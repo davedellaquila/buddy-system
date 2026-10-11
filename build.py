@@ -133,31 +133,38 @@ body{padding:0}
 #view-projects,#view-manifest{touch-action:pan-x pan-y}
 #treezoom.panning,#treezoom.panning *{user-select:none!important;-webkit-user-select:none!important}
 #treezoom,#treezoom *{user-select:none;-webkit-user-select:none}
-/* Slim horizontal zoom — no panel chrome; small▪ · slider · large◼ · fit */
-#zoombar{position:fixed;top:10px;left:calc(var(--sbw, 308px) + 36px);z-index:5;
-  display:flex;align-items:center;gap:4px;width:auto;height:auto;min-height:28px;
+/* Slim vertical zoom — right edge of the tree; no panel chrome; large◼ · slider · small▪ · fit */
+#zoombar{position:fixed;top:50%;right:10px;left:auto;transform:translateY(-50%);z-index:5;
+  display:flex;flex-direction:column;align-items:center;gap:6px;width:auto;height:auto;
   padding:0;margin:0;background:none;border:none;border-radius:0;box-shadow:none;
   -webkit-tap-highlight-color:transparent}
 #zoombar .z-out,#zoombar .z-in{flex:0 0 auto;line-height:1;color:var(--faint);user-select:none;pointer-events:none;
   text-shadow:0 0 4px var(--bg),0 0 8px var(--bg)}
-#zoombar .z-out{font-size:8px}   /* zoom out */
-#zoombar .z-in{font-size:13px}   /* zoom in */
-#zoomrange{flex:0 0 auto;width:96px;height:22px;margin:0;padding:0;transform:none;
-  accent-color:var(--accent);cursor:pointer;touch-action:none;background:transparent;opacity:.9}
+#zoombar .z-out{font-size:8px}   /* zoom out (bottom) */
+#zoombar .z-in{font-size:13px}   /* zoom in (top) */
+#zoomrange{flex:0 0 auto;width:22px;height:112px;margin:0;padding:0;
+  writing-mode:vertical-lr;direction:rtl;/* high value at top, next to large mark */
+  -webkit-appearance:slider-vertical;appearance:slider-vertical;
+  accent-color:var(--accent);cursor:ns-resize;touch-action:none;background:transparent;opacity:.9}
 #zoomfit{flex:0 0 auto;background:none;border:none;border-radius:6px;color:var(--faint);
   font-size:12px;width:22px;height:22px;padding:0;cursor:pointer;line-height:1;
   text-shadow:0 0 4px var(--bg),0 0 8px var(--bg)}
 #zoomfit:hover{color:var(--text);background:transparent}
-/* Fixed to viewport at sidebar edge so vertical #sidebar scroll doesn't move it */
-#sb-resize{position:fixed;top:0;left:calc(var(--sbw, 308px) - 7px);z-index:45;
-  display:flex;align-items:center;justify-content:center;width:10px;height:100vh;height:100dvh;cursor:ew-resize}
-#sb-resize::after{content:'';width:7px;height:56px;border-radius:3px;background:var(--faint)}
-#sb-resize:hover::after{background:var(--accent-hi)}
+/* Fixed to viewport at sidebar edge so vertical #sidebar scroll doesn't move it.
+   MUST be a DOM sibling of #sidebar (not a child): overflow on #sidebar clips
+   hit-testing/paint for fixed descendants, which made the gripper invisible. */
+#sb-resize{position:fixed;top:0;left:calc(var(--sbw, 308px) - 7px);z-index:50;
+  display:flex;align-items:center;justify-content:center;width:14px;height:100vh;height:100dvh;cursor:ew-resize;
+  -webkit-tap-highlight-color:transparent}
+#sb-resize::after{content:'';width:6px;height:72px;border-radius:3px;background:var(--muted);
+  box-shadow:0 0 0 1px color-mix(in srgb, var(--border) 80%, transparent)}
+#sb-resize:hover::after{background:var(--accent-hi);box-shadow:none}
 #sb-resize:hover{background:var(--ghost)}
 body.sb-closed #sb-resize{display:none}
-/* Phone drawer: handle must sit inside sidebar (overflow clips overhang / fixed left) */
+/* Phone drawer: stay fixed (sibling of #sidebar); show only while drawer is open */
 @media (max-width:639px){
-  #sb-resize{position:absolute;left:auto;right:0;z-index:60;height:100%}
+  #sb-resize{display:none;left:calc(var(--sbw, 308px) - 14px);width:28px;z-index:96}
+  #sidebar.open ~ #sb-resize{display:flex}
 }
 .bp-topnav{display:flex;gap:4px;align-items:center;margin-bottom:6px;flex-wrap:wrap}
 .bp-topnav .sep{color:var(--faint);margin:0 2px}
@@ -383,22 +390,20 @@ body.standalone .sa-bar{display:flex}
   #sidebar{position:fixed;left:0;top:0;bottom:0;z-index:95;height:100vh;height:100dvh;
     transform:translateX(-105%);transition:transform .28s cubic-bezier(.32,.72,.35,1);width:min(85vw,340px);flex:none}
   #sidebar.open{transform:none;box-shadow:12px 0 40px rgba(0,0,0,.35)}
-  /* Sidebar resize handle: visible + touch-friendly on phones (was display:none).
-     NB: must sit INSIDE the sidebar (right:0) — the sidebar clips overflow, so any
-     overhang past its edge is dead for hit-testing. */
-  #sb-resize{display:flex;right:0;width:28px;touch-action:none;-webkit-tap-highlight-color:transparent}
-  #sb-resize::after{width:7px}
+  /* Sidebar resize: sibling of #sidebar; visibility gated by #sidebar.open ~ #sb-resize above */
+  #sb-resize{touch-action:none}
+  #sb-resize::after{width:7px;height:80px}
   html,body{overflow-x:clip}
   #sb-scrim{display:none;position:fixed;inset:0;z-index:94;background:rgba(0,0,0,.45);opacity:0;transition:opacity .25s}
   #sb-scrim.show{display:block;opacity:1}
   #main{padding:72px 12px 60px}
   /* Tree keeps the org chart on phones — pan with a finger, zoom with the floating slider */
   .standalones .grid{display:block}
-  /* Slim look, fat hit areas (≈44px) via padding — no filled panel */
-  #zoombar{left:auto;right:6px;top:64px;z-index:30;min-height:44px;padding:8px 6px;gap:2px}
-  #zoomrange{width:120px;height:44px;margin:0 -2px}
+  /* Vertical zoom on the right — fat hit areas (≈44px), no filled panel */
+  #zoombar{right:4px;z-index:30;padding:8px 4px;gap:4px}
+  #zoomrange{width:44px;height:140px}
   #zoomfit{width:44px;height:44px;font-size:14px;display:flex;align-items:center;justify-content:center}
-  #zoombar .z-out,#zoombar .z-in{padding:0 4px}
+  #zoombar .z-out,#zoombar .z-in{padding:4px 0}
   /* Chunkier tree nodes for touch */
   #treezoom .node{padding:15px 14px;min-height:60px}
   /* Bottom sheet panel — taller, grabbable */
@@ -1953,10 +1958,10 @@ function zoomToFit(){
 (function initZoom(){
   const vt = document.getElementById('view-tree');
   vt.insertAdjacentHTML('afterbegin',
-    '<div class="treewrap" id="zoomwrap"><div class="zoombar" id="zoombar" title="Zoom — hold Shift and scroll over the tree">'
-    + '<span class="z-out" aria-hidden="true">\u25aa</span>'
-    + '<input type="range" id="zoomrange" min="50" max="160" step="5" value="100" aria-label="Zoom out to zoom in">'
+    '<div class="treewrap" id="zoomwrap"><div class="zoombar" id="zoombar" title="Zoom — pinch with two fingers, or Shift+scroll">'
     + '<span class="z-in" aria-hidden="true">\u25fc</span>'
+    + '<input type="range" id="zoomrange" min="50" max="160" step="5" value="100" aria-label="Zoom in to zoom out" orient="vertical">'
+    + '<span class="z-out" aria-hidden="true">\u25aa</span>'
     + '<button type="button" id="zoomfit" title="Zoom to fit" aria-label="Zoom to fit">\u26f6</button></div><div id="treezoom"></div></div>');
   const tw = document.getElementById('zoomwrap'), tz = document.getElementById('treezoom');
   Array.from(vt.childNodes).forEach(n => { if (n !== tw) tz.appendChild(n); });
@@ -1992,6 +1997,14 @@ function attachPan(el){
   function scroller(){ return el; }
   const isTree = el.id === 'treezoom';
   let pan = null, swallow = false;
+  /* Tree: track touch pointers for one-finger pan vs two-finger pinch zoom */
+  const pts = new Map();
+  let pinch = null;
+  function pinchDist(){
+    const v = [...pts.values()];
+    if (v.length < 2) return 0;
+    return Math.hypot(v[0].x - v[1].x, v[0].y - v[1].y) || 1;
+  }
   function startPan(x, y, pid){
     const sc = scroller();
     pan = { x: x, y: y, sl: sc.scrollLeft, st: sc.scrollTop, moved: false, id: pid };
@@ -2022,10 +2035,41 @@ function attachPan(el){
     if (pan.moved) { swallow = true; setTimeout(() => { swallow = false; }, 80); }
     pan = null;
   }
+  function beginPinch(){
+    if (pan) endPan(pan.id);
+    const d0 = pinchDist();
+    if (d0 < 8) return;
+    pinch = { d0: d0, z0: S.zoom || 100 };
+    el.dataset.pinching = '1';
+    el.classList.add('panning');
+    swallow = true;
+  }
+  function movePinch(){
+    if (!pinch || pts.size < 2) return;
+    const d = pinchDist();
+    const next = Math.min(160, Math.max(50, Math.round((pinch.z0 * (d / pinch.d0)) / 5) * 5));
+    if (next !== (S.zoom || 100)) { S.zoom = next; applyZoom(); }
+  }
+  function endPinchFinger(pid){
+    pts.delete(pid);
+    if (pts.size < 2 && pinch) {
+      pinch = null;
+      delete el.dataset.pinching;
+      el.classList.remove('panning');
+      save();
+      setTimeout(() => { swallow = false; }, 80);
+    }
+  }
   // Pointer Events — mouse + touch/pen on the tree (touch-action:none) for free 2D pan
   el.addEventListener('pointerdown', e => {
     if (e.pointerType === 'mouse' && e.button !== 0) return;
     if (!isTree && e.pointerType !== 'mouse') return; // projects/manifest keep native touch scroll
+    // Tree pinch: track all non-mouse pointers (including on nodes) so 2-finger zoom works
+    if (isTree && e.pointerType !== 'mouse') {
+      pts.set(e.pointerId, { x: e.clientX, y: e.clientY });
+      if (pts.size >= 2) { beginPinch(); e.preventDefault(); return; }
+    }
+    if (pinch) return;
     // Presses on tree nodes are reserved for node drag-to-reparent (or click); background pans.
     if (e.target.closest && (e.target.closest('#treezoom .node[data-buddy]') || e.target.closest('input,textarea,button'))) return;
     startPan(e.clientX, e.clientY, e.pointerId);
@@ -2033,15 +2077,26 @@ function attachPan(el){
     // Capture is set in movePan once dragging actually starts.
   });
   el.addEventListener('pointermove', e => {
+    if (isTree && pts.has(e.pointerId)) {
+      pts.set(e.pointerId, { x: e.clientX, y: e.clientY });
+      if (pinch) { movePinch(); e.preventDefault(); return; }
+    }
+    if (pinch) return;
     if (!pan || e.pointerId !== pan.id) return;
     movePan(e.clientX, e.clientY, e.pointerId);
     if (pan && pan.moved) e.preventDefault();
   }, { passive: false });
-  el.addEventListener('pointerup', e => endPan(e.pointerId));
-  el.addEventListener('pointercancel', e => endPan(e.pointerId));
+  el.addEventListener('pointerup', e => {
+    if (isTree) endPinchFinger(e.pointerId);
+    endPan(e.pointerId);
+  });
+  el.addEventListener('pointercancel', e => {
+    if (isTree) endPinchFinger(e.pointerId);
+    endPan(e.pointerId);
+  });
   // Mouse Events fallback (older Safari)
   el.addEventListener('mousedown', e => {
-    if (pan) return;
+    if (pan || pinch) return;
     if (e.button !== 0) return;
     if (e.target.closest && (e.target.closest('#treezoom .node[data-buddy]') || e.target.closest('input,textarea,button'))) return;
     startPan(e.clientX, e.clientY, 'mouse');
@@ -2147,6 +2202,8 @@ let nodeDragEndAt = 0; // timestamp of last node-drag gesture; used to swallow t
     cand = { id: id, x0: e.clientX, y0: e.clientY, pid: e.pointerId, touch: e.pointerType === 'touch' };
   });
   window.addEventListener('pointermove', function(e){
+    // Two-finger pinch owns the gesture — abort any node drag candidate
+    if (tz.dataset.pinching) { if (drag || cand) cleanup(); return; }
     if (drag) {
       if (e.pointerId !== drag.pid) return;
       moveGhost(e.clientX, e.clientY);
@@ -3341,7 +3398,6 @@ initSbBrandSticky();
 </button>
 <div id="sb-scrim"></div>
 <aside id="sidebar">
-<div id="sb-resize" title="Drag left or right to resize the sidebar. Double-click to reset to default width."></div>
   <div class="sb-brand-sticky">
     <div id="sb-tools"><button id="sb-gear" title="Settings (⌘,)" aria-label="Settings"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button><button id="sb-close" title="Close sidebar" aria-label="Close sidebar"><svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="currentColor"/><path class="xmark-x" d="M8.8 8.8l6.4 6.4m0-6.4l-6.4 6.4" fill="none" stroke-width="2.25" stroke-linecap="round"/></svg></button></div>
     <div class="brand"><div class="eyebrow">Project Buddy &middot; macro view</div><h1 id="brand-name" title="Click to rename">Buddies</h1><div class="bcount">NBUD buddies &middot; one family</div></div>
@@ -3355,6 +3411,7 @@ initSbBrandSticky();
   <h3>Buddies <span id="attn-pill" class="zero">0</span></h3><div id="buddy-nav"></div></div>
   <div class="nav-sec" id="plans-sec"><h3 style="cursor:pointer" id="plans-toggle"><span id="plans-arrow">\u203a</span> Business Plans</h3><div id="plan-nav"></div></div>
 </aside>
+<div id="sb-resize" title="Drag left or right to resize the sidebar. Double-click to reset to default width."></div>
 <main id="main">
 <div id="journal-bar"></div>
 """ + vt + vp + vpl + vm + """
