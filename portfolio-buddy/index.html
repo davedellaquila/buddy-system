@@ -1,161 +1,464 @@
-<!-- BUDDY-BASIC-TEMPLATE v2 -->
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="auto">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Portfolio Buddy</title>
+<meta name="color-scheme" content="light dark">
+<title>Portfolio Buddy 📸 — Mission Control</title>
 <style>
-:root {
-  --bg: #ffffff;
-  --text: #1a1a1a;
-  --muted: #666;
-  --card: #f5f5f5;
-  --border: #e0e0e0;
-  --accent: #0066cc;
-}
-@media (prefers-color-scheme: dark) {
   :root {
-    --bg: #1a1a1a;
-    --text: #e0e0e0;
-    --muted: #999;
-    --card: #2a2a2a;
-    --border: #3a3a3a;
-    --accent: #4da6ff;
+    --bg: #FBFAF7;
+    --ink: #1C1A17;
+    --card: #FFFFFF;
+    --tile: #F4F1EA;
+    --muted: #6E675C;
+    --line: rgba(28,26,23,.10);
+    --accent: #0E7C6B;
+    --accent-ink: #FFFFFF;
+    --accent-soft: rgba(14,124,107,.10);
+    --amber: #B45309;
+    --amber-soft: #FEF3C7;
+    --amber-line: #F0D9A8;
+    --gray-soft: rgba(110,103,92,.14);
+    --shadow: 0 1px 2px rgba(28,26,23,.05), 0 10px 28px rgba(28,26,23,.07);
+    --radius: 16px;
+    --serif: Georgia, "Times New Roman", serif;
   }
-}
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  background: var(--bg);
-  color: var(--text);
-  line-height: 1.6;
-  padding: 40px 20px;
-  max-width: 800px;
-  margin: 0 auto;
-}
-.header { text-align: center; margin-bottom: 40px; }
-.icon { font-size: 64px; margin-bottom: 16px; }
-h1 { font-size: 32px; margin-bottom: 8px; }
-.tagline { color: var(--muted); font-size: 18px; }
-.mission {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 24px;
-  margin-bottom: 32px;
-  font-size: 17px;
-}
-h2 { font-size: 22px; margin: 32px 0 16px; }
-.attn {
-  background: var(--card);
-  border-left: 4px solid var(--accent);
-  border-radius: 0 8px 8px 0;
-  padding: 16px 20px;
-  margin-bottom: 12px;
-}
-.attn-date { color: var(--muted); font-size: 14px; margin-top: 8px; }
-.children { display: flex; flex-wrap: wrap; gap: 12px; }
-.child {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 12px 20px;
-  text-decoration: none;
-  color: var(--text);
-}
-.child:hover { border-color: var(--accent); }
-.footer {
-  margin-top: 48px;
-  padding-top: 24px;
-  border-top: 1px solid var(--border);
-  color: var(--muted);
-  font-size: 14px;
-  text-align: center;
-}
-.empty { color: var(--muted); font-style: italic; }
-
-.dumpbox {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 20px 22px;
-  margin-bottom: 32px;
-}
-.dumpbox h2 { margin: 0 0 6px; font-size: 20px; }
-.dumpbox-sub { color: var(--muted); font-size: 14px; margin-bottom: 14px; }
-.dumpbox textarea {
-  width: 100%; min-height: 96px; resize: vertical;
-  background: var(--bg); border: 1px solid var(--border); border-radius: 8px;
-  padding: 10px 12px; font-size: 14px; color: var(--text); font-family: inherit;
-}
-.dumpbox textarea:focus { outline: none; border-color: var(--accent); }
-.dumpbox textarea:disabled { opacity: .55; }
-.dumpbox-row { display: flex; align-items: center; gap: 12px; margin-top: 10px; flex-wrap: wrap; }
-.dumpbox-btn {
-  background: var(--accent); color: #fff; border: none; border-radius: 8px;
-  padding: 9px 22px; font-size: 14px; font-weight: 600; cursor: pointer;
-}
-.dumpbox-btn:disabled { opacity: .45; cursor: default; }
-.dumpbox-status { font-size: 13px; color: var(--muted); }
-.dumpbox-token {
-  background: var(--bg); border: 1px dashed var(--border); border-radius: 8px;
-  padding: 12px 14px; margin-bottom: 12px; font-size: 14px;
-}
-.dumpbox-token p { margin-bottom: 8px; }
-.dumpbox-tokenrow { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
-.dumpbox-tokenrow input {
-  flex: 1; min-width: 170px; background: var(--card); border: 1px solid var(--border);
-  border-radius: 8px; padding: 7px 10px; font-size: 13px; color: var(--text);
-}
-.dumpbox-tokenrow button {
-  background: transparent; color: var(--accent); border: 1px solid var(--accent);
-  border-radius: 8px; padding: 7px 14px; font-size: 13px; font-weight: 600; cursor: pointer;
-}
-.dumpbox-tokenrow a { color: var(--accent); font-size: 13px; }
-
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #101413;
+      --ink: #ECE9E2;
+      --card: #171C1B;
+      --tile: #1E2523;
+      --muted: #A39C8E;
+      --line: rgba(236,233,226,.12);
+      --accent: #4CC2A8;
+      --accent-ink: #06231D;
+      --accent-soft: rgba(76,194,168,.13);
+      --amber: #F5A524;
+      --amber-soft: rgba(245,165,36,.13);
+      --amber-line: rgba(245,165,36,.38);
+      --gray-soft: rgba(163,156,142,.16);
+      --shadow: 0 1px 2px rgba(0,0,0,.35), 0 10px 28px rgba(0,0,0,.4);
+    }
+  }
+  html[data-theme="light"] {
+    --bg: #FBFAF7; --ink: #1C1A17; --card: #FFFFFF; --tile: #F4F1EA;
+    --muted: #6E675C; --line: rgba(28,26,23,.10);
+    --accent: #0E7C6B; --accent-ink: #FFFFFF; --accent-soft: rgba(14,124,107,.10);
+    --amber: #B45309; --amber-soft: #FEF3C7; --amber-line: #F0D9A8;
+    --gray-soft: rgba(110,103,92,.14);
+    --shadow: 0 1px 2px rgba(28,26,23,.05), 0 10px 28px rgba(28,26,23,.07);
+  }
+  html[data-theme="dark"] {
+    --bg: #101413; --ink: #ECE9E2; --card: #171C1B; --tile: #1E2523;
+    --muted: #A39C8E; --line: rgba(236,233,226,.12);
+    --accent: #4CC2A8; --accent-ink: #06231D; --accent-soft: rgba(76,194,168,.13);
+    --amber: #F5A524; --amber-soft: rgba(245,165,36,.13); --amber-line: rgba(245,165,36,.38);
+    --gray-soft: rgba(163,156,142,.16);
+    --shadow: 0 1px 2px rgba(0,0,0,.35), 0 10px 28px rgba(0,0,0,.4);
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--ink);
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", system-ui, sans-serif;
+    line-height: 1.6; -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 920px; margin: 0 auto; padding: 44px 22px 72px; }
+  #themeToggle {
+    position: fixed; top: 16px; right: 16px; z-index: 50; cursor: pointer;
+    width: 42px; height: 42px; border-radius: 50%;
+    border: 1px solid var(--line); background: var(--card); color: var(--ink);
+    font-size: 18px; box-shadow: var(--shadow);
+  }
+  header.hero { margin: 6px 0 30px; }
+  .eyebrow {
+    font-size: 12px; letter-spacing: 3px; text-transform: uppercase;
+    color: var(--muted); margin-bottom: 12px;
+  }
+  h1 {
+    font-family: var(--serif); font-size: clamp(34px, 6vw, 50px);
+    letter-spacing: -0.5px; margin: 0 0 10px; line-height: 1.05;
+  }
+  .mission { font-size: 18px; color: var(--muted); max-width: 660px; margin: 0; }
+  .mission strong { color: var(--ink); }
+  .status-pill {
+    display: inline-block; margin-top: 18px; padding: 8px 18px; border-radius: 999px;
+    background: var(--ink); color: var(--bg); font-size: 14px;
+  }
+  .status-pill .dot { color: var(--amber); margin-right: 6px; }
+  .refreshed { margin-top: 10px; font-size: 12.5px; color: var(--muted); }
+  .how {
+    margin: 22px 0 0; padding: 16px 20px; border-radius: var(--radius);
+    background: var(--accent-soft); border: 1px solid var(--accent);
+    font-size: 15px; max-width: 660px;
+  }
+  .how b { color: var(--accent); }
+  section.block { margin: 34px 0; }
+  .card {
+    background: var(--card); border: 1px solid var(--line); border-radius: var(--radius);
+    padding: 26px 28px; box-shadow: var(--shadow);
+  }
+  .card + .card { margin-top: 16px; }
+  .card h2 {
+    font-size: 13px; letter-spacing: .14em; text-transform: uppercase;
+    color: var(--muted); margin: 0 0 6px; font-weight: 700;
+  }
+  .card .sub { color: var(--muted); font-size: 14.5px; margin: 0 0 18px; }
+  /* portfolio picker */
+  .picker-tabs { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 18px; }
+  .ptab {
+    cursor: pointer; border: 1.5px solid var(--line); background: var(--tile);
+    color: var(--ink); border-radius: 14px; padding: 12px 18px; font-size: 15px;
+    font-weight: 600; display: flex; align-items: center; gap: 10px;
+  }
+  .ptab .pi { font-size: 22px; }
+  .ptab.active { border-color: var(--accent); background: var(--accent-soft); }
+  .ptab small { display: block; font-weight: 400; font-size: 12px; color: var(--muted); }
+  .preview {
+    background: var(--tile); border: 1px solid var(--line); border-radius: 12px;
+    padding: 20px 22px;
+  }
+  .preview h3 { font-family: var(--serif); font-size: 22px; margin: 0 0 4px; }
+  .preview .for { font-size: 13.5px; color: var(--muted); font-style: italic; margin-bottom: 12px; }
+  .preview .angle { font-size: 15.5px; margin: 0 0 14px; }
+  .preview .angle b { color: var(--accent); }
+  .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  @media (max-width: 620px) { .cols { grid-template-columns: 1fr; } }
+  .col h4 { font-size: 12px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin: 0 0 8px; }
+  .col ul { margin: 0; padding-left: 18px; font-size: 14.5px; }
+  .col li { margin: 6px 0; }
+  .draft-note { margin-top: 14px; font-size: 13px; color: var(--muted); }
+  /* matrix */
+  .matrix-wrap { overflow-x: auto; }
+  table.matrix { width: 100%; border-collapse: collapse; font-size: 14px; min-width: 560px; }
+  table.matrix th, table.matrix td { padding: 10px 12px; text-align: left; border-bottom: 1px solid var(--line); vertical-align: top; }
+  table.matrix th { font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+  table.matrix td.proj b { display: block; font-size: 14.5px; }
+  table.matrix td.proj span { font-size: 12.5px; color: var(--muted); }
+  .pill {
+    display: inline-block; font-size: 11.5px; font-weight: 700; border-radius: 999px;
+    padding: 3px 11px; white-space: nowrap;
+  }
+  .pill.lead { background: var(--accent); color: var(--accent-ink); }
+  .pill.feat { background: var(--accent-soft); color: var(--accent); border: 1px solid var(--accent); }
+  .pill.plan { background: var(--amber-soft); color: var(--amber); border: 1px solid var(--amber-line); }
+  .pill.lock { background: var(--gray-soft); color: var(--muted); }
+  .pill.none { background: transparent; color: var(--muted); border: 1px dashed var(--line); }
+  .legend { margin-top: 14px; font-size: 12.5px; color: var(--muted); display: flex; gap: 14px; flex-wrap: wrap; }
+  /* ideas + research */
+  ul.tight { margin: 0; padding-left: 0; list-style: none; }
+  ul.tight li {
+    padding: 12px 0; border-bottom: 1px solid var(--line); font-size: 15px;
+    display: flex; gap: 12px; align-items: flex-start;
+  }
+  ul.tight li:last-child { border-bottom: none; }
+  ul.tight .ic { font-size: 20px; flex: none; margin-top: 1px; }
+  ul.tight .tx b { display: block; font-size: 15px; }
+  ul.tight .tx span { font-size: 13.5px; color: var(--muted); }
+  .flag {
+    display: inline-block; font-size: 11px; font-weight: 700; border-radius: 6px;
+    padding: 2px 9px; margin-left: 8px; vertical-align: middle; white-space: nowrap;
+  }
+  .flag.open { background: var(--amber-soft); color: var(--amber); border: 1px solid var(--amber-line); }
+  .flag.todo { background: var(--accent-soft); color: var(--accent); border: 1px solid var(--accent); }
+  .flag.q { background: var(--gray-soft); color: var(--muted); }
+  /* dumpbox */
+  .dumpbox { --card: var(--card); --border: var(--line); --bg: var(--bg); --muted: var(--muted); --text: var(--ink); --accent: var(--accent); }
+  .dumpbox { border-radius: var(--radius); padding: 26px 28px; box-shadow: var(--shadow); }
+  .dumpbox h2 { font-size: 13px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); margin: 0 0 6px; font-weight: 700; }
+  .dumpbox-sub { color: var(--muted); font-size: 14px; margin-bottom: 14px; }
+  .dumpbox textarea {
+    width: 100%; min-height: 96px; resize: vertical;
+    background: var(--bg); border: 1px solid var(--border); border-radius: 10px;
+    padding: 10px 12px; font-size: 14px; color: var(--text); font-family: inherit;
+  }
+  .dumpbox textarea:focus { outline: none; border-color: var(--accent); }
+  .dumpbox textarea:disabled { opacity: .55; }
+  .dumpbox-row { display: flex; align-items: center; gap: 12px; margin-top: 10px; flex-wrap: wrap; }
+  .dumpbox-btn {
+    background: var(--accent); color: var(--accent-ink); border: none; border-radius: 999px;
+    padding: 9px 24px; font-size: 14px; font-weight: 600; cursor: pointer;
+  }
+  .dumpbox-btn:disabled { opacity: .45; cursor: default; }
+  .dumpbox-status { font-size: 13px; color: var(--muted); }
+  .dumpbox-token {
+    background: var(--bg); border: 1px dashed var(--border); border-radius: 10px;
+    padding: 12px 14px; margin-bottom: 12px; font-size: 14px;
+  }
+  .dumpbox-token p { margin: 0 0 8px; }
+  .dumpbox-tokenrow { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+  .dumpbox-tokenrow input {
+    flex: 1; min-width: 170px; background: var(--card); border: 1px solid var(--border);
+    border-radius: 8px; padding: 7px 10px; font-size: 13px; color: var(--text);
+  }
+  .dumpbox-tokenrow button {
+    background: transparent; color: var(--accent); border: 1px solid var(--accent);
+    border-radius: 8px; padding: 7px 14px; font-size: 13px; font-weight: 600; cursor: pointer;
+  }
+  .dumpbox-tokenrow a { color: var(--accent); font-size: 13px; }
+  /* attention + artifacts */
+  .card.attn { border-left: 4px solid var(--amber); }
+  .attn-label {
+    display: inline-block; font-size: 12px; font-weight: 700; color: var(--amber);
+    background: var(--amber-soft); border: 1px solid var(--amber-line);
+    border-radius: 999px; padding: 3px 11px; margin-bottom: 10px;
+  }
+  .btn {
+    display: inline-block; margin-top: 12px; padding: 9px 20px; border-radius: 999px;
+    text-decoration: none; background: var(--accent); color: var(--accent-ink);
+    font-weight: 600; font-size: 14px;
+  }
+  .btn.ghost { background: transparent; color: var(--accent); border: 1px solid var(--accent); margin-left: 8px; }
+  .artifacts a {
+    display: block; padding: 13px 16px; margin: 10px 0; border-radius: 12px;
+    background: var(--tile); color: var(--ink); text-decoration: none; font-weight: 600;
+    border: 1px solid var(--line); font-size: 15px;
+  }
+  .artifacts a:hover { border-color: var(--accent); }
+  .artifacts a .kind { display: block; font-weight: 400; font-size: 13px; color: var(--muted); }
+  footer.rule {
+    text-align: center; margin-top: 40px; font-family: var(--serif);
+    font-size: 19px; color: var(--muted);
+  }
+  footer.rule strong { color: var(--ink); }
+  @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
 </style>
 </head>
 <body>
-<div class="header">
-<div class="icon">🖼️</div>
-<h1>Portfolio Buddy</h1>
-<div class="tagline">The portfolio expert — best practices, multiple audiences, always current</div>
+<button id="themeToggle" title="Toggle theme (auto / light / dark)" aria-label="Toggle theme">◐</button>
+<div class="wrap">
+
+  <header class="hero">
+    <div class="eyebrow">Project Buddy &middot; Buddy Homepage</div>
+    <h1>📸 Portfolio Buddy</h1>
+    <p class="mission">Dave&rsquo;s expert on <strong>online portfolios</strong> — best-practices research, multiple audiences, and a site that&rsquo;s always current. <strong>This page is mission control:</strong> what you specify here is what appears on the portfolio.</p>
+    <div class="status-pill"><span class="dot">●</span> Mission statement in review</div>
+    <div class="refreshed">Living page &middot; last refreshed October 11, 2026</div>
+    <div class="how"><b>How this works:</b> you specify what appears — here, or in the brain-dump box below — and Portfolio Buddy updates the portfolio site(s) to match. No redesign projects, no stale pages.</div>
+  </header>
+
+  <section class="block">
+    <div class="card">
+      <h2>🎯 Portfolio picker</h2>
+      <p class="sub">One portfolio can&rsquo;t serve every audience. Tap to preview the planned narrative for each — then tell me which to build first.</p>
+      <div class="picker-tabs" id="ptabs"></div>
+      <div class="preview" id="preview"></div>
+      <p class="draft-note">Planned lineups — nothing decided yet. The open question from the brief: how many portfolios at launch — design vs engineering vs Apple-safe, or start with one?</p>
+    </div>
+  </section>
+
+  <section class="block">
+    <div class="card">
+      <h2>🗺️ What shows where</h2>
+      <p class="sub">The candidate project lineup across portfolios. Proposed mapping — Dave&rsquo;s call, per project.</p>
+      <div class="matrix-wrap">
+        <table class="matrix">
+          <thead>
+            <tr><th>Project</th><th>🎨 Design</th><th>⚙️ Engineering</th><th>🍎 Apple-safe</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="proj"><b>Money Buddy</b><span>The craftsmanship showcase — first full vibe-designed + built app</span></td>
+              <td><span class="pill lead">LEAD</span></td>
+              <td><span class="pill lead">LEAD</span></td>
+              <td><span class="pill feat">✓ Featured</span></td>
+            </tr>
+            <tr>
+              <td class="proj"><b>Rae Technology / Rae Assist</b><span>Depth: co-founder &amp; VP Products, Apple spin-off, 1992–96</span></td>
+              <td><span class="pill feat">✓ Featured</span></td>
+              <td><span class="pill feat">✓ Featured</span></td>
+              <td><span class="pill feat">✓ Featured</span></td>
+            </tr>
+            <tr>
+              <td class="proj"><b>Personal Website</b><span>The meta piece — the portfolio site itself as a design artifact</span></td>
+              <td><span class="pill feat">✓ Featured</span></td>
+              <td><span class="pill none">—</span></td>
+              <td><span class="pill feat">✓ Featured</span></td>
+            </tr>
+            <tr>
+              <td class="proj"><b>Buddy system · 61 buddies</b><span>Process + scale: the build.py dashboard pipeline</span></td>
+              <td><span class="pill feat">✓ Featured</span></td>
+              <td><span class="pill lead">LEAD</span></td>
+              <td><span class="pill feat">✓ Featured</span></td>
+            </tr>
+            <tr>
+              <td class="proj"><b>STIX · persistent ACV</b><span>Apple-internal tooling — current day job</span></td>
+              <td><span class="pill lock">🔒</span></td>
+              <td><span class="pill lock">🔒</span></td>
+              <td><span class="pill lock">🔒</span></td>
+            </tr>
+            <tr>
+              <td class="proj"><b>smarttub-control</b><span>Reverse-engineered API + Siri voice control for the hot tub</span></td>
+              <td><span class="pill none">—</span></td>
+              <td><span class="pill feat">✓ Featured</span></td>
+              <td><span class="pill none">—</span></td>
+            </tr>
+            <tr>
+              <td class="proj"><b>1959 MGA coupe</b><span>Craftsman flavor — optional, adds character</span></td>
+              <td><span class="pill plan">Planned</span></td>
+              <td><span class="pill none">—</span></td>
+              <td><span class="pill plan">Planned</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="legend">
+        <span><span class="pill lead">LEAD</span> opens the portfolio</span>
+        <span><span class="pill feat">✓ Featured</span> full case study</span>
+        <span><span class="pill plan">Planned</span> proposed, not confirmed</span>
+        <span><span class="pill lock">🔒</span> Apple-confidential — sanitized mention only, TBD</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="block">
+    <div class="card">
+      <h2>💡 Portfolio-ideas list</h2>
+      <p class="sub">The pipeline feeding the build queue. Seeded from the mission statement — add yours in the brain-dump box.</p>
+      <ul class="tight">
+        <li><span class="ic">📐</span><div class="tx"><b>Case-study template<span class="flag todo">TO DESIGN</span></b><span>One repeatable structure every project story follows — problem, process, craft details, outcome.</span></div></li>
+        <li><span class="ic">📊</span><div class="tx"><b>View analytics<span class="flag open">OPEN</span></b><span>See what visitors actually look at — which portfolio, which case study, how long.</span></div></li>
+        <li><span class="ic">🔗</span><div class="tx"><b>Shareable portfolio slices<span class="flag open">OPEN</span></b><span>One link per audience, sent with a tap — ties to Sharing Buddy&rsquo;s artifact-sharing work.</span></div></li>
+        <li><span class="ic">🏠</span><div class="tx"><b>Hosting decision<span class="flag q">OPEN QUESTION</span></b><span>Where do the sites live — GitHub Pages? A custom domain? Something else?</span></div></li>
+        <li><span class="ic">🔍</span><div class="tx"><b>Current-state audit<span class="flag q">UNKNOWN</span></b><span>What exists today — current portfolio URL and state. Nobody&rsquo;s checked yet.</span></div></li>
+        <li><span class="ic">👥</span><div class="tx"><b>Audience count at launch<span class="flag q">OPEN QUESTION</span></b><span>Three portfolios on day one, or start with one and grow?</span></div></li>
+        <li><span class="ic">⭐</span><div class="tx"><b>Which projects lead<span class="flag q">OPEN QUESTION</span></b><span>Money Buddy? STIX-safe work? Rae history? The order sets the narrative.</span></div></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="block">
+    <div class="card">
+      <h2>🔬 Best-practices research</h2>
+      <p class="sub">The standing research brief: what &ldquo;good&rdquo; looks like for product-design + engineering portfolios, tracked on Dave&rsquo;s behalf.</p>
+      <ul class="tight">
+        <li><span class="ic">📝</span><div class="tx"><b>Case-study structure<span class="flag q">NOT STARTED</span></b><span>What great design portfolios do in 2026 — length, visuals, what gets skimmed.</span></div></li>
+        <li><span class="ic">⚙️</span><div class="tx"><b>Engineering portfolio norms<span class="flag q">NOT STARTED</span></b><span>What technical hiring managers actually scan for — code, architecture, outcomes.</span></div></li>
+        <li><span class="ic">🖼️</span><div class="tx"><b>Hero patterns<span class="flag q">NOT STARTED</span></b><span>Personal-site openings that aren&rsquo;t portfolios-as-résumés.</span></div></li>
+        <li><span class="ic">🍎</span><div class="tx"><b>Apple-safe redaction norms<span class="flag q">NOT STARTED</span></b><span>How ex-Apple designers show internal work without leaking it.</span></div></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="block dumpbox" data-buddy-id="portfolio-buddy">
+    <h2>🧠 Brain dump</h2>
+    <p class="dumpbox-sub">Dump what&rsquo;s on your mind about Portfolio Buddy — raw and unfiltered. Each dump lands in the buddy&rsquo;s repo (docs/ingest.md) as a timestamped entry.</p>
+    <div class="dumpbox-token" hidden>
+      <p>🔒 Connect GitHub to unlock dumping. Paste a token once — it stays on this device only.</p>
+      <div class="dumpbox-tokenrow">
+        <input type="password" placeholder="GitHub token (repo scope)" aria-label="GitHub token">
+        <button type="button">Save token</button>
+        <a href="https://github.com/settings/tokens" target="_blank" rel="noopener">Get a token</a>
+      </div>
+    </div>
+    <textarea rows="4" placeholder="Dump what's on your mind about Portfolio Buddy… (e.g. &ldquo;Money Buddy should lead the design portfolio&rdquo; or &ldquo;add a testimonials section&rdquo;)"></textarea>
+    <div class="dumpbox-row">
+      <button type="button" class="dumpbox-btn">Dump it</button>
+      <span class="dumpbox-status" role="status"></span>
+    </div>
+  </section>
+
+  <section class="block">
+    <div class="card attn">
+      <span class="attn-label">NEEDS YOUR REVIEW</span>
+      <h2 style="font-family:var(--serif);font-size:20px;letter-spacing:0;text-transform:none;color:var(--ink);">Mission statement</h2>
+      <p class="sub" style="margin-bottom:0;">The mission statement is ready — looks good, edits, or defer? Review it in the Portfolio Buddy thread.</p>
+      <a class="btn" href="https://docs.google.com/document/d/1uby4pNjL4IRVLAqd_gVG_5bOGdjgcjZ0L_kobSOSVt4/edit" target="_blank" rel="noopener">Read the mission statement</a>
+      <a class="btn ghost" href="https://github.com/davedellaquila/portfolio-buddy" target="_blank" rel="noopener">Repo</a>
+    </div>
+  </section>
+
+  <section class="block">
+    <div class="card artifacts">
+      <h2>📎 Artifacts</h2>
+      <a href="https://docs.google.com/document/d/1uby4pNjL4IRVLAqd_gVG_5bOGdjgcjZ0L_kobSOSVt4/edit" target="_blank" rel="noopener">Portfolio Buddy — Mission Statement<span class="kind">Google Doc · Buddy Docs · the brief, in review now</span></a>
+      <a href="https://github.com/davedellaquila/portfolio-buddy" target="_blank" rel="noopener">davedellaquila/portfolio-buddy<span class="kind">GitHub · private repo · knowledge base home (README, docs/brief.md, docs/ingest.md)</span></a>
+      <a href="https://docs.google.com/document/d/16zLLxIRuCf45aW0JEvx2UXCCJoCSVAFFgW38acFy-0g/edit" target="_blank" rel="noopener">Personal Website — Product Brief<span class="kind">Google Doc · Buddy Docs · the sibling project this buddy will absorb or sit beside</span></a>
+      <a href="https://github.com/davedellaquila/personal-website" target="_blank" rel="noopener">davedellaquila/personal-website<span class="kind">GitHub · private repo · the site build, when it starts</span></a>
+    </div>
+  </section>
+
+  <footer class="rule">House rule: <strong>the portfolio is never stale</strong> — this page is mission control, and the site always matches it. 📸</footer>
+
 </div>
-
-<div class="mission">Portfolio Buddy is Dave&#x27;s expert on online portfolios. It researches contemporary portfolio best practices for product design + engineering work, owns and manages his online portfolio site(s), and updates them dynamically from direction given via its homepage — mission control for what appears on the portfolio. It keeps a portfolio-ideas list and supports multiple portfolios for different audiences (design, engineering, Apple-safe). It consults Astro and Project Buddy&#x27;s registry for project data — no own project tracker.</div>
-
-
-<section class="dumpbox" data-buddy-id="portfolio-buddy">
-<h2>🧠 Brain dump</h2>
-<p class="dumpbox-sub">Dump what's on your mind about Portfolio Buddy — raw and unfiltered. Each dump lands in the buddy's repo (docs/ingest.md) as a timestamped entry.</p>
-<div class="dumpbox-token" hidden>
-<p>🔒 Connect GitHub to unlock dumping. Paste a token once — it stays on this device only.</p>
-<div class="dumpbox-tokenrow">
-<input type="password" placeholder="GitHub token (repo scope)" aria-label="GitHub token">
-<button type="button">Save token</button>
-<a href="https://github.com/settings/tokens" target="_blank" rel="noopener">Get a token</a>
-</div>
-</div>
-<textarea rows="4" placeholder="Dump what's on your mind about Portfolio Buddy…"></textarea>
-<div class="dumpbox-row">
-<button type="button" class="dumpbox-btn">Dump it</button>
-<span class="dumpbox-status" role="status"></span>
-</div>
-</section>
-
-
-<h2>Needs Attention</h2>
-<div class="attn"><div>Mission statement ready for review — looks good, edits, or defer? Dave&#x27;s online-portfolio expert: best practices, multiple audiences, dynamic updates from its mission-control homepage.</div><div class="attn-date">2026-10-11</div></div>
-
-
-
-
-<div class="footer">
-Generated 2026-10-11 · Part of the Buddy System
-</div>
-
 <script>
+/* ---------- theme toggle (auto / light / dark) ---------- */
+(function(){
+  var key = 'portfolio-buddy-theme';
+  function apply(){
+    var t = null;
+    try { t = localStorage.getItem(key); } catch(e){}
+    if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t);
+    else document.documentElement.setAttribute('data-theme', 'auto');
+  }
+  apply();
+  document.getElementById('themeToggle').addEventListener('click', function(){
+    var cur = document.documentElement.getAttribute('data-theme') || 'auto';
+    var next = cur === 'auto' ? 'light' : cur === 'light' ? 'dark' : 'auto';
+    try { localStorage.setItem(key, next); } catch(e){}
+    apply();
+  });
+})();
+
+/* ---------- portfolio picker ---------- */
+var PORTFOLIOS = [
+  {
+    id: 'design', icon: '🎨', name: 'Design',
+    tag: 'Hiring managers & design leads',
+    audience: 'Design hiring managers, design leads, collaborators',
+    angle: '<b>Craftsmanship as the differentiator</b> — elegant interfaces, obsessive detail, delightful motion. This is the Apple-principle portfolio.',
+    leads: ['Money Buddy — the craftsmanship showcase', 'Personal Website — the meta piece: the portfolio site itself as a design artifact', 'Rae Assist — thirty years of the same instinct'],
+    avoids: ['Deep engineering internals', 'Apple-confidential specifics']
+  },
+  {
+    id: 'engineering', icon: '⚙️', name: 'Engineering',
+    tag: 'Technical peers & hiring managers',
+    audience: 'Engineering peers, technical hiring managers',
+    angle: '<b>Vibe designing in practice</b> — shipping real systems with AI assistance, fast and well-architected. Process plus proof.',
+    leads: ['Money Buddy — architecture, data model, sync design', 'Buddy system — 61-buddy build.py dashboard pipeline at scale', 'smarttub-control — reverse-engineered API, voice control'],
+    avoids: ['Apple-confidential code specifics', 'Pure visual-design framing']
+  },
+  {
+    id: 'applesafe', icon: '🍎', name: 'Apple-safe',
+    tag: 'Public, recruiter-safe view',
+    audience: 'Anyone public — recruiters, press, the curious',
+    angle: '<b>The public-safe highlight reel</b> — everything here is already public or fully sanitized. Nothing leaks internal work.',
+    leads: ['Money Buddy — public app, public story', 'Rae Technology / Rae Assist — public history', 'Personal Website concept — public by design'],
+    avoids: ['STIX internals or anything Apple-confidential', 'Anything not yet public']
+  }
+];
+var activePortfolio = 'design';
+function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function renderTabs(){
+  var box = document.getElementById('ptabs');
+  box.innerHTML = '';
+  PORTFOLIOS.forEach(function(p){
+    var b = document.createElement('button');
+    b.className = 'ptab' + (p.id === activePortfolio ? ' active' : '');
+    b.innerHTML = '<span class="pi">' + p.icon + '</span><span>' + esc(p.name) + '<small>' + esc(p.tag) + '</small></span>';
+    b.onclick = function(){ activePortfolio = p.id; renderTabs(); renderPreview(); };
+    box.appendChild(b);
+  });
+}
+function renderPreview(){
+  var p = PORTFOLIOS.filter(function(x){ return x.id === activePortfolio; })[0];
+  var box = document.getElementById('preview');
+  box.innerHTML =
+    '<h3>' + p.icon + ' The ' + esc(p.name) + ' portfolio</h3>' +
+    '<div class="for">For: ' + esc(p.audience) + '</div>' +
+    '<p class="angle">' + p.angle + '</p>' +
+    '<div class="cols"><div class="col"><h4>Leads with</h4><ul>' +
+    p.leads.map(function(l){ return '<li>' + esc(l) + '</li>'; }).join('') +
+    '</ul></div><div class="col"><h4>Leaves out</h4><ul>' +
+    p.avoids.map(function(a){ return '<li>' + esc(a) + '</li>'; }).join('') +
+    '</ul></div></div>';
+}
+renderTabs();
+renderPreview();
+</script>
+<script>
+/* ---------- brain-dump box (dumpbox pattern) ---------- */
 (function(){
   var box = document.querySelector('.dumpbox');
   if (!box || box.dataset.dumpInit) return;
@@ -255,6 +558,5 @@ Generated 2026-10-11 · Part of the Buddy System
   resolveRepo().then(refreshUI);
 })();
 </script>
-
 </body>
 </html>
