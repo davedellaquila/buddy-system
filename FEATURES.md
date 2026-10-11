@@ -9,6 +9,10 @@ Build: `build.py` generates `index.html` from `buddies.json` + `plans.json`.
 
 ---
 
+## Aliases (AKA)
+
+- **`aka[]`** — every buddy can carry a list of aliases. Both search boxes match them, and they render in italics under the buddy's name on the detail panel. Tell Astro to add/remove AKAs for any buddy.
+
 ## Tree chart
 
 - **Classic tree layout** — the canonical design. (A card-based redesign was

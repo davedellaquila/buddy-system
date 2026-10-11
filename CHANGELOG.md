@@ -3,6 +3,32 @@
 All notable changes to the Buddies dashboard and buddy system. Newest first.
 `FEATURES.md` describes the current state; this file describes how it got there.
 
+## 2026-10-11 (AKAs for any buddy)
+
+### Added
+- **`aka[]` field** — any buddy can now have aliases ("also known as"). AKAs are matched by both dashboard search boxes and shown in italics under the buddy's name on the detail panel. First use: Designer is aka "UX designer", "visual designer", "design guy", "design gal" (Dave's ask).
+
+## 2026-10-11 (Designer rename)
+
+### Changed
+- **Design Buddy → Designer** — Dave: "for being a coder too." Thread, mission doc, and dashboard entry renamed; repo (`design-buddy`) and buddy ID unchanged.
+
+## 2026-10-11 (Person buddies renamed to full names)
+
+### Changed
+- **Full-name rule** — person buddies now carry the person's full name as their display name (Dave's refinement), superseding the possessive rule set earlier the same day. Renamed 15: Joel Nelson, James Michael Day, Carl Towne, Nancy Dell'Aquila, Quentin Dell'Aquila, Sawyer Dell'Aquila, Amanda Perez, Emile Dell'Aquila, Ron Dell'Aquila, Mei-ying Dell'Aquila, Jessica, Sarah Dell'Aquila, Rachel, Emil Dell'Aquila, Martha Dell'Aquila. Threads, mission-doc titles, and registry updated; IDs/slugs/repos unchanged. Jessica and Rachel stay first-name-only (last names unknown).
+
+## 2026-10-11 (New buddies: James's Buddy 🎹, Carl's Buddy 🛻)
+
+### Added
+- **James's Buddy** — person buddy for James Michael Day (dueling-piano musician, Modern Dueling Pianos), met at Acorn Ridge Casino 2026-10-10. Child of Relationship Buddy. Repo `davedellaquila/james-buddy` (card photos stored), mission statement, side thread, v1 homepage with dossier (bio, Sharks organist, 4+ shows/week, TapSnap tip jar, 500+ weddings, JMD Entertainment).
+- **Carl's Buddy** — person buddy for Carl Towne, Fiddletown neighbor (general contractor, State of California; keeper of the community wood splitter). Child of Relationship Buddy. Repo `davedellaquila/carl-buddy`, mission statement, side thread, v1 homepage. Open: wood-splitter borrow (Dave texted Carl 2026-10-11).
+
+## 2026-10-11 (Tree root flip: Astro at the top)
+
+### Changed
+- **Astro is now the tree root** — the org chart matches reality: Astro (🚀, chief of staff) sits at the root, Project Buddy (🧭) is a direct report instead of the reverse. `ROOT_ID` constant in build.py replaces ~15 hardcoded `project-buddy` root assumptions (default selection, org chart, drag-and-drop guards, icon fallback). Dashboard icon now defaults to 🚀.
+
 ## 2026-10-11 (Buddy avatars: images, favicons, nicer picker)
 
 ### Added
