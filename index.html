@@ -2291,7 +2291,7 @@ function renderBuddy(id){
     + '<div class="bp-sec" data-field="shared"><h3>Shared notes<span class="info-tip" data-tip="Anybody with repo access can see this note. Saved to the buddy’s repo (docs/notes.md).">ⓘ</span></h3>'
     + '<textarea class="notes" id="bp-shared-notes" placeholder="Anybody with repo access can see this note."></textarea>'
     + '<p class="fineprint" id="shared-status"></p></div>'
-    + '<div class="bp-build">Build 20261011.1236</div>'
+    + '<div class="bp-build">Build 20261011.1243</div>'
     + '</div>';
   const nm = document.getElementById('bp-name');
   nm.addEventListener('keydown', e => { if (e.key === 'Enter'){ e.preventDefault(); nm.blur(); } });
@@ -2998,7 +2998,7 @@ function renderPlan(id){
     + '<p class="fineprint">Saved on this device. (For your eyes only)</p></div>'
     + '<div class="bp-sec"><h3>Shared notes<span class="info-tip" data-tip="Visible to everyone with access to this project.">\u24d8</span></h3><textarea class="notes" id="bp-shared" placeholder="Shared notes\u2026 (visible to everyone with access)">'+escHtml((S.planShared||{})[id]||'')+'</textarea>'
     + '<p class="fineprint">Shared — visible to everyone with access.</p></div>'
-    + '<div class="bp-build">Build 20261011.1236</div>'
+    + '<div class="bp-build">Build 20261011.1243</div>'
     + '</div>';
   const nt = document.getElementById('bp-notes');
   let t = null;
@@ -4062,7 +4062,7 @@ window.__bindEdgeSwipes = bindIframeEdgeSwipes;
 // Returns 'new' | 'current' | 'suppressed' | 'error' so manual triggers
 // (e.g. pull-to-refresh) can report the outcome.
 function initVersionCheck(){
-  const myBuild = '20261011.1236';
+  const myBuild = '20261011.1243';
   function showUpdateBanner(serverBuild){
     if (document.getElementById('update-banner')) return;
     const b = document.createElement('div');
@@ -4271,7 +4271,13 @@ document.addEventListener('click', e => {
     return;
   }
   if (e.target.closest && e.target.closest('#sb-close')) { setSidebarOpen(false); return; }
-  if (e.target.closest && e.target.closest('#menu-btn')) { setSidebarOpen(!isSidebarOpen()); return; }
+  if (e.target.closest && e.target.closest('#menu-btn')) {
+    // State-dependent per Dave's rule: with the right (detail) panel open, the
+    // floating › closes it (same screen position as the drawer's open chevron).
+    const _vb = document.getElementById('view-buddy');
+    if (_vb && _vb.classList.contains('active') && (_vb.classList.contains('panel') || _vb.classList.contains('sheet'))) { closeDetail(); return; }
+    setSidebarOpen(!isSidebarOpen()); return;
+  }
   if (e.target.closest && e.target.closest('#sb-scrim')) { setSidebarOpen(false); return; }
   if (e.target.closest && e.target.closest('#ghtok2-save')) {
     const v = document.getElementById('ghtok2').value.trim();

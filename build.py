@@ -3928,7 +3928,13 @@ document.addEventListener('click', e => {
     return;
   }
   if (e.target.closest && e.target.closest('#sb-close')) { setSidebarOpen(false); return; }
-  if (e.target.closest && e.target.closest('#menu-btn')) { setSidebarOpen(!isSidebarOpen()); return; }
+  if (e.target.closest && e.target.closest('#menu-btn')) {
+    // State-dependent per Dave's rule: with the right (detail) panel open, the
+    // floating › closes it (same screen position as the drawer's open chevron).
+    const _vb = document.getElementById('view-buddy');
+    if (_vb && _vb.classList.contains('active') && (_vb.classList.contains('panel') || _vb.classList.contains('sheet'))) { closeDetail(); return; }
+    setSidebarOpen(!isSidebarOpen()); return;
+  }
   if (e.target.closest && e.target.closest('#sb-scrim')) { setSidebarOpen(false); return; }
   if (e.target.closest && e.target.closest('#ghtok2-save')) {
     const v = document.getElementById('ghtok2').value.trim();

@@ -3,6 +3,11 @@
 All notable changes to the Buddies dashboard and buddy system. Newest first.
 `FEATURES.md` describes the current state; this file describes how it got there.
 
+## 2026-10-11 (Floating chevron fix)
+
+### Fixed
+- **Floating `>` chevron is state-dependent (Dave's rule):** on iPhone, tapping the floating `>` while the right (detail) panel is open now closes the right panel and returns to the current view (e.g. tree). Previously it toggled the left drawer open, which was wrong. With the right panel closed, it still toggles the left drawer as before.
+
 ## 2026-10-11 (AKAs for any buddy)
 
 ### Added
