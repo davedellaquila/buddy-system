@@ -1,11 +1,37 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="auto">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Housing Buddy — Homepage</title>
 <style>
-  :root {
+  :root, :root[data-theme="light"] {
+    --bg: #f6f2e9;
+    --bg2: #efe9d9;
+    --card: #fffdf7;
+    --border: #e0d5b8;
+    --text: #232b3a;
+    --muted: #687182;
+    --gold: #9a6f1c;
+    --green: #2e7d4f;
+    --blue: #2b6cb0;
+    --red: #b04a4a;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0e1420;
+      --bg2: #141c2c;
+      --card: #1a2334;
+      --border: #2b3852;
+      --text: #eef2f9;
+      --muted: #9aa7bf;
+      --gold: #e0b45c;
+      --green: #6fce8f;
+      --blue: #6aa8d8;
+      --red: #e08a8a;
+    }
+  }
+  :root[data-theme="dark"] {
     --bg: #0e1420;
     --bg2: #141c2c;
     --card: #1a2334;
@@ -24,6 +50,7 @@
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
     line-height: 1.55;
     padding: 0 0 64px;
+    transition: background .25s ease, color .25s ease;
   }
   .wrap { max-width: 920px; margin: 0 auto; padding: 0 24px; }
   header.hero {
@@ -146,12 +173,67 @@
   footer { margin-top: 48px; padding-top: 20px; border-top: 1px solid var(--border); color: var(--muted); font-size: 13px; }
   footer a { color: var(--gold); }
   a { color: var(--gold); }
+  .theme-toggle {
+    position: absolute; top: 18px; right: 20px; z-index: 2;
+    background: var(--card); color: var(--muted);
+    border: 1px solid var(--border); border-radius: 999px;
+    padding: 6px 13px; font-size: 12.5px; font-weight: 600; cursor: pointer;
+  }
+  .theme-toggle:hover { border-color: var(--gold); color: var(--gold); }
+  /* ---- brain-dump box (matches dashboard ingest panel write path) ---- */
+  .dumpbox {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 22px;
+  }
+  .dumpbox-sub { color: var(--muted); font-size: 14px; margin-bottom: 14px; }
+  .dumpbox-sub code { background: var(--bg2); border: 1px solid var(--border); padding: 1px 6px; border-radius: 5px; font-size: 12.5px; }
+  .dumpbox textarea {
+    width: 100%; min-height: 96px; resize: vertical;
+    background: var(--bg); border: 1px solid var(--border); border-radius: 8px;
+    padding: 10px 12px; font-size: 14px; color: var(--text); font-family: inherit;
+  }
+  .dumpbox textarea:focus { outline: none; border-color: var(--gold); }
+  .dumpbox textarea:disabled { opacity: .55; }
+  .dumpbox-row { display: flex; align-items: center; gap: 12px; margin-top: 10px; flex-wrap: wrap; }
+  .dumpbox-btn {
+    background: var(--gold); color: #1a1408; border: none; border-radius: 8px;
+    padding: 9px 22px; font-size: 14px; font-weight: 600; cursor: pointer;
+  }
+  :root[data-theme="light"] .dumpbox-btn { color: #ffffff; }
+  @media (prefers-color-scheme: light) {
+    :root[data-theme="auto"] .dumpbox-btn { color: #ffffff; }
+  }
+  .dumpbox-btn:disabled { opacity: .45; cursor: default; }
+  .dumpbox-status { font-size: 13px; color: var(--muted); }
+  .dumpbox-token {
+    background: var(--bg); border: 1px dashed var(--border); border-radius: 8px;
+    padding: 12px 14px; margin-bottom: 12px; font-size: 14px;
+  }
+  .dumpbox-token p { margin-bottom: 8px; color: var(--muted); }
+  .dumpbox-tokenrow { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+  .dumpbox-tokenrow input {
+    flex: 1; min-width: 170px; background: var(--card); border: 1px solid var(--border);
+    border-radius: 8px; padding: 7px 10px; font-size: 13px; color: var(--text);
+  }
+  .dumpbox-tokenrow button {
+    background: transparent; color: var(--gold); border: 1px solid var(--gold);
+    border-radius: 8px; padding: 7px 14px; font-size: 13px; font-weight: 600; cursor: pointer;
+  }
+  .dumpbox-tokenrow a { color: var(--gold); font-size: 13px; }
+  .dumpbox-connect {
+    background: var(--bg); border: 1px dashed var(--border); border-radius: 8px;
+    padding: 14px 16px; margin-bottom: 12px; font-size: 14px;
+  }
+  .dumpbox-connect p { margin-bottom: 8px; color: var(--muted); }
 </style>
 </head>
 <body>
 <div class="wrap">
 
   <header class="hero">
+    <button class="theme-toggle" id="themeToggle" title="Toggle light / dark">🌗 Auto</button>
     <div class="kicker">Buddy Homepage</div>
     <h1>🏠 Housing Buddy</h1>
     <p class="mission">Your know-your-market real estate tool — <strong>what your home is worth</strong>, and <strong>where you should live next</strong>. One dashboard that stays current as prices, inventory, and local signals change.</p>
@@ -214,6 +296,28 @@
     <a class="btn ghost" href="https://docs.google.com/document/d/1XrG_FERFrw-mfCIO-jVsTEBWTo4oie2UvxRoJl9iAdo/edit">Re-read the brief</a>
   </div>
 
+  <h2>🧠 Brain dump <span class="rule"></span></h2>
+  <section class="dumpbox" data-buddy-id="housing-buddy">
+    <p class="dumpbox-sub">Dump what's on your mind about Housing Buddy — raw and unfiltered. Each dump lands in the buddy's repo (<code>docs/ingest.md</code>) as a timestamped entry.</p>
+    <div class="dumpbox-connect" hidden>
+      <p>🔒 Connect GitHub to unlock dumping. Paste a token once — it stays on this device only.</p>
+      <button type="button" class="dumpbox-btn">Connect GitHub to enable</button>
+    </div>
+    <div class="dumpbox-token" hidden>
+      <p>🔒 Connect GitHub to unlock dumping. Paste a token once — it stays on this device only.</p>
+      <div class="dumpbox-tokenrow">
+        <input type="password" placeholder="GitHub token (repo scope)" aria-label="GitHub token">
+        <button type="button">Save token</button>
+        <a href="https://github.com/settings/tokens" target="_blank" rel="noopener">Get a token</a>
+      </div>
+    </div>
+    <textarea rows="4" placeholder="Dump what's on your mind about Housing Buddy…"></textarea>
+    <div class="dumpbox-row">
+      <button type="button" class="dumpbox-btn">Dump it</button>
+      <span class="dumpbox-status" role="status"></span>
+    </div>
+  </section>
+
   <h2>Key decisions <span class="rule"></span></h2>
   <div class="decisions">
     <div class="decision"><div class="d">D1 · LEAD</div><p><strong>Valuation first.</strong> The saved-home pulse is the daily habit; AVM data is the most reliable input. Search ships as the second tab.</p></div>
@@ -249,9 +353,143 @@
   </a>
 
   <footer>
-    Mission source: <a href="https://docs.google.com/document/d/1XrG_FERFrw-mfCIO-jVsTEBWTo4oie2UvxRoJl9iAdo/edit">Housing Buddy — Product Brief</a> · Homepage last updated Oct 9, 2026
+    Mission source: <a href="https://docs.google.com/document/d/1XrG_FERFrw-mfCIO-jVsTEBWTo4oie2UvxRoJl9iAdo/edit">Housing Buddy — Product Brief</a> · Homepage last updated Oct 11, 2026
   </footer>
 
 </div>
+<script>
+  // Theme toggle: auto (OS) / light / dark, persisted per device.
+  (function () {
+    var root = document.documentElement;
+    var btn = document.getElementById("themeToggle");
+    var labels = { auto: "🌗 Auto", light: "🌞 Light", dark: "🌙 Dark" };
+    function apply(t) {
+      root.setAttribute("data-theme", t);
+      btn.textContent = labels[t];
+      try { localStorage.setItem("housing-buddy-theme", t); } catch (e) {}
+    }
+    var saved = null;
+    try { saved = localStorage.getItem("housing-buddy-theme"); } catch (e) {}
+    apply(saved === "light" || saved === "dark" ? saved : "auto");
+    btn.addEventListener("click", function () {
+      var cur = root.getAttribute("data-theme") || "auto";
+      apply(cur === "auto" ? "light" : cur === "light" ? "dark" : "auto");
+    });
+  })();
+</script>
+<script>
+// ---- brain-dump box: appends timestamped entries to docs/ingest.md
+// in this buddy's repo via the GitHub contents API (same write path as
+// the dashboard's ingest panel). Token lives in dashboard localStorage
+// (buddyTree.v3 → ghToken, shared origin); repo resolved from
+// ../buddies.json via data-buddy-id. No hardcoded repo names.
+// ---- dump-box JS (self-contained; no dependencies) ----
+(function(){
+  var box = document.querySelector('.dumpbox');
+  if (!box || box.dataset.dumpInit) return;
+  box.dataset.dumpInit = '1';
+  var bid = box.getAttribute('data-buddy-id') || (function(){
+    var p = location.pathname.replace(/\/+$/, '');
+    return p.substring(p.lastIndexOf('/') + 1);
+  })();
+  var ta = box.querySelector('textarea'),
+      btn = box.querySelector('.dumpbox-row .dumpbox-btn'),
+      st = box.querySelector('.dumpbox-status'),
+      tokWrap = box.querySelector('.dumpbox-token'),
+      connectWrap = box.querySelector('.dumpbox-connect'),
+      connectBtn = connectWrap.querySelector('.dumpbox-btn');
+  function lsGet(){ try { return JSON.parse(localStorage.getItem('buddyTree.v3') || '{}'); } catch(e){ return {}; } }
+  function lsSet(patch){ try { var s = lsGet(); for (var k in patch) s[k] = patch[k]; localStorage.setItem('buddyTree.v3', JSON.stringify(s)); } catch(e){} }
+  function token(){ return lsGet().ghToken || ''; }
+  function b64encode(str){
+    var bytes = new TextEncoder().encode(str), bin = '';
+    bytes.forEach(function(b){ bin += String.fromCharCode(b); });
+    return btoa(bin);
+  }
+  async function ghApi(path, method, body){
+    var t = token();
+    if (!t) throw new Error('Add a GitHub token first.');
+    var r = await fetch('https://api.github.com' + path, {
+      method: method || 'GET',
+      headers: {'Authorization': 'Bearer ' + t, 'Accept': 'application/vnd.github+json', 'Content-Type': 'application/json'},
+      body: body ? JSON.stringify(body) : undefined
+    });
+    if (!r.ok) throw new Error('GitHub ' + r.status);
+    return r.status === 204 ? null : await r.json();
+  }
+  async function ghGetFile(repo, path){
+    try {
+      var j = await ghApi('/repos/davedellaquila/' + repo + '/contents/' + path);
+      if (j && j.content) return {
+        text: new TextDecoder().decode(Uint8Array.from(atob(j.content.replace(/\n/g, '')), function(c){ return c.charCodeAt(0); })),
+        sha: j.sha
+      };
+    } catch(e){}
+    return null;
+  }
+  var repo = null, repoName = bid;
+  async function resolveRepo(){
+    try {
+      var r = await fetch('../buddies.json', {cache: 'no-store'});
+      var d = await r.json();
+      var buds = d.buddies || [];
+      for (var i = 0; i < buds.length; i++) {
+        if (buds[i].id === bid && buds[i].repo) { repo = buds[i].repo; repoName = buds[i].name || bid; break; }
+      }
+    } catch(e){}
+  }
+  function refreshUI(){
+    var has = !!token();
+    connectWrap.hidden = has;
+    if (has) tokWrap.hidden = true;
+    var ok = has && !!repo;
+    ta.disabled = !ok;
+    btn.disabled = !ok;
+    if (!has) { st.textContent = ''; }
+    else if (!repo) { st.textContent = 'No repo linked for this buddy yet.'; }
+  }
+  var tokInput = tokWrap.querySelector('input'),
+      tokSave = tokWrap.querySelector('button');
+  connectBtn.addEventListener('click', function(){
+    tokWrap.hidden = false;
+    if (tokInput) tokInput.focus();
+  });
+  tokSave.addEventListener('click', function(){
+    var v = tokInput.value.trim();
+    if (!v) return;
+    lsSet({ghToken: v});
+    tokInput.value = '';
+    tokWrap.hidden = true;
+    refreshUI();
+    st.textContent = 'Token saved on this device.';
+  });
+  async function dump(){
+    var text = ta.value.trim();
+    if (!text) return;
+    if (!token()) { refreshUI(); return; }
+    if (!repo) { st.textContent = 'No repo linked for this buddy yet.'; return; }
+    st.textContent = 'Dumping…';
+    btn.disabled = true;
+    try {
+      var stamp = new Date().toLocaleString();
+      var NL = String.fromCharCode(10);
+      var entry = '## ' + stamp + NL + NL + text + NL + NL;
+      var cur = await ghGetFile(repo, 'docs/ingest.md');
+      var base = cur ? cur.text : '# Ingest log — ' + repoName + NL + NL;
+      var body = {message: 'Ingest dump for ' + bid, content: b64encode(base + entry)};
+      if (cur && cur.sha) body.sha = cur.sha;
+      await ghApi('/repos/davedellaquila/' + repo + '/contents/docs/ingest.md', 'PUT', body);
+      ta.value = '';
+      st.textContent = '✓ Dumped to ' + repo + '/docs/ingest.md';
+    } catch(err){ st.textContent = 'Save failed: ' + (err.message || err); }
+    btn.disabled = false;
+  }
+  btn.addEventListener('click', dump);
+  ta.addEventListener('keydown', function(ev){
+    if ((ev.metaKey || ev.ctrlKey) && ev.key === 'Enter') { ev.preventDefault(); dump(); }
+  });
+  resolveRepo().then(refreshUI);
+})();
+</script>
 </body>
 </html>

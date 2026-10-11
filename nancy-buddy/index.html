@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Nancy Buddy — Living dossier for Nan</title>
+<title>Nan's Buddy — Living dossier for Nan</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>👩‍🍳</text></svg>">
 <style>
   :root {
@@ -133,10 +133,77 @@
 
   .photostrip { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 14px; }
   .photo { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 10px; max-width: 250px;
-           box-shadow: 0 3px 10px rgba(59,47,38,.08); transform: rotate(-1deg); }
+           box-shadow: 0 3px 10px rgba(59,47,38,.08); transform: rotate(-1deg); position: relative; }
   .photo:nth-child(even) { transform: rotate(1deg); }
   .photo img { width: 100%; border-radius: 8px; display: block; }
   .photo figcaption { font-size: 12px; color: var(--dim); margin-top: 8px; text-align: center; }
+  .photo .trash {
+    position: absolute; top: 6px; right: 6px; width: 32px; height: 32px; border-radius: 50%;
+    border: 1px solid var(--line); background: var(--card); cursor: pointer; font-size: 15px; line-height: 1;
+    opacity: 0; transition: opacity .15s; box-shadow: 0 2px 6px rgba(59,47,38,.18); padding: 0;
+  }
+  .photo:hover .trash, .photo .trash:focus-visible { opacity: 1; }
+  @media (hover: none) { .photo .trash { opacity: .9; } }
+  .photo.spotlight { outline: 3px solid var(--terra); outline-offset: 4px; animation: photopulse 1.8s ease; }
+  @keyframes photopulse { 0%,100% { outline-color: var(--terra); } 50% { outline-color: var(--rose); } }
+  .photostrip .photo img { cursor: zoom-in; }
+  /* Full-screen photo lightbox */
+  #lightbox { position: fixed; inset: 0; z-index: 200; display: flex; align-items: center; justify-content: center; }
+  #lightbox[hidden] { display: none; }
+  .lb-backdrop { position: absolute; inset: 0; background: rgba(20,14,10,.9); backdrop-filter: blur(6px); }
+  .lb-figure { position: relative; margin: 0; max-width: 94vw; text-align: center; }
+  .lb-figure img { max-width: 94vw; max-height: 76vh; border-radius: 12px; box-shadow: 0 12px 48px rgba(0,0,0,.5); object-fit: contain; background: #141414; }
+  .lb-figure figcaption { color: #f5efe6; font-size: 15px; margin-top: 12px; padding: 0 16px; }
+  .lb-controls { position: absolute; left: 50%; transform: translateX(-50%); bottom: max(20px, env(safe-area-inset-bottom)); display: flex; gap: 10px; }
+  .lb-controls button { min-width: 52px; min-height: 48px; padding: 10px 18px; border-radius: 999px; border: 1px solid rgba(255,255,255,.28); background: rgba(30,24,18,.88); color: #f5efe6; font-size: 16px; cursor: pointer; backdrop-filter: blur(4px); }
+  .lb-controls button:active { transform: scale(.96); }
+  #lbClose { position: absolute; top: max(14px, env(safe-area-inset-top)); right: 14px; width: 48px; height: 48px; border-radius: 50%; border: 1px solid rgba(255,255,255,.28); background: rgba(30,24,18,.88); color: #f5efe6; font-size: 20px; cursor: pointer; z-index: 1; }
+  .lb-hint { position: absolute; top: max(22px, env(safe-area-inset-top)); left: 18px; color: rgba(245,239,230,.55); font-size: 12px; }
+  .photo-tools { display: flex; gap: 10px; margin-top: 14px; flex-wrap: wrap; align-items: center; }
+  .btn.ghost { background: var(--card); color: var(--ink); border: 1px solid var(--line); }
+  .btn.ghost:hover { background: var(--terra-soft); }
+
+  .dumpbox {
+    background: var(--card); border: 1px solid var(--line); border-radius: 12px;
+    padding: 20px 22px; margin: 0 0 24px; box-shadow: 0 3px 10px rgba(59,47,38,.08);
+  }
+  .dumpbox h2 { margin: 0 0 6px; font-size: 20px; }
+  .dumpbox-sub { color: var(--dim); font-size: 14px; margin-bottom: 14px; }
+  .dumpbox textarea {
+    width: 100%; min-height: 96px; resize: vertical;
+    background: var(--paper); border: 1px solid var(--line); border-radius: 8px;
+    padding: 10px 12px; font-size: 14px; color: var(--ink); font-family: inherit;
+  }
+  .dumpbox textarea:focus { outline: none; border-color: var(--terra); }
+  .dumpbox textarea:disabled { opacity: .55; }
+  .dumpbox-row { display: flex; align-items: center; gap: 12px; margin-top: 10px; flex-wrap: wrap; }
+  .dumpbox-btn {
+    background: var(--terra); color: #fff; border: none; border-radius: 8px;
+    padding: 9px 22px; font-size: 14px; font-weight: 600; cursor: pointer; font-family: inherit;
+  }
+  .dumpbox-btn:hover:not(:disabled) { background: #A95C3B; }
+  .dumpbox-btn:disabled { opacity: .45; cursor: default; }
+  .dumpbox-status { font-size: 13px; color: var(--dim); }
+  .dumpbox-token {
+    background: var(--paper); border: 1px dashed var(--line); border-radius: 8px;
+    padding: 12px 14px; margin-bottom: 12px; font-size: 14px;
+  }
+  .dumpbox-token p { margin-bottom: 8px; }
+.dumpbox-connect {
+    background: var(--paper); border: 1px dashed var(--line); border-radius: 8px;
+    padding: 12px 14px; margin-bottom: 12px; font-size: 14px;
+  }
+.dumpbox-connect p { margin-bottom: 8px; }
+  .dumpbox-tokenrow { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+  .dumpbox-tokenrow input {
+    flex: 1; min-width: 170px; background: var(--card); border: 1px solid var(--line);
+    border-radius: 8px; padding: 7px 10px; font-size: 13px; color: var(--ink); font-family: inherit;
+  }
+  .dumpbox-tokenrow button {
+    background: transparent; color: var(--terra); border: 1px solid var(--terra);
+    border-radius: 8px; padding: 7px 14px; font-size: 13px; font-weight: 600; cursor: pointer; font-family: inherit;
+  }
+  .dumpbox-tokenrow a { color: var(--terra); font-size: 13px; }
 
   .quotes { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 14px; margin-top: 14px; }
   .quotes blockquote {
@@ -160,9 +227,9 @@
 
   <header class="hero">
     <div class="kicker">Family Buddy · child</div>
-    <h1 class="serif"><span class="ico">👩‍🍳</span>Nancy Buddy</h1>
+    <h1 class="serif"><span class="ico">👩‍🍳</span><span id="buddyTitle">Nan's Buddy</span></h1>
     <div class="tagline serif">The living dossier for Nan.</div>
-    <p class="mission">Nancy Buddy is the one place for everything Dave needs to <b>remember, track, and do</b> regarding Nan — key facts, important dates, notes, reminders, and gift ideas. Where Relationship Buddy maintains relationships broadly, Nancy Buddy goes deep on one person.</p>
+    <p class="mission">Nan's Buddy is the one place for everything Dave needs to <b>remember, track, and do</b> regarding Nan — key facts, important dates, notes, reminders, and gift ideas. Where Relationship Buddy maintains relationships broadly, Nan's Buddy goes deep on one person.</p>
     <div class="meta">
       <span class="pill st">📝 Brief review</span>
       <a class="pill" href="https://docs.google.com/document/d/1cYab49CDpdfPlD5xzL0EXKm11XAObvBhi0yPw_2Pskk/edit" target="_blank" rel="noopener">📄 Product brief</a>
@@ -170,6 +237,28 @@
       <span class="pill">🏠 Parent: Family Buddy</span>
     </div>
   </header>
+
+  <section class="dumpbox" data-buddy-id="nancy-buddy">
+    <h2 class="serif">🧠 Brain dump</h2>
+    <p class="dumpbox-sub">Dump what's on your mind about Nan — raw and unfiltered. Each dump lands in her repo (docs/ingest.md) as a timestamped entry.</p>
+    <div class="dumpbox-connect" hidden>
+      <p>🔒 Connect GitHub to unlock dumping. Paste a token once — it stays on this device only.</p>
+      <button type="button" class="dumpbox-btn">Connect GitHub to enable</button>
+    </div>
+    <div class="dumpbox-token" hidden>
+      <p>🔒 Connect GitHub to unlock dumping. Paste a token once — it stays on this device only.</p>
+      <div class="dumpbox-tokenrow">
+        <input type="password" placeholder="GitHub token (repo scope)" aria-label="GitHub token">
+        <button type="button">Save token</button>
+        <a href="https://github.com/settings/tokens" target="_blank" rel="noopener">Get a token</a>
+      </div>
+    </div>
+    <textarea rows="4" placeholder="Dump what's on your mind about Nan…"></textarea>
+    <div class="dumpbox-row">
+      <button type="button" class="dumpbox-btn">Dump it</button>
+      <span class="dumpbox-status" role="status"></span>
+    </div>
+  </section>
 
   <h2 class="serif">On my mind <span class="sub">What needs Dave's attention</span></h2>
   <div class="mind">
@@ -180,12 +269,12 @@
   <div class="mind amber">
     <div class="dot">💵</div>
     <div><div class="t">Grocery stipend review is open</div>
-    <div class="d">$1,200/mo stipend, under review. Dave's hunch: he's not getting $1,200 worth of meals. The tracker will tell the truth — see below.</div></div>
+    <div class="d">$1,200/mo stipend, under review. Dave's hunch: he's not getting $1,200 worth of meals. The <a href="https://docs.google.com/spreadsheets/d/1n-IWRQpKcK3IcGGjDsropoL9EUO-fypBEirGbGp0HJg/edit" target="_blank" rel="noopener">tracker</a> will tell the truth — see below.</div></div>
   </div>
   <div class="mind sage">
     <div class="dot">🎁</div>
     <div><div class="t">Gift ideas: blank slate — and her birthday is November 4</div>
-    <div class="d">No gift ideas logged yet, and November 4 is less than a month out. The boards below are ready whenever inspiration strikes.</div></div>
+    <div class="d">No gift ideas logged yet, and November 4 is less than a month out. The <a href="#gifts">boards below</a> are ready whenever inspiration strikes.</div></div>
   </div>
 
   <h2 class="serif">Who Nan is <span class="sub">Only what's known — unknowns stay unknown</span></h2>
@@ -234,6 +323,16 @@
       <img src="photos/engagement.jpg" alt="Quentin and Amanda engagement announcement">
       <figcaption>"She said YES" · Quentin &amp; Amanda engaged · Aug 2026</figcaption>
     </figure>
+    <figure class="photo">
+      <img src="photos/nan-2026-10-11.jpg" alt="Nan, October 2026">
+      <figcaption>Nan · Oct 2026</figcaption>
+    </figure>
+  </div>
+  <div class="photo-tools">
+    <button class="btn" onclick="document.getElementById('photoFile').click()">➕ Add a photo</button>
+    <input type="file" id="photoFile" accept="image/*" style="display:none" onchange="addPhoto(event)">
+    <button class="btn ghost" onclick="surprisePhoto()">🎲 Surprise me</button>
+    <button class="btn ghost" id="restoreBtn" onclick="restorePhotos()" style="display:none">↩ Restore hidden</button>
   </div>
 
   <h2 class="serif">In her own words <span class="sub">From Nan's Facebook posts</span></h2>
@@ -302,7 +401,7 @@
   </div>
 
   <footer>
-    <span>👩‍🍳 Nancy Buddy · child of <b>Family Buddy</b></span>
+    <span>👩‍🍳 Nan's Buddy · child of <b>Family Buddy</b></span>
     <span><a href="https://docs.google.com/document/d/1cYab49CDpdfPlD5xzL0EXKm11XAObvBhi0yPw_2Pskk/edit" target="_blank" rel="noopener">Product brief</a></span>
     <span><a href="https://github.com/davedellaquila/nancy-buddy" target="_blank" rel="noopener">davedellaquila/nancy-buddy</a></span>
   </footer>
@@ -311,7 +410,7 @@
 <script>
 const KEY = "nancy-buddy-v1";
 const esc = s => s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
-let store = { notes: [], reminders: [], dates: [], gifts: [] };
+let store = { notes: [], reminders: [], dates: [], gifts: [], hiddenPhotos: [], customPhotos: [], captionOverrides: {} };
 try {
   const raw = localStorage.getItem(KEY);
   if (raw) store = Object.assign(store, JSON.parse(raw));
@@ -330,7 +429,7 @@ function renderNotes() {
   const el = document.getElementById("notes");
   el.innerHTML = store.notes.length ? store.notes.map((n, i) =>
     `<div class="note"><button class="x" onclick="delNote(${i})" title="Remove">✕</button><p>${esc(n.text)}</p><div class="when">${esc(n.when || "")}</div></div>`
-  ).join("") : `<div class="empty">No notes pinned yet — the two above this line are seeded from what Nancy Buddy already knows.</div>`;
+  ).join("") : `<div class="empty">No notes pinned yet — the two above this line are seeded from what Nan's Buddy already knows.</div>`;
 }
 function addNote() {
   const t = document.getElementById("noteInput").value.trim();
@@ -401,7 +500,323 @@ function addGift() {
 }
 function delGift(i) { store.gifts.splice(i, 1); save(); renderGifts(); }
 
-renderNotes(); renderReminders(); renderDates(); renderGifts();
+// Photo manager: trash, add, surprise — all saved on this device
+function renderPhotos() {
+  const strip = document.getElementById("photostrip");
+  strip.querySelectorAll("figure.photo:not(.custom)").forEach(fig => {
+    const img = fig.querySelector("img");
+    const src = img ? img.getAttribute("src") : null;
+    fig.style.display = (src && store.hiddenPhotos.includes(src)) ? "none" : "";
+    if (src) {
+      fig.dataset.pkind = "baked"; fig.dataset.psrc = src;
+      const ov = store.captionOverrides && store.captionOverrides[src];
+      const capEl = fig.querySelector("figcaption");
+      if (ov && capEl) capEl.textContent = ov;
+    }
+    if (img && !fig.querySelector(".trash")) {
+      const b = document.createElement("button");
+      b.className = "trash"; b.title = "Remove this photo"; b.textContent = "🗑️";
+      b.setAttribute("aria-label", "Remove this photo");
+      b.onclick = () => trashPhoto(src);
+      fig.appendChild(b);
+    }
+  });
+  strip.querySelectorAll("figure.photo.custom").forEach(f => f.remove());
+  store.customPhotos.forEach((p, i) => {
+    const fig = document.createElement("figure");
+    fig.className = "photo custom";
+    fig.dataset.pkind = "custom"; fig.dataset.pindex = i;
+    const img = document.createElement("img");
+    img.src = p.src; img.alt = p.caption || "Added photo";
+    const cap = document.createElement("figcaption");
+    cap.textContent = p.caption || "";
+    const b = document.createElement("button");
+    b.className = "trash"; b.title = "Remove this photo"; b.textContent = "🗑️";
+    b.setAttribute("aria-label", "Remove this photo");
+    b.onclick = () => { store.customPhotos.splice(i, 1); save(); renderPhotos(); };
+    fig.appendChild(img); fig.appendChild(cap); fig.appendChild(b);
+    strip.appendChild(fig);
+  });
+  document.getElementById("restoreBtn").style.display = store.hiddenPhotos.length ? "" : "none";
+}
+function trashPhoto(src) {
+  if (src && !store.hiddenPhotos.includes(src)) store.hiddenPhotos.push(src);
+  save(); renderPhotos();
+}
+function restorePhotos() {
+  store.hiddenPhotos = [];
+  save(); renderPhotos();
+}
+function addPhoto(ev) {
+  const file = ev.target.files[0];
+  ev.target.value = "";
+  if (!file) return;
+  const caption = prompt("Caption for this photo:", "");
+  if (caption === null) return;
+  const reader = new FileReader();
+  reader.onload = () => {
+    const img = new Image();
+    img.onload = () => {
+      const max = 1200, scale = Math.min(1, max / Math.max(img.width, img.height));
+      const c = document.createElement("canvas");
+      c.width = Math.round(img.width * scale);
+      c.height = Math.round(img.height * scale);
+      c.getContext("2d").drawImage(img, 0, 0, c.width, c.height);
+      try {
+        store.customPhotos.push({ src: c.toDataURL("image/jpeg", 0.85), caption: caption.trim() || ("Added " + today()) });
+        save(); renderPhotos();
+      } catch (e) { alert("Couldn't save that photo — the browser's local storage is full."); return; }
+      const figs = document.querySelectorAll("#photostrip figure.photo:not([style*='none'])");
+      const last = figs[figs.length - 1];
+      if (last) last.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    };
+    img.src = reader.result;
+  };
+  reader.readAsDataURL(file);
+}
+function surprisePhoto() {
+  const figs = [...document.querySelectorAll("#photostrip figure.photo")].filter(f => f.style.display !== "none");
+  if (!figs.length) return;
+  document.querySelectorAll("#photostrip figure.photo.spotlight").forEach(f => f.classList.remove("spotlight"));
+  const pick = figs[Math.floor(Math.random() * figs.length)];
+  pick.scrollIntoView({ behavior: "smooth", block: "center" });
+  pick.classList.add("spotlight");
+  setTimeout(() => pick.classList.remove("spotlight"), 1900);
+}
+
+// Full-screen photo lightbox: tap any photo -> view it big, edit caption, share, delete
+let lbPhoto = null;
+function lbCaption(desc, fig) {
+  if (desc.kind === "custom") return (store.customPhotos[desc.index] && store.customPhotos[desc.index].caption) || "";
+  const ov = store.captionOverrides && store.captionOverrides[desc.src];
+  if (ov) return ov;
+  const cap = fig ? fig.querySelector("figcaption") : null;
+  return cap ? cap.textContent : "";
+}
+function openLightbox(fig) {
+  const kind = fig.dataset.pkind, img = fig.querySelector("img");
+  if (!img) return;
+  lbPhoto = kind === "custom"
+    ? { kind, index: parseInt(fig.dataset.pindex, 10), src: img.getAttribute("src") }
+    : { kind: "baked", src: img.getAttribute("src") };
+  const lbImg = document.getElementById("lbImg");
+  lbImg.src = img.src; lbImg.alt = img.alt || "Photo";
+  document.getElementById("lbCap").textContent = lbCaption(lbPhoto, fig);
+  document.getElementById("lightbox").hidden = false;
+  document.body.style.overflow = "hidden";
+  document.getElementById("lbClose").focus();
+}
+function closeLightbox() {
+  document.getElementById("lightbox").hidden = true;
+  document.body.style.overflow = "";
+  lbPhoto = null;
+}
+function refreshLightboxCaption() {
+  if (!lbPhoto) return;
+  let fig = null;
+  document.querySelectorAll("#photostrip figure.photo").forEach(f => {
+    if (lbPhoto.kind === "custom" && f.dataset.pkind === "custom" && parseInt(f.dataset.pindex, 10) === lbPhoto.index) fig = f;
+    if (lbPhoto.kind === "baked" && f.dataset.pkind === "baked" && f.dataset.psrc === lbPhoto.src) fig = f;
+  });
+  document.getElementById("lbCap").textContent = lbCaption(lbPhoto, fig);
+}
+function editLbCaption() {
+  if (!lbPhoto) return;
+  const next = prompt("Edit caption:", document.getElementById("lbCap").textContent);
+  if (next === null) return;
+  if (lbPhoto.kind === "custom") {
+    const p = store.customPhotos[lbPhoto.index];
+    if (p) p.caption = next.trim();
+  } else {
+    store.captionOverrides[lbPhoto.src] = next.trim();
+  }
+  save(); renderPhotos(); refreshLightboxCaption();
+}
+function deleteLbPhoto() {
+  if (!lbPhoto) return;
+  if (!confirm("Delete this photo?")) return;
+  if (lbPhoto.kind === "custom") {
+    store.customPhotos.splice(lbPhoto.index, 1);
+  } else if (lbPhoto.src && !store.hiddenPhotos.includes(lbPhoto.src)) {
+    store.hiddenPhotos.push(lbPhoto.src);
+  }
+  save(); renderPhotos(); closeLightbox();
+}
+async function shareLbPhoto() {
+  if (!lbPhoto) return;
+  const caption = document.getElementById("lbCap").textContent;
+  const src = document.getElementById("lbImg").src;
+  try {
+    const res = await fetch(src);
+    const blob = await res.blob();
+    const file = new File([blob], "nans-buddy-photo.jpg", { type: blob.type || "image/jpeg" });
+    if (navigator.canShare && navigator.canShare({ files: [file] })) {
+      await navigator.share({ files: [file], title: caption, text: caption });
+      return;
+    }
+  } catch (e) {}
+  try {
+    if (navigator.share) { await navigator.share({ title: caption, text: caption }); return; }
+  } catch (e) {}
+  const a = document.createElement("a");
+  a.href = src; a.download = "nans-buddy-photo.jpg";
+  document.body.appendChild(a); a.click(); a.remove();
+}
+document.getElementById("photostrip").addEventListener("click", function(ev) {
+  if (ev.target.closest(".trash")) return;
+  const fig = ev.target.closest("figure.photo");
+  if (fig && fig.dataset.pkind) openLightbox(fig);
+});
+document.getElementById("lbBackdrop").addEventListener("click", closeLightbox);
+document.getElementById("lbClose").addEventListener("click", closeLightbox);
+document.getElementById("lbEdit").addEventListener("click", editLbCaption);
+document.getElementById("lbDelete").addEventListener("click", deleteLbPhoto);
+document.getElementById("lbShare").addEventListener("click", shareLbPhoto);
+document.addEventListener("keydown", function(ev) {
+  if (ev.key === "Escape" && !document.getElementById("lightbox").hidden) closeLightbox();
+});
+
+renderNotes(); renderReminders(); renderDates(); renderGifts(); renderPhotos();
+
+// Keep the displayed buddy name in sync with the registry (buddies.json),
+// so a rename reflects here immediately without a homepage rebuild.
+(function(){
+  fetch('../buddies.json', {cache: 'no-store'}).then(function(r){ return r.json(); }).then(function(d){
+    var buds = (d && d.buddies) || [];
+    for (var i = 0; i < buds.length; i++) {
+      if (buds[i].id === 'nancy-buddy' && buds[i].name) {
+        var name = buds[i].name;
+        var t = document.getElementById('buddyTitle');
+        if (t) t.textContent = name;
+        document.title = name + ' — Living dossier for Nan';
+        break;
+      }
+    }
+  }).catch(function(){});
+})();
 </script>
+<script>
+// ---- dump-box JS (self-contained; no dependencies) ----
+(function(){
+  var box = document.querySelector('.dumpbox');
+  if (!box || box.dataset.dumpInit) return;
+  box.dataset.dumpInit = '1';
+  var bid = box.getAttribute('data-buddy-id') || (function(){
+    var p = location.pathname.replace(/\/+$/, '');
+    return p.substring(p.lastIndexOf('/') + 1);
+  })();
+  var ta = box.querySelector('textarea'),
+      btn = box.querySelector('.dumpbox-row .dumpbox-btn'),
+      st = box.querySelector('.dumpbox-status'),
+      tokWrap = box.querySelector('.dumpbox-token'),
+      connectWrap = box.querySelector('.dumpbox-connect'),
+      connectBtn = connectWrap.querySelector('.dumpbox-btn');
+  function lsGet(){ try { return JSON.parse(localStorage.getItem('buddyTree.v3') || '{}'); } catch(e){ return {}; } }
+  function lsSet(patch){ try { var s = lsGet(); for (var k in patch) s[k] = patch[k]; localStorage.setItem('buddyTree.v3', JSON.stringify(s)); } catch(e){} }
+  function token(){ return lsGet().ghToken || ''; }
+  function b64encode(str){
+    var bytes = new TextEncoder().encode(str), bin = '';
+    bytes.forEach(function(b){ bin += String.fromCharCode(b); });
+    return btoa(bin);
+  }
+  async function ghApi(path, method, body){
+    var t = token();
+    if (!t) throw new Error('Add a GitHub token first.');
+    var r = await fetch('https://api.github.com' + path, {
+      method: method || 'GET',
+      headers: {'Authorization': 'Bearer ' + t, 'Accept': 'application/vnd.github+json', 'Content-Type': 'application/json'},
+      body: body ? JSON.stringify(body) : undefined
+    });
+    if (!r.ok) throw new Error('GitHub ' + r.status);
+    return r.status === 204 ? null : await r.json();
+  }
+  async function ghGetFile(repo, path){
+    try {
+      var j = await ghApi('/repos/davedellaquila/' + repo + '/contents/' + path);
+      if (j && j.content) return {
+        text: new TextDecoder().decode(Uint8Array.from(atob(j.content.replace(/\n/g, '')), function(c){ return c.charCodeAt(0); })),
+        sha: j.sha
+      };
+    } catch(e){}
+    return null;
+  }
+  var repo = null, repoName = bid;
+  async function resolveRepo(){
+    try {
+      var r = await fetch('../buddies.json', {cache: 'no-store'});
+      var d = await r.json();
+      var buds = d.buddies || [];
+      for (var i = 0; i < buds.length; i++) {
+        if (buds[i].id === bid && buds[i].repo) { repo = buds[i].repo; repoName = buds[i].name || bid; break; }
+      }
+    } catch(e){}
+  }
+  function refreshUI(){
+    var has = !!token();
+    connectWrap.hidden = has;
+    if (has) tokWrap.hidden = true;
+    var ok = has && !!repo;
+    ta.disabled = !ok;
+    btn.disabled = !ok;
+    if (!has) { st.textContent = ''; }
+    else if (!repo) { st.textContent = 'No repo linked for this buddy yet.'; }
+  }
+  var tokInput = tokWrap.querySelector('input'),
+      tokSave = tokWrap.querySelector('button');
+  connectBtn.addEventListener('click', function(){
+    tokWrap.hidden = false;
+    if (tokInput) tokInput.focus();
+  });
+  tokSave.addEventListener('click', function(){
+    var v = tokInput.value.trim();
+    if (!v) return;
+    lsSet({ghToken: v});
+    tokInput.value = '';
+    tokWrap.hidden = true;
+    refreshUI();
+    st.textContent = 'Token saved on this device.';
+  });
+  async function dump(){
+    var text = ta.value.trim();
+    if (!text) return;
+    if (!token()) { refreshUI(); return; }
+    if (!repo) { st.textContent = 'No repo linked for this buddy yet.'; return; }
+    st.textContent = 'Dumping…';
+    btn.disabled = true;
+    try {
+      var stamp = new Date().toLocaleString();
+      var NL = String.fromCharCode(10);
+      var entry = '## ' + stamp + NL + NL + text + NL + NL;
+      var cur = await ghGetFile(repo, 'docs/ingest.md');
+      var base = cur ? cur.text : '# Ingest log — ' + repoName + NL + NL;
+      var body = {message: 'Ingest dump for ' + bid, content: b64encode(base + entry)};
+      if (cur && cur.sha) body.sha = cur.sha;
+      await ghApi('/repos/davedellaquila/' + repo + '/contents/docs/ingest.md', 'PUT', body);
+      ta.value = '';
+      st.textContent = '✓ Dumped to ' + repo + '/docs/ingest.md';
+    } catch(err){ st.textContent = 'Save failed: ' + (err.message || err); }
+    btn.disabled = false;
+  }
+  btn.addEventListener('click', dump);
+  ta.addEventListener('keydown', function(ev){
+    if ((ev.metaKey || ev.ctrlKey) && ev.key === 'Enter') { ev.preventDefault(); dump(); }
+  });
+  resolveRepo().then(refreshUI);
+})();
+</script>
+<div id="lightbox" role="dialog" aria-modal="true" aria-label="Photo viewer" hidden>
+  <div class="lb-backdrop" id="lbBackdrop"></div>
+  <span class="lb-hint">tap outside or ✕ to close</span>
+  <button id="lbClose" aria-label="Close photo viewer">✕</button>
+  <figure class="lb-figure">
+    <img id="lbImg" alt="">
+    <figcaption id="lbCap"></figcaption>
+  </figure>
+  <div class="lb-controls">
+    <button id="lbEdit" aria-label="Edit caption">✏️ Edit</button>
+    <button id="lbShare" aria-label="Share photo">📤 Share</button>
+    <button id="lbDelete" aria-label="Delete photo">🗑️ Delete</button>
+  </div>
+</div>
 </body>
 </html>

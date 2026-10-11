@@ -110,6 +110,52 @@
     animation:stampin .5s cubic-bezier(.2,2.4,.4,1) both;
   }
   @keyframes stampin{from{transform:rotate(-4deg) scale(1.6); opacity:0} to{transform:rotate(-4deg) scale(1); opacity:.85}}
+  .dumpbox{
+    position:relative; background:var(--panel); border:1px solid var(--line);
+    border-radius:4px 12px 12px 12px; padding:32px 20px 18px; margin-top:38px;
+  }
+  .dumpbox::before{
+    content:"IN-TRAY"; position:absolute; top:-1px; left:14px; padding:5px 14px 7px;
+    background:var(--blue-soft); color:var(--blue); border:1px solid var(--line); border-top:none;
+    border-radius:0 0 8px 8px; font-size:11px; font-weight:800; letter-spacing:1.6px;
+  }
+  .dumpbox h2{margin:8px 0 4px; font-size:20px}
+  .dumpbox-sub{color:var(--muted); font-size:14px; margin:0 0 14px}
+  .dumpbox textarea{
+    width:100%; min-height:96px; resize:vertical; box-sizing:border-box;
+    background:var(--bg); border:1px solid var(--line); border-radius:8px;
+    padding:10px 12px; font-size:14px; color:var(--ink); font-family:inherit; line-height:1.5;
+  }
+  .dumpbox textarea:focus{outline:none; border-color:var(--accent); box-shadow:0 0 0 3px var(--blue-soft)}
+  .dumpbox textarea:disabled{opacity:.55}
+  .dumpbox-row{display:flex; align-items:center; gap:12px; margin-top:10px; flex-wrap:wrap}
+  .dumpbox-btn{
+    background:var(--accent); color:#fff; border:none; border-radius:999px;
+    padding:9px 24px; font-size:14px; font-weight:700; cursor:pointer;
+  }
+  .dumpbox-btn:hover:not(:disabled){filter:brightness(1.08)}
+  .dumpbox-btn:disabled{opacity:.45; cursor:default}
+  .dumpbox-status{font-size:13px; color:var(--muted)}
+  .dumpbox-token{
+    background:var(--bg); border:1px dashed var(--line); border-radius:8px;
+    padding:12px 14px; margin-bottom:12px; font-size:14px;
+  }
+  .dumpbox-token p{margin:0 0 8px}
+.dumpbox-connect{
+    background:var(--bg); border:1px dashed var(--line); border-radius:8px;
+    padding:14px 16px; margin-bottom:12px; font-size:14px;
+  }
+.dumpbox-connect p{margin:0 0 10px}
+  .dumpbox-tokenrow{display:flex; gap:8px; flex-wrap:wrap; align-items:center}
+  .dumpbox-tokenrow input{
+    flex:1; min-width:170px; background:var(--panel); border:1px solid var(--line);
+    border-radius:8px; padding:7px 10px; font-size:13px; color:var(--ink); font-family:inherit;
+  }
+  .dumpbox-tokenrow button{
+    background:transparent; color:var(--accent); border:1px solid var(--accent);
+    border-radius:999px; padding:7px 14px; font-size:13px; font-weight:700; cursor:pointer;
+  }
+  .dumpbox-tokenrow a{color:var(--accent); font-size:13px}
   footer{margin-top:28px; color:var(--muted); font-size:12.5px}
   footer .filed{font-family:ui-monospace,Menlo,Consolas,monospace}
 </style>
@@ -149,13 +195,35 @@
     <div class="card"><div class="e">🗂️</div><h3>Folder hygiene</h3><p>Zuki Docs stays organized — every doc in its place, nothing rotting in Drive root.</p></div>
     <div class="card"><div class="e">🏷️</div><h3>Per-doc meta info</h3><p>What each doc is, where it stands, what it needs next.</p></div>
     <div class="card"><div class="e">💬</div><h3>"What are we working on?"</h3><p>A formatted status list, right in chat, whenever Dave asks.</p></div>
-    <div class="card"><div class="e">📦</div><h3>The repo</h3><p><code>davedellaquila/document-buddy</code><br>Private · created Oct 9 · empty · ready.</p></div>
+    <div class="card"><div class="e">📦</div><h3>The repo</h3><p><code>davedellaquila/document-buddy</code><br>Private · README + brief stamped · no code yet.</p></div>
   </div>
 
   <h2>Needs Dave's attention</h2>
   <div class="attn"><span class="k">Review</span><a href="https://docs.google.com/document/d/13ASNd4D68Tx8sIP0J1JDvGHYEAQspNZsGTxh_m_5sbk/edit" target="_blank" rel="noopener">Product brief</a> is ready — looks good, edits, or defer? After review: PRD or park?</div>
-  <div class="attn"><span class="k">Open question</span>Does it move real files, or report only?</div>
-  <div class="attn"><span class="k">Open question</span>Where does the meta info live?</div>
+  <div class="attn"><span class="k">Open question</span>Does it move real files, or report only? <a href="https://docs.google.com/document/d/13ASNd4D68Tx8sIP0J1JDvGHYEAQspNZsGTxh_m_5sbk/edit" target="_blank" rel="noopener">Open the brief</a></div>
+  <div class="attn"><span class="k">Open question</span>Where does the meta info live? <a href="https://docs.google.com/document/d/13ASNd4D68Tx8sIP0J1JDvGHYEAQspNZsGTxh_m_5sbk/edit" target="_blank" rel="noopener">Open the brief</a></div>
+
+  <section class="dumpbox" data-buddy-id="document-buddy">
+  <h2>🧠 Brain dump</h2>
+  <p class="dumpbox-sub">Something about Document Buddy on your mind? Drop it in the in-tray — raw and unfiltered. It lands in the repo as a timestamped entry I'll file properly later.</p>
+  <div class="dumpbox-connect" hidden>
+    <p>🔒 Connect GitHub to unlock dumping. Paste a token once — it stays on this device only.</p>
+    <button type="button" class="dumpbox-btn">Connect GitHub to enable</button>
+  </div>
+  <div class="dumpbox-token" hidden>
+  <p>🔒 Connect GitHub to unlock dumping. Paste a token once — it stays on this device only.</p>
+  <div class="dumpbox-tokenrow">
+  <input type="password" placeholder="GitHub token (repo scope)" aria-label="GitHub token">
+  <button type="button">Save token</button>
+  <a href="https://github.com/settings/tokens" target="_blank" rel="noopener">Get a token</a>
+  </div>
+  </div>
+  <textarea rows="4" placeholder="Dump what's on your mind about Document Buddy…"></textarea>
+  <div class="dumpbox-row">
+  <button type="button" class="dumpbox-btn">Dump it</button>
+  <span class="dumpbox-status" role="status"></span>
+  </div>
+  </section>
 
   <h2>The paper trail</h2>
   <div class="trail">
@@ -165,6 +233,10 @@
   <div class="trail">
     <span class="v">2026-10-09</span>
     <p>Mission statement backfilled to the thread; homepage designed for the dashboard.</p>
+  </div>
+  <div class="trail">
+    <span class="v">2026-10-11</span>
+    <p>Brain-dump box added to this page — dumps append to the repo's docs/ingest.md via the GitHub API; write path verified end-to-end.</p>
   </div>
 
   <h2>Open it</h2>
@@ -182,5 +254,116 @@
   </footer>
 
 </div>
+<script>
+// ---- brain-dump box: appends timestamped entries to docs/ingest.md in the
+// buddy's repo via the GitHub contents API (same write path as the dashboard
+// ingest panel). Token comes from dashboard localStorage (buddyTree.v3).
+(function(){
+  var box = document.querySelector('.dumpbox');
+  if (!box || box.dataset.dumpInit) return;
+  box.dataset.dumpInit = '1';
+  var bid = box.getAttribute('data-buddy-id') || (function(){
+    var p = location.pathname.replace(/\/+$/, '');
+    return p.substring(p.lastIndexOf('/') + 1);
+  })();
+  var ta = box.querySelector('textarea'),
+      btn = box.querySelector('.dumpbox-row .dumpbox-btn'),
+      st = box.querySelector('.dumpbox-status'),
+      tokWrap = box.querySelector('.dumpbox-token'),
+      connectWrap = box.querySelector('.dumpbox-connect'),
+      connectBtn = connectWrap.querySelector('.dumpbox-btn');
+  function lsGet(){ try { return JSON.parse(localStorage.getItem('buddyTree.v3') || '{}'); } catch(e){ return {}; } }
+  function lsSet(patch){ try { var s = lsGet(); for (var k in patch) s[k] = patch[k]; localStorage.setItem('buddyTree.v3', JSON.stringify(s)); } catch(e){} }
+  function token(){ return lsGet().ghToken || ''; }
+  function b64encode(str){
+    var bytes = new TextEncoder().encode(str), bin = '';
+    bytes.forEach(function(b){ bin += String.fromCharCode(b); });
+    return btoa(bin);
+  }
+  async function ghApi(path, method, body){
+    var t = token();
+    if (!t) throw new Error('Add a GitHub token first.');
+    var r = await fetch('https://api.github.com' + path, {
+      method: method || 'GET',
+      headers: {'Authorization': 'Bearer ' + t, 'Accept': 'application/vnd.github+json', 'Content-Type': 'application/json'},
+      body: body ? JSON.stringify(body) : undefined
+    });
+    if (!r.ok) throw new Error('GitHub ' + r.status);
+    return r.status === 204 ? null : await r.json();
+  }
+  async function ghGetFile(repo, path){
+    try {
+      var j = await ghApi('/repos/davedellaquila/' + repo + '/contents/' + path);
+      if (j && j.content) return {
+        text: new TextDecoder().decode(Uint8Array.from(atob(j.content.replace(/\n/g, '')), function(c){ return c.charCodeAt(0); })),
+        sha: j.sha
+      };
+    } catch(e){}
+    return null;
+  }
+  var repo = null, repoName = bid;
+  async function resolveRepo(){
+    try {
+      var r = await fetch('../buddies.json', {cache: 'no-store'});
+      var d = await r.json();
+      var buds = d.buddies || [];
+      for (var i = 0; i < buds.length; i++) {
+        if (buds[i].id === bid && buds[i].repo) { repo = buds[i].repo; repoName = buds[i].name || bid; break; }
+      }
+    } catch(e){}
+  }
+  function refreshUI(){
+    var has = !!token();
+    connectWrap.hidden = has;
+    if (has) tokWrap.hidden = true;
+    var ok = has && !!repo;
+    ta.disabled = !ok;
+    btn.disabled = !ok;
+    if (!has) { st.textContent = ''; }
+    else if (!repo) { st.textContent = 'No repo linked for this buddy yet.'; }
+  }
+  var tokInput = tokWrap.querySelector('input'),
+      tokSave = tokWrap.querySelector('button');
+  connectBtn.addEventListener('click', function(){
+    tokWrap.hidden = false;
+    if (tokInput) tokInput.focus();
+  });
+  tokSave.addEventListener('click', function(){
+    var v = tokInput.value.trim();
+    if (!v) return;
+    lsSet({ghToken: v});
+    tokInput.value = '';
+    tokWrap.hidden = true;
+    refreshUI();
+    st.textContent = 'Token saved on this device.';
+  });
+  async function dump(){
+    var text = ta.value.trim();
+    if (!text) return;
+    if (!token()) { refreshUI(); return; }
+    if (!repo) { st.textContent = 'No repo linked for this buddy yet.'; return; }
+    st.textContent = 'Dumping…';
+    btn.disabled = true;
+    try {
+      var stamp = new Date().toLocaleString();
+      var NL = String.fromCharCode(10);
+      var entry = '## ' + stamp + NL + NL + text + NL + NL;
+      var cur = await ghGetFile(repo, 'docs/ingest.md');
+      var base = cur ? cur.text : '# Ingest log — ' + repoName + NL + NL;
+      var body = {message: 'Ingest dump for ' + bid, content: b64encode(base + entry)};
+      if (cur && cur.sha) body.sha = cur.sha;
+      await ghApi('/repos/davedellaquila/' + repo + '/contents/docs/ingest.md', 'PUT', body);
+      ta.value = '';
+      st.textContent = '✓ Dumped to ' + repo + '/docs/ingest.md';
+    } catch(err){ st.textContent = 'Save failed: ' + (err.message || err); }
+    btn.disabled = false;
+  }
+  btn.addEventListener('click', dump);
+  ta.addEventListener('keydown', function(ev){
+    if ((ev.metaKey || ev.ctrlKey) && ev.key === 'Enter') { ev.preventDefault(); dump(); }
+  });
+  resolveRepo().then(refreshUI);
+})();
+</script>
 </body>
 </html>

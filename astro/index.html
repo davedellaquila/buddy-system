@@ -53,6 +53,9 @@
   .feed-icon{font-size:22px;flex-shrink:0;line-height:1.3}
   .feed-body{flex:1;min-width:0}
   .feed-buddy{font-size:12px;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:.06em}
+  .feed-buddy a{color:inherit;text-decoration:none}
+  .feed-buddy a:hover{text-decoration:underline}
+  .feed-text a{color:var(--accent);font-weight:600}
   .feed-text{font-size:15px;margin-top:2px}
   .feed-date{font-size:12px;color:var(--dim);font-family:var(--mono);margin-top:4px}
   .feed-more{padding:12px 18px;font-size:13px;color:var(--muted);background:var(--panel2);text-align:center}
@@ -90,6 +93,52 @@
   footer .sig{font-family:var(--mono);font-size:12px;margin-top:8px;color:var(--dim)}
   @media(max-width:560px){h1{font-size:40px}.bar-row{grid-template-columns:110px 1fr 36px}.avatar-img{width:104px;height:104px}}
   @media(prefers-reduced-motion:reduce){.avatar-img{animation:none}.blink{animation:none}}
+
+  /* ---------- light mode ---------- */
+  @media (prefers-color-scheme:light){
+    :root{
+      --bg:#f6f8fa; --panel:#ffffff; --panel2:#edf0f4; --border:#d8dee4;
+      --text:#1f2328; --muted:#59636e; --dim:#8b949e;
+      --accent:#0969da; --pink:#a40e8a; --green:#1a7f37; --amber:#9a6700; --red:#d1242c; --purple:#8250df;
+    }
+    body{background-image:radial-gradient(circle at 20% 0%,rgba(9,105,218,.06),transparent 40%),radial-gradient(circle at 85% 15%,rgba(164,14,138,.05),transparent 35%)}
+    .now{background:linear-gradient(160deg,#edf2f9,#e3eaf4);border-color:#c3d2e6}
+    .bar-track{background:#e4e9ef}
+  }
+  /* ---------- docs library ---------- */
+  .docsearch{width:100%;background:var(--panel);border:1px solid var(--border);border-radius:12px;
+    padding:12px 16px;font-size:15px;color:var(--text);margin-bottom:14px;outline:none}
+  .docsearch:focus{border-color:var(--accent)}
+  .docsearch::placeholder{color:var(--dim)}
+  .docs{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:10px}
+  .doc{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:12px 14px;
+    display:flex;gap:10px;align-items:flex-start;text-decoration:none;transition:transform .15s ease,border-color .15s ease}
+  .doc:hover{transform:translateY(-2px);border-color:var(--accent)}
+  .doc-kind{font-size:16px;flex-shrink:0;line-height:1.4}
+  .doc-name{font-size:13.5px;color:var(--text);font-weight:500;line-height:1.35}
+  .doc-meta{font-size:11px;color:var(--dim);margin-top:3px;text-transform:uppercase;letter-spacing:.05em}
+  .docs-empty{grid-column:1/-1;text-align:center;color:var(--muted);padding:20px}
+  .docs-count{font-size:12px;color:var(--dim);margin-bottom:10px;font-family:var(--mono)}
+  /* ---------- brain dump ---------- */
+  .dumpbox{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:20px 22px;position:relative;overflow:hidden}
+  .dumpbox::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--tint,var(--purple))}
+  .dumpbox-sub{color:var(--muted);font-size:14px;margin-bottom:14px}
+  .dumpbox-sub b{color:var(--text);font-family:var(--mono);font-size:13px}
+  .dumpbox textarea{width:100%;min-height:96px;resize:vertical;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-size:14px;color:var(--text);font-family:inherit}
+  .dumpbox textarea:focus{outline:none;border-color:var(--accent)}
+  .dumpbox textarea:disabled{opacity:.55}
+  .dumpbox textarea::placeholder{color:var(--dim)}
+  .dumpbox-row{display:flex;align-items:center;gap:12px;margin-top:10px;flex-wrap:wrap}
+  .dumpbox-btn{background:var(--accent);color:#fff;border:none;border-radius:8px;padding:9px 22px;font-size:14px;font-weight:600;cursor:pointer}
+  .dumpbox-btn:disabled{opacity:.45;cursor:default}
+  .dumpbox-status{font-size:13px;color:var(--muted)}
+  .dumpbox-token{background:var(--bg);border:1px dashed var(--border);border-radius:8px;padding:12px 14px;margin-bottom:12px;font-size:14px}
+.dumpbox-connect{background:var(--bg);border:1px dashed var(--border);border-radius:8px;padding:14px 16px;margin-bottom:12px;font-size:14px}.dumpbox-connect p{margin:0 0 10px}
+  .dumpbox-token p{margin-bottom:8px;color:var(--muted)}
+  .dumpbox-tokenrow{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+  .dumpbox-tokenrow input{flex:1;min-width:170px;background:var(--panel);border:1px solid var(--border);border-radius:8px;padding:7px 10px;font-size:13px;color:var(--text)}
+  .dumpbox-tokenrow button{background:transparent;color:var(--accent);border:1px solid var(--accent);border-radius:8px;padding:7px 14px;font-size:13px;font-weight:600;cursor:pointer}
+  .dumpbox-tokenrow a{color:var(--accent);font-size:13px}
 </style>
 </head>
 <body>
@@ -114,9 +163,30 @@
   <h2>🔔 Needs Dave's attention</h2>
   <div class="feed" id="feed"><div class="feed-empty">Loading the attention feed…</div></div>
 
+  <h2>📌 Pinned — we'll come back to this</h2>
+  <div class="feed" id="pinned"><div class="feed-empty">Loading pinned items…</div></div>
+
+  <h2>🚀 Starter-set candidates — the default buddies for a new system</h2>
+  <div class="card" style="--tint:#a371f7; margin-bottom:14px">
+    <h3>What this is</h3>
+    <p>The ten buddies a brand-new user gets on day one — one screen, universal life domains, multiple buddy shapes. <b>Candidates, not final:</b> Dave configures this list. The canonical config will live in the Onboarding Buddy repo as <b>starter-set.json</b>; this page mirrors it for review.</p>
+  </div>
+  <div class="grid">
+    <div class="card" style="--tint:#58a6ff"><h3>🪪 Personal Buddy</h3><p>The daily ops layer — Dave's day, triage, and "where am I, what's next?"</p></div>
+    <div class="card" style="--tint:#f778ba"><h3>👨‍👩‍👧 Family Buddy</h3><p>The people layer — family members, milestones, staying close.</p></div>
+    <div class="card" style="--tint:#3fb950"><h3>💰 Money Buddy</h3><p>Money in, money out — spending, bills, and the expense tracker.</p></div>
+    <div class="card" style="--tint:#d29922"><h3>❤️ Health Buddy</h3><p>Body and sleep — the #1 priority, tracked not coached.</p></div>
+    <div class="card" style="--tint:#58a6ff"><h3>🏠 Home Buddy</h3><p>The physical domain — house, cabin, maintenance, projects.</p></div>
+    <div class="card" style="--tint:#a371f7"><h3>💼 Work Buddy</h3><p>The job layer — tasks, estimates, actuals, calibration.</p></div>
+    <div class="card" style="--tint:#f778ba"><h3>🌳 Project Buddy</h3><p>Ideas → projects — the macro view and the idea bank.</p></div>
+    <div class="card" style="--tint:#3fb950"><h3>🎓 Learning Buddy</h3><p>Growth — "what do you want to learn?" then the plan.</p></div>
+    <div class="card" style="--tint:#d29922"><h3>⏰ Reminder Buddy</h3><p>Never drop it — nudges, follow-ups, "don't forget."</p></div>
+    <div class="card" style="--tint:#58a6ff"><h3>📆 Calendar Buddy</h3><p>Time — one honest schedule every other buddy consults.</p></div>
+  </div>
+
   <h2>🌙 Right now</h2>
   <div class="now">
-    <h3>$ astro --status <span class="blink">▊</span> <span class="snap">snapshot · Fri Oct 9, 2026, evening — the feed above is the live list</span></h3>
+    <h3>$ astro --status <span class="blink">▊</span> <span class="snap">snapshot · Sun Oct 11, 2026, morning — the feed above is the live list</span></h3>
     <ul>
       <li>Shipped a 6-fix repair pass on this dashboard <span>— filter tiles now match their status pills, Business Plans rebuilt as cards, click-to-edit buddy name, Tab / Shift-Tab list navigation, per-view visibility toggles in Settings, Dumped atoms restored.</span></li>
       <li>Built Dave a Zen page tonight <span>— he said "go nuts", so I did: ink-wash landscape, a breathing ritual, my Zen heroes, a bookshelf. He approved it ("This is perfect!") and it now follows his system dark mode.</span></li>
@@ -124,6 +194,34 @@
       <li>The review queue is long <span>— briefs and PRDs waiting on Dave's eyes. Start wherever pulls you; nothing here expires quietly.</span></li>
     </ul>
   </div>
+
+  <h2>📜 Recent activity</h2>
+  <div class="now" style="margin-bottom:12px">
+    <h3>$ astro --log <span class="blink">▊</span> <span class="snap">what shipped, what's in flight — updated as work happens</span></h3>
+    <div id="activity"><div class="feed-empty">Loading the activity log…</div></div>
+  </div>
+
+  <h2>🧠 Brain dump</h2>
+  <section class="dumpbox" data-buddy-id="astro" style="--tint:var(--purple)">
+    <p class="dumpbox-sub">Something on your mind for me? Dump it raw — every entry lands timestamped in <b>buddy-system/docs/ingest.md</b>, where my ingest pass picks it up. ⌘/Ctrl+Enter sends.</p>
+    <div class="dumpbox-connect" hidden>
+      <p>🔒 Connect GitHub to unlock dumping. Paste a token once — it stays on this device only.</p>
+      <button type="button" class="dumpbox-btn">Connect GitHub to enable</button>
+    </div>
+    <div class="dumpbox-token" hidden>
+      <p>🔒 Connect GitHub to unlock dumping. Paste a token once — it stays on this device only.</p>
+      <div class="dumpbox-tokenrow">
+        <input type="password" placeholder="GitHub token (repo scope)" aria-label="GitHub token">
+        <button type="button">Save token</button>
+        <a href="https://github.com/settings/tokens" target="_blank" rel="noopener">Get a token</a>
+      </div>
+    </div>
+    <textarea rows="4" placeholder="Dump what's on your mind…"></textarea>
+    <div class="dumpbox-row">
+      <button type="button" class="dumpbox-btn">Dump it</button>
+      <span class="dumpbox-status" role="status"></span>
+    </div>
+  </section>
 
   <h2>🧭 What I track</h2>
   <div class="grid">
@@ -155,6 +253,13 @@
 
   <h2>📈 Buddies by status</h2>
   <div class="bars" id="bars"><p style="color:var(--muted);font-size:14px">Loading…</p></div>
+
+
+  <h2>📚 Buddy Docs library</h2>
+  <p style="font-size:14px;color:var(--muted);margin:-6px 0 14px;max-width:640px">Every brief, PRD, and tracker in the Buddy Docs Drive folder — no buddy owns the library, so it lives here with me.</p>
+  <input class="docsearch" id="docsearch" type="search" placeholder="Filter 86 documents… try &quot;brief&quot;, &quot;PRD&quot;, or a buddy's name">
+  <div class="docs-count" id="docscount"></div>
+  <div class="docs" id="docs"><div class="docs-empty">Loading the library…</div></div>
 
   <h2>📋 How I work</h2>
   <div class="rule"><span class="rule-icon">🧾</span><div><strong>Receipts, not promises</strong><p>I verify on disk and quote the exact state. I correct myself in one breath when the evidence shifts. Trust runs on verification.</p></div></div>
@@ -199,21 +304,62 @@
     .then(function(d){
       var buds=d.buddies||[];
       var attn=[];
-      buds.forEach(function(b){(b.attention||[]).forEach(function(a){attn.push({buddy:b,text:a.text,date:a.date||"",icon:b.icon||"📌",name:b.name});});});
+      buds.forEach(function(b){(b.attention||[]).forEach(function(a){attn.push({buddy:b,text:a.text,date:a.date||"",icon:b.icon||"📌",name:b.name,url:a.url||"",bid:b.id||""});});});
       attn.sort(function(x,y){return (y.date||"").localeCompare(x.date||"");});
       set("st-buddies",buds.length);
       set("st-attn",attn.length);
       set("st-brief",buds.filter(function(b){return hasStatus(b,["brief review"]);}).length);
       set("st-prd",buds.filter(function(b){return hasStatus(b,["prd review","spec review"]);}).length);
       set("st-live",buds.filter(function(b){return hasStatus(b,["live","pilot"]);}).length);
+      fetch("pinned.json",{cache:"no-store"})
+        .then(function(r){if(!r.ok)throw new Error("http "+r.status);return r.json();})
+        .then(function(d){
+          var pin=document.getElementById("pinned");
+          var items=d.pinned||[];
+          if(!items.length){pin.innerHTML='<div class="feed-empty">Nothing pinned — the parking lot is empty. 📌</div>';}
+          else{
+            pin.innerHTML=items.map(function(p){
+              return '<div class="feed-item"><div class="feed-icon">📌</div>'+
+                '<div class="feed-body"><div class="feed-buddy">'+esc(p.title)+'</div>'+
+                '<div class="feed-text">'+esc(p.detail)+'</div>'+
+                (p.date?'<div class="feed-date">pinned '+esc(p.date)+'</div>':'')+'</div></div>';
+            }).join("");
+          }
+        })
+        .catch(function(){document.getElementById("pinned").innerHTML='<div class="feed-empty">Pinned items unavailable right now.</div>';});
+      fetch("activity.json",{cache:"no-store"})
+        .then(function(r){if(!r.ok)throw new Error("http "+r.status);return r.json();})
+        .then(function(d){
+          var box=document.getElementById("activity");
+          var shipped=(d.shipped||[]).slice(0,8), doing=d.doing||[];
+          var h='';
+          if(doing.length){
+            h+='<div style="font-size:12px;text-transform:uppercase;letter-spacing:.1em;color:var(--amber);margin:2px 0 4px">🛠️ In flight</div><ul>'+
+              doing.map(function(x){
+                return '<li>'+esc(x.title)+(x.detail?'<span> — '+esc(x.detail)+'</span>':'')+'</li>';
+              }).join("")+'</ul>';
+          }
+          if(shipped.length){
+            h+='<div style="font-size:12px;text-transform:uppercase;letter-spacing:.1em;color:var(--green);margin:14px 0 4px">✅ Recently shipped</div><ul>'+
+              shipped.map(function(x){
+                return '<li>'+esc(x.title)+(x.detail?'<span> — '+esc(x.detail)+'</span>':'')+
+                  (x.date?'<span style="font-family:var(--mono);font-size:12px"> · '+esc(x.date)+'</span>':'')+'</li>';
+              }).join("")+'</ul>';
+          }
+          box.innerHTML=h||'<div class="feed-empty">Nothing logged yet.</div>';
+        })
+        .catch(function(){document.getElementById("activity").innerHTML='<div class="feed-empty">Activity log unavailable right now.</div>';});
       var feed=document.getElementById("feed");
       var show=attn.slice(0,9);
       if(!show.length){feed.innerHTML='<div class="feed-empty">All quiet — nothing needs Dave right now. 🎉</div>';}
       else{
         feed.innerHTML=show.map(function(a){
+          var home='https://davedellaquila.github.io/buddy-system/'+esc(a.bid)+'/';
+          var txt=esc(a.text);
+          if(a.url){txt='<a href="'+esc(a.url)+'" target="_blank" rel="noopener">'+txt+'</a>';}
           return '<div class="feed-item"><div class="feed-icon">'+esc(a.icon)+'</div>'+
-            '<div class="feed-body"><div class="feed-buddy">'+esc(a.name)+'</div>'+
-            '<div class="feed-text">'+esc(a.text)+'</div>'+
+            '<div class="feed-body"><div class="feed-buddy"><a href="'+home+'" target="_blank" rel="noopener">'+esc(a.name)+'</a></div>'+
+            '<div class="feed-text">'+txt+'</div>'+
             (a.date?'<div class="feed-date">'+esc(a.date)+'</div>':'')+'</div></div>';
         }).join("")+
         (attn.length>show.length?'<div class="feed-more">+ '+(attn.length-show.length)+' more — see them all on the <a href="../">dashboard</a>.</div>':'');
@@ -235,6 +381,138 @@
       var bars=document.getElementById("bars");
       if(bars)bars.innerHTML='<p style="color:var(--muted);font-size:14px">Status breakdown unavailable offline.</p>';
     });
+})();
+</script>
+
+<script>
+(function(){
+  var DOCS = [{"n": "Amador County Transport \u2014 Product Brief", "u": "https://docs.google.com/document/d/1g83ILvK0C1uHR6MaSVSXL0Gc5cRqIqKNSHa1uMnKcSE/edit", "k": "doc"}, {"n": "Amanda Buddy \u2014 Brief", "u": "https://docs.google.com/document/d/19zf1xyyTehPRpoOeyEIJG84OntfsplxEmUTe5Qb3nlo/edit", "k": "doc"}, {"n": "Bank Sync Design", "u": "https://docs.google.com/document/d/1o_qcW7GDiy1hEa9S7aFzjAp3SAJRPnUjk9IkF-oor9M/edit", "k": "doc"}, {"n": "Birthday Buddy \u2014 Brief", "u": "https://docs.google.com/document/d/1e5gJIQ02gxBeJr-mP7K6C0PnNcZ0iq36DZOxzAL0Lik/edit", "k": "doc"}, {"n": "Birthday Buddy \u2014 PRD Draft v1", "u": "https://docs.google.com/document/d/1z7WwImdL3ub3DoCiwQ02rrLR6gwsV5NxLSnBBvp5yVg/edit", "k": "doc"}, {"n": "Briefing Buddy \u2014 Brief", "u": "https://docs.google.com/document/d/1s9ghZ-kyp9dag2whTPnk24ULLUJP3JW_0UGtocAynbs/edit", "k": "doc"}, {"n": "Buddy Suite \u2014 Brief", "u": "https://docs.google.com/document/d/1LbFR4bTkRMsul84cM762-tvbpmAencxC0-Vu7fIZ-60/edit", "k": "doc"}, {"n": "Buddy System \u2014 Marketing Blurb (5 Variations)", "u": "https://docs.google.com/document/d/1oGHj1o2nxZXb0S-KsvLDhoJYCiNNoIIcWhhXgN6LgdY/edit", "k": "doc"}, {"n": "Car Buddy \u2014 Brief", "u": "https://docs.google.com/document/d/1eW7k87_ixHIw9M7ClxiUYd0GGXY9HcCdqvPeBOXrNME/edit", "k": "doc"}, {"n": "Car Buddy \u2014 PRD", "u": "https://docs.google.com/document/d/1Suf40x1f0MeoMVa429tSZKZDrRuAhXgYyuqKi0bE5lw/edit", "k": "doc"}, {"n": "Career Buddy \u2014 Brief", "u": "https://docs.google.com/document/d/1_h_HG7va6gxGAvDnNl4K3GAxrfZNI2dvJuSvcPGqclE/edit", "k": "doc"}, {"n": "Database Migration \u2014 Project Brief", "u": "https://docs.google.com/document/d/1Tr2lNs_p9vl7GvWqelRRHWmNWiKDuwKu9QerZd6T34w/edit", "k": "doc"}, {"n": "Discovery Buddy \u2014 Brief", "u": "https://docs.google.com/document/d/1flMPErgNpYZjZS3X0uUm8pkS9uMTxJGzeezqxibPz8s/edit", "k": "doc"}, {"n": "Document Buddy \u2014 Brief", "u": "https://docs.google.com/document/d/13ASNd4D68Tx8sIP0J1JDvGHYEAQspNZsGTxh_m_5sbk/edit", "k": "doc"}, {"n": "Dream Buddy \u2014 Brief", "u": "https://docs.google.com/document/d/1j3XiCfqIziUeDsGG185fda7maoQ23SsJkUpbXYOn40o/edit", "k": "doc"}, {"n": "Dream Buddy \u2014 PRD Draft v1", "u": "https://docs.google.com/document/d/189Ced4ubFb1ykvXsnfC9xdTAUQTUpMb-QjlQexkkMk4/edit", "k": "doc"}, {"n": "Emil Buddy \u2014 Brief", "u": "https://docs.google.com/document/d/17FAoFP6qBy2_wJj8nHQvVrCgUZC4EqRU2VRYL3GGqvY/edit", "k": "doc"}, {"n": "Emile Buddy \u2014 Brief", "u": "https://docs.google.com/document/d/19I51Rb1nbHZQT9zDZ6JDW8M5zI2WejrSSb-hfYrq0zA/edit", "k": "doc"}, {"n": "Event Manager", "u": "https://docs.google.com/document/d/1psi0pZ7hjp8kBd_svuZwAjGRpzbGJGsg/edit", "k": "doc"}, {"n": "Family Buddy \u2014 Brief", "u": "https://docs.google.com/document/d/1JVwC4BCHHi0YPAk-qdcpg74XGq94e4AQ6R4x6U5Ju1U/edit", "k": "doc"}, {"n": "Feedback Buddy \u2014 Brief", "u": "https://docs.google.com/document/d/1ZzDPRGNRuW8_ulpQE2Me8csFwmgAS9K9YlllHhOG9AM/edit", "k": "doc"}, {"n": "Finance Buddy \u2014 Brief", "u": "https://docs.google.com/document/d/1D46HzQiDWtd6z3u-UTsr6Xh0o0yBxWK94zTx6Qw_qXw/edit", "k": "doc"}, {"n": "Grocery spending tracker", "u": "https://docs.google.com/spreadsheets/d/1n-IWRQpKcK3IcGGjDsropoL9EUO-fypBEirGbGp0HJg/edit", "k": "sheet"}, {"n": "Guardian Buddy \u2014 Brief", "u": "https://docs.google.com/document/d/1sznSg7jSLRlDnAgFb-FaKnxp5lktWnFNQqK6DIEqF6E/edit", "k": "doc"}, {"n": "Health & Fitness App \u2014 PRD", "u": "https://docs.google.com/document/d/1tsVa-nTDXZiqFydedaiB-Cvc2gPgcgyPOsoCIU0IzZI/edit", "k": "doc"}, {"n": "Hiking Buddy \u2014 Brief", "u": "https://docs.google.com/document/d/1NjOxDUcxRtnYzeKhhSZkEHHMYgvgGuYgwUGfjjIMx2M/edit", "k": "doc"}, {"n": "Hot Tub Buddy \u2014 Brief", "u": "https://docs.google.com/document/d/1BDcst37j2FftKqzY-Tz-ecQLtYc5OnR3kmY6xmn80Sg/edit", "k": "doc"}, {"n": "Housing Buddy \u2014 Brief", "u": "https://docs.google.com/document/d/1XrG_FERFrw-mfCIO-jVsTEBWTo4oie2UvxRoJl9iAdo/edit", "k": "doc"}, {"n": "Housing Buddy \u2014 PRD Draft v1", "u": "https://docs.google.com/document/d/1yzuFUxmnnSID4MSfI2JXyrREdWxLcx0QrQkDbCj5wEs/edit", "k": "doc"}, {"n": "Investing Module \u2014 Brief", "u": "https://docs.google.com/document/d/1yoDxAIOzriF6O_3Ve7O6UnAPjnwm29e9vSswfSFrLRc/edit", "k": "doc"}, {"n": "Investing Module \u2014 PRD", "u": "https://docs.google.com/document/d/1pOeSwpqOXPuHZgatg80wOA2G_BrdxBALv_ViCJL9s1w/edit", "k": "doc"}, {"n": "Investment Watchlist", "u": "https://docs.google.com/spreadsheets/d/1B9sBbAK-crDsde8wjJVpChCLtEoab9EHbuGL9UX6y9g/edit", "k": "sheet"}, {"n": "Jessica Buddy \u2014 Brief", "u": "https://docs.google.com/document/d/1u0sPo4bFl11BBl_j8wTfcA0U0KH0pzjhQDE9j_Ey8Fg/edit", "k": "doc"}, {"n": "Job Buddy \u2014 Brief", "u": "https://docs.google.com/document/d/19u8usL6X22ke5feSB-TE3VV0fYqK-U_U5f46eLZNkGM/edit", "k": "doc"}, {"n": "Lenwood Buddy \u2014 Brief", "u": "https://docs.google.com/document/d/1t4s5skvUo8vTQ1cknWxuEobTQp6aMwMD68NNUl-xUY4/edit", "k": "doc"}, {"n": "Little Guy Buddy \u2014 Brief", "u": "https://docs.google.com/document/d/1DsPDePEL2FooO-foNZcENbhl63F2DTaYw3V6e3WaSXg/edit", "k": "doc"}, {"n": "Marley Buddy \u2014 Brief", "u": "https://docs.google.com/document/d/1STcKQbJrsbdIO2NfJ8nOzyKePbRjV0O1qeVAP-MA9Ak/edit", "k": "doc"}, {"n": "Martha Buddy \u2014 Brief", "u": "https://docs.google.com/document/d/1jMm6VWTG_3FStQgvushQse3T9obxz3vLjeLAQBNhnO0/edit", "k": "doc"}, {"n": "Meal tracker", "u": "https://docs.google.com/spreadsheets/d/1A8aboH6yOu3vh82y9KVMLpkpbqIGSyTIMAc_Us9Z13U/edit", "k": "sheet"}, {"n": "Mei-ying Buddy \u2014 Brief", "u": "https://docs.google.com/document/d/1acZkE931q1RslDeJPa7ZOdehKUEnVBu4KlnwLMFz7I0/edit", "k": "doc"}, {"n": "MGA Buddy \u2014 Brief", "u": "https://docs.google.com/document/d/1iXlxReR5Yu1v6a1WEAVKwX3b8VTcvqh_gLOGfRdH2Rk/edit", "k": "doc"}, {"n": "Mileage reimbursement question - draft", "u": "https://docs.google.com/document/d/1JAaJAI4f_yQNUVcSKWguUYY3_V6c21nrZvPyPcwa1Gg/edit", "k": "doc"}, {"n": "ML500 Buddy \u2014 Brief", "u": "https://docs.google.com/document/d/1syTyDmQcMCPQ4Wl9EKQeJZvtlKE7HOhLkWZsgItoDrU/edit", "k": "doc"}, {"n": "Money Buddy \u2014 Feature ideas", "u": "https://docs.google.com/document/d/18K5HJBBJ7HD8zX8yYwfjM3Tg2eFbxSilmP0092JdxBI/edit", "k": "doc"}, {"n": "Money Buddy \u2014 Monetization & Marketing Plan", "u": "https://docs.google.com/document/d/1InvLGGDk0Hu8_IFQS3kbSISGDvEuJ-gI2EHBmkHBfl8/edit", "k": "doc"}, {"n": "Month-Start Funding Total \u2014 Brief", "u": "https://docs.google.com/document/d/1g0lnNMHo5mGConjFwOZVDCZ8YgxqreyNQ-E7weq62Ok/edit", "k": "doc"}, {"n": "Nancy Buddy \u2014 Brief", "u": "https://docs.google.com/document/d/1cYab49CDpdfPlD5xzL0EXKm11XAObvBhi0yPw_2Pskk/edit", "k": "doc"}, {"n": "News Buddy \u2014 Brief", "u": "https://docs.google.com/document/d/11Zz2wGbuIKCqS7OSPOnjIAbz5VsmLQPvxS-OfRicSN0/edit", "k": "doc"}, {"n": "Notice of Rent Increase - 90-Day (Quentin and Amanda)", "u": "https://docs.google.com/document/d/12uN9_JminrvogNoFXmyWxBUR2GDMClIFXE8jvNs1Rw8/edit", "k": "doc"}, {"n": "Party Buddy \u2014 Brief", "u": "https://docs.google.com/document/d/1Y44Cs9JD9uj2O2UIdKXd28F0mdhyXT7nevVIoMOc5AU/edit", "k": "doc"}, {"n": "Personal Buddy \u2014 Brief", "u": "https://docs.google.com/document/d/1jJ_xZDQeogti-GRPLNnY8e-IgsBa93-QhdG1EhLIEJs/edit", "k": "doc"}, {"n": "Personal Website \u2014 Brief", "u": "https://docs.google.com/document/d/16zLLxIRuCf45aW0JEvx2UXCCJoCSVAFFgW38acFy-0g/edit", "k": "doc"}, {"n": "Pet Buddy \u2014 Brief", "u": "https://docs.google.com/document/d/1nJzmN-A3TBk23RH-f8bKbc3BxuPbLDiWRk3AaGJb6uo/edit", "k": "doc"}, {"n": "Pops Buddy \u2014 Brief", "u": "https://docs.google.com/document/d/160SLTRiRiIiYqwdzx9pgXf-7Wiq8zoEtZpAtq43qoxE/edit", "k": "doc"}, {"n": "Project Buddy \u2014 PRD Draft v1", "u": "https://docs.google.com/document/d/1VIn8HJvR5ft3sGcQ0haLsEQj1w8zGALbm6wHlP5aHyA/edit", "k": "doc"}, {"n": "Project Buddy \u2014 Product Brief", "u": "https://docs.google.com/document/d/1yBcOP8Usbw6CaIj_Ufn7pLVX6AaKVjP1AP7ZvkM_O6c/edit", "k": "doc"}, {"n": "Project Buddy \u2014 Tool Spec", "u": "https://docs.google.com/document/d/1djL-_GZbKgVlw9NQavibUXl0J8-Ge_aHXNGmOTbzq3E/edit", "k": "doc"}, {"n": "Project Dashboard \u2014 Feature Brief", "u": "https://docs.google.com/document/d/1nH15oMuBglAn8RGMROYCIEySifWPl7Wq8nfZvIoddH4/edit", "k": "doc"}, {"n": "Property Buddy \u2014 Brief", "u": "https://docs.google.com/document/d/1fwbtQXG1sjfWKSxW1JdS8sOgGVSkRq74hY8KM_SsNTA/edit", "k": "doc"}, {"n": "Quentin and Amanda Living Situation \u2014 Discussion Brief", "u": "https://docs.google.com/document/d/1FpXYWivPWwAc6rNR5FOEbTuehI8K_doQTWkU7CukHZs/edit", "k": "doc"}, {"n": "Quentin Buddy \u2014 Brief", "u": "https://docs.google.com/document/d/157C3sNyJcRIgzNevCbwuWx7V1F4YPYZRwjw1TOCUaNA/edit", "k": "doc"}, {"n": "Rachel Buddy \u2014 Brief", "u": "https://docs.google.com/document/d/14lpAtsdSvXMj6r29KVtEd3Rnqn1KZvoe_7zBwhgidb4/edit", "k": "doc"}, {"n": "Relationship Buddy \u2014 Brief", "u": "https://docs.google.com/document/d/1BdS9TfXY0Mceg7dQ68EvPK38Qo5wqAQrSC_AkS5uX_I/edit", "k": "doc"}, {"n": "Reminder Buddy \u2014 Brief", "u": "https://docs.google.com/document/d/1RNFco95uviVGh7paE4BUmtv8U5YUaswlYCIZ1HLUdnI/edit", "k": "doc"}, {"n": "Rocky Buddy \u2014 Brief", "u": "https://docs.google.com/document/d/1Xm6mqiOZQxw7DqThK2NFjVh0deZEzK4r_EgpHxytjdM/edit", "k": "doc"}, {"n": "Ron Buddy \u2014 Brief", "u": "https://docs.google.com/document/d/1gTz9dlWEqVtoRWXrAfY3f70jPE7PdDLo0ThHcA-rZlo/edit", "k": "doc"}, {"n": "Sarah Buddy \u2014 Brief", "u": "https://docs.google.com/document/d/1Vlpp7cPrlTgTIYihvYmBhjea2--HO1lmCAQ7YOjZMNE/edit", "k": "doc"}, {"n": "Sawyer Buddy \u2014 Brief", "u": "https://docs.google.com/document/d/16VYGF2gZDYNu5pKPXne8B2qOc35pxWmW0Ddej2z2WH0/edit", "k": "doc"}, {"n": "Scaffold Buddy \u2014 Brief", "u": "https://docs.google.com/document/d/1rfrWpNABG-FbiHhbmOyYwVMZk1pwJekm6rNoPsMrh6k/edit", "k": "doc"}, {"n": "School Buddy \u2014 Brief", "u": "https://docs.google.com/document/d/1ZLYpo0FPzZja1P5PkVdcGxYeufX494X1gugXc-jS1m8/edit", "k": "doc"}, {"n": "Sharing Buddy \u2014 Brief", "u": "https://docs.google.com/document/d/1QdzAdT6o0z0EN682dz3eJoeSLgZqrLLxvD4g59SfRlE/edit", "k": "doc"}, {"n": "Shopping Buddy \u2014 Brief", "u": "https://docs.google.com/document/d/1dALnh7njN6Ji4jCMhWMIrIwsKDeFSvftzmCfkMRAE6I/edit", "k": "doc"}, {"n": "Tech Buddy \u2014 Brief", "u": "https://docs.google.com/document/d/19YGpL1uHzU94CV1Yp_qyibZtlqVd8cejjvufn1SEM3g/edit", "k": "doc"}, {"n": "Ticket Buddy \u2014 Brief", "u": "https://docs.google.com/document/d/1rVlr7Hv4vpUSnA9aykPE7Jplx_KuIxttqXHDewnkV2E/edit", "k": "doc"}, {"n": "Tips for Getting the Most Out of Muse", "u": "https://docs.google.com/document/d/1hobyZr8cgjJzCKSh6C7Jvx29zoJD60vm9MolYvJo7RQ/edit", "k": "doc"}, {"n": "Tracker Buddy \u2014 Brief", "u": "https://docs.google.com/document/d/1H5FLJSoj-BS5il-sPdqooswfY7HvpgINUy9D_f58w1E/edit", "k": "doc"}, {"n": "Travel Buddy \u2014 Brief", "u": "https://docs.google.com/document/d/1VWXXml-y3uL-mlps-jmDmDYJcLSG1gY_F_ehdRaDRJs/edit", "k": "doc"}, {"n": "TV Buddy \u2014 Brief", "u": "https://docs.google.com/document/d/1SGspHdx-BlRJ_yRsnVpLS4sa5Ow-Q8mAPjueErdnqP4/edit", "k": "doc"}, {"n": "TV Buddy \u2014 The Mood Dial \u2014 PRD", "u": "https://docs.google.com/document/d/1AmPpRxcUX-R1TyBdVxDmTeXf2-53_60HEDi4fMjRAjA/edit", "k": "doc"}, {"n": "Venue Buddy \u2014 Brief", "u": "https://docs.google.com/document/d/1uAgDOGIkr06CphFQkdoEGubpOEcaTPsJ4AMXRXMHab0/edit", "k": "doc"}, {"n": "Votable Tips System \u2014 Product Brief", "u": "https://docs.google.com/document/d/1OvuYVFpWHcZ3mvFy8jfSZ98TKt1wxnfl6wKRFtJSD_E/edit", "k": "doc"}, {"n": "Want List \u2014 Brief", "u": "https://docs.google.com/document/d/1E1DkJ6BfOcvjkf5ik3YrxqdoZHVnJn-b7Tr-4hOyxe8/edit", "k": "doc"}, {"n": "Wisdom Buddy \u2014 Brief", "u": "https://docs.google.com/document/d/1Z1bdz-YNeRjODYTyPdTnj1FeewnCqxpEwJV2-SS5HUs/edit", "k": "doc"}, {"n": "Wisdom Buddy \u2014 PRD", "u": "https://docs.google.com/document/d/1FZ7AY3HMp6MqmjEsthVh3aS36oPpZj8QOJNJ9Avi5Dc/edit", "k": "doc"}, {"n": "Work Buddy \u2014 Brief", "u": "https://docs.google.com/document/d/10HnvQ2-ECTHyc-cwzv_klOcqnQvqfgxNvOAE7bZT9NQ/edit", "k": "doc"}, {"n": "Zen Buddy \u2014 Brief", "u": "https://docs.google.com/document/d/1KGQfzCvsN3ERTsahhIqxZPRrexjgKOREGKD_P_bRLH8/edit", "k": "doc"}];
+  function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
+  var box = document.getElementById('docs'), input = document.getElementById('docsearch'), count = document.getElementById('docscount');
+  function render(q){
+    q = (q||'').toLowerCase();
+    var list = DOCS.filter(function(d){ return !q || d.n.toLowerCase().indexOf(q) > -1; });
+    count.textContent = list.length + ' of ' + DOCS.length + ' documents';
+    if(!list.length){ box.innerHTML = '<div class="docs-empty">No matches — try a different search.</div>'; return; }
+    box.innerHTML = list.map(function(d){
+      return '<a class="doc" href="' + d.u + '" target="_blank" rel="noopener">' +
+        '<span class="doc-kind">' + (d.k === 'sheet' ? '📊' : '📄') + '</span>' +
+        '<span><span class="doc-name">' + esc(d.n) + '</span>' +
+        '<span class="doc-meta" style="display:block">' + (d.k === 'sheet' ? 'Sheet' : 'Doc') + ' · Buddy Docs</span></span></a>';
+    }).join('');
+  }
+  input.addEventListener('input', function(){ render(input.value); });
+  render('');
+})();
+</script>
+
+<script>
+// ---- dump-box JS (self-contained; no dependencies) ----
+(function(){
+  var box = document.querySelector('.dumpbox');
+  if (!box || box.dataset.dumpInit) return;
+  box.dataset.dumpInit = '1';
+  var bid = box.getAttribute('data-buddy-id') || (function(){
+    var p = location.pathname.replace(/\/+$/, '');
+    return p.substring(p.lastIndexOf('/') + 1);
+  })();
+  var ta = box.querySelector('textarea'),
+      btn = box.querySelector('.dumpbox-row .dumpbox-btn'),
+      st = box.querySelector('.dumpbox-status'),
+      tokWrap = box.querySelector('.dumpbox-token'),
+      connectWrap = box.querySelector('.dumpbox-connect'),
+      connectBtn = connectWrap.querySelector('.dumpbox-btn');
+  function lsGet(){ try { return JSON.parse(localStorage.getItem('buddyTree.v3') || '{}'); } catch(e){ return {}; } }
+  function lsSet(patch){ try { var s = lsGet(); for (var k in patch) s[k] = patch[k]; localStorage.setItem('buddyTree.v3', JSON.stringify(s)); } catch(e){} }
+  function token(){ return lsGet().ghToken || ''; }
+  function b64encode(str){
+    var bytes = new TextEncoder().encode(str), bin = '';
+    bytes.forEach(function(b){ bin += String.fromCharCode(b); });
+    return btoa(bin);
+  }
+  async function ghApi(path, method, body){
+    var t = token();
+    if (!t) throw new Error('Add a GitHub token first.');
+    var r = await fetch('https://api.github.com' + path, {
+      method: method || 'GET',
+      headers: {'Authorization': 'Bearer ' + t, 'Accept': 'application/vnd.github+json', 'Content-Type': 'application/json'},
+      body: body ? JSON.stringify(body) : undefined
+    });
+    if (!r.ok) throw new Error('GitHub ' + r.status);
+    return r.status === 204 ? null : await r.json();
+  }
+  async function ghGetFile(repo, path){
+    try {
+      var j = await ghApi('/repos/davedellaquila/' + repo + '/contents/' + path);
+      if (j && j.content) return {
+        text: new TextDecoder().decode(Uint8Array.from(atob(j.content.replace(/\n/g, '')), function(c){ return c.charCodeAt(0); })),
+        sha: j.sha
+      };
+    } catch(e){}
+    return null;
+  }
+  var repo = null, repoName = bid;
+  async function resolveRepo(){
+    try {
+      var r = await fetch('../buddies.json', {cache: 'no-store'});
+      var d = await r.json();
+      var buds = d.buddies || [];
+      for (var i = 0; i < buds.length; i++) {
+        if (buds[i].id === bid && buds[i].repo) { repo = buds[i].repo; repoName = buds[i].name || bid; break; }
+      }
+    } catch(e){}
+  }
+  function refreshUI(){
+    var has = !!token();
+    connectWrap.hidden = has;
+    if (has) tokWrap.hidden = true;
+    var ok = has && !!repo;
+    ta.disabled = !ok;
+    btn.disabled = !ok;
+    if (!has) { st.textContent = ''; }
+    else if (!repo) { st.textContent = 'No repo linked for this buddy yet.'; }
+  }
+  var tokInput = tokWrap.querySelector('input'),
+      tokSave = tokWrap.querySelector('button');
+  connectBtn.addEventListener('click', function(){
+    tokWrap.hidden = false;
+    if (tokInput) tokInput.focus();
+  });
+  tokSave.addEventListener('click', function(){
+    var v = tokInput.value.trim();
+    if (!v) return;
+    lsSet({ghToken: v});
+    tokInput.value = '';
+    tokWrap.hidden = true;
+    refreshUI();
+    st.textContent = 'Token saved on this device.';
+  });
+  async function dump(){
+    var text = ta.value.trim();
+    if (!text) return;
+    if (!token()) { refreshUI(); return; }
+    if (!repo) { st.textContent = 'No repo linked for this buddy yet.'; return; }
+    st.textContent = 'Dumping…';
+    btn.disabled = true;
+    try {
+      var stamp = new Date().toLocaleString();
+      var NL = String.fromCharCode(10);
+      var entry = '## ' + stamp + NL + NL + text + NL + NL;
+      var cur = await ghGetFile(repo, 'docs/ingest.md');
+      var base = cur ? cur.text : '# Ingest log — ' + repoName + NL + NL;
+      var body = {message: 'Ingest dump for ' + bid, content: b64encode(base + entry)};
+      if (cur && cur.sha) body.sha = cur.sha;
+      await ghApi('/repos/davedellaquila/' + repo + '/contents/docs/ingest.md', 'PUT', body);
+      ta.value = '';
+      st.textContent = '✓ Dumped to ' + repo + '/docs/ingest.md';
+    } catch(err){ st.textContent = 'Save failed: ' + (err.message || err); }
+    btn.disabled = false;
+  }
+  btn.addEventListener('click', dump);
+  ta.addEventListener('keydown', function(ev){
+    if ((ev.metaKey || ev.ctrlKey) && ev.key === 'Enter') { ev.preventDefault(); dump(); }
+  });
+  resolveRepo().then(refreshUI);
 })();
 </script>
 </body>

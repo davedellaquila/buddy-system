@@ -79,7 +79,10 @@ body{padding:0}
   box-shadow:0 8px 14px -10px rgba(0,0,0,.55)}
 .sb-search-sticky #buddy-search{
   width:100%;box-sizing:border-box;background:var(--bg);border:1px solid var(--border);
-  color:var(--text);border-radius:8px;padding:7px 10px;font-size:13px}
+  color:var(--text);border-radius:8px;padding:7px 30px 7px 10px;font-size:13px}
+.sb-search-wrap{position:relative;display:flex;align-items:center}
+#buddy-search-clear{position:absolute;right:6px;top:50%;transform:translateY(-50%);border:none;background:transparent;color:var(--muted);font-size:18px;line-height:1;cursor:pointer;padding:4px 8px;border-radius:6px}
+#buddy-search-clear:hover{color:var(--text);background:rgba(127,127,127,.18)}
 .brand .eyebrow{font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted)}
 .brand h1{font-size:22px;margin:4px 0 0}
 #brand-name{outline:none;border-bottom:2px dashed transparent;cursor:text;display:inline-block;min-width:60px}
@@ -765,9 +768,9 @@ def build():
         + '</div>'
         for p in plans
     )
-    status_tints = {'Live': '#2f9e44', 'Active': '#1f6feb', 'Brief review': '#a371f7',
+    status_tints = {'Live': '#2f9e44', 'Active': '#1f6feb', 'Mission review': '#a371f7',
                     'Exploring': '#d97a1f', 'Planned': '#8b949e', 'Draft': '#8b949e'}
-    status_order = ['Live', 'Active', 'Brief review', 'Exploring', 'Planned', 'Draft']
+    status_order = ['Live', 'Active', 'Mission review', 'Exploring', 'Planned', 'Draft']
     status_counts = {}
     for p in plans:
         status_counts[p["status"]] = status_counts.get(p["status"], 0) + 1
@@ -894,7 +897,7 @@ const VIEW_DEFS = [
 const VIEW_TIPS = {
   tree: 'Tree view — visual hierarchy of all buddies. Click a node to open its details. Drag the background to pan, scroll to zoom. Drag a node onto another node to reparent it.',
   projects: 'Projects list — every buddy in hierarchy order with status. Click a tile to filter by attention status. Click the chevron to expand/collapse sections.',
-  plans: 'Business Plans — real-world ventures as cards. Click a status tile to filter. Each card links to its brief and related buddies.',
+  plans: 'Business Plans — real-world ventures as cards. Click a status tile to filter. Each card links to its mission statement and related buddies.',
   manifest: 'New-Project Manifest — the checklist every new buddy gets. Click AUTOMATIC or PLANNED tiles to filter the steps.',
   project: 'Project Homepage — loads the selected buddy homepage full-bleed in the main view. Clicking a buddy with a homepage swaps it; clicking one without keeps the current page.',
   changelog: 'Changelog — history of everything that changed. Click a tile to filter by change type. Click a row to open the changed buddy.',
@@ -1533,53 +1536,214 @@ function applyPlanFilter(){
 function buddyHomepageHtml(b){
   const kids = (b.children || []).map(cid => byId[cid]).filter(Boolean);
   const arts = b.artifacts || [];
-  const plans = (typeof PLANS !== 'undefined' && PLANS[b.id]) || [];
+  const allPlans = (typeof PLANS !== 'undefined' && PLANS) || [];
+  const plans = allPlans.filter(p => (p.buddies || []).includes(b.id));
   const attnItems = (b.attention || []).filter(a => !S.seen[b.id + ':' + (a.id || a.text)]);
-  let h = '<div style="max-width:800px;margin:0 auto;padding:40px 24px;font-family:inherit">';
-  // Header
-  h += '<div style="text-align:center;margin-bottom:36px">';
-  h += '<div style="font-size:64px;margin-bottom:12px">' + (b.icon || '🤖') + '</div>';
-  h += '<h1 style="font-size:32px;margin:0 0 8px">' + escHtml(dispName(b)) + '</h1>';
-  if (b.tagline) h += '<p style="color:var(--muted);font-size:16px;margin:0">' + escHtml(b.tagline) + '</p>';
-  h += '</div>';
-  // Mission
+  let stats = '';
+  if (attnItems.length) stats += '<span class="hp-stat"><b>' + attnItems.length + '</b> need attention</span>';
+  if (kids.length) stats += '<span class="hp-stat"><b>' + kids.length + '</b> sub-buddies</span>';
+  if (plans.length) stats += '<span class="hp-stat"><b>' + plans.length + '</b> plans</span>';
+  if (arts.length) stats += '<span class="hp-stat"><b>' + arts.length + '</b> artifacts</span>';
+  let h = '<style>'
+    + '.hp{max-width:1080px;margin:0 auto;padding:36px 28px 56px;color:var(--text);font-family:inherit}'
+    + '.hp-grid{display:grid;gap:22px;grid-template-columns:minmax(0,1fr) 340px;grid-template-areas:"head head" "main rail" "dump dump"}'
+    + '.hp-head{grid-area:head;display:flex;align-items:center;gap:20px;min-width:0}'
+    + '.hp-icon{width:78px;height:78px;flex:none;border-radius:24px;background:var(--panel);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:42px;box-shadow:var(--shadow-soft)}'
+    + '.hp-headtxt{min-width:0}'
+    + '.hp-name{margin:0;font-size:30px;letter-spacing:-0.02em;line-height:1.15;overflow-wrap:break-word}'
+    + '.hp-tagline{margin:8px 0 0;color:var(--muted);font-size:15px;line-height:1.55;max-width:660px}'
+    + '.hp-stats{margin-top:12px;display:flex;flex-wrap:wrap;gap:8px;align-items:center}'
+    + '.hp-stat{font-size:12.5px;color:var(--muted);background:var(--panel);border:1px solid var(--border);border-radius:999px;padding:4px 12px;white-space:nowrap}'
+    + '.hp-stat b{color:var(--text)}'
+    + '.hp-main{grid-area:main;min-width:0;display:flex;flex-direction:column;gap:22px}'
+    + '.hp-rail{grid-area:rail;min-width:0;display:flex;flex-direction:column;gap:22px}'
+    + '.hp-card{background:var(--panel);border:1px solid var(--border);border-radius:16px;padding:20px 22px;min-width:0}'
+    + '.hp-kicker{margin:0 0 6px;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.09em;color:var(--muted)}'
+    + '.hp-mission{margin:8px 0 0;font-size:15px;line-height:1.7;overflow-wrap:break-word}'
+    + '.hp-attn{border-color:var(--amber-bd)}'
+    + '.hp-attn .hp-kicker{color:var(--amber-tx)}'
+    + '.hp-aitem{display:flex;gap:10px;padding:10px 0;font-size:14px;line-height:1.5}'
+    + '.hp-aitem + .hp-aitem{border-top:1px solid var(--border)}'
+    + '.hp-adot{color:var(--amber);flex:none;font-size:11px;line-height:2}'
+    + '.hp-atext{min-width:0;overflow-wrap:break-word}'
+    + '.hp-adate{color:var(--faint);font-size:12px;margin-top:3px}'
+    + '.hp-more{font-size:12.5px;color:var(--muted);margin:10px 0 0}'
+    + '.hp-chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}'
+    + '.hp-chip{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:8px 12px;font-size:13.5px;white-space:nowrap}'
+    + '.hp-plan{display:flex;gap:12px;padding:14px 0;min-width:0}'
+    + '.hp-plan + .hp-plan{border-top:1px solid var(--border)}'
+    + '.hp-picon{font-size:26px;flex:none;line-height:1.2}'
+    + '.hp-pbody{min-width:0}'
+    + '.hp-pname{font-weight:650;font-size:15px;overflow-wrap:break-word}'
+    + '.hp-pill{display:inline-block;vertical-align:1px;font-size:11px;font-weight:700;background:var(--wash);color:var(--accent-hi);border-radius:999px;padding:3px 10px;margin-left:8px;white-space:nowrap}'
+    + '.hp-pdesc{margin:6px 0 0;color:var(--muted);font-size:13.5px;line-height:1.55;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;overflow-wrap:break-word}'
+    + '.hp-pdoc{display:inline-block;margin-top:8px;font-size:13px;color:var(--accent);text-decoration:none}'
+    + '.hp-pdoc:hover{text-decoration:underline}'
+    + '.hp-art{display:flex;align-items:center;gap:10px;padding:10px 0;font-size:14.5px;min-width:0}'
+    + '.hp-art + .hp-art{border-top:1px solid var(--border)}'
+    + '.hp-art a{color:var(--accent);text-decoration:none;overflow-wrap:break-word;min-width:0}'
+    + '.hp-art a:hover{text-decoration:underline}'
+    + '.hp-go{margin-left:auto;color:var(--faint);flex:none}'
+    + '.hp-dumpsec{grid-area:dump}'
+    + '.hp-dump textarea{display:block;width:100%;box-sizing:border-box;min-height:92px;background:var(--bg);border:1px solid var(--border);border-radius:10px;color:var(--text);padding:12px 14px;font:inherit;font-size:14px;line-height:1.55;resize:vertical;margin-top:10px}'
+    + '.hp-dump textarea:focus{outline:none;border-color:var(--accent)}'
+    + '.hp-dump-row{display:flex;align-items:center;gap:14px;margin-top:12px;flex-wrap:wrap}'
+    + '.hp-dump-btn{background:var(--accent);color:var(--on-accent);border:0;border-radius:10px;padding:10px 22px;font:inherit;font-size:14px;font-weight:650;cursor:pointer}'
+    + '.hp-dump-btn:hover{filter:brightness(1.08)}'
+    + '.hp-dump-status{font-size:13px;color:var(--muted)}'
+    + '.hp-dump-status a{color:var(--accent)}'
+    + '.hp-note{text-align:center;color:var(--muted);font-size:12px;margin:34px 0 0}'
+    + '.hp-locked{margin-top:10px;background:var(--bg);border:1px dashed var(--border);border-radius:10px;padding:14px 16px}'
+    + '@media (max-width:960px){'
+    + '.hp-grid{grid-template-columns:minmax(0,1fr);grid-template-areas:"head" "rail" "main" "dump"}'
+    + '.hp{padding:26px 16px 44px}'
+    + '.hp-icon{width:62px;height:62px;font-size:34px;border-radius:18px}'
+    + '.hp-name{font-size:24px}'
+    + '.hp-card{padding:16px 18px}'
+    + '}'
+    + '</style>';
+  h += '<div class="hp"><div class="hp-grid">';
+  // header
+  h += '<header class="hp-head"><div class="hp-icon">' + escHtml(b.icon || '🤖') + '</div><div class="hp-headtxt">';
+  h += '<h1 class="hp-name">' + escHtml(dispName(b)) + '</h1>';
+  if (b.tagline) h += '<p class="hp-tagline">' + escHtml(b.tagline) + '</p>';
+  let statHtml = stats;
+  if (b.status) statHtml = '<span class="status ' + escHtml(b.statusClass || '') + '">' + escHtml(b.status) + '</span>' + statHtml;
+  if (statHtml) h += '<div class="hp-stats">' + statHtml + '</div>';
+  h += '</div></header>';
+  // main column
+  h += '<div class="hp-main">';
   if (b.mission) {
-    h += '<div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:20px">';
-    h += '<h3 style="margin:0 0 12px;font-size:14px;text-transform:uppercase;letter-spacing:0.5px;color:var(--muted)">About</h3>';
-    h += '<p style="margin:0;line-height:1.6">' + escHtml(b.mission) + '</p></div>';
+    h += '<section class="hp-card"><h3 class="hp-kicker">About</h3><p class="hp-mission">' + escHtml(b.mission) + '</p></section>';
   }
-  // Attention
-  if (attnItems.length) {
-    h += '<div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:20px">';
-    h += '<h3 style="margin:0 0 12px;font-size:14px;text-transform:uppercase;letter-spacing:0.5px;color:var(--muted)">Needs attention (' + attnItems.length + ')</h3>';
-    attnItems.slice(0, 5).forEach(a => {
-      h += '<div style="padding:8px 0;border-bottom:1px solid var(--border)"><span style="color:#f0a35e">●</span> ' + escHtml(a.text || a) + '</div>';
+  if (plans.length) {
+    h += '<section class="hp-card"><h3 class="hp-kicker">Plans (' + plans.length + ')</h3>';
+    plans.forEach(p => {
+      h += '<div class="hp-plan"><div class="hp-picon">' + escHtml(p.icon || '💼') + '</div><div class="hp-pbody">';
+      h += '<div class="hp-pname">' + escHtml(p.name || 'Untitled plan');
+      if (p.status) h += '<span class="hp-pill">' + escHtml(p.status) + '</span>';
+      h += '</div>';
+      if (p.desc) h += '<p class="hp-pdesc">' + escHtml(p.desc) + '</p>';
+      if (p.docs && p.docs[0] && p.docs[0].url) h += '<a class="hp-pdoc" href="' + escHtml(p.docs[0].url) + '" target="_blank" rel="noopener">' + escHtml(p.docs[0].label || 'Open doc') + ' →</a>';
+      h += '</div></div>';
     });
-    h += '</div>';
+    h += '</section>';
   }
-  // Children
-  if (kids.length) {
-    h += '<div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:20px">';
-    h += '<h3 style="margin:0 0 12px;font-size:14px;text-transform:uppercase;letter-spacing:0.5px;color:var(--muted)">Sub-buddies (' + kids.length + ')</h3>';
-    h += '<div style="display:flex;flex-wrap:wrap;gap:8px">';
-    kids.forEach(k => {
-      h += '<span style="background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:8px 12px;font-size:14px">' + (k.icon || '🤖') + ' ' + escHtml(dispName(k)) + '</span>';
-    });
-    h += '</div></div>';
-  }
-  // Artifacts
   if (arts.length) {
-    h += '<div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:20px">';
-    h += '<h3 style="margin:0 0 12px;font-size:14px;text-transform:uppercase;letter-spacing:0.5px;color:var(--muted)">Artifacts (' + arts.length + ')</h3>';
+    h += '<section class="hp-card"><h3 class="hp-kicker">Artifacts (' + arts.length + ')</h3>';
     arts.slice(0, 6).forEach(a => {
-      h += '<div style="padding:6px 0"><a href="' + escHtml(a.url || '#') + '" target="_blank" style="color:var(--accent);text-decoration:none">' + escHtml(a.title || a.name || 'Artifact') + '</a></div>';
+      h += '<div class="hp-art"><a href="' + escHtml(a.url || '#') + '" target="_blank" rel="noopener">' + escHtml(a.title || a.name || 'Artifact') + '</a><span class="hp-go">→</span></div>';
     });
-    h += '</div>';
+    if (arts.length > 6) h += '<p class="hp-more">+' + (arts.length - 6) + ' more</p>';
+    h += '</section>';
   }
-  h += '<p style="text-align:center;color:var(--muted);font-size:12px;margin-top:32px">Auto-generated homepage — set a custom URL in the Homepage URL field to override.</p>';
+  h += '</div>';
+  // rail
+  h += '<aside class="hp-rail">';
+  if (attnItems.length) {
+    h += '<section class="hp-card hp-attn"><h3 class="hp-kicker">Needs attention (' + attnItems.length + ')</h3>';
+    attnItems.slice(0, 5).forEach(a => {
+      h += '<div class="hp-aitem"><span class="hp-adot">●</span><div class="hp-atext">';
+      if (a.url) h += '<a href="' + escHtml(a.url) + '" target="_blank" rel="noopener" style="color:inherit">' + escHtml(a.text || a) + ' ↗</a>';
+      else h += escHtml(a.text || a);
+      if (a.date) h += '<div class="hp-adate">Asked ' + escHtml(a.date) + '</div>';
+      h += '</div></div>';
+    });
+    if (attnItems.length > 5) h += '<p class="hp-more">+' + (attnItems.length - 5) + ' more</p>';
+    h += '</section>';
+  }
+  if (kids.length) {
+    h += '<section class="hp-card"><h3 class="hp-kicker">Sub-buddies (' + kids.length + ')</h3><div class="hp-chips">';
+    kids.forEach(k => {
+      h += '<span class="hp-chip">' + escHtml(k.icon || '🤖') + ' ' + escHtml(dispName(k)) + '</span>';
+    });
+    h += '</div></section>';
+  }
+  h += '</aside>';
+  // brain dump (full width, two-state: functional when a token is present)
+  h += homepageDumpSectionHtml(b);
+  h += '</div>';
+  h += '<p class="hp-note">Auto-generated homepage — set a custom URL in the Homepage URL field to override.</p>';
   h += '</div>';
   return h;
 }
+function homepageDumpSectionHtml(b){
+  let inner;
+  if (!b.repo) {
+    inner = '<p class="hp-dump-status" style="margin:10px 0 0">No repo linked for this buddy yet — dumps are disabled.</p>';
+  } else if (!ghToken()) {
+    inner = '<div class="hp-locked"><p class="hp-dump-status" style="margin:0 0 12px">🔒 Connect GitHub to unlock dumping. The token stays on this device only.</p>'
+      + '<button type="button" class="hp-dump-btn" data-hp-connect>Connect GitHub to enable</button></div>';
+  } else {
+    inner = '<textarea data-hp-dump placeholder="Dump a thought, link, or half-formed idea — it lands in this buddy\\u2019s docs/ingest.md" aria-label="Brain dump"></textarea>'
+      + '<div class="hp-dump-row"><button type="button" class="hp-dump-btn" data-hp-dump-btn>Dump it</button><span class="hp-dump-status" data-hp-dump-status></span></div>';
+  }
+  return '<section class="hp-card hp-dumpsec" data-hp-dumpsec><div class="hp-dump"><h3 class="hp-kicker">🧠 Brain dump</h3>' + inner + '</div></section>';
+}
+function lsToken(){
+  try { return JSON.parse(localStorage.getItem(LS_KEY) || '{}').ghToken || ''; }
+  catch (e) { return ''; }
+}
+function openTokenPopover(){
+  const pop = document.getElementById('token-pop');
+  if (pop) {
+    pop.classList.add('show');
+    const inp = document.getElementById('ghtok-global');
+    if (inp) inp.focus();
+  }
+}
+function refreshHomepageDumpbox(){
+  const sec = document.querySelector('[data-hp-dumpsec]');
+  if (!sec) return;
+  const b = byId[projectId()] || {};
+  const tmp = document.createElement('div');
+  tmp.innerHTML = homepageDumpSectionHtml(b);
+  const fresh = tmp.firstChild;
+  sec.replaceWith(fresh);
+  initHomepageDumpbox(fresh, b);
+}
+async function homepageDumpSubmit(root, id){
+  const ta = root.querySelector('[data-hp-dump]');
+  const st = root.querySelector('[data-hp-dump-status]');
+  const b = byId[id];
+  if (!ta || !b) return;
+  const text = ta.value.trim();
+  if (!text) return;
+  // Re-check the token fresh from storage — it may have been added in another tab.
+  if (!ghToken()) {
+    const freshTok = lsToken();
+    if (freshTok) { S.ghToken = freshTok; }
+    else {
+      if (st) st.innerHTML = 'Add a GitHub token to unlock ingest. <a href="https://github.com/settings/tokens" target="_blank" rel="noopener">Get one here</a>.';
+      refreshHomepageDumpbox();
+      return;
+    }
+  }
+  const stamp = new Date().toLocaleString();
+  const entry = '## ' + stamp + String.fromCharCode(10,10) + text + String.fromCharCode(10,10);
+  if (!b.repo) { if (st) st.textContent = 'No repo linked for this buddy yet.'; return; }
+  if (st) st.textContent = 'Dumping…';
+  try {
+    const cur = await ghGetFile(b.repo, 'docs/ingest.md') || '# Ingest log — ' + b.name + String.fromCharCode(10,10);
+    await ghPutFile(b.repo, 'docs/ingest.md', b64encode(cur + entry), 'Ingest dump for ' + id);
+    ta.value = '';
+    if (st) st.textContent = 'Dumped to ' + b.repo + '/docs/ingest.md';
+  } catch (err) { if (st) st.textContent = 'Save failed: ' + (err.message || err); }
+}
+function initHomepageDumpbox(root, b){
+  if (!root || !b) return;
+  const dumpBtn = root.querySelector('[data-hp-dump-btn]');
+  if (dumpBtn && !dumpBtn._hpWired) {
+    dumpBtn._hpWired = true;
+    dumpBtn.addEventListener('click', function(){ homepageDumpSubmit(root, b.id); });
+  }
+  const connectBtn = root.querySelector('[data-hp-connect]');
+  if (connectBtn && !connectBtn._hpWired) {
+    connectBtn._hpWired = true;
+    connectBtn.addEventListener('click', function(){ openTokenPopover(); });
+  }
+}
+
 function renderProjectView(){
   const pv = document.getElementById('view-project');
   if (!pv) return;
@@ -1612,6 +1776,10 @@ function renderProjectView(){
             e.preventDefault();
           }
         });
+        // Same-origin homepage: bind pull-to-refresh inside the iframe so the
+        // gesture works while a buddy homepage is showing (cross-origin fails
+        // silently and keeps parent-only behavior).
+        if (window.__bindPullToRefresh && frame.contentDocument) window.__bindPullToRefresh(frame.contentDocument);
       } catch (err) {}
     });
     wrap.appendChild(frame);
@@ -1626,6 +1794,7 @@ function renderProjectView(){
     content.id = 'homepage-frame';
     content.style.cssText = 'width:100%;height:100%;overflow:auto;background:var(--bg)';
     content.innerHTML = buddyHomepageHtml(b);
+    initHomepageDumpbox(content, b);
     wrap.appendChild(content);
   }
   pv.appendChild(wrap);
@@ -1634,11 +1803,11 @@ function renderBuddy(id){
   const b = byId[id]; if(!b) return;
   const items = (b.attention || []).slice().sort((x,y) => (S.seen[x.id]?1:0) - (S.seen[y.id]?1:0));
   let arts = '';
-  if (b.brief) arts += artRow(ICON_DOC, 'Brief', 'The canonical mission & intent — Google Doc', b.brief);
+  if (b.brief) arts += artRow(ICON_DOC, 'Mission statement', 'The canonical mission & intent — Google Doc', b.brief);
   if (b.homepageSource) arts += artRow(ICON_LINK, 'Homepage', 'Buddy homepage — opens on Muse', b.homepageSource);
   if (b.repo) arts += artRow(ICON_REPO, 'GitHub Repo', 'davedellaquila/'+b.repo+' (private)', 'https://github.com/davedellaquila/'+b.repo);
   (b.docs || []).forEach(d => { arts += artRow(ICON_LINK, d.label, 'Related document — Google Doc', d.url); });
-  if (!arts) arts = '<p class="bp-empty">No artifacts yet — the drill adds the brief and repo here when they exist.</p>';
+  if (!arts) arts = '<p class="bp-empty">No artifacts yet — the drill adds the mission statement and repo here when they exist.</p>';
   let photos = '';
   const seedStrip = (b.photos || []).map(u => '<a href="'+escHtml(u)+'" target="_blank" rel="noopener"><img src="'+escHtml(u)+'" loading="lazy" alt=""></a>').join('');
   photos = '<div class="bp-sec" data-field="photos"><h3 id="photos-h3">Photos</h3><div class="prow"><div class="pstrip" id="pstrip">' + seedStrip + '</div>'
@@ -1693,7 +1862,7 @@ function renderBuddy(id){
     + '<textarea class="notes" id="bp-ingest" placeholder="Dump what\u2019s in your head about '+escHtml(dispName(b))+'\u2026"></textarea>'
     + '<div style="margin-top:8px"><span class="fineprint" id="ingest-status"></span></div>'
     + '<div id="ingest-feed" style="margin-top:8px"></div></div>'
-    + '<div class="bp-sec" data-field="mission"><h3>About<span class="info-tip" data-tip="The mission is the brief\\u2019s executive summary \\u2014 tweak it through the buddy\\u2019s chat thread and it updates everywhere.">\\u24d8</span></h3><p class="bp-mission">'+escHtml(b.mission)+'</p></div>'
+    + '<div class="bp-sec" data-field="mission"><h3>About<span class="info-tip" data-tip="The mission statement\\u2019s executive summary \\u2014 tweak it through the buddy\\u2019s chat thread and it updates everywhere.">\\u24d8</span></h3><p class="bp-mission">'+escHtml(b.mission)+'</p></div>'
     + '<div class="bp-sec" data-field="homepage"><h3>Homepage URL</h3>'
     + '<div style="display:flex;align-items:center;gap:8px">'
     + '<input type="url" id="bp-homepage-url" value="'+escHtml(homepageUrl(b))+'" placeholder="Paste homepage URL here…" style="flex:1;min-width:0;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:8px 12px;font-size:13px;color:var(--text)" title="The full URL for this buddy\u2019s homepage. Paste a URL and click away to save.">'
@@ -1956,7 +2125,7 @@ function renderProjects(){
     });
   });
   // Status tint colors (match the pills)
-  const statusTints = {'Active':'#1f6feb','Live · M2 shipped':'#2f9e44','Live · pre-alpha':'#2f9e44','New':'#d97a1f','Brief review':'#a371f7','PRD review':'#a371f7','Pilot':'#1f6feb','Spec review':'#a371f7'};
+  const statusTints = {'Active':'#1f6feb','Live · M2 shipped':'#2f9e44','Live · pre-alpha':'#2f9e44','New':'#d97a1f','Mission review':'#a371f7','PRD review':'#a371f7','Pilot':'#1f6feb','Spec review':'#a371f7'};
   const statusOrder = Object.keys(statusCounts).sort();
   let s = '<section class="projects-view" style="margin-top:24px">'
     + '<div id="project-tiles">'
@@ -3351,42 +3520,145 @@ function initPanelSwipeGestures(){
 // Checks for a newer deployed version; shows an update banner if the server
 // has a newer build than the one currently loaded (helps Safari web apps
 // and other containers without a hard-refresh shortcut).
+// Returns 'new' | 'current' | 'suppressed' | 'error' so manual triggers
+// (e.g. pull-to-refresh) can report the outcome.
 function initVersionCheck(){
   const myBuild = '__BUILD__';
-  async function check(){
+  function showUpdateBanner(serverBuild){
+    if (document.getElementById('update-banner')) return;
+    const b = document.createElement('div');
+    b.id = 'update-banner';
+    b.innerHTML = '<span>A newer version of Buddies is available (' + escHtml(serverBuild) + ').</span> '
+      + '<button id="update-now" style="margin-left:12px;padding:6px 14px;border-radius:8px;border:1px solid var(--accent);background:var(--accent);color:#fff;font-weight:600;cursor:pointer">Update now</button>'
+      + '<button id="update-dismiss" aria-label="Dismiss" style="margin-left:8px;padding:6px 10px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--text);font-size:16px;cursor:pointer;line-height:1">×</button>';
+    b.style.cssText = 'position:fixed;top:16px;left:50%;transform:translateX(-50%);z-index:9999;background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:12px 18px;box-shadow:0 8px 32px rgba(0,0,0,.3);display:flex;align-items:center;font-size:14px';
+    document.body.appendChild(b);
+    document.getElementById('update-now').addEventListener('click', () => {
+      b.remove();
+      try { sessionStorage.setItem('updateClicked', String(Date.now())); } catch (e) {}
+      location.href = location.pathname + '?v=' + Date.now() + location.hash;
+    });
+    document.getElementById('update-dismiss').addEventListener('click', () => {
+      b.remove();
+    });
+  }
+  async function checkForUpdate(){
     try {
       const r = await fetch('version.txt?_=' + Date.now(), {cache: 'no-store'});
-      if (!r.ok) return;
+      if (!r.ok) return 'error';
       const serverBuild = (await r.text()).trim();
       // Don't show the banner for 10 min after "Update now" was clicked (gives Pages time to deploy)
       try {
         const clicked = parseInt(sessionStorage.getItem('updateClicked') || '0', 10);
-        if (clicked && Date.now() - clicked < 10 * 60 * 1000) return;
+        if (clicked && Date.now() - clicked < 10 * 60 * 1000) return 'suppressed';
       } catch (e) {}
-      if (serverBuild && serverBuild !== myBuild && !document.getElementById('update-banner')) {
-        const b = document.createElement('div');
-        b.id = 'update-banner';
-        b.innerHTML = '<span>A newer version of Buddies is available (' + escHtml(serverBuild) + ').</span> '
-          + '<button id="update-now" style="margin-left:12px;padding:6px 14px;border-radius:8px;border:1px solid var(--accent);background:var(--accent);color:#fff;font-weight:600;cursor:pointer">Update now</button>'
-          + '<button id="update-dismiss" aria-label="Dismiss" style="margin-left:8px;padding:6px 10px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--text);font-size:16px;cursor:pointer;line-height:1">\u00d7</button>';
-        b.style.cssText = 'position:fixed;bottom:16px;left:50%;transform:translateX(-50%);z-index:9999;background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:12px 18px;box-shadow:0 8px 32px rgba(0,0,0,.3);display:flex;align-items:center;font-size:14px';
-        document.body.appendChild(b);
-        document.getElementById('update-now').addEventListener('click', () => {
-          b.remove();
-          try { sessionStorage.setItem('updateClicked', String(Date.now())); } catch (e) {}
-          location.href = location.pathname + '?v=' + Date.now() + location.hash;
-        });
-        document.getElementById('update-dismiss').addEventListener('click', () => {
-          b.remove();
-        });
+      if (serverBuild && serverBuild !== myBuild) {
+        showUpdateBanner(serverBuild);
+        return 'new';
       }
-    } catch (e) {}
+      return 'current';
+    } catch (e) { return 'error'; }
   }
-  check();
-  setInterval(check, 5 * 60 * 1000);
+  window.__buddyUpdateCheck = checkForUpdate;
+  checkForUpdate();
+  setInterval(checkForUpdate, 5 * 60 * 1000);
+}
+// Pull-down at the top of any scrollable view triggers a manual update check.
+function initPullToRefresh(){
+  const THRESHOLD = 70;
+  let pill = null, pillVisible = false;
+  function scrollableAncestor(el, doc){
+    const d = doc || document;
+    while (el && el !== d.body && el !== d.documentElement) {
+      if (el.scrollHeight > el.clientHeight + 4) return el;
+      el = el.parentElement;
+    }
+    const de = d.documentElement;
+    if (de.scrollHeight > de.clientHeight + 4) return de;
+    return d.body;
+  }
+  function ensurePill(){
+    if (pill) return pill;
+    pill = document.createElement('div');
+    pill.setAttribute('aria-live', 'polite');
+    pill.style.cssText = 'position:fixed;top:10px;left:50%;transform:translateX(-50%) translateY(-8px);z-index:10000;background:var(--panel);border:1px solid var(--border);border-radius:999px;padding:8px 16px;font-size:13px;color:var(--text);opacity:0;transition:opacity .18s,transform .18s;pointer-events:none;box-shadow:0 4px 16px rgba(0,0,0,.18);white-space:nowrap';
+    document.body.appendChild(pill);
+    return pill;
+  }
+  function showPill(text){
+    const p = ensurePill();
+    p.textContent = text;
+    p.style.opacity = '1';
+    p.style.transform = 'translateX(-50%) translateY(0)';
+    pillVisible = true;
+  }
+  function hidePill(){
+    if (!pill) return;
+    pill.style.opacity = '0';
+    pill.style.transform = 'translateX(-50%) translateY(-8px)';
+    pillVisible = false;
+  }
+  function toast(text, ms){
+    showPill(text);
+    setTimeout(hidePill, ms || 2200);
+  }
+  // Bind the pull gesture on a document. The dashboard binds its own document;
+  // the homepage iframe's document is bound on load (same-origin homepages),
+  // so pull-to-refresh works while a buddy homepage is showing. The pill and
+  // the update check always live in the parent window.
+  function bindDoc(doc){
+    if (!doc || doc.__ptrBound) return;
+    doc.__ptrBound = true;
+    let track = null;
+    doc.addEventListener('touchstart', function(e){
+      if (e.touches.length !== 1) { track = null; return; }
+      const t = e.touches[0];
+      const sc = scrollableAncestor(e.target, doc);
+      track = (sc && sc.scrollTop <= 0) ? { y0: t.clientY, x0: t.clientX } : null;
+    }, {passive: true});
+    doc.addEventListener('touchmove', function(e){
+      if (!track) return;
+      const t = e.touches[0];
+      const dy = t.clientY - track.y0, dx = t.clientX - track.x0;
+      if (Math.abs(dx) > Math.abs(dy) * 1.4) { track = null; hidePill(); return; }
+      if (dy > THRESHOLD) showPill('Release to check for updates');
+      else if (dy > 24) showPill('Keep pulling to check for updates');
+      else if (pillVisible) hidePill();
+    }, {passive: true});
+    function onEnd(){
+      if (!track) return;
+      const engaged = pillVisible;
+      track = null;
+      hidePill();
+      if (!engaged) return;
+      const run = window.__buddyUpdateCheck;
+      if (!run) return;
+      showPill('Checking for updates…');
+      run().then(function(status){
+        if (status === 'new') { hidePill(); }
+        else if (status === 'current' || status === 'suppressed') toast('You are up to date');
+        else toast('Could not check — are you offline?');
+      });
+    }
+    doc.addEventListener('touchend', onEnd, {passive: true});
+    doc.addEventListener('touchcancel', function(){ track = null; hidePill(); }, {passive: true});
+  }
+  bindDoc(document);
+  window.__bindPullToRefresh = bindDoc;
 }
 function initSearch(){
   const bs = document.getElementById('buddy-search');
+  const cb = document.getElementById('buddy-search-clear');
+  if (cb && !cb.dataset.init) {
+    cb.dataset.init = '1';
+    const sync = () => { cb.hidden = !bs.value; };
+    bs.addEventListener('input', sync); sync();
+    cb.addEventListener('click', () => {
+      bs.value = '';
+      bs.dispatchEvent(new Event('input', {bubbles: true}));
+      sync(); bs.focus();
+    });
+  }
   if (bs && !bs.dataset.init) {
     bs.dataset.init = '1';
     bs.addEventListener('input', () => {
@@ -3398,6 +3670,7 @@ function initSearch(){
 function refreshTokenUI(id){
   updateTokenPill();
   updateTokenGating(id);
+  refreshHomepageDumpbox();
   if (id && S.sel === 'buddy:' + id) {
     loadSharedNotes(id);
     renderIngestFeed(id);
@@ -3622,6 +3895,7 @@ initSbToTop();
 initEdgeSwipeOpen();
 initPanelSwipeGestures();
 initVersionCheck();
+initPullToRefresh();
 initPlansToggle();
 initSbBrandSticky();
 """
@@ -3659,8 +3933,11 @@ initSbBrandSticky();
   </div>
   <div class="nav-sec"><h3>Views</h3><div id="view-nav"></div></div>
   <div class="sb-search-sticky">
+    <div class="sb-search-wrap">
     <input type="search" id="buddy-search" placeholder="Search buddies\u2026" aria-label="Search buddies"
       title="Search all buddies by name or tagline. Filters the sidebar list as you type. Press / anywhere to jump here. Arrow keys navigate results.">
+    <button type="button" id="buddy-search-clear" aria-label="Clear search" title="Clear search" hidden>×</button>
+    </div>
   </div>
   <div class="nav-sec">
   <h3>Buddies <span id="attn-pill" class="zero">0</span></h3><div id="buddy-nav"></div></div>

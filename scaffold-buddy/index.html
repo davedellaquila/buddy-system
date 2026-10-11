@@ -10,6 +10,7 @@
     --line:rgba(255,255,255,.16); --accent:#67e8f9; --accent-soft:rgba(103,232,249,.12);
     --amber:#fbbf24; --amber-soft:rgba(251,191,36,.12);
     --grid:rgba(255,255,255,.055); --plate:rgba(255,255,255,.04);
+    --btn-ink:#06224f;
   }
   @media (prefers-color-scheme: light){
     :root{
@@ -17,6 +18,7 @@
       --line:#d4ddf2; --accent:#0b5bd3; --accent-soft:#e3edff;
       --amber:#b45309; --amber-soft:#fdf3e0;
       --grid:rgba(11,43,102,.06); --plate:rgba(11,43,102,.05);
+      --btn-ink:#ffffff;
     }
   }
   *{box-sizing:border-box}
@@ -98,6 +100,46 @@
     padding:10px 18px; font-size:14px; font-weight:600;
   }
   .links a:hover{border-color:var(--accent); color:var(--accent)}
+  .dumpbox{
+    background:var(--panel); border:1px solid var(--line); border-radius:14px;
+    padding:20px 22px; margin-top:38px;
+  }
+  .dumpbox h2{margin:0 0 6px; font-size:20px; letter-spacing:0; text-transform:none; color:var(--ink)}
+  .dumpbox-sub{color:var(--muted); font-size:14px; margin:0 0 14px}
+  .dumpbox textarea{
+    width:100%; min-height:96px; resize:vertical;
+    background:var(--bg); border:1px solid var(--line); border-radius:10px;
+    padding:10px 12px; font-size:14px; color:var(--ink); font-family:inherit;
+  }
+  .dumpbox textarea:focus{outline:none; border-color:var(--accent)}
+  .dumpbox textarea:disabled{opacity:.55}
+  .dumpbox-row{display:flex; align-items:center; gap:12px; margin-top:10px; flex-wrap:wrap}
+  .dumpbox-btn{
+    background:var(--accent); color:var(--btn-ink); border:none; border-radius:999px;
+    padding:9px 22px; font-size:14px; font-weight:700; cursor:pointer;
+  }
+  .dumpbox-btn:disabled{opacity:.45; cursor:default}
+  .dumpbox-status{font-size:13px; color:var(--muted)}
+  .dumpbox-token{
+    background:var(--amber-soft); border:1px dashed var(--amber); border-radius:10px;
+    padding:12px 14px; margin-bottom:12px; font-size:14px;
+  }
+  .dumpbox-token p{margin:0 0 8px}
+.dumpbox-connect{
+    background:var(--amber-soft); border:1px dashed var(--amber); border-radius:10px;
+    padding:12px 14px; margin-bottom:12px; font-size:14px;
+  }
+.dumpbox-connect p{ margin: 0 0 10px;}
+  .dumpbox-tokenrow{display:flex; gap:8px; flex-wrap:wrap; align-items:center}
+  .dumpbox-tokenrow input{
+    flex:1; min-width:170px; background:var(--panel); border:1px solid var(--line);
+    border-radius:8px; padding:7px 10px; font-size:13px; color:var(--ink);
+  }
+  .dumpbox-tokenrow button{
+    background:transparent; color:var(--accent); border:1px solid var(--accent);
+    border-radius:999px; padding:7px 14px; font-size:13px; font-weight:700; cursor:pointer;
+  }
+  .dumpbox-tokenrow a{color:var(--accent); font-size:13px}
   footer{margin-top:36px; color:var(--muted); font-size:12.5px}
   footer code{font-family:ui-monospace,Menlo,Consolas,monospace; font-size:.95em}
 </style>
@@ -158,19 +200,37 @@
     </svg>
   </div>
 
-  <h2>The rules</h2>
+  <h2>The two rules</h2>
   <div class="grid">
     <div class="card"><div class="e">🗣️</div><h3>Curation rule</h3><p>Threads stay conversational. Anything durable gets written into the knowledge base.</p></div>
     <div class="card"><div class="e">⚙️</div><h3>Kickoff stamping</h3><p>Every new buddy repo gets the skeleton stamped in at birth — same bones, every time.</p></div>
-    <div class="card"><div class="e">🌙</div><h3>CRITICAL — Dark mode</h3><p>Every buddy website must ship dark mode (<code>prefers-color-scheme</code> or equivalent). Stamp this into INIT / KNOWLEDGE / homepage checklist. See root <code>AGENTS.md</code>.</p></div>
   </div>
 
-  <h2>Standing order (all buddies)</h2>
-  <div class="attn"><span class="k">Critical</span>Dave needs dark mode on every buddy site <b>now</b> (outdoors). Light-only pages are incomplete. Memo: <a href="../docs/standing-orders.md">docs/standing-orders.md</a>.</div>
+  <section class="dumpbox" data-buddy-id="scaffold-buddy">
+    <h2>🧠 Brain dump</h2>
+    <p class="dumpbox-sub">Dump what's on your mind about Scaffold Buddy — raw and unfiltered. Each dump lands in the buddy's repo (docs/ingest.md) as a timestamped entry.</p>
+    <div class="dumpbox-connect" hidden>
+    <p>🔒 Connect GitHub to unlock dumping. Paste a token once — it stays on this device only.</p>
+    <button type="button" class="dumpbox-btn">Connect GitHub to enable</button>
+    </div>
+    <div class="dumpbox-token" hidden>
+      <p>🔒 Connect GitHub to unlock dumping. Paste a token once — it stays on this device only.</p>
+      <div class="dumpbox-tokenrow">
+        <input type="password" placeholder="GitHub token (repo scope)" aria-label="GitHub token">
+        <button type="button">Save token</button>
+        <a href="https://github.com/settings/tokens" target="_blank" rel="noopener">Get a token</a>
+      </div>
+    </div>
+    <textarea rows="4" placeholder="Dump what's on your mind about Scaffold Buddy…"></textarea>
+    <div class="dumpbox-row">
+      <button type="button" class="dumpbox-btn">Dump it</button>
+      <span class="dumpbox-status" role="status"></span>
+    </div>
+  </section>
 
   <h2>Needs Dave's attention</h2>
   <div class="attn"><span class="k">Review</span><a href="https://docs.google.com/document/d/1rfrWpNABG-FbiHhbmOyYwVMZk1pwJekm6rNoPsMrh6k/edit" target="_blank" rel="noopener">Product brief</a> awaiting your verdict — approve, edits, or defer.</div>
-  <div class="attn"><span class="k">Queued</span>v1 template stamping into the empty repo — unblocked the moment the brief is approved.</div>
+  <div class="attn"><span class="k">Queued</span>v1 template stamping into the <a href="https://github.com/davedellaquila/scaffold-buddy" target="_blank" rel="noopener">empty repo</a> — unblocked the moment the brief is approved.</div>
 
   <h2>Fresh off the bench</h2>
   <div class="ship">
@@ -187,5 +247,115 @@
   <footer>Scaffold Buddy · the blueprint, not the launcher · built with care by Dave &amp; Astro</footer>
 
 </div>
+<script>
+// ---- dump-box JS (self-contained; no dependencies) ----
+(function(){
+  var box = document.querySelector('.dumpbox');
+  if (!box || box.dataset.dumpInit) return;
+  box.dataset.dumpInit = '1';
+  var bid = box.getAttribute('data-buddy-id') || (function(){
+    var p = location.pathname.replace(/\/+$/, '');
+    return p.substring(p.lastIndexOf('/') + 1);
+  })();
+  var ta = box.querySelector('textarea'),
+      btn = box.querySelector('.dumpbox-row .dumpbox-btn'),
+      st = box.querySelector('.dumpbox-status'),
+      tokWrap = box.querySelector('.dumpbox-token'),
+      connectWrap = box.querySelector('.dumpbox-connect'),
+      connectBtn = connectWrap.querySelector('.dumpbox-btn');
+  function lsGet(){ try { return JSON.parse(localStorage.getItem('buddyTree.v3') || '{}'); } catch(e){ return {}; } }
+  function lsSet(patch){ try { var s = lsGet(); for (var k in patch) s[k] = patch[k]; localStorage.setItem('buddyTree.v3', JSON.stringify(s)); } catch(e){} }
+  function token(){ return lsGet().ghToken || ''; }
+  function b64encode(str){
+    var bytes = new TextEncoder().encode(str), bin = '';
+    bytes.forEach(function(b){ bin += String.fromCharCode(b); });
+    return btoa(bin);
+  }
+  async function ghApi(path, method, body){
+    var t = token();
+    if (!t) throw new Error('Add a GitHub token first.');
+    var r = await fetch('https://api.github.com' + path, {
+      method: method || 'GET',
+      headers: {'Authorization': 'Bearer ' + t, 'Accept': 'application/vnd.github+json', 'Content-Type': 'application/json'},
+      body: body ? JSON.stringify(body) : undefined
+    });
+    if (!r.ok) throw new Error('GitHub ' + r.status);
+    return r.status === 204 ? null : await r.json();
+  }
+  async function ghGetFile(repo, path){
+    try {
+      var j = await ghApi('/repos/davedellaquila/' + repo + '/contents/' + path);
+      if (j && j.content) return {
+        text: new TextDecoder().decode(Uint8Array.from(atob(j.content.replace(/\n/g, '')), function(c){ return c.charCodeAt(0); })),
+        sha: j.sha
+      };
+    } catch(e){}
+    return null;
+  }
+  var repo = null, repoName = bid;
+  async function resolveRepo(){
+    try {
+      var r = await fetch('../buddies.json', {cache: 'no-store'});
+      var d = await r.json();
+      var buds = d.buddies || [];
+      for (var i = 0; i < buds.length; i++) {
+        if (buds[i].id === bid && buds[i].repo) { repo = buds[i].repo; repoName = buds[i].name || bid; break; }
+      }
+    } catch(e){}
+  }
+  function refreshUI(){
+    var has = !!token();
+    connectWrap.hidden = has;
+    if (has) tokWrap.hidden = true;
+    var ok = has && !!repo;
+    ta.disabled = !ok;
+    btn.disabled = !ok;
+    if (!has) { st.textContent = ''; }
+    else if (!repo) { st.textContent = 'No repo linked for this buddy yet.'; }
+  }
+  var tokInput = tokWrap.querySelector('input'),
+      tokSave = tokWrap.querySelector('button');
+  connectBtn.addEventListener('click', function(){
+    tokWrap.hidden = false;
+    if (tokInput) tokInput.focus();
+  });
+  tokSave.addEventListener('click', function(){
+    var v = tokInput.value.trim();
+    if (!v) return;
+    lsSet({ghToken: v});
+    tokInput.value = '';
+    tokWrap.hidden = true;
+    refreshUI();
+    st.textContent = 'Token saved on this device.';
+  });
+  async function dump(){
+    var text = ta.value.trim();
+    if (!text) return;
+    if (!token()) { refreshUI(); return; }
+    if (!repo) { st.textContent = 'No repo linked for this buddy yet.'; return; }
+    st.textContent = 'Dumping…';
+    btn.disabled = true;
+    try {
+      var stamp = new Date().toLocaleString();
+      var NL = String.fromCharCode(10);
+      var entry = '## ' + stamp + NL + NL + text + NL + NL;
+      var cur = await ghGetFile(repo, 'docs/ingest.md');
+      var base = cur ? cur.text : '# Ingest log — ' + repoName + NL + NL;
+      var body = {message: 'Ingest dump for ' + bid, content: b64encode(base + entry)};
+      if (cur && cur.sha) body.sha = cur.sha;
+      await ghApi('/repos/davedellaquila/' + repo + '/contents/docs/ingest.md', 'PUT', body);
+      ta.value = '';
+      st.textContent = '✓ Dumped to ' + repo + '/docs/ingest.md';
+    } catch(err){ st.textContent = 'Save failed: ' + (err.message || err); }
+    btn.disabled = false;
+  }
+  btn.addEventListener('click', dump);
+  ta.addEventListener('keydown', function(ev){
+    if ((ev.metaKey || ev.ctrlKey) && ev.key === 'Enter') { ev.preventDefault(); dump(); }
+  });
+  resolveRepo().then(refreshUI);
+})();
+
+</script>
 </body>
 </html>

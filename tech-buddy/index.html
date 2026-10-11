@@ -72,6 +72,66 @@
   footer a { color: var(--accent); text-decoration: none; }
   footer a:hover { text-decoration: underline; }
   .links { display: flex; gap: 16px; flex-wrap: wrap; margin-top: 8px; }
+
+  /* ---- brain-dump box (restyled to Tech Buddy's visual language) ---- */
+  .dumpbox {
+    background: var(--panel); border: 1px solid var(--line); border-radius: 12px;
+    padding: 20px 22px; margin: 30px 0 8px;
+  }
+  .dumpbox h2 { margin: 0 0 6px; font-size: 18px; font-family: var(--mono); letter-spacing: .5px; }
+  .dumpbox-sub { color: var(--dim); font-size: 14px; margin-bottom: 14px; }
+  .dumpbox textarea {
+    width: 100%; min-height: 96px; resize: vertical;
+    background: var(--bg); border: 1px solid var(--line); border-radius: 8px;
+    padding: 10px 12px; font-size: 14px; color: var(--txt); font-family: inherit;
+  }
+  .dumpbox textarea:focus { outline: none; border-color: var(--accent); }
+  .dumpbox textarea:disabled { opacity: .55; }
+  .dumpbox-row { display: flex; align-items: center; gap: 12px; margin-top: 10px; flex-wrap: wrap; }
+  .dumpbox-btn {
+    background: var(--accent); color: #fff; border: none; border-radius: 8px;
+    padding: 9px 22px; font-size: 14px; font-weight: 600; cursor: pointer;
+  }
+  .dumpbox-btn:disabled { opacity: .45; cursor: default; }
+  .dumpbox-status { font-size: 13px; color: var(--dim); font-family: var(--mono); }
+  .dumpbox-token {
+    background: var(--bg); border: 1px dashed var(--line); border-radius: 8px;
+    padding: 12px 14px; margin-bottom: 12px; font-size: 14px;
+  }
+  .dumpbox-token p { margin-bottom: 8px; }
+.dumpbox-connect {
+    background: var(--bg); border: 1px dashed var(--line); border-radius: 8px;
+    padding: 12px 14px; margin-bottom: 12px; font-size: 14px;
+  }
+.dumpbox-connect p { margin: 0 0 10px;  }
+  .dumpbox-tokenrow { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+  .dumpbox-tokenrow input {
+    flex: 1; min-width: 170px; background: var(--panel); border: 1px solid var(--line);
+    border-radius: 8px; padding: 7px 10px; font-size: 13px; color: var(--txt);
+  }
+  .dumpbox-tokenrow button {
+    background: transparent; color: var(--accent); border: 1px solid var(--accent);
+    border-radius: 8px; padding: 7px 14px; font-size: 13px; font-weight: 600; cursor: pointer;
+  }
+  .dumpbox-tokenrow a { color: var(--accent); font-size: 13px; }
+
+  /* ---- light mode (house rule: every buddy page ships dark AND light) ---- */
+  @media (prefers-color-scheme: light) {
+    :root {
+      --bg: #f3f5f9;
+      --panel: #ffffff;
+      --panel2: #edf1f7;
+      --line: #dbe2ec;
+      --txt: #1b2430;
+      --dim: #5c6a7d;
+      --accent: #0a74b8;
+    }
+    header.hero {
+      background: linear-gradient(135deg, #dbeafa 0%, #edf3fa 60%, #f7fafc 100%);
+    }
+    .stat { background: rgba(10,116,184,.06); }
+    .dumpbox-btn { color: #fff; }
+  }
 </style>
 </head>
 <body>
@@ -97,7 +157,7 @@
   <h2>⚠️ Needs your attention <span class="tag">synced from the dashboard</span></h2>
   <div class="alert">
     <div class="dot">📋</div>
-    <div><div class="t">Product brief ready for review</div>
+    <div><div class="t"><a href="https://docs.google.com/document/d/19YGpL1uHzU94CV1Yp_qyibZtlqVd8cejjvufn1SEM3g/edit" target="_blank" rel="noopener">Product brief ready for review</a></div>
     <div class="d">Looks good, edits, or defer? Next step after review: decide whether to go to a PRD.</div></div>
   </div>
   <div class="alert red">
@@ -108,7 +168,7 @@
   <div class="alert red">
     <div class="dot">📱</div>
     <div><div class="t">Lost iPhone 15 Pro Max — AppleCare+ claim still unfiled</div>
-    <div class="d">AppleCare+ with Theft and Loss (LAS2140621) covers it, $149 deductible. File via icloud.com/find (mark as lost first) or aigtheftandloss.com. You're on the iPhone 16e for now.</div></div>
+    <div class="d">AppleCare+ with Theft and Loss (LAS2140621) covers it, $149 deductible. File via <a href="https://www.icloud.com/find" target="_blank" rel="noopener">icloud.com/find</a> (mark as lost first) or aigtheftandloss.com. You're on the iPhone 16e for now.</div></div>
   </div>
 
   <h2>🏠 The inventory <span class="tag">seed inventory — verified items only, growing</span></h2>
@@ -166,6 +226,28 @@
     </div>
   </div>
 
+  <section class="dumpbox" data-buddy-id="tech-buddy">
+    <h2>🧠 Brain dump</h2>
+    <p class="dumpbox-sub">Dump what's on your mind about Tech Buddy — raw and unfiltered. Each dump lands in the buddy's repo (docs/ingest.md) as a timestamped entry.</p>
+    <div class="dumpbox-connect" hidden>
+    <p>🔒 Connect GitHub to unlock dumping. Paste a token once — it stays on this device only.</p>
+    <button type="button" class="dumpbox-btn">Connect GitHub to enable</button>
+    </div>
+    <div class="dumpbox-token" hidden>
+      <p>🔒 Connect GitHub to unlock dumping. Paste a token once — it stays on this device only.</p>
+      <div class="dumpbox-tokenrow">
+        <input type="password" placeholder="GitHub token (repo scope)" aria-label="GitHub token">
+        <button type="button">Save token</button>
+        <a href="https://github.com/settings/tokens" target="_blank" rel="noopener">Get a token</a>
+      </div>
+    </div>
+    <textarea rows="4" placeholder="Dump what's on your mind about Tech Buddy…"></textarea>
+    <div class="dumpbox-row">
+      <button type="button" class="dumpbox-btn">Dump it</button>
+      <span class="dumpbox-status" role="status"></span>
+    </div>
+  </section>
+
   <footer>
     Tech Buddy keeps your gear list so you don't have to. Spotted something missing or wrong? Tell me in the thread and I'll update it.
     <div class="links">
@@ -176,5 +258,115 @@
   </footer>
 
 </div>
+<script>
+// ---- dump-box JS (self-contained; no dependencies) ----
+(function(){
+  var box = document.querySelector('.dumpbox');
+  if (!box || box.dataset.dumpInit) return;
+  box.dataset.dumpInit = '1';
+  var bid = box.getAttribute('data-buddy-id') || (function(){
+    var p = location.pathname.replace(/\/+$/, '');
+    return p.substring(p.lastIndexOf('/') + 1);
+  })();
+  var ta = box.querySelector('textarea'),
+      btn = box.querySelector('.dumpbox-row .dumpbox-btn'),
+      st = box.querySelector('.dumpbox-status'),
+      tokWrap = box.querySelector('.dumpbox-token'),
+      connectWrap = box.querySelector('.dumpbox-connect'),
+      connectBtn = connectWrap.querySelector('.dumpbox-btn');
+  function lsGet(){ try { return JSON.parse(localStorage.getItem('buddyTree.v3') || '{}'); } catch(e){ return {}; } }
+  function lsSet(patch){ try { var s = lsGet(); for (var k in patch) s[k] = patch[k]; localStorage.setItem('buddyTree.v3', JSON.stringify(s)); } catch(e){} }
+  function token(){ return lsGet().ghToken || ''; }
+  function b64encode(str){
+    var bytes = new TextEncoder().encode(str), bin = '';
+    bytes.forEach(function(b){ bin += String.fromCharCode(b); });
+    return btoa(bin);
+  }
+  async function ghApi(path, method, body){
+    var t = token();
+    if (!t) throw new Error('Add a GitHub token first.');
+    var r = await fetch('https://api.github.com' + path, {
+      method: method || 'GET',
+      headers: {'Authorization': 'Bearer ' + t, 'Accept': 'application/vnd.github+json', 'Content-Type': 'application/json'},
+      body: body ? JSON.stringify(body) : undefined
+    });
+    if (!r.ok) throw new Error('GitHub ' + r.status);
+    return r.status === 204 ? null : await r.json();
+  }
+  async function ghGetFile(repo, path){
+    try {
+      var j = await ghApi('/repos/davedellaquila/' + repo + '/contents/' + path);
+      if (j && j.content) return {
+        text: new TextDecoder().decode(Uint8Array.from(atob(j.content.replace(/\n/g, '')), function(c){ return c.charCodeAt(0); })),
+        sha: j.sha
+      };
+    } catch(e){}
+    return null;
+  }
+  var repo = null, repoName = bid;
+  async function resolveRepo(){
+    try {
+      var r = await fetch('../buddies.json', {cache: 'no-store'});
+      var d = await r.json();
+      var buds = d.buddies || [];
+      for (var i = 0; i < buds.length; i++) {
+        if (buds[i].id === bid && buds[i].repo) { repo = buds[i].repo; repoName = buds[i].name || bid; break; }
+      }
+    } catch(e){}
+  }
+  function refreshUI(){
+    var has = !!token();
+    connectWrap.hidden = has;
+    if (has) tokWrap.hidden = true;
+    var ok = has && !!repo;
+    ta.disabled = !ok;
+    btn.disabled = !ok;
+    if (!has) { st.textContent = ''; }
+    else if (!repo) { st.textContent = 'No repo linked for this buddy yet.'; }
+  }
+  var tokInput = tokWrap.querySelector('input'),
+      tokSave = tokWrap.querySelector('button');
+  connectBtn.addEventListener('click', function(){
+    tokWrap.hidden = false;
+    if (tokInput) tokInput.focus();
+  });
+  tokSave.addEventListener('click', function(){
+    var v = tokInput.value.trim();
+    if (!v) return;
+    lsSet({ghToken: v});
+    tokInput.value = '';
+    tokWrap.hidden = true;
+    refreshUI();
+    st.textContent = 'Token saved on this device.';
+  });
+  async function dump(){
+    var text = ta.value.trim();
+    if (!text) return;
+    if (!token()) { refreshUI(); return; }
+    if (!repo) { st.textContent = 'No repo linked for this buddy yet.'; return; }
+    st.textContent = 'Dumping…';
+    btn.disabled = true;
+    try {
+      var stamp = new Date().toLocaleString();
+      var NL = String.fromCharCode(10);
+      var entry = '## ' + stamp + NL + NL + text + NL + NL;
+      var cur = await ghGetFile(repo, 'docs/ingest.md');
+      var base = cur ? cur.text : '# Ingest log — ' + repoName + NL + NL;
+      var body = {message: 'Ingest dump for ' + bid, content: b64encode(base + entry)};
+      if (cur && cur.sha) body.sha = cur.sha;
+      await ghApi('/repos/davedellaquila/' + repo + '/contents/docs/ingest.md', 'PUT', body);
+      ta.value = '';
+      st.textContent = '✓ Dumped to ' + repo + '/docs/ingest.md';
+    } catch(err){ st.textContent = 'Save failed: ' + (err.message || err); }
+    btn.disabled = false;
+  }
+  btn.addEventListener('click', dump);
+  ta.addEventListener('keydown', function(ev){
+    if ((ev.metaKey || ev.ctrlKey) && ev.key === 'Enter') { ev.preventDefault(); dump(); }
+  });
+  resolveRepo().then(refreshUI);
+})();
+
+</script>
 </body>
 </html>

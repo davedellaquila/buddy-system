@@ -3,336 +3,334 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Jessica Buddy — Living dossier for Sawyer's girlfriend</title>
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌷</text></svg>">
+<title>Jessica Buddy</title>
 <style>
-  :root {
-    --paper: #FBF6F3;
-    --card: #FFFDFC;
-    --ink: #43373B;
-    --dim: #8D7C7E;
-    --line: #EAD9D6;
-    --rose: #B95C6E;
-    --rose-soft: #F9E7EB;
-    --blush: #E7A3AF;
-    --champ: #B08A2E;
-    --champ-soft: #F6ECD9;
-    --note: #FFF4DE;
+  :root{
+    --bg:#fdf7f2; --panel:#ffffff; --ink:#2b1d1a; --muted:#8a6f63;
+    --line:#f0e2d6; --rose:#c14a6e; --rose-soft:#fbe9ee; --rose-line:#f3cfda;
+    --amber:#b3541e; --amber-soft:#fdf0e2; --accent:#c14a6e;
   }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body {
-    background: var(--paper); color: var(--ink);
-    font-family: -apple-system, "Segoe UI", Inter, Helvetica, Arial, sans-serif;
-    line-height: 1.55; padding: 28px 20px 70px;
+  @media (prefers-color-scheme: dark){
+    :root{
+      --bg:#171110; --panel:#211917; --ink:#f5e9e2; --muted:#b39a8c;
+      --line:#332620; --rose:#e88ba4; --rose-soft:#2c1d22; --rose-line:#4a2c36;
+      --amber:#e09a4e; --amber-soft:#2b2117; --accent:#e88ba4;
+    }
   }
-  .wrap { max-width: 1040px; margin: 0 auto; }
-  .serif { font-family: Georgia, "Iowan Old Style", "Times New Roman", serif; }
-
-  header.hero {
-    background: linear-gradient(135deg, #FFF7F5 0%, #FBEEEB 55%, #F8E5E8 100%);
-    border: 1px solid var(--line); border-radius: 16px;
-    padding: 34px 32px 26px; margin-bottom: 24px;
-    position: relative; overflow: hidden;
+  *{box-sizing:border-box}
+  body{
+    margin:0; font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text",Inter,"Segoe UI",sans-serif;
+    background:var(--bg); color:var(--ink); line-height:1.55;
+    background-image:radial-gradient(var(--line) 1px, transparent 1px);
+    background-size:22px 22px;
   }
-  header.hero::after {
-    content: "🌷"; position: absolute; right: 26px; top: 8px;
-    font-size: 110px; opacity: .12; transform: rotate(-8deg); pointer-events: none;
+  .wrap{max-width:860px; margin:0 auto; padding:40px 24px 64px}
+  header{display:flex; align-items:center; gap:18px; flex-wrap:wrap}
+  .icon{
+    width:76px; height:76px; border-radius:22px; font-size:40px;
+    display:flex; align-items:center; justify-content:center;
+    background:var(--rose-soft); border:1px solid var(--rose-line);
+    box-shadow:0 6px 20px rgba(193,74,110,.18);
   }
-  .kicker { color: var(--rose); font-size: 12px; letter-spacing: 2.5px; text-transform: uppercase; font-weight: 700; }
-  h1 { font-size: 40px; margin: 8px 0 6px; font-weight: 700; }
-  h1 .ico { margin-right: 10px; }
-  .tagline { font-size: 18px; color: var(--dim); font-style: italic; }
-  .mission { margin-top: 12px; max-width: 74ch; font-size: 15px; }
-  .mission b { color: var(--rose); }
-  .meta { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 18px; }
-  .pill {
-    display: inline-flex; align-items: center; gap: 6px;
-    background: var(--card); border: 1px solid var(--line); border-radius: 999px;
-    padding: 6px 14px; font-size: 13px; color: var(--ink); text-decoration: none;
+  h1{margin:0; font-size:34px; letter-spacing:-.5px; font-family:Georgia,"Times New Roman",serif; font-weight:700}
+  .tagline{margin:4px 0 0; color:var(--muted); font-size:15px}
+  .pill{
+    display:inline-block; font-size:12.5px; font-weight:700; letter-spacing:.4px;
+    color:var(--rose); background:var(--rose-soft);
+    border:1px solid var(--rose-line); border-radius:999px; padding:4px 12px; margin-top:8px;
   }
-  .pill.st { background: var(--rose-soft); border-color: #EFC3CC; font-weight: 600; }
-  a.pill:hover { border-color: var(--rose); }
-
-  h2 { font-size: 21px; margin: 34px 0 6px; }
-  h2 .sub { display: block; font-family: -apple-system, "Segoe UI", Inter, sans-serif;
-            font-size: 13px; color: var(--dim); font-weight: 400; margin-top: 2px; }
-
-  .mind { border: 1px solid var(--line); border-left: 5px solid var(--rose);
-          background: var(--card); border-radius: 10px; padding: 14px 18px;
-          margin-bottom: 12px; display: flex; gap: 14px; align-items: flex-start; }
-  .mind.champ { border-left-color: var(--champ); }
-  .mind.blush { border-left-color: var(--blush); }
-  .mind .dot { font-size: 20px; line-height: 1.4; }
-  .mind .t { font-weight: 700; font-size: 15px; }
-  .mind .d { color: var(--dim); font-size: 13.5px; }
-  .mind a { color: var(--rose); font-weight: 600; }
-
-  .facts { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 14px; margin-top: 14px; }
-  .fact { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 16px 18px; }
-  .fact .e { font-size: 24px; margin-bottom: 6px; }
-  .fact .t { font-weight: 700; font-size: 14.5px; }
-  .fact .d { color: var(--dim); font-size: 13px; margin-top: 4px; }
-  .fact.note-fact { background: var(--rose-soft); border-color: #EFC3CC; }
-
-  .card { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 20px 22px; margin-top: 14px; }
-
-  .board { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 14px; margin-top: 14px; }
-  .note {
-    background: var(--note); border-radius: 4px; padding: 16px 16px 12px;
-    box-shadow: 0 3px 10px rgba(67,55,59,.10); position: relative;
-    transform: rotate(-.6deg); transition: transform .15s;
+  .mission{
+    margin:26px 0 0; font-size:16.5px; line-height:1.7;
+    background:var(--panel); border:1px solid var(--line);
+    border-radius:14px; padding:20px 22px;
   }
-  .note:nth-child(even) { transform: rotate(.7deg); background: #FBEFE2; }
-  .note:hover { transform: rotate(0) scale(1.02); }
-  .note::before { content: ""; position: absolute; top: -8px; left: 50%; transform: translateX(-50%) rotate(2deg);
-                  width: 64px; height: 18px; background: rgba(231,163,175,.45); border-radius: 2px; }
-  .note .x { position: absolute; top: 6px; right: 8px; border: none; background: none; cursor: pointer;
-             color: var(--dim); font-size: 15px; }
-  .note .x:hover { color: #B3402E; }
-  .note p { font-size: 14px; margin-top: 6px; white-space: pre-wrap; }
-  .note .when { font-size: 11px; color: var(--dim); margin-top: 8px; }
-
-  .list-item { display: flex; gap: 12px; align-items: flex-start; padding: 10px 2px; border-bottom: 1px solid var(--line); font-size: 14.5px; }
-  .list-item:last-child { border-bottom: none; }
-  .list-item .x { margin-left: auto; border: none; background: none; cursor: pointer; color: var(--dim); font-size: 15px; }
-  .list-item .x:hover { color: #B3402E; }
-  .list-item.done .txt { text-decoration: line-through; color: var(--dim); }
-  .list-item input[type=checkbox] { margin-top: 5px; accent-color: var(--champ); width: 16px; height: 16px; }
-  .list-item .when { font-size: 11px; color: var(--dim); }
-
-  .gift { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 16px 18px; position: relative; }
-  .gift .g { font-size: 22px; }
-  .gift .t { font-weight: 700; font-size: 15px; margin: 6px 0 2px; }
-  .gift .d { color: var(--dim); font-size: 13px; }
-  .gift .x { position: absolute; top: 8px; right: 10px; border: none; background: none; cursor: pointer; color: var(--dim); font-size: 15px; }
-  .gift .x:hover { color: #B3402E; }
-
-  .addrow { display: flex; gap: 8px; margin-top: 14px; flex-wrap: wrap; }
-  .addrow input, .addrow textarea {
-    flex: 1 1 220px; border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px;
-    font-size: 14px; font-family: inherit; background: #fff; color: var(--ink);
+  .mission b{color:var(--rose)}
+  h2{font-size:13px; letter-spacing:1.6px; text-transform:uppercase; color:var(--muted); margin:38px 0 14px}
+  .story{
+    background:linear-gradient(135deg, var(--rose-soft), var(--panel));
+    border:1px solid var(--rose-line); border-radius:14px; padding:20px 22px;
+    font-size:15.5px; line-height:1.75;
   }
-  .addrow input:focus, .addrow textarea:focus { outline: 2px solid var(--rose-soft); border-color: var(--rose); }
-  .btn {
-    border: none; border-radius: 8px; padding: 10px 18px; font-size: 14px; font-weight: 700;
-    background: var(--rose); color: #fff; cursor: pointer;
+  .story p{margin:0 0 12px}
+  .story p:last-child{margin:0}
+  blockquote{
+    margin:18px 0 0; padding:14px 18px 14px 20px; font-size:16px; font-style:italic;
+    border-left:3px solid var(--rose); background:var(--panel); border-radius:0 12px 12px 0;
   }
-  .btn:hover { background: #A34D5E; }
-  .empty { color: var(--dim); font-style: italic; font-size: 14px; padding: 10px 2px; }
-
-  .photostrip { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 14px; }
-  .photo { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 10px; max-width: 250px;
-           box-shadow: 0 3px 10px rgba(67,55,59,.08); transform: rotate(-1deg); }
-  .photo:nth-child(even) { transform: rotate(1deg); }
-  .photo img { width: 100%; border-radius: 8px; display: block; }
-  .photo figcaption { font-size: 12px; color: var(--dim); margin-top: 8px; text-align: center; }
-
-  .quotes { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 14px; margin-top: 14px; }
-  .quotes blockquote {
-    background: var(--card); border: 1px solid var(--line); border-left: 5px solid var(--blush);
-    border-radius: 10px; padding: 16px 18px 12px; font-family: Georgia, "Iowan Old Style", serif;
-    font-size: 15.5px; font-style: italic; line-height: 1.6;
+  blockquote footer{margin-top:8px; font-style:normal; font-size:13px; color:var(--muted)}
+  .grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); gap:12px}
+  .card{
+    background:var(--panel); border:1px solid var(--line); border-radius:14px;
+    padding:16px 18px;
   }
-  .quotes blockquote cite {
-    display: block; margin-top: 10px; font-family: -apple-system, "Segoe UI", Inter, sans-serif;
-    font-style: normal; font-size: 12px; color: var(--dim);
+  .card .e{font-size:24px}
+  .card h3{margin:8px 0 4px; font-size:15px}
+  .card p{margin:0; font-size:13.5px; color:var(--muted)}
+  .card .soon{font-style:italic}
+  .attn{
+    background:var(--amber-soft); border:1px solid var(--line); border-left:4px solid var(--amber);
+    border-radius:12px; padding:14px 18px; margin-bottom:10px; font-size:14.5px;
   }
-
-  footer { margin-top: 44px; padding-top: 18px; border-top: 1px solid var(--line);
-           color: var(--dim); font-size: 13px; display: flex; gap: 16px; flex-wrap: wrap; }
-  footer a { color: var(--rose); }
-  @media (max-width: 640px) { h1 { font-size: 30px; } header.hero::after { font-size: 70px; } }
+  .attn .k{font-weight:700; color:var(--amber); font-size:12px; letter-spacing:1px; text-transform:uppercase; display:block; margin-bottom:2px}
+  .attn a{color:var(--accent); font-weight:600}
+  .attn a:hover{text-decoration:underline}
+  .ship{border-left:3px solid var(--rose); padding:2px 0 2px 16px; margin:0 0 18px 4px}
+  .ship .v{font-family:ui-monospace,Menlo,Consolas,monospace; font-size:13px; color:var(--rose); font-weight:700}
+  .ship p{margin:4px 0 0; font-size:14px}
+  .links{display:flex; gap:10px; flex-wrap:wrap}
+  .links a{
+    display:inline-flex; align-items:center; gap:8px; text-decoration:none; color:var(--ink);
+    background:var(--panel); border:1px solid var(--line); border-radius:999px;
+    padding:10px 18px; font-size:14px; font-weight:600;
+  }
+  .links a:hover{border-color:var(--accent); color:var(--accent)}
+  .hearts{overflow:hidden; white-space:nowrap; margin:34px 0 0; opacity:.45; font-size:18px; letter-spacing:10px}
+  .hearts span{display:inline-block; animation:drift 9s linear infinite}
+  @keyframes drift{from{transform:translateX(-80px)} to{transform:translateX(110%)}}
+  .dumpbox{
+    background:var(--panel); border:1px solid var(--line); border-radius:14px;
+    padding:20px 22px;
+  }
+  .dumpbox h2{margin:0 0 6px}
+  .dumpbox-sub{color:var(--muted); font-size:14px; margin:0 0 14px}
+  .dumpbox textarea{
+    width:100%; min-height:96px; resize:vertical;
+    background:var(--bg); border:1px solid var(--line); border-radius:10px;
+    padding:10px 12px; font-size:14px; color:var(--ink); font-family:inherit;
+  }
+  .dumpbox textarea:focus{outline:none; border-color:var(--accent)}
+  .dumpbox textarea:disabled{opacity:.55}
+  .dumpbox-row{display:flex; align-items:center; gap:12px; margin-top:10px; flex-wrap:wrap}
+  .dumpbox-btn{
+    background:var(--accent); color:#fff; border:none; border-radius:999px;
+    padding:9px 22px; font-size:14px; font-weight:600; cursor:pointer;
+  }
+  .dumpbox-btn:disabled{opacity:.45; cursor:default}
+  .dumpbox-status{font-size:13px; color:var(--muted)}
+  .dumpbox-token{
+    background:var(--bg); border:1px dashed var(--line); border-radius:10px;
+    padding:12px 14px; margin-bottom:12px; font-size:14px;
+  }
+  .dumpbox-token p{margin:0 0 8px}
+  .dumpbox-tokenrow{display:flex; gap:8px; flex-wrap:wrap; align-items:center}
+  .dumpbox-tokenrow input{
+    flex:1; min-width:170px; background:var(--panel); border:1px solid var(--line);
+    border-radius:999px; padding:7px 12px; font-size:13px; color:var(--ink); font-family:inherit;
+  }
+  .dumpbox-tokenrow input:focus{outline:none; border-color:var(--accent)}
+  .dumpbox-tokenrow button{
+    background:transparent; color:var(--accent); border:1px solid var(--accent);
+    border-radius:999px; padding:7px 14px; font-size:13px; font-weight:600; cursor:pointer;
+  }
+  .dumpbox-tokenrow a{color:var(--accent); font-size:13px}
+  .dumpbox-connect {
+    background:var(--bg); border:1px dashed var(--line); border-radius:10px;
+    padding:14px 16px; margin-bottom:12px; font-size:14px;
+  }
+  .dumpbox-connect p {margin:0 0 8px}
+  footer.page{margin-top:36px; color:var(--muted); font-size:12.5px}
 </style>
 </head>
 <body>
 <div class="wrap">
 
-  <header class="hero">
-    <div class="kicker">Family Buddy · child</div>
-    <h1 class="serif"><span class="ico">🌷</span>Jessica Buddy</h1>
-    <div class="tagline serif">The living dossier for Sawyer's girlfriend.</div>
-    <p class="mission">Jessica Buddy is the one place for everything Dave needs to <b>remember, track, and do</b> regarding Jessica — key facts, important dates, notes, reminders, and gift ideas. Where Relationship Buddy maintains relationships broadly, Jessica Buddy goes deep on one person.</p>
-    <div class="meta">
-      <span class="pill st">📝 Brief review</span>
-      <a class="pill" href="https://docs.google.com/document/d/1u0sPo4bFl11BBl_j8wTfcA0U0KH0pzjhQDE9j_Ey8Fg/edit" target="_blank" rel="noopener">📄 Product brief</a>
-      <a class="pill" href="https://github.com/davedellaquila/jessica-buddy" target="_blank" rel="noopener">💻 jessica-buddy repo</a>
-      <span class="pill">🏠 Parent: Family Buddy</span>
+  <header>
+    <div class="icon">💌</div>
+    <div>
+      <h1>Jessica Buddy</h1>
+      <p class="tagline">The living dossier for Jessica — Sawyer's girlfriend of ten years.</p>
+      <span class="pill">● CHILD OF FAMILY BUDDY</span>
     </div>
   </header>
 
-  <h2 class="serif">On my mind <span class="sub">What needs Dave's attention</span></h2>
-  <div class="mind">
-    <div class="dot">📄</div>
-    <div><div class="t">Product brief ready for review</div>
-    <div class="d">The brief is done and waiting on Dave — <a href="https://docs.google.com/document/d/1u0sPo4bFl11BBl_j8wTfcA0U0KH0pzjhQDE9j_Ey8Fg/edit" target="_blank" rel="noopener">review it here</a>. It still names her as Sawyer's aunt — the dossier was corrected 2026-10-09: she's Sawyer's girlfriend of ~10 years.</div></div>
-  </div>
-  <div class="mind champ">
-    <div class="dot">🎂</div>
-    <div><div class="t">Her birthday is not on record</div>
-    <div class="d">The one big blank on this dossier. The boards below are ready the moment Dave (or Sawyer) fills it in.</div></div>
-  </div>
-  <div class="mind blush">
-    <div class="dot">💞</div>
-    <div><div class="t">Sawyer stayed over at her place Oct 8–9</div>
-    <div class="d">Reported by Dave the morning of Oct 9. Just family news — worth knowing, nothing to do.</div></div>
+  <p class="mission">
+    The one place for everything Dave needs to remember, track, and do regarding Jessica:
+    <b>key facts, important dates, notes, reminders, and gift ideas.</b>
+    A per-person reference buddy — distinct from Relationship Buddy, and all the warmer for it.
+  </p>
+
+  <h2>The story so far</h2>
+  <div class="story">
+    <p>About ten years ago, Sawyer asked Jessica to his senior prom. They drove the green GT out to Fort Hunter Liggett while staying out there with the Santa Cruz Car Club.</p>
+    <p>The car has since met an unfortunate end. The relationship hasn't — ten years on, they're still going strong.</p>
+    <blockquote>
+      "She's a really sweet girl and she's making Sawyer very happy so that makes me happy."
+      <footer>— Dave, October 9 2026</footer>
+    </blockquote>
   </div>
 
-  <h2 class="serif">Who Jessica is <span class="sub">Only what's known — unknowns stay unknown</span></h2>
-  <div class="facts">
-    <div class="fact"><div class="e">💞</div><div class="t">Sawyer's girlfriend — ~10 years</div><div class="d">Corrected 2026-10-09: Dave's "aunt Jessica" that morning was a misspeak. She's Sawyer's girlfriend, together about a decade.</div></div>
-    <div class="fact"><div class="e">📍</div><div class="t">Campbell, CA</div><div class="d">That's home — Dave, 2026-10-09.</div></div>
-    <div class="fact"><div class="e">💼</div><div class="t">Insurance industry</div><div class="d">Her line of work, per Dave.</div></div>
-    <div class="fact"><div class="e">👑</div><div class="t">Senior prom story</div><div class="d">They met when Sawyer asked her to his senior prom — ten years ago and counting.</div></div>
-    <div class="fact"><div class="e">🏎️</div><div class="t">Car club run</div><div class="d">They drove the green GT out to Fort Hunter Liggett with the Santa Cruz Car Club. (The car, sadly, has since met an unfortunate end.)</div></div>
-    <div class="fact"><div class="e">🌷</div><div class="t">Spelled with a C</div><div class="d">Voice transcription keeps rendering "Jessika" — Dave confirmed: it's Jessica.</div></div>
-    <div class="fact note-fact"><div class="e">💛</div><div class="t">Dave's read</div><div class="d">"She's a really sweet girl and she's making Sawyer very happy so that makes me happy." — Dave, 2026-10-09</div></div>
-    <div class="fact"><div class="e">🛏️</div><div class="t">Oct 8–9: Sawyer stayed over</div><div class="d">Sawyer spent the night at her place in Campbell, reported by Dave the morning of Oct 9.</div></div>
+  <h2>What I track</h2>
+  <div class="grid">
+    <div class="card"><div class="e">📋</div><h3>Key facts</h3><p>Campbell, CA · works in insurance · with Sawyer ~10 years.</p></div>
+    <div class="card"><div class="e">💘</div><h3>Our story</h3><p>Senior prom, the green GT, Fort Hunter Liggett — how it started.</p></div>
+    <div class="card"><div class="e">📅</div><h3>Important dates</h3><p class="soon">Birthdays &amp; anniversaries — still collecting.</p></div>
+    <div class="card"><div class="e">📝</div><h3>Notes</h3><p>Running log — e.g. Sawyer's overnight stay, Oct 8.</p></div>
+    <div class="card"><div class="e">🎁</div><h3>Gift ideas</h3><p class="soon">Captured when inspiration strikes. None yet — watch this space.</p></div>
+    <div class="card"><div class="e">🔔</div><h3>Reminders</h3><p class="soon">Check-ins and dates that matter — cadence TBD.</p></div>
   </div>
 
-  <h2 class="serif">Photos <span class="sub">None on file yet</span></h2>
-  <div class="card" style="margin-top:14px">
-    <div class="empty">No photos yet — Jessica wasn't identifiable in Dave's Facebook friends list, so her profile photo couldn't be pulled, and none have been added manually. Once Dave shares her surname or a profile link, her Facebook photos can land here.</div>
+  <h2>Needs Dave's attention</h2>
+  <div class="attn"><span class="k">Review</span>Product brief ready for review — looks good, edits, or defer? Then: the PRD decision. <a href="https://docs.google.com/document/d/1u0sPo4bFl11BBl_j8wTfcA0U0KH0pzjhQDE9j_Ey8Fg/edit" target="_blank" rel="noopener">📄 Open the product brief</a></div>
+  <div class="attn"><span class="k">Missing</span>Jessica's birthday isn't on record yet.</div>
+  <div class="attn"><span class="k">Missing</span>Her interests, preferences, gift-relevant tastes — what does she love?</div>
+  <div class="attn"><span class="k">Decide</span>Reminder cadence — monthly check-in, birthdays only, or something else?</div>
+
+  <h2>Fresh off the bench</h2>
+  <div class="ship">
+    <span class="v">2026-10-09</span>
+    <p>Record corrected — Jessica is Sawyer's <b>girlfriend</b>, not his aunt. Brief updated with the insurance job, the prom story, and the green GT.</p>
+  </div>
+  <div class="ship">
+    <span class="v">2026-10-09</span>
+    <p>Sawyer spent the night at Jessica's place in Campbell.</p>
+  </div>
+  <div class="ship">
+    <span class="v">2026-10-09</span>
+    <p>Jessica Buddy born — thread, product brief, and private repo.</p>
   </div>
 
-  <h2 class="serif">In her own words <span class="sub">Nothing captured yet</span></h2>
-  <div class="card" style="margin-top:14px">
-    <div class="empty">No posts from Jessica have been captured yet — her Facebook timeline couldn't be located. Her own words will appear here once her profile is connected.</div>
+  <h2>🧠 Brain dump</h2>
+  <section class="dumpbox" data-buddy-id="jessica-buddy" aria-label="Brain dump">
+  <p class="dumpbox-sub">Dump what's on your mind about Jessica — raw and unfiltered. Each dump lands in the buddy's repo (docs/ingest.md) as a timestamped entry.</p>
+  <div class="dumpbox-connect" hidden>
+  <p>🔒 Connect GitHub to unlock dumping. Paste a token once — it stays on this device only.</p>
+  <button type="button" class="dumpbox-btn">Connect GitHub to enable</button>
+  </div>
+  <div class="dumpbox-token" hidden>
+  <p>🔒 Connect GitHub to unlock dumping. Paste a token once — it stays on this device only.</p>
+  <div class="dumpbox-tokenrow">
+  <input type="password" placeholder="GitHub token (repo scope)" aria-label="GitHub token">
+  <button type="button">Save token</button>
+  <a href="https://github.com/settings/tokens" target="_blank" rel="noopener">Get a token</a>
+  </div>
+  </div>
+  <textarea rows="4" placeholder="Dump what's on your mind about Jessica…"></textarea>
+  <div class="dumpbox-row">
+  <button type="button" class="dumpbox-btn">Dump it</button>
+  <span class="dumpbox-status" role="status"></span>
+  </div>
+  </section>
+
+  <h2>Open it</h2>
+  <div class="links">
+    <a href="https://docs.google.com/document/d/1u0sPo4bFl11BBl_j8wTfcA0U0KH0pzjhQDE9j_Ey8Fg/edit" target="_blank" rel="noopener">📄&nbsp; Product brief</a>
+    <a href="https://github.com/davedellaquila/jessica-buddy" target="_blank" rel="noopener">💻&nbsp; Repo</a>
+    <a href="https://davedellaquila.github.io/buddy-tree/" target="_blank" rel="noopener">🗂️&nbsp; Buddy dashboard</a>
   </div>
 
-  <h2 class="serif">Notes <span class="sub">Pinned as they come up — saved on this device</span></h2>
-  <div class="board" id="notes"></div>
-  <div class="addrow">
-    <textarea id="noteInput" rows="2" placeholder="Pin a note about Jessica…"></textarea>
-    <button class="btn" onclick="addNote()">Pin it</button>
-  </div>
+  <div class="hearts" aria-hidden="true"><span>💕 · 💗 · 💕 · 💗 · 💕 · 💗 · 💕 · 💗 ·</span></div>
 
-  <h2 class="serif">Reminders <span class="sub">Things to do for or about Jessica</span></h2>
-  <div class="card" style="margin-top:14px" id="reminders"></div>
-  <div class="addrow">
-    <input id="reminderInput" placeholder="Add a reminder…">
-    <button class="btn" onclick="addReminder()">Add</button>
-  </div>
+  <footer class="page">Jessica Buddy · child of Family Buddy · built with care by Dave &amp; Astro</footer>
 
-  <h2 class="serif">Important dates <span class="sub">Birthdays, anniversaries, the things you can't forget</span></h2>
-  <div class="card" style="margin-top:14px" id="dates"></div>
-  <div class="addrow">
-    <input id="dateName" placeholder="Occasion (e.g. Jessica's birthday)">
-    <input id="dateWhen" placeholder="When (e.g. March 14)">
-    <button class="btn" onclick="addDate()">Add date</button>
-  </div>
-
-  <h2 class="serif">Gift ideas <span class="sub">Because the good ones evaporate if you don't write them down</span></h2>
-  <div class="board" id="gifts"></div>
-  <div class="addrow">
-    <input id="giftName" placeholder="Gift idea…">
-    <input id="giftWhy" placeholder="Why she'd love it (optional)">
-    <button class="btn" onclick="addGift()">Add idea</button>
-  </div>
-
-  <footer>
-    <span>🌷 Jessica Buddy · child of <b>Family Buddy</b></span>
-    <span><a href="https://docs.google.com/document/d/1u0sPo4bFl11BBl_j8wTfcA0U0KH0pzjhQDE9j_Ey8Fg/edit" target="_blank" rel="noopener">Product brief</a></span>
-    <span><a href="https://github.com/davedellaquila/jessica-buddy" target="_blank" rel="noopener">davedellaquila/jessica-buddy</a></span>
-  </footer>
 </div>
-
 <script>
-const KEY = "jessica-buddy-v1";
-const esc = s => s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
-let store = { notes: [], reminders: [], dates: [], gifts: [] };
-try {
-  const raw = localStorage.getItem(KEY);
-  if (raw) store = Object.assign(store, JSON.parse(raw));
-} catch (e) {}
-// Seed verified notes on first run
-if (!localStorage.getItem(KEY)) {
-  store.notes = [
-    { text: "Dave's read: \"She's a really sweet girl and she's making Sawyer very happy so that makes me happy.\"", when: "2026-10-09" },
-    { text: "Together ~10 years — met when Sawyer asked her to his senior prom. Drove the green GT to Fort Hunter Liggett with the Santa Cruz Car Club.", when: "2026-10-09" }
-  ];
-  store.reminders = [
-    { text: "Get Jessica's birthday on record (open thread in her dossier).", done: false }
-  ];
-}
-const save = () => localStorage.setItem(KEY, JSON.stringify(store));
-const today = () => new Date().toISOString().slice(0, 10);
-
-function renderNotes() {
-  const el = document.getElementById("notes");
-  el.innerHTML = store.notes.length ? store.notes.map((n, i) =>
-    `<div class="note"><button class="x" onclick="delNote(${i})" title="Remove">✕</button><p>${esc(n.text)}</p><div class="when">${esc(n.when || "")}</div></div>`
-  ).join("") : `<div class="empty">No notes pinned yet — the two above this line are seeded from what Jessica Buddy already knows.</div>`;
-}
-function addNote() {
-  const t = document.getElementById("noteInput").value.trim();
-  if (!t) return;
-  store.notes.unshift({ text: t, when: today() });
-  document.getElementById("noteInput").value = "";
-  save(); renderNotes();
-}
-function delNote(i) { store.notes.splice(i, 1); save(); renderNotes(); }
-
-function renderReminders() {
-  const el = document.getElementById("reminders");
-  el.innerHTML = store.reminders.length ? store.reminders.map((r, i) =>
-    `<div class="list-item ${r.done ? "done" : ""}">
-       <input type="checkbox" ${r.done ? "checked" : ""} onchange="toggleReminder(${i})">
-       <span class="txt">${esc(r.text)}</span>
-       <button class="x" onclick="delReminder(${i})" title="Remove">✕</button>
-     </div>`
-  ).join("") : `<div class="empty">Nothing on the list — add the first reminder whenever something comes up.</div>`;
-}
-function addReminder() {
-  const t = document.getElementById("reminderInput").value.trim();
-  if (!t) return;
-  store.reminders.push({ text: t, done: false });
-  document.getElementById("reminderInput").value = "";
-  save(); renderReminders();
-}
-function toggleReminder(i) { store.reminders[i].done = !store.reminders[i].done; save(); renderReminders(); }
-function delReminder(i) { store.reminders.splice(i, 1); save(); renderReminders(); }
-
-function renderDates() {
-  const el = document.getElementById("dates");
-  el.innerHTML = store.dates.length ? store.dates.map((d, i) =>
-    `<div class="list-item"><span style="font-size:18px">📅</span>
-       <span class="txt"><b>${esc(d.name)}</b> — ${esc(d.when)}</span>
-       <button class="x" onclick="delDate(${i})" title="Remove">✕</button>
-     </div>`
-  ).join("") : `<div class="empty">No dates on record yet — her birthday goes here the moment Dave shares it.</div>`;
-}
-function addDate() {
-  const n = document.getElementById("dateName").value.trim();
-  const w = document.getElementById("dateWhen").value.trim();
-  if (!n || !w) return;
-  store.dates.push({ name: n, when: w });
-  document.getElementById("dateName").value = "";
-  document.getElementById("dateWhen").value = "";
-  save(); renderDates();
-}
-function delDate(i) { store.dates.splice(i, 1); save(); renderDates(); }
-
-function renderGifts() {
-  const el = document.getElementById("gifts");
-  el.innerHTML = store.gifts.length ? store.gifts.map((g, i) =>
-    `<div class="gift"><button class="x" onclick="delGift(${i})" title="Remove">✕</button>
-       <div class="g">🎁</div><div class="t">${esc(g.name)}</div>
-       ${g.why ? `<div class="d">${esc(g.why)}</div>` : ""}
-     </div>`
-  ).join("") : `<div class="empty">The gift vault is empty — stash ideas here the moment they occur to you.</div>`;
-}
-function addGift() {
-  const n = document.getElementById("giftName").value.trim();
-  const w = document.getElementById("giftWhy").value.trim();
-  if (!n) return;
-  store.gifts.push({ name: n, why: w });
-  document.getElementById("giftName").value = "";
-  document.getElementById("giftWhy").value = "";
-  save(); renderGifts();
-}
-function delGift(i) { store.gifts.splice(i, 1); save(); renderGifts(); }
-
-renderNotes(); renderReminders(); renderDates(); renderGifts();
+// ---- dump-box JS (self-contained; no dependencies) ----
+(function(){
+  var box = document.querySelector('.dumpbox');
+  if (!box || box.dataset.dumpInit) return;
+  box.dataset.dumpInit = '1';
+  var bid = box.getAttribute('data-buddy-id') || (function(){
+    var p = location.pathname.replace(/\/+$/, '');
+    return p.substring(p.lastIndexOf('/') + 1);
+  })();
+  var ta = box.querySelector('textarea'),
+      btn = box.querySelector('.dumpbox-row .dumpbox-btn'),
+      st = box.querySelector('.dumpbox-status'),
+      tokWrap = box.querySelector('.dumpbox-token'),
+      connectWrap = box.querySelector('.dumpbox-connect'),
+      connectBtn = connectWrap.querySelector('.dumpbox-btn');
+  function lsGet(){ try { return JSON.parse(localStorage.getItem('buddyTree.v3') || '{}'); } catch(e){ return {}; } }
+  function lsSet(patch){ try { var s = lsGet(); for (var k in patch) s[k] = patch[k]; localStorage.setItem('buddyTree.v3', JSON.stringify(s)); } catch(e){} }
+  function token(){ return lsGet().ghToken || ''; }
+  function b64encode(str){
+    var bytes = new TextEncoder().encode(str), bin = '';
+    bytes.forEach(function(b){ bin += String.fromCharCode(b); });
+    return btoa(bin);
+  }
+  async function ghApi(path, method, body){
+    var t = token();
+    if (!t) throw new Error('Add a GitHub token first.');
+    var r = await fetch('https://api.github.com' + path, {
+      method: method || 'GET',
+      headers: {'Authorization': 'Bearer ' + t, 'Accept': 'application/vnd.github+json', 'Content-Type': 'application/json'},
+      body: body ? JSON.stringify(body) : undefined
+    });
+    if (!r.ok) throw new Error('GitHub ' + r.status);
+    return r.status === 204 ? null : await r.json();
+  }
+  async function ghGetFile(repo, path){
+    try {
+      var j = await ghApi('/repos/davedellaquila/' + repo + '/contents/' + path);
+      if (j && j.content) return {
+        text: new TextDecoder().decode(Uint8Array.from(atob(j.content.replace(/\n/g, '')), function(c){ return c.charCodeAt(0); })),
+        sha: j.sha
+      };
+    } catch(e){}
+    return null;
+  }
+  var repo = null, repoName = bid;
+  async function resolveRepo(){
+    try {
+      var r = await fetch('../buddies.json', {cache: 'no-store'});
+      var d = await r.json();
+      var buds = d.buddies || [];
+      for (var i = 0; i < buds.length; i++) {
+        if (buds[i].id === bid && buds[i].repo) { repo = buds[i].repo; repoName = buds[i].name || bid; break; }
+      }
+    } catch(e){}
+  }
+  function refreshUI(){
+    var has = !!token();
+    connectWrap.hidden = has;
+    if (has) tokWrap.hidden = true;
+    var ok = has && !!repo;
+    ta.disabled = !ok;
+    btn.disabled = !ok;
+    if (!has) { st.textContent = ''; }
+    else if (!repo) { st.textContent = 'No repo linked for this buddy yet.'; }
+  }
+  var tokInput = tokWrap.querySelector('input'),
+      tokSave = tokWrap.querySelector('button');
+  connectBtn.addEventListener('click', function(){
+    tokWrap.hidden = false;
+    if (tokInput) tokInput.focus();
+  });
+  tokSave.addEventListener('click', function(){
+    var v = tokInput.value.trim();
+    if (!v) return;
+    lsSet({ghToken: v});
+    tokInput.value = '';
+    tokWrap.hidden = true;
+    refreshUI();
+    st.textContent = 'Token saved on this device.';
+  });
+  async function dump(){
+    var text = ta.value.trim();
+    if (!text) return;
+    if (!token()) { refreshUI(); return; }
+    if (!repo) { st.textContent = 'No repo linked for this buddy yet.'; return; }
+    st.textContent = 'Dumping…';
+    btn.disabled = true;
+    try {
+      var stamp = new Date().toLocaleString();
+      var NL = String.fromCharCode(10);
+      var entry = '## ' + stamp + NL + NL + text + NL + NL;
+      var cur = await ghGetFile(repo, 'docs/ingest.md');
+      var base = cur ? cur.text : '# Ingest log — ' + repoName + NL + NL;
+      var body = {message: 'Ingest dump for ' + bid, content: b64encode(base + entry)};
+      if (cur && cur.sha) body.sha = cur.sha;
+      await ghApi('/repos/davedellaquila/' + repo + '/contents/docs/ingest.md', 'PUT', body);
+      ta.value = '';
+      st.textContent = '✓ Dumped to ' + repo + '/docs/ingest.md';
+    } catch(err){ st.textContent = 'Save failed: ' + (err.message || err); }
+    btn.disabled = false;
+  }
+  btn.addEventListener('click', dump);
+  ta.addEventListener('keydown', function(ev){
+    if ((ev.metaKey || ev.ctrlKey) && ev.key === 'Enter') { ev.preventDefault(); dump(); }
+  });
+  resolveRepo().then(refreshUI);
+})();
 </script>
 </body>
 </html>

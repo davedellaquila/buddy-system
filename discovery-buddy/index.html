@@ -121,6 +121,41 @@
   footer{margin-top:56px;text-align:center;color:var(--dim);font-size:12px}
   footer a{color:var(--muted)}
 
+  /* ---------- brain dump ---------- */
+  .dumpbox{background:var(--panel);border:1px solid var(--border);border-radius:14px;
+           padding:20px 22px;margin-top:6px}
+  .dumpbox-sub{color:var(--muted);font-size:14px;margin-bottom:14px}
+  .dumpbox textarea{
+    width:100%;min-height:96px;resize:vertical;background:var(--bg);
+    border:1px solid var(--border);border-radius:10px;padding:10px 12px;
+    font-size:14px;color:var(--text);font-family:inherit;
+  }
+  .dumpbox textarea:focus{outline:none;border-color:var(--amber)}
+  .dumpbox textarea:disabled{opacity:.55}
+  .dumpbox-row{display:flex;align-items:center;gap:12px;margin-top:10px;flex-wrap:wrap}
+  .dumpbox-btn{
+    background:linear-gradient(135deg,var(--amber),var(--rose));color:#1a141d;
+    border:none;border-radius:999px;padding:9px 24px;font-size:14px;font-weight:700;cursor:pointer;
+  }
+  .dumpbox-btn:disabled{opacity:.45;cursor:default}
+  .dumpbox-status{font-size:13px;color:var(--muted)}
+  .dumpbox-token{background:var(--bg);border:1px dashed var(--border);border-radius:10px;
+                 padding:12px 14px;margin-bottom:12px;font-size:14px}
+  .dumpbox-token p{margin-bottom:8px;color:var(--muted)}
+.dumpbox-connect{background:var(--bg);border:1px dashed var(--border);border-radius:10px;
+                 padding:14px 16px;margin-bottom:12px;font-size:14px}
+.dumpbox-connect p{margin-bottom:10px;color:var(--muted)}
+  .dumpbox-tokenrow{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+  .dumpbox-tokenrow input{
+    flex:1;min-width:170px;background:var(--panel);border:1px solid var(--border);
+    border-radius:8px;padding:7px 10px;font-size:13px;color:var(--text);
+  }
+  .dumpbox-tokenrow button{
+    background:transparent;color:var(--amber);border:1px solid var(--amber);
+    border-radius:8px;padding:7px 14px;font-size:13px;font-weight:600;cursor:pointer;
+  }
+  .dumpbox-tokenrow a{color:var(--amber);font-size:13px}
+
   /* ---------- light mode (Dave reads outdoors too) ---------- */
   @media (prefers-color-scheme: light){
     :root{
@@ -177,6 +212,28 @@
     <div class="track-empty">One seed so far. A band name from the piano player, a show a friend mentioned, a book that came up at dinner, a video he never got around to — it lands here and doesn't evaporate by morning.</div>
   </div>
 
+  <h2>🧠 Brain dump</h2>
+  <section class="dumpbox" data-buddy-id="discovery-buddy">
+    <p class="dumpbox-sub">Dump what's on your mind about Discovery Buddy — raw and unfiltered. Each dump lands in the buddy's repo (docs/ingest.md) as a timestamped entry.</p>
+    <div class="dumpbox-connect" hidden>
+      <p>🔒 Connect GitHub to unlock dumping. Paste a token once — it stays on this device only.</p>
+      <button type="button" class="dumpbox-btn">Connect GitHub to enable</button>
+    </div>
+    <div class="dumpbox-token" hidden>
+      <p>🔒 Connect GitHub to unlock dumping. Paste a token once — it stays on this device only.</p>
+      <div class="dumpbox-tokenrow">
+        <input type="password" placeholder="GitHub token (repo scope)" aria-label="GitHub token">
+        <button type="button">Save token</button>
+        <a href="https://github.com/settings/tokens" target="_blank" rel="noopener">Get a token</a>
+      </div>
+    </div>
+    <textarea rows="4" placeholder="Dump what's on your mind about Discovery Buddy…"></textarea>
+    <div class="dumpbox-row">
+      <button type="button" class="dumpbox-btn">Dump it</button>
+      <span class="dumpbox-status" role="status"></span>
+    </div>
+  </section>
+
   <h2>🎧 Taste profile</h2>
   <div class="chips">
     <div class="chip"><b>Morgan Wallen</b> <small>· 🎵 country</small></div>
@@ -225,5 +282,115 @@
   </footer>
 
 </div>
+
+<script>
+// ---- dump-box JS (self-contained; no dependencies) ----
+(function(){
+  var box = document.querySelector('.dumpbox');
+  if (!box || box.dataset.dumpInit) return;
+  box.dataset.dumpInit = '1';
+  var bid = box.getAttribute('data-buddy-id') || (function(){
+    var p = location.pathname.replace(/\/+$/, '');
+    return p.substring(p.lastIndexOf('/') + 1);
+  })();
+  var ta = box.querySelector('textarea'),
+      btn = box.querySelector('.dumpbox-row .dumpbox-btn'),
+      st = box.querySelector('.dumpbox-status'),
+      tokWrap = box.querySelector('.dumpbox-token'),
+      connectWrap = box.querySelector('.dumpbox-connect'),
+      connectBtn = connectWrap.querySelector('.dumpbox-btn');
+  function lsGet(){ try { return JSON.parse(localStorage.getItem('buddyTree.v3') || '{}'); } catch(e){ return {}; } }
+  function lsSet(patch){ try { var s = lsGet(); for (var k in patch) s[k] = patch[k]; localStorage.setItem('buddyTree.v3', JSON.stringify(s)); } catch(e){} }
+  function token(){ return lsGet().ghToken || ''; }
+  function b64encode(str){
+    var bytes = new TextEncoder().encode(str), bin = '';
+    bytes.forEach(function(b){ bin += String.fromCharCode(b); });
+    return btoa(bin);
+  }
+  async function ghApi(path, method, body){
+    var t = token();
+    if (!t) throw new Error('Add a GitHub token first.');
+    var r = await fetch('https://api.github.com' + path, {
+      method: method || 'GET',
+      headers: {'Authorization': 'Bearer ' + t, 'Accept': 'application/vnd.github+json', 'Content-Type': 'application/json'},
+      body: body ? JSON.stringify(body) : undefined
+    });
+    if (!r.ok) throw new Error('GitHub ' + r.status);
+    return r.status === 204 ? null : await r.json();
+  }
+  async function ghGetFile(repo, path){
+    try {
+      var j = await ghApi('/repos/davedellaquila/' + repo + '/contents/' + path);
+      if (j && j.content) return {
+        text: new TextDecoder().decode(Uint8Array.from(atob(j.content.replace(/\n/g, '')), function(c){ return c.charCodeAt(0); })),
+        sha: j.sha
+      };
+    } catch(e){}
+    return null;
+  }
+  var repo = null, repoName = bid;
+  async function resolveRepo(){
+    try {
+      var r = await fetch('../buddies.json', {cache: 'no-store'});
+      var d = await r.json();
+      var buds = d.buddies || [];
+      for (var i = 0; i < buds.length; i++) {
+        if (buds[i].id === bid && buds[i].repo) { repo = buds[i].repo; repoName = buds[i].name || bid; break; }
+      }
+    } catch(e){}
+  }
+  function refreshUI(){
+    var has = !!token();
+    connectWrap.hidden = has;
+    if (has) tokWrap.hidden = true;
+    var ok = has && !!repo;
+    ta.disabled = !ok;
+    btn.disabled = !ok;
+    if (!has) { st.textContent = ''; }
+    else if (!repo) { st.textContent = 'No repo linked for this buddy yet.'; }
+  }
+  var tokInput = tokWrap.querySelector('input'),
+      tokSave = tokWrap.querySelector('button');
+  connectBtn.addEventListener('click', function(){
+    tokWrap.hidden = false;
+    if (tokInput) tokInput.focus();
+  });
+  tokSave.addEventListener('click', function(){
+    var v = tokInput.value.trim();
+    if (!v) return;
+    lsSet({ghToken: v});
+    tokInput.value = '';
+    tokWrap.hidden = true;
+    refreshUI();
+    st.textContent = 'Token saved on this device.';
+  });
+  async function dump(){
+    var text = ta.value.trim();
+    if (!text) return;
+    if (!token()) { refreshUI(); return; }
+    if (!repo) { st.textContent = 'No repo linked for this buddy yet.'; return; }
+    st.textContent = 'Dumping' + String.fromCharCode(8230);
+    btn.disabled = true;
+    try {
+      var stamp = new Date().toLocaleString();
+      var NL = String.fromCharCode(10);
+      var entry = '## ' + stamp + NL + NL + text + NL + NL;
+      var cur = await ghGetFile(repo, 'docs/ingest.md');
+      var base = cur ? cur.text : '# Ingest log ' + String.fromCharCode(8212) + ' ' + repoName + NL + NL;
+      var body = {message: 'Ingest dump for ' + bid, content: b64encode(base + entry)};
+      if (cur && cur.sha) body.sha = cur.sha;
+      await ghApi('/repos/davedellaquila/' + repo + '/contents/docs/ingest.md', 'PUT', body);
+      ta.value = '';
+      st.textContent = 'Dumped to ' + repo + '/docs/ingest.md';
+    } catch(err){ st.textContent = 'Save failed: ' + (err.message || err); }
+    btn.disabled = false;
+  }
+  btn.addEventListener('click', dump);
+  ta.addEventListener('keydown', function(ev){
+    if ((ev.metaKey || ev.ctrlKey) && ev.key === 'Enter') { ev.preventDefault(); dump(); }
+  });
+  resolveRepo().then(refreshUI);
+})();
+</script>
 </body>
 </html>

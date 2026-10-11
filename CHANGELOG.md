@@ -3,6 +3,70 @@
 All notable changes to the Buddies dashboard and buddy system. Newest first.
 `FEATURES.md` describes the current state; this file describes how it got there.
 
+## 2026-10-11 (Positioning: "dump anywhere, it's routed")
+
+### Added
+- **"Dump anywhere, it's routed"** captured as a core selling point in FEATURES.md — stream-of-consciousness capture into any homepage dump box or thread lands in a durable inbox and is routed to the right buddy; Dave never decides where a thought goes.
+
+## 2026-10-11 (Dashboard: default project homepage redesign)
+
+### Added
+- **Redesigned default project homepage view** (Design Buddy, Dave-approved) — the auto-generated fallback in `buddyHomepageHtml` (build.py) for buddies without a custom homepage: hero header (icon tile, name, tagline, status pill, stat strip), desktop two-column grid (About / Plans / Artifacts + amber Needs-attention rail and sub-buddy chips), full-width 🧠 brain-dump box writing to the buddy's docs/ingest.md via the dashboard's GitHub token path, attention items link to their referent when a URL is present. Inherits dashboard dark/light theme; single column under 960px. Also fixed two latent bugs: cards used undefined `--card` var (rendered transparent) and plans never rendered (`PLANS[b.id]` on an array).
+- **Attention-item URLs** — 43 registry attention items backfilled with links (brief/mission docs, dashboard); new standing rule: every homepage attention item must link to its referent.
+
+## 2026-10-11 (Dashboard: search clear button)
+
+### Added
+- **Clear (×) button on the dashboard's buddy search box** — Dave's spot: the sidebar search had no visible way to clear it. Explicit × button appears when there's text; tapping clears the query, refocuses the field, and re-renders the list. Works everywhere regardless of native `type=search` behavior.
+
+## 2026-10-11 (Portfolio Buddy: new buddy)
+
+### Added
+- **Portfolio Buddy** (🖼️ provisional icon — Dave picking the final one) — child of Project Buddy. Dave's expert on online portfolios: researches contemporary best practices for product-design + engineering portfolios, owns/manages his portfolio site(s) with dynamic updates from its mission-control homepage, keeps a portfolio-ideas list, supports multiple audiences (design/engineering/Apple-safe). Consults Astro + Project Buddy for project data (no own tracker). Owns the "Redo personal website" goal. Mission statement: [Portfolio Buddy — Mission Statement](https://docs.google.com/document/d/1uby4pNjL4IRVLAqd_gVG_5bOGdjgcjZ0L_kobSOSVt4/edit) — Repo: [davedellaquila/portfolio-buddy](https://github.com/davedellaquila/portfolio-buddy) (private, docs/mission-statement.md). Template homepage generated with 🧠 brain-dump box + dark/light mode; custom mission-control design comes via thread INIT. Dashboard entry added (61 buddies).
+
+## 2026-10-11 (Little Guy Buddy: brain-dump box + dark mode)
+
+### Added
+- **Little Guy Buddy homepage: 🧠 Brain dump box** — textarea + "Dump it" button (Cmd/Ctrl+Enter), appending timestamped entries to docs/ingest.md in the little-guy-buddy repo via the GitHub API (same write path as the dashboard ingest panel). Repo resolved from buddies.json via `data-buddy-id` (no hardcoded names); token read from dashboard localStorage (`buddyTree.v3` → `ghToken`) with a one-time token prompt fallback. Restyled to the page's warm cat theme, dark-mode aware. Write path tested end-to-end against the real API (test entry confirmed in docs/ingest.md, then removed).
+- **Dark mode for the Little Guy Buddy homepage** — full `prefers-color-scheme` dark theme in warm browns, per the buddy-system standing requirement (light-only is not shippable).
+
+## 2026-10-11 (Discovery Buddy: brain-dump box on homepage)
+
+### Added
+- **🧠 Brain dump section** on the Discovery Buddy homepage (textarea + "Dump it",
+  Cmd/Ctrl+Enter). Appends timestamped entries to docs/ingest.md in
+  davedellaquila/discovery-buddy via the GitHub contents API — the same write
+  path as the dashboard's ingest panel. Token read from dashboard localStorage
+  (buddyTree.v3 → ghToken, shared origin); one-time token prompt if missing.
+  Repo resolved from ../buddies.json via data-buddy-id="discovery-buddy".
+  Restyled to the listening-room theme; dark+light mode preserved.
+  JS logic unit-tested with mocked DOM/fetch; write path confirmed with a
+  labeled test entry in docs/ingest.md.
+
+## 2026-10-11 (Design Buddy)
+
+### Added
+- **Design Buddy** — new buddy: Dave's resident design authority, "the Jony Ive on staff" (🎨 icon, child of Project Buddy, `Brief review` status). Reviews every buddy homepage/app for taste, owns the shared design language (dark + light mode, living pages, craftsmanship as differentiator), gives his product work a second eye when asked. Advisory only — owning threads implement; Apple-internal STIX work stays advisory-only. Full drill: [brief](https://docs.google.com/document/d/1_sUDucLCJfg2iB858pgHQWdOtt-vWPwOMqoXjhy3QYU/edit), private repo [davedellaquila/design-buddy](https://github.com/davedellaquila/design-buddy). Open: review cadence?; how prescriptive vs advisory?; proactive redesigns or on-request only?
+- Dashboard now tracks 60 buddies.
+
+## 2026-10-11 (Brain-dump box on every buddy homepage)
+
+### Added
+- **Dump box on all template homepages** — the dashboard's brain-dump (ingest) feature now ships on every template-driven buddy homepage (25 pages): a "🧠 Brain dump" section with textarea + "Dump it" button (Cmd/Ctrl+Enter), writing timestamped entries to that buddy's repo `docs/ingest.md` via the same GitHub API path as the dashboard's ingest panel. Reads the shared GitHub token from the dashboard origin's localStorage (`buddyTree.v3` → `ghToken`); resolves the repo from `../buddies.json`. Dark/light aware via `prefers-color-scheme`. Snippet reference: `docs/dumpbox-snippet.html`. Custom-designed pages (34, thread-owned) get a memo with the snippet + integration instructions instead of direct edits.
+- **Template version marker** — `gen_basic_homepages.py` now stamps `<!-- BUDDY-BASIC-TEMPLATE v2 -->` and regenerates marker-carrying pages (previously it could only create pages for buddies without one, so the daily rebuild was a no-op for existing pages). Custom pages without the marker are never overwritten.
+
+### Fixed
+- **Missing repo links** — set `repo` for `family-buddy`, `finance-buddy`, `mga-buddy`, `ml500-buddy` (repos existed; the registry field was null/empty), so their dump boxes and dashboard repo links work.
+
+## 2026-10-11 (Briefing Buddy split from News Buddy)
+
+### Added
+- **Briefing Buddy** — new buddy: the guy that sends Dave's briefings — morning (6:00 AM PT) + evening (6:00 PM PT) editions assembled from configured sections and live data, delivered to the Briefings thread and by HTML email (📋 icon, child of Project Buddy, `Brief review` status). Homepage is the settings page: what's on the briefing, morning vs evening, live preview of the next briefing's data. Full drill: [brief](https://docs.google.com/document/d/1s9ghZ-kyp9dag2whTPnk24ULLUJP3JW_0UGtocAynbs/edit), private repo [davedellaquila/briefing-buddy](https://github.com/davedellaquila/briefing-buddy). Open: final section lists?; 6 AM / 6 PM still right?; who else gets briefings?
+- Dashboard now tracks 59 buddies.
+
+### Changed
+- **News Buddy mission** — refocused 2026-10-11 at Dave's direction: News Buddy is now Dave's expert on news sources (knows where news comes from, which sources to trust per topic, keeps the source list sharp); briefing assembly and delivery moved OUT to the new Briefing Buddy. Brief rewritten in place: [News Buddy — Brief](https://docs.google.com/document/d/11Zz2wGbuIKCqS7OSPOnjIAbz5VsmLQPvxS-OfRicSN0/edit); repo README + docs/brief.md updated to match.
+
 ## 2026-10-11 (Ticket Buddy, Hiking Buddy, Venue Buddy: three new buddies)
 
 ### Added

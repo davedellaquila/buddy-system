@@ -3,398 +3,473 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Quentin Buddy — Living dossier for Quentin</title>
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏎️</text></svg>">
+<meta name="color-scheme" content="light dark">
+<title>Quentin Buddy — Homepage</title>
 <style>
   :root {
-    --paper: #F5F1E6;
-    --card: #FFFDF6;
-    --ink: #23281F;
-    --dim: #7A7565;
-    --line: #E2D9C2;
-    --green: #1E4D3B;
-    --green-deep: #143527;
-    --green-soft: #E3EDE6;
-    --gold: #B98A2F;
-    --gold-soft: #F7ECD4;
-    --red: #B3402E;
-    --red-soft: #F7E2DC;
-    --note: #FDF3D8;
+    color-scheme: light dark;
+    --paper: #f5efe2;
+    --paper2: #efe7d4;
+    --card: #fffdf6;
+    --ink: #2c2620;
+    --muted: #7d7261;
+    --line: #ddd2b8;
+    --accent: #b3541e;
+    --on-accent: #ffffff;
+    --accent-soft: rgba(179, 84, 30, .10);
+    --gold: #a07d1c;
+    --red: #a03a2e;
+    --shadow: 0 1px 2px rgba(60, 45, 20, .06), 0 4px 14px rgba(60, 45, 20, .07);
+    --dot: rgba(120, 95, 50, .055);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --paper: #161210;
+      --paper2: #1d1713;
+      --card: #221b15;
+      --ink: #ece1cc;
+      --muted: #a99a80;
+      --line: #3b322a;
+      --accent: #e0913f;
+      --on-accent: #231605;
+      --accent-soft: rgba(224, 145, 63, .13);
+      --gold: #d9b04a;
+      --red: #d9705f;
+      --shadow: 0 1px 2px rgba(0, 0, 0, .35), 0 4px 16px rgba(0, 0, 0, .35);
+      --dot: rgba(224, 180, 120, .05);
+    }
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
-    background: var(--paper); color: var(--ink);
-    font-family: -apple-system, "Segoe UI", Inter, Helvetica, Arial, sans-serif;
-    line-height: 1.55; padding: 28px 20px 70px;
+    background: var(--paper);
+    background-image: radial-gradient(var(--dot) 1px, transparent 1px);
+    background-size: 22px 22px;
+    color: var(--ink);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+    line-height: 1.55;
+    padding: 0 0 64px;
   }
-  .wrap { max-width: 1040px; margin: 0 auto; }
-  .serif { font-family: Georgia, "Iowan Old Style", "Times New Roman", serif; }
-
+  .wrap { max-width: 920px; margin: 0 auto; padding: 0 24px; }
   header.hero {
-    background: linear-gradient(135deg, #FFFBEF 0%, #F3EEDC 55%, #E9E2CC 100%);
-    border: 1px solid var(--line); border-radius: 16px;
-    padding: 34px 32px 26px; margin-bottom: 0;
-    position: relative; overflow: hidden;
+    padding: 52px 0 28px;
+    border-bottom: 2px solid var(--ink);
+    margin-bottom: 8px;
+    position: relative;
   }
-  header.hero::after {
-    content: "🏎️"; position: absolute; right: 26px; top: 8px;
-    font-size: 110px; opacity: .12; transform: rotate(-8deg); pointer-events: none;
+  .kicker {
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    font-size: 12px;
+    color: var(--accent);
+    font-weight: 700;
+    margin-bottom: 10px;
   }
-  .checker {
-    height: 12px; border-radius: 0 0 8px 8px;
-    background: repeating-conic-gradient(var(--ink) 0% 25%, var(--paper) 0% 50%);
-    background-size: 24px 24px;
-    margin-bottom: 24px; border: 1px solid var(--line); border-top: none;
+  h1 {
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 44px;
+    font-weight: 600;
+    letter-spacing: -0.5px;
+    margin-bottom: 6px;
   }
-  .kicker { color: var(--green); font-size: 12px; letter-spacing: 2.5px; text-transform: uppercase; font-weight: 700; }
-  h1 { font-size: 40px; margin: 8px 0 6px; font-weight: 700; }
-  h1 .ico { margin-right: 10px; }
-  .tagline { font-size: 18px; color: var(--dim); font-style: italic; }
-  .mission { margin-top: 12px; max-width: 74ch; font-size: 15px; }
-  .mission b { color: var(--green); }
-  .meta { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 18px; }
-  .pill {
-    display: inline-flex; align-items: center; gap: 6px;
-    background: var(--card); border: 1px solid var(--line); border-radius: 999px;
-    padding: 6px 14px; font-size: 13px; color: var(--ink); text-decoration: none;
+  .stamp {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--accent);
+    border: 2px solid var(--accent);
+    border-radius: 6px;
+    padding: 4px 12px;
+    transform: rotate(-2deg);
+    margin: 10px 0 14px;
+    background: var(--accent-soft);
   }
-  .pill.st { background: var(--green-soft); border-color: #B9CFC0; font-weight: 600; }
-  a.pill:hover { border-color: var(--green); }
-
-  h2 { font-size: 21px; margin: 34px 0 6px; }
-  h2 .sub { display: block; font-family: -apple-system, "Segoe UI", Inter, sans-serif;
-            font-size: 13px; color: var(--dim); font-weight: 400; margin-top: 2px; }
-
-  .mind { border: 1px solid var(--line); border-left: 5px solid var(--red);
-          background: var(--card); border-radius: 10px; padding: 14px 18px;
-          margin-bottom: 12px; display: flex; gap: 14px; align-items: flex-start; }
-  .mind.gold { border-left-color: var(--gold); }
-  .mind.green { border-left-color: var(--green); }
-  .mind .dot { font-size: 20px; line-height: 1.4; }
-  .mind .t { font-weight: 700; font-size: 15px; }
-  .mind .d { color: var(--dim); font-size: 13.5px; }
-  .mind a { color: var(--green); font-weight: 600; }
-
-  .facts { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 14px; margin-top: 14px; }
-  .fact { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 16px 18px; }
-  .fact .e { font-size: 24px; margin-bottom: 6px; }
-  .fact .t { font-weight: 700; font-size: 14.5px; }
-  .fact .d { color: var(--dim); font-size: 13px; margin-top: 4px; }
-  .fact.trophy { background: var(--gold-soft); border-color: #E4CFA0; }
-
-  .card { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 20px 22px; margin-top: 14px; }
-
-  .board { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 14px; margin-top: 14px; }
-  .note {
-    background: var(--note); border-radius: 4px; padding: 16px 16px 12px;
-    box-shadow: 0 3px 10px rgba(35,40,31,.10); position: relative;
-    transform: rotate(-.6deg); transition: transform .15s;
+  .mission { color: var(--muted); font-size: 17px; max-width: 660px; }
+  .mission strong { color: var(--ink); font-weight: 600; }
+  h2 {
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 23px;
+    margin: 38px 0 14px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
   }
-  .note:nth-child(even) { transform: rotate(.7deg); background: #FBF3DF; }
-  .note:hover { transform: rotate(0) scale(1.02); }
-  .note::before { content: ""; position: absolute; top: -8px; left: 50%; transform: translateX(-50%) rotate(2deg);
-                  width: 64px; height: 18px; background: rgba(185,138,47,.40); border-radius: 2px; }
-  .note .x { position: absolute; top: 6px; right: 8px; border: none; background: none; cursor: pointer;
-             color: var(--dim); font-size: 15px; }
-  .note .x:hover { color: var(--red); }
-  .note p { font-size: 14px; margin-top: 6px; white-space: pre-wrap; }
-  .note .when { font-size: 11px; color: var(--dim); margin-top: 8px; }
-
-  .list-item { display: flex; gap: 12px; align-items: flex-start; padding: 10px 2px; border-bottom: 1px solid var(--line); font-size: 14.5px; }
-  .list-item:last-child { border-bottom: none; }
-  .list-item .x { margin-left: auto; border: none; background: none; cursor: pointer; color: var(--dim); font-size: 15px; }
-  .list-item .x:hover { color: var(--red); }
-  .list-item.done .txt { text-decoration: line-through; color: var(--dim); }
-  .list-item input[type=checkbox] { margin-top: 5px; accent-color: var(--green); width: 16px; height: 16px; }
-  .list-item .when { font-size: 11px; color: var(--dim); }
-
-  .gift { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 16px 18px; position: relative; }
-  .gift .g { font-size: 22px; }
-  .gift .t { font-weight: 700; font-size: 15px; margin: 6px 0 2px; }
-  .gift .d { color: var(--dim); font-size: 13px; }
-  .gift .x { position: absolute; top: 8px; right: 10px; border: none; background: none; cursor: pointer; color: var(--dim); font-size: 15px; }
-  .gift .x:hover { color: var(--red); }
-
-  .addrow { display: flex; gap: 8px; margin-top: 14px; flex-wrap: wrap; }
-  .addrow input, .addrow textarea {
-    flex: 1 1 220px; border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px;
-    font-size: 14px; font-family: inherit; background: #fff; color: var(--ink);
+  h2 .rule { flex: 1; height: 1px; background: var(--line); }
+  h2 .count {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    background: var(--ink);
+    color: var(--paper);
+    border-radius: 999px;
+    padding: 2px 10px;
   }
-  .addrow input:focus, .addrow textarea:focus { outline: 2px solid var(--green-soft); border-color: var(--green); }
-  .btn {
-    border: none; border-radius: 8px; padding: 10px 18px; font-size: 14px; font-weight: 700;
-    background: var(--green); color: #fff; cursor: pointer;
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(255px, 1fr));
+    gap: 14px;
   }
-  .btn:hover { background: var(--green-deep); }
-  .empty { color: var(--dim); font-style: italic; font-size: 14px; padding: 10px 2px; }
-
-  .photostrip { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 14px; }
-  .photo { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 10px; max-width: 250px;
-           box-shadow: 0 3px 10px rgba(35,40,31,.08); transform: rotate(-1deg); }
-  .photo:nth-child(even) { transform: rotate(1deg); }
-  .photo img { width: 100%; border-radius: 8px; display: block; }
-  .photo figcaption { font-size: 12px; color: var(--dim); margin-top: 8px; text-align: center; }
-  .photo a { text-decoration: none; color: inherit; }
-  .fb-card { display: flex; flex-direction: column; justify-content: center; min-height: 170px;
-             background: var(--green-soft); border: 1px dashed #B9CFC0; border-radius: 8px;
-             text-align: center; padding: 18px 14px; }
-  .fb-card .ico { font-size: 34px; margin-bottom: 8px; }
-  .fb-card .t { font-weight: 700; font-size: 14px; color: var(--green-deep); }
-  .fb-card .d { font-size: 12px; color: var(--dim); margin-top: 6px; }
-
-  .quotes { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 14px; margin-top: 14px; }
-  .quotes blockquote {
-    background: var(--card); border: 1px solid var(--line); border-left: 5px solid var(--gold);
-    border-radius: 10px; padding: 16px 18px 12px; font-family: Georgia, "Iowan Old Style", serif;
-    font-size: 15.5px; font-style: italic; line-height: 1.6;
+  .card {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 16px 18px;
+    box-shadow: var(--shadow);
+    position: relative;
   }
-  .quotes blockquote cite {
-    display: block; margin-top: 10px; font-family: -apple-system, "Segoe UI", Inter, sans-serif;
-    font-style: normal; font-size: 12px; color: var(--dim);
+  .card::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 18px; right: 18px;
+    height: 3px;
+    border-radius: 0 0 4px 4px;
+    background: var(--accent);
+    opacity: .85;
   }
-
-  footer { margin-top: 44px; padding-top: 18px; border-top: 1px solid var(--line);
-           color: var(--dim); font-size: 13px; display: flex; gap: 16px; flex-wrap: wrap; }
-  footer a { color: var(--green); }
-  @media (max-width: 640px) { h1 { font-size: 30px; } header.hero::after { font-size: 70px; } }
+  .card h3 { font-size: 16px; margin-bottom: 6px; }
+  .card p { font-size: 14px; color: var(--muted); }
+  .card p strong { color: var(--ink); }
+  .tag {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 2px 10px;
+    border-radius: 999px;
+    margin-bottom: 10px;
+  }
+  .tag.fact { background: var(--accent-soft); color: var(--accent); border: 1px solid var(--accent); }
+  .tag.open { background: transparent; color: var(--red); border: 1px solid var(--red); }
+  .timeline { list-style: none; }
+  .timeline li {
+    display: flex;
+    gap: 16px;
+    padding: 13px 4px;
+    border-bottom: 1px solid var(--line);
+    font-size: 15px;
+    align-items: baseline;
+  }
+  .timeline li:last-child { border-bottom: none; }
+  .date {
+    flex: 0 0 132px;
+    font-weight: 700;
+    color: var(--accent);
+    font-variant-numeric: tabular-nums;
+    font-size: 14px;
+  }
+  .date.unknown { color: var(--muted); font-weight: 600; }
+  .attention { list-style: none; }
+  .attention li {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-left: 4px solid var(--accent);
+    border-radius: 8px;
+    padding: 14px 18px;
+    margin-bottom: 10px;
+    font-size: 15px;
+    box-shadow: var(--shadow);
+  }
+  .attention li strong { display: block; margin-bottom: 2px; }
+  .attention li span { color: var(--muted); font-size: 14px; }
+  .empty {
+    background: var(--paper2);
+    border: 2px dashed var(--line);
+    border-radius: 10px;
+    padding: 26px 22px;
+    text-align: center;
+    color: var(--muted);
+    font-size: 15px;
+  }
+  .empty strong { color: var(--ink); display: block; font-size: 17px; margin-bottom: 4px; font-family: Georgia, serif; }
+  /* ---- brain-dump box (dashboard ingest feature, restyled to dossier theme) ---- */
+  .dumpbox {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 20px 22px;
+    box-shadow: var(--shadow);
+    margin-top: 38px;
+  }
+  .dumpbox h2 { margin: 0 0 6px; font-size: 22px; }
+  .dumpbox-sub { color: var(--muted); font-size: 14px; margin-bottom: 14px; }
+  .dumpbox textarea {
+    width: 100%; min-height: 96px; resize: vertical;
+    background: var(--paper); border: 1px solid var(--line); border-radius: 8px;
+    padding: 10px 12px; font-size: 14px; color: var(--ink); font-family: inherit;
+  }
+  .dumpbox textarea:focus { outline: none; border-color: var(--accent); }
+  .dumpbox textarea:disabled { opacity: .55; }
+  .dumpbox-row { display: flex; align-items: center; gap: 12px; margin-top: 10px; flex-wrap: wrap; }
+  .dumpbox-btn {
+    background: var(--accent); color: var(--on-accent); border: none; border-radius: 8px;
+    padding: 9px 22px; font-size: 14px; font-weight: 700; cursor: pointer;
+  }
+  .dumpbox-btn:disabled { opacity: .45; cursor: default; }
+  .dumpbox-status { font-size: 13px; color: var(--muted); }
+  .dumpbox-token {
+    background: var(--paper); border: 1px dashed var(--line); border-radius: 8px;
+    padding: 12px 14px; margin-bottom: 12px; font-size: 14px;
+  }
+  .dumpbox-token p { margin-bottom: 8px; }
+  .dumpbox-tokenrow { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+  .dumpbox-tokenrow input {
+    flex: 1; min-width: 170px; background: var(--card); border: 1px solid var(--line);
+    border-radius: 8px; padding: 7px 10px; font-size: 13px; color: var(--ink); font-family: inherit;
+  }
+  .dumpbox-tokenrow button {
+    background: transparent; color: var(--accent); border: 1px solid var(--accent);
+    border-radius: 8px; padding: 7px 14px; font-size: 13px; font-weight: 700; cursor: pointer;
+  }
+  .dumpbox-tokenrow a { color: var(--accent); font-size: 13px; }
+  .dumpbox-connect {
+    background: var(--paper); border: 1px dashed var(--line); border-radius: 8px;
+    padding: 12px 14px; margin-bottom: 12px; font-size: 14px;
+  }
+  .dumpbox-connect p { margin-bottom: 8px; }
+  .family { display: flex; gap: 12px; flex-wrap: wrap; }
+  .fam {
+    flex: 1 1 200px;
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 16px 18px;
+    font-size: 14px;
+    color: var(--muted);
+    box-shadow: var(--shadow);
+  }
+  .fam strong { color: var(--ink); display: block; font-size: 15px; margin-bottom: 4px; }
+  footer {
+    margin-top: 48px;
+    padding-top: 20px;
+    border-top: 2px solid var(--ink);
+    color: var(--muted);
+    font-size: 13px;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  a { color: var(--accent); }
 </style>
 </head>
 <body>
 <div class="wrap">
 
   <header class="hero">
-    <div class="kicker">Family Buddy · child</div>
-    <h1 class="serif"><span class="ico">🏎️</span>Quentin Buddy</h1>
-    <div class="tagline serif">Living dossier for Dave's son Quentin.</div>
-    <p class="mission">Quentin Buddy is the one place for everything Dave needs to <b>remember, track, and do</b> regarding Quentin — key facts, important dates, notes, reminders, and gift ideas. Where Family Buddy holds the whole picture, Quentin Buddy keeps the file on the kid who grew up around engines.</p>
-    <div class="meta">
-      <span class="pill st">📝 Brief review</span>
-      <a class="pill" href="https://docs.google.com/document/d/157C3sNyJcRIgzNevCbwuWx7V1F4YPYZRwjw1TOCUaNA/edit" target="_blank" rel="noopener">📄 Product brief</a>
-      <a class="pill" href="https://github.com/davedellaquila/quentin-buddy" target="_blank" rel="noopener">💻 quentin-buddy repo</a>
-      <a class="pill" href="https://facebook.com/qdellaquila" target="_blank" rel="noopener">📘 Facebook</a>
-      <span class="pill">🏠 Parent: Family Buddy</span>
-    </div>
+    <div class="kicker">Project Buddy &mdash; Homepage</div>
+    <h1>🧑 Quentin Buddy</h1>
+    <div class="stamp">Living Dossier</div>
+    <p class="mission">The one place for everything Dave needs to <strong>remember, track, and do</strong> regarding <strong>Quentin</strong> — key facts, important dates, notes, reminders, and gift ideas. This page is the file I'm keeping on him.</p>
   </header>
-  <div class="checker"></div>
 
-  <h2 class="serif">On my mind <span class="sub">What needs Dave's attention</span></h2>
-  <div class="mind gold">
-    <div class="dot">📄</div>
-    <div><div class="t">Rent notice out for delivery — family discussion today</div>
-    <div class="d">The 90-day notice ($1,000 → $2,000/mo, effective <b>Jan 7, 2027</b>) is being served in person Oct 7–9. The four-person sit-down with Quentin, Amanda and Nancy — rent plus possible future home ownership — is the Lenwood one-pager. If that conversation happened this morning, the file needs the outcome.</div></div>
-  </div>
-  <div class="mind">
-    <div class="dot">💍</div>
-    <div><div class="t">Wedding ahead</div>
-    <div class="d">Engaged to Amanda — announced <b>Aug 11, 2026</b>. No wedding date or plans on record yet. When it comes up naturally, that's the question to ask.</div></div>
-  </div>
-  <div class="mind green">
-    <div class="dot">🔧</div>
-    <div><div class="t">Auto-repair business launching</div>
-    <div class="d">Quentin and Sawyer are starting their own shop in the South Bay, hoping to eventually open near Sacramento. Worth asking how it's going — and what they need.</div></div>
-  </div>
-  <div class="mind">
-    <div class="dot">🎂</div>
-    <div><div class="t">Birthday discrepancy — one question settles it</div>
-    <div class="d">Nan's birthday post points to <b>May 30</b>, but his Facebook profile says <b>June 22</b>. One direct ask to Quentin settles the file's most basic date.</div></div>
-  </div>
-
-  <h2 class="serif">Who Quentin is <span class="sub">Only what's known — unknowns stay unknown</span></h2>
-  <div class="facts">
-    <div class="fact"><div class="e">👨‍👦</div><div class="t">Dave's older son</div><div class="d">31. Sawyer is the younger brother (28).</div></div>
-    <div class="fact"><div class="e">🏠</div><div class="t">Lives at Lenwood</div><div class="d">6929 Lenwood Way, San Jose — with fiancée Amanda. $1,000/mo, notice to $2,000/mo in play.</div></div>
-    <div class="fact"><div class="e">💍</div><div class="t">Engaged to Amanda</div><div class="d">Announced Aug 11, 2026. Together since Dec 2019 (per his Facebook).</div></div>
-    <div class="fact trophy"><div class="e">🏁</div><div class="t">Best MG + Best in Show</div><div class="d">Monterey Car Week, Aug 2026. The trophy card of the family.</div></div>
-    <div class="fact"><div class="e">🔧</div><div class="t">Mechanical Technician</div><div class="d">At Performance Technic — current role per his Facebook.</div></div>
-    <div class="fact"><div class="e">🤝</div><div class="t">Starting his own shop</div><div class="d">Auto-repair business with Sawyer in the South Bay; hoping to eventually open near Sacramento.</div></div>
-    <div class="fact"><div class="e">🏎️</div><div class="t">Dealership-bred</div><div class="d">Technician stints at Porsche Stevens Creek / Los Gatos, BMW of Mountain View, Mercedes-Benz; production tech at Roseville Toyota.</div></div>
-    <div class="fact"><div class="e">🎓</div><div class="t">Leland High School</div><div class="d">San Jose — hometown and current city both San Jose, California.</div></div>
-    <div class="fact"><div class="e">📞</div><div class="t">Weekly check-in with Dave</div><div class="d">The standing rhythm that keeps them close.</div></div>
-    <div class="fact"><div class="e">💬</div><div class="t">Wisdom Buddy reader</div><div class="d">Got Dave's daily wisdom nuggets — now the subject of the Wisdom Buddy revival.</div></div>
-    <div class="fact"><div class="e">🏎️</div><div class="t">Radwood regular</div><div class="d">Amanda's Boxster — she paint-corrected and wet-sanded it herself for Radwood 2025. "Represented Barbie well."</div></div>
-    <div class="fact"><div class="e">✉️</div><div class="t">quentin@dellaquila.com</div><div class="d">On Dave's family list for the Money Buddy new-version email.</div></div>
-  </div>
-
-  <h2 class="serif">Photos <span class="sub">From Quentin's Facebook</span></h2>
-  <div class="photostrip">
-    <figure class="photo">
-      <img src="photos/profile.jpg" alt="Quentin's Facebook profile photo">
-      <figcaption>Profile photo · Facebook</figcaption>
-    </figure>
-    <figure class="photo">
-      <img src="photos/valentines.jpg" alt="Quentin and Amanda at a Valentine's speakeasy">
-      <figcaption>"Valentine's night at a craft cocktail speakeasy with this incredible woman" · Feb 2026</figcaption>
-    </figure>
-    <figure class="photo">
-      <img src="photos/boxster.jpg" alt="Amanda's Boxster, Radwood-ready">
-      <figcaption>"So proud of my panda… she paint-corrected and wet-sanded her entire boxster by herself" · Jul 2025</figcaption>
-    </figure>
-  </div>
-
-  <h2 class="serif">In his own words <span class="sub">From Quentin's Facebook posts</span></h2>
-  <div class="quotes">
-    <blockquote>"Feels like I'm dreaming, she's so beautiful 🤩"<cite>— May 10, 2026</cite></blockquote>
-    <blockquote>"Valentine's night at a craft cocktail speakeasy with this incredible woman. I was honestly stunned by how beautiful she looked, and I feel lucky every day that she's in my life."<cite>— Feb 15, 2026</cite></blockquote>
-    <blockquote>"Coming along in baby steps, but it's starting to look more and more complete! Happy with the progress this weekend!"<cite>— Nov 10, 2025 · on the build</cite></blockquote>
-    <blockquote>"So proud of my panda for being brave enough to paint correct and wet-sand her entire boxster by herself in preparation for Radwood! The car turned out amazing and represented Barbie well! Great job Amanda!"<cite>— Jul 27, 2025</cite></blockquote>
-  </div>
-
-  <h2 class="serif">Notes <span class="sub">Pinned as they come up — saved on this device</span></h2>
-  <div class="board" id="notes"></div>
-  <div class="addrow">
-    <textarea id="noteInput" rows="2" placeholder="Pin a note about Quentin…"></textarea>
-    <button class="btn" onclick="addNote()">Pin it</button>
-  </div>
-
-  <h2 class="serif">Reminders <span class="sub">Things to do for or about Quentin</span></h2>
-  <div class="card" style="margin-top:14px" id="reminders"></div>
-  <div class="addrow">
-    <input id="reminderInput" placeholder="Add a reminder…">
-    <button class="btn" onclick="addReminder()">Add</button>
-  </div>
-
-  <h2 class="serif">Important dates <span class="sub">Birthdays, milestones, the things you can't forget</span></h2>
-  <div class="card" style="margin-top:14px">
-    <div class="list-item"><span style="font-size:18px">🎂</span>
-      <span class="txt"><b>Quentin's birthday</b> — May 30 <span class="when">(from Nan's birthday post to him; ⚠️ his Facebook profile says June 22 — ask him)</span></span>
+  <h2>Key facts <span class="rule"></span><span class="count">5</span></h2>
+  <div class="cards">
+    <div class="card">
+      <span class="tag fact">Fact</span>
+      <h3>🏠 Lenwood</h3>
+      <p>Dave's son. Lives at <strong>6929 Lenwood Way, San Jose</strong> with his girlfriend/fianc&eacute;e <strong>Amanda</strong>.</p>
     </div>
-    <div class="list-item"><span style="font-size:18px">💍</span>
-      <span class="txt"><b>Engagement</b> — Aug 11, 2026 <span class="when">(to Amanda)</span></span>
+    <div class="card">
+      <span class="tag fact">Fact</span>
+      <h3>💵 Rent</h3>
+      <p><strong>$1,000/mo &rarr; $2,000/mo</strong> via 90-day notice, effective <strong>Jan 7, 2027</strong>. Notice out for in-person delivery.</p>
     </div>
-    <div class="list-item"><span style="font-size:18px">💞</span>
-      <span class="txt"><b>With Amanda since</b> — Dec 12, 2019 <span class="when">(his Facebook life event)</span></span>
+    <div class="card">
+      <span class="tag fact">Fact</span>
+      <h3>📞 Weekly check-in</h3>
+      <p>Standing <strong>weekly check-in with Dave</strong> — the rhythm that keeps them close.</p>
     </div>
-    <div class="list-item"><span style="font-size:18px">🏁</span>
-      <span class="txt"><b>Monterey Car Week win</b> — Aug 2026 <span class="when">(Best MG + Best in Show)</span></span>
+    <div class="card">
+      <span class="tag fact">Fact</span>
+      <h3>💬 Wisdom texts</h3>
+      <p>Receives the <strong>Wisdom Buddy daily text</strong> — one of its first readers.</p>
     </div>
-    <div class="list-item"><span style="font-size:18px">📄</span>
-      <span class="txt"><b>Rent notice takes effect</b> — Jan 7, 2027 <span class="when">($2,000/mo)</span></span>
+    <div class="card">
+      <span class="tag open">Open question</span>
+      <h3>❓ Older or younger?</h3>
+      <p>Whether Quentin is the <strong>older (31) or younger (28)</strong> son <strong>isn't established yet</strong>.</p>
     </div>
   </div>
-  <div class="card" style="margin-top:14px" id="dates"></div>
-  <div class="addrow">
-    <input id="dateName" placeholder="Occasion (e.g. Wedding day)">
-    <input id="dateWhen" placeholder="When (e.g. March 14)">
-    <button class="btn" onclick="addDate()">Add date</button>
+
+  <h2>Important dates <span class="rule"></span></h2>
+  <ul class="timeline">
+    <li><span class="date">Oct 9, 2026</span><span><strong>Family rent discussion</strong> — Quentin, Amanda &amp; Nan talk through the notice and the road ahead.</span></li>
+    <li><span class="date">Jan 7, 2027</span><span><strong>New rent takes effect</strong> — $2,000/mo under the 90-day notice.</span></li>
+    <li><span class="date unknown">Not captured</span><span><strong>Quentin's birthday</strong> — the single most important date in this file, still missing.</span></li>
+    <li><span class="date unknown">Not captured</span><span><strong>Amanda's birthday</strong> — worth knowing for the same reason.</span></li>
+  </ul>
+
+  <h2>Needs Dave's attention <span class="rule"></span><span class="count">4</span></h2>
+  <ul class="attention">
+    <li>
+      <strong>Review the product brief</strong>
+      <span>The <a href="https://docs.google.com/document/d/157C3sNyJcRIgzNevCbwuWx7V1F4YPYZRwjw1TOCUaNA/edit">Quentin Buddy brief</a> is waiting on Dave's review before any PRD work.</span>
+    </li>
+    <li>
+      <strong>Older or younger?</strong>
+      <span>Settle whether Quentin is the 31-year-old or the 28-year-old — it anchors half the facts in this file.</span>
+    </li>
+    <li>
+      <strong>Capture the birthdays</strong>
+      <span>Quentin's and Amanda's birthdays belong in Important dates. One question, asked once, remembered forever — and <a href="https://davedellaquila.github.io/buddy-system/birthday-buddy/" target="_blank" rel="noopener">Birthday Buddy</a> handles the reminders.</span>
+    </li>
+    <li>
+      <strong>Seed the gift list</strong>
+      <span>Gift ideas is empty. Next time something reminds Dave of Quentin, it goes here — not into the void.</span>
+    </li>
+  </ul>
+
+  <section class="dumpbox" data-buddy-id="quentin-buddy">
+    <h2>🧠 Brain dump</h2>
+    <p class="dumpbox-sub">Dump what's on your mind about Quentin — raw and unfiltered. Each dump lands in the buddy's repo (docs/ingest.md) as a timestamped entry.</p>
+    <div class="dumpbox-connect" hidden>
+      <p>🔒 Connect GitHub to unlock dumping. Paste a token once — it stays on this device only.</p>
+      <button type="button" class="dumpbox-btn">Connect GitHub to enable</button>
+    </div>
+    <div class="dumpbox-token" hidden>
+      <p>🔒 Connect GitHub to unlock dumping. Paste a token once — it stays on this device only.</p>
+      <div class="dumpbox-tokenrow">
+        <input type="password" placeholder="GitHub token (repo scope)" aria-label="GitHub token">
+        <button type="button">Save token</button>
+        <a href="https://github.com/settings/tokens" target="_blank" rel="noopener">Get a token</a>
+      </div>
+    </div>
+    <textarea rows="4" placeholder="Dump what's on your mind about Quentin…"></textarea>
+    <div class="dumpbox-row">
+      <button type="button" class="dumpbox-btn">Dump it</button>
+      <span class="dumpbox-status" role="status"></span>
+    </div>
+  </section>
+
+  <h2>Gift ideas <span class="rule"></span><span class="count">0</span></h2>
+  <div class="empty">
+    <strong>The shelf is empty.</strong>
+    Nothing filed yet. When something comes to mind — a thing he'd love, a thing he mentioned once — say the word and I'll keep it here.
   </div>
 
-  <h2 class="serif">Gift ideas <span class="sub">Because the good ones evaporate if you don't write them down</span></h2>
-  <div class="board" id="gifts"></div>
-  <div class="addrow">
-    <input id="giftName" placeholder="Gift idea…">
-    <input id="giftWhy" placeholder="Why he'd love it (optional)">
-    <button class="btn" onclick="addGift()">Add idea</button>
+  <h2>Family &amp; artifacts <span class="rule"></span></h2>
+  <div class="family">
+    <div class="fam"><strong>⬆️ Parent: Family Buddy</strong>Quentin Buddy is one of Family Buddy's children — the deep file on one person, inside the whole-family picture.</div>
+    <div class="fam"><strong>📄 Product Brief</strong><a href="https://docs.google.com/document/d/157C3sNyJcRIgzNevCbwuWx7V1F4YPYZRwjw1TOCUaNA/edit">Quentin Buddy — Product Brief</a> in Zuki Docs. Awaiting Dave's review.</div>
+    <div class="fam"><strong>💻 Repo</strong><a href="https://github.com/davedellaquila/quentin-buddy">davedellaquila/quentin-buddy</a> — private, empty, ready when the build starts.</div>
   </div>
 
   <footer>
-    <span>🏎️ Quentin Buddy · child of <b>Family Buddy</b></span>
-    <span><a href="https://docs.google.com/document/d/157C3sNyJcRIgzNevCbwuWx7V1F4YPYZRwjw1TOCUaNA/edit" target="_blank" rel="noopener">Product brief</a></span>
-    <span><a href="https://github.com/davedellaquila/quentin-buddy" target="_blank" rel="noopener">davedellaquila/quentin-buddy</a></span>
-    <span><a href="https://facebook.com/qdellaquila" target="_blank" rel="noopener">Facebook</a></span>
+    <span>Quentin Buddy keeps the file on Quentin.</span>
+    <span>Child of Family Buddy</span>
   </footer>
+
 </div>
-
 <script>
-const KEY = "quentin-buddy-v1";
-const esc = s => s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
-let store = { notes: [], reminders: [], dates: [], gifts: [] };
-try {
-  const raw = localStorage.getItem(KEY);
-  if (raw) store = Object.assign(store, JSON.parse(raw));
-} catch (e) {}
-// Seed verified notes on first run
-if (!localStorage.getItem(KEY)) {
-  store.notes = [
-    { text: "Rent notice: $1,000 → $2,000/mo effective Jan 7, 2027, served in person during Dave's Oct 7–9 San Jose trip. Four-person family discussion (Dave, Nancy, Quentin, Amanda) on rent + possible future home ownership — the Lenwood one-pager is the brief.", when: "2026-10-09" },
-    { text: "Auto-repair business: starting it with his brother Sawyer in the South Bay, hoping to eventually open near Sacramento.", when: "2026-10-09" },
-    { text: "Birthday flag: Nan's birthday post points to May 30, but his Facebook profile says June 22. Worth one direct ask to Quentin.", when: "2026-10-09" },
-    { text: "Monterey Car Week Aug 2026: Best MG + Best in Show.", when: "2026-10-09" }
-  ];
-  store.reminders = [
-    { text: "Confirm Quentin's birthday — May 30 (Nan's post) vs June 22 (his Facebook profile)", done: false },
-    { text: "Follow up on the auto-repair business launch with Sawyer", done: false },
-    { text: "Wedding: no date yet — ask when it comes up naturally", done: false }
-  ];
-}
-const save = () => localStorage.setItem(KEY, JSON.stringify(store));
-const today = () => new Date().toISOString().slice(0, 10);
-
-function renderNotes() {
-  const el = document.getElementById("notes");
-  el.innerHTML = store.notes.length ? store.notes.map((n, i) =>
-    `<div class="note"><button class="x" onclick="delNote(${i})" title="Remove">✕</button><p>${esc(n.text)}</p><div class="when">${esc(n.when || "")}</div></div>`
-  ).join("") : `<div class="empty">No notes pinned yet — pin the first one whenever something comes up.</div>`;
-}
-function addNote() {
-  const t = document.getElementById("noteInput").value.trim();
-  if (!t) return;
-  store.notes.unshift({ text: t, when: today() });
-  document.getElementById("noteInput").value = "";
-  save(); renderNotes();
-}
-function delNote(i) { store.notes.splice(i, 1); save(); renderNotes(); }
-
-function renderReminders() {
-  const el = document.getElementById("reminders");
-  el.innerHTML = store.reminders.length ? store.reminders.map((r, i) =>
-    `<div class="list-item ${r.done ? "done" : ""}">
-       <input type="checkbox" ${r.done ? "checked" : ""} onchange="toggleReminder(${i})">
-       <span class="txt">${esc(r.text)}</span>
-       <button class="x" onclick="delReminder(${i})" title="Remove">✕</button>
-     </div>`
-  ).join("") : `<div class="empty">Nothing on the list — add the first reminder whenever something comes up.</div>`;
-}
-function addReminder() {
-  const t = document.getElementById("reminderInput").value.trim();
-  if (!t) return;
-  store.reminders.push({ text: t, done: false });
-  document.getElementById("reminderInput").value = "";
-  save(); renderReminders();
-}
-function toggleReminder(i) { store.reminders[i].done = !store.reminders[i].done; save(); renderReminders(); }
-function delReminder(i) { store.reminders.splice(i, 1); save(); renderReminders(); }
-
-function renderDates() {
-  const el = document.getElementById("dates");
-  el.innerHTML = store.dates.length ? store.dates.map((d, i) =>
-    `<div class="list-item"><span style="font-size:18px">📅</span>
-       <span class="txt"><b>${esc(d.name)}</b> — ${esc(d.when)}</span>
-       <button class="x" onclick="delDate(${i})" title="Remove">✕</button>
-     </div>`
-  ).join("") : `<div class="empty">No extra dates yet — the big ones are listed above. Anything else goes here.</div>`;
-}
-function addDate() {
-  const n = document.getElementById("dateName").value.trim();
-  const w = document.getElementById("dateWhen").value.trim();
-  if (!n || !w) return;
-  store.dates.push({ name: n, when: w });
-  document.getElementById("dateName").value = "";
-  document.getElementById("dateWhen").value = "";
-  save(); renderDates();
-}
-function delDate(i) { store.dates.splice(i, 1); save(); renderDates(); }
-
-function renderGifts() {
-  const el = document.getElementById("gifts");
-  el.innerHTML = store.gifts.length ? store.gifts.map((g, i) =>
-    `<div class="gift"><button class="x" onclick="delGift(${i})" title="Remove">✕</button>
-       <div class="g">🎁</div><div class="t">${esc(g.name)}</div>
-       ${g.why ? `<div class="d">${esc(g.why)}</div>` : ""}
-     </div>`
-  ).join("") : `<div class="empty">The gift vault is empty — stash ideas here the moment they occur to you.</div>`;
-}
-function addGift() {
-  const n = document.getElementById("giftName").value.trim();
-  const w = document.getElementById("giftWhy").value.trim();
-  if (!n) return;
-  store.gifts.push({ name: n, why: w });
-  document.getElementById("giftName").value = "";
-  document.getElementById("giftWhy").value = "";
-  save(); renderGifts();
-}
-function delGift(i) { store.gifts.splice(i, 1); save(); renderGifts(); }
-
-renderNotes(); renderReminders(); renderDates(); renderGifts();
+// ---- dump-box JS (self-contained; no dependencies) ----
+(function(){
+  var box = document.querySelector('.dumpbox');
+  if (!box || box.dataset.dumpInit) return;
+  box.dataset.dumpInit = '1';
+  var bid = box.getAttribute('data-buddy-id') || (function(){
+    var p = location.pathname.replace(/\/+$/, '');
+    return p.substring(p.lastIndexOf('/') + 1);
+  })();
+  var ta = box.querySelector('textarea'),
+      btn = box.querySelector('.dumpbox-row .dumpbox-btn'),
+      st = box.querySelector('.dumpbox-status'),
+      tokWrap = box.querySelector('.dumpbox-token'),
+      connectWrap = box.querySelector('.dumpbox-connect'),
+      connectBtn = connectWrap.querySelector('.dumpbox-btn');
+  function lsGet(){ try { return JSON.parse(localStorage.getItem('buddyTree.v3') || '{}'); } catch(e){ return {}; } }
+  function lsSet(patch){ try { var s = lsGet(); for (var k in patch) s[k] = patch[k]; localStorage.setItem('buddyTree.v3', JSON.stringify(s)); } catch(e){} }
+  function token(){ return lsGet().ghToken || ''; }
+  function b64encode(str){
+    var bytes = new TextEncoder().encode(str), bin = '';
+    bytes.forEach(function(b){ bin += String.fromCharCode(b); });
+    return btoa(bin);
+  }
+  async function ghApi(path, method, body){
+    var t = token();
+    if (!t) throw new Error('Add a GitHub token first.');
+    var r = await fetch('https://api.github.com' + path, {
+      method: method || 'GET',
+      headers: {'Authorization': 'Bearer ' + t, 'Accept': 'application/vnd.github+json', 'Content-Type': 'application/json'},
+      body: body ? JSON.stringify(body) : undefined
+    });
+    if (!r.ok) throw new Error('GitHub ' + r.status);
+    return r.status === 204 ? null : await r.json();
+  }
+  async function ghGetFile(repo, path){
+    try {
+      var j = await ghApi('/repos/davedellaquila/' + repo + '/contents/' + path);
+      if (j && j.content) return {
+        text: new TextDecoder().decode(Uint8Array.from(atob(j.content.replace(/\n/g, '')), function(c){ return c.charCodeAt(0); })),
+        sha: j.sha
+      };
+    } catch(e){}
+    return null;
+  }
+  var repo = null, repoName = bid;
+  async function resolveRepo(){
+    try {
+      var r = await fetch('../buddies.json', {cache: 'no-store'});
+      var d = await r.json();
+      var buds = d.buddies || [];
+      for (var i = 0; i < buds.length; i++) {
+        if (buds[i].id === bid && buds[i].repo) { repo = buds[i].repo; repoName = buds[i].name || bid; break; }
+      }
+    } catch(e){}
+  }
+  function refreshUI(){
+    var has = !!token();
+    connectWrap.hidden = has;
+    if (has) tokWrap.hidden = true;
+    var ok = has && !!repo;
+    ta.disabled = !ok;
+    btn.disabled = !ok;
+    if (!has) { st.textContent = ''; }
+    else if (!repo) { st.textContent = 'No repo linked for this buddy yet.'; }
+  }
+  var tokInput = tokWrap.querySelector('input'),
+      tokSave = tokWrap.querySelector('button');
+  connectBtn.addEventListener('click', function(){
+    tokWrap.hidden = false;
+    if (tokInput) tokInput.focus();
+  });
+  tokSave.addEventListener('click', function(){
+    var v = tokInput.value.trim();
+    if (!v) return;
+    lsSet({ghToken: v});
+    tokInput.value = '';
+    tokWrap.hidden = true;
+    refreshUI();
+    st.textContent = 'Token saved on this device.';
+  });
+  async function dump(){
+    var text = ta.value.trim();
+    if (!text) return;
+    if (!token()) { refreshUI(); return; }
+    if (!repo) { st.textContent = 'No repo linked for this buddy yet.'; return; }
+    st.textContent = 'Dumping…';
+    btn.disabled = true;
+    try {
+      var stamp = new Date().toLocaleString();
+      var NL = String.fromCharCode(10);
+      var entry = '## ' + stamp + NL + NL + text + NL + NL;
+      var cur = await ghGetFile(repo, 'docs/ingest.md');
+      var base = cur ? cur.text : '# Ingest log — ' + repoName + NL + NL;
+      var body = {message: 'Ingest dump for ' + bid, content: b64encode(base + entry)};
+      if (cur && cur.sha) body.sha = cur.sha;
+      await ghApi('/repos/davedellaquila/' + repo + '/contents/docs/ingest.md', 'PUT', body);
+      ta.value = '';
+      st.textContent = '✓ Dumped to ' + repo + '/docs/ingest.md';
+    } catch(err){ st.textContent = 'Save failed: ' + (err.message || err); }
+    btn.disabled = false;
+  }
+  btn.addEventListener('click', dump);
+  ta.addEventListener('keydown', function(ev){
+    if ((ev.metaKey || ev.ctrlKey) && ev.key === 'Enter') { ev.preventDefault(); dump(); }
+  });
+  resolveRepo().then(refreshUI);
+})();
 </script>
 </body>
 </html>

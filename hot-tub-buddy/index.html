@@ -120,6 +120,8 @@
       display: inline-block; font-size: 11.5px; font-weight: 800; text-transform: uppercase;
       letter-spacing: .05em; border-radius: 6px; padding: 2px 8px; margin-bottom: 6px;
     }
+    .pill-list a.go-link { color: var(--teal-deep); font-weight: 700; font-size: 13.5px; }
+    @media (prefers-color-scheme: dark) { .pill-list a.go-link { color: var(--teal); } }
     .tag.attn { background: var(--amber-soft); color: var(--amber); }
     .tag.open { background: var(--red-soft); color: var(--red); }
     .tag.ok { background: var(--green-soft); color: var(--green); }
@@ -150,6 +152,55 @@
     @media (prefers-color-scheme: dark) { .links a { color: var(--teal); } }
     .links a:hover { border-color: var(--teal); }
 
+    /* ---- brain-dump box (dashboard ingest feature) ---- */
+    .dumpbox {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 22px;
+      box-shadow: var(--shadow);
+      margin-top: 18px;
+    }
+    .dumpbox h2 {
+      font-family: var(--serif); font-size: 20px; font-weight: 600;
+      margin: 0 0 6px; display: flex; align-items: center; gap: 10px;
+    }
+    .dumpbox-sub { color: var(--muted); font-size: 14px; margin: 0 0 14px; }
+    .dumpbox textarea {
+      width: 100%; min-height: 96px; resize: vertical;
+      background: var(--surface-soft); border: 1px solid var(--line); border-radius: 12px;
+      padding: 10px 12px; font-size: 14px; color: var(--ink); font-family: inherit;
+    }
+    .dumpbox textarea:focus { outline: none; border-color: var(--teal); }
+    .dumpbox textarea:disabled { opacity: .55; }
+    .dumpbox-row { display: flex; align-items: center; gap: 12px; margin-top: 10px; flex-wrap: wrap; }
+    .dumpbox-btn {
+      background: var(--teal-deep); color: #fff; border: none; border-radius: 999px;
+      padding: 10px 24px; font-size: 14px; font-weight: 700; cursor: pointer;
+    }
+    .dumpbox-btn:disabled { opacity: .45; cursor: default; }
+    .dumpbox-status { font-size: 13px; color: var(--muted); }
+    .dumpbox-token {
+      background: var(--surface-soft); border: 1px dashed var(--line); border-radius: 12px;
+      padding: 12px 14px; margin-bottom: 12px; font-size: 14px;
+    }
+    .dumpbox-token p { margin: 0 0 8px; color: var(--muted); }
+    .dumpbox-tokenrow { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+    .dumpbox-tokenrow input {
+      flex: 1; min-width: 170px; background: var(--surface); border: 1px solid var(--line);
+      border-radius: 8px; padding: 7px 10px; font-size: 13px; color: var(--ink);
+    }
+    .dumpbox-tokenrow button {
+      background: transparent; color: var(--teal); border: 1px solid var(--teal);
+      border-radius: 999px; padding: 7px 14px; font-size: 13px; font-weight: 700; cursor: pointer;
+    }
+    .dumpbox-tokenrow a { color: var(--teal); font-size: 13px; }
+    .dumpbox-connect {
+      background: var(--surface-soft); border: 1px dashed var(--line); border-radius: 12px;
+      padding: 14px 16px; margin-bottom: 12px; font-size: 14px;
+    }
+    .dumpbox-connect p { margin: 0 0 10px; color: var(--muted); }
+
     .foot { text-align: center; color: var(--faint); font-size: 12.5px; margin-top: 34px; }
   </style>
 </head>
@@ -173,9 +224,11 @@
           <li><span class="tag open">Before ordering</span><br>
             <strong>Verify the inner-filter part number</strong> — 6540-502S vs 6473-453 for 2024+ 880-series. Confirm with the dealer before any filter order.</li>
           <li><span class="tag attn">Open question</span><br>
-            <strong>Chlorine or bromine setup?</strong> Chemistry targets differ — the brief needs this nailed down.</li>
+            <strong>Chlorine or bromine setup?</strong> Chemistry targets differ — the brief needs this nailed down.<br>
+            <a class="go-link" href="https://docs.google.com/document/d/1BDcst37j2FftKqzY-Tz-ecQLtYc5OnR3kmY6xmn80Sg/edit" target="_blank" rel="noopener">📄 Open the product brief →</a></li>
           <li><span class="tag attn">Review</span><br>
-            The <strong>product brief</strong> is in your court. Next steps follow your review — no PRD or business-plan placeholders until then.</li>
+            The <strong>product brief</strong> is in your court. Next steps follow your review — no PRD or business-plan placeholders until then.<br>
+            <a class="go-link" href="https://docs.google.com/document/d/1BDcst37j2FftKqzY-Tz-ecQLtYc5OnR3kmY6xmn80Sg/edit" target="_blank" rel="noopener">📄 Open the product brief →</a></li>
         </ul>
       </section>
 
@@ -242,7 +295,141 @@
 
     </div>
 
-    <p class="foot">Hot Tub Buddy · designed by me, for the dashboard · updated 2026-10-09</p>
+    <section class="dumpbox" data-buddy-id="hot-tub-buddy" aria-labelledby="dumpbox-title">
+      <h2 id="dumpbox-title">🧠 Brain dump</h2>
+      <p class="dumpbox-sub">Dump what's on your mind about Hot Tub Buddy — raw and unfiltered. Each dump lands in the buddy's repo (docs/ingest.md) as a timestamped entry.</p>
+      <div class="dumpbox-connect" hidden>
+        <p>🔒 Connect GitHub to unlock dumping. Paste a token once — it stays on this device only.</p>
+        <button type="button" class="dumpbox-btn">Connect GitHub to enable</button>
+      </div>
+      <div class="dumpbox-token" hidden>
+        <p>🔒 Connect GitHub to unlock dumping. Paste a token once — it stays on this device only.</p>
+        <div class="dumpbox-tokenrow">
+          <input type="password" placeholder="GitHub token (repo scope)" aria-label="GitHub token">
+          <button type="button">Save token</button>
+          <a href="https://github.com/settings/tokens" target="_blank" rel="noopener">Get a token</a>
+        </div>
+      </div>
+      <textarea rows="4" placeholder="Dump what's on your mind about Hot Tub Buddy…"></textarea>
+      <div class="dumpbox-row">
+        <button type="button" class="dumpbox-btn">Dump it</button>
+        <span class="dumpbox-status" role="status"></span>
+      </div>
+    </section>
+
+    <p class="foot">Hot Tub Buddy · designed by me, for the dashboard · updated 2026-10-11 · brain-dump box added</p>
   </div>
+<script>
+// ---- brain-dump box: textarea + "Dump it" (Cmd/Ctrl+Enter) → docs/ingest.md via GitHub API ----
+// Auth: GitHub token from dashboard localStorage (buddyTree.v3 → ghToken, shared origin).
+// Repo: resolved from ../buddies.json via data-buddy-id — no hardcoded repo names.
+// ---- dump-box JS (self-contained; no dependencies) ----
+(function(){
+  var box = document.querySelector('.dumpbox');
+  if (!box || box.dataset.dumpInit) return;
+  box.dataset.dumpInit = '1';
+  var bid = box.getAttribute('data-buddy-id') || (function(){
+    var p = location.pathname.replace(/\/+$/, '');
+    return p.substring(p.lastIndexOf('/') + 1);
+  })();
+  var ta = box.querySelector('textarea'),
+      btn = box.querySelector('.dumpbox-row .dumpbox-btn'),
+      st = box.querySelector('.dumpbox-status'),
+      tokWrap = box.querySelector('.dumpbox-token'),
+      connectWrap = box.querySelector('.dumpbox-connect'),
+      connectBtn = connectWrap.querySelector('.dumpbox-btn');
+  function lsGet(){ try { return JSON.parse(localStorage.getItem('buddyTree.v3') || '{}'); } catch(e){ return {}; } }
+  function lsSet(patch){ try { var s = lsGet(); for (var k in patch) s[k] = patch[k]; localStorage.setItem('buddyTree.v3', JSON.stringify(s)); } catch(e){} }
+  function token(){ return lsGet().ghToken || ''; }
+  function b64encode(str){
+    var bytes = new TextEncoder().encode(str), bin = '';
+    bytes.forEach(function(b){ bin += String.fromCharCode(b); });
+    return btoa(bin);
+  }
+  async function ghApi(path, method, body){
+    var t = token();
+    if (!t) throw new Error('Add a GitHub token first.');
+    var r = await fetch('https://api.github.com' + path, {
+      method: method || 'GET',
+      headers: {'Authorization': 'Bearer ' + t, 'Accept': 'application/vnd.github+json', 'Content-Type': 'application/json'},
+      body: body ? JSON.stringify(body) : undefined
+    });
+    if (!r.ok) throw new Error('GitHub ' + r.status);
+    return r.status === 204 ? null : await r.json();
+  }
+  async function ghGetFile(repo, path){
+    try {
+      var j = await ghApi('/repos/davedellaquila/' + repo + '/contents/' + path);
+      if (j && j.content) return {
+        text: new TextDecoder().decode(Uint8Array.from(atob(j.content.replace(/\n/g, '')), function(c){ return c.charCodeAt(0); })),
+        sha: j.sha
+      };
+    } catch(e){}
+    return null;
+  }
+  var repo = null, repoName = bid;
+  async function resolveRepo(){
+    try {
+      var r = await fetch('../buddies.json', {cache: 'no-store'});
+      var d = await r.json();
+      var buds = d.buddies || [];
+      for (var i = 0; i < buds.length; i++) {
+        if (buds[i].id === bid && buds[i].repo) { repo = buds[i].repo; repoName = buds[i].name || bid; break; }
+      }
+    } catch(e){}
+  }
+  function refreshUI(){
+    var has = !!token();
+    connectWrap.hidden = has;
+    if (has) tokWrap.hidden = true;
+    var ok = has && !!repo;
+    ta.disabled = !ok;
+    btn.disabled = !ok;
+    if (!has) { st.textContent = ''; }
+    else if (!repo) { st.textContent = 'No repo linked for this buddy yet.'; }
+  }
+  var tokInput = tokWrap.querySelector('input'),
+      tokSave = tokWrap.querySelector('button');
+  connectBtn.addEventListener('click', function(){
+    tokWrap.hidden = false;
+    if (tokInput) tokInput.focus();
+  });
+  tokSave.addEventListener('click', function(){
+    var v = tokInput.value.trim();
+    if (!v) return;
+    lsSet({ghToken: v});
+    tokInput.value = '';
+    tokWrap.hidden = true;
+    refreshUI();
+    st.textContent = 'Token saved on this device.';
+  });
+  async function dump(){
+    var text = ta.value.trim();
+    if (!text) return;
+    if (!token()) { refreshUI(); return; }
+    if (!repo) { st.textContent = 'No repo linked for this buddy yet.'; return; }
+    st.textContent = 'Dumping…';
+    btn.disabled = true;
+    try {
+      var stamp = new Date().toLocaleString();
+      var NL = String.fromCharCode(10);
+      var entry = '## ' + stamp + NL + NL + text + NL + NL;
+      var cur = await ghGetFile(repo, 'docs/ingest.md');
+      var base = cur ? cur.text : '# Ingest log — ' + repoName + NL + NL;
+      var body = {message: 'Ingest dump for ' + bid, content: b64encode(base + entry)};
+      if (cur && cur.sha) body.sha = cur.sha;
+      await ghApi('/repos/davedellaquila/' + repo + '/contents/docs/ingest.md', 'PUT', body);
+      ta.value = '';
+      st.textContent = '✓ Dumped to ' + repo + '/docs/ingest.md';
+    } catch(err){ st.textContent = 'Save failed: ' + (err.message || err); }
+    btn.disabled = false;
+  }
+  btn.addEventListener('click', dump);
+  ta.addEventListener('keydown', function(ev){
+    if ((ev.metaKey || ev.ctrlKey) && ev.key === 'Enter') { ev.preventDefault(); dump(); }
+  });
+  resolveRepo().then(refreshUI);
+})();
+</script>
 </body>
 </html>

@@ -1,3 +1,4 @@
+<!-- BUDDY-BASIC-TEMPLATE v2 -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -54,6 +55,7 @@ h2 { font-size: 22px; margin: 32px 0 16px; }
   margin-bottom: 12px;
 }
 .attn-date { color: var(--muted); font-size: 14px; margin-top: 8px; }
+.attn a { color: var(--accent); font-weight: 600; }
 .children { display: flex; flex-wrap: wrap; gap: 12px; }
 .child {
   background: var(--card);
@@ -64,6 +66,34 @@ h2 { font-size: 22px; margin: 32px 0 16px; }
   color: var(--text);
 }
 .child:hover { border-color: var(--accent); }
+.artifact {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 14px 18px;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.artifact-info { flex: 1; min-width: 200px; }
+.artifact-name { font-weight: 600; font-size: 15px; }
+.artifact-desc { color: var(--muted); font-size: 13px; }
+.artifact-btn {
+  background: transparent;
+  border: 1px solid var(--accent);
+  color: var(--accent);
+  border-radius: 8px;
+  padding: 7px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  font-family: inherit;
+}
+.artifact-btn:hover { background: var(--accent); color: #fff; }
+.artifact-btn.copied { border-color: var(--ok, #2e7d4f); color: var(--ok, #2e7d4f); }
 .footer {
   margin-top: 48px;
   padding-top: 24px;
@@ -73,6 +103,51 @@ h2 { font-size: 22px; margin: 32px 0 16px; }
   text-align: center;
 }
 .empty { color: var(--muted); font-style: italic; }
+
+.dumpbox {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px 22px;
+  margin-bottom: 32px;
+}
+.dumpbox h2 { margin: 0 0 6px; font-size: 20px; }
+.dumpbox-sub { color: var(--muted); font-size: 14px; margin-bottom: 14px; }
+.dumpbox textarea {
+  width: 100%; min-height: 96px; resize: vertical;
+  background: var(--bg); border: 1px solid var(--border); border-radius: 8px;
+  padding: 10px 12px; font-size: 14px; color: var(--text); font-family: inherit;
+}
+.dumpbox textarea:focus { outline: none; border-color: var(--accent); }
+.dumpbox textarea:disabled { opacity: .55; }
+.dumpbox-row { display: flex; align-items: center; gap: 12px; margin-top: 10px; flex-wrap: wrap; }
+.dumpbox-btn {
+  background: var(--accent); color: #fff; border: none; border-radius: 8px;
+  padding: 9px 22px; font-size: 14px; font-weight: 600; cursor: pointer;
+}
+.dumpbox-btn:disabled { opacity: .45; cursor: default; }
+.dumpbox-status { font-size: 13px; color: var(--muted); }
+.dumpbox-token {
+  background: var(--bg); border: 1px dashed var(--border); border-radius: 8px;
+  padding: 12px 14px; margin-bottom: 12px; font-size: 14px;
+}
+.dumpbox-token p { margin-bottom: 8px; }
+.dumpbox-connect {
+  background: var(--bg); border: 1px dashed var(--border); border-radius: 8px;
+  padding: 12px 14px; margin-bottom: 12px; font-size: 14px;
+}
+.dumpbox-connect p { margin-bottom: 8px; }
+.dumpbox-tokenrow { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.dumpbox-tokenrow input {
+  flex: 1; min-width: 170px; background: var(--card); border: 1px solid var(--border);
+  border-radius: 8px; padding: 7px 10px; font-size: 13px; color: var(--text);
+}
+.dumpbox-tokenrow button {
+  background: transparent; color: var(--accent); border: 1px solid var(--accent);
+  border-radius: 8px; padding: 7px 14px; font-size: 13px; font-weight: 600; cursor: pointer;
+}
+.dumpbox-tokenrow a { color: var(--accent); font-size: 13px; }
+
 </style>
 </head>
 <body>
@@ -84,29 +159,55 @@ h2 { font-size: 22px; margin: 32px 0 16px; }
 
 <div class="mission">Project Buddy is the one place for all of Dave&#x27;s ideas and projects — fast capture, an idea bank with statuses (New → Considering → Active → Parked → Done/Dropped), promote-to-project with next actions, and lightweight review nudges. This dashboard is its macro view: the status and next action items for every buddy.</div>
 
-<h2>Standing order (all buddies)</h2>
-<div class="attn"><div><b>CRITICAL — Dark mode now.</b> Every buddy website must ship a dark mode (<code>prefers-color-scheme</code> or equivalent). Dave is outdoors and needs readable UIs — update light-only homepages immediately. Canonical: <a href="../AGENTS.md">AGENTS.md</a> · <a href="../docs/standing-orders.md">docs/standing-orders.md</a>.</div><div class="attn-date">2026-10-11</div></div>
+
+<section class="dumpbox" data-buddy-id="project-buddy">
+<h2>🧠 Brain dump</h2>
+<p class="dumpbox-sub">Dump what's on your mind about Project Buddy — raw and unfiltered. Each dump lands in the buddy's repo (docs/ingest.md) as a timestamped entry.</p>
+<div class="dumpbox-connect" hidden>
+  <p>🔒 Connect GitHub to unlock dumping. Paste a token once — it stays on this device only.</p>
+  <button type="button" class="dumpbox-btn">Connect GitHub to enable</button>
+</div>
+<div class="dumpbox-token" hidden>
+<p>🔒 Connect GitHub to unlock dumping. Paste a token once — it stays on this device only.</p>
+<div class="dumpbox-tokenrow">
+<input type="password" placeholder="GitHub token (repo scope)" aria-label="GitHub token">
+<button type="button">Save token</button>
+<a href="https://github.com/settings/tokens" target="_blank" rel="noopener">Get a token</a>
+</div>
+</div>
+<textarea rows="4" placeholder="Dump what's on your mind about Project Buddy…"></textarea>
+<div class="dumpbox-row">
+<button type="button" class="dumpbox-btn">Dump it</button>
+<span class="dumpbox-status" role="status"></span>
+</div>
+</section>
+
 
 <h2>Needs Attention</h2>
-<div class="attn"><div>Dashboard v2 ready for review — Tree, Projects, and Manifest tabs are live.</div><div class="attn-date">2026-10-09</div></div>
-<div class="attn"><div>Open: run the full new-buddy drill (brief, repo, thread) for Family Buddy?</div><div class="attn-date">2026-10-09</div></div>
+<div class="attn"><div><a href="https://davedellaquila.github.io/buddy-system/" target="_blank" rel="noopener">Dashboard v2</a> ready for review — Tree, Projects, and Manifest tabs are live.</div><div class="attn-date">2026-10-09</div></div>
+<div class="attn"><div>Open: run the full new-buddy drill (brief, repo, thread) for <a href="https://davedellaquila.github.io/buddy-system/family-buddy/" target="_blank" rel="noopener">Family Buddy</a>?</div><div class="attn-date">2026-10-09</div></div>
 
 
 <h2>Sub-buddies</h2>
 <div class="children">
 <a class="child" href="../astro/">🚀 Astro</a>
 <a class="child" href="../birthday-buddy/">🎂 Birthday Buddy</a>
+<a class="child" href="../briefing-buddy/">📋 Briefing Buddy</a>
 <a class="child" href="../buddy-suite/">🧩 Buddy Suite</a>
 <a class="child" href="../car-buddy/">🚗 Car Buddy</a>
+<a class="child" href="../design-buddy/">🎨 Design Buddy</a>
 <a class="child" href="../document-buddy/">📄 Document Buddy</a>
 <a class="child" href="../dream-buddy/">💭 Dream Buddy</a>
 <a class="child" href="../family-buddy/">👨‍👩‍👧‍👦 Family Buddy</a>
 <a class="child" href="../feedback-buddy/">📣 Feedback Buddy</a>
 <a class="child" href="../finance-buddy/">💰 Finance Buddy</a>
+<a class="child" href="../guardian-buddy/">🛡️ Guardian Buddy</a>
 <a class="child" href="../housing-buddy/">🏘️ Housing Buddy</a>
 <a class="child" href="../job-buddy/">🔎 Job Buddy</a>
 <a class="child" href="../news-buddy/">📰 News Buddy</a>
+<a class="child" href="../portfolio-buddy/">🖼️ Portfolio Buddy</a>
 <a class="child" href="../property-buddy/">🏠 Property Buddy</a>
+<a class="child" href="../rachel-buddy/">🔧 Rachel Buddy</a>
 <a class="child" href="../reminder-buddy/">⏰ Reminder Buddy</a>
 <a class="child" href="../scaffold-buddy/">🏗️ Scaffold Buddy</a>
 <a class="child" href="../school-buddy/">🎓 School Buddy</a>
@@ -118,8 +219,146 @@ h2 { font-size: 22px; margin: 32px 0 16px; }
 <a class="child" href="../zen-buddy/">🧘 Zen Buddy</a>
 </div>
 
-<div class="footer">
-Generated 2026-10-10 · Part of the Buddy System
+<h2>Artifacts</h2>
+<div class="artifact">
+  <div class="artifact-info">
+    <div class="artifact-name">🗺️ Buddy system architecture</div>
+    <div class="artifact-desc">How the whole thing fits together — publishing, viewing, dumping, and who does what.</div>
+  </div>
+  <a class="artifact-btn" href="../docs/architecture.html" target="_blank" rel="noopener">Open</a>
+  <button class="artifact-btn" data-copy="https://davedellaquila.github.io/buddy-system/docs/architecture.html">Copy link</button>
 </div>
+
+<div class="footer">
+Generated 2026-10-11 · Part of the Buddy System
+</div>
+
+<script>
+// Copy-link buttons for artifacts
+document.addEventListener('click', function(e){
+  var b = e.target.closest('[data-copy]');
+  if (!b) return;
+  var url = b.getAttribute('data-copy');
+  function done(){
+    b.textContent = 'Copied ✓';
+    b.classList.add('copied');
+    setTimeout(function(){ b.textContent = 'Copy link'; b.classList.remove('copied'); }, 2000);
+  }
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(url).then(done, function(){ prompt('Copy this link:', url); });
+  } else { prompt('Copy this link:', url); }
+});
+</script>
+
+<script>
+// ---- dump-box JS (self-contained; no dependencies) ----
+(function(){
+  var box = document.querySelector('.dumpbox');
+  if (!box || box.dataset.dumpInit) return;
+  box.dataset.dumpInit = '1';
+  var bid = box.getAttribute('data-buddy-id') || (function(){
+    var p = location.pathname.replace(/\/+$/, '');
+    return p.substring(p.lastIndexOf('/') + 1);
+  })();
+  var ta = box.querySelector('textarea'),
+      btn = box.querySelector('.dumpbox-row .dumpbox-btn'),
+      st = box.querySelector('.dumpbox-status'),
+      tokWrap = box.querySelector('.dumpbox-token'),
+      connectWrap = box.querySelector('.dumpbox-connect'),
+      connectBtn = connectWrap.querySelector('.dumpbox-btn');
+  function lsGet(){ try { return JSON.parse(localStorage.getItem('buddyTree.v3') || '{}'); } catch(e){ return {}; } }
+  function lsSet(patch){ try { var s = lsGet(); for (var k in patch) s[k] = patch[k]; localStorage.setItem('buddyTree.v3', JSON.stringify(s)); } catch(e){} }
+  function token(){ return lsGet().ghToken || ''; }
+  function b64encode(str){
+    var bytes = new TextEncoder().encode(str), bin = '';
+    bytes.forEach(function(b){ bin += String.fromCharCode(b); });
+    return btoa(bin);
+  }
+  async function ghApi(path, method, body){
+    var t = token();
+    if (!t) throw new Error('Add a GitHub token first.');
+    var r = await fetch('https://api.github.com' + path, {
+      method: method || 'GET',
+      headers: {'Authorization': 'Bearer ' + t, 'Accept': 'application/vnd.github+json', 'Content-Type': 'application/json'},
+      body: body ? JSON.stringify(body) : undefined
+    });
+    if (!r.ok) throw new Error('GitHub ' + r.status);
+    return r.status === 204 ? null : await r.json();
+  }
+  async function ghGetFile(repo, path){
+    try {
+      var j = await ghApi('/repos/davedellaquila/' + repo + '/contents/' + path);
+      if (j && j.content) return {
+        text: new TextDecoder().decode(Uint8Array.from(atob(j.content.replace(/\n/g, '')), function(c){ return c.charCodeAt(0); })),
+        sha: j.sha
+      };
+    } catch(e){}
+    return null;
+  }
+  var repo = null, repoName = bid;
+  async function resolveRepo(){
+    try {
+      var r = await fetch('../buddies.json', {cache: 'no-store'});
+      var d = await r.json();
+      var buds = d.buddies || [];
+      for (var i = 0; i < buds.length; i++) {
+        if (buds[i].id === bid && buds[i].repo) { repo = buds[i].repo; repoName = buds[i].name || bid; break; }
+      }
+    } catch(e){}
+  }
+  function refreshUI(){
+    var has = !!token();
+    connectWrap.hidden = has;
+    if (has) tokWrap.hidden = true;
+    var ok = has && !!repo;
+    ta.disabled = !ok;
+    btn.disabled = !ok;
+    if (!has) { st.textContent = ''; }
+    else if (!repo) { st.textContent = 'No repo linked for this buddy yet.'; }
+  }
+  var tokInput = tokWrap.querySelector('input'),
+      tokSave = tokWrap.querySelector('button');
+  connectBtn.addEventListener('click', function(){
+    tokWrap.hidden = false;
+    if (tokInput) tokInput.focus();
+  });
+  tokSave.addEventListener('click', function(){
+    var v = tokInput.value.trim();
+    if (!v) return;
+    lsSet({ghToken: v});
+    tokInput.value = '';
+    tokWrap.hidden = true;
+    refreshUI();
+    st.textContent = 'Token saved on this device.';
+  });
+  async function dump(){
+    var text = ta.value.trim();
+    if (!text) return;
+    if (!token()) { refreshUI(); return; }
+    if (!repo) { st.textContent = 'No repo linked for this buddy yet.'; return; }
+    st.textContent = 'Dumping…';
+    btn.disabled = true;
+    try {
+      var stamp = new Date().toLocaleString();
+      var NL = String.fromCharCode(10);
+      var entry = '## ' + stamp + NL + NL + text + NL + NL;
+      var cur = await ghGetFile(repo, 'docs/ingest.md');
+      var base = cur ? cur.text : '# Ingest log — ' + repoName + NL + NL;
+      var body = {message: 'Ingest dump for ' + bid, content: b64encode(base + entry)};
+      if (cur && cur.sha) body.sha = cur.sha;
+      await ghApi('/repos/davedellaquila/' + repo + '/contents/docs/ingest.md', 'PUT', body);
+      ta.value = '';
+      st.textContent = '✓ Dumped to ' + repo + '/docs/ingest.md';
+    } catch(err){ st.textContent = 'Save failed: ' + (err.message || err); }
+    btn.disabled = false;
+  }
+  btn.addEventListener('click', dump);
+  ta.addEventListener('keydown', function(ev){
+    if ((ev.metaKey || ev.ctrlKey) && ev.key === 'Enter') { ev.preventDefault(); dump(); }
+  });
+  resolveRepo().then(refreshUI);
+})();
+</script>
+
 </body>
 </html>

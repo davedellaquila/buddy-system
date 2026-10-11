@@ -42,3 +42,43 @@ So when you click on me in the sidebar and Project Homepage is active, the dashb
 
 Test
 
+## 10/11/2026, 2:48:52 PM
+
+Brain-dump box self-test from Astro's homepage integration (Sun Oct 11). Write path: GitHub contents API, same as the dashboard ingest panel. — Astro
+
+## 10/11/2026, 9:05:28 AM
+
+Add a link to the tiles that appear in the needs attention section on the project buddies homepage
+
+## 10/11/2026, 9:05:59 AM
+
+Fix the bug that prevents dumped items from appearing after they’ve been dumped on the homepage they were dumped on
+
+## 10/11/2026, 9:08:59 AM
+
+We should add a way to dismiss the critical memos that appear in the right side panel. Looks like they’re intended for the agents not for me. Let’s confirm that’s the case, but in an event. Those
+
+## 10/11/2026, 9:24:45 AM
+
+I’m not sure if you got this last dump, but I’d like to add a close a clear button in the search box on the left panel on the buddy dashboard
+
+## 10/11/2026, 9:25:08 AM
+
+I’d like pulling down on the side right side panel to do a refresh or check for updates
+
+## 10/11/2026, 9:27:53 AM
+
+I think I would like the brain dump section on the right side panel to be the first section on a right side panel or or buddies info page
+
+## 10/11/2026, 9:29:15 AM
+
+I am looking at Astros info page and I would like all I think this is actually his homepage I would like anything that has a reference that is referencing other buddies or other pages to have a link to go to that options right on the Teil that’s mentioning it
+
+## 10/11/2026, 10:30:35 AM
+
+Provide a what’s new button on the update message when a new version shows up
+
+## 10/11/2026, 10:55:29 AM
+
+We should think about a default set of buddies that every new configuration should have. I think that would make sense as opposed to just starting out with no buddies. What do you think? Thoughts?
+

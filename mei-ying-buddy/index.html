@@ -7,6 +7,7 @@
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌸</text></svg>">
 <style>
   :root {
+    color-scheme: light dark;
     --paper: #FBF7F1;
     --card: #FFFDF9;
     --ink: #43302B;
@@ -19,6 +20,42 @@
     --jade-soft: #E5EEE3;
     --gold: #B98A2F;
     --gold-soft: #F9EFD4;
+    --gold-line: #EBD9A8;
+    --alert-bg: #FDECEA;
+    --alert-line: #F3C1BC;
+    --alert-dot: #D6544A;
+    --hero-1: #FDF6EE;
+    --hero-2: #FAEEE3;
+    --hero-3: #F7E4DC;
+    /* dump-box aliases (snippet expects these names) */
+    --bg: var(--paper);
+    --border: var(--line);
+    --muted: var(--dim);
+    --accent: var(--plum);
+    --text: var(--ink);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --paper: #1D1411;
+      --card: #2A1E19;
+      --ink: #F1E5D8;
+      --dim: #B89F8E;
+      --line: #4C3A2E;
+      --plum: #D89AB5;
+      --plum-soft: #3A2530;
+      --plum-line: #5E3B4D;
+      --jade: #93B795;
+      --jade-soft: #243026;
+      --gold: #D9A94E;
+      --gold-soft: #38300F;
+      --gold-line: #6B5A26;
+      --alert-bg: #3A2320;
+      --alert-line: #6E3A34;
+      --alert-dot: #E87A6E;
+      --hero-1: #2B1E18;
+      --hero-2: #312219;
+      --hero-3: #38251D;
+    }
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
@@ -30,7 +67,7 @@
   .serif { font-family: Georgia, "Iowan Old Style", "Times New Roman", serif; }
 
   header.hero {
-    background: linear-gradient(135deg, #FDF6EE 0%, #FAEEE3 55%, #F7E4DC 100%);
+    background: linear-gradient(135deg, var(--hero-1) 0%, var(--hero-2) 55%, var(--hero-3) 100%);
     border: 1px solid var(--line); border-radius: 16px;
     padding: 34px 32px 26px; margin-bottom: 24px;
     position: relative; overflow: hidden;
@@ -87,18 +124,18 @@
   .hint b { color: var(--plum); }
 
   .empty {
-    margin-top: 12px; background: var(--gold-soft); border: 1px solid #EBD9A8;
+    margin-top: 12px; background: var(--gold-soft); border: 1px solid var(--gold-line);
     border-radius: 12px; padding: 16px 18px; font-size: 14.5px; color: var(--ink);
   }
   .empty .e { margin-right: 8px; }
 
   .attention {
-    margin-top: 12px; background: #FDECEA; border: 1px solid #F3C1BC;
+    margin-top: 12px; background: var(--alert-bg); border: 1px solid var(--alert-line);
     border-radius: 12px; padding: 16px 18px; font-size: 14.5px;
   }
   .attention .dot {
     display: inline-block; width: 9px; height: 9px; border-radius: 50%;
-    background: #D6544A; margin-right: 8px;
+    background: var(--alert-dot); margin-right: 8px;
   }
   .attention a { color: var(--plum); font-weight: 600; }
 
@@ -106,6 +143,55 @@
            font-size: 12.5px; color: var(--dim); display: flex; justify-content: space-between;
            flex-wrap: wrap; gap: 8px; }
   a { color: var(--plum); }
+
+  /* ---- brain dump box ---- */
+  .dumpbox {
+    background: var(--card);
+    border: 1px solid var(--plum-line);
+    border-radius: 12px;
+    padding: 20px 22px;
+    margin-top: 34px;
+  }
+  .dumpbox h2 { margin: 0 0 6px; font-size: 20px; }
+  .dumpbox-sub { color: var(--muted); font-size: 14px; margin-bottom: 14px; }
+  .dumpbox textarea {
+    width: 100%; min-height: 96px; resize: vertical;
+    background: var(--bg); border: 1px solid var(--border); border-radius: 8px;
+    padding: 10px 12px; font-size: 14px; color: var(--text); font-family: inherit;
+  }
+  .dumpbox textarea:focus { outline: none; border-color: var(--accent); }
+  .dumpbox textarea:disabled { opacity: .55; }
+  .dumpbox-row { display: flex; align-items: center; gap: 12px; margin-top: 10px; flex-wrap: wrap; }
+  .dumpbox-btn {
+    background: var(--accent); color: #fff; border: none; border-radius: 8px;
+    padding: 9px 22px; font-size: 14px; font-weight: 600; cursor: pointer;
+  }
+  @media (prefers-color-scheme: dark) {
+    .dumpbox-btn { color: #2A1A22; }
+  }
+  .dumpbox-btn:disabled { opacity: .45; cursor: default; }
+  .dumpbox-status { font-size: 13px; color: var(--muted); }
+  .dumpbox-connect {
+    background: var(--bg); border: 1px dashed var(--border); border-radius: 8px;
+    padding: 12px 14px; margin-bottom: 12px; font-size: 14px;
+  }
+  .dumpbox-connect p { margin-bottom: 8px; }
+
+  .dumpbox-token {
+    background: var(--bg); border: 1px dashed var(--border); border-radius: 8px;
+    padding: 12px 14px; margin-bottom: 12px; font-size: 14px;
+  }
+  .dumpbox-token p { margin-bottom: 8px; }
+  .dumpbox-tokenrow { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+  .dumpbox-tokenrow input {
+    flex: 1; min-width: 170px; background: var(--card); border: 1px solid var(--border);
+    border-radius: 8px; padding: 7px 10px; font-size: 13px; color: var(--text);
+  }
+  .dumpbox-tokenrow button {
+    background: transparent; color: var(--accent); border: 1px solid var(--accent);
+    border-radius: 8px; padding: 7px 14px; font-size: 13px; font-weight: 600; cursor: pointer;
+  }
+  .dumpbox-tokenrow a { color: var(--accent); font-size: 13px; }
 </style>
 </head>
 <body>
@@ -174,6 +260,28 @@
   <h2 class="serif">Gift ideas <span class="sub">The running list.</span></h2>
   <div class="empty"><span class="e">💡</span>No ideas yet. Tell me what she loves and I'll keep the list warm.</div>
 
+  <section class="dumpbox" data-buddy-id="mei-ying-buddy">
+    <h2>🧠 Brain dump</h2>
+    <p class="dumpbox-sub">Dump what's on your mind about Mei-ying — raw and unfiltered. Each dump lands in the buddy's repo (docs/ingest.md) as a timestamped entry.</p>
+    <div class="dumpbox-connect" hidden>
+      <p>🔒 Connect GitHub to unlock dumping. Paste a token once — it stays on this device only.</p>
+      <button type="button" class="dumpbox-btn">Connect GitHub to enable</button>
+    </div>
+    <div class="dumpbox-token" hidden>
+      <p>🔒 Connect GitHub to unlock dumping. Paste a token once — it stays on this device only.</p>
+      <div class="dumpbox-tokenrow">
+        <input type="password" placeholder="GitHub token (repo scope)" aria-label="GitHub token">
+        <button type="button">Save token</button>
+        <a href="https://github.com/settings/tokens" target="_blank" rel="noopener">Get a token</a>
+      </div>
+    </div>
+    <textarea rows="4" placeholder="Dump what's on your mind about Mei-ying…"></textarea>
+    <div class="dumpbox-row">
+      <button type="button" class="dumpbox-btn">Dump it</button>
+      <span class="dumpbox-status" role="status"></span>
+    </div>
+  </section>
+
   <h2 class="serif">Needs Dave's attention <span class="sub">Open items.</span></h2>
   <div class="attention">
     <span class="dot"></span><b>Brief review:</b> the
@@ -187,5 +295,115 @@
   </footer>
 
 </div>
+
+<script>
+// ---- dump-box JS (self-contained; no dependencies) ----
+(function(){
+  var box = document.querySelector('.dumpbox');
+  if (!box || box.dataset.dumpInit) return;
+  box.dataset.dumpInit = '1';
+  var bid = box.getAttribute('data-buddy-id') || (function(){
+    var p = location.pathname.replace(/\/+$/, '');
+    return p.substring(p.lastIndexOf('/') + 1);
+  })();
+  var ta = box.querySelector('textarea'),
+      btn = box.querySelector('.dumpbox-row .dumpbox-btn'),
+      st = box.querySelector('.dumpbox-status'),
+      tokWrap = box.querySelector('.dumpbox-token'),
+      connectWrap = box.querySelector('.dumpbox-connect'),
+      connectBtn = connectWrap.querySelector('.dumpbox-btn');
+  function lsGet(){ try { return JSON.parse(localStorage.getItem('buddyTree.v3') || '{}'); } catch(e){ return {}; } }
+  function lsSet(patch){ try { var s = lsGet(); for (var k in patch) s[k] = patch[k]; localStorage.setItem('buddyTree.v3', JSON.stringify(s)); } catch(e){} }
+  function token(){ return lsGet().ghToken || ''; }
+  function b64encode(str){
+    var bytes = new TextEncoder().encode(str), bin = '';
+    bytes.forEach(function(b){ bin += String.fromCharCode(b); });
+    return btoa(bin);
+  }
+  async function ghApi(path, method, body){
+    var t = token();
+    if (!t) throw new Error('Add a GitHub token first.');
+    var r = await fetch('https://api.github.com' + path, {
+      method: method || 'GET',
+      headers: {'Authorization': 'Bearer ' + t, 'Accept': 'application/vnd.github+json', 'Content-Type': 'application/json'},
+      body: body ? JSON.stringify(body) : undefined
+    });
+    if (!r.ok) throw new Error('GitHub ' + r.status);
+    return r.status === 204 ? null : await r.json();
+  }
+  async function ghGetFile(repo, path){
+    try {
+      var j = await ghApi('/repos/davedellaquila/' + repo + '/contents/' + path);
+      if (j && j.content) return {
+        text: new TextDecoder().decode(Uint8Array.from(atob(j.content.replace(/\n/g, '')), function(c){ return c.charCodeAt(0); })),
+        sha: j.sha
+      };
+    } catch(e){}
+    return null;
+  }
+  var repo = null, repoName = bid;
+  async function resolveRepo(){
+    try {
+      var r = await fetch('../buddies.json', {cache: 'no-store'});
+      var d = await r.json();
+      var buds = d.buddies || [];
+      for (var i = 0; i < buds.length; i++) {
+        if (buds[i].id === bid && buds[i].repo) { repo = buds[i].repo; repoName = buds[i].name || bid; break; }
+      }
+    } catch(e){}
+  }
+  function refreshUI(){
+    var has = !!token();
+    connectWrap.hidden = has;
+    if (has) tokWrap.hidden = true;
+    var ok = has && !!repo;
+    ta.disabled = !ok;
+    btn.disabled = !ok;
+    if (!has) { st.textContent = ''; }
+    else if (!repo) { st.textContent = 'No repo linked for this buddy yet.'; }
+  }
+  var tokInput = tokWrap.querySelector('input'),
+      tokSave = tokWrap.querySelector('button');
+  connectBtn.addEventListener('click', function(){
+    tokWrap.hidden = false;
+    if (tokInput) tokInput.focus();
+  });
+  tokSave.addEventListener('click', function(){
+    var v = tokInput.value.trim();
+    if (!v) return;
+    lsSet({ghToken: v});
+    tokInput.value = '';
+    tokWrap.hidden = true;
+    refreshUI();
+    st.textContent = 'Token saved on this device.';
+  });
+  async function dump(){
+    var text = ta.value.trim();
+    if (!text) return;
+    if (!token()) { refreshUI(); return; }
+    if (!repo) { st.textContent = 'No repo linked for this buddy yet.'; return; }
+    st.textContent = 'Dumping…';
+    btn.disabled = true;
+    try {
+      var stamp = new Date().toLocaleString();
+      var NL = String.fromCharCode(10);
+      var entry = '## ' + stamp + NL + NL + text + NL + NL;
+      var cur = await ghGetFile(repo, 'docs/ingest.md');
+      var base = cur ? cur.text : '# Ingest log — ' + repoName + NL + NL;
+      var body = {message: 'Ingest dump for ' + bid, content: b64encode(base + entry)};
+      if (cur && cur.sha) body.sha = cur.sha;
+      await ghApi('/repos/davedellaquila/' + repo + '/contents/docs/ingest.md', 'PUT', body);
+      ta.value = '';
+      st.textContent = '✓ Dumped to ' + repo + '/docs/ingest.md';
+    } catch(err){ st.textContent = 'Save failed: ' + (err.message || err); }
+    btn.disabled = false;
+  }
+  btn.addEventListener('click', dump);
+  ta.addEventListener('keydown', function(ev){
+    if ((ev.metaKey || ev.ctrlKey) && ev.key === 'Enter') { ev.preventDefault(); dump(); }
+  });
+  resolveRepo().then(refreshUI);
+})();
+</script>
 </body>
 </html>
