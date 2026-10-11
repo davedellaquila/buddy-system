@@ -1,161 +1,351 @@
-<!-- BUDDY-BASIC-TEMPLATE v2 -->
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Design Buddy</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="color-scheme" content="light dark" />
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎨</text></svg>" />
+<title>Design Buddy — The Taste Department</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500;1,9..144,600&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-:root {
-  --bg: #ffffff;
-  --text: #1a1a1a;
-  --muted: #666;
-  --card: #f5f5f5;
-  --border: #e0e0e0;
-  --accent: #0066cc;
-}
-@media (prefers-color-scheme: dark) {
   :root {
-    --bg: #1a1a1a;
-    --text: #e0e0e0;
-    --muted: #999;
-    --card: #2a2a2a;
-    --border: #3a3a3a;
-    --accent: #4da6ff;
+    color-scheme: light dark;
+    --paper: #f7f4ee;
+    --card: #fffdf8;
+    --ink: #1a1713;
+    --muted: #6f6455;
+    --faint: #a89a83;
+    --line: #e4dccb;
+    --accent: #c2410c;
+    --on-accent: #ffffff;
+    --shadow: 0 16px 40px rgba(80, 52, 16, .10);
+    --serif: "Fraunces", Georgia, "Times New Roman", serif;
+    --sans: "Manrope", ui-sans-serif, system-ui, -apple-system, sans-serif;
+    --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
   }
-}
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  background: var(--bg);
-  color: var(--text);
-  line-height: 1.6;
-  padding: 40px 20px;
-  max-width: 800px;
-  margin: 0 auto;
-}
-.header { text-align: center; margin-bottom: 40px; }
-.icon { font-size: 64px; margin-bottom: 16px; }
-h1 { font-size: 32px; margin-bottom: 8px; }
-.tagline { color: var(--muted); font-size: 18px; }
-.mission {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 24px;
-  margin-bottom: 32px;
-  font-size: 17px;
-}
-h2 { font-size: 22px; margin: 32px 0 16px; }
-.attn {
-  background: var(--card);
-  border-left: 4px solid var(--accent);
-  border-radius: 0 8px 8px 0;
-  padding: 16px 20px;
-  margin-bottom: 12px;
-}
-.attn-date { color: var(--muted); font-size: 14px; margin-top: 8px; }
-.children { display: flex; flex-wrap: wrap; gap: 12px; }
-.child {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 12px 20px;
-  text-decoration: none;
-  color: var(--text);
-}
-.child:hover { border-color: var(--accent); }
-.footer {
-  margin-top: 48px;
-  padding-top: 24px;
-  border-top: 1px solid var(--border);
-  color: var(--muted);
-  font-size: 14px;
-  text-align: center;
-}
-.empty { color: var(--muted); font-style: italic; }
-
-.dumpbox {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 20px 22px;
-  margin-bottom: 32px;
-}
-.dumpbox h2 { margin: 0 0 6px; font-size: 20px; }
-.dumpbox-sub { color: var(--muted); font-size: 14px; margin-bottom: 14px; }
-.dumpbox textarea {
-  width: 100%; min-height: 96px; resize: vertical;
-  background: var(--bg); border: 1px solid var(--border); border-radius: 8px;
-  padding: 10px 12px; font-size: 14px; color: var(--text); font-family: inherit;
-}
-.dumpbox textarea:focus { outline: none; border-color: var(--accent); }
-.dumpbox textarea:disabled { opacity: .55; }
-.dumpbox-row { display: flex; align-items: center; gap: 12px; margin-top: 10px; flex-wrap: wrap; }
-.dumpbox-btn {
-  background: var(--accent); color: #fff; border: none; border-radius: 8px;
-  padding: 9px 22px; font-size: 14px; font-weight: 600; cursor: pointer;
-}
-.dumpbox-btn:disabled { opacity: .45; cursor: default; }
-.dumpbox-status { font-size: 13px; color: var(--muted); }
-.dumpbox-token {
-  background: var(--bg); border: 1px dashed var(--border); border-radius: 8px;
-  padding: 12px 14px; margin-bottom: 12px; font-size: 14px;
-}
-.dumpbox-token p { margin-bottom: 8px; }
-.dumpbox-tokenrow { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
-.dumpbox-tokenrow input {
-  flex: 1; min-width: 170px; background: var(--card); border: 1px solid var(--border);
-  border-radius: 8px; padding: 7px 10px; font-size: 13px; color: var(--text);
-}
-.dumpbox-tokenrow button {
-  background: transparent; color: var(--accent); border: 1px solid var(--accent);
-  border-radius: 8px; padding: 7px 14px; font-size: 13px; font-weight: 600; cursor: pointer;
-}
-.dumpbox-tokenrow a { color: var(--accent); font-size: 13px; }
-
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --paper: #14110a;
+      --card: #1d1911;
+      --ink: #f2ead9;
+      --muted: #ac9f85;
+      --faint: #6f6350;
+      --line: #322b1b;
+      --accent: #f0904d;
+      --on-accent: #241104;
+      --shadow: 0 16px 40px rgba(0, 0, 0, .45);
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--paper); color: var(--ink);
+    font-family: var(--sans); font-size: 15.5px; line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 780px; margin: 0 auto; padding: 44px 22px 70px; }
+  .eyebrow {
+    display: flex; align-items: center; gap: 10px;
+    font-size: 12px; font-weight: 800; letter-spacing: .16em; text-transform: uppercase;
+    color: var(--faint); margin-bottom: 16px;
+  }
+  .eyebrow .rule { flex: 1; height: 1px; background: var(--line); }
+  h1 {
+    font-family: var(--serif); font-weight: 700;
+    font-size: clamp(38px, 7vw, 58px); line-height: 1.02;
+    margin: 0 0 10px; letter-spacing: -0.015em;
+  }
+  h1 .palette { font-family: var(--sans); }
+  .tagline {
+    font-family: var(--serif); font-style: italic; font-weight: 500;
+    font-size: 20px; color: var(--muted); margin: 0 0 6px;
+  }
+  .status-pill {
+    display: inline-flex; align-items: center; gap: 8px;
+    margin-top: 14px; padding: 7px 14px 7px 10px;
+    background: color-mix(in srgb, var(--accent) 12%, transparent);
+    border: 1px solid var(--line); border-radius: 999px;
+    font-size: 13px; font-weight: 700; color: var(--accent);
+  }
+  .status-pill .pulse { width: 9px; height: 9px; border-radius: 50%; background: var(--accent); animation: pulse 2s infinite; }
+  @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: .35; } }
+  .mission {
+    margin: 28px 0 0; padding: 24px 26px;
+    background: var(--card); border: 1px solid var(--line); border-radius: 16px;
+    box-shadow: var(--shadow); font-size: 16.5px;
+  }
+  .mission strong { color: var(--accent); }
+  .mission .boundary {
+    display: block; margin-top: 12px; padding-top: 12px;
+    border-top: 1px dashed var(--line); color: var(--muted); font-size: 14px;
+  }
+  h2 {
+    font-family: var(--serif); font-size: 23px; font-weight: 600;
+    margin: 44px 0 4px; display: flex; align-items: baseline; gap: 10px;
+  }
+  h2 .count {
+    font-family: var(--sans); font-size: 12px; font-weight: 800;
+    background: var(--ink); color: var(--paper);
+    border-radius: 999px; padding: 2px 10px; letter-spacing: .06em;
+  }
+  .sub { color: var(--faint); font-size: 13.5px; margin: 0 0 18px; }
+  .card {
+    background: var(--card); border: 1px solid var(--line); border-radius: 16px;
+    box-shadow: var(--shadow); padding: 22px 24px; margin-bottom: 14px;
+  }
+  .attention-card { border-left: 5px solid var(--accent); }
+  .attention-card h3 { margin: 0 0 6px; font-size: 16.5px; }
+  .attention-card p { margin: 0 0 14px; color: var(--muted); font-size: 14.5px; }
+  .btn {
+    display: inline-block; text-decoration: none; font-weight: 700; font-size: 14px;
+    background: var(--ink); color: var(--paper);
+    padding: 10px 20px; border-radius: 10px;
+    transition: transform .15s ease, opacity .15s ease;
+  }
+  .btn:hover { transform: translateY(-1px); opacity: .92; }
+  .btn.ghost { background: transparent; color: var(--ink); border: 1.5px solid var(--line); }
+  /* principles */
+  .principle { display: grid; grid-template-columns: 52px 1fr; gap: 16px; align-items: start; }
+  .principle .num {
+    font-family: var(--serif); font-style: italic; font-size: 30px; font-weight: 600;
+    color: var(--accent); line-height: 1;
+  }
+  .principle h3 { margin: 2px 0 4px; font-size: 16px; }
+  .principle p { margin: 0; color: var(--muted); font-size: 14.5px; }
+  .principle p code {
+    font-family: var(--mono); font-size: 12.5px;
+    background: color-mix(in srgb, var(--accent) 10%, transparent);
+    padding: 1px 6px; border-radius: 5px; color: var(--accent);
+  }
+  /* tokens */
+  .swatches { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; margin-bottom: 18px; }
+  .swatch {
+    border: 1px solid var(--line); border-radius: 12px; overflow: hidden; background: var(--card);
+  }
+  .swatch .chip { height: 56px; }
+  .swatch .meta { padding: 8px 12px 10px; }
+  .swatch .meta .name { font-family: var(--mono); font-size: 12px; font-weight: 600; }
+  .swatch .meta .hex { font-family: var(--mono); font-size: 11.5px; color: var(--muted); }
+  .accent-try { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin: 4px 0 6px; }
+  .accent-opt {
+    width: 40px; height: 40px; border-radius: 50%; border: 2px solid var(--line);
+    cursor: pointer; padding: 0; transition: transform .15s ease, border-color .15s ease;
+  }
+  .accent-opt:hover { transform: scale(1.08); }
+  .accent-opt[aria-pressed="true"] { border-color: var(--ink); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 30%, transparent); }
+  .accent-status { font-size: 13px; color: var(--muted); }
+  .type-spec { display: grid; gap: 14px; margin-top: 18px; }
+  @media (min-width: 560px) { .type-spec { grid-template-columns: 1fr 1fr; } }
+  .type-card { border: 1px solid var(--line); border-radius: 12px; padding: 18px 20px; background: var(--paper); }
+  .type-card .aa-serif { font-family: var(--serif); font-size: 44px; font-weight: 700; line-height: 1; }
+  .type-card .aa-sans { font-family: var(--sans); font-size: 40px; font-weight: 800; line-height: 1; }
+  .type-card .lbl { font-size: 11.5px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; color: var(--faint); margin-top: 10px; }
+  .type-card .sample { font-size: 14px; color: var(--muted); margin-top: 4px; }
+  /* open questions */
+  .qa { margin: 0; padding-left: 20px; color: var(--muted); font-size: 14.5px; }
+  .qa li { margin-bottom: 10px; }
+  .qa li::marker { color: var(--accent); font-weight: 800; }
+  .qa strong { color: var(--ink); }
+  /* dump box */
+  .dumpbox {
+    background: var(--card); border: 1px solid var(--line); border-radius: 16px;
+    box-shadow: var(--shadow); padding: 22px 24px; margin-bottom: 14px;
+  }
+  .dumpbox h2 { font-family: var(--serif); font-size: 22px; font-weight: 600; margin: 0 0 4px; }
+  .dumpbox-sub { color: var(--muted); font-size: 14px; margin: 0 0 14px; }
+  .dumpbox textarea {
+    width: 100%; min-height: 96px; resize: vertical;
+    background: var(--paper); border: 1px solid var(--line); border-radius: 10px;
+    padding: 10px 12px; font-size: 14px; color: var(--ink); font-family: var(--sans);
+  }
+  .dumpbox textarea:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 18%, transparent); }
+  .dumpbox textarea:disabled { opacity: .55; }
+  .dumpbox-row { display: flex; align-items: center; gap: 12px; margin-top: 10px; flex-wrap: wrap; }
+  .dumpbox-btn {
+    background: var(--accent); color: var(--on-accent); border: none; border-radius: 10px;
+    padding: 10px 22px; font-size: 14px; font-weight: 700; cursor: pointer;
+    transition: transform .15s ease, opacity .15s ease;
+  }
+  .dumpbox-btn:hover:not(:disabled) { transform: translateY(-1px); }
+  .dumpbox-btn:disabled { opacity: .45; cursor: default; }
+  .dumpbox-status { font-size: 13px; color: var(--muted); }
+  .dumpbox-token {
+    background: var(--paper); border: 1px dashed var(--faint); border-radius: 10px;
+    padding: 12px 14px; margin-bottom: 12px; font-size: 14px; color: var(--muted);
+  }
+  .dumpbox-token p { margin: 0 0 8px; }
+  .dumpbox-tokenrow { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+  .dumpbox-tokenrow input {
+    flex: 1; min-width: 170px; background: var(--card); border: 1px solid var(--line);
+    border-radius: 8px; padding: 8px 10px; font-size: 13px; color: var(--ink); font-family: var(--sans);
+  }
+  .dumpbox-tokenrow button {
+    background: transparent; color: var(--accent); border: 1.5px solid var(--accent);
+    border-radius: 8px; padding: 7px 14px; font-size: 13px; font-weight: 700; cursor: pointer;
+  }
+  .dumpbox-tokenrow a { color: var(--accent); font-size: 13px; font-weight: 600; }
+  .links { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 6px; }
+  footer {
+    margin-top: 48px; padding-top: 18px; border-top: 1px solid var(--line);
+    color: var(--faint); font-size: 12.5px; display: flex; justify-content: space-between;
+    flex-wrap: wrap; gap: 8px;
+  }
+  footer a { color: var(--accent); font-weight: 600; text-decoration: none; }
 </style>
 </head>
 <body>
-<div class="header">
-<div class="icon">🎨</div>
-<h1>Design Buddy</h1>
-<div class="tagline">The taste authority — our Jony Ive on staff</div>
-</div>
+  <div class="wrap">
+    <div class="eyebrow"><span>Project Buddy family · Staff</span><span class="rule"></span><span>🎨</span></div>
+    <h1><span class="palette">🎨</span> Design Buddy</h1>
+    <p class="tagline">The taste department. What good looks like.</p>
+    <span class="status-pill"><span class="pulse"></span>Brief review — awaiting Dave</span>
 
-<div class="mission">Design Buddy is Dave&#x27;s resident design authority — the Jony Ive on staff. It reviews every buddy homepage/app for taste, owns the shared design language (dark + light mode, living pages, craftsmanship as differentiator), and gives his product work a second eye when asked. Advisory only: owning threads implement; Apple-internal STIX work stays advisory-only.</div>
+    <div class="mission">
+      Design Buddy is the buddy system&rsquo;s <strong>taste department</strong> — the Jony Ive on staff.
+      It reviews every buddy homepage and app for taste, owns the <strong>shared design language</strong>
+      across the whole system, and gives Dave&rsquo;s product work a second design eye when asked.
+      <span class="boundary"><strong>Advisory only.</strong> Owning threads implement — Design Buddy critiques, audits, and sets the bar.
+      Apple-internal STIX work stays advisory-only: no repo access, ever.</span>
+    </div>
 
+    <h2>Needs your attention <span class="count">1</span></h2>
+    <p class="sub">Fresh from the thread — tap through and clear it.</p>
+    <div class="card attention-card">
+      <h3>📄 Product brief ready for review</h3>
+      <p>Looks good, edits, or defer? Your call decides what this buddy becomes. The review ask is open in the Design Buddy thread.</p>
+      <a class="btn" href="https://docs.google.com/document/d/1_sUDucLCJfg2iB858pgHQWdOtt-vWPwOMqoXjhy3QYU/edit">Read the brief</a>
+    </div>
 
-<section class="dumpbox" data-buddy-id="design-buddy">
-<h2>🧠 Brain dump</h2>
-<p class="dumpbox-sub">Dump what's on your mind about Design Buddy — raw and unfiltered. Each dump lands in the buddy's repo (docs/ingest.md) as a timestamped entry.</p>
-<div class="dumpbox-token" hidden>
-<p>🔒 Connect GitHub to unlock dumping. Paste a token once — it stays on this device only.</p>
-<div class="dumpbox-tokenrow">
-<input type="password" placeholder="GitHub token (repo scope)" aria-label="GitHub token">
-<button type="button">Save token</button>
-<a href="https://github.com/settings/tokens" target="_blank" rel="noopener">Get a token</a>
-</div>
-</div>
-<textarea rows="4" placeholder="Dump what's on your mind about Design Buddy…"></textarea>
-<div class="dumpbox-row">
-<button type="button" class="dumpbox-btn">Dump it</button>
-<span class="dumpbox-status" role="status"></span>
-</div>
-</section>
+    <h2>The design language</h2>
+    <p class="sub">The bar, written down. Every buddy homepage is measured against this.</p>
+    <div class="card principle">
+      <div class="num">01</div>
+      <div><h3>Dark AND light mode, always</h3><p>Every page, both themes, via <code>prefers-color-scheme</code>. Light-only is not done.</p></div>
+    </div>
+    <div class="card principle">
+      <div class="num">02</div>
+      <div><h3>Living pages, not one-time builds</h3><p>Refresh when the data changes. A stale page erodes trust; a current page is one Dave can rely on.</p></div>
+    </div>
+    <div class="card principle">
+      <div class="num">03</div>
+      <div><h3>A brain-dump box on every homepage</h3><p>Capture lives where the work lives — timestamped entries straight into the buddy&rsquo;s repo.</p></div>
+    </div>
+    <div class="card principle">
+      <div class="num">04</div>
+      <div><h3>Craftsmanship is the differentiator</h3><p>Handcrafted and delightful, the Apple principle Dave built his career on. Personality is the moat.</p></div>
+    </div>
+    <div class="card principle">
+      <div class="num">05</div>
+      <div><h3>Classic over clever</h3><p>Ship what Dave praised. Surprises are for birthdays, not homepages.</p></div>
+    </div>
 
+    <h2>The tokens, live</h2>
+    <p class="sub">The shared design language, rendered from this page&rsquo;s own variables. Try an accent — the whole page answers.</p>
+    <div class="card">
+      <div class="swatches">
+        <div class="swatch"><div class="chip" style="background:var(--paper)"></div><div class="meta"><div class="name">--paper</div><div class="hex">canvas</div></div></div>
+        <div class="swatch"><div class="chip" style="background:var(--card)"></div><div class="meta"><div class="name">--card</div><div class="hex">surface</div></div></div>
+        <div class="swatch"><div class="chip" style="background:var(--ink)"></div><div class="meta"><div class="name">--ink</div><div class="hex">text</div></div></div>
+        <div class="swatch"><div class="chip" style="background:var(--muted)"></div><div class="meta"><div class="name">--muted</div><div class="hex">secondary</div></div></div>
+        <div class="swatch"><div class="chip" style="background:var(--line)"></div><div class="meta"><div class="name">--line</div><div class="hex">hairline</div></div></div>
+        <div class="swatch"><div class="chip" style="background:var(--accent)"></div><div class="meta"><div class="name">--accent</div><div class="hex" id="accentHex">live</div></div></div>
+      </div>
+      <div class="accent-try" role="group" aria-label="Try an accent color">
+        <button type="button" class="accent-opt" data-accent="ember"  aria-pressed="true"  aria-label="Ember"  title="Ember"  style="background:#c2410c"></button>
+        <button type="button" class="accent-opt" data-accent="indigo" aria-pressed="false" aria-label="Indigo" title="Indigo" style="background:#4f46e5"></button>
+        <button type="button" class="accent-opt" data-accent="forest" aria-pressed="false" aria-label="Forest" title="Forest" style="background:#15803d"></button>
+        <button type="button" class="accent-opt" data-accent="plum"   aria-pressed="false" aria-label="Plum"   title="Plum"   style="background:#a21caf"></button>
+        <span class="accent-status" id="accentStatus" role="status">Ember — the default accent.</span>
+      </div>
+      <div class="type-spec">
+        <div class="type-card">
+          <div class="aa-serif">Aa</div>
+          <div class="lbl">Display — Fraunces</div>
+          <div class="sample" style="font-family:var(--serif)">The quick brown fox, set with intent.</div>
+        </div>
+        <div class="type-card">
+          <div class="aa-sans">Aa</div>
+          <div class="lbl">Text — Manrope</div>
+          <div class="sample">The quick brown fox, set with intent.</div>
+        </div>
+      </div>
+    </div>
 
-<h2>Needs Attention</h2>
-<div class="attn"><div>Brief ready for review — looks good, edits, or defer? Dave&#x27;s resident design authority, “the Jony Ive on staff.”</div><div class="attn-date">2026-10-11</div></div>
+    <h2>Open questions <span class="count">3</span></h2>
+    <p class="sub">From the brief — Dave&rsquo;s call.</p>
+    <div class="card">
+      <ul class="qa">
+        <li><strong>Review cadence:</strong> on-demand when threads ask, or scheduled audits of the whole system?</li>
+        <li><strong>How prescriptive:</strong> recommend only — or can Design Buddy block a ship?</li>
+        <li><strong>Proactive or reactive:</strong> redesign weak pages unasked, or wait to be invited?</li>
+      </ul>
+    </div>
 
+    <section class="dumpbox" data-buddy-id="design-buddy">
+      <h2>🧠 Brain dump</h2>
+      <p class="dumpbox-sub">Dump what&rsquo;s on your mind about design — raw and unfiltered. Each dump lands in this buddy&rsquo;s repo (docs/ingest.md) as a timestamped entry.</p>
+      <div class="dumpbox-token" hidden>
+        <p>🔒 Connect GitHub to unlock dumping. Paste a token once — it stays on this device only.</p>
+        <div class="dumpbox-tokenrow">
+          <input type="password" placeholder="GitHub token (repo scope)" aria-label="GitHub token">
+          <button type="button">Save token</button>
+          <a href="https://github.com/settings/tokens" target="_blank" rel="noopener">Get a token</a>
+        </div>
+      </div>
+      <textarea rows="4" placeholder="Dump what's on your mind about design…"></textarea>
+      <div class="dumpbox-row">
+        <button type="button" class="dumpbox-btn">Dump it</button>
+        <span class="dumpbox-status" role="status"></span>
+      </div>
+    </section>
 
+    <h2>Links</h2>
+    <div class="links">
+      <a class="btn ghost" href="https://docs.google.com/document/d/1_sUDucLCJfg2iB858pgHQWdOtt-vWPwOMqoXjhy3QYU/edit">📄 Product brief</a>
+      <a class="btn ghost" href="https://github.com/davedellaquila/design-buddy">💻 GitHub repo</a>
+      <a class="btn ghost" href="https://davedellaquila.github.io/buddy-system/">🗂️ Buddies dashboard</a>
+    </div>
 
-
-<div class="footer">
-Generated 2026-10-11 · Part of the Buddy System
-</div>
-
+    <footer>
+      <span>A living page in the Project Buddy family · Last refreshed 2026-10-11</span>
+      <span>Thread: <a href="#">Design Buddy 🎨</a> · davedellaquila/design-buddy</span>
+    </footer>
+  </div>
 <script>
+// ---- accent switcher: tokens are live ----
+(function(){
+  var ACCENTS = {
+    ember:  { light: '#c2410c', dark: '#f0904d', name: 'Ember' },
+    indigo: { light: '#4f46e5', dark: '#a5b4fc', name: 'Indigo' },
+    forest: { light: '#15803d', dark: '#6ee7a8', name: 'Forest' },
+    plum:   { light: '#a21caf', dark: '#e879d8', name: 'Plum' }
+  };
+  var mq = window.matchMedia('(prefers-color-scheme: dark)');
+  var status = document.getElementById('accentStatus');
+  var hexEl = document.getElementById('accentHex');
+  var current = 'ember';
+  function apply(){
+    var a = ACCENTS[current];
+    var val = mq.matches ? a.dark : a.light;
+    document.documentElement.style.setProperty('--accent', val);
+    if (status) status.textContent = a.name + ' — the whole page answers to --accent.';
+    if (hexEl) hexEl.textContent = val;
+  }
+  var opts = document.querySelectorAll('.accent-opt');
+  opts.forEach(function(btn){
+    btn.addEventListener('click', function(){
+      current = btn.getAttribute('data-accent');
+      opts.forEach(function(b){ b.setAttribute('aria-pressed', b === btn ? 'true' : 'false'); });
+      apply();
+    });
+  });
+  if (mq.addEventListener) mq.addEventListener('change', apply);
+  apply();
+})();
+</script>
+<script>
+// ---- brain-dump box (self-contained; no dependencies) ----
 (function(){
   var box = document.querySelector('.dumpbox');
   if (!box || box.dataset.dumpInit) return;
@@ -255,6 +445,5 @@ Generated 2026-10-11 · Part of the Buddy System
   resolveRepo().then(refreshUI);
 })();
 </script>
-
 </body>
 </html>
