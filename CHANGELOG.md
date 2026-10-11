@@ -3,6 +3,18 @@
 All notable changes to the Buddies dashboard and buddy system. Newest first.
 `FEATURES.md` describes the current state; this file describes how it got there.
 
+## 2026-10-11 (Tree view: real hierarchy, splitter, section grips, tooltips, ingest fix)
+
+### Fixed
+- **Tree view showed the whole hierarchy as "Orphaned buddies":** only `FAMKINDS` children of the root rendered in the org chart, so Project Buddy (kind `assistant`) and everything under it landed in the orphan grid as indented tiles. The org chart now shows every direct report of the root side by side; only truly parentless buddies go to the orphan section. Retired `FAMKINDS`; depth-1 tile tags now show the buddy's actual kind.
+- **Ingest dumps never loaded when opening a buddy from a view:** `refreshTokenUI` only called `renderIngestFeed` when `S.sel === 'buddy:' + id`, but opening from the Tree view leaves `S.sel` as `view:tree`. The feed (and shared notes) now load whenever the panel renders a buddy.
+
+### Added
+- **Draggable splitter** between the buddy-tree pane and the orphaned-buddies pane; each pane has its own zoom slider + zoom-to-fit. Split position and both zooms persist per device. Dragging an orphan onto a tree buddy still reparents it.
+- **⋮⋮ grippers** on the far right of detail-panel section titles — drag to reorder sections directly; order persists via `fieldOrder`.
+- **Sidebar section headers (Views, Buddies) collapse** on click, like Business Plans already did.
+- **Tooltips are now real popovers:** hover preview on mouse, tap-to-pin with an × close button on touch (the old hover-only CSS tooltips stuck open on touch screens). Tap-outside and Escape also dismiss.
+
 ## 2026-10-11 (Tree-view inspection fixes)
 
 ### Fixed

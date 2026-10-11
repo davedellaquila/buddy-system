@@ -276,41 +276,50 @@ body{padding:0}
 #view-tree.view.active{display:flex !important;flex-direction:column;
   margin:-36px -32px -80px;height:100vh;height:100dvh;overflow:hidden;min-height:0}
 #view-tree #zoomwrap{flex:1;min-height:0;min-width:0;align-items:stretch;display:flex;flex-direction:column}
-/* Single 2D scrollport: both axes together (no nested .chart / #view-tree scroll) */
-#treezoom{flex:1;min-width:0;min-height:0;overflow:auto;overscroll-behavior:contain;
-  border:1px solid var(--border);border-left:none;border-right:none;cursor:grab;border-radius:0;background:var(--bg);
+/* Two stacked panes (buddy tree on top, orphaned buddies below) with a draggable
+   splitter; each pane is its own 2D scrollport with its own zoom control. */
+#treezoom{flex:1;min-width:0;min-height:0;display:flex;flex-direction:column;overflow:hidden;
+  border:1px solid var(--border);border-left:none;border-right:none;border-radius:0;background:var(--bg)}
+.treepane{position:relative;min-height:60px;min-width:0;display:flex;flex-direction:column;flex:1 1 0}
+.treescroll{flex:1;min-width:0;min-height:0;overflow:auto;overscroll-behavior:contain;cursor:grab;
   -webkit-overflow-scrolling:touch}
-#treezoom.panning{cursor:grabbing}
+.treescroll.panning{cursor:grabbing}
 /* JS pan owns gestures on the tree canvas so touch can move X+Y at once */
-#treezoom{touch-action:none}
+.treescroll{touch-action:none}
 #view-projects,#view-manifest{touch-action:pan-x pan-y}
-#treezoom.panning,#treezoom.panning *{user-select:none!important;-webkit-user-select:none!important}
+.treescroll.panning,.treescroll.panning *{user-select:none!important;-webkit-user-select:none!important}
 #treezoom,#treezoom *{user-select:none;-webkit-user-select:none}
-/* Slim vertical zoom — right edge of the tree; no panel chrome; large◼ · slider · small▪ · fit */
-#zoombar{position:fixed;top:50%;right:10px;left:auto;transform:translateY(-50%);z-index:5;
+/* Draggable splitter between the two tree panes */
+#tree-split{flex:0 0 12px;cursor:row-resize;display:flex;align-items:center;justify-content:center;
+  background:var(--bg);border-top:1px solid var(--border);border-bottom:1px solid var(--border);
+  touch-action:none;z-index:4}
+#tree-split .split-grip{width:52px;height:4px;border-radius:2px;background:var(--border2)}
+#tree-split:hover .split-grip,#tree-split:active .split-grip{background:var(--accent)}
+/* Slim vertical zoom — right edge of each pane; no panel chrome; large◼ · slider · small▪ · fit */
+.zoombar{position:absolute;top:50%;right:10px;transform:translateY(-50%);z-index:5;
   display:flex;flex-direction:column;align-items:center;gap:6px;width:auto;height:auto;
   padding:0;margin:0;background:none;border:none;border-radius:0;box-shadow:none;
   -webkit-tap-highlight-color:transparent}
-#zoombar .z-out,#zoombar .z-in{flex:0 0 auto;line-height:1;color:var(--faint);user-select:none;pointer-events:none;
+.zoombar .z-out,.zoombar .z-in{flex:0 0 auto;line-height:1;color:var(--faint);user-select:none;pointer-events:none;
   text-shadow:0 0 4px var(--bg),0 0 8px var(--bg)}
-#zoombar .z-out{font-size:8px}   /* zoom out (bottom) */
-#zoombar .z-in{font-size:13px}   /* zoom in (top) */
-#zoomrange{flex:0 0 auto;width:22px;height:112px;margin:0;padding:0;
+.zoombar .z-out{font-size:8px}   /* zoom out (bottom) */
+.zoombar .z-in{font-size:13px}   /* zoom in (top) */
+input[type=range].zrange{flex:0 0 auto;width:22px;height:112px;margin:0;padding:0;
   writing-mode:vertical-lr;direction:rtl;/* high value at top, next to large mark */
   -webkit-appearance:none;appearance:none;
   background:transparent;cursor:ns-resize;touch-action:none;opacity:1}
 /* High-contrast thumb: solid accent puck with a background-colored ring + halo so it pops on any tile */
-#zoomrange::-webkit-slider-runnable-track{width:5px;background:var(--faint);border-radius:3px}
-#zoomrange::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:20px;height:20px;margin-left:-8px;
+input[type=range].zrange::-webkit-slider-runnable-track{width:5px;background:var(--faint);border-radius:3px}
+input[type=range].zrange::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:20px;height:20px;margin-left:-8px;
   border-radius:50%;background:var(--accent);border:2px solid var(--bg);
   box-shadow:0 0 0 1.5px var(--accent-hi),0 1px 5px rgba(0,0,0,.5);cursor:ns-resize}
-#zoomrange::-moz-range-track{width:5px;background:var(--faint);border-radius:3px}
-#zoomrange::-moz-range-thumb{width:16px;height:16px;border-radius:50%;background:var(--accent);
+input[type=range].zrange::-moz-range-track{width:5px;background:var(--faint);border-radius:3px}
+input[type=range].zrange::-moz-range-thumb{width:16px;height:16px;border-radius:50%;background:var(--accent);
   border:2px solid var(--bg);box-shadow:0 0 0 1.5px var(--accent-hi),0 1px 5px rgba(0,0,0,.5);cursor:ns-resize}
-#zoomfit{flex:0 0 auto;background:none;border:none;border-radius:6px;color:var(--faint);
+.zfit{flex:0 0 auto;background:none;border:none;border-radius:6px;color:var(--faint);
   font-size:12px;width:22px;height:22px;padding:0;cursor:pointer;line-height:1;
   text-shadow:0 0 4px var(--bg),0 0 8px var(--bg)}
-#zoomfit:hover{color:var(--text);background:transparent}
+.zfit:hover{color:var(--text);background:transparent}
 /* Fixed to viewport at sidebar edge so vertical #sidebar scroll doesn't move it.
    MUST be a DOM sibling of #sidebar (not a child): overflow on #sidebar clips
    hit-testing/paint for fixed descendants, which made the gripper invisible. */
@@ -545,6 +554,10 @@ body.sb-closed #menu-btn{display:flex;align-items:center;justify-content:center;
 #plans-sec.collapsed #plan-nav{display:none}
 #plans-sec #plans-arrow{transform:rotate(90deg);display:inline-block}
 #plans-sec.collapsed #plans-arrow{transform:rotate(0deg)}
+/* Collapsible sidebar sections (Views, Buddies) — same pattern as Business Plans */
+.nav-sec.collapsed > div:last-child{display:none}
+.nav-sec .nav-arrow{transform:rotate(90deg);display:inline-block}
+.nav-sec.collapsed .nav-arrow{transform:rotate(0deg)}
 
 #avatar-picker{position:fixed;z-index:2000;background:var(--panel);border:1px solid var(--border);border-radius:12px;
   padding:16px;width:320px;max-height:70vh;overflow-y:auto;display:none;box-shadow:0 12px 40px var(--scrim)}
@@ -560,10 +573,14 @@ body.sb-closed #menu-btn{display:flex;align-items:center;justify-content:center;
   border-radius:8px;padding:8px;font-size:14px;text-align:center}
 .info-tip{position:relative;display:inline-block;margin-left:6px;cursor:help;color:var(--muted);font-size:12px}
 .info-tip:hover{color:var(--text)}
-.info-tip::after{content:attr(data-tip);text-transform:none;position:absolute;bottom:125%;left:-8px;transform:none;
-  background:var(--panel);border:1px solid var(--border);color:var(--text);padding:8px 12px;border-radius:8px;font-size:12px;
-  line-height:1.5;width:220px;white-space:normal;z-index:100;opacity:0;pointer-events:none;transition:opacity .15s}
-.info-tip:hover::after{opacity:1}
+/* Tooltips are JS popovers (see tipPop code) — hover on mouse, tap-to-pin with × on touch */
+.tip-pop{position:fixed;z-index:1000;max-width:240px;background:var(--panel);border:1px solid var(--border);
+  color:var(--text);padding:10px 12px;border-radius:10px;font-size:12.5px;line-height:1.5;text-transform:none;
+  box-shadow:0 8px 28px rgba(0,0,0,.28);white-space:normal}
+.tip-pop.pinned{padding-right:30px}
+.tip-pop .tip-x{position:absolute;top:4px;right:6px;background:none;border:none;color:var(--muted);
+  font-size:17px;line-height:1;padding:4px 6px;cursor:pointer;border-radius:6px}
+.tip-pop .tip-x:hover{color:var(--text);background:var(--ghost)}
 .ghtoken input{flex:1;min-width:180px;background:var(--bg);border:1px solid var(--border);color:var(--text);border-radius:8px;padding:7px 10px;font-size:13px}
 .linkbtn{background:none;border:none;color:var(--accent);cursor:pointer;font-size:13px;padding:2px 4px}
 .linkbtn:hover{text-decoration:underline}
@@ -606,10 +623,10 @@ body.standalone .sa-bar{display:flex}
   /* Tree keeps the org chart on phones — pan with a finger, zoom with the floating slider */
   .standalones .grid{display:block}
   /* Vertical zoom on the right — fat hit areas (≈44px), no filled panel */
-  #zoombar{right:4px;z-index:30;padding:8px 4px;gap:4px}
-  #zoomrange{width:44px;height:140px}
-  #zoomfit{width:44px;height:44px;font-size:14px;display:flex;align-items:center;justify-content:center}
-  #zoombar .z-out,#zoombar .z-in{padding:4px 0}
+  .zoombar{right:4px;z-index:30;padding:8px 4px;gap:4px}
+  input[type=range].zrange{width:44px;height:140px}
+  .zfit{width:44px;height:44px;font-size:14px;display:flex;align-items:center;justify-content:center}
+  .zoombar .z-out,.zoombar .z-in{padding:4px 0}
   /* Chunkier tree nodes for touch */
   #treezoom .node{padding:15px 14px;min-height:60px}
   /* Bottom sheet panel — taller, grabbable */
@@ -893,7 +910,8 @@ body.node-dragging,body.node-dragging *{cursor:grabbing !important}
     <div id="sb-tools"><button id="sb-gear" title="Settings (⌘,)" aria-label="Settings"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button><button id="sb-close" title="Collapse sidebar" aria-label="Collapse sidebar"><svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path d="M14.5 5.5L8 12l6.5 6.5" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>
     <div class="brand"><div class="eyebrow">Project Buddy &middot; macro view</div><h1 id="brand-name" title="Click to rename">Buddies</h1><div class="bcount">68 buddies &middot; one family</div></div>
   </div>
-  <div class="nav-sec"><h3>Views</h3><div id="view-nav"></div></div>
+  <div class="nav-sec" id="views-sec">
+  <h3 style="cursor:pointer" id="views-toggle"><span class="nav-arrow" id="views-arrow">›</span> Views</h3><div id="view-nav"></div></div>
   <div class="sb-search-sticky">
     <div class="sb-search-wrap">
     <input type="search" id="buddy-search" placeholder="Search buddies…" aria-label="Search buddies"
@@ -901,8 +919,8 @@ body.node-dragging,body.node-dragging *{cursor:grabbing !important}
     <button type="button" id="buddy-search-clear" aria-label="Clear search" title="Clear search" hidden>×</button>
     </div>
   </div>
-  <div class="nav-sec">
-  <h3>Buddies <span id="attn-pill" class="zero">0</span></h3><div id="buddy-nav"></div></div>
+  <div class="nav-sec" id="buddies-sec">
+  <h3 style="cursor:pointer" id="buddies-toggle"><span class="nav-arrow" id="buddies-arrow">›</span> Buddies <span id="attn-pill" class="zero">0</span></h3><div id="buddy-nav"></div></div>
   <div class="nav-sec" id="plans-sec"><h3 style="cursor:pointer" id="plans-toggle"><span id="plans-arrow">›</span> Business Plans</h3><div id="plan-nav"></div></div>
 </aside>
 <div id="sb-resize" title="Drag left or right to resize the sidebar. Double-click to reset to default width."></div>
@@ -1221,6 +1239,7 @@ let S = {seen:{}, notes:{}, names:{}, parents:{}, zoom:100, sel:'view:tree', vie
 try { Object.assign(S, JSON.parse(localStorage.getItem(LS_KEY) || '{}')); } catch(e) {}
 S.parents = S.parents || {};
 S.zoom = S.zoom || 100;
+S.zoomOrph = S.zoomOrph || 100;
 initTheme();
 buildKids();
 function save(){ localStorage.setItem(LS_KEY, JSON.stringify(S)); }
@@ -2384,7 +2403,7 @@ function renderBuddy(id){
     + '<div class="bp-sec" data-field="shared"><h3>Shared notes<span class="info-tip" data-tip="Anybody with repo access can see this note. Saved to the buddy’s repo (docs/notes.md).">ⓘ</span></h3>'
     + '<textarea class="notes" id="bp-shared-notes" placeholder="Anybody with repo access can see this note."></textarea>'
     + '<p class="fineprint" id="shared-status"></p></div>'
-    + '<div class="bp-build">Build 20261011.1547</div>'
+    + '<div class="bp-build">Build 20261011.1556</div>'
     + '</div>';
   const nm = document.getElementById('bp-name');
   nm.addEventListener('keydown', e => { if (e.key === 'Enter'){ e.preventDefault(); nm.blur(); } });
@@ -2508,9 +2527,11 @@ function renderBuddy(id){
       tw.innerHTML = '<div class="bp-mini-zoom"><button id="bp-mz-out" title="Zoom out">−</button><button id="bp-mz-in" title="Zoom in">+</button></div><div class="bp-mini-chart"></div>';
       const mc = tw.querySelector('.bp-mini-chart');
       mc.innerHTML = srcEl.innerHTML;
-      const zb = mc.querySelector('#zoombar'); if (zb) zb.remove();
+      mc.querySelectorAll('.zoombar,#tree-split').forEach(x => x.remove());
       const zw = mc.querySelector('#zoomwrap'); if (zw) { zw.style.display = 'block'; }
-      const tz = mc.querySelector('#treezoom'); if (tz) { tz.style.overflow = 'visible'; tz.style.height = 'auto'; tz.removeAttribute('id'); }
+      const tz = mc.querySelector('#treezoom'); if (tz) { tz.style.overflow = 'visible'; tz.style.height = 'auto'; tz.style.display = 'block'; tz.removeAttribute('id'); }
+      mc.querySelectorAll('.treescroll').forEach(x => { x.style.overflow = 'visible'; x.style.height = 'auto'; });
+      mc.querySelectorAll('.treepane').forEach(x => { x.style.display = 'block'; });
       let mz = 80;
       const applyMz = () => { const ch = mc.querySelector('.chart'); if (ch) ch.style.zoom = mz + '%'; };
       applyMz();
@@ -2561,13 +2582,14 @@ function moveBuddy(src, target){
   if (S.sel === 'buddy:' + src || S.sel === 'buddy:' + target || S.sel === 'buddy:' + ROOT_ID) renderBuddy(S.sel.slice(6));
   toast(dispName(b) + ' moved under ' + dispName(byId[target]) + '.');
 }
-const FAMKINDS = ['personal', 'family', 'property', 'finance', 'work'];
+/* FAMKINDS retired 2026-10-11: the org chart now shows every direct report of the
+   root side by side; only truly parentless buddies go to the orphan section. */
 function nodeTag(b, depth){
   if (depth === 1) {
     if (b.kind === 'work') return 'direct child';
     if (b.kind === 'meta') return 'meta';
     if (b.kind === 'standalone') return 'direct';
-    return 'family';
+    return b.kind || 'family';
   }
   return depth === 2 ? 'child' : 'grandchild';
 }
@@ -2589,35 +2611,75 @@ function orgNode(b, depth){
   if (kids.length) s += '<ul>' + kids.map(c => orgNode(c, depth + 1)).join('') + '</ul>';
   return s + '</li>';
 }
+function clampTreeSplit(s){
+  s = parseFloat(s);
+  if (!isFinite(s)) s = 0.72;
+  return Math.min(0.9, Math.max(0.45, s));
+}
+function applyTreeSplit(){
+  const orphPane = document.getElementById('treepane-orph');
+  const mainPane = document.getElementById('treepane-main');
+  const split = document.getElementById('tree-split');
+  const orphScroll = document.getElementById('treezoom-orph');
+  if (!orphPane || !mainPane || !split || !orphScroll) return;
+  const hasOrph = orphScroll.innerHTML.trim().length > 0;
+  if (!hasOrph) {
+    split.style.display = 'none'; orphPane.style.display = 'none';
+    mainPane.style.flex = '1 1 0'; return;
+  }
+  split.style.display = ''; orphPane.style.display = '';
+  const s = clampTreeSplit(S.treeSplit);
+  mainPane.style.flex = s + ' ' + s + ' 0';
+  orphPane.style.flex = (1 - s) + ' ' + (1 - s) + ' 0';
+}
+function initTreeSplit(){
+  const sp = document.getElementById('tree-split');
+  if (!sp || sp.dataset.splitInit) return;
+  sp.dataset.splitInit = '1';
+  let sd = null;
+  sp.addEventListener('pointerdown', e => {
+    if (e.button !== undefined && e.button !== 0) return;
+    if (e.isPrimary === false) return;
+    sd = { y0: e.clientY, s0: clampTreeSplit(S.treeSplit) };
+    try { sp.setPointerCapture(e.pointerId); } catch (err) {}
+    e.preventDefault();
+  });
+  sp.addEventListener('pointermove', e => {
+    if (!sd || e.pointerId !== sd.pid) return;
+    const tz = document.getElementById('treezoom');
+    const h = tz ? tz.getBoundingClientRect().height : 0;
+    if (!h) return;
+    S.treeSplit = clampTreeSplit(sd.s0 + (e.clientY - sd.y0) / h);
+    applyTreeSplit();
+  });
+  const end = e => { if (sd && (e.pointerId === undefined || e.pointerId === sd.pid)) { sd = null; save(); } };
+  sp.addEventListener('pointerup', end);
+  sp.addEventListener('pointercancel', end);
+}
 function renderOrgTree(){
   const root = byId[ROOT_ID];
+  // The org chart shows the real hierarchy: every direct report of the root,
+  // side by side. Only truly parentless buddies land in the orphan section.
   const kids = kidsOf[ROOT_ID] || [];
-  const fam = kids.filter(b => FAMKINDS.includes(b.kind));
-  const rest = kids.filter(b => !FAMKINDS.includes(b.kind));
-  let s = '<div class="chart"><div style="text-align:center"><div class="node root" data-buddy="'+ROOT_ID+'">'
+  const chartHtml = '<div class="chart"><div style="text-align:center"><div class="node root" data-buddy="'+ROOT_ID+'">'
     + '<div class="name">' + iconName(root) + '</div>'
     + '<div class="desc">' + escHtml(root.tagline || '') + '</div></div></div>'
     + '<div class="root-stub"></div><div class="tree"><ul>'
-    + fam.map(b => orgNode(b, 1)).join('') + '</ul></div></div>';
-  if (rest.length) {
-    s += '<section class="standalones"><h2>Orphaned buddies</h2>'
-      + '<p class="sub">No meaningful parent yet &mdash; drag one onto a buddy in the tree to give it a home, or drop it here to detach.</p>'
+    + kids.map(b => orgNode(b, 1)).join('') + '</ul></div></div>';
+  let orphHtml = '';
+  const orphans = (kidsOf['__root'] || []).filter(b => b.id !== ROOT_ID);
+  if (orphans.length) {
+    orphHtml += '<section class="standalones"><h2>Orphaned buddies</h2>'
+      + '<p class="sub">No parent yet &mdash; drag one onto a buddy in the tree to give it a home, or drop it here to detach.</p>'
       + '<div class="grid">'
-      + rest.map(b => '<div class="node ' + b.kind + '" data-buddy="' + b.id + '">' + '<div class="name">' + iconName(b) + '</div>'
+      + orphans.map(b => '<div class="node ' + b.kind + '" data-buddy="' + b.id + '">' + '<div class="name">' + iconName(b) + '</div>'
         + '<div class="desc">' + escHtml(b.tagline || '') + '</div><div class="tag">' + nodeTag(b, 1) + '</div>'
         + gridKids(b) + '</div>').join('')
       + '</div></section>';
   }
-  const orphans = (kidsOf['__root'] || []).filter(b => b.id !== ROOT_ID);
-  if (orphans.length) {
-    s += '<section class="standalones"><h2>Orphaned buddies</h2>'
-      + '<p class="sub">No parent yet &mdash; drag one onto a buddy in the tree to give it a home.</p>'
-      + '<div class="grid">'
-      + orphans.map(b => '<div class="node ' + b.kind + '" data-buddy="' + b.id + '">' + '<div class="name">' + iconName(b) + '</div>'
-        + '<div class="desc">' + escHtml(b.tagline || '') + '</div></div>').join('')
-      + '</div></section>';
-  }
-  document.getElementById('treezoom').innerHTML = s;
+  document.getElementById('treezoom-main').innerHTML = chartHtml;
+  document.getElementById('treezoom-orph').innerHTML = orphHtml;
+  applyTreeSplit();
 }
 function renderProjects(){
   if (!S.projCollapsed || typeof S.projCollapsed !== 'object') S.projCollapsed = {};
@@ -2698,40 +2760,59 @@ function refreshViews(){
   renderProjects();
 }
 function applyZoom(){
-  const tz = document.getElementById('treezoom');
-  if (tz) tz.style.zoom = (S.zoom || 100) + '%';
-  const r = document.getElementById('zoomrange'), v = document.getElementById('zoomval');
-  if (r) r.value = S.zoom || 100;
-  if (v) v.textContent = (S.zoom || 100) + '%';
+  const m = document.getElementById('treezoom-main');
+  const o = document.getElementById('treezoom-orph');
+  if (m) m.style.zoom = (S.zoom || 100) + '%';
+  if (o) o.style.zoom = (S.zoomOrph || 100) + '%';
+  const r1 = document.getElementById('zoomrange-main');
+  const r2 = document.getElementById('zoomrange-orph');
+  if (r1) r1.value = S.zoom || 100;
+  if (r2) r2.value = S.zoomOrph || 100;
 }
-function zoomToFit(){
-  const tz = document.getElementById('treezoom');
-  const chart = tz ? tz.querySelector('.chart') : null;
-  if (!tz || !chart) return;
-  const z = (S.zoom || 100) / 100;
-  const natW = chart.scrollWidth / z, natH = chart.scrollHeight / z;
-  const vw = tz.clientWidth, vh = tz.clientHeight;
+function zoomToFit(paneId, zoomKey){
+  const sc = document.getElementById(paneId);
+  const content = sc ? (sc.querySelector('.chart') || sc.querySelector('.standalones')) : null;
+  if (!sc || !content) return;
+  const z = (S[zoomKey] || 100) / 100;
+  const natW = content.scrollWidth / z, natH = content.scrollHeight / z;
+  const vw = sc.clientWidth, vh = sc.clientHeight;
   if (!natW || !natH || !vw || !vh) return;
   const fit = Math.min(vw / natW, vh / natH) * 100;
-  S.zoom = Math.min(160, Math.max(50, Math.round(fit / 5) * 5));
+  S[zoomKey] = Math.min(160, Math.max(50, Math.round(fit / 5) * 5));
   save(); applyZoom();
-  toast('Zoomed to fit (' + S.zoom + '%).');
+  toast('Zoomed to fit (' + S[zoomKey] + '%).');
 }
 (function initZoom(){
   const vt = document.getElementById('view-tree');
+  function zoombarHTML(sfx, label){
+    return '<div class="zoombar" id="zoombar-' + sfx + '" title="Zoom — pinch with two fingers, or Shift+scroll">'
+      + '<span class="z-in" aria-hidden="true">◼</span>'
+      + '<input type="range" class="zrange" id="zoomrange-' + sfx + '" min="50" max="160" step="5" value="100" aria-label="' + label + '" orient="vertical">'
+      + '<span class="z-out" aria-hidden="true">▪</span>'
+      + '<button type="button" class="zfit" id="zoomfit-' + sfx + '" title="Zoom to fit" aria-label="Zoom to fit">⛶</button></div>';
+  }
   vt.insertAdjacentHTML('afterbegin',
-    '<div class="treewrap" id="zoomwrap"><div class="zoombar" id="zoombar" title="Zoom — pinch with two fingers, or Shift+scroll">'
-    + '<span class="z-in" aria-hidden="true">◼</span>'
-    + '<input type="range" id="zoomrange" min="50" max="160" step="5" value="100" aria-label="Tree zoom" orient="vertical">'
-    + '<span class="z-out" aria-hidden="true">▪</span>'
-    + '<button type="button" id="zoomfit" title="Zoom to fit" aria-label="Zoom to fit">⛶</button></div><div id="treezoom"></div></div>');
-  const tw = document.getElementById('zoomwrap'), tz = document.getElementById('treezoom');
-  Array.from(vt.childNodes).forEach(n => { if (n !== tw) tz.appendChild(n); });
-  document.getElementById('zoomrange').addEventListener('input', e => {
+    '<div class="treewrap" id="zoomwrap"><div id="treezoom">'
+    + '<div class="treepane" id="treepane-main">' + zoombarHTML('main', 'Buddy tree zoom')
+    + '<div class="treescroll" id="treezoom-main" data-zoomkey="zoom" data-treepane="1"></div></div>'
+    + '<div id="tree-split" title="Drag to resize the tree and orphan panes"><div class="split-grip"></div></div>'
+    + '<div class="treepane" id="treepane-orph">' + zoombarHTML('orph', 'Orphaned buddies zoom')
+    + '<div class="treescroll" id="treezoom-orph" data-zoomkey="zoomOrph" data-treepane="1"></div></div>'
+    + '</div></div>');
+  const tw = document.getElementById('zoomwrap');
+  const main = document.getElementById('treezoom-main');
+  Array.from(vt.childNodes).forEach(n => { if (n !== tw) main.appendChild(n); });
+  document.getElementById('zoomrange-main').addEventListener('input', e => {
     S.zoom = parseInt(e.target.value, 10) || 100; save(); applyZoom();
   });
-  document.getElementById('zoomfit').addEventListener('click', zoomToFit);
+  document.getElementById('zoomfit-main').addEventListener('click', () => zoomToFit('treezoom-main', 'zoom'));
+  document.getElementById('zoomrange-orph').addEventListener('input', e => {
+    S.zoomOrph = parseInt(e.target.value, 10) || 100; save(); applyZoom();
+  });
+  document.getElementById('zoomfit-orph').addEventListener('click', () => zoomToFit('treezoom-orph', 'zoomOrph'));
+  initTreeSplit();
   applyZoom();
+  applyTreeSplit();
 })();
 (function initBrand(){
   const bn = document.getElementById('brand-name');
@@ -2754,10 +2835,12 @@ function zoomToFit(){
 function attachPan(el){
   if (!el || el.dataset.panAttached) return;
   el.dataset.panAttached = '1';
-  // #treezoom is the sole 2D scrollport (both axes). Do not pan nested .chart —
-  // overflow-x-only on .chart caused Safari/iOS to lock the first gesture axis.
+  // Each .treescroll pane is its own 2D scrollport (both axes). Do not pan nested
+  // .chart — overflow-x-only on .chart caused Safari/iOS to lock the first gesture axis.
   function scroller(){ return el; }
-  const isTree = el.id === 'treezoom';
+  const isTree = el.id === 'treezoom' || el.dataset.treepane === '1';
+  const zoomKey = el.dataset.zoomkey || 'zoom';
+  function pinchHost(){ return (el.closest && el.closest('#treezoom')) || el; }
   let pan = null, swallow = false;
   /* Tree: track touch pointers for one-finger pan vs two-finger pinch zoom */
   const pts = new Map();
@@ -2801,8 +2884,8 @@ function attachPan(el){
     if (pan) endPan(pan.id);
     const d0 = pinchDist();
     if (d0 < 8) return;
-    pinch = { d0: d0, z0: S.zoom || 100 };
-    el.dataset.pinching = '1';
+    pinch = { d0: d0, z0: S[zoomKey] || 100 };
+    pinchHost().dataset.pinching = '1';
     el.classList.add('panning');
     swallow = true;
   }
@@ -2810,13 +2893,13 @@ function attachPan(el){
     if (!pinch || pts.size < 2) return;
     const d = pinchDist();
     const next = Math.min(160, Math.max(50, Math.round((pinch.z0 * (d / pinch.d0)) / 5) * 5));
-    if (next !== (S.zoom || 100)) { S.zoom = next; applyZoom(); }
+    if (next !== (S[zoomKey] || 100)) { S[zoomKey] = next; applyZoom(); }
   }
   function endPinchFinger(pid){
     pts.delete(pid);
     if (pts.size < 2 && pinch) {
       pinch = null;
-      delete el.dataset.pinching;
+      delete pinchHost().dataset.pinching;
       el.classList.remove('panning');
       save();
       setTimeout(() => { swallow = false; }, 80);
@@ -2874,7 +2957,8 @@ function attachPan(el){
   }, true);
 }
 function initPan(){
-  attachPan(document.getElementById('treezoom'));
+  attachPan(document.getElementById('treezoom-main'));
+  attachPan(document.getElementById('treezoom-orph'));
   attachPan(document.getElementById('view-projects'));
   attachPan(document.getElementById('view-manifest'));
 }
@@ -3035,7 +3119,9 @@ let nodeDragEndAt = 0; // timestamp of last node-drag gesture; used to swallow t
 document.getElementById('view-tree').addEventListener('wheel', e => {
   if (!e.shiftKey) return;
   e.preventDefault();
-  S.zoom = Math.min(160, Math.max(50, (S.zoom || 100) + (e.deltaY > 0 ? -5 : 5)));
+  const pane = e.target && e.target.closest ? e.target.closest('.treescroll') : null;
+  const key = (pane && pane.dataset.zoomkey) || 'zoom';
+  S[key] = Math.min(160, Math.max(50, (S[key] || 100) + (e.deltaY > 0 ? -5 : 5)));
   save(); applyZoom();
 }, { passive: false });
 let dragId = null;
@@ -3096,7 +3182,7 @@ function renderPlan(id){
     + '<p class="fineprint">Saved on this device. (For your eyes only)</p></div>'
     + '<div class="bp-sec"><h3>Shared notes<span class="info-tip" data-tip="Visible to everyone with access to this project.">\u24d8</span></h3><textarea class="notes" id="bp-shared" placeholder="Shared notes\u2026 (visible to everyone with access)">'+escHtml((S.planShared||{})[id]||'')+'</textarea>'
     + '<p class="fineprint">Shared — visible to everyone with access.</p></div>'
-    + '<div class="bp-build">Build 20261011.1547</div>'
+    + '<div class="bp-build">Build 20261011.1556</div>'
     + '</div>';
   const nt = document.getElementById('bp-notes');
   let t = null;
@@ -3764,9 +3850,10 @@ function centerOnBuddy(id){
   const tz = document.getElementById('treezoom');
   const node = tz ? tz.querySelector('.node[data-buddy="' + id + '"]') : null;
   if (!tz || !node) return;
-  const nr = node.getBoundingClientRect(), tr = tz.getBoundingClientRect();
-  tz.scrollLeft += (nr.left + nr.width / 2) - (tr.left + tr.width / 2);
-  tz.scrollTop += (nr.top + nr.height / 2) - (tr.top + tr.height / 2);
+  const sc = (node.closest && node.closest('.treescroll')) || tz;
+  const nr = node.getBoundingClientRect(), tr = sc.getBoundingClientRect();
+  sc.scrollLeft += (nr.left + nr.width / 2) - (tr.left + tr.width / 2);
+  sc.scrollTop += (nr.top + nr.height / 2) - (tr.top + tr.height / 2);
 }
 function firstSearchMatch(){
   const q = (document.getElementById('buddy-search').value || '').toLowerCase().trim();
@@ -3883,6 +3970,22 @@ function initPlansToggle(){
     sec.classList.toggle('collapsed');
     S.plansCollapsed = sec.classList.contains('collapsed');
     save();
+  });
+}
+/* Collapsible sidebar sections: Views and Buddies headers toggle like Business Plans */
+function initNavSecToggles(){
+  [['views-toggle', 'views-sec', 'viewsCollapsed'],
+   ['buddies-toggle', 'buddies-sec', 'buddiesCollapsed']].forEach(([tid, sid, key]) => {
+    const t = document.getElementById(tid);
+    const sec = document.getElementById(sid);
+    if (!t || !sec || t.dataset.init) return;
+    t.dataset.init = '1';
+    if (S[key]) sec.classList.add('collapsed');
+    t.addEventListener('click', () => {
+      sec.classList.toggle('collapsed');
+      S[key] = sec.classList.contains('collapsed');
+      save();
+    });
   });
 }
 /* Keep --sb-brand-h in sync so .sb-search-sticky stacks under the brand chrome. */
@@ -4160,7 +4263,7 @@ window.__bindEdgeSwipes = bindIframeEdgeSwipes;
 // Returns 'new' | 'current' | 'suppressed' | 'error' so manual triggers
 // (e.g. pull-to-refresh) can report the outcome.
 function initVersionCheck(){
-  const myBuild = '20261011.1547';
+  const myBuild = '20261011.1556';
   function showUpdateBanner(serverBuild){
     if (document.getElementById('update-banner')) return;
     const b = document.createElement('div');
@@ -4308,7 +4411,9 @@ function refreshTokenUI(id){
   updateTokenPill();
   updateTokenGating(id);
   refreshHomepageDumpbox();
-  if (id && S.sel === 'buddy:' + id) {
+  // renderBuddy(id) means the panel is showing this buddy — load its feed
+  // regardless of S.sel (which stays 'view:xxx' when the panel opens from a view).
+  if (id) {
     loadSharedNotes(id);
     renderIngestFeed(id);
     const pz = document.getElementById('pstat');
@@ -4358,6 +4463,49 @@ async function loadSharedNotes(id){
     }, 900);
   });
 }
+/* ---------- info-tip popovers: hover preview on mouse, tap-to-pin with × on touch ----------
+   (Pure-CSS :hover tooltips stick open on touch screens with no way to dismiss.) */
+let tipPop = null;
+function tipPopClose(){ if (tipPop) { tipPop.remove(); tipPop = null; } }
+function tipPopShow(icon, pinned){
+  tipPopClose();
+  if (typeof escHtml !== 'function') return;
+  const pop = document.createElement('div');
+  pop.className = 'tip-pop' + (pinned ? ' pinned' : '');
+  pop.innerHTML = (pinned ? '<button type="button" class="tip-x" aria-label="Close tooltip">×</button>' : '')
+    + '<div class="tip-text">' + escHtml(icon.getAttribute('data-tip') || '') + '</div>';
+  pop._icon = icon;
+  document.body.appendChild(pop);
+  const r = icon.getBoundingClientRect();
+  pop.style.left = Math.max(8, Math.min(window.innerWidth - pop.offsetWidth - 8, r.left - 10)) + 'px';
+  let top = r.bottom + 8;
+  if (top + pop.offsetHeight > window.innerHeight - 8) top = Math.max(8, r.top - pop.offsetHeight - 8);
+  pop.style.top = top + 'px';
+  tipPop = pop;
+  if (pinned) pop.querySelector('.tip-x').addEventListener('click', e => { e.stopPropagation(); tipPopClose(); });
+}
+document.addEventListener('pointerover', e => {
+  if (e.pointerType === 'touch') return; // touch uses tap-to-pin
+  const icon = e.target && e.target.closest ? e.target.closest('.info-tip') : null;
+  if (!icon || (tipPop && tipPop._icon === icon)) return;
+  tipPopShow(icon, false);
+});
+document.addEventListener('pointerout', e => {
+  const icon = e.target && e.target.closest ? e.target.closest('.info-tip') : null;
+  if (!icon || !tipPop || tipPop._icon !== icon || tipPop.classList.contains('pinned')) return;
+  tipPopClose();
+});
+document.addEventListener('click', e => {
+  const icon = e.target && e.target.closest ? e.target.closest('.info-tip') : null;
+  if (tipPop && tipPop.classList.contains('pinned') && !icon && !(e.target.closest && e.target.closest('.tip-pop'))) {
+    tipPopClose(); return;
+  }
+  if (icon) {
+    if (tipPop && tipPop._icon === icon && tipPop.classList.contains('pinned')) tipPopClose();
+    else tipPopShow(icon, true);
+  }
+});
+document.addEventListener('keydown', e => { if (e.key === 'Escape') tipPopClose(); });
 document.addEventListener('click', e => {
   if (nodeDragEndAt && Date.now() - nodeDragEndAt < 400) return; // swallow the click that follows a node-drag gesture
   if (edgeOpenAt && Date.now() - edgeOpenAt < 400) return; // swallow the click that follows an edge-swipe open
@@ -4549,6 +4697,7 @@ initPanelSwipeGestures();
 initVersionCheck();
 initPullToRefresh();
 initPlansToggle();
+initNavSecToggles();
 initSbBrandSticky();
 
 </script>

@@ -17,9 +17,13 @@ Build: `build.py` generates `index.html` from `buddies.json` + `plans.json`.
 
 - **Classic tree layout** — the canonical design. (A card-based redesign was
   tried and reverted; preserved on branch `card-tree-redesign` for reference.)
+- **Split panes** — the tree view is two stacked panes with a draggable
+  splitter: the buddy tree on top, orphaned buddies below. Each pane has its
+  own zoom slider + zoom-to-fit; split position and both zooms persist per
+  device. Dragging an orphan tile onto a tree buddy reparents it.
 - **Zoom slider** — compact horizontal control (small▪ · range · large◼ + fit),
-  50–160%; Shift+scroll over the tree still zooms.
-- **Shift+scroll zoom** — hold Shift and scroll over the tree to zoom.
+  50–160%; Shift+scroll over a pane zooms that pane.
+- **Shift+scroll zoom** — hold Shift and scroll over a tree pane to zoom it.
 - **Grab-to-pan** — click-drag the chart to slide it around; grab/grabbing
   cursors; small movements still count as clicks; the stray click after a
   drag is swallowed so you don't navigate by accident.
@@ -32,7 +36,7 @@ Build: `build.py` generates `index.html` from `buddies.json` + `plans.json`.
   dashed outline). Root can't be dragged; dropping onto root makes a buddy
   top-level.
 - **Orphaned buddies section** — buddies with no parent render in their own
-  tree section, instead of being invisible.
+  pane, instead of being invisible.
 - **Drop targets** — tree nodes and Projects rows accept drops from the
   sidebar and from tile drags to assign/change parents.
 
@@ -56,6 +60,8 @@ Build: `build.py` generates `index.html` from `buddies.json` + `plans.json`.
   Changelog; order is user-rearrangeable in settings (gear icon). Number
   keys 1–6 select views in that order; Up/Down arrow through views then
   buddies.
+- **Collapsible sections** — Views, Buddies, and Business Plans headers
+  collapse their sections on click; state persists per device.
 - **Project view** — shows the current project's homepage full-bleed in the
   main view area (no margins); a floating "Open in a new tab" pill button
   overlays the top. Clicking a sidebar buddy loads its homepage if it has
@@ -86,6 +92,11 @@ Build: `build.py` generates `index.html` from `buddies.json` + `plans.json`.
 ## Buddy detail pages
 
 - **Navigation** — Back, Prev, Next, and All buddies.
+- **Draggable sections** — every section title has a ⋮⋮ gripper on the far
+  right; drag to reorder sections directly on the panel. Order persists per
+  device via `fieldOrder` (also editable in field settings).
+- **Tooltips** — ⓘ icons show hover popovers on mouse, tap-to-pin popovers
+  with an × close button on touch; tap-outside and Escape dismiss.
 - **Build numbers** — every buddy and business-plan page shows a timestamp
   build number.
 - **Click-to-rename** — buddy names are inline editable.
