@@ -54,3 +54,7 @@ Add a link to the tiles that appear in the needs attention section on the projec
 
 Fix the bug that prevents dumped items from appearing after they’ve been dumped on the homepage they were dumped on
 
+## 10/11/2026, 9:08:59 AM
+
+We should add a way to dismiss the critical memos that appear in the right side panel. Looks like they’re intended for the agents not for me. Let’s confirm that’s the case, but in an event. Those
+
