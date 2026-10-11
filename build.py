@@ -690,6 +690,9 @@ body.standalone .sa-bar{display:flex}
 .attn.unseen .adot{visibility:visible}
 .attn-body{flex:1;min-width:0}
 .attn-text{font-size:14.5px;line-height:1.5}
+.attn-text a{color:inherit;text-decoration:none}
+.attn-text a:hover{text-decoration:underline}
+.attn-open{font-size:11px;color:var(--accent)}
 .attn-date{font-size:12px;color:var(--muted);margin-top:5px}
 .seenbtn{flex:0 0 auto;background:var(--border2);border:1px solid var(--border);color:var(--text);
   width:28px;height:28px;border-radius:50%;font-size:15px;line-height:1;padding:0;cursor:pointer;
@@ -2026,8 +2029,12 @@ function renderBuddy(id){
   else {
     attn = items.map(a => {
       const seen = !!S.seen[a.id];
+      const txt = escHtml(a.text);
+      const body = a.url
+        ? '<div class="attn-text"><a href="'+escHtml(a.url)+'" target="_blank" rel="noopener">'+txt+' <span class="attn-open">\u2197</span></a></div>'
+        : '<div class="attn-text">'+txt+'</div>';
       return '<div class="attn'+(seen?' seen':' unseen')+'" data-attn="'+a.id+'"><span class="adot"></span>'
-        + '<div class="attn-body"><div class="attn-text">'+escHtml(a.text)+'</div>'
+        + '<div class="attn-body">'+body
         + '<div class="attn-date">Asked '+a.date+'</div></div>'
         + '<button class="seenbtn'+(seen?' done':'')+'" data-seen="'+a.id+'" title="Mark seen" aria-label="Mark seen">'+(seen?'\u2713':'\u25cb')+'</button></div>';
     }).join('');
