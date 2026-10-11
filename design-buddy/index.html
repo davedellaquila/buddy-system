@@ -172,6 +172,37 @@
   .shelfrow a:hover { text-decoration: underline; }
   .shelfrow .why { display: block; color: var(--muted); font-size: 13.5px; margin-top: 2px; }
   .shelfrow .who { color: var(--faint); }
+  /* ---- inline design brief ---- */
+  .sub a, .brief-p a, .sysnote a { color: var(--accent); font-weight: 600; text-decoration: none; }
+  .sub a:hover, .brief-p a:hover, .sysnote a:hover { text-decoration: underline; }
+  .brief-p { margin: 0 0 12px; color: var(--muted); font-size: 14.5px; }
+  .brief-p:last-child { margin-bottom: 0; }
+  .brief-p strong { color: var(--ink); }
+  .brief-p code, .brief-ol code, .brief-ul code, .checklist code {
+    font-family: var(--mono); font-size: 12.5px;
+    background: color-mix(in srgb, var(--accent) 10%, transparent);
+    padding: 1px 6px; border-radius: 5px; color: var(--accent);
+  }
+  .brief-pull {
+    margin: 14px 0; padding: 12px 16px; border-left: 3px solid var(--accent);
+    font-family: var(--serif); font-style: italic; font-size: 17px; color: var(--ink);
+    background: color-mix(in srgb, var(--accent) 7%, transparent); border-radius: 0 10px 10px 0;
+  }
+  .brief-tag { font-family: var(--sans); font-size: 10.5px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; color: var(--faint); }
+  .brief-ol { margin: 0; padding-left: 22px; color: var(--muted); font-size: 14.5px; }
+  .brief-ol li { margin-bottom: 10px; }
+  .brief-ol li:last-child { margin-bottom: 0; }
+  .brief-ol li::marker { color: var(--accent); font-weight: 800; }
+  .brief-ol strong { color: var(--ink); }
+  .brief-ul { margin: 0; padding-left: 20px; color: var(--muted); font-size: 14.5px; }
+  .brief-ul li { margin-bottom: 8px; }
+  .brief-ul li:last-child { margin-bottom: 0; }
+  .brief-ul li::marker { color: var(--accent); }
+  .brief-ul strong { color: var(--ink); }
+  .checklist { list-style: none; margin: 0; padding: 0; }
+  .checklist li { position: relative; padding: 9px 0 9px 32px; border-bottom: 1px solid var(--line); color: var(--muted); font-size: 14.5px; }
+  .checklist li:last-child { border-bottom: none; }
+  .checklist li::before { content: ""; position: absolute; left: 0; top: 12px; width: 15px; height: 15px; border: 1.5px solid var(--faint); border-radius: 5px; }
   /* ---- design-feedback box (mirrors .dumpbox; writes docs/feedback.md) ---- */
   .feedbackbox {
     background: var(--card); border: 1px solid var(--line); border-radius: 16px;
@@ -308,7 +339,7 @@
       <div><h3>Classic over clever</h3><p>Ship what Dave praised. Surprises are for birthdays, not homepages.</p></div>
     </div>
 
-    <h2>The system</h2>
+    <h2 id="the-system">The system</h2>
     <p class="sub">The shared design language, rendered from this page&rsquo;s own variables. This section <em>is</em> the system — steal it. Full write-up: the <a href="https://github.com/davedellaquila/design-buddy/blob/master/docs/design-brief.md" style="color:var(--accent);font-weight:600">design brief</a> in this buddy&rsquo;s repo.</p>
 
     <h3 class="sys-h3">Color</h3>
@@ -358,7 +389,7 @@
       <p class="sysnote">Cards: 22–24px padding, 16px radius. Page: max-width 760–800px, side padding 22px.</p>
     </div>
 
-    <h2>Components</h2>
+    <h2 id="components">Components</h2>
     <p class="sub">The recurring pieces, live. Each one below is the real thing — the class names are the API.</p>
 
     <div class="comp-caption">.attention-card — one per item needing Dave&rsquo;s tap, always carries the action</div>
@@ -442,6 +473,91 @@
         <span class="feedbackbox-status" role="status"></span>
       </div>
     </section>
+
+    <h2 id="design-brief">The design brief</h2>
+    <p class="sub">The source of truth, in full — no login required. Same text as the <a href="https://github.com/davedellaquila/design-buddy/blob/master/docs/design-brief.md">GitHub copy</a>.</p>
+
+    <h3 class="sys-h3">1 · The bar</h3>
+    <div class="card">
+      <p class="brief-p">Every buddy homepage is measured against one standard: <strong>craftsmanship as the differentiator</strong>. Dave built his career on the Apple principle that a handcrafted, delightful product wins. His pages should feel like they were made by someone who cares — because they were.</p>
+      <p class="brief-pull">Taste line: classic over clever. Ship what Dave praised. Restraint beats novelty.</p>
+      <p class="brief-p">A homepage is a tool he opens daily, not a portfolio piece — clarity first, personality second.</p>
+    </div>
+
+    <h3 class="sys-h3">2 · Non-negotiables <span class="brief-tag">the ship checklist</span></h3>
+    <div class="card">
+      <ol class="brief-ol">
+        <li><strong>Dark AND light mode.</strong> <code>prefers-color-scheme: dark</code>, <code>color-scheme: light dark</code>. Light-only = not done. No exceptions.</li>
+        <li><strong>Living page.</strong> Update when the underlying data changes — stale pages erode trust. Bake a &ldquo;Last refreshed YYYY-MM-DD&rdquo; stamp in the footer and mean it.</li>
+        <li><strong>Brain-dump box.</strong> Every homepage gets one: textarea + &ldquo;Dump it&rdquo; (Cmd/Ctrl+Enter), appending timestamped entries to <code>docs/ingest.md</code> in the buddy&rsquo;s repo via the GitHub API. Pattern: <code>docs/dumpbox-snippet.html</code> in the dashboard repo. Set <code>data-buddy-id</code>, resolve the repo via <code>../buddies.json</code> (never hardcode a repo name), keep dark + light working.</li>
+        <li><strong>Every document gets its link.</strong> Any doc named on the page gets a clickable inline link with a friendly name — never a bare URL, never &ldquo;go hunt for it.&rdquo;</li>
+        <li><strong>Custom pages own their markup.</strong> If you hand-design a page, delete the <code>&lt;!-- BUDDY-BASIC-TEMPLATE --&gt;</code> marker so the daily template rebuild never overwrites it.</li>
+        <li><strong>No placeholder copy.</strong> If a section has nothing real to say yet, say so honestly — never lorem ipsum, never invented data.</li>
+      </ol>
+    </div>
+
+    <h3 class="sys-h3">3 · Tokens</h3>
+    <div class="card">
+      <p class="brief-p">Steal the structure; the accent may vary per buddy personality. Rendered live in <a href="#the-system">The system</a> above — the page you&rsquo;re reading is built from these tokens:</p>
+      <div class="toktable">
+        <div class="tokrow tokhead"><span>Token</span><span>Light</span><span>Dark</span><span class="job">Job</span></div>
+        <div class="tokrow"><span class="mono">--paper</span><span class="chips"><i style="background:#f7f4ee"></i></span><span class="chips"><i style="background:#14110a"></i></span><span class="job">page canvas</span></div>
+        <div class="tokrow"><span class="mono">--card</span><span class="chips"><i style="background:#fffdf8"></i></span><span class="chips"><i style="background:#1d1911"></i></span><span class="job">surface</span></div>
+        <div class="tokrow"><span class="mono">--ink</span><span class="chips"><i style="background:#1a1713"></i></span><span class="chips"><i style="background:#f2ead9"></i></span><span class="job">primary text</span></div>
+        <div class="tokrow"><span class="mono">--muted</span><span class="chips"><i style="background:#6f6455"></i></span><span class="chips"><i style="background:#ac9f85"></i></span><span class="job">secondary text</span></div>
+        <div class="tokrow"><span class="mono">--faint</span><span class="chips"><i style="background:#a89a83"></i></span><span class="chips"><i style="background:#6f6350"></i></span><span class="job">tertiary</span></div>
+        <div class="tokrow"><span class="mono">--line</span><span class="chips"><i style="background:#e4dccb"></i></span><span class="chips"><i style="background:#322b1b"></i></span><span class="job">hairlines</span></div>
+        <div class="tokrow"><span class="mono">--accent</span><span class="chips"><i style="background:#c2410c"></i></span><span class="chips"><i style="background:#f0904d"></i></span><span class="job">the one color</span></div>
+        <div class="tokrow"><span class="mono">--on-accent</span><span class="chips"><i style="background:#ffffff"></i></span><span class="chips"><i style="background:#241104"></i></span><span class="job">text on accent</span></div>
+      </div>
+      <p class="brief-p" style="margin-top:14px">Derived tints come from <code>color-mix(in srgb, var(--accent) &lt;pct&gt;%, transparent)</code> — never hand-pick a second accent. <code>--on-accent</code> must pass contrast on <code>--accent</code> in <em>both</em> themes.</p>
+      <p class="brief-p"><strong>Type</strong> — Display: Fraunces (serif), 700, tight leading. H1 <code>clamp(38px, 7vw, 58px)</code>, H2 <code>23px</code>. Text: Manrope (sans). Body <code>15–16px / 1.6</code>; small <code>13px</code>; eyebrow <code>12px / 800 / .16em</code> uppercase. Mono: system stack, specs and labels only.</p>
+      <p class="brief-p"><strong>Spacing</strong> — Scale: <code>4 / 8 / 12 / 16 / 24 / 32 / 48</code>. Cards: <code>22–24px</code> padding, <code>16px</code> radius. Page: <code>max-width 760–800px</code>, side padding <code>22px</code>.</p>
+    </div>
+
+    <h3 class="sys-h3">4 · Components</h3>
+    <div class="card">
+      <p class="brief-p">The recurring pieces, with the class names the reference page uses — each one live in the <a href="#components">Components gallery</a> above:</p>
+      <ul class="brief-ul">
+        <li><strong>status-pill</strong> — one-line state under the headline.</li>
+        <li><strong>mission</strong> — the buddy&rsquo;s job in 2–3 sentences; a boundary line for scope limits.</li>
+        <li><strong>attention-card</strong> — <code>.card</code> with a left accent border; one per item needing Dave&rsquo;s tap; always carries the link or action.</li>
+        <li><strong>stat blocks</strong> — a row of 3–4 numbers saying what this buddy tracks.</li>
+        <li><strong>dumpbox</strong> — the brain-dump pattern (§2.3).</li>
+        <li><strong>link rows</strong> — <code>.links</code> ghost buttons: brief, repo, dashboard.</li>
+        <li><strong>last-refreshed stamp</strong> — footer line, baked date, updated on every content change.</li>
+      </ul>
+    </div>
+
+    <h3 class="sys-h3">5 · Taste, concretely</h3>
+    <div class="card">
+      <ul class="brief-ul">
+        <li>One accent color per page. Chips, pills, markers — all from <code>--accent</code>.</li>
+        <li>Hairlines over shadows; one shadow depth, max.</li>
+        <li>Motion: subtle and purposeful (a 150ms hover lift, a pulse on the status dot). Nothing moves without a reason.</li>
+        <li>Emoji: the buddy icon in the headline, functional icons in cards — not decoration confetti.</li>
+        <li>Write like a person: short sentences, no jargon, no &ldquo;leverage.&rdquo;</li>
+      </ul>
+    </div>
+
+    <h3 class="sys-h3">6 · Feedback loop</h3>
+    <div class="card">
+      <p class="brief-p">Design feedback — Dave&rsquo;s or a thread&rsquo;s — has one inbox: the <strong>feedback box on the Design Buddy homepage</strong>, which appends to <code>docs/feedback.md</code> in <code>davedellaquila/design-buddy</code>. Threads can also route feedback through the main chat to the Design Buddy thread. Design Buddy triages each entry: fold it into this brief and the system, or close it with a note. Nothing evaporates.</p>
+      <p class="brief-p">Scope note: this loop is for the <em>buddy system&rsquo;s design</em>. Feedback to outside parties belongs to Feedback Buddy.</p>
+    </div>
+
+    <h3 class="sys-h3">7 · Before you ship <span class="brief-tag">the taste test</span></h3>
+    <div class="card">
+      <ul class="checklist">
+        <li>Both themes readable, no washed-out text on either.</li>
+        <li>Dump box writes a real entry to the repo.</li>
+        <li>Every named document has its inline link.</li>
+        <li>No <code>BUDDY-BASIC-TEMPLATE</code> marker on custom pages.</li>
+        <li>Looks right at phone, tablet, and desktop widths — no broken layouts, no awkward stretching, no horizontal scroll at any size.</li>
+        <li>A stranger understands what the buddy does in 10 seconds.</li>
+        <li>Classic over clever.</li>
+      </ul>
+    </div>
 
     <h2>Open questions <span class="count">3</span></h2>
     <p class="sub">From the brief — Dave&rsquo;s call.</p>
