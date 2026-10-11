@@ -425,10 +425,13 @@ body.standalone .sa-bar{display:flex}
   #menu-btn{display:flex;align-items:center;justify-content:center;position:fixed;top:12px;left:12px;z-index:90;
     background:var(--panel);border:1px solid var(--border);border-radius:12px;color:var(--text);font-size:20px;
     width:48px;height:48px;cursor:pointer;box-shadow:0 2px 12px var(--shadow)}
-  /* Sidebar drawer with scrim */
+  /* Sidebar drawer with scrim.
+     pointer-events:none while closed so the off-screen drawer never steals the
+     left-edge swipe / tree pan hit target (transform alone is not enough on iOS). */
   #sidebar{position:fixed;left:0;top:0;bottom:0;z-index:95;height:100vh;height:100dvh;
-    transform:translateX(-105%);transition:transform .28s cubic-bezier(.32,.72,.35,1);width:min(85vw,340px);flex:none}
-  #sidebar.open{transform:none;box-shadow:12px 0 40px rgba(0,0,0,.35)}
+    transform:translateX(-105%);transition:transform .28s cubic-bezier(.32,.72,.35,1);width:min(85vw,340px);flex:none;
+    pointer-events:none}
+  #sidebar.open{transform:none;box-shadow:12px 0 40px rgba(0,0,0,.35);pointer-events:auto}
   /* Sidebar resize: sibling of #sidebar; visibility gated by #sidebar.open ~ #sb-resize above */
   #sb-resize{touch-action:none}
   html,body{overflow-x:clip}
@@ -2123,6 +2126,9 @@ function attachPan(el){
   el.addEventListener('pointerdown', e => {
     if (e.pointerType === 'mouse' && e.button !== 0) return;
     if (!isTree && e.pointerType !== 'mouse') return; // projects/manifest keep native touch scroll
+    // Left-edge strip is owned by initEdgeSwipeOpen (open drawer) — don't start a pan.
+    if (isTree && e.pointerType !== 'mouse' && typeof isDrawerNav === 'function' && isDrawerNav()
+        && typeof isSidebarOpen === 'function' && !isSidebarOpen() && e.clientX <= 24) return;
     // Tree pinch: track all non-mouse pointers (including on nodes) so 2-finger zoom works
     if (isTree && e.pointerType !== 'mouse') {
       pts.set(e.pointerId, { x: e.clientX, y: e.clientY });
@@ -3153,6 +3159,7 @@ function initSbToTop(){
   window.addEventListener('resize', sync);
   btn.addEventListener('click', e => {
     e.preventDefault();
+    e.stopPropagation(); // keep document click from stripping #sidebar.open
     try { sb.scrollTo({ top: 0, behavior: 'smooth' }); }
     catch (err) { sb.scrollTop = 0; }
   });
@@ -3186,10 +3193,13 @@ function setSidebarOpen(open){
     if (sc) sc.classList.remove('show');
   }
 }
-/* Left-edge swipe opens the mobile drawer (restored — was dropped in a later merge).
-   Rightward swipe that begins within EDGE_PX of the left screen edge. */
+/* Left-edge swipe opens the mobile drawer.
+   Rightward swipe that begins within EDGE_PX of the left screen edge.
+   Tree pan yields this strip; a short click-swallow window prevents the
+   document click handler from immediately stripping #sidebar.open. */
+let edgeOpenAt = 0;
 function initEdgeSwipeOpen(){
-  const EDGE_PX = 20;
+  const EDGE_PX = 24;
   const MIN_DX = 56;
   const DOMINATE = 1.25;
   let track = null;
@@ -3203,6 +3213,9 @@ function initEdgeSwipeOpen(){
     if (document.body.classList.contains('standalone')) { track = null; return; }
     const t = e.changedTouches && e.changedTouches[0];
     if (!t || t.clientX > EDGE_PX) { track = null; return; }
+    // Don't steal the hamburger / chrome taps in the top-left
+    const el = document.elementFromPoint(t.clientX, t.clientY);
+    if (el && el.closest && el.closest('#menu-btn,#sb-to-top,#sb-resize')) { track = null; return; }
     track = { id: t.identifier, x0: t.clientX, y0: t.clientY };
   }
   function onMove(e){
@@ -3220,7 +3233,10 @@ function initEdgeSwipeOpen(){
     if (!t || !isDrawerNav() || isSidebarOpen()) return;
     if (document.body.classList.contains('standalone')) return;
     const dx = t.clientX - x0, dy = t.clientY - y0;
-    if (dx >= MIN_DX && Math.abs(dx) > Math.abs(dy) * DOMINATE) setSidebarOpen(true);
+    if (dx >= MIN_DX && Math.abs(dx) > Math.abs(dy) * DOMINATE) {
+      setSidebarOpen(true);
+      edgeOpenAt = Date.now();
+    }
   }
   document.addEventListener('touchstart', onStart, { passive: true, capture: true });
   document.addEventListener('touchmove', onMove, { passive: true, capture: true });
@@ -3269,6 +3285,8 @@ function initPanelSwipeGestures(){
     // Detail closed: swipe-left on middle canvas → open right panel
     if (!main || !main.contains(el)) return;
     if (el.closest && el.closest('#view-buddy')) return;
+    // Left-edge strip is owned by initEdgeSwipeOpen (open drawer)
+    if (t.clientX <= 24) return;
     const onTree = !!(el.closest && el.closest('#treezoom'));
     const nearRightEdge = t.clientX >= (window.innerWidth - RIGHT_EDGE);
     if (onTree && !nearRightEdge) return; // don't fight tree pan
@@ -3409,6 +3427,7 @@ async function loadSharedNotes(id){
 }
 document.addEventListener('click', e => {
   if (nodeDragEndAt && Date.now() - nodeDragEndAt < 400) return; // swallow the click that follows a node-drag gesture
+  if (edgeOpenAt && Date.now() - edgeOpenAt < 400) return; // swallow the click that follows an edge-swipe open
   if (e.target.closest && e.target.closest('#bp-icon')) { const m = S.sel.match(/^buddy:(.+)$/); if (m) openAvatarPicker(m[1], e.target.closest('#bp-icon')); return; }
   if (e.target.closest && (e.target.closest('#bp-close') || e.target.closest('#bp-close-x') || e.target.closest('#bp-takeover-back'))) { closeDetail(); return; }
   if (e.target.closest && e.target.closest('#panel-open')) {
@@ -3457,8 +3476,11 @@ document.addEventListener('click', e => {
   if (vb) { show('view:' + vb.dataset.view); if (window.innerWidth < 640) { const sbo=document.getElementById('sidebar'); if(sbo) sbo.classList.remove('open'); const sco=document.getElementById('sb-scrim'); if(sco) sco.classList.remove('show'); } return; }
   const pb = e.target.closest('[data-plan]');
   if (pb) { e.preventDefault(); show('plan:' + pb.dataset.plan); return; }
-  const sb2 = document.getElementById('sidebar');
-  if (sb2) sb2.classList.remove('open');
+  // Don't auto-close the phone drawer for sidebar chrome (#sb-to-top is a sibling of #sidebar)
+  if (!(e.target.closest && e.target.closest('#sb-to-top,#sb-resize,#sidebar'))) {
+    const sb2 = document.getElementById('sidebar');
+    if (sb2) sb2.classList.remove('open');
+  }
   const projTile = e.target.closest('#project-tiles [data-tile]');
   if (projTile) {
     projFilter = projFilter === projTile.dataset.tile ? null : projTile.dataset.tile;
