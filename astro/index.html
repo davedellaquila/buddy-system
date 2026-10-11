@@ -69,6 +69,9 @@
   .done-err a{color:var(--accent)}
   .feed-item.acked{opacity:0;transition:opacity .45s}
   @media (prefers-reduced-motion: reduce){.feed-item.acked{transition:none}}
+  a.cardlink{text-decoration:none;color:inherit;display:block;cursor:pointer}
+  a.cardlink:hover{border-color:var(--accent)}
+  a.cardlink h3{margin-bottom:6px}
   /* ---------- cards ---------- */
   .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}
   .card{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:18px 20px;position:relative;overflow:hidden}
@@ -181,16 +184,16 @@
     <p>The ten buddies a brand-new user gets on day one — one screen, universal life domains, multiple buddy shapes. <b>Candidates, not final:</b> Dave configures this list. The canonical config will live in the Onboarding Buddy repo as <b>starter-set.json</b>; this page mirrors it for review.</p>
   </div>
   <div class="grid">
-    <div class="card" style="--tint:#58a6ff"><h3>🪪 Personal Buddy</h3><p>The daily ops layer — Dave's day, triage, and "where am I, what's next?"</p></div>
-    <div class="card" style="--tint:#f778ba"><h3>👨‍👩‍👧 Family Buddy</h3><p>The people layer — family members, milestones, staying close.</p></div>
-    <div class="card" style="--tint:#3fb950"><h3>💰 Money Buddy</h3><p>Money in, money out — spending, bills, and the expense tracker.</p></div>
-    <div class="card" style="--tint:#d29922"><h3>❤️ Health Buddy</h3><p>Body and sleep — the #1 priority, tracked not coached.</p></div>
-    <div class="card" style="--tint:#58a6ff"><h3>🏠 Home Buddy</h3><p>The physical domain — house, cabin, maintenance, projects.</p></div>
-    <div class="card" style="--tint:#a371f7"><h3>💼 Work Buddy</h3><p>The job layer — tasks, estimates, actuals, calibration.</p></div>
-    <div class="card" style="--tint:#f778ba"><h3>🌳 Project Buddy</h3><p>Ideas → projects — the macro view and the idea bank.</p></div>
-    <div class="card" style="--tint:#3fb950"><h3>🎓 Learning Buddy</h3><p>Growth — "what do you want to learn?" then the plan.</p></div>
-    <div class="card" style="--tint:#d29922"><h3>⏰ Reminder Buddy</h3><p>Never drop it — nudges, follow-ups, "don't forget."</p></div>
-    <div class="card" style="--tint:#58a6ff"><h3>📆 Calendar Buddy</h3><p>Time — one honest schedule every other buddy consults.</p></div>
+    <a class="card cardlink" style="--tint:#58a6ff" href="https://davedellaquila.github.io/buddy-system/personal-buddy/"><h3>🪪 Personal Buddy</h3><p>The daily ops layer — Dave's day, triage, and "where am I, what's next?"</p></a>
+    <a class="card cardlink" style="--tint:#f778ba" href="https://davedellaquila.github.io/buddy-system/family-buddy/"><h3>👨‍👩‍👧 Family Buddy</h3><p>The people layer — family members, milestones, staying close.</p></a>
+    <a class="card cardlink" style="--tint:#3fb950" href="https://davedellaquila.github.io/buddy-system/money-buddy/"><h3>💰 Money Buddy</h3><p>Money in, money out — spending, bills, and the expense tracker.</p></a>
+    <a class="card cardlink" style="--tint:#d29922" href="https://davedellaquila.github.io/buddy-system/health-buddy/"><h3>❤️ Health Buddy</h3><p>Body and sleep — the #1 priority, tracked not coached.</p></a>
+    <a class="card cardlink" style="--tint:#58a6ff" href="https://davedellaquila.github.io/buddy-system/home-buddy/"><h3>🏠 Home Buddy</h3><p>The physical domain — house, cabin, maintenance, projects.</p></a>
+    <a class="card cardlink" style="--tint:#a371f7" href="https://davedellaquila.github.io/buddy-system/work-buddy/"><h3>💼 Work Buddy</h3><p>The job layer — tasks, estimates, actuals, calibration.</p></a>
+    <a class="card cardlink" style="--tint:#f778ba" href="https://davedellaquila.github.io/buddy-system/project-buddy/"><h3>🌳 Project Buddy</h3><p>Ideas → projects — the macro view and the idea bank.</p></a>
+    <a class="card cardlink" style="--tint:#3fb950" href="https://davedellaquila.github.io/buddy-system/learning-buddy/"><h3>🎓 Learning Buddy</h3><p>Growth — "what do you want to learn?" then the plan.</p></a>
+    <a class="card cardlink" style="--tint:#d29922" href="https://davedellaquila.github.io/buddy-system/reminder-buddy/"><h3>⏰ Reminder Buddy</h3><p>Never drop it — nudges, follow-ups, "don't forget."</p></a>
+    <a class="card cardlink" style="--tint:#58a6ff" href="https://davedellaquila.github.io/buddy-system/#/buddy:calendar-buddy"><h3>📆 Calendar Buddy</h3><p>Time — one honest schedule every other buddy consults.</p></a>
   </div>
 
   <h2>🌙 Right now</h2>
@@ -360,10 +363,13 @@
         .catch(function(){document.getElementById("activity").innerHTML='<div class="feed-empty">Activity log unavailable right now.</div>';});
       var feed=document.getElementById("feed");
       var show=attn.slice(0,9);
+      // Buddies without a built homepage dir yet -> link to the dashboard buddy view instead of a 404
+      var NO_HOMEPAGE={ "calendar-buddy":1, "social-media-buddy":1, "onboarding-buddy":1, "joel-buddy":1 };
+      function buddyHome(bid){ return NO_HOMEPAGE[bid] ? "https://davedellaquila.github.io/buddy-system/#/buddy:"+bid : "https://davedellaquila.github.io/buddy-system/"+bid+"/"; }
       if(!show.length){feed.innerHTML='<div class="feed-empty">All quiet — nothing needs Dave right now. 🎉</div>';}
       else{
         feed.innerHTML=show.map(function(a){
-          var home='https://davedellaquila.github.io/buddy-system/'+esc(a.bid)+'/';
+          var home=buddyHome(a.bid);
           var txt=esc(a.text);
           if(a.url){txt='<a href="'+esc(a.url)+'" target="_blank" rel="noopener">'+txt+'</a>';}
           return '<div class="feed-item" data-bid="'+esc(a.bid)+'" data-aid="'+esc(a.aid)+'" data-atext="'+esc(a.text)+'"><div class="feed-icon">'+esc(a.icon)+'</div>'+
