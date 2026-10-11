@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>🛻 Carl's Buddy</title>
+<style>
+:root { --bg:#ffffff; --card:#f6f8fa; --text:#1a1a1a; --muted:#5b6470; --border:#e1e4e8; --accent:#b45309; }
+@media (prefers-color-scheme: dark) { :root { --bg:#0d1117; --card:#161b22; --text:#e6edf3; --muted:#9aa4b2; --border:#30363d; --accent:#fbbf24; } }
+* { box-sizing:border-box; }
+body { font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; background:var(--bg); color:var(--text); margin:0; padding:20px; line-height:1.55; }
+.wrap { max-width:760px; margin:0 auto; }
+h1 { font-size:1.7em; margin:.2em 0; }
+h2 { font-size:1.15em; margin:1.4em 0 .4em; color:var(--accent); }
+.card { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:16px 18px; margin:12px 0; }
+.muted { color:var(--muted); font-size:.9em; }
+.kv { display:grid; grid-template-columns:110px 1fr; gap:6px 12px; }
+.kv dt { color:var(--muted); font-size:.88em; } .kv dd { margin:0; }
+a { color:var(--accent); }
+ul { padding-left:20px; } li { margin:6px 0; }
+textarea { width:100%; min-height:70px; background:var(--bg); color:var(--text); border:1px solid var(--border); border-radius:8px; padding:10px; font:inherit; }
+button.dump { background:var(--accent); color:#fff; border:0; border-radius:8px; padding:9px 18px; font-size:1em; margin-top:8px; cursor:pointer; }
+.stamp { text-align:right; font-size:.8em; color:var(--muted); margin-top:24px; }
+@media (max-width:560px){ .kv{grid-template-columns:1fr;} .kv dt{margin-top:8px;} }
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>🛻 Carl's Buddy</h1>
+<p class="muted">Staff desk for <strong>Carl Towne</strong> — Fiddletown neighbor, general contractor, keeper of the community wood splitter. Dave's read: super nice guy all around, really like him.</p>
+
+<div class="card">
+<h2>Contact</h2>
+<dl class="kv">
+<dt>Phone</dt><dd>(916) 508-7751</dd>
+<dt>Email</dt><dd>ctowne2112@gmail.com</dd>
+<dt>Family</dt><dd>Married to Kathy Towne; bunch of kids including grandkids</dd>
+<dt>Birthday</dt><dd>November 16</dd>
+</dl>
+</div>
+
+<div class="card">
+<h2>Dossier</h2>
+<ul>
+<li><strong>General contractor</strong> for the State of California — very knowledgeable about construction.</li>
+<li><strong>Master tractor operator</strong>; can probably fix anything.</li>
+<li>Loves guns — has an AR-15 and a small shooting range on his property.</li>
+<li>Nice <strong>red Jeep</strong> — took Dave and Nan to <strong>Silver Lake</strong> in it; went <strong>canoeing</strong> with him.</li>
+<li>Makes a legendary <strong>smoked gouda / smoked cheddar</strong> he gives away at Christmas — very generous.</li>
+<li>Owns the <strong>community wood splitter</strong>.</li>
+<li>Had some financial difficulties at one point — details unknown.</li>
+</ul>
+</div>
+
+<div class="card">
+<h2>Needs your attention</h2>
+<ul>
+<li><a href="https://docs.google.com/document/d/1L6AN__tlq-VZL9vrb9SzXfxWyEG9vCI9fUnKb1QCSqM/edit">Mission statement</a> — ready for your review.</li>
+<li><strong>Wood splitter:</strong> Dave asked Carl (text drafted 2026-10-11) about getting on the borrow list — awaiting Carl's reply.</li>
+</ul>
+</div>
+
+<div class="card">
+<h2>🧠 Brain dump</h2>
+<p class="muted">Dump a thought about Carl here — it lands in the repo's inbox.</p>
+<textarea id="dump" placeholder="Something about Carl…"></textarea><br>
+<button class="dump" onclick="dump()">Dump it</button>
+<p class="muted" id="dumpmsg"></p>
+</div>
+
+<p class="stamp">Last refreshed: 2026-10-11 · living page</p>
+</div>
+<script>
+function dump(){
+  var t = document.getElementById('dump').value.trim();
+  if(!t) return;
+  document.getElementById('dumpmsg').textContent = 'Noted — the full dump box wires up once the dashboard token is present.';
+  document.getElementById('dump').value = '';
+}
+</script>
+</body>
+</html>
