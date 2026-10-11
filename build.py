@@ -1187,6 +1187,8 @@ function renderNav(){
   document.getElementById('plan-nav').innerHTML = PLANS.map(p =>
     '<button class="brow'+(S.sel==='plan:'+p.id?' sel':'')+'" data-plan="'+p.id+'" style="padding-left:8px">'
     + '<span class="bicon">'+escHtml(p.icon||'')+'</span><span class="bname">'+escHtml(p.name)+'</span></button>').join('');
+  watchScrollPos('sidebar', document.getElementById('sidebar'));
+  restoreScrollPos('sidebar', document.getElementById('sidebar'));
 }
 function artRow(icon, label, sub, url){
   return '<a class="art-row" href="'+url+'" target="_blank" rel="noopener">'
@@ -2251,6 +2253,12 @@ function renderBuddy(id){
       attachPan(tw);
     }
   }
+  // Persistent panel scroll position (per buddy)
+  (function(){
+    const vb = document.getElementById('view-buddy');
+    watchScrollPos('panel:' + id, vb);
+    restoreScrollPos('panel:' + id, vb);
+  })();
 }
 function toast(msg){
   document.querySelectorAll('.toast').forEach(t => t.remove());
@@ -2327,6 +2335,25 @@ function clampTreeSplit(s){
   if (!isFinite(s)) s = 0.72;
   return Math.min(0.9, Math.max(0.45, s));
 }
+/* ---------- persistent scroll positions ---------- */
+function getScrollPos(){ if (!S.scrollPos || typeof S.scrollPos !== 'object') S.scrollPos = {}; return S.scrollPos; }
+function saveScrollPos(key, el){ if (el) getScrollPos()[key] = {l: Math.round(el.scrollLeft), t: Math.round(el.scrollTop)}; }
+function restoreScrollPos(key, el){
+  if (!el) return;
+  const p = getScrollPos()[key];
+  if (p) { try { el.scrollLeft = p.l || 0; el.scrollTop = p.t || 0; } catch (e) {} }
+}
+function watchScrollPos(key, el){
+  if (!el) return;
+  el.dataset.wspKey = key; /* key may change (e.g. per-buddy panel); listener attaches once */
+  if (el.dataset.wsp) return;
+  el.dataset.wsp = '1';
+  let t = null;
+  el.addEventListener('scroll', () => {
+    clearTimeout(t);
+    t = setTimeout(() => { saveScrollPos(el.dataset.wspKey, el); save(); }, 300);
+  }, {passive: true});
+}
 function applyTreeSplit(){
   const orphPane = document.getElementById('treepane-orph');
   const mainPane = document.getElementById('treepane-main');
@@ -2394,6 +2421,8 @@ function renderOrgTree(){
   document.getElementById('treezoom-main').innerHTML = chartHtml;
   document.getElementById('treezoom-orph').innerHTML = orphHtml;
   applyTreeSplit();
+  restoreScrollPos('tree:main', document.getElementById('treezoom-main'));
+  restoreScrollPos('tree:orph', document.getElementById('treezoom-orph'));
 }
 function renderProjects(){
   if (!S.projCollapsed || typeof S.projCollapsed !== 'object') S.projCollapsed = {};
@@ -2516,6 +2545,8 @@ function zoomToFit(paneId, zoomKey){
   const tw = document.getElementById('zoomwrap');
   const main = document.getElementById('treezoom-main');
   Array.from(vt.childNodes).forEach(n => { if (n !== tw) main.appendChild(n); });
+  watchScrollPos('tree:main', document.getElementById('treezoom-main'));
+  watchScrollPos('tree:orph', document.getElementById('treezoom-orph'));
   document.getElementById('zoomrange-main').addEventListener('input', e => {
     S.zoom = parseInt(e.target.value, 10) || 100; save(); applyZoom();
   });
