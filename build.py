@@ -254,7 +254,7 @@ textarea[disabled]{opacity:.5;cursor:not-allowed}
   border-radius:8px;padding:8px 10px;font-size:13px;margin-bottom:10px}
 #token-pop .saved-check{display:none;color:var(--grn-tx);font-size:14px;font-weight:600;margin-top:8px}
 #token-pop .saved-check.show{display:block}
-/* Reopen right detail panel when closed (Muse-ish fixed chrome) */
+/* Reopen right detail panel when closed — left chevron (expand toward content) */
 #panel-open{position:fixed;top:12px;right:12px;z-index:85;width:44px;height:44px;border-radius:12px;
   background:var(--panel);border:1px solid var(--border);color:var(--muted);cursor:pointer;
   display:flex;align-items:center;justify-content:center;padding:0;
@@ -318,13 +318,14 @@ body:has(#token-pill) #panel-open{right:148px}
 #field-settings input[type=checkbox]:active{transform:scale(.92)}
 .fset-row input[type=checkbox]{margin-left:2px}
 .bp-close-x{position:static;flex:0 0 auto;width:44px;height:44px;margin-left:auto;
-  background:none;border:1px solid transparent;border-radius:10px;color:var(--muted);font-size:22px;
+  background:none;border:1px solid transparent;border-radius:10px;color:var(--muted);
   cursor:pointer;display:none;align-items:center;justify-content:center;padding:0;
   -webkit-tap-highlight-color:transparent}
 .bp-close-x:hover{color:var(--text);border-color:var(--border);background:var(--ghost)}
 .bp-close-x:active{opacity:.7}
+.bp-close-x svg{display:block}
 #view-buddy.panel .bp-close-x,#view-buddy.sheet .bp-close-x{display:flex}
-/* Portrait takeover uses the sticky back bar; keep ✕ for panel / landscape sheet */
+/* Portrait takeover uses the sticky back bar; keep collapse chevron for panel / landscape sheet */
 @media (max-width:639px) and (orientation:portrait){
   #view-buddy.sheet .bp-close-x{display:none}
 }
@@ -1656,14 +1657,14 @@ function renderBuddy(id){
     + '<div class="bp-topnav"><button class="linkbtn" data-navbtn="back">\u2190 Back</button>'
     + '<button class="linkbtn" data-navbtn="prev">\u2039 Prev</button><button class="linkbtn" data-navbtn="next">Next \u203a</button>'
     + '<span class="sep">\u00b7</span><button class="linkbtn" data-view="tree">All buddies</button>'
-    + '<span class="sep">\u00b7</span><button class="linkbtn" id="bp-close" type="button" title="Close detail \u2014 back to main view" aria-label="Close detail \u2014 back to main view">\u2715 Close</button><span class="sep">\u00b7</span><button class="linkbtn" id="bp-desktop">\U0001f4be Save to desktop</button></div>'
+    + '<span class="sep">\u00b7</span><button class="linkbtn" id="bp-close" type="button" title="Collapse buddy details" aria-label="Collapse buddy details">\u203a Close</button><span class="sep">\u00b7</span><button class="linkbtn" id="bp-desktop">\U0001f4be Save to desktop</button></div>'
     + '<div class="bp-crumb">'+crumb(id)+'</div>'
     + '<p class="bp-tagline">'+escHtml(b.tagline||'')+'</p>'
     + '<div class="bp-sticky-head"><div class="bp-top">'
     + '<span class="bp-icon" id="bp-icon" title="Click to change avatar" style="cursor:pointer">'+escHtml(b.icon||'')+'</span>'
     + '<h2 class="bp-name" id="bp-name" contenteditable="true" spellcheck="false" data-buddy="'+id+'">'+escHtml(dispName(b))+'</h2>'
     + '<span class="status '+b.statusClass+'">'+escHtml(b.status)+'</span>'
-    + '<button class="bp-close-x" id="bp-close-x" type="button" title="Close detail \u2014 back to main view" aria-label="Close detail \u2014 back to main view">\u2715</button></div></div>'
+    + '<button class="bp-close-x" id="bp-close-x" type="button" title="Collapse buddy details" aria-label="Collapse buddy details"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg></button></div></div>'
     + standingOrdersHtml()
     + '<div class="bp-sec" data-field="ingest"><h3>Ingest<span class="info-tip" data-tip="Brain-dump anything about this buddy \u2014 raw and unfiltered. Each dump lands in the buddy\u2019s repo (docs/ingest.md) as a timestamped entry.">\u24d8</span></h3>'
     + '<textarea class="notes" id="bp-ingest" placeholder="Dump what\u2019s in your head about '+escHtml(dispName(b))+'\u2026"></textarea>'
@@ -3604,8 +3605,8 @@ initSbBrandSticky();
 <body>
 <div class="app">
 <button id="menu-btn" title="Expand sidebar" aria-label="Expand sidebar"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg></button>
-<button type="button" id="panel-open" title="Open buddy details" aria-label="Open buddy details">
-  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v6"/><circle cx="12" cy="8" r="1.1" fill="currentColor" stroke="none"/></svg>
+<button type="button" id="panel-open" title="Expand buddy details" aria-label="Expand buddy details">
+  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
 </button>
 <div id="sb-scrim"></div>
 <aside id="sidebar">

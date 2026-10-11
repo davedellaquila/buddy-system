@@ -147,6 +147,8 @@ Build: `build.py` generates `index.html` from `buddies.json` + `plans.json`.
   floating zoom slider) instead of a card list.
 - **Sidebar collapse controls**: open panel shows a left chevron (collapse) in
   the top-right tools; closed panel shows a floating right chevron (expand).
+- **Detail panel collapse controls**: open panel sticky header shows a right
+  chevron (collapse); closed panel shows a floating left chevron (expand).
 - **Medium (640–1100px)**: collapsible sidebar; view nav becomes a horizontal
   segmented control; detail opens as a right-docked side sheet (380px).
 - **Large (>1100px)**: tri-pane with persistent detail panel (400px).
