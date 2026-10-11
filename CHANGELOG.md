@@ -3,6 +3,11 @@
 All notable changes to the Buddies dashboard and buddy system. Newest first.
 `FEATURES.md` describes the current state; this file describes how it got there.
 
+## 2026-10-11 (Zoom slider thumb contrast)
+
+### Fixed
+- **Tree zoom slider thumb is high-contrast now (Dave's ask):** the vertical zoom slider's thumb was a small native control tinted with the accent color — easy to miss. It's now a solid accent puck with a background-colored ring and halo, on a defined track, so it reads against any tile in both themes.
+
 ## 2026-10-11 (Tree tile rename fix)
 
 ### Fixed

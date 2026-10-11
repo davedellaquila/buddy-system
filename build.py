@@ -150,8 +150,16 @@ body{padding:0}
 #zoombar .z-in{font-size:13px}   /* zoom in (top) */
 #zoomrange{flex:0 0 auto;width:22px;height:112px;margin:0;padding:0;
   writing-mode:vertical-lr;direction:rtl;/* high value at top, next to large mark */
-  -webkit-appearance:slider-vertical;appearance:slider-vertical;
-  accent-color:var(--accent);cursor:ns-resize;touch-action:none;background:transparent;opacity:.9}
+  -webkit-appearance:none;appearance:none;
+  background:transparent;cursor:ns-resize;touch-action:none;opacity:1}
+/* High-contrast thumb: solid accent puck with a background-colored ring + halo so it pops on any tile */
+#zoomrange::-webkit-slider-runnable-track{width:5px;background:var(--faint);border-radius:3px}
+#zoomrange::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:20px;height:20px;margin-left:-8px;
+  border-radius:50%;background:var(--accent);border:2px solid var(--bg);
+  box-shadow:0 0 0 1.5px var(--accent-hi),0 1px 5px rgba(0,0,0,.5);cursor:ns-resize}
+#zoomrange::-moz-range-track{width:5px;background:var(--faint);border-radius:3px}
+#zoomrange::-moz-range-thumb{width:16px;height:16px;border-radius:50%;background:var(--accent);
+  border:2px solid var(--bg);box-shadow:0 0 0 1.5px var(--accent-hi),0 1px 5px rgba(0,0,0,.5);cursor:ns-resize}
 #zoomfit{flex:0 0 auto;background:none;border:none;border-radius:6px;color:var(--faint);
   font-size:12px;width:22px;height:22px;padding:0;cursor:pointer;line-height:1;
   text-shadow:0 0 4px var(--bg),0 0 8px var(--bg)}

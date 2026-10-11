@@ -297,8 +297,16 @@ body{padding:0}
 #zoombar .z-in{font-size:13px}   /* zoom in (top) */
 #zoomrange{flex:0 0 auto;width:22px;height:112px;margin:0;padding:0;
   writing-mode:vertical-lr;direction:rtl;/* high value at top, next to large mark */
-  -webkit-appearance:slider-vertical;appearance:slider-vertical;
-  accent-color:var(--accent);cursor:ns-resize;touch-action:none;background:transparent;opacity:.9}
+  -webkit-appearance:none;appearance:none;
+  background:transparent;cursor:ns-resize;touch-action:none;opacity:1}
+/* High-contrast thumb: solid accent puck with a background-colored ring + halo so it pops on any tile */
+#zoomrange::-webkit-slider-runnable-track{width:5px;background:var(--faint);border-radius:3px}
+#zoomrange::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:20px;height:20px;margin-left:-8px;
+  border-radius:50%;background:var(--accent);border:2px solid var(--bg);
+  box-shadow:0 0 0 1.5px var(--accent-hi),0 1px 5px rgba(0,0,0,.5);cursor:ns-resize}
+#zoomrange::-moz-range-track{width:5px;background:var(--faint);border-radius:3px}
+#zoomrange::-moz-range-thumb{width:16px;height:16px;border-radius:50%;background:var(--accent);
+  border:2px solid var(--bg);box-shadow:0 0 0 1.5px var(--accent-hi),0 1px 5px rgba(0,0,0,.5);cursor:ns-resize}
 #zoomfit{flex:0 0 auto;background:none;border:none;border-radius:6px;color:var(--faint);
   font-size:12px;width:22px;height:22px;padding:0;cursor:pointer;line-height:1;
   text-shadow:0 0 4px var(--bg),0 0 8px var(--bg)}
@@ -2291,7 +2299,7 @@ function renderBuddy(id){
     + '<div class="bp-sec" data-field="shared"><h3>Shared notes<span class="info-tip" data-tip="Anybody with repo access can see this note. Saved to the buddy’s repo (docs/notes.md).">ⓘ</span></h3>'
     + '<textarea class="notes" id="bp-shared-notes" placeholder="Anybody with repo access can see this note."></textarea>'
     + '<p class="fineprint" id="shared-status"></p></div>'
-    + '<div class="bp-build">Build 20261011.1514</div>'
+    + '<div class="bp-build">Build 20261011.1526</div>'
     + '</div>';
   const nm = document.getElementById('bp-name');
   nm.addEventListener('keydown', e => { if (e.key === 'Enter'){ e.preventDefault(); nm.blur(); } });
@@ -3002,7 +3010,7 @@ function renderPlan(id){
     + '<p class="fineprint">Saved on this device. (For your eyes only)</p></div>'
     + '<div class="bp-sec"><h3>Shared notes<span class="info-tip" data-tip="Visible to everyone with access to this project.">\u24d8</span></h3><textarea class="notes" id="bp-shared" placeholder="Shared notes\u2026 (visible to everyone with access)">'+escHtml((S.planShared||{})[id]||'')+'</textarea>'
     + '<p class="fineprint">Shared — visible to everyone with access.</p></div>'
-    + '<div class="bp-build">Build 20261011.1514</div>'
+    + '<div class="bp-build">Build 20261011.1526</div>'
     + '</div>';
   const nt = document.getElementById('bp-notes');
   let t = null;
@@ -4066,7 +4074,7 @@ window.__bindEdgeSwipes = bindIframeEdgeSwipes;
 // Returns 'new' | 'current' | 'suppressed' | 'error' so manual triggers
 // (e.g. pull-to-refresh) can report the outcome.
 function initVersionCheck(){
-  const myBuild = '20261011.1514';
+  const myBuild = '20261011.1526';
   function showUpdateBanner(serverBuild){
     if (document.getElementById('update-banner')) return;
     const b = document.createElement('div');
