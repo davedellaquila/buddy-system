@@ -3,6 +3,55 @@
 All notable changes to the Buddies dashboard and buddy system. Newest first.
 `FEATURES.md` describes the current state; this file describes how it got there.
 
+## 2026-10-10 (iPhone fixes: sidebar resize, zoom scrubber, touch drop targets)
+
+### Fixed
+- **Sidebar resize handle never hit-tested (root cause)** — the `#sb-resize` handle
+  hung 7px past the sidebar's edge (`right:-7px`), but the scrollable sidebar clips
+  overflow, so the overhang was dead for hit-testing on desktop too (only ~3px
+  grabbed). Moved it fully inside (`right:0`, z-index bumped to 60). Same fix
+  applied to the buddy panel's `#bp-resize` handle (`left:-7px` → `left:0`).
+- **Sidebar resizable on iPhone** — the handle was `display:none` below 639px.
+  It now shows on the drawer as a 28px touch target with `touch-action:none`
+  (the existing pointer-events drag code already handled touch). Width clamps to
+  the viewport (`min(560px, 92vw)`, min 200px) and re-clamps on rotate/resize;
+  still persisted per device.
+- **Zoom scrubber invisible on iPhone (root cause)** — the flex-centered org tree
+  (`.tree { justify-content:center }`) overflowed to negative x-coords on narrow
+  screens, widening the layout viewport (measured 410px on a 390px phone), which
+  pushed the `position:fixed; right:10px` zoombar partly off-screen. The tree now
+  uses `width:max-content; margin:0 auto` (identical centered look when it fits;
+  overflows only rightward/scrollably when not), plus `overflow-x:clip` on
+  html/body below 639px as a guard. Zoombar also chunkier on phones (64px wide,
+  longer slider, z-index 30).
+- **Chunkier touch drop targets** — during a touch drag, drop hit-testing now
+  uses rects inflated by 16px around each node (smallest match wins on overlap);
+  mouse path unchanged. Drag ghost is larger on coarse pointers (240px), and
+  drop-target outlines are thicker.
+
+## 2026-10-10 (Tree tile drag-to-reparent)
+
+### Fixed
+- **Tree node drag-to-reparent** — replaced the ⠿ gripper handles with whole-tile
+  pointer-based dragging: grab any buddy tile on the chart and drop it onto another
+  buddy to reparent it. Works with mouse and touch (iPhone/iPad), where the old
+  HTML5 drag-and-drop grippers could never fire. Tap still opens the buddy detail
+  panel (6px movement threshold separates click from drag); the click after a drag
+  is swallowed. Cycle-safe (invalid targets get a red dashed outline), root can't
+  be dragged, dropping on root makes a buddy top-level. Same localStorage
+  persistence and reset path as sidebar reparenting.
+- **Why the grippers never worked** — the ⠿ handles were never in the DOM: they
+  were only emitted by the JS `renderOrgTree()`, which runs solely after a sidebar
+  reparent creates localStorage overrides; the static tree baked into the page had
+  no handles. Even had they rendered, HTML5 DnD doesn't fire on touch devices.
+- **Background pan now pans the real scroller** — drag-to-pan on the chart
+  background moved nothing: `attachPan` scrolled `#treezoom`, which has no
+  scrollable overflow (the chart scrolls inside its inner `.chart`). It now pans
+  the `.chart` scroller.
+- **Drop-highlight crash** — `initTreeDrop`'s `dragover` handler threw
+  `Cannot read properties of null (reading 'classList')` whenever a sidebar drag
+  hovered blank chart background (`n` was null). Added the missing null guard.
+
 ## 2026-10-10 (Tree view: org chart on phones)
 
 ### Changed
