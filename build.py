@@ -642,6 +642,7 @@ body.standalone .sa-bar{display:flex}
 .bp-name:hover{border-bottom-color:var(--border)}
 .bp-name:focus{border-bottom-color:var(--accent);background:var(--wash2)}
 .bp-tagline{color:var(--muted);font-size:15px;margin:4px 0 8px}
+.bp-aka{color:var(--muted);font-size:13px;font-style:italic;margin-left:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:60%}
 .bp-sec{margin-top:30px}
 .bp-sec>h3{font-size:13px;letter-spacing:1.2px;text-transform:uppercase;color:var(--muted);margin:0 0 12px}
 .bp-sec[data-field="attention"]>h3{color:var(--amber)}
@@ -1095,7 +1096,7 @@ function renderNav(){
   let h = '';
   function matches(b){
     if (!words.length) return true;
-    const hay = (dispName(b) + ' ' + (b.name || '') + ' ' + (b.tagline || '')).toLowerCase();
+    const hay = (dispName(b) + ' ' + (b.name || '') + ' ' + (b.tagline || '') + ' ' + ((b.aka || []).join(' '))).toLowerCase();
     return words.every(w => hay.includes(w));
   }
   function row(id, depth){
@@ -1920,6 +1921,7 @@ function renderBuddy(id){
     + '<span class="bp-icon" id="bp-icon" title="Click to change avatar" style="cursor:pointer">'+'<img class="bp-avatarimg" src="'+escHtml(buddyImageUrl(b))+'" alt="" onerror="this.remove()">'+'<span class="bp-avaemoji">'+escHtml(buddyDisplayIcon(b))+'</span></span>'
     + '<h2 class="bp-name" id="bp-name" contenteditable="true" spellcheck="false" data-buddy="'+id+'">'+escHtml(dispName(b))+'</h2>'
     + '<span class="status '+b.statusClass+'">'+escHtml(b.status)+'</span>'
+    + ((b.aka && b.aka.length) ? '<span class="bp-aka" title="Also known as">aka '+escHtml(b.aka.join(', '))+'</span>' : '')
     + '<button class="bp-close-x" id="bp-close-x" type="button" title="Close detail \u2014 back to main view" aria-label="Close detail \u2014 back to main view">\u203a</button></div></div>'
     + standingOrdersHtml()
     + '<div class="bp-sec" data-field="ingest"><h3>Ingest<span class="info-tip" data-tip="Brain-dump anything about this buddy \u2014 raw and unfiltered. Each dump lands in the buddy\u2019s repo (docs/ingest.md) as a timestamped entry.">\u24d8</span></h3>'
@@ -3330,7 +3332,7 @@ function firstSearchMatch(){
   const words = q.split(/\s+/).filter(Boolean);
   if (!words.length) return null;
   for (const b of BUDDIES) {
-    const hay = (dispName(b) + ' ' + (b.name || '') + ' ' + (b.tagline || '')).toLowerCase();
+    const hay = (dispName(b) + ' ' + (b.name || '') + ' ' + (b.tagline || '') + ' ' + ((b.aka || []).join(' '))).toLowerCase();
     if (words.every(w => hay.includes(w))) return b.id;
   }
   return null;
