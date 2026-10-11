@@ -1907,6 +1907,7 @@ function buddyHomepageHtml(b){
     + '.hp-dump-status{font-size:13px;color:var(--muted)}'
     + '.hp-dump-status a{color:var(--accent)}'
     + '.hp-note{text-align:center;color:var(--muted);font-size:12px;margin:34px 0 0}'
+    + '.hp-locked{margin-top:10px;background:var(--bg);border:1px dashed var(--border);border-radius:10px;padding:14px 16px}'
     + '@media (max-width:960px){'
     + '.hp-grid{grid-template-columns:minmax(0,1fr);grid-template-areas:"head" "rail" "main" "dump"}'
     + '.hp{padding:26px 16px 44px}'
@@ -1973,19 +1974,47 @@ function buddyHomepageHtml(b){
     h += '</div></section>';
   }
   h += '</aside>';
-  // brain dump (full width)
-  h += '<section class="hp-card hp-dumpsec"><div class="hp-dump"><h3 class="hp-kicker">🧠 Brain dump</h3>';
-  if (!b.repo) {
-    h += '<p class="hp-dump-status" style="margin:10px 0 0">No repo linked for this buddy yet — dumps are disabled.</p>';
-  } else {
-    h += '<textarea data-hp-dump placeholder="Dump a thought, link, or half-formed idea — it lands in this buddy\u2019s docs/ingest.md" aria-label="Brain dump"></textarea>';
-    h += '<div class="hp-dump-row"><button type="button" class="hp-dump-btn" data-hp-dump-btn>Dump it</button><span class="hp-dump-status" data-hp-dump-status></span></div>';
-  }
-  h += '</div></section>';
+  // brain dump (full width, two-state: functional when a token is present)
+  h += homepageDumpSectionHtml(b);
   h += '</div>';
   h += '<p class="hp-note">Auto-generated homepage — set a custom URL in the Homepage URL field to override.</p>';
   h += '</div>';
   return h;
+}
+function homepageDumpSectionHtml(b){
+  let inner;
+  if (!b.repo) {
+    inner = '<p class="hp-dump-status" style="margin:10px 0 0">No repo linked for this buddy yet — dumps are disabled.</p>';
+  } else if (!ghToken()) {
+    inner = '<div class="hp-locked"><p class="hp-dump-status" style="margin:0 0 12px">🔒 Connect GitHub to unlock dumping. The token stays on this device only.</p>'
+      + '<button type="button" class="hp-dump-btn" data-hp-connect>Connect GitHub to enable</button></div>';
+  } else {
+    inner = '<textarea data-hp-dump placeholder="Dump a thought, link, or half-formed idea — it lands in this buddy\u2019s docs/ingest.md" aria-label="Brain dump"></textarea>'
+      + '<div class="hp-dump-row"><button type="button" class="hp-dump-btn" data-hp-dump-btn>Dump it</button><span class="hp-dump-status" data-hp-dump-status></span></div>';
+  }
+  return '<section class="hp-card hp-dumpsec" data-hp-dumpsec><div class="hp-dump"><h3 class="hp-kicker">🧠 Brain dump</h3>' + inner + '</div></section>';
+}
+function lsToken(){
+  try { return JSON.parse(localStorage.getItem(LS_KEY) || '{}').ghToken || ''; }
+  catch (e) { return ''; }
+}
+function openTokenPopover(){
+  const pop = document.getElementById('token-pop');
+  if (pop) {
+    pop.classList.add('show');
+    const inp = document.getElementById('ghtok-global');
+    if (inp) inp.focus();
+  }
+}
+function refreshHomepageDumpbox(){
+  const sec = document.querySelector('[data-hp-dumpsec]');
+  if (!sec) return;
+  const b = byId[projectId()] || {};
+  const tmp = document.createElement('div');
+  tmp.innerHTML = homepageDumpSectionHtml(b);
+  const fresh = tmp.firstChild;
+  sec.replaceWith(fresh);
+  initHomepageDumpbox(fresh, b);
 }
 async function homepageDumpSubmit(root, id){
   const ta = root.querySelector('[data-hp-dump]');
@@ -1994,12 +2023,19 @@ async function homepageDumpSubmit(root, id){
   if (!ta || !b) return;
   const text = ta.value.trim();
   if (!text) return;
+  // Re-check the token fresh from storage — it may have been added in another tab.
+  if (!ghToken()) {
+    const freshTok = lsToken();
+    if (freshTok) { S.ghToken = freshTok; }
+    else {
+      if (st) st.innerHTML = 'Add a GitHub token to unlock ingest. <a href="https://github.com/settings/tokens" target="_blank" rel="noopener">Get one here</a>.';
+      refreshHomepageDumpbox();
+      return;
+    }
+  }
   const stamp = new Date().toLocaleString();
   const entry = '## ' + stamp + String.fromCharCode(10,10) + text + String.fromCharCode(10,10);
-  if (!ghToken() || !b.repo) {
-    if (st) st.innerHTML = 'Add a GitHub token to unlock ingest. <a href="https://github.com/settings/tokens" target="_blank" rel="noopener">Get one here</a>.';
-    return;
-  }
+  if (!b.repo) { if (st) st.textContent = 'No repo linked for this buddy yet.'; return; }
   if (st) st.textContent = 'Dumping…';
   try {
     const cur = await ghGetFile(b.repo, 'docs/ingest.md') || '# Ingest log — ' + b.name + String.fromCharCode(10,10);
@@ -2010,10 +2046,16 @@ async function homepageDumpSubmit(root, id){
 }
 function initHomepageDumpbox(root, b){
   if (!root || !b) return;
-  const btn = root.querySelector('[data-hp-dump-btn]');
-  if (!btn || btn._hpWired) return;
-  btn._hpWired = true;
-  btn.addEventListener('click', function(){ homepageDumpSubmit(root, b.id); });
+  const dumpBtn = root.querySelector('[data-hp-dump-btn]');
+  if (dumpBtn && !dumpBtn._hpWired) {
+    dumpBtn._hpWired = true;
+    dumpBtn.addEventListener('click', function(){ homepageDumpSubmit(root, b.id); });
+  }
+  const connectBtn = root.querySelector('[data-hp-connect]');
+  if (connectBtn && !connectBtn._hpWired) {
+    connectBtn._hpWired = true;
+    connectBtn.addEventListener('click', function(){ openTokenPopover(); });
+  }
 }
 
 function renderProjectView(){
@@ -2149,7 +2191,7 @@ function renderBuddy(id){
     + '<div class="bp-sec" data-field="shared"><h3>Shared notes<span class="info-tip" data-tip="Anybody with repo access can see this note. Saved to the buddy’s repo (docs/notes.md).">ⓘ</span></h3>'
     + '<textarea class="notes" id="bp-shared-notes" placeholder="Anybody with repo access can see this note."></textarea>'
     + '<p class="fineprint" id="shared-status"></p></div>'
-    + '<div class="bp-build">Build 20261011.1014</div>'
+    + '<div class="bp-build">Build 20261011.1716</div>'
     + '</div>';
   const nm = document.getElementById('bp-name');
   nm.addEventListener('keydown', e => { if (e.key === 'Enter'){ e.preventDefault(); nm.blur(); } });
@@ -2852,7 +2894,7 @@ function renderPlan(id){
     + '<p class="fineprint">Saved on this device. (For your eyes only)</p></div>'
     + '<div class="bp-sec"><h3>Shared notes<span class="info-tip" data-tip="Visible to everyone with access to this project.">\u24d8</span></h3><textarea class="notes" id="bp-shared" placeholder="Shared notes\u2026 (visible to everyone with access)">'+escHtml((S.planShared||{})[id]||'')+'</textarea>'
     + '<p class="fineprint">Shared — visible to everyone with access.</p></div>'
-    + '<div class="bp-build">Build 20261011.1014</div>'
+    + '<div class="bp-build">Build 20261011.1716</div>'
     + '</div>';
   const nt = document.getElementById('bp-notes');
   let t = null;
@@ -3775,7 +3817,7 @@ function initPanelSwipeGestures(){
 // Returns 'new' | 'current' | 'suppressed' | 'error' so manual triggers
 // (e.g. pull-to-refresh) can report the outcome.
 function initVersionCheck(){
-  const myBuild = '20261011.1014';
+  const myBuild = '20261011.1716';
   function showUpdateBanner(serverBuild){
     if (document.getElementById('update-banner')) return;
     const b = document.createElement('div');
@@ -3910,6 +3952,7 @@ function initSearch(){
 function refreshTokenUI(id){
   updateTokenPill();
   updateTokenGating(id);
+  refreshHomepageDumpbox();
   if (id && S.sel === 'buddy:' + id) {
     loadSharedNotes(id);
     renderIngestFeed(id);

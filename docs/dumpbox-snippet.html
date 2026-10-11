@@ -21,8 +21,12 @@
   AUTH
   Reads the GitHub token Dave already saved in the dashboard. Buddy pages
   live under the same origin (davedellaquila.github.io/buddy-system/<id>/),
-  so localStorage is shared: key 'buddyTree.v3', field 'ghToken'. If no token
-  is stored, the box shows a one-time token prompt (saved to the same key).
+  so localStorage is shared: key 'buddyTree.v3', field 'ghToken'.
+  Two states: with a token the box is fully functional; without one it
+  renders disabled with a "Connect GitHub to enable" button that reveals
+  the one-time token prompt (saved to the same key, activates in place —
+  no reload). Token presence is re-checked from storage on every submit,
+  in case it was added in another tab.
 
   REPO RESOLUTION
   Fetches ../buddies.json and matches the page's buddy id (from the
@@ -85,12 +89,21 @@
   border-radius: 8px; padding: 7px 14px; font-size: 13px; font-weight: 600; cursor: pointer;
 }
 .dumpbox-tokenrow a { color: var(--accent); font-size: 13px; }
+.dumpbox-connect {
+  background: var(--bg); border: 1px dashed var(--border); border-radius: 8px;
+  padding: 14px 16px; margin-bottom: 12px; font-size: 14px;
+}
+.dumpbox-connect p { margin: 0 0 10px; }
 </style>
 
 <!-- ---- dump-box HTML (set data-buddy-id; __BNAME__ = escaped buddy name) ---- -->
 <section class="dumpbox" data-buddy-id="__BID__">
 <h2>🧠 Brain dump</h2>
 <p class="dumpbox-sub">Dump what's on your mind about __BNAME__ — raw and unfiltered. Each dump lands in the buddy's repo (docs/ingest.md) as a timestamped entry.</p>
+<div class="dumpbox-connect" hidden>
+<p>🔒 Connect GitHub to unlock dumping. Paste a token once — it stays on this device only.</p>
+<button type="button" class="dumpbox-btn">Connect GitHub to enable</button>
+</div>
 <div class="dumpbox-token" hidden>
 <p>🔒 Connect GitHub to unlock dumping. Paste a token once — it stays on this device only.</p>
 <div class="dumpbox-tokenrow">
@@ -117,9 +130,11 @@
     return p.substring(p.lastIndexOf('/') + 1);
   })();
   var ta = box.querySelector('textarea'),
-      btn = box.querySelector('.dumpbox-btn'),
+      btn = box.querySelector('.dumpbox-row .dumpbox-btn'),
       st = box.querySelector('.dumpbox-status'),
-      tokWrap = box.querySelector('.dumpbox-token');
+      tokWrap = box.querySelector('.dumpbox-token'),
+      connectWrap = box.querySelector('.dumpbox-connect'),
+      connectBtn = connectWrap.querySelector('.dumpbox-btn');
   function lsGet(){ try { return JSON.parse(localStorage.getItem('buddyTree.v3') || '{}'); } catch(e){ return {}; } }
   function lsSet(patch){ try { var s = lsGet(); for (var k in patch) s[k] = patch[k]; localStorage.setItem('buddyTree.v3', JSON.stringify(s)); } catch(e){} }
   function token(){ return lsGet().ghToken || ''; }
@@ -162,7 +177,8 @@
   }
   function refreshUI(){
     var has = !!token();
-    tokWrap.hidden = has;
+    connectWrap.hidden = has;
+    if (has) tokWrap.hidden = true;
     var ok = has && !!repo;
     ta.disabled = !ok;
     btn.disabled = !ok;
@@ -171,11 +187,16 @@
   }
   var tokInput = tokWrap.querySelector('input'),
       tokSave = tokWrap.querySelector('button');
+  connectBtn.addEventListener('click', function(){
+    tokWrap.hidden = false;
+    if (tokInput) tokInput.focus();
+  });
   tokSave.addEventListener('click', function(){
     var v = tokInput.value.trim();
     if (!v) return;
     lsSet({ghToken: v});
     tokInput.value = '';
+    tokWrap.hidden = true;
     refreshUI();
     st.textContent = 'Token saved on this device.';
   });
