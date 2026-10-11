@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Buddy System Architecture</title>
+<style>
+:root{--bg:#f7f5f0;--card:#fff;--ink:#2b2620;--dim:#8a8177;--line:#e4ded4;--acc:#b3541e;--acc2:#2e7d4f;--acc3:#6b5ce7}
+@media(prefers-color-scheme:dark){:root{--bg:#161310;--card:#211d18;--ink:#f0ebe2;--dim:#a29a8c;--line:#38322b;--acc:#e08a4e;--acc2:#5fc98a;--acc3:#9d92f5}}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font-family:-apple-system,system-ui,"Segoe UI",sans-serif;padding:28px 18px 60px;line-height:1.5}
+.wrap{max-width:860px;margin:0 auto}
+h1{font-size:24px;margin-bottom:4px}
+.sub{color:var(--dim);font-size:14px;margin-bottom:26px}
+.zone{border:1px solid var(--line);border-radius:14px;padding:18px;margin-bottom:18px;background:var(--card)}
+.zone h2{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--dim);margin-bottom:12px}
+.flow{display:flex;align-items:stretch;gap:0;flex-wrap:wrap}
+.box{flex:1 1 0;min-width:150px;border:1.5px solid var(--line);border-radius:10px;padding:12px 10px;text-align:center;font-size:13px;background:var(--bg)}
+.box b{display:block;font-size:14px;margin-bottom:4px}
+.box small{color:var(--dim);font-size:11.5px}
+.box.me{border-color:var(--acc)}
+.box.gh{border-color:var(--acc2)}
+.box.you{border-color:var(--acc3)}
+.arrow{align-self:center;padding:0 8px;font-size:20px;color:var(--dim);font-weight:700}
+.note{font-size:13px;color:var(--dim);margin-top:10px}
+.note b{color:var(--ink)}
+.cache{border:1.5px dashed var(--acc);border-radius:10px;padding:12px;margin-top:12px;font-size:13px;background:var(--bg)}
+.cache b{color:var(--acc)}
+.kv{display:flex;gap:10px;margin-top:8px;font-size:13px}
+.kv span:first-child{font-size:18px}
+@media(max-width:640px){.box{min-width:44%}.arrow{transform:rotate(90deg);padding:6px 0;width:100%;text-align:center}}
+</style></head><body><div class="wrap">
+<h1>🗺️ How your buddy system fits together</h1>
+<p class="sub">Why the dump box showed up in one place but not the other.</p>
+
+<div class="zone"><h2>1 · Publishing — how a change reaches the web</h2>
+<div class="flow">
+<div class="box me"><b>🛠️ Astro's workspace</b><small>~/workspace/projects/buddy-tree<br>I edit files here</small></div><div class="arrow">→</div>
+<div class="box me"><b>git push</b><small>commit → origin/master</small></div><div class="arrow">→</div>
+<div class="box gh"><b>GitHub repo</b><small>davedellaquila/<br>buddy-system</small></div><div class="arrow">→</div>
+<div class="box gh"><b>GitHub Pages</b><small>serves the files as a website<br><i>takes ~1 min to deploy</i></small></div>
+</div>
+<p class="note">The <b>dashboard</b> (the root page) is <i>generated</i> — I edit <b>build.py</b>, run it, and it bakes <b>buddies.json</b> into index.html. The 61 buddy homepages are standalone files served as-is.</p>
+</div>
+
+<div class="zone"><h2>2 · Viewing — two doors into the same house</h2>
+<div class="flow">
+<div class="box gh"><b>GitHub Pages</b><small>the one true website</small></div><div class="arrow">→</div>
+<div class="box you"><b>📱 Muse app</b><small>opened my link fresh<br><b>no stale cache → saw the box ✅</b></small></div>
+</div>
+<div class="flow" style="margin-top:10px">
+<div class="box gh"><b>GitHub Pages</b><small>same website!</small></div><div class="arrow">→</div>
+<div class="box you"><b>🌐 Safari / browser</b><small>had an <b>old copy cached</b><br>didn't see the box ❌</small></div>
+</div>
+<div class="cache"><b>🔑 This is what bit you:</b> your browser kept a saved copy of Nan's page from before the dump box existed, and showed you that instead of fetching the new one. The Muse app had never opened it, so it fetched fresh. <b>Fix:</b> hard refresh (or the dashboard's "Update now" banner, which busts the cache).</div>
+</div>
+
+<div class="zone"><h2>3 · Dumping — where your brain dumps go</h2>
+<div class="flow">
+<div class="box you"><b>🧠 Dump box</b><small>on any homepage</small></div><div class="arrow">→</div>
+<div class="box you"><b>🔑 GitHub token</b><small>lives in <i>this device's</i> browser only<br>that's the permission</small></div><div class="arrow">→</div>
+<div class="box gh"><b>GitHub API</b><small>writes as you</small></div><div class="arrow">→</div>
+<div class="box gh"><b>buddy repo</b><small>docs/ingest.md<br>timestamped entry</small></div>
+</div>
+<p class="note">No token on a device → the box shows the disabled <b>"Connect GitHub to enable"</b> state instead of a dead form. Read-only viewers never have a token, so they never get a working box.</p>
+</div>
+
+<div class="zone"><h2>4 · The cast</h2>
+<div class="kv"><span>🧭</span><div><b>Project Buddy</b> — owns the process: the new-buddy drill, the homepage requirements checklist, the dashboard registry.</div></div>
+<div class="kv"><span>🎨</span><div><b>Design Buddy</b> — the taste advisor: designs the look, the animations, the symbols. Advisory — owning threads implement.</div></div>
+<div class="kv"><span>🤖</span><div><b>Astro (me)</b> — your chief of staff: runs the drill, wires the builds, verifies, ships.</div></div>
+</div>
+</div></body></html>
