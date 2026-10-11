@@ -3,6 +3,11 @@
 All notable changes to the Buddies dashboard and buddy system. Newest first.
 `FEATURES.md` describes the current state; this file describes how it got there.
 
+## 2026-10-11 (Portfolio Buddy: new buddy)
+
+### Added
+- **Portfolio Buddy** (🖼️ provisional icon — Dave picking the final one) — child of Project Buddy. Dave's expert on online portfolios: researches contemporary best practices for product-design + engineering portfolios, owns/manages his portfolio site(s) with dynamic updates from its mission-control homepage, keeps a portfolio-ideas list, supports multiple audiences (design/engineering/Apple-safe). Consults Astro + Project Buddy for project data (no own tracker). Owns the "Redo personal website" goal. Mission statement: [Portfolio Buddy — Mission Statement](https://docs.google.com/document/d/1uby4pNjL4IRVLAqd_gVG_5bOGdjgcjZ0L_kobSOSVt4/edit) — Repo: [davedellaquila/portfolio-buddy](https://github.com/davedellaquila/portfolio-buddy) (private, docs/mission-statement.md). Template homepage generated with 🧠 brain-dump box + dark/light mode; custom mission-control design comes via thread INIT. Dashboard entry added (61 buddies).
+
 ## 2026-10-11 (Little Guy Buddy: brain-dump box + dark mode)
 
 ### Added
