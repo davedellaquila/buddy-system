@@ -329,6 +329,10 @@ body:has(#token-pill) #panel-open{right:148px}
   cursor:pointer;border:1px solid var(--border2);border-radius:10px;background:var(--bg);user-select:none;-webkit-user-select:none}
 .fset-check:hover{border-color:var(--border);background:var(--hover)}
 .fset-check:has(input:checked){border-color:color-mix(in srgb, var(--accent) 45%, var(--border));background:var(--wash)}
+.fset-choice{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:8px;padding:11px 12px;font-size:13.5px;
+  border:1px solid var(--border2);border-radius:10px;background:var(--bg)}
+.fset-choice select{background:var(--panel);color:var(--text);border:1px solid var(--border);border-radius:8px;
+  padding:6px 10px;font-size:13px;font-family:inherit}
 #field-settings input[type=checkbox]{
   -webkit-appearance:none;appearance:none;width:28px;height:28px;margin:0;flex:0 0 28px;
   border:2px solid var(--border);border-radius:50%;background:var(--panel);cursor:pointer;
@@ -676,6 +680,19 @@ body.standalone .sa-bar{display:flex}
 .bp-sec{margin-top:30px}
 .bp-sec>h3{font-size:13px;letter-spacing:1.2px;text-transform:uppercase;color:var(--muted);margin:0 0 12px}
 .bp-sec[data-field="attention"]>h3{color:var(--amber)}
+.bp-sec[data-field="attention"].attn-high>h3{color:var(--danger)}
+/* Attention-getting header effects (style chosen in Settings → Attention header effect) */
+@keyframes attn-pulse{0%,100%{opacity:1}50%{opacity:.4}}
+@keyframes attn-glow{0%,100%{text-shadow:0 0 0 rgba(0,0,0,0)}50%{text-shadow:0 0 14px var(--amber)}}
+@keyframes attn-glow-red{0%,100%{text-shadow:0 0 0 rgba(0,0,0,0)}50%{text-shadow:0 0 14px var(--danger)}}
+@keyframes attn-shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-3px)}75%{transform:translateX(3px)}}
+@keyframes attn-blink{0%,100%{opacity:1}50%{opacity:.2}}
+.bp-sec[data-field="attention"].fx-pulse>h3{animation:attn-pulse 1.6s ease-in-out infinite}
+.bp-sec[data-field="attention"].fx-glow>h3{animation:attn-glow 1.8s ease-in-out infinite}
+.bp-sec[data-field="attention"].fx-glow.attn-high>h3{animation-name:attn-glow-red}
+.bp-sec[data-field="attention"].fx-shake>h3{animation:attn-shake 1.2s ease-in-out infinite}
+.bp-sec[data-field="attention"].fx-blink>h3{animation:attn-blink 1.1s steps(2,jump-none) infinite}
+@media (prefers-reduced-motion:reduce){.bp-sec[data-field="attention"]>h3{animation:none!important}}
 .bp-mission{font-size:15.5px;line-height:1.7;background:var(--panel);border:1px solid var(--border);
   border-radius:12px;padding:16px 18px;margin:0}
 .art-row{display:flex;align-items:center;gap:14px;padding:11px 14px;border:1px solid var(--border2);
@@ -1354,10 +1371,11 @@ function isFieldVisible(fid){
 const SETTING_DEFS = [
   {id:'hideBuddyWord', label:'Hide the word “Buddy” in names', type:'bool', def:false},
   {id:'autoOpenPanel', label:'Always open detail panel on buddy click', type:'bool', def:false, tip:'When off (default), the panel auto-opens in every view EXCEPT Project Homepage — there, use the \u24d8 icon. When on, the panel opens on every click in every view.'},
+  {id:'attnEffect', label:'Attention header effect', type:'choice', options:['pulse','glow','shake','blink','none'], def:'pulse', tip:'How the \u201cNeeds your attention\u201d section header grabs your eye when items are waiting.'},
 ];
 function getSetting(id){
   const def = SETTING_DEFS.find(s => s.id === id);
-  if (S[id] === undefined) return def ? !!def.def : undefined;
+  if (S[id] === undefined) return def ? def.def : undefined;
   return S[id];
 }
 function snapshotSettable(){
@@ -1393,12 +1411,14 @@ function renderSettingChecks(){
     + SETTING_DEFS.map(s => {
     const val = getSetting(s.id);
     if (s.type === 'bool') return '<label class="fset-check"><input type="checkbox" data-setting="' + s.id + '"' + (val ? ' checked' : '') + '> <span>' + s.label + '</span></label>';
+    if (s.type === 'choice') return '<label class="fset-choice"><span>' + s.label + (s.tip ? ' <span class="info-tip" data-tip="' + escHtml(s.tip) + '">\\u24d8</span>' : '') + '</span><select data-setting="' + s.id + '">'
+      + s.options.map(o => '<option value="' + o + '"' + (val === o ? ' selected' : '') + '>' + o.charAt(0).toUpperCase() + o.slice(1) + '</option>').join('') + '</select></label>';
     return '';
   }).join('');
   wireThemePicks(sdiv);
-  sdiv.querySelectorAll('[data-setting]').forEach(cb => {
-    cb.addEventListener('change', () => {
-      S[cb.dataset.setting] = cb.checked; save();
+  sdiv.querySelectorAll('[data-setting]').forEach(el => {
+    el.addEventListener('change', () => {
+      S[el.dataset.setting] = (el.type === 'checkbox') ? el.checked : el.value; save();
       show(S.sel, false);
     });
   });
@@ -2079,7 +2099,7 @@ function renderBuddy(id){
     + '<input type="url" id="bp-homepage-url" value="'+escHtml(homepageUrl(b))+'" placeholder="Paste homepage URL here…" style="flex:1;min-width:0;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:8px 12px;font-size:13px;color:var(--text)" title="The full URL for this buddy\u2019s homepage. Paste a URL and click away to save.">'
     + '<button class="linkbtn" id="bp-homepage-copy" title="Copy homepage URL to clipboard" style="flex-shrink:0">Copy</button>'
     + '</div></div>'
-    + (unseenCount > 0 ? '<div class="bp-sec" data-field="attention"><h3>Needs your attention <span class="attn-count">('+unseenCount+')</span></h3>'+attn+'</div>' : '')
+    + (unseenCount > 0 ? (function(){ const fx = getSetting('attnEffect') || 'none'; const high = items.some(a => !S.seen[a.id] && a.priority === 'high'); return '<div class="bp-sec fx-'+fx+(high?' attn-high':'')+'" data-field="attention"><h3>Needs your attention <span class="attn-count">('+unseenCount+')</span></h3>'+attn+'</div>'; })() : '')
     + photos
     + (id === ROOT_ID
         ? '<div class="bp-sec" data-field="tree"><h3>The Buddy Tree</h3><div class="bp-tree-wrap"></div>'
