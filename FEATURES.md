@@ -53,11 +53,11 @@ Build: `build.py` generates `index.html` from `buddies.json` + `plans.json`.
   keys 1–6 select views in that order; Up/Down arrow through views then
   buddies.
 - **Project view** — shows the current project's homepage full-bleed in the
-  main view area (no margins); a floating "Open in a new tab" pill button
-  overlays the top. Clicking a sidebar buddy loads its homepage if it has
-  one, and leaves the view untouched if it doesn't. Buddies without a
-  homepage show a "No homepage for this project" empty state. Picking a
-  view-menu option never dismisses the right-side buddy panel.
+  main view area (no margins). "Open in a new tab" lives in the right detail
+  panel footer. Clicking a sidebar buddy loads its homepage if it has one,
+  and leaves the view untouched if it doesn't. Buddies without a homepage
+  show a "No homepage for this project" empty state. Picking a view-menu
+  option never dismisses the right-side buddy panel.
 - **Projects view** — hierarchical outline of every buddy with its status;
   opens with global attention tiles (TO REVIEW / NEW / CLEARED across all
   buddies), constrained to the same 860px width as the list below.
