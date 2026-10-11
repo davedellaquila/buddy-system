@@ -133,10 +133,22 @@
 
   .photostrip { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 14px; }
   .photo { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 10px; max-width: 250px;
-           box-shadow: 0 3px 10px rgba(59,47,38,.08); transform: rotate(-1deg); }
+           box-shadow: 0 3px 10px rgba(59,47,38,.08); transform: rotate(-1deg); position: relative; }
   .photo:nth-child(even) { transform: rotate(1deg); }
   .photo img { width: 100%; border-radius: 8px; display: block; }
   .photo figcaption { font-size: 12px; color: var(--dim); margin-top: 8px; text-align: center; }
+  .photo .trash {
+    position: absolute; top: 6px; right: 6px; width: 32px; height: 32px; border-radius: 50%;
+    border: 1px solid var(--line); background: var(--card); cursor: pointer; font-size: 15px; line-height: 1;
+    opacity: 0; transition: opacity .15s; box-shadow: 0 2px 6px rgba(59,47,38,.18); padding: 0;
+  }
+  .photo:hover .trash, .photo .trash:focus-visible { opacity: 1; }
+  @media (hover: none) { .photo .trash { opacity: .9; } }
+  .photo.spotlight { outline: 3px solid var(--terra); outline-offset: 4px; animation: photopulse 1.8s ease; }
+  @keyframes photopulse { 0%,100% { outline-color: var(--terra); } 50% { outline-color: var(--rose); } }
+  .photo-tools { display: flex; gap: 10px; margin-top: 14px; flex-wrap: wrap; align-items: center; }
+  .btn.ghost { background: var(--card); color: var(--ink); border: 1px solid var(--line); }
+  .btn.ghost:hover { background: var(--terra-soft); }
 
   .quotes { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 14px; margin-top: 14px; }
   .quotes blockquote {
@@ -239,6 +251,12 @@
       <figcaption>Nan · Oct 2026</figcaption>
     </figure>
   </div>
+  <div class="photo-tools">
+    <button class="btn" onclick="document.getElementById('photoFile').click()">➕ Add a photo</button>
+    <input type="file" id="photoFile" accept="image/*" style="display:none" onchange="addPhoto(event)">
+    <button class="btn ghost" onclick="surprisePhoto()">🎲 Surprise me</button>
+    <button class="btn ghost" id="restoreBtn" onclick="restorePhotos()" style="display:none">↩ Restore hidden</button>
+  </div>
 
   <h2 class="serif">In her own words <span class="sub">From Nan's Facebook posts</span></h2>
   <div class="quotes">
@@ -315,7 +333,7 @@
 <script>
 const KEY = "nancy-buddy-v1";
 const esc = s => s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
-let store = { notes: [], reminders: [], dates: [], gifts: [] };
+let store = { notes: [], reminders: [], dates: [], gifts: [], hiddenPhotos: [], customPhotos: [] };
 try {
   const raw = localStorage.getItem(KEY);
   if (raw) store = Object.assign(store, JSON.parse(raw));
@@ -405,7 +423,84 @@ function addGift() {
 }
 function delGift(i) { store.gifts.splice(i, 1); save(); renderGifts(); }
 
-renderNotes(); renderReminders(); renderDates(); renderGifts();
+// Photo manager: trash, add, surprise — all saved on this device
+function renderPhotos() {
+  const strip = document.getElementById("photostrip");
+  strip.querySelectorAll("figure.photo:not(.custom)").forEach(fig => {
+    const img = fig.querySelector("img");
+    const src = img ? img.getAttribute("src") : null;
+    fig.style.display = (src && store.hiddenPhotos.includes(src)) ? "none" : "";
+    if (img && !fig.querySelector(".trash")) {
+      const b = document.createElement("button");
+      b.className = "trash"; b.title = "Remove this photo"; b.textContent = "🗑️";
+      b.setAttribute("aria-label", "Remove this photo");
+      b.onclick = () => trashPhoto(src);
+      fig.appendChild(b);
+    }
+  });
+  strip.querySelectorAll("figure.photo.custom").forEach(f => f.remove());
+  store.customPhotos.forEach((p, i) => {
+    const fig = document.createElement("figure");
+    fig.className = "photo custom";
+    const img = document.createElement("img");
+    img.src = p.src; img.alt = p.caption || "Added photo";
+    const cap = document.createElement("figcaption");
+    cap.textContent = p.caption || "";
+    const b = document.createElement("button");
+    b.className = "trash"; b.title = "Remove this photo"; b.textContent = "🗑️";
+    b.setAttribute("aria-label", "Remove this photo");
+    b.onclick = () => { store.customPhotos.splice(i, 1); save(); renderPhotos(); };
+    fig.appendChild(img); fig.appendChild(cap); fig.appendChild(b);
+    strip.appendChild(fig);
+  });
+  document.getElementById("restoreBtn").style.display = store.hiddenPhotos.length ? "" : "none";
+}
+function trashPhoto(src) {
+  if (src && !store.hiddenPhotos.includes(src)) store.hiddenPhotos.push(src);
+  save(); renderPhotos();
+}
+function restorePhotos() {
+  store.hiddenPhotos = [];
+  save(); renderPhotos();
+}
+function addPhoto(ev) {
+  const file = ev.target.files[0];
+  ev.target.value = "";
+  if (!file) return;
+  const caption = prompt("Caption for this photo:", "");
+  if (caption === null) return;
+  const reader = new FileReader();
+  reader.onload = () => {
+    const img = new Image();
+    img.onload = () => {
+      const max = 1200, scale = Math.min(1, max / Math.max(img.width, img.height));
+      const c = document.createElement("canvas");
+      c.width = Math.round(img.width * scale);
+      c.height = Math.round(img.height * scale);
+      c.getContext("2d").drawImage(img, 0, 0, c.width, c.height);
+      try {
+        store.customPhotos.push({ src: c.toDataURL("image/jpeg", 0.85), caption: caption.trim() || ("Added " + today()) });
+        save(); renderPhotos();
+      } catch (e) { alert("Couldn't save that photo — the browser's local storage is full."); return; }
+      const figs = document.querySelectorAll("#photostrip figure.photo:not([style*='none'])");
+      const last = figs[figs.length - 1];
+      if (last) last.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    };
+    img.src = reader.result;
+  };
+  reader.readAsDataURL(file);
+}
+function surprisePhoto() {
+  const figs = [...document.querySelectorAll("#photostrip figure.photo")].filter(f => f.style.display !== "none");
+  if (!figs.length) return;
+  document.querySelectorAll("#photostrip figure.photo.spotlight").forEach(f => f.classList.remove("spotlight"));
+  const pick = figs[Math.floor(Math.random() * figs.length)];
+  pick.scrollIntoView({ behavior: "smooth", block: "center" });
+  pick.classList.add("spotlight");
+  setTimeout(() => pick.classList.remove("spotlight"), 1900);
+}
+
+renderNotes(); renderReminders(); renderDates(); renderGifts(); renderPhotos();
 </script>
 </body>
 </html>
