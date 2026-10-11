@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Nancy Buddy — Living dossier for Nan</title>
+<title>Nan's Buddy — Living dossier for Nan</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>👩‍🍳</text></svg>">
 <style>
   :root {
@@ -209,9 +209,9 @@
 
   <header class="hero">
     <div class="kicker">Family Buddy · child</div>
-    <h1 class="serif"><span class="ico">👩‍🍳</span>Nancy Buddy</h1>
+    <h1 class="serif"><span class="ico">👩‍🍳</span><span id="buddyTitle">Nan's Buddy</span></h1>
     <div class="tagline serif">The living dossier for Nan.</div>
-    <p class="mission">Nancy Buddy is the one place for everything Dave needs to <b>remember, track, and do</b> regarding Nan — key facts, important dates, notes, reminders, and gift ideas. Where Relationship Buddy maintains relationships broadly, Nancy Buddy goes deep on one person.</p>
+    <p class="mission">Nan's Buddy is the one place for everything Dave needs to <b>remember, track, and do</b> regarding Nan — key facts, important dates, notes, reminders, and gift ideas. Where Relationship Buddy maintains relationships broadly, Nan's Buddy goes deep on one person.</p>
     <div class="meta">
       <span class="pill st">📝 Brief review</span>
       <a class="pill" href="https://docs.google.com/document/d/1cYab49CDpdfPlD5xzL0EXKm11XAObvBhi0yPw_2Pskk/edit" target="_blank" rel="noopener">📄 Product brief</a>
@@ -379,7 +379,7 @@
   </div>
 
   <footer>
-    <span>👩‍🍳 Nancy Buddy · child of <b>Family Buddy</b></span>
+    <span>👩‍🍳 Nan's Buddy · child of <b>Family Buddy</b></span>
     <span><a href="https://docs.google.com/document/d/1cYab49CDpdfPlD5xzL0EXKm11XAObvBhi0yPw_2Pskk/edit" target="_blank" rel="noopener">Product brief</a></span>
     <span><a href="https://github.com/davedellaquila/nancy-buddy" target="_blank" rel="noopener">davedellaquila/nancy-buddy</a></span>
   </footer>
@@ -407,7 +407,7 @@ function renderNotes() {
   const el = document.getElementById("notes");
   el.innerHTML = store.notes.length ? store.notes.map((n, i) =>
     `<div class="note"><button class="x" onclick="delNote(${i})" title="Remove">✕</button><p>${esc(n.text)}</p><div class="when">${esc(n.when || "")}</div></div>`
-  ).join("") : `<div class="empty">No notes pinned yet — the two above this line are seeded from what Nancy Buddy already knows.</div>`;
+  ).join("") : `<div class="empty">No notes pinned yet — the two above this line are seeded from what Nan's Buddy already knows.</div>`;
 }
 function addNote() {
   const t = document.getElementById("noteInput").value.trim();
@@ -556,6 +556,23 @@ function surprisePhoto() {
 }
 
 renderNotes(); renderReminders(); renderDates(); renderGifts(); renderPhotos();
+
+// Keep the displayed buddy name in sync with the registry (buddies.json),
+// so a rename reflects here immediately without a homepage rebuild.
+(function(){
+  fetch('../buddies.json', {cache: 'no-store'}).then(function(r){ return r.json(); }).then(function(d){
+    var buds = (d && d.buddies) || [];
+    for (var i = 0; i < buds.length; i++) {
+      if (buds[i].id === 'nancy-buddy' && buds[i].name) {
+        var name = buds[i].name;
+        var t = document.getElementById('buddyTitle');
+        if (t) t.textContent = name;
+        document.title = name + ' — Living dossier for Nan';
+        break;
+      }
+    }
+  }).catch(function(){});
+})();
 </script>
 <script>
 // ---- brain-dump box (writes to nancy-buddy/docs/ingest.md via GitHub API) ----

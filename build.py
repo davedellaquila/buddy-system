@@ -3313,39 +3313,119 @@ function initPanelSwipeGestures(){
 // Checks for a newer deployed version; shows an update banner if the server
 // has a newer build than the one currently loaded (helps Safari web apps
 // and other containers without a hard-refresh shortcut).
+// Returns 'new' | 'current' | 'suppressed' | 'error' so manual triggers
+// (e.g. pull-to-refresh) can report the outcome.
 function initVersionCheck(){
   const myBuild = '__BUILD__';
-  async function check(){
+  function showUpdateBanner(serverBuild){
+    if (document.getElementById('update-banner')) return;
+    const b = document.createElement('div');
+    b.id = 'update-banner';
+    b.innerHTML = '<span>A newer version of Buddies is available (' + escHtml(serverBuild) + ').</span> '
+      + '<button id="update-now" style="margin-left:12px;padding:6px 14px;border-radius:8px;border:1px solid var(--accent);background:var(--accent);color:#fff;font-weight:600;cursor:pointer">Update now</button>'
+      + '<button id="update-dismiss" aria-label="Dismiss" style="margin-left:8px;padding:6px 10px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--text);font-size:16px;cursor:pointer;line-height:1">×</button>';
+    b.style.cssText = 'position:fixed;bottom:16px;left:50%;transform:translateX(-50%);z-index:9999;background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:12px 18px;box-shadow:0 8px 32px rgba(0,0,0,.3);display:flex;align-items:center;font-size:14px';
+    document.body.appendChild(b);
+    document.getElementById('update-now').addEventListener('click', () => {
+      b.remove();
+      try { sessionStorage.setItem('updateClicked', String(Date.now())); } catch (e) {}
+      location.href = location.pathname + '?v=' + Date.now() + location.hash;
+    });
+    document.getElementById('update-dismiss').addEventListener('click', () => {
+      b.remove();
+    });
+  }
+  async function checkForUpdate(){
     try {
       const r = await fetch('version.txt?_=' + Date.now(), {cache: 'no-store'});
-      if (!r.ok) return;
+      if (!r.ok) return 'error';
       const serverBuild = (await r.text()).trim();
       // Don't show the banner for 10 min after "Update now" was clicked (gives Pages time to deploy)
       try {
         const clicked = parseInt(sessionStorage.getItem('updateClicked') || '0', 10);
-        if (clicked && Date.now() - clicked < 10 * 60 * 1000) return;
+        if (clicked && Date.now() - clicked < 10 * 60 * 1000) return 'suppressed';
       } catch (e) {}
-      if (serverBuild && serverBuild !== myBuild && !document.getElementById('update-banner')) {
-        const b = document.createElement('div');
-        b.id = 'update-banner';
-        b.innerHTML = '<span>A newer version of Buddies is available (' + escHtml(serverBuild) + ').</span> '
-          + '<button id="update-now" style="margin-left:12px;padding:6px 14px;border-radius:8px;border:1px solid var(--accent);background:var(--accent);color:#fff;font-weight:600;cursor:pointer">Update now</button>'
-          + '<button id="update-dismiss" aria-label="Dismiss" style="margin-left:8px;padding:6px 10px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--text);font-size:16px;cursor:pointer;line-height:1">\u00d7</button>';
-        b.style.cssText = 'position:fixed;bottom:16px;left:50%;transform:translateX(-50%);z-index:9999;background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:12px 18px;box-shadow:0 8px 32px rgba(0,0,0,.3);display:flex;align-items:center;font-size:14px';
-        document.body.appendChild(b);
-        document.getElementById('update-now').addEventListener('click', () => {
-          b.remove();
-          try { sessionStorage.setItem('updateClicked', String(Date.now())); } catch (e) {}
-          location.href = location.pathname + '?v=' + Date.now() + location.hash;
-        });
-        document.getElementById('update-dismiss').addEventListener('click', () => {
-          b.remove();
-        });
+      if (serverBuild && serverBuild !== myBuild) {
+        showUpdateBanner(serverBuild);
+        return 'new';
       }
-    } catch (e) {}
+      return 'current';
+    } catch (e) { return 'error'; }
   }
-  check();
-  setInterval(check, 5 * 60 * 1000);
+  window.__buddyUpdateCheck = checkForUpdate;
+  checkForUpdate();
+  setInterval(checkForUpdate, 5 * 60 * 1000);
+}
+// Pull-down at the top of any scrollable view triggers a manual update check.
+function initPullToRefresh(){
+  const THRESHOLD = 70;
+  let track = null, pill = null, pillVisible = false;
+  function scrollableAncestor(el){
+    while (el && el !== document.body && el !== document.documentElement) {
+      if (el.scrollHeight > el.clientHeight + 4) return el;
+      el = el.parentElement;
+    }
+    const de = document.documentElement;
+    if (de.scrollHeight > de.clientHeight + 4) return de;
+    return document.body;
+  }
+  function ensurePill(){
+    if (pill) return pill;
+    pill = document.createElement('div');
+    pill.setAttribute('aria-live', 'polite');
+    pill.style.cssText = 'position:fixed;top:10px;left:50%;transform:translateX(-50%) translateY(-8px);z-index:10000;background:var(--panel);border:1px solid var(--border);border-radius:999px;padding:8px 16px;font-size:13px;color:var(--text);opacity:0;transition:opacity .18s,transform .18s;pointer-events:none;box-shadow:0 4px 16px rgba(0,0,0,.18);white-space:nowrap';
+    document.body.appendChild(pill);
+    return pill;
+  }
+  function showPill(text){
+    const p = ensurePill();
+    p.textContent = text;
+    p.style.opacity = '1';
+    p.style.transform = 'translateX(-50%) translateY(0)';
+    pillVisible = true;
+  }
+  function hidePill(){
+    if (!pill) return;
+    pill.style.opacity = '0';
+    pill.style.transform = 'translateX(-50%) translateY(-8px)';
+    pillVisible = false;
+  }
+  function toast(text, ms){
+    showPill(text);
+    setTimeout(hidePill, ms || 2200);
+  }
+  document.addEventListener('touchstart', function(e){
+    if (e.touches.length !== 1) { track = null; return; }
+    const t = e.touches[0];
+    const sc = scrollableAncestor(e.target);
+    track = (sc && sc.scrollTop <= 0) ? { y0: t.clientY, x0: t.clientX } : null;
+  }, {passive: true});
+  document.addEventListener('touchmove', function(e){
+    if (!track) return;
+    const t = e.touches[0];
+    const dy = t.clientY - track.y0, dx = t.clientX - track.x0;
+    if (Math.abs(dx) > Math.abs(dy) * 1.4) { track = null; hidePill(); return; }
+    if (dy > THRESHOLD) showPill('Release to check for updates');
+    else if (dy > 24) showPill('Keep pulling to check for updates');
+    else if (pillVisible) hidePill();
+  }, {passive: true});
+  function onEnd(){
+    if (!track) return;
+    const engaged = pillVisible;
+    track = null;
+    hidePill();
+    if (!engaged) return;
+    const run = window.__buddyUpdateCheck;
+    if (!run) return;
+    showPill('Checking for updates…');
+    run().then(function(status){
+      if (status === 'new') { hidePill(); }
+      else if (status === 'current' || status === 'suppressed') toast('You are up to date');
+      else toast('Could not check — are you offline?');
+    });
+  }
+  document.addEventListener('touchend', onEnd, {passive: true});
+  document.addEventListener('touchcancel', function(){ track = null; hidePill(); }, {passive: true});
 }
 function initSearch(){
   const bs = document.getElementById('buddy-search');
@@ -3591,6 +3671,7 @@ initSbToTop();
 initEdgeSwipeOpen();
 initPanelSwipeGestures();
 initVersionCheck();
+initPullToRefresh();
 initPlansToggle();
 initSbBrandSticky();
 """
