@@ -791,6 +791,7 @@ def build():
     js = """const BUDDIES = BUDDIES_JSON;
 const ROOT_ORDER = ORDER_JSON;
 const byId = Object.fromEntries(BUDDIES.map(b => [b.id, b]));
+BUDDIES.forEach(b => { (b.links || []).forEach(lid => { const t = byId[lid]; if (t && lid !== b.id) { (t.linkedBy = t.linkedBy || []).push(b.id); } }); });
 (function applyIconOverrides(){ try { const o = JSON.parse(localStorage.getItem('buddyState') || '{}').iconOverrides || {}; Object.entries(o).forEach(([id, ic]) => { if (byId[id]) byId[id].icon = ic; }); } catch(e){} })();
 const PLANS = PLANS_JSON;
 const planById = Object.fromEntries(PLANS.map(p => [p.id, p]));
@@ -1823,6 +1824,24 @@ function renderBuddy(id){
       + '<span><span class="art-label">'+escHtml(p.name)+'</span><div class="art-sub">BRD / business plan · '+escHtml(p.status)+'</div></span>'
       + '<span class="art-go">→</span></a>').join('') + '</div>';
   }
+  let linkSec = '';
+  (function(){
+    const out = (b.links || []).filter(lid => lid !== id);
+    const inc = (b.linkedBy || []).filter(lid => lid !== id && out.indexOf(lid) < 0);
+    const all = out.concat(inc);
+    if (!all.length) return;
+    function prettyId(s){ return s.replace(/-buddy$/, "'s Buddy").replace(/(^|-)([a-z])/g, function(m, p, c){ return (p === '-' ? ' ' : '') + c.toUpperCase(); }); }
+    linkSec = '<div class="bp-sec" data-field="links"><h3>Linked buddies</h3>' + all.map(lid => {
+      const lb = byId[lid];
+      if (lb) return '<a class="art-row" data-buddy="' + escHtml(lid) + '">'
+        + '<span class="art-ic">' + escHtml(lb.icon || '') + '</span>'
+        + '<span><span class="art-label">' + escHtml(dispName(lb)) + '</span><div class="art-sub">' + escHtml((lb.mission || '').slice(0, 90)) + '</div></span>'
+        + '<span class="art-go">\u2192</span></a>';
+      return '<div class="art-row" style="opacity:.55">'
+        + '<span class="art-ic">\u23f3</span>'
+        + '<span><span class="art-label">' + escHtml(prettyId(lid)) + '</span><div class="art-sub">Buddy being set up</div></span></div>';
+    }).join('') + '</div>';
+  })();
   let attn = '';
   let unseenCount = 0;
   if (!items.length) attn = '';
@@ -1864,6 +1883,7 @@ function renderBuddy(id){
     + '<div style="margin-top:8px"><span class="fineprint" id="ingest-status"></span></div>'
     + '<div id="ingest-feed" style="margin-top:8px"></div></div>'
     + '<div class="bp-sec" data-field="mission"><h3>About<span class="info-tip" data-tip="The mission statement\\u2019s executive summary \\u2014 tweak it through the buddy\\u2019s chat thread and it updates everywhere.">\\u24d8</span></h3><p class="bp-mission">'+escHtml(b.mission)+'</p></div>'
+    + linkSec
     + '<div class="bp-sec" data-field="homepage"><h3>Homepage URL</h3>'
     + '<div style="display:flex;align-items:center;gap:8px">'
     + '<input type="url" id="bp-homepage-url" value="'+escHtml(homepageUrl(b))+'" placeholder="Paste homepage URL here…" style="flex:1;min-width:0;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:8px 12px;font-size:13px;color:var(--text)" title="The full URL for this buddy\u2019s homepage. Paste a URL and click away to save.">'
