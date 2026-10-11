@@ -3,6 +3,19 @@
 All notable changes to the Buddies dashboard and buddy system. Newest first.
 `FEATURES.md` describes the current state; this file describes how it got there.
 
+## 2026-10-11 (Discovery Buddy: brain-dump box on homepage)
+
+### Added
+- **🧠 Brain dump section** on the Discovery Buddy homepage (textarea + "Dump it",
+  Cmd/Ctrl+Enter). Appends timestamped entries to docs/ingest.md in
+  davedellaquila/discovery-buddy via the GitHub contents API — the same write
+  path as the dashboard's ingest panel. Token read from dashboard localStorage
+  (buddyTree.v3 → ghToken, shared origin); one-time token prompt if missing.
+  Repo resolved from ../buddies.json via data-buddy-id="discovery-buddy".
+  Restyled to the listening-room theme; dark+light mode preserved.
+  JS logic unit-tested with mocked DOM/fetch; write path confirmed with a
+  labeled test entry in docs/ingest.md.
+
 ## 2026-10-11 (Design Buddy)
 
 ### Added
