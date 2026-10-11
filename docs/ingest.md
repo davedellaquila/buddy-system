@@ -82,3 +82,9 @@ Provide a what’s new button on the update message when a new version shows up
 
 We should think about a default set of buddies that every new configuration should have. I think that would make sense as opposed to just starting out with no buddies. What do you think? Thoughts?
 
+## 10/11/2026, 11:48:16 AM
+
+For the side panel behavior this is definitely an improvement. I like how the left sidebar slides out and leaves a little space on the right to let you know that it's a panel that's slid out.
+
+Also while we're at it, make it slightly shorter so there's some margin on the top and bottom, and round the corners as well to soften it up a little bit. I like the exact same behavior on the right side panel. When you click the chevron icon, it slides out and there's a chevron icon in the opposite direction to slide it back. Same rounded corners, same margins around the edges
+
