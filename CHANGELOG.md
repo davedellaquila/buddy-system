@@ -3,6 +3,14 @@
 All notable changes to the Buddies dashboard and buddy system. Newest first.
 `FEATURES.md` describes the current state; this file describes how it got there.
 
+## 2026-10-11 (Ticket Buddy, Hiking Buddy, Venue Buddy: three new buddies)
+
+### Added
+- **Ticket Buddy** — new buddy: finds tickets to the shows Dave wants to see — concerts, theater, comedy (🎟️ icon, child of Personal Buddy, `Brief review` status). Keeps the want-to-see list, hunts down ticket options with prices and seat info, flags onsales, price drops, and newly released seats. Pairs with Discovery Buddy (Discovery figures out what he'd like; Ticket Buddy gets him in the door). Full drill: [brief](https://docs.google.com/document/d/1rVlr7Hv4vpUSnA9aykPE7Jplx_KuIxttqXHDewnkV2E/edit), private repo [davedellaquila/ticket-buddy](https://github.com/davedellaquila/ticket-buddy). Open: sources beyond Ticketmaster?; travel range for shows?; per-show budget?
+- **Hiking Buddy** — new buddy: the trusted list of local Fiddletown/Amador trails — distance, difficulty, time, highlights — plus hiking advice on demand (🥾 icon, child of Cabin Buddy, `Brief review` status). Seeded with the Lake Tabeaud loop (2.5 mi, easy, ~45–60 min). Born when Dave was giving a friend hiking advice. Full drill: [brief](https://docs.google.com/document/d/1NjOxDUcxRtnYzeKhhSZkEHHMYgvgGuYgwUGfjjIMx2M/edit), private repo [davedellaquila/hiking-buddy](https://github.com/davedellaquila/hiking-buddy). Open: which trails seed the list first?; expand beyond Amador County?
+- **Venue Buddy** — new buddy: the shortlist of places worth checking out — wedding venues, wineries, restaurants, weekend spots (📍 icon, child of Personal Buddy, `Brief review` status). First entry: Oak Farm Vineyards, Lodi (~$4,500/wedding, ~300 capacity, 70-acre historic estate) as a candidate for Quentin and Amanda's wedding. Full drill: [brief](https://docs.google.com/document/d/1uAgDOGIkr06CphFQkdoEGubpOEcaTPsJ4AMXRXMHab0/edit), private repo [davedellaquila/venue-buddy](https://github.com/davedellaquila/venue-buddy). Open: wedding date, budget, guest count?; how many venues on the shortlist?
+- Dashboard now tracks 58 buddies.
+
 ## 2026-10-11 (Discovery Buddy: scope widened to every form of entertainment)
 
 ### Changed
