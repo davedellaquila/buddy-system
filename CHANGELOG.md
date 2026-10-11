@@ -10,7 +10,8 @@ All notable changes to the Buddies dashboard and buddy system. Newest first.
   into the right detail panel footer (above the build stamp).
 - **Dump list refresh** — new dumps paint immediately and stay visible: default
   expanded, race-safe against stale GitHub fetches, and the Ingest section is
-  un-hidden/un-collapsed when a dump lands.
+  un-hidden/un-collapsed when a dump lands. The **Dumps** heading always
+  renders (even at 0) so the section can’t disappear; status text points at it.
 
 ## 2026-10-11 (Sidebar + detail panel: chevron expand/collapse controls)
 
