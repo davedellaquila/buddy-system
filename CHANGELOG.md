@@ -3,6 +3,17 @@
 All notable changes to the Buddies dashboard and buddy system. Newest first.
 `FEATURES.md` describes the current state; this file describes how it got there.
 
+## 2026-10-11 (Scroll isolation: homepage vs side panels)
+
+### Fixed
+- **First-paint homepage scroll dragged the side panel** — after a full reload,
+  with homepage + left sidebar visible, wheel/trackpad over the homepage scrolled
+  the whole document (sidebar moved with it). Scrolling the sidebar once “fixed”
+  it. Desktop/tablet (≥640px) now locks the app shell to the viewport: left
+  sidebar and main are separate scrollports (`overscroll-behavior: contain`);
+  homepage mode puts overflow on the iframe pane only. Phone drawer + standalone
+  keep document scroll.
+
 ## 2026-10-11 (Detail panel footer + dump feed fixes)
 
 ### Changed

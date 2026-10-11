@@ -205,8 +205,29 @@ body{padding:0}
 .app{display:flex;min-height:100vh;align-items:stretch}
 #sidebar{width:308px;flex:0 0 308px;background:var(--bg);border-right:1px solid var(--border2);
   padding:0 14px 32px;position:sticky;top:0;height:100vh;overflow-y:auto;overflow-x:hidden;overflow-wrap:break-word;
-  z-index:40}
-#main{flex:1;min-width:0;padding:36px 32px 80px;position:relative;z-index:1}
+  z-index:40;overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
+#main{flex:1;min-width:0;min-height:0;padding:36px 32px 80px;position:relative;z-index:1}
+/* Desktop/tablet: lock the shell to the viewport so homepage wheel/trackpad
+   never scrolls the document (and the sticky sidebar) on first paint. Each
+   pane is its own scrollport; phone drawer layout keeps document scroll. */
+@media (min-width:640px){
+  html,body{height:100%;overflow:hidden}
+  .app{height:100vh;height:100dvh;max-height:100vh;max-height:100dvh;min-height:0;overflow:hidden}
+  #sidebar{position:relative;top:auto;height:auto;align-self:stretch;max-height:none;
+    overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
+  #main{align-self:stretch;height:auto;min-height:0;overflow-y:auto;overflow-x:hidden;
+    overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
+  #main.homepage-mode{display:flex;flex-direction:column;overflow:hidden;padding:0}
+  #main.homepage-mode #view-project.active{flex:1 1 auto;min-height:0!important;height:auto;max-height:none}
+  #homepage-wrap{flex:1 1 auto;min-height:0;height:auto;overflow:hidden}
+  #homepage-frame{flex:1 1 auto;min-height:0;height:100%;width:100%}
+  /* Tree fills the main pane (not the document) */
+  #view-tree.view.active{height:100%!important;max-height:100%;box-sizing:border-box}
+  /* Standalone buddy pages scroll the document again */
+  body.standalone{height:auto;overflow:auto}
+  body.standalone .app{height:auto;max-height:none;min-height:100vh;overflow:visible}
+  body.standalone #main{overflow:visible;height:auto}
+}
 .brand{padding:22px 8px 14px;background:var(--bg)}
 /* Brand chrome (eyebrow/title/subtitle + gear/close) pins at top; Views scroll under */
 .sb-brand-sticky{
@@ -569,7 +590,9 @@ body.standalone .sa-bar{display:flex}
 #menu-btn{display:none}
 /* ---- Small: <640px (iPhone) ---- */
 @media (max-width:639px){
-  .app{display:block}
+  /* Phone drawer: document scrolls; undo desktop viewport lock */
+  html,body{height:auto;overflow-x:clip;overflow-y:auto}
+  .app{display:block;height:auto;max-height:none;min-height:0;overflow:visible}
   /* Prevent iOS auto-zoom on input focus */
   input, textarea, select{font-size:16px !important}
   #menu-btn{display:flex;align-items:center;justify-content:center;position:fixed;top:12px;left:12px;z-index:90;
@@ -577,11 +600,12 @@ body.standalone .sa-bar{display:flex}
     width:48px;height:48px;cursor:pointer;box-shadow:0 2px 12px var(--shadow)}
   /* Sidebar drawer with scrim */
   #sidebar{position:fixed;left:0;top:0;bottom:0;z-index:95;height:100vh;height:100dvh;
-    transform:translateX(-105%);transition:transform .28s cubic-bezier(.32,.72,.35,1);width:min(85vw,340px);flex:none}
+    transform:translateX(-105%);transition:transform .28s cubic-bezier(.32,.72,.35,1);width:min(85vw,340px);flex:none;
+    overflow-y:auto;overflow-x:hidden}
   #sidebar.open{transform:none;box-shadow:12px 0 40px rgba(0,0,0,.35)}
   /* Sidebar resize: sibling of #sidebar; visibility gated by #sidebar.open ~ #sb-resize above */
   #sb-resize{touch-action:none}
-  html,body{overflow-x:clip}
+  #main{overflow:visible;height:auto;min-height:0}
   #sb-scrim{display:none;position:fixed;inset:0;z-index:94;background:rgba(0,0,0,.45);opacity:0;transition:opacity .25s}
   #sb-scrim.show{display:block;opacity:1}
   #main{padding:72px 12px 60px}
@@ -642,23 +666,24 @@ body.standalone .sa-bar{display:flex}
 }
 /* ---- Medium: 640-1100px (iPad) ---- */
 @media (min-width:640px) and (max-width:1100px){
-  /* Keep a real left sidebar — do not stack above main (iPad portrait is ~744–834px). */
+  /* Keep a real left sidebar — do not stack above main (iPad portrait is ~744–834px).
+     Scroll isolation comes from the ≥640px viewport-locked shell above. */
   .app{display:flex;flex-direction:row;align-items:stretch}
-  #sidebar{width:250px;flex:0 0 250px;position:sticky;top:0;height:100vh;height:100dvh;
+  #sidebar{width:250px;flex:0 0 250px;position:relative;top:auto;height:auto;align-self:stretch;
     max-height:none;border-right:1px solid var(--border2);border-bottom:0;overflow-y:auto;overflow-x:hidden;
-    z-index:40;background:var(--bg)}
-  #main{flex:1;min-width:0;padding:28px 22px 64px;position:relative;z-index:1}
+    z-index:40;background:var(--bg);overscroll-behavior:contain}
+  #main{flex:1;min-width:0;min-height:0;padding:28px 22px 64px;position:relative;z-index:1}
   #main.homepage-mode{padding:0}
   .node{width:172px}
   #view-buddy.panel{position:fixed;top:0;right:0;bottom:0;width:min(380px,calc(100vw - 250px));z-index:30;
     background:var(--bg);border-left:1px solid var(--border);overflow-y:auto;overflow-x:hidden;
-    padding:20px 18px 48px;box-shadow:-8px 0 32px var(--shadow)}
+    padding:20px 18px 48px;box-shadow:-8px 0 32px var(--shadow);overscroll-behavior:contain}
 }
 /* ---- Large: >1100px (desktop) ---- */
 @media (min-width:1101px){
   #view-buddy.panel{position:fixed;top:0;right:0;bottom:0;width:400px;z-index:60;
     background:var(--bg);border-left:1px solid var(--border);overflow-y:auto;overflow-x:hidden;
-    padding:24px 20px 48px;box-shadow:-8px 0 32px var(--shadow)}
+    padding:24px 20px 48px;box-shadow:-8px 0 32px var(--shadow);overscroll-behavior:contain}
 }
 #view-buddy.panel.active,#view-buddy.sheet.active{display:block}
 #main .view{display:none}
@@ -717,12 +742,16 @@ body.standalone .sa-bar{display:flex}
   .ptile-sub{font-size:10px !important;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 }
 #main.homepage-mode{padding:0}
+/* Phone / short layouts still size the project view to the viewport; desktop
+   homepage fill is handled by the ≥640px locked-shell rules above. */
 #main.homepage-mode #view-project.active{min-height:100vh}
 #homepage-wrap{flex:1;display:flex;flex-direction:column;min-height:0;margin:0;position:relative}
 #homepage-frame{flex:1;width:100%;min-height:0;border:0;border-radius:0;background:#fff;display:block}
-@media (max-width:760px){#main #view-project.active{min-height:calc(100vh - 88px)}
-#main.homepage-mode{padding:0}
-#main.homepage-mode #view-project.active{min-height:100vh}}
+@media (max-width:639px){
+  #main #view-project.active{min-height:calc(100vh - 88px)}
+  #main.homepage-mode{padding:0}
+  #main.homepage-mode #view-project.active{min-height:100vh}
+}
 
 .pstrip img{height:150px;border-radius:10px;border:1px solid var(--border);display:block}
 .pstrip img:hover{border-color:var(--accent)}
@@ -2020,7 +2049,7 @@ function renderBuddy(id){
     + (getHomepage(b)
         ? '<a class="linkbtn" id="bp-open-tab" href="'+escHtml(b.homepageSource || getHomepage(b))+'" target="_blank" rel="noopener" title="Open this buddy’s homepage in a new tab">Open in a new tab</a>'
         : '')
-    + '<div class="bp-build">Build 20261011.1621</div></div>'
+    + '<div class="bp-build">Build 20261011.1650</div></div>'
     + '</div>';
   const nm = document.getElementById('bp-name');
   nm.addEventListener('keydown', e => { if (e.key === 'Enter'){ e.preventDefault(); nm.blur(); } });
@@ -2725,7 +2754,7 @@ function renderPlan(id){
     + '<p class="fineprint">Saved on this device. (For your eyes only)</p></div>'
     + '<div class="bp-sec"><h3>Shared notes<span class="info-tip" data-tip="Visible to everyone with access to this project.">\u24d8</span></h3><textarea class="notes" id="bp-shared" placeholder="Shared notes\u2026 (visible to everyone with access)">'+escHtml((S.planShared||{})[id]||'')+'</textarea>'
     + '<p class="fineprint">Shared — visible to everyone with access.</p></div>'
-    + '<div class="bp-build">Build 20261011.1621</div>'
+    + '<div class="bp-build">Build 20261011.1650</div>'
     + '</div>';
   const nt = document.getElementById('bp-notes');
   let t = null;
@@ -3656,7 +3685,7 @@ function initPanelSwipeGestures(){
 // has a newer build than the one currently loaded (helps Safari web apps
 // and other containers without a hard-refresh shortcut).
 function initVersionCheck(){
-  const myBuild = '20261011.1621';
+  const myBuild = '20261011.1650';
   async function check(){
     try {
       const r = await fetch('version.txt?_=' + Date.now(), {cache: 'no-store'});

@@ -152,6 +152,9 @@ Build: `build.py` generates `index.html` from `buddies.json` + `plans.json`.
   the top-right tools; closed panel shows a floating right chevron (expand).
 - **Detail panel collapse controls**: open panel sticky header shows a right
   chevron (collapse); closed panel shows a floating left chevron (expand).
+- **Scroll isolation (≥640px)**: app shell is viewport-locked; left sidebar and
+  main scroll independently. Homepage mode scrolls only the homepage pane (not
+  the sidebar). Phone drawer layout still uses document scroll.
 - **Medium (640–1100px)**: collapsible sidebar; view nav becomes a horizontal
   segmented control; detail opens as a right-docked side sheet (380px).
 - **Large (>1100px)**: tri-pane with persistent detail panel (400px).
