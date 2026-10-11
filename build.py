@@ -96,6 +96,7 @@ body{padding:0}
 #attn-pill{background:var(--accent);color:var(--on-accent);font-size:11px;font-weight:700;border-radius:999px;
   padding:1px 8px;letter-spacing:0;text-transform:none}
 #attn-pill.zero{background:var(--border2);color:var(--muted)}
+.attn-count{font-size:11px;font-weight:700;color:var(--muted);letter-spacing:0;text-transform:none}
 .navbtn{display:flex;align-items:center;gap:10px;width:100%;text-align:left;background:none;border:0;
   color:var(--text);font:inherit;font-size:14px;padding:8px 10px;border-radius:8px;cursor:pointer}
 .navbtn:hover{background:var(--hover)}
@@ -2046,7 +2047,7 @@ function renderBuddy(id){
     + '<input type="url" id="bp-homepage-url" value="'+escHtml(homepageUrl(b))+'" placeholder="Paste homepage URL here…" style="flex:1;min-width:0;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:8px 12px;font-size:13px;color:var(--text)" title="The full URL for this buddy\u2019s homepage. Paste a URL and click away to save.">'
     + '<button class="linkbtn" id="bp-homepage-copy" title="Copy homepage URL to clipboard" style="flex-shrink:0">Copy</button>'
     + '</div></div>'
-    + (unseenCount > 0 ? '<div class="bp-sec" data-field="attention"><h3>Needs your attention</h3>'+attn+'</div>' : '')
+    + (unseenCount > 0 ? '<div class="bp-sec" data-field="attention"><h3>Needs your attention <span class="attn-count">('+unseenCount+')</span></h3>'+attn+'</div>' : '')
     + photos
     + (id === ROOT_ID
         ? '<div class="bp-sec" data-field="tree"><h3>The Buddy Tree</h3><div class="bp-tree-wrap"></div>'
