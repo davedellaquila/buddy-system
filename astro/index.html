@@ -61,6 +61,14 @@
   .feed-more{padding:12px 18px;font-size:13px;color:var(--muted);background:var(--panel2);text-align:center}
   .feed-more a{color:var(--accent);text-decoration:none;font-weight:600}
   .feed-empty{padding:24px;text-align:center;color:var(--muted)}
+  .feed-hint{font-size:12px;color:var(--muted);margin:-6px 0 10px}
+  .donebtn{flex-shrink:0;align-self:center;border:1px solid var(--border);background:transparent;color:var(--dim);border-radius:999px;padding:8px 14px;font-size:13px;cursor:pointer;min-height:44px}
+  .donebtn:hover{border-color:var(--green);color:var(--green)}
+  .donebtn:disabled{opacity:.5;cursor:default}
+  .done-err{font-size:12px;color:var(--amber);align-self:center;max-width:230px;line-height:1.4}
+  .done-err a{color:var(--accent)}
+  .feed-item.acked{opacity:0;transition:opacity .45s}
+  @media (prefers-reduced-motion: reduce){.feed-item.acked{transition:none}}
   /* ---------- cards ---------- */
   .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}
   .card{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:18px 20px;position:relative;overflow:hidden}
@@ -161,6 +169,7 @@
   </div>
 
   <h2>🔔 Needs Dave's attention</h2>
+  <div class="feed-hint">Tap ✓ Done on anything you've handled — it writes back to the repo and tells Astro, so it clears everywhere.</div>
   <div class="feed" id="feed"><div class="feed-empty">Loading the attention feed…</div></div>
 
   <h2>📌 Pinned — we'll come back to this</h2>
@@ -304,7 +313,7 @@
     .then(function(d){
       var buds=d.buddies||[];
       var attn=[];
-      buds.forEach(function(b){(b.attention||[]).forEach(function(a){attn.push({buddy:b,text:a.text,date:a.date||"",icon:b.icon||"📌",name:b.name,url:a.url||"",bid:b.id||""});});});
+      buds.forEach(function(b){(b.attention||[]).forEach(function(a){attn.push({buddy:b,aid:a.id||"",text:a.text,date:a.date||"",icon:b.icon||"📌",name:b.name,url:a.url||"",bid:b.id||""});});});
       attn.sort(function(x,y){return (y.date||"").localeCompare(x.date||"");});
       set("st-buddies",buds.length);
       set("st-attn",attn.length);
@@ -357,13 +366,59 @@
           var home='https://davedellaquila.github.io/buddy-system/'+esc(a.bid)+'/';
           var txt=esc(a.text);
           if(a.url){txt='<a href="'+esc(a.url)+'" target="_blank" rel="noopener">'+txt+'</a>';}
-          return '<div class="feed-item"><div class="feed-icon">'+esc(a.icon)+'</div>'+
+          return '<div class="feed-item" data-bid="'+esc(a.bid)+'" data-aid="'+esc(a.aid)+'" data-atext="'+esc(a.text)+'"><div class="feed-icon">'+esc(a.icon)+'</div>'+
             '<div class="feed-body"><div class="feed-buddy"><a href="'+home+'" target="_blank" rel="noopener">'+esc(a.name)+'</a></div>'+
             '<div class="feed-text">'+txt+'</div>'+
-            (a.date?'<div class="feed-date">'+esc(a.date)+'</div>':'')+'</div></div>';
+            (a.date?'<div class="feed-date">'+esc(a.date)+'</div>':'')+'</div>'+
+            '<button class="donebtn" title="Mark handled — writes back and tells Astro">✓ Done</button></div>';
         }).join("")+
         (attn.length>show.length?'<div class="feed-more">+ '+(attn.length-show.length)+' more — see them all on the <a href="../">dashboard</a>.</div>':'');
       }
+      /* ---------- ✓ Done write-back: ack an attention item straight to buddies.json ---------- */
+      var LSKEY='buddyTree.v3';
+      function ghToken(){ try{ return JSON.parse(localStorage.getItem(LSKEY)||'{}').ghToken||''; }catch(e){ return ''; } }
+      function b64enc(str){ var b=new TextEncoder().encode(str),s=''; for(var i=0;i<b.length;i++) s+=String.fromCharCode(b[i]); return btoa(s); }
+      function b64dec(b64){ var bin=atob(String(b64).replace(/\n/g,'')),u=Uint8Array.from(bin,function(c){return c.charCodeAt(0);}); return new TextDecoder().decode(u); }
+      async function ackAttention(item){
+        var bid=item.getAttribute('data-bid'), aid=item.getAttribute('data-aid'), atext=item.getAttribute('data-atext');
+        var btn=item.querySelector('.donebtn');
+        var t=ghToken();
+        if(!t){ btn.outerHTML='<span class="done-err">Add your GitHub token on the <a href="../">dashboard</a> (Photos section) — same token the shared notes use.</span>'; return; }
+        btn.disabled=true; btn.textContent='…';
+        var headers={'Authorization':'Bearer '+t,'Accept':'application/vnd.github+json','Content-Type':'application/json'};
+        var api='https://api.github.com/repos/davedellaquila/buddy-system/contents/buddies.json';
+        try{
+          var g=await fetch(api,{headers:headers});
+          if(!g.ok) throw new Error('couldn\'t read buddies.json ('+g.status+')');
+          var gj=await g.json();
+          var data=JSON.parse(b64dec(gj.content));
+          var found=false, label='';
+          (data.buddies||[]).forEach(function(b){
+            if(b.id!==bid) return;
+            var att=b.attention||[];
+            for(var j=att.length-1;j>=0;j--){
+              if((aid && att[j].id===aid)||(!aid && att[j].text===atext)){ label=att[j].text||''; att.splice(j,1); found=true; break; }
+            }
+          });
+          if(found){
+            var p=await fetch(api,{method:'PUT',headers:headers,body:JSON.stringify({
+              message:'Ack attention: '+bid+' — '+(label||atext||'').slice(0,80),
+              content:b64enc(JSON.stringify(data,null,1)+'\n'), sha:gj.sha })});
+            if(p.status===409||p.status===422) throw new Error('buddies.json changed elsewhere — reload and retry');
+            if(!p.ok) throw new Error('write failed ('+p.status+')');
+          }
+          item.classList.add('acked');
+          setTimeout(function(){ item.remove(); },480);
+          var n=document.getElementById('st-attn');
+          if(n && /^\d+$/.test(n.textContent)) n.textContent=String(Math.max(0,parseInt(n.textContent,10)-1));
+        }catch(err){
+          btn.outerHTML='<span class="done-err">'+esc(String((err&&err.message)||err))+'</span>';
+        }
+      }
+      document.getElementById('feed').addEventListener('click',function(ev){
+        var b=ev.target.closest('.donebtn'); if(!b) return;
+        ackAttention(b.closest('.feed-item'));
+      });
       var counts={};
       buds.forEach(function(b){var s=b.status||"Unknown";counts[s]=(counts[s]||0)+1;});
       var rows=Object.keys(counts).sort(function(a,b2){return counts[b2]-counts[a];});
