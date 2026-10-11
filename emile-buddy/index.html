@@ -3,363 +3,328 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Emile Buddy — Living dossier for Dave's middle brother</title>
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏎️</text></svg>">
+<title>Emile Buddy</title>
 <style>
-  :root {
-    --paper: #F4F1E7;
-    --card: #FFFEF9;
-    --ink: #232B24;
-    --dim: #6F7669;
-    --line: #DED7C0;
-    --racing: #1E5631;
-    --racing-deep: #143B23;
-    --racing-soft: #E0EBDF;
-    --gold: #B8862F;
-    --gold-soft: #F6ECD4;
-    --note: #FDF6DC;
-    --amber: #B3541E;
-    --red: #B3402E;
-    --red-soft: #F9E9E6;
+  :root{
+    --bg:#f7f5f0; --panel:#ffffff; --ink:#232a33; --muted:#6b7684;
+    --line:#e4e0d5; --steel:#2f5d8a; --steel-soft:#e8f0f8; --steel-line:#c9d9ea;
+    --amber:#b3541e; --amber-soft:#fdf0e2; --red:#b3352b; --red-soft:#fbeae8;
+    --green:#3d7a4e; --green-soft:#e9f3ec; --accent:#2f5d8a;
   }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body {
-    background: var(--paper); color: var(--ink);
-    font-family: -apple-system, "Segoe UI", Inter, Helvetica, Arial, sans-serif;
-    line-height: 1.55; padding: 28px 20px 70px;
-    background-image: radial-gradient(var(--line) 1px, transparent 1px);
-    background-size: 22px 22px;
+  @media (prefers-color-scheme: dark){
+    :root{
+      --bg:#14181d; --panel:#1d232b; --ink:#eceff3; --muted:#9aa6b2;
+      --line:#2c343e; --steel:#7fb0dd; --steel-soft:#1c2733; --steel-line:#33506b;
+      --amber:#e09a4e; --amber-soft:#2b2117; --red:#e07a6f; --red-soft:#2c1e1c;
+      --green:#7cbf8f; --green-soft:#1c2a21; --accent:#7fb0dd;
+    }
   }
-  .wrap { max-width: 1040px; margin: 0 auto; }
-  .serif { font-family: Georgia, "Iowan Old Style", "Times New Roman", serif; }
-
-  header.hero {
-    background: linear-gradient(135deg, #151B17 0%, var(--racing-deep) 45%, var(--racing) 100%);
-    color: #F5F1E3; border: 1px solid #0F2A19; border-radius: 16px;
-    padding: 34px 32px 26px; margin-bottom: 24px;
-    position: relative; overflow: hidden;
-    box-shadow: 0 10px 30px rgba(20,59,35,.30);
+  *{box-sizing:border-box}
+  body{
+    margin:0; font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text",Inter,"Segoe UI",sans-serif;
+    background:var(--bg); color:var(--ink); line-height:1.55;
+    background-image:radial-gradient(var(--line) 1px, transparent 1px);
+    background-size:22px 22px;
   }
-  header.hero::after {
-    content: "🏎️"; position: absolute; right: 20px; top: 2px;
-    font-size: 120px; opacity: .14; transform: rotate(6deg); pointer-events: none;
+  .wrap{max-width:860px; margin:0 auto; padding:40px 24px 64px}
+  header{display:flex; align-items:center; gap:18px; flex-wrap:wrap}
+  .icon{
+    width:76px; height:76px; border-radius:22px; font-size:40px;
+    display:flex; align-items:center; justify-content:center;
+    background:var(--steel-soft); border:1px solid var(--steel-line);
+    box-shadow:0 6px 20px rgba(47,93,138,.18);
   }
-  .kicker { color: var(--gold); font-size: 12px; letter-spacing: 2.5px; text-transform: uppercase; font-weight: 700; }
-  h1 { font-size: 40px; margin: 8px 0 6px; font-weight: 700; color: #FFFDF4; }
-  h1 .ico { margin-right: 10px; }
-  .tagline { font-size: 18px; color: #D8CFB4; font-style: italic; }
-  .mission { margin-top: 12px; max-width: 74ch; font-size: 15px; color: #EDE7D2; }
-  .mission b { color: #F2D98B; }
-  .meta { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 18px; }
-  .pill {
-    display: inline-flex; align-items: center; gap: 6px;
-    background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.22); border-radius: 999px;
-    padding: 6px 14px; font-size: 13px; color: #F5F1E3; text-decoration: none;
+  h1{margin:0; font-size:34px; letter-spacing:-.5px; font-family:Georgia,"Times New Roman",serif; font-weight:700}
+  .tagline{margin:4px 0 0; color:var(--muted); font-size:15px}
+  .pill{
+    display:inline-block; font-size:12.5px; font-weight:700; letter-spacing:.4px;
+    color:var(--steel); background:var(--steel-soft);
+    border:1px solid var(--steel-line); border-radius:999px; padding:4px 12px; margin-top:8px;
   }
-  .pill.st { background: rgba(184,134,47,.22); border-color: rgba(184,134,47,.65); font-weight: 600; color: #F2D98B; }
-  a.pill:hover { border-color: var(--gold); color: #F2D98B; }
-
-  h2 { font-size: 21px; margin: 34px 0 6px; }
-  h2 .sub { display: block; font-family: -apple-system, "Segoe UI", Inter, sans-serif;
-            font-size: 13px; color: var(--dim); font-weight: 400; margin-top: 2px; }
-
-  .mind { border: 1px solid var(--line); border-left: 5px solid var(--gold);
-          background: var(--card); border-radius: 10px; padding: 14px 18px;
-          margin-bottom: 12px; display: flex; gap: 14px; align-items: flex-start; }
-  .mind.amber { border-left-color: var(--amber); }
-  .mind.red { border-left-color: var(--red); background: var(--red-soft); }
-  .mind .dot { font-size: 20px; line-height: 1.4; }
-  .mind .t { font-weight: 700; font-size: 15px; }
-  .mind .d { color: var(--dim); font-size: 13.5px; }
-
-  .facts { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 14px; margin-top: 14px; }
-  .fact { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 16px 18px; }
-  .fact .e { font-size: 24px; margin-bottom: 6px; }
-  .fact .t { font-weight: 700; font-size: 14.5px; }
-  .fact .d { color: var(--dim); font-size: 13px; margin-top: 4px; }
-  .fact.note-fact { background: var(--racing-soft); border-color: #B9D1B8; }
-
-  .card { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 20px 22px; margin-top: 14px; }
-
-  .board { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 14px; margin-top: 14px; }
-  .note {
-    background: var(--note); border-radius: 4px; padding: 16px 16px 12px;
-    box-shadow: 0 3px 10px rgba(35,43,36,.10); position: relative;
-    transform: rotate(-.6deg); transition: transform .15s;
+  .mission{
+    margin:26px 0 0; font-size:16.5px; line-height:1.7;
+    background:var(--panel); border:1px solid var(--line);
+    border-radius:14px; padding:20px 22px;
   }
-  .note:nth-child(even) { transform: rotate(.7deg); background: #FBF3D8; }
-  .note:hover { transform: rotate(0) scale(1.02); }
-  .note::before { content: ""; position: absolute; top: -8px; left: 50%; transform: translateX(-50%) rotate(2deg);
-                  width: 64px; height: 18px; background: rgba(30,86,49,.30); border-radius: 2px; }
-  .note .x { position: absolute; top: 6px; right: 8px; border: none; background: none; cursor: pointer;
-             color: var(--dim); font-size: 15px; }
-  .note .x:hover { color: var(--red); }
-  .note p { font-size: 14px; margin-top: 6px; white-space: pre-wrap; }
-  .note .when { font-size: 11px; color: var(--dim); margin-top: 8px; }
-
-  .list-item { display: flex; gap: 12px; align-items: flex-start; padding: 10px 2px; border-bottom: 1px solid var(--line); font-size: 14.5px; }
-  .list-item:last-child { border-bottom: none; }
-  .list-item .x { margin-left: auto; border: none; background: none; cursor: pointer; color: var(--dim); font-size: 15px; }
-  .list-item .x:hover { color: var(--red); }
-  .list-item.done .txt { text-decoration: line-through; color: var(--dim); }
-  .list-item input[type=checkbox] { margin-top: 5px; accent-color: var(--racing); width: 16px; height: 16px; }
-  .list-item .when { font-size: 11px; color: var(--dim); }
-
-  .gift { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 16px 18px; position: relative; }
-  .gift .g { font-size: 22px; }
-  .gift .t { font-weight: 700; font-size: 15px; margin: 6px 0 2px; }
-  .gift .d { color: var(--dim); font-size: 13px; }
-  .gift .x { position: absolute; top: 8px; right: 10px; border: none; background: none; cursor: pointer; color: var(--dim); font-size: 15px; }
-  .gift .x:hover { color: var(--red); }
-
-  .addrow { display: flex; gap: 8px; margin-top: 14px; flex-wrap: wrap; }
-  .addrow input, .addrow textarea {
-    flex: 1 1 220px; border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px;
-    font-size: 14px; font-family: inherit; background: #fff; color: var(--ink);
+  .mission b{color:var(--steel)}
+  h2{font-size:13px; letter-spacing:1.6px; text-transform:uppercase; color:var(--muted); margin:38px 0 14px}
+  .story{
+    background:linear-gradient(135deg, var(--steel-soft), var(--panel));
+    border:1px solid var(--steel-line); border-radius:14px; padding:20px 22px;
+    font-size:15.5px; line-height:1.75;
   }
-  .addrow input:focus, .addrow textarea:focus { outline: 2px solid var(--racing-soft); border-color: var(--racing); }
-  .btn {
-    border: none; border-radius: 8px; padding: 10px 18px; font-size: 14px; font-weight: 700;
-    background: var(--racing); color: #fff; cursor: pointer;
+  .story p{margin:0 0 12px}
+  .story p:last-child{margin:0}
+  .filenote{
+    margin:18px 0 0; padding:14px 18px; font-size:14.5px;
+    border:1px dashed var(--steel-line); background:var(--panel); border-radius:12px;
   }
-  .btn:hover { background: var(--racing-deep); }
-  .empty { color: var(--dim); font-style: italic; font-size: 14px; padding: 10px 2px; }
-
-  .photostrip { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 14px; }
-  .photo { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 10px; max-width: 250px;
-           box-shadow: 0 3px 10px rgba(35,43,36,.08); transform: rotate(-1deg); }
-  .photo:nth-child(even) { transform: rotate(1deg); }
-  .photo img { width: 100%; border-radius: 8px; display: block; }
-  .photo figcaption { font-size: 12px; color: var(--dim); margin-top: 8px; text-align: center; }
-
-  .quotes { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 14px; margin-top: 14px; }
-  .quotes blockquote {
-    background: var(--card); border: 1px solid var(--line); border-left: 5px solid var(--racing);
-    border-radius: 10px; padding: 16px 18px 12px; font-family: Georgia, "Iowan Old Style", serif;
-    font-size: 15.5px; font-style: italic; line-height: 1.6;
+  .filenote .k{font-weight:700; color:var(--steel); font-size:12px; letter-spacing:1px; text-transform:uppercase; display:block; margin-bottom:2px}
+  .grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); gap:12px}
+  .card{
+    background:var(--panel); border:1px solid var(--line); border-radius:14px;
+    padding:16px 18px;
   }
-  .quotes blockquote cite {
-    display: block; margin-top: 10px; font-family: -apple-system, "Segoe UI", Inter, sans-serif;
-    font-style: normal; font-size: 12px; color: var(--dim);
+  .card .e{font-size:24px}
+  .card h3{margin:8px 0 4px; font-size:15px}
+  .card p{margin:0; font-size:13.5px; color:var(--muted)}
+  .card .soon{font-style:italic}
+  .attn{
+    background:var(--panel); border:1px solid var(--line); border-left:4px solid var(--amber);
+    border-radius:12px; padding:14px 18px; margin-bottom:10px; font-size:14.5px;
   }
-
-  footer { margin-top: 44px; padding-top: 18px; border-top: 1px solid var(--line);
-           color: var(--dim); font-size: 13px; display: flex; gap: 16px; flex-wrap: wrap; }
-  footer a { color: var(--racing); }
-  @media (max-width: 640px) { h1 { font-size: 30px; } header.hero::after { font-size: 70px; } }
+  .attn.blocked{border-left-color:var(--red); background:var(--red-soft)}
+  .attn.closed{border-left-color:var(--green); background:var(--green-soft)}
+  .attn .k{font-weight:700; font-size:12px; letter-spacing:1px; text-transform:uppercase; display:block; margin-bottom:2px}
+  .attn .k.amber{color:var(--amber)} .attn .k.red{color:var(--red)} .attn .k.green{color:var(--green)}
+  .ship{border-left:3px solid var(--steel); padding:2px 0 2px 16px; margin:0 0 18px 4px}
+  .ship .v{font-family:ui-monospace,Menlo,Consolas,monospace; font-size:13px; color:var(--steel); font-weight:700}
+  .ship p{margin:4px 0 0; font-size:14px}
+  .links{display:flex; gap:10px; flex-wrap:wrap}
+  .links a{
+    display:inline-flex; align-items:center; gap:8px; text-decoration:none; color:var(--ink);
+    background:var(--panel); border:1px solid var(--line); border-radius:999px;
+    padding:10px 18px; font-size:14px; font-weight:600;
+  }
+  .links a:hover{border-color:var(--accent); color:var(--accent)}
+  footer.page{margin-top:36px; color:var(--muted); font-size:12.5px}
+  footer.page p{margin:4px 0}
+  /* ---- brain dump box (Emile dossier styling; dark+light via theme vars) ---- */
+  .dumpbox{
+    background:var(--panel); border:1px solid var(--line); border-radius:14px;
+    padding:20px 22px; margin:38px 0 0;
+  }
+  .dumpbox h2.dumpbox-title{
+    margin:0 0 6px; font-size:13px; letter-spacing:1.6px;
+    text-transform:uppercase; color:var(--muted);
+  }
+  .dumpbox-sub{color:var(--muted); font-size:14px; margin:0 0 14px}
+  .dumpbox textarea{
+    width:100%; min-height:96px; resize:vertical; box-sizing:border-box;
+    background:var(--bg); border:1px solid var(--line); border-radius:8px;
+    padding:10px 12px; font-size:14px; color:var(--ink); font-family:inherit;
+  }
+  .dumpbox textarea:focus{outline:none; border-color:var(--steel)}
+  .dumpbox textarea:disabled{opacity:.55}
+  .dumpbox-row{display:flex; align-items:center; gap:12px; margin-top:10px; flex-wrap:wrap}
+  .dumpbox-btn{
+    background:var(--steel); color:#fff; border:none; border-radius:8px;
+    padding:9px 22px; font-size:14px; font-weight:600; cursor:pointer;
+  }
+  .dumpbox-btn:disabled{opacity:.45; cursor:default}
+  .dumpbox-status{font-size:13px; color:var(--muted)}
+  .dumpbox-token{
+    background:var(--bg); border:1px dashed var(--steel-line); border-radius:8px;
+    padding:12px 14px; margin-bottom:12px; font-size:14px;
+  }
+  .dumpbox-token p{margin:0 0 8px}
+  .dumpbox-tokenrow{display:flex; gap:8px; flex-wrap:wrap; align-items:center}
+  .dumpbox-tokenrow input{
+    flex:1; min-width:170px; background:var(--panel); border:1px solid var(--line);
+    border-radius:8px; padding:7px 10px; font-size:13px; color:var(--ink);
+  }
+  .dumpbox-tokenrow button{
+    background:transparent; color:var(--steel); border:1px solid var(--steel);
+    border-radius:8px; padding:7px 14px; font-size:13px; font-weight:600; cursor:pointer;
+  }
+  .dumpbox-tokenrow a{color:var(--steel); font-size:13px}
 </style>
 </head>
 <body>
 <div class="wrap">
 
-  <header class="hero">
-    <div class="kicker">Family Buddy · child</div>
-    <h1 class="serif"><span class="ico">🏎️</span>Emile Buddy</h1>
-    <div class="tagline serif">Living dossier for Dave's middle brother.</div>
-    <p class="mission">The one place for everything Dave needs to <b>remember, track, and do</b> regarding Emile — key facts, important dates, notes, reminders, and gift ideas. The active thread right now is the family business: co-selling the Morgan Hill house with Dave and Ron.</p>
-    <div class="meta">
-      <span class="pill st">📝 Brief review</span>
-      <a class="pill" href="https://docs.google.com/document/d/19I51Rb1nbHZQT9zDZ6JDW8M5zI2WejrSSb-hfYrq0zA/edit" target="_blank" rel="noopener">📄 Product brief</a>
-      <a class="pill" href="https://github.com/davedellaquila/emile-buddy" target="_blank" rel="noopener">💻 emile-buddy repo</a>
-      <span class="pill">🏠 Parent: Family Buddy</span>
+  <header>
+    <div class="icon">🤝</div>
+    <div>
+      <h1>Emile Buddy</h1>
+      <p class="tagline">The living dossier for Emile — Dave's middle brother.</p>
+      <span class="pill">● CHILD OF FAMILY BUDDY</span>
     </div>
   </header>
 
-  <h2 class="serif">On my mind <span class="sub">What needs Dave's attention</span></h2>
-  <div class="mind red">
-    <div class="dot">🚫</div>
-    <div><div class="t">DocuSign blocked — sale can't proceed until Emile signs</div>
-    <div class="d">His Successor Trustee signing envelope has been bouncing since Oct 5 — the mailbox is rejecting mail, not a typo (the address is spelled right). Next moves: text or call Emile (draft ready since Oct 5), or hand Kay Korbel his alternate email so she can re-fire it (draft ready since Oct 7 — that inbox is unverified).</div></div>
-  </div>
-  <div class="mind amber">
-    <div class="dot">🛋️</div>
-    <div><div class="t">Staging proposal waiting on all three sellers</div>
-    <div class="d">Mayra Vera's $4,250 design/styling fee — approval needs Dave, Ron, AND Emile. Dave's reply asking Kay for the all-in cost and timing was drafted Sep 29.</div></div>
-  </div>
-  <div class="mind amber">
-    <div class="dot">☎️</div>
-    <div><div class="t">Google Voice watch for Emile's calls has stalled</div>
-    <div class="d">The shared browser session expired — Dave needs to sign back in at voice.google.com before new calls, texts, or voicemails from Emile can be picked up.</div></div>
-  </div>
-  <div class="mind">
-    <div class="dot">🎂</div>
-    <div><div class="t">Emile's birthday isn't on record</div>
-    <div class="d">Not on his Facebook profile either. One of the first things to ask him next time he calls.</div></div>
-  </div>
+  <p class="mission">
+    The one place for everything Dave needs to remember, track, and do regarding Emile:
+    <b>key facts, important dates, notes, reminders, and gift ideas.</b>
+    A per-person reference buddy — distinct from Relationship Buddy, and all the steadier for it.
+  </p>
 
-  <h2 class="serif">Who Emile is <span class="sub">Only what's known — unknowns stay unknown</span></h2>
-  <div class="facts">
-    <div class="fact"><div class="e">🤝</div><div class="t">Middle brother</div><div class="d">Dave's middle brother — confirmed Sep 29, 2026. Not the father: the Sep 25 voicemail opening "it's Dad again, Dave…" was likely him relaying their father's message.</div></div>
-    <div class="fact"><div class="e">🏁</div><div class="t">Runs Emiles Sports Car Performance</div><div class="d">Listed as his employer on Facebook — cars are his trade, not just his hobby.</div></div>
-    <div class="fact"><div class="e">🏠</div><div class="t">Morgan Hill co-seller</div><div class="d">Co-selling 18231 Llagas Creek Dr with Dave and Ron. Listing agent: Kay Korbel.</div></div>
-    <div class="fact"><div class="e">📍</div><div class="t">Santa Cruz, California</div><div class="d">Current city per his Facebook profile; hometown Santa Clara, California. His phone numbers carry the 831 area code.</div></div>
-    <div class="fact"><div class="e">🏎️</div><div class="t">1979 Lamborghini Urraco</div><div class="d">His own May 2026 reel: test driving a '79 Urraco after a recent fuel-system overhaul. This is what he does.</div></div>
-    <div class="fact"><div class="e">🎸</div><div class="t">Classic-rock live performances</div><div class="d">His timeline is mostly shares of concert performances — Hendrix and company. He posts video more than words.</div></div>
-    <div class="fact"><div class="e">🎓</div><div class="t">Peterson High School</div><div class="d">Per his Facebook profile — alongside a joking "University of Formula One."</div></div>
-    <div class="fact note-fact"><div class="e">🤐</div><div class="t">Man of few words</div><div class="d">Almost no original captions in the last year — one in twenty posts. His uploads carry the story; words rarely do.</div></div>
-  </div>
-
-  <h2 class="serif">Photos <span class="sub">From Emile's Facebook</span></h2>
-  <div class="photostrip">
-    <figure class="photo">
-      <img src="photos/profile.jpg" alt="Emile's Facebook profile photo">
-      <figcaption>Profile photo · Facebook</figcaption>
-    </figure>
-    <figure class="photo">
-      <img src="photos/garage.jpg" alt="Emile's March 2026 upload">
-      <figcaption>From the garage · Mar 2026</figcaption>
-    </figure>
-  </div>
-  <p class="empty">His timeline also holds a reel of the Urraco test drive (May 2026) — link kept in the dossier's notes. New photos land here as they surface.</p>
-
-  <h2 class="serif">In his own words <span class="sub">From Emile's Facebook posts</span></h2>
-  <div class="quotes">
-    <blockquote>"Test driving a 1979 Lamborghini Urraco. Recent fuel system overhaul."<cite>— May 15, 2026 · Facebook reel</cite></blockquote>
-  </div>
-  <p class="empty">That's the whole quote board — his one original caption in the last year. He's a man of few words; when he captions something, it's worth keeping.</p>
-
-  <h2 class="serif">Notes <span class="sub">Pinned as they come up — saved on this device</span></h2>
-  <div class="board" id="notes"></div>
-  <div class="addrow">
-    <textarea id="noteInput" rows="2" placeholder="Pin a note about Emile…"></textarea>
-    <button class="btn" onclick="addNote()">Pin it</button>
-  </div>
-
-  <h2 class="serif">Reminders <span class="sub">Things to do for or about Emile</span></h2>
-  <div class="card" style="margin-top:14px" id="reminders"></div>
-  <div class="addrow">
-    <input id="reminderInput" placeholder="Add a reminder…">
-    <button class="btn" onclick="addReminder()">Add</button>
-  </div>
-
-  <h2 class="serif">Important dates <span class="sub">Birthdays, anniversaries, the things you can't forget</span></h2>
-  <div class="card" style="margin-top:14px">
-    <div class="list-item"><span style="font-size:18px">❓</span>
-      <span class="txt"><b>Birthday</b> — not on record <span class="when">(not listed on his Facebook profile either)</span></span>
+  <h2>The story so far</h2>
+  <div class="story">
+    <p>Emile is Dave's middle brother, and right now the active thread is the family business: the three of them — Dave, Ron, and Emile — are co-selling the Morgan Hill house at 18231 Llagas Creek Dr, with Kay Korbel running the listing.</p>
+    <p>The snag: Emile's DocuSign envelope, signing as Successor Trustee, has been bouncing since October 5. His mailbox is rejecting the mail — not a typo, the address is spelled right — and the sale can't proceed without his signature. The fix is either Emile sorting out his inbox or Kay re-firing the envelopes to his alternate email.</p>
+    <div class="filenote">
+      <span class="k">File note — Sep 29</span>
+      Dave clarified: Emile is his <b>middle brother</b>, not his father — despite the September 25 voicemail opening with "it's Dad again, Dave…" (possibly relaying their father's message; unconfirmed).
     </div>
   </div>
-  <div class="card" style="margin-top:14px" id="dates"></div>
-  <div class="addrow">
-    <input id="dateName" placeholder="Occasion (e.g. Emile's birthday)">
-    <input id="dateWhen" placeholder="When (e.g. March 14)">
-    <button class="btn" onclick="addDate()">Add date</button>
+
+  <h2>What I track</h2>
+  <div class="grid">
+    <div class="card"><div class="e">📋</div><h3>Key facts</h3><p>Middle brother · co-seller of the Morgan Hill house · Sports Car Performance · owns 3 Maseratis (2 Boras, 1 Merak).</p></div>
+    <div class="card"><div class="e">📇</div><h3>Contact paths</h3><p>iPhone, home, work &amp; Google Voice numbers on file. Primary email bouncing; alternate email on file — unverified.</p></div>
+    <div class="card"><div class="e">📅</div><h3>Important dates</h3><p class="soon">Nothing captured yet — birthdays and anniversaries still to collect.</p></div>
+    <div class="card"><div class="e">📝</div><h3>Notes</h3><p>Running log — Google Voice watch, the staging thread, every call and voicemail.</p></div>
+    <div class="card"><div class="e">🎁</div><h3>Gift ideas</h3><p class="soon">None yet — tell me one and it's filed for the right moment.</p></div>
+    <div class="card"><div class="e">🔔</div><h3>Reminders</h3><p>The DocuSign chase, the staging sign-off, and keeping in touch.</p></div>
   </div>
 
-  <h2 class="serif">Gift ideas <span class="sub">Because the good ones evaporate if you don't write them down</span></h2>
-  <div class="board" id="gifts"></div>
-  <div class="addrow">
-    <input id="giftName" placeholder="Gift idea…">
-    <input id="giftWhy" placeholder="Why he'd love it (optional)">
-    <button class="btn" onclick="addGift()">Add idea</button>
+  <section class="dumpbox" data-buddy-id="emile-buddy">
+    <h2 class="dumpbox-title">🧠 Brain dump</h2>
+    <p class="dumpbox-sub">Dump what's on your mind about Emile — raw and unfiltered. Each dump lands in the buddy's repo (docs/ingest.md) as a timestamped entry.</p>
+    <div class="dumpbox-token" hidden>
+      <p>🔒 Connect GitHub to unlock dumping. Paste a token once — it stays on this device only.</p>
+      <div class="dumpbox-tokenrow">
+        <input type="password" placeholder="GitHub token (repo scope)" aria-label="GitHub token">
+        <button type="button">Save token</button>
+        <a href="https://github.com/settings/tokens" target="_blank" rel="noopener">Get a token</a>
+      </div>
+    </div>
+    <textarea rows="4" placeholder="Dump what's on your mind about Emile…"></textarea>
+    <div class="dumpbox-row">
+      <button type="button" class="dumpbox-btn">Dump it</button>
+      <span class="dumpbox-status" role="status"></span>
+    </div>
+  </section>
+
+  <h2>Needs Dave's attention</h2>
+  <div class="attn blocked"><span class="k red">Blocked</span>DocuSign Successor Trustee envelope bouncing since Oct 5 — the sale can't proceed until Emile signs. Next move: text or call Emile (draft ready since Oct 5), or hand Kay the alternate email so she can re-fire (draft ready since Oct 7).</div>
+  <div class="attn"><span class="k amber">Waiting</span>Mayra Vera's staging proposal — $4,250 design/styling fee. Needs all three sellers to agree; Dave's reply asking Kay for the all-in cost and timing was drafted Sep 29.</div>
+  <div class="attn"><span class="k amber">Stalled</span>Google Voice watch for Emile's calls — the session expired. Dave needs to sign back in at voice.google.com before new calls, texts, or voicemails can be picked up.</div>
+  <div class="attn"><span class="k amber">Missing</span>Emile's birthday isn't on record — nor his gift-relevant interests. What does he love?</div>
+  <div class="attn closed"><span class="k green">Closed</span>HomeGuard termite-repair authorization — retired Oct 7 per Dave ("don't worry about HomeGuard"). One less thing chasing Emile.</div>
+
+  <h2>Fresh off the bench</h2>
+  <div class="ship">
+    <span class="v">2026-10-09</span>
+    <p>Emile Buddy born — thread, product brief, and private repo.</p>
+  </div>
+  <div class="ship">
+    <span class="v">2026-10-07</span>
+    <p>HomeGuard thread retired at Dave's direction. Draft text to Kay prepared — re-fire the DocuSigns to Emile's alternate email.</p>
+  </div>
+  <div class="ship">
+    <span class="v">2026-10-06</span>
+    <p>Alternate email found on Emile's iPad contact card; still nothing back from him — no signed DocuSign, no reply, no alternate address.</p>
+  </div>
+  <div class="ship">
+    <span class="v">2026-10-05</span>
+    <p>DocuSign envelope bounced twice at the correctly spelled address — a mailbox rejection, not a typo. Draft text to Emile prepared.</p>
   </div>
 
-  <footer>
-    <span>🏎️ Emile Buddy · child of <b>Family Buddy</b></span>
-    <span><a href="https://docs.google.com/document/d/19I51Rb1nbHZQT9zDZ6JDW8M5zI2WejrSSb-hfYrq0zA/edit" target="_blank" rel="noopener">Product brief</a></span>
-    <span><a href="https://github.com/davedellaquila/emile-buddy" target="_blank" rel="noopener">davedellaquila/emile-buddy</a></span>
+  <h2>Open it</h2>
+  <div class="links">
+    <a href="https://docs.google.com/document/d/19I51Rb1nbHZQT9zDZ6JDW8M5zI2WejrSSb-hfYrq0zA/edit" target="_blank" rel="noopener">📄&nbsp; Product brief</a>
+    <a href="https://github.com/davedellaquila/emile-buddy" target="_blank" rel="noopener">💻&nbsp; Repo</a>
+    <a href="https://davedellaquila.github.io/buddy-tree/" target="_blank" rel="noopener">🗂️&nbsp; Buddy dashboard</a>
+  </div>
+
+  <footer class="page">
+    <p>Emile Buddy · child of Family Buddy · built with care by Dave &amp; Astro</p>
+    <p>Phone numbers and email addresses stay in the private dossier — this page keeps them off the public web.</p>
+    <p>Dossier verified current as of Oct 10, 2026.</p>
   </footer>
+
 </div>
-
 <script>
-const KEY = "emile-buddy-v1";
-const esc = s => s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
-let store = { notes: [], reminders: [], dates: [], gifts: [] };
-try {
-  const raw = localStorage.getItem(KEY);
-  if (raw) store = Object.assign(store, JSON.parse(raw));
-} catch (e) {}
-// Seed verified notes on first run
-if (!localStorage.getItem(KEY)) {
-  store.notes = [
-    { text: "DocuSign (Successor Trustee) has been bouncing since Oct 5 — the mailbox rejects mail, not a typo. Alternate email on his iPad contact card (Sports Car Performance); that inbox is unverified.", when: "2026-10-09" },
-    { text: "Co-selling 18231 Llagas Creek Dr, Morgan Hill with Dave and Ron (Kay Korbel listing). Mayra Vera's $4,250 staging proposal needs all three sellers' sign-off.", when: "2026-10-09" },
-    { text: "Sep 25 voicemail opened 'it's Dad again, Dave…' — but Emile is the middle brother (confirmed Sep 29), so he was likely relaying their father's message.", when: "2026-10-09" }
-  ];
-  store.reminders = [
-    { text: "Confirm whether the Oct 5 text to Emile went out — or re-send", done: false },
-    { text: "Ask Kay to re-fire the DocuSign to the alternate email if the primary inbox still bounces", done: false },
-    { text: "Get Emile's birthday on record next time he calls", done: false }
-  ];
-}
-const save = () => localStorage.setItem(KEY, JSON.stringify(store));
-const today = () => new Date().toISOString().slice(0, 10);
-
-function renderNotes() {
-  const el = document.getElementById("notes");
-  el.innerHTML = store.notes.length ? store.notes.map((n, i) =>
-    `<div class="note"><button class="x" onclick="delNote(${i})" title="Remove">✕</button><p>${esc(n.text)}</p><div class="when">${esc(n.when || "")}</div></div>`
-  ).join("") : `<div class="empty">No notes pinned yet — the three above this line are seeded from what Emile Buddy already knows.</div>`;
-}
-function addNote() {
-  const t = document.getElementById("noteInput").value.trim();
-  if (!t) return;
-  store.notes.unshift({ text: t, when: today() });
-  document.getElementById("noteInput").value = "";
-  save(); renderNotes();
-}
-function delNote(i) { store.notes.splice(i, 1); save(); renderNotes(); }
-
-function renderReminders() {
-  const el = document.getElementById("reminders");
-  el.innerHTML = store.reminders.length ? store.reminders.map((r, i) =>
-    `<div class="list-item ${r.done ? "done" : ""}">
-       <input type="checkbox" ${r.done ? "checked" : ""} onchange="toggleReminder(${i})">
-       <span class="txt">${esc(r.text)}</span>
-       <button class="x" onclick="delReminder(${i})" title="Remove">✕</button>
-     </div>`
-  ).join("") : `<div class="empty">Nothing on the list — add the first reminder whenever something comes up.</div>`;
-}
-function addReminder() {
-  const t = document.getElementById("reminderInput").value.trim();
-  if (!t) return;
-  store.reminders.push({ text: t, done: false });
-  document.getElementById("reminderInput").value = "";
-  save(); renderReminders();
-}
-function toggleReminder(i) { store.reminders[i].done = !store.reminders[i].done; save(); renderReminders(); }
-function delReminder(i) { store.reminders.splice(i, 1); save(); renderReminders(); }
-
-function renderDates() {
-  const el = document.getElementById("dates");
-  el.innerHTML = store.dates.length ? store.dates.map((d, i) =>
-    `<div class="list-item"><span style="font-size:18px">📅</span>
-       <span class="txt"><b>${esc(d.name)}</b> — ${esc(d.when)}</span>
-       <button class="x" onclick="delDate(${i})" title="Remove">✕</button>
-     </div>`
-  ).join("") : `<div class="empty">No user-added dates yet — Emile's birthday goes here the moment Dave learns it.</div>`;
-}
-function addDate() {
-  const n = document.getElementById("dateName").value.trim();
-  const w = document.getElementById("dateWhen").value.trim();
-  if (!n || !w) return;
-  store.dates.push({ name: n, when: w });
-  document.getElementById("dateName").value = "";
-  document.getElementById("dateWhen").value = "";
-  save(); renderDates();
-}
-function delDate(i) { store.dates.splice(i, 1); save(); renderDates(); }
-
-function renderGifts() {
-  const el = document.getElementById("gifts");
-  el.innerHTML = store.gifts.length ? store.gifts.map((g, i) =>
-    `<div class="gift"><button class="x" onclick="delGift(${i})" title="Remove">✕</button>
-       <div class="g">🎁</div><div class="t">${esc(g.name)}</div>
-       ${g.why ? `<div class="d">${esc(g.why)}</div>` : ""}
-     </div>`
-  ).join("") : `<div class="empty">The gift vault is empty — stash ideas here the moment they occur to you.</div>`;
-}
-function addGift() {
-  const n = document.getElementById("giftName").value.trim();
-  const w = document.getElementById("giftWhy").value.trim();
-  if (!n) return;
-  store.gifts.push({ name: n, why: w });
-  document.getElementById("giftName").value = "";
-  document.getElementById("giftWhy").value = "";
-  save(); renderGifts();
-}
-function delGift(i) { store.gifts.splice(i, 1); save(); renderGifts(); }
-
-renderNotes(); renderReminders(); renderDates(); renderGifts();
+// ---- brain dump box JS (self-contained; no dependencies) ----
+(function(){
+  var box = document.querySelector('.dumpbox');
+  if (!box || box.dataset.dumpInit) return;
+  box.dataset.dumpInit = '1';
+  var bid = box.getAttribute('data-buddy-id') || (function(){
+    var p = location.pathname.replace(/\/+$/, '');
+    return p.substring(p.lastIndexOf('/') + 1);
+  })();
+  var ta = box.querySelector('textarea'),
+      btn = box.querySelector('.dumpbox-btn'),
+      st = box.querySelector('.dumpbox-status'),
+      tokWrap = box.querySelector('.dumpbox-token');
+  function lsGet(){ try { return JSON.parse(localStorage.getItem('buddyTree.v3') || '{}'); } catch(e){ return {}; } }
+  function lsSet(patch){ try { var s = lsGet(); for (var k in patch) s[k] = patch[k]; localStorage.setItem('buddyTree.v3', JSON.stringify(s)); } catch(e){} }
+  function token(){ return lsGet().ghToken || ''; }
+  function b64encode(str){
+    var bytes = new TextEncoder().encode(str), bin = '';
+    bytes.forEach(function(b){ bin += String.fromCharCode(b); });
+    return btoa(bin);
+  }
+  async function ghApi(path, method, body){
+    var t = token();
+    if (!t) throw new Error('Add a GitHub token first.');
+    var r = await fetch('https://api.github.com' + path, {
+      method: method || 'GET',
+      headers: {'Authorization': 'Bearer ' + t, 'Accept': 'application/vnd.github+json', 'Content-Type': 'application/json'},
+      body: body ? JSON.stringify(body) : undefined
+    });
+    if (!r.ok) throw new Error('GitHub ' + r.status);
+    return r.status === 204 ? null : await r.json();
+  }
+  async function ghGetFile(repo, path){
+    try {
+      var j = await ghApi('/repos/davedellaquila/' + repo + '/contents/' + path);
+      if (j && j.content) return {
+        text: new TextDecoder().decode(Uint8Array.from(atob(j.content.replace(/\n/g, '')), function(c){ return c.charCodeAt(0); })),
+        sha: j.sha
+      };
+    } catch(e){}
+    return null;
+  }
+  var repo = null, repoName = bid;
+  async function resolveRepo(){
+    try {
+      var r = await fetch('../buddies.json', {cache: 'no-store'});
+      var d = await r.json();
+      var buds = d.buddies || [];
+      for (var i = 0; i < buds.length; i++) {
+        if (buds[i].id === bid && buds[i].repo) { repo = buds[i].repo; repoName = buds[i].name || bid; break; }
+      }
+    } catch(e){}
+  }
+  function refreshUI(){
+    var has = !!token();
+    tokWrap.hidden = has;
+    var ok = has && !!repo;
+    ta.disabled = !ok;
+    btn.disabled = !ok;
+    if (!has) { st.textContent = ''; }
+    else if (!repo) { st.textContent = 'No repo linked for this buddy yet.'; }
+  }
+  var tokInput = tokWrap.querySelector('input'),
+      tokSave = tokWrap.querySelector('button');
+  tokSave.addEventListener('click', function(){
+    var v = tokInput.value.trim();
+    if (!v) return;
+    lsSet({ghToken: v});
+    tokInput.value = '';
+    refreshUI();
+    st.textContent = 'Token saved on this device.';
+  });
+  async function dump(){
+    var text = ta.value.trim();
+    if (!text) return;
+    if (!token()) { refreshUI(); return; }
+    if (!repo) { st.textContent = 'No repo linked for this buddy yet.'; return; }
+    st.textContent = 'Dumping…';
+    btn.disabled = true;
+    try {
+      var stamp = new Date().toLocaleString();
+      var NL = String.fromCharCode(10);
+      var entry = '## ' + stamp + NL + NL + text + NL + NL;
+      var cur = await ghGetFile(repo, 'docs/ingest.md');
+      var base = cur ? cur.text : '# Ingest log — Emile Buddy' + NL + NL;
+      var body = {message: 'Ingest dump for ' + bid, content: b64encode(base + entry)};
+      if (cur && cur.sha) body.sha = cur.sha;
+      await ghApi('/repos/davedellaquila/' + repo + '/contents/docs/ingest.md', 'PUT', body);
+      ta.value = '';
+      st.textContent = '✓ Dumped to ' + repo + '/docs/ingest.md';
+    } catch(err){ st.textContent = 'Save failed: ' + (err.message || err); }
+    btn.disabled = false;
+  }
+  btn.addEventListener('click', dump);
+  ta.addEventListener('keydown', function(ev){
+    if ((ev.metaKey || ev.ctrlKey) && ev.key === 'Enter') { ev.preventDefault(); dump(); }
+  });
+  resolveRepo().then(refreshUI);
+})();
 </script>
 </body>
 </html>
