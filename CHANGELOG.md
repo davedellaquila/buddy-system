@@ -3,6 +3,11 @@
 All notable changes to the Buddies dashboard and buddy system. Newest first.
 `FEATURES.md` describes the current state; this file describes how it got there.
 
+## 2026-10-11 (Idea Buddy)
+
+### Added
+- **Idea Buddy** 💡 — Dave's brainstorming desk, child of Project Buddy. Runs ideation sessions, curates the persona roster (101+ personality options for new hires, seeded from Dave's 2026-10-11 riff), and feeds personality picks into the new-hire drill. Mission: Idea Buddy — Mission Statement (review pending). Repo: davedellaquila/idea-buddy.
+
 ## 2026-10-11 (Floating chevron fix)
 
 ### Fixed
