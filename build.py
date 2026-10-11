@@ -425,7 +425,7 @@ body.sb-closed #menu-btn{display:flex;align-items:center;justify-content:center;
 .av-grid button:hover{border-color:var(--accent);background:var(--hover)}
 #avatar-picker input{width:100%;box-sizing:border-box;background:var(--bg);border:1px solid var(--border);color:var(--text);
   border-radius:8px;padding:8px;font-size:14px;text-align:center}
-.info-tip{position:relative;display:inline-block;margin-left:6px;cursor:help;color:var(--muted);font-size:12px}
+.info-tip{position:relative;display:inline-block;margin-left:6px;cursor:help;color:var(--muted);font-size:15px;line-height:1}
 .info-tip:hover{color:var(--text)}
 /* Tooltips are JS popovers (see tipPop code) — hover on mouse, tap-to-pin with × on touch */
 .tip-pop{position:fixed;z-index:1000;max-width:240px;background:var(--panel);border:1px solid var(--border);
