@@ -3,6 +3,13 @@
 All notable changes to the Buddies dashboard and buddy system. Newest first.
 `FEATURES.md` describes the current state; this file describes how it got there.
 
+## 2026-10-11 (Tree-view inspection fixes)
+
+### Fixed
+- **Joel Nelson tile showed "UNDEFINED" badge:** his registry entry was missing `kind` (set to `personal`, like James's).
+- **Zoom slider had a garbled screen-reader label** ("Zoom in to zoom out") — now reads "Tree zoom".
+- Not a bug: the "53" next to BUDDIES in the sidebar is the unseen-attention count (reviews awaiting Dave), not a buddy count — the 68-buddy total in the header is correct.
+
 ## 2026-10-11 (Memo dismiss)
 
 ### Added

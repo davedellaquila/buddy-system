@@ -2298,7 +2298,7 @@ function zoomToFit(){
   vt.insertAdjacentHTML('afterbegin',
     '<div class="treewrap" id="zoomwrap"><div class="zoombar" id="zoombar" title="Zoom — pinch with two fingers, or Shift+scroll">'
     + '<span class="z-in" aria-hidden="true">\u25fc</span>'
-    + '<input type="range" id="zoomrange" min="50" max="160" step="5" value="100" aria-label="Zoom in to zoom out" orient="vertical">'
+    + '<input type="range" id="zoomrange" min="50" max="160" step="5" value="100" aria-label="Tree zoom" orient="vertical">'
     + '<span class="z-out" aria-hidden="true">\u25aa</span>'
     + '<button type="button" id="zoomfit" title="Zoom to fit" aria-label="Zoom to fit">\u26f6</button></div><div id="treezoom"></div></div>');
   const tw = document.getElementById('zoomwrap'), tz = document.getElementById('treezoom');
