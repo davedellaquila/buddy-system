@@ -79,7 +79,10 @@ body{padding:0}
   box-shadow:0 8px 14px -10px rgba(0,0,0,.55)}
 .sb-search-sticky #buddy-search{
   width:100%;box-sizing:border-box;background:var(--bg);border:1px solid var(--border);
-  color:var(--text);border-radius:8px;padding:7px 10px;font-size:13px}
+  color:var(--text);border-radius:8px;padding:7px 30px 7px 10px;font-size:13px}
+.sb-search-wrap{position:relative;display:flex;align-items:center}
+#buddy-search-clear{position:absolute;right:6px;top:50%;transform:translateY(-50%);border:none;background:transparent;color:var(--muted);font-size:18px;line-height:1;cursor:pointer;padding:4px 8px;border-radius:6px}
+#buddy-search-clear:hover{color:var(--text);background:rgba(127,127,127,.18)}
 .brand .eyebrow{font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted)}
 .brand h1{font-size:22px;margin:4px 0 0}
 #brand-name{outline:none;border-bottom:2px dashed transparent;cursor:text;display:inline-block;min-width:60px}
@@ -3346,6 +3349,17 @@ function initVersionCheck(){
 }
 function initSearch(){
   const bs = document.getElementById('buddy-search');
+  const cb = document.getElementById('buddy-search-clear');
+  if (cb && !cb.dataset.init) {
+    cb.dataset.init = '1';
+    const sync = () => { cb.hidden = !bs.value; };
+    bs.addEventListener('input', sync); sync();
+    cb.addEventListener('click', () => {
+      bs.value = '';
+      bs.dispatchEvent(new Event('input', {bubbles: true}));
+      sync(); bs.focus();
+    });
+  }
   if (bs && !bs.dataset.init) {
     bs.dataset.init = '1';
     bs.addEventListener('input', () => {
@@ -3614,8 +3628,11 @@ initSbBrandSticky();
   </div>
   <div class="nav-sec"><h3>Views</h3><div id="view-nav"></div></div>
   <div class="sb-search-sticky">
+    <div class="sb-search-wrap">
     <input type="search" id="buddy-search" placeholder="Search buddies\u2026" aria-label="Search buddies"
       title="Search all buddies by name or tagline. Filters the sidebar list as you type. Press / anywhere to jump here. Arrow keys navigate results.">
+    <button type="button" id="buddy-search-clear" aria-label="Clear search" title="Clear search" hidden>×</button>
+    </div>
   </div>
   <div class="nav-sec">
   <h3>Buddies <span id="attn-pill" class="zero">0</span></h3><div id="buddy-nav"></div></div>
