@@ -66,3 +66,7 @@ I’m not sure if you got this last dump, but I’d like to add a close a clear 
 
 I’d like pulling down on the side right side panel to do a refresh or check for updates
 
+## 10/11/2026, 9:27:53 AM
+
+I think I would like the brain dump section on the right side panel to be the first section on a right side panel or or buddies info page
+
