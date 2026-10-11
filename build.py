@@ -1,16 +1,17 @@
 #!/usr/bin/env python3
 """Build the Project Buddy dashboard (index.html) from buddies.json + the view fragments.
 
-Usage: build.py   (run from ~/workspace/projects/buddy-tree)
+Usage: python3 build.py   (from this repo root)
 Reads:  buddies.json, buddy-tree.html (style + the three view fragments)
-Writes: index.html
+Writes: index.html, version.txt
 """
 import json
+import os
 import re
 from datetime import datetime
 BUILD_NUM = datetime.now().strftime('%Y%m%d.%H%M')
 
-HERE = "/home/hatch/workspace/projects/buddy-tree"
+HERE = os.path.dirname(os.path.abspath(__file__))
 
 ROOT_ORDER = [
     "project-buddy",
@@ -363,7 +364,7 @@ body:has(#token-pill) #panel-open{right:148px}
 body.no-write .pdel,body.no-write [data-dump-del],body.no-write [data-dump-edit]{display:none!important}
 .dumps-body .attn-body{padding-right:64px}
 .dumps.collapsed .dumps-body{display:none}
-/* Sidebar top-right tools: gear + close (44px targets, 8px gap — HIG touch spacing) */
+/* Sidebar top-right tools: gear + collapse chevron (44px targets, 8px gap — HIG touch spacing) */
 #sb-tools{position:absolute;top:8px;right:8px;z-index:10;display:flex;align-items:center;gap:8px}
 #sb-tools button{width:44px;height:44px;background:none;border:none;border-radius:10px;color:var(--muted);
   cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0;-webkit-tap-highlight-color:transparent}
@@ -373,13 +374,13 @@ body.no-write .pdel,body.no-write [data-dump-del],body.no-write [data-dump-edit]
 #sb-gear:hover{color:red;background:var(--hover)}
 #sb-close{color:var(--faint)}
 #sb-close:hover{color:var(--muted)}
-#sb-close .xmark-x{stroke:var(--bg)}
 #sidebar .brand{padding-right:112px}
-/* Collapsed sidebar (iPad/desktop): hide panel, show hamburger to reopen */
+/* Collapsed sidebar (iPad/desktop): hide panel, show right-chevron to reopen */
 body.sb-closed #sidebar{display:none}
 body.sb-closed #menu-btn{display:flex;align-items:center;justify-content:center;position:fixed;top:12px;left:12px;z-index:90;
-  background:var(--panel);border:1px solid var(--border);border-radius:12px;color:var(--text);font-size:20px;
+  background:var(--panel);border:1px solid var(--border);border-radius:12px;color:var(--text);
   width:48px;height:48px;cursor:pointer;box-shadow:0 2px 12px var(--shadow)}
+#menu-btn svg{display:block}
 #plans-sec.collapsed #plan-nav{display:none}
 #plans-sec #plans-arrow{transform:rotate(90deg);display:inline-block}
 #plans-sec.collapsed #plans-arrow{transform:rotate(0deg)}
@@ -423,7 +424,7 @@ body.standalone .sa-bar{display:flex}
   /* Prevent iOS auto-zoom on input focus */
   input, textarea, select{font-size:16px !important}
   #menu-btn{display:flex;align-items:center;justify-content:center;position:fixed;top:12px;left:12px;z-index:90;
-    background:var(--panel);border:1px solid var(--border);border-radius:12px;color:var(--text);font-size:20px;
+    background:var(--panel);border:1px solid var(--border);border-radius:12px;color:var(--text);
     width:48px;height:48px;cursor:pointer;box-shadow:0 2px 12px var(--shadow)}
   /* Sidebar drawer with scrim */
   #sidebar{position:fixed;left:0;top:0;bottom:0;z-index:95;height:100vh;height:100dvh;
@@ -3602,14 +3603,14 @@ initSbBrandSticky();
 </head>
 <body>
 <div class="app">
-<button id="menu-btn" aria-label="Open menu">\u2630</button>
+<button id="menu-btn" title="Expand sidebar" aria-label="Expand sidebar"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg></button>
 <button type="button" id="panel-open" title="Open buddy details" aria-label="Open buddy details">
   <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v6"/><circle cx="12" cy="8" r="1.1" fill="currentColor" stroke="none"/></svg>
 </button>
 <div id="sb-scrim"></div>
 <aside id="sidebar">
   <div class="sb-brand-sticky">
-    <div id="sb-tools"><button id="sb-gear" title="Settings (⌘,)" aria-label="Settings"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button><button id="sb-close" title="Close sidebar" aria-label="Close sidebar"><svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="currentColor"/><path class="xmark-x" d="M8.8 8.8l6.4 6.4m0-6.4l-6.4 6.4" fill="none" stroke-width="2.25" stroke-linecap="round"/></svg></button></div>
+    <div id="sb-tools"><button id="sb-gear" title="Settings (⌘,)" aria-label="Settings"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button><button id="sb-close" title="Collapse sidebar" aria-label="Collapse sidebar"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg></button></div>
     <div class="brand"><div class="eyebrow">Project Buddy &middot; macro view</div><h1 id="brand-name" title="Click to rename">Buddies</h1><div class="bcount">NBUD buddies &middot; one family</div></div>
   </div>
   <div class="nav-sec"><h3>Views</h3><div id="view-nav"></div></div>

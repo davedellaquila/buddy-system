@@ -3,6 +3,15 @@
 All notable changes to the Buddies dashboard and buddy system. Newest first.
 `FEATURES.md` describes the current state; this file describes how it got there.
 
+## 2026-10-11 (Sidebar: chevron expand/collapse controls)
+
+### Changed
+- **Sidebar toggle icons** — the open-panel close control (X-in-circle) is now
+  a left chevron; the closed-panel floating reopen control (hamburger) is now
+  a right chevron. Same expand/collapse behavior; clearer direction affordance.
+- **`build.py` path** — `HERE` is derived from `__file__` so the dashboard
+  rebuilds correctly outside the old hatch workspace path.
+
 ## 2026-10-11 (Portfolio Buddy: new buddy)
 
 ### Added
