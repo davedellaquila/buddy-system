@@ -3486,7 +3486,7 @@ function initVersionCheck(){
     b.innerHTML = '<span>A newer version of Buddies is available (' + escHtml(serverBuild) + ').</span> '
       + '<button id="update-now" style="margin-left:12px;padding:6px 14px;border-radius:8px;border:1px solid var(--accent);background:var(--accent);color:#fff;font-weight:600;cursor:pointer">Update now</button>'
       + '<button id="update-dismiss" aria-label="Dismiss" style="margin-left:8px;padding:6px 10px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--text);font-size:16px;cursor:pointer;line-height:1">×</button>';
-    b.style.cssText = 'position:fixed;bottom:16px;left:50%;transform:translateX(-50%);z-index:9999;background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:12px 18px;box-shadow:0 8px 32px rgba(0,0,0,.3);display:flex;align-items:center;font-size:14px';
+    b.style.cssText = 'position:fixed;top:16px;left:50%;transform:translateX(-50%);z-index:9999;background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:12px 18px;box-shadow:0 8px 32px rgba(0,0,0,.3);display:flex;align-items:center;font-size:14px';
     document.body.appendChild(b);
     document.getElementById('update-now').addEventListener('click', () => {
       b.remove();
