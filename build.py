@@ -691,9 +691,11 @@ body.standalone .sa-bar{display:flex}
 .attn-body{flex:1;min-width:0}
 .attn-text{font-size:14.5px;line-height:1.5}
 .attn-date{font-size:12px;color:var(--muted);margin-top:5px}
-.seenbtn{flex:0 0 auto;background:var(--border2);border:1px solid var(--border);color:var(--text);font:inherit;
-  font-size:12.5px;padding:6px 12px;border-radius:999px;cursor:pointer}
-.seenbtn:hover{border-color:var(--accent)}
+.seenbtn{flex:0 0 auto;background:var(--border2);border:1px solid var(--border);color:var(--text);
+  width:28px;height:28px;border-radius:50%;font-size:15px;line-height:1;padding:0;cursor:pointer;
+  display:flex;align-items:center;justify-content:center}
+.seenbtn:hover{border-color:var(--accent);color:var(--accent)}
+.attn-all .seenbtn{width:auto;height:auto;border-radius:999px;font-size:12.5px;padding:6px 12px}
 .attn.seen{opacity:.55}
 .attn.seen .adot{visibility:visible;background:var(--grn-solid);width:18px;height:18px;flex:0 0 18px;
   display:flex;align-items:center;justify-content:center;color:var(--on-accent);font-size:11px;font-weight:700}
@@ -2008,7 +2010,7 @@ function renderBuddy(id){
       return '<div class="attn'+(seen?' seen':' unseen')+'" data-attn="'+a.id+'"><span class="adot"></span>'
         + '<div class="attn-body"><div class="attn-text">'+escHtml(a.text)+'</div>'
         + '<div class="attn-date">Asked '+a.date+'</div></div>'
-        + '<button class="seenbtn" data-seen="'+a.id+'">Mark seen</button></div>';
+        + '<button class="seenbtn" data-seen="'+a.id+'" title="Mark seen" aria-label="Mark seen">\u2713</button></div>';
     }).join('');
     const un = items.filter(a => !S.seen[a.id]).length;
     unseenCount = un;
