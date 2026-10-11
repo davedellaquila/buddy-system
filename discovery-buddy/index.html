@@ -3,12 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Discovery Buddy — New music, tuned to his taste</title>
+<title>Discovery Buddy — Discovery for every form of entertainment</title>
 <style>
   :root{
     --bg:#141017; --bg2:#1c1521; --panel:#201824; --panel2:#261d2c;
     --border:#3a2d42; --text:#f3e9f2; --muted:#b8a4b5; --dim:#7d6a7d;
-    --amber:#f0a32e; --rose:#f06292; --teal:#4fd1a5; --violet:#a371f7;
+    --amber:#f0a32e; --rose:#f06292; --teal:#4fd1a5; --violet:#a371f7; --blue:#58a6ff;
     --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,monospace;
   }
   *{box-sizing:border-box;margin:0;padding:0}
@@ -43,8 +43,11 @@
   h1{font-size:46px;font-weight:800;letter-spacing:-1px;margin:18px 0 6px;
      background:linear-gradient(135deg,var(--amber) 10%,var(--rose) 90%);
      -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
-  .tagline{font-size:18px;color:var(--muted);max-width:600px;margin:0 auto}
+  .tagline{font-size:18px;color:var(--muted);max-width:640px;margin:0 auto}
   .tagline em{color:var(--text);font-style:normal;font-weight:600}
+  .cats{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-top:18px}
+  .cat{font-size:13px;padding:6px 14px;border-radius:999px;background:var(--panel);
+       border:1px solid var(--border);color:var(--muted)}
   .pill{
     display:inline-block;margin-top:18px;padding:8px 20px;border-radius:999px;
     background:var(--panel);border:1px solid var(--border);font-size:14px;color:var(--muted);
@@ -72,20 +75,18 @@
   .stat-label{font-size:12px;color:var(--muted);text-transform:uppercase;
               letter-spacing:.08em;margin-top:6px}
 
-  /* ---------- tracklist (queue) ---------- */
+  /* ---------- queue ---------- */
   .tracklist{background:var(--panel);border:1px solid var(--border);border-radius:14px;overflow:hidden}
   .track{display:flex;gap:16px;padding:16px 20px;border-bottom:1px solid var(--border);align-items:center}
   .track:last-child{border-bottom:none}
-  .track-num{font-family:var(--mono);font-size:13px;color:var(--dim);width:26px;flex-shrink:0}
+  .track-cat{font-size:26px;flex-shrink:0;width:40px;text-align:center}
   .track-body{flex:1;min-width:0}
   .track-title{font-size:17px;font-weight:700}
   .track-meta{font-size:13px;color:var(--muted);margin-top:2px}
   .badge{display:inline-block;font-size:11px;font-weight:700;text-transform:uppercase;
          letter-spacing:.06em;padding:3px 10px;border-radius:999px;margin-top:6px}
   .b-amber{background:rgba(240,163,46,.14);color:var(--amber);border:1px solid rgba(240,163,46,.4)}
-  .b-teal{background:rgba(79,209,165,.12);color:var(--teal);border:1px solid rgba(79,209,165,.4)}
-  .b-dim{background:rgba(125,106,125,.12);color:var(--muted);border:1px solid var(--border)}
-  .track-empty{padding:30px;text-align:center;color:var(--muted);font-size:14px}
+  .track-empty{padding:30px;text-align:center;color:var(--muted);font-size:14px;max-width:560px;margin:0 auto}
 
   /* ---------- taste chips ---------- */
   .chips{display:flex;flex-wrap:wrap;gap:10px}
@@ -132,7 +133,7 @@
         radial-gradient(circle at 88% 12%, rgba(240,98,146,.10), transparent 38%),
         radial-gradient(circle at 50% 100%, rgba(163,113,247,.07), transparent 45%);
     }
-    .card,.stat,.tracklist,.attn,.pill,.links a,.chips .chip{
+    .card,.stat,.tracklist,.attn,.pill,.links a,.chips .chip,.cat{
       box-shadow:0 4px 18px rgba(36,26,40,.07);
     }
   }
@@ -144,9 +145,14 @@
   <header>
     <div class="stage"><div class="vinyl" aria-hidden="true"></div></div>
     <h1>Discovery Buddy</h1>
-    <p class="tagline">A durable home for every band, artist, or song worth checking out —
+    <p class="tagline">A durable home for everything worth checking out —
       <em>recommendations tuned to what Dave actually likes.</em></p>
-    <div><span class="pill"><span class="dot">●</span> Status: brief review — born at a dueling piano bar, 2026-10-10</span></div>
+    <div class="cats" aria-label="Categories">
+      <span class="cat">🎵 Music</span><span class="cat">▶️ YouTube</span>
+      <span class="cat">🎙️ Podcasts</span><span class="cat">📺 TV</span>
+      <span class="cat">🎬 Movies</span><span class="cat">📚 Books</span>
+    </div>
+    <div><span class="pill"><span class="dot">●</span> Status: brief review — born at a dueling piano bar 2026-10-10; scope widened the same night from music-only to every form of entertainment</span></div>
     <div class="eq" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
   </header>
 
@@ -154,28 +160,30 @@
   <div class="stats">
     <div class="stat" style="--tint:var(--amber)"><div class="stat-num">1</div><div class="stat-label">In the queue</div></div>
     <div class="stat" style="--tint:var(--rose)"><div class="stat-num">2</div><div class="stat-label">Taste seeds</div></div>
-    <div class="stat" style="--tint:var(--teal)"><div class="stat-num">3</div><div class="stat-label">Open questions</div></div>
+    <div class="stat" style="--tint:var(--teal)"><div class="stat-num">4</div><div class="stat-label">Open questions</div></div>
     <div class="stat" style="--tint:var(--violet)"><div class="stat-num">0</div><div class="stat-label">Recommendations sent</div></div>
   </div>
 
-  <h2>🎵 Check-out queue</h2>
+  <h2>🎯 Check-out queue</h2>
   <div class="tracklist">
     <div class="track">
-      <div class="track-num">01</div>
+      <div class="track-cat">🎵</div>
       <div class="track-body">
         <div class="track-title">Regulators</div>
-        <div class="track-meta">Heard at the dueling piano bar · added 2026-10-10 · seeded item</div>
+        <div class="track-meta">Heard at the dueling piano bar · added 2026-10-10 · the seed that created this buddy</div>
         <span class="badge b-amber">Unconfirmed — Warren G's "Regulate"?</span>
       </div>
     </div>
-    <div class="track-empty">Nothing else waiting. When Dave hears something at a bar, a concert, or from a friend, it lands here — and doesn't evaporate by morning.</div>
+    <div class="track-empty">One seed so far. A band name from the piano player, a show a friend mentioned, a book that came up at dinner, a video he never got around to — it lands here and doesn't evaporate by morning.</div>
   </div>
 
   <h2>🎧 Taste profile</h2>
   <div class="chips">
-    <div class="chip"><b>Morgan Wallen</b> <small>· country</small></div>
-    <div class="chip"><b>Gordon Mullen</b> <small>· "Cover Me Up" — Amanda's wedding-song candidate</small></div>
-    <div class="chip seed">＋ seed 3–5 beloved artists — waiting on Dave</div>
+    <div class="chip"><b>Morgan Wallen</b> <small>· 🎵 country</small></div>
+    <div class="chip"><b>Gordon Mullen</b> <small>· 🎵 "Cover Me Up" — Amanda's wedding-song candidate</small></div>
+    <div class="chip seed">＋ 📺 favorite shows — waiting on Dave</div>
+    <div class="chip seed">＋ 📚 books he loves — waiting on Dave</div>
+    <div class="chip seed">＋ 🎙️ podcasts in the rotation — waiting on Dave</div>
   </div>
 
   <h2>❓ Open questions</h2>
@@ -185,19 +193,23 @@
       <p>Likely Warren G's <b>"Regulate"</b> (1994) — the famous track the piano player probably covered. <b>Unconfirmed</b>; Dave knows.</p>
     </div>
     <div class="card" style="--tint:var(--rose)">
-      <h3>Which streaming service?</h3>
-      <p>Apple Music, Spotify, or something else — picks land as <b>links he can tap</b> once we know where he listens.</p>
+      <h3>Where does he listen and watch?</h3>
+      <p>Music streaming (Apple Music, Spotify?) plus video and podcast apps — picks land as <b>tappable links</b> once we know his services.</p>
     </div>
     <div class="card" style="--tint:var(--teal)">
       <h3>On-demand or digest?</h3>
-      <p>"What should I listen to?" whenever he asks, a <b>weekly new-music digest</b>, or both. The brief review decides.</p>
+      <p>"What should I watch, read, or listen to?" whenever he asks, a <b>weekly picks digest</b>, or both. The brief review decides.</p>
+    </div>
+    <div class="card" style="--tint:var(--violet)">
+      <h3>Seed the taste profile</h3>
+      <p>Music has 2 seeds. Still open: <b>3–5 beloved artists</b> plus favorite <b>shows, books, and podcasts</b> — never invented, only offered.</p>
     </div>
   </div>
 
   <h2>⚠️ Needs Dave's attention</h2>
   <div class="attn">
     <h3>Brief ready for review</h3>
-    <p>The <a href="https://docs.google.com/document/d/1flMPErgNpYZjZS3X0uUm8pkS9uMTxJGzeezqxibPz8s/edit">Discovery Buddy brief</a> is ready for his call: looks good, edits, or defer? No PRD or business plan yet — the brief review decides.</p>
+    <p>The <a href="https://docs.google.com/document/d/1flMPErgNpYZjZS3X0uUm8pkS9uMTxJGzeezqxibPz8s/edit">Discovery Buddy brief</a> is ready for his call: looks good, edits, or defer? It already carries the widened scope. No PRD or business plan yet — the brief review decides.</p>
   </div>
 
   <h2>🔗 Links</h2>
@@ -209,7 +221,7 @@
 
   <footer>
     Discovery Buddy · a living page — it updates whenever the queue, taste profile, or open questions change.<br>
-    Nothing auto-plays or auto-adds to his library without his tap.
+    Nothing auto-plays, auto-adds, or auto-subscribes without his tap.
   </footer>
 
 </div>

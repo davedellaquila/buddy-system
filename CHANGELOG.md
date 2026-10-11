@@ -3,6 +3,19 @@
 All notable changes to the Buddies dashboard and buddy system. Newest first.
 `FEATURES.md` describes the current state; this file describes how it got there.
 
+## 2026-10-11 (Discovery Buddy: scope widened to every form of entertainment)
+
+### Changed
+- **Discovery Buddy mission/tagline** — widened from music-only to every form
+  of entertainment (YouTube, podcasts, TV, movies, books) per Dave, 2026-10-10
+  ~10 PM: buddies.json mission + tagline, repo README + docs/brief.md, MEMORY.md.
+- **Discovery Buddy homepage** — refreshed for the widened scope: category
+  strip (music / YouTube / podcasts / TV / movies / books), kind column in the
+  queue, taste seeds open for shows/books/podcasts, four open questions.
+  Dark+light mode preserved.
+- **`queue.md`** in davedellaquila/discovery-buddy — reframed for all
+  entertainment with a Kind column (Regulators filed as 🎵 Music).
+
 ## 2026-10-11 (Discovery Buddy: custom homepage + check-out queue)
 
 ### Added
