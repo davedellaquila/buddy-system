@@ -46,3 +46,7 @@ Test
 
 Brain-dump box self-test from Astro's homepage integration (Sun Oct 11). Write path: GitHub contents API, same as the dashboard ingest panel. — Astro
 
+## 10/11/2026, 9:05:28 AM
+
+Add a link to the tiles that appear in the needs attention section on the project buddies homepage
+
