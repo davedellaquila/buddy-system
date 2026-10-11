@@ -277,19 +277,21 @@ body{padding:0}
 #view-projects,#view-manifest{touch-action:pan-x pan-y}
 #treezoom.panning,#treezoom.panning *{user-select:none!important;-webkit-user-select:none!important}
 #treezoom,#treezoom *{user-select:none;-webkit-user-select:none}
-/* Compact horizontal zoom — small mark · slider · large mark (+ tiny fit) */
-#zoombar{position:fixed;top:12px;left:calc(var(--sbw, 308px) + 40px);z-index:5;
-  display:flex;align-items:center;gap:6px;height:34px;width:auto;padding:0 8px;
-  background:color-mix(in srgb, var(--panel) 78%, transparent);border:1px solid var(--border2);
-  border-radius:10px;box-shadow:0 2px 8px var(--shadow-soft);-webkit-tap-highlight-color:transparent}
-#zoombar .z-out,#zoombar .z-in{flex:0 0 auto;line-height:1;color:var(--muted);user-select:none;pointer-events:none}
-#zoombar .z-out{font-size:9px}   /* zoom out */
-#zoombar .z-in{font-size:15px}   /* zoom in */
-#zoomrange{flex:0 0 auto;width:112px;height:28px;margin:0;padding:0;transform:none;
-  accent-color:var(--accent);cursor:pointer;touch-action:none}
-#zoomfit{flex:0 0 auto;background:none;border:none;border-radius:6px;color:var(--muted);
-  font-size:13px;width:28px;height:28px;padding:0;cursor:pointer;line-height:1}
-#zoomfit:hover{color:var(--text);background:var(--ghost)}
+/* Slim horizontal zoom — no panel chrome; small▪ · slider · large◼ · fit */
+#zoombar{position:fixed;top:10px;left:calc(var(--sbw, 308px) + 36px);z-index:5;
+  display:flex;align-items:center;gap:4px;width:auto;height:auto;min-height:28px;
+  padding:0;margin:0;background:none;border:none;border-radius:0;box-shadow:none;
+  -webkit-tap-highlight-color:transparent}
+#zoombar .z-out,#zoombar .z-in{flex:0 0 auto;line-height:1;color:var(--faint);user-select:none;pointer-events:none;
+  text-shadow:0 0 4px var(--bg),0 0 8px var(--bg)}
+#zoombar .z-out{font-size:8px}   /* zoom out */
+#zoombar .z-in{font-size:13px}   /* zoom in */
+#zoomrange{flex:0 0 auto;width:96px;height:22px;margin:0;padding:0;transform:none;
+  accent-color:var(--accent);cursor:pointer;touch-action:none;background:transparent;opacity:.9}
+#zoomfit{flex:0 0 auto;background:none;border:none;border-radius:6px;color:var(--faint);
+  font-size:12px;width:22px;height:22px;padding:0;cursor:pointer;line-height:1;
+  text-shadow:0 0 4px var(--bg),0 0 8px var(--bg)}
+#zoomfit:hover{color:var(--text);background:transparent}
 /* Fixed to viewport at sidebar edge so vertical #sidebar scroll doesn't move it */
 #sb-resize{position:fixed;top:0;left:calc(var(--sbw, 308px) - 7px);z-index:45;
   display:flex;align-items:center;justify-content:center;width:10px;height:100vh;height:100dvh;cursor:ew-resize}
@@ -537,8 +539,11 @@ body.standalone .sa-bar{display:flex}
   #main{padding:72px 12px 60px}
   /* Tree keeps the org chart on phones — pan with a finger, zoom with the floating slider */
   .standalones .grid{display:block}
-  #zoombar{left:auto;right:10px;top:72px;z-index:30;height:40px;padding:0 10px;gap:8px}
-  #zoomrange{width:132px;height:32px}
+  /* Slim look, fat hit areas (≈44px) via padding — no filled panel */
+  #zoombar{left:auto;right:6px;top:64px;z-index:30;min-height:44px;padding:8px 6px;gap:2px}
+  #zoomrange{width:120px;height:44px;margin:0 -2px}
+  #zoomfit{width:44px;height:44px;font-size:14px;display:flex;align-items:center;justify-content:center}
+  #zoombar .z-out,#zoombar .z-in{padding:0 4px}
   /* Chunkier tree nodes for touch */
   #treezoom .node{padding:15px 14px;min-height:60px}
   /* Bottom sheet panel — taller, grabbable */
@@ -1954,7 +1959,7 @@ function renderBuddy(id){
     + '<div class="bp-sec" data-field="shared"><h3>Shared notes<span class="info-tip" data-tip="Anybody with repo access can see this note. Saved to the buddy’s repo (docs/notes.md).">ⓘ</span></h3>'
     + '<textarea class="notes" id="bp-shared-notes" placeholder="Anybody with repo access can see this note."></textarea>'
     + '<p class="fineprint" id="shared-status"></p></div>'
-    + '<div class="bp-build">Build 20261011.0315</div>'
+    + '<div class="bp-build">Build 20261011.0335</div>'
     + '</div>';
   const nm = document.getElementById('bp-name');
   nm.addEventListener('keydown', e => { if (e.key === 'Enter'){ e.preventDefault(); nm.blur(); } });
@@ -2605,7 +2610,7 @@ function renderPlan(id){
     + '<p class="fineprint">Saved on this device. (For your eyes only)</p></div>'
     + '<div class="bp-sec"><h3>Shared notes<span class="info-tip" data-tip="Visible to everyone with access to this project.">\u24d8</span></h3><textarea class="notes" id="bp-shared" placeholder="Shared notes\u2026 (visible to everyone with access)">'+escHtml((S.planShared||{})[id]||'')+'</textarea>'
     + '<p class="fineprint">Shared — visible to everyone with access.</p></div>'
-    + '<div class="bp-build">Build 20261011.0315</div>'
+    + '<div class="bp-build">Build 20261011.0335</div>'
     + '</div>';
   const nt = document.getElementById('bp-notes');
   let t = null;
@@ -3378,7 +3383,7 @@ function setSidebarOpen(open){
 // has a newer build than the one currently loaded (helps Safari web apps
 // and other containers without a hard-refresh shortcut).
 function initVersionCheck(){
-  const myBuild = '20261011.0315';
+  const myBuild = '20261011.0335';
   async function check(){
     try {
       const r = await fetch('version.txt?_=' + Date.now(), {cache: 'no-store'});
