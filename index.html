@@ -505,7 +505,8 @@ body:has(#token-pill) #panel-open{right:148px}
 .dumps-head h4{margin:0;font-size:12px;letter-spacing:1px;text-transform:uppercase;color:var(--muted)}
 .dumps-head .darrow{font-size:25px;color:var(--muted);transition:transform .15s;display:inline-block;line-height:1;position:relative;top:-2px}
 .bp-sec > h3{cursor:pointer;user-select:none;display:flex;align-items:center;gap:6px}
-.bp-sec > h3 .secgrip{cursor:grab;color:var(--faint);font-size:14px;line-height:1;padding:2px 4px;border-radius:4px}
+.bp-sec > h3 .secgrip{cursor:grab;color:var(--faint);font-size:14px;line-height:1;padding:2px 4px;border-radius:4px;
+  margin-left:auto;touch-action:none}
 .bp-sec > h3 .secgrip:hover{color:var(--muted);background:var(--ghost)}
 .bp-sec > h3 .secgrip:active{cursor:grabbing}
 .bp-sec.sec-dragging{opacity:0.4}
@@ -1548,15 +1549,94 @@ function applySectionCollapse(bid){
     arrow.className = 'secarrow';
     arrow.textContent = '›';
     h3.insertBefore(arrow, h3.firstChild);
+    const grip = document.createElement('span');
+    grip.className = 'secgrip';
+    grip.textContent = '⋮⋮';
+    grip.title = 'Drag to reorder sections';
+    h3.appendChild(grip);
     if (S.secCollapsed[bid][fid]) sec.classList.add('collapsed');
     h3.addEventListener('click', e => {
       if (e.target.closest('.info-tip')) return;
+      if (e.target.closest('.secgrip')) return; // grip drags; never toggles collapse
       sec.classList.toggle('collapsed');
       S.secCollapsed[bid][fid] = sec.classList.contains('collapsed');
       save();
     });
   });
 }
+/* ---------- direct section reorder: drag the ⋮⋮ grip on a section title ----------
+   Pointer-based (mouse + touch). Live-reorders .bp-sec elements inside .bp-wrap;
+   on release the DOM order is persisted to S.fieldOrder. The grip uses pointer
+   capture so the follow-up click lands on the grip, which never toggles collapse. */
+const secDrag = { cand: null, drag: null };
+function applySectionDrag(){
+  const home = document.getElementById('buddy-home');
+  if (!home) return;
+  home.querySelectorAll('.bp-sec[data-field] > h3 .secgrip').forEach(grip => {
+    if (grip.dataset.sdrag) return;
+    grip.dataset.sdrag = '1';
+    grip.addEventListener('pointerdown', e => {
+      if (e.button !== undefined && e.button !== 0) return;
+      if (e.isPrimary === false) return;
+      e.preventDefault(); e.stopPropagation();
+      secDrag.cand = { grip: grip, sec: grip.closest('.bp-sec'), y0: e.clientY, pid: e.pointerId };
+    });
+  });
+}
+(function initSectionDrag(){
+  function secsOf(sec){
+    const home = document.getElementById('buddy-home');
+    if (!home) return [];
+    return Array.from(home.querySelectorAll('.bp-sec[data-field]')).filter(s => s !== sec);
+  }
+  window.addEventListener('pointermove', e => {
+    if (secDrag.drag) {
+      if (e.pointerId !== secDrag.drag.pid) return;
+      const d = secDrag.drag;
+      const wrap = d.sec.parentElement;
+      if (!wrap) return;
+      const build = wrap.querySelector(':scope > .bp-build');
+      let target = null;
+      for (const s of secsOf(d.sec)) {
+        const r = s.getBoundingClientRect();
+        if (e.clientY < r.top + r.height / 2) { target = s; break; }
+      }
+      if (target) wrap.insertBefore(d.sec, target);
+      else if (build) wrap.insertBefore(d.sec, build);
+      else wrap.appendChild(d.sec);
+      e.preventDefault();
+      return;
+    }
+    const c = secDrag.cand;
+    if (c && e.pointerId === c.pid) {
+      if (Math.abs(e.clientY - c.y0) > 6) {
+        secDrag.drag = c; secDrag.cand = null;
+        c.sec.classList.add('sec-dragging');
+        try { c.grip.setPointerCapture(c.pid); } catch (err) {}
+      }
+    }
+  }, { passive: false });
+  function end(e){
+    const d = secDrag.drag;
+    if (d && e.pointerId === d.pid) {
+      d.sec.classList.remove('sec-dragging');
+      const wrap = d.sec.parentElement;
+      if (wrap) {
+        const order = Array.from(wrap.querySelectorAll(':scope > .bp-sec[data-field]')).map(s => s.dataset.field);
+        const cur = getFieldOrder();
+        const seen = new Set(order);
+        S.fieldOrder = order.concat(cur.filter(id => !seen.has(id)));
+        save();
+      }
+      secDrag.drag = null;
+      return;
+    }
+    const c = secDrag.cand;
+    if (c && e.pointerId === c.pid) secDrag.cand = null;
+  }
+  window.addEventListener('pointerup', end);
+  window.addEventListener('pointercancel', end);
+})();
 function applyFieldOrder(){
   const home = document.getElementById('buddy-home');
   if (!home) return;
@@ -2304,7 +2384,7 @@ function renderBuddy(id){
     + '<div class="bp-sec" data-field="shared"><h3>Shared notes<span class="info-tip" data-tip="Anybody with repo access can see this note. Saved to the buddy’s repo (docs/notes.md).">ⓘ</span></h3>'
     + '<textarea class="notes" id="bp-shared-notes" placeholder="Anybody with repo access can see this note."></textarea>'
     + '<p class="fineprint" id="shared-status"></p></div>'
-    + '<div class="bp-build">Build 20261011.1543</div>'
+    + '<div class="bp-build">Build 20261011.1547</div>'
     + '</div>';
   const nm = document.getElementById('bp-name');
   nm.addEventListener('keydown', e => { if (e.key === 'Enter'){ e.preventDefault(); nm.blur(); } });
@@ -2419,6 +2499,7 @@ function renderBuddy(id){
   refreshTokenUI(id);
   applyFieldOrder();
   applySectionCollapse(id);
+  applySectionDrag();
   renderJournal();
   if (id === ROOT_ID) {
     const tw = document.querySelector('#buddy-home .bp-tree-wrap');
@@ -3015,7 +3096,7 @@ function renderPlan(id){
     + '<p class="fineprint">Saved on this device. (For your eyes only)</p></div>'
     + '<div class="bp-sec"><h3>Shared notes<span class="info-tip" data-tip="Visible to everyone with access to this project.">\u24d8</span></h3><textarea class="notes" id="bp-shared" placeholder="Shared notes\u2026 (visible to everyone with access)">'+escHtml((S.planShared||{})[id]||'')+'</textarea>'
     + '<p class="fineprint">Shared — visible to everyone with access.</p></div>'
-    + '<div class="bp-build">Build 20261011.1543</div>'
+    + '<div class="bp-build">Build 20261011.1547</div>'
     + '</div>';
   const nt = document.getElementById('bp-notes');
   let t = null;
@@ -4079,7 +4160,7 @@ window.__bindEdgeSwipes = bindIframeEdgeSwipes;
 // Returns 'new' | 'current' | 'suppressed' | 'error' so manual triggers
 // (e.g. pull-to-refresh) can report the outcome.
 function initVersionCheck(){
-  const myBuild = '20261011.1543';
+  const myBuild = '20261011.1547';
   function showUpdateBanner(serverBuild){
     if (document.getElementById('update-banner')) return;
     const b = document.createElement('div');
