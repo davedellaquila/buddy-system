@@ -312,6 +312,29 @@ body.sb-closed #sb-resize{display:none}
   #sidebar.open ~ #sb-resize{display:flex}
   #sb-resize::after{width:5px;height:56px}
 }
+/* Sidebar scroll-to-top — Muse-ish frosted chip, pinned to bottom of left panel */
+#sb-to-top{position:fixed;bottom:16px;left:calc(var(--sbw, 308px) / 2 - 22px);z-index:48;
+  width:44px;height:44px;border-radius:12px;padding:0;
+  display:flex;align-items:center;justify-content:center;
+  background:color-mix(in srgb, var(--panel) 78%, transparent);border:1px solid var(--border);
+  color:var(--muted);cursor:pointer;
+  box-shadow:0 2px 14px var(--shadow);
+  -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
+  opacity:0;pointer-events:none;transform:translateY(6px);
+  transition:opacity .18s ease,transform .18s ease,color .15s,border-color .15s;
+  -webkit-tap-highlight-color:transparent}
+#sb-to-top.show{opacity:1;pointer-events:auto;transform:none}
+#sb-to-top:hover{color:var(--accent);border-color:var(--accent)}
+#sb-to-top:active{transform:scale(.96)}
+#sb-to-top svg{display:block}
+body.sb-closed #sb-to-top,
+body.standalone #sb-to-top{opacity:0!important;pointer-events:none!important}
+@media (max-width:639px){
+  #sb-to-top{bottom:20px;z-index:101;left:calc(var(--sbw, 308px) / 2 - 22px)}
+  /* Only while the drawer is open — sibling selector */
+  #sb-to-top{opacity:0;pointer-events:none}
+  #sidebar.open ~ #sb-to-top.show{opacity:1;pointer-events:auto}
+}
 .bp-topnav{display:flex;gap:4px;align-items:center;margin-bottom:6px;flex-wrap:wrap}
 .bp-topnav .sep{color:var(--faint);margin:0 2px}
 /* Takeover back bar: hidden everywhere except the portrait-phone takeover (see below) */
@@ -830,6 +853,9 @@ body.node-dragging,body.node-dragging *{cursor:grabbing !important}
   <div class="nav-sec" id="plans-sec"><h3 style="cursor:pointer" id="plans-toggle"><span id="plans-arrow">›</span> Business Plans</h3><div id="plan-nav"></div></div>
 </aside>
 <div id="sb-resize" title="Drag left or right to resize the sidebar. Double-click to reset to default width."></div>
+<button type="button" id="sb-to-top" title="Scroll sidebar to top" aria-label="Scroll sidebar to top">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5"/><path d="M6 11l6-6 6 6"/></svg>
+</button>
 <main id="main">
 <div id="journal-bar"></div>
 <div id="view-tree" class="view">
@@ -3451,6 +3477,33 @@ function initGear(){
   const g = document.getElementById('sb-gear');
   if (g && !g.dataset.init) { g.dataset.init = '1'; g.addEventListener('click', () => openFieldSettings()); }
 }
+/* Floating control at the bottom of the left sidebar — jump back to brand/search. */
+function initSbToTop(){
+  const sb = document.getElementById('sidebar');
+  const btn = document.getElementById('sb-to-top');
+  if (!sb || !btn || btn.dataset.init) return;
+  btn.dataset.init = '1';
+  const THRESH = 100;
+  function sync(){
+    const useful = sb.scrollTop > THRESH && isSidebarOpen() && !document.body.classList.contains('standalone');
+    btn.classList.toggle('show', !!useful);
+  }
+  sb.addEventListener('scroll', sync, { passive: true });
+  window.addEventListener('resize', sync);
+  btn.addEventListener('click', e => {
+    e.preventDefault();
+    try { sb.scrollTo({ top: 0, behavior: 'smooth' }); }
+    catch (err) { sb.scrollTop = 0; }
+  });
+  // Re-sync when drawer opens/closes (class toggles don't fire scroll)
+  const mo = typeof MutationObserver !== 'undefined'
+    ? new MutationObserver(sync) : null;
+  if (mo) {
+    mo.observe(sb, { attributes: true, attributeFilter: ['class'] });
+    mo.observe(document.body, { attributes: true, attributeFilter: ['class'] });
+  }
+  sync();
+}
 function isDrawerNav(){ return window.matchMedia('(max-width:639px)').matches; }
 function isSidebarOpen(){
   const sb = document.getElementById('sidebar');
@@ -3859,6 +3912,7 @@ initTokenPill();
 updateTokenGating();
 initSearch();
 initGear();
+initSbToTop();
 initEdgeSwipeOpen();
 initPanelSwipeGestures();
 initVersionCheck();
