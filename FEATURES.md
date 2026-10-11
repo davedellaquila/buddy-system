@@ -94,6 +94,11 @@ Build: `build.py` generates `index.html` from `buddies.json` + `plans.json`.
   "Dumps (n)" section (collapsed by default, state remembered per buddy);
   each dump tile has edit (✏️) and delete (🗑️) buttons in its upper-right
   corner.
+- **Dump anywhere, it's routed** — the system's core capture promise: type a
+  stream-of-consciousness thought into any buddy's homepage dump box or any
+  thread, and it lands in a durable inbox (`docs/ingest.md`) and gets routed
+  to the buddy it actually belongs to. Dave never has to decide where a
+  thought goes — capture is universal, routing is the staff's job.
 - **Token gating** — photos, shared notes, and ingest are locked until a
   GitHub token is saved; an amber banner at the top of every buddy page
   prompts for it.

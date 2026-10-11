@@ -3,6 +3,11 @@
 All notable changes to the Buddies dashboard and buddy system. Newest first.
 `FEATURES.md` describes the current state; this file describes how it got there.
 
+## 2026-10-11 (Positioning: "dump anywhere, it's routed")
+
+### Added
+- **"Dump anywhere, it's routed"** captured as a core selling point in FEATURES.md — stream-of-consciousness capture into any homepage dump box or thread lands in a durable inbox and is routed to the right buddy; Dave never decides where a thought goes.
+
 ## 2026-10-11 (Dashboard: default project homepage redesign)
 
 ### Added
