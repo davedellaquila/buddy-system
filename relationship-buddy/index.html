@@ -182,6 +182,35 @@
     border-radius: 999px; padding: 8px 16px; font-size: 13px; font-weight: 600; cursor: pointer;
   }
   .dumpbox-tokenrow a { color: var(--rose); font-size: 13px; }
+  /* ---- date-night roulette ---- */
+  .ratings { display: flex; gap: 8px; flex-wrap: wrap; margin: 2px 0 20px; }
+  .rating {
+    font-weight: 800; font-size: 13px; letter-spacing: 1px;
+    border: 2px solid var(--border); border-radius: 6px; padding: 6px 12px;
+    background: var(--panel); color: var(--muted); cursor: pointer;
+    font-family: inherit; transition: border-color .15s ease, color .15s ease;
+  }
+  .rating:hover { border-color: var(--rose); color: var(--text); }
+  .rating[aria-checked="true"] {
+    border-color: var(--rose); color: #fff;
+    background: linear-gradient(120deg, var(--rose-deep), var(--rose));
+  }
+  .wheel-wrap { display: flex; flex-direction: column; align-items: center; margin: 4px 0; }
+  .wheel-stage { position: relative; width: min(340px, 86vw); }
+  #rwheel { width: 100%; height: auto; display: block; }
+  .rpointer {
+    position: absolute; top: -16px; left: 50%; transform: translateX(-50%);
+    font-size: 26px; color: var(--gold); text-shadow: 0 2px 6px rgba(0,0,0,.35);
+    pointer-events: none;
+  }
+  button.btn { border: none; cursor: pointer; font-family: inherit; }
+  .rresult { margin-top: 18px; }
+  .rrate {
+    display: inline-block; font-weight: 800; font-size: 12px; letter-spacing: 1px;
+    border: 2px solid var(--rose); border-radius: 6px; padding: 2px 8px;
+    color: var(--rose); margin-right: 10px; vertical-align: 2px; white-space: nowrap;
+  }
+  .ridea { font-size: 16px; }
   footer {
     margin-top: 56px; padding-top: 24px; border-top: 1px solid var(--border);
     text-align: center; color: var(--muted); font-size: 13px;
@@ -309,6 +338,32 @@
     </div>
   </section>
 
+  <section id="datenight">
+    <h2>🎡 Date-night roulette</h2>
+    <p class="sec-desc">Spin for tonight's plan. Pick a rating — the wheel only serves what you select.</p>
+    <div class="ratings" role="radiogroup" aria-label="Spiciness rating">
+      <button type="button" class="rating" data-rating="G" aria-checked="false">G</button>
+      <button type="button" class="rating" data-rating="PG" aria-checked="false">PG</button>
+      <button type="button" class="rating" data-rating="R" aria-checked="true">R</button>
+      <button type="button" class="rating" data-rating="X" aria-checked="false">X</button>
+      <button type="button" class="rating" data-rating="XXX" aria-checked="false">XXX</button>
+      <button type="button" class="rating" data-rating="KINK" aria-checked="false">kink.com</button>
+    </div>
+    <div class="wheel-wrap">
+      <div class="wheel-stage">
+        <div class="rpointer">▼</div>
+        <canvas id="rwheel" width="640" height="640" aria-label="Date-night idea wheel"></canvas>
+      </div>
+      <button type="button" id="spinBtn" class="btn" style="margin-top:16px">Spin the wheel</button>
+    </div>
+    <div class="rresult card hot" hidden>
+      <div>
+        <span class="rrate"></span><strong class="ridea"></strong>
+      </div>
+    </div>
+    <p class="note">Between you two 💞 — the wheel never tells.</p>
+  </section>
+
   <section>
     <h2>Links</h2>
     <div class="links">
@@ -419,6 +474,181 @@
     if ((ev.metaKey || ev.ctrlKey) && ev.key === 'Enter') { ev.preventDefault(); dump(); }
   });
   resolveRepo().then(refreshUI);
+})();
+</script>
+<script>
+// ---- date-night roulette (self-contained, no dependencies) ----
+(function(){
+  var sec = document.getElementById('datenight');
+  if (!sec || sec.dataset.rInit) return;
+  sec.dataset.rInit = '1';
+
+  var IDEAS = {
+    G: [
+      {s:'Sunset picnic', t:'Pack a sunset picnic — even the backyard counts. Phones stay inside.'},
+      {s:'Stargazing', t:'Stargazing with a blanket and something warm to drink. Find three constellations.'},
+      {s:'Slow dance', t:'Slow dance in the living room to \u2018your song.\u2019 No audience, no judgment.'},
+      {s:'Cook together', t:'Cook a brand-new recipe together, then eat it by candlelight.'},
+      {s:'Love notes', t:'Write each other a short love note and trade them over dessert.'},
+      {s:'Scenic drive', t:'Take a scenic drive with no destination — windows down, playlist up.'},
+      {s:'Sunrise coffee', t:'Watch the sunrise together with good coffee. Say one thing you\u2019re grateful for.'},
+      {s:'Foot rubs', t:'Trade foot rubs while you tell each other about your week.'}
+    ],
+    PG: [
+      {s:'Feed each other', t:'Feed each other dessert — no hands allowed.'},
+      {s:'Hot tub kiss', t:'Kiss like teenagers in the hot tub. Take your time.'},
+      {s:'Warm-oil massage', t:'Trade massages with warm oil. Slow hands, no rush.'},
+      {s:'Strip poker', t:'Strip poker — loser makes breakfast in the morning.'},
+      {s:'Bubble bath', t:'A candlelit bubble bath for two. Bring the wine.'},
+      {s:'Blindfold bites', t:'Blindfold taste-test: feed each other mystery bites and guess.'},
+      {s:'Shower for two', t:'Shower together — warm water, no agenda, no rush.'},
+      {s:'Striptease', t:'A slow, silly striptease to music. Laughing is allowed — encouraged, even.'}
+    ],
+    R: [
+      {s:'Strangers\u2019 bar', t:'Role-play: you\u2019re strangers meeting at a bar. (The bar is your kitchen.)'},
+      {s:'Ice play', t:'Ice cubes and warm hands — take turns exploring, slowly.'},
+      {s:'Couch makeout', t:'Make out on the couch like the movie is still paused. It is.'},
+      {s:'Whisper it', t:'Whisper exactly what you want tonight — then do it.'},
+      {s:'The yes game', t:'The \u2018yes\u2019 game: twenty minutes, no saying no.'},
+      {s:'Dressed to undress', t:'Get dressed up with nothing underneath. Dinner decides what happens after.'},
+      {s:'Mirror play', t:'Make love in front of a mirror — watch each other.'},
+      {s:'Edible paint', t:'Edible body paint. The canvas is optional; the tasting isn\u2019t.'}
+    ],
+    X: [
+      {s:'Take turns', t:'Take turns: one gives, one only receives. Then switch.'},
+      {s:'Blindfold guess', t:'Blindfolded — guess what they\u2019re using on you. No peeking.'},
+      {s:'No finish line', t:'Go down on each other with no finish line in mind. Just enjoy.'},
+      {s:'Tile shower', t:'Sex in the shower, up against the warm tile.'},
+      {s:'Narrate it', t:'Talk dirty — narrate everything you\u2019re doing, in detail.'},
+      {s:'Eye contact', t:'Touch yourselves for each other, eyes locked the whole time.'},
+      {s:'That position', t:'Try the position you\u2019ve both been curious about. Tonight\u2019s the night.'},
+      {s:'Together', t:'Make coming together the whole point of the evening.'}
+    ],
+    XXX: [
+      {s:'Slow & deep', t:'Slow, deep, eyes locked — don\u2019t look away until someone breaks.'},
+      {s:'From behind', t:'From behind, with a firm grip on their hips. Set the rhythm together.'},
+      {s:'Begging', t:'Go down on them until they\u2019re begging — then keep going a little longer.'},
+      {s:'Kitchen counter', t:'Bent over the kitchen counter, clothes half-on, in a hurry.'},
+      {s:'All night', t:'Multiple rounds, no sleep till sunrise. Hydrate between.'},
+      {s:'Risky & private', t:'Find a risky spot for a private moment — the thrill is the point.'},
+      {s:'Film it', t:'Film each other on your phone. For your eyes only.'},
+      {s:'Shower off', t:'Finish on each other, then wash each other clean in the shower.'}
+    ],
+    KINK: [
+      {s:'Silk ties', t:'Light bondage: silk ties, wrists to the headboard. Agree on a safe word first.'},
+      {s:'Power hour', t:'One hour of power exchange — one of you gives all the orders.'},
+      {s:'Spanking', t:'A spanking session: start light, check in, build up together.'},
+      {s:'Sensation play', t:'Sensation play — ice, low-temp wax, feathers. Take turns.'},
+      {s:'Role reversal', t:'Role reversal night: the usual giver becomes the receiver.'},
+      {s:'Edging', t:'Orgasm control — edge them mercilessly, and decide exactly when.'},
+      {s:'Praise kink', t:'Praise kink: narrate everything they\u2019re doing right, in vivid detail.'},
+      {s:'Aftercare', t:'Aftercare done right: blankets, water, and holding each other close.'}
+    ]
+  };
+  var LABEL = {G:'G', PG:'PG', R:'R', X:'X', XXX:'XXX', KINK:'kink.com'};
+
+  var canvas = sec.querySelector('#rwheel');
+  var ctx = canvas.getContext('2d');
+  var spinBtn = sec.querySelector('#spinBtn');
+  var result = sec.querySelector('.rresult');
+  var rText = sec.querySelector('.ridea');
+  var rBadge = sec.querySelector('.rrate');
+
+  var TAU = Math.PI * 2, N = 8, SEG = TAU / N;
+  var rating = 'R', items = IDEAS[rating];
+  var rot = 0, spinning = false, winner = -1;
+
+  function palette(){
+    var light = window.matchMedia('(prefers-color-scheme: light)').matches;
+    return light
+      ? {a:'#f2d3de', b:'#eadff2', text:'#2c1f27', line:'#faf5f0', win:'#e9bd6a'}
+      : {a:'#462838', b:'#2c2136', text:'#f4eae5', line:'#171219', win:'#8a6a2f'};
+  }
+
+  function draw(){
+    var P = palette(), W = canvas.width, C = W / 2, Rr = C - 10;
+    ctx.clearRect(0, 0, W, W);
+    for (var i = 0; i < N; i++){
+      var a0 = rot + i * SEG, a1 = a0 + SEG;
+      ctx.beginPath();
+      ctx.moveTo(C, C); ctx.arc(C, C, Rr, a0, a1); ctx.closePath();
+      ctx.fillStyle = (i === winner) ? P.win : (i % 2 ? P.b : P.a);
+      ctx.fill();
+      ctx.strokeStyle = P.line; ctx.lineWidth = 3; ctx.stroke();
+      ctx.save();
+      ctx.translate(C, C); ctx.rotate(a0 + SEG / 2);
+      ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+      ctx.fillStyle = (i === winner) ? P.line : P.text;
+      ctx.font = '600 21px -apple-system, "Segoe UI", sans-serif';
+      ctx.fillText(items[i].s, Rr - 20, 0);
+      ctx.restore();
+    }
+    ctx.beginPath(); ctx.arc(C, C, 36, 0, TAU);
+    ctx.fillStyle = P.line; ctx.fill();
+    ctx.font = '38px serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText('\uD83D\uDC9E', C, C + 2);
+  }
+
+  // Which segment sits under the top pointer for a given rotation?
+  function segmentAt(rotation){
+    var norm = ((-Math.PI / 2 - rotation) % TAU + TAU) % TAU;
+    return Math.floor(norm / SEG) % N;
+  }
+
+  function showResult(i){
+    rBadge.textContent = LABEL[rating];
+    rText.textContent = items[i].t;
+    result.hidden = false;
+  }
+
+  function spin(){
+    if (spinning) return;
+    spinning = true; winner = -1; result.hidden = true;
+    spinBtn.disabled = true; spinBtn.textContent = 'Spinning…';
+    var target = Math.floor(Math.random() * N);
+    var turns = 5 + Math.floor(Math.random() * 3); // integer turns: keeps the landing math exact
+    var dest = -Math.PI / 2 - (target * SEG + SEG / 2) + turns * TAU;
+    while (dest < rot + 4 * TAU) dest += TAU;
+    var start = rot;
+    var dur = window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 700 : 4600;
+    var t0 = performance.now();
+    function frame(now){
+      var p = Math.min(1, (now - t0) / dur);
+      var e = 1 - Math.pow(1 - p, 4);
+      rot = start + (dest - start) * e;
+      draw();
+      if (p < 1){ requestAnimationFrame(frame); return; }
+      rot = dest % TAU;
+      winner = segmentAt(rot);
+      draw();
+      showResult(winner);
+      spinning = false;
+      spinBtn.disabled = false; spinBtn.textContent = 'Spin again';
+    }
+    requestAnimationFrame(frame);
+  }
+
+  spinBtn.addEventListener('click', spin);
+
+  sec.querySelectorAll('.rating').forEach(function(b){
+    b.addEventListener('click', function(){
+      if (spinning) return;
+      rating = b.getAttribute('data-rating');
+      items = IDEAS[rating];
+      sec.querySelectorAll('.rating').forEach(function(x){
+        x.setAttribute('aria-checked', x === b ? 'true' : 'false');
+      });
+      winner = -1; result.hidden = true;
+      spinBtn.disabled = false; spinBtn.textContent = 'Spin the wheel';
+      draw();
+    });
+  });
+
+  if (window.matchMedia){
+    var mq = window.matchMedia('(prefers-color-scheme: light)');
+    if (mq.addEventListener) mq.addEventListener('change', draw);
+  }
+  draw();
 })();
 </script>
 </body>
