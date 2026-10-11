@@ -277,12 +277,19 @@ body{padding:0}
 #view-projects,#view-manifest{touch-action:pan-x pan-y}
 #treezoom.panning,#treezoom.panning *{user-select:none!important;-webkit-user-select:none!important}
 #treezoom,#treezoom *{user-select:none;-webkit-user-select:none}
-#zoombar{position:fixed;top:14px;left:calc(var(--sbw, 308px) + 46px);width:54px;height:248px;background:color-mix(in srgb, var(--panel) 72%, transparent);border:1px solid var(--border2);border-radius:12px;z-index:5;box-shadow:0 2px 8px var(--shadow-soft)}
-#zoombar .zt{position:absolute;top:8px;left:0;right:0;text-align:center;font-size:11px;color:var(--muted);cursor:help}
-#zoomrange{position:absolute;left:50%;top:50%;width:188px;margin:0;padding:0;transform:translate(-50%,-50%) rotate(-90deg);accent-color:var(--accent);cursor:pointer}
-#zoombar .zv{position:absolute;bottom:8px;left:0;right:0;text-align:center;font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
-#zoomfit{position:absolute;bottom:30px;left:50%;transform:translateX(-50%);background:none;border:1px solid var(--border);border-radius:8px;color:var(--muted);font-size:14px;width:30px;height:26px;cursor:pointer}
-#zoomfit:hover{color:var(--text);border-color:var(--muted)}
+/* Compact horizontal zoom — small mark · slider · large mark (+ tiny fit) */
+#zoombar{position:fixed;top:12px;left:calc(var(--sbw, 308px) + 40px);z-index:5;
+  display:flex;align-items:center;gap:6px;height:34px;width:auto;padding:0 8px;
+  background:color-mix(in srgb, var(--panel) 78%, transparent);border:1px solid var(--border2);
+  border-radius:10px;box-shadow:0 2px 8px var(--shadow-soft);-webkit-tap-highlight-color:transparent}
+#zoombar .z-out,#zoombar .z-in{flex:0 0 auto;line-height:1;color:var(--muted);user-select:none;pointer-events:none}
+#zoombar .z-out{font-size:9px}   /* zoom out */
+#zoombar .z-in{font-size:15px}   /* zoom in */
+#zoomrange{flex:0 0 auto;width:112px;height:28px;margin:0;padding:0;transform:none;
+  accent-color:var(--accent);cursor:pointer;touch-action:none}
+#zoomfit{flex:0 0 auto;background:none;border:none;border-radius:6px;color:var(--muted);
+  font-size:13px;width:28px;height:28px;padding:0;cursor:pointer;line-height:1}
+#zoomfit:hover{color:var(--text);background:var(--ghost)}
 /* Fixed to viewport at sidebar edge so vertical #sidebar scroll doesn't move it */
 #sb-resize{position:fixed;top:0;left:calc(var(--sbw, 308px) - 7px);z-index:45;
   display:flex;align-items:center;justify-content:center;width:10px;height:100vh;height:100dvh;cursor:ew-resize}
@@ -530,8 +537,8 @@ body.standalone .sa-bar{display:flex}
   #main{padding:72px 12px 60px}
   /* Tree keeps the org chart on phones — pan with a finger, zoom with the floating slider */
   .standalones .grid{display:block}
-  #zoombar{display:block;left:auto;right:10px;top:84px;z-index:30;width:64px;height:272px}
-  #zoomrange{width:200px}
+  #zoombar{left:auto;right:10px;top:72px;z-index:30;height:40px;padding:0 10px;gap:8px}
+  #zoomrange{width:132px;height:32px}
   /* Chunkier tree nodes for touch */
   #treezoom .node{padding:15px 14px;min-height:60px}
   /* Bottom sheet panel — taller, grabbable */
@@ -2277,9 +2284,11 @@ function zoomToFit(){
 (function initZoom(){
   const vt = document.getElementById('view-tree');
   vt.insertAdjacentHTML('afterbegin',
-    '<div class="treewrap" id="zoomwrap"><div class="zoombar" id="zoombar"><span class="zt" title="Tip: hold Shift and scroll over the tree to zoom">Zoom</span>'
-    + '<input type="range" id="zoomrange" min="50" max="160" step="5" value="100" aria-label="Tree zoom">'
-    + '<span class="zv" id="zoomval">100%</span><button id="zoomfit" title="Zoom to fit">⛶</button></div><div id="treezoom"></div></div>');
+    '<div class="treewrap" id="zoomwrap"><div class="zoombar" id="zoombar" title="Zoom — hold Shift and scroll over the tree">'
+    + '<span class="z-out" aria-hidden="true">▪</span>'
+    + '<input type="range" id="zoomrange" min="50" max="160" step="5" value="100" aria-label="Zoom out to zoom in">'
+    + '<span class="z-in" aria-hidden="true">◼</span>'
+    + '<button type="button" id="zoomfit" title="Zoom to fit" aria-label="Zoom to fit">⛶</button></div><div id="treezoom"></div></div>');
   const tw = document.getElementById('zoomwrap'), tz = document.getElementById('treezoom');
   Array.from(vt.childNodes).forEach(n => { if (n !== tw) tz.appendChild(n); });
   document.getElementById('zoomrange').addEventListener('input', e => {

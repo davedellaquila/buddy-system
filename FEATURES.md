@@ -13,7 +13,8 @@ Build: `build.py` generates `index.html` from `buddies.json` + `plans.json`.
 
 - **Classic tree layout** — the canonical design. (A card-based redesign was
   tried and reverted; preserved on branch `card-tree-redesign` for reference.)
-- **Zoom slider** — vertical slider beside the chart, 50–160%.
+- **Zoom slider** — compact horizontal control (small▪ · range · large◼ + fit),
+  50–160%; Shift+scroll over the tree still zooms.
 - **Shift+scroll zoom** — hold Shift and scroll over the tree to zoom.
 - **Grab-to-pan** — click-drag the chart to slide it around; grab/grabbing
   cursors; small movements still count as clicks; the stray click after a
