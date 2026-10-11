@@ -273,11 +273,17 @@ body{padding:0}
 #zoombar .zv{position:absolute;bottom:8px;left:0;right:0;text-align:center;font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
 #zoomfit{position:absolute;bottom:30px;left:50%;transform:translateX(-50%);background:none;border:1px solid var(--border);border-radius:8px;color:var(--muted);font-size:14px;width:30px;height:26px;cursor:pointer}
 #zoomfit:hover{color:var(--text);border-color:var(--muted)}
-#sb-resize{position:absolute;top:0;right:0;z-index:60;display:flex;align-items:center;justify-content:center;width:10px;height:100vh;cursor:ew-resize}
+/* Fixed to viewport at sidebar edge so vertical #sidebar scroll doesn't move it */
+#sb-resize{position:fixed;top:0;left:calc(var(--sbw, 308px) - 7px);z-index:45;
+  display:flex;align-items:center;justify-content:center;width:10px;height:100vh;height:100dvh;cursor:ew-resize}
 #sb-resize::after{content:'';width:7px;height:56px;border-radius:3px;background:var(--faint)}
 #sb-resize:hover::after{background:var(--accent-hi)}
 #sb-resize:hover{background:var(--ghost)}
-/* (mobile: the drawer handle is restyled, not hidden, in the max-width:639px block below) */
+body.sb-closed #sb-resize{display:none}
+/* Phone drawer: handle must sit inside sidebar (overflow clips overhang / fixed left) */
+@media (max-width:639px){
+  #sb-resize{position:absolute;left:auto;right:0;z-index:60;height:100%}
+}
 .bp-topnav{display:flex;gap:4px;align-items:center;margin-bottom:6px;flex-wrap:wrap}
 .bp-topnav .sep{color:var(--faint);margin:0 2px}
 /* Takeover back bar: hidden everywhere except the portrait-phone takeover (see below) */
@@ -335,6 +341,18 @@ textarea[disabled]{opacity:.5;cursor:not-allowed}
   border-radius:8px;padding:8px 10px;font-size:13px;margin-bottom:10px}
 #token-pop .saved-check{display:none;color:var(--grn-tx);font-size:14px;font-weight:600;margin-top:8px}
 #token-pop .saved-check.show{display:block}
+/* Reopen right detail panel when closed (Muse-ish fixed chrome) */
+#panel-open{position:fixed;top:12px;right:12px;z-index:85;width:44px;height:44px;border-radius:12px;
+  background:var(--panel);border:1px solid var(--border);color:var(--muted);cursor:pointer;
+  display:flex;align-items:center;justify-content:center;padding:0;
+  box-shadow:0 2px 14px var(--shadow);-webkit-tap-highlight-color:transparent;transition:border-color .15s,color .15s,transform .15s}
+#panel-open:hover{color:var(--accent);border-color:var(--accent);transform:scale(1.05)}
+#panel-open:active{transform:scale(.96)}
+#panel-open svg{display:block}
+body:has(#view-buddy.active) #panel-open,
+body.standalone #panel-open{display:none}
+/* When token pill is present, sit just to its left */
+body:has(#token-pill) #panel-open{right:148px}
 .ctog{display:none;width:18px;height:18px;flex:0 0 18px;align-items:center;justify-content:center;
   background:none;border:none;color:var(--muted);cursor:pointer;font-size:10px;padding:0;margin-right:2px}
 .brow:hover .ctog.has-kids{display:inline-flex}
@@ -345,7 +363,12 @@ textarea[disabled]{opacity:.5;cursor:not-allowed}
 #field-settings.show{display:flex;flex-direction:column}
 #field-settings .fset-head{padding:20px 20px 0;cursor:move;user-select:none;-webkit-user-select:none;flex:0 0 auto}
 #field-settings .fset-head h3{margin:0 0 12px;font-size:14px}
-#field-settings .fset-body{padding:0 20px;overflow-y:auto;flex:1 1 auto;min-height:0}
+#field-settings .fset-body{padding:0 20px 16px;overflow-y:auto;flex:1 1 auto;min-height:0}
+#field-settings .fset-sec{margin:0}
+#field-settings .fset-sec-h{position:sticky;top:0;z-index:3;margin:0;padding:12px 0 8px;font-size:13px;
+  letter-spacing:.02em;background:var(--panel);border-bottom:1px solid var(--border);color:var(--text)}
+#field-settings .fset-sec + .fset-sec .fset-sec-h{margin-top:8px}
+#field-settings .fset-sec .fineprint{margin:10px 0 12px}
 #field-settings .fset-footer{padding:12px 20px;border-top:1px solid var(--border);display:flex;gap:8px;justify-content:space-between;align-items:center;background:var(--panel);flex:0 0 auto}
 #field-settings .fset-resize{position:absolute;right:3px;bottom:3px;width:14px;height:14px;cursor:nwse-resize;opacity:.55;
   background:linear-gradient(135deg,transparent 55%,var(--muted) 55%);border-radius:0 0 8px 0}
@@ -356,11 +379,15 @@ textarea[disabled]{opacity:.5;cursor:not-allowed}
   box-shadow:0 2px 8px rgba(0,0,0,.08);transition:all .15s ease}
 #field-settings .fset-close-x:hover{color:#fff;background:linear-gradient(135deg,#e0533d,#c23e2a);border-color:#c23e2a;box-shadow:0 2px 12px rgba(224,83,61,.3);transform:scale(1.05)}
 .fset-row{display:flex;align-items:center;gap:8px;padding:8px;border:1px solid var(--border2);border-radius:8px;margin-bottom:6px;background:var(--bg);cursor:grab}
-.fset-row.drag-over{border-color:var(--accent);background:var(--wash2)}
-.fset-row .fh{touch-action:none;cursor:grab;padding:4px 8px;font-size:18px;min-width:44px;min-height:44px;display:flex;align-items:center;justify-content:center}
-.fset-row.dragging{opacity:.5}
-.fset-row .fh{color:var(--muted);cursor:grab;font-size:14px}
+.fset-row .fh{touch-action:none;cursor:grab;padding:4px 8px;font-size:18px;min-width:44px;min-height:44px;display:flex;align-items:center;justify-content:center;color:var(--muted)}
 .fset-row .fl{flex:1;font-size:13px}
+/* Settings list DnD feedback: dim source, dashed insert line, elevated ghost */
+.fset-row.dragging{opacity:.32;border-style:dashed;background:var(--wash)}
+.fset-insert{height:0;margin:-1px 2px 5px;border:0;border-top:2px dashed var(--accent);
+  box-shadow:0 0 0 1px color-mix(in srgb, var(--accent) 35%, transparent);pointer-events:none}
+#fset-ghost{position:fixed;z-index:4000;pointer-events:none;margin:0;opacity:.95;
+  box-shadow:0 12px 32px rgba(0,0,0,.55);border-color:var(--accent);transform:scale(1.03);
+  background:var(--panel)}
 /* Circle-check settings toggles (checkmark.circle.fill style) */
 .fset-check{display:flex;align-items:center;gap:12px;margin-top:8px;padding:11px 12px;font-size:13.5px;
   cursor:pointer;border:1px solid var(--border2);border-radius:10px;background:var(--bg);user-select:none;-webkit-user-select:none}
@@ -378,10 +405,11 @@ textarea[disabled]{opacity:.5;cursor:not-allowed}
 #field-settings input[type=checkbox]:focus-visible{outline:none;box-shadow:0 0 0 3px var(--ghost)}
 #field-settings input[type=checkbox]:active{transform:scale(.92)}
 .fset-row input[type=checkbox]{margin-left:2px}
-.bp-close-x{position:absolute;top:10px;right:10px;z-index:10;width:36px;height:36px;
-  background:none;border:none;border-radius:8px;color:var(--muted);font-size:24px;
-  cursor:pointer;display:flex;align-items:center;justify-content:center}
+.bp-close-x{position:static;flex:0 0 auto;width:32px;height:32px;margin-left:2px;
+  background:none;border:none;border-radius:8px;color:var(--muted);font-size:20px;
+  cursor:pointer;display:none;align-items:center;justify-content:center;padding:0}
 .bp-close-x:hover{color:var(--text)}
+#view-buddy.panel .bp-close-x,#view-buddy.sheet .bp-close-x{display:flex}
 #buddy-home{position:relative}
 #bp-resize{position:absolute;top:0;left:0;z-index:60;display:flex;align-items:center;justify-content:center;width:10px;height:100vh;cursor:ew-resize}
 #bp-resize::after{content:'';width:10px;height:56px;border-radius:3px;background:var(--faint)}
@@ -503,12 +531,6 @@ body.standalone .sa-bar{display:flex}
     -webkit-overflow-scrolling:touch}
   #view-buddy.sheet::before{content:'';display:block;width:48px;height:5px;border-radius:3px;
     background:var(--border);margin:4px auto 14px;flex:none}
-  /* Tiles: 2-column grid */
-  #project-tiles,#changelog-tiles,#plans-tiles,#manifest-tiles,#project-status-tiles{display:grid !important;
-    grid-template-columns:1fr 1fr;gap:10px;max-width:none;margin:0 0 18px}
-  #project-tiles .ptile,#changelog-tiles .ptile,#plans-tiles .ptile,#manifest-tiles .ptile{flex:none !important;max-width:none !important}
-  .ptile{padding:14px 12px;border-radius:14px}
-  .ptile-num{font-size:28px}
   /* Plans: single column cards */
   .plan-grid{display:block;max-width:none}
   .plan-card{margin-bottom:12px}
@@ -597,6 +619,34 @@ body.standalone .sa-bar{display:flex}
 .ptile-sub{font-size:13px;color:var(--muted)}
 .ptile[data-tile]{cursor:pointer}
 .ptile.sel{box-shadow:inset 0 0 0 2px var(--tint)}
+/* Phone tiles AFTER base .ptile so cascade wins (beat inline gap/display too) */
+@media (max-width:639px){
+  #project-tiles,#changelog-tiles,#plans-tiles,#manifest-tiles,#project-status-tiles{
+    display:grid !important;grid-template-columns:1fr 1fr !important;
+    gap:6px !important;max-width:none !important;width:100% !important;
+    margin:0 0 12px !important;box-sizing:border-box;flex-wrap:unset !important}
+  #project-tiles .ptile,#changelog-tiles .ptile,#plans-tiles .ptile,#manifest-tiles .ptile,
+  #project-status-tiles .ptile{flex:none !important;max-width:none !important;min-width:0 !important}
+  .ptile{padding:6px 8px 5px !important;border-radius:10px !important}
+  .ptile::before{width:3px}
+  .ptile-label{font-size:9px !important;letter-spacing:.08em;line-height:1.15}
+  .ptile-num{font-size:18px !important;line-height:1.05 !important;margin:1px 0}
+  .ptile-sub{font-size:10px !important;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+}
+/* Landscape phones are often >639px wide — key off short height instead */
+@media (orientation:landscape) and (max-height:520px){
+  #project-tiles,#changelog-tiles,#plans-tiles,#manifest-tiles,#project-status-tiles{
+    display:grid !important;grid-template-columns:repeat(auto-fit,minmax(96px,1fr)) !important;
+    gap:6px !important;max-width:none !important;width:100% !important;
+    margin:0 0 10px !important;box-sizing:border-box;flex-wrap:unset !important}
+  #project-tiles .ptile,#changelog-tiles .ptile,#plans-tiles .ptile,#manifest-tiles .ptile,
+  #project-status-tiles .ptile{flex:none !important;max-width:none !important;min-width:0 !important}
+  .ptile{padding:5px 7px 4px !important;border-radius:10px !important}
+  .ptile::before{width:3px}
+  .ptile-label{font-size:9px !important;letter-spacing:.08em;line-height:1.15}
+  .ptile-num{font-size:16px !important;line-height:1.05 !important;margin:1px 0}
+  .ptile-sub{font-size:10px !important;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+}
 #main.homepage-mode{padding:0}
 #main.homepage-mode #view-project.active{min-height:100vh}
 #homepage-wrap{flex:1;display:flex;flex-direction:column;min-height:0;margin:0;position:relative}
@@ -624,12 +674,21 @@ body.standalone .sa-bar{display:flex}
 .bp-crumb .reposlug{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-weight:600}
 .bp-crumb b{color:var(--text);font-weight:600}
 .bp-top{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
-.bp-sticky-head{position:sticky;top:0;z-index:5;background:var(--bg);padding:12px 0 8px;margin:-12px 0 0;border-bottom:1px solid var(--border)}
+/* Compact sticky identity bar — one row; nav / crumb / tagline scroll away */
+.bp-sticky-head{position:sticky;top:0;z-index:6;background:var(--bg);
+  padding:6px 0;margin:0 0 2px;border-bottom:1px solid var(--border)}
+.bp-sticky-head .bp-top{gap:8px;flex-wrap:nowrap;min-width:0;align-items:center}
+.bp-sticky-head .bp-icon{font-size:20px;line-height:1;flex:0 0 auto}
+.bp-sticky-head .bp-name{font-size:16px;font-weight:700;margin:0;padding:0;min-width:0;
+  flex:1 1 auto;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+  border-bottom-width:1px}
+.bp-sticky-head .status{flex:0 1 auto;max-width:36%;overflow:hidden;text-overflow:ellipsis;
+  white-space:nowrap;font-size:11px;padding:2px 8px;line-height:1.25}
 .bp-name{font-size:32px;font-weight:700;margin:0;outline:none;border-bottom:2px dashed transparent;
   padding-bottom:2px;min-width:120px}
 .bp-name:hover{border-bottom-color:var(--border)}
 .bp-name:focus{border-bottom-color:var(--accent);background:var(--wash2)}
-.bp-tagline{color:var(--muted);font-size:15px;margin:8px 0 0}
+.bp-tagline{color:var(--muted);font-size:15px;margin:4px 0 8px}
 .bp-sec{margin-top:30px}
 .bp-sec>h3{font-size:13px;letter-spacing:1.2px;text-transform:uppercase;color:var(--muted);margin:0 0 12px}
 .bp-sec[data-field="attention"]>h3{color:var(--amber)}
@@ -704,6 +763,9 @@ body.node-dragging,body.node-dragging *{cursor:grabbing !important}
 <body>
 <div class="app">
 <button id="menu-btn" aria-label="Open menu">☰</button>
+<button type="button" id="panel-open" title="Open buddy details" aria-label="Open buddy details">
+  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v6"/><circle cx="12" cy="8" r="1.1" fill="currentColor" stroke="none"/></svg>
+</button>
 <div id="sb-scrim"></div>
 <aside id="sidebar">
 <div id="sb-resize" title="Drag left or right to resize the sidebar. Double-click to reset to default width."></div>
@@ -1298,21 +1360,25 @@ function applySectionCollapse(bid){
 function applyFieldOrder(){
   const home = document.getElementById('buddy-home');
   if (!home) return;
+  // Keep sections inside .bp-wrap (before .bp-build) so .bp-sticky-head can stick
+  const wrap = home.querySelector('.bp-wrap') || home;
+  const build = wrap.querySelector('.bp-build');
   const order = getFieldOrder();
   const sections = {};
   home.querySelectorAll('.bp-sec[data-field]').forEach(el => { sections[el.dataset.field] = el; });
   // Remove all and re-append in order
   Object.values(sections).forEach(el => el.remove());
+  const place = el => { if (build) wrap.insertBefore(el, build); else wrap.appendChild(el); };
   order.forEach(fid => {
     const el = sections[fid];
     if (!el) return;
     if (S.fieldHidden && S.fieldHidden[fid]) el.style.display = 'none';
     else el.style.display = '';
-    home.appendChild(el);
+    place(el);
   });
   // Append any sections not in order (safety)
   Object.entries(sections).forEach(([fid, el]) => {
-    if (!order.includes(fid) && !el.parentNode) home.appendChild(el);
+    if (!order.includes(fid) && !el.parentNode) place(el);
   });
 }
 function isFieldVisible(fid){
@@ -1425,9 +1491,11 @@ function openFieldSettings(){
     m = document.createElement('div'); m.id = 'field-settings';
     m.innerHTML = '<button class="fset-close-x" id="fset-x" title="Close">✕</button>'
       + '<div class="fset-head" id="fset-drag"><h3>Settings</h3></div>'
-      + '<div class="fset-body"><div id="fset-settings"></div>'
-      + '<h3 style="margin-top:18px">Buddy fields</h3><p class="fineprint" style="margin-bottom:12px">Drag to reorder. Uncheck to hide.</p><div id="fset-list"></div>'
-      + '<h3 style="margin-top:18px">Main views</h3><p class="fineprint" style="margin-bottom:12px">Drag to reorder. Number keys 1–9 follow this order.</p><div id="vset-list"></div></div>'
+      + '<div class="fset-body">'
+      + '<section class="fset-sec"><h3 class="fset-sec-h">Preferences</h3><div id="fset-settings"></div></section>'
+      + '<section class="fset-sec"><h3 class="fset-sec-h">Buddy fields</h3><p class="fineprint">Drag to reorder. Uncheck to hide.</p><div id="fset-list"></div></section>'
+      + '<section class="fset-sec"><h3 class="fset-sec-h">Main views</h3><p class="fineprint">Drag to reorder. Number keys 1–9 follow this order.</p><div id="vset-list"></div></section>'
+      + '</div>'
       + '<div class="fset-footer">'
       + '<div style="display:flex;gap:8px"><button class="linkbtn" id="fset-reset" title="Restore all settings to factory defaults">Reset to Factory Defaults</button>'
       + '<button class="linkbtn" id="fset-update" title="Save current settings as the new factory defaults">Update Factory Defaults</button></div>'
@@ -1458,71 +1526,122 @@ function openFieldSettings(){
       + '<span class="fh">☰</span><span class="fl">' + def.label + '</span>'
       + '<input type="checkbox" ' + (vis ? 'checked' : '') + ' data-vis="' + fid + '" title="Show/hide"></div>';
   }).join('');
-  // Drag reorder
-  let dragEl = null;
-  list.querySelectorAll('.fset-row').forEach(row => {
-    row.addEventListener('dragstart', e => { dragEl = row; row.classList.add('dragging'); e.dataTransfer.effectAllowed = 'move'; });
-    row.addEventListener('dragend', () => row.classList.remove('dragging'));
-    row.addEventListener('dragover', e => { e.preventDefault(); e.dataTransfer.dropEffect = 'move'; });
-    row.addEventListener('drop', e => {
-      e.preventDefault();
-      if (!dragEl || dragEl === row) return;
-      const ids = Array.from(list.querySelectorAll('.fset-row')).map(r => r.dataset.fid);
-      const from = ids.indexOf(dragEl.dataset.fid), to = ids.indexOf(row.dataset.fid);
-      const order = getFieldOrder();
-      const [moved] = order.splice(from, 1);
-      order.splice(to, 0, moved);
-      S.fieldOrder = order; save();
-      openFieldSettings();
-      const vb2 = document.getElementById('view-buddy');
-      if (vb2 && vb2.classList.contains('active') && S.projectId && byId[S.projectId]) {
-        renderBuddy(S.projectId);
-      }
-    });
-  });
-  // Touch drag support for iPad (HTML5 DnD doesn't work on touch)
-  function addTouchDrag(listEl, getId, onReorder) {
-    let tDragEl = null, tTarget = null;
+  function clearFsetDnD(listEl){
+    if (listEl) {
+      listEl.querySelectorAll('.fset-row').forEach(r => r.classList.remove('dragging'));
+      listEl.querySelectorAll('.fset-insert').forEach(n => n.remove());
+    }
+    const g = document.getElementById('fset-ghost');
+    if (g) g.remove();
+  }
+  function moveFsetGhost(row, clientX, clientY){
+    let g = document.getElementById('fset-ghost');
+    if (!g) {
+      g = row.cloneNode(true);
+      g.id = 'fset-ghost';
+      g.classList.remove('dragging');
+      g.querySelectorAll('input').forEach(i => { i.disabled = true; });
+      g.style.width = row.getBoundingClientRect().width + 'px';
+      document.body.appendChild(g);
+    }
+    g.style.left = Math.max(8, clientX - 28) + 'px';
+    g.style.top = Math.max(8, clientY - 22) + 'px';
+  }
+  function placeFsetInsert(listEl, clientY, dragEl){
+    listEl.querySelectorAll('.fset-insert').forEach(n => n.remove());
+    const rows = [...listEl.querySelectorAll('.fset-row')].filter(r => r !== dragEl);
+    let before = null;
+    for (const r of rows) {
+      const rect = r.getBoundingClientRect();
+      if (clientY < rect.top + rect.height / 2) { before = r; break; }
+    }
+    const marker = document.createElement('div');
+    marker.className = 'fset-insert';
+    if (before) listEl.insertBefore(marker, before);
+    else listEl.appendChild(marker);
+    return before;
+  }
+  function insertBeforeFromMarker(listEl, dragEl){
+    const insert = listEl.querySelector('.fset-insert');
+    let before = insert ? insert.nextElementSibling : null;
+    while (before && (before === dragEl || !before.classList || !before.classList.contains('fset-row'))) {
+      before = before.nextElementSibling;
+    }
+    return before;
+  }
+  function reorderBefore(order, fromId, beforeId){
+    const from = order.indexOf(fromId);
+    if (from < 0) return order;
+    const next = order.slice();
+    const [moved] = next.splice(from, 1);
+    if (!beforeId) next.push(moved);
+    else {
+      const to = next.indexOf(beforeId);
+      if (to < 0) next.push(moved);
+      else next.splice(to, 0, moved);
+    }
+    return next;
+  }
+  // HTML5 + touch reorder with ghost preview and dashed insert line
+  function bindFsetListDnD(listEl, getId, applyOrder){
+    let dragEl = null;
+    const finish = () => {
+      if (!dragEl) return;
+      const before = insertBeforeFromMarker(listEl, dragEl);
+      const fromId = getId(dragEl);
+      const beforeId = before ? getId(before) : null;
+      clearFsetDnD(listEl);
+      if (fromId && beforeId !== fromId) applyOrder(fromId, beforeId);
+      dragEl = null;
+    };
     listEl.querySelectorAll('.fset-row').forEach(row => {
+      row.addEventListener('dragstart', e => {
+        dragEl = row;
+        row.classList.add('dragging');
+        e.dataTransfer.effectAllowed = 'move';
+        try { e.dataTransfer.setData('text/plain', getId(row)); } catch (err) {}
+        const ghost = row.cloneNode(true);
+        ghost.style.cssText = 'position:absolute;top:-9999px;left:0;width:' + row.offsetWidth + 'px;opacity:.95;box-shadow:0 12px 32px rgba(0,0,0,.55);border-color:var(--accent);background:var(--panel)';
+        document.body.appendChild(ghost);
+        try { e.dataTransfer.setDragImage(ghost, 28, 22); } catch (err) {}
+        setTimeout(() => ghost.remove(), 0);
+      });
+      row.addEventListener('dragend', () => { clearFsetDnD(listEl); dragEl = null; });
+      row.addEventListener('dragover', e => {
+        e.preventDefault(); e.dataTransfer.dropEffect = 'move';
+        if (dragEl) placeFsetInsert(listEl, e.clientY, dragEl);
+      });
+      row.addEventListener('drop', e => { e.preventDefault(); finish(); });
       const handle = row.querySelector('.fh');
       if (!handle) return;
       handle.style.touchAction = 'none';
       handle.addEventListener('touchstart', e => {
-        tDragEl = row; row.classList.add('dragging');
+        const t = e.touches[0];
+        dragEl = row;
+        row.classList.add('dragging');
+        moveFsetGhost(row, t.clientX, t.clientY);
+        placeFsetInsert(listEl, t.clientY, dragEl);
         e.preventDefault();
       }, {passive: false});
       handle.addEventListener('touchmove', e => {
-        if (!tDragEl) return;
+        if (!dragEl) return;
         e.preventDefault();
         const t = e.touches[0];
-        const el = document.elementFromPoint(t.clientX, t.clientY);
-        const targetRow = el ? el.closest('.fset-row') : null;
-        listEl.querySelectorAll('.fset-row').forEach(r => r.classList.remove('drag-over'));
-        if (targetRow && targetRow !== tDragEl) {
-          targetRow.classList.add('drag-over');
-          tTarget = targetRow;
-        } else {
-          tTarget = null;
-        }
+        moveFsetGhost(dragEl, t.clientX, t.clientY);
+        placeFsetInsert(listEl, t.clientY, dragEl);
       }, {passive: false});
-      handle.addEventListener('touchend', e => {
-        if (!tDragEl) return;
-        row.classList.remove('dragging');
-        listEl.querySelectorAll('.fset-row').forEach(r => r.classList.remove('drag-over'));
-        if (tTarget && tTarget !== tDragEl) {
-          onReorder(getId(tDragEl), getId(tTarget));
-        }
-        tDragEl = null; tTarget = null;
-      });
+      handle.addEventListener('touchend', () => finish());
+      handle.addEventListener('touchcancel', () => { clearFsetDnD(listEl); dragEl = null; });
     });
+    listEl.addEventListener('dragover', e => {
+      e.preventDefault();
+      if (dragEl) placeFsetInsert(listEl, e.clientY, dragEl);
+    });
+    listEl.addEventListener('drop', e => { e.preventDefault(); finish(); });
   }
-  addTouchDrag(list, r => r.dataset.fid, (fromId, toId) => {
-    const ids = Array.from(list.querySelectorAll('.fset-row')).map(r => r.dataset.fid);
-    const from = ids.indexOf(fromId), to = ids.indexOf(toId);
-    const order = getFieldOrder();
-    const [moved] = order.splice(from, 1);
-    order.splice(to, 0, moved);
-    S.fieldOrder = order; save();
+  bindFsetListDnD(list, r => r.dataset.fid, (fromId, beforeId) => {
+    S.fieldOrder = reorderBefore(getFieldOrder(), fromId, beforeId);
+    save();
     openFieldSettings();
     const vb2 = document.getElementById('view-buddy');
     if (vb2 && vb2.classList.contains('active') && S.projectId && byId[S.projectId]) {
@@ -1534,7 +1653,6 @@ function openFieldSettings(){
       if (!S.fieldHidden) S.fieldHidden = {};
       S.fieldHidden[cb.dataset.vis] = !cb.checked;
       save();
-      // Re-render the panel immediately if it's open (use S.projectId, not S.sel)
       const vb = document.getElementById('view-buddy');
       if (vb && vb.classList.contains('active') && S.projectId && byId[S.projectId]) {
         renderBuddy(S.projectId);
@@ -1549,33 +1667,11 @@ function openFieldSettings(){
       return '<div class="fset-row" draggable="true" data-vid="' + vid + '">'
         + '<span class="fh">☰</span><span class="fl">' + def[1] + '</span></div>';
     }).join('');
-    let vdragEl = null;
-    vlist.querySelectorAll('.fset-row').forEach(row => {
-      row.addEventListener('dragstart', e => { vdragEl = row; row.classList.add('dragging'); e.dataTransfer.effectAllowed = 'move'; });
-      row.addEventListener('dragend', () => row.classList.remove('dragging'));
-      row.addEventListener('dragover', e => { e.preventDefault(); e.dataTransfer.dropEffect = 'move'; });
-      row.addEventListener('drop', e => {
-        e.preventDefault();
-        if (!vdragEl || vdragEl === row) return;
-        const ids = Array.from(vlist.querySelectorAll('.fset-row')).map(r => r.dataset.vid);
-        const from = ids.indexOf(vdragEl.dataset.vid), to = ids.indexOf(row.dataset.vid);
-        const order = getViewOrder();
-        const moved = order.splice(from, 1)[0];
-        order.splice(to, 0, moved);
-        S.viewOrder = order; save();
-        renderNav();
-        openFieldSettings();
-      });
-    addTouchDrag(vlist, r => r.dataset.vid, (fromId, toId) => {
-      const ids = Array.from(vlist.querySelectorAll('.fset-row')).map(r => r.dataset.vid);
-      const from = ids.indexOf(fromId), to = ids.indexOf(toId);
-      const order = getViewOrder();
-      const moved = order.splice(from, 1)[0];
-      order.splice(to, 0, moved);
-      S.viewOrder = order; save();
+    bindFsetListDnD(vlist, r => r.dataset.vid, (fromId, beforeId) => {
+      S.viewOrder = reorderBefore(getViewOrder(), fromId, beforeId);
+      save();
       renderNav();
       openFieldSettings();
-    });
     });
   }
   m.classList.add('show');
@@ -1785,17 +1881,17 @@ function renderBuddy(id){
     + '<button class="linkbtn" id="ghtok2-save">Save token</button>'
     + '<a href="https://github.com/settings/tokens" target="_blank" rel="noopener" class="linkbtn" style="text-decoration:none" title="Open GitHub token settings in a new tab">Get a token</a></div></div>'
     + '<div class="sa-bar"><span>🔖 Standalone view</span><button class="linkbtn" id="sa-full">Open full dashboard →</button></div>'
-    + '<button class="bp-close-x" id="bp-close-x" title="Close">✕</button>'
-    + '<div class="bp-sticky-head">'
     + '<div class="bp-topnav"><button class="linkbtn" data-navbtn="back">← Back</button>'
     + '<button class="linkbtn" data-navbtn="prev">‹ Prev</button><button class="linkbtn" data-navbtn="next">Next ›</button>'
     + '<span class="sep">·</span><button class="linkbtn" data-view="tree">All buddies</button>'
     + '<span class="sep">·</span><button class="linkbtn" id="bp-close">✕ Close</button><span class="sep">·</span><button class="linkbtn" id="bp-desktop">💾 Save to desktop</button></div>'
     + '<div class="bp-crumb">'+crumb(id)+'</div>'
-    + '<div class="bp-top"><span class="bp-icon" id="bp-icon" title="Click to change avatar" style="cursor:pointer">'+escHtml(b.icon||'')+'</span><h2 class="bp-name" id="bp-name" contenteditable="true" spellcheck="false" data-buddy="'+id+'">'+escHtml(dispName(b))+'</h2>'
-    + '<span class="status '+b.statusClass+'">'+escHtml(b.status)+'</span></div>'
     + '<p class="bp-tagline">'+escHtml(b.tagline||'')+'</p>'
-    + '</div>'
+    + '<div class="bp-sticky-head"><div class="bp-top">'
+    + '<span class="bp-icon" id="bp-icon" title="Click to change avatar" style="cursor:pointer">'+escHtml(b.icon||'')+'</span>'
+    + '<h2 class="bp-name" id="bp-name" contenteditable="true" spellcheck="false" data-buddy="'+id+'">'+escHtml(dispName(b))+'</h2>'
+    + '<span class="status '+b.statusClass+'">'+escHtml(b.status)+'</span>'
+    + '<button class="bp-close-x" id="bp-close-x" title="Close">✕</button></div></div>'
     + '<div class="bp-sec" data-field="ingest"><h3>Ingest<span class="info-tip" data-tip="Brain-dump anything about this buddy — raw and unfiltered. Each dump lands in the buddy’s repo (docs/ingest.md) as a timestamped entry.">ⓘ</span></h3>'
     + '<textarea class="notes" id="bp-ingest" placeholder="Dump what’s in your head about '+escHtml(dispName(b))+'…"></textarea>'
     + '<div style="margin-top:8px"><span class="fineprint" id="ingest-status"></span></div>'
@@ -1819,7 +1915,7 @@ function renderBuddy(id){
     + '<div class="bp-sec" data-field="shared"><h3>Shared notes<span class="info-tip" data-tip="Anybody with repo access can see this note. Saved to the buddy’s repo (docs/notes.md).">ⓘ</span></h3>'
     + '<textarea class="notes" id="bp-shared-notes" placeholder="Anybody with repo access can see this note."></textarea>'
     + '<p class="fineprint" id="shared-status"></p></div>'
-    + '<div class="bp-build">Build 20261011.0311</div>'
+    + '<div class="bp-build">Build 20261011.0315</div>'
     + '</div>';
   const nm = document.getElementById('bp-name');
   nm.addEventListener('keydown', e => { if (e.key === 'Enter'){ e.preventDefault(); nm.blur(); } });
@@ -2452,9 +2548,9 @@ function renderPlan(id){
   document.getElementById('buddy-home').innerHTML =
     '<div class="bp-wrap">'
     + '<div class="bp-crumb"><button class="linkbtn" data-view="plans">Business Plans</button> <span style="color:var(--faint)">/</span> <b>'+escHtml(p.name)+'</b></div>'
-    + '<div class="bp-top"><span class="bp-icon">'+escHtml(p.icon||'')+'</span>'
-    + '<h2 style="font-size:32px;font-weight:700;margin:0">'+escHtml(p.name)+'</h2>'
-    + '<span class="status '+p.statusClass+'">'+escHtml(p.status)+'</span></div>'
+    + '<div class="bp-sticky-head"><div class="bp-top"><span class="bp-icon">'+escHtml(p.icon||'')+'</span>'
+    + '<h2 class="bp-name">'+escHtml(p.name)+'</h2>'
+    + '<span class="status '+p.statusClass+'">'+escHtml(p.status)+'</span></div></div>'
     + '<div class="bp-sec"><h3>What it is</h3><p class="bp-mission">'+escHtml(p.desc)+'</p></div>'
     + '<div class="bp-sec"><h3>Documents</h3>'+docs+'</div>'
     + '<div class="bp-sec"><h3>Related buddies</h3>'+buds+'</div>'
@@ -2462,7 +2558,7 @@ function renderPlan(id){
     + '<p class="fineprint">Saved on this device. (For your eyes only)</p></div>'
     + '<div class="bp-sec"><h3>Shared notes<span class="info-tip" data-tip="Visible to everyone with access to this project.">\u24d8</span></h3><textarea class="notes" id="bp-shared" placeholder="Shared notes\u2026 (visible to everyone with access)">'+escHtml((S.planShared||{})[id]||'')+'</textarea>'
     + '<p class="fineprint">Shared — visible to everyone with access.</p></div>'
-    + '<div class="bp-build">Build 20261011.0311</div>'
+    + '<div class="bp-build">Build 20261011.0315</div>'
     + '</div>';
   const nt = document.getElementById('bp-notes');
   let t = null;
@@ -2631,10 +2727,22 @@ document.addEventListener('keydown', e => {
   const h = document.getElementById('sb-resize');
   let sx = null, sw = 0;
   h.addEventListener('pointerdown', e => { sx = e.clientX; sw = sb.getBoundingClientRect().width; h.setPointerCapture(e.pointerId); e.preventDefault(); });
-  h.addEventListener('pointermove', e => { if (sx === null) return; const w = sbClampW(sw + e.clientX - sx); sb.style.width = w + 'px'; sb.style.flex = '0 0 ' + w + 'px'; });
-  const done = () => { if (sx === null) return; sx = null; S.sbWidth = Math.round(sb.getBoundingClientRect().width); save(); };
+  h.addEventListener('pointermove', e => {
+    if (sx === null) return;
+    const w = sbClampW(sw + e.clientX - sx);
+    sb.style.width = w + 'px'; sb.style.flex = '0 0 ' + w + 'px';
+    document.documentElement.style.setProperty('--sbw', w + 'px');
+  });
+  const done = () => {
+    if (sx === null) return; sx = null;
+    S.sbWidth = Math.round(sb.getBoundingClientRect().width); save();
+    applySbWidth();
+  };
   h.addEventListener('pointerup', done);
   h.addEventListener('pointercancel', done);
+  h.addEventListener('dblclick', () => {
+    S.sbWidth = SB_DEFAULT_W; save(); applySbWidth();
+  });
   window.addEventListener('resize', () => applySbWidth()); /* re-clamp drawer on rotate/resize */
 })();
 /* ---------- prev/next/back ---------- */
@@ -3223,7 +3331,7 @@ function setSidebarOpen(open){
 // has a newer build than the one currently loaded (helps Safari web apps
 // and other containers without a hard-refresh shortcut).
 function initVersionCheck(){
-  const myBuild = '20261011.0311';
+  const myBuild = '20261011.0315';
   async function check(){
     try {
       const r = await fetch('version.txt?_=' + Date.now(), {cache: 'no-store'});
@@ -3323,6 +3431,11 @@ document.addEventListener('click', e => {
   if (nodeDragEndAt && Date.now() - nodeDragEndAt < 400) return; // swallow the click that follows a node-drag gesture
   if (e.target.closest && e.target.closest('#bp-icon')) { const m = S.sel.match(/^buddy:(.+)$/); if (m) openAvatarPicker(m[1], e.target.closest('#bp-icon')); return; }
   if (e.target.closest && (e.target.closest('#bp-close') || e.target.closest('#bp-close-x') || e.target.closest('#bp-takeover-back'))) { closeDetail(); return; }
+  if (e.target.closest && e.target.closest('#panel-open')) {
+    const id = (S.projectId && byId[S.projectId]) ? S.projectId : 'project-buddy';
+    openBuddy(id);
+    return;
+  }
   if (e.target.closest && e.target.closest('#sb-close')) { setSidebarOpen(false); return; }
   if (e.target.closest && e.target.closest('#menu-btn')) { setSidebarOpen(!isSidebarOpen()); return; }
   if (e.target.closest && e.target.closest('#sb-scrim')) { setSidebarOpen(false); return; }
