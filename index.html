@@ -600,9 +600,31 @@ body.standalone .sa-bar{display:flex}
   /* Plans: single column cards */
   .plan-grid{display:block;max-width:none}
   .plan-card{margin-bottom:12px}
-  /* Projects outline: larger touch targets */
-  .proj-row{padding:14px 12px;min-height:52px;border-radius:12px}
-  .proj-row .pname{font-size:15px}
+  /* Projects / Manifest / SME rows: card stack — title (+ status), then full-width description */
+  .proj-row{
+    display:flex !important;flex-direction:column !important;flex-wrap:nowrap !important;
+    align-items:stretch !important;gap:6px;
+    background:var(--panel);border:1px solid var(--border);border-bottom:1px solid var(--border);
+    border-radius:12px;margin:0 0 8px;padding:12px 14px;min-height:52px}
+  .proj-row .pname{font-size:16px}
+  .proj-row .pdesc{font-size:15.5px;line-height:1.45}
+  .proj-row .dot{display:none}
+  .proj-row-head{display:flex;align-items:center;gap:8px;width:100%;min-width:0}
+  .proj-row-head .parrow{flex:0 0 auto;margin-top:0}
+  .proj-row-head .pname{flex:1 1 auto;min-width:0;white-space:normal;line-height:1.3}
+  .proj-row-head .status{flex:0 0 auto;margin-left:auto}
+  .proj-row-head .proj-info{flex:0 0 auto;padding:4px !important;opacity:.75}
+  .proj-row > .pdesc,.proj-row .pdesc{
+    display:block;order:unset;flex:none !important;width:100% !important;max-width:none !important}
+  /* Static rows without .proj-row-head (Manifest): CSS grid stack */
+  .proj-row:not(:has(.proj-row-head)){
+    display:grid !important;grid-template-columns:1fr auto;grid-template-areas:"title status" "desc desc";
+    gap:6px 10px;align-items:start}
+  .proj-row:not(:has(.proj-row-head)) .pname{grid-area:title;white-space:normal;line-height:1.3;min-width:0}
+  .proj-row:not(:has(.proj-row-head)) .status{grid-area:status;justify-self:end}
+  .proj-row:not(:has(.proj-row-head)) .pdesc{grid-area:desc}
+  .proj-row:not(:has(.proj-row-head)) .parrow{display:none}
+  .proj-row.d0,.proj-row.d1,.proj-row.d2,.proj-row.d3{padding-left:14px}
   /* Changelog entries */
   .cl-entry{padding:14px 12px}
   /* View nav: vertical list with larger touch targets */
@@ -2314,12 +2336,13 @@ function renderProjects(){
     const hasKids = kids.length > 0;
     const collapsed = (projFilter || statusFilter) ? false : !!S.projCollapsed[id];
     s += '<div class="proj-row d' + Math.min(depth, 3) + '" data-buddy="' + b.id + '">'
+      + '<div class="proj-row-head">'
       + (hasKids ? '<span class="parrow ' + (collapsed ? '' : 'expanded') + '" data-proj-toggle="' + b.id + '">›</span>' : '')
-      + (depth ? '<span class="dot">└</span>' : '')
       + '<span class="pname">' + iconName(b) + '</span>'
-      + '<span class="pdesc">' + escHtml(b.tagline || '') + '</span>'
       + '<span class="status ' + b.statusClass + '">' + escHtml(b.status) + '</span>'
-      + '<button class="proj-info" data-proj-info="' + b.id + '" title="Open ' + escHtml(dispName(b)) + ' details (right panel)" style="background:none;border:none;cursor:pointer;font-size:16px;padding:4px 8px;opacity:0.6" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.6">ⓘ</button></div>';
+      + '<button class="proj-info" data-proj-info="' + b.id + '" title="Open ' + escHtml(dispName(b)) + ' details (right panel)" style="background:none;border:none;cursor:pointer;font-size:16px;padding:4px 8px;opacity:0.6" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.6">ⓘ</button>'
+      + '</div>'
+      + '<span class="pdesc">' + escHtml(b.tagline || '') + '</span></div>';
     if (!collapsed) kids.forEach(c => walk(c.id, depth + 1));
   })('project-buddy', 0);
   s += '</div></section>';
