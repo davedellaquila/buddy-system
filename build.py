@@ -1010,7 +1010,7 @@ const VIEW_DEFS = [
   ['projects','Projects','☰'],
   ['plans','Business Plans','💼'],
   ['manifest','Manifest','✓'],
-  ['project','Project Homepage','🏠'],
+  ['project','Homepage','🏠'],
   ['changelog','Changelog','🕘'],
 ];
 const VIEW_TIPS = {
@@ -1018,7 +1018,7 @@ const VIEW_TIPS = {
   projects: 'Projects list — every buddy in hierarchy order with status. Click a tile to filter by attention status. Click the chevron to expand/collapse sections.',
   plans: 'Business Plans — real-world ventures as cards. Click a status tile to filter. Each card links to its mission statement and related buddies.',
   manifest: 'New-Project Manifest — the checklist every new buddy gets. Click AUTOMATIC or PLANNED tiles to filter the steps.',
-  project: 'Project Homepage — loads the selected buddy homepage full-bleed in the main view. Clicking a buddy with a homepage swaps it; clicking one without keeps the current page.',
+  project: 'Homepage — loads the selected buddy homepage full-bleed in the main view. Clicking a buddy with a homepage swaps it; clicking one without keeps the current page.',
   changelog: 'Changelog — history of everything that changed. Click a tile to filter by change type. Click a row to open the changed buddy.',
 };
 function getViewOrder(){
@@ -1387,7 +1387,7 @@ function isFieldVisible(fid){
 }
 const SETTING_DEFS = [
   {id:'hideBuddyWord', label:'Hide the word “Buddy” in names', type:'bool', def:false},
-  {id:'autoOpenPanel', label:'Always open detail panel on buddy click', type:'bool', def:false, tip:'When off (default), the panel auto-opens in every view EXCEPT Project Homepage — there, use the \u24d8 icon. When on, the panel opens on every click in every view.'},
+  {id:'autoOpenPanel', label:'Always open detail panel on buddy click', type:'bool', def:false, tip:'When off (default), the panel auto-opens in every view EXCEPT Homepage — there, use the \u24d8 icon. When on, the panel opens on every click in every view.'},
   {id:'attnEffect', label:'Attention header effect', type:'choice', options:['pulse','glow','shake','blink','none'], def:'pulse', tip:'How the \u201cNeeds your attention\u201d section header grabs your eye when items are waiting.'},
 ];
 function getSetting(id){
@@ -2171,7 +2171,7 @@ function renderBuddy(id){
       const after = getHomepage(b);
       if (before !== after) logChange('homepage', id, 'Homepage URL \u2192 ' + (after || '(cleared)'), before || null, after || null);
       save();
-      // If the Project Homepage view is showing this buddy, reload it with the new URL
+      // If the Homepage view is showing this buddy, reload it with the new URL
       if (S.sel === 'view:project' && S.projectId === id) {
         renderProjectView();
       }
@@ -2534,7 +2534,7 @@ function zoomToFit(paneId, zoomKey){
   const vw = sc.clientWidth, vh = sc.clientHeight;
   if (!natW || !natH || !vw || !vh) return;
   const fit = Math.min(vw / natW, vh / natH) * 100;
-  S[zoomKey] = Math.min(160, Math.max(50, Math.round(fit / 5) * 5));
+  S[zoomKey] = Math.min(160, Math.max(25, Math.round(fit / 5) * 5));
   save(); applyZoom();
   toast('Zoomed to fit (' + S[zoomKey] + '%).');
 }
@@ -2543,7 +2543,7 @@ function zoomToFit(paneId, zoomKey){
   function zoombarHTML(sfx, label){
     return '<div class="zoombar" id="zoombar-' + sfx + '" title="Zoom — pinch with two fingers, or Shift+scroll">'
       + '<span class="z-in" aria-hidden="true">\u25fc</span>'
-      + '<input type="range" class="zrange" id="zoomrange-' + sfx + '" min="50" max="160" step="5" value="100" aria-label="' + label + '" orient="vertical">'
+      + '<input type="range" class="zrange" id="zoomrange-' + sfx + '" min="25" max="160" step="5" value="100" aria-label="' + label + '" orient="vertical">'
       + '<span class="z-out" aria-hidden="true">\u25aa</span>'
       + '<button type="button" class="zfit" id="zoomfit-' + sfx + '" title="Zoom to fit" aria-label="Zoom to fit">\u26f6</button></div>';
   }
@@ -2650,7 +2650,7 @@ function attachPan(el){
   function movePinch(){
     if (!pinch || pts.size < 2) return;
     const d = pinchDist();
-    const next = Math.min(160, Math.max(50, Math.round((pinch.z0 * (d / pinch.d0)) / 5) * 5));
+    const next = Math.min(160, Math.max(25, Math.round((pinch.z0 * (d / pinch.d0)) / 5) * 5));
     if (next !== (S[zoomKey] || 100)) { S[zoomKey] = next; applyZoom(); }
   }
   function endPinchFinger(pid){
@@ -2879,7 +2879,7 @@ document.getElementById('view-tree').addEventListener('wheel', e => {
   e.preventDefault();
   const pane = e.target && e.target.closest ? e.target.closest('.treescroll') : null;
   const key = (pane && pane.dataset.zoomkey) || 'zoom';
-  S[key] = Math.min(160, Math.max(50, (S[key] || 100) + (e.deltaY > 0 ? -5 : 5)));
+  S[key] = Math.min(160, Math.max(25, (S[key] || 100) + (e.deltaY > 0 ? -5 : 5)));
   save(); applyZoom();
 }, { passive: false });
 let dragId = null;
@@ -3075,7 +3075,7 @@ document.addEventListener('keydown', e => {
   if (e.key === 'Escape') { closeDetail(); return; }
   if (e.key === '/' && !e.target.matches('input, textarea, [contenteditable="true"]')) { e.preventDefault(); const bs = document.getElementById('buddy-search'); if (bs) bs.focus(); return; }
   if (e.key === '+' || e.key === '=') { S.zoom = Math.min(160, (S.zoom || 100) + 5); save(); applyZoom(); return; }
-  if (e.key === '-' || e.key === '_') { S.zoom = Math.max(50, (S.zoom || 100) - 5); save(); applyZoom(); return; }
+  if (e.key === '-' || e.key === '_') { S.zoom = Math.max(25, (S.zoom || 100) - 5); save(); applyZoom(); return; }
   if (e.key === '0') { zoomToFit(); return; }
   if (/^[1-9]$/.test(e.key)) {
     const vbtns = Array.from(document.querySelectorAll('#view-nav .navbtn[data-view]'));
@@ -4478,7 +4478,7 @@ document.addEventListener('click', e => {
   if (hp) { e.preventDefault(); selectProject(hp.dataset.homepage); return; }
   const bb = e.target.closest('[data-buddy]');
   // Don't re-open the buddy when clicking an editable field (e.g. the name)
-  // Panel behavior is view-aware: in Project Homepage view, clicking selects only
+  // Panel behavior is view-aware: in Homepage view, clicking selects only
   // (use the ⓘ icon for the panel). In other views, clicking opens the panel.
   // The autoOpenPanel setting overrides to always open.
   if (bb && !e.target.closest('[contenteditable="true"]')) {
