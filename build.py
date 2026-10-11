@@ -138,6 +138,14 @@ body{padding:0}
 /* (mobile: the drawer handle is restyled, not hidden, in the max-width:639px block below) */
 .bp-topnav{display:flex;gap:4px;align-items:center;margin-bottom:6px;flex-wrap:wrap}
 .bp-topnav .sep{color:var(--faint);margin:0 2px}
+/* Takeover back bar: hidden everywhere except the portrait-phone takeover (see below) */
+.bp-takeover-back{display:none;align-items:center;gap:4px;position:sticky;top:0;z-index:20;
+  width:calc(100% + 36px);margin:0 -18px 4px;padding:14px 18px;min-height:52px;
+  background:var(--bg);border:none;border-bottom:1px solid var(--border);
+  color:var(--accent);font-size:17px;font-weight:600;text-align:left;cursor:pointer;
+  -webkit-tap-highlight-color:transparent}
+.bp-takeover-back:active{opacity:.6}
+@keyframes takeoverIn{from{transform:translateX(60px);opacity:.4}to{transform:none;opacity:1}}
 #journal-bar{display:none;margin:0 0 12px;background:var(--wash);border:1px solid var(--accent);border-radius:10px;padding:9px 13px;font-size:13px}
 #journal-bar.show{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 #journal-bar ul{margin:8px 0 4px;padding-left:18px;display:none}
@@ -386,6 +394,18 @@ body.standalone .sa-bar{display:flex}
   /* Ensure buttons are tappable */
   button{cursor:pointer;-webkit-tap-highlight-color:transparent}
   .icon-btn,button.icon{width:44px;height:44px;display:inline-flex;align-items:center;justify-content:center}
+}
+/* ---- Portrait phones: full-screen takeover instead of bottom sheet (Dave, 2026-10-10).
+   iOS-style push navigation — one thing on screen at a time, no sidebar/panel crowding.
+   Landscape phones are >=640px wide so they keep the bottom sheet above. */
+@media (max-width:639px) and (orientation:portrait){
+  #view-buddy.sheet{top:0;border-radius:0;border-top:none;padding:0 18px 60px;z-index:97;
+    animation:takeoverIn .28s cubic-bezier(.32,.72,.35,1)}
+  #view-buddy.sheet::before{display:none}
+  #view-buddy.sheet #bp-resize{display:none}
+  #view-buddy.sheet .bp-close-x{display:none}
+  #view-buddy.sheet .bp-takeover-back{display:flex}
+  #view-buddy.sheet .bp-sticky-head{top:53px}
 }
 /* ---- Medium: 640-1100px (iPad) ---- */
 @media (min-width:640px) and (max-width:1100px){
@@ -1429,6 +1449,7 @@ function renderBuddy(id){
   }
   document.getElementById('buddy-home').innerHTML =
     '<div class="bp-wrap">'
+    + '<button class="bp-takeover-back" id="bp-takeover-back">\u2039 Buddies</button>'
     + '<div id="token-banner"><h4>\U0001f511 Connect GitHub to unlock this buddy</h4>'
     + '<p>Photos, shared notes, and ingest save to the buddy\u2019s repo. Paste a token once \u2014 it stays on this device.</p>'
     + '<div class="ghtoken"><input type="password" id="ghtok2" placeholder="GitHub token (repo scope)" aria-label="GitHub token">'
@@ -2972,7 +2993,7 @@ async function loadSharedNotes(id){
 document.addEventListener('click', e => {
   if (nodeDragEndAt && Date.now() - nodeDragEndAt < 400) return; // swallow the click that follows a node-drag gesture
   if (e.target.closest && e.target.closest('#bp-icon')) { const m = S.sel.match(/^buddy:(.+)$/); if (m) openAvatarPicker(m[1], e.target.closest('#bp-icon')); return; }
-  if (e.target.closest && (e.target.closest('#bp-close') || e.target.closest('#bp-close-x'))) { closeDetail(); return; }
+  if (e.target.closest && (e.target.closest('#bp-close') || e.target.closest('#bp-close-x') || e.target.closest('#bp-takeover-back'))) { closeDetail(); return; }
   if (e.target.closest && e.target.closest('#sb-close')) { setSidebarOpen(false); return; }
   if (e.target.closest && e.target.closest('#menu-btn')) { setSidebarOpen(!isSidebarOpen()); return; }
   if (e.target.closest && e.target.closest('#sb-scrim')) { setSidebarOpen(false); return; }
