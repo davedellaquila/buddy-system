@@ -1,96 +1,474 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="auto">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Briefing Buddy</title>
+<title>Briefing Buddy — Your daily briefings, designed</title>
 <style>
-:root {
-  --bg: #ffffff;
-  --text: #1a1a1a;
-  --muted: #666;
-  --card: #f5f5f5;
-  --border: #e0e0e0;
-  --accent: #0066cc;
-}
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg: #1a1a1a;
-    --text: #e0e0e0;
-    --muted: #999;
-    --card: #2a2a2a;
-    --border: #3a3a3a;
-    --accent: #4da6ff;
+  :root{
+    --paper:#faf6ee; --card:#fffdf7; --ink:#221b12; --muted:#7d7060;
+    --accent:#b45309; --accent-ink:#8a3f06; --accent-soft:#f6e8d2;
+    --rule:#e2d7c0; --rule-strong:#221b12;
+    --shadow:0 2px 14px rgba(80,55,15,.09);
+    --chip:#f1e9d8;
   }
-}
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  background: var(--bg);
-  color: var(--text);
-  line-height: 1.6;
-  padding: 40px 20px;
-  max-width: 800px;
-  margin: 0 auto;
-}
-.header { text-align: center; margin-bottom: 40px; }
-.icon { font-size: 64px; margin-bottom: 16px; }
-h1 { font-size: 32px; margin-bottom: 8px; }
-.tagline { color: var(--muted); font-size: 18px; }
-.mission {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 24px;
-  margin-bottom: 32px;
-  font-size: 17px;
-}
-h2 { font-size: 22px; margin: 32px 0 16px; }
-.attn {
-  background: var(--card);
-  border-left: 4px solid var(--accent);
-  border-radius: 0 8px 8px 0;
-  padding: 16px 20px;
-  margin-bottom: 12px;
-}
-.attn-date { color: var(--muted); font-size: 14px; margin-top: 8px; }
-.children { display: flex; flex-wrap: wrap; gap: 12px; }
-.child {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 12px 20px;
-  text-decoration: none;
-  color: var(--text);
-}
-.child:hover { border-color: var(--accent); }
-.footer {
-  margin-top: 48px;
-  padding-top: 24px;
-  border-top: 1px solid var(--border);
-  color: var(--muted);
-  font-size: 14px;
-  text-align: center;
-}
-.empty { color: var(--muted); font-style: italic; }
+  @media (prefers-color-scheme:dark){
+    :root[data-theme="auto"]{
+      --paper:#131009; --card:#1e1912; --ink:#f2e9d6; --muted:#a79a82;
+      --accent:#f0a83e; --accent-ink:#f5bd67; --accent-soft:#33270f;
+      --rule:#38301f; --rule-strong:#f2e9d6;
+      --shadow:0 2px 18px rgba(0,0,0,.45);
+      --chip:#2b2314;
+    }
+  }
+  :root[data-theme="dark"]{
+    --paper:#131009; --card:#1e1912; --ink:#f2e9d6; --muted:#a79a82;
+    --accent:#f0a83e; --accent-ink:#f5bd67; --accent-soft:#33270f;
+    --rule:#38301f; --rule-strong:#f2e9d6;
+    --shadow:0 2px 18px rgba(0,0,0,.45);
+    --chip:#2b2314;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; background:var(--paper); color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    line-height:1.55; -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:880px;margin:0 auto;padding:0 20px 64px}
+  /* ---------- masthead ---------- */
+  .masthead{text-align:center;padding:40px 0 8px;position:relative}
+  .masthead .kicker{
+    font-size:11px;letter-spacing:4px;color:var(--muted);
+    text-transform:uppercase;margin:0 0 10px;
+  }
+  .masthead h1{
+    font-family:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,"Times New Roman",serif;
+    font-size:clamp(2.6rem,7vw,4.2rem);font-weight:700;margin:0;line-height:1.05;
+    letter-spacing:-.01em;
+  }
+  .masthead h1 .amp{color:var(--accent);font-style:italic}
+  .masthead .tagline{font-size:16px;color:var(--muted);margin:10px 0 0;font-style:italic;
+    font-family:Georgia,serif}
+  .dateline{
+    display:flex;justify-content:space-between;align-items:center;gap:12px;
+    border-top:3px double var(--rule-strong);border-bottom:1px solid var(--rule-strong);
+    margin:22px 0 0;padding:9px 2px;font-size:12.5px;color:var(--muted);
+    text-transform:uppercase;letter-spacing:1.5px;flex-wrap:wrap;
+  }
+  .theme-btn{
+    border:1px solid var(--rule);background:var(--card);color:var(--ink);
+    border-radius:999px;padding:5px 14px;font-size:12px;cursor:pointer;letter-spacing:.5px;
+  }
+  .theme-btn:hover{border-color:var(--accent)}
+  /* ---------- sections ---------- */
+  section{margin-top:44px}
+  .sec-head{display:flex;align-items:baseline;gap:14px;margin-bottom:16px}
+  .sec-num{
+    font-family:Georgia,serif;font-style:italic;color:var(--accent);
+    font-size:15px;white-space:nowrap;
+  }
+  .sec-head h2{
+    font-family:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
+    font-size:24px;margin:0;font-weight:700;
+  }
+  .sec-head .line{flex:1;height:1px;background:var(--rule);align-self:center}
+  .lede{color:var(--muted);font-size:15px;margin:-6px 0 18px;max-width:62ch}
+  .card{
+    background:var(--card);border:1px solid var(--rule);border-radius:12px;
+    box-shadow:var(--shadow);padding:22px 24px;
+  }
+  /* ---------- attention ---------- */
+  .attention{border-left:4px solid var(--accent)}
+  .attention h3{margin:0 0 6px;font-size:16px}
+  .attention h3 .flag{
+    display:inline-block;background:var(--accent);color:#fff;
+    font-size:10.5px;letter-spacing:1.5px;padding:2px 9px;border-radius:999px;
+    vertical-align:2px;margin-right:8px;text-transform:uppercase;
+  }
+  :root[data-theme="dark"] .attention h3 .flag{color:#1a1206}
+  @media (prefers-color-scheme:dark){
+    :root[data-theme="auto"] .attention h3 .flag{color:#1a1206}
+  }
+  .attention p{margin:6px 0 0;font-size:14.5px;color:var(--muted)}
+  .attention a{color:var(--accent);font-weight:600}
+  .stack{display:grid;gap:14px}
+  /* ---------- editions ---------- */
+  .editions{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  @media (max-width:640px){.editions{grid-template-columns:1fr}}
+  .edition{position:relative;overflow:hidden}
+  .edition .etype{
+    font-size:11px;letter-spacing:2.5px;text-transform:uppercase;
+    color:var(--accent);font-weight:700;margin:0 0 4px;
+  }
+  .edition h3{margin:0 0 4px;font-size:19px;font-family:Georgia,serif}
+  .edition .meta{font-size:13px;color:var(--muted);margin:0 0 10px}
+  .edition .status{
+    display:inline-block;font-size:12px;font-weight:600;
+    background:var(--accent-soft);color:var(--accent-ink);
+    padding:3px 12px;border-radius:999px;margin-bottom:10px;
+  }
+  .edition details{font-size:13.5px;color:var(--muted)}
+  .edition summary{cursor:pointer;color:var(--accent);font-weight:600;font-size:13px}
+  .edition ul{margin:8px 0 0;padding-left:18px}
+  .edition li{margin:3px 0}
+  /* ---------- designer ---------- */
+  .designer-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:16px}
+  @media (max-width:760px){.designer-grid{grid-template-columns:1fr}}
+  .stepper{display:flex;align-items:center;gap:14px;margin-bottom:6px}
+  .stepper button{
+    width:36px;height:36px;border-radius:50%;border:1px solid var(--rule);
+    background:var(--card);color:var(--ink);font-size:20px;cursor:pointer;line-height:1;
+  }
+  .stepper button:hover:not(:disabled){border-color:var(--accent);color:var(--accent)}
+  .stepper button:disabled{opacity:.3;cursor:default}
+  .stepper .count{font-size:15px;font-weight:600;min-width:170px;text-align:center}
+  .brief-card{border:1px solid var(--rule);border-radius:10px;padding:16px;margin-top:14px;background:var(--paper)}
+  .brief-card .bhead{display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap}
+  .brief-card .bname{font-weight:700;font-size:15px}
+  .brief-card input[type="time"]{
+    border:1px solid var(--rule);border-radius:8px;background:var(--card);
+    color:var(--ink);padding:5px 9px;font-size:14px;
+  }
+  .seclist{display:grid;grid-template-columns:1fr 1fr;gap:6px 12px}
+  @media (max-width:480px){.seclist{grid-template-columns:1fr}}
+  .seclist label{
+    display:flex;gap:8px;align-items:flex-start;font-size:13px;cursor:pointer;
+    padding:6px 8px;border-radius:8px;
+  }
+  .seclist label:hover{background:var(--accent-soft)}
+  .seclist input{margin-top:3px;accent-color:var(--accent)}
+  .preview-sticky{position:sticky;top:16px}
+  .preview-lineup{display:grid;gap:10px;margin-top:8px}
+  .pv{border-left:3px solid var(--accent);padding:8px 12px;background:var(--paper);border-radius:0 8px 8px 0}
+  .pv .t{font-weight:700;font-size:14px}
+  .pv .t span{color:var(--accent);font-variant-numeric:tabular-nums;margin-right:8px}
+  .pv .s{font-size:12.5px;color:var(--muted);margin-top:3px}
+  .designer-note{font-size:13px;color:var(--muted);font-style:italic;margin-top:14px}
+  .reset-link{background:none;border:none;color:var(--accent);cursor:pointer;font-size:13px;padding:0;text-decoration:underline}
+  /* ---------- library ---------- */
+  .lib-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px}
+  .lib-item{padding:14px 16px}
+  .lib-item h4{margin:0 0 4px;font-size:14px}
+  .lib-item h4 .dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--accent);margin-right:8px}
+  .lib-item p{margin:0;font-size:13px;color:var(--muted)}
+  /* ---------- topics ---------- */
+  .chips{display:flex;flex-wrap:wrap;gap:10px}
+  .chip{
+    background:var(--chip);border:1px solid var(--rule);border-radius:999px;
+    padding:7px 16px;font-size:13.5px;font-weight:500;
+  }
+  /* ---------- mind ---------- */
+  .mind-list{margin:0;padding:0;list-style:none;display:grid;gap:12px}
+  .mind-list li{padding-left:26px;position:relative;font-size:14.5px}
+  .mind-list li::before{
+    content:"?";position:absolute;left:0;top:1px;width:19px;height:19px;
+    border:1.5px solid var(--accent);color:var(--accent);border-radius:50%;
+    font-size:12px;font-weight:700;text-align:center;line-height:17px;
+    font-family:Georgia,serif;font-style:italic;
+  }
+  .mind-list li span{color:var(--muted)}
+  /* ---------- footer ---------- */
+  footer{margin-top:56px;border-top:3px double var(--rule-strong);padding-top:18px;
+    display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;
+    font-size:13px;color:var(--muted)}
+  footer a{color:var(--accent);font-weight:600}
 </style>
 </head>
 <body>
-<div class="header">
-<div class="icon">📋</div>
-<h1>Briefing Buddy</h1>
-<div class="tagline">Personalized news companion</div>
+<div class="wrap">
+
+  <header class="masthead">
+    <p class="kicker">The Buddy Suite &middot; Est. 2026</p>
+    <h1>Briefing <span class="amp">&amp;</span> Buddy</h1>
+    <p class="tagline">The design studio for your daily briefings.</p>
+    <div class="dateline">
+      <span id="dateline">Sunday, October 11, 2026</span>
+      <span>2 editions daily &middot; thread + HTML email</span>
+      <button class="theme-btn" id="themeBtn" title="Toggle light / dark">◐ Theme</button>
+    </div>
+  </header>
+
+  <main>
+    <!-- ATTENTION -->
+    <section>
+      <div class="sec-head"><span class="sec-num">No. 1</span><h2>Needs your attention</h2><span class="line"></span></div>
+      <div class="stack">
+        <div class="card attention">
+          <h3><span class="flag">Open</span>Full PRD — not started yet</h3>
+          <p>You asked for a full PRD after the brief. The brief already queues the spec: user stories per feature, the sections library, per-briefing content mixing, scheduling &amp; send-time rules, the delivery contract with the assistant, and success criteria. Say the word and it's drafted.</p>
+        </div>
+        <div class="card attention">
+          <h3><span class="flag">Open</span>Product name: News Buddy or Briefing Buddy?</h3>
+          <p>This thread is <strong>Briefing Buddy</strong>, but the <a href="https://docs.google.com/document/d/11Zz2wGbuIKCqS7OSPOnjIAbz5VsmLQPvxS-OfRicSN0/edit">product brief</a> still says <strong>News Buddy</strong>. "Briefing Buddy" fits what it actually became — the design studio for your briefings. Your call which wins.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- EDITIONS -->
+    <section>
+      <div class="sec-head"><span class="sec-num">No. 2</span><h2>Today&rsquo;s editions</h2><span class="line"></span></div>
+      <p class="lede">Two editions a day, built by your assistant and delivered to the Briefings thread — plus a styled HTML email. This is the service the product grows out of.</p>
+      <div class="editions">
+        <div class="card edition">
+          <p class="etype">Morning</p>
+          <h3>The Morning Edition</h3>
+          <p class="meta">Daily &middot; 6:00 AM PT</p>
+          <span class="status">● Live — thread + email</span>
+          <details>
+            <summary>13 sections</summary>
+            <ul>
+              <li>High-priority reminders</li><li>Calendar</li><li>Weather</li><li>Sky</li>
+              <li>Fire &amp; air</li><li>Commute</li><li>Inbox</li><li>Markets &amp; tech</li>
+              <li>Events radar</li><li>Prep</li><li>Bills</li><li>Awaiting your reply</li><li>Quick links</li>
+            </ul>
+          </details>
+        </div>
+        <div class="card edition">
+          <p class="etype">Evening</p>
+          <h3>The Evening Edition</h3>
+          <p class="meta">Daily &middot; 6:00 PM PT</p>
+          <span class="status">● Live — thread + email</span>
+          <details>
+            <summary>11 sections</summary>
+            <ul>
+              <li>High-priority reminders</li><li>Top stories</li><li>Markets</li><li>Tech &amp; AI</li>
+              <li>YouTube picks</li><li>Podcast picks</li><li>Sky</li><li>Night sky</li>
+              <li>Awaiting your reply</li><li>Quick links</li><li>The dinner question</li>
+            </ul>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <!-- DESIGNER -->
+    <section>
+      <div class="sec-head"><span class="sec-num">No. 3</span><h2>The briefing designer</h2><span class="line"></span></div>
+      <p class="lede">The seed of the app. Decide how many briefings go out each day, when each lands, and what goes in it — a mix-and-match sections library. What you design here is what the assistant delivers.</p>
+      <div class="designer-grid">
+        <div class="card">
+          <div class="stepper">
+            <button id="minusBtn" aria-label="Fewer briefings">−</button>
+            <span class="count" id="countLabel">2 briefings per day</span>
+            <button id="plusBtn" aria-label="More briefings">+</button>
+          </div>
+          <div id="briefCards"></div>
+          <p class="designer-note"><button class="reset-link" id="resetBtn">Reset to the current setup</button> — the two editions above.</p>
+        </div>
+        <div class="card preview-sticky">
+          <p class="etype" style="font-size:11px;letter-spacing:2.5px;text-transform:uppercase;color:var(--accent);font-weight:700;margin:0 0 4px;">Live preview</p>
+          <h3 style="margin:0 0 4px;font-size:18px;font-family:Georgia,serif;">Your lineup</h3>
+          <div class="preview-lineup" id="preview"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- LIBRARY -->
+    <section>
+      <div class="sec-head"><span class="sec-num">No. 4</span><h2>Sections library</h2><span class="line"></span></div>
+      <p class="lede">Every building block a briefing can be made of. Check the boxes in the designer to mix and match.</p>
+      <div class="lib-grid" id="library"></div>
+    </section>
+
+    <!-- TOPICS -->
+    <section>
+      <div class="sec-head"><span class="sec-num">No. 5</span><h2>Topics I watch</h2><span class="line"></span></div>
+      <p class="lede">The personalization axis. Every story is ranked against these.</p>
+      <div class="chips">
+        <span class="chip">🤖 AI &amp; technology</span>
+        <span class="chip">📈 Markets &amp; investing</span>
+        <span class="chip">✏️ Product design</span>
+        <span class="chip">⚙️ Engineering</span>
+        <span class="chip">🏎️ Motorsport</span>
+        <span class="chip">🎶 Live music</span>
+        <span class="chip">🌲 Amador County local</span>
+      </div>
+    </section>
+
+    <!-- MIND -->
+    <section>
+      <div class="sec-head"><span class="sec-num">No. 6</span><h2>On my mind</h2><span class="line"></span></div>
+      <p class="lede">Open questions from the brief — the ones the PRD will have to settle.</p>
+      <ul class="mind-list">
+        <li>One buddy app or a family of them? <span>— the Buddy Suite pattern is emerging.</span></li>
+        <li>Personalization depth: <span>explicit topic toggles only, or learned from reading behavior too?</span></li>
+        <li>Local news sourcing: <span>which outlets actually cover Amador County well?</span></li>
+        <li>Delivery mechanics: <span>how does a design in the app become the assistant's schedule?</span></li>
+        <li>Business model: <span>personal tool, or something shippable?</span></li>
+      </ul>
+    </section>
+  </main>
+
+  <footer>
+    <span>Briefing Buddy · a living page · last refreshed <strong>October 11, 2026</strong></span>
+    <span><a href="https://docs.google.com/document/d/11Zz2wGbuIKCqS7OSPOnjIAbz5VsmLQPvxS-OfRicSN0/edit">Product brief</a> · editions live in the Briefings thread</span>
+  </footer>
 </div>
 
-<div class="mission">Briefing Buddy is the guy that sends Dave’s briefings — morning (6:00 AM PT) + evening (6:00 PM PT) editions assembled from configured sections and live data, delivered to the Briefings thread and by email.</div>
+<script>
+(function(){
+  "use strict";
+  /* ---------- dateline ---------- */
+  try{
+    document.getElementById("dateline").textContent =
+      new Date().toLocaleDateString("en-US",{weekday:"long",year:"numeric",month:"long",day:"numeric"});
+  }catch(e){}
 
-<h2>Needs Attention</h2>
-<p class="empty">Nothing needs attention right now.</p>
+  /* ---------- theme ---------- */
+  var root = document.documentElement, btn = document.getElementById("themeBtn");
+  function currentTheme(){
+    var t = root.getAttribute("data-theme");
+    if(t === "light" || t === "dark") return t;
+    return (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) ? "dark" : "light";
+  }
+  function paint(){ btn.textContent = currentTheme() === "dark" ? "☀ Theme" : "◐ Theme"; }
+  btn.addEventListener("click", function(){
+    root.setAttribute("data-theme", currentTheme() === "dark" ? "light" : "dark");
+    try{ localStorage.setItem("bb-theme", root.getAttribute("data-theme")); }catch(e){}
+    paint();
+  });
+  try{
+    var saved = localStorage.getItem("bb-theme");
+    if(saved === "light" || saved === "dark") root.setAttribute("data-theme", saved);
+  }catch(e){}
+  paint();
 
+  /* ---------- sections library ---------- */
+  var SECTIONS = [
+    {id:"reminders",  name:"High-priority reminders", desc:"From the assistant's registry. Leads every briefing."},
+    {id:"calendar",   name:"Calendar",                desc:"Today's agenda, from Google Calendar."},
+    {id:"weather",    name:"Weather",                 desc:"Fiddletown + San Jose conditions, highs and lows."},
+    {id:"sky",        name:"Sky",                     desc:"Sunrise, moon phase, illumination."},
+    {id:"fire",       name:"Fire & air",              desc:"Red-flag warnings, burn-day status, AQI."},
+    {id:"commute",    name:"Commute",                 desc:"Drive time — only on travel mornings."},
+    {id:"inbox",      name:"Inbox",                   desc:"What needs action in the last 24 hours."},
+    {id:"mkttech",    name:"Markets & tech",          desc:"Morning headlines — AAPL always included."},
+    {id:"events",     name:"Events radar",            desc:"Live music, motorsport, local happenings."},
+    {id:"prep",       name:"Prep",                    desc:"One thing today that needs advance work."},
+    {id:"bills",      name:"Bills",                   desc:"Overdue + due in 7 days, from the tracker."},
+    {id:"top",        name:"Top stories",             desc:"4–6 US & world headlines, key fact each."},
+    {id:"markets",    name:"Markets",                 desc:"How the day closed: indexes, yields, oil, AAPL."},
+    {id:"techai",     name:"Tech & AI",               desc:"2–3 headlines in Dave's lanes."},
+    {id:"youtube",    name:"YouTube picks",           desc:"3–5 videos, links verified."},
+    {id:"podcasts",   name:"Podcast picks",           desc:"2–3 episodes for the drive."},
+    {id:"nightsky",   name:"Night sky",               desc:"What's up tonight over Fiddletown."},
+    {id:"awaiting",   name:"Awaiting your reply",     desc:"Open questions, one line each."},
+    {id:"links",      name:"Quick links",             desc:"Working docs, grouped."},
+    {id:"mealq",      name:"The dinner question",     desc:"“What did you have for lunch and dinner?”"}
+  ];
+  var byId = {};
+  SECTIONS.forEach(function(s){ byId[s.id] = s; });
 
+  var DEFAULTS = [
+    {name:"Morning edition", time:"06:00",
+     sections:["reminders","calendar","weather","sky","fire","commute","inbox","mkttech","events","prep","bills","awaiting","links"]},
+    {name:"Evening edition", time:"18:00",
+     sections:["reminders","top","markets","techai","youtube","podcasts","sky","nightsky","awaiting","links","mealq"]}
+  ];
+  var NAMES = ["Morning edition","Midday edition","Evening edition","Night edition"];
+  var NEW_DEFAULT = ["reminders","top","awaiting"];
 
-<div class="footer">
-Generated 2026-10-10 · Part of the Buddy System
-</div>
+  var briefings = JSON.parse(JSON.stringify(DEFAULTS));
+
+  var cardsEl = document.getElementById("briefCards"),
+      prevEl  = document.getElementById("preview"),
+      countEl = document.getElementById("countLabel"),
+      minusEl = document.getElementById("minusBtn"),
+      plusEl  = document.getElementById("plusBtn");
+
+  function fmtTime(t){
+    var p = t.split(":"), h = +p[0], m = p[1] || "00";
+    var ap = h >= 12 ? "PM" : "AM", h12 = h % 12 || 12;
+    return h12 + ":" + m + " " + ap;
+  }
+  function esc(s){ return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
+
+  function render(){
+    var n = briefings.length;
+    countEl.textContent = n + (n === 1 ? " briefing per day" : " briefings per day");
+    minusEl.disabled = n <= 1; plusEl.disabled = n >= 4;
+
+    cardsEl.innerHTML = "";
+    briefings.forEach(function(b, i){
+      var card = document.createElement("div");
+      card.className = "brief-card";
+      var head = document.createElement("div");
+      head.className = "bhead";
+      var nm = document.createElement("span");
+      nm.className = "bname"; nm.textContent = b.name;
+      var tp = document.createElement("input");
+      tp.type = "time"; tp.value = b.time; tp.setAttribute("aria-label", b.name + " send time");
+      tp.addEventListener("change", function(){ b.time = tp.value || b.time; renderPreview(); });
+      head.appendChild(nm); head.appendChild(tp);
+      card.appendChild(head);
+
+      var grid = document.createElement("div");
+      grid.className = "seclist";
+      SECTIONS.forEach(function(s){
+        var lab = document.createElement("label");
+        var cb = document.createElement("input");
+        cb.type = "checkbox"; cb.checked = b.sections.indexOf(s.id) !== -1;
+        cb.addEventListener("change", function(){
+          var ix = b.sections.indexOf(s.id);
+          if(cb.checked && ix === -1) b.sections.push(s.id);
+          if(!cb.checked && ix !== -1) b.sections.splice(ix, 1);
+          renderPreview();
+        });
+        var tx = document.createElement("span"); tx.textContent = s.name;
+        lab.appendChild(cb); lab.appendChild(tx);
+        grid.appendChild(lab);
+      });
+      card.appendChild(grid);
+      cardsEl.appendChild(card);
+    });
+    renderPreview();
+  }
+
+  function renderPreview(){
+    prevEl.innerHTML = "";
+    var sorted = briefings.slice().sort(function(a,b){ return a.time < b.time ? -1 : 1; });
+    sorted.forEach(function(b){
+      var d = document.createElement("div"); d.className = "pv";
+      var t = document.createElement("div"); t.className = "t";
+      var tm = document.createElement("span"); tm.textContent = fmtTime(b.time);
+      t.appendChild(tm); t.appendChild(document.createTextNode(b.name));
+      var s = document.createElement("div"); s.className = "s";
+      s.textContent = b.sections.length
+        ? b.sections.map(function(id){ return byId[id].name; }).join(" · ")
+        : "No sections yet — pick from the library.";
+      d.appendChild(t); d.appendChild(s);
+      prevEl.appendChild(d);
+    });
+  }
+
+  minusEl.addEventListener("click", function(){
+    if(briefings.length > 1){ briefings.pop(); render(); }
+  });
+  plusEl.addEventListener("click", function(){
+    if(briefings.length < 4){
+      briefings.push({name: NAMES[briefings.length], time:"12:00", sections: NEW_DEFAULT.slice()});
+      render();
+    }
+  });
+  document.getElementById("resetBtn").addEventListener("click", function(){
+    briefings = JSON.parse(JSON.stringify(DEFAULTS));
+    render();
+  });
+
+  /* ---------- library grid ---------- */
+  var lib = document.getElementById("library");
+  SECTIONS.forEach(function(s){
+    var d = document.createElement("div");
+    d.className = "card lib-item";
+    var h = document.createElement("h4");
+    var dot = document.createElement("span"); dot.className = "dot";
+    h.appendChild(dot); h.appendChild(document.createTextNode(s.name));
+    var p = document.createElement("p"); p.textContent = s.desc;
+    d.appendChild(h); d.appendChild(p);
+    lib.appendChild(d);
+  });
+
+  render();
+})();
+</script>
 </body>
 </html>
