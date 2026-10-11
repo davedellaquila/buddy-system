@@ -100,7 +100,7 @@ Build: `build.py` generates `index.html` from `buddies.json` + `plans.json`.
 - **Build numbers** — every buddy and business-plan page shows a timestamp
   build number.
 - **Click-to-rename** — buddy names are inline editable.
-- **Scratch notes** — device-local freeform notes (localStorage).
+- **Private notes** — device-local freeform notes (localStorage).
 - **Shared notes** — sync to the buddy's repo at `docs/notes.md` via the
   GitHub Contents API (needs a token; falls back to device-local).
 - **Ingest box** — brain-dump raw thoughts about the buddy; each dump is

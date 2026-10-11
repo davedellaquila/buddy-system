@@ -1199,7 +1199,7 @@ const FIELD_DEFS = [
   {id:'tree', label:'The Buddy Tree'},
   {id:'artifacts', label:'Artifacts'},
   {id:'plans', label:'Business plans'},
-  {id:'notes', label:'Notes'},
+  {id:'notes', label:'Private notes'},
   {id:'shared', label:'Shared notes'},
 ];
 function getFieldOrder(){
@@ -2054,7 +2054,7 @@ function renderBuddy(id){
         : '')
     + '<div class="bp-sec" data-field="artifacts"><h3>Artifacts</h3>'+arts+'</div>'
     + planSec
-    + '<div class="bp-sec" data-field="notes"><h3>Notes<span class="info-tip" data-tip="Saved on this device. (For your eyes only)">\u24d8</span></h3><textarea class="notes" id="bp-notes" placeholder="Scratch pad for this buddy\u2026 (For your eyes only)">'+escHtml(S.notes[id]||'')+'</textarea>'
+    + '<div class="bp-sec" data-field="notes"><h3>Private notes<span class="info-tip" data-tip="Saved on this device. (For your eyes only)">\u24d8</span></h3><textarea class="notes" id="bp-notes" placeholder="Scratch pad for this buddy\u2026 (For your eyes only)">'+escHtml(S.notes[id]||'')+'</textarea>'
     + '</div>'
     + '<div class="bp-sec" data-field="shared"><h3>Shared notes<span class="info-tip" data-tip="Anybody with repo access can see this note. Saved to the buddy\u2019s repo (docs/notes.md).">\u24d8</span></h3>'
     + '<textarea class="notes" id="bp-shared-notes" placeholder="Anybody with repo access can see this note."></textarea>'
@@ -2834,7 +2834,7 @@ function renderPlan(id){
     + '<div class="bp-sec"><h3>What it is</h3><p class="bp-mission">'+escHtml(p.desc)+'</p></div>'
     + '<div class="bp-sec"><h3>Documents</h3>'+docs+'</div>'
     + '<div class="bp-sec"><h3>Related buddies</h3>'+buds+'</div>'
-    + '<div class="bp-sec"><h3>Notes<span class="info-tip" data-tip="Saved on this device. (For your eyes only)">\\u24d8</span></h3><textarea class="notes" id="bp-notes" placeholder="Scratch pad for this plan\\u2026 (For your eyes only)">'+escHtml(S.notes[id]||'')+'</textarea>'
+    + '<div class="bp-sec"><h3>Private notes<span class="info-tip" data-tip="Saved on this device. (For your eyes only)">\\u24d8</span></h3><textarea class="notes" id="bp-notes" placeholder="Scratch pad for this plan\\u2026 (For your eyes only)">'+escHtml(S.notes[id]||'')+'</textarea>'
     + '<p class="fineprint">Saved on this device. (For your eyes only)</p></div>'
     + '<div class="bp-sec"><h3>Shared notes<span class="info-tip" data-tip="Visible to everyone with access to this project.">\\u24d8</span></h3><textarea class="notes" id="bp-shared" placeholder="Shared notes\\u2026 (visible to everyone with access)">'+escHtml((S.planShared||{})[id]||'')+'</textarea>'
     + '<p class="fineprint">Shared \u2014 visible to everyone with access.</p></div>'
