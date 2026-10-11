@@ -740,9 +740,9 @@ def build():
         + '</div>'
         for p in plans
     )
-    status_tints = {'Live': '#2f9e44', 'Active': '#1f6feb', 'Brief review': '#a371f7',
+    status_tints = {'Live': '#2f9e44', 'Active': '#1f6feb', 'Mission review': '#a371f7',
                     'Exploring': '#d97a1f', 'Planned': '#8b949e', 'Draft': '#8b949e'}
-    status_order = ['Live', 'Active', 'Brief review', 'Exploring', 'Planned', 'Draft']
+    status_order = ['Live', 'Active', 'Mission review', 'Exploring', 'Planned', 'Draft']
     status_counts = {}
     for p in plans:
         status_counts[p["status"]] = status_counts.get(p["status"], 0) + 1
@@ -869,7 +869,7 @@ const VIEW_DEFS = [
 const VIEW_TIPS = {
   tree: 'Tree view — visual hierarchy of all buddies. Click a node to open its details. Drag the background to pan, scroll to zoom. Drag a node onto another node to reparent it.',
   projects: 'Projects list — every buddy in hierarchy order with status. Click a tile to filter by attention status. Click the chevron to expand/collapse sections.',
-  plans: 'Business Plans — real-world ventures as cards. Click a status tile to filter. Each card links to its brief and related buddies.',
+  plans: 'Business Plans — real-world ventures as cards. Click a status tile to filter. Each card links to its mission statement and related buddies.',
   manifest: 'New-Project Manifest — the checklist every new buddy gets. Click AUTOMATIC or PLANNED tiles to filter the steps.',
   project: 'Project Homepage — loads the selected buddy homepage full-bleed in the main view. Clicking a buddy with a homepage swaps it; clicking one without keeps the current page.',
   changelog: 'Changelog — history of everything that changed. Click a tile to filter by change type. Click a row to open the changed buddy.',
@@ -1609,11 +1609,11 @@ function renderBuddy(id){
   const b = byId[id]; if(!b) return;
   const items = (b.attention || []).slice().sort((x,y) => (S.seen[x.id]?1:0) - (S.seen[y.id]?1:0));
   let arts = '';
-  if (b.brief) arts += artRow(ICON_DOC, 'Brief', 'The canonical mission & intent — Google Doc', b.brief);
+  if (b.brief) arts += artRow(ICON_DOC, 'Mission statement', 'The canonical mission & intent — Google Doc', b.brief);
   if (b.homepageSource) arts += artRow(ICON_LINK, 'Homepage', 'Buddy homepage — opens on Muse', b.homepageSource);
   if (b.repo) arts += artRow(ICON_REPO, 'GitHub Repo', 'davedellaquila/'+b.repo+' (private)', 'https://github.com/davedellaquila/'+b.repo);
   (b.docs || []).forEach(d => { arts += artRow(ICON_LINK, d.label, 'Related document — Google Doc', d.url); });
-  if (!arts) arts = '<p class="bp-empty">No artifacts yet — the drill adds the brief and repo here when they exist.</p>';
+  if (!arts) arts = '<p class="bp-empty">No artifacts yet — the drill adds the mission statement and repo here when they exist.</p>';
   let photos = '';
   const seedStrip = (b.photos || []).map(u => '<a href="'+escHtml(u)+'" target="_blank" rel="noopener"><img src="'+escHtml(u)+'" loading="lazy" alt=""></a>').join('');
   photos = '<div class="bp-sec" data-field="photos"><h3 id="photos-h3">Photos</h3><div class="prow"><div class="pstrip" id="pstrip">' + seedStrip + '</div>'
@@ -1668,7 +1668,7 @@ function renderBuddy(id){
     + '<textarea class="notes" id="bp-ingest" placeholder="Dump what\u2019s in your head about '+escHtml(dispName(b))+'\u2026"></textarea>'
     + '<div style="margin-top:8px"><span class="fineprint" id="ingest-status"></span></div>'
     + '<div id="ingest-feed" style="margin-top:8px"></div></div>'
-    + '<div class="bp-sec" data-field="mission"><h3>About<span class="info-tip" data-tip="The mission is the brief\\u2019s executive summary \\u2014 tweak it through the buddy\\u2019s chat thread and it updates everywhere.">\\u24d8</span></h3><p class="bp-mission">'+escHtml(b.mission)+'</p></div>'
+    + '<div class="bp-sec" data-field="mission"><h3>About<span class="info-tip" data-tip="The mission statement\\u2019s executive summary \\u2014 tweak it through the buddy\\u2019s chat thread and it updates everywhere.">\\u24d8</span></h3><p class="bp-mission">'+escHtml(b.mission)+'</p></div>'
     + '<div class="bp-sec" data-field="homepage"><h3>Homepage URL</h3>'
     + '<div style="display:flex;align-items:center;gap:8px">'
     + '<input type="url" id="bp-homepage-url" value="'+escHtml(homepageUrl(b))+'" placeholder="Paste homepage URL here…" style="flex:1;min-width:0;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:8px 12px;font-size:13px;color:var(--text)" title="The full URL for this buddy\u2019s homepage. Paste a URL and click away to save.">'
@@ -1931,7 +1931,7 @@ function renderProjects(){
     });
   });
   // Status tint colors (match the pills)
-  const statusTints = {'Active':'#1f6feb','Live · M2 shipped':'#2f9e44','Live · pre-alpha':'#2f9e44','New':'#d97a1f','Brief review':'#a371f7','PRD review':'#a371f7','Pilot':'#1f6feb','Spec review':'#a371f7'};
+  const statusTints = {'Active':'#1f6feb','Live · M2 shipped':'#2f9e44','Live · pre-alpha':'#2f9e44','New':'#d97a1f','Mission review':'#a371f7','PRD review':'#a371f7','Pilot':'#1f6feb','Spec review':'#a371f7'};
   const statusOrder = Object.keys(statusCounts).sort();
   let s = '<section class="projects-view" style="margin-top:24px">'
     + '<div id="project-tiles">'
