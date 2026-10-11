@@ -374,7 +374,7 @@ body:has(#token-pill) #panel-open{right:148px}
 .bp-sec > h3 .secgrip:active{cursor:grabbing}
 .bp-sec.sec-dragging{opacity:0.4}
 .bp-sec > h3 .secarrow{font-size:25px;color:var(--muted);transition:transform .15s;display:inline-block;line-height:1}
-.bp-sec.collapsed > *:not(h3){display:none}
+.bp-sec.collapsed > *:not(h3){display:none !important} /* !important beats inline display styles (e.g. homepage URL row) */
 .bp-sec .secarrow{transform:rotate(90deg)}
 .bp-sec.collapsed .secarrow{transform:rotate(0deg)}
 .dumps .darrow{transform:rotate(90deg)}
