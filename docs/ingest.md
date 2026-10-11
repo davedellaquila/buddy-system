@@ -70,3 +70,7 @@ I’d like pulling down on the side right side panel to do a refresh or check fo
 
 I think I would like the brain dump section on the right side panel to be the first section on a right side panel or or buddies info page
 
+## 10/11/2026, 9:29:15 AM
+
+I am looking at Astros info page and I would like all I think this is actually his homepage I would like anything that has a reference that is referencing other buddies or other pages to have a link to go to that options right on the Teil that’s mentioning it
+
