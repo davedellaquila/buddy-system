@@ -155,6 +155,9 @@ Build: `build.py` generates `index.html` from `buddies.json` + `plans.json`.
 - **Scroll isolation (≥640px)**: app shell is viewport-locked; left sidebar and
   main scroll independently. Homepage mode scrolls only the homepage pane (not
   the sidebar). Phone drawer layout still uses document scroll.
+- **Floating glass sidebars (≥640px)**: left nav and right detail panels are
+  frosted, rounded, inset slide-outs over full-bleed main content (Astro-style).
+  Collapse animates the left panel off-screen; chevrons reopen either side.
 - **Medium (640–1100px)**: collapsible sidebar; view nav becomes a horizontal
   segmented control; detail opens as a right-docked side sheet (380px).
 - **Large (>1100px)**: tri-pane with persistent detail panel (400px).

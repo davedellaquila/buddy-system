@@ -3,6 +3,16 @@
 All notable changes to the Buddies dashboard and buddy system. Newest first.
 `FEATURES.md` describes the current state; this file describes how it got there.
 
+## 2026-10-11 (Floating glass slide-out sidebars)
+
+### Changed
+- **Left + right panels** — Astro-inspired floating glass slide-outs on
+  desktop/tablet: frosted `backdrop-filter` panels inset from the screen edge,
+  rounded corners, soft shadow. Left sidebar slides off-screen when collapsed
+  (animated); right detail panel matches the same glass chrome. Phone drawer
+  keeps a left-edge sheet with a rounded inner edge. Search/selection chips
+  use pill styling to match.
+
 ## 2026-10-11 (Scroll isolation: homepage vs side panels)
 
 ### Fixed

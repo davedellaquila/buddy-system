@@ -179,6 +179,12 @@
   --danger:#f85149;
   --shadow:rgba(0,0,0,.5); --shadow-soft:rgba(0,0,0,.3);
   --scrim:rgba(0,0,0,.6);
+  /* Floating glass slide-out panels (Astro-inspired) */
+  --glass-bg:rgba(22,27,34,.72); --glass-bg-solid:rgba(22,27,34,.88);
+  --glass-border:rgba(255,255,255,.10); --glass-inset:12px; --glass-radius:28px;
+  --glass-shadow:0 18px 50px rgba(0,0,0,.45), 0 0 0 1px rgba(255,255,255,.04) inset;
+  --glass-blur:28px; --glass-sat:1.35;
+  --glass-head:rgba(13,17,23,.45); --glass-chip:rgba(0,0,0,.34);
 }
 html.light{
   --bg:#ffffff; --panel:#f6f8fa; --hover:#eaeef2; --active:#ddf4ff;
@@ -193,6 +199,11 @@ html.light{
   --danger:#cf222e;
   --shadow:rgba(31,35,40,.18); --shadow-soft:rgba(31,35,40,.08);
   --scrim:rgba(31,35,40,.5);
+  --glass-bg:rgba(255,255,255,.74); --glass-bg-solid:rgba(255,255,255,.90);
+  --glass-border:rgba(31,35,40,.10); --glass-inset:12px; --glass-radius:28px;
+  --glass-shadow:0 18px 50px rgba(31,35,40,.16), 0 0 0 1px rgba(255,255,255,.55) inset;
+  --glass-blur:28px; --glass-sat:1.25;
+  --glass-head:rgba(246,248,250,.72); --glass-chip:rgba(255,255,255,.72);
 }
 body{background:var(--bg);color:var(--text)}
 .theme-pick{display:flex;margin:12px 10px 0;border:1px solid var(--border);border-radius:8px;overflow:hidden}
@@ -207,44 +218,56 @@ body{padding:0}
   padding:0 14px 32px;position:sticky;top:0;height:100vh;overflow-y:auto;overflow-x:hidden;overflow-wrap:break-word;
   z-index:40;overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
 #main{flex:1;min-width:0;min-height:0;padding:36px 32px 80px;position:relative;z-index:1}
-/* Desktop/tablet: lock the shell to the viewport so homepage wheel/trackpad
-   never scrolls the document (and the sticky sidebar) on first paint. Each
-   pane is its own scrollport; phone drawer layout keeps document scroll. */
+/* Desktop/tablet: floating glass slide-out sidebars over a full-bleed main pane.
+   Viewport-locked so homepage/sidebar scroll stay independent. */
 @media (min-width:640px){
   html,body{height:100%;overflow:hidden}
-  .app{height:100vh;height:100dvh;max-height:100vh;max-height:100dvh;min-height:0;overflow:hidden}
-  #sidebar{position:relative;top:auto;height:auto;align-self:stretch;max-height:none;
-    overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
-  #main{align-self:stretch;height:auto;min-height:0;overflow-y:auto;overflow-x:hidden;
-    overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
+  .app{display:block;height:100vh;height:100dvh;max-height:100vh;max-height:100dvh;min-height:0;overflow:hidden;position:relative}
+  #sidebar{
+    position:fixed;left:var(--glass-inset);top:var(--glass-inset);bottom:var(--glass-inset);
+    width:var(--sbw,308px);flex:none;height:auto;max-height:none;z-index:90;
+    padding:0 14px 20px;border:1px solid var(--glass-border);border-radius:var(--glass-radius);
+    background:var(--glass-bg);border-right:1px solid var(--glass-border);
+    -webkit-backdrop-filter:blur(var(--glass-blur)) saturate(var(--glass-sat));
+    backdrop-filter:blur(var(--glass-blur)) saturate(var(--glass-sat));
+    box-shadow:var(--glass-shadow);
+    overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;
+    transform:translateX(0);opacity:1;
+    transition:transform .32s cubic-bezier(.32,.72,.35,1),opacity .22s ease}
+  /* Slide off-screen instead of display:none so close/open animates */
+  body.sb-closed #sidebar{display:block!important;transform:translateX(calc(-100% - 28px));
+    opacity:0;pointer-events:none}
+  #main{display:block;width:100%;height:100%;min-height:0;overflow-y:auto;overflow-x:hidden;
+    overscroll-behavior:contain;-webkit-overflow-scrolling:touch;box-sizing:border-box}
   #main.homepage-mode{display:flex;flex-direction:column;overflow:hidden;padding:0}
   #main.homepage-mode #view-project.active{flex:1 1 auto;min-height:0!important;height:auto;max-height:none}
   #homepage-wrap{flex:1 1 auto;min-height:0;height:auto;overflow:hidden}
   #homepage-frame{flex:1 1 auto;min-height:0;height:100%;width:100%}
-  /* Tree fills the main pane — drop the old 100vh + negative-margin bleed */
   #main:has(#view-tree.active){padding:0;overflow:hidden}
   #view-tree.view.active{margin:0!important;height:100%!important;max-height:100%;box-sizing:border-box}
-  /* Standalone buddy pages scroll the document again */
   body.standalone{height:auto;overflow:auto}
-  body.standalone .app{height:auto;max-height:none;min-height:100vh;overflow:visible}
+  body.standalone .app{height:auto;max-height:none;min-height:100vh;overflow:visible;display:block}
   body.standalone #main{overflow:visible;height:auto}
+  body.standalone #sidebar{display:none!important}
 }
-.brand{padding:22px 8px 14px;background:var(--bg)}
+.brand{padding:22px 8px 14px;background:transparent}
 /* Brand chrome (eyebrow/title/subtitle + gear/close) pins at top; Views scroll under */
 .sb-brand-sticky{
-  position:sticky;top:0;z-index:7;background:var(--bg);
+  position:sticky;top:0;z-index:7;background:var(--glass-head);
+  -webkit-backdrop-filter:blur(16px) saturate(1.2);backdrop-filter:blur(16px) saturate(1.2);
   margin:0 -14px;padding:0 14px;
-  border-bottom:1px solid var(--border)}
+  border-bottom:1px solid var(--glass-border);border-radius:var(--glass-radius) var(--glass-radius) 0 0}
 .sb-brand-sticky #sb-tools{position:absolute;top:8px;right:8px;z-index:10}
 /* Search stacks under brand sticky block; --sb-brand-h set from measured brand height */
 .sb-search-sticky{
-  position:sticky;top:var(--sb-brand-h,96px);z-index:6;background:var(--bg);
+  position:sticky;top:var(--sb-brand-h,96px);z-index:6;background:var(--glass-head);
+  -webkit-backdrop-filter:blur(16px) saturate(1.2);backdrop-filter:blur(16px) saturate(1.2);
   margin:0 -14px;padding:10px 14px 10px;
-  border-bottom:1px solid var(--border);
-  box-shadow:0 8px 14px -10px rgba(0,0,0,.55)}
+  border-bottom:1px solid var(--glass-border);
+  box-shadow:0 8px 14px -10px rgba(0,0,0,.35)}
 .sb-search-sticky #buddy-search{
-  width:100%;box-sizing:border-box;background:var(--bg);border:1px solid var(--border);
-  color:var(--text);border-radius:8px;padding:7px 10px;font-size:13px}
+  width:100%;box-sizing:border-box;background:var(--glass-chip);border:1px solid var(--glass-border);
+  color:var(--text);border-radius:999px;padding:9px 14px;font-size:13px}
 .brand .eyebrow{font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted)}
 .brand h1{font-size:22px;margin:4px 0 0}
 #brand-name{outline:none;border-bottom:2px dashed transparent;cursor:text;display:inline-block;min-width:60px}
@@ -258,18 +281,18 @@ body{padding:0}
   padding:1px 8px;letter-spacing:0;text-transform:none}
 #attn-pill.zero{background:var(--border2);color:var(--muted)}
 .navbtn{display:flex;align-items:center;gap:10px;width:100%;text-align:left;background:none;border:0;
-  color:var(--text);font:inherit;font-size:14px;padding:8px 10px;border-radius:8px;cursor:pointer}
-.navbtn:hover{background:var(--hover)}
-.navbtn.sel{background:var(--active);box-shadow:inset 2px 0 0 var(--accent)}
+  color:var(--text);font:inherit;font-size:14px;padding:10px 14px;border-radius:999px;cursor:pointer}
+.navbtn:hover{background:var(--glass-chip)}
+.navbtn.sel{background:var(--glass-chip);box-shadow:inset 0 0 0 1px var(--glass-border);font-weight:600}
 .navbtn .nic{width:20px;text-align:center;color:var(--muted)}
 /* Views always stack vertically (desktop + iPad); phone keeps the same */
 #view-nav{display:flex;flex-direction:column;gap:2px}
 #view-nav .navbtn{flex:none;width:100%}
 .brow{display:flex;align-items:center;gap:8px;width:100%;text-align:left;background:none;border:0;
-  color:var(--text);font:inherit;font-size:13.5px;padding:6px 10px 6px 8px;border-radius:8px;cursor:pointer}
-.brow:hover{background:var(--hover)}
+  color:var(--text);font:inherit;font-size:13.5px;padding:8px 12px 8px 10px;border-radius:14px;cursor:pointer}
+.brow:hover{background:var(--glass-chip)}
 .brow:hover .binfo{opacity:0.7 !important}
-.brow.sel{background:var(--active);box-shadow:inset 2px 0 0 var(--accent)}
+.brow.sel{background:var(--glass-chip);box-shadow:inset 0 0 0 1px var(--glass-border)}
 .bdot{width:8px;height:8px;border-radius:50%;background:var(--accent);flex:0 0 8px;visibility:hidden}
 .brow.has-unseen .bdot{visibility:visible}
 .bname{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -318,8 +341,8 @@ body{padding:0}
 /* Fixed to viewport at sidebar edge so vertical #sidebar scroll doesn't move it.
    MUST be a DOM sibling of #sidebar (not a child): overflow on #sidebar clips
    hit-testing/paint for fixed descendants, which made the gripper invisible. */
-#sb-resize{position:fixed;top:0;left:calc(var(--sbw, 308px) - 7px);z-index:50;
-  display:flex;align-items:center;justify-content:center;width:14px;height:100vh;height:100dvh;cursor:ew-resize;
+#sb-resize{position:fixed;top:var(--glass-inset,0);left:calc(var(--glass-inset, 0px) + var(--sbw, 308px) - 7px);z-index:92;
+  display:flex;align-items:center;justify-content:center;width:14px;height:auto;bottom:var(--glass-inset,0);cursor:ew-resize;
   background:transparent;-webkit-tap-highlight-color:transparent}
 /* Vertical sheet-handle pill (reference rotated 90°) — thin, fully rounded, flat gray */
 #sb-resize::after{content:'';width:5px;height:48px;border-radius:999px;background:var(--muted);
@@ -334,7 +357,7 @@ body.sb-closed #sb-resize{display:none}
   #sb-resize::after{width:5px;height:56px}
 }
 /* Sidebar scroll-to-top — Muse-ish frosted chip, pinned to bottom of left panel */
-#sb-to-top{position:fixed;bottom:16px;left:calc(var(--sbw, 308px) / 2 - 22px);z-index:48;
+#sb-to-top{position:fixed;bottom:calc(var(--glass-inset, 0px) + 16px);left:calc(var(--glass-inset, 0px) + var(--sbw, 308px) / 2 - 22px);z-index:93;
   width:44px;height:44px;border-radius:12px;padding:0;
   display:flex;align-items:center;justify-content:center;
   background:color-mix(in srgb, var(--panel) 78%, transparent);border:1px solid var(--border);
@@ -419,10 +442,12 @@ textarea[disabled]{opacity:.5;cursor:not-allowed}
 #token-pop .saved-check{display:none;color:var(--grn-tx);font-size:14px;font-weight:600;margin-top:8px}
 #token-pop .saved-check.show{display:block}
 /* Reopen right detail panel when closed — left chevron (expand toward content) */
-#panel-open{position:fixed;top:12px;right:12px;z-index:85;width:44px;height:44px;border-radius:12px;
-  background:var(--panel);border:1px solid var(--border);color:var(--muted);cursor:pointer;
+#panel-open{position:fixed;top:var(--glass-inset,12px);right:var(--glass-inset,12px);z-index:85;width:44px;height:44px;border-radius:16px;
+  background:var(--glass-bg);border:1px solid var(--glass-border);color:var(--muted);cursor:pointer;
   display:flex;align-items:center;justify-content:center;padding:0;
-  box-shadow:0 2px 14px var(--shadow);-webkit-tap-highlight-color:transparent;transition:border-color .15s,color .15s,transform .15s}
+  box-shadow:var(--glass-shadow);-webkit-tap-highlight-color:transparent;transition:border-color .15s,color .15s,transform .15s;
+  -webkit-backdrop-filter:blur(var(--glass-blur)) saturate(var(--glass-sat));
+  backdrop-filter:blur(var(--glass-blur)) saturate(var(--glass-sat))}
 #panel-open:hover{color:var(--accent);border-color:var(--accent);transform:scale(1.05)}
 #panel-open:active{transform:scale(.96)}
 #panel-open svg{display:block}
@@ -542,9 +567,11 @@ body.no-write .pdel,body.no-write [data-dump-del],body.no-write [data-dump-edit]
 #sidebar .brand{padding-right:112px}
 /* Collapsed sidebar (iPad/desktop): hide panel, show right-chevron to reopen */
 body.sb-closed #sidebar{display:none}
-body.sb-closed #menu-btn{display:flex;align-items:center;justify-content:center;position:fixed;top:12px;left:12px;z-index:90;
-  background:var(--panel);border:1px solid var(--border);border-radius:12px;color:var(--text);
-  width:48px;height:48px;cursor:pointer;box-shadow:0 2px 12px var(--shadow)}
+body.sb-closed #menu-btn{display:flex;align-items:center;justify-content:center;position:fixed;top:var(--glass-inset,12px);left:var(--glass-inset,12px);z-index:95;
+  background:var(--glass-bg);border:1px solid var(--glass-border);border-radius:16px;color:var(--text);
+  width:48px;height:48px;cursor:pointer;box-shadow:var(--glass-shadow);
+  -webkit-backdrop-filter:blur(var(--glass-blur)) saturate(var(--glass-sat));
+  backdrop-filter:blur(var(--glass-blur)) saturate(var(--glass-sat))}
 #menu-btn svg{display:block}
 #plans-sec.collapsed #plan-nav{display:none}
 #plans-sec #plans-arrow{transform:rotate(90deg);display:inline-block}
@@ -571,9 +598,9 @@ body.sb-closed #menu-btn{display:flex;align-items:center;justify-content:center;
 .bp-topnav{margin-bottom:6px}
 .bp-footer{margin:26px 0 6px;display:flex;flex-direction:column;align-items:center;gap:10px}
 .bp-footer #bp-open-tab{display:inline-flex;align-items:center;justify-content:center;
-  background:var(--panel);color:var(--text);border:1px solid var(--border);border-radius:999px;
+  background:var(--glass-chip);color:var(--text);border:1px solid var(--glass-border);border-radius:999px;
   padding:8px 16px;font-size:13px;font-weight:600;text-decoration:none;
-  box-shadow:0 2px 10px var(--shadow)}
+  box-shadow:0 2px 10px var(--shadow-soft)}
 .bp-footer #bp-open-tab:hover{border-color:var(--accent);color:var(--accent)}
 .bp-build{margin:0;font-size:11px;color:var(--faint);text-align:center}
 .pstrip{display:flex;gap:10px;overflow-x:auto;padding:2px 2px 6px}
@@ -597,13 +624,22 @@ body.standalone .sa-bar{display:flex}
   /* Prevent iOS auto-zoom on input focus */
   input, textarea, select{font-size:16px !important}
   #menu-btn{display:flex;align-items:center;justify-content:center;position:fixed;top:12px;left:12px;z-index:90;
-    background:var(--panel);border:1px solid var(--border);border-radius:12px;color:var(--text);
-    width:48px;height:48px;cursor:pointer;box-shadow:0 2px 12px var(--shadow)}
-  /* Sidebar drawer with scrim */
-  #sidebar{position:fixed;left:0;top:0;bottom:0;z-index:95;height:100vh;height:100dvh;
-    transform:translateX(-105%);transition:transform .28s cubic-bezier(.32,.72,.35,1);width:min(85vw,340px);flex:none;
-    overflow-y:auto;overflow-x:hidden}
-  #sidebar.open{transform:none;box-shadow:12px 0 40px rgba(0,0,0,.35)}
+    background:var(--glass-bg);border:1px solid var(--glass-border);border-radius:16px;color:var(--text);
+    width:48px;height:48px;cursor:pointer;box-shadow:var(--glass-shadow);
+    -webkit-backdrop-filter:blur(var(--glass-blur)) saturate(var(--glass-sat));
+    backdrop-filter:blur(var(--glass-blur)) saturate(var(--glass-sat))}
+  .sb-brand-sticky{border-radius:0 var(--glass-radius) 0 0}
+  /* Sidebar drawer with scrim — glass slide-out, rounded inner edge */
+  #sidebar{position:fixed;left:0;top:var(--glass-inset);bottom:var(--glass-inset);z-index:95;
+    height:auto;max-height:none;
+    transform:translateX(-105%);transition:transform .28s cubic-bezier(.32,.72,.35,1),box-shadow .28s;
+    width:min(85vw,340px);flex:none;overflow-y:auto;overflow-x:hidden;
+    background:var(--glass-bg);border:1px solid var(--glass-border);border-left:none;
+    border-radius:0 var(--glass-radius) var(--glass-radius) 0;
+    -webkit-backdrop-filter:blur(var(--glass-blur)) saturate(var(--glass-sat));
+    backdrop-filter:blur(var(--glass-blur)) saturate(var(--glass-sat));
+    box-shadow:none}
+  #sidebar.open{transform:none;box-shadow:var(--glass-shadow)}
   /* Sidebar resize: sibling of #sidebar; visibility gated by #sidebar.open ~ #sb-resize above */
   #sb-resize{touch-action:none}
   #main{overflow:visible;height:auto;min-height:0}
@@ -621,9 +657,11 @@ body.standalone .sa-bar{display:flex}
   #treezoom .node{padding:15px 14px;min-height:60px}
   /* Bottom sheet panel — taller, grabbable */
   #view-buddy.sheet{position:fixed;left:0;right:0;bottom:0;top:6%;z-index:96;
-    background:var(--bg);border-top:1px solid var(--border);border-radius:20px 20px 0 0;
-    overflow-y:auto;overflow-x:hidden;padding:8px 18px 60px;box-shadow:0 -12px 40px rgba(0,0,0,.35);
-    -webkit-overflow-scrolling:touch}
+    background:var(--glass-bg);border-top:1px solid var(--glass-border);border-radius:20px 20px 0 0;
+    overflow-y:auto;overflow-x:hidden;padding:8px 18px 60px;box-shadow:var(--glass-shadow);
+    -webkit-overflow-scrolling:touch;
+    -webkit-backdrop-filter:blur(var(--glass-blur)) saturate(var(--glass-sat));
+    backdrop-filter:blur(var(--glass-blur)) saturate(var(--glass-sat))}
   #view-buddy.sheet::before{content:'';display:block;width:48px;height:5px;border-radius:3px;
     background:var(--border);margin:4px auto 14px;flex:none}
   /* Plans: single column cards */
@@ -665,26 +703,30 @@ body.standalone .sa-bar{display:flex}
   #view-buddy.sheet .bp-takeover-back{display:flex}
   #view-buddy.sheet .bp-sticky-head{top:53px}
 }
-/* ---- Medium: 640-1100px (iPad) ---- */
+/* ---- Medium: 640-1100px (iPad) — floating glass sidebars (same shell as ≥640) ---- */
 @media (min-width:640px) and (max-width:1100px){
-  /* Keep a real left sidebar — do not stack above main (iPad portrait is ~744–834px).
-     Scroll isolation comes from the ≥640px viewport-locked shell above. */
-  .app{display:flex;flex-direction:row;align-items:stretch}
-  #sidebar{width:250px;flex:0 0 250px;position:relative;top:auto;height:auto;align-self:stretch;
-    max-height:none;border-right:1px solid var(--border2);border-bottom:0;overflow-y:auto;overflow-x:hidden;
-    z-index:40;background:var(--bg);overscroll-behavior:contain}
-  #main{flex:1;min-width:0;min-height:0;padding:28px 22px 64px;position:relative;z-index:1}
+  .app{display:block}
+  #sidebar{width:min(var(--sbw, 280px), calc(100vw - 48px))}
+  #main{padding:28px 22px 64px}
   #main.homepage-mode{padding:0}
   .node{width:172px}
-  #view-buddy.panel{position:fixed;top:0;right:0;bottom:0;width:min(380px,calc(100vw - 250px));z-index:30;
-    background:var(--bg);border-left:1px solid var(--border);overflow-y:auto;overflow-x:hidden;
-    padding:20px 18px 48px;box-shadow:-8px 0 32px var(--shadow);overscroll-behavior:contain}
+  #view-buddy.panel{position:fixed;top:var(--glass-inset);right:var(--glass-inset);bottom:var(--glass-inset);
+    width:min(380px, calc(100vw - 48px));z-index:88;
+    background:var(--glass-bg);border:1px solid var(--glass-border);border-radius:var(--glass-radius);
+    overflow-y:auto;overflow-x:hidden;padding:20px 18px 48px;
+    box-shadow:var(--glass-shadow);overscroll-behavior:contain;
+    -webkit-backdrop-filter:blur(var(--glass-blur)) saturate(var(--glass-sat));
+    backdrop-filter:blur(var(--glass-blur)) saturate(var(--glass-sat))}
 }
-/* ---- Large: >1100px (desktop) ---- */
+/* ---- Large: >1100px (desktop) — floating glass detail panel ---- */
 @media (min-width:1101px){
-  #view-buddy.panel{position:fixed;top:0;right:0;bottom:0;width:400px;z-index:60;
-    background:var(--bg);border-left:1px solid var(--border);overflow-y:auto;overflow-x:hidden;
-    padding:24px 20px 48px;box-shadow:-8px 0 32px var(--shadow);overscroll-behavior:contain}
+  #view-buddy.panel{position:fixed;top:var(--glass-inset);right:var(--glass-inset);bottom:var(--glass-inset);
+    width:min(400px, calc(100vw - 48px));z-index:88;
+    background:var(--glass-bg);border:1px solid var(--glass-border);border-radius:var(--glass-radius);
+    overflow-y:auto;overflow-x:hidden;padding:24px 20px 48px;
+    box-shadow:var(--glass-shadow);overscroll-behavior:contain;
+    -webkit-backdrop-filter:blur(var(--glass-blur)) saturate(var(--glass-sat));
+    backdrop-filter:blur(var(--glass-blur)) saturate(var(--glass-sat))}
 }
 #view-buddy.panel.active,#view-buddy.sheet.active{display:block}
 #main .view{display:none}
@@ -772,8 +814,10 @@ body.standalone .sa-bar{display:flex}
 .bp-crumb b{color:var(--text);font-weight:600}
 .bp-top{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
 /* Compact sticky identity bar — one row; nav / crumb / tagline scroll away */
-.bp-sticky-head{position:sticky;top:0;z-index:6;background:var(--bg);
-  padding:6px 0;margin:0 0 2px;border-bottom:1px solid var(--border)}
+.bp-sticky-head{position:sticky;top:0;z-index:6;background:var(--glass-head);
+  -webkit-backdrop-filter:blur(16px) saturate(1.2);backdrop-filter:blur(16px) saturate(1.2);
+  padding:8px 4px;margin:0 -4px 2px;border-bottom:1px solid var(--glass-border);
+  border-radius:calc(var(--glass-radius) - 8px) calc(var(--glass-radius) - 8px) 0 0}
 .bp-sticky-head .bp-top{gap:8px;flex-wrap:nowrap;min-width:0;align-items:center}
 .bp-sticky-head .bp-icon{font-size:20px;line-height:1;flex:0 0 auto}
 .bp-sticky-head .bp-name{font-size:16px;font-weight:700;margin:0;padding:0;min-width:0;
@@ -1825,7 +1869,12 @@ function applyPanelWidth(){
 }
 function applySbWidth(){
   const sb = document.getElementById('sidebar');
-  if (sb) { const w = sbClampW(S.sbWidth || SB_DEFAULT_W); sb.style.width = w + 'px'; sb.style.flex = '0 0 ' + w + 'px'; document.documentElement.style.setProperty('--sbw', w + 'px'); }
+  if (sb) {
+    const w = sbClampW(S.sbWidth || SB_DEFAULT_W);
+    sb.style.width = w + 'px';
+    sb.style.flex = 'none';
+    document.documentElement.style.setProperty('--sbw', w + 'px');
+  }
 }
 /* Sidebar width clamp: desktop max 560, but never wider than 92% of the viewport (drawer on phones) */
 function sbClampW(w){ return Math.min(Math.min(560, Math.floor(window.innerWidth * 0.92)), Math.max(200, w)); }
@@ -2050,7 +2099,7 @@ function renderBuddy(id){
     + (getHomepage(b)
         ? '<a class="linkbtn" id="bp-open-tab" href="'+escHtml(b.homepageSource || getHomepage(b))+'" target="_blank" rel="noopener" title="Open this buddy’s homepage in a new tab">Open in a new tab</a>'
         : '')
-    + '<div class="bp-build">Build 20261011.1651</div></div>'
+    + '<div class="bp-build">Build 20261011.1728</div></div>'
     + '</div>';
   const nm = document.getElementById('bp-name');
   nm.addEventListener('keydown', e => { if (e.key === 'Enter'){ e.preventDefault(); nm.blur(); } });
@@ -2755,7 +2804,7 @@ function renderPlan(id){
     + '<p class="fineprint">Saved on this device. (For your eyes only)</p></div>'
     + '<div class="bp-sec"><h3>Shared notes<span class="info-tip" data-tip="Visible to everyone with access to this project.">\u24d8</span></h3><textarea class="notes" id="bp-shared" placeholder="Shared notes\u2026 (visible to everyone with access)">'+escHtml((S.planShared||{})[id]||'')+'</textarea>'
     + '<p class="fineprint">Shared — visible to everyone with access.</p></div>'
-    + '<div class="bp-build">Build 20261011.1651</div>'
+    + '<div class="bp-build">Build 20261011.1728</div>'
     + '</div>';
   const nt = document.getElementById('bp-notes');
   let t = null;
@@ -2927,7 +2976,7 @@ document.addEventListener('keydown', e => {
   h.addEventListener('pointermove', e => {
     if (sx === null) return;
     const w = sbClampW(sw + e.clientX - sx);
-    sb.style.width = w + 'px'; sb.style.flex = '0 0 ' + w + 'px';
+    sb.style.width = w + 'px'; sb.style.flex = 'none';
     document.documentElement.style.setProperty('--sbw', w + 'px');
   });
   const done = () => {
@@ -3686,7 +3735,7 @@ function initPanelSwipeGestures(){
 // has a newer build than the one currently loaded (helps Safari web apps
 // and other containers without a hard-refresh shortcut).
 function initVersionCheck(){
-  const myBuild = '20261011.1651';
+  const myBuild = '20261011.1728';
   async function check(){
     try {
       const r = await fetch('version.txt?_=' + Date.now(), {cache: 'no-store'});
