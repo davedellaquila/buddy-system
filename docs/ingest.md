@@ -42,3 +42,7 @@ So when you click on me in the sidebar and Project Homepage is active, the dashb
 
 Test
 
+## 10/11/2026, 2:48:52 PM
+
+Brain-dump box self-test from Astro's homepage integration (Sun Oct 11). Write path: GitHub contents API, same as the dashboard ingest panel. — Astro
+
