@@ -3,6 +3,19 @@
 All notable changes to the Buddies dashboard and buddy system. Newest first.
 `FEATURES.md` describes the current state; this file describes how it got there.
 
+## 2026-10-11 (CRITICAL standing order: dark mode on every buddy website)
+
+### Added
+- **`AGENTS.md`** — agent init rules; CRITICAL requirement that every buddy
+  website ships dark mode (`prefers-color-scheme` or equivalent).
+- **`docs/standing-orders.md`** — durable memo (Dave is outdoors; update
+  light-only homepages now).
+- **Dashboard standing-order banner** — shown on every buddy detail panel;
+  same memo on Project Buddy, Scaffold Buddy, and Astro homepages; ingest
+  log entry on Project Buddy.
+- **Manifest / INIT** — INIT summary and Per-buddy home page steps now
+  require the dark-mode standing order; Scaffold lists it as a skeleton rule.
+
 ## 2026-10-10 (iPhone fixes: sidebar resize, zoom scrubber, touch drop targets)
 
 ### Fixed

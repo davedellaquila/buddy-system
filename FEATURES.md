@@ -36,6 +36,15 @@ Build: `build.py` generates `index.html` from `buddies.json` + `plans.json`.
 - **Light / Dark / System theme** — segmented picker under the sidebar
   brand; per-device localStorage (default System, follows the OS live).
 
+## Agent standing orders
+
+- **`AGENTS.md`** — critical rules agents read on start (INIT / first
+  homepage pass). Currently: every buddy website must ship dark mode.
+- **`docs/standing-orders.md`** — durable memo log (newest first).
+- **Dashboard broadcast** — each buddy detail panel shows active standing
+  orders (amber banner) so existing agents see them when the panel opens;
+  also surfaced on Project Buddy / Scaffold / Astro homepages.
+
 ## Sidebar
 
 - **Main views** — Tree, Projects, Business Plans, Manifest, Project,

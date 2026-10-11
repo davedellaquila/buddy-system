@@ -719,6 +719,13 @@ body.standalone .sa-bar{display:flex}
 .attn.seen .adot::after{content:'\2713'}
 .attn.seen .seenbtn{visibility:hidden}
 .attn-all{margin-top:6px}
+/* Standing orders — broadcast to every buddy detail (agents + Dave) */
+.standing-order{margin:10px 0 4px;padding:10px 12px;border-radius:10px;border:1px solid var(--amber-bd);
+  background:var(--amber-bg);font-size:13.5px;line-height:1.45;color:var(--amber-tx)}
+.standing-order.critical{border-color:var(--amber-bd)}
+.standing-order b{color:var(--amber-hi)}
+.standing-order a{color:var(--accent-hi)}
+.standing-order .so-date{display:block;margin-top:4px;font-size:11px;color:var(--muted)}
 .notes{width:100%;min-height:120px;background:var(--bg);border:1px solid var(--border);border-radius:12px;
   color:var(--text);font:inherit;font-size:14.5px;line-height:1.6;padding:13px 15px;resize:vertical}
 .notes:focus{outline:none;border-color:var(--accent)}
@@ -1006,13 +1013,13 @@ body.node-dragging,body.node-dragging *{cursor:grabbing !important}
         <div class="proj-row d0"><span class="pname">1 · Side thread</span><span class="pdesc">The project's conversational home — all discussion, decisions, and reviews live here.</span><span class="status st-auto">Automatic</span></div>
         <div class="proj-row d0"><span class="pname">2 · Product brief</span><span class="pdesc">Canonical description in Zuki Docs (Google Doc): the idea, the problem, revenue potential, room for growth, v1 scope, open questions.</span><span class="status st-auto">Automatic</span></div>
         <div class="proj-row d0"><span class="pname">3 · GitHub repo</span><span class="pdesc">Private repo holding the code — and eventually the knowledge base (KNOWLEDGE.md, DECISIONS.md).</span><span class="status st-auto">Automatic</span></div>
-        <div class="proj-row d0"><span class="pname">4 · INIT summary</span><span class="pdesc">First message in the thread: the brief's executive summary (the mission statement), plus links to brief, repo, related docs, parent and children.</span><span class="status st-auto">Automatic</span></div>
+        <div class="proj-row d0"><span class="pname">4 · INIT summary</span><span class="pdesc">First message in the thread: the brief's executive summary (the mission statement), plus links to brief, repo, related docs, parent and children. Must include CRITICAL standing orders from AGENTS.md — especially dark mode for the buddy website.</span><span class="status st-auto">Automatic</span></div>
         <div class="proj-row d0"><span class="pname">5 · Review ask</span><span class="pdesc">Quick-reply widget asking Dave to review the brief — looks good, edits, or defer.</span><span class="status st-auto">Automatic</span></div>
         <div class="proj-row d0"><span class="pname">6 · Quick-links entry</span><span class="pdesc">One-tap link to the brief, appended to quick-links.md.</span><span class="status st-auto">Automatic</span></div>
         <div class="proj-row d0"><span class="pname">7 · Memory entry</span><span class="pdesc">MEMORY.md bullet: what the project is, key links, current status.</span><span class="status st-auto">Automatic</span></div>
         <div class="proj-row d0"><span class="pname">8 · Awaiting-reply entry</span><span class="pdesc">The brief review tracked in the registry until Dave answers.</span><span class="status st-auto">Automatic</span></div>
         <div class="proj-row d0"><span class="pname">9 · Dashboard entry</span><span class="pdesc">The buddy appears here in the dashboard, in hierarchy order.</span><span class="status st-planned">Planned</span></div>
-        <div class="proj-row d0"><span class="pname">10 · Per-buddy home page</span><span class="pdesc">A home page view in the sidebar for the new buddy.</span><span class="status st-planned">Planned</span></div>
+        <div class="proj-row d0"><span class="pname">10 · Per-buddy home page</span><span class="pdesc">A home page for the new buddy. CRITICAL: must ship a dark mode (prefers-color-scheme or equivalent) — not light-only. See AGENTS.md / docs/standing-orders.md.</span><span class="status st-planned">Planned</span></div>
       </div>
     </section>
   </div>
@@ -1029,6 +1036,20 @@ const ROOT_ORDER = ["project-buddy", "personal-buddy", "family-buddy", "property
 const byId = Object.fromEntries(BUDDIES.map(b => [b.id, b]));
 (function applyIconOverrides(){ try { const o = JSON.parse(localStorage.getItem('buddyState') || '{}').iconOverrides || {}; Object.entries(o).forEach(([id, ic]) => { if (byId[id]) byId[id].icon = ic; }); } catch(e){} })();
 const PLANS = [{"buddies": [], "desc": "Affordable book-way-in-advance transportation for Amador County, where options are scarce today. Riders schedule trips weeks or months out; tied into the Fiddletown event calendar as the demand signal. Working title \u2014 needs a real name.", "docs": [{"label": "Product Brief (business-plan beginnings)", "url": "https://docs.google.com/document/d/1g83ILvK0C1uHR6MaSVSXL0Gc5cRqIqKNSHa1uMnKcSE/edit"}], "icon": "\ud83d\ude8c", "id": "amador-transport", "name": "Amador County Transport", "status": "Brief review", "statusClass": "st-brief"}, {"buddies": [], "desc": "Events-listing website for the Fiddletown/Amador area. The business model is selling advertising to local businesses such as wineries. The admin is built and live.", "docs": [{"label": "Admin (live)", "url": "https://fiddletown-events.web.app"}, {"label": "GitHub repo (private)", "url": "https://github.com/davedellaquila/fiddletown-data-admin"}], "icon": "\ud83c\udfaa", "id": "fiddletown-events", "name": "Fiddletown Events Site", "status": "Live", "statusClass": "st-live"}, {"buddies": [], "desc": "Non-medical home care business in Amador County \u2014 one of the two options Dave narrowed his exploration to. Higher startup capital and regulatory burden than defensible space, but more recurring year-round revenue.", "docs": [], "icon": "\ud83c\udfe5", "id": "home-care", "name": "Non-Medical Home Care (Amador)", "status": "Exploring", "statusClass": "st-idea"}, {"buddies": [], "desc": "Defensible-space / vegetation-management business in Amador County \u2014 ranked #1 in Dave's narrowing. Leaner startup, faster path to revenue; his co-rented San Andreas warehouse could stage equipment.", "docs": [], "icon": "\ud83c\udf32", "id": "defensible-space", "name": "Defensible Space (Amador)", "status": "Exploring", "statusClass": "st-idea"}, {"buddies": ["money-buddy"], "desc": "Monetization plan for Money Buddy: freemium SaaS positioned as a privacy-first YNAB alternative for freelancers \u2014 free local functionality, Pro at $9/mo or $79/yr (cloud sync, household sharing, tax-ready reports). Lifetime and bookkeeper tiers considered; referral program added Oct 2026.", "docs": [{"label": "Monetization & Marketing Plan", "url": "https://docs.google.com/document/d/1InvLGGDk0Hu8_IFQS3kbSISGDvEuJ-gI2EHBmkHBfl8/edit"}], "icon": "\ud83d\udcb3", "id": "expense-monetization", "name": "Money Buddy Monetization", "status": "Active", "statusClass": "st-active"}, {"buddies": ["buddy-suite"], "desc": "The monetization plan and marketing strategy across the whole buddy family \u2014 defined scope of the Buddy Suite meta-project. Covered inside the Buddy Suite brief; no standalone monetization doc exists yet.", "docs": [{"label": "Buddy Suite \u2014 Product Brief", "url": "https://docs.google.com/document/d/1LbFR4bTkRMsul84cM762-tvbpmAencxC0-Vu7fIZ-60/edit"}], "icon": "\ud83e\udde9", "id": "buddy-suite-monetization", "name": "Buddy Suite Monetization", "status": "Planned", "statusClass": "st-new"}, {"buddies": ["wisdom-buddy"], "desc": "Draft subscription business plan for the Wisdom Library revival. The draft lives inside the private davedellaquila/wisdom repo; the revival stalled for lack of feedback from the kids.", "docs": [{"label": "Wisdom repo (draft lives here)", "url": "https://github.com/davedellaquila/wisdom"}], "icon": "\ud83e\udd89", "id": "wisdom-families", "name": "Wisdom for Families", "status": "Draft", "statusClass": "st-spec"}];
+
+/* Durable broadcast memos — shown on every buddy detail. Source: docs/standing-orders.md */
+const STANDING_ORDERS = [
+  {id:'dark-mode-2026-10-11', date:'2026-10-11', critical:true,
+   text:'CRITICAL — Dark mode for every buddy website. Prefer prefers-color-scheme (or equivalent). Dave is outdoors and needs readable UIs now: update light-only homepages immediately.',
+   href:'docs/standing-orders.md'}
+];
+function standingOrdersHtml(){
+  if (!STANDING_ORDERS || !STANDING_ORDERS.length) return '';
+  return STANDING_ORDERS.map(o => {
+    const link = o.href ? ' <a href="'+o.href+'" target="_blank" rel="noopener">Standing orders</a> · <a href="AGENTS.md" target="_blank" rel="noopener">AGENTS.md</a>' : '';
+    return '<div class="standing-order'+(o.critical?' critical':'')+'" data-order="'+o.id+'"><b>'+(o.critical?'Critical memo':'Memo')+'</b> — '+escHtml(o.text)+link+'<span class="so-date">'+escHtml(o.date||'')+'</span></div>';
+  }).join('');
+}
 const planById = Object.fromEntries(PLANS.map(p => [p.id, p]));
 const kidsOf = {};
 function effParent(b){ if (S.parents && b.id in S.parents) return S.parents[b.id]; return b.parent; }
@@ -1892,6 +1913,7 @@ function renderBuddy(id){
     + '<h2 class="bp-name" id="bp-name" contenteditable="true" spellcheck="false" data-buddy="'+id+'">'+escHtml(dispName(b))+'</h2>'
     + '<span class="status '+b.statusClass+'">'+escHtml(b.status)+'</span>'
     + '<button class="bp-close-x" id="bp-close-x" title="Close">✕</button></div></div>'
+    + standingOrdersHtml()
     + '<div class="bp-sec" data-field="ingest"><h3>Ingest<span class="info-tip" data-tip="Brain-dump anything about this buddy — raw and unfiltered. Each dump lands in the buddy’s repo (docs/ingest.md) as a timestamped entry.">ⓘ</span></h3>'
     + '<textarea class="notes" id="bp-ingest" placeholder="Dump what’s in your head about '+escHtml(dispName(b))+'…"></textarea>'
     + '<div style="margin-top:8px"><span class="fineprint" id="ingest-status"></span></div>'

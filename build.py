@@ -576,6 +576,13 @@ body.standalone .sa-bar{display:flex}
 .attn.seen .adot::after{content:'\\2713'}
 .attn.seen .seenbtn{visibility:hidden}
 .attn-all{margin-top:6px}
+/* Standing orders — broadcast to every buddy detail (agents + Dave) */
+.standing-order{margin:10px 0 4px;padding:10px 12px;border-radius:10px;border:1px solid var(--amber-bd);
+  background:var(--amber-bg);font-size:13.5px;line-height:1.45;color:var(--amber-tx)}
+.standing-order.critical{border-color:var(--amber-bd)}
+.standing-order b{color:var(--amber-hi)}
+.standing-order a{color:var(--accent-hi)}
+.standing-order .so-date{display:block;margin-top:4px;font-size:11px;color:var(--muted)}
 .notes{width:100%;min-height:120px;background:var(--bg);border:1px solid var(--border);border-radius:12px;
   color:var(--text);font:inherit;font-size:14.5px;line-height:1.6;padding:13px 15px;resize:vertical}
 .notes:focus{outline:none;border-color:var(--accent)}
@@ -697,6 +704,19 @@ const byId = Object.fromEntries(BUDDIES.map(b => [b.id, b]));
 (function applyIconOverrides(){ try { const o = JSON.parse(localStorage.getItem('buddyState') || '{}').iconOverrides || {}; Object.entries(o).forEach(([id, ic]) => { if (byId[id]) byId[id].icon = ic; }); } catch(e){} })();
 const PLANS = PLANS_JSON;
 const planById = Object.fromEntries(PLANS.map(p => [p.id, p]));
+/* Durable broadcast memos — shown on every buddy detail. Source: docs/standing-orders.md */
+const STANDING_ORDERS = [
+  {id:'dark-mode-2026-10-11', date:'2026-10-11', critical:true,
+   text:'CRITICAL — Dark mode for every buddy website. Prefer prefers-color-scheme (or equivalent). Dave is outdoors and needs readable UIs now: update light-only homepages immediately.',
+   href:'docs/standing-orders.md'}
+];
+function standingOrdersHtml(){
+  if (!STANDING_ORDERS || !STANDING_ORDERS.length) return '';
+  return STANDING_ORDERS.map(o => {
+    const link = o.href ? ' <a href="'+o.href+'" target="_blank" rel="noopener">Standing orders</a> · <a href="AGENTS.md" target="_blank" rel="noopener">AGENTS.md</a>' : '';
+    return '<div class="standing-order'+(o.critical?' critical':'')+'" data-order="'+o.id+'"><b>'+(o.critical?'Critical memo':'Memo')+'</b> — '+escHtml(o.text)+link+'<span class="so-date">'+escHtml(o.date||'')+'</span></div>';
+  }).join('');
+}
 const kidsOf = {};
 function effParent(b){ if (S.parents && b.id in S.parents) return S.parents[b.id]; return b.parent; }
 function buildKids(){
@@ -1559,6 +1579,7 @@ function renderBuddy(id){
     + '<h2 class="bp-name" id="bp-name" contenteditable="true" spellcheck="false" data-buddy="'+id+'">'+escHtml(dispName(b))+'</h2>'
     + '<span class="status '+b.statusClass+'">'+escHtml(b.status)+'</span>'
     + '<button class="bp-close-x" id="bp-close-x" title="Close">\u2715</button></div></div>'
+    + standingOrdersHtml()
     + '<div class="bp-sec" data-field="ingest"><h3>Ingest<span class="info-tip" data-tip="Brain-dump anything about this buddy \u2014 raw and unfiltered. Each dump lands in the buddy\u2019s repo (docs/ingest.md) as a timestamped entry.">\u24d8</span></h3>'
     + '<textarea class="notes" id="bp-ingest" placeholder="Dump what\u2019s in your head about '+escHtml(dispName(b))+'\u2026"></textarea>'
     + '<div style="margin-top:8px"><span class="fineprint" id="ingest-status"></span></div>'

@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 """Generate basic homepages for buddies that don't have one yet.
-Template includes dark mode support via prefers-color-scheme.
+
+CRITICAL: every buddy website must support dark mode. This template does via
+prefers-color-scheme — do not ship light-only pages. See AGENTS.md and
+docs/standing-orders.md.
 """
 import json
 import os
