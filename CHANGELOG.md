@@ -3,6 +3,12 @@
 All notable changes to the Buddies dashboard and buddy system. Newest first.
 `FEATURES.md` describes the current state; this file describes how it got there.
 
+## 2026-10-11 (Design Buddy)
+
+### Added
+- **Design Buddy** — new buddy: Dave's resident design authority, "the Jony Ive on staff" (🎨 icon, child of Project Buddy, `Brief review` status). Reviews every buddy homepage/app for taste, owns the shared design language (dark + light mode, living pages, craftsmanship as differentiator), gives his product work a second eye when asked. Advisory only — owning threads implement; Apple-internal STIX work stays advisory-only. Full drill: [brief](https://docs.google.com/document/d/1_sUDucLCJfg2iB858pgHQWdOtt-vWPwOMqoXjhy3QYU/edit), private repo [davedellaquila/design-buddy](https://github.com/davedellaquila/design-buddy). Open: review cadence?; how prescriptive vs advisory?; proactive redesigns or on-request only?
+- Dashboard now tracks 60 buddies.
+
 ## 2026-10-11 (Brain-dump box on every buddy homepage)
 
 ### Added
