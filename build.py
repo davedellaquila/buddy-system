@@ -405,7 +405,13 @@ body.sb-closed #menu-btn{display:flex;align-items:center;justify-content:center;
 .linkbtn{background:none;border:none;color:var(--accent);cursor:pointer;font-size:13px;padding:2px 4px}
 .linkbtn:hover{text-decoration:underline}
 .bp-topnav{margin-bottom:6px}
-.bp-build{margin:26px 0 6px;font-size:11px;color:var(--faint);text-align:center}
+.bp-footer{margin:26px 0 6px;display:flex;flex-direction:column;align-items:center;gap:10px}
+.bp-footer #bp-open-tab{display:inline-flex;align-items:center;justify-content:center;
+  background:var(--panel);color:var(--text);border:1px solid var(--border);border-radius:999px;
+  padding:8px 16px;font-size:13px;font-weight:600;text-decoration:none;
+  box-shadow:0 2px 10px var(--shadow)}
+.bp-footer #bp-open-tab:hover{border-color:var(--accent);color:var(--accent)}
+.bp-build{margin:0;font-size:11px;color:var(--faint);text-align:center}
 .pstrip{display:flex;gap:10px;overflow-x:auto;padding:2px 2px 6px}
 .pstrip a{flex:0 0 auto}
 /* ---- standalone buddy mode ---- */
@@ -571,8 +577,6 @@ body.standalone .sa-bar{display:flex}
 #main.homepage-mode{padding:0}
 #main.homepage-mode #view-project.active{min-height:100vh}
 #homepage-wrap{flex:1;display:flex;flex-direction:column;min-height:0;margin:0;position:relative}
-#homepage-open{position:absolute;top:14px;right:16px;z-index:5;background:var(--panel);color:var(--text);border:1px solid var(--border);border-radius:999px;padding:8px 16px;font-size:13px;font-weight:600;text-decoration:none;box-shadow:0 4px 16px rgba(0,0,0,.18);white-space:nowrap}
-#homepage-open:hover{border-color:var(--accent);color:var(--accent)}
 #homepage-frame{flex:1;width:100%;min-height:0;border:0;border-radius:0;background:#fff;display:block}
 @media (max-width:760px){#main #view-project.active{min-height:calc(100vh - 88px)}
 #main.homepage-mode{padding:0}
@@ -1133,9 +1137,9 @@ function applySectionCollapse(bid){
 function applyFieldOrder(){
   const home = document.getElementById('buddy-home');
   if (!home) return;
-  // Keep sections inside .bp-wrap (before .bp-build) so .bp-sticky-head can stick
+  // Keep sections inside .bp-wrap (before footer/build) so .bp-sticky-head can stick
   const wrap = home.querySelector('.bp-wrap') || home;
-  const build = wrap.querySelector('.bp-build');
+  const build = wrap.querySelector('.bp-footer') || wrap.querySelector('.bp-build');
   const order = getFieldOrder();
   const sections = {};
   home.querySelectorAll('.bp-sec[data-field]').forEach(el => { sections[el.dataset.field] = el; });
@@ -1569,14 +1573,7 @@ function renderProjectView(){
   const wrap = document.createElement('div');
   wrap.id = 'homepage-wrap';
   if (hp) {
-    // Custom homepage URL: load in iframe
-    const open = document.createElement('a');
-    open.id = 'homepage-open';
-    open.href = b.homepageSource || hp;
-    open.target = '_blank';
-    open.rel = 'noopener';
-    open.textContent = 'Open in a new tab';
-    wrap.appendChild(open);
+    // Custom homepage URL: load in iframe ("Open in a new tab" lives in the right detail panel footer)
     const frame = document.createElement('iframe');
     frame.id = 'homepage-frame';
     frame.src = hp;
@@ -1594,11 +1591,6 @@ function renderProjectView(){
     wrap.appendChild(frame);
   } else {
     // No custom URL: auto-generate homepage
-    const open = document.createElement('span');
-    open.id = 'homepage-open';
-    open.style.cssText = 'cursor:default;opacity:0.6';
-    open.textContent = 'Auto-generated homepage';
-    wrap.appendChild(open);
     const content = document.createElement('div');
     content.id = 'homepage-frame';
     content.style.cssText = 'width:100%;height:100%;overflow:auto;background:var(--bg)';
@@ -1689,7 +1681,11 @@ function renderBuddy(id){
     + '<div class="bp-sec" data-field="shared"><h3>Shared notes<span class="info-tip" data-tip="Anybody with repo access can see this note. Saved to the buddy\u2019s repo (docs/notes.md).">\u24d8</span></h3>'
     + '<textarea class="notes" id="bp-shared-notes" placeholder="Anybody with repo access can see this note."></textarea>'
     + '<p class="fineprint" id="shared-status"></p></div>'
-    + '<div class="bp-build">Build __BUILD__</div>'
+    + '<div class="bp-footer">'
+    + (getHomepage(b)
+        ? '<a class="linkbtn" id="bp-open-tab" href="'+escHtml(b.homepageSource || getHomepage(b))+'" target="_blank" rel="noopener" title="Open this buddy\u2019s homepage in a new tab">Open in a new tab</a>'
+        : '')
+    + '<div class="bp-build">Build __BUILD__</div></div>'
     + '</div>';
   const nm = document.getElementById('bp-name');
   nm.addEventListener('keydown', e => { if (e.key === 'Enter'){ e.preventDefault(); nm.blur(); } });
@@ -2678,51 +2674,55 @@ async function dumpIngest(id, keepText){
     prependDumpEntry(id, {stamp: stamp, body: text});
   } catch (err) { if (st) st.textContent = 'Save failed: ' + (err.message || err); }
 }
+function dumpKey(e){ return (e.stamp || '') + '\0' + (e.body || ''); }
+function paintIngestFeed(id, entries){
+  const feed = document.getElementById('ingest-feed'); if (!feed) return;
+  feed._entries = entries.slice();
+  if (!entries.length) { feed.innerHTML = '<p class="fineprint">No dumps yet.</p>'; return; }
+  if (!S.dumpsCollapsed || typeof S.dumpsCollapsed !== 'object') S.dumpsCollapsed = {};
+  // Default expanded so new dumps are visible without an extra click
+  const dCollapsed = S.dumpsCollapsed[id] === true;
+  feed.innerHTML = '<div class="dumps' + (dCollapsed ? ' collapsed' : '') + '">'
+    + '<div class="dumps-head" id="dumps-toggle"><span class="darrow">\u203a</span><h4>Dumps (' + entries.length + ')</h4></div>'
+    + '<div class="dumps-body"><div style="height:8px"></div>'
+    + entries.map(function(e, i){ return '<div class="attn"><div class="dump-actions"><button class="dump-act" data-dump-edit="' + i + '" title="Edit this dump">' + ICON_EDIT + '</button><button class="dump-act" data-dump-del="' + i + '" title="Delete this dump">' + ICON_TRASH + '</button></div><div class="attn-body"><div class="attn-text">' + linkify(escHtml(e.body.slice(0, 300))) + (e.body.length > 300 ? '\u2026' : '') + '</div><div class="attn-date">' + escHtml(e.stamp) + '</div></div></div>'; }).join('')
+    + '</div></div>';
+  var dt = document.getElementById('dumps-toggle');
+  if (dt) dt.addEventListener('click', function(){
+    var d = feed.querySelector('.dumps');
+    d.classList.toggle('collapsed');
+    if (!S.dumpsCollapsed || typeof S.dumpsCollapsed !== 'object') S.dumpsCollapsed = {};
+    S.dumpsCollapsed[id] = d.classList.contains('collapsed');
+    save();
+  });
+  wireDumpButtons(feed, id);
+}
 function prependDumpEntry(id, e){
   const feed = document.getElementById('ingest-feed'); if (!feed) return;
-  // If feed is empty ("No dumps yet"), build the full structure with the new entry
-  if (!feed.querySelector('.dumps')) {
-    if (!S.dumpsCollapsed || typeof S.dumpsCollapsed !== 'object') S.dumpsCollapsed = {};
-    S.dumpsCollapsed[id] = false;
-    feed.innerHTML = '<div class="dumps">'
-      + '<div class="dumps-head" id="dumps-toggle"><span class="darrow">\u203a</span><h4>Dumps (1)</h4></div>'
-      + '<div class="dumps-body"><div style="height:8px"></div>'
-      + '<div class="attn"><div class="dump-actions"><button class="dump-act" data-dump-edit="0" title="Edit this dump">' + ICON_EDIT + '</button><button class="dump-act" data-dump-del="0" title="Delete this dump">' + ICON_TRASH + '</button></div><div class="attn-body"><div class="attn-text">' + linkify(escHtml(e.body.slice(0, 300))) + (e.body.length > 300 ? '\u2026' : '') + '</div><div class="attn-date">' + escHtml(e.stamp) + '</div></div></div>'
-      + '</div></div>';
-    feed._entries = [e];
-    // Wire up the toggle
-    var dt = document.getElementById('dumps-toggle');
-    if (dt) dt.addEventListener('click', function(){
-      var d = feed.querySelector('.dumps');
-      d.classList.toggle('collapsed');
-      if (!S.dumpsCollapsed || typeof S.dumpsCollapsed !== 'object') S.dumpsCollapsed = {};
-      S.dumpsCollapsed[id] = d.classList.contains('collapsed');
-      save();
-    });
-    // Wire up delete/edit for the new entry
-    wireDumpButtons(feed, id);
-    save();
-    return;
+  if (!S.dumpsCollapsed || typeof S.dumpsCollapsed !== 'object') S.dumpsCollapsed = {};
+  S.dumpsCollapsed[id] = false;
+  // If Ingest was hidden in field settings, show it so the dump is visible
+  if (S.fieldHidden && S.fieldHidden.ingest) {
+    S.fieldHidden.ingest = false;
+    applyFieldOrder();
   }
-  const body = feed.querySelector('.dumps-body');
-  if (!body) return;
-  const div = document.createElement('div');
-  div.className = 'attn';
-  div.innerHTML = '<div class="dump-actions"><button class="dump-act" data-dump-edit="0" title="Edit this dump">' + ICON_EDIT + '</button><button class="dump-act" data-dump-del="0" title="Delete this dump">' + ICON_TRASH + '</button></div><div class="attn-body"><div class="attn-text">' + linkify(escHtml(e.body.slice(0, 300))) + (e.body.length > 300 ? '\u2026' : '') + '</div><div class="attn-date">' + escHtml(e.stamp) + '</div></div>';
-  body.insertBefore(div, body.firstChild);
-  // Update count and entries cache
-  const head = feed.querySelector('.dumps-head h4');
-  const entries = feed._entries || [];
-  entries.unshift(e);
-  feed._entries = entries;
-  if (head) head.textContent = 'Dumps (' + entries.length + ')';
-  // Expand if collapsed so the new dump is visible
-  const dumps = feed.querySelector('.dumps');
-  if (dumps && dumps.classList.contains('collapsed')) {
-    dumps.classList.remove('collapsed');
-    if (!S.dumpsCollapsed || typeof S.dumpsCollapsed !== 'object') S.dumpsCollapsed = {};
-    S.dumpsCollapsed[id] = false; save();
+  const entries = (feed._entries || []).slice();
+  // Avoid duplicate optimistic rows if a refresh already included this dump
+  if (!entries.some(function(x){ return dumpKey(x) === dumpKey(e); })) entries.unshift(e);
+  feed._gen = (feed._gen || 0) + 1; // invalidate in-flight GitHub fetches
+  paintIngestFeed(id, entries);
+  save();
+  // Keep ingest section open and scroll the new dump into view
+  const sec = document.querySelector('#buddy-home .bp-sec[data-field="ingest"]');
+  if (sec) {
+    sec.style.display = '';
+    sec.classList.remove('collapsed');
+    if (!S.secCollapsed || typeof S.secCollapsed !== 'object') S.secCollapsed = {};
+    if (!S.secCollapsed[id] || typeof S.secCollapsed[id] !== 'object') S.secCollapsed[id] = {};
+    S.secCollapsed[id].ingest = false;
   }
+  const first = feed.querySelector('.dumps-body .attn');
+  if (first && first.scrollIntoView) first.scrollIntoView({block: 'nearest', behavior: 'smooth'});
 }
 function parseIngest(md){
   return md.split(/^## /m).slice(1).map(p => {
@@ -2733,31 +2733,25 @@ function parseIngest(md){
 async function renderIngestFeed(id){
   const feed = document.getElementById('ingest-feed'); if (!feed) return;
   const b = byId[id];
+  const gen = (feed._gen = (feed._gen || 0) + 1);
+  const prior = (feed._entries || []).slice();
   let entries = [];
   if (ghToken() && b.repo) {
     const md = await ghGetFile(b.repo, 'docs/ingest.md');
+    if (feed._gen !== gen) return; // newer paint won the race
     if (md) entries = parseIngest(md);
   } else {
     try { entries = (JSON.parse(localStorage.getItem('ingest:' + id) || '[]')).map(e => ({stamp: new Date(e.t).toLocaleString(), body: e.text})).reverse(); } catch (e) {}
   }
-  if (!entries.length) { feed.innerHTML = '<p class="fineprint">No dumps yet.</p>'; return; }
-  if (!S.dumpsCollapsed || typeof S.dumpsCollapsed !== 'object') S.dumpsCollapsed = {};
-  const dCollapsed = S.dumpsCollapsed[id] !== false;
-  feed.innerHTML = '<div class="dumps' + (dCollapsed ? ' collapsed' : '') + '">'
-    + '<div class="dumps-head" id="dumps-toggle"><span class="darrow">\u203a</span><h4>Dumps (' + entries.length + ')</h4></div>'
-    + '<div class="dumps-body"><div style="height:8px"></div>'
-    + entries.map(function(e, i){ return '<div class="attn"><div class="dump-actions"><button class="dump-act" data-dump-edit="' + i + '" title="Edit this dump">' + ICON_EDIT + '</button><button class="dump-act" data-dump-del="' + i + '" title="Delete this dump">' + ICON_TRASH + '</button></div><div class="attn-body"><div class="attn-text">' + linkify(escHtml(e.body.slice(0, 300))) + (e.body.length > 300 ? '\u2026' : '') + '</div><div class="attn-date">' + escHtml(e.stamp) + '</div></div></div>'; }).join('')
-    + '</div></div>';
-  feed._entries = entries;
-  var dt = document.getElementById('dumps-toggle');
-  if (dt) dt.addEventListener('click', function(){
-    var d = feed.querySelector('.dumps');
-    d.classList.toggle('collapsed');
-    if (!S.dumpsCollapsed || typeof S.dumpsCollapsed !== 'object') S.dumpsCollapsed = {};
-    S.dumpsCollapsed[id] = d.classList.contains('collapsed');
-    save();
-  });
-  wireDumpButtons(feed, id);
+  if (feed._gen !== gen) return;
+  // Keep optimistic dumps that GitHub has not returned yet (API lag after push)
+  if (prior.length) {
+    const seen = {};
+    entries.forEach(function(e){ seen[dumpKey(e)] = true; });
+    const extras = prior.filter(function(e){ return !seen[dumpKey(e)]; });
+    if (extras.length) entries = extras.concat(entries);
+  }
+  paintIngestFeed(id, entries);
 }
 function wireDumpButtons(feed, id){
   feed.querySelectorAll('[data-dump-del]').forEach(function(btn){

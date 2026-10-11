@@ -3,6 +3,15 @@
 All notable changes to the Buddies dashboard and buddy system. Newest first.
 `FEATURES.md` describes the current state; this file describes how it got there.
 
+## 2026-10-11 (Detail panel footer + dump feed fixes)
+
+### Changed
+- **“Open in a new tab”** — moved from the floating overlay on Project Homepage
+  into the right detail panel footer (above the build stamp).
+- **Dump list refresh** — new dumps paint immediately and stay visible: default
+  expanded, race-safe against stale GitHub fetches, and the Ingest section is
+  un-hidden/un-collapsed when a dump lands.
+
 ## 2026-10-11 (Sidebar + detail panel: chevron expand/collapse controls)
 
 ### Changed
