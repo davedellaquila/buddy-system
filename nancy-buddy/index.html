@@ -146,6 +146,19 @@
   @media (hover: none) { .photo .trash { opacity: .9; } }
   .photo.spotlight { outline: 3px solid var(--terra); outline-offset: 4px; animation: photopulse 1.8s ease; }
   @keyframes photopulse { 0%,100% { outline-color: var(--terra); } 50% { outline-color: var(--rose); } }
+  .photostrip .photo img { cursor: zoom-in; }
+  /* Full-screen photo lightbox */
+  #lightbox { position: fixed; inset: 0; z-index: 200; display: flex; align-items: center; justify-content: center; }
+  #lightbox[hidden] { display: none; }
+  .lb-backdrop { position: absolute; inset: 0; background: rgba(20,14,10,.9); backdrop-filter: blur(6px); }
+  .lb-figure { position: relative; margin: 0; max-width: 94vw; text-align: center; }
+  .lb-figure img { max-width: 94vw; max-height: 76vh; border-radius: 12px; box-shadow: 0 12px 48px rgba(0,0,0,.5); object-fit: contain; background: #141414; }
+  .lb-figure figcaption { color: #f5efe6; font-size: 15px; margin-top: 12px; padding: 0 16px; }
+  .lb-controls { position: absolute; left: 50%; transform: translateX(-50%); bottom: max(20px, env(safe-area-inset-bottom)); display: flex; gap: 10px; }
+  .lb-controls button { min-width: 52px; min-height: 48px; padding: 10px 18px; border-radius: 999px; border: 1px solid rgba(255,255,255,.28); background: rgba(30,24,18,.88); color: #f5efe6; font-size: 16px; cursor: pointer; backdrop-filter: blur(4px); }
+  .lb-controls button:active { transform: scale(.96); }
+  #lbClose { position: absolute; top: max(14px, env(safe-area-inset-top)); right: 14px; width: 48px; height: 48px; border-radius: 50%; border: 1px solid rgba(255,255,255,.28); background: rgba(30,24,18,.88); color: #f5efe6; font-size: 20px; cursor: pointer; z-index: 1; }
+  .lb-hint { position: absolute; top: max(22px, env(safe-area-inset-top)); left: 18px; color: rgba(245,239,230,.55); font-size: 12px; }
   .photo-tools { display: flex; gap: 10px; margin-top: 14px; flex-wrap: wrap; align-items: center; }
   .btn.ghost { background: var(--card); color: var(--ink); border: 1px solid var(--line); }
   .btn.ghost:hover { background: var(--terra-soft); }
@@ -397,7 +410,7 @@
 <script>
 const KEY = "nancy-buddy-v1";
 const esc = s => s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
-let store = { notes: [], reminders: [], dates: [], gifts: [], hiddenPhotos: [], customPhotos: [] };
+let store = { notes: [], reminders: [], dates: [], gifts: [], hiddenPhotos: [], customPhotos: [], captionOverrides: {} };
 try {
   const raw = localStorage.getItem(KEY);
   if (raw) store = Object.assign(store, JSON.parse(raw));
@@ -494,6 +507,12 @@ function renderPhotos() {
     const img = fig.querySelector("img");
     const src = img ? img.getAttribute("src") : null;
     fig.style.display = (src && store.hiddenPhotos.includes(src)) ? "none" : "";
+    if (src) {
+      fig.dataset.pkind = "baked"; fig.dataset.psrc = src;
+      const ov = store.captionOverrides && store.captionOverrides[src];
+      const capEl = fig.querySelector("figcaption");
+      if (ov && capEl) capEl.textContent = ov;
+    }
     if (img && !fig.querySelector(".trash")) {
       const b = document.createElement("button");
       b.className = "trash"; b.title = "Remove this photo"; b.textContent = "🗑️";
@@ -506,6 +525,7 @@ function renderPhotos() {
   store.customPhotos.forEach((p, i) => {
     const fig = document.createElement("figure");
     fig.className = "photo custom";
+    fig.dataset.pkind = "custom"; fig.dataset.pindex = i;
     const img = document.createElement("img");
     img.src = p.src; img.alt = p.caption || "Added photo";
     const cap = document.createElement("figcaption");
@@ -563,6 +583,98 @@ function surprisePhoto() {
   pick.classList.add("spotlight");
   setTimeout(() => pick.classList.remove("spotlight"), 1900);
 }
+
+// Full-screen photo lightbox: tap any photo -> view it big, edit caption, share, delete
+let lbPhoto = null;
+function lbCaption(desc, fig) {
+  if (desc.kind === "custom") return (store.customPhotos[desc.index] && store.customPhotos[desc.index].caption) || "";
+  const ov = store.captionOverrides && store.captionOverrides[desc.src];
+  if (ov) return ov;
+  const cap = fig ? fig.querySelector("figcaption") : null;
+  return cap ? cap.textContent : "";
+}
+function openLightbox(fig) {
+  const kind = fig.dataset.pkind, img = fig.querySelector("img");
+  if (!img) return;
+  lbPhoto = kind === "custom"
+    ? { kind, index: parseInt(fig.dataset.pindex, 10), src: img.getAttribute("src") }
+    : { kind: "baked", src: img.getAttribute("src") };
+  const lbImg = document.getElementById("lbImg");
+  lbImg.src = img.src; lbImg.alt = img.alt || "Photo";
+  document.getElementById("lbCap").textContent = lbCaption(lbPhoto, fig);
+  document.getElementById("lightbox").hidden = false;
+  document.body.style.overflow = "hidden";
+  document.getElementById("lbClose").focus();
+}
+function closeLightbox() {
+  document.getElementById("lightbox").hidden = true;
+  document.body.style.overflow = "";
+  lbPhoto = null;
+}
+function refreshLightboxCaption() {
+  if (!lbPhoto) return;
+  let fig = null;
+  document.querySelectorAll("#photostrip figure.photo").forEach(f => {
+    if (lbPhoto.kind === "custom" && f.dataset.pkind === "custom" && parseInt(f.dataset.pindex, 10) === lbPhoto.index) fig = f;
+    if (lbPhoto.kind === "baked" && f.dataset.pkind === "baked" && f.dataset.psrc === lbPhoto.src) fig = f;
+  });
+  document.getElementById("lbCap").textContent = lbCaption(lbPhoto, fig);
+}
+function editLbCaption() {
+  if (!lbPhoto) return;
+  const next = prompt("Edit caption:", document.getElementById("lbCap").textContent);
+  if (next === null) return;
+  if (lbPhoto.kind === "custom") {
+    const p = store.customPhotos[lbPhoto.index];
+    if (p) p.caption = next.trim();
+  } else {
+    store.captionOverrides[lbPhoto.src] = next.trim();
+  }
+  save(); renderPhotos(); refreshLightboxCaption();
+}
+function deleteLbPhoto() {
+  if (!lbPhoto) return;
+  if (!confirm("Delete this photo?")) return;
+  if (lbPhoto.kind === "custom") {
+    store.customPhotos.splice(lbPhoto.index, 1);
+  } else if (lbPhoto.src && !store.hiddenPhotos.includes(lbPhoto.src)) {
+    store.hiddenPhotos.push(lbPhoto.src);
+  }
+  save(); renderPhotos(); closeLightbox();
+}
+async function shareLbPhoto() {
+  if (!lbPhoto) return;
+  const caption = document.getElementById("lbCap").textContent;
+  const src = document.getElementById("lbImg").src;
+  try {
+    const res = await fetch(src);
+    const blob = await res.blob();
+    const file = new File([blob], "nans-buddy-photo.jpg", { type: blob.type || "image/jpeg" });
+    if (navigator.canShare && navigator.canShare({ files: [file] })) {
+      await navigator.share({ files: [file], title: caption, text: caption });
+      return;
+    }
+  } catch (e) {}
+  try {
+    if (navigator.share) { await navigator.share({ title: caption, text: caption }); return; }
+  } catch (e) {}
+  const a = document.createElement("a");
+  a.href = src; a.download = "nans-buddy-photo.jpg";
+  document.body.appendChild(a); a.click(); a.remove();
+}
+document.getElementById("photostrip").addEventListener("click", function(ev) {
+  if (ev.target.closest(".trash")) return;
+  const fig = ev.target.closest("figure.photo");
+  if (fig && fig.dataset.pkind) openLightbox(fig);
+});
+document.getElementById("lbBackdrop").addEventListener("click", closeLightbox);
+document.getElementById("lbClose").addEventListener("click", closeLightbox);
+document.getElementById("lbEdit").addEventListener("click", editLbCaption);
+document.getElementById("lbDelete").addEventListener("click", deleteLbPhoto);
+document.getElementById("lbShare").addEventListener("click", shareLbPhoto);
+document.addEventListener("keydown", function(ev) {
+  if (ev.key === "Escape" && !document.getElementById("lightbox").hidden) closeLightbox();
+});
 
 renderNotes(); renderReminders(); renderDates(); renderGifts(); renderPhotos();
 
@@ -692,5 +804,19 @@ renderNotes(); renderReminders(); renderDates(); renderGifts(); renderPhotos();
   resolveRepo().then(refreshUI);
 })();
 </script>
+<div id="lightbox" role="dialog" aria-modal="true" aria-label="Photo viewer" hidden>
+  <div class="lb-backdrop" id="lbBackdrop"></div>
+  <span class="lb-hint">tap outside or ✕ to close</span>
+  <button id="lbClose" aria-label="Close photo viewer">✕</button>
+  <figure class="lb-figure">
+    <img id="lbImg" alt="">
+    <figcaption id="lbCap"></figcaption>
+  </figure>
+  <div class="lb-controls">
+    <button id="lbEdit" aria-label="Edit caption">✏️ Edit</button>
+    <button id="lbShare" aria-label="Share photo">📤 Share</button>
+    <button id="lbDelete" aria-label="Delete photo">🗑️ Delete</button>
+  </div>
+</div>
 </body>
 </html>
