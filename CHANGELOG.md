@@ -3,6 +3,13 @@
 All notable changes to the Buddies dashboard and buddy system. Newest first.
 `FEATURES.md` describes the current state; this file describes how it got there.
 
+## 2026-10-11 (Drawer fixes + Manifest card stack)
+
+### Fixed
+- **Scroll-to-top** — tapping `#sb-to-top` no longer closes the phone left drawer; it only scrolls the sidebar to top.
+- **Left-edge swipe** — swipe-right from the left edge opens the drawer again without fighting Tree pan or panel swipes.
+- **Manifest list cards** — on phone, title (+ status) on the first row and description flush left full-width underneath (same stacked pattern as Business Plans / Projects).
+
 ## 2026-10-11 (Positioning: "dump anywhere, it's routed")
 
 ### Added
