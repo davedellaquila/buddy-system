@@ -1751,6 +1751,10 @@ function renderProjectView(){
             e.preventDefault();
           }
         });
+        // Same-origin homepage: bind pull-to-refresh inside the iframe so the
+        // gesture works while a buddy homepage is showing (cross-origin fails
+        // silently and keeps parent-only behavior).
+        if (window.__bindPullToRefresh && frame.contentDocument) window.__bindPullToRefresh(frame.contentDocument);
       } catch (err) {}
     });
     wrap.appendChild(frame);
@@ -3521,15 +3525,16 @@ function initVersionCheck(){
 // Pull-down at the top of any scrollable view triggers a manual update check.
 function initPullToRefresh(){
   const THRESHOLD = 70;
-  let track = null, pill = null, pillVisible = false;
-  function scrollableAncestor(el){
-    while (el && el !== document.body && el !== document.documentElement) {
+  let pill = null, pillVisible = false;
+  function scrollableAncestor(el, doc){
+    const d = doc || document;
+    while (el && el !== d.body && el !== d.documentElement) {
       if (el.scrollHeight > el.clientHeight + 4) return el;
       el = el.parentElement;
     }
-    const de = document.documentElement;
+    const de = d.documentElement;
     if (de.scrollHeight > de.clientHeight + 4) return de;
-    return document.body;
+    return d.body;
   }
   function ensurePill(){
     if (pill) return pill;
@@ -3556,38 +3561,49 @@ function initPullToRefresh(){
     showPill(text);
     setTimeout(hidePill, ms || 2200);
   }
-  document.addEventListener('touchstart', function(e){
-    if (e.touches.length !== 1) { track = null; return; }
-    const t = e.touches[0];
-    const sc = scrollableAncestor(e.target);
-    track = (sc && sc.scrollTop <= 0) ? { y0: t.clientY, x0: t.clientX } : null;
-  }, {passive: true});
-  document.addEventListener('touchmove', function(e){
-    if (!track) return;
-    const t = e.touches[0];
-    const dy = t.clientY - track.y0, dx = t.clientX - track.x0;
-    if (Math.abs(dx) > Math.abs(dy) * 1.4) { track = null; hidePill(); return; }
-    if (dy > THRESHOLD) showPill('Release to check for updates');
-    else if (dy > 24) showPill('Keep pulling to check for updates');
-    else if (pillVisible) hidePill();
-  }, {passive: true});
-  function onEnd(){
-    if (!track) return;
-    const engaged = pillVisible;
-    track = null;
-    hidePill();
-    if (!engaged) return;
-    const run = window.__buddyUpdateCheck;
-    if (!run) return;
-    showPill('Checking for updates…');
-    run().then(function(status){
-      if (status === 'new') { hidePill(); }
-      else if (status === 'current' || status === 'suppressed') toast('You are up to date');
-      else toast('Could not check — are you offline?');
-    });
+  // Bind the pull gesture on a document. The dashboard binds its own document;
+  // the homepage iframe's document is bound on load (same-origin homepages),
+  // so pull-to-refresh works while a buddy homepage is showing. The pill and
+  // the update check always live in the parent window.
+  function bindDoc(doc){
+    if (!doc || doc.__ptrBound) return;
+    doc.__ptrBound = true;
+    let track = null;
+    doc.addEventListener('touchstart', function(e){
+      if (e.touches.length !== 1) { track = null; return; }
+      const t = e.touches[0];
+      const sc = scrollableAncestor(e.target, doc);
+      track = (sc && sc.scrollTop <= 0) ? { y0: t.clientY, x0: t.clientX } : null;
+    }, {passive: true});
+    doc.addEventListener('touchmove', function(e){
+      if (!track) return;
+      const t = e.touches[0];
+      const dy = t.clientY - track.y0, dx = t.clientX - track.x0;
+      if (Math.abs(dx) > Math.abs(dy) * 1.4) { track = null; hidePill(); return; }
+      if (dy > THRESHOLD) showPill('Release to check for updates');
+      else if (dy > 24) showPill('Keep pulling to check for updates');
+      else if (pillVisible) hidePill();
+    }, {passive: true});
+    function onEnd(){
+      if (!track) return;
+      const engaged = pillVisible;
+      track = null;
+      hidePill();
+      if (!engaged) return;
+      const run = window.__buddyUpdateCheck;
+      if (!run) return;
+      showPill('Checking for updates…');
+      run().then(function(status){
+        if (status === 'new') { hidePill(); }
+        else if (status === 'current' || status === 'suppressed') toast('You are up to date');
+        else toast('Could not check — are you offline?');
+      });
+    }
+    doc.addEventListener('touchend', onEnd, {passive: true});
+    doc.addEventListener('touchcancel', function(){ track = null; hidePill(); }, {passive: true});
   }
-  document.addEventListener('touchend', onEnd, {passive: true});
-  document.addEventListener('touchcancel', function(){ track = null; hidePill(); }, {passive: true});
+  bindDoc(document);
+  window.__bindPullToRefresh = bindDoc;
 }
 function initSearch(){
   const bs = document.getElementById('buddy-search');
