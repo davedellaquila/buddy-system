@@ -2460,7 +2460,7 @@ function renderBuddy(id){
     + '<div class="bp-sec" data-field="shared"><h3>Shared notes<span class="info-tip" data-tip="Anybody with repo access can see this note. Saved to the buddy’s repo (docs/notes.md).">ⓘ</span></h3>'
     + '<textarea class="notes" id="bp-shared-notes" placeholder="Anybody with repo access can see this note."></textarea>'
     + '<p class="fineprint" id="shared-status"></p></div>'
-    + '<div class="bp-build">Build 20261011.1639</div>'
+    + '<div class="bp-build">Build 20261011.1644</div>'
     + '</div>';
   const nm = document.getElementById('bp-name');
   nm.addEventListener('keydown', e => { if (e.key === 'Enter'){ e.preventDefault(); nm.blur(); } });
@@ -3271,7 +3271,7 @@ function renderPlan(id){
     + '<p class="fineprint">Saved on this device. (For your eyes only)</p></div>'
     + '<div class="bp-sec"><h3>Shared notes<span class="info-tip" data-tip="Visible to everyone with access to this project.">\u24d8</span></h3><textarea class="notes" id="bp-shared" placeholder="Shared notes\u2026 (visible to everyone with access)">'+escHtml((S.planShared||{})[id]||'')+'</textarea>'
     + '<p class="fineprint">Shared — visible to everyone with access.</p></div>'
-    + '<div class="bp-build">Build 20261011.1639</div>'
+    + '<div class="bp-build">Build 20261011.1644</div>'
     + '</div>';
   const nt = document.getElementById('bp-notes');
   let t = null;
@@ -4364,22 +4364,86 @@ function bindIframeEdgeSwipes(iframeDoc, frameEl, buddyId){
 }
 window.__bindEdgeSwipes = bindIframeEdgeSwipes;
 
+/* What's-new modal (from the update banner) */
+#whatsnew-modal{position:fixed;inset:0;z-index:10000}
+.wn-backdrop{position:absolute;inset:0;background:var(--scrim)}
+.wn-box{position:absolute;top:8%;left:50%;transform:translateX(-50%);width:min(560px,calc(100vw - 32px));max-height:80vh;
+  display:flex;flex-direction:column;background:var(--panel);border:1px solid var(--border);border-radius:14px;
+  box-shadow:0 16px 48px rgba(0,0,0,.4)}
+.wn-head{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--border)}
+.wn-head h3{margin:0;font-size:16px}
+.wn-x{background:none;border:none;color:var(--text);font-size:22px;cursor:pointer;line-height:1;padding:4px}
+.wn-body{padding:6px 18px 18px;overflow-y:auto}
+.wn-body h4{margin:16px 0 6px;font-size:14.5px}
+.wn-body h5{margin:12px 0 4px;font-size:13px;color:var(--muted)}
+.wn-body ul{margin:4px 0 8px;padding-left:20px;font-size:13.5px;line-height:1.55}
 // Checks for a newer deployed version; shows an update banner if the server
 // has a newer build than the one currently loaded (helps Safari web apps
 // and other containers without a hard-refresh shortcut).
 // Returns 'new' | 'current' | 'suppressed' | 'error' so manual triggers
 // (e.g. pull-to-refresh) can report the outcome.
+/* Renders the newest CHANGELOG.md sections as HTML for the What's-new modal */
+function changelogMdToHtml(md){
+  const lines = String(md || '').split('
+');
+  let html = '', sections = 0, inList = false;
+  const closeList = () => { if (inList) { html += '</ul>'; inList = false; } };
+  for (const raw of lines) {
+    const line = raw.replace(/\s+$/, '');
+    if (/^## /.test(line)) {
+      sections++;
+      if (sections > 3) break;
+      closeList();
+      html += '<h4>' + escHtml(line.slice(3)) + '</h4>';
+    } else if (/^### /.test(line)) {
+      closeList();
+      html += '<h5>' + escHtml(line.slice(4)) + '</h5>';
+    } else if (/^- /.test(line)) {
+      if (!inList) { html += '<ul>'; inList = true; }
+      html += '<li>' + escHtml(line.slice(2)).replace(/\*\*([^*]+)\*\*/g, '<b>$1</b>') + '</li>';
+    } else if (line.trim() === '') {
+      closeList();
+    }
+  }
+  closeList();
+  if (!html) html = '<p class="fineprint">No changelog entries found.</p>';
+  html += '<p class="fineprint"><a href="https://github.com/davedellaquila/buddy-system/blob/master/CHANGELOG.md" target="_blank" rel="noopener">Full changelog on GitHub</a></p>';
+  return html;
+}
+function openWhatsNew(){
+  let m = document.getElementById('whatsnew-modal');
+  if (m) m.remove();
+  m = document.createElement('div');
+  m.id = 'whatsnew-modal';
+  m.innerHTML = '<div class="wn-backdrop"></div><div class="wn-box" role="dialog" aria-label="What’s new">'
+    + '<div class="wn-head"><h3>What’s new</h3><button class="wn-x" aria-label="Close">×</button></div>'
+    + '<div class="wn-body"><p class="fineprint">Loading…</p></div></div>';
+  document.body.appendChild(m);
+  const close = () => m.remove();
+  m.querySelector('.wn-x').addEventListener('click', close);
+  m.querySelector('.wn-backdrop').addEventListener('click', close);
+  m.addEventListener('keydown', e => { if (e.key === 'Escape') close(); });
+  const body = m.querySelector('.wn-body');
+  fetch('https://raw.githubusercontent.com/davedellaquila/buddy-system/master/CHANGELOG.md?_' + Date.now(), {cache: 'no-store'})
+    .then(r => { if (!r.ok) throw new Error('fetch failed'); return r.text(); })
+    .then(md => { body.innerHTML = changelogMdToHtml(md); })
+    .catch(() => { body.innerHTML = '<p class="fineprint">Couldn’t load the changelog. <a href="https://github.com/davedellaquila/buddy-system/blob/master/CHANGELOG.md" target="_blank" rel="noopener">View it on GitHub</a>.</p>'; });
+  const x = m.querySelector('.wn-x');
+  if (x) x.focus();
+}
 function initVersionCheck(){
-  const myBuild = '20261011.1639';
+  const myBuild = '20261011.1644';
   function showUpdateBanner(serverBuild){
     if (document.getElementById('update-banner')) return;
     const b = document.createElement('div');
     b.id = 'update-banner';
     b.innerHTML = '<span>A newer version of Buddies is available (' + escHtml(serverBuild) + ').</span> '
+      + '<button id="update-whatsnew" style="margin-left:12px;background:none;border:none;color:var(--accent);font-size:14px;cursor:pointer;text-decoration:underline;padding:6px 4px">What’s new</button>'
       + '<button id="update-now" style="margin-left:12px;padding:6px 14px;border-radius:8px;border:1px solid var(--accent);background:var(--accent);color:#fff;font-weight:600;cursor:pointer">Update now</button>'
       + '<button id="update-dismiss" aria-label="Dismiss" style="margin-left:8px;padding:6px 10px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--text);font-size:16px;cursor:pointer;line-height:1">×</button>';
     b.style.cssText = 'position:fixed;top:16px;left:50%;transform:translateX(-50%);z-index:9999;background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:12px 18px;box-shadow:0 8px 32px rgba(0,0,0,.3);display:flex;align-items:center;font-size:14px';
     document.body.appendChild(b);
+    document.getElementById('update-whatsnew').addEventListener('click', () => { openWhatsNew(); });
     document.getElementById('update-now').addEventListener('click', () => {
       b.remove();
       try { sessionStorage.setItem('updateClicked', String(Date.now())); } catch (e) {}
