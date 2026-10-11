@@ -1,96 +1,271 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="auto">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Wisdom Buddy</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wisdom Buddy — Daily wisdom nuggets to the kids</title>
 <style>
-:root {
-  --bg: #ffffff;
-  --text: #1a1a1a;
-  --muted: #666;
-  --card: #f5f5f5;
-  --border: #e0e0e0;
-  --accent: #0066cc;
-}
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg: #1a1a1a;
-    --text: #e0e0e0;
-    --muted: #999;
-    --card: #2a2a2a;
-    --border: #3a3a3a;
-    --accent: #4da6ff;
+  :root{
+    --gold:#c99a2e; --amber:#e3b341;
+    --text:#2b2419; --muted:#7a6f5c; --faint:#a89a7d;
+    --bg:#faf6ec; --bg2:#f3ecdb; --panel:#fffdf7; --panel2:#f8f2e4;
+    --border:#e4d8bd; --bubble:#ffffff;
+    --shadow:0 8px 28px rgba(120,90,20,.10);
   }
-}
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  background: var(--bg);
-  color: var(--text);
-  line-height: 1.6;
-  padding: 40px 20px;
-  max-width: 800px;
-  margin: 0 auto;
-}
-.header { text-align: center; margin-bottom: 40px; }
-.icon { font-size: 64px; margin-bottom: 16px; }
-h1 { font-size: 32px; margin-bottom: 8px; }
-.tagline { color: var(--muted); font-size: 18px; }
-.mission {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 24px;
-  margin-bottom: 32px;
-  font-size: 17px;
-}
-h2 { font-size: 22px; margin: 32px 0 16px; }
-.attn {
-  background: var(--card);
-  border-left: 4px solid var(--accent);
-  border-radius: 0 8px 8px 0;
-  padding: 16px 20px;
-  margin-bottom: 12px;
-}
-.attn-date { color: var(--muted); font-size: 14px; margin-top: 8px; }
-.children { display: flex; flex-wrap: wrap; gap: 12px; }
-.child {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 12px 20px;
-  text-decoration: none;
-  color: var(--text);
-}
-.child:hover { border-color: var(--accent); }
-.footer {
-  margin-top: 48px;
-  padding-top: 24px;
-  border-top: 1px solid var(--border);
-  color: var(--muted);
-  font-size: 14px;
-  text-align: center;
-}
-.empty { color: var(--muted); font-style: italic; }
+  html[data-theme="dark"]{
+    --text:#f0e8d8; --muted:#b3a689; --faint:#7d7260;
+    --bg:#171310; --bg2:#1e1813; --panel:#221b15; --panel2:#2a211a;
+    --border:#3b3023; --bubble:#2c231a;
+    --shadow:0 8px 28px rgba(0,0,0,.45);
+  }
+  @media (prefers-color-scheme: dark){
+    html[data-theme="auto"]{
+      --text:#f0e8d8; --muted:#b3a689; --faint:#7d7260;
+      --bg:#171310; --bg2:#1e1813; --panel:#221b15; --panel2:#2a211a;
+      --border:#3b3023; --bubble:#2c231a;
+      --shadow:0 8px 28px rgba(0,0,0,.45);
+    }
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    background:var(--bg); color:var(--text);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
+    line-height:1.6; min-height:100vh; transition:background .25s,color .25s;
+    background-image:radial-gradient(circle at 12% 0%, rgba(227,179,65,.10), transparent 42%),
+                     radial-gradient(circle at 88% 8%, rgba(201,154,46,.07), transparent 38%);
+  }
+  .wrap{max-width:880px;margin:0 auto;padding:48px 24px 72px}
+  .topbar{display:flex;justify-content:flex-end;margin-bottom:8px}
+  .theme-toggle{
+    background:var(--panel);border:1px solid var(--border);color:var(--text);
+    border-radius:999px;padding:8px 16px;font-size:14px;cursor:pointer;
+    box-shadow:var(--shadow); transition:transform .15s;
+  }
+  .theme-toggle:hover{transform:translateY(-1px)}
+  header{text-align:center;margin-bottom:36px}
+  .avatar{font-size:76px;display:inline-block;animation:float 4s ease-in-out infinite;filter:drop-shadow(0 6px 14px rgba(120,90,20,.25))}
+  @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+  @media (prefers-reduced-motion:reduce){.avatar,.eq span{animation:none!important}}
+  h1{font-size:44px;font-weight:800;margin:16px 0 8px;letter-spacing:-1px;
+     background:linear-gradient(135deg,var(--amber),var(--gold));
+     -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+  .tagline{font-size:19px;color:var(--muted);font-style:italic}
+  .pill{display:inline-block;margin-top:14px;padding:5px 16px;border-radius:999px;
+    font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+    background:rgba(227,179,65,.14);color:var(--gold);border:1px solid rgba(227,179,65,.45)}
+
+  h2{font-size:22px;margin:40px 0 14px;padding-bottom:8px;border-bottom:1px solid var(--border)}
+
+  .phone{max-width:560px;margin:0 auto;background:var(--panel);border:1px solid var(--border);
+    border-radius:22px;padding:20px;box-shadow:var(--shadow)}
+  .phone-head{display:flex;align-items:center;gap:10px;padding-bottom:12px;border-bottom:1px solid var(--border);margin-bottom:14px}
+  .phone-head .who{font-weight:700}
+  .phone-head .sub{font-size:13px;color:var(--muted)}
+  .bubble{background:var(--bubble);border:1px solid var(--border);border-radius:18px 18px 18px 6px;
+    padding:16px 18px;margin-bottom:12px;box-shadow:var(--shadow)}
+  .bubble .nugget-text{font-size:18px;font-weight:600;margin-bottom:8px}
+  .bubble .nugget-mean{font-size:15px;color:var(--muted);font-style:italic}
+  .chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+  .chip{font-size:12px;padding:4px 12px;border-radius:999px;background:rgba(227,179,65,.12);
+    border:1px solid rgba(227,179,65,.35);color:var(--gold)}
+  .score{font-size:12px;color:var(--faint);margin-left:auto;align-self:center}
+  .phone-foot{display:flex;align-items:center;justify-content:space-between;margin-top:14px;padding-top:12px;border-top:1px solid var(--border)}
+  .phone-foot .q{font-size:13px;color:var(--muted)}
+  .draw{background:linear-gradient(135deg,var(--amber),var(--gold));border:none;color:#1c1508;
+    font-weight:700;font-size:14px;padding:10px 20px;border-radius:999px;cursor:pointer;
+    box-shadow:0 4px 14px rgba(201,154,46,.35);transition:transform .15s}
+  .draw:hover{transform:translateY(-1px)}
+
+  .eq{display:flex;justify-content:center;gap:5px;height:30px;margin:30px 0 0;align-items:flex-end}
+  .eq span{width:6px;border-radius:4px;background:linear-gradient(180deg,var(--amber),var(--gold));
+    animation:eq 1.4s ease-in-out infinite}
+  .eq span:nth-child(1){height:40%;animation-delay:0s}.eq span:nth-child(2){height:80%;animation-delay:.15s}
+  .eq span:nth-child(3){height:55%;animation-delay:.3s}.eq span:nth-child(4){height:95%;animation-delay:.45s}
+  .eq span:nth-child(5){height:60%;animation-delay:.6s}.eq span:nth-child(6){height:85%;animation-delay:.75s}
+  .eq span:nth-child(7){height:45%;animation-delay:.9s}
+  @keyframes eq{0%,100%{transform:scaleY(.5)}50%{transform:scaleY(1)}}
+
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px;margin:28px 0}
+  .card{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:20px;
+    position:relative;overflow:hidden;box-shadow:var(--shadow)}
+  .card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--tint,var(--gold))}
+  .card h3{font-size:13px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:8px}
+  .card p,.card li{font-size:15px}
+  .card ul{list-style:none;padding:0}
+  .card li{padding:7px 0;border-bottom:1px solid var(--border)}
+  .card li:last-child{border-bottom:none}
+  .stat{text-align:center;padding:16px 8px}
+  .stat-num{font-size:36px;font-weight:800;color:var(--tint,var(--gold))}
+  .stat-label{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-top:4px}
+  .bar{background:var(--border);border-radius:999px;height:10px;margin:10px 0 4px;overflow:hidden}
+  .bar>div{height:100%;width:27%;border-radius:999px;background:linear-gradient(90deg,var(--gold),var(--amber))}
+  .bar-caption{font-size:13px;color:var(--muted)}
+  .links{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-top:12px}
+  .link-btn{display:block;text-decoration:none;color:var(--text);background:var(--panel);
+    border:1px solid var(--border);border-radius:12px;padding:14px 16px;transition:border-color .15s,transform .15s;box-shadow:var(--shadow)}
+  .link-btn:hover{border-color:var(--gold);transform:translateY(-1px)}
+  .link-btn .lbl{font-weight:700;font-size:15px}
+  .link-btn .sub{font-size:13px;color:var(--muted)}
+  .mind{display:flex;gap:12px;align-items:flex-start}
+  .mind .dot{font-size:22px;flex-shrink:0}
+  .thesis{font-size:16px}
+  .thesis strong{color:var(--gold)}
+  footer{margin-top:56px;text-align:center;color:var(--faint);font-size:13px}
 </style>
 </head>
 <body>
-<div class="header">
-<div class="icon">🦉</div>
-<h1>Wisdom Buddy</h1>
-<div class="tagline">Daily wisdom nuggets to the kids</div>
+<div class="wrap">
+
+  <div class="topbar">
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle light and dark mode">🌙 dark</button>
+  </div>
+
+  <header>
+    <span class="avatar">🦉</span>
+    <h1>Wisdom Buddy</h1>
+    <div class="tagline">Daily wisdom nuggets to the kids</div>
+    <div><span class="pill">8-week pilot &middot; pre-launch</span></div>
+  </header>
+
+  <div class="phone">
+    <div class="phone-head">
+      <span style="font-size:28px">🦉</span>
+      <div><div class="who">Wisdom Buddy</div><div class="sub">this morning, 7:00 AM</div></div>
+    </div>
+    <div class="bubble">
+      <div class="nugget-text" id="nuggetText"></div>
+      <div class="nugget-mean" id="nuggetMean"></div>
+      <div class="chips" id="nuggetChips"></div>
+    </div>
+    <div class="phone-foot">
+      <span class="q" id="queueCount"></span>
+      <button class="draw" id="drawBtn">↻ draw another</button>
+    </div>
+  </div>
+
+  <div class="eq" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+
+  <div class="grid">
+    <div class="card stat" style="--tint:var(--gold)"><div class="stat-num">266</div><div class="stat-label">Library entries</div></div>
+    <div class="card stat" style="--tint:var(--amber)"><div class="stat-num">229</div><div class="stat-label">Queued &amp; unsent</div></div>
+    <div class="card stat" style="--tint:#58a6ff"><div class="stat-num">37</div><div class="stat-label">Sent to Quentin</div></div>
+    <div class="card stat" style="--tint:#3fb950"><div class="stat-num">36</div><div class="stat-label">Sent to Sawyer</div></div>
+    <div class="card stat" style="--tint:var(--muted)"><div class="stat-num">159</div><div class="stat-label">Themes</div></div>
+  </div>
+
+  <div class="card" style="--tint:var(--gold)">
+    <h3>Library progress</h3>
+    <div class="bar"><div></div></div>
+    <div class="bar-caption">73 of 266 entries sent at least once — 229 still fresh, more than enough to fill the whole pilot.</div>
+  </div>
+
+  <h2>The revival thesis</h2>
+  <div class="card" style="--tint:var(--gold)">
+    <h3>Why it stalled</h3>
+    <p class="thesis">The system worked. What died was momentum: no feedback from Quentin and Sawyer, and Dave's own interest faded. So this round isn't about finishing the automation backlog — it's an experiment in <strong>engagement</strong>. The central question is the feedback loop, not the plumbing.</p>
+  </div>
+
+  <h2>The pilot plan</h2>
+  <div class="card" style="--tint:#58a6ff">
+    <h3>8-week reactivation pilot</h3>
+    <ul>
+      <li>📲 Weekday <strong>7:00 AM</strong> sends, Monday&ndash;Thursday</li>
+      <li>🧾 Delivery logging + reply capture on every send</li>
+      <li>📬 Friday <strong>8:00 AM</strong> &ldquo;what landed&rdquo; digest for Dave</li>
+      <li>🚦 Decision gate at week 8: keep going, adjust, or park it</li>
+    </ul>
+  </div>
+
+  <h2>Proposed calls <span style="font-size:14px;color:var(--muted);font-weight:normal">(overturnable)</span></h2>
+  <div class="card" style="--tint:#3fb950">
+    <ul>
+      <li>👪 <strong>Personal family tool first</strong> — &ldquo;Wisdom for Families&rdquo; commercial concept stays parked</li>
+      <li>💬 <strong>Lightweight feedback loop</strong> — no gamification, keep it dignified</li>
+      <li>📞 <strong>Twilio</strong> for SMS delivery</li>
+      <li>📊 <strong>Sheets + Apps Script</strong> for v1 — no rebuild on the expense-tracker pattern</li>
+      <li>🖥️ <strong>Dashboard deferred</strong> to a later phase</li>
+    </ul>
+  </div>
+
+  <h2>On my mind</h2>
+  <div class="card mind" style="--tint:var(--amber)">
+    <span class="dot">🔵</span>
+    <p><strong>Launch is one decision away.</strong> The library is stocked, the plan is written, and the five proposed calls are flagged in the PRD. Confirm them and the first 7 AM send can go out. The no-feedback problem is exactly what this round is designed to learn about.</p>
+  </div>
+  <div class="card mind" style="--tint:var(--muted);margin-top:12px">
+    <span class="dot">📚</span>
+    <p>Sources on watch: Instagram (millionaire.grandpa, the millionaire.dad) and Threads (larrywilsonn_). Screenshot intake for image-sourced wisdom is a Phase 2 idea. Zen Buddy's brief also notes a possible sibling relationship — practice companion vs. content library — worth a look as both take shape.</p>
+  </div>
+
+  <h2>Documents &amp; links</h2>
+  <div class="links">
+    <a class="link-btn" href="https://docs.google.com/document/d/1Z1bdz-YNeRjODYTyPdTnj1FeewnCqxpEwJV2-SS5HUs/edit">
+      <div class="lbl">📄 Product Brief</div><div class="sub">The revival thesis, Zuki Docs</div>
+    </a>
+    <a class="link-btn" href="https://docs.google.com/document/d/1FZ7AY3HMp6MqmjEsthVh3aS36oPpZj8QOJNJ9Avi5Dc/edit">
+      <div class="lbl">📋 PRD Draft 1</div><div class="sub">Pilot plan + build order</div>
+    </a>
+    <a class="link-btn" href="https://docs.google.com/spreadsheets/d/1-UgKViOrfsWtmEufznVl18l8fTpzob6UKFAFaawS4uA/edit">
+      <div class="lbl">📊 Wisdom sheet</div><div class="sub">Canonical library, 266 entries</div>
+    </a>
+    <a class="link-btn" href="https://github.com/davedellaquila/wisdom">
+      <div class="lbl">💻 GitHub repo</div><div class="sub">davedellaquila/wisdom (private)</div>
+    </a>
+  </div>
+
+  <footer>Wisdom Buddy &middot; library stats verified 2026-10-11 &middot; a living page — refreshed when the data changes</footer>
+
 </div>
+<script>
+(function(){
+  var root = document.documentElement;
+  var btn = document.getElementById('themeToggle');
+  function apply(mode){
+    root.setAttribute('data-theme', mode);
+    var dark = mode === 'dark' || (mode === 'auto' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+    btn.textContent = dark ? '☀️ light' : '🌙 dark';
+  }
+  var saved = null;
+  try { saved = localStorage.getItem('wisdom-theme'); } catch(e){}
+  apply(saved || 'auto');
+  btn.addEventListener('click', function(){
+    var isDark = root.getAttribute('data-theme') === 'dark' ||
+      (root.getAttribute('data-theme') === 'auto' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+    var next = isDark ? 'light' : 'dark';
+    try { localStorage.setItem('wisdom-theme', next); } catch(e){}
+    apply(next);
+  });
 
-<div class="mission">Wisdom Buddy revives the Wisdom Library — wisdom nuggets (mainly from Instagram) curated in the canonical Wisdom sheet and sent daily by text to Quentin and Sawyer. Currently an 8-week pilot with a decision gate; the central question is engagement (the feedback loop), not the automation.</div>
-
-<h2>Needs Attention</h2>
-<p class="empty">Nothing needs attention right now.</p>
-
-
-
-<div class="footer">
-Generated 2026-10-10 · Part of the Buddy System
-</div>
+  var nuggets = [
+    {t:"Control your emotions or they will control your life. A mature man still feels anger, pain, jealousy, and pressure. But he does not let every emotion become a decision. He learns to pause. Think. Then act.",
+     m:"Maturity means feeling emotions without letting them run your choices.",
+     h:["Self-control","Emotional maturity","Masculinity","Personal growth"], s:88},
+    {t:"Your feelings are real, but your responsibilities still remain. A mature man does not say, \u2018I\u2019m not in the mood,\u2019 every time life demands something. He still shows up.",
+     m:"Your feelings matter, but adulthood still requires you to show up and handle your duties.",
+     h:["Responsibility","Discipline","Emotional maturity","Personal growth"], s:90},
+    {t:"No one is coming to save you. An immature man chases noise. A mature man starts protecting peace.",
+     m:"Stop waiting to be rescued; your life improves when you take ownership of it.",
+     h:["Self-reliance","Responsibility","Personal growth","Masculinity"], s:86},
+    {t:"Peace is more valuable than attention. A mature man chooses few people, few distractions, and more focus \u2014 because attention is cheap, but peace is expensive.",
+     m:"A mature person values calm, focus, and stability more than approval or attention.",
+     h:["Peace","Self-control","Focus","Personal growth"], s:78}
+  ];
+  var i = 0;
+  function esc(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+  function render(){
+    var n = nuggets[i];
+    document.getElementById('nuggetText').textContent = "\u201C" + n.t + "\u201D";
+    document.getElementById('nuggetMean').textContent = n.m;
+    document.getElementById('nuggetChips').innerHTML =
+      n.h.map(function(x){return '<span class="chip">'+esc(x)+'</span>';}).join('') +
+      '<span class="score">score '+n.s+'</span>';
+    document.getElementById('queueCount').textContent = "from the unsent queue \u2014 229 waiting";
+  }
+  document.getElementById('drawBtn').addEventListener('click', function(){
+    i = (i + 1) % nuggets.length; render();
+  });
+  render();
+})();
+</script>
 </body>
 </html>
