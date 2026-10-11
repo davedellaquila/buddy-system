@@ -1198,6 +1198,7 @@ const FIELD_DEFS = [
   {id:'ingest', label:'Ingest'},
   {id:'attention', label:'Needs your attention'},
   {id:'mission', label:'About'},
+  {id:'reports', label:'Direct reports'},
   {id:'homepage', label:'Homepage URL'},
   {id:'photos', label:'Photos'},
   {id:'tree', label:'The Buddy Tree'},
@@ -1991,6 +1992,16 @@ function renderBuddy(id){
       + '<span><span class="art-label">'+escHtml(p.name)+'</span><div class="art-sub">BRD / business plan · '+escHtml(p.status)+'</div></span>'
       + '<span class="art-go">→</span></a>').join('') + '</div>';
   }
+  let reportsSec = '';
+  (function(){
+    const kids = (kidsOf[id] || []).filter(k => k && k.id !== id);
+    if (!kids.length) return;
+    reportsSec = '<div class="bp-sec" data-field="reports"><h3>Direct reports <span class="attn-count">('+kids.length+')</span></h3>' + kids.map(k =>
+      '<a class="art-row" data-buddy="'+escHtml(k.id)+'">'
+      + '<span class="art-ic">'+escHtml(k.icon || '')+'</span>'
+      + '<span><span class="art-label">'+escHtml(dispName(k))+'</span><div class="art-sub">'+escHtml((k.tagline || k.mission || '').slice(0, 90))+'</div></span>'
+      + '<span class="art-go">\\u2192</span></a>').join('') + '</div>';
+  })();
   let linkSec = '';
   (function(){
     const out = (b.links || []).filter(lid => lid !== id);
@@ -2051,6 +2062,7 @@ function renderBuddy(id){
     + '<div style="margin-top:8px"><span class="fineprint" id="ingest-status"></span></div>'
     + '<div id="ingest-feed" style="margin-top:8px"></div></div>'
     + '<div class="bp-sec" data-field="mission"><h3>About<span class="info-tip" data-tip="The mission statement\\u2019s executive summary \\u2014 tweak it through the buddy\\u2019s chat thread and it updates everywhere.">\\u24d8</span></h3><p class="bp-mission">'+escHtml(b.mission)+'</p></div>'
+    + reportsSec
     + linkSec
     + '<div class="bp-sec" data-field="homepage"><h3>Homepage URL</h3>'
     + '<div style="display:flex;align-items:center;gap:8px">'
@@ -2290,11 +2302,11 @@ function applyTreeSplit(){
   const orphScroll = document.getElementById('treezoom-orph');
   if (!orphPane || !mainPane || !split || !orphScroll) return;
   const hasOrph = orphScroll.innerHTML.trim().length > 0;
-  if (!hasOrph) {
-    split.style.display = 'none'; orphPane.style.display = 'none';
-    mainPane.style.flex = '1 1 0'; return;
-  }
   split.style.display = ''; orphPane.style.display = '';
+  if (!hasOrph) {
+    /* No orphans: keep a slim drop strip so buddies can always be detached here */
+    mainPane.style.flex = '1 1 0'; orphPane.style.flex = '0 0 auto'; return;
+  }
   const s = clampTreeSplit(S.treeSplit);
   mainPane.style.flex = s + ' ' + s + ' 0';
   orphPane.style.flex = (1 - s) + ' ' + (1 - s) + ' 0';
@@ -2307,7 +2319,7 @@ function initTreeSplit(){
   sp.addEventListener('pointerdown', e => {
     if (e.button !== undefined && e.button !== 0) return;
     if (e.isPrimary === false) return;
-    sd = { y0: e.clientY, s0: clampTreeSplit(S.treeSplit) };
+    sd = { y0: e.clientY, s0: clampTreeSplit(S.treeSplit), pid: e.pointerId };
     try { sp.setPointerCapture(e.pointerId); } catch (err) {}
     e.preventDefault();
   });
@@ -2343,6 +2355,9 @@ function renderOrgTree(){
         + '<div class="desc">' + escHtml(b.tagline || '') + '</div><div class="tag">' + nodeTag(b, 1) + '</div>'
         + gridKids(b) + '</div>').join('')
       + '</div></section>';
+  } else {
+    orphHtml += '<section class="standalones empty"><h2>Orphaned buddies</h2>'
+      + '<p class="sub">None right now &mdash; drag a buddy here to detach it.</p></section>';
   }
   document.getElementById('treezoom-main').innerHTML = chartHtml;
   document.getElementById('treezoom-orph').innerHTML = orphHtml;

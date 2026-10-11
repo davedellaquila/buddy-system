@@ -3,6 +3,18 @@
 All notable changes to the Buddies dashboard and buddy system. Newest first.
 `FEATURES.md` describes the current state; this file describes how it got there.
 
+## 2026-10-11 (Detail-panel polish: private notes, attention count, checkmarks, collapse fix, wider resize grips)
+
+### Changed
+- **"Notes" is now "Private notes" (Dave's ask):** the device-local notes section was too easy to confuse with "Shared notes". Renamed in buddy panels, business-plan pages, and field settings.
+- **"Needs your attention" header now shows the count:** e.g. "Needs your attention (3)".
+- **"Mark seen" is now a circle checkmark:** each attention item starts with an empty circle ○; tapping it marks the item seen and it becomes a filled checkmark ✓ (the item dims as before). The bulk "Mark all seen" action is unchanged.
+- **Side-panel resize grips are easier to grab:** the draggable zone along each panel's inner edge grew from 14px to 28px, and a small movement threshold means plain taps near the edge no longer start an accidental resize. Double-click still resets to the default width.
+
+### Fixed
+- **Homepage URL section wouldn't collapse:** its content row carries an inline `display:flex` style, which overruled the collapse stylesheet. The collapse rule now wins over inline display styles, so every section header collapses.
+- **Photos header lost its collapse arrow + drag grip** when the photo count refreshed (it rewrote the whole header). It now updates only the label, preserving both controls.
+
 ## 2026-10-11 (Tree view: real hierarchy, splitter, section grips, tooltips, ingest fix)
 
 ### Fixed
