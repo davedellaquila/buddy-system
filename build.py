@@ -13,6 +13,7 @@ BUILD_NUM = datetime.now().strftime('%Y%m%d.%H%M')
 HERE = "/home/hatch/workspace/projects/buddy-tree"
 
 ROOT_ORDER = [
+    "astro",
     "project-buddy",
     "personal-buddy", "family-buddy", "property-buddy", "finance-buddy", "work-buddy",
     "car-buddy", "mga-buddy", "ml500-buddy", "tv-buddy", "news-buddy", "wisdom-buddy", "birthday-buddy",
@@ -796,6 +797,7 @@ def build():
     js = """const BUDDIES = BUDDIES_JSON;
 const ROOT_ORDER = ORDER_JSON;
 const byId = Object.fromEntries(BUDDIES.map(b => [b.id, b]));
+const ROOT_ID = 'astro'; // chief of staff sits at the root of the tree
 BUDDIES.forEach(b => { (b.links || []).forEach(lid => { const t = byId[lid]; if (t && lid !== b.id) { (t.linkedBy = t.linkedBy || []).push(b.id); } }); });
 function buddyImageUrl(b, prefix){ if(!b) return null; if(b.image) return b.image; return (prefix || '') + 'avatars/' + b.id + '.jpg'; }
 function buddyDisplayIcon(b){ try { if (window.S && S.iconOverrides && S.iconOverrides[b.id]) return S.iconOverrides[b.id]; } catch(e){} return b.icon || ''; }
@@ -957,7 +959,7 @@ function getViewOrder(){
 if (!S.view || VIEW_DEFS.every(v => v[0] !== S.view)) S.view = (typeof S.sel === 'string' && S.sel.indexOf('view:') === 0) ? S.sel.slice(5) : 'tree';
 function projectId(){
   const id = S.projectId;
-  return (id && byId[id]) ? id : 'project-buddy';
+  return (id && byId[id]) ? id : ROOT_ID;
 }
 function selectProject(id){
   if (!byId[id]) return;
@@ -1100,9 +1102,9 @@ function renderNav(){
     const b = byId[id]; if(!b) return;
     if (words.length && !matches(b)) { (kidsOf[id] || []).forEach(c => row(c.id, depth+1)); return; }
     const un = descUnseen(id);
-    const kind = b.kind === 'root' ? 'root' : (b.parent === 'project-buddy' ? 'direct' : b.kind);
+    const kind = b.kind === 'root' ? 'root' : (b.parent === ROOT_ID ? 'direct' : b.kind);
     h += '<button class="brow'+((S.projectId===id || S.sel==='buddy:'+id)?' sel':'')+(un?' has-unseen':'')+'" data-buddy="'+id+'"'
-      + ' draggable="'+(id==='project-buddy'?'false':'true')+'"'
+      + ' draggable="'+(id===ROOT_ID?'false':'true')+'"'
       + ' style="padding-left:'+(8+depth*16)+'px" title="'+escHtml(b.tagline||'')+'">'
       + '<span class="bdot"></span><span class="bicon">'+escHtml(b.icon||'')+'</span><span class="bname">'+escHtml(dispName(b))+'</span>'
       + '<span class="bkind">'+kind+'</span>'
@@ -1933,7 +1935,7 @@ function renderBuddy(id){
     + '</div></div>'
     + (unseenCount > 0 ? '<div class="bp-sec" data-field="attention"><h3>Needs your attention</h3>'+attn+'</div>' : '')
     + photos
-    + (id === 'project-buddy'
+    + (id === ROOT_ID
         ? '<div class="bp-sec" data-field="tree"><h3>The Buddy Tree</h3><div class="bp-tree-wrap"></div>'
           + '<p class="fineprint"><button class="linkbtn" data-view="tree">Open the tree as its own view \\u2192</button></p></div>'
         : '')
@@ -2055,7 +2057,7 @@ function renderBuddy(id){
   applyFieldOrder();
   applySectionCollapse(id);
   renderJournal();
-  if (id === 'project-buddy') {
+  if (id === ROOT_ID) {
     const tw = document.querySelector('#buddy-home .bp-tree-wrap');
     const srcEl = document.getElementById('view-tree');
     if (tw && srcEl) {
@@ -2112,7 +2114,7 @@ function moveBuddy(src, target){
   if (target === b.parent) delete S.parents[src]; else S.parents[src] = target;
   logChange('move', src, 'Moved \u201c' + dispName(byId[src]) + '\u201d under \u201c' + dispName(byId[target]) + '\u201d', beforeParent, target);
   save(); buildKids(); renderNav(); refreshViews();
-  if (S.sel === 'buddy:' + src || S.sel === 'buddy:' + target || S.sel === 'buddy:project-buddy') renderBuddy(S.sel.slice(6));
+  if (S.sel === 'buddy:' + src || S.sel === 'buddy:' + target || S.sel === 'buddy:' + ROOT_ID) renderBuddy(S.sel.slice(6));
   toast(dispName(b) + ' moved under ' + dispName(byId[target]) + '.');
 }
 const FAMKINDS = ['personal', 'family', 'property', 'finance', 'work'];
@@ -2144,11 +2146,11 @@ function orgNode(b, depth){
   return s + '</li>';
 }
 function renderOrgTree(){
-  const root = byId['project-buddy'];
-  const kids = kidsOf['project-buddy'] || [];
+  const root = byId[ROOT_ID];
+  const kids = kidsOf[ROOT_ID] || [];
   const fam = kids.filter(b => FAMKINDS.includes(b.kind));
   const rest = kids.filter(b => !FAMKINDS.includes(b.kind));
-  let s = '<div class="chart"><div style="text-align:center"><div class="node root" data-buddy="project-buddy">'
+  let s = '<div class="chart"><div style="text-align:center"><div class="node root" data-buddy="'+ROOT_ID+'">'
     + '<div class="name">' + iconName(root) + '</div>'
     + '<div class="desc">' + escHtml(root.tagline || '') + '</div></div></div>'
     + '<div class="root-stub"></div><div class="tree"><ul>'
@@ -2162,7 +2164,7 @@ function renderOrgTree(){
         + gridKids(b) + '</div>').join('')
       + '</div></section>';
   }
-  const orphans = (kidsOf['__root'] || []).filter(b => b.id !== 'project-buddy');
+  const orphans = (kidsOf['__root'] || []).filter(b => b.id !== ROOT_ID);
   if (orphans.length) {
     s += '<section class="standalones"><h2>Orphaned buddies</h2>'
       + '<p class="sub">No parent yet &mdash; drag one onto a buddy in the tree to give it a home.</p>'
@@ -2240,7 +2242,7 @@ function renderProjects(){
       + '</div>'
       + '<span class="pdesc">' + escHtml(b.tagline || '') + '</span></div>';
     if (!collapsed) kids.forEach(c => walk(c.id, depth + 1));
-  })('project-buddy', 0);
+  })(ROOT_ID, 0);
   s += '</div></section>';
   const vp = document.getElementById('view-projects');
   vp.innerHTML = s;
@@ -2477,7 +2479,7 @@ let nodeDragEndAt = 0; // timestamp of last node-drag gesture; used to swallow t
     if (!n) return;
     const tid = n.dataset.buddy;
     if (!tid || tid === drag.id) return; // self: no highlight, no drop
-    if (tid === 'project-buddy' || !isDesc(tid, drag.id)) {
+    if (tid === ROOT_ID || !isDesc(tid, drag.id)) {
       n.classList.add('drop-target'); drag.target = tid; // valid (root included)
     } else {
       n.classList.add('drop-invalid'); // dropping here would create a cycle
@@ -2518,7 +2520,7 @@ let nodeDragEndAt = 0; // timestamp of last node-drag gesture; used to swallow t
     const n = treeNodeFrom(e.target);
     if (!n) return;
     const id = n.dataset.buddy;
-    if (!id || id === 'project-buddy') return; // root can't be reparented
+    if (!id || id === ROOT_ID) return; // root can't be reparented
     cand = { id: id, x0: e.clientX, y0: e.clientY, pid: e.pointerId, touch: e.pointerType === 'touch' };
   });
   window.addEventListener('pointermove', function(e){
@@ -2598,7 +2600,7 @@ let dragId = null;
   const nav = document.getElementById('buddy-nav');
   nav.addEventListener('dragstart', e => {
     const r = e.target.closest('[data-buddy]');
-    if (!r || r.dataset.buddy === 'project-buddy') { e.preventDefault(); return; }
+    if (!r || r.dataset.buddy === ROOT_ID) { e.preventDefault(); return; }
     dragId = r.dataset.buddy;
     e.dataTransfer.effectAllowed = 'move';
     try { e.dataTransfer.setData('text/plain', dragId); } catch (_e) {}
@@ -2767,7 +2769,7 @@ function show(sel, push){
   window.scrollTo(0,0);
   setIcon(sel.startsWith('plan:') ? ((planById[sel.slice(5)] || {}).icon)
     : sel === 'view:project' ? ((byId[projectId()] || {}).icon)
-    : sel.startsWith('buddy:') ? ((byId[sel.slice(6)] || {}).icon) : byId['project-buddy'].icon);
+    : sel.startsWith('buddy:') ? ((byId[sel.slice(6)] || {}).icon) : byId[ROOT_ID].icon);
 }
 /* ---------- keyboard nav ---------- */
 document.addEventListener('keydown', e => {
@@ -3632,7 +3634,7 @@ function initPanelSwipeGestures(){
     if (mode === 'openRight') {
       if (detailOpen()) return; // already open → no-op
       if (dx >= 0) return; // need leftward
-      const id = (S.projectId && byId[S.projectId]) ? S.projectId : 'project-buddy';
+      const id = (S.projectId && byId[S.projectId]) ? S.projectId : ROOT_ID;
       openBuddy(id);
     }
   }
@@ -3700,7 +3702,7 @@ function bindIframeEdgeSwipes(iframeDoc, frameEl, buddyId){
       if (dx > 0 && isDrawerNav() && !isSidebarOpen()){ setSidebarOpen(true); edgeOpenAt = Date.now(); }
       return;
     }
-    if (dx < 0 && !detailOpen()) openBuddy(buddyId || 'project-buddy');
+    if (dx < 0 && !detailOpen()) openBuddy(buddyId || ROOT_ID);
   }
   iframeDoc.addEventListener('touchstart', onStart, { passive: true, capture: true });
   iframeDoc.addEventListener('touchmove', onMove, { passive: true, capture: true });
@@ -3919,7 +3921,7 @@ document.addEventListener('click', e => {
   if (e.target.closest && e.target.closest('#bp-icon')) { const m = S.sel.match(/^buddy:(.+)$/); if (m) openAvatarPicker(m[1], e.target.closest('#bp-icon')); return; }
   if (e.target.closest && (e.target.closest('#bp-close') || e.target.closest('#bp-close-x') || e.target.closest('#bp-takeover-back'))) { closeDetail(); return; }
   if (e.target.closest && e.target.closest('#panel-open')) {
-    const id = (S.projectId && byId[S.projectId]) ? S.projectId : 'project-buddy';
+    const id = (S.projectId && byId[S.projectId]) ? S.projectId : ROOT_ID;
     openBuddy(id);
     return;
   }
