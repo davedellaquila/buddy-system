@@ -177,6 +177,11 @@ body.sb-closed #sb-resize{display:none}
   color:var(--accent);font-size:17px;font-weight:600;text-align:left;cursor:pointer;
   -webkit-tap-highlight-color:transparent}
 .bp-takeover-back:active{opacity:.6}
+/* Phone drawer above an open detail sheet (swipe-from-panel / menu) */
+@media (max-width:639px){
+  #sidebar.open{z-index:100}
+  #sb-scrim.show{z-index:99}
+}
 @keyframes takeoverIn{from{transform:translateX(60px);opacity:.4}to{transform:none;opacity:1}}
 #journal-bar{display:none;margin:0 0 12px;background:var(--wash);border:1px solid var(--accent);border-radius:10px;padding:9px 13px;font-size:13px}
 #journal-bar.show{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
@@ -288,11 +293,17 @@ body:has(#token-pill) #panel-open{right:148px}
 #field-settings input[type=checkbox]:focus-visible{outline:none;box-shadow:0 0 0 3px var(--ghost)}
 #field-settings input[type=checkbox]:active{transform:scale(.92)}
 .fset-row input[type=checkbox]{margin-left:2px}
-.bp-close-x{position:static;flex:0 0 auto;width:32px;height:32px;margin-left:2px;
-  background:none;border:none;border-radius:8px;color:var(--muted);font-size:20px;
-  cursor:pointer;display:none;align-items:center;justify-content:center;padding:0}
-.bp-close-x:hover{color:var(--text)}
+.bp-close-x{position:static;flex:0 0 auto;width:44px;height:44px;margin-left:auto;
+  background:none;border:1px solid transparent;border-radius:10px;color:var(--muted);font-size:22px;
+  cursor:pointer;display:none;align-items:center;justify-content:center;padding:0;
+  -webkit-tap-highlight-color:transparent}
+.bp-close-x:hover{color:var(--text);border-color:var(--border);background:var(--ghost)}
+.bp-close-x:active{opacity:.7}
 #view-buddy.panel .bp-close-x,#view-buddy.sheet .bp-close-x{display:flex}
+/* Portrait takeover uses the sticky back bar; keep ✕ for panel / landscape sheet */
+@media (max-width:639px) and (orientation:portrait){
+  #view-buddy.sheet .bp-close-x{display:none}
+}
 #buddy-home{position:relative}
 #bp-resize{position:absolute;top:0;left:0;z-index:60;display:flex;align-items:center;justify-content:center;width:14px;height:100vh;cursor:ew-resize;
   background:transparent;-webkit-tap-highlight-color:transparent}
@@ -453,7 +464,6 @@ body.standalone .sa-bar{display:flex}
     animation:takeoverIn .28s cubic-bezier(.32,.72,.35,1)}
   #view-buddy.sheet::before{display:none}
   #view-buddy.sheet #bp-resize{display:none}
-  #view-buddy.sheet .bp-close-x{display:none}
   #view-buddy.sheet .bp-takeover-back{display:flex}
   #view-buddy.sheet .bp-sticky-head{top:53px}
 }
@@ -1028,7 +1038,29 @@ function artRow(icon, label, sub, url){
     + '<span class="art-go">→</span></a>';
 }
 function closeDetail(){
-  document.getElementById('view-buddy').classList.remove('active', 'panel', 'sheet');
+  const vb = document.getElementById('view-buddy');
+  if (vb) vb.classList.remove('active', 'panel', 'sheet');
+  // Restore the middle canvas when nothing else is active (e.g. landed on #/buddy:…)
+  const anyMain = document.querySelector('#main .view.active:not(#view-buddy)');
+  if (!anyMain) {
+    const v = S.view || 'tree';
+    const ev = document.getElementById('view-' + v) || document.getElementById('view-tree');
+    if (ev) {
+      ev.classList.add('active');
+      if (!S.sel || S.sel.startsWith('buddy:') || S.sel.startsWith('plan:')) {
+        S.sel = 'view:' + (ev.id && ev.id.indexOf('view-') === 0 ? ev.id.slice(5) : v);
+        save();
+        try { if (typeof location !== 'undefined') location.hash = hashFor(S.sel); } catch (e) {}
+      }
+    }
+  }
+  try {
+    const main = document.getElementById('main');
+    if (main) {
+      if (!main.hasAttribute('tabindex')) main.setAttribute('tabindex', '-1');
+      main.focus({ preventScroll: true });
+    }
+  } catch (e) {}
 }
 const FIELD_DEFS = [
   {id:'ingest', label:'Ingest'},
@@ -1590,7 +1622,7 @@ function renderBuddy(id){
   }
   document.getElementById('buddy-home').innerHTML =
     '<div class="bp-wrap">'
-    + '<button class="bp-takeover-back" id="bp-takeover-back">\u2039 Buddies</button>'
+    + '<button class="bp-takeover-back" id="bp-takeover-back" type="button" title="Close detail \u2014 back to main view" aria-label="Close detail \u2014 back to main view">\u2039 Main</button>'
     + '<div id="token-banner"><h4>\U0001f511 Connect GitHub to unlock this buddy</h4>'
     + '<p>Photos, shared notes, and ingest save to the buddy\u2019s repo. Paste a token once \u2014 it stays on this device.</p>'
     + '<div class="ghtoken"><input type="password" id="ghtok2" placeholder="GitHub token (repo scope)" aria-label="GitHub token">'
@@ -1600,14 +1632,14 @@ function renderBuddy(id){
     + '<div class="bp-topnav"><button class="linkbtn" data-navbtn="back">\u2190 Back</button>'
     + '<button class="linkbtn" data-navbtn="prev">\u2039 Prev</button><button class="linkbtn" data-navbtn="next">Next \u203a</button>'
     + '<span class="sep">\u00b7</span><button class="linkbtn" data-view="tree">All buddies</button>'
-    + '<span class="sep">\u00b7</span><button class="linkbtn" id="bp-close">\u2715 Close</button><span class="sep">\u00b7</span><button class="linkbtn" id="bp-desktop">\U0001f4be Save to desktop</button></div>'
+    + '<span class="sep">\u00b7</span><button class="linkbtn" id="bp-close" type="button" title="Close detail \u2014 back to main view" aria-label="Close detail \u2014 back to main view">\u2715 Close</button><span class="sep">\u00b7</span><button class="linkbtn" id="bp-desktop">\U0001f4be Save to desktop</button></div>'
     + '<div class="bp-crumb">'+crumb(id)+'</div>'
     + '<p class="bp-tagline">'+escHtml(b.tagline||'')+'</p>'
     + '<div class="bp-sticky-head"><div class="bp-top">'
     + '<span class="bp-icon" id="bp-icon" title="Click to change avatar" style="cursor:pointer">'+escHtml(b.icon||'')+'</span>'
     + '<h2 class="bp-name" id="bp-name" contenteditable="true" spellcheck="false" data-buddy="'+id+'">'+escHtml(dispName(b))+'</h2>'
     + '<span class="status '+b.statusClass+'">'+escHtml(b.status)+'</span>'
-    + '<button class="bp-close-x" id="bp-close-x" title="Close">\u2715</button></div></div>'
+    + '<button class="bp-close-x" id="bp-close-x" type="button" title="Close detail \u2014 back to main view" aria-label="Close detail \u2014 back to main view">\u2715</button></div></div>'
     + standingOrdersHtml()
     + '<div class="bp-sec" data-field="ingest"><h3>Ingest<span class="info-tip" data-tip="Brain-dump anything about this buddy \u2014 raw and unfiltered. Each dump lands in the buddy\u2019s repo (docs/ingest.md) as a timestamped entry.">\u24d8</span></h3>'
     + '<textarea class="notes" id="bp-ingest" placeholder="Dump what\u2019s in your head about '+escHtml(dispName(b))+'\u2026"></textarea>'
@@ -3104,6 +3136,127 @@ function setSidebarOpen(open){
     if (sc) sc.classList.remove('show');
   }
 }
+/* Left-edge swipe opens the mobile drawer (restored — was dropped in a later merge).
+   Rightward swipe that begins within EDGE_PX of the left screen edge. */
+function initEdgeSwipeOpen(){
+  const EDGE_PX = 20;
+  const MIN_DX = 56;
+  const DOMINATE = 1.25;
+  let track = null;
+  function touchById(list, id){
+    if (!list) return null;
+    for (let i = 0; i < list.length; i++) if (list[i].identifier === id) return list[i];
+    return null;
+  }
+  function onStart(e){
+    if (!isDrawerNav() || isSidebarOpen()) { track = null; return; }
+    if (document.body.classList.contains('standalone')) { track = null; return; }
+    const t = e.changedTouches && e.changedTouches[0];
+    if (!t || t.clientX > EDGE_PX) { track = null; return; }
+    track = { id: t.identifier, x0: t.clientX, y0: t.clientY };
+  }
+  function onMove(e){
+    if (!track) return;
+    const t = touchById(e.touches, track.id) || touchById(e.changedTouches, track.id);
+    if (!t) return;
+    const dx = t.clientX - track.x0, dy = t.clientY - track.y0;
+    if (Math.abs(dy) > 28 && Math.abs(dy) > Math.abs(dx)) track = null;
+  }
+  function onEnd(e){
+    if (!track) return;
+    const t = touchById(e.changedTouches, track.id);
+    const x0 = track.x0, y0 = track.y0;
+    track = null;
+    if (!t || !isDrawerNav() || isSidebarOpen()) return;
+    if (document.body.classList.contains('standalone')) return;
+    const dx = t.clientX - x0, dy = t.clientY - y0;
+    if (dx >= MIN_DX && Math.abs(dx) > Math.abs(dy) * DOMINATE) setSidebarOpen(true);
+  }
+  document.addEventListener('touchstart', onStart, { passive: true, capture: true });
+  document.addEventListener('touchmove', onMove, { passive: true, capture: true });
+  document.addEventListener('touchend', onEnd, { passive: true, capture: true });
+  document.addEventListener('touchcancel', () => { track = null; }, { passive: true, capture: true });
+}
+/* Paired horizontal swipes (dominant over vertical so scroll still works):
+   • Detail open  → swipe right on the panel/sheet → open left sidebar
+   • Detail closed → swipe left on the middle canvas → openBuddy (same as ⓘ)
+   • Detail open  → swipe left is ignored
+   Tree canvas (#treezoom) is excluded from swipe-left (keeps free 2D pan); a
+   right-edge strip (24px) still allows swipe-left to open detail over the tree. */
+function initPanelSwipeGestures(){
+  const MIN_DX = 56;
+  const DOMINATE = 1.25;
+  const RIGHT_EDGE = 24;
+  let track = null; // {id,x0,y0,mode:'openLeft'|'openRight'}
+  function detailOpen(){
+    const vb = document.getElementById('view-buddy');
+    return !!(vb && vb.classList.contains('active') && (vb.classList.contains('panel') || vb.classList.contains('sheet')));
+  }
+  function touchById(list, id){
+    if (!list) return null;
+    for (let i = 0; i < list.length; i++) if (list[i].identifier === id) return list[i];
+    return null;
+  }
+  function blockedEl(el){
+    return !!(el && el.closest && el.closest('input,textarea,select,[contenteditable="true"],#bp-resize,#sb-resize,#panel-open,#menu-btn'));
+  }
+  function onStart(e){
+    track = null;
+    if (document.body.classList.contains('standalone')) return;
+    const t = e.changedTouches && e.changedTouches[0];
+    if (!t) return;
+    const el = document.elementFromPoint(t.clientX, t.clientY);
+    if (!el || blockedEl(el)) return;
+    const vb = document.getElementById('view-buddy');
+    const main = document.getElementById('main');
+    if (detailOpen()) {
+      // Swipe-right on the open detail surface → open left. Swipe-left ignored.
+      if (isSidebarOpen()) return;
+      if (!vb.contains(el)) return;
+      track = { id: t.identifier, x0: t.clientX, y0: t.clientY, mode: 'openLeft' };
+      return;
+    }
+    // Detail closed: swipe-left on middle canvas → open right panel
+    if (!main || !main.contains(el)) return;
+    if (el.closest && el.closest('#view-buddy')) return;
+    const onTree = !!(el.closest && el.closest('#treezoom'));
+    const nearRightEdge = t.clientX >= (window.innerWidth - RIGHT_EDGE);
+    if (onTree && !nearRightEdge) return; // don't fight tree pan
+    track = { id: t.identifier, x0: t.clientX, y0: t.clientY, mode: 'openRight' };
+  }
+  function onMove(e){
+    if (!track) return;
+    const t = touchById(e.touches, track.id) || touchById(e.changedTouches, track.id);
+    if (!t) return;
+    const dx = t.clientX - track.x0, dy = t.clientY - track.y0;
+    if (Math.abs(dy) > 28 && Math.abs(dy) > Math.abs(dx)) track = null;
+  }
+  function onEnd(e){
+    if (!track) return;
+    const mode = track.mode;
+    const t = touchById(e.changedTouches, track.id);
+    const x0 = track.x0, y0 = track.y0;
+    track = null;
+    if (!t || document.body.classList.contains('standalone')) return;
+    const dx = t.clientX - x0, dy = t.clientY - y0;
+    if (Math.abs(dx) < MIN_DX || Math.abs(dx) <= Math.abs(dy) * DOMINATE) return;
+    if (mode === 'openLeft') {
+      if (!detailOpen() || isSidebarOpen()) return;
+      if (dx > 0) setSidebarOpen(true);
+      return;
+    }
+    if (mode === 'openRight') {
+      if (detailOpen()) return; // already open → no-op
+      if (dx >= 0) return; // need leftward
+      const id = (S.projectId && byId[S.projectId]) ? S.projectId : 'project-buddy';
+      openBuddy(id);
+    }
+  }
+  document.addEventListener('touchstart', onStart, { passive: true, capture: true });
+  document.addEventListener('touchmove', onMove, { passive: true, capture: true });
+  document.addEventListener('touchend', onEnd, { passive: true, capture: true });
+  document.addEventListener('touchcancel', () => { track = null; }, { passive: true, capture: true });
+}
 // Checks for a newer deployed version; shows an update banner if the server
 // has a newer build than the one currently loaded (helps Safari web apps
 // and other containers without a hard-refresh shortcut).
@@ -3370,6 +3523,8 @@ initTokenPill();
 updateTokenGating();
 initSearch();
 initGear();
+initEdgeSwipeOpen();
+initPanelSwipeGestures();
 initVersionCheck();
 initPlansToggle();
 initSbBrandSticky();
