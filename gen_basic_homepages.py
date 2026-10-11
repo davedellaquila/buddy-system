@@ -1,9 +1,14 @@
 #!/usr/bin/env python3
-"""Generate basic homepages for buddies that don't have one yet.
+"""Generate basic homepages for buddies, and refresh template-driven ones.
 
 CRITICAL: every buddy website must support dark mode. This template does via
 prefers-color-scheme — do not ship light-only pages. See AGENTS.md and
 docs/standing-orders.md.
+
+Template-driven pages carry the <!-- BUDDY-BASIC-TEMPLATE --> marker (v1 pages
+are detected by their "Part of the Buddy System" footer signature). Pages
+WITHOUT the marker are thread-owned custom designs and are NEVER overwritten
+here — the daily rebuild relies on this distinction.
 """
 import json
 import os
@@ -17,7 +22,180 @@ with open('buddies.json') as f:
 
 by_id = {b['id']: b for b in d['buddies']}
 
-TEMPLATE = """<!DOCTYPE html>
+# ---------------------------------------------------------------------------
+# Dump box: self-contained brain-dump snippet (HTML+CSS+JS).
+# Same GitHub write path as the dashboard's ingest panel: reads the shared
+# GitHub token from the dashboard origin's localStorage (key 'buddyTree.v3',
+# field 'ghToken'), resolves the buddy's repo from ../buddies.json, and appends
+# a timestamped entry to docs/ingest.md via the GitHub contents API.
+# __BID__ / __BNAME__ are substituted per buddy at generation time.
+# ---------------------------------------------------------------------------
+DUMPBOX_CSS = """
+.dumpbox {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px 22px;
+  margin-bottom: 32px;
+}
+.dumpbox h2 { margin: 0 0 6px; font-size: 20px; }
+.dumpbox-sub { color: var(--muted); font-size: 14px; margin-bottom: 14px; }
+.dumpbox textarea {
+  width: 100%; min-height: 96px; resize: vertical;
+  background: var(--bg); border: 1px solid var(--border); border-radius: 8px;
+  padding: 10px 12px; font-size: 14px; color: var(--text); font-family: inherit;
+}
+.dumpbox textarea:focus { outline: none; border-color: var(--accent); }
+.dumpbox textarea:disabled { opacity: .55; }
+.dumpbox-row { display: flex; align-items: center; gap: 12px; margin-top: 10px; flex-wrap: wrap; }
+.dumpbox-btn {
+  background: var(--accent); color: #fff; border: none; border-radius: 8px;
+  padding: 9px 22px; font-size: 14px; font-weight: 600; cursor: pointer;
+}
+.dumpbox-btn:disabled { opacity: .45; cursor: default; }
+.dumpbox-status { font-size: 13px; color: var(--muted); }
+.dumpbox-token {
+  background: var(--bg); border: 1px dashed var(--border); border-radius: 8px;
+  padding: 12px 14px; margin-bottom: 12px; font-size: 14px;
+}
+.dumpbox-token p { margin-bottom: 8px; }
+.dumpbox-tokenrow { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.dumpbox-tokenrow input {
+  flex: 1; min-width: 170px; background: var(--card); border: 1px solid var(--border);
+  border-radius: 8px; padding: 7px 10px; font-size: 13px; color: var(--text);
+}
+.dumpbox-tokenrow button {
+  background: transparent; color: var(--accent); border: 1px solid var(--accent);
+  border-radius: 8px; padding: 7px 14px; font-size: 13px; font-weight: 600; cursor: pointer;
+}
+.dumpbox-tokenrow a { color: var(--accent); font-size: 13px; }
+"""
+
+DUMPBOX_HTML = """
+<section class="dumpbox" data-buddy-id="__BID__">
+<h2>🧠 Brain dump</h2>
+<p class="dumpbox-sub">Dump what's on your mind about __BNAME__ — raw and unfiltered. Each dump lands in the buddy's repo (docs/ingest.md) as a timestamped entry.</p>
+<div class="dumpbox-token" hidden>
+<p>🔒 Connect GitHub to unlock dumping. Paste a token once — it stays on this device only.</p>
+<div class="dumpbox-tokenrow">
+<input type="password" placeholder="GitHub token (repo scope)" aria-label="GitHub token">
+<button type="button">Save token</button>
+<a href="https://github.com/settings/tokens" target="_blank" rel="noopener">Get a token</a>
+</div>
+</div>
+<textarea rows="4" placeholder="Dump what's on your mind about __BNAME__…"></textarea>
+<div class="dumpbox-row">
+<button type="button" class="dumpbox-btn">Dump it</button>
+<span class="dumpbox-status" role="status"></span>
+</div>
+</section>
+"""
+
+DUMPBOX_JS = """
+<script>
+(function(){
+  var box = document.querySelector('.dumpbox');
+  if (!box || box.dataset.dumpInit) return;
+  box.dataset.dumpInit = '1';
+  var bid = box.getAttribute('data-buddy-id') || (function(){
+    var p = location.pathname.replace(/\\/+$/, '');
+    return p.substring(p.lastIndexOf('/') + 1);
+  })();
+  var ta = box.querySelector('textarea'),
+      btn = box.querySelector('.dumpbox-btn'),
+      st = box.querySelector('.dumpbox-status'),
+      tokWrap = box.querySelector('.dumpbox-token');
+  function lsGet(){ try { return JSON.parse(localStorage.getItem('buddyTree.v3') || '{}'); } catch(e){ return {}; } }
+  function lsSet(patch){ try { var s = lsGet(); for (var k in patch) s[k] = patch[k]; localStorage.setItem('buddyTree.v3', JSON.stringify(s)); } catch(e){} }
+  function token(){ return lsGet().ghToken || ''; }
+  function b64encode(str){
+    var bytes = new TextEncoder().encode(str), bin = '';
+    bytes.forEach(function(b){ bin += String.fromCharCode(b); });
+    return btoa(bin);
+  }
+  async function ghApi(path, method, body){
+    var t = token();
+    if (!t) throw new Error('Add a GitHub token first.');
+    var r = await fetch('https://api.github.com' + path, {
+      method: method || 'GET',
+      headers: {'Authorization': 'Bearer ' + t, 'Accept': 'application/vnd.github+json', 'Content-Type': 'application/json'},
+      body: body ? JSON.stringify(body) : undefined
+    });
+    if (!r.ok) throw new Error('GitHub ' + r.status);
+    return r.status === 204 ? null : await r.json();
+  }
+  async function ghGetFile(repo, path){
+    try {
+      var j = await ghApi('/repos/davedellaquila/' + repo + '/contents/' + path);
+      if (j && j.content) return {
+        text: new TextDecoder().decode(Uint8Array.from(atob(j.content.replace(/\\n/g, '')), function(c){ return c.charCodeAt(0); })),
+        sha: j.sha
+      };
+    } catch(e){}
+    return null;
+  }
+  var repo = null, repoName = bid;
+  async function resolveRepo(){
+    try {
+      var r = await fetch('../buddies.json', {cache: 'no-store'});
+      var d = await r.json();
+      var buds = d.buddies || [];
+      for (var i = 0; i < buds.length; i++) {
+        if (buds[i].id === bid && buds[i].repo) { repo = buds[i].repo; repoName = buds[i].name || bid; break; }
+      }
+    } catch(e){}
+  }
+  function refreshUI(){
+    var has = !!token();
+    tokWrap.hidden = has;
+    var ok = has && !!repo;
+    ta.disabled = !ok;
+    btn.disabled = !ok;
+    if (!has) { st.textContent = ''; }
+    else if (!repo) { st.textContent = 'No repo linked for this buddy yet.'; }
+  }
+  var tokInput = tokWrap.querySelector('input'),
+      tokSave = tokWrap.querySelector('button');
+  tokSave.addEventListener('click', function(){
+    var v = tokInput.value.trim();
+    if (!v) return;
+    lsSet({ghToken: v});
+    tokInput.value = '';
+    refreshUI();
+    st.textContent = 'Token saved on this device.';
+  });
+  async function dump(){
+    var text = ta.value.trim();
+    if (!text) return;
+    if (!token()) { refreshUI(); return; }
+    if (!repo) { st.textContent = 'No repo linked for this buddy yet.'; return; }
+    st.textContent = 'Dumping…';
+    btn.disabled = true;
+    try {
+      var stamp = new Date().toLocaleString();
+      var NL = String.fromCharCode(10);
+      var entry = '## ' + stamp + NL + NL + text + NL + NL;
+      var cur = await ghGetFile(repo, 'docs/ingest.md');
+      var base = cur ? cur.text : '# Ingest log — ' + repoName + NL + NL;
+      var body = {message: 'Ingest dump for ' + bid, content: b64encode(base + entry)};
+      if (cur && cur.sha) body.sha = cur.sha;
+      await ghApi('/repos/davedellaquila/' + repo + '/contents/docs/ingest.md', 'PUT', body);
+      ta.value = '';
+      st.textContent = '✓ Dumped to ' + repo + '/docs/ingest.md';
+    } catch(err){ st.textContent = 'Save failed: ' + (err.message || err); }
+    btn.disabled = false;
+  }
+  btn.addEventListener('click', dump);
+  ta.addEventListener('keydown', function(ev){
+    if ((ev.metaKey || ev.ctrlKey) && ev.key === 'Enter') { ev.preventDefault(); dump(); }
+  });
+  resolveRepo().then(refreshUI);
+})();
+</script>
+"""
+
+TEMPLATE = """<!-- BUDDY-BASIC-TEMPLATE v2 -->
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
@@ -92,6 +270,7 @@ h2 {{ font-size: 22px; margin: 32px 0 16px; }}
   text-align: center;
 }}
 .empty {{ color: var(--muted); font-style: italic; }}
+{dumpbox_css}
 </style>
 </head>
 <body>
@@ -103,6 +282,8 @@ h2 {{ font-size: 22px; margin: 32px 0 16px; }}
 
 <div class="mission">{mission}</div>
 
+{dumpbox_html}
+
 {attention_section}
 
 {children_section}
@@ -110,6 +291,7 @@ h2 {{ font-size: 22px; margin: 32px 0 16px; }}
 <div class="footer">
 Generated {date} · Part of the Buddy System
 </div>
+{dumpbox_js}
 </body>
 </html>
 """
@@ -117,12 +299,27 @@ Generated {date} · Part of the Buddy System
 from datetime import datetime
 today = datetime.now().strftime('%Y-%m-%d')
 
+
+def is_template_page(idxpath):
+    """True if the existing page was generated from the basic template."""
+    try:
+        with open(idxpath) as f:
+            content = f.read()
+    except OSError:
+        return False
+    return ('BUDDY-BASIC-TEMPLATE' in content) or ('Part of the Buddy System' in content)
+
+
 generated = []
 for b in d['buddies']:
-    if b.get('homepage'):
-        continue  # Already has one
-
     bid = b['id']
+    dirpath = os.path.join(HERE, bid)
+    idxpath = os.path.join(dirpath, 'index.html')
+    has_page = os.path.exists(idxpath)
+
+    if b.get('homepage') and has_page and not is_template_page(idxpath):
+        continue  # Thread-owned custom design — never overwrite
+
     name = html.escape(b.get('name', bid))
     icon = b.get('icon', '🤖')
     tagline = html.escape(b.get('tagline', ''))
@@ -159,6 +356,8 @@ for b in d['buddies']:
     else:
         children_section = ''
 
+    dumpbox_html = DUMPBOX_HTML.replace('__BID__', bid).replace('__BNAME__', name)
+
     page = TEMPLATE.format(
         name=name,
         icon=icon,
@@ -167,12 +366,14 @@ for b in d['buddies']:
         attention_section=attention_section,
         children_section=children_section,
         date=today,
+        dumpbox_css=DUMPBOX_CSS,
+        dumpbox_html=dumpbox_html,
+        dumpbox_js=DUMPBOX_JS,
     )
 
     # Write to <bid>/index.html
-    dirpath = os.path.join(HERE, bid)
     os.makedirs(dirpath, exist_ok=True)
-    with open(os.path.join(dirpath, 'index.html'), 'w') as f:
+    with open(idxpath, 'w') as f:
         f.write(page)
 
     # Update buddies.json
@@ -181,7 +382,8 @@ for b in d['buddies']:
     print(f"Generated {bid}/index.html")
 
 with open('buddies.json', 'w') as f:
-    json.dump(d, f, indent=2)
+    # Match the file's existing format exactly (indent=1, literal UTF-8)
+    json.dump(d, f, indent=1, ensure_ascii=False)
     f.write('\n')
 
 print(f"\nDone: {len(generated)} pages generated")
