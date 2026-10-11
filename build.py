@@ -177,9 +177,9 @@ input[type=range].zrange::-moz-range-thumb{width:16px;height:16px;border-radius:
 /* Fixed to viewport at sidebar edge so vertical #sidebar scroll doesn't move it.
    MUST be a DOM sibling of #sidebar (not a child): overflow on #sidebar clips
    hit-testing/paint for fixed descendants, which made the gripper invisible. */
-#sb-resize{position:fixed;top:0;left:calc(var(--sbw, 308px) - 7px);z-index:50;
-  display:flex;align-items:center;justify-content:center;width:14px;height:100vh;height:100dvh;cursor:ew-resize;
-  background:transparent;-webkit-tap-highlight-color:transparent}
+#sb-resize{position:fixed;top:0;left:calc(var(--sbw, 308px) - 14px);z-index:50;
+  display:flex;align-items:center;justify-content:center;width:28px;height:100vh;height:100dvh;cursor:ew-resize;
+  background:transparent;-webkit-tap-highlight-color:transparent;touch-action:none;user-select:none}
 /* Vertical sheet-handle pill (reference rotated 90°) — thin, fully rounded, flat gray */
 #sb-resize::after{content:'';width:5px;height:48px;border-radius:999px;background:var(--muted);
   border:none;box-shadow:none}
@@ -352,8 +352,8 @@ body:has(#token-pill) #panel-open{right:148px}
   #view-buddy.sheet .bp-close-x{display:none}
 }
 #buddy-home{position:relative}
-#bp-resize{position:absolute;top:0;left:0;z-index:60;display:flex;align-items:center;justify-content:center;width:14px;height:100vh;cursor:ew-resize;
-  background:transparent;-webkit-tap-highlight-color:transparent}
+#bp-resize{position:absolute;top:0;left:-14px;z-index:60;display:flex;align-items:center;justify-content:center;width:28px;height:100vh;cursor:ew-resize;
+  background:transparent;-webkit-tap-highlight-color:transparent;touch-action:none;user-select:none}
 /* Same vertical pill language as #sb-resize */
 #bp-resize::after{content:'';width:5px;height:48px;border-radius:999px;background:var(--muted);
   border:none;box-shadow:none}
@@ -1652,20 +1652,27 @@ function initPanelResize(){
   vb.dataset.rsz = '1';
   const h = document.getElementById('bp-resize');
   if (!h) return;
-  let sx = null, sw = 0;
+  let sx = null, sw = 0, sdrag = false;
   h.addEventListener('pointerdown', e => {
-    sx = e.clientX; sw = vb.getBoundingClientRect().width;
-    h.setPointerCapture(e.pointerId); e.preventDefault();
+    sx = e.clientX; sw = vb.getBoundingClientRect().width; sdrag = false;
   });
   h.addEventListener('pointermove', e => {
     if (sx === null) return;
+    if (!sdrag) {
+      if (Math.abs(e.clientX - sx) < 6) return; /* tap slop: don't resize on a plain tap */
+      sdrag = true;
+      try { h.setPointerCapture(e.pointerId); } catch (err) {}
+      e.preventDefault();
+    }
     const w = Math.min(560, Math.max(320, sw + (sx - e.clientX)));
     vb.style.width = w + 'px';
   });
   h.addEventListener('pointerup', e => {
     if (sx === null) return;
+    sx = null;
+    if (!sdrag) return;
     S.panelWidth = Math.round(vb.getBoundingClientRect().width);
-    save(); sx = null;
+    save();
   });
 }
 function tileHtml(label, num, tint, sub, fkey, sel, tip){
@@ -3009,16 +3016,23 @@ document.addEventListener('keydown', e => {
   const sb = document.getElementById('sidebar');
   applySbWidth();
   const h = document.getElementById('sb-resize');
-  let sx = null, sw = 0;
-  h.addEventListener('pointerdown', e => { sx = e.clientX; sw = sb.getBoundingClientRect().width; h.setPointerCapture(e.pointerId); e.preventDefault(); });
+  let sx = null, sw = 0, sdrag = false;
+  h.addEventListener('pointerdown', e => { sx = e.clientX; sw = sb.getBoundingClientRect().width; sdrag = false; });
   h.addEventListener('pointermove', e => {
     if (sx === null) return;
+    if (!sdrag) {
+      if (Math.abs(e.clientX - sx) < 6) return; /* tap slop: don't resize on a plain tap */
+      sdrag = true;
+      try { h.setPointerCapture(e.pointerId); } catch (err) {}
+      e.preventDefault();
+    }
     const w = sbClampW(sw + e.clientX - sx);
     sb.style.width = w + 'px'; sb.style.flex = '0 0 ' + w + 'px';
     document.documentElement.style.setProperty('--sbw', w + 'px');
   });
   const done = () => {
     if (sx === null) return; sx = null;
+    if (!sdrag) return;
     S.sbWidth = Math.round(sb.getBoundingClientRect().width); save();
     applySbWidth();
   };
