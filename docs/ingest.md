@@ -78,3 +78,7 @@ I am looking at Astros info page and I would like all I think this is actually h
 
 Provide a what’s new button on the update message when a new version shows up
 
+## 10/11/2026, 10:55:29 AM
+
+We should think about a default set of buddies that every new configuration should have. I think that would make sense as opposed to just starting out with no buddies. What do you think? Thoughts?
+
