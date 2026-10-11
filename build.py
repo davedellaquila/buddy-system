@@ -155,16 +155,18 @@ body{padding:0}
    hit-testing/paint for fixed descendants, which made the gripper invisible. */
 #sb-resize{position:fixed;top:0;left:calc(var(--sbw, 308px) - 7px);z-index:50;
   display:flex;align-items:center;justify-content:center;width:14px;height:100vh;height:100dvh;cursor:ew-resize;
-  -webkit-tap-highlight-color:transparent}
-#sb-resize::after{content:'';width:6px;height:72px;border-radius:3px;background:var(--muted);
-  box-shadow:0 0 0 1px color-mix(in srgb, var(--border) 80%, transparent)}
-#sb-resize:hover::after{background:var(--accent-hi);box-shadow:none}
-#sb-resize:hover{background:var(--ghost)}
+  background:transparent;-webkit-tap-highlight-color:transparent}
+/* Vertical sheet-handle pill (reference rotated 90°) — thin, fully rounded, flat gray */
+#sb-resize::after{content:'';width:5px;height:48px;border-radius:999px;background:var(--muted);
+  border:none;box-shadow:none}
+#sb-resize:hover::after{background:var(--text2)}
+#sb-resize:hover{background:transparent}
 body.sb-closed #sb-resize{display:none}
 /* Phone drawer: stay fixed (sibling of #sidebar); show only while drawer is open */
 @media (max-width:639px){
   #sb-resize{display:none;left:calc(var(--sbw, 308px) - 14px);width:28px;z-index:96}
   #sidebar.open ~ #sb-resize{display:flex}
+  #sb-resize::after{width:5px;height:56px}
 }
 .bp-topnav{display:flex;gap:4px;align-items:center;margin-bottom:6px;flex-wrap:wrap}
 .bp-topnav .sep{color:var(--faint);margin:0 2px}
@@ -292,10 +294,13 @@ body:has(#token-pill) #panel-open{right:148px}
 .bp-close-x:hover{color:var(--text)}
 #view-buddy.panel .bp-close-x,#view-buddy.sheet .bp-close-x{display:flex}
 #buddy-home{position:relative}
-#bp-resize{position:absolute;top:0;left:0;z-index:60;display:flex;align-items:center;justify-content:center;width:10px;height:100vh;cursor:ew-resize}
-#bp-resize::after{content:'';width:10px;height:56px;border-radius:3px;background:var(--faint)}
-#bp-resize:hover::after{background:var(--accent-hi)}
-#bp-resize:hover{background:var(--ghost)}
+#bp-resize{position:absolute;top:0;left:0;z-index:60;display:flex;align-items:center;justify-content:center;width:14px;height:100vh;cursor:ew-resize;
+  background:transparent;-webkit-tap-highlight-color:transparent}
+/* Same vertical pill language as #sb-resize */
+#bp-resize::after{content:'';width:5px;height:48px;border-radius:999px;background:var(--muted);
+  border:none;box-shadow:none}
+#bp-resize:hover::after{background:var(--text2)}
+#bp-resize:hover{background:transparent}
 #view-buddy.active:not(.panel):not(.sheet) #bp-resize{display:none}
 .pupload{height:150px;min-width:120px;border-radius:10px;border:1px dashed var(--border);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;background:var(--bg);flex:0 0 auto}
 .pupload .pbar{width:80px;height:6px;background:var(--border2);border-radius:3px;overflow:hidden}
@@ -392,7 +397,6 @@ body.standalone .sa-bar{display:flex}
   #sidebar.open{transform:none;box-shadow:12px 0 40px rgba(0,0,0,.35)}
   /* Sidebar resize: sibling of #sidebar; visibility gated by #sidebar.open ~ #sb-resize above */
   #sb-resize{touch-action:none}
-  #sb-resize::after{width:7px;height:80px}
   html,body{overflow-x:clip}
   #sb-scrim{display:none;position:fixed;inset:0;z-index:94;background:rgba(0,0,0,.45);opacity:0;transition:opacity .25s}
   #sb-scrim.show{display:block;opacity:1}
