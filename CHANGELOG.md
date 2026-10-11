@@ -3,6 +3,13 @@
 All notable changes to the Buddies dashboard and buddy system. Newest first.
 `FEATURES.md` describes the current state; this file describes how it got there.
 
+## 2026-10-11 (Buddy avatars: images, favicons, nicer picker)
+
+### Added
+- **Per-buddy favicon** — opening a buddy's card or homepage now sets the page favicon + Apple touch icon from the buddy's image, or renders the buddy's emoji to a PNG data URI when there's no image. "Save to desktop / Add to Dock" now carries the buddy's face (Dave's ask).
+- **Avatar image upload** — the avatar picker gained Upload/Remove image: uploads are downscaled to 512px JPEG and pushed to `avatars/<buddy-id>.jpg` in the dashboard repo (GitHub token), shown on the card, homepage, and favicon.
+- **Categorized emoji picker** — ~200 emojis across 8 categories (Smileys, Gestures, Animals, Food, Activities, Travel, Objects, Symbols) plus paste-any-emoji, on the dashboard card; homepages got their own tap-the-avatar picker sharing the dashboard's localStorage override store.
+
 ## 2026-10-11 (Buddy links: many-to-many, Rae Assist style)
 
 ### Added

@@ -107,6 +107,17 @@ Build: `build.py` generates `index.html` from `buddies.json` + `plans.json`.
   buddies that don't exist yet render as "Buddy being set up" and light up
   when the buddy is created. Custom homepages carry their own Connections
   section (first live link: Joel's Buddy ↔ James's Buddy).
+- **Buddy avatars** — every buddy can have an image, not just an emoji:
+  upload from the avatar picker (downscaled, stored in the dashboard repo
+  at `avatars/<buddy-id>.jpg`, shown on the card, homepage, and favicon;
+  removable). Tapping the avatar on a buddy's card *or* homepage opens a
+  categorized emoji picker (~200 emojis across 8 categories, plus
+  paste-any-emoji); homepage picks share the dashboard's override store,
+  so they stay in sync on the same device.
+- **Per-buddy favicon** — opening a buddy's card or homepage sets the
+  page's favicon (and Apple touch icon) from the buddy's image, or renders
+  the buddy's emoji to a PNG when there's no image. Save the page to the
+  desktop or Dock and it carries the buddy's face.
 - **Token gating** — photos, shared notes, and ingest are locked until a
   GitHub token is saved; an amber banner at the top of every buddy page
   prompts for it.
