@@ -116,6 +116,25 @@
   .doc-meta{font-size:11px;color:var(--dim);margin-top:3px;text-transform:uppercase;letter-spacing:.05em}
   .docs-empty{grid-column:1/-1;text-align:center;color:var(--muted);padding:20px}
   .docs-count{font-size:12px;color:var(--dim);margin-bottom:10px;font-family:var(--mono)}
+  /* ---------- brain dump ---------- */
+  .dumpbox{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:20px 22px;position:relative;overflow:hidden}
+  .dumpbox::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--tint,var(--purple))}
+  .dumpbox-sub{color:var(--muted);font-size:14px;margin-bottom:14px}
+  .dumpbox-sub b{color:var(--text);font-family:var(--mono);font-size:13px}
+  .dumpbox textarea{width:100%;min-height:96px;resize:vertical;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-size:14px;color:var(--text);font-family:inherit}
+  .dumpbox textarea:focus{outline:none;border-color:var(--accent)}
+  .dumpbox textarea:disabled{opacity:.55}
+  .dumpbox textarea::placeholder{color:var(--dim)}
+  .dumpbox-row{display:flex;align-items:center;gap:12px;margin-top:10px;flex-wrap:wrap}
+  .dumpbox-btn{background:var(--accent);color:#fff;border:none;border-radius:8px;padding:9px 22px;font-size:14px;font-weight:600;cursor:pointer}
+  .dumpbox-btn:disabled{opacity:.45;cursor:default}
+  .dumpbox-status{font-size:13px;color:var(--muted)}
+  .dumpbox-token{background:var(--bg);border:1px dashed var(--border);border-radius:8px;padding:12px 14px;margin-bottom:12px;font-size:14px}
+  .dumpbox-token p{margin-bottom:8px;color:var(--muted)}
+  .dumpbox-tokenrow{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+  .dumpbox-tokenrow input{flex:1;min-width:170px;background:var(--panel);border:1px solid var(--border);border-radius:8px;padding:7px 10px;font-size:13px;color:var(--text)}
+  .dumpbox-tokenrow button{background:transparent;color:var(--accent);border:1px solid var(--accent);border-radius:8px;padding:7px 14px;font-size:13px;font-weight:600;cursor:pointer}
+  .dumpbox-tokenrow a{color:var(--accent);font-size:13px}
 </style>
 </head>
 <body>
@@ -150,6 +169,24 @@
       <li>The review queue is long <span>— briefs and PRDs waiting on Dave's eyes. Start wherever pulls you; nothing here expires quietly.</span></li>
     </ul>
   </div>
+
+  <h2>🧠 Brain dump</h2>
+  <section class="dumpbox" data-buddy-id="astro" style="--tint:var(--purple)">
+    <p class="dumpbox-sub">Something on your mind for me? Dump it raw — every entry lands timestamped in <b>buddy-system/docs/ingest.md</b>, where my ingest pass picks it up. ⌘/Ctrl+Enter sends.</p>
+    <div class="dumpbox-token" hidden>
+      <p>🔒 Connect GitHub to unlock dumping. Paste a token once — it stays on this device only.</p>
+      <div class="dumpbox-tokenrow">
+        <input type="password" placeholder="GitHub token (repo scope)" aria-label="GitHub token">
+        <button type="button">Save token</button>
+        <a href="https://github.com/settings/tokens" target="_blank" rel="noopener">Get a token</a>
+      </div>
+    </div>
+    <textarea rows="4" placeholder="Dump what's on your mind…"></textarea>
+    <div class="dumpbox-row">
+      <button type="button" class="dumpbox-btn">Dump it</button>
+      <span class="dumpbox-status" role="status"></span>
+    </div>
+  </section>
 
   <h2>🧭 What I track</h2>
   <div class="grid">
@@ -290,6 +327,108 @@
   }
   input.addEventListener('input', function(){ render(input.value); });
   render('');
+})();
+</script>
+
+<script>
+// ---- brain-dump box (shared snippet; writes to docs/ingest.md via GitHub API) ----
+(function(){
+  var box = document.querySelector('.dumpbox');
+  if (!box || box.dataset.dumpInit) return;
+  box.dataset.dumpInit = '1';
+  var bid = box.getAttribute('data-buddy-id') || (function(){
+    var p = location.pathname.replace(/\/+$/, '');
+    return p.substring(p.lastIndexOf('/') + 1);
+  })();
+  var ta = box.querySelector('textarea'),
+      btn = box.querySelector('.dumpbox-btn'),
+      st = box.querySelector('.dumpbox-status'),
+      tokWrap = box.querySelector('.dumpbox-token');
+  function lsGet(){ try { return JSON.parse(localStorage.getItem('buddyTree.v3') || '{}'); } catch(e){ return {}; } }
+  function lsSet(patch){ try { var s = lsGet(); for (var k in patch) s[k] = patch[k]; localStorage.setItem('buddyTree.v3', JSON.stringify(s)); } catch(e){} }
+  function token(){ return lsGet().ghToken || ''; }
+  function b64encode(str){
+    var bytes = new TextEncoder().encode(str), bin = '';
+    bytes.forEach(function(b){ bin += String.fromCharCode(b); });
+    return btoa(bin);
+  }
+  async function ghApi(path, method, body){
+    var t = token();
+    if (!t) throw new Error('Add a GitHub token first.');
+    var r = await fetch('https://api.github.com' + path, {
+      method: method || 'GET',
+      headers: {'Authorization': 'Bearer ' + t, 'Accept': 'application/vnd.github+json', 'Content-Type': 'application/json'},
+      body: body ? JSON.stringify(body) : undefined
+    });
+    if (!r.ok) throw new Error('GitHub ' + r.status);
+    return r.status === 204 ? null : await r.json();
+  }
+  async function ghGetFile(repo, path){
+    try {
+      var j = await ghApi('/repos/davedellaquila/' + repo + '/contents/' + path);
+      if (j && j.content) return {
+        text: new TextDecoder().decode(Uint8Array.from(atob(j.content.replace(/\n/g, '')), function(c){ return c.charCodeAt(0); })),
+        sha: j.sha
+      };
+    } catch(e){}
+    return null;
+  }
+  var repo = null, repoName = bid;
+  async function resolveRepo(){
+    try {
+      var r = await fetch('../buddies.json', {cache: 'no-store'});
+      var d = await r.json();
+      var buds = d.buddies || [];
+      for (var i = 0; i < buds.length; i++) {
+        if (buds[i].id === bid && buds[i].repo) { repo = buds[i].repo; repoName = buds[i].name || bid; break; }
+      }
+    } catch(e){}
+  }
+  function refreshUI(){
+    var has = !!token();
+    tokWrap.hidden = has;
+    var ok = has && !!repo;
+    ta.disabled = !ok;
+    btn.disabled = !ok;
+    if (!has) { st.textContent = ''; }
+    else if (!repo) { st.textContent = 'No repo linked for this buddy yet.'; }
+  }
+  var tokInput = tokWrap.querySelector('input'),
+      tokSave = tokWrap.querySelector('button');
+  tokSave.addEventListener('click', function(){
+    var v = tokInput.value.trim();
+    if (!v) return;
+    lsSet({ghToken: v});
+    tokInput.value = '';
+    refreshUI();
+    st.textContent = 'Token saved on this device.';
+  });
+  async function dump(){
+    var text = ta.value.trim();
+    if (!text) return;
+    if (!token()) { refreshUI(); return; }
+    if (!repo) { st.textContent = 'No repo linked for this buddy yet.'; return; }
+    st.textContent = 'Dumping…';
+    btn.disabled = true;
+    try {
+      var stamp = new Date().toLocaleString();
+      var NL = String.fromCharCode(10);
+      var entry = '## ' + stamp + NL + NL + text + NL + NL;
+      var cur = await ghGetFile(repo, 'docs/ingest.md');
+      var base = cur ? cur.text : '# Ingest log — ' + repoName + NL + NL;
+      var body = {message: 'Ingest dump for ' + bid, content: b64encode(base + entry)};
+      if (cur && cur.sha) body.sha = cur.sha;
+      await ghApi('/repos/davedellaquila/' + repo + '/contents/docs/ingest.md', 'PUT', body);
+      ta.value = '';
+      st.textContent = '✓ Dumped to ' + repo + '/docs/ingest.md';
+    } catch(err){ st.textContent = 'Save failed: ' + (err.message || err); }
+    btn.disabled = false;
+  }
+  btn.addEventListener('click', dump);
+  ta.addEventListener('keydown', function(ev){
+    if ((ev.metaKey || ev.ctrlKey) && ev.key === 'Enter') { ev.preventDefault(); dump(); }
+  });
+  resolveRepo().then(refreshUI);
 })();
 </script>
 </body>
