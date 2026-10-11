@@ -682,6 +682,19 @@ body.standalone .sa-bar{display:flex}
 .bp-sec{margin-top:30px}
 .bp-sec>h3{font-size:13px;letter-spacing:1.2px;text-transform:uppercase;color:var(--muted);margin:0 0 12px}
 .bp-sec[data-field="attention"]>h3{color:var(--amber)}
+/* What's-new modal (from the update banner) */
+#whatsnew-modal{position:fixed;inset:0;z-index:10000}
+.wn-backdrop{position:absolute;inset:0;background:var(--scrim)}
+.wn-box{position:absolute;top:8%;left:50%;transform:translateX(-50%);width:min(560px,calc(100vw - 32px));max-height:80vh;
+  display:flex;flex-direction:column;background:var(--panel);border:1px solid var(--border);border-radius:14px;
+  box-shadow:0 16px 48px rgba(0,0,0,.4)}
+.wn-head{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--border)}
+.wn-head h3{margin:0;font-size:16px}
+.wn-x{background:none;border:none;color:var(--text);font-size:22px;cursor:pointer;line-height:1;padding:4px}
+.wn-body{padding:6px 18px 18px;overflow-y:auto}
+.wn-body h4{margin:16px 0 6px;font-size:14.5px}
+.wn-body h5{margin:12px 0 4px;font-size:13px;color:var(--muted)}
+.wn-body ul{margin:4px 0 8px;padding-left:20px;font-size:13.5px;line-height:1.55}
 .bp-sec[data-field="attention"].attn-high>h3{color:var(--danger)}
 /* Attention-getting header effects (style chosen in Settings → Attention header effect) */
 @keyframes attn-pulse{0%,100%{opacity:1}50%{opacity:.4}}
@@ -4020,19 +4033,6 @@ function bindIframeEdgeSwipes(iframeDoc, frameEl, buddyId){
 }
 window.__bindEdgeSwipes = bindIframeEdgeSwipes;
 
-/* What's-new modal (from the update banner) */
-#whatsnew-modal{position:fixed;inset:0;z-index:10000}
-.wn-backdrop{position:absolute;inset:0;background:var(--scrim)}
-.wn-box{position:absolute;top:8%;left:50%;transform:translateX(-50%);width:min(560px,calc(100vw - 32px));max-height:80vh;
-  display:flex;flex-direction:column;background:var(--panel);border:1px solid var(--border);border-radius:14px;
-  box-shadow:0 16px 48px rgba(0,0,0,.4)}
-.wn-head{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--border)}
-.wn-head h3{margin:0;font-size:16px}
-.wn-x{background:none;border:none;color:var(--text);font-size:22px;cursor:pointer;line-height:1;padding:4px}
-.wn-body{padding:6px 18px 18px;overflow-y:auto}
-.wn-body h4{margin:16px 0 6px;font-size:14.5px}
-.wn-body h5{margin:12px 0 4px;font-size:13px;color:var(--muted)}
-.wn-body ul{margin:4px 0 8px;padding-left:20px;font-size:13.5px;line-height:1.55}
 // Checks for a newer deployed version; shows an update banner if the server
 // has a newer build than the one currently loaded (helps Safari web apps
 // and other containers without a hard-refresh shortcut).
@@ -4040,7 +4040,7 @@ window.__bindEdgeSwipes = bindIframeEdgeSwipes;
 // (e.g. pull-to-refresh) can report the outcome.
 /* Renders the newest CHANGELOG.md sections as HTML for the What's-new modal */
 function changelogMdToHtml(md){
-  const lines = String(md || '').split('\n');
+  const lines = String(md || '').split('\\n');
   let html = '', sections = 0, inList = false;
   const closeList = () => { if (inList) { html += '</ul>'; inList = false; } };
   for (const raw of lines) {
