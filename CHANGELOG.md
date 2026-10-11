@@ -3,6 +3,12 @@
 All notable changes to the Buddies dashboard and buddy system. Newest first.
 `FEATURES.md` describes the current state; this file describes how it got there.
 
+## 2026-10-11 (Dashboard: default project homepage redesign)
+
+### Added
+- **Redesigned default project homepage view** (Design Buddy, Dave-approved) — the auto-generated fallback in `buddyHomepageHtml` (build.py) for buddies without a custom homepage: hero header (icon tile, name, tagline, status pill, stat strip), desktop two-column grid (About / Plans / Artifacts + amber Needs-attention rail and sub-buddy chips), full-width 🧠 brain-dump box writing to the buddy's docs/ingest.md via the dashboard's GitHub token path, attention items link to their referent when a URL is present. Inherits dashboard dark/light theme; single column under 960px. Also fixed two latent bugs: cards used undefined `--card` var (rendered transparent) and plans never rendered (`PLANS[b.id]` on an array).
+- **Attention-item URLs** — 43 registry attention items backfilled with links (brief/mission docs, dashboard); new standing rule: every homepage attention item must link to its referent.
+
 ## 2026-10-11 (Dashboard: search clear button)
 
 ### Added
