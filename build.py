@@ -1963,6 +1963,11 @@ function renderBuddy(id){
     // Immediately reflect the new name in the current view
     if (S.view === 'project' && S.projectId === id) renderProjectView();
     else if (S.view === 'projects') renderProjects();
+    // Tree tiles: update labels in place — a rename changes no structure, so keep the user's pan/zoom
+    document.querySelectorAll('#treezoom .node[data-buddy="' + id + '"] .name').forEach(function(el){
+      const kc = el.querySelector('.kcount');
+      el.innerHTML = iconName(byId[id]) + (kc ? kc.outerHTML : '');
+    });
     // Update the panel itself to show the new name (in case hideBuddyWord applies)
     renderBuddy(id);
   });
@@ -2249,11 +2254,10 @@ function renderProjects(){
   const vp = document.getElementById('view-projects');
   vp.innerHTML = s;
 }
-let treeHTML0 = null, projHTML0 = null;
 function refreshViews(){
-  const tz = document.getElementById('treezoom'), vp = document.getElementById('view-projects');
-  if (treeHTML0 === null) { treeHTML0 = tz.innerHTML; projHTML0 = vp.innerHTML; }
-  if (Object.keys(S.parents).length) { renderOrgTree(); } else { tz.innerHTML = treeHTML0; }
+  // Always re-render the tree from current data. Restoring a cached copy left
+  // renamed / re-iconed tiles stale, and broke "reset tree" after reparenting.
+  renderOrgTree();
   renderProjects();
 }
 function applyZoom(){

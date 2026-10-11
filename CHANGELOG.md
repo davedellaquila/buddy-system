@@ -3,6 +3,11 @@
 All notable changes to the Buddies dashboard and buddy system. Newest first.
 `FEATURES.md` describes the current state; this file describes how it got there.
 
+## 2026-10-11 (Tree tile rename fix)
+
+### Fixed
+- **Tree tiles now reflect renames immediately (Dave's catch):** renaming a buddy from the info panel updated the left buddy list and the panel itself, but the tree chart tiles kept showing the old name until a full page reload. Tree tile labels now update in place on rename (pan/zoom preserved). Also fixed the same staleness for icon changes and "reset tree" after drag-reparenting: `refreshViews()` now always re-renders the tree from current data instead of restoring a cached copy.
+
 ## 2026-10-11 (Idea Buddy)
 
 ### Added
