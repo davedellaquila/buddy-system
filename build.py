@@ -3388,7 +3388,18 @@ async function loadPhotos(id){
   }
   const all = seeds.concat(repo.filter(x => !seeds.some(s => s.src === x.src)));
   const ph3 = document.getElementById('photos-h3');
-  if (ph3) ph3.textContent = 'Photos (' + all.length + ')';
+  if (ph3) {
+    // Update the label without disturbing the collapse arrow / drag grip
+    let label = ph3.querySelector('.ph-label');
+    if (!label) {
+      label = document.createElement('span');
+      label.className = 'ph-label';
+      Array.from(ph3.childNodes).forEach(n => { if (n.nodeType === 3) n.remove(); });
+      const arrow = ph3.querySelector('.secarrow');
+      if (arrow && arrow.after) arrow.after(label); else ph3.prepend(label);
+    }
+    label.textContent = 'Photos (' + all.length + ')';
+  }
   strip.innerHTML = all.map(p => {
     const del = p.path ? '<button class="pdel" data-del="' + escHtml(p.path) + '" data-repo="' + escHtml(p.repo || 'buddy-system') + '" title="Delete photo">' + ICON_TRASH + '</button>' : '';
     return '<div class="pwrap"><a href="' + escHtml(p.href) + '" target="_blank" rel="noopener"><img src="' + escHtml(p.src) + '" loading="lazy" alt=""></a>' + del + '</div>';
