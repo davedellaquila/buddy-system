@@ -115,7 +115,9 @@ body{padding:0}
 .bicon{width:20px;flex:0 0 20px;text-align:center;font-size:15px}
 .brow.dragging{opacity:.35}
 .brow.drop-target{background:var(--active);box-shadow:inset 0 0 0 2px var(--accent)}
-.bp-icon{font-size:38px;line-height:1}
+.bp-icon{font-size:38px;line-height:1;position:relative;overflow:hidden;display:inline-flex;align-items:center;justify-content:center}
+.bp-avatarimg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.bp-avaemoji{position:relative}
 .toast{position:fixed;bottom:26px;left:50%;transform:translateX(-50%);background:var(--panel);
   border:1px solid var(--accent);color:var(--text);padding:10px 20px;border-radius:999px;
   font-size:14px;z-index:99;box-shadow:0 4px 24px var(--shadow);white-space:nowrap;
@@ -388,12 +390,15 @@ body.sb-closed #menu-btn{display:flex;align-items:center;justify-content:center;
 #plans-sec.collapsed #plans-arrow{transform:rotate(0deg)}
 
 #avatar-picker{position:fixed;z-index:2000;background:var(--panel);border:1px solid var(--border);border-radius:12px;
-  padding:16px;width:280px;display:none;box-shadow:0 12px 40px var(--scrim)}
+  padding:16px;width:320px;max-height:70vh;overflow-y:auto;display:none;box-shadow:0 12px 40px var(--scrim)}
 #avatar-picker.show{display:block}
 #avatar-picker h4{margin:0 0 10px;font-size:13px}
-#avatar-grid{display:grid;grid-template-columns:repeat(8,1fr);gap:4px;margin-bottom:10px}
-#avatar-grid button{background:none;border:1px solid transparent;border-radius:8px;font-size:20px;padding:6px;cursor:pointer}
-#avatar-grid button:hover{border-color:var(--accent);background:var(--hover)}
+.av-cat{font-size:11px;color:var(--muted);margin:10px 0 4px;text-transform:uppercase;letter-spacing:.06em}
+.av-cat:first-of-type{margin-top:0}
+#avatar-grid{margin-bottom:10px}
+.av-grid{display:grid;grid-template-columns:repeat(8,1fr);gap:4px}
+.av-grid button{background:none;border:1px solid transparent;border-radius:8px;font-size:20px;padding:6px;cursor:pointer}
+.av-grid button:hover{border-color:var(--accent);background:var(--hover)}
 #avatar-picker input{width:100%;box-sizing:border-box;background:var(--bg);border:1px solid var(--border);color:var(--text);
   border-radius:8px;padding:8px;font-size:14px;text-align:center}
 .info-tip{position:relative;display:inline-block;margin-left:6px;cursor:help;color:var(--muted);font-size:12px}
@@ -792,6 +797,42 @@ def build():
 const ROOT_ORDER = ORDER_JSON;
 const byId = Object.fromEntries(BUDDIES.map(b => [b.id, b]));
 BUDDIES.forEach(b => { (b.links || []).forEach(lid => { const t = byId[lid]; if (t && lid !== b.id) { (t.linkedBy = t.linkedBy || []).push(b.id); } }); });
+function buddyImageUrl(b, prefix){ if(!b) return null; if(b.image) return b.image; return (prefix || '') + 'avatars/' + b.id + '.jpg'; }
+function buddyDisplayIcon(b){ try { if (window.S && S.iconOverrides && S.iconOverrides[b.id]) return S.iconOverrides[b.id]; } catch(e){} return b.icon || ''; }
+function setBuddyFavicon(icon, imageUrl){
+  function apply(url){
+    let l = document.querySelector('link[rel="icon"]');
+    if(!l){ l = document.createElement('link'); l.rel = 'icon'; document.head.appendChild(l); }
+    l.type = 'image/png'; l.href = url;
+    let t = document.querySelector('link[rel="apple-touch-icon"]');
+    if(!t){ t = document.createElement('link'); t.rel = 'apple-touch-icon'; document.head.appendChild(t); }
+    t.href = url;
+  }
+  function fromEmoji(e){
+    try{
+      const c = document.createElement('canvas'); c.width = c.height = 64;
+      const x = c.getContext('2d');
+      x.font = '48px "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif';
+      x.textAlign = 'center'; x.textBaseline = 'middle';
+      x.fillText(e || '?', 32, 36);
+      apply(c.toDataURL('image/png'));
+    }catch(err){}
+  }
+  if(imageUrl){
+    const img = new Image();
+    img.onload = function(){
+      try{
+        const c = document.createElement('canvas'); c.width = c.height = 64;
+        const x = c.getContext('2d');
+        const s = Math.min(img.width, img.height);
+        x.drawImage(img, (img.width - s)/2, (img.height - s)/2, s, s, 0, 0, 64, 64);
+        apply(c.toDataURL('image/png'));
+      }catch(err){ fromEmoji(icon); }
+    };
+    img.onerror = function(){ fromEmoji(icon); };
+    img.src = imageUrl;
+  } else fromEmoji(icon);
+}
 (function applyIconOverrides(){ try { const o = JSON.parse(localStorage.getItem('buddyState') || '{}').iconOverrides || {}; Object.entries(o).forEach(([id, ic]) => { if (byId[id]) byId[id].icon = ic; }); } catch(e){} })();
 const PLANS = PLANS_JSON;
 const planById = Object.fromEntries(PLANS.map(p => [p.id, p]));
@@ -1803,6 +1844,7 @@ function renderProjectView(){
 }
 function renderBuddy(id){
   const b = byId[id]; if(!b) return;
+  try{ setBuddyFavicon(buddyDisplayIcon(b), buddyImageUrl(b)); }catch(e){}
   const items = (b.attention || []).slice().sort((x,y) => (S.seen[x.id]?1:0) - (S.seen[y.id]?1:0));
   let arts = '';
   if (b.brief) arts += artRow(ICON_DOC, 'Mission statement', 'The canonical mission & intent — Google Doc', b.brief);
@@ -1873,7 +1915,7 @@ function renderBuddy(id){
     + '<div class="bp-crumb">'+crumb(id)+'</div>'
     + '<p class="bp-tagline">'+escHtml(b.tagline||'')+'</p>'
     + '<div class="bp-sticky-head"><div class="bp-top">'
-    + '<span class="bp-icon" id="bp-icon" title="Click to change avatar" style="cursor:pointer">'+escHtml(b.icon||'')+'</span>'
+    + '<span class="bp-icon" id="bp-icon" title="Click to change avatar" style="cursor:pointer">'+'<img class="bp-avatarimg" src="'+escHtml(buddyImageUrl(b))+'" alt="" onerror="this.remove()">'+'<span class="bp-avaemoji">'+escHtml(buddyDisplayIcon(b))+'</span></span>'
     + '<h2 class="bp-name" id="bp-name" contenteditable="true" spellcheck="false" data-buddy="'+id+'">'+escHtml(dispName(b))+'</h2>'
     + '<span class="status '+b.statusClass+'">'+escHtml(b.status)+'</span>'
     + '<button class="bp-close-x" id="bp-close-x" type="button" title="Close detail \u2014 back to main view" aria-label="Close detail \u2014 back to main view">\u203a</button></div></div>'
@@ -3291,29 +3333,88 @@ function firstSearchMatch(){
   }
   return null;
 }
-const AVATAR_CHOICES = ['\U0001f4cb','\U0001f3e0','\U0001f4bc','\U0001f680','\U0001f4a1','\U0001f3af','\U0001f3ae','\U0001f3b5','\U0001f4f7','\U0001f697','\U0001f3e1','\U0001f9f3','\U0001f4dA','\U0001f4dd','\U0001f6e0','\U0001f9ed','\U0001f464','\U0001f465','\U0001f43e','\U0001f431','\U0001f33a','\U00002600','\U0001f319','\U0001f4ab'];
+const AVATAR_CATS = [
+ {name:'Smileys', emojis:'😀 😃 😄 😁 😆 😅 😂 🤣 😊 😇 🙂 🙃 😉 😌 😍 🥰 😘 😎 🤩 🥳 😏 🤔 😴 🤯 😱'.split(' ')},
+ {name:'Gestures', emojis:'👋 🤚 🖐 ✋ 🖖 👌 🤌 ✌️ 🤞 🤟 🤘 🤙 👈 👉 👆 👇 ☝️ 👍 👎 ✊ 👊 🤛 🤜 👏 🙌 💪 🤲 🤝 🙏'.split(' ')},
+ {name:'Animals', emojis:'🐶 🐱 🐭 🐹 🐰 🦊 🐻 🐼 🐨 🐯 🦁 🐮 🐷 🐸 🐵 🐔 🐧 🐦 🦄 🐝 🦋 🐢 🐙 🦑 🐠 🐟 🐬 🦈'.split(' ')},
+ {name:'Food', emojis:'🍎 🍐 🍊 🍋 🍌 🍉 🍇 🍓 🫐 🍒 🍑 🍍 🥑 🍆 🌶 🥕 🌽 🍄 🥜 🍞 🥐 🧀 🥚 🍳 🥞 🍕 🍔 🍟 🌮 🍣 🍩 🍪 🎂 🍫 ☕ 🍺 🍷'.split(' ')},
+ {name:'Activities', emojis:'⚽ 🏀 🏈 ⚾ 🎾 🏐 🎱 🏓 🏸 🥊 🎽 🛹 🎿 ⛷ 🏂 🏋️ 🤸 🏄 🏊 🚴 🧗 🎣 ⛳ 🎯 🎮 🎲 🧩 🎭 🎨 🎬 🎤 🎧 🎷 🎺 🎸 🎹 🥁'.split(' ')},
+ {name:'Travel', emojis:'🚗 🚕 🚙 🚌 🏎 🚓 🚑 🚒 🚚 🚜 🛴 🚲 🛵 🏍 ✈️ 🚀 🛸 🚁 ⛵ 🚤 🛳 ⚓ 🗺 🗽 🗼 🏰 🎡 🎢 ⛲ 🏖 🏝 ⛰ 🏔 🗻 🏕 ⛺ 🌋'.split(' ')},
+ {name:'Objects', emojis:'💡 🔦 🕯 🧯 💸 💵 💰 💳 💎 ⚖️ 🧰 🔧 🔨 ⚙️ 🧲 💣 🔪 🛡 🔮 📿 🧿 🔭 🔬 💊 🩺 🏷 🔖 🚩 📚 📖 ✏️ 📝 📎 🖇 📐 ✂️'.split(' ')},
+ {name:'Symbols', emojis:'❤️ 🧡 💛 💚 💙 💜 🖤 🤍 💔 💕 💖 ☮️ ✝️ ☪️ 🕉 ☸️ ✡️ ☯️ 🛐 ⚛️ ♈ ♉ ♊ ♋ ♌ ♍ ♎ ♏ ♐ ♑ ♒ ♓ 🆔 ✅ ❌ ❓ ❗ ➕ ➖ 💯 🔱'.split(' ')}
+];
 function openAvatarPicker(bid, anchorEl){
   let pk = document.getElementById('avatar-picker');
-  if (!pk) {
+  if(!pk){
     pk = document.createElement('div'); pk.id = 'avatar-picker';
     pk.innerHTML = '<h4>Choose avatar</h4><div id="avatar-grid"></div>'
-      + '<input id="avatar-custom" placeholder="Or paste any emoji" maxlength="8">';
+      + '<input id="avatar-custom" placeholder="Or paste any emoji" maxlength="8">'
+      + '<div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap">'
+      + '<button class="linkbtn" id="avatar-upload">Upload image</button>'
+      + '<button class="linkbtn" id="avatar-remove">Remove image</button></div>'
+      + '<p class="fineprint" style="margin:8px 0 0">Uploaded images live in the dashboard repo (avatars/) and appear on the card, homepage, and favicon.</p>';
     document.body.appendChild(pk);
+    document.getElementById('avatar-upload').addEventListener('click', () => {
+      const cur = document.getElementById('avatar-picker').dataset.bid;
+      uploadBuddyImage(cur);
+    });
+    document.getElementById('avatar-remove').addEventListener('click', async () => {
+      const cur = document.getElementById('avatar-picker').dataset.bid;
+      if(!ghToken()){ openTokenPopover(); toast('Add a GitHub token first.'); return; }
+      try{ await ghDeleteFile('buddy-system', 'avatars/' + cur + '.jpg', 'Remove avatar for ' + cur); toast('Avatar image removed.'); }
+      catch(e){ toast('No custom image to remove.'); }
+      pk.classList.remove('show'); if(cur) renderBuddy(cur);
+    });
   }
+  pk.dataset.bid = bid;
   const grid = document.getElementById('avatar-grid');
-  grid.innerHTML = AVATAR_CHOICES.map(e => '<button data-emoji="' + e + '">' + e + '</button>').join('');
+  grid.innerHTML = AVATAR_CATS.map(cat =>
+    '<div class="av-cat">' + cat.name + '</div><div class="av-grid">' +
+    cat.emojis.map(e => '<button data-emoji="' + e + '">' + e + '</button>').join('') + '</div>'
+  ).join('');
   grid.querySelectorAll('button').forEach(btn => {
     btn.addEventListener('click', () => { setBuddyIcon(bid, btn.dataset.emoji); pk.classList.remove('show'); });
   });
   const inp = document.getElementById('avatar-custom');
   inp.value = '';
-  inp.onchange = () => { const v = inp.value.trim(); if (v) { setBuddyIcon(bid, v); pk.classList.remove('show'); } };
+  inp.onchange = () => { const v = inp.value.trim(); if(v){ setBuddyIcon(bid, v); pk.classList.remove('show'); } };
   const r = anchorEl.getBoundingClientRect();
-  pk.style.left = Math.min(window.innerWidth - 300, r.left) + 'px';
+  pk.style.left = Math.min(window.innerWidth - 340, r.left) + 'px';
   pk.style.top = (r.bottom + 8) + 'px';
   pk.classList.add('show');
-  const close = e => { if (!pk.contains(e.target) && e.target !== anchorEl) { pk.classList.remove('show'); document.removeEventListener('click', close); } };
+  const close = e => { if(!pk.contains(e.target) && e.target !== anchorEl){ pk.classList.remove('show'); document.removeEventListener('click', close); } };
   setTimeout(() => document.addEventListener('click', close), 10);
+}
+function fileToDataUrl(f){ return new Promise((res, rej) => { const r = new FileReader(); r.onload = () => res(r.result); r.onerror = rej; r.readAsDataURL(f); }); }
+function downscaleToJpeg(dataUrl, maxSize){
+  return new Promise((res, rej) => {
+    const img = new Image();
+    img.onload = () => {
+      const s = Math.min(1, maxSize / Math.max(img.width, img.height));
+      const c = document.createElement('canvas');
+      c.width = Math.max(1, Math.round(img.width * s)); c.height = Math.max(1, Math.round(img.height * s));
+      c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+      res(c.toDataURL('image/jpeg', 0.85));
+    };
+    img.onerror = rej; img.src = dataUrl;
+  });
+}
+async function uploadBuddyImage(bid){
+  if(!bid) return;
+  if(!ghToken()){ openTokenPopover(); toast('Add a GitHub token first.'); return; }
+  const inp = document.createElement('input'); inp.type = 'file'; inp.accept = 'image/*';
+  inp.onchange = async () => {
+    const f = inp.files && inp.files[0]; if(!f) return;
+    const pk = document.getElementById('avatar-picker'); if(pk) pk.classList.remove('show');
+    toast('Uploading avatar…');
+    try{
+      const jpg = await downscaleToJpeg(await fileToDataUrl(f), 512);
+      await ghPutFile('buddy-system', 'avatars/' + bid + '.jpg', jpg.split(',')[1], 'Avatar image for ' + bid);
+      toast('Avatar image saved.');
+      renderBuddy(bid);
+    }catch(err){ toast('Upload failed: ' + (err && err.message || err)); }
+  };
+  inp.click();
 }
 function setBuddyIcon(bid, emoji){
   const b = byId[bid]; if (!b) return;
@@ -3321,7 +3422,9 @@ function setBuddyIcon(bid, emoji){
   // Persist to buddies.json via journal? For now, device-local + mark dirty
   if (!S.iconOverrides) S.iconOverrides = {};
   S.iconOverrides[bid] = emoji; save();
-  const el = document.getElementById('bp-icon'); if (el) el.textContent = emoji;
+  const eel = document.querySelector('#bp-icon .bp-avaemoji'); if (eel) eel.textContent = emoji;
+  else { const el = document.getElementById('bp-icon'); if (el) el.textContent = emoji; }
+  try{ setBuddyFavicon(emoji, buddyImageUrl(b)); }catch(e){}
   renderNav(); refreshViews();
   toast('Avatar updated.');
 }

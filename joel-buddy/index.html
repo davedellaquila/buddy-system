@@ -65,6 +65,20 @@
   .dumpbox-tokenrow a{color:var(--accent); font-size:13px}
   .dumpbox-connect{background:var(--bg); border:1px dashed var(--border); border-radius:8px; padding:14px 16px; margin-bottom:12px; font-size:14px}
   .dumpbox-connect p{margin:0 0 10px}
+  /* avatar picker */
+  .avatar{cursor:pointer}
+  .avatar img{width:96px;height:96px;border-radius:24px;object-fit:cover}
+  #hp-picker{position:fixed;z-index:2000;background:var(--card);border:1px solid var(--border);border-radius:12px;
+    padding:16px;width:320px;max-width:calc(100vw - 32px);max-height:70vh;overflow-y:auto;display:none;
+    box-shadow:0 12px 40px rgba(0,0,0,.35);left:16px;top:16px}
+  #hp-picker.show{display:block}
+  #hp-picker h4{margin:0 0 10px;font-size:14px}
+  .hp-avcat{font-size:11px;color:var(--muted);margin:10px 0 4px;text-transform:uppercase;letter-spacing:.06em}
+  .hp-avgrid{display:grid;grid-template-columns:repeat(8,1fr);gap:4px}
+  .hp-avgrid button{background:none;border:1px solid transparent;border-radius:8px;font-size:20px;padding:6px;cursor:pointer}
+  .hp-avgrid button:hover{border-color:var(--accent)}
+  #hp-picker input{width:100%;box-sizing:border-box;background:var(--bg);border:1px solid var(--border);color:var(--text);
+    border-radius:8px;padding:8px;font-size:14px;text-align:center;margin-top:10px}
 </style>
 </head>
 <body>
@@ -264,6 +278,134 @@
     }
   }).catch(function(){});
   resolveRepo().then(refreshUI);
+})();
+</script>
+<script>
+/* Buddy avatar: image, tap-to-change emoji picker, per-buddy favicon */
+(function(){
+  var box = document.querySelector('[data-buddy-id]');
+  var bid = box ? box.getAttribute('data-buddy-id') : null;
+  if(!bid) return;
+  var avatarEl = document.querySelector('.avatar');
+  var imageShown = false;
+
+  function overrides(){
+    try{ return JSON.parse(localStorage.getItem('buddyState')||'{}').iconOverrides || {}; }
+    catch(e){ return {}; }
+  }
+  function hpSetFavicon(icon, imageUrl){
+    function apply(url){
+      var l = document.querySelector('link[rel="icon"]');
+      if(!l){ l = document.createElement('link'); l.rel = 'icon'; document.head.appendChild(l); }
+      l.type = 'image/png'; l.href = url;
+      var t = document.querySelector('link[rel="apple-touch-icon"]');
+      if(!t){ t = document.createElement('link'); t.rel = 'apple-touch-icon'; document.head.appendChild(t); }
+      t.href = url;
+    }
+    function fromEmoji(e){
+      try{
+        var c = document.createElement('canvas'); c.width = c.height = 64;
+        var x = c.getContext('2d');
+        x.font = '48px "Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif';
+        x.textAlign = 'center'; x.textBaseline = 'middle';
+        x.fillText(e || '?', 32, 36);
+        apply(c.toDataURL('image/png'));
+      }catch(err){}
+    }
+    if(imageUrl){
+      var img = new Image();
+      img.onload = function(){
+        try{
+          var c = document.createElement('canvas'); c.width = c.height = 64;
+          var x = c.getContext('2d');
+          var s = Math.min(img.width, img.height);
+          x.drawImage(img, (img.width-s)/2, (img.height-s)/2, s, s, 0, 0, 64, 64);
+          apply(c.toDataURL('image/png'));
+        }catch(err){ fromEmoji(icon); }
+      };
+      img.onerror = function(){ fromEmoji(icon); };
+      img.src = imageUrl;
+    } else fromEmoji(icon);
+  }
+  function showImage(url, icon){
+    if(!avatarEl) return;
+    avatarEl.innerHTML = '';
+    var i = document.createElement('img'); i.src = url; i.alt = '';
+    i.onerror = function(){ imageShown = false; if(avatarEl) avatarEl.textContent = icon; hpSetFavicon(icon, null); };
+    avatarEl.appendChild(i);
+    imageShown = true;
+    hpSetFavicon(icon, url);
+  }
+  // Resolve icon + image from the registry, then try the avatar image
+  fetch('../buddies.json', {cache:'no-store'}).then(function(r){ return r.json(); }).then(function(d){
+    var buds = (d && d.buddies) || [];
+    var b = null;
+    for(var k = 0; k < buds.length; k++){ if(buds[k].id === bid){ b = buds[k]; break; } }
+    var icon = overrides()[bid] || (b && b.icon) || (avatarEl ? avatarEl.textContent.trim() : '') || '?';
+    if(avatarEl && !imageShown) avatarEl.textContent = icon;
+    var imgUrl = (b && b.image) || ('../avatars/' + bid + '.jpg');
+    var probe = new Image();
+    probe.onload = function(){ showImage(imgUrl, icon); };
+    probe.onerror = function(){ hpSetFavicon(icon, null); };
+    probe.src = imgUrl;
+  }).catch(function(){
+    hpSetFavicon(avatarEl ? avatarEl.textContent.trim() : '', null);
+  });
+
+  // Tap the avatar to change the emoji (shared with the dashboard via localStorage)
+  var CATS = [
+    ['Smileys','😀 😃 😄 😁 😆 😅 😂 🤣 😊 😇 🙂 🙃 😉 😌 😍 🥰 😘 😎 🤩 🥳 😏 🤔 😴 🤯 😱'],
+    ['Gestures','👋 🤚 🖐 ✋ 🖖 👌 🤌 ✌️ 🤞 🤟 🤘 🤙 👈 👉 👆 👇 ☝️ 👍 👎 ✊ 👊 👏 🙌 💪 🤝 🙏'],
+    ['Animals','🐶 🐱 🐭 🐹 🐰 🦊 🐻 🐼 🐨 🐯 🦁 🐮 🐷 🐸 🐵 🐔 🐧 🐦 🦄 🐝 🦋 🐢 🐙 🐠 🐟 🐬 🦈'],
+    ['Food','🍎 🍐 🍊 🍋 🍌 🍉 🍇 🍓 🫐 🍒 🍑 🍍 🥑 🍆 🌶 🥕 🌽 🍄 🥜 🍞 🥐 🧀 🥚 🍳 🍕 🍔 🌮 🍣 🍩 🍪 🎂 🍫 ☕ 🍺'],
+    ['Activities','⚽ 🏀 🏈 ⚾ 🎾 🏐 🎱 🏓 🏸 🥊 🛹 🎿 🏂 🏋️ 🏄 🏊 🚴 🎣 ⛳ 🎯 🎮 🎲 🎭 🎨 🎬 🎤 🎧 🎸 🎹 🥁'],
+    ['Travel','🚗 🚕 🚙 🚌 🏎 🚓 🚑 🚚 🛴 🚲 🛵 🏍 ✈️ 🚀 🚁 ⛵ 🚤 🛳 ⚓ 🗺 🗽 🗼 🏰 🎡 🏖 🏝 ⛰ 🏔 🗻 🏕 🌋'],
+    ['Objects','💡 🔦 🕯 💸 💵 💰 💳 💎 ⚖️ 🧰 🔧 🔨 ⚙️ 🧲 💣 🔪 🛡 🔮 🔭 🔬 💊 🩺 🏷 🚩 📚 📖 ✏️ 📝 ✂️'],
+    ['Symbols','❤️ 🧡 💛 💚 💙 💜 🖤 🤍 💔 💕 ☮️ ☯️ ⚛️ ♈ ♉ ♊ ♋ ♌ ♍ ♎ ♏ ♐ ♑ ♒ ♓ ✅ ❌ ❓ ❗ ➕ ➖ 💯']
+  ];
+  function pick(emoji){
+    try{
+      var st = JSON.parse(localStorage.getItem('buddyState')||'{}');
+      st.iconOverrides = st.iconOverrides || {};
+      st.iconOverrides[bid] = emoji;
+      localStorage.setItem('buddyState', JSON.stringify(st));
+    }catch(e){}
+    if(avatarEl && !imageShown) avatarEl.textContent = emoji;
+    if(!imageShown) hpSetFavicon(emoji, null);
+    var pk = document.getElementById('hp-picker');
+    if(pk) pk.classList.remove('show');
+  }
+  if(avatarEl){
+    avatarEl.title = 'Tap to change avatar';
+    avatarEl.addEventListener('click', function(){
+      var pk = document.getElementById('hp-picker');
+      if(!pk){
+        pk = document.createElement('div'); pk.id = 'hp-picker';
+        var html = '<h4>Choose avatar</h4>';
+        CATS.forEach(function(cat){
+          html += '<div class="hp-avcat">' + cat[0] + '</div><div class="hp-avgrid">';
+          cat[1].split(' ').forEach(function(e){ html += '<button data-e="' + e + '">' + e + '</button>'; });
+          html += '</div>';
+        });
+        html += '<input id="hp-custom" placeholder="Or paste any emoji" maxlength="8">';
+        pk.innerHTML = html;
+        document.body.appendChild(pk);
+        pk.querySelectorAll('button').forEach(function(btn){
+          btn.addEventListener('click', function(ev){ ev.stopPropagation(); pick(btn.getAttribute('data-e')); });
+        });
+        pk.querySelector('#hp-custom').addEventListener('change', function(ev){
+          var v = ev.target.value.trim(); if(v) pick(v);
+        });
+      }
+      pk.classList.add('show');
+      var close = function(e){
+        if(!pk.contains(e.target) && e.target !== avatarEl){
+          pk.classList.remove('show'); document.removeEventListener('click', close);
+        }
+      };
+      setTimeout(function(){ document.addEventListener('click', close); }, 10);
+    });
+  }
 })();
 </script>
 </body>
