@@ -3,6 +3,28 @@
 All notable changes to the Buddies dashboard and buddy system. Newest first.
 `FEATURES.md` describes the current state; this file describes how it got there.
 
+## 2026-10-11 (Detail panel footer + dump feed fixes)
+
+### Changed
+- **“Open in a new tab”** — moved from the floating overlay on Project Homepage
+  into the right detail panel footer (above the build stamp).
+- **Dump list refresh** — new dumps paint immediately and stay visible: default
+  expanded, race-safe against stale GitHub fetches, and the Ingest section is
+  un-hidden/un-collapsed when a dump lands. The **Dumps** heading always
+  renders (even at 0) so the section can’t disappear; status text points at it.
+
+## 2026-10-11 (Sidebar + detail panel: chevron expand/collapse controls)
+
+### Changed
+- **Sidebar toggle icons** — the open-panel close control (X-in-circle) is now
+  a left chevron; the closed-panel floating reopen control (hamburger) is now
+  a right chevron. Same expand/collapse behavior; clearer direction affordance.
+- **Right detail panel toggle icons** — floating reopen control (info “i”) is
+  now a left chevron; sticky-header close (✕) is now a right chevron; topnav
+  Close uses › to match. Direction mirrors the left sidebar.
+- **`build.py` path** — `HERE` is derived from `__file__` so the dashboard
+  rebuilds correctly outside the old hatch workspace path.
+
 ## 2026-10-11 (Portfolio Buddy: new buddy)
 
 ### Added

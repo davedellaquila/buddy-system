@@ -53,11 +53,11 @@ Build: `build.py` generates `index.html` from `buddies.json` + `plans.json`.
   keys 1–6 select views in that order; Up/Down arrow through views then
   buddies.
 - **Project view** — shows the current project's homepage full-bleed in the
-  main view area (no margins); a floating "Open in a new tab" pill button
-  overlays the top. Clicking a sidebar buddy loads its homepage if it has
-  one, and leaves the view untouched if it doesn't. Buddies without a
-  homepage show a "No homepage for this project" empty state. Picking a
-  view-menu option never dismisses the right-side buddy panel.
+  main view area (no margins). "Open in a new tab" lives in the right detail
+  panel footer. Clicking a sidebar buddy loads its homepage if it has one,
+  and leaves the view untouched if it doesn't. Buddies without a homepage
+  show a "No homepage for this project" empty state. Picking a view-menu
+  option never dismisses the right-side buddy panel.
 - **Projects view** — hierarchical outline of every buddy with its status;
   opens with global attention tiles (TO REVIEW / NEW / CLEARED across all
   buddies), constrained to the same 860px width as the list below.
@@ -90,6 +90,9 @@ Build: `build.py` generates `index.html` from `buddies.json` + `plans.json`.
   GitHub Contents API (needs a token; falls back to device-local).
 - **Ingest box** — brain-dump raw thoughts about the buddy; each dump is
   appended as a timestamped entry to the buddy's repo `docs/ingest.md`.
+  The Dumps list updates immediately (optimistic paint) and defaults expanded.
+- **Open in a new tab** — in the right detail panel footer when the buddy has
+  a homepage URL (no longer a floating overlay on Project Homepage).
   Raw material for later dossier work. Dumps live in a collapsible
   "Dumps (n)" section (collapsed by default, state remembered per buddy);
   each dump tile has edit (✏️) and delete (🗑️) buttons in its upper-right
@@ -142,9 +145,13 @@ Build: `build.py` generates `index.html` from `buddies.json` + `plans.json`.
 
 - **Fit button (⛶)** next to the zoom slider — zooms to fit the chart content.
 - **Small (<640px)**: tiles stack as full-width cards; sidebar becomes a
-  drawer (hamburger button); detail opens as a bottom sheet; the Tree view
-  keeps the org chart (pan with a finger, floating zoom slider) instead of a
-  card list.
+  drawer (right-chevron to expand, left-chevron to collapse); detail opens as
+  a bottom sheet; the Tree view keeps the org chart (pan with a finger,
+  floating zoom slider) instead of a card list.
+- **Sidebar collapse controls**: open panel shows a left chevron (collapse) in
+  the top-right tools; closed panel shows a floating right chevron (expand).
+- **Detail panel collapse controls**: open panel sticky header shows a right
+  chevron (collapse); closed panel shows a floating left chevron (expand).
 - **Medium (640–1100px)**: collapsible sidebar; view nav becomes a horizontal
   segmented control; detail opens as a right-docked side sheet (380px).
 - **Large (>1100px)**: tri-pane with persistent detail panel (400px).
