@@ -3,6 +3,11 @@
 All notable changes to the Buddies dashboard and buddy system. Newest first.
 `FEATURES.md` describes the current state; this file describes how it got there.
 
+## 2026-10-11 (Memo dismiss)
+
+### Added
+- **Close link on the critical memo card (Dave's ask):** the "Critical memo" banner on buddy detail panels now has a × close control. Dismissing it hides the memo everywhere and remembers the choice on the device — a new memo (new ID) will still show.
+
 ## 2026-10-11 (Zoom slider thumb contrast)
 
 ### Fixed

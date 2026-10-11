@@ -688,6 +688,10 @@ body.standalone .sa-bar{display:flex}
 .standing-order b{color:var(--amber-hi)}
 .standing-order a{color:var(--accent-hi)}
 .standing-order .so-date{display:block;margin-top:4px;font-size:11px;color:var(--muted)}
+.standing-order{position:relative}
+.so-close{position:absolute;top:4px;right:6px;background:none;border:none;color:var(--amber-hi);
+  font-size:17px;line-height:1;padding:5px 7px;cursor:pointer;opacity:.6}
+.so-close:hover{opacity:1}
 .notes{width:100%;min-height:120px;background:var(--bg);border:1px solid var(--border);border-radius:12px;
   color:var(--text);font:inherit;font-size:14.5px;line-height:1.6;padding:13px 15px;resize:vertical}
 .notes:focus{outline:none;border-color:var(--accent)}
@@ -855,9 +859,10 @@ const STANDING_ORDERS = [
 ];
 function standingOrdersHtml(){
   if (!STANDING_ORDERS || !STANDING_ORDERS.length) return '';
-  return STANDING_ORDERS.map(o => {
+  const dismissed = S.dismissedOrders || [];
+  return STANDING_ORDERS.filter(o => dismissed.indexOf(o.id) < 0).map(o => {
     const link = o.href ? ' <a href="'+o.href+'" target="_blank" rel="noopener">Standing orders</a> · <a href="AGENTS.md" target="_blank" rel="noopener">AGENTS.md</a>' : '';
-    return '<div class="standing-order'+(o.critical?' critical':'')+'" data-order="'+o.id+'"><b>'+(o.critical?'Critical memo':'Memo')+'</b> — '+escHtml(o.text)+link+'<span class="so-date">'+escHtml(o.date||'')+'</span></div>';
+    return '<div class="standing-order'+(o.critical?' critical':'')+'" data-order="'+o.id+'"><button type="button" class="so-close" data-close-order="'+o.id+'" aria-label="Dismiss memo" title="Dismiss memo">\u00d7</button><b>'+(o.critical?'Critical memo':'Memo')+'</b> — '+escHtml(o.text)+link+'<span class="so-date">'+escHtml(o.date||'')+'</span></div>';
   }).join('');
 }
 const kidsOf = {};
@@ -3933,6 +3938,15 @@ document.addEventListener('click', e => {
   if (nodeDragEndAt && Date.now() - nodeDragEndAt < 400) return; // swallow the click that follows a node-drag gesture
   if (edgeOpenAt && Date.now() - edgeOpenAt < 400) return; // swallow the click that follows an edge-swipe open
   if (e.target.closest && e.target.closest('#bp-icon')) { const m = S.sel.match(/^buddy:(.+)$/); if (m) openAvatarPicker(m[1], e.target.closest('#bp-icon')); return; }
+  const co = e.target.closest && e.target.closest('[data-close-order]');
+  if (co) {
+    const oid = co.getAttribute('data-close-order');
+    S.dismissedOrders = S.dismissedOrders || [];
+    if (S.dismissedOrders.indexOf(oid) < 0) S.dismissedOrders.push(oid);
+    save();
+    const card = co.closest('.standing-order'); if (card) card.remove();
+    return;
+  }
   if (e.target.closest && (e.target.closest('#bp-close') || e.target.closest('#bp-close-x') || e.target.closest('#bp-takeover-back'))) { closeDetail(); return; }
   if (e.target.closest && e.target.closest('#panel-open')) {
     const id = (S.projectId && byId[S.projectId]) ? S.projectId : ROOT_ID;
