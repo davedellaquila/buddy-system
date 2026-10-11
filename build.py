@@ -198,21 +198,26 @@ body{padding:0}
 #zoomfit:hover{color:var(--text);background:transparent}
 /* Fixed to viewport at sidebar edge so vertical #sidebar scroll doesn't move it.
    MUST be a DOM sibling of #sidebar (not a child): overflow on #sidebar clips
-   hit-testing/paint for fixed descendants, which made the gripper invisible. */
-#sb-resize{position:fixed;top:var(--glass-inset,0);left:calc(var(--glass-inset, 0px) + var(--sbw, 308px) - 7px);z-index:92;
-  display:flex;align-items:center;justify-content:center;width:14px;height:auto;bottom:var(--glass-inset,0);cursor:ew-resize;
-  background:transparent;-webkit-tap-highlight-color:transparent}
-/* Vertical sheet-handle pill (reference rotated 90°) — thin, fully rounded, flat gray */
-#sb-resize::after{content:'';width:5px;height:48px;border-radius:999px;background:var(--muted);
-  border:none;box-shadow:none}
-#sb-resize:hover::after{background:var(--text2)}
+   hit-testing/paint for fixed descendants, which made the gripper invisible.
+   Hit area is deliberately wide (32px) — visual pill stays thin. */
+#sb-resize{position:fixed;top:var(--glass-inset,0);bottom:var(--glass-inset,0);
+  left:calc(var(--glass-inset, 0px) + var(--sbw, 308px) - 16px);z-index:94;
+  display:flex;align-items:center;justify-content:center;width:32px;height:auto;cursor:ew-resize;
+  background:transparent;border:none;padding:0;margin:0;
+  touch-action:none;-webkit-user-select:none;user-select:none;
+  -webkit-tap-highlight-color:transparent}
+/* Vertical sheet-handle pill — thin chrome, wide invisible hit strip */
+#sb-resize::after{content:'';width:5px;height:64px;border-radius:999px;background:var(--muted);
+  border:none;box-shadow:none;opacity:.85;transition:background .15s,opacity .15s,height .15s,width .15s;pointer-events:none}
+#sb-resize:hover::after,#sb-resize:focus-visible::after,.resizing-pane #sb-resize::after{
+  background:var(--accent);opacity:1;width:6px;height:80px}
 #sb-resize:hover{background:transparent}
 body.sb-closed #sb-resize{display:none}
 /* Phone drawer: stay fixed (sibling of #sidebar); show only while drawer is open */
 @media (max-width:639px){
-  #sb-resize{display:none;left:calc(var(--sbw, 308px) - 14px);width:28px;z-index:96}
+  #sb-resize{display:none;left:calc(var(--sbw, 308px) - 20px);width:40px;z-index:96;top:0;bottom:0}
   #sidebar.open ~ #sb-resize{display:flex}
-  #sb-resize::after{width:5px;height:56px}
+  #sb-resize::after{width:6px;height:72px}
 }
 /* Sidebar scroll-to-top — Muse-ish frosted chip, pinned to bottom of left panel */
 #sb-to-top{position:fixed;bottom:calc(var(--glass-inset, 0px) + 16px);left:calc(var(--glass-inset, 0px) + var(--sbw, 308px) / 2 - 22px);z-index:93;
@@ -377,14 +382,24 @@ body:has(#token-pill) #panel-open{right:148px}
   #view-buddy.sheet .bp-close-x{display:none}
 }
 #buddy-home{position:relative}
-#bp-resize{position:absolute;top:0;left:0;z-index:60;display:flex;align-items:center;justify-content:center;width:14px;height:100vh;cursor:ew-resize;
-  background:transparent;-webkit-tap-highlight-color:transparent}
-/* Same vertical pill language as #sb-resize */
-#bp-resize::after{content:'';width:5px;height:48px;border-radius:999px;background:var(--muted);
-  border:none;box-shadow:none}
-#bp-resize:hover::after{background:var(--text2)}
+/* Right-panel gripper: fixed on desktop so panel overflow/radius can't steal hits.
+   Wide hit strip; thin visual pill (mirrors #sb-resize). */
+#bp-resize{position:absolute;top:0;left:0;z-index:60;display:flex;align-items:center;justify-content:center;
+  width:32px;height:100%;cursor:ew-resize;background:transparent;border:none;padding:0;margin:0;
+  touch-action:none;-webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent}
+#bp-resize::after{content:'';width:5px;height:64px;border-radius:999px;background:var(--muted);
+  border:none;box-shadow:none;opacity:.85;transition:background .15s,opacity .15s,height .15s,width .15s;pointer-events:none}
+#bp-resize:hover::after,#bp-resize:focus-visible::after,.resizing-pane #bp-resize::after{
+  background:var(--accent);opacity:1;width:6px;height:80px}
 #bp-resize:hover{background:transparent}
 #view-buddy.active:not(.panel):not(.sheet) #bp-resize{display:none}
+@media (min-width:640px){
+  #view-buddy.panel.active #bp-resize{
+    position:fixed;top:var(--glass-inset);bottom:var(--glass-inset);height:auto;z-index:94;
+    left:calc(100vw - var(--glass-inset, 12px) - var(--panel-w, 400px) - 16px);width:32px}
+}
+body.resizing-pane,body.resizing-pane *{cursor:ew-resize!important;-webkit-user-select:none!important;user-select:none!important}
+body.resizing-pane{touch-action:none}
 .pupload{height:150px;min-width:120px;border-radius:10px;border:1px dashed var(--border);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;background:var(--bg);flex:0 0 auto}
 .pupload .pbar{width:80px;height:6px;background:var(--border2);border-radius:3px;overflow:hidden}
 .pupload .pbar > div{height:100%;background:var(--accent);border-radius:3px;transition:width .2s}
@@ -1528,9 +1543,16 @@ function openFieldSettings(){
   m.classList.add('show');
   if (m._applyGeom) m._applyGeom();
 }
+function panelClampW(w){
+  const max = Math.min(560, Math.floor(window.innerWidth * 0.92));
+  return Math.min(max, Math.max(280, w));
+}
 function applyPanelWidth(){
   const vb = document.getElementById('view-buddy');
-  if (vb && S.panelWidth) vb.style.width = Math.min(S.panelWidth, 560) + 'px';
+  if (!vb) return;
+  const w = panelClampW(S.panelWidth || SB_DEFAULT_W);
+  vb.style.width = w + 'px';
+  document.documentElement.style.setProperty('--panel-w', w + 'px');
 }
 function applySbWidth(){
   const sb = document.getElementById('sidebar');
@@ -1543,26 +1565,69 @@ function applySbWidth(){
 }
 /* Sidebar width clamp: desktop max 560, but never wider than 92% of the viewport (drawer on phones) */
 function sbClampW(w){ return Math.min(Math.min(560, Math.floor(window.innerWidth * 0.92)), Math.max(200, w)); }
+/* Shared edge-drag binder — wide hit targets + document-level move/up so capture
+   drops (iframe under cursor, glass stacking) don't abort the resize mid-drag. */
+function bindPaneResize(handle, opts){
+  if (!handle || handle.dataset.boundResize) return;
+  handle.dataset.boundResize = '1';
+  let drag = null;
+  function onMove(e){
+    if (!drag || e.pointerId !== drag.id) return;
+    e.preventDefault();
+    opts.onMove(drag.w, e.clientX - drag.x);
+  }
+  function onUp(e){
+    if (!drag) return;
+    if (e && e.pointerId != null && e.pointerId !== drag.id) return;
+    drag = null;
+    document.body.classList.remove('resizing-pane');
+    document.removeEventListener('pointermove', onMove, true);
+    document.removeEventListener('pointerup', onUp, true);
+    document.removeEventListener('pointercancel', onUp, true);
+    try { if (e && e.pointerId != null) handle.releasePointerCapture(e.pointerId); } catch (err) {}
+    opts.onCommit();
+  }
+  handle.addEventListener('pointerdown', e => {
+    if (e.button != null && e.button !== 0) return;
+    e.preventDefault();
+    e.stopPropagation();
+    drag = { id: e.pointerId, x: e.clientX, w: opts.getWidth() };
+    document.body.classList.add('resizing-pane');
+    try { handle.setPointerCapture(e.pointerId); } catch (err) {}
+    document.addEventListener('pointermove', onMove, true);
+    document.addEventListener('pointerup', onUp, true);
+    document.addEventListener('pointercancel', onUp, true);
+  });
+  if (opts.onReset) {
+    handle.addEventListener('dblclick', e => {
+      e.preventDefault();
+      e.stopPropagation();
+      opts.onReset();
+    });
+  }
+}
 function initPanelResize(){
   const vb = document.getElementById('view-buddy');
-  if (!vb || vb.dataset.rsz) return;
-  vb.dataset.rsz = '1';
   const h = document.getElementById('bp-resize');
-  if (!h) return;
-  let sx = null, sw = 0;
-  h.addEventListener('pointerdown', e => {
-    sx = e.clientX; sw = vb.getBoundingClientRect().width;
-    h.setPointerCapture(e.pointerId); e.preventDefault();
-  });
-  h.addEventListener('pointermove', e => {
-    if (sx === null) return;
-    const w = Math.min(560, Math.max(320, sw + (sx - e.clientX)));
-    vb.style.width = w + 'px';
-  });
-  h.addEventListener('pointerup', e => {
-    if (sx === null) return;
-    S.panelWidth = Math.round(vb.getBoundingClientRect().width);
-    save(); sx = null;
+  if (!vb || !h || h.dataset.boundResize) return;
+  applyPanelWidth();
+  bindPaneResize(h, {
+    getWidth: () => vb.getBoundingClientRect().width,
+    onMove: (startW, dx) => {
+      const w = panelClampW(startW - dx); /* drag left edge: leftward = wider */
+      vb.style.width = w + 'px';
+      document.documentElement.style.setProperty('--panel-w', w + 'px');
+    },
+    onCommit: () => {
+      S.panelWidth = panelClampW(vb.getBoundingClientRect().width);
+      save();
+      applyPanelWidth();
+    },
+    onReset: () => {
+      S.panelWidth = SB_DEFAULT_W;
+      save();
+      applyPanelWidth();
+    }
   });
 }
 function tileHtml(label, num, tint, sub, fkey, sel, tip){
@@ -2634,27 +2699,29 @@ document.addEventListener('keydown', e => {
 /* ---------- sidebar resize ---------- */
 (function initSbResize(){
   const sb = document.getElementById('sidebar');
-  applySbWidth();
   const h = document.getElementById('sb-resize');
-  let sx = null, sw = 0;
-  h.addEventListener('pointerdown', e => { sx = e.clientX; sw = sb.getBoundingClientRect().width; h.setPointerCapture(e.pointerId); e.preventDefault(); });
-  h.addEventListener('pointermove', e => {
-    if (sx === null) return;
-    const w = sbClampW(sw + e.clientX - sx);
-    sb.style.width = w + 'px'; sb.style.flex = 'none';
-    document.documentElement.style.setProperty('--sbw', w + 'px');
+  if (!sb || !h) return;
+  applySbWidth();
+  bindPaneResize(h, {
+    getWidth: () => sb.getBoundingClientRect().width,
+    onMove: (startW, dx) => {
+      const w = sbClampW(startW + dx);
+      sb.style.width = w + 'px';
+      sb.style.flex = 'none';
+      document.documentElement.style.setProperty('--sbw', w + 'px');
+    },
+    onCommit: () => {
+      S.sbWidth = sbClampW(sb.getBoundingClientRect().width);
+      save();
+      applySbWidth();
+    },
+    onReset: () => {
+      S.sbWidth = SB_DEFAULT_W;
+      save();
+      applySbWidth();
+    }
   });
-  const done = () => {
-    if (sx === null) return; sx = null;
-    S.sbWidth = Math.round(sb.getBoundingClientRect().width); save();
-    applySbWidth();
-  };
-  h.addEventListener('pointerup', done);
-  h.addEventListener('pointercancel', done);
-  h.addEventListener('dblclick', () => {
-    S.sbWidth = SB_DEFAULT_W; save(); applySbWidth();
-  });
-  window.addEventListener('resize', () => applySbWidth()); /* re-clamp drawer on rotate/resize */
+  window.addEventListener('resize', () => { applySbWidth(); applyPanelWidth(); });
 })();
 /* ---------- prev/next/back ---------- */
 function goBack(){ const p = navHist.pop(); show(p || 'view:tree', false); }

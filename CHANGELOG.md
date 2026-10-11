@@ -3,6 +3,16 @@
 All notable changes to the Buddies dashboard and buddy system. Newest first.
 `FEATURES.md` describes the current state; this file describes how it got there.
 
+## 2026-10-11 (Resize grippers: wider hit target + fixed right handle)
+
+### Fixed
+- **Panel resize hard to engage** — after floating glass panels, grippers needed
+  multiple tries. Hit strips are now 32px (40px on phone) with the thin pill
+  unchanged; right-panel gripper is `position:fixed` so panel overflow/radius
+  can’t clip hits; drag uses document-level pointer move/up (survives iframe
+  hover / lost capture); accent highlight while dragging; double-click still
+  resets width.
+
 ## 2026-10-11 (Floating glass slide-out sidebars)
 
 ### Changed
