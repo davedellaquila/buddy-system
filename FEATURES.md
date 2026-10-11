@@ -99,6 +99,14 @@ Build: `build.py` generates `index.html` from `buddies.json` + `plans.json`.
   thread, and it lands in a durable inbox (`docs/ingest.md`) and gets routed
   to the buddy it actually belongs to. Dave never has to decide where a
   thought goes — capture is universal, routing is the staff's job.
+- **Buddy links (many-to-many)** — buddies link to each other, Rae Assist
+  style: everything can be linked to everything. A `links` array on a
+  registry entry names linked buddy ids; the dashboard renders a "Linked
+  buddies" section on each buddy's detail card, and reverse links are
+  computed automatically — link once, it shows on both cards. Links to
+  buddies that don't exist yet render as "Buddy being set up" and light up
+  when the buddy is created. Custom homepages carry their own Connections
+  section (first live link: Joel's Buddy ↔ James's Buddy).
 - **Token gating** — photos, shared notes, and ingest are locked until a
   GitHub token is saved; an amber banner at the top of every buddy page
   prompts for it.

@@ -3,6 +3,12 @@
 All notable changes to the Buddies dashboard and buddy system. Newest first.
 `FEATURES.md` describes the current state; this file describes how it got there.
 
+## 2026-10-11 (Buddy links: many-to-many, Rae Assist style)
+
+### Added
+- **Buddy links** — `links[]` on registry entries + a "Linked buddies" section on every buddy's detail card, with reverse links computed automatically (link once, shows on both cards). Dave's direction: "just like in Rae Assist everything can be linked to everything. Everything's a many-to-many." First live link: Joel's Buddy → James's Buddy (renders "Buddy being set up" until James's buddy exists).
+- **Connections section on Joel's Buddy homepage** — links to James; Acorn Ridge Casino / Acorn Ridge Lodge facts confirmed on the page.
+
 ## 2026-10-11 (Drawer fixes + Manifest card stack)
 
 ### Fixed
