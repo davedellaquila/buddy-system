@@ -176,6 +176,11 @@
     padding: 12px 14px; margin-bottom: 12px; font-size: 14px;
   }
   .dumpbox-token p { margin-bottom: 8px; }
+.dumpbox-connect {
+    background: var(--paper); border: 1px dashed var(--line); border-radius: 8px;
+    padding: 12px 14px; margin-bottom: 12px; font-size: 14px;
+  }
+.dumpbox-connect p { margin-bottom: 8px; }
   .dumpbox-tokenrow { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
   .dumpbox-tokenrow input {
     flex: 1; min-width: 170px; background: var(--card); border: 1px solid var(--line);
@@ -223,6 +228,10 @@
   <section class="dumpbox" data-buddy-id="nancy-buddy">
     <h2 class="serif">🧠 Brain dump</h2>
     <p class="dumpbox-sub">Dump what's on your mind about Nan — raw and unfiltered. Each dump lands in her repo (docs/ingest.md) as a timestamped entry.</p>
+    <div class="dumpbox-connect" hidden>
+      <p>🔒 Connect GitHub to unlock dumping. Paste a token once — it stays on this device only.</p>
+      <button type="button" class="dumpbox-btn">Connect GitHub to enable</button>
+    </div>
     <div class="dumpbox-token" hidden>
       <p>🔒 Connect GitHub to unlock dumping. Paste a token once — it stays on this device only.</p>
       <div class="dumpbox-tokenrow">
@@ -575,7 +584,7 @@ renderNotes(); renderReminders(); renderDates(); renderGifts(); renderPhotos();
 })();
 </script>
 <script>
-// ---- brain-dump box (writes to nancy-buddy/docs/ingest.md via GitHub API) ----
+// ---- dump-box JS (self-contained; no dependencies) ----
 (function(){
   var box = document.querySelector('.dumpbox');
   if (!box || box.dataset.dumpInit) return;
@@ -585,9 +594,11 @@ renderNotes(); renderReminders(); renderDates(); renderGifts(); renderPhotos();
     return p.substring(p.lastIndexOf('/') + 1);
   })();
   var ta = box.querySelector('textarea'),
-      btn = box.querySelector('.dumpbox-btn'),
+      btn = box.querySelector('.dumpbox-row .dumpbox-btn'),
       st = box.querySelector('.dumpbox-status'),
-      tokWrap = box.querySelector('.dumpbox-token');
+      tokWrap = box.querySelector('.dumpbox-token'),
+      connectWrap = box.querySelector('.dumpbox-connect'),
+      connectBtn = connectWrap.querySelector('.dumpbox-btn');
   function lsGet(){ try { return JSON.parse(localStorage.getItem('buddyTree.v3') || '{}'); } catch(e){ return {}; } }
   function lsSet(patch){ try { var s = lsGet(); for (var k in patch) s[k] = patch[k]; localStorage.setItem('buddyTree.v3', JSON.stringify(s)); } catch(e){} }
   function token(){ return lsGet().ghToken || ''; }
@@ -617,20 +628,21 @@ renderNotes(); renderReminders(); renderDates(); renderGifts(); renderPhotos();
     } catch(e){}
     return null;
   }
-  var repo = null;
+  var repo = null, repoName = bid;
   async function resolveRepo(){
     try {
       var r = await fetch('../buddies.json', {cache: 'no-store'});
       var d = await r.json();
       var buds = d.buddies || [];
       for (var i = 0; i < buds.length; i++) {
-        if (buds[i].id === bid && buds[i].repo) { repo = buds[i].repo; break; }
+        if (buds[i].id === bid && buds[i].repo) { repo = buds[i].repo; repoName = buds[i].name || bid; break; }
       }
     } catch(e){}
   }
   function refreshUI(){
     var has = !!token();
-    tokWrap.hidden = has;
+    connectWrap.hidden = has;
+    if (has) tokWrap.hidden = true;
     var ok = has && !!repo;
     ta.disabled = !ok;
     btn.disabled = !ok;
@@ -639,11 +651,16 @@ renderNotes(); renderReminders(); renderDates(); renderGifts(); renderPhotos();
   }
   var tokInput = tokWrap.querySelector('input'),
       tokSave = tokWrap.querySelector('button');
+  connectBtn.addEventListener('click', function(){
+    tokWrap.hidden = false;
+    if (tokInput) tokInput.focus();
+  });
   tokSave.addEventListener('click', function(){
     var v = tokInput.value.trim();
     if (!v) return;
     lsSet({ghToken: v});
     tokInput.value = '';
+    tokWrap.hidden = true;
     refreshUI();
     st.textContent = 'Token saved on this device.';
   });
@@ -659,7 +676,7 @@ renderNotes(); renderReminders(); renderDates(); renderGifts(); renderPhotos();
       var NL = String.fromCharCode(10);
       var entry = '## ' + stamp + NL + NL + text + NL + NL;
       var cur = await ghGetFile(repo, 'docs/ingest.md');
-      var base = cur ? cur.text : '# Ingest log — ' + repo + NL + NL;
+      var base = cur ? cur.text : '# Ingest log — ' + repoName + NL + NL;
       var body = {message: 'Ingest dump for ' + bid, content: b64encode(base + entry)};
       if (cur && cur.sha) body.sha = cur.sha;
       await ghApi('/repos/davedellaquila/' + repo + '/contents/docs/ingest.md', 'PUT', body);

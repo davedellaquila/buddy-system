@@ -185,6 +185,12 @@
   .dumpbox-btn:hover:not(:disabled) { background: var(--ember-deep); }
   .dumpbox-btn:disabled { opacity: .45; cursor: default; }
   .dumpbox-status { font-size: 13px; color: var(--dim); }
+  .dumpbox-connect {
+    background: var(--paper); border: 1px dashed var(--ember); border-radius: 8px;
+    padding: 12px 14px; margin-bottom: 12px; font-size: 14px;
+  }
+  .dumpbox-connect p { margin-bottom: 8px; }
+
   .dumpbox-token {
     background: var(--paper); border: 1px dashed var(--ember); border-radius: 8px;
     padding: 12px 14px; margin-bottom: 12px; font-size: 14px;
@@ -228,6 +234,10 @@
   <h2 class="serif">🧠 Brain dump <span class="sub">Raw and unfiltered — lands in the repo as a timestamped entry</span></h2>
   <section class="dumpbox" data-buddy-id="marley-buddy">
     <p class="dumpbox-sub">Dump what's on your mind about Marley — facts, quirks, vet notes. Each dump appends a timestamped entry to <code>docs/ingest.md</code> in this buddy's repo.</p>
+    <div class="dumpbox-connect" hidden>
+      <p>🔒 Connect GitHub to unlock dumping. Paste a token once — it stays on this device only.</p>
+      <button type="button" class="dumpbox-btn">Connect GitHub to enable</button>
+    </div>
     <div class="dumpbox-token" hidden>
       <p>🔒 Connect GitHub to unlock dumping. Paste a token once — it stays on this device only.</p>
       <div class="dumpbox-tokenrow">
@@ -342,9 +352,11 @@
     return p.substring(p.lastIndexOf('/') + 1);
   })();
   var ta = box.querySelector('textarea'),
-      btn = box.querySelector('.dumpbox-btn'),
+      btn = box.querySelector('.dumpbox-row .dumpbox-btn'),
       st = box.querySelector('.dumpbox-status'),
-      tokWrap = box.querySelector('.dumpbox-token');
+      tokWrap = box.querySelector('.dumpbox-token'),
+      connectWrap = box.querySelector('.dumpbox-connect'),
+      connectBtn = connectWrap.querySelector('.dumpbox-btn');
   function lsGet(){ try { return JSON.parse(localStorage.getItem('buddyTree.v3') || '{}'); } catch(e){ return {}; } }
   function lsSet(patch){ try { var s = lsGet(); for (var k in patch) s[k] = patch[k]; localStorage.setItem('buddyTree.v3', JSON.stringify(s)); } catch(e){} }
   function token(){ return lsGet().ghToken || ''; }
@@ -387,7 +399,8 @@
   }
   function refreshUI(){
     var has = !!token();
-    tokWrap.hidden = has;
+    connectWrap.hidden = has;
+    if (has) tokWrap.hidden = true;
     var ok = has && !!repo;
     ta.disabled = !ok;
     btn.disabled = !ok;
@@ -396,11 +409,16 @@
   }
   var tokInput = tokWrap.querySelector('input'),
       tokSave = tokWrap.querySelector('button');
+  connectBtn.addEventListener('click', function(){
+    tokWrap.hidden = false;
+    if (tokInput) tokInput.focus();
+  });
   tokSave.addEventListener('click', function(){
     var v = tokInput.value.trim();
     if (!v) return;
     lsSet({ghToken: v});
     tokInput.value = '';
+    tokWrap.hidden = true;
     refreshUI();
     st.textContent = 'Token saved on this device.';
   });

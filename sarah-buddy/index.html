@@ -191,6 +191,11 @@
 }
 .dumpbox-tokenrow a { color: var(--accent, #B9576B); font-size: 13px; }
 
+.dumpbox-connect {
+  background: var(--bg, #FFFDF7); border: 1px dashed var(--border, #e8dcc8); border-radius: 8px;
+  padding: 12px 14px; margin-bottom: 12px; font-size: 14px;
+}
+.dumpbox-connect p { margin-bottom: 8px; }
 </style>
 </head>
 <body>
@@ -310,6 +315,10 @@
 <section class="dumpbox" data-buddy-id="sarah-buddy">
 <h2>🧠 Brain dump</h2>
 <p class="dumpbox-sub">Dump what's on your mind about Sarah Buddy — raw and unfiltered. Each dump lands in the buddy's repo (docs/ingest.md) as a timestamped entry.</p>
+<div class="dumpbox-connect" hidden>
+  <p>🔒 Connect GitHub to unlock dumping. Paste a token once — it stays on this device only.</p>
+  <button type="button" class="dumpbox-btn">Connect GitHub to enable</button>
+</div>
 <div class="dumpbox-token" hidden>
 <p>🔒 Connect GitHub to unlock dumping. Paste a token once — it stays on this device only.</p>
 <div class="dumpbox-tokenrow">
@@ -324,7 +333,8 @@
 <span class="dumpbox-status" role="status"></span>
 </div>
 </section>
-<script>// ---- dump-box JS (self-contained; no dependencies) ----
+<script>
+// ---- dump-box JS (self-contained; no dependencies) ----
 (function(){
   var box = document.querySelector('.dumpbox');
   if (!box || box.dataset.dumpInit) return;
@@ -334,9 +344,11 @@
     return p.substring(p.lastIndexOf('/') + 1);
   })();
   var ta = box.querySelector('textarea'),
-      btn = box.querySelector('.dumpbox-btn'),
+      btn = box.querySelector('.dumpbox-row .dumpbox-btn'),
       st = box.querySelector('.dumpbox-status'),
-      tokWrap = box.querySelector('.dumpbox-token');
+      tokWrap = box.querySelector('.dumpbox-token'),
+      connectWrap = box.querySelector('.dumpbox-connect'),
+      connectBtn = connectWrap.querySelector('.dumpbox-btn');
   function lsGet(){ try { return JSON.parse(localStorage.getItem('buddyTree.v3') || '{}'); } catch(e){ return {}; } }
   function lsSet(patch){ try { var s = lsGet(); for (var k in patch) s[k] = patch[k]; localStorage.setItem('buddyTree.v3', JSON.stringify(s)); } catch(e){} }
   function token(){ return lsGet().ghToken || ''; }
@@ -379,7 +391,8 @@
   }
   function refreshUI(){
     var has = !!token();
-    tokWrap.hidden = has;
+    connectWrap.hidden = has;
+    if (has) tokWrap.hidden = true;
     var ok = has && !!repo;
     ta.disabled = !ok;
     btn.disabled = !ok;
@@ -388,11 +401,16 @@
   }
   var tokInput = tokWrap.querySelector('input'),
       tokSave = tokWrap.querySelector('button');
+  connectBtn.addEventListener('click', function(){
+    tokWrap.hidden = false;
+    if (tokInput) tokInput.focus();
+  });
   tokSave.addEventListener('click', function(){
     var v = tokInput.value.trim();
     if (!v) return;
     lsSet({ghToken: v});
     tokInput.value = '';
+    tokWrap.hidden = true;
     refreshUI();
     st.textContent = 'Token saved on this device.';
   });
@@ -423,7 +441,6 @@
   });
   resolveRepo().then(refreshUI);
 })();
-
 </script>
 </body>
 </html>
