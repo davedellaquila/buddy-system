@@ -3,6 +3,15 @@
 All notable changes to the Buddies dashboard and buddy system. Newest first.
 `FEATURES.md` describes the current state; this file describes how it got there.
 
+## 2026-10-11 (Briefing Buddy split from News Buddy)
+
+### Added
+- **Briefing Buddy** — new buddy: the guy that sends Dave's briefings — morning (6:00 AM PT) + evening (6:00 PM PT) editions assembled from configured sections and live data, delivered to the Briefings thread and by HTML email (📋 icon, child of Project Buddy, `Brief review` status). Homepage is the settings page: what's on the briefing, morning vs evening, live preview of the next briefing's data. Full drill: [brief](https://docs.google.com/document/d/1s9ghZ-kyp9dag2whTPnk24ULLUJP3JW_0UGtocAynbs/edit), private repo [davedellaquila/briefing-buddy](https://github.com/davedellaquila/briefing-buddy). Open: final section lists?; 6 AM / 6 PM still right?; who else gets briefings?
+- Dashboard now tracks 59 buddies.
+
+### Changed
+- **News Buddy mission** — refocused 2026-10-11 at Dave's direction: News Buddy is now Dave's expert on news sources (knows where news comes from, which sources to trust per topic, keeps the source list sharp); briefing assembly and delivery moved OUT to the new Briefing Buddy. Brief rewritten in place: [News Buddy — Brief](https://docs.google.com/document/d/11Zz2wGbuIKCqS7OSPOnjIAbz5VsmLQPvxS-OfRicSN0/edit); repo README + docs/brief.md updated to match.
+
 ## 2026-10-11 (Ticket Buddy, Hiking Buddy, Venue Buddy: three new buddies)
 
 ### Added
