@@ -1773,6 +1773,7 @@ function renderProjectView(){
         // gesture works while a buddy homepage is showing (cross-origin fails
         // silently and keeps parent-only behavior).
         if (window.__bindPullToRefresh && frame.contentDocument) window.__bindPullToRefresh(frame.contentDocument);
+        if (window.__bindEdgeSwipes && frame.contentDocument){ try { window.__bindEdgeSwipes(frame.contentDocument, frame, b.id); } catch (err2) {} }
       } catch (err) {}
     });
     wrap.appendChild(frame);
@@ -3517,6 +3518,74 @@ function initPanelSwipeGestures(){
   document.addEventListener('touchend', onEnd, { passive: true, capture: true });
   document.addEventListener('touchcancel', () => { track = null; }, { passive: true, capture: true });
 }
+
+/* Edge swipes inside same-origin homepage iframes.
+   Touch events inside the iframe never reach the parent document, so the
+   parent binds this recognizer on the iframe's document (via the frame load
+   hook — same pattern as pull-to-refresh). Coordinates are translated to
+   screen space with the frame's bounding rect at touchstart.
+   - swipe right from the left  24px edge -> open left drawer (mobile)
+   - swipe left  from the right 24px edge -> open this buddy's right panel
+   Actions run in the parent window, so all state stays in one place. */
+function bindIframeEdgeSwipes(iframeDoc, frameEl, buddyId){
+  if (!iframeDoc || iframeDoc.__edgeSwipesBound) return;
+  iframeDoc.__edgeSwipesBound = true;
+  const LEFT_EDGE = 24, RIGHT_EDGE = 24, MIN_DX = 56, DOMINATE = 1.25;
+  let track = null;
+  function screenX(t){
+    try { return frameEl.getBoundingClientRect().left + t.clientX; }
+    catch (e) { return t.clientX; }
+  }
+  function touchById(list, id){
+    if (!list) return null;
+    for (let i = 0; i < list.length; i++) if (list[i].identifier === id) return list[i];
+    return null;
+  }
+  function detailOpen(){
+    const vb = document.getElementById('view-buddy');
+    return !!(vb && vb.classList.contains('active') && (vb.classList.contains('panel') || vb.classList.contains('sheet')));
+  }
+  function onStart(e){
+    track = null;
+    if (document.body.classList.contains('standalone')) return;
+    const t = e.changedTouches && e.changedTouches[0];
+    if (!t) return;
+    const sx = screenX(t);
+    const fromLeft = sx <= LEFT_EDGE, fromRight = sx >= (window.innerWidth - RIGHT_EDGE);
+    if (!fromLeft && !fromRight) return;
+    const el = iframeDoc.elementFromPoint(t.clientX, t.clientY);
+    if (el && el.closest && el.closest('input,textarea,select,[contenteditable="true"],button,a')) return;
+    track = { id: t.identifier, x0: sx, y0: t.clientY, mode: fromLeft ? 'drawer' : 'panel' };
+  }
+  function onMove(e){
+    if (!track) return;
+    const t = touchById(e.touches, track.id) || touchById(e.changedTouches, track.id);
+    if (!t) return;
+    const dx = screenX(t) - track.x0, dy = t.clientY - track.y0;
+    if (Math.abs(dy) > 28 && Math.abs(dy) > Math.abs(dx)) track = null;
+  }
+  function onEnd(e){
+    if (!track) return;
+    const mode = track.mode;
+    const t = touchById(e.changedTouches, track.id);
+    const x0 = track.x0, y0 = track.y0;
+    track = null;
+    if (!t || document.body.classList.contains('standalone')) return;
+    const dx = screenX(t) - x0, dy = t.clientY - y0;
+    if (Math.abs(dx) < MIN_DX || Math.abs(dx) <= Math.abs(dy) * DOMINATE) return;
+    if (mode === 'drawer'){
+      if (dx > 0 && isDrawerNav() && !isSidebarOpen()){ setSidebarOpen(true); edgeOpenAt = Date.now(); }
+      return;
+    }
+    if (dx < 0 && !detailOpen()) openBuddy(buddyId || 'project-buddy');
+  }
+  iframeDoc.addEventListener('touchstart', onStart, { passive: true, capture: true });
+  iframeDoc.addEventListener('touchmove', onMove, { passive: true, capture: true });
+  iframeDoc.addEventListener('touchend', onEnd, { passive: true, capture: true });
+  iframeDoc.addEventListener('touchcancel', function(){ track = null; }, { passive: true, capture: true });
+}
+window.__bindEdgeSwipes = bindIframeEdgeSwipes;
+
 // Checks for a newer deployed version; shows an update banner if the server
 // has a newer build than the one currently loaded (helps Safari web apps
 // and other containers without a hard-refresh shortcut).
