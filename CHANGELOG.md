@@ -3,6 +3,11 @@
 All notable changes to the Buddies dashboard and buddy system. Newest first.
 `FEATURES.md` describes the current state; this file describes how it got there.
 
+## 2026-10-10 (Discovery Buddy: new buddy + dashboard entry)
+
+### Added
+- **Discovery Buddy** — new buddy: Dave's music discovery companion (🔍 icon, child of Personal Buddy, `Brief review` status). A durable "to check out" list for new bands/artists plus taste-tuned recommendations. Born at a dueling piano bar when Dave wanted to file away "Regulators" (unconfirmed: Warren G's "Regulate"?). Seeded with his country lean (Morgan Wallen, Gordon Mullen's "Cover Me Up"). Full drill: [brief](https://docs.google.com/document/d/1flMPErgNpYZjZS3X0uUm8pkS9uMTxJGzeezqxibPz8s/edit), private repo [davedellaquila/discovery-buddy](https://github.com/davedellaquila/discovery-buddy), side thread, review ask. Open: streaming service, recommendation cadence, seeding 3–5 beloved artists.
+
 ## 2026-10-11 (CRITICAL standing order: dark mode on every buddy website)
 
 ### Added
