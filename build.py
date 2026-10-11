@@ -37,6 +37,7 @@ NEW_CSS = """
   --danger:#f85149;
   --shadow:rgba(0,0,0,.5); --shadow-soft:rgba(0,0,0,.3);
   --scrim:rgba(0,0,0,.6);
+  --canvas:color-mix(in srgb, var(--bg) 97.5%, black); /* whisper-dark chart canvas (Jonny, 2026-10-11) */
 }
 html.light{
   --bg:#ffffff; --panel:#f6f8fa; --hover:#eaeef2; --active:#ddf4ff;
@@ -51,6 +52,7 @@ html.light{
   --danger:#cf222e;
   --shadow:rgba(31,35,40,.18); --shadow-soft:rgba(31,35,40,.08);
   --scrim:rgba(31,35,40,.5);
+  --canvas:color-mix(in srgb, var(--bg) 97%, black); /* whisper-dark chart canvas (Jonny, 2026-10-11) */
 }
 body{background:var(--bg);color:var(--text)}
 .theme-pick{display:flex;margin:12px 10px 0;border:1px solid var(--border);border-radius:8px;overflow:hidden}
@@ -133,7 +135,7 @@ body{padding:0}
 /* Two stacked panes (buddy tree on top, orphaned buddies below) with a draggable
    splitter; each pane is its own 2D scrollport with its own zoom control. */
 #treezoom{flex:1;min-width:0;min-height:0;display:flex;flex-direction:column;overflow:hidden;
-  border:1px solid var(--border);border-left:none;border-right:none;border-radius:0;background:var(--bg)}
+  border:1px solid var(--border);border-left:none;border-right:none;border-radius:0;background:var(--canvas)}
 .treepane{position:relative;min-height:60px;min-width:0;display:flex;flex-direction:column;flex:1 1 0}
 .treescroll{flex:1;min-width:0;min-height:0;overflow:auto;overscroll-behavior:contain;cursor:grab;
   -webkit-overflow-scrolling:touch}
