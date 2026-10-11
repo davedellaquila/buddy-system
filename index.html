@@ -327,17 +327,18 @@ input[type=range].zrange::-moz-range-thumb{width:16px;height:16px;border-radius:
 #sb-resize{position:fixed;top:0;left:calc(var(--sbw, 308px) - 14px);z-index:50;
   display:flex;align-items:center;justify-content:center;width:28px;height:100vh;height:100dvh;cursor:ew-resize;
   background:transparent;-webkit-tap-highlight-color:transparent;touch-action:none;user-select:none}
-/* Vertical sheet-handle pill (reference rotated 90°) — thin, fully rounded, flat gray */
-#sb-resize::after{content:'';width:5px;height:48px;border-radius:999px;background:var(--muted);
-  border:none;box-shadow:none}
-#sb-resize:hover::after{background:var(--text2)}
+/* 2x5 dot-grid gripper (Jonny's pick, 2026-10-11): honest affordance, no hover required */
+#sb-resize::after{content:'';width:14px;height:35px;
+  background-image:radial-gradient(circle,var(--gripdot,var(--muted)) 1.6px,transparent 1.7px);
+  background-size:7px 7px;background-position:center;background-repeat:repeat}
+#sb-resize:hover::after{--gripdot:var(--text2)}
+#sb-resize:active::after{--gripdot:var(--accent)}
 #sb-resize:hover{background:transparent}
 body.sb-closed #sb-resize{display:none}
 /* Phone drawer: stay fixed (sibling of #sidebar); show only while drawer is open */
 @media (max-width:639px){
   #sb-resize{display:none;left:calc(var(--sbw, 308px) - 14px);width:28px;z-index:96}
   #sidebar.open ~ #sb-resize{display:flex}
-  #sb-resize::after{width:5px;height:56px}
 }
 /* Sidebar scroll-to-top — Muse-ish frosted chip, pinned to bottom of left panel */
 #sb-to-top{position:fixed;bottom:16px;left:calc(var(--sbw, 308px) / 2 - 22px);z-index:48;
@@ -501,10 +502,12 @@ body:has(#token-pill) #panel-open{right:148px}
 #buddy-home{position:relative}
 #bp-resize{position:absolute;top:0;left:-14px;z-index:60;display:flex;align-items:center;justify-content:center;width:28px;height:100vh;cursor:ew-resize;
   background:transparent;-webkit-tap-highlight-color:transparent;touch-action:none;user-select:none}
-/* Same vertical pill language as #sb-resize */
-#bp-resize::after{content:'';width:5px;height:48px;border-radius:999px;background:var(--muted);
-  border:none;box-shadow:none}
-#bp-resize:hover::after{background:var(--text2)}
+/* Same dot-grid gripper language as #sb-resize */
+#bp-resize::after{content:'';width:14px;height:35px;
+  background-image:radial-gradient(circle,var(--gripdot,var(--muted)) 1.6px,transparent 1.7px);
+  background-size:7px 7px;background-position:center;background-repeat:repeat}
+#bp-resize:hover::after{--gripdot:var(--text2)}
+#bp-resize:active::after{--gripdot:var(--accent)}
 #bp-resize:hover{background:transparent}
 #view-buddy.active:not(.panel):not(.sheet) #bp-resize{display:none}
 .pupload{height:150px;min-width:120px;border-radius:10px;border:1px dashed var(--border);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;background:var(--bg);flex:0 0 auto}
@@ -2433,7 +2436,7 @@ function renderBuddy(id){
     + '<div class="bp-sec" data-field="shared"><h3>Shared notes<span class="info-tip" data-tip="Anybody with repo access can see this note. Saved to the buddy’s repo (docs/notes.md).">ⓘ</span></h3>'
     + '<textarea class="notes" id="bp-shared-notes" placeholder="Anybody with repo access can see this note."></textarea>'
     + '<p class="fineprint" id="shared-status"></p></div>'
-    + '<div class="bp-build">Build 20261011.1625</div>'
+    + '<div class="bp-build">Build 20261011.1627</div>'
     + '</div>';
   const nm = document.getElementById('bp-name');
   nm.addEventListener('keydown', e => { if (e.key === 'Enter'){ e.preventDefault(); nm.blur(); } });
@@ -3215,7 +3218,7 @@ function renderPlan(id){
     + '<p class="fineprint">Saved on this device. (For your eyes only)</p></div>'
     + '<div class="bp-sec"><h3>Shared notes<span class="info-tip" data-tip="Visible to everyone with access to this project.">\u24d8</span></h3><textarea class="notes" id="bp-shared" placeholder="Shared notes\u2026 (visible to everyone with access)">'+escHtml((S.planShared||{})[id]||'')+'</textarea>'
     + '<p class="fineprint">Shared — visible to everyone with access.</p></div>'
-    + '<div class="bp-build">Build 20261011.1625</div>'
+    + '<div class="bp-build">Build 20261011.1627</div>'
     + '</div>';
   const nt = document.getElementById('bp-notes');
   let t = null;
@@ -4314,7 +4317,7 @@ window.__bindEdgeSwipes = bindIframeEdgeSwipes;
 // Returns 'new' | 'current' | 'suppressed' | 'error' so manual triggers
 // (e.g. pull-to-refresh) can report the outcome.
 function initVersionCheck(){
-  const myBuild = '20261011.1625';
+  const myBuild = '20261011.1627';
   function showUpdateBanner(serverBuild){
     if (document.getElementById('update-banner')) return;
     const b = document.createElement('div');
