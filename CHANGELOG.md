@@ -3,6 +3,12 @@
 All notable changes to the Buddies dashboard and buddy system. Newest first.
 `FEATURES.md` describes the current state; this file describes how it got there.
 
+## 2026-10-11 (Little Guy Buddy: brain-dump box + dark mode)
+
+### Added
+- **Little Guy Buddy homepage: 🧠 Brain dump box** — textarea + "Dump it" button (Cmd/Ctrl+Enter), appending timestamped entries to docs/ingest.md in the little-guy-buddy repo via the GitHub API (same write path as the dashboard ingest panel). Repo resolved from buddies.json via `data-buddy-id` (no hardcoded names); token read from dashboard localStorage (`buddyTree.v3` → `ghToken`) with a one-time token prompt fallback. Restyled to the page's warm cat theme, dark-mode aware. Write path tested end-to-end against the real API (test entry confirmed in docs/ingest.md, then removed).
+- **Dark mode for the Little Guy Buddy homepage** — full `prefers-color-scheme` dark theme in warm browns, per the buddy-system standing requirement (light-only is not shippable).
+
 ## 2026-10-11 (Discovery Buddy: brain-dump box on homepage)
 
 ### Added
