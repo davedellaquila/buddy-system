@@ -3,6 +3,16 @@
 All notable changes to the Buddies dashboard and buddy system. Newest first.
 `FEATURES.md` describes the current state; this file describes how it got there.
 
+## 2026-10-11 (Discovery Buddy: custom homepage + check-out queue)
+
+### Added
+- **Discovery Buddy homepage** — custom living page at `discovery-buddy/`
+  (spinning-vinyl hero, equalizer animation, check-out queue tracklist, taste
+  profile, open questions, attention, links). Dark-first design with a
+  `prefers-color-scheme: light` theme (dark-mode standing order). Wired via
+  `"homepage": "discovery-buddy/"` in `buddies.json`.
+- **`queue.md`** in [davedellaquila/discovery-buddy](https://github.com/davedellaquila/discovery-buddy) — check-out queue seeded with "Regulators" (unconfirmed: Warren G's "Regulate"?), heard at the dueling piano bar 2026-10-10.
+
 ## 2026-10-10 (Discovery Buddy: new buddy + dashboard entry)
 
 ### Added
