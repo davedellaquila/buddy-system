@@ -53,6 +53,9 @@
   .feed-icon{font-size:22px;flex-shrink:0;line-height:1.3}
   .feed-body{flex:1;min-width:0}
   .feed-buddy{font-size:12px;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:.06em}
+  .feed-buddy a{color:inherit;text-decoration:none}
+  .feed-buddy a:hover{text-decoration:underline}
+  .feed-text a{color:var(--accent);font-weight:600}
   .feed-text{font-size:15px;margin-top:2px}
   .feed-date{font-size:12px;color:var(--dim);font-family:var(--mono);margin-top:4px}
   .feed-more{padding:12px 18px;font-size:13px;color:var(--muted);background:var(--panel2);text-align:center}
@@ -278,7 +281,7 @@
     .then(function(d){
       var buds=d.buddies||[];
       var attn=[];
-      buds.forEach(function(b){(b.attention||[]).forEach(function(a){attn.push({buddy:b,text:a.text,date:a.date||"",icon:b.icon||"📌",name:b.name});});});
+      buds.forEach(function(b){(b.attention||[]).forEach(function(a){attn.push({buddy:b,text:a.text,date:a.date||"",icon:b.icon||"📌",name:b.name,url:a.url||"",bid:b.id||""});});});
       attn.sort(function(x,y){return (y.date||"").localeCompare(x.date||"");});
       set("st-buddies",buds.length);
       set("st-attn",attn.length);
@@ -328,9 +331,12 @@
       if(!show.length){feed.innerHTML='<div class="feed-empty">All quiet — nothing needs Dave right now. 🎉</div>';}
       else{
         feed.innerHTML=show.map(function(a){
+          var home='https://davedellaquila.github.io/buddy-system/'+esc(a.bid)+'/';
+          var txt=esc(a.text);
+          if(a.url){txt='<a href="'+esc(a.url)+'" target="_blank" rel="noopener">'+txt+'</a>';}
           return '<div class="feed-item"><div class="feed-icon">'+esc(a.icon)+'</div>'+
-            '<div class="feed-body"><div class="feed-buddy">'+esc(a.name)+'</div>'+
-            '<div class="feed-text">'+esc(a.text)+'</div>'+
+            '<div class="feed-body"><div class="feed-buddy"><a href="'+home+'" target="_blank" rel="noopener">'+esc(a.name)+'</a></div>'+
+            '<div class="feed-text">'+txt+'</div>'+
             (a.date?'<div class="feed-date">'+esc(a.date)+'</div>':'')+'</div></div>';
         }).join("")+
         (attn.length>show.length?'<div class="feed-more">+ '+(attn.length-show.length)+' more — see them all on the <a href="../">dashboard</a>.</div>':'');

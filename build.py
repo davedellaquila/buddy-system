@@ -1617,7 +1617,9 @@ function buddyHomepageHtml(b){
   if (attnItems.length) {
     h += '<section class="hp-card hp-attn"><h3 class="hp-kicker">Needs attention (' + attnItems.length + ')</h3>';
     attnItems.slice(0, 5).forEach(a => {
-      h += '<div class="hp-aitem"><span class="hp-adot">●</span><div class="hp-atext">' + escHtml(a.text || a);
+      h += '<div class="hp-aitem"><span class="hp-adot">●</span><div class="hp-atext">';
+      if (a.url) h += '<a href="' + escHtml(a.url) + '" target="_blank" rel="noopener" style="color:inherit">' + escHtml(a.text || a) + ' ↗</a>';
+      else h += escHtml(a.text || a);
       if (a.date) h += '<div class="hp-adate">Asked ' + escHtml(a.date) + '</div>';
       h += '</div></div>';
     });
