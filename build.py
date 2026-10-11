@@ -118,19 +118,36 @@ body{padding:0}
   font-size:14px;z-index:99;box-shadow:0 4px 24px var(--shadow);white-space:nowrap;
   max-width:92vw;overflow:hidden;text-overflow:ellipsis}
 .treewrap{position:relative;display:flex;gap:10px;align-items:flex-start}
-#view-tree{margin:-36px -32px -80px;display:flex;flex-direction:column;height:calc(100vh - 0px);overflow:auto}
-#view-tree #zoomwrap{flex:1;min-height:0;align-items:stretch}
-#treezoom{flex:1;min-width:0;min-height:0;overflow:auto;border:1px solid var(--border);border-left:none;border-right:none;cursor:grab;border-radius:0;background:var(--bg)}
+/* Beat .view.active{display:block} so the tree fills the viewport and #treezoom
+   alone scrolls in both axes (fixes iOS axis-lock from nested X/Y scrollers). */
+#view-tree.view.active{display:flex !important;flex-direction:column;
+  margin:-36px -32px -80px;height:100vh;height:100dvh;overflow:hidden;min-height:0}
+#view-tree #zoomwrap{flex:1;min-height:0;min-width:0;align-items:stretch;display:flex;flex-direction:column}
+/* Single 2D scrollport: both axes together (no nested .chart / #view-tree scroll) */
+#treezoom{flex:1;min-width:0;min-height:0;overflow:auto;overscroll-behavior:contain;
+  border:1px solid var(--border);border-left:none;border-right:none;cursor:grab;border-radius:0;background:var(--bg);
+  -webkit-overflow-scrolling:touch}
 #treezoom.panning{cursor:grabbing}
-#treezoom,#view-projects,#view-manifest{touch-action:pan-x pan-y}
+/* JS pan owns gestures on the tree canvas so touch can move X+Y at once */
+#treezoom{touch-action:none}
+#view-projects,#view-manifest{touch-action:pan-x pan-y}
 #treezoom.panning,#treezoom.panning *{user-select:none!important;-webkit-user-select:none!important}
 #treezoom,#treezoom *{user-select:none;-webkit-user-select:none}
-#zoombar{position:fixed;top:14px;left:calc(var(--sbw, 308px) + 46px);width:54px;height:248px;background:color-mix(in srgb, var(--panel) 72%, transparent);border:1px solid var(--border2);border-radius:12px;z-index:5;box-shadow:0 2px 8px var(--shadow-soft)}
-#zoombar .zt{position:absolute;top:8px;left:0;right:0;text-align:center;font-size:11px;color:var(--muted);cursor:help}
-#zoomrange{position:absolute;left:50%;top:50%;width:188px;margin:0;padding:0;transform:translate(-50%,-50%) rotate(-90deg);accent-color:var(--accent);cursor:pointer}
-#zoombar .zv{position:absolute;bottom:8px;left:0;right:0;text-align:center;font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
-#zoomfit{position:absolute;bottom:30px;left:50%;transform:translateX(-50%);background:none;border:1px solid var(--border);border-radius:8px;color:var(--muted);font-size:14px;width:30px;height:26px;cursor:pointer}
-#zoomfit:hover{color:var(--text);border-color:var(--muted)}
+/* Slim horizontal zoom — no panel chrome; small▪ · slider · large◼ · fit */
+#zoombar{position:fixed;top:10px;left:calc(var(--sbw, 308px) + 36px);z-index:5;
+  display:flex;align-items:center;gap:4px;width:auto;height:auto;min-height:28px;
+  padding:0;margin:0;background:none;border:none;border-radius:0;box-shadow:none;
+  -webkit-tap-highlight-color:transparent}
+#zoombar .z-out,#zoombar .z-in{flex:0 0 auto;line-height:1;color:var(--faint);user-select:none;pointer-events:none;
+  text-shadow:0 0 4px var(--bg),0 0 8px var(--bg)}
+#zoombar .z-out{font-size:8px}   /* zoom out */
+#zoombar .z-in{font-size:13px}   /* zoom in */
+#zoomrange{flex:0 0 auto;width:96px;height:22px;margin:0;padding:0;transform:none;
+  accent-color:var(--accent);cursor:pointer;touch-action:none;background:transparent;opacity:.9}
+#zoomfit{flex:0 0 auto;background:none;border:none;border-radius:6px;color:var(--faint);
+  font-size:12px;width:22px;height:22px;padding:0;cursor:pointer;line-height:1;
+  text-shadow:0 0 4px var(--bg),0 0 8px var(--bg)}
+#zoomfit:hover{color:var(--text);background:transparent}
 /* Fixed to viewport at sidebar edge so vertical #sidebar scroll doesn't move it */
 #sb-resize{position:fixed;top:0;left:calc(var(--sbw, 308px) - 7px);z-index:45;
   display:flex;align-items:center;justify-content:center;width:10px;height:100vh;height:100dvh;cursor:ew-resize}
@@ -377,8 +394,11 @@ body.standalone .sa-bar{display:flex}
   #main{padding:72px 12px 60px}
   /* Tree keeps the org chart on phones — pan with a finger, zoom with the floating slider */
   .standalones .grid{display:block}
-  #zoombar{display:block;left:auto;right:10px;top:84px;z-index:30;width:64px;height:272px}
-  #zoomrange{width:200px}
+  /* Slim look, fat hit areas (≈44px) via padding — no filled panel */
+  #zoombar{left:auto;right:6px;top:64px;z-index:30;min-height:44px;padding:8px 6px;gap:2px}
+  #zoomrange{width:120px;height:44px;margin:0 -2px}
+  #zoomfit{width:44px;height:44px;font-size:14px;display:flex;align-items:center;justify-content:center}
+  #zoombar .z-out,#zoombar .z-in{padding:0 4px}
   /* Chunkier tree nodes for touch */
   #treezoom .node{padding:15px 14px;min-height:60px}
   /* Bottom sheet panel — taller, grabbable */
@@ -576,6 +596,13 @@ body.standalone .sa-bar{display:flex}
 .attn.seen .adot::after{content:'\\2713'}
 .attn.seen .seenbtn{visibility:hidden}
 .attn-all{margin-top:6px}
+/* Standing orders — broadcast to every buddy detail (agents + Dave) */
+.standing-order{margin:10px 0 4px;padding:10px 12px;border-radius:10px;border:1px solid var(--amber-bd);
+  background:var(--amber-bg);font-size:13.5px;line-height:1.45;color:var(--amber-tx)}
+.standing-order.critical{border-color:var(--amber-bd)}
+.standing-order b{color:var(--amber-hi)}
+.standing-order a{color:var(--accent-hi)}
+.standing-order .so-date{display:block;margin-top:4px;font-size:11px;color:var(--muted)}
 .notes{width:100%;min-height:120px;background:var(--bg);border:1px solid var(--border);border-radius:12px;
   color:var(--text);font:inherit;font-size:14.5px;line-height:1.6;padding:13px 15px;resize:vertical}
 .notes:focus{outline:none;border-color:var(--accent)}
@@ -697,6 +724,19 @@ const byId = Object.fromEntries(BUDDIES.map(b => [b.id, b]));
 (function applyIconOverrides(){ try { const o = JSON.parse(localStorage.getItem('buddyState') || '{}').iconOverrides || {}; Object.entries(o).forEach(([id, ic]) => { if (byId[id]) byId[id].icon = ic; }); } catch(e){} })();
 const PLANS = PLANS_JSON;
 const planById = Object.fromEntries(PLANS.map(p => [p.id, p]));
+/* Durable broadcast memos — shown on every buddy detail. Source: docs/standing-orders.md */
+const STANDING_ORDERS = [
+  {id:'dark-mode-2026-10-11', date:'2026-10-11', critical:true,
+   text:'CRITICAL — Dark mode for every buddy website. Prefer prefers-color-scheme (or equivalent). Dave is outdoors and needs readable UIs now: update light-only homepages immediately.',
+   href:'docs/standing-orders.md'}
+];
+function standingOrdersHtml(){
+  if (!STANDING_ORDERS || !STANDING_ORDERS.length) return '';
+  return STANDING_ORDERS.map(o => {
+    const link = o.href ? ' <a href="'+o.href+'" target="_blank" rel="noopener">Standing orders</a> · <a href="AGENTS.md" target="_blank" rel="noopener">AGENTS.md</a>' : '';
+    return '<div class="standing-order'+(o.critical?' critical':'')+'" data-order="'+o.id+'"><b>'+(o.critical?'Critical memo':'Memo')+'</b> — '+escHtml(o.text)+link+'<span class="so-date">'+escHtml(o.date||'')+'</span></div>';
+  }).join('');
+}
 const kidsOf = {};
 function effParent(b){ if (S.parents && b.id in S.parents) return S.parents[b.id]; return b.parent; }
 function buildKids(){
@@ -1559,6 +1599,7 @@ function renderBuddy(id){
     + '<h2 class="bp-name" id="bp-name" contenteditable="true" spellcheck="false" data-buddy="'+id+'">'+escHtml(dispName(b))+'</h2>'
     + '<span class="status '+b.statusClass+'">'+escHtml(b.status)+'</span>'
     + '<button class="bp-close-x" id="bp-close-x" title="Close">\u2715</button></div></div>'
+    + standingOrdersHtml()
     + '<div class="bp-sec" data-field="ingest"><h3>Ingest<span class="info-tip" data-tip="Brain-dump anything about this buddy \u2014 raw and unfiltered. Each dump lands in the buddy\u2019s repo (docs/ingest.md) as a timestamped entry.">\u24d8</span></h3>'
     + '<textarea class="notes" id="bp-ingest" placeholder="Dump what\u2019s in your head about '+escHtml(dispName(b))+'\u2026"></textarea>'
     + '<div style="margin-top:8px"><span class="fineprint" id="ingest-status"></span></div>'
@@ -1912,9 +1953,11 @@ function zoomToFit(){
 (function initZoom(){
   const vt = document.getElementById('view-tree');
   vt.insertAdjacentHTML('afterbegin',
-    '<div class="treewrap" id="zoomwrap"><div class="zoombar" id="zoombar"><span class="zt" title="Tip: hold Shift and scroll over the tree to zoom">Zoom</span>'
-    + '<input type="range" id="zoomrange" min="50" max="160" step="5" value="100" aria-label="Tree zoom">'
-    + '<span class="zv" id="zoomval">100%</span><button id="zoomfit" title="Zoom to fit">\u26f6</button></div><div id="treezoom"></div></div>');
+    '<div class="treewrap" id="zoomwrap"><div class="zoombar" id="zoombar" title="Zoom — hold Shift and scroll over the tree">'
+    + '<span class="z-out" aria-hidden="true">\u25aa</span>'
+    + '<input type="range" id="zoomrange" min="50" max="160" step="5" value="100" aria-label="Zoom out to zoom in">'
+    + '<span class="z-in" aria-hidden="true">\u25fc</span>'
+    + '<button type="button" id="zoomfit" title="Zoom to fit" aria-label="Zoom to fit">\u26f6</button></div><div id="treezoom"></div></div>');
   const tw = document.getElementById('zoomwrap'), tz = document.getElementById('treezoom');
   Array.from(vt.childNodes).forEach(n => { if (n !== tw) tz.appendChild(n); });
   document.getElementById('zoomrange').addEventListener('input', e => {
@@ -1944,9 +1987,10 @@ function zoomToFit(){
 function attachPan(el){
   if (!el || el.dataset.panAttached) return;
   el.dataset.panAttached = '1';
-  // The tree chart's scrollable overflow lives in its inner .chart element
-  // (overflow-x:auto), not in #treezoom itself — pan that scroller.
-  function scroller(){ return (el.id === 'treezoom' && el.querySelector('.chart')) || el; }
+  // #treezoom is the sole 2D scrollport (both axes). Do not pan nested .chart —
+  // overflow-x-only on .chart caused Safari/iOS to lock the first gesture axis.
+  function scroller(){ return el; }
+  const isTree = el.id === 'treezoom';
   let pan = null, swallow = false;
   function startPan(x, y, pid){
     const sc = scroller();
@@ -1964,33 +2008,38 @@ function attachPan(el){
     const sc = scroller();
     sc.classList.add('panning');
     el.classList.add('panning');
+    // Apply both axes every move — free diagonal pan (no axis lock)
     sc.scrollLeft = pan.sl - dx;
     sc.scrollTop = pan.st - dy;
   }
   function endPan(pid){
     if (!pan) return;
     if (pid !== undefined && pid !== pan.id) return;
-    try { if (el.releasePointerCapture && pan.id !== undefined) el.releasePointerCapture(pan.id); } catch (err) {}
+    try { if (el.releasePointerCapture && pan.id !== undefined && pan.id !== 'mouse') el.releasePointerCapture(pan.id); } catch (err) {}
     const sc = scroller();
     sc.classList.remove('panning');
     el.classList.remove('panning');
     if (pan.moved) { swallow = true; setTimeout(() => { swallow = false; }, 80); }
     pan = null;
   }
-  // Pointer Events (modern browsers)
+  // Pointer Events — mouse + touch/pen on the tree (touch-action:none) for free 2D pan
   el.addEventListener('pointerdown', e => {
-    if (e.pointerType !== 'mouse') return;
-    if (e.button !== 0) return;
+    if (e.pointerType === 'mouse' && e.button !== 0) return;
+    if (!isTree && e.pointerType !== 'mouse') return; // projects/manifest keep native touch scroll
     // Presses on tree nodes are reserved for node drag-to-reparent (or click); background pans.
     if (e.target.closest && (e.target.closest('#treezoom .node[data-buddy]') || e.target.closest('input,textarea,button'))) return;
     startPan(e.clientX, e.clientY, e.pointerId);
     // Don't set pointer capture here — it interferes with click events on tree nodes.
     // Capture is set in movePan once dragging actually starts.
   });
-  el.addEventListener('pointermove', e => { movePan(e.clientX, e.clientY, e.pointerId); e.preventDefault(); });
+  el.addEventListener('pointermove', e => {
+    if (!pan || e.pointerId !== pan.id) return;
+    movePan(e.clientX, e.clientY, e.pointerId);
+    if (pan && pan.moved) e.preventDefault();
+  }, { passive: false });
   el.addEventListener('pointerup', e => endPan(e.pointerId));
   el.addEventListener('pointercancel', e => endPan(e.pointerId));
-  // Mouse Events fallback (Safari)
+  // Mouse Events fallback (older Safari)
   el.addEventListener('mousedown', e => {
     if (pan) return;
     if (e.button !== 0) return;

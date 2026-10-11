@@ -13,7 +13,8 @@ Build: `build.py` generates `index.html` from `buddies.json` + `plans.json`.
 
 - **Classic tree layout** — the canonical design. (A card-based redesign was
   tried and reverted; preserved on branch `card-tree-redesign` for reference.)
-- **Zoom slider** — vertical slider beside the chart, 50–160%.
+- **Zoom slider** — compact horizontal control (small▪ · range · large◼ + fit),
+  50–160%; Shift+scroll over the tree still zooms.
 - **Shift+scroll zoom** — hold Shift and scroll over the tree to zoom.
 - **Grab-to-pan** — click-drag the chart to slide it around; grab/grabbing
   cursors; small movements still count as clicks; the stray click after a
@@ -35,6 +36,15 @@ Build: `build.py` generates `index.html` from `buddies.json` + `plans.json`.
 
 - **Light / Dark / System theme** — segmented picker under the sidebar
   brand; per-device localStorage (default System, follows the OS live).
+
+## Agent standing orders
+
+- **`AGENTS.md`** — critical rules agents read on start (INIT / first
+  homepage pass). Currently: every buddy website must ship dark mode.
+- **`docs/standing-orders.md`** — durable memo log (newest first).
+- **Dashboard broadcast** — each buddy detail panel shows active standing
+  orders (amber banner) so existing agents see them when the panel opens;
+  also surfaced on Project Buddy / Scaffold / Astro homepages.
 
 ## Sidebar
 

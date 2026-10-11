@@ -1,5 +1,9 @@
 # Ingest log — Project Buddy
 
+## 10/11/2026 — Standing order (all buddies)
+
+CRITICAL memo from Dave: every buddy website must ship dark mode now (`prefers-color-scheme` or equivalent). Dave is outdoors and needs readable UIs. Canonical copy: `AGENTS.md` + `docs/standing-orders.md`. Dashboard surfaces the same order on every buddy detail panel.
+
 ## 10/9/2026, 7:15:00 PM
 
 Did you clone the repo on your VM?
