@@ -62,3 +62,7 @@ We should add a way to dismiss the critical memos that appear in the right side 
 
 I’m not sure if you got this last dump, but I’d like to add a close a clear button in the search box on the left panel on the buddy dashboard
 
+## 10/11/2026, 9:25:08 AM
+
+I’d like pulling down on the side right side panel to do a refresh or check for updates
+
