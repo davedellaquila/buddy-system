@@ -74,3 +74,7 @@ I think I would like the brain dump section on the right side panel to be the fi
 
 I am looking at Astros info page and I would like all I think this is actually his homepage I would like anything that has a reference that is referencing other buddies or other pages to have a link to go to that options right on the Teil that’s mentioning it
 
+## 10/11/2026, 10:30:35 AM
+
+Provide a what’s new button on the update message when a new version shows up
+
