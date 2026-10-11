@@ -1511,53 +1511,170 @@ function applyPlanFilter(){
 function buddyHomepageHtml(b){
   const kids = (b.children || []).map(cid => byId[cid]).filter(Boolean);
   const arts = b.artifacts || [];
-  const plans = (typeof PLANS !== 'undefined' && PLANS[b.id]) || [];
+  const allPlans = (typeof PLANS !== 'undefined' && PLANS) || [];
+  const plans = allPlans.filter(p => (p.buddies || []).includes(b.id));
   const attnItems = (b.attention || []).filter(a => !S.seen[b.id + ':' + (a.id || a.text)]);
-  let h = '<div style="max-width:800px;margin:0 auto;padding:40px 24px;font-family:inherit">';
-  // Header
-  h += '<div style="text-align:center;margin-bottom:36px">';
-  h += '<div style="font-size:64px;margin-bottom:12px">' + (b.icon || '🤖') + '</div>';
-  h += '<h1 style="font-size:32px;margin:0 0 8px">' + escHtml(dispName(b)) + '</h1>';
-  if (b.tagline) h += '<p style="color:var(--muted);font-size:16px;margin:0">' + escHtml(b.tagline) + '</p>';
-  h += '</div>';
-  // Mission
+  let stats = '';
+  if (attnItems.length) stats += '<span class="hp-stat"><b>' + attnItems.length + '</b> need attention</span>';
+  if (kids.length) stats += '<span class="hp-stat"><b>' + kids.length + '</b> sub-buddies</span>';
+  if (plans.length) stats += '<span class="hp-stat"><b>' + plans.length + '</b> plans</span>';
+  if (arts.length) stats += '<span class="hp-stat"><b>' + arts.length + '</b> artifacts</span>';
+  let h = '<style>'
+    + '.hp{max-width:1080px;margin:0 auto;padding:36px 28px 56px;color:var(--text);font-family:inherit}'
+    + '.hp-grid{display:grid;gap:22px;grid-template-columns:minmax(0,1fr) 340px;grid-template-areas:"head head" "main rail" "dump dump"}'
+    + '.hp-head{grid-area:head;display:flex;align-items:center;gap:20px;min-width:0}'
+    + '.hp-icon{width:78px;height:78px;flex:none;border-radius:24px;background:var(--panel);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:42px;box-shadow:var(--shadow-soft)}'
+    + '.hp-headtxt{min-width:0}'
+    + '.hp-name{margin:0;font-size:30px;letter-spacing:-0.02em;line-height:1.15;overflow-wrap:break-word}'
+    + '.hp-tagline{margin:8px 0 0;color:var(--muted);font-size:15px;line-height:1.55;max-width:660px}'
+    + '.hp-stats{margin-top:12px;display:flex;flex-wrap:wrap;gap:8px;align-items:center}'
+    + '.hp-stat{font-size:12.5px;color:var(--muted);background:var(--panel);border:1px solid var(--border);border-radius:999px;padding:4px 12px;white-space:nowrap}'
+    + '.hp-stat b{color:var(--text)}'
+    + '.hp-main{grid-area:main;min-width:0;display:flex;flex-direction:column;gap:22px}'
+    + '.hp-rail{grid-area:rail;min-width:0;display:flex;flex-direction:column;gap:22px}'
+    + '.hp-card{background:var(--panel);border:1px solid var(--border);border-radius:16px;padding:20px 22px;min-width:0}'
+    + '.hp-kicker{margin:0 0 6px;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.09em;color:var(--muted)}'
+    + '.hp-mission{margin:8px 0 0;font-size:15px;line-height:1.7;overflow-wrap:break-word}'
+    + '.hp-attn{border-color:var(--amber-bd)}'
+    + '.hp-attn .hp-kicker{color:var(--amber-tx)}'
+    + '.hp-aitem{display:flex;gap:10px;padding:10px 0;font-size:14px;line-height:1.5}'
+    + '.hp-aitem + .hp-aitem{border-top:1px solid var(--border)}'
+    + '.hp-adot{color:var(--amber);flex:none;font-size:11px;line-height:2}'
+    + '.hp-atext{min-width:0;overflow-wrap:break-word}'
+    + '.hp-adate{color:var(--faint);font-size:12px;margin-top:3px}'
+    + '.hp-more{font-size:12.5px;color:var(--muted);margin:10px 0 0}'
+    + '.hp-chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}'
+    + '.hp-chip{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:8px 12px;font-size:13.5px;white-space:nowrap}'
+    + '.hp-plan{display:flex;gap:12px;padding:14px 0;min-width:0}'
+    + '.hp-plan + .hp-plan{border-top:1px solid var(--border)}'
+    + '.hp-picon{font-size:26px;flex:none;line-height:1.2}'
+    + '.hp-pbody{min-width:0}'
+    + '.hp-pname{font-weight:650;font-size:15px;overflow-wrap:break-word}'
+    + '.hp-pill{display:inline-block;vertical-align:1px;font-size:11px;font-weight:700;background:var(--wash);color:var(--accent-hi);border-radius:999px;padding:3px 10px;margin-left:8px;white-space:nowrap}'
+    + '.hp-pdesc{margin:6px 0 0;color:var(--muted);font-size:13.5px;line-height:1.55;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;overflow-wrap:break-word}'
+    + '.hp-pdoc{display:inline-block;margin-top:8px;font-size:13px;color:var(--accent);text-decoration:none}'
+    + '.hp-pdoc:hover{text-decoration:underline}'
+    + '.hp-art{display:flex;align-items:center;gap:10px;padding:10px 0;font-size:14.5px;min-width:0}'
+    + '.hp-art + .hp-art{border-top:1px solid var(--border)}'
+    + '.hp-art a{color:var(--accent);text-decoration:none;overflow-wrap:break-word;min-width:0}'
+    + '.hp-art a:hover{text-decoration:underline}'
+    + '.hp-go{margin-left:auto;color:var(--faint);flex:none}'
+    + '.hp-dumpsec{grid-area:dump}'
+    + '.hp-dump textarea{display:block;width:100%;box-sizing:border-box;min-height:92px;background:var(--bg);border:1px solid var(--border);border-radius:10px;color:var(--text);padding:12px 14px;font:inherit;font-size:14px;line-height:1.55;resize:vertical;margin-top:10px}'
+    + '.hp-dump textarea:focus{outline:none;border-color:var(--accent)}'
+    + '.hp-dump-row{display:flex;align-items:center;gap:14px;margin-top:12px;flex-wrap:wrap}'
+    + '.hp-dump-btn{background:var(--accent);color:var(--on-accent);border:0;border-radius:10px;padding:10px 22px;font:inherit;font-size:14px;font-weight:650;cursor:pointer}'
+    + '.hp-dump-btn:hover{filter:brightness(1.08)}'
+    + '.hp-dump-status{font-size:13px;color:var(--muted)}'
+    + '.hp-dump-status a{color:var(--accent)}'
+    + '.hp-note{text-align:center;color:var(--muted);font-size:12px;margin:34px 0 0}'
+    + '@media (max-width:960px){'
+    + '.hp-grid{grid-template-columns:minmax(0,1fr);grid-template-areas:"head" "rail" "main" "dump"}'
+    + '.hp{padding:26px 16px 44px}'
+    + '.hp-icon{width:62px;height:62px;font-size:34px;border-radius:18px}'
+    + '.hp-name{font-size:24px}'
+    + '.hp-card{padding:16px 18px}'
+    + '}'
+    + '</style>';
+  h += '<div class="hp"><div class="hp-grid">';
+  // header
+  h += '<header class="hp-head"><div class="hp-icon">' + escHtml(b.icon || '🤖') + '</div><div class="hp-headtxt">';
+  h += '<h1 class="hp-name">' + escHtml(dispName(b)) + '</h1>';
+  if (b.tagline) h += '<p class="hp-tagline">' + escHtml(b.tagline) + '</p>';
+  let statHtml = stats;
+  if (b.status) statHtml = '<span class="status ' + escHtml(b.statusClass || '') + '">' + escHtml(b.status) + '</span>' + statHtml;
+  if (statHtml) h += '<div class="hp-stats">' + statHtml + '</div>';
+  h += '</div></header>';
+  // main column
+  h += '<div class="hp-main">';
   if (b.mission) {
-    h += '<div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:20px">';
-    h += '<h3 style="margin:0 0 12px;font-size:14px;text-transform:uppercase;letter-spacing:0.5px;color:var(--muted)">About</h3>';
-    h += '<p style="margin:0;line-height:1.6">' + escHtml(b.mission) + '</p></div>';
+    h += '<section class="hp-card"><h3 class="hp-kicker">About</h3><p class="hp-mission">' + escHtml(b.mission) + '</p></section>';
   }
-  // Attention
-  if (attnItems.length) {
-    h += '<div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:20px">';
-    h += '<h3 style="margin:0 0 12px;font-size:14px;text-transform:uppercase;letter-spacing:0.5px;color:var(--muted)">Needs attention (' + attnItems.length + ')</h3>';
-    attnItems.slice(0, 5).forEach(a => {
-      h += '<div style="padding:8px 0;border-bottom:1px solid var(--border)"><span style="color:#f0a35e">●</span> ' + escHtml(a.text || a) + '</div>';
+  if (plans.length) {
+    h += '<section class="hp-card"><h3 class="hp-kicker">Plans (' + plans.length + ')</h3>';
+    plans.forEach(p => {
+      h += '<div class="hp-plan"><div class="hp-picon">' + escHtml(p.icon || '💼') + '</div><div class="hp-pbody">';
+      h += '<div class="hp-pname">' + escHtml(p.name || 'Untitled plan');
+      if (p.status) h += '<span class="hp-pill">' + escHtml(p.status) + '</span>';
+      h += '</div>';
+      if (p.desc) h += '<p class="hp-pdesc">' + escHtml(p.desc) + '</p>';
+      if (p.docs && p.docs[0] && p.docs[0].url) h += '<a class="hp-pdoc" href="' + escHtml(p.docs[0].url) + '" target="_blank" rel="noopener">' + escHtml(p.docs[0].label || 'Open doc') + ' →</a>';
+      h += '</div></div>';
     });
-    h += '</div>';
+    h += '</section>';
   }
-  // Children
-  if (kids.length) {
-    h += '<div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:20px">';
-    h += '<h3 style="margin:0 0 12px;font-size:14px;text-transform:uppercase;letter-spacing:0.5px;color:var(--muted)">Sub-buddies (' + kids.length + ')</h3>';
-    h += '<div style="display:flex;flex-wrap:wrap;gap:8px">';
-    kids.forEach(k => {
-      h += '<span style="background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:8px 12px;font-size:14px">' + (k.icon || '🤖') + ' ' + escHtml(dispName(k)) + '</span>';
-    });
-    h += '</div></div>';
-  }
-  // Artifacts
   if (arts.length) {
-    h += '<div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:20px">';
-    h += '<h3 style="margin:0 0 12px;font-size:14px;text-transform:uppercase;letter-spacing:0.5px;color:var(--muted)">Artifacts (' + arts.length + ')</h3>';
+    h += '<section class="hp-card"><h3 class="hp-kicker">Artifacts (' + arts.length + ')</h3>';
     arts.slice(0, 6).forEach(a => {
-      h += '<div style="padding:6px 0"><a href="' + escHtml(a.url || '#') + '" target="_blank" style="color:var(--accent);text-decoration:none">' + escHtml(a.title || a.name || 'Artifact') + '</a></div>';
+      h += '<div class="hp-art"><a href="' + escHtml(a.url || '#') + '" target="_blank" rel="noopener">' + escHtml(a.title || a.name || 'Artifact') + '</a><span class="hp-go">→</span></div>';
     });
-    h += '</div>';
+    if (arts.length > 6) h += '<p class="hp-more">+' + (arts.length - 6) + ' more</p>';
+    h += '</section>';
   }
-  h += '<p style="text-align:center;color:var(--muted);font-size:12px;margin-top:32px">Auto-generated homepage — set a custom URL in the Homepage URL field to override.</p>';
+  h += '</div>';
+  // rail
+  h += '<aside class="hp-rail">';
+  if (attnItems.length) {
+    h += '<section class="hp-card hp-attn"><h3 class="hp-kicker">Needs attention (' + attnItems.length + ')</h3>';
+    attnItems.slice(0, 5).forEach(a => {
+      h += '<div class="hp-aitem"><span class="hp-adot">●</span><div class="hp-atext">' + escHtml(a.text || a);
+      if (a.date) h += '<div class="hp-adate">Asked ' + escHtml(a.date) + '</div>';
+      h += '</div></div>';
+    });
+    if (attnItems.length > 5) h += '<p class="hp-more">+' + (attnItems.length - 5) + ' more</p>';
+    h += '</section>';
+  }
+  if (kids.length) {
+    h += '<section class="hp-card"><h3 class="hp-kicker">Sub-buddies (' + kids.length + ')</h3><div class="hp-chips">';
+    kids.forEach(k => {
+      h += '<span class="hp-chip">' + escHtml(k.icon || '🤖') + ' ' + escHtml(dispName(k)) + '</span>';
+    });
+    h += '</div></section>';
+  }
+  h += '</aside>';
+  // brain dump (full width)
+  h += '<section class="hp-card hp-dumpsec"><div class="hp-dump"><h3 class="hp-kicker">🧠 Brain dump</h3>';
+  if (!b.repo) {
+    h += '<p class="hp-dump-status" style="margin:10px 0 0">No repo linked for this buddy yet — dumps are disabled.</p>';
+  } else {
+    h += '<textarea data-hp-dump placeholder="Dump a thought, link, or half-formed idea — it lands in this buddy\\u2019s docs/ingest.md" aria-label="Brain dump"></textarea>';
+    h += '<div class="hp-dump-row"><button type="button" class="hp-dump-btn" data-hp-dump-btn>Dump it</button><span class="hp-dump-status" data-hp-dump-status></span></div>';
+  }
+  h += '</div></section>';
+  h += '</div>';
+  h += '<p class="hp-note">Auto-generated homepage — set a custom URL in the Homepage URL field to override.</p>';
   h += '</div>';
   return h;
 }
+async function homepageDumpSubmit(root, id){
+  const ta = root.querySelector('[data-hp-dump]');
+  const st = root.querySelector('[data-hp-dump-status]');
+  const b = byId[id];
+  if (!ta || !b) return;
+  const text = ta.value.trim();
+  if (!text) return;
+  const stamp = new Date().toLocaleString();
+  const entry = '## ' + stamp + String.fromCharCode(10,10) + text + String.fromCharCode(10,10);
+  if (!ghToken() || !b.repo) {
+    if (st) st.innerHTML = 'Add a GitHub token to unlock ingest. <a href="https://github.com/settings/tokens" target="_blank" rel="noopener">Get one here</a>.';
+    return;
+  }
+  if (st) st.textContent = 'Dumping…';
+  try {
+    const cur = await ghGetFile(b.repo, 'docs/ingest.md') || '# Ingest log — ' + b.name + String.fromCharCode(10,10);
+    await ghPutFile(b.repo, 'docs/ingest.md', b64encode(cur + entry), 'Ingest dump for ' + id);
+    ta.value = '';
+    if (st) st.textContent = 'Dumped to ' + b.repo + '/docs/ingest.md';
+  } catch (err) { if (st) st.textContent = 'Save failed: ' + (err.message || err); }
+}
+function initHomepageDumpbox(root, b){
+  if (!root || !b) return;
+  const btn = root.querySelector('[data-hp-dump-btn]');
+  if (!btn || btn._hpWired) return;
+  btn._hpWired = true;
+  btn.addEventListener('click', function(){ homepageDumpSubmit(root, b.id); });
+}
+
 function renderProjectView(){
   const pv = document.getElementById('view-project');
   if (!pv) return;
@@ -1604,6 +1721,7 @@ function renderProjectView(){
     content.id = 'homepage-frame';
     content.style.cssText = 'width:100%;height:100%;overflow:auto;background:var(--bg)';
     content.innerHTML = buddyHomepageHtml(b);
+    initHomepageDumpbox(content, b);
     wrap.appendChild(content);
   }
   pv.appendChild(wrap);
