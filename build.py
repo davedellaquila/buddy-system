@@ -2000,7 +2000,7 @@ function renderBuddy(id){
       '<a class="art-row" data-buddy="'+escHtml(k.id)+'">'
       + '<span class="art-ic">'+escHtml(k.icon || '')+'</span>'
       + '<span><span class="art-label">'+escHtml(dispName(k))+'</span><div class="art-sub">'+escHtml((k.tagline || k.mission || '').slice(0, 90))+'</div></span>'
-      + '<span class="art-go">\\u2192</span></a>').join('') + '</div>';
+      + '<span class="art-go" data-homepage="'+escHtml(k.id)+'" title="Open homepage">\\u2192</span></a>').join('') + '</div>';
   })();
   let linkSec = '';
   (function(){
@@ -2014,7 +2014,7 @@ function renderBuddy(id){
       if (lb) return '<a class="art-row" data-buddy="' + escHtml(lid) + '">'
         + '<span class="art-ic">' + escHtml(lb.icon || '') + '</span>'
         + '<span><span class="art-label">' + escHtml(dispName(lb)) + '</span><div class="art-sub">' + escHtml((lb.mission || '').slice(0, 90)) + '</div></span>'
-        + '<span class="art-go">\u2192</span></a>';
+        + '<span class="art-go" data-homepage="' + escHtml(lid) + '" title="Open homepage">\u2192</span></a>';
       return '<div class="art-row" style="opacity:.55">'
         + '<span class="art-ic">\u23f3</span>'
         + '<span><span class="art-label">' + escHtml(prettyId(lid)) + '</span><div class="art-sub">Buddy being set up</div></span></div>';
@@ -4348,6 +4348,8 @@ document.addEventListener('click', e => {
     else selectBuddy(projRow.dataset.buddy);
     return;
   }
+  const hp = e.target.closest('[data-homepage]');
+  if (hp) { e.preventDefault(); selectProject(hp.dataset.homepage); return; }
   const bb = e.target.closest('[data-buddy]');
   // Don't re-open the buddy when clicking an editable field (e.g. the name)
   // Panel behavior is view-aware: in Project Homepage view, clicking selects only
