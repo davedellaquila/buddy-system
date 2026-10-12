@@ -1,648 +1,162 @@
-<!doctype html>
+<!-- BUDDY-BASIC-TEMPLATE v2 -->
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<meta name="color-scheme" content="light dark" />
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎨</text></svg>" />
-<title>Design Buddy — The Taste Department</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500;1,9..144,600&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Designer</title>
 <style>
+:root {
+  --bg: #ffffff;
+  --text: #1a1a1a;
+  --muted: #666;
+  --card: #f5f5f5;
+  --border: #e0e0e0;
+  --accent: #0066cc;
+}
+@media (prefers-color-scheme: dark) {
   :root {
-    color-scheme: light dark;
-    --paper: #f7f4ee;
-    --card: #fffdf8;
-    --ink: #1a1713;
-    --muted: #6f6455;
-    --faint: #a89a83;
-    --line: #e4dccb;
-    --accent: #c2410c;
-    --on-accent: #ffffff;
-    --shadow: 0 16px 40px rgba(80, 52, 16, .10);
-    --serif: "Fraunces", Georgia, "Times New Roman", serif;
-    --sans: "Manrope", ui-sans-serif, system-ui, -apple-system, sans-serif;
-    --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    --bg: #1a1a1a;
+    --text: #e0e0e0;
+    --muted: #999;
+    --card: #2a2a2a;
+    --border: #3a3a3a;
+    --accent: #4da6ff;
   }
-  @media (prefers-color-scheme: dark) {
-    :root {
-      --paper: #14110a;
-      --card: #1d1911;
-      --ink: #f2ead9;
-      --muted: #ac9f85;
-      --faint: #6f6350;
-      --line: #322b1b;
-      --accent: #f0904d;
-      --on-accent: #241104;
-      --shadow: 0 16px 40px rgba(0, 0, 0, .45);
-    }
-  }
-  * { box-sizing: border-box; }
-  body {
-    margin: 0; background: var(--paper); color: var(--ink);
-    font-family: var(--sans); font-size: 15.5px; line-height: 1.6;
-    -webkit-font-smoothing: antialiased;
-  }
-  .wrap { max-width: 780px; margin: 0 auto; padding: 44px 22px 70px; }
-  .eyebrow {
-    display: flex; align-items: center; gap: 10px;
-    font-size: 12px; font-weight: 800; letter-spacing: .16em; text-transform: uppercase;
-    color: var(--faint); margin-bottom: 16px;
-  }
-  .eyebrow .rule { flex: 1; height: 1px; background: var(--line); }
-  h1 {
-    font-family: var(--serif); font-weight: 700;
-    font-size: clamp(38px, 7vw, 58px); line-height: 1.02;
-    margin: 0 0 10px; letter-spacing: -0.015em;
-  }
-  h1 .palette { font-family: var(--sans); }
-  .tagline {
-    font-family: var(--serif); font-style: italic; font-weight: 500;
-    font-size: 20px; color: var(--muted); margin: 0 0 6px;
-  }
-  .status-pill {
-    display: inline-flex; align-items: center; gap: 8px;
-    margin-top: 14px; padding: 7px 14px 7px 10px;
-    background: color-mix(in srgb, var(--accent) 12%, transparent);
-    border: 1px solid var(--line); border-radius: 999px;
-    font-size: 13px; font-weight: 700; color: var(--accent);
-  }
-  .status-pill .pulse { width: 9px; height: 9px; border-radius: 50%; background: var(--accent); animation: pulse 2s infinite; }
-  @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: .35; } }
-  .mission {
-    margin: 28px 0 0; padding: 24px 26px;
-    background: var(--card); border: 1px solid var(--line); border-radius: 16px;
-    box-shadow: var(--shadow); font-size: 16.5px;
-  }
-  .mission strong { color: var(--accent); }
-  .mission .boundary {
-    display: block; margin-top: 12px; padding-top: 12px;
-    border-top: 1px dashed var(--line); color: var(--muted); font-size: 14px;
-  }
-  h2 {
-    font-family: var(--serif); font-size: 23px; font-weight: 600;
-    margin: 44px 0 4px; display: flex; align-items: baseline; gap: 10px;
-  }
-  h2 .count {
-    font-family: var(--sans); font-size: 12px; font-weight: 800;
-    background: var(--ink); color: var(--paper);
-    border-radius: 999px; padding: 2px 10px; letter-spacing: .06em;
-  }
-  .sub { color: var(--faint); font-size: 13.5px; margin: 0 0 18px; }
-  .card {
-    background: var(--card); border: 1px solid var(--line); border-radius: 16px;
-    box-shadow: var(--shadow); padding: 22px 24px; margin-bottom: 14px;
-  }
-  .attention-card { border-left: 5px solid var(--accent); }
-  .attention-card h3 { margin: 0 0 6px; font-size: 16.5px; }
-  .attention-card p { margin: 0 0 14px; color: var(--muted); font-size: 14.5px; }
-  .btn {
-    display: inline-block; text-decoration: none; font-weight: 700; font-size: 14px;
-    background: var(--ink); color: var(--paper);
-    padding: 10px 20px; border-radius: 10px;
-    transition: transform .15s ease, opacity .15s ease;
-  }
-  .btn:hover { transform: translateY(-1px); opacity: .92; }
-  .btn.ghost { background: transparent; color: var(--ink); border: 1.5px solid var(--line); }
-  /* principles */
-  .principle { display: grid; grid-template-columns: 52px 1fr; gap: 16px; align-items: start; }
-  .principle .num {
-    font-family: var(--serif); font-style: italic; font-size: 30px; font-weight: 600;
-    color: var(--accent); line-height: 1;
-  }
-  .principle h3 { margin: 2px 0 4px; font-size: 16px; }
-  .principle p { margin: 0; color: var(--muted); font-size: 14.5px; }
-  .principle p code {
-    font-family: var(--mono); font-size: 12.5px;
-    background: color-mix(in srgb, var(--accent) 10%, transparent);
-    padding: 1px 6px; border-radius: 5px; color: var(--accent);
-  }
-  /* ---- the system: tokens, type, spacing, components ---- */
-  .sys-h3 { font-family: var(--serif); font-size: 19px; font-weight: 600; margin: 30px 0 10px; }
-  .toktable { display: grid; }
-  .tokrow {
-    display: grid; grid-template-columns: 104px 46px 46px 1fr; gap: 10px; align-items: center;
-    padding: 8px 2px; border-bottom: 1px solid var(--line); font-size: 13.5px;
-  }
-  .tokrow.tokhead {
-    font-size: 10.5px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase;
-    color: var(--faint); border-bottom: 2px solid var(--line); padding-bottom: 6px;
-  }
-  .tokrow .mono { font-family: var(--mono); font-size: 12.5px; font-weight: 600; }
-  .tokrow .job { color: var(--muted); }
-  .chips i { display: block; width: 34px; height: 22px; border-radius: 6px; border: 1px solid var(--line); }
-  .sysnote { color: var(--muted); font-size: 13.5px; margin: 14px 0 0; }
-  .sysnote code, .ghost-note code, .feedbackbox-sub code {
-    font-family: var(--mono); font-size: 12.5px;
-    background: color-mix(in srgb, var(--accent) 10%, transparent);
-    padding: 1px 6px; border-radius: 5px; color: var(--accent);
-  }
-  .accent-try { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin: 16px 0 4px; }
-  .accent-opt {
-    width: 40px; height: 40px; border-radius: 50%; border: 2px solid var(--line);
-    cursor: pointer; padding: 0; transition: transform .15s ease, border-color .15s ease;
-  }
-  .accent-opt:hover { transform: scale(1.08); }
-  .accent-opt[aria-pressed="true"] { border-color: var(--ink); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 30%, transparent); }
-  .accent-status { font-size: 13px; color: var(--muted); }
-  .typerow { padding: 12px 0; border-bottom: 1px solid var(--line); }
-  .typerow:last-child { border-bottom: none; }
-  .typerow .spec { font-family: var(--mono); font-size: 11px; color: var(--faint); margin-bottom: 6px; }
-  .eyebrow-demo { font-size: 12px; font-weight: 800; letter-spacing: .16em; text-transform: uppercase; color: var(--faint); }
-  .h1-demo { font-family: var(--serif); font-weight: 700; font-size: clamp(30px, 5vw, 42px); line-height: 1.05; letter-spacing: -0.015em; }
-  .h2-demo { font-family: var(--serif); font-size: 23px; font-weight: 600; }
-  .h3-demo { font-size: 16px; font-weight: 700; }
-  .body-demo { font-size: 15.5px; line-height: 1.6; }
-  .small-demo { font-size: 13px; color: var(--muted); }
-  .spacerow { display: flex; align-items: flex-end; gap: 20px; padding: 10px 0 4px; flex-wrap: wrap; }
-  .space-item { display: flex; flex-direction: column; align-items: center; gap: 8px; }
-  .space-bar { background: var(--accent); border-radius: 4px; width: 100%; opacity: .85; }
-  .space-lbl { font-family: var(--mono); font-size: 11px; color: var(--muted); }
-  .comp-caption { font-family: var(--mono); font-size: 12px; color: var(--faint); margin: 26px 0 8px; }
-  .stat-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; margin-bottom: 14px; }
-  .stat { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 16px; text-align: center; }
-  .stat-num { font-family: var(--serif); font-size: 34px; font-weight: 700; color: var(--accent); line-height: 1; }
-  .stat-lbl { font-size: 12px; color: var(--muted); margin-top: 6px; }
-  .ghost-note { color: var(--muted); font-size: 14.5px; }
-  /* ---- inspiration shelf ---- */
-  .shelfrow { padding: 11px 0; border-bottom: 1px solid var(--line); }
-  .shelfrow:last-child { border-bottom: none; }
-  .shelfrow a { font-weight: 700; color: var(--accent); text-decoration: none; font-size: 15px; }
-  .shelfrow a:hover { text-decoration: underline; }
-  .shelfrow .why { display: block; color: var(--muted); font-size: 13.5px; margin-top: 2px; }
-  .shelfrow .who { color: var(--faint); }
-  /* ---- inline design brief ---- */
-  .sub a, .brief-p a, .sysnote a { color: var(--accent); font-weight: 600; text-decoration: none; }
-  .sub a:hover, .brief-p a:hover, .sysnote a:hover { text-decoration: underline; }
-  .brief-p { margin: 0 0 12px; color: var(--muted); font-size: 14.5px; }
-  .brief-p:last-child { margin-bottom: 0; }
-  .brief-p strong { color: var(--ink); }
-  .brief-p code, .brief-ol code, .brief-ul code, .checklist code {
-    font-family: var(--mono); font-size: 12.5px;
-    background: color-mix(in srgb, var(--accent) 10%, transparent);
-    padding: 1px 6px; border-radius: 5px; color: var(--accent);
-  }
-  .brief-pull {
-    margin: 14px 0; padding: 12px 16px; border-left: 3px solid var(--accent);
-    font-family: var(--serif); font-style: italic; font-size: 17px; color: var(--ink);
-    background: color-mix(in srgb, var(--accent) 7%, transparent); border-radius: 0 10px 10px 0;
-  }
-  .brief-tag { font-family: var(--sans); font-size: 10.5px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; color: var(--faint); }
-  .brief-ol { margin: 0; padding-left: 22px; color: var(--muted); font-size: 14.5px; }
-  .brief-ol li { margin-bottom: 10px; }
-  .brief-ol li:last-child { margin-bottom: 0; }
-  .brief-ol li::marker { color: var(--accent); font-weight: 800; }
-  .brief-ol strong { color: var(--ink); }
-  .brief-ul { margin: 0; padding-left: 20px; color: var(--muted); font-size: 14.5px; }
-  .brief-ul li { margin-bottom: 8px; }
-  .brief-ul li:last-child { margin-bottom: 0; }
-  .brief-ul li::marker { color: var(--accent); }
-  .brief-ul strong { color: var(--ink); }
-  .checklist { list-style: none; margin: 0; padding: 0; }
-  .checklist li { position: relative; padding: 9px 0 9px 32px; border-bottom: 1px solid var(--line); color: var(--muted); font-size: 14.5px; }
-  .checklist li:last-child { border-bottom: none; }
-  .checklist li::before { content: ""; position: absolute; left: 0; top: 12px; width: 15px; height: 15px; border: 1.5px solid var(--faint); border-radius: 5px; }
-  /* ---- design-feedback box (mirrors .dumpbox; writes docs/feedback.md) ---- */
-  .feedbackbox {
-    background: var(--card); border: 1px solid var(--line); border-radius: 16px;
-    box-shadow: var(--shadow); padding: 22px 24px; margin-bottom: 14px;
-  }
-  .feedbackbox h2 { font-family: var(--serif); font-size: 22px; font-weight: 600; margin: 0 0 4px; }
-  .feedbackbox-sub { color: var(--muted); font-size: 14px; margin: 0 0 14px; }
-  .feedbackbox textarea {
-    width: 100%; min-height: 96px; resize: vertical;
-    background: var(--paper); border: 1px solid var(--line); border-radius: 10px;
-    padding: 10px 12px; font-size: 14px; color: var(--ink); font-family: var(--sans);
-  }
-  .feedbackbox textarea:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 18%, transparent); }
-  .feedbackbox textarea:disabled { opacity: .55; }
-  .feedbackbox-row { display: flex; align-items: center; gap: 12px; margin-top: 10px; flex-wrap: wrap; }
-  .feedbackbox-btn {
-    background: var(--accent); color: var(--on-accent); border: none; border-radius: 10px;
-    padding: 10px 22px; font-size: 14px; font-weight: 700; cursor: pointer;
-    transition: transform .15s ease, opacity .15s ease;
-  }
-  .feedbackbox-btn:hover:not(:disabled) { transform: translateY(-1px); }
-  .feedbackbox-btn:disabled { opacity: .45; cursor: default; }
-  .feedbackbox-status { font-size: 13px; color: var(--muted); }
-  .feedbackbox-token {
-    background: var(--paper); border: 1px dashed var(--faint); border-radius: 10px;
-    padding: 12px 14px; margin-bottom: 12px; font-size: 14px; color: var(--muted);
-  }
-  .feedbackbox-token p { margin: 0 0 8px; }
-  .feedbackbox-tokenrow { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
-  .feedbackbox-tokenrow input {
-    flex: 1; min-width: 170px; background: var(--card); border: 1px solid var(--line);
-    border-radius: 8px; padding: 8px 10px; font-size: 13px; color: var(--ink); font-family: var(--sans);
-  }
-  .feedbackbox-tokenrow button {
-    background: transparent; color: var(--accent); border: 1.5px solid var(--accent);
-    border-radius: 8px; padding: 7px 14px; font-size: 13px; font-weight: 700; cursor: pointer;
-  }
-  .feedbackbox-tokenrow a { color: var(--accent); font-size: 13px; font-weight: 600; }
-  /* open questions */
-  .qa { margin: 0; padding-left: 20px; color: var(--muted); font-size: 14.5px; }
-  .qa li { margin-bottom: 10px; }
-  .qa li::marker { color: var(--accent); font-weight: 800; }
-  .qa strong { color: var(--ink); }
-  /* dump box */
-  .dumpbox {
-    background: var(--card); border: 1px solid var(--line); border-radius: 16px;
-    box-shadow: var(--shadow); padding: 22px 24px; margin-bottom: 14px;
-  }
-  .dumpbox h2 { font-family: var(--serif); font-size: 22px; font-weight: 600; margin: 0 0 4px; }
-  .dumpbox-sub { color: var(--muted); font-size: 14px; margin: 0 0 14px; }
-  .dumpbox textarea {
-    width: 100%; min-height: 96px; resize: vertical;
-    background: var(--paper); border: 1px solid var(--line); border-radius: 10px;
-    padding: 10px 12px; font-size: 14px; color: var(--ink); font-family: var(--sans);
-  }
-  .dumpbox textarea:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 18%, transparent); }
-  .dumpbox textarea:disabled { opacity: .55; }
-  .dumpbox-row { display: flex; align-items: center; gap: 12px; margin-top: 10px; flex-wrap: wrap; }
-  .dumpbox-btn {
-    background: var(--accent); color: var(--on-accent); border: none; border-radius: 10px;
-    padding: 10px 22px; font-size: 14px; font-weight: 700; cursor: pointer;
-    transition: transform .15s ease, opacity .15s ease;
-  }
-  .dumpbox-btn:hover:not(:disabled) { transform: translateY(-1px); }
-  .dumpbox-btn:disabled { opacity: .45; cursor: default; }
-  .dumpbox-status { font-size: 13px; color: var(--muted); }
-  .dumpbox-token {
-    background: var(--paper); border: 1px dashed var(--faint); border-radius: 10px;
-    padding: 12px 14px; margin-bottom: 12px; font-size: 14px; color: var(--muted);
-  }
-  .dumpbox-token p { margin: 0 0 8px; }
-.dumpbox-connect {
-    background: var(--paper); border: 1px dashed var(--faint); border-radius: 10px;
-    padding: 14px 16px; margin-bottom: 12px; font-size: 14px; color: var(--muted);
-  }
-.dumpbox-connect p { margin: 0 0 10px; }
-  .dumpbox-tokenrow { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
-  .dumpbox-tokenrow input {
-    flex: 1; min-width: 170px; background: var(--card); border: 1px solid var(--line);
-    border-radius: 8px; padding: 8px 10px; font-size: 13px; color: var(--ink); font-family: var(--sans);
-  }
-  .dumpbox-tokenrow button {
-    background: transparent; color: var(--accent); border: 1.5px solid var(--accent);
-    border-radius: 8px; padding: 7px 14px; font-size: 13px; font-weight: 700; cursor: pointer;
-  }
-  .dumpbox-tokenrow a { color: var(--accent); font-size: 13px; font-weight: 600; }
-  .links { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 6px; }
-  footer {
-    margin-top: 48px; padding-top: 18px; border-top: 1px solid var(--line);
-    color: var(--faint); font-size: 12.5px; display: flex; justify-content: space-between;
-    flex-wrap: wrap; gap: 8px;
-  }
-  footer a { color: var(--accent); font-weight: 600; text-decoration: none; }
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  padding: 40px 20px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+.header { text-align: center; margin-bottom: 40px; }
+.icon { font-size: 64px; margin-bottom: 16px; }
+h1 { font-size: 32px; margin-bottom: 8px; }
+.tagline { color: var(--muted); font-size: 18px; }
+.mission {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 32px;
+  font-size: 17px;
+}
+h2 { font-size: 22px; margin: 32px 0 16px; }
+.attn {
+  background: var(--card);
+  border-left: 4px solid var(--accent);
+  border-radius: 0 8px 8px 0;
+  padding: 16px 20px;
+  margin-bottom: 12px;
+}
+.attn-date { color: var(--muted); font-size: 14px; margin-top: 8px; }
+.children { display: flex; flex-wrap: wrap; gap: 12px; }
+.child {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px 20px;
+  text-decoration: none;
+  color: var(--text);
+}
+.child:hover { border-color: var(--accent); }
+.footer {
+  margin-top: 48px;
+  padding-top: 24px;
+  border-top: 1px solid var(--border);
+  color: var(--muted);
+  font-size: 14px;
+  text-align: center;
+}
+.empty { color: var(--muted); font-style: italic; }
+
+.dumpbox {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px 22px;
+  margin-bottom: 32px;
+}
+.dumpbox h2 { margin: 0 0 6px; font-size: 20px; }
+.dumpbox-sub { color: var(--muted); font-size: 14px; margin-bottom: 14px; }
+.dumpbox textarea {
+  width: 100%; min-height: 96px; resize: vertical;
+  background: var(--bg); border: 1px solid var(--border); border-radius: 8px;
+  padding: 10px 12px; font-size: 14px; color: var(--text); font-family: inherit;
+}
+.dumpbox textarea:focus { outline: none; border-color: var(--accent); }
+.dumpbox textarea:disabled { opacity: .55; }
+.dumpbox-row { display: flex; align-items: center; gap: 12px; margin-top: 10px; flex-wrap: wrap; }
+.dumpbox-btn {
+  background: var(--accent); color: #fff; border: none; border-radius: 8px;
+  padding: 9px 22px; font-size: 14px; font-weight: 600; cursor: pointer;
+}
+.dumpbox-btn:disabled { opacity: .45; cursor: default; }
+.dumpbox-status { font-size: 13px; color: var(--muted); }
+.dumpbox-token {
+  background: var(--bg); border: 1px dashed var(--border); border-radius: 8px;
+  padding: 12px 14px; margin-bottom: 12px; font-size: 14px;
+}
+.dumpbox-token p { margin-bottom: 8px; }
+.dumpbox-tokenrow { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.dumpbox-tokenrow input {
+  flex: 1; min-width: 170px; background: var(--card); border: 1px solid var(--border);
+  border-radius: 8px; padding: 7px 10px; font-size: 13px; color: var(--text);
+}
+.dumpbox-tokenrow button {
+  background: transparent; color: var(--accent); border: 1px solid var(--accent);
+  border-radius: 8px; padding: 7px 14px; font-size: 13px; font-weight: 600; cursor: pointer;
+}
+.dumpbox-tokenrow a { color: var(--accent); font-size: 13px; }
+
 </style>
 </head>
 <body>
-  <div class="wrap">
-    <div class="eyebrow"><span>Project Buddy family · Staff</span><span class="rule"></span><span>🎨</span></div>
-    <h1><span class="palette">🎨</span> Design Buddy</h1>
-    <p class="tagline">The taste department. What good looks like.</p>
-    <span class="status-pill"><span class="pulse"></span>Brief review — awaiting Dave</span>
+<div class="header">
+<div class="icon">🎨</div>
+<h1>Designer</h1>
+<div class="tagline">The taste authority — our Jony Ive on staff</div>
+</div>
 
-    <div class="mission">
-      Design Buddy is the buddy system&rsquo;s <strong>taste department</strong> — the Jony Ive on staff.
-      It reviews every buddy homepage and app for taste, owns the <strong>shared design language</strong>
-      across the whole system, and gives Dave&rsquo;s product work a second design eye when asked.
-      <span class="boundary"><strong>Advisory only.</strong> Owning threads implement — Design Buddy critiques, audits, and sets the bar.
-      Apple-internal STIX work stays advisory-only: no repo access, ever.</span>
-    </div>
+<div class="mission">Design Buddy is Dave&#x27;s resident design authority — the Jony Ive on staff. It reviews every buddy homepage/app for taste, owns the shared design language (dark + light mode, living pages, craftsmanship as differentiator), and gives his product work a second eye when asked. Advisory only: owning threads implement; Apple-internal STIX work stays advisory-only.</div>
 
-    <h2>Needs your attention <span class="count">1</span></h2>
-    <p class="sub">Fresh from the thread — tap through and clear it.</p>
-    <div class="card attention-card">
-      <h3>📄 Product brief ready for review</h3>
-      <p>Looks good, edits, or defer? Your call decides what this buddy becomes. The review ask is open in the Design Buddy thread.</p>
-      <a class="btn" href="https://docs.google.com/document/d/1_sUDucLCJfg2iB858pgHQWdOtt-vWPwOMqoXjhy3QYU/edit">Read the brief</a>
-    </div>
 
-    <h2>The design language</h2>
-    <p class="sub">The bar, written down. Every buddy homepage is measured against this.</p>
-    <div class="card principle">
-      <div class="num">01</div>
-      <div><h3>Dark AND light mode, always</h3><p>Every page, both themes, via <code>prefers-color-scheme</code>. Light-only is not done.</p></div>
-    </div>
-    <div class="card principle">
-      <div class="num">02</div>
-      <div><h3>Living pages, not one-time builds</h3><p>Refresh when the data changes. A stale page erodes trust; a current page is one Dave can rely on.</p></div>
-    </div>
-    <div class="card principle">
-      <div class="num">03</div>
-      <div><h3>A brain-dump box on every homepage</h3><p>Capture lives where the work lives — timestamped entries straight into the buddy&rsquo;s repo.</p></div>
-    </div>
-    <div class="card principle">
-      <div class="num">04</div>
-      <div><h3>Craftsmanship is the differentiator</h3><p>Handcrafted and delightful, the Apple principle Dave built his career on. Personality is the moat.</p></div>
-    </div>
-    <div class="card principle">
-      <div class="num">05</div>
-      <div><h3>Classic over clever</h3><p>Ship what Dave praised. Surprises are for birthdays, not homepages.</p></div>
-    </div>
+<section class="dumpbox" data-buddy-id="design-buddy">
+<h2>🧠 Brain dump</h2>
+<p class="dumpbox-sub">Dump what's on your mind about Designer — raw and unfiltered. Each dump lands in the buddy's repo (docs/ingest.md) as a timestamped entry.</p>
+<div class="dumpbox-token" hidden>
+<p>🔒 Connect GitHub to unlock dumping. Paste a token once — it stays on this device only.</p>
+<div class="dumpbox-tokenrow">
+<input type="password" placeholder="GitHub token (repo scope)" aria-label="GitHub token">
+<button type="button">Save token</button>
+<a href="https://github.com/settings/tokens" target="_blank" rel="noopener">Get a token</a>
+</div>
+</div>
+<textarea rows="4" placeholder="Dump what's on your mind about Designer…"></textarea>
+<div class="dumpbox-row">
+<button type="button" class="dumpbox-btn">Dump it</button>
+<span class="dumpbox-status" role="status"></span>
+</div>
+</section>
 
-    <h2 id="the-system">The system</h2>
-    <p class="sub">The shared design language, rendered from this page&rsquo;s own variables. This section <em>is</em> the system — steal it. Full write-up: the <a href="https://github.com/davedellaquila/design-buddy/blob/master/docs/design-brief.md" style="color:var(--accent);font-weight:600">design brief</a> in this buddy&rsquo;s repo.</p>
 
-    <h3 class="sys-h3">Color</h3>
-    <div class="card">
-      <div class="toktable">
-        <div class="tokrow tokhead"><span>Token</span><span>Light</span><span>Dark</span><span class="job">Job</span></div>
-        <div class="tokrow"><span class="mono">--paper</span><span class="chips"><i style="background:#f7f4ee"></i></span><span class="chips"><i style="background:#14110a"></i></span><span class="job">page canvas</span></div>
-        <div class="tokrow"><span class="mono">--card</span><span class="chips"><i style="background:#fffdf8"></i></span><span class="chips"><i style="background:#1d1911"></i></span><span class="job">surface</span></div>
-        <div class="tokrow"><span class="mono">--ink</span><span class="chips"><i style="background:#1a1713"></i></span><span class="chips"><i style="background:#f2ead9"></i></span><span class="job">primary text</span></div>
-        <div class="tokrow"><span class="mono">--muted</span><span class="chips"><i style="background:#6f6455"></i></span><span class="chips"><i style="background:#ac9f85"></i></span><span class="job">secondary text</span></div>
-        <div class="tokrow"><span class="mono">--faint</span><span class="chips"><i style="background:#a89a83"></i></span><span class="chips"><i style="background:#6f6350"></i></span><span class="job">tertiary / labels</span></div>
-        <div class="tokrow"><span class="mono">--line</span><span class="chips"><i style="background:#e4dccb"></i></span><span class="chips"><i style="background:#322b1b"></i></span><span class="job">hairlines</span></div>
-        <div class="tokrow"><span class="mono">--accent</span><span class="chips"><i style="background:#c2410c"></i></span><span class="chips"><i style="background:#f0904d"></i></span><span class="job">the one color</span></div>
-        <div class="tokrow"><span class="mono">--on-accent</span><span class="chips"><i style="background:#ffffff"></i></span><span class="chips"><i style="background:#241104"></i></span><span class="job">text on accent</span></div>
-      </div>
-      <p class="sysnote">Derived tints come from <code>color-mix(in srgb, var(--accent) &lt;pct&gt;%, transparent)</code> — never hand-pick a second accent. <code>--on-accent</code> must pass contrast on <code>--accent</code> in <em>both</em> themes.</p>
-      <div class="accent-try" role="group" aria-label="Try an accent color">
-        <button type="button" class="accent-opt" data-accent="ember"  aria-pressed="true"  aria-label="Ember"  title="Ember"  style="background:#c2410c"></button>
-        <button type="button" class="accent-opt" data-accent="indigo" aria-pressed="false" aria-label="Indigo" title="Indigo" style="background:#4f46e5"></button>
-        <button type="button" class="accent-opt" data-accent="forest" aria-pressed="false" aria-label="Forest" title="Forest" style="background:#15803d"></button>
-        <button type="button" class="accent-opt" data-accent="plum"   aria-pressed="false" aria-label="Plum"   title="Plum"   style="background:#a21caf"></button>
-        <span class="accent-status" id="accentStatus" role="status">Ember — the default accent.</span>
-      </div>
-    </div>
+<h2>Needs Attention</h2>
+<div class="attn"><div>Brief ready for review — looks good, edits, or defer? Dave&#x27;s resident design authority, “the Jony Ive on staff.”</div><div class="attn-date">2026-10-11</div></div>
+<div class="attn"><div>Jonny’s Essence keynote package is ready to view — promo film, voiceover, jingle, 12-slide deck, web page, LinkedIn post, and social plan are in the Designer thread.</div><div class="attn-date">2026-10-11</div></div>
 
-    <h3 class="sys-h3">Type</h3>
-    <div class="card">
-      <div class="typerow"><div class="spec">eyebrow · 12px / 800 / .16em caps</div><div class="eyebrow-demo">Project Buddy family</div></div>
-      <div class="typerow"><div class="spec">h1 · Fraunces 700 · clamp(38px, 7vw, 58px)</div><div class="h1-demo">The quick brown fox</div></div>
-      <div class="typerow"><div class="spec">h2 · Fraunces 600 · 23px</div><div class="h2-demo">The quick brown fox</div></div>
-      <div class="typerow"><div class="spec">h3 · Manrope 700 · 16px</div><div class="h3-demo">The quick brown fox</div></div>
-      <div class="typerow"><div class="spec">body · Manrope 400 · 15.5px / 1.6</div><div class="body-demo">The quick brown fox jumps over the lazy dog — set with intent, and room to breathe.</div></div>
-      <div class="typerow"><div class="spec">small · 13px · muted</div><div class="small-demo">The quick brown fox, quietly noted.</div></div>
-    </div>
 
-    <h3 class="sys-h3">Spacing</h3>
-    <div class="card">
-      <div class="spacerow">
-        <div class="space-item"><div class="space-bar" style="height:4px"></div><div class="space-lbl">4</div></div>
-        <div class="space-item"><div class="space-bar" style="height:8px"></div><div class="space-lbl">8</div></div>
-        <div class="space-item"><div class="space-bar" style="height:12px"></div><div class="space-lbl">12</div></div>
-        <div class="space-item"><div class="space-bar" style="height:16px"></div><div class="space-lbl">16</div></div>
-        <div class="space-item"><div class="space-bar" style="height:24px"></div><div class="space-lbl">24</div></div>
-        <div class="space-item"><div class="space-bar" style="height:32px"></div><div class="space-lbl">32</div></div>
-        <div class="space-item"><div class="space-bar" style="height:48px"></div><div class="space-lbl">48</div></div>
-      </div>
-      <p class="sysnote">Cards: 22–24px padding, 16px radius. Page: max-width 760–800px, side padding 22px.</p>
-    </div>
 
-    <h2 id="components">Components</h2>
-    <p class="sub">The recurring pieces, live. Each one below is the real thing — the class names are the API.</p>
 
-    <div class="comp-caption">.attention-card — one per item needing Dave&rsquo;s tap, always carries the action</div>
-    <div class="card attention-card">
-      <h3>🎨 Design brief ready to ship</h3>
-      <p>The system&rsquo;s source of truth lives at <code>docs/design-brief.md</code> in this repo — every buddy reads it before homepage work.</p>
-      <a class="btn" href="https://github.com/davedellaquila/design-buddy/blob/master/docs/design-brief.md">Read the design brief</a>
-    </div>
+<div class="footer">
+Generated 2026-10-12 · Part of the Buddy System
+</div>
 
-    <div class="comp-caption">.stat-row — a row of numbers saying what this buddy tracks</div>
-    <div class="stat-row">
-      <div class="stat"><div class="stat-num">60+</div><div class="stat-lbl">buddies in the system</div></div>
-      <div class="stat"><div class="stat-num">8</div><div class="stat-lbl">color tokens</div></div>
-      <div class="stat"><div class="stat-num">5</div><div class="stat-lbl">design principles</div></div>
-      <div class="stat"><div class="stat-num">2</div><div class="stat-lbl">themes, always</div></div>
-    </div>
-
-    <div class="comp-caption">.links — ghost buttons: brief, repo, dashboard</div>
-    <div class="links">
-      <a class="btn ghost" href="#components-sample">📄 Sample link</a>
-      <a class="btn ghost" href="#components-sample">💻 Sample link</a>
-      <a class="btn ghost" href="#components-sample">🗂️ Sample link</a>
-    </div>
-
-    <div class="comp-caption">.dumpbox — the brain-dump pattern, live further down this page</div>
-    <div class="card ghost-note">One per homepage, writing timestamped entries to the buddy&rsquo;s <code>docs/ingest.md</code>. The box below <em>is</em> this component.</div>
-
-    <div class="comp-caption">.last-refreshed — footer stamp, updated on every content change</div>
-    <div class="card ghost-note">Living page · <strong>Last refreshed 2026-10-11</strong> — the same stamp in this page&rsquo;s footer.</div>
-
-    <h2 id="inspiration">Inspiration &amp; sources</h2>
-    <p class="sub">The shelf this taste was built on — curated, not collected. If it&rsquo;s here, it earned its place. Say &ldquo;add X&rdquo; or &ldquo;drop Y&rdquo; in the Design Buddy thread and both this shelf and the mission statement get updated.</p>
-
-    <h3 class="sys-h3">The canon</h3>
-    <div class="card">
-      <div class="shelfrow"><a href="https://jnd.org/books/">The Design of Everyday Things</a><span class="why"><span class="who">Don Norman —</span> affordances, signifiers, and the original UX bug: the door.</span></div>
-      <div class="shelfrow"><a href="https://sensible.com/dont-make-me-think/">Don&rsquo;t Make Me Think</a><span class="why"><span class="who">Steve Krug —</span> the usability bible. Every homepage should survive the ten-second test.</span></div>
-      <div class="shelfrow"><a href="https://www.refactoringui.com/">Refactoring UI</a><span class="why"><span class="who">Adam Wathan &amp; Steve Schoger —</span> hierarchy, spacing, and color for people without a design degree.</span></div>
-      <div class="shelfrow"><a href="https://ellenlupton.com/Thinking-with-Type-1">Thinking with Type</a><span class="why"><span class="who">Ellen Lupton —</span> type is ninety percent of web design.</span></div>
-      <div class="shelfrow"><a href="https://www.vignelli.com/canon">The Vignelli Canon</a><span class="why"><span class="who">Massimo Vignelli —</span> grid, restraint, and the courage to use six typefaces forever. Free on his site.</span></div>
-    </div>
-
-    <h3 class="sys-h3">The practitioners</h3>
-    <div class="card">
-      <div class="shelfrow"><a href="https://www.vitsoe.com/us/about/good-design">Dieter Rams</a><span class="why">Ten principles of good design. &ldquo;Less, but better&rdquo; is the whole job.</span></div>
-      <div class="shelfrow"><a href="https://en.wikipedia.org/wiki/Jony_Ive">Jony Ive</a><span class="why">The namesake of this desk. Materials, restraint, and sweating the chamfer.</span></div>
-      <div class="shelfrow"><a href="https://www.edwardtufte.com/tufte/">Edward Tufte</a><span class="why">Information density without clutter. The data-ink ratio as a moral stance.</span></div>
-    </div>
-
-    <h3 class="sys-h3">The working references</h3>
-    <div class="card">
-      <div class="shelfrow"><a href="https://developer.apple.com/design/human-interface-guidelines/">Apple Human Interface Guidelines</a><span class="why">The platform canon for everything Dave touches.</span></div>
-      <div class="shelfrow"><a href="https://m3.material.io/">Material Design 3</a><span class="why">The other platform canon — design tokens done at planetary scale.</span></div>
-      <div class="shelfrow"><a href="https://lawsofux.com/">Laws of UX</a><span class="why">Psychology distilled into rules of thumb.</span></div>
-      <div class="shelfrow"><a href="https://stripe.com/">Stripe</a><span class="why">The commercial proof: craft as a moat, at scale.</span></div>
-    </div>
-
-    <h3 class="sys-h3">The house</h3>
-    <div class="card">
-      <div class="shelfrow"><a href="#inspiration">Craftsmanship as the differentiator</a><span class="why"><span class="who">Dave&rsquo;s product philosophy —</span> the Apple principle he built his career on. Personality is the moat.</span></div>
-      <div class="shelfrow"><a href="#inspiration">Vibe designing</a><span class="why"><span class="who">Dave&rsquo;s term —</span> design and build in one motion, with AI. The workflow this whole system runs on.</span></div>
-      <div class="shelfrow"><a href="https://github.com/davedellaquila/design-buddy/blob/master/docs/design-brief.md">The buddy design language</a><span class="why"><span class="who">This buddy&rsquo;s brief —</span> dark+light, living pages, the dump box. The bar, written down.</span></div>
-    </div>
-
-    <h2>Design feedback</h2>
-    <p class="sub">The loop: your note lands in this repo&rsquo;s <code>docs/feedback.md</code>. I triage every entry — fold it into the brief and the system, or close it with a note. Nothing evaporates. Threads can also route feedback through the main chat.</p>
-    <section class="feedbackbox" data-buddy-id="design-buddy">
-      <h2>💬 Design feedback</h2>
-      <p class="feedbackbox-sub">Spotted something off in the system, or have a better idea? Say it here.</p>
-      <div class="feedbackbox-token" hidden>
-        <p>🔒 Connect GitHub to unlock feedback. Paste a token once — it stays on this device only.</p>
-        <div class="feedbackbox-tokenrow">
-          <input type="password" placeholder="GitHub token (repo scope)" aria-label="GitHub token">
-          <button type="button">Save token</button>
-          <a href="https://github.com/settings/tokens" target="_blank" rel="noopener">Get a token</a>
-        </div>
-      </div>
-      <textarea rows="4" placeholder="What should change about the design system, and why?"></textarea>
-      <div class="feedbackbox-row">
-        <button type="button" class="feedbackbox-btn">Send feedback</button>
-        <span class="feedbackbox-status" role="status"></span>
-      </div>
-    </section>
-
-    <h2 id="design-brief">The design brief</h2>
-    <p class="sub">The source of truth, in full — no login required. Same text as the <a href="https://github.com/davedellaquila/design-buddy/blob/master/docs/design-brief.md">GitHub copy</a>.</p>
-
-    <h3 class="sys-h3">1 · The bar</h3>
-    <div class="card">
-      <p class="brief-p">Every buddy homepage is measured against one standard: <strong>craftsmanship as the differentiator</strong>. Dave built his career on the Apple principle that a handcrafted, delightful product wins. His pages should feel like they were made by someone who cares — because they were.</p>
-      <p class="brief-pull">Taste line: classic over clever. Ship what Dave praised. Restraint beats novelty.</p>
-      <p class="brief-p">A homepage is a tool he opens daily, not a portfolio piece — clarity first, personality second.</p>
-    </div>
-
-    <h3 class="sys-h3">2 · Non-negotiables <span class="brief-tag">the ship checklist</span></h3>
-    <div class="card">
-      <ol class="brief-ol">
-        <li><strong>Dark AND light mode.</strong> <code>prefers-color-scheme: dark</code>, <code>color-scheme: light dark</code>. Light-only = not done. No exceptions.</li>
-        <li><strong>Living page.</strong> Update when the underlying data changes — stale pages erode trust. Bake a &ldquo;Last refreshed YYYY-MM-DD&rdquo; stamp in the footer and mean it.</li>
-        <li><strong>Brain-dump box.</strong> Every homepage gets one: textarea + &ldquo;Dump it&rdquo; (Cmd/Ctrl+Enter), appending timestamped entries to <code>docs/ingest.md</code> in the buddy&rsquo;s repo via the GitHub API. Pattern: <code>docs/dumpbox-snippet.html</code> in the dashboard repo. Set <code>data-buddy-id</code>, resolve the repo via <code>../buddies.json</code> (never hardcode a repo name), keep dark + light working.</li>
-        <li><strong>Every document gets its link.</strong> Any doc named on the page gets a clickable inline link with a friendly name — never a bare URL, never &ldquo;go hunt for it.&rdquo;</li>
-        <li><strong>Custom pages own their markup.</strong> If you hand-design a page, delete the <code>&lt;!-- BUDDY-BASIC-TEMPLATE --&gt;</code> marker so the daily template rebuild never overwrites it.</li>
-        <li><strong>No placeholder copy.</strong> If a section has nothing real to say yet, say so honestly — never lorem ipsum, never invented data.</li>
-      </ol>
-    </div>
-
-    <h3 class="sys-h3">3 · Tokens</h3>
-    <div class="card">
-      <p class="brief-p">Steal the structure; the accent may vary per buddy personality. Rendered live in <a href="#the-system">The system</a> above — the page you&rsquo;re reading is built from these tokens:</p>
-      <div class="toktable">
-        <div class="tokrow tokhead"><span>Token</span><span>Light</span><span>Dark</span><span class="job">Job</span></div>
-        <div class="tokrow"><span class="mono">--paper</span><span class="chips"><i style="background:#f7f4ee"></i></span><span class="chips"><i style="background:#14110a"></i></span><span class="job">page canvas</span></div>
-        <div class="tokrow"><span class="mono">--card</span><span class="chips"><i style="background:#fffdf8"></i></span><span class="chips"><i style="background:#1d1911"></i></span><span class="job">surface</span></div>
-        <div class="tokrow"><span class="mono">--ink</span><span class="chips"><i style="background:#1a1713"></i></span><span class="chips"><i style="background:#f2ead9"></i></span><span class="job">primary text</span></div>
-        <div class="tokrow"><span class="mono">--muted</span><span class="chips"><i style="background:#6f6455"></i></span><span class="chips"><i style="background:#ac9f85"></i></span><span class="job">secondary text</span></div>
-        <div class="tokrow"><span class="mono">--faint</span><span class="chips"><i style="background:#a89a83"></i></span><span class="chips"><i style="background:#6f6350"></i></span><span class="job">tertiary</span></div>
-        <div class="tokrow"><span class="mono">--line</span><span class="chips"><i style="background:#e4dccb"></i></span><span class="chips"><i style="background:#322b1b"></i></span><span class="job">hairlines</span></div>
-        <div class="tokrow"><span class="mono">--accent</span><span class="chips"><i style="background:#c2410c"></i></span><span class="chips"><i style="background:#f0904d"></i></span><span class="job">the one color</span></div>
-        <div class="tokrow"><span class="mono">--on-accent</span><span class="chips"><i style="background:#ffffff"></i></span><span class="chips"><i style="background:#241104"></i></span><span class="job">text on accent</span></div>
-      </div>
-      <p class="brief-p" style="margin-top:14px">Derived tints come from <code>color-mix(in srgb, var(--accent) &lt;pct&gt;%, transparent)</code> — never hand-pick a second accent. <code>--on-accent</code> must pass contrast on <code>--accent</code> in <em>both</em> themes.</p>
-      <p class="brief-p"><strong>Type</strong> — Display: Fraunces (serif), 700, tight leading. H1 <code>clamp(38px, 7vw, 58px)</code>, H2 <code>23px</code>. Text: Manrope (sans). Body <code>15–16px / 1.6</code>; small <code>13px</code>; eyebrow <code>12px / 800 / .16em</code> uppercase. Mono: system stack, specs and labels only.</p>
-      <p class="brief-p"><strong>Spacing</strong> — Scale: <code>4 / 8 / 12 / 16 / 24 / 32 / 48</code>. Cards: <code>22–24px</code> padding, <code>16px</code> radius. Page: <code>max-width 760–800px</code>, side padding <code>22px</code>.</p>
-    </div>
-
-    <h3 class="sys-h3">4 · Components</h3>
-    <div class="card">
-      <p class="brief-p">The recurring pieces, with the class names the reference page uses — each one live in the <a href="#components">Components gallery</a> above:</p>
-      <ul class="brief-ul">
-        <li><strong>status-pill</strong> — one-line state under the headline.</li>
-        <li><strong>mission</strong> — the buddy&rsquo;s job in 2–3 sentences; a boundary line for scope limits.</li>
-        <li><strong>attention-card</strong> — <code>.card</code> with a left accent border; one per item needing Dave&rsquo;s tap; always carries the link or action.</li>
-        <li><strong>stat blocks</strong> — a row of 3–4 numbers saying what this buddy tracks.</li>
-        <li><strong>dumpbox</strong> — the brain-dump pattern (§2.3).</li>
-        <li><strong>link rows</strong> — <code>.links</code> ghost buttons: brief, repo, dashboard.</li>
-        <li><strong>last-refreshed stamp</strong> — footer line, baked date, updated on every content change.</li>
-      </ul>
-    </div>
-
-    <h3 class="sys-h3">5 · Taste, concretely</h3>
-    <div class="card">
-      <ul class="brief-ul">
-        <li>One accent color per page. Chips, pills, markers — all from <code>--accent</code>.</li>
-        <li>Hairlines over shadows; one shadow depth, max.</li>
-        <li>Motion: subtle and purposeful (a 150ms hover lift, a pulse on the status dot). Nothing moves without a reason.</li>
-        <li>Emoji: the buddy icon in the headline, functional icons in cards — not decoration confetti.</li>
-        <li>Write like a person: short sentences, no jargon, no &ldquo;leverage.&rdquo;</li>
-      </ul>
-    </div>
-
-    <h3 class="sys-h3">6 · Feedback loop</h3>
-    <div class="card">
-      <p class="brief-p">Design feedback — Dave&rsquo;s or a thread&rsquo;s — has one inbox: the <strong>feedback box on the Design Buddy homepage</strong>, which appends to <code>docs/feedback.md</code> in <code>davedellaquila/design-buddy</code>. Threads can also route feedback through the main chat to the Design Buddy thread. Design Buddy triages each entry: fold it into this brief and the system, or close it with a note. Nothing evaporates.</p>
-      <p class="brief-p">Scope note: this loop is for the <em>buddy system&rsquo;s design</em>. Feedback to outside parties belongs to Feedback Buddy.</p>
-    </div>
-
-    <h3 class="sys-h3">7 · Before you ship <span class="brief-tag">the taste test</span></h3>
-    <div class="card">
-      <ul class="checklist">
-        <li>Both themes readable, no washed-out text on either.</li>
-        <li>Dump box writes a real entry to the repo.</li>
-        <li>Every named document has its inline link.</li>
-        <li>No <code>BUDDY-BASIC-TEMPLATE</code> marker on custom pages.</li>
-        <li>Looks right at phone, tablet, and desktop widths — no broken layouts, no awkward stretching, no horizontal scroll at any size.</li>
-        <li>A stranger understands what the buddy does in 10 seconds.</li>
-        <li>Classic over clever.</li>
-      </ul>
-    </div>
-
-    <h2>Open questions <span class="count">3</span></h2>
-    <p class="sub">From the brief — Dave&rsquo;s call.</p>
-    <div class="card">
-      <ul class="qa">
-        <li><strong>Review cadence:</strong> on-demand when threads ask, or scheduled audits of the whole system?</li>
-        <li><strong>How prescriptive:</strong> recommend only — or can Design Buddy block a ship?</li>
-        <li><strong>Proactive or reactive:</strong> redesign weak pages unasked, or wait to be invited?</li>
-      </ul>
-    </div>
-
-    <section class="dumpbox" data-buddy-id="design-buddy">
-      <h2>🧠 Brain dump</h2>
-      <p class="dumpbox-sub">Dump what&rsquo;s on your mind about design — raw and unfiltered. Each dump lands in this buddy&rsquo;s repo (docs/ingest.md) as a timestamped entry.</p>
-      <div class="dumpbox-connect" hidden>
-        <p>🔒 Connect GitHub to unlock dumping. Paste a token once — it stays on this device only.</p>
-        <button type="button" class="dumpbox-btn">Connect GitHub to enable</button>
-      </div>
-      <div class="dumpbox-token" hidden>
-        <p>🔒 Connect GitHub to unlock dumping. Paste a token once — it stays on this device only.</p>
-        <div class="dumpbox-tokenrow">
-          <input type="password" placeholder="GitHub token (repo scope)" aria-label="GitHub token">
-          <button type="button">Save token</button>
-          <a href="https://github.com/settings/tokens" target="_blank" rel="noopener">Get a token</a>
-        </div>
-      </div>
-      <textarea rows="4" placeholder="Dump what's on your mind about design…"></textarea>
-      <div class="dumpbox-row">
-        <button type="button" class="dumpbox-btn">Dump it</button>
-        <span class="dumpbox-status" role="status"></span>
-      </div>
-    </section>
-
-    <h2>Links</h2>
-    <div class="links">
-      <a class="btn ghost" href="https://docs.google.com/document/d/1_sUDucLCJfg2iB858pgHQWdOtt-vWPwOMqoXjhy3QYU/edit">📄 Product brief</a>
-      <a class="btn ghost" href="https://github.com/davedellaquila/design-buddy/blob/master/docs/design-brief.md">🎨 Design brief</a>
-      <a class="btn ghost" href="https://github.com/davedellaquila/design-buddy">💻 GitHub repo</a>
-      <a class="btn ghost" href="https://davedellaquila.github.io/buddy-system/">🗂️ Buddies dashboard</a>
-    </div>
-
-    <footer>
-      <span>A living page in the Project Buddy family · Last refreshed 2026-10-11</span>
-      <span>Thread: <a href="#">Design Buddy 🎨</a> · davedellaquila/design-buddy</span>
-    </footer>
-  </div>
 <script>
-// ---- accent switcher: tokens are live ----
-(function(){
-  var ACCENTS = {
-    ember:  { light: '#c2410c', dark: '#f0904d', name: 'Ember' },
-    indigo: { light: '#4f46e5', dark: '#a5b4fc', name: 'Indigo' },
-    forest: { light: '#15803d', dark: '#6ee7a8', name: 'Forest' },
-    plum:   { light: '#a21caf', dark: '#e879d8', name: 'Plum' }
-  };
-  var mq = window.matchMedia('(prefers-color-scheme: dark)');
-  var status = document.getElementById('accentStatus');
-  var hexEl = document.getElementById('accentHex');
-  var current = 'ember';
-  function apply(){
-    var a = ACCENTS[current];
-    var val = mq.matches ? a.dark : a.light;
-    document.documentElement.style.setProperty('--accent', val);
-    if (status) status.textContent = a.name + ' — the whole page answers to --accent.';
-    if (hexEl) hexEl.textContent = val;
-  }
-  var opts = document.querySelectorAll('.accent-opt');
-  opts.forEach(function(btn){
-    btn.addEventListener('click', function(){
-      current = btn.getAttribute('data-accent');
-      opts.forEach(function(b){ b.setAttribute('aria-pressed', b === btn ? 'true' : 'false'); });
-      apply();
-    });
-  });
-  if (mq.addEventListener) mq.addEventListener('change', apply);
-  apply();
-})();
-</script>
-<script>
-// ---- brain-dump box (self-contained; no dependencies) ----
 (function(){
   var box = document.querySelector('.dumpbox');
   if (!box || box.dataset.dumpInit) return;
@@ -652,118 +166,9 @@
     return p.substring(p.lastIndexOf('/') + 1);
   })();
   var ta = box.querySelector('textarea'),
-      btn = box.querySelector('.dumpbox-row .dumpbox-btn'),
+      btn = box.querySelector('.dumpbox-btn'),
       st = box.querySelector('.dumpbox-status'),
-      tokWrap = box.querySelector('.dumpbox-token'),
-      connectWrap = box.querySelector('.dumpbox-connect'),
-      connectBtn = connectWrap.querySelector('.dumpbox-btn');
-  function lsGet(){ try { return JSON.parse(localStorage.getItem('buddyTree.v3') || '{}'); } catch(e){ return {}; } }
-  function lsSet(patch){ try { var s = lsGet(); for (var k in patch) s[k] = patch[k]; localStorage.setItem('buddyTree.v3', JSON.stringify(s)); } catch(e){} }
-  function token(){ return lsGet().ghToken || ''; }
-  function b64encode(str){
-    var bytes = new TextEncoder().encode(str), bin = '';
-    bytes.forEach(function(b){ bin += String.fromCharCode(b); });
-    return btoa(bin);
-  }
-  async function ghApi(path, method, body){
-    var t = token();
-    if (!t) throw new Error('Add a GitHub token first.');
-    var r = await fetch('https://api.github.com' + path, {
-      method: method || 'GET',
-      headers: {'Authorization': 'Bearer ' + t, 'Accept': 'application/vnd.github+json', 'Content-Type': 'application/json'},
-      body: body ? JSON.stringify(body) : undefined
-    });
-    if (!r.ok) throw new Error('GitHub ' + r.status);
-    return r.status === 204 ? null : await r.json();
-  }
-  async function ghGetFile(repo, path){
-    try {
-      var j = await ghApi('/repos/davedellaquila/' + repo + '/contents/' + path);
-      if (j && j.content) return {
-        text: new TextDecoder().decode(Uint8Array.from(atob(j.content.replace(/\n/g, '')), function(c){ return c.charCodeAt(0); })),
-        sha: j.sha
-      };
-    } catch(e){}
-    return null;
-  }
-  var repo = null, repoName = bid;
-  async function resolveRepo(){
-    try {
-      var r = await fetch('../buddies.json', {cache: 'no-store'});
-      var d = await r.json();
-      var buds = d.buddies || [];
-      for (var i = 0; i < buds.length; i++) {
-        if (buds[i].id === bid && buds[i].repo) { repo = buds[i].repo; repoName = buds[i].name || bid; break; }
-      }
-    } catch(e){}
-  }
-  function refreshUI(){
-    var has = !!token();
-    connectWrap.hidden = has;
-    if (has) tokWrap.hidden = true;
-    var ok = has && !!repo;
-    ta.disabled = !ok;
-    btn.disabled = !ok;
-    if (!has) { st.textContent = ''; }
-    else if (!repo) { st.textContent = 'No repo linked for this buddy yet.'; }
-  }
-  var tokInput = tokWrap.querySelector('input'),
-      tokSave = tokWrap.querySelector('button');
-  connectBtn.addEventListener('click', function(){
-    tokWrap.hidden = false;
-    if (tokInput) tokInput.focus();
-  });
-  tokSave.addEventListener('click', function(){
-    var v = tokInput.value.trim();
-    if (!v) return;
-    lsSet({ghToken: v});
-    tokInput.value = '';
-    tokWrap.hidden = true;
-    refreshUI();
-    st.textContent = 'Token saved on this device.';
-  });
-  async function dump(){
-    var text = ta.value.trim();
-    if (!text) return;
-    if (!token()) { refreshUI(); return; }
-    if (!repo) { st.textContent = 'No repo linked for this buddy yet.'; return; }
-    st.textContent = 'Dumping…';
-    btn.disabled = true;
-    try {
-      var stamp = new Date().toLocaleString();
-      var NL = String.fromCharCode(10);
-      var entry = '## ' + stamp + NL + NL + text + NL + NL;
-      var cur = await ghGetFile(repo, 'docs/ingest.md');
-      var base = cur ? cur.text : '# Ingest log — ' + repoName + NL + NL;
-      var body = {message: 'Ingest dump for ' + bid, content: b64encode(base + entry)};
-      if (cur && cur.sha) body.sha = cur.sha;
-      await ghApi('/repos/davedellaquila/' + repo + '/contents/docs/ingest.md', 'PUT', body);
-      ta.value = '';
-      st.textContent = '✓ Dumped to ' + repo + '/docs/ingest.md';
-    } catch(err){ st.textContent = 'Save failed: ' + (err.message || err); }
-    btn.disabled = false;
-  }
-  btn.addEventListener('click', dump);
-  ta.addEventListener('keydown', function(ev){
-    if ((ev.metaKey || ev.ctrlKey) && ev.key === 'Enter') { ev.preventDefault(); dump(); }
-  });
-  resolveRepo().then(refreshUI);
-})();
-</script>
-<script>
-// ---- design-feedback box (self-contained; writes docs/feedback.md) ----
-(function(){
-  var box = document.querySelector('.feedbackbox');
-  if (!box || box.dataset.fbInit) return;
-  box.dataset.fbInit = '1';
-  var bid = box.getAttribute('data-buddy-id') || (function(){
-    var p = location.pathname.replace(/\/+$/, '');
-    return p.substring(p.lastIndexOf('/') + 1);
-  })();
-  var ta = box.querySelector('textarea'),
-      btn = box.querySelector('.feedbackbox-btn'),
-      st = box.querySelector('.feedbackbox-status'),
-      tokWrap = box.querySelector('.feedbackbox-token');
+      tokWrap = box.querySelector('.dumpbox-token');
   function lsGet(){ try { return JSON.parse(localStorage.getItem('buddyTree.v3') || '{}'); } catch(e){ return {}; } }
   function lsSet(patch){ try { var s = lsGet(); for (var k in patch) s[k] = patch[k]; localStorage.setItem('buddyTree.v3', JSON.stringify(s)); } catch(e){} }
   function token(){ return lsGet().ghToken || ''; }
@@ -823,33 +228,34 @@
     refreshUI();
     st.textContent = 'Token saved on this device.';
   });
-  async function send(){
+  async function dump(){
     var text = ta.value.trim();
     if (!text) return;
     if (!token()) { refreshUI(); return; }
     if (!repo) { st.textContent = 'No repo linked for this buddy yet.'; return; }
-    st.textContent = 'Sending…';
+    st.textContent = 'Dumping…';
     btn.disabled = true;
     try {
       var stamp = new Date().toLocaleString();
       var NL = String.fromCharCode(10);
       var entry = '## ' + stamp + NL + NL + text + NL + NL;
-      var cur = await ghGetFile(repo, 'docs/feedback.md');
-      var base = cur ? cur.text : '# Design feedback log' + NL + NL;
-      var body = {message: 'Design feedback for ' + bid, content: b64encode(base + entry)};
+      var cur = await ghGetFile(repo, 'docs/ingest.md');
+      var base = cur ? cur.text : '# Ingest log — ' + repoName + NL + NL;
+      var body = {message: 'Ingest dump for ' + bid, content: b64encode(base + entry)};
       if (cur && cur.sha) body.sha = cur.sha;
-      await ghApi('/repos/davedellaquila/' + repo + '/contents/docs/feedback.md', 'PUT', body);
+      await ghApi('/repos/davedellaquila/' + repo + '/contents/docs/ingest.md', 'PUT', body);
       ta.value = '';
-      st.textContent = '✓ Filed to ' + repo + '/docs/feedback.md — thank you.';
-    } catch(err){ st.textContent = 'Send failed: ' + (err.message || err); }
+      st.textContent = '✓ Dumped to ' + repo + '/docs/ingest.md';
+    } catch(err){ st.textContent = 'Save failed: ' + (err.message || err); }
     btn.disabled = false;
   }
-  btn.addEventListener('click', send);
+  btn.addEventListener('click', dump);
   ta.addEventListener('keydown', function(ev){
-    if ((ev.metaKey || ev.ctrlKey) && ev.key === 'Enter') { ev.preventDefault(); send(); }
+    if ((ev.metaKey || ev.ctrlKey) && ev.key === 'Enter') { ev.preventDefault(); dump(); }
   });
   resolveRepo().then(refreshUI);
 })();
 </script>
+
 </body>
 </html>

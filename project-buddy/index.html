@@ -55,7 +55,6 @@ h2 { font-size: 22px; margin: 32px 0 16px; }
   margin-bottom: 12px;
 }
 .attn-date { color: var(--muted); font-size: 14px; margin-top: 8px; }
-.attn a { color: var(--accent); font-weight: 600; }
 .children { display: flex; flex-wrap: wrap; gap: 12px; }
 .child {
   background: var(--card);
@@ -66,34 +65,6 @@ h2 { font-size: 22px; margin: 32px 0 16px; }
   color: var(--text);
 }
 .child:hover { border-color: var(--accent); }
-.artifact {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 14px 18px;
-  margin-bottom: 12px;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  flex-wrap: wrap;
-}
-.artifact-info { flex: 1; min-width: 200px; }
-.artifact-name { font-weight: 600; font-size: 15px; }
-.artifact-desc { color: var(--muted); font-size: 13px; }
-.artifact-btn {
-  background: transparent;
-  border: 1px solid var(--accent);
-  color: var(--accent);
-  border-radius: 8px;
-  padding: 7px 14px;
-  font-size: 13px;
-  font-weight: 600;
-  cursor: pointer;
-  text-decoration: none;
-  font-family: inherit;
-}
-.artifact-btn:hover { background: var(--accent); color: #fff; }
-.artifact-btn.copied { border-color: var(--ok, #2e7d4f); color: var(--ok, #2e7d4f); }
 .footer {
   margin-top: 48px;
   padding-top: 24px;
@@ -132,11 +103,6 @@ h2 { font-size: 22px; margin: 32px 0 16px; }
   padding: 12px 14px; margin-bottom: 12px; font-size: 14px;
 }
 .dumpbox-token p { margin-bottom: 8px; }
-.dumpbox-connect {
-  background: var(--bg); border: 1px dashed var(--border); border-radius: 8px;
-  padding: 12px 14px; margin-bottom: 12px; font-size: 14px;
-}
-.dumpbox-connect p { margin-bottom: 8px; }
 .dumpbox-tokenrow { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
 .dumpbox-tokenrow input {
   flex: 1; min-width: 170px; background: var(--card); border: 1px solid var(--border);
@@ -163,10 +129,6 @@ h2 { font-size: 22px; margin: 32px 0 16px; }
 <section class="dumpbox" data-buddy-id="project-buddy">
 <h2>🧠 Brain dump</h2>
 <p class="dumpbox-sub">Dump what's on your mind about Project Buddy — raw and unfiltered. Each dump lands in the buddy's repo (docs/ingest.md) as a timestamped entry.</p>
-<div class="dumpbox-connect" hidden>
-  <p>🔒 Connect GitHub to unlock dumping. Paste a token once — it stays on this device only.</p>
-  <button type="button" class="dumpbox-btn">Connect GitHub to enable</button>
-</div>
 <div class="dumpbox-token" hidden>
 <p>🔒 Connect GitHub to unlock dumping. Paste a token once — it stays on this device only.</p>
 <div class="dumpbox-tokenrow">
@@ -184,33 +146,36 @@ h2 { font-size: 22px; margin: 32px 0 16px; }
 
 
 <h2>Needs Attention</h2>
-<div class="attn"><div><a href="https://davedellaquila.github.io/buddy-system/" target="_blank" rel="noopener">Dashboard v2</a> ready for review — Tree, Projects, and Manifest tabs are live.</div><div class="attn-date">2026-10-09</div></div>
-<div class="attn"><div>Open: run the full new-buddy drill (brief, repo, thread) for <a href="https://davedellaquila.github.io/buddy-system/family-buddy/" target="_blank" rel="noopener">Family Buddy</a>?</div><div class="attn-date">2026-10-09</div></div>
+<div class="attn"><div>Dashboard v2 ready for review — Tree, Projects, and Manifest tabs are live.</div><div class="attn-date">2026-10-09</div></div>
+<div class="attn"><div>Open: run the full new-buddy drill (brief, repo, thread) for Family Buddy?</div><div class="attn-date">2026-10-09</div></div>
 
 
 <h2>Sub-buddies</h2>
 <div class="children">
-<a class="child" href="../astro/">🚀 Astro</a>
+<a class="child" href="../architect-buddy/">📐 Architect Buddy</a>
 <a class="child" href="../birthday-buddy/">🎂 Birthday Buddy</a>
 <a class="child" href="../briefing-buddy/">📋 Briefing Buddy</a>
+<a class="child" href="../buddy-types/">🧬 Buddy Buddy</a>
 <a class="child" href="../buddy-suite/">🧩 Buddy Suite</a>
 <a class="child" href="../car-buddy/">🚗 Car Buddy</a>
-<a class="child" href="../design-buddy/">🎨 Design Buddy</a>
+<a class="child" href="../design-buddy/">🎨 Designer</a>
 <a class="child" href="../document-buddy/">📄 Document Buddy</a>
 <a class="child" href="../dream-buddy/">💭 Dream Buddy</a>
-<a class="child" href="../family-buddy/">👨‍👩‍👧‍👦 Family Buddy</a>
+<a class="child" href="../family/">🤖 Family</a>
 <a class="child" href="../feedback-buddy/">📣 Feedback Buddy</a>
 <a class="child" href="../finance-buddy/">💰 Finance Buddy</a>
 <a class="child" href="../guardian-buddy/">🛡️ Guardian Buddy</a>
 <a class="child" href="../housing-buddy/">🏘️ Housing Buddy</a>
+<a class="child" href="../idea-buddy/">💡 Idea Buddy</a>
 <a class="child" href="../job-buddy/">🔎 Job Buddy</a>
+<a class="child" href="../school-buddy/">🎓 Learning Buddy</a>
 <a class="child" href="../news-buddy/">📰 News Buddy</a>
-<a class="child" href="../portfolio-buddy/">🖼️ Portfolio Buddy</a>
+<a class="child" href="../onboarding-buddy/">👋 Onboarding Buddy</a>
+<a class="child" href="../portfolio-buddy/">📸 Portfolio Buddy</a>
 <a class="child" href="../property-buddy/">🏠 Property Buddy</a>
-<a class="child" href="../rachel-buddy/">🔧 Rachel Buddy</a>
+<a class="child" href="../rachel-buddy/">🔧 Rachel</a>
 <a class="child" href="../reminder-buddy/">⏰ Reminder Buddy</a>
 <a class="child" href="../scaffold-buddy/">🏗️ Scaffold Buddy</a>
-<a class="child" href="../school-buddy/">🎓 School Buddy</a>
 <a class="child" href="../sharing-buddy/">🔗 Sharing Buddy</a>
 <a class="child" href="../tv-buddy/">📺 TV Buddy</a>
 <a class="child" href="../tech-buddy/">🤖 Tech Buddy</a>
@@ -219,39 +184,11 @@ h2 { font-size: 22px; margin: 32px 0 16px; }
 <a class="child" href="../zen-buddy/">🧘 Zen Buddy</a>
 </div>
 
-<h2>Artifacts</h2>
-<div class="artifact">
-  <div class="artifact-info">
-    <div class="artifact-name">🗺️ Buddy system architecture</div>
-    <div class="artifact-desc">How the whole thing fits together — publishing, viewing, dumping, and who does what.</div>
-  </div>
-  <a class="artifact-btn" href="../docs/architecture.html" target="_blank" rel="noopener">Open</a>
-  <button class="artifact-btn" data-copy="https://davedellaquila.github.io/buddy-system/docs/architecture.html">Copy link</button>
-</div>
-
 <div class="footer">
-Generated 2026-10-11 · Part of the Buddy System
+Generated 2026-10-12 · Part of the Buddy System
 </div>
 
 <script>
-// Copy-link buttons for artifacts
-document.addEventListener('click', function(e){
-  var b = e.target.closest('[data-copy]');
-  if (!b) return;
-  var url = b.getAttribute('data-copy');
-  function done(){
-    b.textContent = 'Copied ✓';
-    b.classList.add('copied');
-    setTimeout(function(){ b.textContent = 'Copy link'; b.classList.remove('copied'); }, 2000);
-  }
-  if (navigator.clipboard && navigator.clipboard.writeText) {
-    navigator.clipboard.writeText(url).then(done, function(){ prompt('Copy this link:', url); });
-  } else { prompt('Copy this link:', url); }
-});
-</script>
-
-<script>
-// ---- dump-box JS (self-contained; no dependencies) ----
 (function(){
   var box = document.querySelector('.dumpbox');
   if (!box || box.dataset.dumpInit) return;
@@ -261,11 +198,9 @@ document.addEventListener('click', function(e){
     return p.substring(p.lastIndexOf('/') + 1);
   })();
   var ta = box.querySelector('textarea'),
-      btn = box.querySelector('.dumpbox-row .dumpbox-btn'),
+      btn = box.querySelector('.dumpbox-btn'),
       st = box.querySelector('.dumpbox-status'),
-      tokWrap = box.querySelector('.dumpbox-token'),
-      connectWrap = box.querySelector('.dumpbox-connect'),
-      connectBtn = connectWrap.querySelector('.dumpbox-btn');
+      tokWrap = box.querySelector('.dumpbox-token');
   function lsGet(){ try { return JSON.parse(localStorage.getItem('buddyTree.v3') || '{}'); } catch(e){ return {}; } }
   function lsSet(patch){ try { var s = lsGet(); for (var k in patch) s[k] = patch[k]; localStorage.setItem('buddyTree.v3', JSON.stringify(s)); } catch(e){} }
   function token(){ return lsGet().ghToken || ''; }
@@ -308,8 +243,7 @@ document.addEventListener('click', function(e){
   }
   function refreshUI(){
     var has = !!token();
-    connectWrap.hidden = has;
-    if (has) tokWrap.hidden = true;
+    tokWrap.hidden = has;
     var ok = has && !!repo;
     ta.disabled = !ok;
     btn.disabled = !ok;
@@ -318,16 +252,11 @@ document.addEventListener('click', function(e){
   }
   var tokInput = tokWrap.querySelector('input'),
       tokSave = tokWrap.querySelector('button');
-  connectBtn.addEventListener('click', function(){
-    tokWrap.hidden = false;
-    if (tokInput) tokInput.focus();
-  });
   tokSave.addEventListener('click', function(){
     var v = tokInput.value.trim();
     if (!v) return;
     lsSet({ghToken: v});
     tokInput.value = '';
-    tokWrap.hidden = true;
     refreshUI();
     st.textContent = 'Token saved on this device.';
   });

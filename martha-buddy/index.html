@@ -4,7 +4,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Martha Buddy</title>
+<title>Martha Dell&#x27;Aquila</title>
 <style>
 :root {
   --bg: #ffffff;
@@ -98,12 +98,6 @@ h2 { font-size: 22px; margin: 32px 0 16px; }
 }
 .dumpbox-btn:disabled { opacity: .45; cursor: default; }
 .dumpbox-status { font-size: 13px; color: var(--muted); }
-.dumpbox-connect {
-  background: var(--bg); border: 1px dashed var(--border); border-radius: 8px;
-  padding: 12px 14px; margin-bottom: 12px; font-size: 14px;
-}
-.dumpbox-connect p { margin-bottom: 8px; }
-
 .dumpbox-token {
   background: var(--bg); border: 1px dashed var(--border); border-radius: 8px;
   padding: 12px 14px; margin-bottom: 12px; font-size: 14px;
@@ -125,7 +119,7 @@ h2 { font-size: 22px; margin: 32px 0 16px; }
 <body>
 <div class="header">
 <div class="icon">💃</div>
-<h1>Martha Buddy</h1>
+<h1>Martha Dell&#x27;Aquila</h1>
 <div class="tagline"></div>
 </div>
 
@@ -134,11 +128,7 @@ h2 { font-size: 22px; margin: 32px 0 16px; }
 
 <section class="dumpbox" data-buddy-id="martha-buddy">
 <h2>🧠 Brain dump</h2>
-<p class="dumpbox-sub">Dump what's on your mind about Martha Buddy — raw and unfiltered. Each dump lands in the buddy's repo (docs/ingest.md) as a timestamped entry.</p>
-<div class="dumpbox-connect" hidden>
-<p>🔒 Connect GitHub to unlock dumping. Paste a token once — it stays on this device only.</p>
-<button type="button" class="dumpbox-btn">Connect GitHub to enable</button>
-</div>
+<p class="dumpbox-sub">Dump what's on your mind about Martha Dell&#x27;Aquila — raw and unfiltered. Each dump lands in the buddy's repo (docs/ingest.md) as a timestamped entry.</p>
 <div class="dumpbox-token" hidden>
 <p>🔒 Connect GitHub to unlock dumping. Paste a token once — it stays on this device only.</p>
 <div class="dumpbox-tokenrow">
@@ -147,7 +137,7 @@ h2 { font-size: 22px; margin: 32px 0 16px; }
 <a href="https://github.com/settings/tokens" target="_blank" rel="noopener">Get a token</a>
 </div>
 </div>
-<textarea rows="4" placeholder="Dump what's on your mind about Martha Buddy…"></textarea>
+<textarea rows="4" placeholder="Dump what's on your mind about Martha Dell&#x27;Aquila…"></textarea>
 <div class="dumpbox-row">
 <button type="button" class="dumpbox-btn">Dump it</button>
 <span class="dumpbox-status" role="status"></span>
@@ -160,17 +150,16 @@ h2 { font-size: 22px; margin: 32px 0 16px; }
 
 <h2>Sub-buddies</h2>
 <div class="children">
-<a class="child" href="../emile-buddy/">🧔 Emile Buddy</a>
+<a class="child" href="../emile-buddy/">🧔 Emile Dell&#x27;Aquila</a>
 <a class="child" href="../personal-buddy/">🙋 Personal Buddy</a>
-<a class="child" href="../ron-buddy/">👨‍🦳 Ron Buddy</a>
+<a class="child" href="../ron-buddy/">👨‍🦳 Ron Dell&#x27;Aquila</a>
 </div>
 
 <div class="footer">
-Generated 2026-10-11 · Part of the Buddy System
+Generated 2026-10-12 · Part of the Buddy System
 </div>
 
 <script>
-// ---- dump-box JS (self-contained; no dependencies) ----
 (function(){
   var box = document.querySelector('.dumpbox');
   if (!box || box.dataset.dumpInit) return;
@@ -180,11 +169,9 @@ Generated 2026-10-11 · Part of the Buddy System
     return p.substring(p.lastIndexOf('/') + 1);
   })();
   var ta = box.querySelector('textarea'),
-      btn = box.querySelector('.dumpbox-row .dumpbox-btn'),
+      btn = box.querySelector('.dumpbox-btn'),
       st = box.querySelector('.dumpbox-status'),
-      tokWrap = box.querySelector('.dumpbox-token'),
-      connectWrap = box.querySelector('.dumpbox-connect'),
-      connectBtn = connectWrap.querySelector('.dumpbox-btn');
+      tokWrap = box.querySelector('.dumpbox-token');
   function lsGet(){ try { return JSON.parse(localStorage.getItem('buddyTree.v3') || '{}'); } catch(e){ return {}; } }
   function lsSet(patch){ try { var s = lsGet(); for (var k in patch) s[k] = patch[k]; localStorage.setItem('buddyTree.v3', JSON.stringify(s)); } catch(e){} }
   function token(){ return lsGet().ghToken || ''; }
@@ -227,8 +214,7 @@ Generated 2026-10-11 · Part of the Buddy System
   }
   function refreshUI(){
     var has = !!token();
-    connectWrap.hidden = has;
-    if (has) tokWrap.hidden = true;
+    tokWrap.hidden = has;
     var ok = has && !!repo;
     ta.disabled = !ok;
     btn.disabled = !ok;
@@ -237,16 +223,11 @@ Generated 2026-10-11 · Part of the Buddy System
   }
   var tokInput = tokWrap.querySelector('input'),
       tokSave = tokWrap.querySelector('button');
-  connectBtn.addEventListener('click', function(){
-    tokWrap.hidden = false;
-    if (tokInput) tokInput.focus();
-  });
   tokSave.addEventListener('click', function(){
     var v = tokInput.value.trim();
     if (!v) return;
     lsSet({ghToken: v});
     tokInput.value = '';
-    tokWrap.hidden = true;
     refreshUI();
     st.textContent = 'Token saved on this device.';
   });
