@@ -378,17 +378,23 @@ body:has(#token-pill) #panel-open{right:148px}
   border:1px solid var(--border2);border-radius:10px;background:var(--bg)}
 .fset-choice select{background:var(--panel);color:var(--text);border:1px solid var(--border);border-radius:8px;
   padding:6px 10px;font-size:13px;font-family:inherit}
-#field-settings input[type=checkbox]{
+#field-settings input[type=checkbox],
+.fset-check input[type=checkbox]{
   -webkit-appearance:none;appearance:none;width:28px;height:28px;margin:0;flex:0 0 28px;
   border:2px solid var(--border);border-radius:50%;background:var(--panel);cursor:pointer;
   position:relative;transition:background .15s ease,border-color .15s ease,box-shadow .15s ease,transform .12s ease}
-#field-settings input[type=checkbox]:hover{border-color:var(--accent);background:var(--ghost)}
-#field-settings input[type=checkbox]:checked{background:var(--accent);border-color:var(--accent)}
-#field-settings input[type=checkbox]:checked::after{
+#field-settings input[type=checkbox]:hover,
+.fset-check input[type=checkbox]:hover{border-color:var(--accent);background:var(--ghost)}
+#field-settings input[type=checkbox]:checked,
+.fset-check input[type=checkbox]:checked{background:var(--accent);border-color:var(--accent)}
+#field-settings input[type=checkbox]:checked::after,
+.fset-check input[type=checkbox]:checked::after{
   content:'';position:absolute;left:9px;top:4px;width:6px;height:12px;
   border:solid var(--on-accent);border-width:0 2.5px 2.5px 0;transform:rotate(45deg)}
-#field-settings input[type=checkbox]:focus-visible{outline:none;box-shadow:0 0 0 3px var(--ghost)}
-#field-settings input[type=checkbox]:active{transform:scale(.92)}
+#field-settings input[type=checkbox]:focus-visible,
+.fset-check input[type=checkbox]:focus-visible{outline:none;box-shadow:0 0 0 3px var(--ghost)}
+#field-settings input[type=checkbox]:active,
+.fset-check input[type=checkbox]:active{transform:scale(.92)}
 .fset-row input[type=checkbox]{margin-left:2px}
 .bp-close-x{position:static;flex:0 0 auto;width:44px;height:44px;margin-left:auto;
   background:none;border:1px solid transparent;border-radius:10px;color:var(--muted);font-size:22px;
@@ -1551,8 +1557,8 @@ function isFieldVisible(fid){
 const SETTING_DEFS = [
   {id:'hideBuddyWord', label:'Hide the word “Buddy” in names', type:'bool', def:false},
   {id:'autoOpenPanel', label:'Always open detail panel on buddy click', type:'bool', def:false, tip:'When off (default), the panel auto-opens in every view EXCEPT Homepage — there, use the \u24d8 icon. When on, the panel opens on every click in every view.'},
-  {id:'attnEffect', label:'Attention header effect', type:'choice', options:['pulse','glow','shake','blink','none'], def:'pulse', tip:'How the \u201cNeeds your attention\u201d section header grabs your eye when items are waiting.'},
-  {id:'nbSheetWidth', label:'New buddy sheet width (px)', type:'number', def:560, min:320, max:900, advanced:true, tip:'Fixed width of the New Buddy bottom sheet. Height follows the content; drag the grab handle to resize vertically.'},
+  {id:'attnEffect', label:'Attention header effect', type:'choice', options:['pulse','glow','shake','blink','none'], def:'pulse', advanced:true, tip:'How the \u201cNeeds your attention\u201d section header grabs your eye when items are waiting.'},
+  {id:'nbSheetWidth', label:'New buddy sheet width', type:'number', def:560, min:320, max:900, advanced:true, tip:'Fixed width of the New Buddy bottom sheet, in pixels. Height follows the content; drag the grab handle to resize vertically.', unit:'px'},
   {id:'shiftLeftAction', label:'Shift+← action', type:'choice', options:['promote','go to parent','nothing'], def:'promote', advanced:true, tip:'What Shift+Left arrow does for the selected buddy. Promote moves it up one level; Go to parent just navigates there.'},
 ];
 function getSetting(id){
@@ -1609,7 +1615,7 @@ function renderSettingChecks(){
   if (adv) {
     adv.innerHTML = SETTING_DEFS.filter(s => s.advanced).map(s => {
       const val = getSetting(s.id);
-      if (s.type === 'number') return '<label class="fset-choice"><span>' + s.label + (s.tip ? ' <span class="info-tip" data-tip="' + escHtml(s.tip) + '">\\u24d8</span>' : '') + '</span><input type="number" data-setting="' + s.id + '" value="' + val + '"' + (s.min !== undefined ? ' min="' + s.min + '"' : '') + (s.max !== undefined ? ' max="' + s.max + '"' : '') + ' style="width:90px"></label>';
+      if (s.type === 'number') return '<label class="fset-choice"><span>' + s.label + (s.tip ? ' <span class="info-tip" data-tip="' + escHtml(s.tip) + '">\\u24d8</span>' : '') + '</span><span style="display:flex;align-items:center;gap:6px;white-space:nowrap"><input type="number" data-setting="' + s.id + '" value="' + val + '"' + (s.min !== undefined ? ' min="' + s.min + '"' : '') + (s.max !== undefined ? ' max="' + s.max + '"' : '') + ' style="width:90px">' + (s.unit ? '<span class="fineprint">' + escHtml(s.unit) + '</span>' : '') + '</span></label>';
       if (s.type === 'choice') return '<label class="fset-choice"><span>' + s.label + (s.tip ? ' <span class="info-tip" data-tip="' + escHtml(s.tip) + '">\\u24d8</span>' : '') + '</span><select data-setting="' + s.id + '">'
         + s.options.map(o => '<option value="' + o + '"' + (val === o ? ' selected' : '') + '>' + o.charAt(0).toUpperCase() + o.slice(1) + '</option>').join('') + '</select></label>';
       return '';
@@ -1692,9 +1698,9 @@ function openFieldSettings(){
       + '<section class="fset-sec"><h3 class="fset-sec-h">Advanced</h3><div id="fset-advanced"></div></section>'
       + '</div>'
       + '<div class="fset-footer">'
-      + '<div style="display:flex;gap:8px"><button class="linkbtn" id="fset-reset" title="Restore all settings to factory defaults">Reset to Factory Defaults</button>'
-      + '<button class="linkbtn" id="fset-update" title="Save current settings as the new factory defaults">Update Factory Defaults</button></div>'
-      + '<button class="linkbtn" id="fset-close">Done</button></div>'
+      + '<div style="display:flex;gap:12px"><button class="linkbtn" id="fset-reset" title="Restore all settings to factory defaults">Reset defaults</button>'
+      + '<button class="linkbtn" id="fset-update" title="Save current settings as the new factory defaults">Save as defaults</button></div>'
+      + '<button id="fset-close" style="font-size:14px;font-weight:600;padding:8px 24px;border:none;border-radius:20px;background:var(--accent);color:#fff;cursor:pointer">Done</button></div>'
       + '<div class="fset-resize" id="fset-resize" title="Drag to resize"></div>';
     document.body.appendChild(m);
     initFsetChrome(m);
