@@ -3,6 +3,11 @@
 All notable changes to the Buddies dashboard and buddy system. Newest first.
 `FEATURES.md` describes the current state; this file describes how it got there.
 
+## 2026-10-11 (Release Notes view)
+
+### Added
+- **🎁 Release Notes view:** renders CHANGELOG.md in the same format as the What's New update modal — "New since you last looked" on top, earlier history in a collapsible section below. Visiting marks the notes seen, so the "new" section stays honest.
+
 ## 2026-10-11 (Right-panel gripper stays put)
 
 ### Fixed

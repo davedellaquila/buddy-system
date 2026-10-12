@@ -1124,6 +1124,7 @@ const VIEW_DEFS = [
   ['manifest','Manifest','✓'],
   ['project','Homepage','🏠'],
   ['changelog','Changelog','🕘'],
+  ['releases','Release Notes','🎁'],
 ];
 const VIEW_TIPS = {
   tree: 'Tree view — visual hierarchy of all buddies. Click a node to open its details. Drag the background to pan, scroll to zoom. Drag a node onto another node to reparent it.',
@@ -1132,6 +1133,7 @@ const VIEW_TIPS = {
   manifest: 'New-Project Manifest — the checklist every new buddy gets. Click AUTOMATIC or PLANNED tiles to filter the steps.',
   project: 'Homepage — loads the selected buddy homepage full-bleed in the main view. Clicking a buddy with a homepage swaps it; clicking one without keeps the current page.',
   changelog: 'Changelog — history of everything that changed. Click a tile to filter by change type. Click a row to open the changed buddy.',
+  releases: 'Release Notes — what shipped, newest first. New since you last looked on top, earlier history below.',
 };
 function getViewOrder(){
   const ids = VIEW_DEFS.map(v => v[0]);
@@ -2652,6 +2654,37 @@ function renderOrgTree(){
   restoreScrollPos('tree:main', document.getElementById('treezoom-main'));
   restoreScrollPos('tree:orph', document.getElementById('treezoom-orph'));
 }
+/* Release Notes view — same format as the What's New update modal:
+   "new since you last looked" on top, earlier history below. */
+function renderReleases(){
+  const el = document.getElementById('view-releases');
+  if (!el) return;
+  el.innerHTML = '<section class="changelog" style="margin:24px auto 0;max-width:860px">'
+    + '<h2>Release Notes</h2>'
+    + '<p class="sub">What shipped, newest first.</p>'
+    + '<div id="releases-body"><p class="fineprint">Loading…</p></div></section>';
+  const body = el.querySelector('#releases-body');
+  fetch('https://raw.githubusercontent.com/davedellaquila/buddy-system/master/CHANGELOG.md?_=' + Date.now(), {cache: 'no-store'})
+    .then(r => { if (!r.ok) throw new Error('fetch failed'); return r.text(); })
+    .then(md => {
+      const sp = whatsnewSplit(md);
+      let html = '';
+      if (sp.hasNew) {
+        html += '<h4 style="margin-top:0">New since you last looked</h4>' + changelogMdToHtml(sp.newMd, true);
+      } else {
+        html += '<p class="fineprint" style="margin-top:0">You’re up to date — nothing new since you last looked.</p>';
+      }
+      if (sp.oldMd.trim()) {
+        html += '<details style="margin-top:12px"><summary class="fineprint" style="cursor:pointer">Earlier history</summary>'
+          + changelogMdToHtml(sp.oldMd, true) + '</details>';
+      }
+      html += '<p class="fineprint"><a href="https://github.com/davedellaquila/buddy-system/blob/master/CHANGELOG.md" target="_blank" rel="noopener">Full changelog on GitHub</a></p>';
+      body.innerHTML = html;
+      wireChangelogTypeFilter(body);
+      whatsnewMarkSeen(md);
+    })
+    .catch(() => { body.innerHTML = '<p class="fineprint">Couldn’t load the release notes. <a href="https://github.com/davedellaquila/buddy-system/blob/master/CHANGELOG.md" target="_blank" rel="noopener">View on GitHub</a>.</p>'; });
+}
 function renderProjects(){
   if (!S.projCollapsed || typeof S.projCollapsed !== 'object') S.projCollapsed = {};
   let unseen = 0, fresh = 0, cleared = 0;
@@ -3332,6 +3365,7 @@ function show(sel, push){
       const ev = document.getElementById('view-' + sel.slice(5));
       if (ev) ev.classList.add('active');
       if (sel === 'view:changelog') renderChangelog();
+      if (sel === 'view:releases') renderReleases();
     } else if (sel.startsWith('plan:')) {
       closeDetail();
       vb.style.width = '';
@@ -5264,6 +5298,7 @@ initSbBrandSticky();
 <section id="view-buddy" class="view"><div id="bp-resize" title="Drag left or right to resize the buddy detail panel. Double-click to reset to default width."></div><div id="buddy-home"></div></section>
 <section id="view-project" class="view"></section>
 <section id="view-changelog" class="view"></section>
+<section id="view-releases" class="view"></section>
 </main>
 </div>
 <script>
