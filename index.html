@@ -46,23 +46,23 @@
 
   /* ---- classic CSS org tree ---- */
   .tree, .tree ul { display: flex; justify-content: center; margin: 0; padding: 0; }
-  .tree ul { padding-top: 26px; position: relative; }
-  .tree li { list-style: none; position: relative; padding: 26px 7px 0; text-align: center; }
+  .tree ul { padding-top: 20px; position: relative; }
+  .tree li { list-style: none; position: relative; padding: 20px 7px 0; text-align: center; }
   .tree li::before, .tree li::after {
     content: ''; position: absolute; top: 0; right: 50%;
-    width: 50%; height: 26px; border-top: 2px solid #3a4a63;
+    width: 50%; height: 20px; border-top: 1px solid #2a3547;
   }
-  .tree li::after { right: auto; left: 50%; border-left: 2px solid #3a4a63; }
+  .tree li::after { right: auto; left: 50%; border-left: 1px solid #2a3547; }
   .tree li:only-child::before, .tree li:only-child::after { display: none; }
   .tree li:only-child { padding-top: 0; }
   .tree li:first-child::before, .tree li:last-child::after { border: 0 none; }
-  .tree li:last-child::before { border-right: 2px solid #3a4a63; border-radius: 0 8px 0 0; }
+  .tree li:last-child::before { border-right: 1px solid #2a3547; border-radius: 0 8px 0 0; }
   .tree li:first-child::after { border-radius: 8px 0 0 0; }
   .tree ul ul::before {
     content: ''; position: absolute; top: 0; left: 50%;
-    width: 0; height: 26px; border-left: 2px solid #3a4a63;
+    width: 0; height: 20px; border-left: 1px solid #2a3547;
   }
-  .root-stub { width: 0; height: 26px; border-left: 2px solid #3a4a63; margin: 0 auto; }
+  .root-stub { width: 0; height: 20px; border-left: 1px solid #2a3547; margin: 0 auto; }
 
   .node {
     display: inline-block; width: 196px; vertical-align: top; position: relative;
@@ -308,6 +308,11 @@ body{padding:0}
 .treescroll{touch-action:none}
 #view-projects,#view-manifest{touch-action:pan-x pan-y}
 .treescroll.panning,.treescroll.panning *{user-select:none!important;-webkit-user-select:none!important}
+/* Center the composition when it fits inside the pane (Jony: no dead field below at fit zoom).
+   margin:auto on the flex child centers only when there's extra space — overflowing content
+   still scrolls normally from the top. */
+.treescroll.fit-centered{display:flex}
+.treescroll.fit-centered .chart,.treescroll.fit-centered .standalones{margin:auto}
 #treezoom,#treezoom *{user-select:none;-webkit-user-select:none}
 /* Draggable splitter between the two tree panes */
 #tree-split{flex:0 0 12px;cursor:row-resize;display:flex;align-items:center;justify-content:center;
@@ -2863,7 +2868,7 @@ function renderBuddy(id){
     + '<div class="bp-sec" data-field="shared"><h3>Shared notes<span class="info-tip" data-tip="Anybody with repo access can see this note. Saved to the buddy’s repo (docs/notes.md).">ⓘ</span></h3>'
     + '<textarea class="notes" id="bp-shared-notes" placeholder="Anybody with repo access can see this note."></textarea>'
     + '<p class="fineprint" id="shared-status"></p></div>'
-    + '<div class="bp-build">Build 20261012.0627</div>'
+    + '<div class="bp-build">Build 20261012.0630</div>'
     + '</div>';
   const nm = document.getElementById('bp-name');
   nm.addEventListener('keydown', e => { if (e.key === 'Enter'){ e.preventDefault(); nm.blur(); } });
@@ -3463,6 +3468,17 @@ function applyZoom(){
   const r2 = document.getElementById('zoomrange-orph');
   if (r1) r1.value = S.zoom || 100;
   if (r2) r2.value = S.zoomOrph || 100;
+  requestAnimationFrame(centerIfFits);
+}
+function centerIfFits(){
+  [['treezoom-main'],['treezoom-orph']].forEach(([paneId]) => {
+    const sc = document.getElementById(paneId);
+    if (!sc) return;
+    const content = sc.querySelector('.chart') || sc.querySelector('.standalones');
+    if (!content) return;
+    const fits = content.scrollHeight <= sc.clientHeight + 1 && content.scrollWidth <= sc.clientWidth + 1;
+    sc.classList.toggle('fit-centered', fits);
+  });
 }
 function fitZoomFor(paneId){
   const sc = document.getElementById(paneId);
@@ -3941,7 +3957,7 @@ function renderPlan(id){
     + '<p class="fineprint">Saved on this device. (For your eyes only)</p></div>'
     + '<div class="bp-sec"><h3>Shared notes<span class="info-tip" data-tip="Visible to everyone with access to this project.">\u24d8</span></h3><textarea class="notes" id="bp-shared" placeholder="Shared notes\u2026 (visible to everyone with access)">'+escHtml((S.planShared||{})[id]||'')+'</textarea>'
     + '<p class="fineprint">Shared — visible to everyone with access.</p></div>'
-    + '<div class="bp-build">Build 20261012.0627</div>'
+    + '<div class="bp-build">Build 20261012.0630</div>'
     + '</div>';
   const nt = document.getElementById('bp-notes');
   let t = null;
@@ -4160,7 +4176,7 @@ document.addEventListener('keydown', e => {
   h.addEventListener('dblclick', () => {
     setSidebarOpen(false);
   });
-  window.addEventListener('resize', () => applySbWidth()); /* re-clamp drawer on rotate/resize */
+  window.addEventListener('resize', () => { applySbWidth(); centerIfFits(); }); /* re-clamp drawer on rotate/resize */
 })();
 /* ---------- prev/next/back ---------- */
 function goBack(){ const p = navHist.pop(); show(p || 'view:tree', false); }
@@ -5759,7 +5775,7 @@ function openWhatsNew(){
   head.insertBefore(updBtn, head.querySelector('.wn-x'));
   fetch('version.txt?_=' + Date.now(), {cache: 'no-store'})
     .then(r => r.ok ? r.text() : '')
-    .then(t => { if (t.trim() && t.trim() !== '20261012.0627') updBtn.style.display = ''; })
+    .then(t => { if (t.trim() && t.trim() !== '20261012.0630') updBtn.style.display = ''; })
     .catch(() => {});
   fetch('https://raw.githubusercontent.com/davedellaquila/buddy-system/master/CHANGELOG.md?_' + Date.now(), {cache: 'no-store'})
     .then(r => { if (!r.ok) throw new Error('fetch failed'); return r.text(); })
@@ -5787,7 +5803,7 @@ function openWhatsNew(){
   if (x) x.focus();
 }
 function initVersionCheck(){
-  const myBuild = '20261012.0627';
+  const myBuild = '20261012.0630';
   function showUpdateBanner(serverBuild){
     if (document.getElementById('update-banner')) return;
     const b = document.createElement('div');

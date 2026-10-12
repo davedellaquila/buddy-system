@@ -8,6 +8,9 @@ All notable changes to the Buddies dashboard and buddy system. Newest first.
 ### Added
 - **Text size slider** in Settings → Advanced — scales text and UI throughout the app from 80% to 130%, like the text-size slider on iPhone and Watch. Live preview as you drag.
 
+### Changed
+- **Org chart beauty pass** (Jony): generation pills (CHILD/GRANDCHILD) removed — depth is already encoded vertically; Quick Answers collapsed to one horizontally-scrolling row; connectors are 1px hairlines instead of 2px slate; parent/child gap tightened from 26px to 20px; the composition centers vertically in the pane when it fits instead of anchoring to the top.
+
 ## 2026-10-12 (Evening polish)
 
 ### Added

@@ -160,6 +160,11 @@ body{padding:0}
 .treescroll{touch-action:none}
 #view-projects,#view-manifest{touch-action:pan-x pan-y}
 .treescroll.panning,.treescroll.panning *{user-select:none!important;-webkit-user-select:none!important}
+/* Center the composition when it fits inside the pane (Jony: no dead field below at fit zoom).
+   margin:auto on the flex child centers only when there's extra space — overflowing content
+   still scrolls normally from the top. */
+.treescroll.fit-centered{display:flex}
+.treescroll.fit-centered .chart,.treescroll.fit-centered .standalones{margin:auto}
 #treezoom,#treezoom *{user-select:none;-webkit-user-select:none}
 /* Draggable splitter between the two tree panes */
 #tree-split{flex:0 0 12px;cursor:row-resize;display:flex;align-items:center;justify-content:center;
@@ -3111,6 +3116,17 @@ function applyZoom(){
   const r2 = document.getElementById('zoomrange-orph');
   if (r1) r1.value = S.zoom || 100;
   if (r2) r2.value = S.zoomOrph || 100;
+  requestAnimationFrame(centerIfFits);
+}
+function centerIfFits(){
+  [['treezoom-main'],['treezoom-orph']].forEach(([paneId]) => {
+    const sc = document.getElementById(paneId);
+    if (!sc) return;
+    const content = sc.querySelector('.chart') || sc.querySelector('.standalones');
+    if (!content) return;
+    const fits = content.scrollHeight <= sc.clientHeight + 1 && content.scrollWidth <= sc.clientWidth + 1;
+    sc.classList.toggle('fit-centered', fits);
+  });
 }
 function fitZoomFor(paneId){
   const sc = document.getElementById(paneId);
@@ -3808,7 +3824,7 @@ document.addEventListener('keydown', e => {
   h.addEventListener('dblclick', () => {
     setSidebarOpen(false);
   });
-  window.addEventListener('resize', () => applySbWidth()); /* re-clamp drawer on rotate/resize */
+  window.addEventListener('resize', () => { applySbWidth(); centerIfFits(); }); /* re-clamp drawer on rotate/resize */
 })();
 /* ---------- prev/next/back ---------- */
 function goBack(){ const p = navHist.pop(); show(p || 'view:tree', false); }

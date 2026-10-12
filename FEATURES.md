@@ -41,6 +41,14 @@ Build: `build.py` generates `index.html` from `buddies.json` + `plans.json`.
   pane, instead of being invisible.
 - **Drop targets** — tree nodes and Projects rows accept drops from the
   sidebar and from tile drags to assign/change parents.
+- **Quick Answers bar** — up to 12 pending attention items as tappable chips
+  above the tree; tap to jump to that buddy's question. One horizontally
+  scrolling row, so it never crowds the chart.
+- **Collapse pills** — parent tiles carry a ⌄/› pill with their descendant
+  count; tap to collapse/expand the whole subtree. State persists.
+- **Hairline connectors** — 1px tree lines with 8px elbow radius; 20px
+  generational gaps. The composition centers vertically in the pane whenever
+  it fits, instead of anchoring to the top.
 
 ## Appearance
 
