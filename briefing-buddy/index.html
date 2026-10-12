@@ -205,6 +205,10 @@
     font-family:inherit;
   }
   .dumpbox-tokenrow a{color:var(--accent);font-size:13px}
+  /* ---------- briefing charts ---------- */
+  .chart{margin:18px 0 0;padding-top:14px;border-top:1px solid var(--rule)}
+  .chart img{width:100%;height:auto;display:block;border-radius:8px}
+  .chart figcaption{font-size:12.5px;color:var(--muted);font-style:italic;margin-top:8px;font-family:Georgia,serif}
 </style>
 </head>
 <body>
@@ -215,7 +219,7 @@
     <h1>Briefing <span class="amp">&amp;</span> Buddy</h1>
     <p class="tagline">The design studio for your daily briefings.</p>
     <div class="dateline">
-      <span id="dateline">Sunday, October 11, 2026</span>
+      <span id="dateline">Monday, October 12, 2026</span>
       <span>2 editions daily &middot; thread + HTML email</span>
       <button class="theme-btn" id="themeBtn" title="Toggle light / dark">◐ Theme</button>
     </div>
@@ -239,7 +243,7 @@
           <p>The <a href="https://docs.google.com/document/d/1s9ghZ-kyp9dag2whTPnk24ULLUJP3JW_0UGtocAynbs/edit">Briefing Buddy brief</a> went up for review Oct 11 — looks good, edits, or hold? The open questions inside (exact section lists, 6 AM / 6 PM still right, who else gets briefings, settings → job write-back) are what the PRD will settle.</p>
         </div>
         <div class="card attention">
-          <h3><span class="flag">Open</span>Two briefing rules set today</h3>
+          <h3><span class="flag">Open</span>Two briefing rules set Oct 11</h3>
           <p><strong>Morning north star:</strong> Dave finishes it in about 10 minutes — digestibility is the design rule now. <strong>Evening sports:</strong> 49ers' next-opponent scouting is now a standing section — the evening cron definition hasn't been updated to include it yet, so tonight's lineup ships without it.</p>
         </div>
       </div>
@@ -264,6 +268,10 @@
               <li>Events radar</li><li>Prep</li><li>Bills</li><li>Awaiting your reply</li><li>Quick links</li>
             </ul>
           </details>
+          <figure class="chart">
+            <img data-chart="weather" data-light="charts/weather-fiddletown-7day-light.png" data-dark="charts/weather-fiddletown-7day-dark.png" src="charts/weather-fiddletown-7day-light.png" alt="7-day temperature trend — Fiddletown highs and lows">
+            <figcaption>The week ahead in Fiddletown · Source: Open-Meteo</figcaption>
+          </figure>
         </div>
         <div class="card edition">
           <p class="etype">Evening</p>
@@ -278,6 +286,14 @@
               <li>Awaiting your reply</li><li>Quick links</li><li>The dinner question</li>
             </ul>
           </details>
+          <figure class="chart">
+            <img data-chart="markets" data-light="charts/markets-snapshot-light.png" data-dark="charts/markets-snapshot-dark.png" src="charts/markets-snapshot-light.png" alt="Market snapshot — Dow, S&P 500, Nasdaq and AAPL, one month">
+            <figcaption>One-month trend · Source: Yahoo Finance</figcaption>
+          </figure>
+          <figure class="chart">
+            <img data-chart="sunset" data-light="charts/sunset-fiddletown-60days-light.png" data-dark="charts/sunset-fiddletown-60days-dark.png" src="charts/sunset-fiddletown-60days-light.png" alt="Sunset trend — Fiddletown, 60 days">
+            <figcaption>Fiddletown sunsets, 60 days · Source: NOAA solar equation</figcaption>
+          </figure>
         </div>
       </div>
     </section>
@@ -291,7 +307,7 @@
         <div class="card lib-item"><h4><span class="dot"></span>Sky</h4><p>Sunrise 7:07 AM (official Fiddletown time); waxing crescent, ~1% lit — new moon was yesterday.</p></div>
         <div class="card lib-item"><h4><span class="dot"></span>Fire &amp; air</h4><p>All clear: no red-flag warnings or alerts, air quality good (AQI 30).</p></div>
         <div class="card lib-item"><h4><span class="dot"></span>AAPL</h4><p>Closed Friday at $336.64, down 1.1% on a Nikkei report of iPhone 18 Pro component-order cuts.</p></div>
-        <div class="card lib-item"><h4><span class="dot"></span>Awaiting your reply</h4><p>37 open questions &middot; 2 high-priority: the updated rent-notice copy and the trust paperwork.</p></div>
+        <div class="card lib-item"><h4><span class="dot"></span>Awaiting your reply</h4><p>35 open questions &middot; 2 high-priority: the updated rent-notice copy and the trust paperwork.</p></div>
         <div class="card lib-item"><h4><span class="dot"></span>Next: evening edition, 6:00 PM PT</h4><p>Top stories &middot; Markets &middot; Tech &amp; AI &middot; YouTube picks &middot; Podcast picks &middot; Sky &middot; Night sky &middot; Awaiting your reply &middot; Quick links &middot; the meal question.</p></div>
       </div>
     </section>
@@ -374,7 +390,7 @@
   </main>
 
   <footer>
-    <span>Briefing Buddy · a living page · last refreshed <strong>October 11, 2026</strong></span>
+    <span>Briefing Buddy · a living page · last refreshed <strong>October 12, 2026</strong></span>
     <span><a href="https://docs.google.com/document/d/1s9ghZ-kyp9dag2whTPnk24ULLUJP3JW_0UGtocAynbs/edit">Product brief</a> · editions live in the Briefings thread</span>
   </footer>
 </div>
@@ -395,7 +411,16 @@
     if(t === "light" || t === "dark") return t;
     return (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) ? "dark" : "light";
   }
-  function paint(){ btn.textContent = currentTheme() === "dark" ? "☀ Theme" : "◐ Theme"; }
+  function paint(){ btn.textContent = currentTheme() === "dark" ? "☀ Theme" : "◐ Theme"; swapCharts(); }
+  /* ---------- chart theme swap (light/dark chart variants follow the manual toggle too) ---------- */
+  function swapCharts(){
+    var dark = currentTheme() === "dark";
+    var imgs = document.querySelectorAll('img[data-chart]');
+    for(var i = 0; i < imgs.length; i++){
+      var src = dark ? imgs[i].getAttribute('data-dark') : imgs[i].getAttribute('data-light');
+      if(src && imgs[i].getAttribute('src') !== src) imgs[i].setAttribute('src', src);
+    }
+  }
   btn.addEventListener("click", function(){
     root.setAttribute("data-theme", currentTheme() === "dark" ? "light" : "dark");
     try{ localStorage.setItem("bb-theme", root.getAttribute("data-theme")); }catch(e){}
