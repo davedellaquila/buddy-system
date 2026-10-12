@@ -156,6 +156,23 @@
   }
   .dumpbox-tokenrow a{color:var(--amber);font-size:13px}
 
+  /* ---------- attention action buttons ---------- */
+  .attn-actions{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap}
+  .attn-actions button{
+    border-radius:999px;padding:8px 18px;font-size:13px;font-weight:700;cursor:pointer;
+    font-family:inherit;
+  }
+  .attn-actions button[data-act="done"]{
+    background:linear-gradient(135deg,var(--teal),var(--amber));color:#1a141d;border:none;
+  }
+  .attn-actions button[data-act="info"]{
+    background:transparent;color:var(--amber);border:1px solid var(--amber);
+  }
+  .attn-actions button:disabled{opacity:.45;cursor:default}
+  .attn-status{font-size:13px;color:var(--muted);margin-top:8px;min-height:20px}
+  .attn-tile.attn-resolved{opacity:.55}
+  .attn-tile.attn-resolved .attn-actions{pointer-events:none;opacity:.5}
+
   /* ---------- light mode (Dave reads outdoors too) ---------- */
   @media (prefers-color-scheme: light){
     :root{
@@ -264,9 +281,14 @@
   </div>
 
   <h2>⚠️ Needs Dave's attention</h2>
-  <div class="attn">
+  <div class="attn attn-tile" data-attn-id="discovery-buddy-brief">
     <h3>Brief ready for review</h3>
     <p>The <a href="https://docs.google.com/document/d/1flMPErgNpYZjZS3X0uUm8pkS9uMTxJGzeezqxibPz8s/edit">Discovery Buddy brief</a> is ready for his call: looks good, edits, or defer? It already carries the widened scope. No PRD or business plan yet — the brief review decides.</p>
+    <div class="attn-actions">
+      <button type="button" data-act="done">✓ Done</button>
+      <button type="button" data-act="info">Need more info</button>
+    </div>
+    <div class="attn-status" role="status"></div>
   </div>
 
   <h2>🔗 Links</h2>
@@ -390,6 +412,123 @@
     if ((ev.metaKey || ev.ctrlKey) && ev.key === 'Enter') { ev.preventDefault(); dump(); }
   });
   resolveRepo().then(refreshUI);
+})();
+</script>
+<script>
+// ---- attention action buttons (self-contained; no dependencies) ----
+// "Done" / "Need more info" per attention tile. Writes a timestamped entry
+// to the buddy's docs/ingest.md via the GitHub contents API (same pattern
+// as the brain-dump box); the buddy triages it from there. Tile state
+// persists in localStorage so it stays resolved on reload.
+(function(){
+  var tiles = document.querySelectorAll('.attn-tile');
+  if (!tiles.length) return;
+  var NL = String.fromCharCode(10);
+  function lsGet(){ try { return JSON.parse(localStorage.getItem('buddyTree.v3') || '{}'); } catch(e){ return {}; } }
+  function lsSet(patch){ try { var s = lsGet(); for (var k in patch) s[k] = patch[k]; localStorage.setItem('buddyTree.v3', JSON.stringify(s)); } catch(e){} }
+  function token(){ return lsGet().ghToken || ''; }
+  function buddyId(){
+    var db = document.querySelector('.dumpbox');
+    if (db && db.getAttribute('data-buddy-id')) return db.getAttribute('data-buddy-id');
+    var p = location.pathname.replace(/\/+$/, '');
+    return p.substring(p.lastIndexOf('/') + 1);
+  }
+  function b64encode(str){
+    var bytes = new TextEncoder().encode(str), bin = '';
+    bytes.forEach(function(b){ bin += String.fromCharCode(b); });
+    return btoa(bin);
+  }
+  async function ghApi(path, method, body){
+    var t = token();
+    if (!t) throw new Error('Add a GitHub token in the Brain dump section above to enable actions.');
+    var r = await fetch('https://api.github.com' + path, {
+      method: method || 'GET',
+      headers: {'Authorization': 'Bearer ' + t, 'Accept': 'application/vnd.github+json', 'Content-Type': 'application/json'},
+      body: body ? JSON.stringify(body) : undefined
+    });
+    if (!r.ok) throw new Error('GitHub ' + r.status);
+    return r.status === 204 ? null : await r.json();
+  }
+  async function ghGetFile(repo, path){
+    try {
+      var j = await ghApi('/repos/davedellaquila/' + repo + '/contents/' + path);
+      if (j && j.content) return {
+        text: new TextDecoder().decode(Uint8Array.from(atob(j.content.replace(/\n/g, '')), function(c){ return c.charCodeAt(0); })),
+        sha: j.sha
+      };
+    } catch(e){}
+    return null;
+  }
+  var bid = buddyId(), repo = null, repoName = bid;
+  async function resolveRepo(){
+    try {
+      var r = await fetch('../buddies.json', {cache: 'no-store'});
+      var d = await r.json();
+      var buds = d.buddies || [];
+      for (var i = 0; i < buds.length; i++) {
+        if (buds[i].id === bid && buds[i].repo) { repo = buds[i].repo; repoName = buds[i].name || bid; break; }
+      }
+    } catch(e){}
+  }
+  function stateKey(id){ return bid + ':' + id; }
+  function getState(id){ var s = lsGet().attnStates || {}; return s[stateKey(id)] || null; }
+  function setState(id, v){
+    var s = lsGet(), states = s.attnStates || {};
+    states[stateKey(id)] = v;
+    lsSet({attnStates: states});
+  }
+  function tileText(tile){
+    var h = tile.querySelector('h3'), p = tile.querySelector('p');
+    var t = (h ? h.textContent : '') + (p ? ' — ' + p.textContent : '');
+    t = t.replace(/\s+/g, ' ').trim();
+    return t.length > 300 ? t.slice(0, 297) + '...' : t;
+  }
+  function applyState(tile, id){
+    var st = tile.querySelector('.attn-status');
+    var v = getState(id);
+    if (v === 'done') {
+      tile.classList.add('attn-resolved');
+      tile.querySelectorAll('.attn-actions button').forEach(function(b){ b.disabled = true; });
+      st.textContent = 'Marked done';
+    } else if (v === 'info') {
+      tile.querySelectorAll('.attn-actions button').forEach(function(b){ b.disabled = true; });
+      st.textContent = 'Sent — will follow up.';
+    }
+  }
+  async function act(tile, id, kind){
+    var st = tile.querySelector('.attn-status');
+    var btns = tile.querySelectorAll('.attn-actions button');
+    if (!token()) { st.textContent = 'Add a GitHub token in the Brain dump section above to enable actions.'; return; }
+    if (!repo) { st.textContent = 'No repo linked for this buddy yet.'; return; }
+    var text = tileText(tile);
+    var stamp = new Date().toLocaleString();
+    var entry = kind === 'done'
+      ? "DONE — Dave marked this done on the homepage: '" + text + "' (attention id: " + id + "). Please remove it from the attention list in buddies.json."
+      : "FOLLOW-UP — Dave needs more info on: '" + text + "' (attention id: " + id + "). Please follow up with him.";
+    st.textContent = kind === 'done' ? 'Marking done' + String.fromCharCode(8230) : 'Sending' + String.fromCharCode(8230);
+    btns.forEach(function(b){ b.disabled = true; });
+    try {
+      var cur = await ghGetFile(repo, 'docs/ingest.md');
+      var base = cur ? cur.text : '# Ingest log ' + String.fromCharCode(8212) + ' ' + repoName + NL + NL;
+      var body = {message: 'Attention action for ' + bid + ' (' + kind + ')', content: b64encode(base + '## ' + stamp + NL + NL + entry + NL + NL)};
+      if (cur && cur.sha) body.sha = cur.sha;
+      await ghApi('/repos/davedellaquila/' + repo + '/contents/docs/ingest.md', 'PUT', body);
+      setState(id, kind);
+      applyState(tile, id);
+    } catch(err){
+      st.textContent = 'Save failed: ' + (err.message || err);
+      btns.forEach(function(b){ b.disabled = false; });
+    }
+  }
+  resolveRepo().then(function(){
+    tiles.forEach(function(tile){
+      var id = tile.getAttribute('data-attn-id') || 'unknown';
+      applyState(tile, id);
+      tile.querySelectorAll('.attn-actions button').forEach(function(b){
+        b.addEventListener('click', function(){ act(tile, id, b.getAttribute('data-act')); });
+      });
+    });
+  });
 })();
 </script>
 </body>

@@ -3,6 +3,18 @@
 All notable changes to the Buddies dashboard and buddy system. Newest first.
 `FEATURES.md` describes the current state; this file describes how it got there.
 
+## 2026-10-12 (Discovery Buddy: attention action buttons)
+
+### Added
+- **Attention action buttons** on the Discovery Buddy homepage's "Needs Attention"
+  tile (✓ Done / Need more info), per Dave's directive (rolled out from the
+  Dell'Aquilas homepage). "Done" appends a DONE entry to docs/ingest.md asking
+  the buddy to clear the item from buddies.json; "Need more info" appends a
+  FOLLOW-UP entry. Tile resolves immediately in the UI and persists in
+  localStorage; writes use the shared ghToken (same pattern as the brain-dump
+  box). Restyled to the listening-room theme; dark+light mode, phone-friendly.
+  Behavior unit-tested with mocked DOM/fetch (10 assertions).
+
 ## 2026-10-12 (Charts Buddy: attention action buttons)
 
 ### Added
