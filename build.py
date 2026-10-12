@@ -678,11 +678,15 @@ body.standalone .sa-bar{display:flex}
 .node.drop-target{outline:2px solid var(--accent);outline-offset:3px}
 .proj-row.drop-target{background:var(--active);box-shadow:inset 0 0 0 2px var(--accent)}
 #view-projects .proj-row[data-buddy]{cursor:pointer}
-.proj-search-sticky{position:sticky;top:0;z-index:5;background:var(--bg);padding:8px 0;border-bottom:1px solid var(--border)}
+.proj-search-sticky{position:sticky;top:0;z-index:5;background:var(--bg);padding:8px 0;border-bottom:1px solid var(--border);
+  transition:margin .28s ease,top .28s ease,border-radius .28s ease,box-shadow .28s ease,background .28s ease,border-color .28s ease}
 @media (max-width:640px){
-  /* Clear the floating panel open buttons (44-48px at top:12px) on phones */
-  .proj-search-sticky{top:64px}
-  body.sb-closed .proj-search-sticky{top:64px}
+  /* Stuck mode: compress into a floating pill between the panel buttons */
+  .proj-search-sticky.is-stuck{top:12px;margin:0 68px 0 64px;padding:6px 8px;
+    border:1px solid var(--border);border-radius:14px;
+    background:color-mix(in srgb,var(--bg) 88%,transparent);
+    -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
+    box-shadow:0 6px 20px var(--shadow);border-bottom:1px solid var(--border)}
 }
 .proj-controls{display:flex;gap:8px;align-items:center}
 .proj-controls #proj-search{width:100%;box-sizing:border-box;background:var(--bg);border:1px solid var(--border);color:var(--text);border-radius:8px;padding:7px 30px 7px 10px;font-size:13px}
@@ -1780,7 +1784,7 @@ function tileHtml(label, num, tint, sub, fkey, sel, tip){
     + '<div class="ptile-num">' + escHtml(String(num)) + '</div>'
     + '<div class="ptile-sub">' + escHtml(sub) + '</div></div>';
 }
-let projFilter = null, clFilter = null, planFilter = null, manifestFilter = null, statusFilter = null, projSearch = '', projViewMode = 'hier';
+let projFilter = null, clFilter = null, planFilter = null, manifestFilter = null, statusFilter = null, projSearch = '', projViewMode = 'hier', projStickObs = null;
 function applyManifestFilter(){
   document.querySelectorAll('#view-manifest .proj-row').forEach(r => {
     const isAuto = !!r.querySelector('.st-auto');
@@ -2584,6 +2588,7 @@ function renderProjects(){
     + statusOrder.map(st => tileHtml(st.toUpperCase(), statusCounts[st], statusTints[st] || '#8b949e', '', 'status:' + st, statusFilter === st, 'Click to filter by ' + st + ' status. Click again to clear.')).join('')
     + '</div>'
     + '<h2>Projects by Buddy</h2>'
+    + '<div class="proj-search-sentinel" aria-hidden="true"></div>'
     + '<div class="proj-search-sticky"><div class="proj-controls">'
     + '<div class="sb-search-wrap" style="flex:1;min-width:0">'
     + '<input type="search" id="proj-search" placeholder="Search projects\u2026" aria-label="Search projects" value="'+escHtml(projSearch)+'">'
@@ -2664,6 +2669,18 @@ function renderProjects(){
   s += '</div></section>';
   const vp = document.getElementById('view-projects');
   vp.innerHTML = s;
+  // Stuck-state detection for the search pill: sentinel scrolls away -> pill is stuck
+  try {
+    if (projStickObs) projStickObs.disconnect();
+    const sent = vp.querySelector('.proj-search-sentinel');
+    const pill = vp.querySelector('.proj-search-sticky');
+    if (sent && pill && 'IntersectionObserver' in window) {
+      projStickObs = new IntersectionObserver(en => {
+        pill.classList.toggle('is-stuck', !en[0].isIntersecting);
+      }, {threshold: 0});
+      projStickObs.observe(sent);
+    }
+  } catch (err) {}
 }
 function refreshViews(){
   // Always re-render the tree from current data. Restoring a cached copy left
