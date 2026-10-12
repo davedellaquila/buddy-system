@@ -638,7 +638,7 @@ body.standalone .sa-bar{display:flex}
     z-index:40;background:var(--bg)}
   #main{flex:1;min-width:0;padding:28px 22px 64px;position:relative;z-index:1}
   #main.homepage-mode{padding:0}
-  .node{width:260px}
+  .node{width:max-content;min-width:180px;max-width:320px}
   #view-buddy.panel{position:fixed;top:0;right:0;bottom:0;width:min(380px,calc(100vw - 250px));z-index:30;
     background:var(--bg);border-left:1px solid var(--border);overflow-y:auto;overflow-x:hidden;
     padding:20px 18px 48px;box-shadow:-8px 0 32px var(--shadow)}
@@ -905,7 +905,7 @@ body.standalone .sa-bar{display:flex}
 .bp-mini-zoom button:hover{border-color:var(--accent)}
 .linkbtn{background:none;border:0;color:var(--accent);font:inherit;font-size:12.5px;cursor:pointer;padding:0}
 .linkbtn:hover{text-decoration:underline}
-.node{position:relative;width:260px;flex-shrink:0}
+.node{position:relative;width:max-content;min-width:180px;max-width:320px;flex-shrink:0}
 /* Fix: flex-centered org tree overflows to negative x-coords on narrow screens, which widens the
    layout viewport and pushes position:fixed UI (zoombar) partly off-screen. max-content + auto
    margins keeps the centered look when it fits, and overflows only rightward (scrollable) when not. */
