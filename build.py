@@ -230,8 +230,14 @@ body.sb-closed #sb-resize{display:none}
 /* New-buddy request bottom sheet */
 #newbuddy-sheet{position:fixed;inset:0;z-index:10000;display:flex;align-items:flex-end;justify-content:center}
 #newbuddy-sheet .nb-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.5);opacity:0;transition:opacity .25s}
-#newbuddy-sheet .nb-sheet{position:relative;background:var(--panel);border-radius:20px 20px 0 0;padding:12px 22px 26px;width:100%;max-width:560px;height:auto;max-height:88vh;overflow-y:auto;
+#newbuddy-sheet .nb-sheet{position:relative;background:var(--panel);border-radius:20px 20px 0 0;padding:12px 22px 0;width:100%;max-width:560px;height:auto;max-height:88vh;display:flex;flex-direction:column;
   box-shadow:0 -8px 40px rgba(0,0,0,.4);transform:translateY(100%);transition:transform .3s cubic-bezier(.32,.72,.35,1)}
+#newbuddy-sheet .nb-body{overflow-y:auto;padding-bottom:16px}
+#newbuddy-sheet .nb-actions{position:sticky;bottom:0;background:var(--panel);padding:14px 0 26px;border-top:1px solid var(--border2);display:flex;gap:10px;justify-content:flex-end;margin:0 -22px;padding-left:22px;padding-right:22px}
+#newbuddy-sheet .nb-actions button{font-size:14px;font-weight:600;padding:10px 22px;border-radius:20px;cursor:pointer;border:1px solid var(--border)}
+#newbuddy-sheet .nb-actions .ab-cancel{background:none;color:var(--text)}
+#newbuddy-sheet .nb-actions .ab-create{background:var(--accent);border-color:var(--accent);color:#fff}
+#newbuddy-sheet .nb-actions .ab-create:disabled{opacity:.4;cursor:default}
 #newbuddy-sheet.open .nb-backdrop{opacity:1}
 #newbuddy-sheet.open .nb-sheet{transform:translateY(0)}
 #newbuddy-sheet .nb-grab{width:44px;height:5px;border-radius:3px;background:var(--border);margin:0 auto 14px}
@@ -239,7 +245,10 @@ body.sb-closed #sb-resize{display:none}
 #newbuddy-sheet label{display:block;font-size:12px;color:var(--muted);margin:14px 0 8px;text-transform:uppercase;letter-spacing:.8px}
 #newbuddy-sheet input[type=text],#newbuddy-sheet textarea{width:100%;box-sizing:border-box;font-size:16px;padding:10px 12px;border-radius:10px;border:1px solid var(--border);background:var(--bg);color:var(--text);font-family:inherit}
 #newbuddy-sheet textarea{resize:vertical;min-height:76px}
-#newbuddy-sheet .nb-personas{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;max-height:220px;overflow-y:auto;padding:2px}
+#newbuddy-sheet .nb-personas{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;max-height:220px;overflow-y:auto;padding:2px;scrollbar-width:thin;scrollbar-color:var(--border) transparent}
+#newbuddy-sheet .nb-personas::-webkit-scrollbar{width:6px}
+#newbuddy-sheet .nb-personas::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+#newbuddy-sheet .nb-personas::-webkit-scrollbar-track{background:transparent}
 #newbuddy-sheet .nb-personas button{display:flex;flex-direction:column;align-items:center;gap:4px;padding:10px 6px;border-radius:12px;border:1px solid var(--border);background:var(--bg);color:var(--text);cursor:pointer;font-size:12px}
 #newbuddy-sheet .nb-personas button.sel{border-color:var(--accent);background:var(--wash)}
 #newbuddy-sheet .nb-p-emoji{font-size:24px}
@@ -4117,6 +4126,7 @@ function openNewBuddyRequest(){
   m.innerHTML = '<div class="nb-backdrop"></div><div class="nb-sheet" role="dialog" aria-label="Request a new buddy">'
     + '<div class="nb-grab"></div>'
     + '<h2>New buddy</h2>'
+    + '<div class="nb-body">'
     + '<p class="ab-sub">Tell Astro what you want — they\u2019ll run the full onboarding (repo, mission doc, side chat, homepage).</p>'
     + '<label>Name</label><input type="text" id="nb-name" placeholder="e.g. Car Buddy" autocomplete="off">'
     + '<label>Place in tree</label><div class="nb-place" role="tablist" aria-label="Where in the tree">'
@@ -4127,13 +4137,14 @@ function openNewBuddyRequest(){
     + '<option value="">— Top level —</option>'
     + BUDDIES.filter(x => x && x.id).sort((a,b) => dispName(a).localeCompare(dispName(b))).map(x => '<option value="' + escHtml(x.id) + '">' + escHtml((x.icon || '') + ' ' + dispName(x)) + '</option>').join('')
     + '</select><p class="fineprint" id="nb-place-hint" style="margin-top:6px">As a child of the selected buddy (or top level).</p></div>'
-    + '<label>Persona <span class="fineprint" style="text-transform:none;letter-spacing:0">— pick the voice that makes you grin</span></label>'
+    + '<label>Persona</label><p class="fineprint" style="margin:-4px 0 8px">Pick the voice that makes you grin.</p>'
     + '<div class="nb-personas">' + REQUEST_PERSONAS.map((p,i) =>
         '<button type="button" data-persona="' + escHtml(p[0]) + '">'
         + '<span class="nb-p-emoji">' + p[1] + '</span><span class="nb-p-name">' + escHtml(p[0]) + '</span></button>').join('') + '</div>'
     + '<label>What should it do?</label><textarea id="nb-purpose" rows="3" placeholder="e.g. Track my car maintenance, remind me about oil changes, and help me plan the restoration."></textarea>'
     + '<div class="ab-err" id="nb-err"></div>'
-    + '<div class="ab-actions"><button class="ab-cancel" id="nb-cancel">Cancel</button><button class="ab-create" id="nb-create" disabled>Start the setup</button></div></div>';
+    + '</div>'
+    + '<div class="nb-actions"><button class="ab-cancel" id="nb-cancel">Cancel</button><button class="ab-create" id="nb-create" disabled>Start the setup</button></div></div>';
   document.body.appendChild(m);
   const sheet = m.querySelector('.nb-sheet');
   // Fixed width from Advanced settings
