@@ -2159,7 +2159,7 @@ function renderBuddy(id){
     + '<div class="sa-bar"><span>\U0001f516 Standalone view</span><button class="linkbtn" id="sa-full">Open full dashboard \u2192</button></div>'
     + '<div class="bp-topnav"><button class="linkbtn" data-navbtn="back">\u2190 Back</button>'
     + '<button class="linkbtn" data-navbtn="prev">\u2039 Prev</button><button class="linkbtn" data-navbtn="next">Next \u203a</button>'
-    + '<span class="sep">\u00b7</span><button class="linkbtn" data-view="tree">All buddies</button>'
+    + '<span class="sep">\u00b7</span><button class="linkbtn" data-view="projects">All buddies</button>'
     + '<span class=\"sep\">\\u00b7</span><button class=\"linkbtn\" id=\"bp-dormant\" title=\"Mark dormant / wake up\"></button>'
     + '<span class="sep">\u00b7</span><button class="linkbtn" id="bp-desktop">\U0001f4be Save to desktop</button></div>'
     + '<div class="bp-crumb">'+crumb(id)+'</div>'
