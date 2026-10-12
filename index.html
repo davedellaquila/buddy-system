@@ -313,6 +313,10 @@ body{padding:0}
    still scrolls normally from the top. */
 .treescroll.fit-centered{display:flex}
 .treescroll.fit-centered .chart,.treescroll.fit-centered .standalones{margin:auto}
+/* Flash highlight for "All buddies" navigation — brief accent glow that fades */
+.proj-row.flash-highlight{outline:2px solid var(--accent);outline-offset:2px;border-radius:8px;
+  animation:flashFade 2.5s ease-out forwards}
+@keyframes flashFade{0%{background:color-mix(in srgb,var(--accent) 18%,transparent)}100%{background:transparent}}
 #treezoom,#treezoom *{user-select:none;-webkit-user-select:none}
 /* Draggable splitter between the two tree panes */
 #tree-split{flex:0 0 12px;cursor:row-resize;display:flex;align-items:center;justify-content:center;
@@ -2069,7 +2073,7 @@ function renderDevelopSection(){
   const dev = document.getElementById('fset-develop');
   if (!dev) return;
   const simulating = !!devBackup;
-  const buildNum = '20261012.0655';
+  const buildNum = '20261012.0658';
   dev.innerHTML = ''
     + '<label class="fset-check"><input type="checkbox" id="dev-empty-toggle"' + (simulating ? ' checked' : '') + '> <span><strong>Simulate new user</strong> — empty data file, as if opening the shared link fresh</span></label>'
     + '<div class="fineprint" style="margin:8px 0 12px">Build <span style="font-family:monospace">' + escHtml(String(buildNum)) + '</span> · ' + BUDDIES.length + ' buddies in this file</div>'
@@ -2878,7 +2882,7 @@ function renderBuddy(id){
     + '<div class="sa-bar"><span>🔖 Standalone view</span><button class="linkbtn" id="sa-full">Open full dashboard →</button></div>'
     + '<div class="bp-topnav"><button class="linkbtn" data-navbtn="back">← Back</button>'
     + '<button class="linkbtn" data-navbtn="prev">‹ Prev</button><button class="linkbtn" data-navbtn="next">Next ›</button>'
-    + '<span class="sep">·</span><button class="linkbtn" data-view="projects">All buddies</button>'
+    + '<span class="sep">·</span><button class="linkbtn" data-view="projects" id="bp-allbuddies">All buddies</button>'
     + '<span class="sep">·</span><button class="linkbtn" id="bp-settings">Settings</button>'
     + '<span class="sep">\u00b7</span><button class="linkbtn" id="bp-dormant" title="Mark dormant / wake up"></button>'
     + '<span class="sep">·</span><button class="linkbtn" id="bp-desktop">💾 Save to desktop</button></div>'
@@ -2927,7 +2931,7 @@ function renderBuddy(id){
     + '<div class="bp-sec" data-field="shared"><h3>Shared notes<span class="info-tip" data-tip="Anybody with repo access can see this note. Saved to the buddy’s repo (docs/notes.md).">ⓘ</span></h3>'
     + '<textarea class="notes" id="bp-shared-notes" placeholder="Anybody with repo access can see this note."></textarea>'
     + '<p class="fineprint" id="shared-status"></p></div>'
-    + '<div class="bp-build">Build 20261012.0655</div>'
+    + '<div class="bp-build">Build 20261012.0658</div>'
     + '</div>';
   const nm = document.getElementById('bp-name');
   nm.addEventListener('keydown', e => { if (e.key === 'Enter'){ e.preventDefault(); nm.blur(); } });
@@ -3414,6 +3418,17 @@ function renderReleases(){
       whatsnewMarkSeen(md);
     })
     .catch(() => { body.innerHTML = '<p class="fineprint">Couldn’t load the release notes. <a href="https://github.com/davedellaquila/buddy-system/blob/master/CHANGELOG.md" target="_blank" rel="noopener">View on GitHub</a>.</p>'; });
+}
+// Briefly highlight a project row after "All buddies" navigation — shows you where you came from.
+let pendingHighlight = null;
+function highlightProjectRow(id){
+  requestAnimationFrame(() => {
+    const row = document.querySelector('#view-projects .proj-row[data-buddy="' + id + '"]');
+    if (!row) return;
+    row.scrollIntoView({block:'center', behavior:'smooth'});
+    row.classList.add('flash-highlight');
+    setTimeout(() => row.classList.remove('flash-highlight'), 2500);
+  });
 }
 function renderProjects(){
   if (!S.projCollapsed || typeof S.projCollapsed !== 'object') S.projCollapsed = {};
@@ -4046,7 +4061,7 @@ function renderPlan(id){
     + '<p class="fineprint">Saved on this device. (For your eyes only)</p></div>'
     + '<div class="bp-sec"><h3>Shared notes<span class="info-tip" data-tip="Visible to everyone with access to this project.">\u24d8</span></h3><textarea class="notes" id="bp-shared" placeholder="Shared notes\u2026 (visible to everyone with access)">'+escHtml((S.planShared||{})[id]||'')+'</textarea>'
     + '<p class="fineprint">Shared — visible to everyone with access.</p></div>'
-    + '<div class="bp-build">Build 20261012.0655</div>'
+    + '<div class="bp-build">Build 20261012.0658</div>'
     + '</div>';
   const nt = document.getElementById('bp-notes');
   let t = null;
@@ -5810,10 +5825,23 @@ function wireChangelogTypeFilter(root){
   });
 }
 function whatsnewSeenKey(){ try { return localStorage.getItem('whatsnewSeen'); } catch (e) { return null; } }
+function whatsnewHash(s){
+  let h = 5381;
+  s = String(s || '');
+  for (let i = 0; i < s.length; i++) h = ((h << 5) + h + s.charCodeAt(i)) | 0;
+  return (h >>> 0).toString(36);
+}
 function whatsnewMarkSeen(md){
   try {
-    const m = String(md || '').match(/^## .*/m);
-    if (m) localStorage.setItem('whatsnewSeen', m[0]);
+    // Seen key = newest header + hash of its section content, so new bullets
+    // added under an existing header are still detected as new next time.
+    const lines = String(md || '').split(String.fromCharCode(10));
+    let header = '', section = [];
+    for (const line of lines) {
+      if (/^## /.test(line)) { if (header) break; header = line; continue; }
+      if (header) section.push(line);
+    }
+    if (header) localStorage.setItem('whatsnewSeen', header + '|' + whatsnewHash(section.join(String.fromCharCode(10))));
   } catch (e) {}
 }
 function whatsnewSplit(md){
@@ -5865,7 +5893,7 @@ function openWhatsNew(){
   head.insertBefore(updBtn, head.querySelector('.wn-x'));
   fetch('version.txt?_=' + Date.now(), {cache: 'no-store'})
     .then(r => r.ok ? r.text() : '')
-    .then(t => { if (t.trim() && t.trim() !== '20261012.0655') updBtn.style.display = ''; })
+    .then(t => { if (t.trim() && t.trim() !== '20261012.0658') updBtn.style.display = ''; })
     .catch(() => {});
   fetch('https://raw.githubusercontent.com/davedellaquila/buddy-system/master/CHANGELOG.md?_' + Date.now(), {cache: 'no-store'})
     .then(r => { if (!r.ok) throw new Error('fetch failed'); return r.text(); })
@@ -5893,7 +5921,7 @@ function openWhatsNew(){
   if (x) x.focus();
 }
 function initVersionCheck(){
-  const myBuild = '20261012.0655';
+  const myBuild = '20261012.0658';
   function showUpdateBanner(serverBuild){
     if (document.getElementById('update-banner')) return;
     const b = document.createElement('div');
@@ -6225,7 +6253,16 @@ document.addEventListener('click', e => {
     return;
   }
   const vb = e.target.closest('[data-view]');
-  if (vb) { show('view:' + vb.dataset.view); if (window.innerWidth < 640) { const sbo=document.getElementById('sidebar'); if(sbo) sbo.classList.remove('open'); const sco=document.getElementById('sb-scrim'); if(sco) sco.classList.remove('show'); } return; }
+  if (vb) {
+    // "All buddies" from the info panel: remember the buddy so the projects
+    // view can scroll to and highlight it — you don't lose your place.
+    const fromPanel = vb.id === 'bp-allbuddies' || (vb.dataset.view === 'projects' && S.sel && S.sel.startsWith('buddy:'));
+    if (fromPanel && S.sel && S.sel.startsWith('buddy:')) pendingHighlight = S.sel.slice(6);
+    show('view:' + vb.dataset.view);
+    if (window.innerWidth < 640) { const sbo=document.getElementById('sidebar'); if(sbo) sbo.classList.remove('open'); const sco=document.getElementById('sb-scrim'); if(sco) sco.classList.remove('show'); }
+    if (pendingHighlight) { const id = pendingHighlight; pendingHighlight = null; highlightProjectRow(id); }
+    return;
+  }
   const pmb = e.target.closest('[data-proj-mode]');
   if (pmb) { projViewMode = pmb.dataset.projMode; renderProjects(); return; }
   if (e.target.closest && e.target.closest('#proj-search-clear')) { projSearch = ''; renderProjects(); const ps = document.getElementById('proj-search'); if (ps) ps.focus(); return; }

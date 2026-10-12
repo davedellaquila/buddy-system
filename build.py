@@ -165,6 +165,10 @@ body{padding:0}
    still scrolls normally from the top. */
 .treescroll.fit-centered{display:flex}
 .treescroll.fit-centered .chart,.treescroll.fit-centered .standalones{margin:auto}
+/* Flash highlight for "All buddies" navigation — brief accent glow that fades */
+.proj-row.flash-highlight{outline:2px solid var(--accent);outline-offset:2px;border-radius:8px;
+  animation:flashFade 2.5s ease-out forwards}
+@keyframes flashFade{0%{background:color-mix(in srgb,var(--accent) 18%,transparent)}100%{background:transparent}}
 #treezoom,#treezoom *{user-select:none;-webkit-user-select:none}
 /* Draggable splitter between the two tree panes */
 #tree-split{flex:0 0 12px;cursor:row-resize;display:flex;align-items:center;justify-content:center;
@@ -2526,7 +2530,7 @@ function renderBuddy(id){
     + '<div class="sa-bar"><span>\U0001f516 Standalone view</span><button class="linkbtn" id="sa-full">Open full dashboard \u2192</button></div>'
     + '<div class="bp-topnav"><button class="linkbtn" data-navbtn="back">\u2190 Back</button>'
     + '<button class="linkbtn" data-navbtn="prev">\u2039 Prev</button><button class="linkbtn" data-navbtn="next">Next \u203a</button>'
-    + '<span class="sep">\u00b7</span><button class="linkbtn" data-view="projects">All buddies</button>'
+    + '<span class="sep">\u00b7</span><button class="linkbtn" data-view="projects" id="bp-allbuddies">All buddies</button>'
     + '<span class="sep">\u00b7</span><button class="linkbtn" id="bp-settings">Settings</button>'
     + '<span class=\"sep\">\\u00b7</span><button class=\"linkbtn\" id=\"bp-dormant\" title=\"Mark dormant / wake up\"></button>'
     + '<span class="sep">\u00b7</span><button class="linkbtn" id="bp-desktop">\U0001f4be Save to desktop</button></div>'
@@ -3062,6 +3066,17 @@ function renderReleases(){
       whatsnewMarkSeen(md);
     })
     .catch(() => { body.innerHTML = '<p class="fineprint">Couldn’t load the release notes. <a href="https://github.com/davedellaquila/buddy-system/blob/master/CHANGELOG.md" target="_blank" rel="noopener">View on GitHub</a>.</p>'; });
+}
+// Briefly highlight a project row after "All buddies" navigation — shows you where you came from.
+let pendingHighlight = null;
+function highlightProjectRow(id){
+  requestAnimationFrame(() => {
+    const row = document.querySelector('#view-projects .proj-row[data-buddy="' + id + '"]');
+    if (!row) return;
+    row.scrollIntoView({block:'center', behavior:'smooth'});
+    row.classList.add('flash-highlight');
+    setTimeout(() => row.classList.remove('flash-highlight'), 2500);
+  });
 }
 function renderProjects(){
   if (!S.projCollapsed || typeof S.projCollapsed !== 'object') S.projCollapsed = {};
@@ -5458,10 +5473,23 @@ function wireChangelogTypeFilter(root){
   });
 }
 function whatsnewSeenKey(){ try { return localStorage.getItem('whatsnewSeen'); } catch (e) { return null; } }
+function whatsnewHash(s){
+  let h = 5381;
+  s = String(s || '');
+  for (let i = 0; i < s.length; i++) h = ((h << 5) + h + s.charCodeAt(i)) | 0;
+  return (h >>> 0).toString(36);
+}
 function whatsnewMarkSeen(md){
   try {
-    const m = String(md || '').match(/^## .*/m);
-    if (m) localStorage.setItem('whatsnewSeen', m[0]);
+    // Seen key = newest header + hash of its section content, so new bullets
+    // added under an existing header are still detected as new next time.
+    const lines = String(md || '').split(String.fromCharCode(10));
+    let header = '', section = [];
+    for (const line of lines) {
+      if (/^## /.test(line)) { if (header) break; header = line; continue; }
+      if (header) section.push(line);
+    }
+    if (header) localStorage.setItem('whatsnewSeen', header + '|' + whatsnewHash(section.join(String.fromCharCode(10))));
   } catch (e) {}
 }
 function whatsnewSplit(md){
@@ -5873,7 +5901,16 @@ document.addEventListener('click', e => {
     return;
   }
   const vb = e.target.closest('[data-view]');
-  if (vb) { show('view:' + vb.dataset.view); if (window.innerWidth < 640) { const sbo=document.getElementById('sidebar'); if(sbo) sbo.classList.remove('open'); const sco=document.getElementById('sb-scrim'); if(sco) sco.classList.remove('show'); } return; }
+  if (vb) {
+    // "All buddies" from the info panel: remember the buddy so the projects
+    // view can scroll to and highlight it — you don't lose your place.
+    const fromPanel = vb.id === 'bp-allbuddies' || (vb.dataset.view === 'projects' && S.sel && S.sel.startsWith('buddy:'));
+    if (fromPanel && S.sel && S.sel.startsWith('buddy:')) pendingHighlight = S.sel.slice(6);
+    show('view:' + vb.dataset.view);
+    if (window.innerWidth < 640) { const sbo=document.getElementById('sidebar'); if(sbo) sbo.classList.remove('open'); const sco=document.getElementById('sb-scrim'); if(sco) sco.classList.remove('show'); }
+    if (pendingHighlight) { const id = pendingHighlight; pendingHighlight = null; highlightProjectRow(id); }
+    return;
+  }
   const pmb = e.target.closest('[data-proj-mode]');
   if (pmb) { projViewMode = pmb.dataset.projMode; renderProjects(); return; }
   if (e.target.closest && e.target.closest('#proj-search-clear')) { projSearch = ''; renderProjects(); const ps = document.getElementById('proj-search'); if (ps) ps.focus(); return; }
