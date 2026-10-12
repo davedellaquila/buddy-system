@@ -1447,8 +1447,17 @@ function applySectionCollapse(bid){
     h3.addEventListener('click', e => {
       if (e.target.closest('.info-tip')) return;
       if (e.target.closest('.secgrip')) return; // grip drags; never toggles collapse
-      sec.classList.toggle('collapsed');
-      S.secCollapsed[bid][fid] = sec.classList.contains('collapsed');
+      const willCollapse = !sec.classList.contains('collapsed');
+      if (e.shiftKey) {
+        // Shift-click: apply to all sections
+        home.querySelectorAll('.bp-sec[data-field]').forEach(s2 => {
+          s2.classList.toggle('collapsed', willCollapse);
+          S.secCollapsed[bid][s2.dataset.field] = willCollapse;
+        });
+      } else {
+        sec.classList.toggle('collapsed');
+        S.secCollapsed[bid][fid] = sec.classList.contains('collapsed');
+      }
       save();
     });
   });
