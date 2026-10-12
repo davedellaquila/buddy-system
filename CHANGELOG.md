@@ -3,6 +3,11 @@
 All notable changes to the Buddies dashboard and buddy system. Newest first.
 `FEATURES.md` describes the current state; this file describes how it got there.
 
+## 2026-10-12 (Morning)
+
+### Added
+- **Text size slider** in Settings → Advanced — scales text and UI throughout the app from 80% to 130%, like the text-size slider on iPhone and Watch. Live preview as you drag.
+
 ## 2026-10-12 (Evening polish)
 
 ### Added

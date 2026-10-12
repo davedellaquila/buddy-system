@@ -46,6 +46,9 @@ Build: `build.py` generates `index.html` from `buddies.json` + `plans.json`.
 
 - **Light / Dark / System theme** — segmented picker under the sidebar
   brand; per-device localStorage (default System, follows the OS live).
+- **Text size slider** — Settings → Advanced; scales text and UI throughout
+  the app from 80% to 130% (default 100%), with live preview as you drag.
+  Like the text-size slider on iPhone and Watch.
 
 ## Agent standing orders
 

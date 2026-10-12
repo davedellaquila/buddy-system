@@ -1606,11 +1606,17 @@ const SETTING_DEFS = [
   {id:'attnEffect', label:'Attention header effect', type:'choice', options:['pulse','glow','shake','blink','none'], def:'pulse', advanced:true, tip:'How the \u201cNeeds your attention\u201d section header grabs your eye when items are waiting.'},
   {id:'nbSheetWidth', label:'New buddy sheet width', type:'number', def:560, min:320, max:900, advanced:true, tip:'Fixed width of the New Buddy bottom sheet, in pixels. Height follows the content; drag the grab handle to resize vertically.', unit:'px'},
   {id:'shiftLeftAction', label:'Shift+← action', type:'choice', options:['promote','go to parent','nothing'], def:'promote', advanced:true, tip:'What Shift+Left arrow does for the selected buddy. Promote moves it up one level; Go to parent just navigates there.'},
+  {id:'fontScale', label:'Text size', type:'slider', def:100, min:80, max:130, step:5, advanced:true, tip:'Scales text and UI throughout the app — like the text-size slider on iPhone and Watch.', unit:'%'},
 ];
 function getSetting(id){
   const def = SETTING_DEFS.find(s => s.id === id);
   if (S[id] === undefined) return def ? def.def : undefined;
   return S[id];
+}
+function applyFontScale(){
+  const v = getSetting('fontScale');
+  const scale = (typeof v === 'number' && !isNaN(v) ? v : 100) / 100;
+  document.body.style.zoom = scale === 1 ? '' : String(scale);
 }
 function snapshotSettable(){
   return {
@@ -1664,9 +1670,26 @@ function renderSettingChecks(){
       if (s.type === 'number') return '<label class="fset-choice"><span>' + s.label + (s.tip ? ' <span class="info-tip" data-tip="' + escHtml(s.tip) + '">\\u24d8</span>' : '') + '</span><span style="display:flex;align-items:center;gap:6px;white-space:nowrap"><input type="number" data-setting="' + s.id + '" value="' + val + '"' + (s.min !== undefined ? ' min="' + s.min + '"' : '') + (s.max !== undefined ? ' max="' + s.max + '"' : '') + ' style="width:90px">' + (s.unit ? '<span class="fineprint">' + escHtml(s.unit) + '</span>' : '') + '</span></label>';
       if (s.type === 'choice') return '<label class="fset-choice"><span>' + s.label + (s.tip ? ' <span class="info-tip" data-tip="' + escHtml(s.tip) + '">\\u24d8</span>' : '') + '</span><select data-setting="' + s.id + '">'
         + s.options.map(o => '<option value="' + o + '"' + (val === o ? ' selected' : '') + '>' + o.charAt(0).toUpperCase() + o.slice(1) + '</option>').join('') + '</select></label>';
+      if (s.type === 'slider') return '<label class="fset-choice"><span>' + s.label + (s.tip ? ' <span class="info-tip" data-tip="' + escHtml(s.tip) + '">\\u24d8</span>' : '') + '</span><span style="display:flex;align-items:center;gap:8px;white-space:nowrap;min-width:180px;flex:1"><span class="fineprint" style="font-size:11px">A</span><input type="range" data-setting="' + s.id + '" value="' + val + '"' + (s.min !== undefined ? ' min="' + s.min + '"' : '') + (s.max !== undefined ? ' max="' + s.max + '"' : '') + (s.step !== undefined ? ' step="' + s.step + '"' : '') + ' style="flex:1;accent-color:var(--accent)"><span class="fineprint" style="font-size:15px">A</span><span class="fineprint" data-scale-val="' + s.id + '" style="min-width:42px;text-align:right">' + val + (s.unit || '') + '</span></span></label>';
       return '';
     }).join('');
     adv.querySelectorAll('[data-setting]').forEach(el => {
+      const onSliderInput = () => {
+        const def = SETTING_DEFS.find(s => s.id === el.dataset.setting);
+        let v = parseInt(el.value, 10);
+        if (isNaN(v)) v = def ? def.def : 100;
+        if (def && def.min !== undefined) v = Math.max(def.min, v);
+        if (def && def.max !== undefined) v = Math.min(def.max, v);
+        S[el.dataset.setting] = v;
+        const valEl = adv.querySelector('[data-scale-val="' + el.dataset.setting + '"]');
+        if (valEl) valEl.textContent = v + (def && def.unit ? def.unit : '');
+        applyFontScale();
+      };
+      if (el.type === 'range') {
+        el.addEventListener('input', onSliderInput);
+        el.addEventListener('change', () => { save(); });
+        return;
+      }
       el.addEventListener('change', () => {
         const def = SETTING_DEFS.find(s => s.id === el.dataset.setting);
         if (el.type === 'number') {
@@ -1760,7 +1783,7 @@ function openFieldSettings(){
     m.querySelector('#fset-reset').addEventListener('click', () => {
       if (!confirm('Reset all settings to factory defaults?')) return;
       resetToFactory(); renderSettingChecks(); openFieldSettings();
-      applySbWidth(); applyPanelWidth();
+      applySbWidth(); applyPanelWidth(); applyFontScale();
       show(S.sel, false);
     });
     m.querySelector('#fset-update').addEventListener('click', () => {
@@ -3749,6 +3772,7 @@ document.addEventListener('keydown', e => {
 (function initSbResize(){
   const sb = document.getElementById('sidebar');
   applySbWidth();
+  applyFontScale();
   const h = document.getElementById('sb-resize');
   let sx = null, sw = 0, sdrag = false, snapped = false;
   const SNAP_SHUT = 140; /* drag narrower than this → snap the sidebar closed */
