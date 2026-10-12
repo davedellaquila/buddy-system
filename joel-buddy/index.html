@@ -102,6 +102,75 @@
   </dl>
 </section>
 
+<style>
+/* Joel's Buddy — "The story so far" vertical timeline. Self-contained, namespaced. */
+.jt-timeline {
+  --jt-text: #2b241d; --jt-muted: #7a6f61; --jt-border: #e8ddcd;
+  --jt-accent: #b4762a; --jt-card: #ffffff;
+  max-width: 760px; margin: 18px auto 0; padding: 8px 4px 8px 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  .jt-timeline {
+    --jt-text: #f2ece4; --jt-muted: #a89e90; --jt-border: #332c26;
+    --jt-accent: #e0a458; --jt-card: #1e1a17;
+  }
+}
+.jt-timeline h3 { font-size: 20px; margin: 0 0 4px; color: var(--jt-text); }
+.jt-timeline .jt-sub { font-size: 13px; color: var(--jt-muted); font-style: italic; margin: 0 0 20px; }
+.jt-items { position: relative; margin: 0; padding: 0; list-style: none; }
+.jt-items::before {
+  content: ""; position: absolute; left: 10px; top: 8px; bottom: 8px; width: 2px;
+  background: var(--jt-border); border-radius: 2px;
+}
+.jt-item { position: relative; padding: 0 0 26px 34px; }
+.jt-item:last-child { padding-bottom: 4px; }
+.jt-dot {
+  position: absolute; left: 0; top: 4px; width: 16px; height: 16px; border-radius: 50%;
+  background: var(--jt-accent); border: 3px solid var(--jt-card);
+  box-shadow: 0 0 0 2px var(--jt-border);
+}
+.jt-item.jt-upcoming .jt-dot { background: transparent; box-shadow: 0 0 0 2px var(--jt-accent); }
+.jt-date { font-size: 12px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase;
+  color: var(--jt-accent); margin-bottom: 3px; }
+.jt-title { font-size: 16px; font-weight: 700; color: var(--jt-text); margin-bottom: 3px; }
+.jt-detail { font-size: 14px; line-height: 1.5; color: var(--jt-muted); margin: 0; }
+.jt-tag { display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: 1px;
+  text-transform: uppercase; color: var(--jt-accent);
+  border: 1px solid var(--jt-accent); border-radius: 20px; padding: 2px 10px; margin-left: 8px;
+  vertical-align: 2px; }
+</style>
+<div class="jt-timeline">
+  <h3>The story so far</h3>
+  <p class="jt-sub">Joel Nelson, from the night you met — a timeline until the numbers arrive.</p>
+  <ol class="jt-items">
+    <li class="jt-item">
+      <span class="jt-dot"></span>
+      <div class="jt-date">Oct 10, 2026</div>
+      <div class="jt-title">Met Joel</div>
+      <p class="jt-detail">Acorn Ridge Casino, Jackson — dueling-pianos gig with James Michael Day of Modern Dueling Pianos.</p>
+    </li>
+    <li class="jt-item">
+      <span class="jt-dot"></span>
+      <div class="jt-date">Oct 11, 2026</div>
+      <div class="jt-title">Lake Tabeaud loop recommendations</div>
+      <p class="jt-detail">Prepared the hike summary — his ask from that night. (Delivery to Joel unconfirmed.)</p>
+    </li>
+    <li class="jt-item">
+      <span class="jt-dot"></span>
+      <div class="jt-date">Oct 11, 2026</div>
+      <div class="jt-title">Joel's Buddy created</div>
+      <p class="jt-detail">Mission statement approved — live as a child of Relationship Buddy.</p>
+    </li>
+    <li class="jt-item jt-upcoming">
+      <span class="jt-dot"></span>
+      <div class="jt-date">Upcoming<span class="jt-tag">📌 Pinned</span></div>
+      <div class="jt-title">Invite Joel and James over</div>
+      <p class="jt-detail">Sometime — the next chapter writes itself here.</p>
+    </li>
+  </ol>
+</div>
+
 <section>
   <h2><span class="e">🤝</span>Connections</h2>
   <ul>
