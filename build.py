@@ -4059,7 +4059,7 @@ function openNewBuddyRequest(){
   m.innerHTML = '<div class="nb-backdrop"></div><div class="nb-sheet" role="dialog" aria-label="Request a new buddy">'
     + '<div class="nb-grab"></div>'
     + '<h2>New buddy</h2>'
-    + '<p class="ab-sub">Tell Astro what you want — they\u2019ll run the full setup drill (repo, mission doc, side chat, homepage).</p>'
+    + '<p class="ab-sub">Tell Astro what you want — they\u2019ll run the full onboarding (repo, mission doc, side chat, homepage).</p>'
     + '<label>Name</label><input type="text" id="nb-name" placeholder="e.g. Car Buddy" autocomplete="off">'
     + '<label>Persona <span class="fineprint" style="text-transform:none;letter-spacing:0">— pick the voice that makes you grin</span></label>'
     + '<div class="nb-personas">' + REQUEST_PERSONAS.map((p,i) =>
@@ -4161,7 +4161,7 @@ async function createBuddyFromDialog(name, icon, kind, parentId, errEl, createBt
       status: 'new', statusClass: 'new',
       brief: '', docs: [], repo: '', homepage: '', photos: [],
       setup_pending: true,
-      attention: [{id: 'setup-' + nid, date: today, text: 'New buddy added from the dashboard — run the full setup drill (mission doc, repo, side chat, homepage).'}]
+      attention: [{id: 'setup-' + nid, date: today, text: 'New buddy added from the dashboard — run the full onboarding (mission doc, repo, side chat, homepage).'}]
     };
     // Fetch latest buddies.json from GitHub, append, write back
     const raw = await ghGetFile('buddy-system', 'buddies.json');
@@ -4193,7 +4193,7 @@ async function createBuddyFromDialog(name, icon, kind, parentId, errEl, createBt
     closeAddBuddyDialog();
     save(); renderNav(); refreshViews();
     if (S.projectId) renderBuddy(S.projectId);
-    toast('Buddy created — Astro will run the full setup drill.');
+    toast('Buddy created — Astro will run the full onboarding.');
   } catch (e) {
     errEl.textContent = e.message || String(e);
     createBtn.disabled = false;

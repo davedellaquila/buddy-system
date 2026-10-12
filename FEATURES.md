@@ -120,7 +120,7 @@ Build: `build.py` generates `index.html` from `buddies.json` + `plans.json`.
   "+ Sibling" button, the Direct reports header has "+ Child". A dialog takes
   the new buddy's name, icon, and type, then writes the entry straight to
   `buddies.json` on GitHub (needs the GitHub token). New buddies are flagged
-  `setup_pending` with an attention item so Astro runs the full setup drill.
+  `setup_pending` with an attention item so Astro runs the full onboarding.
 - **Buddy links (many-to-many)** — buddies link to each other, Rae Assist
   style: everything can be linked to everything. A `links` array on a
   registry entry names linked buddy ids; the dashboard renders a "Linked
