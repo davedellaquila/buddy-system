@@ -3,6 +3,11 @@
 All notable changes to the Buddies dashboard and buddy system. Newest first.
 `FEATURES.md` describes the current state; this file describes how it got there.
 
+## 2026-10-11 (Tree pan speed fixed at low zoom)
+
+### Fixed
+- **Panning felt geared down when zoomed out:** the finger delta is in screen pixels but the scroll offsets live in the zoomed coordinate space — at 50% zoom every pan moved at 2:1. The delta is now scaled by 1/zoom, so panning feels 1:1 at any zoom level.
+
 ## 2026-10-11 (What's New modal actually shows what's new)
 
 ### Fixed

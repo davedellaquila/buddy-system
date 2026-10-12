@@ -2854,9 +2854,12 @@ function attachPan(el){
     const sc = scroller();
     sc.classList.add('panning');
     el.classList.add('panning');
-    // Apply both axes every move — free diagonal pan (no axis lock)
-    sc.scrollLeft = pan.sl - dx;
-    sc.scrollTop = pan.st - dy;
+    // Apply both axes every move — free diagonal pan (no axis lock).
+    // Scale the finger delta by 1/zoom: scroll offsets live in the zoomed
+    // coordinate space, so without this a 50% zoom pans at 2:1 (geared down).
+    const zf = (S[zoomKey] || 100) / 100;
+    sc.scrollLeft = pan.sl - dx / zf;
+    sc.scrollTop = pan.st - dy / zf;
   }
   function endPan(pid){
     if (!pan) return;
