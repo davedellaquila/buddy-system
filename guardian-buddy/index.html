@@ -60,6 +60,21 @@
   a.btn{background:var(--panel);border:1px solid var(--border);border-radius:10px;
     padding:12px 20px;text-decoration:none;color:var(--text);font-weight:600;font-size:15px}
   a.btn:hover{border-color:var(--accent)}
+  /* ---------- attention actions ---------- */
+  .attn{background:var(--panel);border:1px solid var(--border);border-radius:12px;
+    padding:16px 20px;margin-bottom:12px}
+  .attn.resolved{opacity:.55}
+  .attn-text{font-size:15px;margin-bottom:4px}
+  .attn-text a{color:var(--accent);font-weight:600}
+  .attn-date{color:var(--muted);font-size:13px;margin-bottom:10px}
+  .attn-actions{display:flex;gap:10px;flex-wrap:wrap}
+  .attn-btn{border:1px solid var(--border);background:var(--card);color:var(--text);
+    border-radius:999px;padding:10px 18px;font-size:14px;font-weight:600;cursor:pointer;
+    min-height:44px}
+  .attn-btn[data-act="done"]:hover{border-color:var(--green);color:var(--green)}
+  .attn-btn[data-act="info"]:hover{border-color:var(--amber);color:var(--amber)}
+  .attn-btn:disabled{opacity:.5;cursor:default}
+  .attn-status{font-size:13px;color:var(--muted);margin-top:8px;min-height:20px}
   .dumpbox{background:var(--panel);border:1px solid var(--border);border-radius:14px;
     padding:22px;margin-top:44px}
   .dumpbox h2{margin:0 0 6px}
@@ -95,6 +110,9 @@
   <div class="tagline">Security + monetization watchdog</div>
   <div class="premise"><strong>The honest premise:</strong> you cannot DRM HTML. Anyone can View Source, download the dashboard, and re-host it. So the HTML is not the product — the moat is the service, the data, and the brand behind it. My job is keeping the valuable parts server-side, the legal footing real, and every revenue idea defensible.</div>
 </header>
+
+<h2>Needs Attention</h2>
+<div id="attn-list"><div class="attn"><div class="attn-text" style="color:var(--muted)">Loading attention items…</div></div></div>
 
 <h2>The defensibility ledger</h2>
 <div class="chart-card">
@@ -311,6 +329,119 @@ Living page — last refreshed 2026-10-12 · Guardian Buddy
     if ((ev.metaKey || ev.ctrlKey) && ev.key === 'Enter') { ev.preventDefault(); dump(); }
   });
   resolveRepo().then(refreshUI);
+})();
+</script>
+<script>
+(function(){
+  var list = document.getElementById('attn-list');
+  if (!list) return;
+  var bid = 'guardian-buddy';
+  function lsGet(){ try { return JSON.parse(localStorage.getItem('buddyTree.v3') || '{}'); } catch(e){ return {}; } }
+  function lsSet(patch){ try { var s = lsGet(); for (var k in patch) s[k] = patch[k]; localStorage.setItem('buddyTree.v3', JSON.stringify(s)); } catch(e){} }
+  function token(){ return lsGet().ghToken || ''; }
+  function b64encode(str){
+    var bytes = new TextEncoder().encode(str), bin = '';
+    bytes.forEach(function(b){ bin += String.fromCharCode(b); });
+    return btoa(bin);
+  }
+  async function ghApi(path, method, body){
+    var t = token();
+    if (!t) throw new Error('Add a GitHub token first.');
+    var r = await fetch('https://api.github.com' + path, {
+      method: method || 'GET',
+      headers: {'Authorization': 'Bearer ' + t, 'Accept': 'application/vnd.github+json', 'Content-Type': 'application/json'},
+      body: body ? JSON.stringify(body) : undefined
+    });
+    if (!r.ok) throw new Error('GitHub ' + r.status);
+    return r.status === 204 ? null : await r.json();
+  }
+  async function ghGetFile(repo, path){
+    try {
+      var j = await ghApi('/repos/davedellaquila/' + repo + '/contents/' + path);
+      if (j && j.content) return {
+        text: new TextDecoder().decode(Uint8Array.from(atob(j.content.replace(/\n/g, '')), function(c){ return c.charCodeAt(0); })),
+        sha: j.sha
+      };
+    } catch(e){}
+    return null;
+  }
+  var repo = null, buddyName = 'Guardian Buddy';
+  function rkey(aid, text){ return bid + '|' + (aid || ('text:' + text.slice(0, 60))); }
+  function isResolved(aid, text){ var m = lsGet().attnDone || {}; return !!m[rkey(aid, text)]; }
+  function setResolved(aid, text){ var s = lsGet(); var m = s.attnDone || {}; m[rkey(aid, text)] = 1; s.attnDone = m; lsSet(s); }
+  function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+  async function load(){
+    try {
+      var r = await fetch('../buddies.json', {cache: 'no-store'});
+      var d = await r.json();
+      var buds = d.buddies || [], me = null;
+      for (var i = 0; i < buds.length; i++) { if (buds[i].id === bid) { me = buds[i]; break; } }
+      if (me) { if (me.repo) repo = me.repo; if (me.name) buddyName = me.name; }
+      var attns = (me && me.attention) || [];
+      if (!attns.length) { list.innerHTML = '<div class="attn"><div class="attn-text" style="color:var(--muted)">Nothing needs attention right now. Suspicious, but I\u2019ll take it.</div></div>'; return; }
+      list.innerHTML = '';
+      attns.forEach(function(a){
+        var aid = a.id || '', text = a.text || '';
+        var tile = document.createElement('div');
+        tile.className = 'attn';
+        tile.setAttribute('data-attn-id', aid);
+        var textHtml = esc(text);
+        if (a.url) textHtml += ' <a href="' + esc(a.url) + '" target="_blank" rel="noopener">Open \u2192</a>';
+        tile.innerHTML =
+          '<div class="attn-text">' + textHtml + '</div>' +
+          (a.date ? '<div class="attn-date">' + esc(a.date) + '</div>' : '') +
+          '<div class="attn-actions"><button class="attn-btn" data-act="done">\u2713 Done</button>' +
+          '<button class="attn-btn" data-act="info">Need more info</button></div>' +
+          '<div class="attn-status" role="status"></div>';
+        list.appendChild(tile);
+        if (isResolved(aid, text)) {
+          tile.classList.add('resolved');
+          tile.querySelector('.attn-status').textContent = 'Marked done';
+          return;
+        }
+        tile.addEventListener('click', function(ev){
+          var btn = ev.target.closest ? ev.target.closest('.attn-btn') : null;
+          if (!btn || btn.disabled) return;
+          handleAction(tile, aid, text, btn.getAttribute('data-act'));
+        });
+      });
+    } catch(e){
+      list.innerHTML = '<div class="attn"><div class="attn-text" style="color:var(--muted)">Couldn\u2019t load attention items.</div></div>';
+    }
+  }
+  async function handleAction(tile, aid, text, act){
+    var st = tile.querySelector('.attn-status');
+    var btns = tile.querySelectorAll('.attn-btn');
+    if (!token()) { st.textContent = 'Add a GitHub token in the Brain dump section above to enable actions.'; return; }
+    if (!repo) { st.textContent = 'No repo linked for this buddy yet.'; return; }
+    var idBit = aid ? ' (attention id: ' + aid + ')' : '';
+    var NL = String.fromCharCode(10);
+    var entry = (act === 'done')
+      ? 'DONE \u2014 Dave marked this done on the homepage: "' + text + '"' + idBit + '. Please remove it from the attention list in buddies.json.'
+      : 'FOLLOW-UP \u2014 Dave needs more info on: "' + text + '"' + idBit + '. Please follow up with him.';
+    btns.forEach(function(b){ b.disabled = true; });
+    st.textContent = 'Working\u2026';
+    try {
+      var stamp = new Date().toLocaleString();
+      var cur = await ghGetFile(repo, 'docs/ingest.md');
+      var base = cur ? cur.text : '# Ingest log \u2014 ' + buddyName + NL + NL;
+      var body = {message: 'Attention action for ' + bid, content: b64encode(base + '## ' + stamp + NL + NL + entry + NL + NL)};
+      if (cur && cur.sha) body.sha = cur.sha;
+      await ghApi('/repos/davedellaquila/' + repo + '/contents/docs/ingest.md', 'PUT', body);
+      if (act === 'done') {
+        setResolved(aid, text);
+        tile.classList.add('resolved');
+        st.textContent = 'Marked done \u2014 the buddy will clear it.';
+      } else {
+        st.textContent = 'Sent \u2014 ' + buddyName + ' will follow up.';
+        btns.forEach(function(b){ b.disabled = false; });
+      }
+    } catch(err){
+      st.textContent = 'Save failed: ' + (err.message || err);
+      btns.forEach(function(b){ b.disabled = false; });
+    }
+  }
+  load();
 })();
 </script>
 
