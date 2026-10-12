@@ -3,6 +3,11 @@
 All notable changes to the Buddies dashboard and buddy system. Newest first.
 `FEATURES.md` describes the current state; this file describes how it got there.
 
+## 2026-10-12 (Section poof-away animation)
+
+### Changed
+- **Info panel sections poof away when their last item is completed.** Marking the final "Needs your attention" item done dims the section text, then fades/shrinks/collapses it — sections below scooch up smoothly. Applies to "Mark all done" too.
+
 ## 2026-10-12 (Atlas views follow buddy-list filter)
 
 ### Changed
