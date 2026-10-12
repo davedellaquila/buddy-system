@@ -2477,14 +2477,20 @@ function renderProjects(){
   // Status tint colors (match the pills)
   const statusTints = {'Active':'#1f6feb','Live · M2 shipped':'#2f9e44','Live · pre-alpha':'#2f9e44','New':'#d97a1f','Mission review':'#a371f7','PRD review':'#a371f7','Pilot':'#1f6feb','Spec review':'#a371f7'};
   const statusOrder = Object.keys(statusCounts).sort();
+  // Visible sum for the TO REVIEW tile (Jonny: one tile language)
+  const revBits = [];
+  if (statusCounts['Mission review']) revBits.push(statusCounts['Mission review'] + ' mission');
+  if (statusCounts['PRD review']) revBits.push(statusCounts['PRD review'] + ' PRD');
+  if (statusCounts['Spec review']) revBits.push(statusCounts['Spec review'] + ' spec');
+  const revSub = revBits.length ? revBits.join(' \u00b7 ') : 'Needs your attention';
   let s = '<section class="projects-view" style="margin-top:24px">'
     + '<div id="project-tiles">'
-    + tileHtml('TO REVIEW', unseen, '#d43d2a', 'Needs your attention', 'unseen', projFilter === 'unseen')
-    + tileHtml('NEW', fresh, '#d97a1f', 'Added in the last 7 days', 'fresh', projFilter === 'fresh')
+    + tileHtml('TO REVIEW', unseen, '#a371f7', revSub, 'unseen', projFilter === 'unseen')
+    + tileHtml('FRESH', fresh, '#d97a1f', 'Added in the last 7 days', 'fresh', projFilter === 'fresh')
     + tileHtml('CLEARED', cleared, '#2f9e44', 'Reviewed & cleared', 'cleared', projFilter === 'cleared')
     + '</div>'
     + '<div id="project-status-tiles" style="margin-top:12px">'
-    + statusOrder.map(st => tileHtml(st.toUpperCase(), statusCounts[st], statusTints[st] || '#8b949e', st + ' projects', 'status:' + st, statusFilter === st, 'Click to filter by ' + st + ' status. Click again to clear.')).join('')
+    + statusOrder.map(st => tileHtml(st.toUpperCase(), statusCounts[st], statusTints[st] || '#8b949e', '', 'status:' + st, statusFilter === st, 'Click to filter by ' + st + ' status. Click again to clear.')).join('')
     + '</div>'
     + '<h2>Projects by Buddy</h2>'
     + '<p class="sub">Every buddy, in hierarchy order, with its current status.</p><div class="proj-list">';
