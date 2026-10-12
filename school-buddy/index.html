@@ -131,15 +131,32 @@
     .ask-hint { margin-top: 10px; font-size: 13px; color: rgba(244,239,225,.6); position: relative; z-index: 1; display: none; }
     .ask-hint.show { display: block; }
 
-    /* attention */
-    .attention {
-      margin: 26px 0 8px; border-radius: var(--radius);
-      background: var(--amber-soft); border: 1px solid var(--line);
-      padding: 20px 22px; box-shadow: var(--shadow);
+    /* needs attention */
+    .attn-section { margin-top: 30px; }
+    .attn {
+      background: var(--amber-soft);
+      border: 1px solid var(--line);
+      border-left: 4px solid var(--gold);
+      border-radius: 0 var(--radius) var(--radius) 0;
+      padding: 18px 20px;
+      margin-bottom: 14px;
+      box-shadow: var(--shadow);
+      transition: opacity .25s ease;
     }
-    .attention h2 { font-family: var(--serif); font-size: 20px; margin: 0 0 6px; }
-    .attention p { margin: 0 0 14px; color: var(--muted); }
-    .attention p .done { color: var(--chalk); font-weight: 600; }
+    .attn-text { font-size: 14.5px; }
+    .attn-text strong { color: var(--ink); }
+    .attn-links { margin-top: 12px; }
+    .attn-actions { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
+    .attn-btn {
+      border: 1px solid var(--line); background: var(--surface); color: var(--ink);
+      border-radius: 999px; padding: 8px 18px; font-size: 13px; font-weight: 700; cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .attn-btn:hover { border-color: var(--chalk); color: var(--chalk); }
+    .attn-btn:disabled { opacity: .45; cursor: default; }
+    .attn-status { font-size: 13px; color: var(--muted); margin-top: 8px; min-height: 18px; }
+    .attn.resolved { opacity: .55; }
+    .attn.resolved .attn-actions { display: none; }
     .btnrow { display: flex; flex-wrap: wrap; gap: 10px; }
     .btn {
       display: inline-flex; align-items: center; gap: 8px;
@@ -288,14 +305,30 @@
       <p class="ask-hint" id="askhint">Good — that's exactly how we'd start. Drop your answer in the School Buddy thread and I'll build your first real plan.</p>
     </div>
 
-    <div class="attention">
-      <h2>📋 The brief is ready for your review</h2>
-      <p>Covers the idea, the problem, how it could work, revenue potential, room for growth, and the open questions. <span class="done">Your call is already folded in</span> — the brief now opens with "What do you want to learn?" and marks curiosity-driven as decided. After review: the PRD decision.</p>
-      <div class="btnrow">
-        <a class="btn primary" href="https://docs.google.com/document/d/1ZLYpo0FPzZja1P5PkVdcGxYeufX494X1gugXc-jS1m8/edit" target="_blank" rel="noopener">Read the brief</a>
-        <a class="btn" href="https://github.com/davedellaquila/school-buddy" target="_blank" rel="noopener">View the repo</a>
+    <section class="block attn-section" id="needs-attention" aria-labelledby="attn-heading">
+      <h2 id="attn-heading">🔔 Needs attention</h2>
+      <p class="note">Two open items — act on them right here.</p>
+      <div class="attn" data-attn-id="school-buddy-brief">
+        <div class="attn-text"><strong>📋 Product brief ready for review</strong> — looks good, edits, or defer? Covers the idea, the problem, how it could work, revenue potential, room for growth, and the open questions. Your direction is already folded in. After review: the PRD decision.</div>
+        <div class="btnrow attn-links">
+          <a class="btn primary" href="https://docs.google.com/document/d/1ZLYpo0FPzZja1P5PkVdcGxYeufX494X1gugXc-jS1m8/edit" target="_blank" rel="noopener">Read the brief</a>
+          <a class="btn" href="https://github.com/davedellaquila/school-buddy" target="_blank" rel="noopener">View the repo</a>
+        </div>
+        <div class="attn-actions">
+          <button type="button" class="attn-btn" data-act="done">✓ Done</button>
+          <button type="button" class="attn-btn" data-act="info">Need more info</button>
+        </div>
+        <div class="attn-status" role="status"></div>
       </div>
-    </div>
+      <div class="attn" data-attn-id="school-buddy-direction">
+        <div class="attn-text"><strong>✅ Direction folded in</strong> — the brief now opens with "What do you want to learn?" and marks curiosity-driven as decided (2026-10-09).</div>
+        <div class="attn-actions">
+          <button type="button" class="attn-btn" data-act="done">✓ Done</button>
+          <button type="button" class="attn-btn" data-act="info">Need more info</button>
+        </div>
+        <div class="attn-status" role="status"></div>
+      </div>
+    </section>
 
     <div class="pipe">
       <div class="step done"><span class="dot"></span>Idea captured</div>
@@ -522,5 +555,117 @@
 })();
 
 </script>
+  <script>
+  // ---- attention actions: per-tile Done / Need-more-info buttons ----
+  // Same GitHub write path as the brain-dump box: appends to the buddy's
+  // docs/ingest.md via the shared dashboard token. Tiles resolve locally
+  // immediately and persist in localStorage.
+  (function(){
+    var tiles = document.querySelectorAll('.attn[data-attn-id]');
+    if (!tiles.length) return;
+    var dumpbox = document.querySelector('.dumpbox');
+    var bid = (dumpbox && dumpbox.getAttribute('data-buddy-id')) || (function(){
+      var p = location.pathname.replace(/\/+$/, '');
+      return p.substring(p.lastIndexOf('/') + 1);
+    })();
+    function lsGet(){ try { return JSON.parse(localStorage.getItem('buddyTree.v3') || '{}'); } catch(e){ return {}; } }
+    function lsSet(patch){ try { var s = lsGet(); for (var k in patch) s[k] = patch[k]; localStorage.setItem('buddyTree.v3', JSON.stringify(s)); } catch(e){} }
+    function token(){ return lsGet().ghToken || ''; }
+    function b64encode(str){
+      var bytes = new TextEncoder().encode(str), bin = '';
+      bytes.forEach(function(b){ bin += String.fromCharCode(b); });
+      return btoa(bin);
+    }
+    async function ghApi(path, method, body){
+      var t = token();
+      if (!t) throw new Error('Add a GitHub token first.');
+      var r = await fetch('https://api.github.com' + path, {
+        method: method || 'GET',
+        headers: {'Authorization': 'Bearer ' + t, 'Accept': 'application/vnd.github+json', 'Content-Type': 'application/json'},
+        body: body ? JSON.stringify(body) : undefined
+      });
+      if (!r.ok) throw new Error('GitHub ' + r.status);
+      return r.status === 204 ? null : await r.json();
+    }
+    async function ghGetFile(repo, path){
+      try {
+        var j = await ghApi('/repos/davedellaquila/' + repo + '/contents/' + path);
+        if (j && j.content) return {
+          text: new TextDecoder().decode(Uint8Array.from(atob(j.content.replace(/\n/g, '')), function(c){ return c.charCodeAt(0); })),
+          sha: j.sha
+        };
+      } catch(e){}
+      return null;
+    }
+    var repo = null, buddyName = bid;
+    async function resolveBuddy(){
+      try {
+        var r = await fetch('../buddies.json', {cache: 'no-store'});
+        var d = await r.json();
+        var buds = d.buddies || [];
+        for (var i = 0; i < buds.length; i++) {
+          if (buds[i].id === bid) {
+            if (buds[i].repo) repo = buds[i].repo;
+            if (buds[i].name) buddyName = buds[i].name;
+            break;
+          }
+        }
+      } catch(e){}
+    }
+    function rkey(aid, text){ return bid + '|' + (aid || ('text:' + text.slice(0, 60))); }
+    function isResolved(aid, text){ var m = lsGet().attnDone || {}; return !!m[rkey(aid, text)]; }
+    function setResolved(aid, text){ var s = lsGet(); var m = s.attnDone || {}; m[rkey(aid, text)] = 1; s.attnDone = m; lsSet(s); }
+    function paintResolved(tile, msg){
+      tile.classList.add('resolved');
+      var st = tile.querySelector('.attn-status');
+      if (st) st.textContent = msg;
+    }
+    async function sendAction(tile, entry, okMsg){
+      var st = tile.querySelector('.attn-status');
+      var btns = tile.querySelectorAll('.attn-btn');
+      if (!token()) { st.textContent = 'Add a GitHub token in the Brain dump section above to enable actions.'; return false; }
+      if (!repo) { st.textContent = 'No repo linked for this buddy yet.'; return false; }
+      btns.forEach(function(b){ b.disabled = true; });
+      st.textContent = 'Working…';
+      try {
+        var NL = String.fromCharCode(10);
+        var stamp = new Date().toLocaleString();
+        var cur = await ghGetFile(repo, 'docs/ingest.md');
+        var base = cur ? cur.text : '# Ingest log — ' + buddyName + NL + NL;
+        var body = {message: 'Attention action for ' + bid, content: b64encode(base + '## ' + stamp + NL + NL + entry + NL + NL)};
+        if (cur && cur.sha) body.sha = cur.sha;
+        await ghApi('/repos/davedellaquila/' + repo + '/contents/docs/ingest.md', 'PUT', body);
+        st.textContent = okMsg;
+        return true;
+      } catch(err){
+        st.textContent = 'Save failed: ' + (err.message || err);
+        btns.forEach(function(b){ b.disabled = false; });
+        return false;
+      }
+    }
+    tiles.forEach(function(tile){
+      var aid = tile.getAttribute('data-attn-id') || '';
+      var textEl = tile.querySelector('.attn-text');
+      var text = textEl ? textEl.textContent.trim() : '';
+      if (isResolved(aid, text)) { paintResolved(tile, 'Marked done'); return; }
+      tile.addEventListener('click', function(ev){
+        var btn = ev.target.closest ? ev.target.closest('.attn-btn') : null;
+        if (!btn || btn.disabled) return;
+        var act = btn.getAttribute('data-act');
+        var idBit = aid ? ' (attention id: ' + aid + ')' : '';
+        if (act === 'done') {
+          sendAction(tile,
+            'DONE — Dave marked this done on the homepage: "' + text + '"' + idBit + '. Please remove it from the attention list in buddies.json.',
+            'Marked done — the buddy will clear it.').then(function(ok){ if (ok) { setResolved(aid, text); paintResolved(tile, 'Marked done — the buddy will clear it.'); } });
+        } else if (act === 'info') {
+          sendAction(tile,
+            'FOLLOW-UP — Dave needs more info on: "' + text + '"' + idBit + '. Please follow up with him.',
+            'Sent — ' + buddyName + ' will follow up.');
+        }
+      });
+    });
+    resolveBuddy();
+  })();
+  </script>
 </body>
 </html>
