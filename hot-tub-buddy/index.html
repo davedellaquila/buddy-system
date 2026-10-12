@@ -201,6 +201,22 @@
     }
     .dumpbox-connect p { margin: 0 0 10px; color: var(--muted); }
 
+    /* ---- attention action buttons (Dave-approved rollout) ---- */
+    .attn { position: relative; }
+    .attn-text { margin-top: 6px; }
+    .attn-actions { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
+    .attn-btn {
+      background: transparent; color: var(--teal); border: 1px solid var(--teal);
+      border-radius: 999px; padding: 7px 16px; font-size: 13px; font-weight: 700; cursor: pointer;
+    }
+    .attn-btn:hover { background: var(--teal-soft); }
+    .attn-btn.primary { background: var(--teal-deep); border-color: var(--teal-deep); color: #fff; }
+    .attn-btn.primary:hover { background: var(--teal); border-color: var(--teal); }
+    .attn-btn:disabled { opacity: .45; cursor: default; }
+    .attn-status { font-size: 13px; color: var(--muted); margin-top: 8px; min-height: 18px; }
+    .attn.resolved { opacity: .6; }
+    .attn.resolved .attn-actions { display: none; }
+
     .foot { text-align: center; color: var(--faint); font-size: 12.5px; margin-top: 34px; }
   </style>
 </head>
@@ -219,16 +235,36 @@
       <section class="card full">
         <h2><span class="emoji">👀</span> Needs Dave's attention</h2>
         <ul class="pill-list">
-          <li><span class="tag open">Waiting on you</span><br>
-            <strong>When was the tub last treated?</strong> Asked 2026-10-09 — still unknown. The treatment log starts with your answer.</li>
-          <li><span class="tag open">Before ordering</span><br>
-            <strong>Verify the inner-filter part number</strong> — 6540-502S vs 6473-453 for 2024+ 880-series. Confirm with the dealer before any filter order.</li>
-          <li><span class="tag attn">Open question</span><br>
-            <strong>Chlorine or bromine setup?</strong> Chemistry targets differ — the brief needs this nailed down.<br>
-            <a class="go-link" href="https://docs.google.com/document/d/1BDcst37j2FftKqzY-Tz-ecQLtYc5OnR3kmY6xmn80Sg/edit" target="_blank" rel="noopener">📄 Open the product brief →</a></li>
-          <li><span class="tag attn">Review</span><br>
-            The <strong>product brief</strong> is in your court. Next steps follow your review — no PRD or business-plan placeholders until then.<br>
-            <a class="go-link" href="https://docs.google.com/document/d/1BDcst37j2FftKqzY-Tz-ecQLtYc5OnR3kmY6xmn80Sg/edit" target="_blank" rel="noopener">📄 Open the product brief →</a></li>
+          <li class="attn" data-attn-id="last-treated-date"><span class="tag open">Waiting on you</span>
+            <div class="attn-text"><strong>When was the tub last treated?</strong> Asked 2026-10-09 — still unknown. The treatment log starts with your answer.</div>
+            <div class="attn-actions">
+              <button type="button" class="attn-btn primary" data-act="done">✓ Done</button>
+              <button type="button" class="attn-btn" data-act="info">Need more info</button>
+            </div>
+            <div class="attn-status" role="status"></div></li>
+          <li class="attn" data-attn-id="inner-filter-part"><span class="tag open">Before ordering</span>
+            <div class="attn-text"><strong>Verify the inner-filter part number</strong> — 6540-502S vs 6473-453 for 2024+ 880-series. Confirm with the dealer before any filter order.</div>
+            <div class="attn-actions">
+              <button type="button" class="attn-btn primary" data-act="done">✓ Done</button>
+              <button type="button" class="attn-btn" data-act="info">Need more info</button>
+            </div>
+            <div class="attn-status" role="status"></div></li>
+          <li class="attn" data-attn-id="chlorine-vs-bromine"><span class="tag attn">Open question</span>
+            <div class="attn-text"><strong>Chlorine or bromine setup?</strong> Chemistry targets differ — the brief needs this nailed down.<br>
+            <a class="go-link" href="https://docs.google.com/document/d/1BDcst37j2FftKqzY-Tz-ecQLtYc5OnR3kmY6xmn80Sg/edit" target="_blank" rel="noopener">📄 Open the product brief →</a></div>
+            <div class="attn-actions">
+              <button type="button" class="attn-btn primary" data-act="done">✓ Done</button>
+              <button type="button" class="attn-btn" data-act="info">Need more info</button>
+            </div>
+            <div class="attn-status" role="status"></div></li>
+          <li class="attn" data-attn-id="brief-review"><span class="tag attn">Review</span>
+            <div class="attn-text">The <strong>product brief</strong> is in your court. Next steps follow your review — no PRD or business-plan placeholders until then.<br>
+            <a class="go-link" href="https://docs.google.com/document/d/1BDcst37j2FftKqzY-Tz-ecQLtYc5OnR3kmY6xmn80Sg/edit" target="_blank" rel="noopener">📄 Open the product brief →</a></div>
+            <div class="attn-actions">
+              <button type="button" class="attn-btn primary" data-act="done">✓ Done</button>
+              <button type="button" class="attn-btn" data-act="info">Need more info</button>
+            </div>
+            <div class="attn-status" role="status"></div></li>
         </ul>
       </section>
 
@@ -429,6 +465,120 @@
     if ((ev.metaKey || ev.ctrlKey) && ev.key === 'Enter') { ev.preventDefault(); dump(); }
   });
   resolveRepo().then(refreshUI);
+})();
+</script>
+<script>
+// ---- attention action buttons: "Done" / "Need more info" per tile ----
+// Same GitHub write path as the brain-dump box: shared token from dashboard
+// localStorage (buddyTree.v3 → ghToken), repo resolved from ../buddies.json.
+// Resolved state persists in localStorage so tiles stay resolved on reload.
+(function(){
+  var tiles = document.querySelectorAll('.attn[data-attn-id]');
+  if (!tiles.length || document.querySelector('[data-attn-init]')) return;
+  document.documentElement.setAttribute('data-attn-init', '1');
+  var dumpbox = document.querySelector('.dumpbox');
+  var bid = (dumpbox && dumpbox.getAttribute('data-buddy-id')) || (function(){
+    var p = location.pathname.replace(/\/+$/, '');
+    return p.substring(p.lastIndexOf('/') + 1);
+  })();
+  function lsGet(){ try { return JSON.parse(localStorage.getItem('buddyTree.v3') || '{}'); } catch(e){ return {}; } }
+  function lsSet(patch){ try { var s = lsGet(); for (var k in patch) s[k] = patch[k]; localStorage.setItem('buddyTree.v3', JSON.stringify(s)); } catch(e){} }
+  function token(){ return lsGet().ghToken || ''; }
+  function b64encode(str){
+    var bytes = new TextEncoder().encode(str), bin = '';
+    bytes.forEach(function(b){ bin += String.fromCharCode(b); });
+    return btoa(bin);
+  }
+  async function ghApi(path, method, body){
+    var t = token();
+    if (!t) throw new Error('Add a GitHub token first.');
+    var r = await fetch('https://api.github.com' + path, {
+      method: method || 'GET',
+      headers: {'Authorization': 'Bearer ' + t, 'Accept': 'application/vnd.github+json', 'Content-Type': 'application/json'},
+      body: body ? JSON.stringify(body) : undefined
+    });
+    if (!r.ok) throw new Error('GitHub ' + r.status);
+    return r.status === 204 ? null : await r.json();
+  }
+  async function ghGetFile(repo, path){
+    try {
+      var j = await ghApi('/repos/davedellaquila/' + repo + '/contents/' + path);
+      if (j && j.content) return {
+        text: new TextDecoder().decode(Uint8Array.from(atob(j.content.replace(/\n/g, '')), function(c){ return c.charCodeAt(0); })),
+        sha: j.sha
+      };
+    } catch(e){}
+    return null;
+  }
+  var repo = null, buddyName = bid;
+  async function resolveBuddy(){
+    try {
+      var r = await fetch('../buddies.json', {cache: 'no-store'});
+      var d = await r.json();
+      var buds = d.buddies || [];
+      for (var i = 0; i < buds.length; i++) {
+        if (buds[i].id === bid) {
+          if (buds[i].repo) repo = buds[i].repo;
+          if (buds[i].name) buddyName = buds[i].name;
+          break;
+        }
+      }
+    } catch(e){}
+  }
+  function rkey(aid, text){ return bid + '|' + (aid || ('text:' + text.slice(0, 60))); }
+  function isResolved(aid, text){ var m = lsGet().attnDone || {}; return !!m[rkey(aid, text)]; }
+  function setResolved(aid, text){ var s = lsGet(); var m = s.attnDone || {}; m[rkey(aid, text)] = 1; s.attnDone = m; lsSet(s); }
+  function paintResolved(tile, msg){
+    tile.classList.add('resolved');
+    var st = tile.querySelector('.attn-status');
+    if (st) st.textContent = msg;
+  }
+  async function sendAction(tile, entry, okMsg){
+    var st = tile.querySelector('.attn-status');
+    var btns = tile.querySelectorAll('.attn-btn');
+    if (!token()) { st.textContent = 'Add a GitHub token in the Brain dump section above to enable actions.'; return false; }
+    if (!repo) { st.textContent = 'No repo linked for this buddy yet.'; return false; }
+    btns.forEach(function(b){ b.disabled = true; });
+    st.textContent = 'Working…';
+    try {
+      var NL = String.fromCharCode(10);
+      var stamp = new Date().toLocaleString();
+      var cur = await ghGetFile(repo, 'docs/ingest.md');
+      var base = cur ? cur.text : '# Ingest log — ' + buddyName + NL + NL;
+      var body = {message: 'Attention action for ' + bid, content: b64encode(base + '## ' + stamp + NL + NL + entry + NL + NL)};
+      if (cur && cur.sha) body.sha = cur.sha;
+      await ghApi('/repos/davedellaquila/' + repo + '/contents/docs/ingest.md', 'PUT', body);
+      st.textContent = okMsg;
+      return true;
+    } catch(err){
+      st.textContent = 'Save failed: ' + (err.message || err);
+      btns.forEach(function(b){ b.disabled = false; });
+      return false;
+    }
+  }
+  resolveBuddy().then(function(){
+    tiles.forEach(function(tile){
+      var aid = tile.getAttribute('data-attn-id') || '';
+      var textEl = tile.querySelector('.attn-text');
+      var text = textEl ? textEl.textContent.trim().replace(/\s+/g, ' ') : '';
+      if (isResolved(aid, text)) { paintResolved(tile, 'Marked done'); return; }
+      tile.addEventListener('click', function(ev){
+        var btn = ev.target.closest ? ev.target.closest('.attn-btn') : null;
+        if (!btn || btn.disabled) return;
+        var act = btn.getAttribute('data-act');
+        var idBit = aid ? ' (attention id: ' + aid + ')' : '';
+        if (act === 'done') {
+          sendAction(tile,
+            'DONE — Dave marked this done on the homepage: "' + text + '"' + idBit + '. Please remove it from the attention section of the homepage.',
+            'Marked done — the buddy will clear it.').then(function(ok){ if (ok) { setResolved(aid, text); paintResolved(tile, 'Marked done — the buddy will clear it.'); } });
+        } else if (act === 'info') {
+          sendAction(tile,
+            'FOLLOW-UP — Dave needs more info on: "' + text + '"' + idBit + '. Please follow up with him.',
+            'Sent — ' + buddyName + ' will follow up.');
+        }
+      });
+    });
+  });
 })();
 </script>
 </body>
