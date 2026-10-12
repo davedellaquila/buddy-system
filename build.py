@@ -4060,14 +4060,14 @@ function openNewBuddyRequest(){
     + '<div class="nb-grab"></div>'
     + '<h2>New buddy</h2>'
     + '<p class="ab-sub">Tell Astro what you want — they\u2019ll run the full setup drill (repo, mission doc, side chat, homepage).</p>'
-    + '<label>Name</label><input type="text" id="nb-name" placeholder="Buddy name" autocomplete="off">'
+    + '<label>Name</label><input type="text" id="nb-name" placeholder="e.g. Car Buddy" autocomplete="off">'
     + '<label>Persona <span class="fineprint" style="text-transform:none;letter-spacing:0">— pick the voice that makes you grin</span></label>'
     + '<div class="nb-personas">' + REQUEST_PERSONAS.map((p,i) =>
-        '<button type="button" data-persona="' + escHtml(p[0]) + '" class="' + (i===0?'sel':'') + '">'
+        '<button type="button" data-persona="' + escHtml(p[0]) + '">'
         + '<span class="nb-p-emoji">' + p[1] + '</span><span class="nb-p-name">' + escHtml(p[0]) + '</span></button>').join('') + '</div>'
-    + '<label>What should it do?</label><textarea id="nb-purpose" rows="3" placeholder="What do you want this buddy to do, or specialize in?"></textarea>'
+    + '<label>What should it do?</label><textarea id="nb-purpose" rows="3" placeholder="e.g. Track my car maintenance, remind me about oil changes, and help me plan the restoration."></textarea>'
     + '<div class="ab-err" id="nb-err"></div>'
-    + '<div class="ab-actions"><button class="ab-cancel" id="nb-cancel">Cancel</button><button class="ab-create" id="nb-create" disabled>Send request</button></div></div>';
+    + '<div class="ab-actions"><button class="ab-cancel" id="nb-cancel">Cancel</button><button class="ab-create" id="nb-create" disabled>Start the setup</button></div></div>';
   document.body.appendChild(m);
   const sheet = m.querySelector('.nb-sheet');
   // Fixed width from Advanced settings
@@ -4079,21 +4079,22 @@ function openNewBuddyRequest(){
   const purposeInput = m.querySelector('#nb-purpose');
   const createBtn = m.querySelector('#nb-create');
   const errEl = m.querySelector('#nb-err');
-  let persona = REQUEST_PERSONAS[0][0];
+  let persona = null;
   const close = () => m.remove();
   m.querySelector('.nb-backdrop').addEventListener('click', close);
   m.querySelector('#nb-cancel').addEventListener('click', close);
   m.querySelectorAll('.nb-personas button').forEach(b => b.addEventListener('click', () => {
     m.querySelectorAll('.nb-personas button').forEach(x => x.classList.remove('sel'));
     b.classList.add('sel'); persona = b.dataset.persona;
+    validate();
   }));
-  const validate = () => { createBtn.disabled = !nameInput.value.trim(); errEl.textContent = ''; };
+  const validate = () => { createBtn.disabled = !(nameInput.value.trim() && persona); errEl.textContent = ''; };
   nameInput.addEventListener('input', validate);
   purposeInput.addEventListener('input', validate);
   createBtn.addEventListener('click', async () => {
     errEl.textContent = '';
     createBtn.disabled = true;
-    createBtn.textContent = 'Sending…';
+    createBtn.textContent = 'Starting…';
     try {
       if (!ghToken()) throw new Error('Add a GitHub token first (gear menu → GitHub token) so the dashboard can save.');
       const stamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19);
@@ -4111,7 +4112,7 @@ function openNewBuddyRequest(){
     } catch (e) {
       errEl.textContent = e.message || String(e);
       createBtn.disabled = false;
-      createBtn.textContent = 'Send request';
+      createBtn.textContent = 'Start the setup';
     }
   });
   requestAnimationFrame(() => m.classList.add('open'));

@@ -3,6 +3,13 @@
 All notable changes to the Buddies dashboard and buddy system. Newest first.
 `FEATURES.md` describes the current state; this file describes how it got there.
 
+## 2026-10-11 (Jony's New Buddy sheet tweaks)
+
+### Changed
+- **"Send request" → "Start the setup"** — you're hiring, not filing a ticket.
+- **No pre-selected persona** — the button waits until you deliberately pick a face.
+- **Example placeholders** on the name field ("e.g. Car Buddy") and purpose textarea.
+
 ## 2026-10-11 (Shift+← configurable)
 
 ### Added
