@@ -1983,6 +1983,7 @@ function initPanelResize(){
     S.panelWidth = Math.round(vb.getBoundingClientRect().width);
     save();
   });
+  h.addEventListener('dblclick', () => closeDetail());
 }
 function tileHtml(label, num, tint, sub, fkey, sel, tip){
   return '<div class="ptile' + (sel ? ' sel' : '') + '"' + (fkey ? ' data-tile="' + fkey + '"' : '') + (tip ? ' title="' + escHtml(tip) + '"' : '') + ' style="--tint:' + tint + ';flex:1">'
@@ -3684,7 +3685,7 @@ document.addEventListener('keydown', e => {
   h.addEventListener('pointerup', done);
   h.addEventListener('pointercancel', done);
   h.addEventListener('dblclick', () => {
-    S.sbWidth = SB_DEFAULT_W; save(); applySbWidth();
+    setSidebarOpen(false);
   });
   window.addEventListener('resize', () => applySbWidth()); /* re-clamp drawer on rotate/resize */
 })();
@@ -5827,7 +5828,7 @@ initSbBrandSticky();
   <div class="nav-sec" id="views-sec">
   <h3 style="cursor:pointer" id="views-toggle"><span class="nav-arrow" id="views-arrow">\u203a</span> Views</h3><div id="view-nav"></div></div>
 </aside>
-<div id="sb-resize" title="Drag left or right to resize the sidebar. Double-click to reset to default width."></div>
+<div id="sb-resize" title="Drag left or right to resize the sidebar. Double-click to close."></div>
 <button type="button" id="sb-to-top" title="Scroll sidebar to top" aria-label="Scroll sidebar to top">
   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5"/><path d="M6 11l6-6 6 6"/></svg>
 </button>

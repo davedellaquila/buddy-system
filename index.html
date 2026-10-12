@@ -1121,7 +1121,7 @@ body.node-dragging,body.node-dragging *{cursor:grabbing !important}
   <div class="nav-sec" id="views-sec">
   <h3 style="cursor:pointer" id="views-toggle"><span class="nav-arrow" id="views-arrow">›</span> Views</h3><div id="view-nav"></div></div>
 </aside>
-<div id="sb-resize" title="Drag left or right to resize the sidebar. Double-click to reset to default width."></div>
+<div id="sb-resize" title="Drag left or right to resize the sidebar. Double-click to close."></div>
 <button type="button" id="sb-to-top" title="Scroll sidebar to top" aria-label="Scroll sidebar to top">
   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5"/><path d="M6 11l6-6 6 6"/></svg>
 </button>
@@ -2335,6 +2335,7 @@ function initPanelResize(){
     S.panelWidth = Math.round(vb.getBoundingClientRect().width);
     save();
   });
+  h.addEventListener('dblclick', () => closeDetail());
 }
 function tileHtml(label, num, tint, sub, fkey, sel, tip){
   return '<div class="ptile' + (sel ? ' sel' : '') + '"' + (fkey ? ' data-tile="' + fkey + '"' : '') + (tip ? ' title="' + escHtml(tip) + '"' : '') + ' style="--tint:' + tint + ';flex:1">'
@@ -2803,7 +2804,7 @@ function renderBuddy(id){
     + '<div class="bp-sec" data-field="shared"><h3>Shared notes<span class="info-tip" data-tip="Anybody with repo access can see this note. Saved to the buddy’s repo (docs/notes.md).">ⓘ</span></h3>'
     + '<textarea class="notes" id="bp-shared-notes" placeholder="Anybody with repo access can see this note."></textarea>'
     + '<p class="fineprint" id="shared-status"></p></div>'
-    + '<div class="bp-build">Build 20261012.0100</div>'
+    + '<div class="bp-build">Build 20261012.0102</div>'
     + '</div>';
   const nm = document.getElementById('bp-name');
   nm.addEventListener('keydown', e => { if (e.key === 'Enter'){ e.preventDefault(); nm.blur(); } });
@@ -3820,7 +3821,7 @@ function renderPlan(id){
     + '<p class="fineprint">Saved on this device. (For your eyes only)</p></div>'
     + '<div class="bp-sec"><h3>Shared notes<span class="info-tip" data-tip="Visible to everyone with access to this project.">\u24d8</span></h3><textarea class="notes" id="bp-shared" placeholder="Shared notes\u2026 (visible to everyone with access)">'+escHtml((S.planShared||{})[id]||'')+'</textarea>'
     + '<p class="fineprint">Shared — visible to everyone with access.</p></div>'
-    + '<div class="bp-build">Build 20261012.0100</div>'
+    + '<div class="bp-build">Build 20261012.0102</div>'
     + '</div>';
   const nt = document.getElementById('bp-notes');
   let t = null;
@@ -4036,7 +4037,7 @@ document.addEventListener('keydown', e => {
   h.addEventListener('pointerup', done);
   h.addEventListener('pointercancel', done);
   h.addEventListener('dblclick', () => {
-    S.sbWidth = SB_DEFAULT_W; save(); applySbWidth();
+    setSidebarOpen(false);
   });
   window.addEventListener('resize', () => applySbWidth()); /* re-clamp drawer on rotate/resize */
 })();
@@ -5631,7 +5632,7 @@ function openWhatsNew(){
   head.insertBefore(updBtn, head.querySelector('.wn-x'));
   fetch('version.txt?_=' + Date.now(), {cache: 'no-store'})
     .then(r => r.ok ? r.text() : '')
-    .then(t => { if (t.trim() && t.trim() !== '20261012.0100') updBtn.style.display = ''; })
+    .then(t => { if (t.trim() && t.trim() !== '20261012.0102') updBtn.style.display = ''; })
     .catch(() => {});
   fetch('https://raw.githubusercontent.com/davedellaquila/buddy-system/master/CHANGELOG.md?_' + Date.now(), {cache: 'no-store'})
     .then(r => { if (!r.ok) throw new Error('fetch failed'); return r.text(); })
@@ -5659,7 +5660,7 @@ function openWhatsNew(){
   if (x) x.focus();
 }
 function initVersionCheck(){
-  const myBuild = '20261012.0100';
+  const myBuild = '20261012.0102';
   function showUpdateBanner(serverBuild){
     if (document.getElementById('update-banner')) return;
     const b = document.createElement('div');
