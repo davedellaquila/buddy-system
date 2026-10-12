@@ -369,6 +369,11 @@ body{padding:0}
   background-size:7px 7px;background-position:center;background-repeat:no-repeat}
 .ledger-row:hover .ledger-grip{opacity:.95}
 .ledger-grip:active{cursor:grabbing}
+.ledger-chev{flex:0 0 auto;width:22px;height:22px;border:0;background:none;color:var(--muted);font-size:16px;cursor:pointer;border-radius:6px;align-self:center;padding:0;line-height:1}
+.ledger-chev:hover{background:var(--wash);color:var(--text)}
+.ledger-chev i{display:inline-block;transition:transform .15s;font-style:normal;line-height:1}
+.ledger-chev:not(.collapsed) i{transform:rotate(90deg)}
+.ledger-chev-sp{flex:0 0 auto;width:22px;align-self:center}
 .ledger-row.drag-armed{outline:2px solid var(--accent);outline-offset:2px}
 .ledger-row.drag-src{opacity:.4}
 .ledger-row.drop-target{background:var(--active);box-shadow:inset 0 0 0 2px var(--accent)}
@@ -2196,7 +2201,7 @@ function renderDevelopSection(){
   const dev = document.getElementById('fset-develop');
   if (!dev) return;
   const simulating = !!devBackup;
-  const buildNum = '20261012.0951';
+  const buildNum = '20261012.0958';
   dev.innerHTML = ''
     + '<label class="fset-check"><input type="checkbox" id="dev-empty-toggle"' + (simulating ? ' checked' : '') + '> <span><strong>Simulate new user</strong> — empty data file, as if opening the shared link fresh</span></label>'
     + '<div class="fineprint" style="margin:8px 0 12px">Build <span style="font-family:monospace">' + escHtml(String(buildNum)) + '</span> · ' + BUDDIES.length + ' buddies in this file</div>'
@@ -3081,20 +3086,22 @@ function renderBuddy(id){
     + '<button class="bp-takeover-back" id="bp-takeover-back" type="button" title="Close detail — back to main view" aria-label="Close detail — back to main view">‹ Main</button>'
 
     + '<div class="sa-bar"><span>🔖 Standalone view</span><button class="linkbtn" id="sa-full">Open full dashboard →</button></div>'
+    + '<div class="bp-sticky-head">'
     + '<div class="bp-topnav"><button class="linkbtn" data-navbtn="back">← Back</button>'
     + '<button class="linkbtn" data-navbtn="prev">‹ Prev</button><button class="linkbtn" data-navbtn="next">Next ›</button>'
     + '<span class="sep">·</span><button class="linkbtn" data-view="projects" id="bp-allbuddies">All buddies</button>'
     + '<span class="sep">·</span><button class="linkbtn" id="bp-settings">Settings</button>'
     + '<span class="sep">\u00b7</span><button class="linkbtn" id="bp-dormant" title="Mark dormant / wake up"></button>'
     + '<span class="sep">·</span><button class="linkbtn" id="bp-desktop">💾 Save to desktop</button></div>'
-    + '<div class="bp-crumb">'+crumb(id)+'</div>'
-    + '<p class="bp-tagline">'+escHtml(b.tagline||'')+'</p>'
-    + '<div class="bp-sticky-head"><div class="bp-top">'
+    + '<div class="bp-top">'
     + '<span class="bp-icon" id="bp-icon" title="Click to change avatar" style="cursor:pointer">'+'<img class="bp-avatarimg" src="'+escHtml(buddyImageUrl(b))+'" alt="" onerror="this.remove()">'+'<span class="bp-avaemoji">'+escHtml(buddyDisplayIcon(b))+'</span></span>'
     + '<h2 class="bp-name" id="bp-name" contenteditable="true" spellcheck="false" data-buddy="'+id+'">'+escHtml(dispName(b))+'</h2>'
     + '<span class="status '+b.statusClass+'">'+escHtml(b.status)+'</span>'
     + (function(){ const ak = effAka(b); return ak.length ? '<span class="bp-aka" title="Also known as">aka '+escHtml(ak.join(', '))+'</span>' : ''; })()
-    + '<button class="bp-close-x" id="bp-close-x" type="button" title="Close detail — back to main view" aria-label="Close detail — back to main view">›</button></div></div>'
+    + '<button class="bp-close-x" id="bp-close-x" type="button" title="Close detail — back to main view" aria-label="Close detail — back to main view">›</button></div>'
+    + '</div>'
+    + '<div class="bp-crumb">'+crumb(id)+'</div>'
+    + '<p class="bp-tagline">'+escHtml(b.tagline||'')+'</p>'
     + '<div id="token-banner"><h4>🔑 Connect GitHub to unlock this buddy</h4>'
     + '<p>Photos, shared notes, and ingest save to the buddy’s repo. Paste a token once — it stays on this device.</p>'
     + '<div class="ghtoken"><input type="password" id="ghtok2" placeholder="GitHub token (repo scope)" aria-label="GitHub token">'
@@ -3133,8 +3140,43 @@ function renderBuddy(id){
     + '<div class="bp-sec" data-field="shared"><h3>Shared notes<span class="info-tip" data-tip="Anybody with repo access can see this note. Saved to the buddy’s repo (docs/notes.md).">ⓘ</span></h3>'
     + '<textarea class="notes" id="bp-shared-notes" placeholder="Anybody with repo access can see this note."></textarea>'
     + '<p class="fineprint" id="shared-status"></p></div>'
-    + '<div class="bp-build">Build 20261012.0951</div>'
+    + '<div class="bp-build">Build 20261012.0958</div>'
     + '</div>';
+  // Update every visible label for a buddy after a rename/re-icon, across all
+  // Atlas lenses. A rename changes no structure, so labels are patched in place
+  // to preserve the user's pan/zoom/scroll.
+  window.refreshBuddyLabels = function(id){
+    const b = byId[id]; if (!b) return;
+    const label = iconName(b);
+    const q = '#treezoom [data-buddy="' + id + '"]';
+    // Org + Lineage tiles (and orphan grid)
+    document.querySelectorAll('#treezoom .node[data-buddy="' + id + '"] .name').forEach(function(el){
+      const kc = el.querySelector('.kcount');
+      el.innerHTML = label + (kc ? kc.outerHTML : '');
+    });
+    // Ledger rows
+    document.querySelectorAll('#treezoom .ledger-row[data-buddy="' + id + '"] .ledger-name').forEach(function(el){
+      el.innerHTML = label;
+    });
+    // Colonnade rows (first span holds the name)
+    document.querySelectorAll('#treezoom .mcol-row[data-buddy="' + id + '"] > span:first-child').forEach(function(el){
+      el.innerHTML = label;
+    });
+    // Terrain tiles (leaf + branch labels)
+    document.querySelectorAll('#treezoom .tm-tile[data-buddy="' + id + '"] .tm-name, #treezoom .tm-label[data-buddy="' + id + '"]').forEach(function(el){
+      el.innerHTML = label;
+    });
+    // Halo SVG labels + center label
+    document.querySelectorAll('#halo-svg text.halo-label[data-buddy="' + id + '"]').forEach(function(el){
+      el.textContent = (b.icon ? b.icon + ' ' : '') + dispName(b);
+    });
+    document.querySelectorAll('.halo-center-label[data-buddy="' + id + '"]').forEach(function(el){
+      el.innerHTML = label;
+    });
+    // Constellation is canvas-drawn: re-init picks up the new label
+    if (typeof getChartType === 'function' && getChartType() === 'constellation'
+        && typeof initConstellation === 'function') initConstellation();
+  };
   const nm = document.getElementById('bp-name');
   nm.addEventListener('keydown', e => { if (e.key === 'Enter'){ e.preventDefault(); nm.blur(); } });
   nm.addEventListener('blur', () => {
@@ -3148,11 +3190,8 @@ function renderBuddy(id){
     // Immediately reflect the new name in the current view
     if (S.view === 'project' && S.projectId === id) renderProjectView();
     else if (S.view === 'projects') renderProjects();
-    // Tree tiles: update labels in place — a rename changes no structure, so keep the user's pan/zoom
-    document.querySelectorAll('#treezoom .node[data-buddy="' + id + '"] .name').forEach(function(el){
-      const kc = el.querySelector('.kcount');
-      el.innerHTML = iconName(byId[id]) + (kc ? kc.outerHTML : '');
-    });
+    // Immediately reflect the new name in every visible chart (all Atlas lenses)
+    refreshBuddyLabels(id);
     // Update the panel itself to show the new name (in case hideBuddyWord applies)
     renderBuddy(id);
   });
@@ -3689,13 +3728,18 @@ function renderChartMain(type, root, kids){
 function ledgerHtml(root){
   function row(b, depth){
     const kids = kidsOf[b.id] || [];
+    const collapsed = kids.length && S.collapsedNodes && S.collapsedNodes[b.id];
+    const chev = kids.length
+      ? '<button class="ledger-chev' + (collapsed ? ' collapsed' : '') + '" data-collapse="' + b.id + '" title="' + (collapsed ? 'Expand' : 'Collapse') + '"><i>›</i></button>'
+      : '<span class="ledger-chev-sp"></span>';
     const grip = b.id === ROOT_ID ? '' : '<span class="ledger-grip" data-ledger-grip="' + b.id + '" title="Drag to reparent ' + escHtml(dispName(b)) + '"></span>';
     let s = '<div class="ledger-row" data-buddy="' + b.id + '" style="padding-left:' + (depth * 24 + 12) + 'px">'
+      + chev
       + grip
       + '<span class="ledger-name">' + iconName(b) + '</span>'
       + (b.tagline ? '<span class="ledger-desc">' + escHtml(b.tagline) + '</span>' : '')
       + '</div>';
-    kids.forEach(k => { s += row(k, depth + 1); });
+    if (!collapsed) kids.forEach(k => { s += row(k, depth + 1); });
     return s;
   }
   return '<div class="ledger">' + row(root, 0) + '</div>';
@@ -4617,7 +4661,7 @@ function renderPlan(id){
     + '<p class="fineprint">Saved on this device. (For your eyes only)</p></div>'
     + '<div class="bp-sec"><h3>Shared notes<span class="info-tip" data-tip="Visible to everyone with access to this project.">\u24d8</span></h3><textarea class="notes" id="bp-shared" placeholder="Shared notes\u2026 (visible to everyone with access)">'+escHtml((S.planShared||{})[id]||'')+'</textarea>'
     + '<p class="fineprint">Shared — visible to everyone with access.</p></div>'
-    + '<div class="bp-build">Build 20261012.0951</div>'
+    + '<div class="bp-build">Build 20261012.0958</div>'
     + '</div>';
   const nt = document.getElementById('bp-notes');
   let t = null;
@@ -6477,7 +6521,7 @@ function openWhatsNew(){
   head.insertBefore(updBtn, head.querySelector('.wn-x'));
   fetch('version.txt?_=' + Date.now(), {cache: 'no-store'})
     .then(r => r.ok ? r.text() : '')
-    .then(t => { if (t.trim() && t.trim() !== '20261012.0951') updBtn.style.display = ''; })
+    .then(t => { if (t.trim() && t.trim() !== '20261012.0958') updBtn.style.display = ''; })
     .catch(() => {});
   fetch('https://raw.githubusercontent.com/davedellaquila/buddy-system/master/CHANGELOG.md?_' + Date.now(), {cache: 'no-store'})
     .then(r => { if (!r.ok) throw new Error('fetch failed'); return r.text(); })
@@ -6505,7 +6549,7 @@ function openWhatsNew(){
   if (x) x.focus();
 }
 function initVersionCheck(){
-  const myBuild = '20261012.0951';
+  const myBuild = '20261012.0958';
   function showUpdateBanner(serverBuild){
     if (document.getElementById('update-banner')) return;
     const b = document.createElement('div');

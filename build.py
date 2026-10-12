@@ -221,6 +221,11 @@ body{padding:0}
   background-size:7px 7px;background-position:center;background-repeat:no-repeat}
 .ledger-row:hover .ledger-grip{opacity:.95}
 .ledger-grip:active{cursor:grabbing}
+.ledger-chev{flex:0 0 auto;width:22px;height:22px;border:0;background:none;color:var(--muted);font-size:16px;cursor:pointer;border-radius:6px;align-self:center;padding:0;line-height:1}
+.ledger-chev:hover{background:var(--wash);color:var(--text)}
+.ledger-chev i{display:inline-block;transition:transform .15s;font-style:normal;line-height:1}
+.ledger-chev:not(.collapsed) i{transform:rotate(90deg)}
+.ledger-chev-sp{flex:0 0 auto;width:22px;align-self:center}
 .ledger-row.drag-armed{outline:2px solid var(--accent);outline-offset:2px}
 .ledger-row.drag-src{opacity:.4}
 .ledger-row.drop-target{background:var(--active);box-shadow:inset 0 0 0 2px var(--accent)}
@@ -2738,20 +2743,22 @@ function renderBuddy(id){
     + '<button class="bp-takeover-back" id="bp-takeover-back" type="button" title="Close detail \u2014 back to main view" aria-label="Close detail \u2014 back to main view">\u2039 Main</button>'
 
     + '<div class="sa-bar"><span>\U0001f516 Standalone view</span><button class="linkbtn" id="sa-full">Open full dashboard \u2192</button></div>'
+    + '<div class="bp-sticky-head">'
     + '<div class="bp-topnav"><button class="linkbtn" data-navbtn="back">\u2190 Back</button>'
     + '<button class="linkbtn" data-navbtn="prev">\u2039 Prev</button><button class="linkbtn" data-navbtn="next">Next \u203a</button>'
     + '<span class="sep">\u00b7</span><button class="linkbtn" data-view="projects" id="bp-allbuddies">All buddies</button>'
     + '<span class="sep">\u00b7</span><button class="linkbtn" id="bp-settings">Settings</button>'
     + '<span class=\"sep\">\\u00b7</span><button class=\"linkbtn\" id=\"bp-dormant\" title=\"Mark dormant / wake up\"></button>'
     + '<span class="sep">\u00b7</span><button class="linkbtn" id="bp-desktop">\U0001f4be Save to desktop</button></div>'
-    + '<div class="bp-crumb">'+crumb(id)+'</div>'
-    + '<p class="bp-tagline">'+escHtml(b.tagline||'')+'</p>'
-    + '<div class="bp-sticky-head"><div class="bp-top">'
+    + '<div class="bp-top">'
     + '<span class="bp-icon" id="bp-icon" title="Click to change avatar" style="cursor:pointer">'+'<img class="bp-avatarimg" src="'+escHtml(buddyImageUrl(b))+'" alt="" onerror="this.remove()">'+'<span class="bp-avaemoji">'+escHtml(buddyDisplayIcon(b))+'</span></span>'
     + '<h2 class="bp-name" id="bp-name" contenteditable="true" spellcheck="false" data-buddy="'+id+'">'+escHtml(dispName(b))+'</h2>'
     + '<span class="status '+b.statusClass+'">'+escHtml(b.status)+'</span>'
     + (function(){ const ak = effAka(b); return ak.length ? '<span class="bp-aka" title="Also known as">aka '+escHtml(ak.join(', '))+'</span>' : ''; })()
-    + '<button class="bp-close-x" id="bp-close-x" type="button" title="Close detail \u2014 back to main view" aria-label="Close detail \u2014 back to main view">\u203a</button></div></div>'
+    + '<button class="bp-close-x" id="bp-close-x" type="button" title="Close detail \u2014 back to main view" aria-label="Close detail \u2014 back to main view">\u203a</button></div>'
+    + '</div>'
+    + '<div class="bp-crumb">'+crumb(id)+'</div>'
+    + '<p class="bp-tagline">'+escHtml(b.tagline||'')+'</p>'
     + '<div id="token-banner"><h4>\U0001f511 Connect GitHub to unlock this buddy</h4>'
     + '<p>Photos, shared notes, and ingest save to the buddy\u2019s repo. Paste a token once \u2014 it stays on this device.</p>'
     + '<div class="ghtoken"><input type="password" id="ghtok2" placeholder="GitHub token (repo scope)" aria-label="GitHub token">'
@@ -2792,6 +2799,41 @@ function renderBuddy(id){
     + '<p class="fineprint" id="shared-status"></p></div>'
     + '<div class="bp-build">Build __BUILD__</div>'
     + '</div>';
+  // Update every visible label for a buddy after a rename/re-icon, across all
+  // Atlas lenses. A rename changes no structure, so labels are patched in place
+  // to preserve the user's pan/zoom/scroll.
+  window.refreshBuddyLabels = function(id){
+    const b = byId[id]; if (!b) return;
+    const label = iconName(b);
+    const q = '#treezoom [data-buddy="' + id + '"]';
+    // Org + Lineage tiles (and orphan grid)
+    document.querySelectorAll('#treezoom .node[data-buddy="' + id + '"] .name').forEach(function(el){
+      const kc = el.querySelector('.kcount');
+      el.innerHTML = label + (kc ? kc.outerHTML : '');
+    });
+    // Ledger rows
+    document.querySelectorAll('#treezoom .ledger-row[data-buddy="' + id + '"] .ledger-name').forEach(function(el){
+      el.innerHTML = label;
+    });
+    // Colonnade rows (first span holds the name)
+    document.querySelectorAll('#treezoom .mcol-row[data-buddy="' + id + '"] > span:first-child').forEach(function(el){
+      el.innerHTML = label;
+    });
+    // Terrain tiles (leaf + branch labels)
+    document.querySelectorAll('#treezoom .tm-tile[data-buddy="' + id + '"] .tm-name, #treezoom .tm-label[data-buddy="' + id + '"]').forEach(function(el){
+      el.innerHTML = label;
+    });
+    // Halo SVG labels + center label
+    document.querySelectorAll('#halo-svg text.halo-label[data-buddy="' + id + '"]').forEach(function(el){
+      el.textContent = (b.icon ? b.icon + ' ' : '') + dispName(b);
+    });
+    document.querySelectorAll('.halo-center-label[data-buddy="' + id + '"]').forEach(function(el){
+      el.innerHTML = label;
+    });
+    // Constellation is canvas-drawn: re-init picks up the new label
+    if (typeof getChartType === 'function' && getChartType() === 'constellation'
+        && typeof initConstellation === 'function') initConstellation();
+  };
   const nm = document.getElementById('bp-name');
   nm.addEventListener('keydown', e => { if (e.key === 'Enter'){ e.preventDefault(); nm.blur(); } });
   nm.addEventListener('blur', () => {
@@ -2805,11 +2847,8 @@ function renderBuddy(id){
     // Immediately reflect the new name in the current view
     if (S.view === 'project' && S.projectId === id) renderProjectView();
     else if (S.view === 'projects') renderProjects();
-    // Tree tiles: update labels in place — a rename changes no structure, so keep the user's pan/zoom
-    document.querySelectorAll('#treezoom .node[data-buddy="' + id + '"] .name').forEach(function(el){
-      const kc = el.querySelector('.kcount');
-      el.innerHTML = iconName(byId[id]) + (kc ? kc.outerHTML : '');
-    });
+    // Immediately reflect the new name in every visible chart (all Atlas lenses)
+    refreshBuddyLabels(id);
     // Update the panel itself to show the new name (in case hideBuddyWord applies)
     renderBuddy(id);
   });
@@ -3346,13 +3385,18 @@ function renderChartMain(type, root, kids){
 function ledgerHtml(root){
   function row(b, depth){
     const kids = kidsOf[b.id] || [];
+    const collapsed = kids.length && S.collapsedNodes && S.collapsedNodes[b.id];
+    const chev = kids.length
+      ? '<button class="ledger-chev' + (collapsed ? ' collapsed' : '') + '" data-collapse="' + b.id + '" title="' + (collapsed ? 'Expand' : 'Collapse') + '"><i>\u203a</i></button>'
+      : '<span class="ledger-chev-sp"></span>';
     const grip = b.id === ROOT_ID ? '' : '<span class="ledger-grip" data-ledger-grip="' + b.id + '" title="Drag to reparent ' + escHtml(dispName(b)) + '"></span>';
     let s = '<div class="ledger-row" data-buddy="' + b.id + '" style="padding-left:' + (depth * 24 + 12) + 'px">'
+      + chev
       + grip
       + '<span class="ledger-name">' + iconName(b) + '</span>'
       + (b.tagline ? '<span class="ledger-desc">' + escHtml(b.tagline) + '</span>' : '')
       + '</div>';
-    kids.forEach(k => { s += row(k, depth + 1); });
+    if (!collapsed) kids.forEach(k => { s += row(k, depth + 1); });
     return s;
   }
   return '<div class="ledger">' + row(root, 0) + '</div>';
