@@ -2462,7 +2462,7 @@ function renderBuddy(id){
     + '<div class="bp-topnav"><button class="linkbtn" data-navbtn="back">← Back</button>'
     + '<button class="linkbtn" data-navbtn="prev">‹ Prev</button><button class="linkbtn" data-navbtn="next">Next ›</button>'
     + '<span class="sep">·</span><button class="linkbtn" data-view="tree">All buddies</button>'
-    + '<span class="sep">·</span><button class="linkbtn" id="bp-close" type="button" title="Close detail — back to main view" aria-label="Close detail — back to main view">✕ Close</button><span class="sep">·</span><button class="linkbtn" id="bp-desktop">💾 Save to desktop</button></div>'
+    + '<span class="sep">·</span><button class="linkbtn" id="bp-desktop">💾 Save to desktop</button></div>'
     + '<div class="bp-crumb">'+crumb(id)+'</div>'
     + '<p class="bp-tagline">'+escHtml(b.tagline||'')+'</p>'
     + '<div class="bp-sticky-head"><div class="bp-top">'
@@ -2497,7 +2497,7 @@ function renderBuddy(id){
     + '<div class="bp-sec" data-field="shared"><h3>Shared notes<span class="info-tip" data-tip="Anybody with repo access can see this note. Saved to the buddy’s repo (docs/notes.md).">ⓘ</span></h3>'
     + '<textarea class="notes" id="bp-shared-notes" placeholder="Anybody with repo access can see this note."></textarea>'
     + '<p class="fineprint" id="shared-status"></p></div>'
-    + '<div class="bp-build">Build 20261011.1718</div>'
+    + '<div class="bp-build">Build 20261011.1724</div>'
     + '</div>';
   const nm = document.getElementById('bp-name');
   nm.addEventListener('keydown', e => { if (e.key === 'Enter'){ e.preventDefault(); nm.blur(); } });
@@ -3308,7 +3308,7 @@ function renderPlan(id){
     + '<p class="fineprint">Saved on this device. (For your eyes only)</p></div>'
     + '<div class="bp-sec"><h3>Shared notes<span class="info-tip" data-tip="Visible to everyone with access to this project.">\u24d8</span></h3><textarea class="notes" id="bp-shared" placeholder="Shared notes\u2026 (visible to everyone with access)">'+escHtml((S.planShared||{})[id]||'')+'</textarea>'
     + '<p class="fineprint">Shared — visible to everyone with access.</p></div>'
-    + '<div class="bp-build">Build 20261011.1718</div>'
+    + '<div class="bp-build">Build 20261011.1724</div>'
     + '</div>';
   const nt = document.getElementById('bp-notes');
   let t = null;
@@ -4511,7 +4511,7 @@ function openWhatsNew(){
   if (x) x.focus();
 }
 function initVersionCheck(){
-  const myBuild = '20261011.1718';
+  const myBuild = '20261011.1724';
   function showUpdateBanner(serverBuild){
     if (document.getElementById('update-banner')) return;
     const b = document.createElement('div');
@@ -4769,7 +4769,7 @@ document.addEventListener('click', e => {
     const card = co.closest('.standing-order'); if (card) card.remove();
     return;
   }
-  if (e.target.closest && (e.target.closest('#bp-close') || e.target.closest('#bp-close-x') || e.target.closest('#bp-takeover-back'))) { closeDetail(); return; }
+  if (e.target.closest && (e.target.closest('#bp-close-x') || e.target.closest('#bp-takeover-back'))) { closeDetail(); return; }
   if (e.target.closest && e.target.closest('#panel-open')) {
     const id = (S.projectId && byId[S.projectId]) ? S.projectId : ROOT_ID;
     openBuddy(id);

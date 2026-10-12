@@ -2117,7 +2117,7 @@ function renderBuddy(id){
     + '<div class="bp-topnav"><button class="linkbtn" data-navbtn="back">\u2190 Back</button>'
     + '<button class="linkbtn" data-navbtn="prev">\u2039 Prev</button><button class="linkbtn" data-navbtn="next">Next \u203a</button>'
     + '<span class="sep">\u00b7</span><button class="linkbtn" data-view="tree">All buddies</button>'
-    + '<span class="sep">\u00b7</span><button class="linkbtn" id="bp-close" type="button" title="Close detail \u2014 back to main view" aria-label="Close detail \u2014 back to main view">\u2715 Close</button><span class="sep">\u00b7</span><button class="linkbtn" id="bp-desktop">\U0001f4be Save to desktop</button></div>'
+    + '<span class="sep">\u00b7</span><button class="linkbtn" id="bp-desktop">\U0001f4be Save to desktop</button></div>'
     + '<div class="bp-crumb">'+crumb(id)+'</div>'
     + '<p class="bp-tagline">'+escHtml(b.tagline||'')+'</p>'
     + '<div class="bp-sticky-head"><div class="bp-top">'
@@ -4424,7 +4424,7 @@ document.addEventListener('click', e => {
     const card = co.closest('.standing-order'); if (card) card.remove();
     return;
   }
-  if (e.target.closest && (e.target.closest('#bp-close') || e.target.closest('#bp-close-x') || e.target.closest('#bp-takeover-back'))) { closeDetail(); return; }
+  if (e.target.closest && (e.target.closest('#bp-close-x') || e.target.closest('#bp-takeover-back'))) { closeDetail(); return; }
   if (e.target.closest && e.target.closest('#panel-open')) {
     const id = (S.projectId && byId[S.projectId]) ? S.projectId : ROOT_ID;
     openBuddy(id);
