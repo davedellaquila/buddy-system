@@ -244,6 +244,9 @@ body.sb-closed #sb-resize{display:none}
 #newbuddy-sheet .nb-personas button.sel{border-color:var(--accent);background:var(--wash)}
 #newbuddy-sheet .nb-p-emoji{font-size:24px}
 #newbuddy-sheet .nb-p-name{text-align:center;line-height:1.25}
+#newbuddy-sheet .nb-place{display:flex;background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:3px;gap:3px}
+#newbuddy-sheet .nb-place button{flex:1;border:none;background:none;color:var(--muted);font-size:13px;font-weight:600;padding:8px 4px;border-radius:9px;cursor:pointer}
+#newbuddy-sheet .nb-place button.sel{background:var(--panel);color:var(--text);box-shadow:0 1px 4px rgba(0,0,0,.2)}
 #bp-to-top:hover{color:var(--accent);border-color:var(--accent)}
 #bp-to-top:active{transform:scale(.96)}
 #bp-to-top svg{display:block}
@@ -4116,6 +4119,14 @@ function openNewBuddyRequest(){
     + '<h2>New buddy</h2>'
     + '<p class="ab-sub">Tell Astro what you want — they\u2019ll run the full onboarding (repo, mission doc, side chat, homepage).</p>'
     + '<label>Name</label><input type="text" id="nb-name" placeholder="e.g. Car Buddy" autocomplete="off">'
+    + '<label>Place in tree</label><div class="nb-place" role="tablist" aria-label="Where in the tree">'
+    + '<button type="button" data-place="child" class="sel" role="tab" aria-selected="true">Child</button>'
+    + '<button type="button" data-place="sibling" role="tab" aria-selected="false">Sibling</button>'
+    + '<button type="button" data-place="parent" role="tab" aria-selected="false">Parent</button></div>'
+    + '<div id="nb-place-pick" style="margin-top:8px"><select id="nb-ref" style="width:100%;box-sizing:border-box;font-size:15px;padding:10px 12px;border-radius:10px;border:1px solid var(--border);background:var(--bg);color:var(--text)">'
+    + '<option value="">— Top level —</option>'
+    + BUDDIES.filter(x => x && x.id).sort((a,b) => dispName(a).localeCompare(dispName(b))).map(x => '<option value="' + escHtml(x.id) + '">' + escHtml((x.icon || '') + ' ' + dispName(x)) + '</option>').join('')
+    + '</select><p class="fineprint" id="nb-place-hint" style="margin-top:6px">As a child of the selected buddy (or top level).</p></div>'
     + '<label>Persona <span class="fineprint" style="text-transform:none;letter-spacing:0">— pick the voice that makes you grin</span></label>'
     + '<div class="nb-personas">' + REQUEST_PERSONAS.map((p,i) =>
         '<button type="button" data-persona="' + escHtml(p[0]) + '">'
@@ -4134,7 +4145,23 @@ function openNewBuddyRequest(){
   const purposeInput = m.querySelector('#nb-purpose');
   const createBtn = m.querySelector('#nb-create');
   const errEl = m.querySelector('#nb-err');
-  let persona = null;
+  let persona = null, placeMode = 'child';
+  const refSel = m.querySelector('#nb-ref'), placeHint = m.querySelector('#nb-place-hint');
+  const updateHint = () => {
+    const ref = refSel.value ? byId[refSel.value] : null;
+    const rn = ref ? dispName(ref) : 'top level';
+    placeHint.textContent = placeMode === 'child'
+      ? (ref ? 'As a child of ' + rn + '.' : 'At top level (no parent).')
+      : placeMode === 'sibling'
+      ? (ref ? 'Alongside ' + rn + ' (same parent).' : 'Pick a buddy to sit alongside.')
+      : (ref ? 'As the parent of ' + rn + ' — ' + rn + ' becomes its child.' : 'Pick a buddy to become the child of the new buddy.');
+  };
+  m.querySelectorAll('.nb-place button').forEach(b => b.addEventListener('click', () => {
+    m.querySelectorAll('.nb-place button').forEach(x => { x.classList.remove('sel'); x.setAttribute('aria-selected', 'false'); });
+    b.classList.add('sel'); b.setAttribute('aria-selected', 'true');
+    placeMode = b.dataset.place; updateHint();
+  }));
+  refSel.addEventListener('change', updateHint); updateHint();
   const close = () => m.remove();
   m.querySelector('.nb-backdrop').addEventListener('click', close);
   m.querySelector('#nb-cancel').addEventListener('click', close);
@@ -4157,6 +4184,8 @@ function openNewBuddyRequest(){
         name: nameInput.value.trim(),
         persona: persona,
         purpose: purposeInput.value.trim(),
+        place_mode: placeMode,
+        ref_buddy: refSel.value || null,
         requested_at: new Date().toISOString(),
         requested_from: 'dashboard-fab',
       };

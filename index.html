@@ -392,6 +392,9 @@ body.sb-closed #sb-resize{display:none}
 #newbuddy-sheet .nb-personas button.sel{border-color:var(--accent);background:var(--wash)}
 #newbuddy-sheet .nb-p-emoji{font-size:24px}
 #newbuddy-sheet .nb-p-name{text-align:center;line-height:1.25}
+#newbuddy-sheet .nb-place{display:flex;background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:3px;gap:3px}
+#newbuddy-sheet .nb-place button{flex:1;border:none;background:none;color:var(--muted);font-size:13px;font-weight:600;padding:8px 4px;border-radius:9px;cursor:pointer}
+#newbuddy-sheet .nb-place button.sel{background:var(--panel);color:var(--text);box-shadow:0 1px 4px rgba(0,0,0,.2)}
 #bp-to-top:hover{color:var(--accent);border-color:var(--accent)}
 #bp-to-top:active{transform:scale(.96)}
 #bp-to-top svg{display:block}
@@ -2781,7 +2784,7 @@ function renderBuddy(id){
     + '<div class="bp-sec" data-field="shared"><h3>Shared notes<span class="info-tip" data-tip="Anybody with repo access can see this note. Saved to the buddy’s repo (docs/notes.md).">ⓘ</span></h3>'
     + '<textarea class="notes" id="bp-shared-notes" placeholder="Anybody with repo access can see this note."></textarea>'
     + '<p class="fineprint" id="shared-status"></p></div>'
-    + '<div class="bp-build">Build 20261012.0032</div>'
+    + '<div class="bp-build">Build 20261012.0035</div>'
     + '</div>';
   const nm = document.getElementById('bp-name');
   nm.addEventListener('keydown', e => { if (e.key === 'Enter'){ e.preventDefault(); nm.blur(); } });
@@ -3798,7 +3801,7 @@ function renderPlan(id){
     + '<p class="fineprint">Saved on this device. (For your eyes only)</p></div>'
     + '<div class="bp-sec"><h3>Shared notes<span class="info-tip" data-tip="Visible to everyone with access to this project.">\u24d8</span></h3><textarea class="notes" id="bp-shared" placeholder="Shared notes\u2026 (visible to everyone with access)">'+escHtml((S.planShared||{})[id]||'')+'</textarea>'
     + '<p class="fineprint">Shared — visible to everyone with access.</p></div>'
-    + '<div class="bp-build">Build 20261012.0032</div>'
+    + '<div class="bp-build">Build 20261012.0035</div>'
     + '</div>';
   const nt = document.getElementById('bp-notes');
   let t = null;
@@ -4468,6 +4471,14 @@ function openNewBuddyRequest(){
     + '<h2>New buddy</h2>'
     + '<p class="ab-sub">Tell Astro what you want — they’ll run the full onboarding (repo, mission doc, side chat, homepage).</p>'
     + '<label>Name</label><input type="text" id="nb-name" placeholder="e.g. Car Buddy" autocomplete="off">'
+    + '<label>Place in tree</label><div class="nb-place" role="tablist" aria-label="Where in the tree">'
+    + '<button type="button" data-place="child" class="sel" role="tab" aria-selected="true">Child</button>'
+    + '<button type="button" data-place="sibling" role="tab" aria-selected="false">Sibling</button>'
+    + '<button type="button" data-place="parent" role="tab" aria-selected="false">Parent</button></div>'
+    + '<div id="nb-place-pick" style="margin-top:8px"><select id="nb-ref" style="width:100%;box-sizing:border-box;font-size:15px;padding:10px 12px;border-radius:10px;border:1px solid var(--border);background:var(--bg);color:var(--text)">'
+    + '<option value="">— Top level —</option>'
+    + BUDDIES.filter(x => x && x.id).sort((a,b) => dispName(a).localeCompare(dispName(b))).map(x => '<option value="' + escHtml(x.id) + '">' + escHtml((x.icon || '') + ' ' + dispName(x)) + '</option>').join('')
+    + '</select><p class="fineprint" id="nb-place-hint" style="margin-top:6px">As a child of the selected buddy (or top level).</p></div>'
     + '<label>Persona <span class="fineprint" style="text-transform:none;letter-spacing:0">— pick the voice that makes you grin</span></label>'
     + '<div class="nb-personas">' + REQUEST_PERSONAS.map((p,i) =>
         '<button type="button" data-persona="' + escHtml(p[0]) + '">'
@@ -4486,7 +4497,23 @@ function openNewBuddyRequest(){
   const purposeInput = m.querySelector('#nb-purpose');
   const createBtn = m.querySelector('#nb-create');
   const errEl = m.querySelector('#nb-err');
-  let persona = null;
+  let persona = null, placeMode = 'child';
+  const refSel = m.querySelector('#nb-ref'), placeHint = m.querySelector('#nb-place-hint');
+  const updateHint = () => {
+    const ref = refSel.value ? byId[refSel.value] : null;
+    const rn = ref ? dispName(ref) : 'top level';
+    placeHint.textContent = placeMode === 'child'
+      ? (ref ? 'As a child of ' + rn + '.' : 'At top level (no parent).')
+      : placeMode === 'sibling'
+      ? (ref ? 'Alongside ' + rn + ' (same parent).' : 'Pick a buddy to sit alongside.')
+      : (ref ? 'As the parent of ' + rn + ' — ' + rn + ' becomes its child.' : 'Pick a buddy to become the child of the new buddy.');
+  };
+  m.querySelectorAll('.nb-place button').forEach(b => b.addEventListener('click', () => {
+    m.querySelectorAll('.nb-place button').forEach(x => { x.classList.remove('sel'); x.setAttribute('aria-selected', 'false'); });
+    b.classList.add('sel'); b.setAttribute('aria-selected', 'true');
+    placeMode = b.dataset.place; updateHint();
+  }));
+  refSel.addEventListener('change', updateHint); updateHint();
   const close = () => m.remove();
   m.querySelector('.nb-backdrop').addEventListener('click', close);
   m.querySelector('#nb-cancel').addEventListener('click', close);
@@ -4509,6 +4536,8 @@ function openNewBuddyRequest(){
         name: nameInput.value.trim(),
         persona: persona,
         purpose: purposeInput.value.trim(),
+        place_mode: placeMode,
+        ref_buddy: refSel.value || null,
         requested_at: new Date().toISOString(),
         requested_from: 'dashboard-fab',
       };
@@ -5566,7 +5595,7 @@ function openWhatsNew(){
   head.insertBefore(updBtn, head.querySelector('.wn-x'));
   fetch('version.txt?_=' + Date.now(), {cache: 'no-store'})
     .then(r => r.ok ? r.text() : '')
-    .then(t => { if (t.trim() && t.trim() !== '20261012.0032') updBtn.style.display = ''; })
+    .then(t => { if (t.trim() && t.trim() !== '20261012.0035') updBtn.style.display = ''; })
     .catch(() => {});
   fetch('https://raw.githubusercontent.com/davedellaquila/buddy-system/master/CHANGELOG.md?_' + Date.now(), {cache: 'no-store'})
     .then(r => { if (!r.ok) throw new Error('fetch failed'); return r.text(); })
@@ -5594,7 +5623,7 @@ function openWhatsNew(){
   if (x) x.focus();
 }
 function initVersionCheck(){
-  const myBuild = '20261012.0032';
+  const myBuild = '20261012.0035';
   function showUpdateBanner(serverBuild){
     if (document.getElementById('update-banner')) return;
     const b = document.createElement('div');
