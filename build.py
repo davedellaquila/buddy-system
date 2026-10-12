@@ -782,6 +782,7 @@ body.standalone .sa-bar{display:flex}
 .bp-sec{margin-top:30px}
 .bp-sec>h3{font-size:13px;letter-spacing:1.2px;text-transform:uppercase;color:var(--muted);margin:0 0 12px}
 .bp-sec>h3 .bp-add{float:right;font-size:12px;letter-spacing:0;text-transform:none;font-weight:600;color:var(--accent);background:none;border:1px solid var(--accent);border-radius:20px;padding:2px 10px;cursor:pointer}
+.art-row.sib-compact{padding:6px 10px}.art-row.sib-compact .art-ic{font-size:18px}
 .bp-sec>h3 .bp-circle-add{float:right;font-size:18px;line-height:1;color:var(--accent);background:none;border:none;cursor:pointer;min-width:44px;min-height:44px;display:inline-flex;align-items:center;justify-content:center}
 .bp-sec>h3 .bp-add:active{transform:scale(.96)}
 .bp-sec[data-field="attention"]>h3{color:var(--amber)}
@@ -1408,12 +1409,10 @@ function closeDetail(){
 const FIELD_DEFS = [
   {id:'ingest', label:'Ingest'},
   {id:'attention', label:'Needs your attention'},
-  {id:'aka', label:'A.K.A.'},
   {id:'reports', label:'Direct reports'},
   {id:'siblings', label:'Siblings'},
   {id:'parent', label:'Parent'},
   {id:'links', label:'Linked buddies'},
-  {id:'homepage', label:'Homepage URL'},
   {id:'photos', label:'Photos'},
   {id:'tree', label:'The Buddy Tree'},
   {id:'artifacts', label:'Artifacts'},
@@ -1421,6 +1420,8 @@ const FIELD_DEFS = [
   {id:'notes', label:'Private notes'},
   {id:'shared', label:'Shared notes'},
   {id:'mission', label:'About'},
+  {id:'aka', label:'A.K.A.'},
+  {id:'homepage', label:'Homepage URL'},
 ];
 function getFieldOrder(){
   if (!S.fieldOrder || !Array.isArray(S.fieldOrder)) S.fieldOrder = FIELD_DEFS.map(f => f.id);
@@ -1430,6 +1431,7 @@ function getFieldOrder(){
   const oldDefaults = [
     ['ingest','attention','mission','aka','reports','homepage','photos','tree','artifacts','plans','notes','shared'],
     ['ingest','attention','aka','reports','homepage','photos','tree','artifacts','plans','notes','shared','mission'],
+    ['ingest','attention','aka','reports','siblings','parent','links','homepage','photos','tree','artifacts','plans','notes','shared','mission'],
   ];
   if (oldDefaults.some(d => JSON.stringify(S.fieldOrder) === JSON.stringify(d))) S.fieldOrder = FIELD_DEFS.map(f => f.id);
   // Add any new fields that weren't in the saved order
@@ -1458,6 +1460,7 @@ function applySectionCollapse(bid){
     grip.title = 'Drag to reorder sections';
     h3.appendChild(grip);
     if (S.secCollapsed[bid][fid]) sec.classList.add('collapsed');
+    h3.title = 'Click to collapse/expand — Shift+click applies to all sections';
     h3.addEventListener('click', e => {
       if (e.target.closest('.info-tip')) return;
       if (e.target.closest('.secgrip')) return; // grip drags; never toggles collapse
@@ -2320,7 +2323,7 @@ function renderBuddy(id){
     }
     const pb = byId[par];
     if (!pb) return;
-    parSec = '<div class="bp-sec" data-field="parent"><h3>Parent'+addParentBtn+'<button class="bp-add" data-changeparent="'+escHtml(id)+'" title="Change this buddy\u2019s parent">Change</button></h3>'
+    parSec = '<div class="bp-sec" data-field="parent"><h3>Parent<button class="bp-add" data-changeparent="'+escHtml(id)+'" title="Change this buddy\u2019s parent">Change</button></h3>'
       + '<a class="art-row" data-buddy="'+escHtml(par)+'">'
       + '<span class="art-ic">'+escHtml(pb.icon || '')+'</span>'
       + '<span><span class="art-label">'+escHtml(dispName(pb))+'</span><div class="art-sub">'+escHtml((pb.tagline || pb.mission || '').slice(0, 90))+'</div></span>'
@@ -2332,11 +2335,17 @@ function renderBuddy(id){
     if (!par) return;
     const sibs = (kidsOf[par] || []).filter(k => k && k.id !== id && k.id !== par);
     if (!sibs.length) return;
-    sibSec = '<div class="bp-sec" data-field="siblings"><h3>Siblings <span class="attn-count">('+sibs.length+')</span></h3>' + sibs.map(k =>
-      '<a class="art-row" data-buddy="'+escHtml(k.id)+'">'
+    const SHOW_SIBS = 5;
+    const sibRows = sibs.slice(0, SHOW_SIBS).map(k =>
+      '<a class="art-row sib-compact" data-buddy="'+escHtml(k.id)+'">'
       + '<span class="art-ic">'+escHtml(k.icon || '')+'</span>'
-      + '<span><span class="art-label">'+escHtml(dispName(k))+'</span><div class="art-sub">'+escHtml((k.tagline || k.mission || '').slice(0, 90))+'</div></span>'
-      + '<span class="art-go" data-homepage="'+escHtml(k.id)+'" title="Open homepage">\\u2192</span></a>').join('') + '</div>';
+      + '<span class="art-label">'+escHtml(dispName(k))+'</span></a>').join('');
+    const sibMore = sibs.length > SHOW_SIBS
+      ? '<button class="linkbtn" id="sib-showall" style="margin-top:6px">Show all '+sibs.length+' siblings</button><div id="sib-rest" hidden>' + sibs.slice(SHOW_SIBS).map(k =>
+        '<a class="art-row sib-compact" data-buddy="'+escHtml(k.id)+'">'
+        + '<span class="art-ic">'+escHtml(k.icon || '')+'</span>'
+        + '<span class="art-label">'+escHtml(dispName(k))+'</span></a>').join('') + '</div>' : '';
+    sibSec = '<div class="bp-sec" data-field="siblings"><h3>Siblings <span class="attn-count">('+sibs.length+')</span></h3>' + sibRows + sibMore + '</div>';
   })();
   let linkSec = '';
   (function(){
@@ -2371,7 +2380,7 @@ function renderBuddy(id){
   else {
     attn = items.map(a => {
       const seen = !!S.seen[a.id];
-      const txt = escHtml(a.text);
+      const txt = escHtml(a.text || '');
       const body = a.url
         ? '<div class="attn-text"><a href="'+escHtml(a.url)+'" target="_blank" rel="noopener">'+txt+' <span class="attn-open">\u2197</span></a></div>'
         : '<div class="attn-text">'+txt+'</div>';
@@ -2380,7 +2389,7 @@ function renderBuddy(id){
         ? '<div class="attn-date">Done '+fmtSeenTime(seenAt)+'</div>' : '';
       return '<div class="attn'+(seen?' seen':' unseen')+'" data-attn="'+a.id+'"><span class="adot"></span>'
         + '<div class="attn-body">'+body
-        + '<div class="attn-date">Asked '+a.date+'</div>'+doneNote+'</div>'
+        + (a.date ? '<div class="attn-date">Asked '+escHtml(a.date)+'</div>' : '')+doneNote+'</div>'
         + '<button class="seenbtn'+(seen?' done':'')+'" data-seen="'+a.id+'" title="Mark seen" aria-label="Mark seen">'+(seen?'\u2713':'\u25cb')+'</button></div>';
     }).join('');
     const un = items.filter(a => !S.seen[a.id]).length;
@@ -2390,11 +2399,7 @@ function renderBuddy(id){
   document.getElementById('buddy-home').innerHTML =
     '<div class="bp-wrap">'
     + '<button class="bp-takeover-back" id="bp-takeover-back" type="button" title="Close detail \u2014 back to main view" aria-label="Close detail \u2014 back to main view">\u2039 Main</button>'
-    + '<div id="token-banner"><h4>\U0001f511 Connect GitHub to unlock this buddy</h4>'
-    + '<p>Photos, shared notes, and ingest save to the buddy\u2019s repo. Paste a token once \u2014 it stays on this device.</p>'
-    + '<div class="ghtoken"><input type="password" id="ghtok2" placeholder="GitHub token (repo scope)" aria-label="GitHub token">'
-    + '<button class="linkbtn" id="ghtok2-save">Save token</button>'
-    + '<a href="https://github.com/settings/tokens" target="_blank" rel="noopener" class="linkbtn" style="text-decoration:none" title="Open GitHub token settings in a new tab">Get a token</a></div></div>'
+
     + '<div class="sa-bar"><span>\U0001f516 Standalone view</span><button class="linkbtn" id="sa-full">Open full dashboard \u2192</button></div>'
     + '<div class="bp-topnav"><button class="linkbtn" data-navbtn="back">\u2190 Back</button>'
     + '<button class="linkbtn" data-navbtn="prev">\u2039 Prev</button><button class="linkbtn" data-navbtn="next">Next \u203a</button>'
@@ -2409,6 +2414,11 @@ function renderBuddy(id){
     + '<span class="status '+b.statusClass+'">'+escHtml(b.status)+'</span>'
     + (function(){ const ak = effAka(b); return ak.length ? '<span class="bp-aka" title="Also known as">aka '+escHtml(ak.join(', '))+'</span>' : ''; })()
     + '<button class="bp-close-x" id="bp-close-x" type="button" title="Close detail \u2014 back to main view" aria-label="Close detail \u2014 back to main view">\u203a</button></div></div>'
+    + '<div id="token-banner"><h4>\U0001f511 Connect GitHub to unlock this buddy</h4>'
+    + '<p>Photos, shared notes, and ingest save to the buddy\u2019s repo. Paste a token once \u2014 it stays on this device.</p>'
+    + '<div class="ghtoken"><input type="password" id="ghtok2" placeholder="GitHub token (repo scope)" aria-label="GitHub token">'
+    + '<button class="linkbtn" id="ghtok2-save">Save token</button>'
+    + '<a href="https://github.com/settings/tokens" target="_blank" rel="noopener" class="linkbtn" style="text-decoration:none" title="Open GitHub token settings in a new tab">Get a token</a></div></div>'
     + standingOrdersHtml()
     + '<div class="bp-sec" data-field="ingest"><h3>Ingest<span class="info-tip" data-tip="Brain-dump anything about this buddy \u2014 raw and unfiltered. Each dump lands in the buddy\u2019s repo (docs/ingest.md) as a timestamped entry.">\u24d8</span></h3>'
     + '<textarea class="notes" id="bp-ingest" placeholder="Dump what\u2019s in your head about '+escHtml(dispName(b))+'\u2026"></textarea>'
@@ -4334,6 +4344,11 @@ document.addEventListener('click', e => {
 });
 // Change-parent picker: select a new parent for a buddy (excludes self + descendants to prevent cycles)
 document.addEventListener('click', e => {
+  if (e.target.closest('#sib-showall')) {
+    document.getElementById('sib-rest').hidden = false;
+    e.target.closest('#sib-showall').remove();
+    return;
+  }
   const btn = e.target.closest('[data-changeparent]');
   if (!btn) return;
   e.preventDefault(); e.stopPropagation();
@@ -4354,17 +4369,18 @@ function openChangeParentDialog(bid){
   const cur = effParent(b);
   const m = document.createElement('div'); m.id = 'addbuddy-modal';
   const optHtml = x => '<option value="' + escHtml(x.id) + '"' + (x.id === cur ? ' selected' : '') + '>' + escHtml((x.icon || '') + ' ' + dispName(x)) + '</option>';
+  const hiddenCount = BUDDIES.length - opts.length;
   m.innerHTML = '<div class="ab-backdrop"></div><div class="ab-box" role="dialog" aria-modal="true" aria-label="Change parent">'
     + '<h2>Change parent</h2><p class="ab-sub">Pick a new parent for ' + escHtml(dispName(b)) + '.</p>'
     + '<label for="cp-filter">Filter</label>'
     + '<input type="text" id="cp-filter" placeholder="Type to filter…" autocomplete="off" style="margin-bottom:10px">'
     + '<label for="cp-select">Parent</label>'
     + '<select id="cp-select" size="8" style="width:100%;box-sizing:border-box;font-size:15px;padding:10px 12px;border-radius:10px;border:1px solid var(--border);background:var(--bg);color:var(--text)">'
-    + '<option value="" disabled>— Top level —</option>'
     + '<option value="">No parent (top level)</option>'
     + '<option value="" disabled>──────────</option>'
     + opts.map(optHtml).join('')
     + '</select>'
+    + (hiddenCount > 0 ? '<p class="fineprint" style="margin-top:6px">' + hiddenCount + ' hidden — a buddy can\u2019t be its own ancestor.</p>' : '')
     + '<div style="display:flex;gap:10px;justify-content:flex-end;margin-top:18px">'
     + '<button class="linkbtn" id="cp-cancel" type="button">Cancel</button>'
     + '<button class="linkbtn" id="cp-save" type="button" style="font-weight:600">Save</button>'
@@ -4372,21 +4388,30 @@ function openChangeParentDialog(bid){
   document.body.appendChild(m);
   const close = () => m.remove();
   const sel = m.querySelector('#cp-select'), filt = m.querySelector('#cp-filter');
+  const firstVisible = () => [...sel.options].find(o => !o.hidden && !o.disabled && o.value !== undefined);
   filt.addEventListener('input', () => {
     const q = filt.value.trim().toLowerCase();
-    sel.querySelectorAll('option[value]:not([disabled])').forEach(o => {
-      if (!o.value) return; // keep the "No parent" row always visible
+    sel.querySelectorAll('option').forEach(o => {
+      if (o.disabled || !o.value) return; // keep "No parent" and separators visible
       o.hidden = q && !o.textContent.toLowerCase().includes(q);
     });
+    const fv = firstVisible();
+    if (fv) sel.value = fv.value;
   });
-  m.querySelector('.ab-backdrop').addEventListener('click', close);
-  m.querySelector('#cp-cancel').addEventListener('click', close);
-  m.querySelector('#cp-save').addEventListener('click', () => {
+  filt.addEventListener('keydown', e => {
+    if (e.key === 'Enter') { e.preventDefault(); m.querySelector('#cp-save').click(); }
+  });
+  const doSave = () => {
     const v = sel.value || null;
+    const beforeParent = effParent(b);
     applyParentOverride(bid, v); save(); buildKids(); renderNav(); refreshViews();
     if (S.sel === 'buddy:' + bid) renderBuddy(bid);
-    close(); toast('Parent updated.');
-  });
+    close();
+    offerMoveUndo(bid, beforeParent, 'Parent updated.');
+  };
+  m.querySelector('.ab-backdrop').addEventListener('click', close);
+  m.querySelector('#cp-cancel').addEventListener('click', close);
+  m.querySelector('#cp-save').addEventListener('click', doSave);
 }
 async function ghDeleteFile(repo, path, msg){
   const t = ghToken(); if (!t) throw new Error('Add a GitHub token first.');
