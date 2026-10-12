@@ -1773,7 +1773,33 @@ function openFieldSettings(){
   // HTML5 + touch reorder with ghost preview and dashed insert line
   function bindFsetListDnD(listEl, getId, applyOrder){
     let dragEl = null;
+    // Auto-scroll the nearest scrollable ancestor while a drag hovers near its top/bottom edge.
+    let scrollRaf = null, lastClientY = null;
+    const stopAutoScroll = () => { if (scrollRaf) cancelAnimationFrame(scrollRaf); scrollRaf = null; lastClientY = null; };
+    const scrollAncestor = () => {
+      let sc = listEl.parentElement;
+      while (sc && sc !== document.body && sc.scrollHeight <= sc.clientHeight + 1) sc = sc.parentElement;
+      return (sc && sc !== document.body) ? sc : null;
+    };
+    const autoScrollStep = () => {
+      scrollRaf = null;
+      if (lastClientY == null || !dragEl) return;
+      const sc = scrollAncestor();
+      if (!sc) return;
+      const rect = sc.getBoundingClientRect(), EDGE = 48;
+      let dir = 0;
+      if (lastClientY < rect.top + EDGE && sc.scrollTop > 0) dir = -1;
+      else if (lastClientY > rect.bottom - EDGE && sc.scrollTop < sc.scrollHeight - sc.clientHeight) dir = 1;
+      if (!dir) return;
+      sc.scrollBy(0, dir * 10);
+      scrollRaf = requestAnimationFrame(autoScrollStep);
+    };
+    const autoScrollTick = (clientY) => {
+      lastClientY = clientY;
+      if (!scrollRaf) scrollRaf = requestAnimationFrame(autoScrollStep);
+    };
     const finish = () => {
+      stopAutoScroll();
       if (!dragEl) return;
       const before = insertBeforeFromMarker(listEl, dragEl);
       const fromId = getId(dragEl);
@@ -1794,10 +1820,10 @@ function openFieldSettings(){
         try { e.dataTransfer.setDragImage(ghost, 28, 22); } catch (err) {}
         setTimeout(() => ghost.remove(), 0);
       });
-      row.addEventListener('dragend', () => { clearFsetDnD(listEl); dragEl = null; });
+      row.addEventListener('dragend', () => { stopAutoScroll(); clearFsetDnD(listEl); dragEl = null; });
       row.addEventListener('dragover', e => {
         e.preventDefault(); e.dataTransfer.dropEffect = 'move';
-        if (dragEl) placeFsetInsert(listEl, e.clientY, dragEl);
+        if (dragEl) { placeFsetInsert(listEl, e.clientY, dragEl); autoScrollTick(e.clientY); }
       });
       row.addEventListener('drop', e => { e.preventDefault(); finish(); });
       const handle = row.querySelector('.fh');
@@ -1817,13 +1843,14 @@ function openFieldSettings(){
         const t = e.touches[0];
         moveFsetGhost(dragEl, t.clientX, t.clientY);
         placeFsetInsert(listEl, t.clientY, dragEl);
+        autoScrollTick(t.clientY);
       }, {passive: false});
       handle.addEventListener('touchend', () => finish());
-      handle.addEventListener('touchcancel', () => { clearFsetDnD(listEl); dragEl = null; });
+      handle.addEventListener('touchcancel', () => { stopAutoScroll(); clearFsetDnD(listEl); dragEl = null; });
     });
     listEl.addEventListener('dragover', e => {
       e.preventDefault();
-      if (dragEl) placeFsetInsert(listEl, e.clientY, dragEl);
+      if (dragEl) { placeFsetInsert(listEl, e.clientY, dragEl); autoScrollTick(e.clientY); }
     });
     listEl.addEventListener('drop', e => { e.preventDefault(); finish(); });
   }
