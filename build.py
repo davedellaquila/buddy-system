@@ -1163,7 +1163,7 @@ function crumb(id){
   while (b) { chain.unshift(b); const p = effParent(b); b = p ? byId[p] : null; }
   return chain.map((c,i) => i < chain.length-1
     ? '<a href="#" data-goto="'+c.id+'" style="color:var(--muted)">'+escHtml(dispName(c))+'</a>'
-    : '<b class="reposlug" title="'+escHtml(c.repo ? 'GitHub repo: davedellaquila/'+c.repo : 'No repo linked')+'">'+escHtml(c.repo || 'no repo linked')+'</b>').join(' <span style="color:var(--faint)">/</span> ');
+    : '<b title="'+escHtml(c.repo ? 'GitHub repo: davedellaquila/'+c.repo : 'No repo linked')+'">'+escHtml(dispName(c))+'</b>').join(' <span style="color:var(--faint)">/</span> ');
 }
 function escHtml(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 // Converts URLs in already-escaped HTML text into clickable links
