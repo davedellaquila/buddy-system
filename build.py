@@ -136,6 +136,9 @@ body{padding:0}
 .qa-link:hover{border-color:var(--accent)}
 .qa-icon{font-size:16px}
 .qa-text{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.node{position:relative}
+.collapse-pill{position:absolute;bottom:8px;right:8px;min-width:44px;height:28px;border-radius:999px;border:1px solid var(--border);background:var(--panel);color:var(--muted);font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:4px;padding:0 10px;z-index:2}
+.collapse-pill:hover{border-color:var(--accent);color:var(--accent)}
 #view-tree.view.active{display:flex !important;flex-direction:column;
   margin:-36px -32px -80px;height:100vh;height:100dvh;overflow:hidden;min-height:0}
 #view-tree #zoomwrap{flex:1;min-height:0;min-width:0;align-items:stretch;display:flex;flex-direction:column}
@@ -2782,10 +2785,13 @@ function gridKids(b){
 function orgNode(b, depth){
   const kids = kidsOf[b.id] || [];
   const kc = kids.length ? '<span class="kcount">' + kids.length + '</span>' : '';
-  let s = '<li><div class="node ' + b.kind + '" data-buddy="' + b.id + '">' + '<div class="name">' + iconName(b) + kc + '</div>'
+  const collapsed = kids.length && S.collapsedNodes && S.collapsedNodes[b.id];
+  const pill = kids.length ? '<button class="collapse-pill" data-collapse="' + b.id + '" title="' + (collapsed ? 'Expand' : 'Collapse') + ' children">'
+    + (collapsed ? '\u203a' : '\u2304') + ' ' + kids.length + '</button>' : '';
+  let s = '<li><div class="node ' + b.kind + (collapsed ? ' collapsed' : '') + '" data-buddy="' + b.id + '">' + '<div class="name">' + iconName(b) + kc + '</div>'
     + '<div class="desc">' + escHtml(b.tagline || '') + '</div>'
-    + '<div class="tag">' + nodeTag(b, depth) + '</div></div>';
-  if (kids.length) s += '<ul>' + kids.map(c => orgNode(c, depth + 1)).join('') + '</ul>';
+    + '<div class="tag">' + nodeTag(b, depth) + '</div>' + pill + '</div>';
+  if (kids.length && !collapsed) s += '<ul>' + kids.map(c => orgNode(c, depth + 1)).join('') + '</ul>';
   return s + '</li>';
 }
 function clampTreeSplit(s){
@@ -3468,6 +3474,15 @@ let nodeDragEndAt = 0; // timestamp of last node-drag gesture; used to swallow t
   document.addEventListener('dragend', () => { dragId = null; clearHl(); });
 })();
 document.addEventListener('click', e => {
+  const cp = e.target.closest('[data-collapse]');
+  if (cp) {
+    e.stopPropagation();
+    const bid = cp.dataset.collapse;
+    if (!S.collapsedNodes || typeof S.collapsedNodes !== 'object') S.collapsedNodes = {};
+    S.collapsedNodes[bid] = !S.collapsedNodes[bid];
+    save(); renderOrgTree();
+    return;
+  }
   const qa = e.target.closest('[data-qa-buddy]');
   if (qa) { openBuddy(qa.dataset.qaBuddy); return; }
 });
