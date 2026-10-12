@@ -4538,19 +4538,20 @@ document.addEventListener('click', e => {
   }
   const projRow = e.target.closest('#view-projects .proj-row[data-buddy]');
   if (projRow) {
-    // Whole row toggles expand/collapse (if it has children)
-    const pt = projRow.querySelector('[data-proj-toggle]');
+    // The chevron is isolated on the far left: only it toggles expand/collapse.
+    const pt = e.target.closest('[data-proj-toggle]');
     if (pt) {
       const bid = pt.dataset.projToggle;
       if (!S.projCollapsed || typeof S.projCollapsed !== 'object') S.projCollapsed = {};
       S.projCollapsed[bid] = !S.projCollapsed[bid];
       save(); renderProjects();
+      return;
     }
-    // View-aware panel behavior: Projects list is not the homepage view, so rows
-    // open the panel by default (consistent with sidebar clicks in other views).
-    const wantPanel = S.autoOpenPanel || S.view !== 'project';
-    if (wantPanel) openBuddy(projRow.dataset.buddy);
-    else selectBuddy(projRow.dataset.buddy);
+    // Anywhere else on the row toggles this buddy's info panel.
+    const bid = projRow.dataset.buddy;
+    const vb = document.getElementById('view-buddy');
+    if (vb && vb.classList.contains('active') && S.projectId === bid) closeDetail();
+    else openBuddy(bid);
     return;
   }
   const hp = e.target.closest('[data-homepage]');

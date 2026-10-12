@@ -118,8 +118,9 @@
   .proj-row .pname { font-weight: 700; font-size: 14px; white-space: nowrap; }
   .proj-row .pdesc { font-size: 13px; color: #8b949e; flex: 1; }
   .proj-row .dot { color: #3a4a63; font-size: 12px; }
-  .proj-row .parrow { font-size: 18px; color: #8b949e; cursor: pointer; display: inline-block; line-height: 1; transition: transform .15s; user-select: none; }
+  .proj-row .parrow { font-size: 18px; color: #8b949e; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; width: 32px; height: 32px; flex: 0 0 32px; line-height: 1; transition: transform .15s, background .15s, color .15s; user-select: none; border-radius: 8px; margin-left: -6px; }
   .proj-row .parrow.expanded { transform: rotate(90deg); }
+  .proj-row .parrow:hover { background: var(--hover); color: var(--text); }
   .proj-row .parrow.leaf { visibility: hidden; }
   .status {
     font-size: 11px; font-weight: 700; letter-spacing: 0.4px; text-transform: uppercase;
@@ -2496,7 +2497,7 @@ function renderBuddy(id){
     + '<div class="bp-sec" data-field="shared"><h3>Shared notes<span class="info-tip" data-tip="Anybody with repo access can see this note. Saved to the buddy’s repo (docs/notes.md).">ⓘ</span></h3>'
     + '<textarea class="notes" id="bp-shared-notes" placeholder="Anybody with repo access can see this note."></textarea>'
     + '<p class="fineprint" id="shared-status"></p></div>'
-    + '<div class="bp-build">Build 20261011.1717</div>'
+    + '<div class="bp-build">Build 20261011.1718</div>'
     + '</div>';
   const nm = document.getElementById('bp-name');
   nm.addEventListener('keydown', e => { if (e.key === 'Enter'){ e.preventDefault(); nm.blur(); } });
@@ -3307,7 +3308,7 @@ function renderPlan(id){
     + '<p class="fineprint">Saved on this device. (For your eyes only)</p></div>'
     + '<div class="bp-sec"><h3>Shared notes<span class="info-tip" data-tip="Visible to everyone with access to this project.">\u24d8</span></h3><textarea class="notes" id="bp-shared" placeholder="Shared notes\u2026 (visible to everyone with access)">'+escHtml((S.planShared||{})[id]||'')+'</textarea>'
     + '<p class="fineprint">Shared — visible to everyone with access.</p></div>'
-    + '<div class="bp-build">Build 20261011.1717</div>'
+    + '<div class="bp-build">Build 20261011.1718</div>'
     + '</div>';
   const nt = document.getElementById('bp-notes');
   let t = null;
@@ -4510,7 +4511,7 @@ function openWhatsNew(){
   if (x) x.focus();
 }
 function initVersionCheck(){
-  const myBuild = '20261011.1717';
+  const myBuild = '20261011.1718';
   function showUpdateBanner(serverBuild){
     if (document.getElementById('update-banner')) return;
     const b = document.createElement('div');
@@ -4882,19 +4883,20 @@ document.addEventListener('click', e => {
   }
   const projRow = e.target.closest('#view-projects .proj-row[data-buddy]');
   if (projRow) {
-    // Whole row toggles expand/collapse (if it has children)
-    const pt = projRow.querySelector('[data-proj-toggle]');
+    // The chevron is isolated on the far left: only it toggles expand/collapse.
+    const pt = e.target.closest('[data-proj-toggle]');
     if (pt) {
       const bid = pt.dataset.projToggle;
       if (!S.projCollapsed || typeof S.projCollapsed !== 'object') S.projCollapsed = {};
       S.projCollapsed[bid] = !S.projCollapsed[bid];
       save(); renderProjects();
+      return;
     }
-    // View-aware panel behavior: Projects list is not the homepage view, so rows
-    // open the panel by default (consistent with sidebar clicks in other views).
-    const wantPanel = S.autoOpenPanel || S.view !== 'project';
-    if (wantPanel) openBuddy(projRow.dataset.buddy);
-    else selectBuddy(projRow.dataset.buddy);
+    // Anywhere else on the row toggles this buddy's info panel.
+    const bid = projRow.dataset.buddy;
+    const vb = document.getElementById('view-buddy');
+    if (vb && vb.classList.contains('active') && S.projectId === bid) closeDetail();
+    else openBuddy(bid);
     return;
   }
   const hp = e.target.closest('[data-homepage]');
