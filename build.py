@@ -906,6 +906,8 @@ body.standalone .sa-bar{display:flex}
 .linkbtn{background:none;border:0;color:var(--accent);font:inherit;font-size:12.5px;cursor:pointer;padding:0}
 .linkbtn:hover{text-decoration:underline}
 .node{position:relative;width:max-content;min-width:180px;max-width:320px;flex-shrink:0}
+#treezoom .node .name{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#treezoom .node .desc{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
 /* Fix: flex-centered org tree overflows to negative x-coords on narrow screens, which widens the
    layout viewport and pushes position:fixed UI (zoombar) partly off-screen. max-content + auto
    margins keeps the centered look when it fits, and overflows only rightward (scrollable) when not. */
