@@ -3,6 +3,11 @@
 All notable changes to the Buddies dashboard and buddy system. Newest first.
 `FEATURES.md` describes the current state; this file describes how it got there.
 
+## 2026-10-11 (Undo for tree reparenting)
+
+### Added
+- **Undo toast when moving a buddy on the tree:** dragging a buddy onto a new parent (or onto blank background to orphan it) now shows an Undo toast for ~6 seconds instead of just a confirmation. Tapping Undo restores the previous parent. Follows the same "forgiveness, not friction" pattern as dump deletes.
+
 ## 2026-10-11 (Dump edit fixes)
 
 ### Fixed

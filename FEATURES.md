@@ -34,7 +34,8 @@ Build: `build.py` generates `index.html` from `buddies.json` + `plans.json`.
   threshold); the stray click after a drag is swallowed. Loop protection:
   can't drop a parent onto its own descendant (invalid targets get a red
   dashed outline). Root can't be dragged; dropping onto root makes a buddy
-  top-level.
+  top-level. Every move shows an Undo toast (~6s) — tap it to restore the
+  previous parent.
 - **Orphaned buddies section** — buddies with no parent render in their own
   pane, instead of being invisible.
 - **Drop targets** — tree nodes and Projects rows accept drops from the

@@ -2448,16 +2448,45 @@ function isDesc(id, anc){
   while (p) { if (p === anc) return true; p = byId[p] ? effParent(byId[p]) : null; }
   return false;
 }
+let pendingMoveUndo = null; // {src, beforeParent, timer} — one pending move undo at a time
+function clearPendingMoveUndo(){
+  if (pendingMoveUndo) { clearTimeout(pendingMoveUndo.timer); pendingMoveUndo = null; }
+  hideUndoToast();
+}
+function applyParentOverride(src, parentId){
+  const b = byId[src]; if (!b) return;
+  if (parentId === b.parent) delete S.parents[src]; else S.parents[src] = parentId;
+}
+function undoMove(src, beforeParent){
+  const b = byId[src]; if (!b) return;
+  const wasParent = effParent(b);
+  applyParentOverride(src, beforeParent);
+  const dest = beforeParent ? byId[beforeParent] : null;
+  logChange('move', src, 'Undid move of \u201c' + dispName(b) + '\u201d', wasParent, beforeParent);
+  save(); buildKids(); renderNav(); refreshViews();
+  if (S.sel === 'buddy:' + src || S.sel === 'buddy:' + ROOT_ID) renderBuddy(S.sel.slice(6));
+  toast(dispName(b) + (dest ? ' moved back under ' + dispName(dest) + '.' : ' restored as an orphan.'));
+}
+function offerMoveUndo(src, beforeParent, msg){
+  clearPendingMoveUndo();
+  const data = {src: src, beforeParent: beforeParent, timer: null};
+  data.timer = setTimeout(function(){ pendingMoveUndo = null; hideUndoToast(); }, 6000);
+  pendingMoveUndo = data;
+  undoToast(msg, function(){
+    if (pendingMoveUndo === data) { clearTimeout(data.timer); pendingMoveUndo = null; }
+    undoMove(src, beforeParent);
+  });
+}
 function moveBuddy(src, target){
   if (!src || !target || src === target) return;
   const b = byId[src]; if (!b || !byId[target]) return;
   if (isDesc(target, src)) { toast('Can\u2019t move ' + dispName(b) + ' under ' + dispName(byId[target]) + ' \u2014 that would create a loop.'); return; }
   const beforeParent = effParent(b);
-  if (target === b.parent) delete S.parents[src]; else S.parents[src] = target;
+  applyParentOverride(src, target);
   logChange('move', src, 'Moved \u201c' + dispName(byId[src]) + '\u201d under \u201c' + dispName(byId[target]) + '\u201d', beforeParent, target);
   save(); buildKids(); renderNav(); refreshViews();
   if (S.sel === 'buddy:' + src || S.sel === 'buddy:' + target || S.sel === 'buddy:' + ROOT_ID) renderBuddy(S.sel.slice(6));
-  toast(dispName(b) + ' moved under ' + dispName(byId[target]) + '.');
+  offerMoveUndo(src, beforeParent, dispName(b) + ' moved under ' + dispName(byId[target]) + '.');
 }
 /* FAMKINDS retired 2026-10-11: the org chart now shows every direct report of the
    root side by side; only truly parentless buddies go to the orphan section. */
@@ -3063,12 +3092,12 @@ let nodeDragEndAt = 0; // timestamp of last node-drag gesture; used to swallow t
       if (b) {
         const beforeParent = effParent(b);
         if (b.parent) { /* has real parent in data */ }
-        delete S.parents[src];
         // Set explicit orphan: parent = null override
         S.parents[src] = null;
         logChange('move', src, 'Detached \u201c' + dispName(b) + '\u201d (now orphaned)', beforeParent, null);
         save(); buildKids(); renderNav(); refreshViews();
-        toast(dispName(b) + ' detached \u2014 now an orphan.');
+        if (S.sel === 'buddy:' + src || S.sel === 'buddy:' + ROOT_ID) renderBuddy(S.sel.slice(6));
+        offerMoveUndo(src, beforeParent, dispName(b) + ' detached \u2014 now an orphan.');
       }
     }
   });

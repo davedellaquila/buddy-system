@@ -2600,7 +2600,7 @@ function renderBuddy(id){
     + '<div class="bp-sec" data-field="shared"><h3>Shared notes<span class="info-tip" data-tip="Anybody with repo access can see this note. Saved to the buddy’s repo (docs/notes.md).">ⓘ</span></h3>'
     + '<textarea class="notes" id="bp-shared-notes" placeholder="Anybody with repo access can see this note."></textarea>'
     + '<p class="fineprint" id="shared-status"></p></div>'
-    + '<div class="bp-build">Build 20261011.2054</div>'
+    + '<div class="bp-build">Build 20261011.2111</div>'
     + '</div>';
   const nm = document.getElementById('bp-name');
   nm.addEventListener('keydown', e => { if (e.key === 'Enter'){ e.preventDefault(); nm.blur(); } });
@@ -2793,16 +2793,45 @@ function isDesc(id, anc){
   while (p) { if (p === anc) return true; p = byId[p] ? effParent(byId[p]) : null; }
   return false;
 }
+let pendingMoveUndo = null; // {src, beforeParent, timer} — one pending move undo at a time
+function clearPendingMoveUndo(){
+  if (pendingMoveUndo) { clearTimeout(pendingMoveUndo.timer); pendingMoveUndo = null; }
+  hideUndoToast();
+}
+function applyParentOverride(src, parentId){
+  const b = byId[src]; if (!b) return;
+  if (parentId === b.parent) delete S.parents[src]; else S.parents[src] = parentId;
+}
+function undoMove(src, beforeParent){
+  const b = byId[src]; if (!b) return;
+  const wasParent = effParent(b);
+  applyParentOverride(src, beforeParent);
+  const dest = beforeParent ? byId[beforeParent] : null;
+  logChange('move', src, 'Undid move of “' + dispName(b) + '”', wasParent, beforeParent);
+  save(); buildKids(); renderNav(); refreshViews();
+  if (S.sel === 'buddy:' + src || S.sel === 'buddy:' + ROOT_ID) renderBuddy(S.sel.slice(6));
+  toast(dispName(b) + (dest ? ' moved back under ' + dispName(dest) + '.' : ' restored as an orphan.'));
+}
+function offerMoveUndo(src, beforeParent, msg){
+  clearPendingMoveUndo();
+  const data = {src: src, beforeParent: beforeParent, timer: null};
+  data.timer = setTimeout(function(){ pendingMoveUndo = null; hideUndoToast(); }, 6000);
+  pendingMoveUndo = data;
+  undoToast(msg, function(){
+    if (pendingMoveUndo === data) { clearTimeout(data.timer); pendingMoveUndo = null; }
+    undoMove(src, beforeParent);
+  });
+}
 function moveBuddy(src, target){
   if (!src || !target || src === target) return;
   const b = byId[src]; if (!b || !byId[target]) return;
   if (isDesc(target, src)) { toast('Can’t move ' + dispName(b) + ' under ' + dispName(byId[target]) + ' — that would create a loop.'); return; }
   const beforeParent = effParent(b);
-  if (target === b.parent) delete S.parents[src]; else S.parents[src] = target;
+  applyParentOverride(src, target);
   logChange('move', src, 'Moved “' + dispName(byId[src]) + '” under “' + dispName(byId[target]) + '”', beforeParent, target);
   save(); buildKids(); renderNav(); refreshViews();
   if (S.sel === 'buddy:' + src || S.sel === 'buddy:' + target || S.sel === 'buddy:' + ROOT_ID) renderBuddy(S.sel.slice(6));
-  toast(dispName(b) + ' moved under ' + dispName(byId[target]) + '.');
+  offerMoveUndo(src, beforeParent, dispName(b) + ' moved under ' + dispName(byId[target]) + '.');
 }
 /* FAMKINDS retired 2026-10-11: the org chart now shows every direct report of the
    root side by side; only truly parentless buddies go to the orphan section. */
@@ -3408,12 +3437,12 @@ let nodeDragEndAt = 0; // timestamp of last node-drag gesture; used to swallow t
       if (b) {
         const beforeParent = effParent(b);
         if (b.parent) { /* has real parent in data */ }
-        delete S.parents[src];
         // Set explicit orphan: parent = null override
         S.parents[src] = null;
         logChange('move', src, 'Detached “' + dispName(b) + '” (now orphaned)', beforeParent, null);
         save(); buildKids(); renderNav(); refreshViews();
-        toast(dispName(b) + ' detached — now an orphan.');
+        if (S.sel === 'buddy:' + src || S.sel === 'buddy:' + ROOT_ID) renderBuddy(S.sel.slice(6));
+        offerMoveUndo(src, beforeParent, dispName(b) + ' detached — now an orphan.');
       }
     }
   });
@@ -3485,7 +3514,7 @@ function renderPlan(id){
     + '<p class="fineprint">Saved on this device. (For your eyes only)</p></div>'
     + '<div class="bp-sec"><h3>Shared notes<span class="info-tip" data-tip="Visible to everyone with access to this project.">\u24d8</span></h3><textarea class="notes" id="bp-shared" placeholder="Shared notes\u2026 (visible to everyone with access)">'+escHtml((S.planShared||{})[id]||'')+'</textarea>'
     + '<p class="fineprint">Shared — visible to everyone with access.</p></div>'
-    + '<div class="bp-build">Build 20261011.2054</div>'
+    + '<div class="bp-build">Build 20261011.2111</div>'
     + '</div>';
   const nt = document.getElementById('bp-notes');
   let t = null;
@@ -4884,7 +4913,7 @@ function openWhatsNew(){
   head.insertBefore(updBtn, head.querySelector('.wn-x'));
   fetch('version.txt?_=' + Date.now(), {cache: 'no-store'})
     .then(r => r.ok ? r.text() : '')
-    .then(t => { if (t.trim() && t.trim() !== '20261011.2054') updBtn.style.display = ''; })
+    .then(t => { if (t.trim() && t.trim() !== '20261011.2111') updBtn.style.display = ''; })
     .catch(() => {});
   fetch('https://raw.githubusercontent.com/davedellaquila/buddy-system/master/CHANGELOG.md?_' + Date.now(), {cache: 'no-store'})
     .then(r => { if (!r.ok) throw new Error('fetch failed'); return r.text(); })
@@ -4910,7 +4939,7 @@ function openWhatsNew(){
   if (x) x.focus();
 }
 function initVersionCheck(){
-  const myBuild = '20261011.2054';
+  const myBuild = '20261011.2111';
   function showUpdateBanner(serverBuild){
     if (document.getElementById('update-banner')) return;
     const b = document.createElement('div');
