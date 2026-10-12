@@ -2078,6 +2078,18 @@ function renderBuddy(id){
       + '<span><span class="art-label">'+escHtml(dispName(k))+'</span><div class="art-sub">'+escHtml((k.tagline || k.mission || '').slice(0, 90))+'</div></span>'
       + '<span class="art-go" data-homepage="'+escHtml(k.id)+'" title="Open homepage">\\u2192</span></a>').join('') + '</div>';
   })();
+  let sibSec = '';
+  (function(){
+    const par = effParent(b);
+    if (!par) return;
+    const sibs = (kidsOf[par] || []).filter(k => k && k.id !== id && k.id !== par);
+    if (!sibs.length) return;
+    sibSec = '<div class="bp-sec" data-field="siblings"><h3>Siblings <span class="attn-count">('+sibs.length+')</span></h3>' + sibs.map(k =>
+      '<a class="art-row" data-buddy="'+escHtml(k.id)+'">'
+      + '<span class="art-ic">'+escHtml(k.icon || '')+'</span>'
+      + '<span><span class="art-label">'+escHtml(dispName(k))+'</span><div class="art-sub">'+escHtml((k.tagline || k.mission || '').slice(0, 90))+'</div></span>'
+      + '<span class="art-go" data-homepage="'+escHtml(k.id)+'" title="Open homepage">\\u2192</span></a>').join('') + '</div>';
+  })();
   let linkSec = '';
   (function(){
     const out = (b.links || []).filter(lid => lid !== id);
@@ -2155,6 +2167,7 @@ function renderBuddy(id){
     + '<div id="ingest-feed" style="margin-top:8px"></div></div>'
     + '<div class="bp-sec" data-field="mission"><h3>About<span class="info-tip" data-tip="The mission statement\\u2019s executive summary \\u2014 tweak it through the buddy\\u2019s chat thread and it updates everywhere.">\\u24d8</span></h3><p class="bp-mission">'+escHtml(b.mission)+'</p></div>'
     + reportsSec
+    + sibSec
     + linkSec
     + '<div class="bp-sec" data-field="homepage"><h3>Homepage URL</h3>'
     + '<div style="display:flex;align-items:center;gap:8px">'
