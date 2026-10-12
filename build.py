@@ -362,6 +362,28 @@ body:has(#field-settings.show) #new-buddy-fab{display:none}
 #newbuddy-sheet .nb-personas button.sel{border-color:var(--accent);background:var(--wash)}
 #newbuddy-sheet .nb-p-emoji{font-size:24px}
 #newbuddy-sheet .nb-p-name{text-align:center;line-height:1.25}
+/* ---- Persona picker (info panel) — Kin language, phone-first, dark-mode safe ---- */
+.bp-persona-cur{padding:2px 0}
+.bp-persona-name{font-size:15px;font-weight:700;color:var(--text)}
+.bp-persona-blurb{font-size:13px;color:var(--muted);margin-top:2px;line-height:1.4}
+#persona-picker{position:fixed;inset:0;z-index:200;display:flex;align-items:center;justify-content:center;padding:16px}
+#persona-picker .pp-backdrop{position:absolute;inset:0;background:var(--scrim)}
+#persona-picker .pp-sheet{position:relative;width:100%;max-width:560px;max-height:82vh;display:flex;flex-direction:column;background:var(--panel);border:1px solid var(--border);border-radius:16px;box-shadow:0 12px 40px var(--shadow);overflow:hidden}
+#persona-picker .pp-head{padding:16px 16px 0}
+#persona-picker .pp-head h2{margin:0 0 2px;font-size:17px}
+#persona-picker #pp-filter{margin:12px 16px 0;padding:10px 12px;font-size:16px;border-radius:10px;border:1px solid var(--border);background:var(--bg);color:var(--text);font-family:inherit;box-sizing:border-box;width:calc(100% - 32px)}
+#persona-picker .pp-grid{flex:1;min-height:0;overflow-y:auto;display:grid;grid-template-columns:repeat(2,1fr);gap:8px;padding:12px 16px;scrollbar-width:thin;scrollbar-color:var(--border) transparent}
+#persona-picker .pp-card{display:flex;flex-direction:column;align-items:flex-start;gap:4px;padding:10px 12px;border-radius:12px;border:1px solid var(--border);background:var(--bg);color:var(--text);cursor:pointer;text-align:left;min-height:44px;-webkit-tap-highlight-color:transparent}
+#persona-picker .pp-card:hover{border-color:var(--accent)}
+#persona-picker .pp-card.sel{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent);background:var(--wash)}
+#persona-picker .pp-name{font-size:13px;font-weight:700}
+#persona-picker .pp-blurb{font-size:12px;color:var(--muted);line-height:1.35}
+#persona-picker .pp-actions{display:flex;gap:8px;flex-wrap:wrap;padding:12px 16px 16px;border-top:1px solid var(--border)}
+@media (max-width:639px){
+  #persona-picker{align-items:flex-end;padding:0}
+  #persona-picker .pp-sheet{max-width:none;border-radius:16px 16px 0 0;max-height:88vh}
+  #persona-picker .pp-grid{grid-template-columns:1fr}
+}
 #newbuddy-sheet .nb-place{display:flex;background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:3px;gap:3px}
 #newbuddy-sheet .nb-place button{flex:1;border:none;background:none;color:var(--muted);font-size:13px;font-weight:600;padding:8px 4px;border-radius:9px;cursor:pointer}
 #newbuddy-sheet .nb-place button.sel{background:var(--panel);color:var(--text);box-shadow:0 1px 4px rgba(0,0,0,.2)}
@@ -1096,6 +1118,15 @@ def build():
     order_js = json.dumps(ROOT_ORDER)
     plans = json.load(open(f"{HERE}/plans.json"))["plans"]
     plans_js = json.dumps(plans)
+    # Persona roster (~/workspace/persona-roster.md) -> baked into the dashboard
+    # so the info-panel persona picker offers the full 116-entry list.
+    import re as _re
+    _roster = []
+    for _line in open(f"{HERE}/../../persona-roster.md", encoding="utf-8"):
+        _m = _re.match(r'\d+\.\s+\*\*(.+?)\*\*\s+[—–-]\s+(.*)', _line.strip())
+        if _m:
+            _roster.append({"name": _m.group(1).strip(), "blurb": _m.group(2).strip()})
+    roster_js = json.dumps(_roster)
     n_buddies = len(buddies)
 
     plan_rows = "".join(
@@ -1133,6 +1164,7 @@ def build():
 
     js = """const BUDDIES = BUDDIES_JSON;
 const ROOT_ORDER = ORDER_JSON;
+const PERSONA_ROSTER = PERSONA_ROSTER_JSON; // 116-entry persona list, baked at build time
 const byId = Object.fromEntries(BUDDIES.map(b => [b.id, b]));
 const ROOT_ID = 'astro'; // chief of staff sits at the root of the tree
 BUDDIES.forEach(b => { (b.links || []).forEach(lid => { const t = byId[lid]; if (t && lid !== b.id) { (t.linkedBy = t.linkedBy || []).push(b.id); } }); });
@@ -1530,6 +1562,7 @@ const FIELD_DEFS = [
   {id:'shared', label:'Shared notes'},
   {id:'mission', label:'About'},
   {id:'aka', label:'A.K.A.'},
+  {id:'persona', label:'Persona'},
   {id:'homepage', label:'Homepage URL'},
 ];
 function getFieldOrder(){
@@ -2489,6 +2522,86 @@ function renderProjectView(){
   }
   pv.appendChild(wrap);
 }
+/* ---- Persona picker (info panel) ---- */
+function personaBlurb(name){
+  const e = (typeof PERSONA_ROSTER !== 'undefined' ? PERSONA_ROSTER : []).find(x => x.name === name);
+  return e ? e.blurb : '';
+}
+function personaSecHtml(b){
+  const p = b.persona || '';
+  const cur = p
+    ? '<div class="bp-persona-cur"><div class="bp-persona-name">' + escHtml(p) + '</div>'
+      + (personaBlurb(p) ? '<div class="bp-persona-blurb">' + escHtml(personaBlurb(p)) + '</div>' : '') + '</div>'
+    : '<p class="bp-empty">No persona set — this buddy speaks in its default voice.</p>';
+  return '<div class="bp-sec" data-field="persona"><h3>Persona<span class="info-tip" data-tip="The voice this buddy speaks in. Pick the one that makes you grin \\u2014 it shapes how its messages and notifications sound.">\\u24d8</span></h3>'
+    + cur
+    + '<div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap">'
+    + '<button class="linkbtn" id="bp-persona-change" type="button">Change persona</button>'
+    + '<button class="linkbtn" id="bp-persona-surprise" type="button" title="Pick a random persona from the roster">\\uD83C\\uDFB2 Surprise me</button>'
+    + '</div><p class="fineprint" id="bp-persona-status"></p></div>';
+}
+function openPersonaPicker(id){
+  const b = byId[id]; if (!b) return;
+  const cur = b.persona || '';
+  const roster = (typeof PERSONA_ROSTER !== 'undefined' ? PERSONA_ROSTER : []);
+  const m = document.createElement('div');
+  m.id = 'persona-picker';
+  m.innerHTML = '<div class="pp-backdrop"></div><div class="pp-sheet" role="dialog" aria-label="Choose a persona">'
+    + '<div class="pp-head"><h2>Persona</h2><p class="fineprint">Pick the voice that makes you grin.</p></div>'
+    + '<input type="search" id="pp-filter" placeholder="Filter the 116 personas…" aria-label="Filter personas" autocomplete="off">'
+    + '<div class="pp-grid" id="pp-grid"></div>'
+    + '<div class="pp-actions"><button class="linkbtn" id="pp-none" type="button">No persona (default voice)</button>'
+    + '<button class="linkbtn" id="pp-surprise" type="button">\\uD83C\\uDFB2 Surprise me</button>'
+    + '<button class="linkbtn" id="pp-cancel" type="button">Cancel</button></div></div>';
+  document.body.appendChild(m);
+  const grid = m.querySelector('#pp-grid');
+  const filter = m.querySelector('#pp-filter');
+  const close = () => m.remove();
+  function renderGrid(){
+    const q = filter.value.trim().toLowerCase();
+    const list = roster.filter(p => !q || p.name.toLowerCase().indexOf(q) >= 0 || p.blurb.toLowerCase().indexOf(q) >= 0);
+    grid.innerHTML = list.map(p =>
+      '<button type="button" class="pp-card' + (p.name === cur ? ' sel' : '') + '" data-persona="' + escHtml(p.name) + '">'
+      + '<span class="pp-name">' + escHtml(p.name) + '</span><span class="pp-blurb">' + escHtml(p.blurb) + '</span></button>').join('')
+      || '<p class="bp-empty">No personas match that filter.</p>';
+    grid.querySelectorAll('.pp-card').forEach(c => c.addEventListener('click', () => {
+      const name = c.getAttribute('data-persona'); close(); setBuddyPersona(id, name);
+    }));
+  }
+  filter.addEventListener('input', renderGrid);
+  renderGrid();
+  m.querySelector('.pp-backdrop').addEventListener('click', close);
+  m.querySelector('#pp-cancel').addEventListener('click', close);
+  m.querySelector('#pp-none').addEventListener('click', () => { close(); setBuddyPersona(id, ''); });
+  m.querySelector('#pp-surprise').addEventListener('click', () => {
+    if (!roster.length) return;
+    close(); setBuddyPersona(id, roster[Math.floor(Math.random() * roster.length)].name);
+  });
+  m.addEventListener('keydown', e => { if (e.key === 'Escape') close(); });
+  filter.focus();
+}
+async function setBuddyPersona(id, name){
+  const st = document.getElementById('bp-persona-status');
+  try {
+    if (!ghToken()) throw new Error('Add a GitHub token first (gear menu \\u2192 GitHub token) so the dashboard can save.');
+    if (st) st.textContent = 'Saving…';
+    const raw = await ghGetFile('buddy-system', 'buddies.json');
+    if (!raw) throw new Error('Could not read buddies.json from GitHub.');
+    const data = JSON.parse(raw);
+    const arr = data.buddies || data;
+    const e = arr.find(x => x.id === id);
+    if (!e) throw new Error('Buddy not found in the registry.');
+    if (name) e.persona = name; else delete e.persona;
+    await ghPutFile('buddy-system', 'buddies.json', b64encode(JSON.stringify(data, null, 1)), 'Set persona for ' + id + ' (dashboard info panel)');
+    const b = byId[id];
+    if (b) { if (name) b.persona = name; else delete b.persona; }
+    save(); renderBuddy(id);
+    toast(name ? 'Persona set to ' + name + '.' : 'Persona cleared — back to the default voice.');
+  } catch (err) {
+    if (st) st.textContent = '';
+    toast('Could not save persona: ' + (err.message || err));
+  }
+}
 function renderBuddy(id){
   const b = byId[id]; if(!b) return;
   try{ setBuddyFavicon(buddyDisplayIcon(b), buddyImageUrl(b)); }catch(e){}
@@ -2642,6 +2755,7 @@ function renderBuddy(id){
     + '<div id="bp-aka-list" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px"></div>'
     + '<div style="display:flex;gap:8px"><input type="text" id="bp-aka-input" placeholder="Add a nickname…" aria-label="Add a nickname" style="flex:1;min-width:0;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:8px 12px;font-size:13px;color:var(--text)">'
     + '<button class="linkbtn" id="bp-aka-add" type="button">Add</button></div></div>'
+    + personaSecHtml(b)
     + reportsSec
     + parSec
     + sibSec
@@ -2717,6 +2831,19 @@ function renderBuddy(id){
     // Prevent the global click handler from re-opening the buddy when clicking the input
     hpu.addEventListener('click', e => e.stopPropagation());
   }
+  /* Persona picker — persisted to buddies.json via the GitHub token route */
+  (function initPersona(){
+    const changeBtn = document.getElementById('bp-persona-change');
+    const surpriseBtn = document.getElementById('bp-persona-surprise');
+    if (!changeBtn || !surpriseBtn) return;
+    changeBtn.addEventListener('click', e => { e.stopPropagation(); openPersonaPicker(id); });
+    surpriseBtn.addEventListener('click', e => {
+      e.stopPropagation();
+      const roster = (typeof PERSONA_ROSTER !== 'undefined' ? PERSONA_ROSTER : []);
+      if (!roster.length) { toast('Persona roster is empty.'); return; }
+      setBuddyPersona(id, roster[Math.floor(Math.random() * roster.length)].name);
+    });
+  })();
   /* A.K.A. editor — device-local alias list, searchable */
   (function initAka(){
     const list = document.getElementById('bp-aka-list');
@@ -6537,7 +6664,7 @@ initPlansToggle();
 initNavSecToggles();
 initSbBrandSticky();
 """
-    js = js.replace("BUDDIES_JSON", buddies_js).replace("ORDER_JSON", order_js).replace("PLANS_JSON", plans_js)
+    js = js.replace("BUDDIES_JSON", buddies_js).replace("ORDER_JSON", order_js).replace("PLANS_JSON", plans_js).replace("PERSONA_ROSTER_JSON", roster_js)
     js = js.replace("ICON_DOC", "'" + ICON_DOC.replace("'", "\\'") + "'")
     js = js.replace("ICON_REPO", "'" + ICON_REPO.replace("'", "\\'") + "'")
     js = js.replace("ICON_LINK", "'" + ICON_LINK.replace("'", "\\'") + "'")
