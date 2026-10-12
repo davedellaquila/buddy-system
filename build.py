@@ -4591,7 +4591,6 @@ function openWhatsNew(){
   fetch('https://raw.githubusercontent.com/davedellaquila/buddy-system/master/CHANGELOG.md?_' + Date.now(), {cache: 'no-store'})
     .then(r => { if (!r.ok) throw new Error('fetch failed'); return r.text(); })
     .then(md => {
-      whatsnewMarkSeen(md);
       const sp = whatsnewSplit(md);
       let html = '';
       if (sp.hasNew) {
@@ -4606,6 +4605,9 @@ function openWhatsNew(){
       html += '<p class="fineprint"><a href="https://github.com/davedellaquila/buddy-system/blob/master/CHANGELOG.md" target="_blank" rel="noopener">Full changelog on GitHub</a></p>';
       body.innerHTML = html;
       wireChangelogTypeFilter(body);
+      // Mark seen only AFTER the split + render, so the "new" section is
+      // computed against the previous visit — not the one that just happened.
+      whatsnewMarkSeen(md);
     })
     .catch(() => { body.innerHTML = '<p class="fineprint">Couldn\u2019t load the changelog. <a href="https://github.com/davedellaquila/buddy-system/blob/master/CHANGELOG.md" target="_blank" rel="noopener">View it on GitHub</a>.</p>'; });
   const x = m.querySelector('.wn-x');

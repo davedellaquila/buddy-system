@@ -3,6 +3,11 @@
 All notable changes to the Buddies dashboard and buddy system. Newest first.
 `FEATURES.md` describes the current state; this file describes how it got there.
 
+## 2026-10-11 (What's New modal actually shows what's new)
+
+### Fixed
+- **"What's new" always said "nothing new":** the modal marked the changelog's newest heading as seen *before* splitting it into new vs. old sections — so every section landed in "old" and the "new" list was always empty. It now splits first, renders, and only then marks the latest heading seen.
+
 ## 2026-10-11 (Press-and-hold to drag on the tree)
 
 ### Changed
