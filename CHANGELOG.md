@@ -3,6 +3,12 @@
 All notable changes to the Buddies dashboard and buddy system. Newest first.
 `FEATURES.md` describes the current state; this file describes how it got there.
 
+## 2026-10-11 (Dump edit fixes)
+
+### Fixed
+- **Edit button on freshly-added dumps did nothing:** `prependDumpEntry` never wired the new entry's edit/delete buttons and left the older entries' indices stale (tapping edit hit the wrong dump). Buttons are now re-indexed and wired after every prepend.
+- **No way to exit dump edit mode on touch devices:** the editor only closed on Escape (no Escape key on iPhone). There's now a Done button that flushes any pending autosave and re-renders the feed.
+
 ## 2026-10-11 (Add child/sibling from the info panel)
 
 ### Added

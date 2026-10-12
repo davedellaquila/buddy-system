@@ -3471,6 +3471,14 @@ function prependDumpEntry(id, e){
   entries.unshift(e);
   feed._entries = entries;
   if (head) head.textContent = 'Dumps (' + entries.length + ')';
+  // Re-index all edit/delete buttons (the unshift moved every entry down one)
+  // and wire the new buttons — without this, edit taps on fresh dumps do nothing
+  // and taps on older dumps hit the wrong entry.
+  body.querySelectorAll('.attn').forEach(function(tile, i){
+    const eb = tile.querySelector('[data-dump-edit]'); if (eb) eb.setAttribute('data-dump-edit', i);
+    const db = tile.querySelector('[data-dump-del]'); if (db) db.setAttribute('data-dump-del', i);
+  });
+  wireDumpButtons(feed, id);
   // Expand if collapsed so the new dump is visible
   const dumps = feed.querySelector('.dumps');
   if (dumps && dumps.classList.contains('collapsed')) {
@@ -3654,11 +3662,20 @@ function editDump(id, idx, btn){
   const acts = tile.querySelector('.dump-actions');
   if (acts) acts.style.display = 'none';
   textDiv.innerHTML = '<textarea class="notes" style="min-height:90px">' + escHtml(e.body) + '</textarea>'
-    + '<div class="fineprint" data-dump-status style="margin-top:4px;min-height:16px"></div>';
+    + '<div style="display:flex;align-items:center;gap:10px;margin-top:6px"><div class="fineprint" data-dump-status style="flex:1;min-height:16px"></div><button class="dump-act" data-dump-done style="font-size:13px;font-weight:600;padding:6px 14px;border:1px solid var(--border);border-radius:20px;background:var(--bg)">Done</button></div>';
   const ta = textDiv.querySelector('textarea');
   const st = textDiv.querySelector('[data-dump-status]');
   ta.focus();
   ta.selectionStart = ta.selectionEnd = ta.value.length;
+  textDiv.querySelector('[data-dump-done]').addEventListener('click', function(ev){
+    ev.stopPropagation();
+    clearTimeout(t);
+    // Flush any pending autosave before leaving edit mode
+    const v = ta.value.trim();
+    const done = function(){ renderIngestFeed(id); };
+    if (v && v !== e.body) { saveDumpBody(id, idx, v).then(done, done); }
+    else done();
+  });
   let t = null;
   ta.addEventListener('input', function(){
     clearTimeout(t);
