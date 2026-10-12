@@ -3,6 +3,11 @@
 All notable changes to the Buddies dashboard and buddy system. Newest first.
 `FEATURES.md` describes the current state; this file describes how it got there.
 
+## 2026-10-11 (Press-and-hold to drag on the tree)
+
+### Changed
+- **Tree node drag now needs a press-and-hold (~400ms) before it arms:** previously any press that moved >6px started a drag, so taps could accidentally grab nodes. Now a quick tap always opens the detail panel; holding briefly shows an accent ring on the node, and only then does moving start the drag.
+
 ## 2026-10-11 (Undo for tree reparenting)
 
 ### Added

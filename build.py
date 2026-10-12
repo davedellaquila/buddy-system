@@ -845,6 +845,7 @@ body.standalone .sa-bar{display:flex}
 #treezoom .node[data-buddy]:not(.root){touch-action:none;cursor:grab}
 #treezoom .node[data-buddy]:not(.root):active{cursor:grabbing}
 #treezoom .node.drag-src{opacity:.35}
+#treezoom .node.drag-armed{box-shadow:0 0 0 2px var(--accent),0 8px 24px rgba(0,0,0,.4)}
 #treezoom .node.drop-invalid{outline:2px dashed #e0533d;outline-offset:3px}
 .node-drag-ghost{position:fixed;left:0;top:0;z-index:9999;pointer-events:none;width:196px;opacity:.94;
   transform:translate(-50%,-118%) rotate(-2deg);
@@ -2951,16 +2952,18 @@ function initPan(){
 }
 initPan();
 /* ---------- tree node drag-to-reparent (pointer events: mouse + touch) ----------
-   Whole-tile drag: press a node and move >6px to drag it; a simple tap still
-   opens the buddy detail panel. Works with mouse and touch (HTML5 DnD never
-   fires on touch, which is why the old gripper handles could not work there).
-   Dragging a node reparents it; dragging empty background pans the chart. */
+   Press-and-hold a node (~400ms) to arm it, then move >6px to drag it; a
+   simple tap still opens the buddy detail panel. Works with mouse and touch
+   (HTML5 DnD never fires on touch, which is why the old gripper handles could
+   not work there). Dragging a node reparents it; dragging empty background
+   pans the chart. */
 let nodeDragEndAt = 0; // timestamp of last node-drag gesture; used to swallow the follow-up click
 (function initNodeDrag(){
   const tz = document.getElementById('treezoom');
   if (!tz) return;
-  const THRESH = 6; // px of movement before a press becomes a drag (less = click)
-  let cand = null;  // {id, x0, y0, pid} — pressed on a node, drag not yet started
+  const THRESH = 6; // px of movement before an armed press becomes a drag (less = click)
+  const HOLD_MS = 400; // press-and-hold delay: a node must be held this long before it can be dragged
+  let cand = null;  // {id, x0, y0, pid, touch, armed, timer} — pressed on a node, drag not yet armed/started
   let drag = null;  // {id, pid, ghost, target} — active drag
 
   function treeNodeFrom(el){
@@ -3001,9 +3004,10 @@ let nodeDragEndAt = 0; // timestamp of last node-drag gesture; used to swallow t
   }
   function cleanup(){
     clearHl();
-    tz.querySelectorAll('.node.drag-src').forEach(function(x){ x.classList.remove('drag-src'); });
+    tz.querySelectorAll('.node.drag-src,.node.drag-armed').forEach(function(x){ x.classList.remove('drag-src', 'drag-armed'); });
     if (drag && drag.ghost && drag.ghost.parentNode) drag.ghost.parentNode.removeChild(drag.ghost);
     document.body.classList.remove('node-dragging');
+    if (cand && cand.timer) clearTimeout(cand.timer);
     drag = null; cand = null;
   }
   function beginDrag(x, y){
@@ -3035,7 +3039,16 @@ let nodeDragEndAt = 0; // timestamp of last node-drag gesture; used to swallow t
     if (!n) return;
     const id = n.dataset.buddy;
     if (!id || id === ROOT_ID) return; // root can't be reparented
-    cand = { id: id, x0: e.clientX, y0: e.clientY, pid: e.pointerId, touch: e.pointerType === 'touch' };
+    if (cand && cand.timer) clearTimeout(cand.timer);
+    cand = { id: id, x0: e.clientX, y0: e.clientY, pid: e.pointerId, touch: e.pointerType === 'touch', armed: false, timer: null };
+    // Press-and-hold: the node becomes draggable only after HOLD_MS. A quick
+    // tap (down+up before the timer) never enters drag mode — it opens the panel.
+    cand.timer = setTimeout(function(){
+      if (!cand || drag) return;
+      cand.armed = true;
+      const src = tz.querySelector('.node[data-buddy="' + cand.id + '"]');
+      if (src) src.classList.add('drag-armed');
+    }, HOLD_MS);
   });
   window.addEventListener('pointermove', function(e){
     // Two-finger pinch owns the gesture — abort any node drag candidate
@@ -3048,7 +3061,7 @@ let nodeDragEndAt = 0; // timestamp of last node-drag gesture; used to swallow t
     }
     if (cand && e.pointerId === cand.pid) {
       const dx = e.clientX - cand.x0, dy = e.clientY - cand.y0;
-      if (dx * dx + dy * dy > THRESH * THRESH) beginDrag(e.clientX, e.clientY);
+      if (cand.armed && dx * dx + dy * dy > THRESH * THRESH) beginDrag(e.clientX, e.clientY);
     }
   }, { passive: true });
   function finish(e, cancelled){
@@ -3059,7 +3072,12 @@ let nodeDragEndAt = 0; // timestamp of last node-drag gesture; used to swallow t
       if (!cancelled && tid) moveBuddy(src, tid);
       return;
     }
-    if (cand && e.pointerId === cand.pid) cand = null;
+    if (cand && e.pointerId === cand.pid) {
+      if (cand.timer) clearTimeout(cand.timer);
+      const src = tz.querySelector('.node[data-buddy="' + cand.id + '"]');
+      if (src) src.classList.remove('drag-armed');
+      cand = null;
+    }
   }
   window.addEventListener('pointerup', function(e){ finish(e, false); });
   window.addEventListener('pointercancel', function(e){ finish(e, true); });

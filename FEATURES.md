@@ -27,11 +27,12 @@ Build: `build.py` generates `index.html` from `buddies.json` + `plans.json`.
 - **Grab-to-pan** — click-drag the chart to slide it around; grab/grabbing
   cursors; small movements still count as clicks; the stray click after a
   drag is swallowed so you don't navigate by accident.
-- **Drag-to-reparent on tiles** — grab any tree tile and drag it onto another
-  buddy to reparent it. Pointer-based (mouse + touch), so it works on
-  iPhone/iPad where HTML5 drag-and-drop never fires. A tap still opens the
-  buddy's detail panel (drag vs. click distinguished by a 6px movement
-  threshold); the stray click after a drag is swallowed. Loop protection:
+- **Drag-to-reparent on tiles** — press-and-hold a tree tile (~400ms, accent
+  ring shows when armed), then drag it onto another buddy to reparent it.
+  Pointer-based (mouse + touch), so it works on iPhone/iPad where HTML5
+  drag-and-drop never fires. A quick tap still opens the buddy's detail panel
+  (drag vs. tap distinguished by the hold delay + a 6px movement threshold);
+  the stray click after a drag is swallowed. Loop protection:
   can't drop a parent onto its own descendant (invalid targets get a red
   dashed outline). Root can't be dragged; dropping onto root makes a buddy
   top-level. Every move shows an Undo toast (~6s) — tap it to restore the
