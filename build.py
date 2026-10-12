@@ -5698,7 +5698,15 @@ document.addEventListener('click', e => {
     if (pt) {
       const bid = pt.dataset.projToggle;
       if (!S.projCollapsed || typeof S.projCollapsed !== 'object') S.projCollapsed = {};
-      S.projCollapsed[bid] = !S.projCollapsed[bid];
+      if (e.shiftKey) {
+        // Shift-click: apply to all project sections
+        const willCollapse = !S.projCollapsed[bid];
+        document.querySelectorAll('#view-projects [data-proj-toggle]').forEach(el => {
+          S.projCollapsed[el.dataset.projToggle] = willCollapse;
+        });
+      } else {
+        S.projCollapsed[bid] = !S.projCollapsed[bid];
+      }
       save(); renderProjects();
       return;
     }
