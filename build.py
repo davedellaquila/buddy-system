@@ -1126,7 +1126,7 @@ const VIEW_DEFS = [
   ['plans','Business Plans','💼'],
   ['manifest','Manifest','✓'],
   ['project','Homepage','🏠'],
-  ['changelog','Changelog','🕘'],
+  ['changelog','Change Log','🕘'],
   ['releases','Release Notes','🎁'],
 ];
 const VIEW_TIPS = {
@@ -1135,7 +1135,7 @@ const VIEW_TIPS = {
   plans: 'Business Plans — real-world ventures as cards. Click a status tile to filter. Each card links to its mission statement and related buddies.',
   manifest: 'New-Project Manifest — the checklist every new buddy gets. Click AUTOMATIC or PLANNED tiles to filter the steps.',
   project: 'Homepage — loads the selected buddy homepage full-bleed in the main view. Clicking a buddy with a homepage swaps it; clicking one without keeps the current page.',
-  changelog: 'Changelog — history of everything that changed. Click a tile to filter by change type. Click a row to open the changed buddy.',
+  changelog: 'Change Log — history of everything that changed. Click a tile to filter by change type. Click a row to open the changed buddy.',
   releases: 'Release Notes — what shipped, newest first. New since you last looked on top, earlier history below.',
 };
 function getViewOrder(){
@@ -1245,7 +1245,7 @@ function renderChangelog(){
   }).join('');
   let h = '<section class="changelog" style="margin:24px auto 0;max-width:860px">'
     + (typeTiles ? '<div id="changelog-tiles" style="display:flex;gap:12px;margin-bottom:20px;flex-wrap:wrap">' + typeTiles + '</div>' : '')
-    + '<h2>Changelog</h2>'
+    + '<h2>Change Log</h2>'
     + '<p class="sub">Every change made in this dashboard, newest first.</p>';
   const js = (S.journal || []).slice().reverse().filter(c => !clFilter || (c && c.type) === clFilter);
   if (!js.length) { el.innerHTML = h + '<p class="fineprint">' + (clFilter ? 'No changes of this type yet.' : 'No changes yet.') + '</p></section>'; return; }

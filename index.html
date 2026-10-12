@@ -1475,7 +1475,7 @@ const VIEW_DEFS = [
   ['plans','Business Plans','💼'],
   ['manifest','Manifest','✓'],
   ['project','Homepage','🏠'],
-  ['changelog','Changelog','🕘'],
+  ['changelog','Change Log','🕘'],
   ['releases','Release Notes','🎁'],
 ];
 const VIEW_TIPS = {
@@ -1484,7 +1484,7 @@ const VIEW_TIPS = {
   plans: 'Business Plans — real-world ventures as cards. Click a status tile to filter. Each card links to its mission statement and related buddies.',
   manifest: 'New-Project Manifest — the checklist every new buddy gets. Click AUTOMATIC or PLANNED tiles to filter the steps.',
   project: 'Homepage — loads the selected buddy homepage full-bleed in the main view. Clicking a buddy with a homepage swaps it; clicking one without keeps the current page.',
-  changelog: 'Changelog — history of everything that changed. Click a tile to filter by change type. Click a row to open the changed buddy.',
+  changelog: 'Change Log — history of everything that changed. Click a tile to filter by change type. Click a row to open the changed buddy.',
   releases: 'Release Notes — what shipped, newest first. New since you last looked on top, earlier history below.',
 };
 function getViewOrder(){
@@ -1594,7 +1594,7 @@ function renderChangelog(){
   }).join('');
   let h = '<section class="changelog" style="margin:24px auto 0;max-width:860px">'
     + (typeTiles ? '<div id="changelog-tiles" style="display:flex;gap:12px;margin-bottom:20px;flex-wrap:wrap">' + typeTiles + '</div>' : '')
-    + '<h2>Changelog</h2>'
+    + '<h2>Change Log</h2>'
     + '<p class="sub">Every change made in this dashboard, newest first.</p>';
   const js = (S.journal || []).slice().reverse().filter(c => !clFilter || (c && c.type) === clFilter);
   if (!js.length) { el.innerHTML = h + '<p class="fineprint">' + (clFilter ? 'No changes of this type yet.' : 'No changes yet.') + '</p></section>'; return; }
@@ -2650,7 +2650,7 @@ function renderBuddy(id){
     + '<div class="bp-sec" data-field="shared"><h3>Shared notes<span class="info-tip" data-tip="Anybody with repo access can see this note. Saved to the buddy’s repo (docs/notes.md).">ⓘ</span></h3>'
     + '<textarea class="notes" id="bp-shared-notes" placeholder="Anybody with repo access can see this note."></textarea>'
     + '<p class="fineprint" id="shared-status"></p></div>'
-    + '<div class="bp-build">Build 20261011.2310</div>'
+    + '<div class="bp-build">Build 20261011.2311</div>'
     + '</div>';
   const nm = document.getElementById('bp-name');
   nm.addEventListener('keydown', e => { if (e.key === 'Enter'){ e.preventDefault(); nm.blur(); } });
@@ -3617,7 +3617,7 @@ function renderPlan(id){
     + '<p class="fineprint">Saved on this device. (For your eyes only)</p></div>'
     + '<div class="bp-sec"><h3>Shared notes<span class="info-tip" data-tip="Visible to everyone with access to this project.">\u24d8</span></h3><textarea class="notes" id="bp-shared" placeholder="Shared notes\u2026 (visible to everyone with access)">'+escHtml((S.planShared||{})[id]||'')+'</textarea>'
     + '<p class="fineprint">Shared — visible to everyone with access.</p></div>'
-    + '<div class="bp-build">Build 20261011.2310</div>'
+    + '<div class="bp-build">Build 20261011.2311</div>'
     + '</div>';
   const nt = document.getElementById('bp-notes');
   let t = null;
@@ -5098,7 +5098,7 @@ function openWhatsNew(){
   head.insertBefore(updBtn, head.querySelector('.wn-x'));
   fetch('version.txt?_=' + Date.now(), {cache: 'no-store'})
     .then(r => r.ok ? r.text() : '')
-    .then(t => { if (t.trim() && t.trim() !== '20261011.2310') updBtn.style.display = ''; })
+    .then(t => { if (t.trim() && t.trim() !== '20261011.2311') updBtn.style.display = ''; })
     .catch(() => {});
   fetch('https://raw.githubusercontent.com/davedellaquila/buddy-system/master/CHANGELOG.md?_' + Date.now(), {cache: 'no-store'})
     .then(r => { if (!r.ok) throw new Error('fetch failed'); return r.text(); })
@@ -5126,7 +5126,7 @@ function openWhatsNew(){
   if (x) x.focus();
 }
 function initVersionCheck(){
-  const myBuild = '20261011.2310';
+  const myBuild = '20261011.2311';
   function showUpdateBanner(serverBuild){
     if (document.getElementById('update-banner')) return;
     const b = document.createElement('div');
