@@ -3,6 +3,26 @@
 All notable changes to the Buddies dashboard and buddy system. Newest first.
 `FEATURES.md` describes the current state; this file describes how it got there.
 
+## 2026-10-12 (Done affordance: Jonny's circle + Undo; build numbers on What's new)
+
+### Added
+- **Jonny's Done affordance.** The info panel's attention items now use the
+  existing empty circle as the checkbox — tap it and it fills with accent +
+  white check (~200ms), the tile glides out, and a "Marked done. Undo." toast
+  appears for 6s. No confirmation dialog, ever. Done items leave the list
+  entirely (emptiness is the goal); the done timestamp is recorded in
+  `S.seen[id]` for the Undo window and persists. "Mark all done" gets the
+  same Undo treatment. `role="checkbox"` + `aria-checked` + keyboard support.
+- **Build numbers on What's new.** The update banner now reads "You're on
+  build X. Build Y is available." The What's new sheet shows your current
+  build at the top, plus the new build when one is available. (Dave: "i think
+  they should.")
+
+### Changed
+- **Astro's homepage uses the same circle.** The "✓ Done" button is replaced
+  with Jonny's circle checkbox; "Need more info" is now a quiet subordinate
+  link. Same 200ms fill, glide-out, and GitHub writeback behavior.
+
 ## 2026-10-12 (Ledger: drag grippers + Parent one-liner)
 
 ### Added

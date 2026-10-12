@@ -50,6 +50,12 @@ Build: `build.py` generates `index.html` from `buddies.json` + `plans.json`.
 - **Quick Answers bar** — up to 12 pending attention items as tappable chips
   above the tree; tap to jump to that buddy's question. One horizontally
   scrolling row, so it never crowds the chart.
+- **Done affordance (Jonny)** — info-panel attention items use the empty
+  circle as the checkbox: tap → accent fill + white check (~200ms) → tile
+  glides out → "Marked done. Undo." toast for 6s. Done items leave the list;
+  the timestamp is recorded. Same circle on Astro's homepage (replacing the
+  "✓ Done" button); "Need more info" stays a quiet link. `role="checkbox"`
+  with keyboard support.
 - **Collapse pills** — parent tiles carry a ⌄/› pill with their descendant
   count; tap to collapse/expand the whole subtree. State persists.
 - **Hairline connectors** — 1px tree lines with 8px elbow radius; 20px
