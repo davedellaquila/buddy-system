@@ -678,6 +678,15 @@ body.standalone .sa-bar{display:flex}
 .node.drop-target{outline:2px solid var(--accent);outline-offset:3px}
 .proj-row.drop-target{background:var(--active);box-shadow:inset 0 0 0 2px var(--accent)}
 #view-projects .proj-row[data-buddy]{cursor:pointer}
+.proj-search-sticky{position:sticky;top:0;z-index:5;background:var(--bg);padding:8px 0;border-bottom:1px solid var(--border)}
+.proj-controls{display:flex;gap:8px;align-items:center}
+.proj-controls #proj-search{width:100%;box-sizing:border-box;background:var(--bg);border:1px solid var(--border);color:var(--text);border-radius:8px;padding:7px 30px 7px 10px;font-size:13px}
+.proj-controls #proj-search-clear{position:absolute;right:6px;top:50%;transform:translateY(-50%);border:none;background:transparent;color:var(--muted);font-size:18px;line-height:1;cursor:pointer;padding:4px 8px;border-radius:6px}
+.proj-controls #proj-search-clear:hover{color:var(--text);background:rgba(127,127,127,.18)}
+.proj-mode-toggle{display:flex;border:1px solid var(--border);border-radius:8px;overflow:hidden;flex-shrink:0}
+.proj-mode-toggle button{border:none;background:transparent;color:var(--muted);padding:7px 12px;font-size:13px;cursor:pointer}
+.proj-mode-toggle button.sel{background:var(--active);color:var(--text)}
+.proj-mode-toggle button+button{border-left:1px solid var(--border)}
 /* ---- buddy homepage ---- */
 .bp-wrap{max-width:880px;margin:0 auto;padding:6px 4px}
 .bp-crumb{font-size:12.5px;color:var(--muted);margin-bottom:10px}
@@ -1766,7 +1775,7 @@ function tileHtml(label, num, tint, sub, fkey, sel, tip){
     + '<div class="ptile-num">' + escHtml(String(num)) + '</div>'
     + '<div class="ptile-sub">' + escHtml(sub) + '</div></div>';
 }
-let projFilter = null, clFilter = null, planFilter = null, manifestFilter = null, statusFilter = null;
+let projFilter = null, clFilter = null, planFilter = null, manifestFilter = null, statusFilter = null, projSearch = '', projViewMode = 'hier';
 function applyManifestFilter(){
   document.querySelectorAll('#view-manifest .proj-row').forEach(r => {
     const isAuto = !!r.querySelector('.st-auto');
@@ -2557,7 +2566,16 @@ function renderProjects(){
     + statusOrder.map(st => tileHtml(st.toUpperCase(), statusCounts[st], statusTints[st] || '#8b949e', '', 'status:' + st, statusFilter === st, 'Click to filter by ' + st + ' status. Click again to clear.')).join('')
     + '</div>'
     + '<h2>Projects by Buddy</h2>'
-    + '<p class="sub">Every buddy, in hierarchy order, with its current status.</p><div class="proj-list">';
+    + '<div class="proj-search-sticky"><div class="proj-controls">'
+    + '<div class="sb-search-wrap" style="flex:1;min-width:0">'
+    + '<input type="search" id="proj-search" placeholder="Search projects\u2026" aria-label="Search projects" value="'+escHtml(projSearch)+'">'
+    + '<button type="button" id="proj-search-clear" aria-label="Clear search" title="Clear search"'+(projSearch?'':' hidden')+'>\u00d7</button>'
+    + '</div>'
+    + '<div class="proj-mode-toggle" role="group" aria-label="List layout">'
+    + '<button type="button" data-proj-mode="hier" class="'+(projViewMode==='hier'?'sel':'')+'" title="Hierarchical listing">\u2630</button>'
+    + '<button type="button" data-proj-mode="alpha" class="'+(projViewMode==='alpha'?'sel':'')+'" title="Alphabetical listing">A\u2013Z</button>'
+    + '</div></div></div>'
+    + '<p class="sub">'+(projViewMode==='alpha'?'Every buddy, A to Z, with its current status.':'Every buddy, in hierarchy order, with its current status.')+'</p><div class="proj-list">';
   // When a tile filter is active, show matching buddies plus their ancestors
   let showIds = null;
   if (projFilter) {
@@ -2582,22 +2600,49 @@ function renderProjects(){
       while (x) { showIds[x.id] = true; const p = effParent(x); x = p ? byId[p] : null; }
     });
   }
-  (function walk(id, depth){
-    const b = byId[id]; if (!b) return;
-    if (showIds && !showIds[id]) return;
-    const kids = kidsOf[id] || [];
-    const hasKids = kids.length > 0;
-    const collapsed = (projFilter || statusFilter) ? false : !!S.projCollapsed[id];
-    s += '<div class="proj-row d' + Math.min(depth, 3) + '" data-buddy="' + b.id + '">'
+  // Text search: match name or tagline, show matches plus their ancestors
+  if (projSearch) {
+    const q = projSearch.toLowerCase();
+    const sm = {};
+    Object.values(byId).forEach(b => {
+      const hay = ((b.name || '') + ' ' + (b.tagline || '')).toLowerCase();
+      if (!hay.includes(q)) return;
+      let x = b;
+      while (x) { sm[x.id] = true; const p = effParent(x); x = p ? byId[p] : null; }
+    });
+    showIds = showIds ? Object.keys(showIds).filter(id => sm[id]).reduce((o, id) => (o[id] = true, o), {}) : sm;
+  }
+  const projRowHtml = b => '<div class="proj-row" data-buddy="' + b.id + '">'
       + '<div class="proj-row-head">'
-      + (hasKids ? '<span class="parrow ' + (collapsed ? '' : 'expanded') + '" data-proj-toggle="' + b.id + '">\u203a</span>' : '')
       + '<span class="pname">' + iconName(b) + '</span>'
       + '<span class="status ' + b.statusClass + '">' + escHtml(b.status) + '</span>'
       + '<button class="proj-info" data-proj-info="' + b.id + '" title="Open ' + escHtml(dispName(b)) + ' details (right panel)" style="background:none;border:none;cursor:pointer;font-size:16px;padding:4px 8px;opacity:0.6" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.6">\u24d8</button>'
       + '</div>'
       + '<span class="pdesc">' + escHtml(b.tagline || '') + '</span></div>';
-    if (!collapsed) kids.forEach(c => walk(c.id, depth + 1));
-  })(ROOT_ID, 0);
+  if (projViewMode === 'alpha') {
+    // Flat A-Z listing; search/tile filters narrow the set
+    Object.values(byId)
+      .filter(b => !showIds || showIds[b.id])
+      .sort((a, b) => dispName(a).toLowerCase().localeCompare(dispName(b).toLowerCase()))
+      .forEach(b => { s += projRowHtml(b); });
+  } else {
+    (function walk(id, depth){
+      const b = byId[id]; if (!b) return;
+      if (showIds && !showIds[id]) return;
+      const kids = kidsOf[id] || [];
+      const hasKids = kids.length > 0;
+      const collapsed = (projFilter || statusFilter) ? false : !!S.projCollapsed[id];
+      s += '<div class="proj-row d' + Math.min(depth, 3) + '" data-buddy="' + b.id + '">'
+        + '<div class="proj-row-head">'
+        + (hasKids ? '<span class="parrow ' + (collapsed ? '' : 'expanded') + '" data-proj-toggle="' + b.id + '">\u203a</span>' : '')
+        + '<span class="pname">' + iconName(b) + '</span>'
+        + '<span class="status ' + b.statusClass + '">' + escHtml(b.status) + '</span>'
+        + '<button class="proj-info" data-proj-info="' + b.id + '" title="Open ' + escHtml(dispName(b)) + ' details (right panel)" style="background:none;border:none;cursor:pointer;font-size:16px;padding:4px 8px;opacity:0.6" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.6">\u24d8</button>'
+        + '</div>'
+        + '<span class="pdesc">' + escHtml(b.tagline || '') + '</span></div>';
+      if (!collapsed) kids.forEach(c => walk(c.id, depth + 1));
+    })(ROOT_ID, 0);
+  }
   s += '</div></section>';
   const vp = document.getElementById('view-projects');
   vp.innerHTML = s;
@@ -4591,6 +4636,15 @@ document.addEventListener('click', e => {
   }
 });
 document.addEventListener('keydown', e => { if (e.key === 'Escape') tipPopClose(); });
+document.addEventListener('input', e => {
+  if (e.target && e.target.id === 'proj-search') {
+    projSearch = e.target.value;
+    const pos = e.target.selectionStart;
+    renderProjects();
+    const ni = document.getElementById('proj-search');
+    if (ni) { ni.focus(); try { ni.setSelectionRange(pos, pos); } catch (err) {} }
+  }
+});
 document.addEventListener('click', e => {
   if (nodeDragEndAt && Date.now() - nodeDragEndAt < 400) return; // swallow the click that follows a node-drag gesture
   if (edgeOpenAt && Date.now() - edgeOpenAt < 400) return; // swallow the click that follows an edge-swipe open
@@ -4657,6 +4711,9 @@ document.addEventListener('click', e => {
   }
   const vb = e.target.closest('[data-view]');
   if (vb) { show('view:' + vb.dataset.view); if (window.innerWidth < 640) { const sbo=document.getElementById('sidebar'); if(sbo) sbo.classList.remove('open'); const sco=document.getElementById('sb-scrim'); if(sco) sco.classList.remove('show'); } return; }
+  const pmb = e.target.closest('[data-proj-mode]');
+  if (pmb) { projViewMode = pmb.dataset.projMode; renderProjects(); return; }
+  if (e.target.closest && e.target.closest('#proj-search-clear')) { projSearch = ''; renderProjects(); const ps = document.getElementById('proj-search'); if (ps) ps.focus(); return; }
   const pb = e.target.closest('[data-plan]');
   if (pb) { e.preventDefault(); show('plan:' + pb.dataset.plan); return; }
   // Don't auto-close the phone drawer for sidebar chrome (#sb-to-top is a sibling of #sidebar)
