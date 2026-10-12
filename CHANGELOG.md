@@ -3,6 +3,11 @@
 All notable changes to the Buddies dashboard and buddy system. Newest first.
 `FEATURES.md` describes the current state; this file describes how it got there.
 
+## 2026-10-11 (Side panels snap shut on resize)
+
+### Added
+- **Snap-to-close on panel resize:** drag the sidebar narrower than 140px (or the buddy panel narrower than 220px) and the panel snaps fully shut instead of stopping at its minimum width — no more pushing through a threshold. Reopening restores your last width.
+
 ## 2026-10-11 (Release Notes entries go professional)
 
 ### Changed

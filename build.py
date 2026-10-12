@@ -1822,26 +1822,35 @@ function initPanelResize(){
   vb.dataset.rsz = '1';
   const h = document.getElementById('bp-resize');
   if (!h) return;
-  let sx = null, sw = 0, sdrag = false;
+  let sx = null, sw = 0, sdrag = false, snapped = false;
+  const SNAP_SHUT = 220; /* drag narrower than this → snap the panel closed */
   h.addEventListener('pointerdown', e => {
-    sx = e.clientX; sw = vb.getBoundingClientRect().width; sdrag = false;
+    sx = e.clientX; sw = vb.getBoundingClientRect().width; sdrag = false; snapped = false;
   });
   h.addEventListener('pointermove', e => {
-    if (sx === null) return;
+    if (sx === null || snapped) return;
     if (!sdrag) {
       if (Math.abs(e.clientX - sx) < 6) return; /* tap slop: don't resize on a plain tap */
       sdrag = true;
       try { h.setPointerCapture(e.pointerId); } catch (err) {}
       e.preventDefault();
     }
-    const w = Math.min(560, Math.max(320, sw + (sx - e.clientX)));
+    const raw = sw + (sx - e.clientX);
+    if (raw < SNAP_SHUT) {
+      /* Pushed through the threshold — snap shut instead of stopping at min width */
+      snapped = true;
+      sx = null;
+      closeDetail();
+      return;
+    }
+    const w = Math.min(560, Math.max(320, raw));
     vb.style.width = w + 'px';
     document.documentElement.style.setProperty('--bpw', w + 'px');
   });
   h.addEventListener('pointerup', e => {
     if (sx === null) return;
     sx = null;
-    if (!sdrag) return;
+    if (!sdrag || snapped) return;
     S.panelWidth = Math.round(vb.getBoundingClientRect().width);
     save();
   });
@@ -3439,23 +3448,32 @@ document.addEventListener('keydown', e => {
   const sb = document.getElementById('sidebar');
   applySbWidth();
   const h = document.getElementById('sb-resize');
-  let sx = null, sw = 0, sdrag = false;
-  h.addEventListener('pointerdown', e => { sx = e.clientX; sw = sb.getBoundingClientRect().width; sdrag = false; });
+  let sx = null, sw = 0, sdrag = false, snapped = false;
+  const SNAP_SHUT = 140; /* drag narrower than this → snap the sidebar closed */
+  h.addEventListener('pointerdown', e => { sx = e.clientX; sw = sb.getBoundingClientRect().width; sdrag = false; snapped = false; });
   h.addEventListener('pointermove', e => {
-    if (sx === null) return;
+    if (sx === null || snapped) return;
     if (!sdrag) {
       if (Math.abs(e.clientX - sx) < 6) return; /* tap slop: don't resize on a plain tap */
       sdrag = true;
       try { h.setPointerCapture(e.pointerId); } catch (err) {}
       e.preventDefault();
     }
-    const w = sbClampW(sw + e.clientX - sx);
+    const raw = sw + e.clientX - sx;
+    if (raw < SNAP_SHUT) {
+      /* Pushed through the threshold — snap shut instead of stopping at min width */
+      snapped = true;
+      setSidebarOpen(false);
+      sx = null;
+      return;
+    }
+    const w = sbClampW(raw);
     sb.style.width = w + 'px'; sb.style.flex = '0 0 ' + w + 'px';
     document.documentElement.style.setProperty('--sbw', w + 'px');
   });
   const done = () => {
     if (sx === null) return; sx = null;
-    if (!sdrag) return;
+    if (!sdrag || snapped) return;
     S.sbWidth = Math.round(sb.getBoundingClientRect().width); save();
     applySbWidth();
   };
