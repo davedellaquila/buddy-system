@@ -2097,6 +2097,15 @@ function renderBuddy(id){
     }).join('') + '</div>';
   })();
   let attn = '';
+  const fmtSeenTime = ts => {
+    try {
+      const d = new Date(ts), now = new Date();
+      const time = d.toLocaleTimeString([], {hour:'numeric', minute:'2-digit'});
+      const sameDay = d.toDateString() === now.toDateString();
+      if (sameDay) return time;
+      return d.toLocaleDateString([], {month:'short', day:'numeric'}) + ', ' + time;
+    } catch (e) { return ''; }
+  };
   let unseenCount = 0;
   if (!items.length) attn = '';
   else {
@@ -2106,9 +2115,12 @@ function renderBuddy(id){
       const body = a.url
         ? '<div class="attn-text"><a href="'+escHtml(a.url)+'" target="_blank" rel="noopener">'+txt+' <span class="attn-open">\u2197</span></a></div>'
         : '<div class="attn-text">'+txt+'</div>';
+      const seenAt = S.seen[a.id];
+      const doneNote = (seen && seenAt && typeof seenAt === 'number')
+        ? '<div class="attn-date">Done '+fmtSeenTime(seenAt)+'</div>' : '';
       return '<div class="attn'+(seen?' seen':' unseen')+'" data-attn="'+a.id+'"><span class="adot"></span>'
         + '<div class="attn-body">'+body
-        + '<div class="attn-date">Asked '+a.date+'</div></div>'
+        + '<div class="attn-date">Asked '+a.date+'</div>'+doneNote+'</div>'
         + '<button class="seenbtn'+(seen?' done':'')+'" data-seen="'+a.id+'" title="Mark seen" aria-label="Mark seen">'+(seen?'\u2713':'\u25cb')+'</button></div>';
     }).join('');
     const un = items.filter(a => !S.seen[a.id]).length;
