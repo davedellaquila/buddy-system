@@ -536,13 +536,19 @@ body:has(#token-pill) #panel-open{right:148px}
 .dumps .darrow{transform:rotate(90deg)}
 .dumps.collapsed .darrow{transform:rotate(0deg)}
 .dump-actions{position:absolute;top:10px;right:12px;display:flex;gap:8px;align-items:center}
-.dump-act{background:none;border:none;cursor:pointer;opacity:.55;padding:3px;line-height:1;color:var(--muted);display:inline-flex;align-items:center}
+.dump-act{background:none;border:none;cursor:pointer;opacity:.35;padding:3px;line-height:1;color:var(--muted);display:inline-flex;align-items:center}
 .dump-act:hover{opacity:1;color:var(--text)}
+.dump-act:active{opacity:1}
 .dump-act[data-dump-del]{color:#e0533d}
 .dump-act[data-dump-del]:hover{color:#ff6b5b}
 .dump-act svg{width:14px;height:14px;display:block}
 body.no-write .pdel,body.no-write [data-dump-del],body.no-write [data-dump-edit]{display:none!important}
 .dumps-body .attn-body{padding-right:64px}
+.dumps-body .attn{overflow:hidden;transition:max-height .3s ease,opacity .25s ease,margin .3s ease,padding .3s ease,border-width .3s ease}
+.dumps-body .attn.dump-removing{max-height:0!important;opacity:0;margin-bottom:0!important;padding-top:0!important;padding-bottom:0!important;border-top-width:0;border-bottom-width:0}
+.toast.undo-toast{display:flex;align-items:center;gap:14px;padding:8px 8px 8px 20px;white-space:normal}
+.undo-btn{background:var(--accent);border:none;color:#fff;font:inherit;font-size:14px;font-weight:600;border-radius:999px;padding:8px 18px;cursor:pointer;flex:0 0 auto}
+.undo-btn:active{transform:scale(.96)}
 .dumps.collapsed .dumps-body{display:none}
 /* Sidebar top-right tools: gear + close (44px targets, 8px gap — HIG touch spacing) */
 #sb-tools{position:absolute;top:8px;right:8px;z-index:10;display:flex;align-items:center;gap:8px}
@@ -2473,7 +2479,7 @@ function renderBuddy(id){
     + '<div class="bp-sec" data-field="shared"><h3>Shared notes<span class="info-tip" data-tip="Anybody with repo access can see this note. Saved to the buddy’s repo (docs/notes.md).">ⓘ</span></h3>'
     + '<textarea class="notes" id="bp-shared-notes" placeholder="Anybody with repo access can see this note."></textarea>'
     + '<p class="fineprint" id="shared-status"></p></div>'
-    + '<div class="bp-build">Build 20261011.1701</div>'
+    + '<div class="bp-build">Build 20261011.1707</div>'
     + '</div>';
   const nm = document.getElementById('bp-name');
   nm.addEventListener('keydown', e => { if (e.key === 'Enter'){ e.preventDefault(); nm.blur(); } });
@@ -3284,7 +3290,7 @@ function renderPlan(id){
     + '<p class="fineprint">Saved on this device. (For your eyes only)</p></div>'
     + '<div class="bp-sec"><h3>Shared notes<span class="info-tip" data-tip="Visible to everyone with access to this project.">\u24d8</span></h3><textarea class="notes" id="bp-shared" placeholder="Shared notes\u2026 (visible to everyone with access)">'+escHtml((S.planShared||{})[id]||'')+'</textarea>'
     + '<p class="fineprint">Shared — visible to everyone with access.</p></div>'
-    + '<div class="bp-build">Build 20261011.1701</div>'
+    + '<div class="bp-build">Build 20261011.1707</div>'
     + '</div>';
   const nt = document.getElementById('bp-notes');
   let t = null;
@@ -3664,8 +3670,7 @@ function wireDumpButtons(feed, id){
     if (btn.dataset.wired) return; btn.dataset.wired = '1';
     btn.addEventListener('click', function(ev){
       ev.stopPropagation();
-      if (!confirm('Delete this dump?')) return;
-      deleteDump(id, parseInt(btn.getAttribute('data-dump-del'), 10));
+      deleteDumpWithUndo(id, parseInt(btn.getAttribute('data-dump-del'), 10), btn);
     });
   });
   feed.querySelectorAll('[data-dump-edit]').forEach(function(btn){
@@ -3677,31 +3682,88 @@ function wireDumpButtons(feed, id){
   });
 }
 
-async function deleteDump(id, idx){
+let pendingDumpDelete = null; // single pending delete: {id, op, timer}
+function undoToast(msg, onUndo){
+  document.querySelectorAll('.toast').forEach(function(t){ t.remove(); });
+  const t = document.createElement('div');
+  t.className = 'toast undo-toast'; t.id = 'undo-toast';
+  const span = document.createElement('span'); span.textContent = msg;
+  const btn = document.createElement('button'); btn.className = 'undo-btn'; btn.textContent = 'Undo';
+  btn.addEventListener('click', function(ev){ ev.stopPropagation(); hideUndoToast(); onUndo(); });
+  t.appendChild(span); t.appendChild(btn);
+  document.body.appendChild(t);
+}
+function hideUndoToast(){
+  const t = document.getElementById('undo-toast');
+  if (t && t.parentNode) t.parentNode.removeChild(t);
+}
+// Compute the post-delete stored state WITHOUT writing it. The destructive
+// write waits out the undo window (Jonny: forgiveness, not friction).
+async function computeDumpDelete(id, idx){
   const b = byId[id];
+  if (ghToken() && b.repo) {
+    const md = await ghGetFile(b.repo, 'docs/ingest.md');
+    if (!md) throw new Error('No ingest file.');
+    const parts = md.split(/^## /m);
+    const head = parts[0];
+    const secs = parts.slice(1);
+    const target = secs.length - 1 - idx;
+    if (target < 0 || target >= secs.length) throw new Error('Dump not found.');
+    secs.splice(target, 1);
+    return {kind:'gh', repo:b.repo, path:'docs/ingest.md',
+      content: b64encode(head + secs.map(function(x){ return '## ' + x; }).join('')),
+      msg:'Delete ingest dump for ' + id};
+  }
+  const key = 'ingest:' + id;
+  let arr = [];
+  try { arr = JSON.parse(localStorage.getItem(key) || '[]'); } catch (e) {}
+  const target = arr.length - 1 - idx;
+  if (target < 0 || target >= arr.length) throw new Error('Dump not found.');
+  arr.splice(target, 1);
+  return {kind:'ls', key:key, content: JSON.stringify(arr)};
+}
+async function commitDumpDelete(pd){
+  if (!pd) return;
+  if (pendingDumpDelete === pd) { clearTimeout(pd.timer); pendingDumpDelete = null; }
+  hideUndoToast();
   try {
-    if (ghToken() && b.repo) {
-      const md = await ghGetFile(b.repo, 'docs/ingest.md');
-      if (!md) throw new Error('No ingest file.');
-      const parts = md.split(/^## /m);
-      const head = parts[0];
-      const secs = parts.slice(1);
-      const target = secs.length - 1 - idx;
-      if (target < 0 || target >= secs.length) throw new Error('Dump not found.');
-      secs.splice(target, 1);
-      await ghPutFile(b.repo, 'docs/ingest.md', b64encode(head + secs.map(function(s){ return '## ' + s; }).join('')), 'Delete ingest dump for ' + id);
-    } else {
-      const key = 'ingest:' + id;
-      let arr = [];
-      try { arr = JSON.parse(localStorage.getItem(key) || '[]'); } catch (e) {}
-      const target = arr.length - 1 - idx;
-      if (target < 0 || target >= arr.length) throw new Error('Dump not found.');
-      arr.splice(target, 1);
-      localStorage.setItem(key, JSON.stringify(arr));
+    if (pd.op.kind === 'gh') await ghPutFile(pd.op.repo, pd.op.path, pd.op.content, pd.op.msg);
+    else localStorage.setItem(pd.op.key, pd.op.content);
+  } catch (err) { toast('Delete failed: ' + (err.message || err)); }
+  renderIngestFeed(pd.id);
+}
+async function deleteDumpWithUndo(id, idx, btn){
+  const feed = document.getElementById('ingest-feed');
+  // One pending delete at a time: commit any earlier one first, then
+  // re-resolve this entry's index in the freshly rendered feed.
+  if (pendingDumpDelete) {
+    const prevEntry = (feed && feed._entries) ? feed._entries[idx] : null;
+    await commitDumpDelete(pendingDumpDelete);
+    if (prevEntry) {
+      const fresh = (document.getElementById('ingest-feed') || {})._entries || [];
+      idx = fresh.findIndex(function(e){ return e.stamp === prevEntry.stamp && e.body === prevEntry.body; });
+      if (idx < 0) { toast('Dump already gone.'); return; }
     }
-    toast('Dump deleted.');
-  } catch (err) { toast('Delete failed: ' + (err.message || err)); return; }
-  renderIngestFeed(id);
+  }
+  let op;
+  try { op = await computeDumpDelete(id, idx); }
+  catch (err) { toast('Delete failed: ' + (err.message || err)); return; }
+  // Collapse the card out with motion. Nothing is written until the undo window closes.
+  const card = btn ? btn.closest('.attn') : null;
+  if (card) {
+    card.style.maxHeight = card.scrollHeight + 'px';
+    void card.offsetHeight;
+    card.classList.add('dump-removing');
+    setTimeout(function(){ if (card.parentNode) card.parentNode.removeChild(card); }, 340);
+  }
+  const pd = {id:id, op:op, timer:null};
+  pd.timer = setTimeout(function(){ commitDumpDelete(pd); }, 6000);
+  pendingDumpDelete = pd;
+  undoToast('Dump deleted.', function(){
+    if (pendingDumpDelete === pd) { clearTimeout(pd.timer); pendingDumpDelete = null; }
+    renderIngestFeed(id);
+    toast('Dump restored.');
+  });
 }
 
 async function saveDumpBody(id, idx, newBody){
@@ -4431,7 +4493,7 @@ function openWhatsNew(){
   if (x) x.focus();
 }
 function initVersionCheck(){
-  const myBuild = '20261011.1701';
+  const myBuild = '20261011.1707';
   function showUpdateBanner(serverBuild){
     if (document.getElementById('update-banner')) return;
     const b = document.createElement('div');
