@@ -1056,6 +1056,7 @@ body.standalone .sa-bar{display:flex}
 @keyframes placeholder-pulse{0%,100%{opacity:1}50%{opacity:.35}}
 #bp-ingest::placeholder{animation:placeholder-pulse 3.2s ease-in-out infinite}
 #bp-ingest::-webkit-input-placeholder{animation:placeholder-pulse 3.2s ease-in-out infinite}
+.dump-pending-badge{display:inline-block;font-size:10px;font-weight:600;color:#9a6a00;background:#fff3cd;border:1px solid #e6c200;border-radius:4px;padding:1px 6px;margin-left:8px;vertical-align:middle}
 #ingest-status.dumped-ok{color:var(--grn-tx)}
 /* ---------- Secret nerd settings (tap build number 5x to unlock) ---------- */
 #nerd-modal{position:fixed;inset:0;z-index:10000;display:flex;align-items:center;justify-content:center}
@@ -4949,6 +4950,42 @@ function saveToDesktop(id){
   toast('Saved ' + filename + ' ' + String.fromCharCode(8212) + ' move it to your desktop.');
 }
 /* ---------- ingest ---------- */
+// Pending dump queue (Dave 2026-10-12): when the GitHub write fails (no token,
+// bad token, offline), dumps land in localStorage instead of vanishing. They show
+// in the feed with a "pending sync" badge and flush to the repo on the next
+// successful write or page load with a valid token.
+function getPendingDumps(){
+  try { return JSON.parse(localStorage.getItem('pendingDumps') || '[]'); }
+  catch(e){ return []; }
+}
+function savePendingDumps(q){
+  try { localStorage.setItem('pendingDumps', JSON.stringify(q)); } catch(e){}
+}
+function queuePendingDump(id, stamp, text){
+  const q = getPendingDumps();
+  q.push({buddyId: id, stamp: stamp, body: text, queuedAt: Date.now()});
+  savePendingDumps(q);
+}
+async function flushPendingDumps(){
+  const q = getPendingDumps();
+  if (!q.length || !ghToken()) return;
+  const remaining = [];
+  for (const p of q){
+    const b = byId[p.buddyId];
+    if (!b || !b.repo){ remaining.push(p); continue; }
+    try {
+      const entry = '## ' + p.stamp + String.fromCharCode(10,10) + p.body + String.fromCharCode(10,10);
+      const cur = await ghGetFile(b.repo, 'docs/ingest.md') || '# Ingest log \u2014 ' + b.name + String.fromCharCode(10,10);
+      await ghPutFile(b.repo, 'docs/ingest.md', b64encode(cur + entry), 'Ingest dump for ' + p.buddyId);
+    } catch(err){ remaining.push(p); }
+  }
+  savePendingDumps(remaining);
+  if (remaining.length < q.length) {
+    // Some flushed — refresh the feed if we're looking at a buddy
+    const m = (S.sel || '').match(/^buddy:(.+)/);
+    if (m) renderIngestFeed(m[1]);
+  }
+}
 async function dumpIngest(id, keepText){
   const ta = document.getElementById('bp-ingest'), st = document.getElementById('ingest-status');
   const text = ta.value.trim();
@@ -4956,16 +4993,24 @@ async function dumpIngest(id, keepText){
   const b = byId[id];
   const stamp = new Date().toLocaleString();
   const entry = '## ' + stamp + String.fromCharCode(10,10) + text + String.fromCharCode(10,10);
-  if (!ghToken() || !b.repo) { if (st) st.innerHTML = 'Add a GitHub token to unlock ingest. <a href="https://github.com/settings/tokens" target="_blank" rel="noopener">Get one here</a>.'; return; }
+  const fallBackToQueue = (why) => {
+    queuePendingDump(id, stamp, text);
+    if (!keepText) ta.value = '';
+    if (st) st.innerHTML = 'Saved on this device — will sync to GitHub when a token is available. <a href="https://github.com/settings/tokens" target="_blank" rel="noopener">Get a token</a>';
+    prependDumpEntry(id, {stamp: stamp, body: text, pending: true});
+  };
+  if (!ghToken() || !b.repo) { fallBackToQueue('no-token'); return; }
   if (st) st.textContent = 'Dumping\u2026';
   try {
     const cur = await ghGetFile(b.repo, 'docs/ingest.md') || '# Ingest log \u2014 ' + b.name + String.fromCharCode(10,10);
     await ghPutFile(b.repo, 'docs/ingest.md', b64encode(cur + entry), 'Ingest dump for ' + id);
     if (!keepText) ta.value = '';
     if (st) st.textContent = 'Dumped to ' + b.repo + '/docs/ingest.md';
+    // Flush any queued dumps now that we know the token works
+    flushPendingDumps();
     // Optimistically show the new dump — GitHub API may return stale data right after push
     prependDumpEntry(id, {stamp: stamp, body: text});
-  } catch (err) { if (st) st.textContent = 'Save failed: ' + (err.message || err); }
+  } catch (err) { fallBackToQueue(err.message || err); }
 }
 function prependDumpEntry(id, e){
   const feed = document.getElementById('ingest-feed'); if (!feed) return;
@@ -4976,7 +5021,7 @@ function prependDumpEntry(id, e){
     feed.innerHTML = '<div class="dumps">'
       + '<div class="dumps-head" id="dumps-toggle"><span class="darrow">\u203a</span><h4>Dumps (1)</h4></div>'
       + '<div class="dumps-body"><div style="height:8px"></div>'
-      + '<div class="attn"><div class="dump-actions"><button class="dump-act" data-dump-edit="0" title="Edit this dump">' + ICON_EDIT + '</button><button class="dump-act" data-dump-del="0" title="Delete this dump">' + ICON_TRASH + '</button></div><div class="attn-body"><div class="attn-text">' + linkify(escHtml(e.body.slice(0, 300))) + (e.body.length > 300 ? '\u2026' : '') + '</div><div class="attn-date">' + escHtml(e.stamp) + '</div></div></div>'
+      + '<div class="attn"><div class="dump-actions"><button class="dump-act" data-dump-edit="0" title="Edit this dump">' + ICON_EDIT + '</button><button class="dump-act" data-dump-del="0" title="Delete this dump">' + ICON_TRASH + '</button></div><div class="attn-body"><div class="attn-text">' + linkify(escHtml(e.body.slice(0, 300))) + (e.body.length > 300 ? '\u2026' : '') + (e.pending ? '<span class="dump-pending-badge">pending sync</span>' : '') + '</div><div class="attn-date">' + escHtml(e.stamp) + '</div></div></div>'
       + '</div></div>';
     feed._entries = [e];
     // Wire up the toggle
@@ -4997,7 +5042,7 @@ function prependDumpEntry(id, e){
   if (!body) return;
   const div = document.createElement('div');
   div.className = 'attn';
-  div.innerHTML = '<div class="dump-actions"><button class="dump-act" data-dump-edit="0" title="Edit this dump">' + ICON_EDIT + '</button><button class="dump-act" data-dump-del="0" title="Delete this dump">' + ICON_TRASH + '</button></div><div class="attn-body"><div class="attn-text">' + linkify(escHtml(e.body.slice(0, 300))) + (e.body.length > 300 ? '\u2026' : '') + '</div><div class="attn-date">' + escHtml(e.stamp) + '</div></div>';
+  div.innerHTML = '<div class="dump-actions"><button class="dump-act" data-dump-edit="0" title="Edit this dump">' + ICON_EDIT + '</button><button class="dump-act" data-dump-del="0" title="Delete this dump">' + ICON_TRASH + '</button></div><div class="attn-body"><div class="attn-text">' + linkify(escHtml(e.body.slice(0, 300))) + (e.body.length > 300 ? '\u2026' : '') + '' + (e.pending ? '<span class="dump-pending-badge">pending sync</span>' : '') + '</div><div class="attn-date">' + escHtml(e.stamp) + '</div></div>';
   body.insertBefore(div, body.firstChild);
   // Update count and entries cache
   const head = feed.querySelector('.dumps-head h4');
@@ -5037,13 +5082,16 @@ async function renderIngestFeed(id){
   } else {
     try { entries = (JSON.parse(localStorage.getItem('ingest:' + id) || '[]')).map(e => ({stamp: new Date(e.t).toLocaleString(), body: e.text})).reverse(); } catch (e) {}
   }
+  // Merge pending (not-yet-synced) dumps at the top, newest first
+  const pending = getPendingDumps().filter(p => p.buddyId === id).reverse();
+  pending.forEach(p => entries.unshift({stamp: p.stamp, body: p.body, pending: true}));
   if (!entries.length) { feed.innerHTML = '<p class="fineprint">No dumps yet.</p>'; return; }
   if (!S.dumpsCollapsed || typeof S.dumpsCollapsed !== 'object') S.dumpsCollapsed = {};
   const dCollapsed = S.dumpsCollapsed[id] !== false;
   feed.innerHTML = '<div class="dumps' + (dCollapsed ? ' collapsed' : '') + '">'
     + '<div class="dumps-head" id="dumps-toggle"><span class="darrow">\u203a</span><h4>Dumps (' + entries.length + ')</h4></div>'
     + '<div class="dumps-body"><div style="height:8px"></div>'
-    + entries.map(function(e, i){ return '<div class="attn"><div class="dump-actions"><button class="dump-act" data-dump-edit="' + i + '" title="Edit this dump">' + ICON_EDIT + '</button><button class="dump-act" data-dump-del="' + i + '" title="Delete this dump">' + ICON_TRASH + '</button></div><div class="attn-body"><div class="attn-text">' + linkify(escHtml(e.body.slice(0, 300))) + (e.body.length > 300 ? '\u2026' : '') + '</div><div class="attn-date">' + escHtml(e.stamp) + '</div></div></div>'; }).join('')
+    + entries.map(function(e, i){ return '<div class="attn"><div class="dump-actions"><button class="dump-act" data-dump-edit="' + i + '" title="Edit this dump">' + ICON_EDIT + '</button><button class="dump-act" data-dump-del="' + i + '" title="Delete this dump">' + ICON_TRASH + '</button></div><div class="attn-body"><div class="attn-text">' + linkify(escHtml(e.body.slice(0, 300))) + (e.body.length > 300 ? '\u2026' : '') + (e.pending ? '<span class="dump-pending-badge">pending sync</span>' : '') + '</div><div class="attn-date">' + escHtml(e.stamp) + '</div></div></div>'; }).join('')
     + '</div></div>';
   feed._entries = entries;
   var dt = document.getElementById('dumps-toggle');
@@ -7074,6 +7122,8 @@ renderJournal();
 initTokenPill();
 updateTokenGating();
 initSearch();
+// Flush any dumps that were queued while offline or token-less (Dave 2026-10-12)
+flushPendingDumps();
 initGear();
 initSbToTop();
 initBpToTop();
