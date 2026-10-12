@@ -3,6 +3,11 @@
 All notable changes to the Buddies dashboard and buddy system. Newest first.
 `FEATURES.md` describes the current state; this file describes how it got there.
 
+## 2026-10-12 (Little Guy Buddy: attention action buttons)
+
+### Added
+- **Attention action buttons on the "On my mind" tiles** — each tile now carries ✓ Done / Need more info buttons + a status line (Dave-approved rollout from the Dell'Aquilas homepage). Done appends a DONE entry to docs/ingest.md asking the buddy to clear the item from buddies.json, resolves the tile immediately in the UI, and persists the resolved state in localStorage; Need more info appends a FOLLOW-UP entry. GitHub writes reuse the brain-dump box's shared-token pattern. Adapted from gen_basic_homepages.py's ATTN_JS to the page's warm theme; dark mode + phone-friendly preserved.
+
 ## 2026-10-12 (Morning)
 
 ### Added
