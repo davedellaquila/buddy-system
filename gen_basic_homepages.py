@@ -13,9 +13,18 @@ here — the daily rebuild relies on this distinction.
 import json
 import os
 import html
+import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 os.chdir(HERE)
+
+# Optional: --only <buddy-id> regenerates a single page (used to test
+# template changes on one buddy before the daily rebuild rolls them out).
+only_bid = None
+if '--only' in sys.argv:
+    idx = sys.argv.index('--only')
+    if idx + 1 < len(sys.argv):
+        only_bid = sys.argv[idx + 1]
 
 with open('buddies.json') as f:
     d = json.load(f)
@@ -194,6 +203,126 @@ DUMPBOX_JS = """
 </script>
 """
 
+# ---------------------------------------------------------------------------
+# Attention actions: per-tile follow-up buttons ("Done", "Need more info").
+# Same GitHub write path as the dump box: the shared token from localStorage
+# ('buddyTree.v3' / 'ghToken') appends a timestamped entry to the buddy's
+# docs/ingest.md, which the buddy triages — "Done" asks the buddy to clear
+# the item from buddies.json; "Need more info" asks it to follow up.
+# The tile resolves locally immediately (persisted in localStorage) so Dave
+# sees it handled even before the next rebuild.
+# ---------------------------------------------------------------------------
+ATTN_JS = """
+<script>
+(function(){
+  var tiles = document.querySelectorAll('.attn[data-attn-id]');
+  if (!tiles.length) return;
+  var dumpbox = document.querySelector('.dumpbox');
+  var bid = (dumpbox && dumpbox.getAttribute('data-buddy-id')) || (function(){
+    var p = location.pathname.replace(/\\/+$/, '');
+    return p.substring(p.lastIndexOf('/') + 1);
+  })();
+  function lsGet(){ try { return JSON.parse(localStorage.getItem('buddyTree.v3') || '{}'); } catch(e){ return {}; } }
+  function lsSet(patch){ try { var s = lsGet(); for (var k in patch) s[k] = patch[k]; localStorage.setItem('buddyTree.v3', JSON.stringify(s)); } catch(e){} }
+  function token(){ return lsGet().ghToken || ''; }
+  function b64encode(str){
+    var bytes = new TextEncoder().encode(str), bin = '';
+    bytes.forEach(function(b){ bin += String.fromCharCode(b); });
+    return btoa(bin);
+  }
+  async function ghApi(path, method, body){
+    var t = token();
+    if (!t) throw new Error('Add a GitHub token first.');
+    var r = await fetch('https://api.github.com' + path, {
+      method: method || 'GET',
+      headers: {'Authorization': 'Bearer ' + t, 'Accept': 'application/vnd.github+json', 'Content-Type': 'application/json'},
+      body: body ? JSON.stringify(body) : undefined
+    });
+    if (!r.ok) throw new Error('GitHub ' + r.status);
+    return r.status === 204 ? null : await r.json();
+  }
+  async function ghGetFile(repo, path){
+    try {
+      var j = await ghApi('/repos/davedellaquila/' + repo + '/contents/' + path);
+      if (j && j.content) return {
+        text: new TextDecoder().decode(Uint8Array.from(atob(j.content.replace(/\\n/g, '')), function(c){ return c.charCodeAt(0); })),
+        sha: j.sha
+      };
+    } catch(e){}
+    return null;
+  }
+  var repo = null, buddyName = bid;
+  async function resolveBuddy(){
+    try {
+      var r = await fetch('../buddies.json', {cache: 'no-store'});
+      var d = await r.json();
+      var buds = d.buddies || [];
+      for (var i = 0; i < buds.length; i++) {
+        if (buds[i].id === bid) {
+          if (buds[i].repo) repo = buds[i].repo;
+          if (buds[i].name) buddyName = buds[i].name;
+          break;
+        }
+      }
+    } catch(e){}
+  }
+  function rkey(aid, text){ return bid + '|' + (aid || ('text:' + text.slice(0, 60))); }
+  function isResolved(aid, text){ var m = lsGet().attnDone || {}; return !!m[rkey(aid, text)]; }
+  function setResolved(aid, text){ var s = lsGet(); var m = s.attnDone || {}; m[rkey(aid, text)] = 1; s.attnDone = m; lsSet(s); }
+  function paintResolved(tile, msg){
+    tile.classList.add('resolved');
+    var st = tile.querySelector('.attn-status');
+    if (st) st.textContent = msg;
+  }
+  async function sendAction(tile, entry, okMsg){
+    var st = tile.querySelector('.attn-status');
+    var btns = tile.querySelectorAll('.attn-btn');
+    if (!token()) { st.textContent = 'Add a GitHub token in the Brain dump section above to enable actions.'; return false; }
+    if (!repo) { st.textContent = 'No repo linked for this buddy yet.'; return false; }
+    btns.forEach(function(b){ b.disabled = true; });
+    st.textContent = 'Working…';
+    try {
+      var NL = String.fromCharCode(10);
+      var stamp = new Date().toLocaleString();
+      var cur = await ghGetFile(repo, 'docs/ingest.md');
+      var base = cur ? cur.text : '# Ingest log — ' + buddyName + NL + NL;
+      var body = {message: 'Attention action for ' + bid, content: b64encode(base + '## ' + stamp + NL + NL + entry + NL + NL)};
+      if (cur && cur.sha) body.sha = cur.sha;
+      await ghApi('/repos/davedellaquila/' + repo + '/contents/docs/ingest.md', 'PUT', body);
+      st.textContent = okMsg;
+      return true;
+    } catch(err){
+      st.textContent = 'Save failed: ' + (err.message || err);
+      btns.forEach(function(b){ b.disabled = false; });
+      return false;
+    }
+  }
+  tiles.forEach(function(tile){
+    var aid = tile.getAttribute('data-attn-id') || '';
+    var textEl = tile.querySelector('.attn-text');
+    var text = textEl ? textEl.textContent.trim() : '';
+    if (isResolved(aid, text)) { paintResolved(tile, 'Marked done'); return; }
+    tile.addEventListener('click', function(ev){
+      var btn = ev.target.closest ? ev.target.closest('.attn-btn') : null;
+      if (!btn || btn.disabled) return;
+      var act = btn.getAttribute('data-act');
+      var idBit = aid ? ' (attention id: ' + aid + ')' : '';
+      if (act === 'done') {
+        sendAction(tile,
+          'DONE — Dave marked this done on the homepage: "' + text + '"' + idBit + '. Please remove it from the attention list in buddies.json.',
+          'Marked done — the buddy will clear it.').then(function(ok){ if (ok) { setResolved(aid, text); paintResolved(tile, 'Marked done — the buddy will clear it.'); } });
+      } else if (act === 'info') {
+        sendAction(tile,
+          'FOLLOW-UP — Dave needs more info on: "' + text + '"' + idBit + '. Please follow up with him.',
+          'Sent — ' + buddyName + ' will follow up.');
+      }
+    });
+  });
+  resolveBuddy();
+})();
+</script>
+"""
+
 TEMPLATE = """<!-- BUDDY-BASIC-TEMPLATE v2 -->
 <!DOCTYPE html>
 <html lang="en">
@@ -251,6 +380,18 @@ h2 {{ font-size: 22px; margin: 32px 0 16px; }}
   margin-bottom: 12px;
 }}
 .attn-date {{ color: var(--muted); font-size: 14px; margin-top: 8px; }}
+.attn-actions {{ display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }}
+.attn-btn {{
+  border: 1px solid var(--border); background: var(--bg); color: var(--text);
+  border-radius: 8px; padding: 7px 14px; font-size: 13px; font-weight: 600; cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}}
+.attn-btn:hover {{ border-color: var(--accent); }}
+.attn-btn.primary {{ background: var(--accent); border-color: var(--accent); color: #fff; }}
+.attn-btn:disabled {{ opacity: .45; cursor: default; }}
+.attn-status {{ font-size: 13px; color: var(--muted); margin-top: 8px; min-height: 18px; }}
+.attn.resolved {{ opacity: .6; }}
+.attn.resolved .attn-actions {{ display: none; }}
 .children {{ display: flex; flex-wrap: wrap; gap: 12px; }}
 .child {{
   background: var(--card);
@@ -292,6 +433,7 @@ h2 {{ font-size: 22px; margin: 32px 0 16px; }}
 Generated {date} · Part of the Buddy System
 </div>
 {dumpbox_js}
+{attn_js}
 </body>
 </html>
 """
@@ -313,6 +455,8 @@ def is_template_page(idxpath):
 generated = []
 for b in d['buddies']:
     bid = b['id']
+    if only_bid and bid != only_bid:
+        continue
     dirpath = os.path.join(HERE, bid)
     idxpath = os.path.join(dirpath, 'index.html')
     has_page = os.path.exists(idxpath)
@@ -332,10 +476,14 @@ for b in d['buddies']:
         for a in attn_items[:10]:
             text = html.escape(a.get('text', str(a)) if isinstance(a, dict) else str(a))
             date = html.escape(a.get('date', '') if isinstance(a, dict) else '')
-            attn_html += f'<div class="attn"><div>{text}</div>'
+            aid = html.escape(a.get('id', '') if isinstance(a, dict) else '', quote=True)
+            attn_html += f'<div class="attn" data-attn-id="{aid}"><div class="attn-text">{text}</div>'
             if date:
                 attn_html += f'<div class="attn-date">{date}</div>'
-            attn_html += '</div>\n'
+            attn_html += ('<div class="attn-actions">'
+                          '<button type="button" class="attn-btn primary" data-act="done">✓ Done</button>'
+                          '<button type="button" class="attn-btn" data-act="info">Need more info</button>'
+                          '</div><div class="attn-status" role="status"></div></div>\n')
         attention_section = attn_html
     else:
         attention_section = '<h2>Needs Attention</h2>\n<p class="empty">Nothing needs attention right now.</p>'
@@ -369,6 +517,7 @@ for b in d['buddies']:
         dumpbox_css=DUMPBOX_CSS,
         dumpbox_html=dumpbox_html,
         dumpbox_js=DUMPBOX_JS,
+        attn_js=ATTN_JS,
     )
 
     # Write to <bid>/index.html
