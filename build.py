@@ -1387,7 +1387,6 @@ function closeDetail(){
 const FIELD_DEFS = [
   {id:'ingest', label:'Ingest'},
   {id:'attention', label:'Needs your attention'},
-  {id:'mission', label:'About'},
   {id:'aka', label:'A.K.A.'},
   {id:'reports', label:'Direct reports'},
   {id:'homepage', label:'Homepage URL'},
@@ -1397,9 +1396,14 @@ const FIELD_DEFS = [
   {id:'plans', label:'Business plans'},
   {id:'notes', label:'Private notes'},
   {id:'shared', label:'Shared notes'},
+  {id:'mission', label:'About'},
 ];
 function getFieldOrder(){
   if (!S.fieldOrder || !Array.isArray(S.fieldOrder)) S.fieldOrder = FIELD_DEFS.map(f => f.id);
+  // One-time migration (2026-10-12): About moved to bottom, notes fields right above it.
+  // Reset stored order if it matches the old default so the new layout applies.
+  const oldDefault = ['ingest','attention','mission','aka','reports','homepage','photos','tree','artifacts','plans','notes','shared'];
+  if (JSON.stringify(S.fieldOrder) === JSON.stringify(oldDefault)) S.fieldOrder = FIELD_DEFS.map(f => f.id);
   // Add any new fields that weren't in the saved order
   const ids = FIELD_DEFS.map(f => f.id);
   ids.forEach(id => { if (!S.fieldOrder.includes(id)) S.fieldOrder.push(id); });
@@ -5630,6 +5634,8 @@ initSbBrandSticky();
     <div id="sb-tools"><button id="sb-gear" title="Settings (⌘,)" aria-label="Settings"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button><button id="sb-close" title="Collapse sidebar" aria-label="Collapse sidebar"><svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path d="M14.5 5.5L8 12l6.5 6.5" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>
     <div class="brand"><div class="eyebrow">Project Buddy &middot; macro view</div><h1 id="brand-name" title="Click to rename">Buddies</h1><div class="bcount">NBUD buddies &middot; one family</div></div>
   </div>
+  <div class="nav-sec" id="buddies-sec">
+  <h3 style="cursor:pointer" id="buddies-toggle"><span class="nav-arrow" id="buddies-arrow">\u203a</span> Buddies <span id="attn-pill" class="zero">0</span></h3><div id="buddy-nav"></div></div>
   <div class="nav-sec" id="views-sec">
   <h3 style="cursor:pointer" id="views-toggle"><span class="nav-arrow" id="views-arrow">\u203a</span> Views</h3><div id="view-nav"></div></div>
   <div class="sb-search-sticky">
@@ -5639,8 +5645,6 @@ initSbBrandSticky();
     <button type="button" id="buddy-search-clear" aria-label="Clear search" title="Clear search" hidden>×</button>
     </div>
   </div>
-  <div class="nav-sec" id="buddies-sec">
-  <h3 style="cursor:pointer" id="buddies-toggle"><span class="nav-arrow" id="buddies-arrow">\u203a</span> Buddies <span id="attn-pill" class="zero">0</span></h3><div id="buddy-nav"></div></div>
   <div class="nav-sec" id="plans-sec"><h3 style="cursor:pointer" id="plans-toggle"><span id="plans-arrow">\u203a</span> Business Plans</h3><div id="plan-nav"></div></div>
 </aside>
 <div id="sb-resize" title="Drag left or right to resize the sidebar. Double-click to reset to default width."></div>
