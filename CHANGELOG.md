@@ -3,6 +3,11 @@
 All notable changes to the Buddies dashboard and buddy system. Newest first.
 `FEATURES.md` describes the current state; this file describes how it got there.
 
+## 2026-10-12 (Atlas views follow buddy-list filter)
+
+### Changed
+- **Atlas views now respect the buddy-list search filter.** Filtering buddies in the sidebar also filters all seven Atlas lenses (org, lineage, ledger, colonnade, terrain, halo, constellation). Matching buddies show with their ancestors (for hierarchy context) and descendants.
+
 ## 2026-10-12 (BMW homepage repair plan; version comparison fix)
 
 ### Added
