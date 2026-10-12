@@ -3,6 +3,12 @@
 All notable changes to the Buddies dashboard and buddy system. Newest first.
 `FEATURES.md` describes the current state; this file describes how it got there.
 
+## 2026-10-11 (New Buddy sheet: content height + Advanced width)
+
+### Changed
+- **New Buddy sheet height now hugs its content** (still capped at 88vh with internal scroll; grab handle still resizes).
+- **New Advanced section in Settings** with a fixed width control for the New Buddy sheet (320–900px, default 560).
+
 ## 2026-10-11 (New Buddy sheet resizable)
 
 ### Added

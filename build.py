@@ -230,7 +230,7 @@ body.sb-closed #sb-resize{display:none}
 /* New-buddy request bottom sheet */
 #newbuddy-sheet{position:fixed;inset:0;z-index:10000;display:flex;align-items:flex-end;justify-content:center}
 #newbuddy-sheet .nb-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.5);opacity:0;transition:opacity .25s}
-#newbuddy-sheet .nb-sheet{position:relative;background:var(--panel);border-radius:20px 20px 0 0;padding:12px 22px 26px;width:100%;max-width:560px;max-height:88vh;overflow-y:auto;
+#newbuddy-sheet .nb-sheet{position:relative;background:var(--panel);border-radius:20px 20px 0 0;padding:12px 22px 26px;width:100%;max-width:560px;height:auto;max-height:88vh;overflow-y:auto;
   box-shadow:0 -8px 40px rgba(0,0,0,.4);transform:translateY(100%);transition:transform .3s cubic-bezier(.32,.72,.35,1)}
 #newbuddy-sheet.open .nb-backdrop{opacity:1}
 #newbuddy-sheet.open .nb-sheet{transform:translateY(0)}
@@ -1540,6 +1540,7 @@ const SETTING_DEFS = [
   {id:'hideBuddyWord', label:'Hide the word “Buddy” in names', type:'bool', def:false},
   {id:'autoOpenPanel', label:'Always open detail panel on buddy click', type:'bool', def:false, tip:'When off (default), the panel auto-opens in every view EXCEPT Homepage — there, use the \u24d8 icon. When on, the panel opens on every click in every view.'},
   {id:'attnEffect', label:'Attention header effect', type:'choice', options:['pulse','glow','shake','blink','none'], def:'pulse', tip:'How the \u201cNeeds your attention\u201d section header grabs your eye when items are waiting.'},
+  {id:'nbSheetWidth', label:'New buddy sheet width (px)', type:'number', def:560, min:320, max:900, advanced:true, tip:'Fixed width of the New Buddy bottom sheet. Height follows the content; drag the grab handle to resize vertically.'},
 ];
 function getSetting(id){
   const def = SETTING_DEFS.find(s => s.id === id);
@@ -1576,7 +1577,7 @@ function renderSettingChecks(){
   if (!sdiv) return;
   sdiv.innerHTML = '<div style="margin-bottom:12px"><div style="font-size:13px;margin-bottom:6px">Theme</div>'
     + '<div class="theme-pick" role="group" aria-label="Theme" style="margin:0"><button data-theme-pick="light" title="Light theme">Light</button><button data-theme-pick="dark" title="Dark theme">Dark</button><button data-theme-pick="system" title="Follow system theme">System</button></div></div>'
-    + SETTING_DEFS.map(s => {
+    + SETTING_DEFS.filter(s => !s.advanced).map(s => {
     const val = getSetting(s.id);
     if (s.type === 'bool') return '<label class="fset-check"><input type="checkbox" data-setting="' + s.id + '"' + (val ? ' checked' : '') + '> <span>' + s.label + '</span></label>';
     if (s.type === 'choice') return '<label class="fset-choice"><span>' + s.label + (s.tip ? ' <span class="info-tip" data-tip="' + escHtml(s.tip) + '">\\u24d8</span>' : '') + '</span><select data-setting="' + s.id + '">'
@@ -1590,6 +1591,26 @@ function renderSettingChecks(){
       show(S.sel, false);
     });
   });
+  // Advanced settings
+  const adv = document.getElementById('fset-advanced');
+  if (adv) {
+    adv.innerHTML = SETTING_DEFS.filter(s => s.advanced).map(s => {
+      const val = getSetting(s.id);
+      if (s.type === 'number') return '<label class="fset-choice"><span>' + s.label + (s.tip ? ' <span class="info-tip" data-tip="' + escHtml(s.tip) + '">\\u24d8</span>' : '') + '</span><input type="number" data-setting="' + s.id + '" value="' + val + '"' + (s.min !== undefined ? ' min="' + s.min + '"' : '') + (s.max !== undefined ? ' max="' + s.max + '"' : '') + ' style="width:90px"></label>';
+      return '';
+    }).join('');
+    adv.querySelectorAll('[data-setting]').forEach(el => {
+      el.addEventListener('change', () => {
+        let v = parseInt(el.value, 10);
+        const def = SETTING_DEFS.find(s => s.id === el.dataset.setting);
+        if (isNaN(v)) v = def ? def.def : 0;
+        if (def && def.min !== undefined) v = Math.max(def.min, v);
+        if (def && def.max !== undefined) v = Math.min(def.max, v);
+        el.value = v;
+        S[el.dataset.setting] = v; save();
+      });
+    });
+  }
 }
 function initFsetChrome(m){
   function applyGeom(){
@@ -1649,6 +1670,7 @@ function openFieldSettings(){
       + '<section class="fset-sec"><h3 class="fset-sec-h">Preferences</h3><div id="fset-settings"></div></section>'
       + '<section class="fset-sec"><h3 class="fset-sec-h">Main views</h3><p class="fineprint">Drag to reorder. Number keys 1–9 follow this order.</p><div id="vset-list"></div></section>'
       + '<section class="fset-sec"><h3 class="fset-sec-h">Buddy fields</h3><p class="fineprint">Drag to reorder. Uncheck to hide.</p><div id="fset-list"></div></section>'
+      + '<section class="fset-sec"><h3 class="fset-sec-h">Advanced</h3><div id="fset-advanced"></div></section>'
       + '</div>'
       + '<div class="fset-footer">'
       + '<div style="display:flex;gap:8px"><button class="linkbtn" id="fset-reset" title="Restore all settings to factory defaults">Reset to Factory Defaults</button>'
@@ -4033,6 +4055,12 @@ function openNewBuddyRequest(){
     + '<div class="ab-err" id="nb-err"></div>'
     + '<div class="ab-actions"><button class="ab-cancel" id="nb-cancel">Cancel</button><button class="ab-create" id="nb-create" disabled>Send request</button></div></div>';
   document.body.appendChild(m);
+  const sheet = m.querySelector('.nb-sheet');
+  // Fixed width from Advanced settings
+  try {
+    const w = (typeof getSetting === 'function') ? getSetting('nbSheetWidth') : 560;
+    if (w) sheet.style.maxWidth = w + 'px';
+  } catch (e) {}
   const nameInput = m.querySelector('#nb-name');
   const purposeInput = m.querySelector('#nb-purpose');
   const createBtn = m.querySelector('#nb-create');
@@ -4075,7 +4103,6 @@ function openNewBuddyRequest(){
   requestAnimationFrame(() => m.classList.add('open'));
   setTimeout(() => nameInput.focus(), 300);
   // Drag the grab handle to resize sheet height
-  const sheet = m.querySelector('.nb-sheet');
   const grab = m.querySelector('.nb-grab');
   grab.style.cursor = 'ns-resize';
   grab.style.touchAction = 'none';
