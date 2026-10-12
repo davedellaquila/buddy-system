@@ -638,7 +638,7 @@ body.standalone .sa-bar{display:flex}
     z-index:40;background:var(--bg)}
   #main{flex:1;min-width:0;padding:28px 22px 64px;position:relative;z-index:1}
   #main.homepage-mode{padding:0}
-  .node{width:172px}
+  .node{width:220px}
   #view-buddy.panel{position:fixed;top:0;right:0;bottom:0;width:min(380px,calc(100vw - 250px));z-index:30;
     background:var(--bg);border-left:1px solid var(--border);overflow-y:auto;overflow-x:hidden;
     padding:20px 18px 48px;box-shadow:-8px 0 32px var(--shadow)}
@@ -905,7 +905,7 @@ body.standalone .sa-bar{display:flex}
 .bp-mini-zoom button:hover{border-color:var(--accent)}
 .linkbtn{background:none;border:0;color:var(--accent);font:inherit;font-size:12.5px;cursor:pointer;padding:0}
 .linkbtn:hover{text-decoration:underline}
-.node{position:relative;width:172px;flex-shrink:0}
+.node{position:relative;width:220px;flex-shrink:0}
 /* Fix: flex-centered org tree overflows to negative x-coords on narrow screens, which widens the
    layout viewport and pushes position:fixed UI (zoombar) partly off-screen. max-content + auto
    margins keeps the centered look when it fits, and overflows only rightward (scrollable) when not. */
@@ -916,7 +916,7 @@ body.standalone .sa-bar{display:flex}
 #treezoom .node.drag-src{opacity:.35}
 #treezoom .node.drag-armed{box-shadow:0 0 0 2px var(--accent),0 8px 24px rgba(0,0,0,.4)}
 #treezoom .node.drop-invalid{outline:2px dashed #e0533d;outline-offset:3px}
-.node-drag-ghost{position:fixed;left:0;top:0;z-index:9999;pointer-events:none;width:196px;opacity:.94;
+.node-drag-ghost{position:fixed;left:0;top:0;z-index:9999;pointer-events:none;width:244px;opacity:.94;
   transform:translate(-50%,-118%) rotate(-2deg);
   background:#161b22;border:1px solid #58a6ff;border-top:3px solid #58a6ff;
   border-radius:10px;padding:12px 12px 13px;box-shadow:0 12px 32px rgba(0,0,0,.55);
