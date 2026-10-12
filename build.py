@@ -1336,7 +1336,7 @@ function renderChangelog(){
   el.innerHTML = h + '</section>';
 }
 function renderNav(){
-  const views = getViewOrder().map(id => VIEW_DEFS.find(v => v[0] === id)).filter(Boolean);
+  const views = getViewOrder().map(id => VIEW_DEFS.find(v => v[0] === id)).filter(Boolean).filter(([v]) => isViewVisible(v));
   document.getElementById('view-nav').innerHTML = views.map(([v,l,ic]) =>
     '<button class="navbtn'+(S.view===v?' sel':'')+'" data-view="'+v+'" title="'+(VIEW_TIPS[v]||l)+'"><span class="nic">'+ic+'</span>'+l+'</button>').join('');
   const q = (document.getElementById('buddy-search').value || '').toLowerCase().trim();
@@ -1587,6 +1587,10 @@ function isFieldVisible(fid){
   if (!S.fieldHidden) S.fieldHidden = {};
   return !S.fieldHidden[fid];
 }
+function isViewVisible(vid){
+  if (!S.viewHidden) S.viewHidden = {};
+  return !S.viewHidden[vid];
+}
 const SETTING_DEFS = [
   {id:'hideBuddyWord', label:'Hide the word “Buddy” in names', type:'bool', def:false},
   {id:'autoOpenPanel', label:'Always open detail panel on buddy click', type:'bool', def:false, tip:'When off (default), the panel auto-opens in every view EXCEPT Homepage — there, use the \u24d8 icon. When on, the panel opens on every click in every view.'},
@@ -1762,7 +1766,8 @@ function openFieldSettings(){
     const vis = isFieldVisible(fid);
     return '<div class="fset-row" draggable="true" data-fid="' + fid + '">'
       + '<input type="checkbox" ' + (vis ? 'checked' : '') + ' data-vis="' + fid + '" title="Show/hide">'
-      + '<span class="fh">\u22ee\u22ee</span><span class="fl">' + def.label + '</span></div>';
+      + '<span class="fl">' + def.label + '</span>'
+      + '<span class="fh" style="margin-left:auto">\u22ee\u22ee</span></div>';
   }).join('');
   function clearFsetDnD(listEl){
     if (listEl) {
@@ -1929,14 +1934,25 @@ function openFieldSettings(){
     vlist.innerHTML = getViewOrder().map(vid => {
       const def = VIEW_DEFS.find(v => v[0] === vid);
       if (!def) return '';
+      const vvis = isViewVisible(vid);
       return '<div class="fset-row" draggable="true" data-vid="' + vid + '">'
-        + '<span class="fh">\u22ee\u22ee</span><span class="fl">' + def[1] + '</span></div>';
+        + '<input type="checkbox" ' + (vvis ? 'checked' : '') + ' data-vvis="' + vid + '" title="Show/hide">'
+        + '<span class="fl">' + def[1] + '</span>'
+        + '<span class="fh" style="margin-left:auto">\u22ee\u22ee</span></div>';
     }).join('');
     bindFsetListDnD(vlist, r => r.dataset.vid, (fromId, beforeId) => {
       S.viewOrder = reorderBefore(getViewOrder(), fromId, beforeId);
       save();
       renderNav();
       openFieldSettings();
+    });
+    vlist.querySelectorAll('[data-vvis]').forEach(cb => {
+      cb.addEventListener('change', () => {
+        if (!S.viewHidden) S.viewHidden = {};
+        S.viewHidden[cb.dataset.vvis] = !cb.checked;
+        save();
+        renderNav();
+      });
     });
   }
   m.classList.add('show');
