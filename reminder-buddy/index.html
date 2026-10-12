@@ -1,79 +1,118 @@
-<!-- BUDDY-BASIC-TEMPLATE v2 -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Reminder Buddy</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reminder Buddy — Tell it once. It never forgets.</title>
 <style>
-:root {
-  --bg: #ffffff;
-  --text: #1a1a1a;
-  --muted: #666;
-  --card: #f5f5f5;
-  --border: #e0e0e0;
-  --accent: #0066cc;
-}
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg: #1a1a1a;
-    --text: #e0e0e0;
-    --muted: #999;
-    --card: #2a2a2a;
-    --border: #3a3a3a;
-    --accent: #4da6ff;
+  :root{
+    --bg:#faf7f0; --panel:#ffffff; --panel2:#f4efe3;
+    --ink:#1f1b16; --muted:#6f675c; --faint:#a89e8d;
+    --border:#e7ddc9; --accent:#b45309; --accent-ink:#92400e;
+    --accent-soft:#fef3c7; --green:#15803d; --green-soft:#dcfce7;
+    --shadow:0 10px 30px rgba(120,90,20,.08);
+    --card:var(--panel); --text:var(--ink);
   }
-}
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  background: var(--bg);
-  color: var(--text);
-  line-height: 1.6;
-  padding: 40px 20px;
-  max-width: 800px;
-  margin: 0 auto;
-}
-.header { text-align: center; margin-bottom: 40px; }
-.icon { font-size: 64px; margin-bottom: 16px; }
-h1 { font-size: 32px; margin-bottom: 8px; }
-.tagline { color: var(--muted); font-size: 18px; }
-.mission {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 24px;
-  margin-bottom: 32px;
-  font-size: 17px;
-}
-h2 { font-size: 22px; margin: 32px 0 16px; }
-.attn {
-  background: var(--card);
-  border-left: 4px solid var(--accent);
-  border-radius: 0 8px 8px 0;
-  padding: 16px 20px;
-  margin-bottom: 12px;
-}
-.attn-date { color: var(--muted); font-size: 14px; margin-top: 8px; }
-.children { display: flex; flex-wrap: wrap; gap: 12px; }
-.child {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 12px 20px;
-  text-decoration: none;
-  color: var(--text);
-}
-.child:hover { border-color: var(--accent); }
-.footer {
-  margin-top: 48px;
-  padding-top: 24px;
-  border-top: 1px solid var(--border);
-  color: var(--muted);
-  font-size: 14px;
-  text-align: center;
-}
-.empty { color: var(--muted); font-style: italic; }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --bg:#0e131b; --panel:#161d29; --panel2:#1b2331;
+      --ink:#ece7da; --muted:#9d937f; --faint:#6b6355;
+      --border:#273041; --accent:#f5a524; --accent-ink:#fbbf24;
+      --accent-soft:rgba(245,165,36,.10); --green:#4ade80; --green-soft:rgba(74,222,128,.10);
+      --shadow:0 10px 30px rgba(0,0,0,.35);
+      --card:var(--panel); --text:var(--ink);
+    }
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    background:var(--bg); color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
+    line-height:1.65; min-height:100vh;
+    background-image:radial-gradient(circle at 50% -80px, var(--accent-soft), transparent 55%);
+  }
+  .wrap{max-width:920px;margin:0 auto;padding:52px 24px 80px}
+  /* ---------- hero ---------- */
+  header.hero{text-align:center;margin-bottom:10px}
+  .avatar{font-size:76px;display:inline-block;animation:sway 4s ease-in-out infinite;filter:drop-shadow(0 8px 24px var(--accent-soft))}
+  @keyframes sway{0%,100%{transform:rotate(-8deg)}50%{transform:rotate(8deg)}}
+  h1{font-size:50px;font-weight:800;letter-spacing:-1px;margin:12px 0 6px}
+  h1 .grad{background:linear-gradient(120deg,var(--accent),var(--accent-ink));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+  .tagline{font-size:20px;color:var(--muted)}
+  .tagline em{color:var(--ink);font-style:normal;font-weight:600}
+  .pill{display:inline-flex;align-items:center;gap:8px;margin-top:18px;background:var(--panel);
+    border:1px solid var(--border);border-radius:999px;padding:8px 18px;font-size:13.5px;color:var(--muted);box-shadow:var(--shadow)}
+  .pill .dot{width:9px;height:9px;border-radius:50%;background:var(--accent);box-shadow:0 0 10px var(--accent);animation:pulse 2s infinite}
+  @keyframes pulse{50%{opacity:.45}}
+  /* ---------- sections ---------- */
+  h2{font-size:13px;text-transform:uppercase;letter-spacing:.14em;color:var(--faint);margin:46px 0 14px;display:flex;align-items:center;gap:10px}
+  h2::after{content:"";flex:1;height:1px;background:var(--border)}
+  /* ---------- counters ---------- */
+  .counters{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+  .counter{flex:1;min-width:150px;background:var(--panel);border:1px solid var(--border);border-radius:14px;
+    padding:14px 16px;text-align:center;box-shadow:var(--shadow)}
+  .counter .n{font-size:32px;font-weight:800;color:var(--accent)}
+  .counter .n.zero{color:var(--green)}
+  .counter .l{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin-top:4px}
+  .counter .wink{display:block;font-size:11.5px;color:var(--faint);margin-top:4px;text-transform:none;letter-spacing:0}
+  /* ---------- net ---------- */
+  .net{background:var(--panel);border:1px solid var(--border);border-radius:16px;overflow:hidden;box-shadow:var(--shadow)}
+  .catch{display:flex;gap:10px;padding:16px;border-bottom:1px solid var(--border);background:var(--panel2);flex-wrap:wrap}
+  .catch input{flex:1;min-width:200px;background:var(--panel);border:1px solid var(--border);border-radius:10px;
+    padding:11px 14px;font-size:15px;color:var(--ink);outline:none}
+  .catch input:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+  .catch select{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:11px 12px;
+    font-size:14px;color:var(--ink);outline:none}
+  .catch button{background:var(--accent);color:#fff;border:none;border-radius:10px;padding:11px 20px;
+    font-size:15px;font-weight:700;cursor:pointer;transition:transform .12s ease, filter .12s ease}
+  .catch button:hover{filter:brightness(1.08);transform:translateY(-1px)}
+  .catch button:active{transform:translateY(0)}
+  @media (prefers-color-scheme: dark){ .catch button{color:#1a1206} }
+  .net-item{display:flex;gap:14px;padding:15px 18px;border-bottom:1px solid var(--border);align-items:flex-start;
+    animation:slidein .25s ease}
+  .net-item:last-child{border-bottom:none}
+  @keyframes slidein{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
+  .net-item .tick{font-size:20px;flex-shrink:0;margin-top:2px}
+  .net-body{flex:1;min-width:0}
+  .net-text{font-size:15px}
+  .net-nudge{font-size:12.5px;color:var(--muted);margin-top:4px}
+  .net-nudge b{color:var(--accent-ink);font-weight:600}
+  .resolve{flex-shrink:0;background:transparent;border:1px solid var(--border);color:var(--muted);
+    border-radius:999px;padding:7px 14px;font-size:13px;font-weight:600;cursor:pointer;transition:all .15s ease}
+  .resolve:hover{border-color:var(--green);color:var(--green)}
+  .net-empty{padding:28px;text-align:center;color:var(--muted);font-size:15px}
+  .net-note{padding:12px 18px;background:var(--panel2);font-size:12.5px;color:var(--faint);text-align:center;border-top:1px solid var(--border)}
+  /* ---------- loop ---------- */
+  .loop{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px}
+  .step{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:18px;position:relative;box-shadow:var(--shadow)}
+  .step .ico{font-size:26px}
+  .step strong{display:block;margin:8px 0 4px;font-size:15px}
+  .step p{font-size:13.5px;color:var(--muted)}
+  .step .num{position:absolute;top:12px;right:14px;font-size:12px;font-weight:800;color:var(--faint)}
+  /* ---------- cards ---------- */
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:12px}
+  .card{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:18px 20px;position:relative;overflow:hidden;box-shadow:var(--shadow)}
+  .card::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--tint,var(--accent))}
+  .card h3{font-size:16px;margin-bottom:6px}
+  .card p{font-size:14px;color:var(--muted)}
+  .card p b, .card li b{color:var(--ink);font-weight:600}
+  .card ul{list-style:none;margin-top:6px}
+  .card li{font-size:14px;color:var(--muted);padding:4px 0}
+  .verdict{margin-top:14px;background:var(--accent-soft);border:1px dashed var(--accent);border-radius:12px;
+    padding:14px 18px;font-size:14.5px;text-align:center}
+  .verdict b{color:var(--accent-ink)}
+  /* ---------- attention ---------- */
+  .attention{background:linear-gradient(160deg,var(--accent-soft),transparent 70%);border:1px solid var(--accent);
+    border-radius:16px;padding:22px;box-shadow:var(--shadow)}
+  .attention h3{font-size:18px;margin-bottom:8px}
+  .attention p{font-size:14.5px;color:var(--muted);margin-bottom:14px}
+  .btn{display:inline-block;background:var(--accent);color:#fff;text-decoration:none;font-weight:700;
+    padding:12px 24px;border-radius:12px;transition:transform .12s ease, filter .12s ease}
+  .btn:hover{filter:brightness(1.08);transform:translateY(-1px)}
+  @media (prefers-color-scheme: dark){ .btn{color:#1a1206} }
+  footer{text-align:center;margin-top:56px;padding-top:22px;border-top:1px solid var(--border);color:var(--faint);font-size:13px}
+  footer .sig{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12px;margin-top:8px}
+  a{color:var(--accent-ink)}
+  @media(max-width:560px){h1{font-size:38px}.catch{flex-direction:column}.catch button{width:100%}}
 
 .dumpbox {
   background: var(--card);
@@ -117,18 +156,80 @@ h2 { font-size: 22px; margin: 32px 0 16px; }
 </style>
 </head>
 <body>
-<div class="header">
-<div class="icon">⏰</div>
-<h1>Reminder Buddy</h1>
-<div class="tagline">Fire-and-forget nudges</div>
-</div>
+<div class="wrap">
 
-<div class="mission">Reminder Buddy is the fire-and-forget nudge buddy — the possible future home for the OmniFocus migration. Big open question: standalone app vs merged into existing buddies vs assistant-native capture inbox.</div>
+  <header class="hero">
+    <div class="avatar">⏰</div>
+    <h1><span class="grad">Reminder Buddy</span></h1>
+    <p class="tagline">Tell it once. <em>It never forgets.</em></p>
+    <div class="pill"><span class="dot"></span> Brief review — one big decision open</div>
+  </header>
 
+  <h2>🕸️ The net — try it</h2>
+  <p style="color:var(--muted);font-size:15px;margin-bottom:14px;max-width:640px">
+    This is the seed of the app. Type anything you'd otherwise forget, pick when to be nudged, and it's caught.
+    Three real open loops are already in there.
+  </p>
+  <div class="counters">
+    <div class="counter"><div class="n" id="c-net">3</div><div class="l">In the net</div></div>
+    <div class="counter"><div class="n" id="c-res">0</div><div class="l">Resolved</div></div>
+    <div class="counter"><div class="n zero">0</div><div class="l">Fallen through the cracks</div><span class="wink">that's the whole point</span></div>
+  </div>
+  <div class="net">
+    <div class="catch">
+      <input id="catch-input" type="text" placeholder="e.g. Call the roofer back…" maxlength="140" aria-label="What should I remember?">
+      <select id="catch-when" aria-label="When should I nudge you?">
+        <option value="hour">Nudge me in 1 hour</option>
+        <option value="tomorrow">Tomorrow at 8am</option>
+        <option value="monday">Next Monday at 8am</option>
+      </select>
+      <button id="catch-btn">Catch it →</button>
+    </div>
+    <div id="net-list"></div>
+    <div class="net-note">Demo only — nothing here leaves this page. The real app would sync it everywhere.</div>
+  </div>
 
+  <h2>🔁 The loop</h2>
+  <div class="loop">
+    <div class="step"><span class="num">1</span><div class="ico">📥</div><strong>Capture</strong><p>From any thread, in one sentence. No forms, no projects, no filing.</p></div>
+    <div class="step"><span class="num">2</span><div class="ico">🧭</div><strong>Track</strong><p>One calm list. Not a second OmniFocus — the opposite: fire-and-forget.</p></div>
+    <div class="step"><span class="num">3</span><div class="ico">🔔</div><strong>Nudge</strong><p>One nudge per item, only while it's still open. Never naggy, never silent.</p></div>
+    <div class="step"><span class="num">4</span><div class="ico">✅</div><strong>Resolve</strong><p>Closed loops stay closed. The net keeps the receipt.</p></div>
+  </div>
+
+  <h2>💭 On my mind</h2>
+  <p style="color:var(--muted);font-size:15px;margin-bottom:14px;max-width:640px">
+    The brief is written. One decision blocks everything else — and it's Dave's to make.
+  </p>
+  <div class="grid">
+    <div class="card" style="--tint:#b45309">
+      <h3>📱 Standalone app</h3>
+      <p>The ultimate to-do reminder app, its own thing. Fast capture, smart reminders, full control.</p>
+      <ul><li>✔ A real product, shippable</li><li>✘ Another app to open</li></ul>
+    </div>
+    <div class="card" style="--tint:#7c5cbf">
+      <h3>🧩 Merged into the buddies</h3>
+      <p>Reminders as a shared layer inside every buddy — Car Buddy nudges about the smog check, Cabin Buddy about the hot tub.</p>
+      <ul><li>✔ Nothing new to learn</li><li>✘ Every buddy must agree on the pattern</li></ul>
+    </div>
+    <div class="card" style="--tint:#2f7d4f">
+      <h3>💬 Assistant-native</h3>
+      <p>Just the assistant, with a better capture inbox. Zero new surface — much of this is already what happens in chat.</p>
+      <ul><li>✔ Nothing to build or maintain</li><li>✘ Only as good as the memory it's fixing</li></ul>
+    </div>
+  </div>
+  <div class="verdict">Your call — <b>the brief can't make it alone.</b></div>
+
+  <h2>📦 One more thing</h2>
+  <div class="card" style="--tint:var(--accent)">
+    <h3>The OmniFocus question</h3>
+    <p>Dave dropped OmniFocus. If Reminder Buddy becomes its replacement, this is the <b>destination for that migration</b> — projects, tasks, tags, dates, notes. The merge decision above picks the destination, so the migration waits on it.</p>
+  </div>
+
+  
 <section class="dumpbox" data-buddy-id="reminder-buddy">
 <h2>🧠 Brain dump</h2>
-<p class="dumpbox-sub">Dump what's on your mind about Reminder Buddy — raw and unfiltered. Each dump lands in the buddy's repo (docs/ingest.md) as a timestamped entry.</p>
+<p class="dumpbox-sub">Dump what's on your mind about Reminder Buddy — raw and unfiltered. Each dump lands timestamped in the dashboard inbox (buddy-system/docs/ingest.md).</p>
 <div class="dumpbox-token" hidden>
 <p>🔒 Connect GitHub to unlock dumping. Paste a token once — it stays on this device only.</p>
 <div class="dumpbox-tokenrow">
@@ -144,16 +245,75 @@ h2 { font-size: 22px; margin: 32px 0 16px; }
 </div>
 </section>
 
+  <h2>🔔 Needs your attention</h2>
+  <div class="attention">
+    <h3>📄 The product brief is ready for your review</h3>
+    <p>The idea, the problem, how it could work, room for growth — and the merge question front and center as its own section. Review it, then we decide: PRD, or rethink.</p>
+    <a class="btn" href="https://docs.google.com/document/d/1RNFco95uviVGh7paE4BUmtv8U5YUaswlYCIZ1HLUdnI/edit">Read the brief →</a>
+  </div>
 
-<h2>Needs Attention</h2>
-<div class="attn"><div>Product brief ready for review — looks good, edits, or defer? Big open question: standalone app vs merged into existing buddies vs assistant-native capture inbox.</div><div class="attn-date">2026-10-08</div></div>
-
-
-
-
-<div class="footer">
-Generated 2026-10-12 · Part of the Buddy System
+  <footer>
+    <p>A living page — updated whenever the underlying data changes. Stale pages erode trust.</p>
+    <p class="sig">baked Mon Oct 12, 2026 · seed items are real open loops from the dashboard registry</p>
+  </footer>
 </div>
+
+<script>
+(function(){
+  var DAYS=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+  var MONTHS=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+  function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
+  function fmt(d){
+    var h=d.getHours(), m=d.getMinutes(), ap=h>=12?"PM":"AM", h12=h%12||12;
+    return DAYS[d.getDay()]+" "+MONTHS[d.getMonth()]+" "+d.getDate()+", "+h12+":"+(m<10?"0":"")+m+" "+ap;
+  }
+  function nudgeFor(opt){
+    var n=new Date();
+    if(opt==="hour"){ n.setHours(n.getHours()+1); return fmt(n); }
+    if(opt==="tomorrow"){ n.setDate(n.getDate()+1); n.setHours(8,0,0,0); return fmt(n); }
+    var d=new Date(); d.setDate(d.getDate()+(((8-d.getDay())%7)||7)); d.setHours(8,0,0,0); return fmt(d);
+  }
+  var net=[
+    {text:"Review the Reminder Buddy brief — standalone, merged, or assistant-native? Your call.", nudge:"every morning until decided"},
+    {text:"$5,800 rodent-proofing estimate — needs all three sellers\u2019 sign-off before the Oct 19 fumigation.", nudge:"Oct 18, 8:00 AM"},
+    {text:"OmniFocus migration — its destination hinges on the merge decision.", nudge:"when the brief is approved"}
+  ];
+  var resolved=0;
+  var list=document.getElementById("net-list");
+  var input=document.getElementById("catch-input");
+  var when=document.getElementById("catch-when");
+  function render(){
+    document.getElementById("c-net").textContent=net.length;
+    document.getElementById("c-res").textContent=resolved;
+    if(!net.length){
+      list.innerHTML='<div class="net-empty">The net is empty. Suspiciously calm. 🎉</div>';
+      return;
+    }
+    list.innerHTML=net.map(function(item,i){
+      return '<div class="net-item"><div class="tick">🕸️</div>'+
+        '<div class="net-body"><div class="net-text">'+esc(item.text)+'</div>'+
+        '<div class="net-nudge">🔔 nudge: <b>'+esc(item.nudge)+'</b></div></div>'+
+        '<button class="resolve" data-i="'+i+'">Resolve ✓</button></div>';
+    }).join("");
+    var btns=list.querySelectorAll(".resolve");
+    for(var k=0;k<btns.length;k++){
+      btns[k].addEventListener("click",function(){
+        net.splice(parseInt(this.getAttribute("data-i"),10),1);
+        resolved++; render();
+      });
+    }
+  }
+  function catchIt(){
+    var v=input.value.trim();
+    if(!v){ input.focus(); input.placeholder="Type the thing you'd forget…"; return; }
+    net.unshift({text:v, nudge:nudgeFor(when.value)});
+    input.value=""; input.placeholder="e.g. Call the roofer back…"; render();
+  }
+  document.getElementById("catch-btn").addEventListener("click",catchIt);
+  input.addEventListener("keydown",function(e){ if(e.key==="Enter") catchIt(); });
+  render();
+})();
+</script>
 
 <script>
 (function(){
@@ -198,6 +358,7 @@ Generated 2026-10-12 · Part of the Buddy System
     return null;
   }
   var repo = null, repoName = bid;
+  if (bid === 'reminder-buddy') { repo = 'buddy-system'; repoName = 'Reminder Buddy'; }
   async function resolveRepo(){
     try {
       var r = await fetch('../buddies.json', {cache: 'no-store'});
