@@ -841,6 +841,10 @@ body.standalone .sa-bar{display:flex}
 .notes{width:100%;min-height:120px;background:var(--bg);border:1px solid var(--border);border-radius:12px;
   color:var(--text);font:inherit;font-size:14.5px;line-height:1.6;padding:13px 15px;resize:vertical}
 .notes:focus{outline:none;border-color:var(--accent)}
+/* Gentle pulse on the dump field's placeholder — bright to dim, bright to dim */
+@keyframes placeholder-pulse{0%,100%{opacity:1}50%{opacity:.35}}
+#bp-ingest::placeholder{animation:placeholder-pulse 3.2s ease-in-out infinite}
+#bp-ingest::-webkit-input-placeholder{animation:placeholder-pulse 3.2s ease-in-out infinite}
 .fineprint{font-size:12.5px;color:var(--faint);margin-top:8px;line-height:1.5}
 .bp-empty{color:var(--muted);font-size:14px}
 .proj-row[data-plan]{cursor:pointer}

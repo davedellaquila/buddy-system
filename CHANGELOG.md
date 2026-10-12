@@ -3,6 +3,11 @@
 All notable changes to the Buddies dashboard and buddy system. Newest first.
 `FEATURES.md` describes the current state; this file describes how it got there.
 
+## 2026-10-11 (Dump placeholder pulses gently)
+
+### Changed
+- **The "Dump what's in your head about…" placeholder now breathes:** a slow 3.2s bright-to-dim pulse on the dump field's placeholder text, so the invitation to dump is alive without shouting.
+
 ## 2026-10-11 (Secret nerd settings: pan gearing slider)
 
 ### Added
