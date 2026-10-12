@@ -1,130 +1,178 @@
-<!-- BUDDY-BASIC-TEMPLATE v2 -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Guardian Buddy</title>
+<title>Guardian Buddy — Security + Monetization Watchdog</title>
 <style>
-:root {
-  --bg: #ffffff;
-  --text: #1a1a1a;
-  --muted: #666;
-  --card: #f5f5f5;
-  --border: #e0e0e0;
-  --accent: #0066cc;
-}
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg: #1a1a1a;
-    --text: #e0e0e0;
-    --muted: #999;
-    --card: #2a2a2a;
-    --border: #3a3a3a;
-    --accent: #4da6ff;
+  :root{
+    --bg:#0d1117; --panel:#161b22; --card:#1c2330; --border:#2a3342;
+    --text:#e6edf3; --muted:#8b949e;
+    --amber:#d99a26; --green:#3fb950; --red:#f85149; --accent:#58a6ff;
   }
-}
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  background: var(--bg);
-  color: var(--text);
-  line-height: 1.6;
-  padding: 40px 20px;
-  max-width: 800px;
-  margin: 0 auto;
-}
-.header { text-align: center; margin-bottom: 40px; }
-.icon { font-size: 64px; margin-bottom: 16px; }
-h1 { font-size: 32px; margin-bottom: 8px; }
-.tagline { color: var(--muted); font-size: 18px; }
-.mission {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 24px;
-  margin-bottom: 32px;
-  font-size: 17px;
-}
-h2 { font-size: 22px; margin: 32px 0 16px; }
-.attn {
-  background: var(--card);
-  border-left: 4px solid var(--accent);
-  border-radius: 0 8px 8px 0;
-  padding: 16px 20px;
-  margin-bottom: 12px;
-}
-.attn-date { color: var(--muted); font-size: 14px; margin-top: 8px; }
-.children { display: flex; flex-wrap: wrap; gap: 12px; }
-.child {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 12px 20px;
-  text-decoration: none;
-  color: var(--text);
-}
-.child:hover { border-color: var(--accent); }
-.footer {
-  margin-top: 48px;
-  padding-top: 24px;
-  border-top: 1px solid var(--border);
-  color: var(--muted);
-  font-size: 14px;
-  text-align: center;
-}
-.empty { color: var(--muted); font-style: italic; }
-
-.dumpbox {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 20px 22px;
-  margin-bottom: 32px;
-}
-.dumpbox h2 { margin: 0 0 6px; font-size: 20px; }
-.dumpbox-sub { color: var(--muted); font-size: 14px; margin-bottom: 14px; }
-.dumpbox textarea {
-  width: 100%; min-height: 96px; resize: vertical;
-  background: var(--bg); border: 1px solid var(--border); border-radius: 8px;
-  padding: 10px 12px; font-size: 14px; color: var(--text); font-family: inherit;
-}
-.dumpbox textarea:focus { outline: none; border-color: var(--accent); }
-.dumpbox textarea:disabled { opacity: .55; }
-.dumpbox-row { display: flex; align-items: center; gap: 12px; margin-top: 10px; flex-wrap: wrap; }
-.dumpbox-btn {
-  background: var(--accent); color: #fff; border: none; border-radius: 8px;
-  padding: 9px 22px; font-size: 14px; font-weight: 600; cursor: pointer;
-}
-.dumpbox-btn:disabled { opacity: .45; cursor: default; }
-.dumpbox-status { font-size: 13px; color: var(--muted); }
-.dumpbox-token {
-  background: var(--bg); border: 1px dashed var(--border); border-radius: 8px;
-  padding: 12px 14px; margin-bottom: 12px; font-size: 14px;
-}
-.dumpbox-token p { margin-bottom: 8px; }
-.dumpbox-tokenrow { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
-.dumpbox-tokenrow input {
-  flex: 1; min-width: 170px; background: var(--card); border: 1px solid var(--border);
-  border-radius: 8px; padding: 7px 10px; font-size: 13px; color: var(--text);
-}
-.dumpbox-tokenrow button {
-  background: transparent; color: var(--accent); border: 1px solid var(--accent);
-  border-radius: 8px; padding: 7px 14px; font-size: 13px; font-weight: 600; cursor: pointer;
-}
-.dumpbox-tokenrow a { color: var(--accent); font-size: 13px; }
-
+  html[data-theme="light"]{
+    --bg:#f7f7f7; --panel:#ffffff; --card:#ffffff; --border:#e0e0e0;
+    --text:#1f2328; --muted:#59636e;
+    --amber:#9a6700; --green:#1a7f37; --red:#d1242c; --accent:#0969da;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--text);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;
+    line-height:1.6;min-height:100vh}
+  .wrap{max-width:880px;margin:0 auto;padding:40px 22px 72px}
+  .theme-btn{position:fixed;top:14px;right:14px;background:var(--panel);
+    border:1px solid var(--border);border-radius:999px;color:var(--text);
+    padding:8px 14px;font-size:14px;cursor:pointer;z-index:10}
+  .theme-btn:hover{border-color:var(--amber)}
+  header{text-align:center;margin-bottom:10px}
+  .icon{font-size:64px;margin-bottom:10px}
+  h1{font-size:34px;letter-spacing:-.5px;margin-bottom:6px}
+  .tagline{color:var(--muted);font-size:17px;margin-bottom:22px}
+  .premise{border:1px solid var(--border);border-left:4px solid var(--amber);
+    border-radius:0 12px 12px 0;background:var(--panel);
+    padding:18px 22px;font-size:16px;margin:0 auto 8px;max-width:720px}
+  .premise strong{color:var(--amber)}
+  h2{font-size:13px;text-transform:uppercase;letter-spacing:.14em;color:var(--muted);
+    margin:44px 0 14px;display:flex;align-items:center;gap:10px}
+  h2::after{content:"";flex:1;height:1px;background:var(--border)}
+  .chart-card{background:var(--panel);border:1px solid var(--border);border-radius:14px;
+    padding:22px 18px;overflow-x:auto}
+  .chart-card svg{margin:0 auto}
+  .board{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:12px}
+  .row{background:var(--panel);border:1px solid var(--border);border-radius:12px;
+    padding:15px 18px}
+  .row .top{display:flex;align-items:center;justify-content:space-between;gap:10px;
+    margin-bottom:6px}
+  .row .asset{font-weight:700;font-size:15px}
+  .pill{font-size:11px;font-weight:700;letter-spacing:.08em;border-radius:999px;
+    padding:4px 11px;white-space:nowrap}
+  .pill.guarded{background:rgba(63,185,80,.15);color:var(--green);border:1px solid var(--green)}
+  .pill.exposed{background:rgba(248,81,73,.15);color:var(--red);border:1px solid var(--red)}
+  .pill.open{background:rgba(217,154,38,.15);color:var(--amber);border:1px solid var(--amber)}
+  .row p{font-size:14px;color:var(--muted)}
+  .partners{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px}
+  a.cardlink{background:var(--panel);border:1px solid var(--border);border-radius:12px;
+    padding:18px 20px;text-decoration:none;color:inherit;display:block}
+  a.cardlink:hover{border-color:var(--accent)}
+  a.cardlink h3{font-size:16px;margin-bottom:6px}
+  a.cardlink p{font-size:14px;color:var(--muted)}
+  .docs{display:flex;flex-wrap:wrap;gap:12px}
+  a.btn{background:var(--panel);border:1px solid var(--border);border-radius:10px;
+    padding:12px 20px;text-decoration:none;color:var(--text);font-weight:600;font-size:15px}
+  a.btn:hover{border-color:var(--accent)}
+  .dumpbox{background:var(--panel);border:1px solid var(--border);border-radius:14px;
+    padding:22px;margin-top:44px}
+  .dumpbox h2{margin:0 0 6px}
+  .dumpbox h2::after{display:none}
+  .dumpbox-sub{color:var(--muted);font-size:14px;margin-bottom:14px}
+  .dumpbox textarea{width:100%;background:var(--bg);border:1px solid var(--border);
+    border-radius:10px;color:var(--text);padding:12px 14px;font:inherit;font-size:15px;
+    resize:vertical}
+  .dumpbox-row{display:flex;align-items:center;gap:14px;margin-top:12px}
+  .dumpbox-btn{background:var(--amber);border:none;border-radius:10px;color:#0d1117;
+    font-weight:700;font-size:15px;padding:11px 24px;cursor:pointer}
+  .dumpbox-btn:disabled{opacity:.5;cursor:default}
+  .dumpbox-status{font-size:14px;color:var(--muted)}
+  .dumpbox-token p{font-size:14px;color:var(--muted);margin-bottom:10px}
+  .dumpbox-tokenrow{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+  .dumpbox-tokenrow input{background:var(--bg);border:1px solid var(--border);
+    border-radius:8px;color:var(--text);padding:9px 12px;font:inherit;flex:1;min-width:200px}
+  .dumpbox-tokenrow button{background:var(--panel);border:1px solid var(--border);
+    border-radius:8px;color:var(--text);padding:9px 16px;cursor:pointer;font:inherit}
+  .dumpbox-tokenrow a{color:var(--accent);font-size:14px}
+  footer{margin-top:56px;padding-top:22px;border-top:1px solid var(--border);
+    color:var(--muted);font-size:13px;text-align:center}
+  @media(max-width:560px){h1{font-size:28px}.wrap{padding:32px 16px 64px}}
 </style>
 </head>
 <body>
-<div class="header">
-<div class="icon">🛡️</div>
-<h1>Guardian Buddy</h1>
-<div class="tagline">Security + monetization watchdog</div>
+<button class="theme-btn" id="themeBtn" aria-label="Toggle theme">☀️</button>
+<div class="wrap">
+
+<header>
+  <div class="icon">🛡️</div>
+  <h1>Guardian Buddy</h1>
+  <div class="tagline">Security + monetization watchdog</div>
+  <div class="premise"><strong>The honest premise:</strong> you cannot DRM HTML. Anyone can View Source, download the dashboard, and re-host it. So the HTML is not the product — the moat is the service, the data, and the brand behind it. My job is keeping the valuable parts server-side, the legal footing real, and every revenue idea defensible.</div>
+</header>
+
+<h2>The defensibility ledger</h2>
+<div class="chart-card">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 600" width="100%" role="img" aria-label="Defensibility ledger" style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;max-width:720px;display:block">
+<title>The defensibility ledger — Guardian’s working assessment</title>
+<text x="64" y="32" font-size="22" font-weight="700" fill="var(--text)">The defensibility ledger</text>
+<text x="64" y="54" font-size="12.5" fill="var(--muted)" font-style="italic">the moat is the service — not the markup</text>
+<text x="70" y="82" font-size="11" font-weight="700" fill="var(--muted)" opacity="0.75" letter-spacing="2">THE MOAT</text>
+<text x="678" y="470" text-anchor="end" font-size="11" font-weight="700" fill="var(--muted)" opacity="0.75" letter-spacing="2">THE HUSK</text>
+<line x1="87.0" y1="64" x2="87.0" y2="516" stroke="var(--border)" stroke-width="1" opacity="0.6"/>
+<line x1="64" y1="499.3" x2="684" y2="499.3" stroke="var(--border)" stroke-width="1" opacity="0.6"/>
+<line x1="144.4" y1="64" x2="144.4" y2="516" stroke="var(--border)" stroke-width="1" opacity="0.6"/>
+<line x1="64" y1="457.4" x2="684" y2="457.4" stroke="var(--border)" stroke-width="1" opacity="0.6"/>
+<line x1="201.8" y1="64" x2="201.8" y2="516" stroke="var(--border)" stroke-width="1" opacity="0.6"/>
+<line x1="64" y1="415.6" x2="684" y2="415.6" stroke="var(--border)" stroke-width="1" opacity="0.6"/>
+<line x1="259.2" y1="64" x2="259.2" y2="516" stroke="var(--border)" stroke-width="1" opacity="0.6"/>
+<line x1="64" y1="373.7" x2="684" y2="373.7" stroke="var(--border)" stroke-width="1" opacity="0.6"/>
+<line x1="316.6" y1="64" x2="316.6" y2="516" stroke="var(--border)" stroke-width="1" opacity="0.6"/>
+<line x1="64" y1="331.9" x2="684" y2="331.9" stroke="var(--border)" stroke-width="1" opacity="0.6"/>
+<line x1="374.0" y1="64" x2="374.0" y2="516" stroke="var(--border)" stroke-width="1" opacity="0.6"/>
+<line x1="64" y1="290.0" x2="684" y2="290.0" stroke="var(--border)" stroke-width="1" opacity="0.6"/>
+<line x1="431.4" y1="64" x2="431.4" y2="516" stroke="var(--border)" stroke-width="1" opacity="0.6"/>
+<line x1="488.8" y1="64" x2="488.8" y2="516" stroke="var(--border)" stroke-width="1" opacity="0.6"/>
+<line x1="64" y1="248.1" x2="684" y2="248.1" stroke="var(--border)" stroke-width="1" opacity="0.6"/>
+<line x1="546.2" y1="64" x2="546.2" y2="516" stroke="var(--border)" stroke-width="1" opacity="0.6"/>
+<line x1="64" y1="206.3" x2="684" y2="206.3" stroke="var(--border)" stroke-width="1" opacity="0.6"/>
+<line x1="603.6" y1="64" x2="603.6" y2="516" stroke="var(--border)" stroke-width="1" opacity="0.6"/>
+<line x1="64" y1="164.4" x2="684" y2="164.4" stroke="var(--border)" stroke-width="1" opacity="0.6"/>
+<text x="64" y="548" font-size="11.5" fill="var(--muted)">hard to copy</text>
+<text x="684" y="548" text-anchor="end" font-size="11.5" fill="var(--muted)">trivial to copy</text>
+<text x="374.0" y="568" text-anchor="middle" font-size="12.5" fill="var(--muted)">→ ease of copying</text>
+<text x="18" y="64" font-size="11.5" fill="var(--muted)">the business</text>
+<text x="18" y="516" font-size="11.5" fill="var(--muted)">negligible</text>
+<circle cx="603.6" cy="457.4" r="14" fill="#d99a26" opacity="0.85"/>
+<text x="603.6" y="489.4" text-anchor="middle" font-size="12" font-weight="600" fill="var(--text)">Raw HTML shell</text>
+<circle cx="488.8" cy="331.9" r="22" fill="#d99a26" opacity="0.85"/>
+<text x="520.8" y="331.9" text-anchor="start" font-size="12" font-weight="600" fill="var(--text)">Client-side UI craft</text>
+<circle cx="201.8" cy="206.3" r="32" fill="#d99a26" opacity="0.85"/>
+<text x="201.8" y="149.3" text-anchor="middle" font-size="12" font-weight="600" fill="var(--text)">Firebase backend</text>
+<text x="201.8" y="164.3" text-anchor="middle" font-size="12" font-weight="600" fill="var(--text)">user data</text>
+<circle cx="259.2" cy="248.1" r="32" fill="#d99a26" opacity="0.85"/>
+<text x="217.2" y="248.1" text-anchor="end" font-size="12" font-weight="600" fill="var(--text)">Bank sync pipeline</text>
+<circle cx="316.6" cy="164.4" r="32" fill="#d99a26" opacity="0.85"/>
+<text x="316.6" y="122.4" text-anchor="middle" font-size="12" font-weight="600" fill="var(--text)">AI agent orchestration</text>
+<circle cx="144.4" cy="290.0" r="22" fill="#d99a26" opacity="0.85"/>
+<text x="112.4" y="290.0" text-anchor="end" font-size="12" font-weight="600" fill="var(--text)">Trademark / brand</text>
+<circle cx="201.8" cy="331.9" r="14" fill="#d99a26" opacity="0.85"/>
+<text x="201.8" y="363.9" text-anchor="middle" font-size="12" font-weight="600" fill="var(--text)">Terms + licensing</text>
+<circle cx="431.4" cy="290.0" r="22" fill="#d99a26" opacity="0.85"/>
+<text x="431.4" y="243.0" text-anchor="middle" font-size="12" font-weight="600" fill="var(--text)">Community templates</text>
+<text x="431.4" y="258.0" text-anchor="middle" font-size="12" font-weight="600" fill="var(--text)">library</text>
+<text x="64" y="592" font-size="11" fill="var(--muted)" font-style="italic">Guardian’s working assessment — judgment calls, not measured data.</text>
+</svg>
 </div>
 
-<div class="mission">Guardian Buddy is Dave&#x27;s security and monetization watchdog for Money Buddy and the buddy system. Born from Dave&#x27;s question: what stops someone from downloading the raw HTML and stealing the idea? Honest premise: you can&#x27;t DRM HTML — the moat is the service, data, and brand, not the markup. Partners with Buddy Suite (monetization plan owner) and the Money Buddy thread.</div>
+<h2>The watch board — what I'm guarding</h2>
+<div class="board">
+  <div class="row"><div class="top"><span class="asset">Server-side services</span><span class="pill guarded">GUARDED</span></div><p>Bank sync, user data, agent orchestration. The moat lives behind the API.</p></div>
+  <div class="row"><div class="top"><span class="asset">Raw HTML shell</span><span class="pill exposed">EXPOSED</span></div><p>View Source exists. Any protection plan built on secrecy is built on sand — plan accordingly.</p></div>
+  <div class="row"><div class="top"><span class="asset">Trademark / brand</span><span class="pill open">DECISION OPEN</span></div><p>What gets filed first? Waiting on Dave's pick.</p></div>
+  <div class="row"><div class="top"><span class="asset">Terms + licensing</span><span class="pill open">DECISION OPEN</span></div><p>Needed before any money changes hands.</p></div>
+  <div class="row"><div class="top"><span class="asset">Pricing hypothesis / tip jar</span><span class="pill open">DECISION OPEN</span></div><p>Being worked with Buddy Suite.</p></div>
+  <div class="row"><div class="top"><span class="asset">Client/server split (Money Buddy)</span><span class="pill open">DECISION OPEN</span></div><p>Which logic moves server-side before launch?</p></div>
+  <div class="row"><div class="top"><span class="asset">Open-source vs proprietary</span><span class="pill open">DECISION OPEN</span></div><p>Strategy, not sentiment. My call: proprietary core, open glue.</p></div>
+  <div class="row"><div class="top"><span class="asset">Dashboard: personal tool or product?</span><span class="pill open">DECISION OPEN</span></div><p>Money Buddy Monetization's question — I keep the answer honest.</p></div>
+</div>
 
+<h2>Partners</h2>
+<div class="partners">
+  <a class="cardlink" href="../buddy-suite/"><h3>🧩 Buddy Suite</h3><p>Owns the monetization plan across the buddy family. I pressure-test it and fill the security gaps.</p></a>
+  <a class="cardlink" href="../money-buddy/"><h3>💵 Money Buddy</h3><p>The product. I keep its client/server split honest.</p></a>
+</div>
+
+<h2>Docs</h2>
+<div class="docs">
+  <a class="btn" href="https://docs.google.com/document/d/1sznSg7jSLRlDnAgFb-FaKnxp5lktWnFNQqK6DIEqF6E/edit">📄 Guardian Buddy — Brief</a>
+  <a class="btn" href="https://github.com/davedellaquila/guardian-buddy">💻 davedellaquila/guardian-buddy</a>
+</div>
 
 <section class="dumpbox" data-buddy-id="guardian-buddy">
 <h2>🧠 Brain dump</h2>
@@ -144,17 +192,27 @@ h2 { font-size: 22px; margin: 32px 0 16px; }
 </div>
 </section>
 
+<footer>
+Living page — last refreshed 2026-10-12 · Guardian Buddy
+</footer>
 
-<h2>Needs Attention</h2>
-<div class="attn"><div>Brief ready for review — looks good, edits, or defer? Open: server-side split before launch, trademark priorities, open-source vs proprietary, pricing hypothesis.</div><div class="attn-date">2026-10-10</div></div>
+</div><!-- .wrap -->
 
-
-
-
-<div class="footer">
-Generated 2026-10-12 · Part of the Buddy System
-</div>
-
+<script>
+(function(){
+  // theme: manual toggle + prefers-color-scheme, persisted
+  var root = document.documentElement, btn = document.getElementById('themeBtn');
+  function apply(t){ root.setAttribute('data-theme', t);
+    btn.textContent = (t === 'light') ? '🌙' : '☀️';
+    try { localStorage.setItem('guardian-buddy-theme', t); } catch(e){} }
+  var saved = null;
+  try { saved = localStorage.getItem('guardian-buddy-theme'); } catch(e){}
+  apply(saved || ((window.matchMedia && matchMedia('(prefers-color-scheme: light)').matches) ? 'light' : 'dark'));
+  btn.addEventListener('click', function(){
+    apply(root.getAttribute('data-theme') === 'light' ? 'dark' : 'light');
+  });
+})();
+</script>
 <script>
 (function(){
   var box = document.querySelector('.dumpbox');
