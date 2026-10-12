@@ -172,6 +172,21 @@
     padding: 12px 14px; margin-bottom: 12px; font-size: 14px;
   }
   .dumpbox-connect p { margin-bottom: 8px; }
+  /* ---- attention action buttons (same GitHub write path as the dump box) ---- */
+  .attn-actions { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
+  .attn-btn {
+    background: transparent; color: var(--heritage);
+    border: 1px solid var(--heritage); border-radius: 8px;
+    padding: 7px 14px; font-size: 13px; font-weight: 600; cursor: pointer; font-family: inherit;
+  }
+  .attn-btn:hover { border-color: var(--gold); color: var(--gold); }
+  .attn-btn.primary { background: var(--heritage); border-color: var(--heritage); color: #fff; }
+  .attn-btn.primary:hover { color: #fff; border-color: var(--heritage-deep); }
+  .attn-btn:disabled { opacity: .45; cursor: default; }
+  .attn-status { font-size: 13px; color: var(--dim); margin-top: 8px; min-height: 18px; }
+  .attn.resolved { opacity: .55; }
+  .attn.resolved .attn-actions { display: none; }
+
   /* ---- dark mode (prefers-color-scheme) ---- */
   @media (prefers-color-scheme: dark) {
     :root {
@@ -190,8 +205,8 @@
     }
     .note:nth-child(even) { background: #2E2A1C; }
     .addrow input, .addrow textarea { background: var(--paper); }
-    .btn, .dumpbox-btn { background: #46639B; }
-    .btn:hover, .dumpbox-btn:hover { background: #38517F; }
+    .btn, .dumpbox-btn, .attn-btn.primary { background: #46639B; }
+    .btn:hover, .dumpbox-btn:hover, .attn-btn.primary:hover { background: #38517F; border-color: #38517F; }
     .photo { box-shadow: 0 3px 10px rgba(0,0,0,.35); }
     .note { box-shadow: 0 3px 10px rgba(0,0,0,.35); }
     header.hero { box-shadow: 0 10px 30px rgba(0,0,0,.45); }
@@ -227,20 +242,26 @@
   </header>
 
   <h2 class="serif">On my mind <span class="sub">What needs Dave's attention</span></h2>
-  <div class="mind amber">
+  <div class="mind amber attn" data-attn-id="ron-staging-proposal">
     <div class="dot">🛋️</div>
-    <div><div class="t">Staging proposal needs all three sellers</div>
+    <div style="flex:1"><div class="attn-text"><div class="t">Staging proposal needs all three sellers</div>
     <div class="d">Mayra Vera's $4,250 design/styling fee — painting, wallpaper removal, cleaning, repairs, and hauling NOT included. Dave drafted questions for Kay Korbel on Sep 29; Ron's take is still unknown. <a href="https://davedellaquila.github.io/buddy-system/property-buddy/" target="_blank" rel="noopener">Property Buddy →</a></div></div>
+    <div class="attn-actions"><button type="button" class="attn-btn primary" data-act="done">✓ Done</button><button type="button" class="attn-btn" data-act="info">Need more info</button></div>
+    <div class="attn-status" role="status"></div></div>
   </div>
-  <div class="mind amber">
+  <div class="mind amber attn" data-attn-id="ron-rodent-proofing">
     <div class="dot">🐭</div>
-    <div><div class="t">Rodent-proofing estimate waiting on all three sellers</div>
+    <div style="flex:1"><div class="attn-text"><div class="t">Rodent-proofing estimate waiting on all three sellers</div>
     <div class="d">Julio Arciga (Silicon Valley Rodent Proofers) sent Estimate #787 on Oct 7 — $5,800 to screen roof vents, plumbing stacks, and eaves, plus re-screen damaged attic vents. Needs Ron + Emile + Dave approval. <a href="https://davedellaquila.github.io/buddy-system/property-buddy/" target="_blank" rel="noopener">Property Buddy →</a></div></div>
+    <div class="attn-actions"><button type="button" class="attn-btn primary" data-act="done">✓ Done</button><button type="button" class="attn-btn" data-act="info">Need more info</button></div>
+    <div class="attn-status" role="status"></div></div>
   </div>
-  <div class="mind">
+  <div class="mind attn" data-attn-id="ron-birthday">
     <div class="dot">🎂</div>
-    <div><div class="t">Birthday found: March 14 (year unknown)</div>
+    <div style="flex:1"><div class="attn-text"><div class="t">Birthday found: March 14 (year unknown)</div>
     <div class="d">Pulled from his Facebook page on Oct 9 — along with Santa Clara, his photography work, and San Francisco State. Still unknown: kids, interests, birth year.</div></div>
+    <div class="attn-actions"><button type="button" class="attn-btn primary" data-act="done">✓ Done</button><button type="button" class="attn-btn" data-act="info">Need more info</button></div>
+    <div class="attn-status" role="status"></div></div>
   </div>
 
   <h2 class="serif">🧠 Brain dump <span class="sub">Unfiltered thoughts about Ron — they land in the repo</span></h2>
@@ -547,6 +568,115 @@ renderNotes(); renderReminders(); renderDates(); renderGifts();
     if ((ev.metaKey || ev.ctrlKey) && ev.key === 'Enter') { ev.preventDefault(); dump(); }
   });
   resolveRepo().then(refreshUI);
+})();
+</script>
+<script>
+// ---- attention action buttons (same GitHub write path as the dump box) ----
+(function(){
+  var tiles = document.querySelectorAll('.attn[data-attn-id]');
+  if (!tiles.length) return;
+  var dumpbox = document.querySelector('.dumpbox');
+  var bid = (dumpbox && dumpbox.getAttribute('data-buddy-id')) || (function(){
+    var p = location.pathname.replace(/\/+$/, '');
+    return p.substring(p.lastIndexOf('/') + 1);
+  })();
+  function lsGet(){ try { return JSON.parse(localStorage.getItem('buddyTree.v3') || '{}'); } catch(e){ return {}; } }
+  function lsSet(patch){ try { var s = lsGet(); for (var k in patch) s[k] = patch[k]; localStorage.setItem('buddyTree.v3', JSON.stringify(s)); } catch(e){} }
+  function token(){ return lsGet().ghToken || ''; }
+  function b64encode(str){
+    var bytes = new TextEncoder().encode(str), bin = '';
+    bytes.forEach(function(b){ bin += String.fromCharCode(b); });
+    return btoa(bin);
+  }
+  async function ghApi(path, method, body){
+    var t = token();
+    if (!t) throw new Error('Add a GitHub token first.');
+    var r = await fetch('https://api.github.com' + path, {
+      method: method || 'GET',
+      headers: {'Authorization': 'Bearer ' + t, 'Accept': 'application/vnd.github+json', 'Content-Type': 'application/json'},
+      body: body ? JSON.stringify(body) : undefined
+    });
+    if (!r.ok) throw new Error('GitHub ' + r.status);
+    return r.status === 204 ? null : await r.json();
+  }
+  async function ghGetFile(repo, path){
+    try {
+      var j = await ghApi('/repos/davedellaquila/' + repo + '/contents/' + path);
+      if (j && j.content) return {
+        text: new TextDecoder().decode(Uint8Array.from(atob(j.content.replace(/\n/g, '')), function(c){ return c.charCodeAt(0); })),
+        sha: j.sha
+      };
+    } catch(e){}
+    return null;
+  }
+  var repo = null, buddyName = bid;
+  async function resolveBuddy(){
+    try {
+      var r = await fetch('../buddies.json', {cache: 'no-store'});
+      var d = await r.json();
+      var buds = d.buddies || [];
+      for (var i = 0; i < buds.length; i++) {
+        if (buds[i].id === bid) {
+          if (buds[i].repo) repo = buds[i].repo;
+          if (buds[i].name) buddyName = buds[i].name;
+          break;
+        }
+      }
+    } catch(e){}
+  }
+  function rkey(aid, text){ return bid + '|' + (aid || ('text:' + text.slice(0, 60))); }
+  function isResolved(aid, text){ var m = lsGet().attnDone || {}; return !!m[rkey(aid, text)]; }
+  function setResolved(aid, text){ var s = lsGet(); var m = s.attnDone || {}; m[rkey(aid, text)] = 1; s.attnDone = m; lsSet(s); }
+  function paintResolved(tile, msg){
+    tile.classList.add('resolved');
+    var st = tile.querySelector('.attn-status');
+    if (st) st.textContent = msg;
+  }
+  async function sendAction(tile, entry, okMsg){
+    var st = tile.querySelector('.attn-status');
+    var btns = tile.querySelectorAll('.attn-btn');
+    if (!token()) { st.textContent = 'Add a GitHub token in the Brain dump section above to enable actions.'; return false; }
+    if (!repo) { st.textContent = 'No repo linked for this buddy yet.'; return false; }
+    btns.forEach(function(b){ b.disabled = true; });
+    st.textContent = 'Working…';
+    try {
+      var NL = String.fromCharCode(10);
+      var stamp = new Date().toLocaleString();
+      var cur = await ghGetFile(repo, 'docs/ingest.md');
+      var base = cur ? cur.text : '# Ingest log — ' + buddyName + NL + NL;
+      var body = {message: 'Attention action for ' + bid, content: b64encode(base + '## ' + stamp + NL + NL + entry + NL + NL)};
+      if (cur && cur.sha) body.sha = cur.sha;
+      await ghApi('/repos/davedellaquila/' + repo + '/contents/docs/ingest.md', 'PUT', body);
+      st.textContent = okMsg;
+      return true;
+    } catch(err){
+      st.textContent = 'Save failed: ' + (err.message || err);
+      btns.forEach(function(b){ b.disabled = false; });
+      return false;
+    }
+  }
+  tiles.forEach(function(tile){
+    var aid = tile.getAttribute('data-attn-id') || '';
+    var textEl = tile.querySelector('.attn-text');
+    var text = textEl ? textEl.textContent.trim().replace(/\s+/g, ' ') : '';
+    if (isResolved(aid, text)) { paintResolved(tile, 'Marked done'); return; }
+    tile.addEventListener('click', function(ev){
+      var btn = ev.target.closest ? ev.target.closest('.attn-btn') : null;
+      if (!btn || btn.disabled) return;
+      var act = btn.getAttribute('data-act');
+      var idBit = aid ? ' (attention id: ' + aid + ')' : '';
+      if (act === 'done') {
+        sendAction(tile,
+          'DONE — Dave marked this done on the homepage: "' + text + '"' + idBit + '. Please remove it from the attention list in buddies.json.',
+          'Marked done — the buddy will clear it.').then(function(ok){ if (ok) { setResolved(aid, text); paintResolved(tile, 'Marked done — the buddy will clear it.'); } });
+      } else if (act === 'info') {
+        sendAction(tile,
+          'FOLLOW-UP — Dave needs more info on: "' + text + '"' + idBit + '. Please follow up with him.',
+          'Sent — ' + buddyName + ' will follow up.');
+      }
+    });
+  });
+  resolveBuddy();
 })();
 </script>
 </body>
