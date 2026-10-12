@@ -3,6 +3,11 @@
 All notable changes to the Buddies dashboard and buddy system. Newest first.
 `FEATURES.md` describes the current state; this file describes how it got there.
 
+## 2026-10-11 (Scroll-to-top on the info panel)
+
+### Added
+- **Floating scroll-to-top button on the buddy info panel:** mirrors the sidebar's frosted chip — appears once you've scrolled down, centered at the panel's bottom, smooth-scrolls back to top on tap. Position tracks the panel width through resizes.
+
 ## 2026-10-11 (Tree pan speed fixed at low zoom)
 
 ### Fixed

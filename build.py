@@ -210,6 +210,22 @@ body.sb-closed #sb-resize{display:none}
 #sb-to-top:hover{color:var(--accent);border-color:var(--accent)}
 #sb-to-top:active{transform:scale(.96)}
 #sb-to-top svg{display:block}
+/* Buddy-panel scroll-to-top — same chip, centered at the bottom of the info panel */
+#bp-to-top{position:fixed;bottom:16px;z-index:48;
+  width:44px;height:44px;border-radius:12px;padding:0;
+  display:flex;align-items:center;justify-content:center;
+  background:color-mix(in srgb, var(--panel) 78%, transparent);border:1px solid var(--border);
+  color:var(--muted);cursor:pointer;
+  box-shadow:0 2px 14px var(--shadow);
+  -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
+  opacity:0;pointer-events:none;transform:translateY(6px);
+  transition:opacity .18s ease,transform .18s ease,color .15s,border-color .15s;
+  -webkit-tap-highlight-color:transparent}
+#bp-to-top.show{opacity:1;pointer-events:auto;transform:none}
+#bp-to-top:hover{color:var(--accent);border-color:var(--accent)}
+#bp-to-top:active{transform:scale(.96)}
+#bp-to-top svg{display:block}
+body.standalone #bp-to-top{opacity:0!important;pointer-events:none!important}
 body.sb-closed #sb-to-top,
 body.standalone #sb-to-top{opacity:0!important;pointer-events:none!important}
 @media (max-width:639px){
@@ -4241,6 +4257,37 @@ function initSbToTop(){
   }
   sync();
 }
+function initBpToTop(){
+  const vb = document.getElementById('view-buddy');
+  const btn = document.getElementById('bp-to-top');
+  if (!vb || !btn || btn.dataset.init) return;
+  btn.dataset.init = '1';
+  const THRESH = 100;
+  function panelOpen(){
+    return vb.classList.contains('active') && (vb.classList.contains('panel') || vb.classList.contains('sheet'));
+  }
+  function sync(){
+    const useful = vb.scrollTop > THRESH && panelOpen() && !document.body.classList.contains('standalone');
+    btn.classList.toggle('show', !!useful);
+    // Center horizontally in the panel: panel is fixed to the right edge
+    if (useful) btn.style.right = Math.max(8, vb.offsetWidth / 2 - 22) + 'px';
+  }
+  vb.addEventListener('scroll', sync, { passive: true });
+  window.addEventListener('resize', sync);
+  btn.addEventListener('click', e => {
+    e.preventDefault();
+    e.stopPropagation();
+    try { vb.scrollTo({ top: 0, behavior: 'smooth' }); }
+    catch (err) { vb.scrollTop = 0; }
+  });
+  const mo = typeof MutationObserver !== 'undefined'
+    ? new MutationObserver(sync) : null;
+  if (mo) {
+    mo.observe(vb, { attributes: true, attributeFilter: ['class'] });
+    mo.observe(document.body, { attributes: true, attributeFilter: ['class'] });
+  }
+  sync();
+}
 function isDrawerNav(){ return window.matchMedia('(max-width:639px)').matches; }
 function isSidebarOpen(){
   const sb = document.getElementById('sidebar');
@@ -5073,6 +5120,7 @@ updateTokenGating();
 initSearch();
 initGear();
 initSbToTop();
+initBpToTop();
 initEdgeSwipeOpen();
 initPanelSwipeGestures();
 initVersionCheck();
@@ -5128,6 +5176,9 @@ initSbBrandSticky();
 </aside>
 <div id="sb-resize" title="Drag left or right to resize the sidebar. Double-click to reset to default width."></div>
 <button type="button" id="sb-to-top" title="Scroll sidebar to top" aria-label="Scroll sidebar to top">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5"/><path d="M6 11l6-6 6 6"/></svg>
+</button>
+<button type="button" id="bp-to-top" title="Scroll panel to top" aria-label="Scroll panel to top">
   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5"/><path d="M6 11l6-6 6 6"/></svg>
 </button>
 <main id="main">
