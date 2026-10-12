@@ -3,6 +3,23 @@
 All notable changes to the Buddies dashboard and buddy system. Newest first.
 `FEATURES.md` describes the current state; this file describes how it got there.
 
+## 2026-10-12 (Info panel + tree polish)
+
+### Added
+- **Change parent:** "Change" button in the Parent section opens a picker dialog — filter-as-you-type, "Top level" pinned at top, self/descendants excluded to prevent cycles (per Jony).
+- **Add child:** bare ⊕ in the Direct reports header (44px hit area, per Jony) — header supplies the noun, glyph supplies the verb.
+- **Parent, Siblings, Linked buddies** now appear in Settings → Buddy fields ordering.
+- **Shift-click a section header** collapses/expands all sections at once.
+
+### Changed
+- **"Setup drill" → "Onboarding"** across the dashboard.
+- **Info panel field order:** About moved to bottom, Private/Shared notes right above it.
+- **Left panel order:** Buddies, search, Business Plans, Views (last).
+- **Org chart tiles** auto-size to content (180–320px), names truncate with ellipsis, descriptions clamp at 3 lines.
+- **Info panel always opens scrolled to top** (no more restoring last position).
+- **Settings panel** per Jony: Done is now a real button, factory actions are quiet links ("Reset defaults"/"Save as defaults"); one toggle metaphor (blue check-circles everywhere); "(px)" unit hangs on the input; Attention header effect moved to Advanced.
+- **~40 side chats renamed** to match dashboard icons/names.
+
 ## 2026-10-11 (Jony's New Buddy sheet tweaks)
 
 ### Changed
