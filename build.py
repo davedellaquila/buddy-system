@@ -153,6 +153,9 @@ body{padding:0}
 #treezoom{flex:1;min-width:0;min-height:0;display:flex;flex-direction:column;overflow:hidden;
   border:1px solid var(--border);border-left:none;border-right:none;border-radius:0;background:var(--canvas)}
 .treepane{position:relative;min-height:60px;min-width:0;display:flex;flex-direction:column;flex:1 1 0}
+/* UI chrome above the chart scroll pane (Quick answers + Atlas lens picker).
+   Sits outside #treezoom-main so the zoom control never scales it. */
+.tree-chrome{flex:0 0 auto;min-width:0}
 .treescroll{flex:1;min-width:0;min-height:0;overflow:auto;overscroll-behavior:contain;cursor:grab;
   -webkit-overflow-scrolling:touch}
 .treescroll.panning{cursor:grabbing}
@@ -1458,7 +1461,7 @@ function renderNav(){
     h += '<button class="brow'+((S.projectId===id || S.sel==='buddy:'+id)?' sel':'')+(un?' has-unseen':'')+(isDormant(id)?' dormant':'')+'" data-buddy="'+id+'"'
       + ' draggable="'+(id===ROOT_ID?'false':'true')+'"'
       + ' style="padding-left:'+(8+depth*16)+'px" title="'+escHtml(b.tagline||'')+'">'
-      + (hasKids ? '<span class="ctog has-kids'+(collapsed?' collapsed':'')+'" data-ctog="'+id+'" title="'+(collapsed?'Expand':'Collapse')+'"><i class="chev">\u203a</i></span>' : '')
+      + (hasKids ? '<span class="ctog has-kids'+(collapsed?' collapsed':'')+'" data-ctog="'+id+'" title="'+(collapsed?'Expand':'Collapse')+' \u2014 Shift+click applies to the whole subtree"><i class="chev">\u203a</i></span>' : '')
       + '<span class="bdot"></span><span class="bicon">'+escHtml(b.icon||'')+'</span><span class="bname">'+escHtml(dispName(b))+'</span>'
       + '<span class="bkind">'+kind+'</span>'
       + '<span class="binfo" data-buddy-info="'+id+'" title="Open '+escHtml(dispName(b))+' details" style="margin-left:auto;padding:2px 6px;opacity:0;transition:opacity 0.15s;cursor:pointer" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0">\u24d8</span></button>';
@@ -3092,13 +3095,13 @@ function renderOrgTree(){
   const kids = kidsOf[ROOT_ID] || [];
   let chartHtml;
   if (chartType === 'org') {
-    chartHtml = '<div class="chart">' + quickAnswersHtml() + chartSwitcherHtml() + '<div style="text-align:center"><div class="node root" data-buddy="'+ROOT_ID+'">'
+    chartHtml = '<div class="chart"><div style="text-align:center"><div class="node root" data-buddy="'+ROOT_ID+'">'
       + '<div class="name">' + iconName(root) + '</div>'
       + '<div class="desc">' + escHtml(root.tagline || '') + '</div></div></div>'
       + '<div class="root-stub"></div><div class="tree"><ul>'
       + kids.map(b => orgNode(b, 1)).join('') + '</ul></div></div>';
   } else {
-    chartHtml = '<div class="chart chart-' + chartType + '">' + quickAnswersHtml() + chartSwitcherHtml() + renderChartMain(chartType, root, kids) + '</div>';
+    chartHtml = '<div class="chart chart-' + chartType + '">' + renderChartMain(chartType, root, kids) + '</div>';
   }
   let orphHtml = '';
   const orphans = (kidsOf['__root'] || []).filter(b => b.id !== ROOT_ID);
@@ -3114,6 +3117,9 @@ function renderOrgTree(){
     orphHtml += '<section class="standalones empty"><h2>Orphaned buddies</h2>'
       + '<p class="sub">None right now &mdash; drag a buddy here to detach it.</p></section>';
   }
+  // UI chrome (Quick answers + lens picker) lives outside the zoomed scroll pane
+  // so the zoom control only scales the chart itself.
+  document.getElementById('tree-chrome-main').innerHTML = quickAnswersHtml() + chartSwitcherHtml();
   document.getElementById('treezoom-main').innerHTML = chartHtml;
   document.getElementById('treezoom-orph').innerHTML = orphHtml;
   applyTreeSplit();
@@ -3681,6 +3687,7 @@ function zoomToFit(paneId, zoomKey){
   vt.insertAdjacentHTML('afterbegin',
     '<div class="treewrap" id="zoomwrap"><div id="treezoom">'
     + '<div class="treepane" id="treepane-main">' + zoombarHTML('main', 'Buddy tree zoom')
+    + '<div class="tree-chrome" id="tree-chrome-main"></div>'
     + '<div class="treescroll" id="treezoom-main" data-zoomkey="zoom" data-treepane="1"></div></div>'
     + '<div id="tree-split" title="Drag to resize the tree and orphan panes"><div class="split-grip"></div></div>'
     + '<div class="treepane" id="treepane-orph">' + zoombarHTML('orph', 'Orphaned buddies zoom')
@@ -6462,7 +6469,16 @@ document.addEventListener('click', e => {
   if (ctog) {
     const cid = ctog.getAttribute('data-ctog');
     if (!S.navCollapsed || typeof S.navCollapsed !== 'object') S.navCollapsed = {};
-    if (S.navCollapsed[cid]) delete S.navCollapsed[cid]; else S.navCollapsed[cid] = true;
+    const willCollapse = !S.navCollapsed[cid];
+    if (e.shiftKey) {
+      // Shift+click: apply to the whole subtree, not just this row.
+      (function walk(id){
+        if (willCollapse) S.navCollapsed[id] = true; else delete S.navCollapsed[id];
+        (kidsOf[id] || []).forEach(c => walk(c.id));
+      })(cid);
+    } else {
+      if (willCollapse) S.navCollapsed[cid] = true; else delete S.navCollapsed[cid];
+    }
     save(); renderNav();
     return;
   }

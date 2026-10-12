@@ -301,6 +301,9 @@ body{padding:0}
 #treezoom{flex:1;min-width:0;min-height:0;display:flex;flex-direction:column;overflow:hidden;
   border:1px solid var(--border);border-left:none;border-right:none;border-radius:0;background:var(--canvas)}
 .treepane{position:relative;min-height:60px;min-width:0;display:flex;flex-direction:column;flex:1 1 0}
+/* UI chrome above the chart scroll pane (Quick answers + Atlas lens picker).
+   Sits outside #treezoom-main so the zoom control never scales it. */
+.tree-chrome{flex:0 0 auto;min-width:0}
 .treescroll{flex:1;min-width:0;min-height:0;overflow:auto;overscroll-behavior:contain;cursor:grab;
   -webkit-overflow-scrolling:touch}
 .treescroll.panning{cursor:grabbing}
@@ -1810,7 +1813,7 @@ function renderNav(){
     h += '<button class="brow'+((S.projectId===id || S.sel==='buddy:'+id)?' sel':'')+(un?' has-unseen':'')+(isDormant(id)?' dormant':'')+'" data-buddy="'+id+'"'
       + ' draggable="'+(id===ROOT_ID?'false':'true')+'"'
       + ' style="padding-left:'+(8+depth*16)+'px" title="'+escHtml(b.tagline||'')+'">'
-      + (hasKids ? '<span class="ctog has-kids'+(collapsed?' collapsed':'')+'" data-ctog="'+id+'" title="'+(collapsed?'Expand':'Collapse')+'"><i class="chev">›</i></span>' : '')
+      + (hasKids ? '<span class="ctog has-kids'+(collapsed?' collapsed':'')+'" data-ctog="'+id+'" title="'+(collapsed?'Expand':'Collapse')+' — Shift+click applies to the whole subtree"><i class="chev">›</i></span>' : '')
       + '<span class="bdot"></span><span class="bicon">'+escHtml(b.icon||'')+'</span><span class="bname">'+escHtml(dispName(b))+'</span>'
       + '<span class="bkind">'+kind+'</span>'
       + '<span class="binfo" data-buddy-info="'+id+'" title="Open '+escHtml(dispName(b))+' details" style="margin-left:auto;padding:2px 6px;opacity:0;transition:opacity 0.15s;cursor:pointer" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0">ⓘ</span></button>';
@@ -2155,7 +2158,7 @@ function renderDevelopSection(){
   const dev = document.getElementById('fset-develop');
   if (!dev) return;
   const simulating = !!devBackup;
-  const buildNum = '20261012.1609';
+  const buildNum = '20261012.0927';
   dev.innerHTML = ''
     + '<label class="fset-check"><input type="checkbox" id="dev-empty-toggle"' + (simulating ? ' checked' : '') + '> <span><strong>Simulate new user</strong> — empty data file, as if opening the shared link fresh</span></label>'
     + '<div class="fineprint" style="margin:8px 0 12px">Build <span style="font-family:monospace">' + escHtml(String(buildNum)) + '</span> · ' + BUDDIES.length + ' buddies in this file</div>'
@@ -3013,7 +3016,7 @@ function renderBuddy(id){
     + '<div class="bp-sec" data-field="shared"><h3>Shared notes<span class="info-tip" data-tip="Anybody with repo access can see this note. Saved to the buddy’s repo (docs/notes.md).">ⓘ</span></h3>'
     + '<textarea class="notes" id="bp-shared-notes" placeholder="Anybody with repo access can see this note."></textarea>'
     + '<p class="fineprint" id="shared-status"></p></div>'
-    + '<div class="bp-build">Build 20261012.1609</div>'
+    + '<div class="bp-build">Build 20261012.0927</div>'
     + '</div>';
   const nm = document.getElementById('bp-name');
   nm.addEventListener('keydown', e => { if (e.key === 'Enter'){ e.preventDefault(); nm.blur(); } });
@@ -3444,13 +3447,13 @@ function renderOrgTree(){
   const kids = kidsOf[ROOT_ID] || [];
   let chartHtml;
   if (chartType === 'org') {
-    chartHtml = '<div class="chart">' + quickAnswersHtml() + chartSwitcherHtml() + '<div style="text-align:center"><div class="node root" data-buddy="'+ROOT_ID+'">'
+    chartHtml = '<div class="chart"><div style="text-align:center"><div class="node root" data-buddy="'+ROOT_ID+'">'
       + '<div class="name">' + iconName(root) + '</div>'
       + '<div class="desc">' + escHtml(root.tagline || '') + '</div></div></div>'
       + '<div class="root-stub"></div><div class="tree"><ul>'
       + kids.map(b => orgNode(b, 1)).join('') + '</ul></div></div>';
   } else {
-    chartHtml = '<div class="chart chart-' + chartType + '">' + quickAnswersHtml() + chartSwitcherHtml() + renderChartMain(chartType, root, kids) + '</div>';
+    chartHtml = '<div class="chart chart-' + chartType + '">' + renderChartMain(chartType, root, kids) + '</div>';
   }
   let orphHtml = '';
   const orphans = (kidsOf['__root'] || []).filter(b => b.id !== ROOT_ID);
@@ -3466,6 +3469,9 @@ function renderOrgTree(){
     orphHtml += '<section class="standalones empty"><h2>Orphaned buddies</h2>'
       + '<p class="sub">None right now &mdash; drag a buddy here to detach it.</p></section>';
   }
+  // UI chrome (Quick answers + lens picker) lives outside the zoomed scroll pane
+  // so the zoom control only scales the chart itself.
+  document.getElementById('tree-chrome-main').innerHTML = quickAnswersHtml() + chartSwitcherHtml();
   document.getElementById('treezoom-main').innerHTML = chartHtml;
   document.getElementById('treezoom-orph').innerHTML = orphHtml;
   applyTreeSplit();
@@ -4033,6 +4039,7 @@ function zoomToFit(paneId, zoomKey){
   vt.insertAdjacentHTML('afterbegin',
     '<div class="treewrap" id="zoomwrap"><div id="treezoom">'
     + '<div class="treepane" id="treepane-main">' + zoombarHTML('main', 'Buddy tree zoom')
+    + '<div class="tree-chrome" id="tree-chrome-main"></div>'
     + '<div class="treescroll" id="treezoom-main" data-zoomkey="zoom" data-treepane="1"></div></div>'
     + '<div id="tree-split" title="Drag to resize the tree and orphan panes"><div class="split-grip"></div></div>'
     + '<div class="treepane" id="treepane-orph">' + zoombarHTML('orph', 'Orphaned buddies zoom')
@@ -4465,7 +4472,7 @@ function renderPlan(id){
     + '<p class="fineprint">Saved on this device. (For your eyes only)</p></div>'
     + '<div class="bp-sec"><h3>Shared notes<span class="info-tip" data-tip="Visible to everyone with access to this project.">\u24d8</span></h3><textarea class="notes" id="bp-shared" placeholder="Shared notes\u2026 (visible to everyone with access)">'+escHtml((S.planShared||{})[id]||'')+'</textarea>'
     + '<p class="fineprint">Shared — visible to everyone with access.</p></div>'
-    + '<div class="bp-build">Build 20261012.1609</div>'
+    + '<div class="bp-build">Build 20261012.0927</div>'
     + '</div>';
   const nt = document.getElementById('bp-notes');
   let t = null;
@@ -6325,7 +6332,7 @@ function openWhatsNew(){
   head.insertBefore(updBtn, head.querySelector('.wn-x'));
   fetch('version.txt?_=' + Date.now(), {cache: 'no-store'})
     .then(r => r.ok ? r.text() : '')
-    .then(t => { if (t.trim() && t.trim() !== '20261012.1609') updBtn.style.display = ''; })
+    .then(t => { if (t.trim() && t.trim() !== '20261012.0927') updBtn.style.display = ''; })
     .catch(() => {});
   fetch('https://raw.githubusercontent.com/davedellaquila/buddy-system/master/CHANGELOG.md?_' + Date.now(), {cache: 'no-store'})
     .then(r => { if (!r.ok) throw new Error('fetch failed'); return r.text(); })
@@ -6353,7 +6360,7 @@ function openWhatsNew(){
   if (x) x.focus();
 }
 function initVersionCheck(){
-  const myBuild = '20261012.1609';
+  const myBuild = '20261012.0927';
   function showUpdateBanner(serverBuild){
     if (document.getElementById('update-banner')) return;
     const b = document.createElement('div');
@@ -6814,7 +6821,16 @@ document.addEventListener('click', e => {
   if (ctog) {
     const cid = ctog.getAttribute('data-ctog');
     if (!S.navCollapsed || typeof S.navCollapsed !== 'object') S.navCollapsed = {};
-    if (S.navCollapsed[cid]) delete S.navCollapsed[cid]; else S.navCollapsed[cid] = true;
+    const willCollapse = !S.navCollapsed[cid];
+    if (e.shiftKey) {
+      // Shift+click: apply to the whole subtree, not just this row.
+      (function walk(id){
+        if (willCollapse) S.navCollapsed[id] = true; else delete S.navCollapsed[id];
+        (kidsOf[id] || []).forEach(c => walk(c.id));
+      })(cid);
+    } else {
+      if (willCollapse) S.navCollapsed[cid] = true; else delete S.navCollapsed[cid];
+    }
     save(); renderNav();
     return;
   }
