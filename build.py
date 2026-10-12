@@ -2527,6 +2527,7 @@ function renderBuddy(id){
     + '<div class="bp-topnav"><button class="linkbtn" data-navbtn="back">\u2190 Back</button>'
     + '<button class="linkbtn" data-navbtn="prev">\u2039 Prev</button><button class="linkbtn" data-navbtn="next">Next \u203a</button>'
     + '<span class="sep">\u00b7</span><button class="linkbtn" data-view="projects">All buddies</button>'
+    + '<span class="sep">\u00b7</span><button class="linkbtn" id="bp-settings">Settings</button>'
     + '<span class=\"sep\">\\u00b7</span><button class=\"linkbtn\" id=\"bp-dormant\" title=\"Mark dormant / wake up\"></button>'
     + '<span class="sep">\u00b7</span><button class="linkbtn" id="bp-desktop">\U0001f4be Save to desktop</button></div>'
     + '<div class="bp-crumb">'+crumb(id)+'</div>'
@@ -5845,6 +5846,7 @@ document.addEventListener('click', e => {
     return;
   }
   if (e.target.closest && e.target.closest('#bp-desktop')) { const m = S.sel.match(/^buddy:(.+)$/); if (m) saveToDesktop(m[1]); return; }
+  if (e.target.closest && e.target.closest('#bp-settings')) { openFieldSettings(); return; }
   if (e.target.closest && e.target.closest('#sa-full')) { try { location.hash = '#/' + S.sel; } catch (e) {} document.body.classList.remove('standalone'); return; }
   const pd = e.target.closest('[data-del]');
   if (pd) {

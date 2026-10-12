@@ -2069,7 +2069,7 @@ function renderDevelopSection(){
   const dev = document.getElementById('fset-develop');
   if (!dev) return;
   const simulating = !!devBackup;
-  const buildNum = '20261012.0651';
+  const buildNum = '20261012.0652';
   dev.innerHTML = ''
     + '<label class="fset-check"><input type="checkbox" id="dev-empty-toggle"' + (simulating ? ' checked' : '') + '> <span><strong>Simulate new user</strong> — empty data file, as if opening the shared link fresh</span></label>'
     + '<div class="fineprint" style="margin:8px 0 12px">Build <span style="font-family:monospace">' + escHtml(String(buildNum)) + '</span> · ' + BUDDIES.length + ' buddies in this file</div>'
@@ -2879,6 +2879,7 @@ function renderBuddy(id){
     + '<div class="bp-topnav"><button class="linkbtn" data-navbtn="back">← Back</button>'
     + '<button class="linkbtn" data-navbtn="prev">‹ Prev</button><button class="linkbtn" data-navbtn="next">Next ›</button>'
     + '<span class="sep">·</span><button class="linkbtn" data-view="projects">All buddies</button>'
+    + '<span class="sep">·</span><button class="linkbtn" id="bp-settings">Settings</button>'
     + '<span class="sep">\u00b7</span><button class="linkbtn" id="bp-dormant" title="Mark dormant / wake up"></button>'
     + '<span class="sep">·</span><button class="linkbtn" id="bp-desktop">💾 Save to desktop</button></div>'
     + '<div class="bp-crumb">'+crumb(id)+'</div>'
@@ -2926,7 +2927,7 @@ function renderBuddy(id){
     + '<div class="bp-sec" data-field="shared"><h3>Shared notes<span class="info-tip" data-tip="Anybody with repo access can see this note. Saved to the buddy’s repo (docs/notes.md).">ⓘ</span></h3>'
     + '<textarea class="notes" id="bp-shared-notes" placeholder="Anybody with repo access can see this note."></textarea>'
     + '<p class="fineprint" id="shared-status"></p></div>'
-    + '<div class="bp-build">Build 20261012.0651</div>'
+    + '<div class="bp-build">Build 20261012.0652</div>'
     + '</div>';
   const nm = document.getElementById('bp-name');
   nm.addEventListener('keydown', e => { if (e.key === 'Enter'){ e.preventDefault(); nm.blur(); } });
@@ -4045,7 +4046,7 @@ function renderPlan(id){
     + '<p class="fineprint">Saved on this device. (For your eyes only)</p></div>'
     + '<div class="bp-sec"><h3>Shared notes<span class="info-tip" data-tip="Visible to everyone with access to this project.">\u24d8</span></h3><textarea class="notes" id="bp-shared" placeholder="Shared notes\u2026 (visible to everyone with access)">'+escHtml((S.planShared||{})[id]||'')+'</textarea>'
     + '<p class="fineprint">Shared — visible to everyone with access.</p></div>'
-    + '<div class="bp-build">Build 20261012.0651</div>'
+    + '<div class="bp-build">Build 20261012.0652</div>'
     + '</div>';
   const nt = document.getElementById('bp-notes');
   let t = null;
@@ -5864,7 +5865,7 @@ function openWhatsNew(){
   head.insertBefore(updBtn, head.querySelector('.wn-x'));
   fetch('version.txt?_=' + Date.now(), {cache: 'no-store'})
     .then(r => r.ok ? r.text() : '')
-    .then(t => { if (t.trim() && t.trim() !== '20261012.0651') updBtn.style.display = ''; })
+    .then(t => { if (t.trim() && t.trim() !== '20261012.0652') updBtn.style.display = ''; })
     .catch(() => {});
   fetch('https://raw.githubusercontent.com/davedellaquila/buddy-system/master/CHANGELOG.md?_' + Date.now(), {cache: 'no-store'})
     .then(r => { if (!r.ok) throw new Error('fetch failed'); return r.text(); })
@@ -5892,7 +5893,7 @@ function openWhatsNew(){
   if (x) x.focus();
 }
 function initVersionCheck(){
-  const myBuild = '20261012.0651';
+  const myBuild = '20261012.0652';
   function showUpdateBanner(serverBuild){
     if (document.getElementById('update-banner')) return;
     const b = document.createElement('div');
@@ -6197,6 +6198,7 @@ document.addEventListener('click', e => {
     return;
   }
   if (e.target.closest && e.target.closest('#bp-desktop')) { const m = S.sel.match(/^buddy:(.+)$/); if (m) saveToDesktop(m[1]); return; }
+  if (e.target.closest && e.target.closest('#bp-settings')) { openFieldSettings(); return; }
   if (e.target.closest && e.target.closest('#sa-full')) { try { location.hash = '#/' + S.sel; } catch (e) {} document.body.classList.remove('standalone'); return; }
   const pd = e.target.closest('[data-del]');
   if (pd) {
