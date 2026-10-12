@@ -184,7 +184,7 @@ input[type=range].zrange::-moz-range-thumb{width:16px;height:16px;border-radius:
   background:transparent;-webkit-tap-highlight-color:transparent;touch-action:none;user-select:none}
 /* 2x5 dot-grid gripper (Jonny's pick, 2026-10-11): honest affordance, no hover required */
 #sb-resize::after{content:'';width:14px;height:35px;transform:translateX(-9px);
-  background-image:radial-gradient(circle,var(--gripdot,var(--muted)) 1.6px,transparent 1.7px);
+  background-image:radial-gradient(circle,var(--gripdot,color-mix(in srgb,var(--muted) 34%,var(--border))) 1.6px,transparent 1.7px);
   background-size:7px 7px;background-position:center;background-repeat:repeat}
 #sb-resize:hover::after{--gripdot:var(--text2)}
 #sb-resize:active::after{--gripdot:var(--accent)}
@@ -363,7 +363,7 @@ body:has(#token-pill) #panel-open{right:148px}
   background:transparent;-webkit-tap-highlight-color:transparent;touch-action:none;user-select:none}
 /* Same dot-grid gripper language as #sb-resize */
 #bp-resize::after{content:'';width:14px;height:35px;transform:translateX(9px);
-  background-image:radial-gradient(circle,var(--gripdot,var(--muted)) 1.6px,transparent 1.7px);
+  background-image:radial-gradient(circle,var(--gripdot,color-mix(in srgb,var(--muted) 34%,var(--border))) 1.6px,transparent 1.7px);
   background-size:7px 7px;background-position:center;background-repeat:repeat}
 #bp-resize:hover::after{--gripdot:var(--text2)}
 #bp-resize:active::after{--gripdot:var(--accent)}
