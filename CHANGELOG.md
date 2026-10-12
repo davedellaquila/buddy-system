@@ -3,6 +3,12 @@
 All notable changes to the Buddies dashboard and buddy system. Newest first.
 `FEATURES.md` describes the current state; this file describes how it got there.
 
+## 2026-10-11 (＋ ↑ Parent / ＋ ↓ Child)
+
+### Added
+- **＋ ↑ Parent button** in the Parent section: creates a new buddy above the current one (manager/parent) and reparents the current buddy under it.
+- **＋ ↓ Child button** in Direct reports (restyled): creates a buddy below — direct report, subordinate, device/appliance, or activity.
+
 ## 2026-10-11 (New Buddy request sheet)
 
 ### Changed

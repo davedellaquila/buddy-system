@@ -2204,7 +2204,7 @@ function renderBuddy(id){
   let reportsSec = '';
   (function(){
     const kids = (kidsOf[id] || []).filter(k => k && k.id !== id);
-    const addBtn = '<button class="bp-add" data-addbuddy="child" data-for="'+escHtml(id)+'">+ Child</button>';
+    const addBtn = '<button class="bp-add" data-addbuddy="child" data-for="'+escHtml(id)+'" title="Add a direct report / subordinate below this buddy">＋ ↓ Child</button>';
     const rows = kids.map(k =>
       '<a class="art-row" data-buddy="'+escHtml(k.id)+'">'
       + '<span class="art-ic">'+escHtml(k.icon || '')+'</span>'
@@ -2215,14 +2215,15 @@ function renderBuddy(id){
   let parSec = '';
   (function(){
     const par = effParent(b);
-    const addBtn = '<button class="bp-add" data-addbuddy="sibling" data-for="'+escHtml(id)+'">+ Sibling</button>';
+    const addParentBtn = '<button class="bp-add" data-addbuddy="parent" data-for="'+escHtml(id)+'" title="Add a parent/manager above this buddy">＋ ↑ Parent</button>';
+    const addSibBtn = '<button class="bp-add" data-addbuddy="sibling" data-for="'+escHtml(id)+'">+ Sibling</button>';
     if (!par) {
-      parSec = '<div class="bp-sec" data-field="parent"><h3>Parent'+addBtn+'</h3><p class="bp-empty">Top-level buddy — no parent.</p></div>';
+      parSec = '<div class="bp-sec" data-field="parent"><h3>Parent'+addParentBtn+'</h3><p class="bp-empty">Top-level buddy — no parent.</p></div>';
       return;
     }
     const pb = byId[par];
     if (!pb) return;
-    parSec = '<div class="bp-sec" data-field="parent"><h3>Parent'+addBtn+'</h3>'
+    parSec = '<div class="bp-sec" data-field="parent"><h3>Parent'+addParentBtn+'</h3>'
       + '<a class="art-row" data-buddy="'+escHtml(par)+'">'
       + '<span class="art-ic">'+escHtml(pb.icon || '')+'</span>'
       + '<span><span class="art-label">'+escHtml(dispName(pb))+'</span><div class="art-sub">'+escHtml((pb.tagline || pb.mission || '').slice(0, 90))+'</div></span>'
@@ -3952,16 +3953,20 @@ function slugifyBuddy(name){
 }
 function openAddBuddyDialog(mode, forId){
   const ref = byId[forId]; if (!ref) return;
-  const parentId = mode === 'child' ? forId : effParent(ref);
+  const parentId = mode === 'child' ? forId : mode === 'parent' ? effParent(ref) : effParent(ref);
   const parentName = parentId && byId[parentId] ? dispName(byId[parentId]) : 'top level';
+  const title = mode === 'child' ? 'Add a child' : mode === 'parent' ? 'Add a parent' : 'Add a sibling';
+  const sub = mode === 'child'
+    ? 'New buddy under <b>' + escHtml(dispName(ref)) + '</b> — a direct report, subordinate, device, or activity.'
+    : mode === 'parent'
+    ? 'New buddy above <b>' + escHtml(dispName(ref)) + '</b> — a manager or parent. ' + escHtml(dispName(ref)) + ' becomes its direct report' + (parentId ? ' (under ' + escHtml(parentName) + ')' : ' at top level') + '.'
+    : 'New buddy alongside <b>' + escHtml(dispName(ref)) + '</b> (under ' + escHtml(parentName) + ')';
   closeAddBuddyDialog();
   const m = document.createElement('div');
   m.id = 'addbuddy-modal';
   m.innerHTML = '<div class="ab-backdrop"></div><div class="ab-box" role="dialog" aria-label="Add buddy">'
-    + '<h2>' + (mode === 'child' ? 'Add a child' : 'Add a sibling') + '</h2>'
-    + '<p class="ab-sub">' + (mode === 'child'
-        ? 'New buddy under <b>' + escHtml(dispName(ref)) + '</b>'
-        : 'New buddy alongside <b>' + escHtml(dispName(ref)) + '</b> (under ' + escHtml(parentName) + ')') + '</p>'
+    + '<h2>' + title + '</h2>'
+    + '<p class="ab-sub">' + sub + '</p>'
     + '<label>Name</label><input type="text" id="ab-name" placeholder="Buddy name" autocomplete="off">'
     + '<label>Icon</label><div class="ab-icons">' + ADD_ICONS.map((ic,i) => '<button data-ic="'+escHtml(ic)+'" class="'+(i===0?'sel':'')+'">'+escHtml(ic)+'</button>').join('') + '</div>'
     + '<label>Type</label><div class="ab-kinds">' + ADD_KINDS.map((k,i) => '<button data-kind="'+k[0]+'" class="'+(i===0?'sel':'')+'">'+k[1]+'</button>').join('') + '</div>'
@@ -3984,7 +3989,7 @@ function openAddBuddyDialog(mode, forId){
   }));
   nameInput.addEventListener('input', () => { createBtn.disabled = !nameInput.value.trim(); errEl.textContent = ''; });
   nameInput.addEventListener('keydown', e => { if (e.key === 'Enter' && !createBtn.disabled) createBtn.click(); if (e.key === 'Escape') closeAddBuddyDialog(); });
-  createBtn.addEventListener('click', () => createBuddyFromDialog(nameInput.value.trim(), icon, kind, parentId, errEl, createBtn));
+  createBtn.addEventListener('click', () => createBuddyFromDialog(nameInput.value.trim(), icon, kind, parentId, errEl, createBtn, mode, forId));
   setTimeout(() => nameInput.focus(), 50);
 }
 function closeAddBuddyDialog(){
@@ -4067,7 +4072,7 @@ function initNewBuddyFab(){
   fab.dataset.init = '1';
   fab.addEventListener('click', e => { e.stopPropagation(); openNewBuddyRequest(); });
 }
-async function createBuddyFromDialog(name, icon, kind, parentId, errEl, createBtn){
+async function createBuddyFromDialog(name, icon, kind, parentId, errEl, createBtn, mode, forId){
   errEl.textContent = '';
   createBtn.disabled = true;
   createBtn.textContent = 'Creating…';
@@ -4092,12 +4097,26 @@ async function createBuddyFromDialog(name, icon, kind, parentId, errEl, createBt
     const arr = data.buddies || data;
     if (arr.some(x => x.id === nid)) throw new Error('A buddy with that id already exists — try a different name.');
     arr.push(entry);
+    // Parent mode: reparent the reference buddy under the new parent
+    let reparented = null;
+    if (mode === 'parent' && forId) {
+      reparented = arr.find(x => x.id === forId);
+      if (reparented) reparented.parent = nid;
+    }
     await ghPutFile('buddy-system', 'buddies.json', b64encode(JSON.stringify(data, null, 1)), 'Add buddy ' + nid + ' (from dashboard info panel)');
     // Optimistic local update
     (BUDDIES).push(entry);
     byId[nid] = entry;
     const p = parentId || '__root';
     (kidsOf[p] = kidsOf[p] || []).push(entry);
+    if (mode === 'parent' && forId && byId[forId]) {
+      const oldP = effParent(byId[forId]) || '__root';
+      byId[forId].parent = nid;
+      const sibs = kidsOf[oldP] || [];
+      const ix = sibs.indexOf(byId[forId]);
+      if (ix >= 0) sibs.splice(ix, 1);
+      (kidsOf[nid] = kidsOf[nid] || []).push(byId[forId]);
+    }
     closeAddBuddyDialog();
     save(); renderNav(); refreshViews();
     if (S.projectId) renderBuddy(S.projectId);
