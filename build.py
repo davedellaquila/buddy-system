@@ -2965,7 +2965,8 @@ function initTreeSplit(){
   sp.addEventListener('pointerup', end);
   sp.addEventListener('pointercancel', end);
 }
-function quickAnswersHtml(){
+// All unseen attention items across every buddy — drives Quick Answers and the home-screen icon badge.
+function pendingAttentionItems(){
   const items = [];
   (BUDDIES || []).forEach(b => {
     (b.attention || []).forEach(a => {
@@ -2973,6 +2974,20 @@ function quickAnswersHtml(){
       if (!S.seen[key]) items.push({b, a, key});
     });
   });
+  return items;
+}
+// Home-screen icon badge (Badging API: iOS 16.4+ installed web apps, Chromium).
+// No permission needed, no service worker — reflects the count while the app is open.
+function updateAppBadge(){
+  try {
+    if (!('setAppBadge' in navigator)) return;
+    const n = pendingAttentionItems().length;
+    if (n > 0) navigator.setAppBadge(n);
+    else if ('clearAppBadge' in navigator) navigator.clearAppBadge();
+  } catch (e) {}
+}
+function quickAnswersHtml(){
+  const items = pendingAttentionItems();
   if (!items.length) return '';
   const links = items.slice(0, 12).map(({b, a, key}) =>
     '<span class="qa-chip"><button class="qa-link" data-qa-buddy="'+b.id+'" title="'+escHtml(a.text || '')+'">'
@@ -3597,7 +3612,7 @@ document.addEventListener('click', e => {
   if (qd) {
     e.stopImmediatePropagation();
     S.seen[qd.dataset.qaDone] = Date.now();
-    save(); renderOrgTree(); renderNav();
+    save(); renderOrgTree(); renderNav(); updateAppBadge();
     return;
   }
   const cp = e.target.closest('[data-collapse]');
@@ -3862,6 +3877,7 @@ document.addEventListener('keydown', e => {
   const sb = document.getElementById('sidebar');
   applySbWidth();
   applyFontScale();
+  updateAppBadge();
   const h = document.getElementById('sb-resize');
   let sx = null, sw = 0, sdrag = false, snapped = false;
   const SNAP_SHUT = 140; /* drag narrower than this → snap the sidebar closed */
@@ -5970,9 +5986,9 @@ document.addEventListener('click', e => {
     return;
   }
   const sb = e.target.closest('[data-seen]');
-  if (sb) { S.seen[sb.dataset.seen] = Date.now(); save(); renderBuddy(S.sel.slice(6)); renderNav(); return; }
+  if (sb) { S.seen[sb.dataset.seen] = Date.now(); save(); renderBuddy(S.sel.slice(6)); renderNav(); updateAppBadge(); return; }
   const sa = e.target.closest('[data-seen-all]');
-  if (sa) { (byId[sa.dataset.seenAll].attention || []).forEach(a => S.seen[a.id] = Date.now()); save(); renderBuddy(S.sel.slice(6)); renderNav(); return; }
+  if (sa) { (byId[sa.dataset.seenAll].attention || []).forEach(a => S.seen[a.id] = Date.now()); save(); renderBuddy(S.sel.slice(6)); renderNav(); updateAppBadge(); return; }
   const gt = e.target.closest('[data-goto]');
   if (gt) { e.preventDefault(); show('buddy:' + gt.dataset.goto); return; }
   const nb = e.target.closest('[data-navbtn]');

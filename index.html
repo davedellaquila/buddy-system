@@ -2069,7 +2069,7 @@ function renderDevelopSection(){
   const dev = document.getElementById('fset-develop');
   if (!dev) return;
   const simulating = !!devBackup;
-  const buildNum = '20261012.0650';
+  const buildNum = '20261012.0651';
   dev.innerHTML = ''
     + '<label class="fset-check"><input type="checkbox" id="dev-empty-toggle"' + (simulating ? ' checked' : '') + '> <span><strong>Simulate new user</strong> — empty data file, as if opening the shared link fresh</span></label>'
     + '<div class="fineprint" style="margin:8px 0 12px">Build <span style="font-family:monospace">' + escHtml(String(buildNum)) + '</span> · ' + BUDDIES.length + ' buddies in this file</div>'
@@ -2926,7 +2926,7 @@ function renderBuddy(id){
     + '<div class="bp-sec" data-field="shared"><h3>Shared notes<span class="info-tip" data-tip="Anybody with repo access can see this note. Saved to the buddy’s repo (docs/notes.md).">ⓘ</span></h3>'
     + '<textarea class="notes" id="bp-shared-notes" placeholder="Anybody with repo access can see this note."></textarea>'
     + '<p class="fineprint" id="shared-status"></p></div>'
-    + '<div class="bp-build">Build 20261012.0650</div>'
+    + '<div class="bp-build">Build 20261012.0651</div>'
     + '</div>';
   const nm = document.getElementById('bp-name');
   nm.addEventListener('keydown', e => { if (e.key === 'Enter'){ e.preventDefault(); nm.blur(); } });
@@ -3317,7 +3317,8 @@ function initTreeSplit(){
   sp.addEventListener('pointerup', end);
   sp.addEventListener('pointercancel', end);
 }
-function quickAnswersHtml(){
+// All unseen attention items across every buddy — drives Quick Answers and the home-screen icon badge.
+function pendingAttentionItems(){
   const items = [];
   (BUDDIES || []).forEach(b => {
     (b.attention || []).forEach(a => {
@@ -3325,6 +3326,20 @@ function quickAnswersHtml(){
       if (!S.seen[key]) items.push({b, a, key});
     });
   });
+  return items;
+}
+// Home-screen icon badge (Badging API: iOS 16.4+ installed web apps, Chromium).
+// No permission needed, no service worker — reflects the count while the app is open.
+function updateAppBadge(){
+  try {
+    if (!('setAppBadge' in navigator)) return;
+    const n = pendingAttentionItems().length;
+    if (n > 0) navigator.setAppBadge(n);
+    else if ('clearAppBadge' in navigator) navigator.clearAppBadge();
+  } catch (e) {}
+}
+function quickAnswersHtml(){
+  const items = pendingAttentionItems();
   if (!items.length) return '';
   const links = items.slice(0, 12).map(({b, a, key}) =>
     '<span class="qa-chip"><button class="qa-link" data-qa-buddy="'+b.id+'" title="'+escHtml(a.text || '')+'">'
@@ -3949,7 +3964,7 @@ document.addEventListener('click', e => {
   if (qd) {
     e.stopImmediatePropagation();
     S.seen[qd.dataset.qaDone] = Date.now();
-    save(); renderOrgTree(); renderNav();
+    save(); renderOrgTree(); renderNav(); updateAppBadge();
     return;
   }
   const cp = e.target.closest('[data-collapse]');
@@ -4030,7 +4045,7 @@ function renderPlan(id){
     + '<p class="fineprint">Saved on this device. (For your eyes only)</p></div>'
     + '<div class="bp-sec"><h3>Shared notes<span class="info-tip" data-tip="Visible to everyone with access to this project.">\u24d8</span></h3><textarea class="notes" id="bp-shared" placeholder="Shared notes\u2026 (visible to everyone with access)">'+escHtml((S.planShared||{})[id]||'')+'</textarea>'
     + '<p class="fineprint">Shared — visible to everyone with access.</p></div>'
-    + '<div class="bp-build">Build 20261012.0650</div>'
+    + '<div class="bp-build">Build 20261012.0651</div>'
     + '</div>';
   const nt = document.getElementById('bp-notes');
   let t = null;
@@ -4214,6 +4229,7 @@ document.addEventListener('keydown', e => {
   const sb = document.getElementById('sidebar');
   applySbWidth();
   applyFontScale();
+  updateAppBadge();
   const h = document.getElementById('sb-resize');
   let sx = null, sw = 0, sdrag = false, snapped = false;
   const SNAP_SHUT = 140; /* drag narrower than this → snap the sidebar closed */
@@ -5848,7 +5864,7 @@ function openWhatsNew(){
   head.insertBefore(updBtn, head.querySelector('.wn-x'));
   fetch('version.txt?_=' + Date.now(), {cache: 'no-store'})
     .then(r => r.ok ? r.text() : '')
-    .then(t => { if (t.trim() && t.trim() !== '20261012.0650') updBtn.style.display = ''; })
+    .then(t => { if (t.trim() && t.trim() !== '20261012.0651') updBtn.style.display = ''; })
     .catch(() => {});
   fetch('https://raw.githubusercontent.com/davedellaquila/buddy-system/master/CHANGELOG.md?_' + Date.now(), {cache: 'no-store'})
     .then(r => { if (!r.ok) throw new Error('fetch failed'); return r.text(); })
@@ -5876,7 +5892,7 @@ function openWhatsNew(){
   if (x) x.focus();
 }
 function initVersionCheck(){
-  const myBuild = '20261012.0650';
+  const myBuild = '20261012.0651';
   function showUpdateBanner(serverBuild){
     if (document.getElementById('update-banner')) return;
     const b = document.createElement('div');
@@ -6322,9 +6338,9 @@ document.addEventListener('click', e => {
     return;
   }
   const sb = e.target.closest('[data-seen]');
-  if (sb) { S.seen[sb.dataset.seen] = Date.now(); save(); renderBuddy(S.sel.slice(6)); renderNav(); return; }
+  if (sb) { S.seen[sb.dataset.seen] = Date.now(); save(); renderBuddy(S.sel.slice(6)); renderNav(); updateAppBadge(); return; }
   const sa = e.target.closest('[data-seen-all]');
-  if (sa) { (byId[sa.dataset.seenAll].attention || []).forEach(a => S.seen[a.id] = Date.now()); save(); renderBuddy(S.sel.slice(6)); renderNav(); return; }
+  if (sa) { (byId[sa.dataset.seenAll].attention || []).forEach(a => S.seen[a.id] = Date.now()); save(); renderBuddy(S.sel.slice(6)); renderNav(); updateAppBadge(); return; }
   const gt = e.target.closest('[data-goto]');
   if (gt) { e.preventDefault(); show('buddy:' + gt.dataset.goto); return; }
   const nb = e.target.closest('[data-navbtn]');
