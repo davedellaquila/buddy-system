@@ -720,7 +720,7 @@ body.standalone .sa-bar{display:flex}
 #main.homepage-mode{padding:0}
 #main.homepage-mode #view-project.active{min-height:100vh}
 #homepage-wrap{flex:1;display:flex;flex-direction:column;min-height:0;margin:0;position:relative}
-#homepage-open{position:absolute;bottom:14px;right:16px;z-index:5;background:var(--panel);color:var(--text);border:1px solid var(--border);border-radius:999px;padding:8px 16px;font-size:13px;font-weight:600;text-decoration:none;box-shadow:0 4px 16px rgba(0,0,0,.18);white-space:nowrap}
+#homepage-open{position:absolute;bottom:14px;left:16px;z-index:5;background:var(--panel);color:var(--text);border:1px solid var(--border);border-radius:999px;padding:8px 16px;font-size:13px;font-weight:600;text-decoration:none;box-shadow:0 4px 16px rgba(0,0,0,.18);white-space:nowrap}
 #homepage-open:hover{border-color:var(--accent);color:var(--accent)}
 #homepage-frame{flex:1;width:100%;min-height:0;border:0;border-radius:0;background:#fff;display:block}
 @media (max-width:760px){#main #view-project.active{min-height:calc(100vh - 88px)}
