@@ -84,6 +84,10 @@ Build: `build.py` generates `index.html` from `buddies.json` + `plans.json`.
 - **Collapsible buddy rows** — buddies with children carry a chevron; click
   toggles just that row, Shift+click collapses/expands the whole subtree.
   State persists per device.
+- **Persona picker** — every buddy's info panel shows its current persona
+  (name + voice blurb) with "Change persona" (searchable picker over the
+  full 116-entry roster) and "🎲 Surprise me" (random pick). Persists to
+  `buddies.json` via the GitHub token; works for Astro too.
 - **Project view** — shows the current project's homepage full-bleed in the
   main view area (no margins); a floating "Open in a new tab" pill button
   overlays the top. Clicking a sidebar buddy loads its homepage if it has
