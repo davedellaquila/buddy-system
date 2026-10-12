@@ -2622,11 +2622,10 @@ function renderBuddy(id){
       attachPan(tw);
     }
   }
-  // Persistent panel scroll position (per buddy)
+  // Panel always opens at the top
   (function(){
     const vb = document.getElementById('view-buddy');
-    watchScrollPos('panel:' + id, vb);
-    restoreScrollPos('panel:' + id, vb);
+    if (vb) vb.scrollTop = 0;
   })();
 }
 function toast(msg){
