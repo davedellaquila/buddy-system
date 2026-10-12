@@ -3,6 +3,11 @@
 All notable changes to the Buddies dashboard and buddy system. Newest first.
 `FEATURES.md` describes the current state; this file describes how it got there.
 
+## 2026-10-11 (A.K.A. section)
+
+### Added
+- **A.K.A. section in the buddy info panel:** add and remove nicknames/aliases per buddy. They're searchable, show in the panel header, and save per device. Logged to the change journal.
+
 ## 2026-10-11 (Side panels snap shut on resize)
 
 ### Added

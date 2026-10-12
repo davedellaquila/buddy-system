@@ -738,6 +738,7 @@ body.standalone .sa-bar{display:flex}
 .bp-name:focus{border-bottom-color:var(--accent);background:var(--wash2)}
 .bp-tagline{color:var(--muted);font-size:15px;margin:4px 0 8px}
 .bp-aka{color:var(--muted);font-size:13px;font-style:italic;margin-left:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:60%}
+.aka-pill{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;font-size:13px;background:var(--wash2);border:1px solid var(--border);border-radius:999px;color:var(--text)}
 .bp-sec{margin-top:30px}
 .bp-sec>h3{font-size:13px;letter-spacing:1.2px;text-transform:uppercase;color:var(--muted);margin:0 0 12px}
 .bp-sec>h3 .bp-add{float:right;font-size:12px;letter-spacing:0;text-transform:none;font-weight:600;color:var(--accent);background:none;border:1px solid var(--accent);border-radius:20px;padding:2px 10px;cursor:pointer}
@@ -1091,6 +1092,10 @@ function dispName(b){
   if (S.hideBuddyWord) n = n.replace(/\s+Buddy$/i, '');
   return n;
 }
+function effAka(b){
+  if (S.aka && Array.isArray(S.aka[b.id])) return S.aka[b.id];
+  return b.aka || [];
+}
 function getHomepage(b){ return (S.homepages && S.homepages[b.id]) || b.homepage || ''; }
 function homepageUrl(b){
   const hp = getHomepage(b);
@@ -1287,7 +1292,7 @@ function renderNav(){
   let h = '';
   function matches(b){
     if (!words.length) return true;
-    const hay = (dispName(b) + ' ' + (b.name || '') + ' ' + (b.tagline || '') + ' ' + ((b.aka || []).join(' '))).toLowerCase();
+    const hay = (dispName(b) + ' ' + (b.name || '') + ' ' + (b.tagline || '') + ' ' + effAka(b).join(' ')).toLowerCase();
     return words.every(w => hay.includes(w));
   }
   function row(id, depth){
@@ -1360,6 +1365,7 @@ const FIELD_DEFS = [
   {id:'ingest', label:'Ingest'},
   {id:'attention', label:'Needs your attention'},
   {id:'mission', label:'About'},
+  {id:'aka', label:'A.K.A.'},
   {id:'reports', label:'Direct reports'},
   {id:'homepage', label:'Homepage URL'},
   {id:'photos', label:'Photos'},
@@ -2280,7 +2286,7 @@ function renderBuddy(id){
     + '<span class="bp-icon" id="bp-icon" title="Click to change avatar" style="cursor:pointer">'+'<img class="bp-avatarimg" src="'+escHtml(buddyImageUrl(b))+'" alt="" onerror="this.remove()">'+'<span class="bp-avaemoji">'+escHtml(buddyDisplayIcon(b))+'</span></span>'
     + '<h2 class="bp-name" id="bp-name" contenteditable="true" spellcheck="false" data-buddy="'+id+'">'+escHtml(dispName(b))+'</h2>'
     + '<span class="status '+b.statusClass+'">'+escHtml(b.status)+'</span>'
-    + ((b.aka && b.aka.length) ? '<span class="bp-aka" title="Also known as">aka '+escHtml(b.aka.join(', '))+'</span>' : '')
+    + (function(){ const ak = effAka(b); return ak.length ? '<span class="bp-aka" title="Also known as">aka '+escHtml(ak.join(', '))+'</span>' : ''; })()
     + '<button class="bp-close-x" id="bp-close-x" type="button" title="Close detail \u2014 back to main view" aria-label="Close detail \u2014 back to main view">\u203a</button></div></div>'
     + standingOrdersHtml()
     + '<div class="bp-sec" data-field="ingest"><h3>Ingest<span class="info-tip" data-tip="Brain-dump anything about this buddy \u2014 raw and unfiltered. Each dump lands in the buddy\u2019s repo (docs/ingest.md) as a timestamped entry.">\u24d8</span></h3>'
@@ -2288,6 +2294,10 @@ function renderBuddy(id){
     + '<div style="margin-top:8px"><span class="fineprint" id="ingest-status"></span></div>'
     + '<div id="ingest-feed" style="margin-top:8px"></div></div>'
     + '<div class="bp-sec" data-field="mission"><h3>About<span class="info-tip" data-tip="The mission statement\\u2019s executive summary \\u2014 tweak it through the buddy\\u2019s chat thread and it updates everywhere.">\\u24d8</span></h3><p class="bp-mission">'+escHtml(b.mission)+'</p></div>'
+    + '<div class="bp-sec" data-field="aka"><h3>A.K.A.<span class="info-tip" data-tip="Other names for this buddy \\u2014 nicknames, aliases, what people actually call them. Searchable.">\\u24d8</span></h3>'
+    + '<div id="bp-aka-list" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px"></div>'
+    + '<div style="display:flex;gap:8px"><input type="text" id="bp-aka-input" placeholder="Add a nickname…" aria-label="Add a nickname" style="flex:1;min-width:0;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:8px 12px;font-size:13px;color:var(--text)">'
+    + '<button class="linkbtn" id="bp-aka-add" type="button">Add</button></div></div>'
     + reportsSec
     + parSec
     + sibSec
@@ -2363,6 +2373,54 @@ function renderBuddy(id){
     // Prevent the global click handler from re-opening the buddy when clicking the input
     hpu.addEventListener('click', e => e.stopPropagation());
   }
+  /* A.K.A. editor — device-local alias list, searchable */
+  (function initAka(){
+    const list = document.getElementById('bp-aka-list');
+    const input = document.getElementById('bp-aka-input');
+    const addBtn = document.getElementById('bp-aka-add');
+    if (!list || !input || !addBtn) return;
+    function cur(){ return effAka(b).slice(); }
+    function persist(arr){
+      if (!S.aka || typeof S.aka !== 'object') S.aka = {};
+      const baked = b.aka || [];
+      if (JSON.stringify(arr) === JSON.stringify(baked)) delete S.aka[id];
+      else S.aka[id] = arr;
+      save();
+    }
+    function render(){
+      const arr = cur();
+      list.innerHTML = arr.length
+        ? arr.map((a, i) => '<span class="aka-pill">'
+          + escHtml(a)
+          + '<button type="button" class="linkbtn" data-aka-del="' + i + '" aria-label="Remove nickname" style="padding:0 2px">×</button></span>').join('')
+        : '<span class="fineprint">No nicknames yet.</span>';
+    }
+    list.addEventListener('click', e => {
+      const del = e.target.closest('[data-aka-del]');
+      if (!del) return;
+      e.stopPropagation();
+      const arr = cur();
+      const removed = arr.splice(+del.dataset.akaDel, 1)[0];
+      persist(arr); render();
+      logChange('rename', id, 'Removed nickname "' + removed + '"', removed, null);
+      renderNav();
+    });
+    function add(){
+      const v = input.value.trim();
+      if (!v) return;
+      const arr = cur();
+      if (arr.some(a => a.toLowerCase() === v.toLowerCase())) { input.value = ''; return; }
+      arr.push(v);
+      persist(arr); render();
+      input.value = '';
+      logChange('rename', id, 'Added nickname "' + v + '"', null, v);
+      renderNav();
+    }
+    addBtn.addEventListener('click', e => { e.stopPropagation(); add(); });
+    input.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); add(); } });
+    input.addEventListener('click', e => e.stopPropagation());
+    render();
+  })();
   const hpc = document.getElementById('bp-homepage-copy');
   if (hpc) {
     hpc.addEventListener('click', e => {
@@ -4154,7 +4212,7 @@ function firstSearchMatch(){
   const words = q.split(/\s+/).filter(Boolean);
   if (!words.length) return null;
   for (const b of BUDDIES) {
-    const hay = (dispName(b) + ' ' + (b.name || '') + ' ' + (b.tagline || '') + ' ' + ((b.aka || []).join(' '))).toLowerCase();
+    const hay = (dispName(b) + ' ' + (b.name || '') + ' ' + (b.tagline || '') + ' ' + effAka(b).join(' ')).toLowerCase();
     if (words.every(w => hay.includes(w))) return b.id;
   }
   return null;
