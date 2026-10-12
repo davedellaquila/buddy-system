@@ -1390,6 +1390,9 @@ const FIELD_DEFS = [
   {id:'attention', label:'Needs your attention'},
   {id:'aka', label:'A.K.A.'},
   {id:'reports', label:'Direct reports'},
+  {id:'siblings', label:'Siblings'},
+  {id:'parent', label:'Parent'},
+  {id:'links', label:'Linked buddies'},
   {id:'homepage', label:'Homepage URL'},
   {id:'photos', label:'Photos'},
   {id:'tree', label:'The Buddy Tree'},
@@ -1401,10 +1404,14 @@ const FIELD_DEFS = [
 ];
 function getFieldOrder(){
   if (!S.fieldOrder || !Array.isArray(S.fieldOrder)) S.fieldOrder = FIELD_DEFS.map(f => f.id);
-  // One-time migration (2026-10-12): About moved to bottom, notes fields right above it.
-  // Reset stored order if it matches the old default so the new layout applies.
-  const oldDefault = ['ingest','attention','mission','aka','reports','homepage','photos','tree','artifacts','plans','notes','shared'];
-  if (JSON.stringify(S.fieldOrder) === JSON.stringify(oldDefault)) S.fieldOrder = FIELD_DEFS.map(f => f.id);
+  // One-time migration (2026-10-12): About moved to bottom, notes fields right above it;
+  // parent/siblings/links added to the orderable fields.
+  // Reset stored order if it matches a previous default so the new layout applies.
+  const oldDefaults = [
+    ['ingest','attention','mission','aka','reports','homepage','photos','tree','artifacts','plans','notes','shared'],
+    ['ingest','attention','aka','reports','homepage','photos','tree','artifacts','plans','notes','shared','mission'],
+  ];
+  if (oldDefaults.some(d => JSON.stringify(S.fieldOrder) === JSON.stringify(d))) S.fieldOrder = FIELD_DEFS.map(f => f.id);
   // Add any new fields that weren't in the saved order
   const ids = FIELD_DEFS.map(f => f.id);
   ids.forEach(id => { if (!S.fieldOrder.includes(id)) S.fieldOrder.push(id); });
