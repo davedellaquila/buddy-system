@@ -1541,6 +1541,7 @@ const SETTING_DEFS = [
   {id:'autoOpenPanel', label:'Always open detail panel on buddy click', type:'bool', def:false, tip:'When off (default), the panel auto-opens in every view EXCEPT Homepage — there, use the \u24d8 icon. When on, the panel opens on every click in every view.'},
   {id:'attnEffect', label:'Attention header effect', type:'choice', options:['pulse','glow','shake','blink','none'], def:'pulse', tip:'How the \u201cNeeds your attention\u201d section header grabs your eye when items are waiting.'},
   {id:'nbSheetWidth', label:'New buddy sheet width (px)', type:'number', def:560, min:320, max:900, advanced:true, tip:'Fixed width of the New Buddy bottom sheet. Height follows the content; drag the grab handle to resize vertically.'},
+  {id:'shiftLeftAction', label:'Shift+← action', type:'choice', options:['promote','go to parent','nothing'], def:'promote', advanced:true, tip:'What Shift+Left arrow does for the selected buddy. Promote moves it up one level; Go to parent just navigates there.'},
 ];
 function getSetting(id){
   const def = SETTING_DEFS.find(s => s.id === id);
@@ -1597,17 +1598,23 @@ function renderSettingChecks(){
     adv.innerHTML = SETTING_DEFS.filter(s => s.advanced).map(s => {
       const val = getSetting(s.id);
       if (s.type === 'number') return '<label class="fset-choice"><span>' + s.label + (s.tip ? ' <span class="info-tip" data-tip="' + escHtml(s.tip) + '">\\u24d8</span>' : '') + '</span><input type="number" data-setting="' + s.id + '" value="' + val + '"' + (s.min !== undefined ? ' min="' + s.min + '"' : '') + (s.max !== undefined ? ' max="' + s.max + '"' : '') + ' style="width:90px"></label>';
+      if (s.type === 'choice') return '<label class="fset-choice"><span>' + s.label + (s.tip ? ' <span class="info-tip" data-tip="' + escHtml(s.tip) + '">\\u24d8</span>' : '') + '</span><select data-setting="' + s.id + '">'
+        + s.options.map(o => '<option value="' + o + '"' + (val === o ? ' selected' : '') + '>' + o.charAt(0).toUpperCase() + o.slice(1) + '</option>').join('') + '</select></label>';
       return '';
     }).join('');
     adv.querySelectorAll('[data-setting]').forEach(el => {
       el.addEventListener('change', () => {
-        let v = parseInt(el.value, 10);
         const def = SETTING_DEFS.find(s => s.id === el.dataset.setting);
-        if (isNaN(v)) v = def ? def.def : 0;
-        if (def && def.min !== undefined) v = Math.max(def.min, v);
-        if (def && def.max !== undefined) v = Math.min(def.max, v);
-        el.value = v;
-        S[el.dataset.setting] = v; save();
+        if (el.type === 'number') {
+          let v = parseInt(el.value, 10);
+          if (isNaN(v)) v = def ? def.def : 0;
+          if (def && def.min !== undefined) v = Math.max(def.min, v);
+          if (def && def.max !== undefined) v = Math.min(def.max, v);
+          el.value = v;
+          S[el.dataset.setting] = v; save();
+        } else {
+          S[el.dataset.setting] = el.value; save();
+        }
       });
     });
   }
@@ -3436,11 +3443,18 @@ document.addEventListener('keydown', e => {
   }
   if (e.metaKey || e.ctrlKey || e.altKey) return;
   if (e.target && e.target.closest && e.target.closest('input,textarea,[contenteditable]')) return;
-  // Shift+Arrow: create buddy relative to the selected one
-  if (e.shiftKey && ['ArrowUp','ArrowDown','ArrowRight'].includes(e.key)) {
+  // Shift+Arrow: create buddy relative to the selected one (Left = configurable)
+  if (e.shiftKey && ['ArrowUp','ArrowDown','ArrowRight','ArrowLeft'].includes(e.key)) {
     if (S.projectId && byId[S.projectId]) {
-      const mode = e.key === 'ArrowUp' ? 'parent' : e.key === 'ArrowDown' ? 'child' : 'sibling';
-      openAddBuddyDialog(mode, S.projectId);
+      if (e.key === 'ArrowLeft') {
+        const act = (typeof getSetting === 'function') ? getSetting('shiftLeftAction') : 'promote';
+        if (act === 'promote') promoteBuddy(S.projectId);
+        else if (act === 'go to parent') { const p = effParent(byId[S.projectId]); if (p && byId[p]) openBuddy(p); }
+        // 'nothing' → do nothing
+      } else {
+        const mode = e.key === 'ArrowUp' ? 'parent' : e.key === 'ArrowDown' ? 'child' : 'sibling';
+        openAddBuddyDialog(mode, S.projectId);
+      }
       e.preventDefault();
     }
     return;
@@ -4183,6 +4197,36 @@ async function createBuddyFromDialog(name, icon, kind, parentId, errEl, createBt
     errEl.textContent = e.message || String(e);
     createBtn.disabled = false;
     createBtn.textContent = 'Create';
+  }
+}
+// Promote a buddy one level up (Shift+Left). Reparents to grandparent via GitHub.
+async function promoteBuddy(id){
+  const b = byId[id]; if (!b) return;
+  const par = effParent(b);
+  if (!par) { toast('Already top-level — nothing to promote to.'); return; }
+  const grand = effParent(byId[par]);
+  if (!ghToken()) { toast('Add a GitHub token first (gear menu) so the dashboard can save.'); return; }
+  try {
+    const raw = await ghGetFile('buddy-system', 'buddies.json');
+    if (!raw) throw new Error('Could not read buddies.json');
+    const data = JSON.parse(raw);
+    const arr = data.buddies || data;
+    const rec = arr.find(x => x.id === id);
+    if (!rec) throw new Error('Buddy not found on GitHub');
+    rec.parent = grand || null;
+    await ghPutFile('buddy-system', 'buddies.json', b64encode(JSON.stringify(data, null, 1)), 'Promote ' + id + ' one level (Shift+Left)');
+    // Optimistic local update
+    b.parent = grand || null;
+    const oldKids = kidsOf[par] || [];
+    const ix = oldKids.indexOf(b);
+    if (ix >= 0) oldKids.splice(ix, 1);
+    const gp = grand || '__root';
+    (kidsOf[gp] = kidsOf[gp] || []).push(b);
+    save(); renderNav(); refreshViews();
+    if (S.projectId) renderBuddy(S.projectId);
+    toast('Promoted — now under ' + (grand && byId[grand] ? dispName(byId[grand]) : 'top level') + '.');
+  } catch (err) {
+    toast('Promote failed: ' + (err.message || err));
   }
 }
 // Delegated clicks for the + Child / + Sibling buttons in the info panel

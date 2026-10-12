@@ -3,6 +3,11 @@
 All notable changes to the Buddies dashboard and buddy system. Newest first.
 `FEATURES.md` describes the current state; this file describes how it got there.
 
+## 2026-10-11 (Shift+← configurable)
+
+### Added
+- **Advanced → Shift+← action:** choose what Shift+Left does — Promote (move buddy up one level, default), Go to parent (navigate), or Nothing.
+
 ## 2026-10-11 (New Buddy sheet: content height + Advanced width)
 
 ### Changed
