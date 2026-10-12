@@ -111,6 +111,23 @@
   .thesis{font-size:16px}
   .thesis strong{color:var(--gold)}
 
+  /* attention tiles */
+  .attn{background:var(--panel);border:1px solid var(--border);border-left:4px solid var(--gold);
+    border-radius:0 12px 12px 0;padding:18px 20px;margin-bottom:14px;box-shadow:var(--shadow);
+    transition:opacity .3s}
+  .attn-text{font-size:15px}
+  .attn-date{color:var(--faint);font-size:13px;margin-top:6px}
+  .attn-actions{display:flex;gap:10px;margin-top:12px;flex-wrap:wrap}
+  .attn-btn{border:1px solid var(--border);background:var(--bg);color:var(--text);
+    border-radius:999px;padding:9px 18px;font-size:13px;font-weight:700;cursor:pointer;
+    -webkit-tap-highlight-color:transparent;min-height:38px}
+  .attn-btn.primary{background:linear-gradient(135deg,var(--amber),var(--gold));border:none;color:#1c1508;
+    box-shadow:0 4px 14px rgba(201,154,46,.35)}
+  .attn-btn:disabled{opacity:.45;cursor:default}
+  .attn-status{font-size:13px;color:var(--muted);margin-top:8px;min-height:18px}
+  .attn.resolved{opacity:.55}
+  .attn.resolved .attn-status{color:var(--gold);font-weight:700}
+
   /* brain dump */
   .dumpbox{background:var(--panel);border:1px solid var(--border);border-radius:14px;
     padding:22px 24px;margin:40px 0 0;box-shadow:var(--shadow);position:relative;overflow:hidden}
@@ -217,14 +234,24 @@
     </ul>
   </div>
 
-  <h2>On my mind</h2>
-  <div class="card mind" style="--tint:var(--amber)">
-    <span class="dot">🔵</span>
-    <p><strong>Launch is one decision away.</strong> The library is stocked, the plan is written, and the five proposed calls are flagged in the PRD. Confirm them and the first 7 AM send can go out. The no-feedback problem is exactly what this round is designed to learn about.</p>
+  <h2>Needs Attention</h2>
+  <div class="attn" data-attn-id="wisdom-pilot-launch">
+    <div class="attn-text"><strong>Launch is one decision away.</strong> The library is stocked, the plan is written, and the five proposed calls are flagged in the PRD. Confirm them and the first 7 AM send can go out. The no-feedback problem is exactly what this round is designed to learn about.</div>
+    <div class="attn-date">2026-10-11</div>
+    <div class="attn-actions">
+      <button type="button" class="attn-btn primary" data-act="done">✓ Done</button>
+      <button type="button" class="attn-btn" data-act="info">Need more info</button>
+    </div>
+    <div class="attn-status" role="status"></div>
   </div>
-  <div class="card mind" style="--tint:var(--muted);margin-top:12px">
-    <span class="dot">📚</span>
-    <p>Sources on watch: Instagram (millionaire.grandpa, the millionaire.dad) and Threads (larrywilsonn_). Screenshot intake for image-sourced wisdom is a Phase 2 idea. Zen Buddy's brief also notes a possible sibling relationship — practice companion vs. content library — worth a look as both take shape.</p>
+  <div class="attn" data-attn-id="wisdom-sources-watch">
+    <div class="attn-text">Sources on watch: Instagram (millionaire.grandpa, the millionaire.dad) and Threads (larrywilsonn_). Screenshot intake for image-sourced wisdom is a Phase 2 idea. Zen Buddy's brief also notes a possible sibling relationship — practice companion vs. content library — worth a look as both take shape.</div>
+    <div class="attn-date">2026-10-11</div>
+    <div class="attn-actions">
+      <button type="button" class="attn-btn primary" data-act="done">✓ Done</button>
+      <button type="button" class="attn-btn" data-act="info">Need more info</button>
+    </div>
+    <div class="attn-status" role="status"></div>
   </div>
 
   <h2>Documents &amp; links</h2>
@@ -425,6 +452,114 @@
     });
     resolveRepo().then(refreshUI);
   })();
+})();
+
+/* ---- attention action buttons (ingest-backed) ---- */
+(function(){
+  var tiles = document.querySelectorAll('.attn[data-attn-id]');
+  if (!tiles.length) return;
+  var dumpbox = document.querySelector('.dumpbox');
+  var bid = (dumpbox && dumpbox.getAttribute('data-buddy-id')) || (function(){
+    var p = location.pathname.replace(/\/+$/, '');
+    return p.substring(p.lastIndexOf('/') + 1);
+  })();
+  function lsGet(){ try { return JSON.parse(localStorage.getItem('buddyTree.v3') || '{}'); } catch(e){ return {}; } }
+  function lsSet(patch){ try { var s = lsGet(); for (var k in patch) s[k] = patch[k]; localStorage.setItem('buddyTree.v3', JSON.stringify(s)); } catch(e){} }
+  function token(){ return lsGet().ghToken || ''; }
+  function b64encode(str){
+    var bytes = new TextEncoder().encode(str), bin = '';
+    bytes.forEach(function(b){ bin += String.fromCharCode(b); });
+    return btoa(bin);
+  }
+  async function ghApi(path, method, body){
+    var t = token();
+    if (!t) throw new Error('Add a GitHub token first.');
+    var r = await fetch('https://api.github.com' + path, {
+      method: method || 'GET',
+      headers: {'Authorization': 'Bearer ' + t, 'Accept': 'application/vnd.github+json', 'Content-Type': 'application/json'},
+      body: body ? JSON.stringify(body) : undefined
+    });
+    if (!r.ok) throw new Error('GitHub ' + r.status);
+    return r.status === 204 ? null : await r.json();
+  }
+  async function ghGetFile(repo, path){
+    try {
+      var j = await ghApi('/repos/davedellaquila/' + repo + '/contents/' + path);
+      if (j && j.content) return {
+        text: new TextDecoder().decode(Uint8Array.from(atob(j.content.replace(/\n/g, '')), function(c){ return c.charCodeAt(0); })),
+        sha: j.sha
+      };
+    } catch(e){}
+    return null;
+  }
+  var repo = null, buddyName = bid;
+  async function resolveBuddy(){
+    try {
+      var r = await fetch('../buddies.json', {cache: 'no-store'});
+      var d = await r.json();
+      var buds = d.buddies || [];
+      for (var i = 0; i < buds.length; i++) {
+        if (buds[i].id === bid) {
+          if (buds[i].repo) repo = buds[i].repo;
+          if (buds[i].name) buddyName = buds[i].name;
+          break;
+        }
+      }
+    } catch(e){}
+  }
+  function rkey(aid, text){ return bid + '|' + (aid || ('text:' + text.slice(0, 60))); }
+  function isResolved(aid, text){ var m = lsGet().attnDone || {}; return !!m[rkey(aid, text)]; }
+  function setResolved(aid, text){ var s = lsGet(); var m = s.attnDone || {}; m[rkey(aid, text)] = 1; s.attnDone = m; lsSet(s); }
+  function paintResolved(tile, msg){
+    tile.classList.add('resolved');
+    var st = tile.querySelector('.attn-status');
+    if (st) st.textContent = msg;
+  }
+  async function sendAction(tile, entry, okMsg){
+    var st = tile.querySelector('.attn-status');
+    var btns = tile.querySelectorAll('.attn-btn');
+    if (!token()) { st.textContent = 'Add a GitHub token in the Brain dump section above to enable actions.'; return false; }
+    if (!repo) { st.textContent = 'No repo linked for this buddy yet.'; return false; }
+    btns.forEach(function(b){ b.disabled = true; });
+    st.textContent = 'Working…';
+    try {
+      var NL = String.fromCharCode(10);
+      var stamp = new Date().toLocaleString();
+      var cur = await ghGetFile(repo, 'docs/ingest.md');
+      var base = cur ? cur.text : '# Ingest log — ' + buddyName + NL + NL;
+      var body = {message: 'Attention action for ' + bid, content: b64encode(base + '## ' + stamp + NL + NL + entry + NL + NL)};
+      if (cur && cur.sha) body.sha = cur.sha;
+      await ghApi('/repos/davedellaquila/' + repo + '/contents/docs/ingest.md', 'PUT', body);
+      st.textContent = okMsg;
+      return true;
+    } catch(err){
+      st.textContent = 'Save failed: ' + (err.message || err);
+      btns.forEach(function(b){ b.disabled = false; });
+      return false;
+    }
+  }
+  tiles.forEach(function(tile){
+    var aid = tile.getAttribute('data-attn-id') || '';
+    var textEl = tile.querySelector('.attn-text');
+    var text = textEl ? textEl.textContent.trim() : '';
+    if (isResolved(aid, text)) { paintResolved(tile, 'Marked done'); return; }
+    tile.addEventListener('click', function(ev){
+      var btn = ev.target.closest ? ev.target.closest('.attn-btn') : null;
+      if (!btn || btn.disabled) return;
+      var act = btn.getAttribute('data-act');
+      var idBit = aid ? ' (attention id: ' + aid + ')' : '';
+      if (act === 'done') {
+        sendAction(tile,
+          'DONE — Dave marked this done on the homepage: "' + text + '"' + idBit + '. Please remove it from the attention list in buddies.json.',
+          'Marked done — the buddy will clear it.').then(function(ok){ if (ok) { setResolved(aid, text); paintResolved(tile, 'Marked done — the buddy will clear it.'); } });
+      } else if (act === 'info') {
+        sendAction(tile,
+          'FOLLOW-UP — Dave needs more info on: "' + text + '"' + idBit + '. Please follow up with him.',
+          'Sent — ' + buddyName + ' will follow up.');
+      }
+    });
+  });
+  resolveBuddy();
 })();
 </script>
 </body>
