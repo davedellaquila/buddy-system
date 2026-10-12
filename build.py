@@ -215,6 +215,16 @@ body{padding:0}
 .ledger-row:hover{background:var(--wash)}
 .ledger-name{font-weight:600;font-size:15px;white-space:nowrap}
 .ledger-desc{color:var(--muted);font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+/* Ledger drag grippers — Jonny's quiet 2x3 dot-grid language; the gripper is the drag handle */
+.ledger-grip{flex:0 0 auto;width:22px;height:22px;align-self:center;cursor:grab;touch-action:none;opacity:.5;border-radius:6px;
+  background-image:radial-gradient(circle,var(--gripdot,color-mix(in srgb,var(--muted) 42%,var(--border))) 1.5px,transparent 1.6px);
+  background-size:7px 7px;background-position:center;background-repeat:no-repeat}
+.ledger-row:hover .ledger-grip{opacity:.95}
+.ledger-grip:active{cursor:grabbing}
+.ledger-row.drag-armed{outline:2px solid var(--accent);outline-offset:2px}
+.ledger-row.drag-src{opacity:.4}
+.ledger-row.drop-target{background:var(--active);box-shadow:inset 0 0 0 2px var(--accent)}
+.ledger-row.drop-invalid{box-shadow:inset 0 0 0 2px #e0533d}
 .chart-lineage .lineage{overflow-x:auto;padding:16px 8px}
 .hgen{display:flex;align-items:center;gap:0}
 .hchildren{display:flex;flex-direction:column;gap:12px;margin-left:0;padding-left:28px;position:relative}
@@ -1040,6 +1050,10 @@ body.standalone .sa-bar{display:flex}
 #nerd-modal .nd-close{background:var(--accent)!important;color:#fff!important;border:none!important}
 .fineprint{font-size:12.5px;color:var(--faint);margin-top:8px;line-height:1.5}
 .bp-empty{color:var(--muted);font-size:14px}
+/* Parent one-liner link — name + kind, no tile */
+.bp-parent-link{display:inline-block;font-size:15px;font-weight:600;color:var(--accent);cursor:pointer;text-decoration:none;padding:6px 0}
+.bp-parent-link:hover{text-decoration:underline}
+.bp-parent-kind{font-weight:400;color:var(--muted);font-size:13px}
 .proj-row[data-plan]{cursor:pointer}
 .proj-row[data-plan]:hover{background:var(--hover)}
 .bp-tree-wrap{border:1px solid var(--border2);border-radius:12px;background:var(--bg);overflow:auto;position:relative;height:420px;cursor:grab}
@@ -2649,10 +2663,8 @@ function renderBuddy(id){
     const pb = byId[par];
     if (!pb) return;
     parSec = '<div class="bp-sec" data-field="parent"><h3>Parent<button class="bp-add" data-changeparent="'+escHtml(id)+'" title="Change this buddy\u2019s parent">Change</button></h3>'
-      + '<a class="art-row" data-buddy="'+escHtml(par)+'">'
-      + '<span class="art-ic">'+escHtml(pb.icon || '')+'</span>'
-      + '<span><span class="art-label">'+escHtml(dispName(pb))+'</span><div class="art-sub">'+escHtml((pb.tagline || pb.mission || '').slice(0, 90))+'</div></span>'
-      + '<span class="art-go" data-homepage="'+escHtml(par)+'" title="Open homepage">\\u2192</span></a></div>';
+      + '<a class="bp-parent-link" data-buddy="'+escHtml(par)+'" title="Open '+escHtml(dispName(pb))+'">'
+      + escHtml(dispName(pb)) + '<span class="bp-parent-kind"> (' + escHtml(pb.kind || 'buddy') + ')</span></a></div>';
   })();
   let sibSec = '';
   (function(){
@@ -3334,7 +3346,9 @@ function renderChartMain(type, root, kids){
 function ledgerHtml(root){
   function row(b, depth){
     const kids = kidsOf[b.id] || [];
+    const grip = b.id === ROOT_ID ? '' : '<span class="ledger-grip" data-ledger-grip="' + b.id + '" title="Drag to reparent ' + escHtml(dispName(b)) + '"></span>';
     let s = '<div class="ledger-row" data-buddy="' + b.id + '" style="padding-left:' + (depth * 24 + 12) + 'px">'
+      + grip
       + '<span class="ledger-name">' + iconName(b) + '</span>'
       + (b.tagline ? '<span class="ledger-desc">' + escHtml(b.tagline) + '</span>' : '')
       + '</div>';
@@ -4007,13 +4021,16 @@ let nodeDragEndAt = 0; // timestamp of last node-drag gesture; used to swallow t
   let drag = null;  // {id, pid, ghost, target} — active drag
 
   function treeNodeFrom(el){
-    return (el && el.closest) ? el.closest('#treezoom .node[data-buddy]') : null;
+    return (el && el.closest) ? el.closest('#treezoom .node[data-buddy], #treezoom .ledger-row[data-buddy]') : null;
+  }
+  function dragSrcEl(id){
+    return tz.querySelector('.node[data-buddy="' + id + '"], .ledger-row[data-buddy="' + id + '"]');
   }
   var TOUCH_SLOP = 16; // px of extra hit area around each node during a touch drag
   function nodeAt(x, y, touch){
     if (!touch) return treeNodeFrom(document.elementFromPoint(x, y));
     // Touch: finger covers the exact point, so test inflated rects and take the smallest match.
-    var nodes = tz.querySelectorAll('.node[data-buddy]'), best = null, bestArea = Infinity;
+    var nodes = tz.querySelectorAll('.node[data-buddy], .ledger-row[data-buddy]'), best = null, bestArea = Infinity;
     for (var i = 0; i < nodes.length; i++){
       var r = nodes[i].getBoundingClientRect();
       if (x >= r.left - TOUCH_SLOP && x <= r.right + TOUCH_SLOP && y >= r.top - TOUCH_SLOP && y <= r.bottom + TOUCH_SLOP){
@@ -4024,7 +4041,7 @@ let nodeDragEndAt = 0; // timestamp of last node-drag gesture; used to swallow t
     return best;
   }
   function clearHl(){
-    tz.querySelectorAll('.node.drop-target,.node.drop-invalid').forEach(function(x){ x.classList.remove('drop-target', 'drop-invalid'); });
+    tz.querySelectorAll('.node.drop-target,.node.drop-invalid,.ledger-row.drop-target,.ledger-row.drop-invalid').forEach(function(x){ x.classList.remove('drop-target', 'drop-invalid'); });
   }
   function moveGhost(x, y){
     if (drag && drag.ghost) { drag.ghost.style.left = x + 'px'; drag.ghost.style.top = y + 'px'; }
@@ -4044,7 +4061,7 @@ let nodeDragEndAt = 0; // timestamp of last node-drag gesture; used to swallow t
   }
   function cleanup(){
     clearHl();
-    tz.querySelectorAll('.node.drag-src,.node.drag-armed').forEach(function(x){ x.classList.remove('drag-src', 'drag-armed'); });
+    tz.querySelectorAll('.node.drag-src,.node.drag-armed,.ledger-row.drag-src,.ledger-row.drag-armed').forEach(function(x){ x.classList.remove('drag-src', 'drag-armed'); });
     if (drag && drag.ghost && drag.ghost.parentNode) drag.ghost.parentNode.removeChild(drag.ghost);
     document.body.classList.remove('node-dragging');
     if (cand && cand.timer) clearTimeout(cand.timer);
@@ -4052,12 +4069,12 @@ let nodeDragEndAt = 0; // timestamp of last node-drag gesture; used to swallow t
   }
   function beginDrag(x, y){
     const c = cand, id = c.id;
-    const src = tz.querySelector('.node[data-buddy="' + id + '"]');
+    const src = dragSrcEl(id);
     const ghost = document.createElement('div');
     ghost.className = 'node-drag-ghost';
     let label = id;
     if (src) {
-      const nm = src.querySelector('.name');
+      const nm = src.querySelector('.name, .ledger-name');
       label = (nm ? nm.textContent : src.textContent) || id;
     }
     const nmDiv = document.createElement('div');
@@ -4079,16 +4096,26 @@ let nodeDragEndAt = 0; // timestamp of last node-drag gesture; used to swallow t
     if (!n) return;
     const id = n.dataset.buddy;
     if (!id || id === ROOT_ID) return; // root can't be reparented
+    const isLedger = n.classList.contains('ledger-row');
+    const onGrip = e.target.closest && e.target.closest('[data-ledger-grip]');
+    // Ledger rows drag only from their gripper; the row itself stays tappable.
+    if (isLedger && !onGrip) return;
     if (cand && cand.timer) clearTimeout(cand.timer);
     cand = { id: id, x0: e.clientX, y0: e.clientY, pid: e.pointerId, touch: e.pointerType === 'touch', armed: false, timer: null };
-    // Press-and-hold: the node becomes draggable only after HOLD_MS. A quick
-    // tap (down+up before the timer) never enters drag mode — it opens the panel.
-    cand.timer = setTimeout(function(){
-      if (!cand || drag) return;
+    if (isLedger) {
+      // The gripper is an explicit drag affordance — arm immediately, no hold.
       cand.armed = true;
-      const src = tz.querySelector('.node[data-buddy="' + cand.id + '"]');
-      if (src) src.classList.add('drag-armed');
-    }, HOLD_MS);
+      n.classList.add('drag-armed');
+    } else {
+      // Press-and-hold: the node becomes draggable only after HOLD_MS. A quick
+      // tap (down+up before the timer) never enters drag mode — it opens the panel.
+      cand.timer = setTimeout(function(){
+        if (!cand || drag) return;
+        cand.armed = true;
+        const src = dragSrcEl(cand.id);
+        if (src) src.classList.add('drag-armed');
+      }, HOLD_MS);
+    }
   });
   window.addEventListener('pointermove', function(e){
     // Two-finger pinch owns the gesture — abort any node drag candidate
@@ -4114,7 +4141,7 @@ let nodeDragEndAt = 0; // timestamp of last node-drag gesture; used to swallow t
     }
     if (cand && e.pointerId === cand.pid) {
       if (cand.timer) clearTimeout(cand.timer);
-      const src = tz.querySelector('.node[data-buddy="' + cand.id + '"]');
+      const src = dragSrcEl(cand.id);
       if (src) src.classList.remove('drag-armed');
       cand = null;
     }
