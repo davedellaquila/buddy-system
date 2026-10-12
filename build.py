@@ -3080,18 +3080,42 @@ function highlightProjectRow(id){
 }
 function renderProjects(){
   if (!S.projCollapsed || typeof S.projCollapsed !== 'object') S.projCollapsed = {};
-  let unseen = 0, fresh = 0, cleared = 0;
   const weekAgo = Date.now() - 7 * 864e5;
+  // Compute the exact set of buddy IDs a filter shows (matching buddies +
+  // their ancestors, for hierarchy context). Tile counts use this so the
+  // number on the tile always matches the filtered row count.
+  function idsForFilter(kind, val){
+    const ids = {};
+    const addWithAncestors = b => {
+      let x = b;
+      while (x) { ids[x.id] = true; const p = effParent(x); x = p ? byId[p] : null; }
+    };
+    if (kind === 'attention') {
+      const matches = b => (b.attention || []).some(a => {
+        const seen = !!S.seen[a.id];
+        if (val === 'unseen') return !seen;
+        if (val === 'cleared') return seen;
+        const t = Date.parse(a.date || '');
+        return t && t >= weekAgo;
+      });
+      Object.values(byId).forEach(b => { if (matches(b)) addWithAncestors(b); });
+    } else if (kind === 'status') {
+      Object.values(byId).forEach(b => { if ((b.status || 'Unknown') === val) addWithAncestors(b); });
+    }
+    return ids;
+  }
+  const unseenIds = idsForFilter('attention', 'unseen');
+  const freshIds = idsForFilter('attention', 'fresh');
+  const clearedIds = idsForFilter('attention', 'cleared');
   const statusCounts = {};
+  const statusIds = {};
   Object.values(byId).forEach(b => {
     const st = b.status || 'Unknown';
-    statusCounts[st] = (statusCounts[st] || 0) + 1;
-    (b.attention || []).forEach(a => {
-      if (S.seen[a.id]) cleared++; else unseen++;
-      const t = Date.parse(a.date || '');
-      if (t && t >= weekAgo) fresh++;
-    });
+    (statusIds[st] = statusIds[st] || {});
+    let x = b;
+    while (x) { statusIds[st][x.id] = true; const p = effParent(x); x = p ? byId[p] : null; }
   });
+  Object.keys(statusIds).forEach(st => statusCounts[st] = Object.keys(statusIds[st]).length);
   // Status tint colors (match the pills)
   const statusTints = {'Active':'#1f6feb','Live · M2 shipped':'#2f9e44','Live · pre-alpha':'#2f9e44','New':'#d97a1f','Mission review':'#a371f7','PRD review':'#a371f7','Pilot':'#1f6feb','Spec review':'#a371f7'};
   const statusOrder = Object.keys(statusCounts).sort();
@@ -3103,9 +3127,9 @@ function renderProjects(){
   const revSub = revBits.length ? revBits.join(' \u00b7 ') : 'Needs your attention';
   let s = '<section class="projects-view" style="margin-top:24px">'
     + '<div id="project-tiles">'
-    + tileHtml('TO REVIEW', unseen, '#a371f7', revSub, 'unseen', projFilter === 'unseen')
-    + tileHtml('FRESH', fresh, '#d97a1f', 'Added in the last 7 days', 'fresh', projFilter === 'fresh')
-    + tileHtml('CLEARED', cleared, '#2f9e44', 'Reviewed & cleared', 'cleared', projFilter === 'cleared')
+    + tileHtml('TO REVIEW', Object.keys(unseenIds).length, '#a371f7', revSub, 'unseen', projFilter === 'unseen')
+    + tileHtml('FRESH', Object.keys(freshIds).length, '#d97a1f', 'Added in the last 7 days', 'fresh', projFilter === 'fresh')
+    + tileHtml('CLEARED', Object.keys(clearedIds).length, '#2f9e44', 'Reviewed & cleared', 'cleared', projFilter === 'cleared')
     + '</div>'
     + '<div id="project-status-tiles" style="margin-top:12px">'
     + statusOrder.map(st => tileHtml(st.toUpperCase(), statusCounts[st], statusTints[st] || '#8b949e', '', 'status:' + st, statusFilter === st, 'Click to filter by ' + st + ' status. Click again to clear.')).join('')
@@ -3122,29 +3146,13 @@ function renderProjects(){
     + '<button type="button" data-proj-mode="alpha" class="'+(projViewMode==='alpha'?'sel':'')+'" title="Alphabetical listing">A\u2013Z</button>'
     + '</div></div></div>'
     + '<p class="sub">'+(projViewMode==='alpha'?'Every buddy, A to Z, with its current status.':'Every buddy, in hierarchy order, with its current status.')+'</p><div class="proj-list">';
-  // When a tile filter is active, show matching buddies plus their ancestors
+  // When a tile filter is active, show matching buddies plus their ancestors.
+  // Uses idsForFilter so the row count always matches the tile count.
   let showIds = null;
   if (projFilter) {
-    const matches = b => (b.attention || []).some(a => {
-      const seen = !!S.seen[a.id];
-      if (projFilter === 'unseen') return !seen;
-      if (projFilter === 'cleared') return seen;
-      const t = Date.parse(a.date || '');
-      return t && t >= weekAgo;
-    });
-    showIds = {};
-    Object.values(byId).forEach(b => {
-      if (!matches(b)) return;
-      let x = b;
-      while (x) { showIds[x.id] = true; const p = effParent(x); x = p ? byId[p] : null; }
-    });
+    showIds = idsForFilter('attention', projFilter);
   } else if (statusFilter) {
-    showIds = {};
-    Object.values(byId).forEach(b => {
-      if ((b.status || 'Unknown') !== statusFilter) return;
-      let x = b;
-      while (x) { showIds[x.id] = true; const p = effParent(x); x = p ? byId[p] : null; }
-    });
+    showIds = idsForFilter('status', statusFilter);
   }
   // Text search: match name or tagline, show matches plus their ancestors
   if (projSearch) {
