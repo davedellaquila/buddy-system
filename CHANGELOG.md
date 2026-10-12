@@ -3,6 +3,11 @@
 All notable changes to the Buddies dashboard and buddy system. Newest first.
 `FEATURES.md` describes the current state; this file describes how it got there.
 
+## 2026-10-11 (Floating New Buddy button)
+
+### Added
+- **＋ Floating New Buddy button:** sticky round FAB (bottom-right) with a plus sign. Opens a dialog (name, icon, type) that writes a request file to `docs/inbox/` — a watcher job picks it up every 15 min and pings Dave to run the full setup drill.
+
 ## 2026-10-11 (A.K.A. section)
 
 ### Added

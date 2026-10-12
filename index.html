@@ -370,6 +370,11 @@ body.sb-closed #sb-resize{display:none}
   transition:opacity .18s ease,transform .18s ease,color .15s,border-color .15s;
   -webkit-tap-highlight-color:transparent}
 #bp-to-top.show{opacity:1;pointer-events:auto;transform:none}
+/* Floating + button for new buddy requests — sticky, round, always visible */
+#new-buddy-fab{position:fixed;right:20px;bottom:20px;z-index:9000;width:56px;height:56px;border-radius:50%;
+  background:var(--accent);color:#fff;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;
+  box-shadow:0 4px 16px rgba(0,0,0,.35);-webkit-tap-highlight-color:transparent}
+#new-buddy-fab:active{transform:scale(.94)}
 #bp-to-top:hover{color:var(--accent);border-color:var(--accent)}
 #bp-to-top:active{transform:scale(.96)}
 #bp-to-top svg{display:block}
@@ -1083,6 +1088,9 @@ body.node-dragging,body.node-dragging *{cursor:grabbing !important}
 </button>
 <button type="button" id="bp-to-top" title="Scroll panel to top" aria-label="Scroll panel to top">
   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5"/><path d="M6 11l6-6 6 6"/></svg>
+</button>
+<button type="button" id="new-buddy-fab" title="New buddy" aria-label="New buddy">
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
 </button>
 <main id="main">
 <div id="journal-bar"></div>
@@ -2670,7 +2678,7 @@ function renderBuddy(id){
     + '<div class="bp-sec" data-field="shared"><h3>Shared notes<span class="info-tip" data-tip="Anybody with repo access can see this note. Saved to the buddy’s repo (docs/notes.md).">ⓘ</span></h3>'
     + '<textarea class="notes" id="bp-shared-notes" placeholder="Anybody with repo access can see this note."></textarea>'
     + '<p class="fineprint" id="shared-status"></p></div>'
-    + '<div class="bp-build">Build 20261011.2321</div>'
+    + '<div class="bp-build">Build 20261011.2326</div>'
     + '</div>';
   const nm = document.getElementById('bp-name');
   nm.addEventListener('keydown', e => { if (e.key === 'Enter'){ e.preventDefault(); nm.blur(); } });
@@ -3688,7 +3696,7 @@ function renderPlan(id){
     + '<p class="fineprint">Saved on this device. (For your eyes only)</p></div>'
     + '<div class="bp-sec"><h3>Shared notes<span class="info-tip" data-tip="Visible to everyone with access to this project.">\u24d8</span></h3><textarea class="notes" id="bp-shared" placeholder="Shared notes\u2026 (visible to everyone with access)">'+escHtml((S.planShared||{})[id]||'')+'</textarea>'
     + '<p class="fineprint">Shared — visible to everyone with access.</p></div>'
-    + '<div class="bp-build">Build 20261011.2321</div>'
+    + '<div class="bp-build">Build 20261011.2326</div>'
     + '</div>';
   const nt = document.getElementById('bp-notes');
   let t = null;
@@ -4317,6 +4325,68 @@ function openAddBuddyDialog(mode, forId){
 function closeAddBuddyDialog(){
   const m = document.getElementById('addbuddy-modal');
   if (m) m.remove();
+}
+/* New-buddy request dialog (FAB) — writes a request file for Astro to pick up */
+function openNewBuddyRequest(){
+  closeAddBuddyDialog();
+  const m = document.createElement('div');
+  m.id = 'addbuddy-modal';
+  m.innerHTML = '<div class="ab-backdrop"></div><div class="ab-box" role="dialog" aria-label="Request a new buddy">'
+    + '<h2>New buddy</h2>'
+    + '<p class="ab-sub">Tell Astro what you want — they’ll run the full setup drill (repo, mission doc, side chat, homepage).</p>'
+    + '<label>Name</label><input type="text" id="ab-name" placeholder="Buddy name" autocomplete="off">'
+    + '<label>Icon</label><div class="ab-icons">' + ADD_ICONS.map((ic,i) => '<button data-ic="'+escHtml(ic)+'" class="'+(i===0?'sel':'')+'">'+escHtml(ic)+'</button>').join('') + '</div>'
+    + '<label>Type</label><div class="ab-kinds">' + ADD_KINDS.map((k,i) => '<button data-kind="'+k[0]+'" class="'+(i===0?'sel':'')+'">'+k[1]+'</button>').join('') + '</div>'
+    + '<div class="ab-err" id="ab-err"></div>'
+    + '<div class="ab-actions"><button class="ab-cancel" id="ab-cancel">Cancel</button><button class="ab-create" id="ab-create" disabled>Send request</button></div></div>';
+  document.body.appendChild(m);
+  const nameInput = m.querySelector('#ab-name');
+  const createBtn = m.querySelector('#ab-create');
+  const errEl = m.querySelector('#ab-err');
+  let icon = ADD_ICONS[0], kind = ADD_KINDS[0][0];
+  m.querySelector('.ab-backdrop').addEventListener('click', closeAddBuddyDialog);
+  m.querySelector('#ab-cancel').addEventListener('click', closeAddBuddyDialog);
+  m.querySelectorAll('.ab-icons button').forEach(b => b.addEventListener('click', () => {
+    m.querySelectorAll('.ab-icons button').forEach(x => x.classList.remove('sel'));
+    b.classList.add('sel'); icon = b.dataset.ic;
+  }));
+  m.querySelectorAll('.ab-kinds button').forEach(b => b.addEventListener('click', () => {
+    m.querySelectorAll('.ab-kinds button').forEach(x => x.classList.remove('sel'));
+    b.classList.add('sel'); kind = b.dataset.kind;
+  }));
+  nameInput.addEventListener('input', () => { createBtn.disabled = !nameInput.value.trim(); errEl.textContent = ''; });
+  nameInput.addEventListener('keydown', e => { if (e.key === 'Enter' && !createBtn.disabled) createBtn.click(); if (e.key === 'Escape') closeAddBuddyDialog(); });
+  createBtn.addEventListener('click', async () => {
+    errEl.textContent = '';
+    createBtn.disabled = true;
+    createBtn.textContent = 'Sending…';
+    try {
+      if (!ghToken()) throw new Error('Add a GitHub token first (gear menu → GitHub token) so the dashboard can save.');
+      const stamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19);
+      const req = {
+        name: nameInput.value.trim(),
+        icon: icon,
+        kind: kind,
+        requested_at: new Date().toISOString(),
+        requested_from: 'dashboard-fab',
+      };
+      const path = 'docs/inbox/new-buddy-' + stamp + '.json';
+      await ghPutFile('buddy-system', path, b64encode(JSON.stringify(req, null, 2)), 'New buddy request: ' + req.name);
+      closeAddBuddyDialog();
+      toast('Request sent — Astro will pick it up shortly.');
+    } catch (e) {
+      errEl.textContent = e.message || String(e);
+      createBtn.disabled = false;
+      createBtn.textContent = 'Send request';
+    }
+  });
+  setTimeout(() => nameInput.focus(), 50);
+}
+function initNewBuddyFab(){
+  const fab = document.getElementById('new-buddy-fab');
+  if (!fab || fab.dataset.init) return;
+  fab.dataset.init = '1';
+  fab.addEventListener('click', e => { e.stopPropagation(); openNewBuddyRequest(); });
 }
 async function createBuddyFromDialog(name, icon, kind, parentId, errEl, createBtn){
   errEl.textContent = '';
@@ -5232,7 +5302,7 @@ function openWhatsNew(){
   head.insertBefore(updBtn, head.querySelector('.wn-x'));
   fetch('version.txt?_=' + Date.now(), {cache: 'no-store'})
     .then(r => r.ok ? r.text() : '')
-    .then(t => { if (t.trim() && t.trim() !== '20261011.2321') updBtn.style.display = ''; })
+    .then(t => { if (t.trim() && t.trim() !== '20261011.2326') updBtn.style.display = ''; })
     .catch(() => {});
   fetch('https://raw.githubusercontent.com/davedellaquila/buddy-system/master/CHANGELOG.md?_' + Date.now(), {cache: 'no-store'})
     .then(r => { if (!r.ok) throw new Error('fetch failed'); return r.text(); })
@@ -5260,7 +5330,7 @@ function openWhatsNew(){
   if (x) x.focus();
 }
 function initVersionCheck(){
-  const myBuild = '20261011.2321';
+  const myBuild = '20261011.2326';
   function showUpdateBanner(serverBuild){
     if (document.getElementById('update-banner')) return;
     const b = document.createElement('div');
@@ -5718,6 +5788,7 @@ initGear();
 initSbToTop();
 initBpToTop();
 initNerdSettings();
+initNewBuddyFab();
 initEdgeSwipeOpen();
 initPanelSwipeGestures();
 initVersionCheck();
