@@ -703,6 +703,15 @@ body.standalone .sa-bar{display:flex}
 .bp-sec[data-field="attention"]>h3{color:var(--amber)}
 /* What's-new modal (from the update banner) */
 #whatsnew-modal{position:fixed;inset:0;z-index:10000}
+.cl-type-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(72px,1fr));gap:8px;margin:0 0 12px}
+.cl-type-stat{display:block;width:100%;box-sizing:border-box;font:inherit;appearance:none;-webkit-appearance:none;
+  text-align:center;border:1px solid;border-radius:10px;padding:8px 6px;min-width:0;cursor:pointer;background:var(--panel)}
+.cl-type-stat .value{font-size:20px;font-weight:800;letter-spacing:-.3px;line-height:1.1}
+.cl-type-stat .label{font-size:11px;font-weight:700;margin-top:3px;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cl-type-stat.cl-type-added{color:#2f9e44;border-color:#2f9e44;background:rgba(47,158,68,.08)}
+.cl-type-stat.cl-type-changed{color:#1f6feb;border-color:#1f6feb;background:rgba(31,111,235,.08)}
+.cl-type-stat.cl-type-fixed{color:#d43d2a;border-color:#d43d2a;background:rgba(212,61,42,.08)}
+.cl-type-stat[aria-pressed="true"]{box-shadow:inset 0 0 0 2px currentColor}
 .wn-backdrop{position:absolute;inset:0;background:var(--scrim)}
 .wn-box{position:absolute;top:8%;left:50%;transform:translateX(-50%);width:min(560px,calc(100vw - 32px));max-height:80vh;
   display:flex;flex-direction:column;background:var(--panel);border:1px solid var(--border);border-radius:14px;
@@ -4138,8 +4147,10 @@ window.__bindEdgeSwipes = bindIframeEdgeSwipes;
 /* Renders the newest CHANGELOG.md sections as HTML for the What's-new modal */
 function changelogMdToHtml(md){
   const lines = String(md || '').split('\\n');
-  let html = '', sections = 0, inList = false;
+  let html = '', sections = 0, inList = false, curType = '';
+  const typeCounts = {};
   const closeList = () => { if (inList) { html += '</ul>'; inList = false; } };
+  const typeSlug = t => t.toLowerCase().replace(/[^a-z]+/g, '');
   for (const raw of lines) {
     const line = raw.replace(/\s+$/, '');
     if (/^## /.test(line)) {
@@ -4149,18 +4160,55 @@ function changelogMdToHtml(md){
       html += '<h4>' + escHtml(line.slice(3)) + '</h4>';
     } else if (/^### /.test(line)) {
       closeList();
-      html += '<h5>' + escHtml(line.slice(4)) + '</h5>';
+      curType = line.slice(4).trim();
+      html += '<h5 data-cl-type-head="' + escHtml(typeSlug(curType)) + '">' + escHtml(curType) + '</h5>';
     } else if (/^- /.test(line)) {
       if (!inList) { html += '<ul>'; inList = true; }
-      html += '<li>' + escHtml(line.slice(2)).replace(/\*\*([^*]+)\*\*/g, '<b>$1</b>') + '</li>';
+      const slug = typeSlug(curType || 'other');
+      typeCounts[slug] = (typeCounts[slug] || 0) + 1;
+      html += '<li data-cl-type="' + escHtml(slug) + '">' + escHtml(line.slice(2)).replace(/\*\*([^*]+)\*\*/g, '<b>$1</b>') + '</li>';
     } else if (line.trim() === '') {
       closeList();
     }
   }
   closeList();
   if (!html) html = '<p class="fineprint">No changelog entries found.</p>';
+  // Type stats (like Money Buddy): clickable counts that filter the list
+  const typeLabels = { added: 'Added', changed: 'Changed', fixed: 'Fixed' };
+  const order = ['added', 'changed', 'fixed'];
+  const shown = order.filter(t => typeCounts[t] > 0);
+  let stats = '';
+  if (shown.length) {
+    stats = '<div class="cl-type-stats" role="group" aria-label="Change type counts">'
+      + shown.map(t => '<button type="button" class="cl-type-stat cl-type-' + t + '" data-cl-type="' + t + '" aria-pressed="false"'
+        + ' title="Filter to ' + typeLabels[t] + ' (click again to clear)">'
+        + '<div class="value">' + typeCounts[t] + '</div><div class="label">' + typeLabels[t] + '</div></button>').join('')
+      + '</div>';
+  }
+  html = stats + html;
   html += '<p class="fineprint"><a href="https://github.com/davedellaquila/buddy-system/blob/master/CHANGELOG.md" target="_blank" rel="noopener">Full changelog on GitHub</a></p>';
   return html;
+}
+function wireChangelogTypeFilter(root){
+  if (!root) return;
+  root.querySelectorAll('.cl-type-stat').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const active = btn.getAttribute('aria-pressed') === 'true';
+      root.querySelectorAll('.cl-type-stat').forEach(b => b.setAttribute('aria-pressed', 'false'));
+      const slug = active ? '' : btn.dataset.clType;
+      if (!active) btn.setAttribute('aria-pressed', 'true');
+      root.querySelectorAll('li[data-cl-type]').forEach(li => {
+        li.hidden = !!(slug && li.dataset.clType !== slug);
+      });
+      // Hide empty type headings and version sections when filtering
+      root.querySelectorAll('h5[data-cl-type-head]').forEach(h => {
+        const ul = h.nextElementSibling;
+        const anyVisible = ul && ul.tagName === 'UL' && [...ul.children].some(li => !li.hidden);
+        h.hidden = !!(slug && !anyVisible);
+        if (ul && ul.tagName === 'UL') ul.hidden = !!(slug && !anyVisible);
+      });
+    });
+  });
 }
 function openWhatsNew(){
   let m = document.getElementById('whatsnew-modal');
@@ -4178,7 +4226,7 @@ function openWhatsNew(){
   const body = m.querySelector('.wn-body');
   fetch('https://raw.githubusercontent.com/davedellaquila/buddy-system/master/CHANGELOG.md?_' + Date.now(), {cache: 'no-store'})
     .then(r => { if (!r.ok) throw new Error('fetch failed'); return r.text(); })
-    .then(md => { body.innerHTML = changelogMdToHtml(md); })
+    .then(md => { body.innerHTML = changelogMdToHtml(md); wireChangelogTypeFilter(body); })
     .catch(() => { body.innerHTML = '<p class="fineprint">Couldn\u2019t load the changelog. <a href="https://github.com/davedellaquila/buddy-system/blob/master/CHANGELOG.md" target="_blank" rel="noopener">View it on GitHub</a>.</p>'; });
   const x = m.querySelector('.wn-x');
   if (x) x.focus();
