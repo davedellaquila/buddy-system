@@ -38,6 +38,11 @@ Build: `build.py` generates `index.html` from `buddies.json` + `plans.json`.
   dashed outline). Root can't be dragged; dropping onto root makes a buddy
   top-level. Every move shows an Undo toast (~6s) — tap it to restore the
   previous parent.
+- **Ledger drag grippers** — every Ledger row (except the root) has a quiet
+  dot-grid gripper (Jonny's language). Grab it and drop onto another row to
+  make that buddy the parent. The gripper arms immediately (explicit drag
+  affordance, no press-and-hold); same cycle protection, ghost label, drop
+  highlighting, and ~6s undo toast as tile drag.
 - **Orphaned buddies section** — buddies with no parent render in their own
   pane, instead of being invisible.
 - **Drop targets** — tree nodes and Projects rows accept drops from the
@@ -145,6 +150,9 @@ Build: `build.py` generates `index.html` from `buddies.json` + `plans.json`.
   the new buddy's name, icon, and type, then writes the entry straight to
   `buddies.json` on GitHub (needs the GitHub token). New buddies are flagged
   `setup_pending` with an attention item so Astro runs the full onboarding.
+- **Parent one-liner** — the Parent section shows just "Name (kind)" as a
+  clickable link instead of a tile; tapping it opens the parent's panel. The
+  Change button stays in the section header.
 - **Buddy links (many-to-many)** — buddies link to each other, Rae Assist
   style: everything can be linked to everything. A `links` array on a
   registry entry names linked buddy ids; the dashboard renders a "Linked

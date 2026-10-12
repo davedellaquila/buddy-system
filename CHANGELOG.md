@@ -3,6 +3,64 @@
 All notable changes to the Buddies dashboard and buddy system. Newest first.
 `FEATURES.md` describes the current state; this file describes how it got there.
 
+## 2026-10-12 (Ledger: drag grippers + Parent one-liner)
+
+### Added
+- **Drag grippers on Ledger rows.** Every row except the root now carries a
+  quiet dot-grid gripper (Jonny's language). Grab it and drop onto another
+  row to reparent — same cycle protection, ghost, drop highlighting, and ~6s
+  undo toast as org-chart tile drag. The gripper arms immediately (explicit
+  affordance, no press-and-hold); taps on the row itself still open the
+  panel.
+
+### Changed
+- **Parent section is now a one-liner.** The info panel shows just
+  "Name (kind)" as a clickable link instead of the full tile; tapping it
+  opens the parent's panel. The Change button stays in the header.
+
+## 2026-10-12 (Info panel: persona picker)
+
+### Added
+- **Persona picker in every buddy's info panel.** Each buddy now shows its
+  current persona (name + voice blurb) in a dedicated Persona section, with
+  "Change persona" opening a searchable picker over the full 116-entry
+  roster (baked in at build time from persona-roster.md) and a "Surprise
+  me" button for a random pick. Works for Astro too. Selections persist to
+  `buddies.json` in the buddy-system repo via the dashboard's GitHub token
+  (same fetch-modify-write pattern as buddy creation), with an optimistic
+  local update. Phone-friendly bottom-sheet on small screens; dark-mode
+  safe.
+
+## 2026-10-12 (Tree view: zoom chrome fix + Shift+click subtree collapse)
+
+### Fixed
+- **Zoom no longer scales the Quick answers row or the Atlas lens pill.**
+  Both were rendered inside the zoomed chart container, so the zoom slider
+  grew/shrank them along with the chart. They now live in a dedicated
+  un-zoomed chrome strip above the chart scroll pane.
+- **Shift+click a sidebar collapse chevron collapses/expands the whole
+  subtree**, not just that row. Plain clicks still toggle only the clicked
+  row. Chevron tooltips now mention the Shift+click behavior.
+
+## 2026-10-12 (Portfolio Buddy: attention action buttons)
+
+### Added
+- **Attention action buttons** on the Portfolio Buddy homepage's two review cards
+  (Reimagined Portfolio product brief + mission statement): ✓ Done / Need more
+  info, per Dave's directive (rolled out from the Dell'Aquilas homepage).
+  "Done" appends a DONE entry to portfolio-buddy/docs/ingest.md asking the
+  buddy to clear the item from buddies.json; "Need more info" appends a
+  FOLLOW-UP entry. Tiles resolve immediately in the UI ("Marked done",
+  actions hidden) and persist that state in localStorage (`buddyTree.v3` /
+  `attnDone`); writes reuse the brain-dump box's shared-token pattern
+  (`ghToken`). Adapted from gen_basic_homepages.py's ATTN_JS to the page's
+  serif/pill-button language; dark mode and phone-friendly preserved. Also
+  added the product-brief review to the buddies.json attention registry so
+  both tiles map to real attention items (ids: portfolio-buddy-brief,
+  portfolio-buddy-mission). All three inline script bundles pass `node
+  --check`; rebuilt dashboard index.html verified to embed the new attention
+  entry.
+
 ## 2026-10-12 (Personal Buddy: attention action buttons)
 
 ### Added
