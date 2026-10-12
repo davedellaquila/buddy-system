@@ -3,6 +3,11 @@
 All notable changes to the Buddies dashboard and buddy system. Newest first.
 `FEATURES.md` describes the current state; this file describes how it got there.
 
+## 2026-10-11 (Buddy creation keyboard shortcuts)
+
+### Added
+- **Shift+↑ creates a parent, Shift+↓ a child, Shift+→ a sibling** — for the currently selected buddy. Works anywhere except inside text fields.
+
 ## 2026-10-11 (Settings section order)
 
 ### Changed

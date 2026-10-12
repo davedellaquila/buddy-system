@@ -3414,6 +3414,15 @@ document.addEventListener('keydown', e => {
   }
   if (e.metaKey || e.ctrlKey || e.altKey) return;
   if (e.target && e.target.closest && e.target.closest('input,textarea,[contenteditable]')) return;
+  // Shift+Arrow: create buddy relative to the selected one
+  if (e.shiftKey && ['ArrowUp','ArrowDown','ArrowRight'].includes(e.key)) {
+    if (S.projectId && byId[S.projectId]) {
+      const mode = e.key === 'ArrowUp' ? 'parent' : e.key === 'ArrowDown' ? 'child' : 'sibling';
+      openAddBuddyDialog(mode, S.projectId);
+      e.preventDefault();
+    }
+    return;
+  }
   if (e.key >= '1' && e.key <= '9') {
     const idx = parseInt(e.key, 10) - 1;
     const btns = Array.from(document.querySelectorAll('#sidebar .navbtn[data-view]'));
