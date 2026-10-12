@@ -3522,14 +3522,14 @@ let nodeDragEndAt = 0; // timestamp of last node-drag gesture; used to swallow t
 document.addEventListener('click', e => {
   const qd = e.target.closest('[data-qa-done]');
   if (qd) {
-    e.stopPropagation();
+    e.stopImmediatePropagation();
     S.seen[qd.dataset.qaDone] = Date.now();
     save(); renderOrgTree(); renderNav();
     return;
   }
   const cp = e.target.closest('[data-collapse]');
   if (cp) {
-    e.stopPropagation();
+    e.stopImmediatePropagation();
     const bid = cp.dataset.collapse;
     if (!S.collapsedNodes || typeof S.collapsedNodes !== 'object') S.collapsedNodes = {};
     S.collapsedNodes[bid] = !S.collapsedNodes[bid];

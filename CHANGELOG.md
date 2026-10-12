@@ -10,6 +10,7 @@ All notable changes to the Buddies dashboard and buddy system. Newest first.
 
 ### Changed
 - **Org chart beauty pass** (Jony): generation pills (CHILD/GRANDCHILD) removed — depth is already encoded vertically; Quick Answers collapsed to one horizontally-scrolling row; connectors are 1px hairlines instead of 2px slate; parent/child gap tightened from 26px to 20px; the composition centers vertically in the pane when it fits instead of anchoring to the top.
+- **Collapse pill taps** no longer open the info panel — tapping ⌄/› only collapses/expands; tapping anywhere else on the tile opens the panel. (Root cause: `stopPropagation` doesn't stop sibling listeners on the same element; switched to `stopImmediatePropagation`.) Same fix for the Quick Answers ✓ button.
 
 ## 2026-10-12 (Evening polish)
 
