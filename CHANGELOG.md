@@ -3,6 +3,26 @@
 All notable changes to the Buddies dashboard and buddy system. Newest first.
 `FEATURES.md` describes the current state; this file describes how it got there.
 
+## 2026-10-12 (Evening polish)
+
+### Added
+- **Quick answers bar** on the tree view — up to 12 pending attention items as tappable chips; tap to jump to that buddy's question.
+- **Architect Buddy** (📐) — Dave's digital architecture specialist.
+
+### Changed
+- **Zoom slider minimum** is now fit-to-chart — drag all the way down to see the entire tree.
+- **Search box** moved to the top of the left panel, above Buddies.
+- **Breadcrumb** shows the buddy's display name, not the raw repo slug.
+- **Double-click/tap on panel grippers** closes the panel (sidebar and info panel).
+- **Left-edge swipe** opens the sidebar on all screen sizes, not just phones.
+- **Settings rows** use the ⋮⋮ gripper; visibility checkbox moved to the left (Buddy fields and Main views).
+- **Settings resize thumb** now works on touch (was mouse-only).
+- **Hot Tub homepage** — "child of" → "inherits from Cabin Buddy".
+- **Hans/BMW artifacts** — E61 diagnostic report linked in both.
+
+### Fixed
+- **Projects view Shift+click** on a section chevron collapses/expands all sections.
+
 ## 2026-10-12 (Info panel + tree polish)
 
 ### Added
