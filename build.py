@@ -2678,10 +2678,14 @@ function renderReleases(){
         html += '<p class="fineprint" style="margin-top:0">You’re up to date — nothing new since you last looked.</p>';
       }
       if (sp.oldMd.trim()) {
-        html += '<details style="margin-top:12px"><summary class="fineprint" style="cursor:pointer">Earlier history</summary>'
-          + changelogMdToHtml(sp.oldMd, true) + '</details>';
+        html += '<div style="display:flex;align-items:baseline;gap:16px;margin-top:12px;flex-wrap:wrap">'
+          + '<details style="flex:1;min-width:0"><summary class="fineprint" style="cursor:pointer">Earlier history</summary>'
+          + changelogMdToHtml(sp.oldMd, true) + '</details>'
+          + '<p class="fineprint" style="margin:0;white-space:nowrap"><a href="https://github.com/davedellaquila/buddy-system/blob/master/CHANGELOG.md" target="_blank" rel="noopener">Earlier changes on GitHub</a></p>'
+          + '</div>';
+      } else {
+        html += '<p class="fineprint"><a href="https://github.com/davedellaquila/buddy-system/blob/master/CHANGELOG.md" target="_blank" rel="noopener">Earlier changes on GitHub</a></p>';
       }
-      html += '<p class="fineprint"><a href="https://github.com/davedellaquila/buddy-system/blob/master/CHANGELOG.md" target="_blank" rel="noopener">Full changelog on GitHub</a></p>';
       body.innerHTML = html;
       wireChangelogTypeFilter(body);
       whatsnewMarkSeen(md);
