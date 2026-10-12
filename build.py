@@ -267,6 +267,9 @@ body.standalone #sb-to-top{opacity:0!important;pointer-events:none!important}
 .cl-title{font-size:15px;font-weight:600;color:var(--text);line-height:1.3}
 .cl-desc{font-size:13.5px;color:var(--muted);margin-top:3px;line-height:1.4;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .cl-time{font-size:12px;color:var(--faint);margin-top:4px;white-space:nowrap}
+/* Changelog / Release Notes: never scroll horizontally — wrap long words */
+#view-changelog .changelog,#view-releases .changelog{overflow-x:hidden;overflow-wrap:break-word;word-break:break-word}
+#view-changelog .changelog a,#view-releases .changelog a{overflow-wrap:break-word;word-break:break-all}
 #journal-bar .jtime{color:var(--faint);font-size:11px;margin-left:6px}
 .pdrop{border:2px dashed var(--border);border-radius:12px;padding:20px;text-align:center;color:var(--muted);font-size:13px;margin-top:10px;cursor:pointer}
 .pdrop.over{border-color:var(--accent);background:var(--wash);color:var(--text)}

@@ -3,6 +3,11 @@
 All notable changes to the Buddies dashboard and buddy system. Newest first.
 `FEATURES.md` describes the current state; this file describes how it got there.
 
+## 2026-10-11 (Changelog/Release Notes no horizontal scroll)
+
+### Fixed
+- **Changelog and Release Notes no longer scroll sideways:** long URLs and unbreakable text now wrap instead of pushing the view wider than the screen.
+
 ## 2026-10-11 (Release Notes view)
 
 ### Added
