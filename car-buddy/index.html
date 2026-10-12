@@ -112,6 +112,18 @@
   .attention li strong { display: block; margin-bottom: 2px; }
   .attention a { color: var(--accent, #e0a437); font-weight: 600; }
   .attention li span { color: var(--muted); font-size: 14px; }
+  .attn-actions { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
+  .attn-btn {
+    border: 1px solid var(--border); background: var(--bg); color: var(--text);
+    border-radius: 8px; padding: 7px 14px; font-size: 13px; font-weight: 600; cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .attn-btn:hover { border-color: var(--amber); }
+  .attn-btn.primary { background: var(--amber); border-color: var(--amber); color: var(--bg); }
+  .attn-btn:disabled { opacity: .45; cursor: default; }
+  .attn-status { font-size: 13px; color: var(--muted); margin-top: 8px; min-height: 18px; }
+  .attn.resolved { opacity: .55; }
+  .attn.resolved .attn-actions { display: none; }
   .docs { display: flex; gap: 12px; flex-wrap: wrap; }
   .doc {
     flex: 1 1 220px;
@@ -262,17 +274,38 @@
 
   <h2>Needs Dave's attention <span class="rule"></span></h2>
   <ul class="attention">
-    <li>
-      <strong>The BMW's fuel system can't wait</strong>
-      <span>Filters and pump need attention, and it's spilling gas when parked (noticed at your dad's). At ~200k miles this is the kind of thing that strands you — worth scheduling before it does.</span>
+    <li class="attn" data-attn-id="bmw-fuel">
+      <div class="attn-text">
+        <strong>The BMW's fuel system can't wait</strong>
+        <span>Filters and pump need attention, and it's spilling gas when parked (noticed at your dad's). At ~200k miles this is the kind of thing that strands you — worth scheduling before it does.</span>
+      </div>
+      <div class="attn-actions">
+        <button type="button" class="attn-btn primary" data-act="done">✓ Done</button>
+        <button type="button" class="attn-btn" data-act="info">Need more info</button>
+      </div>
+      <div class="attn-status" role="status"></div>
     </li>
-    <li class="calm">
-      <strong>Green-light the build</strong>
-      <span><a href="https://docs.google.com/document/d/1Suf40x1f0MeoMVa429tSZKZDrRuAhXgYyuqKi0bE5lw/edit" target="_blank" rel="noopener">PRD</a> is locked. The open call is platform confirmation — Firebase web app per the PRD — then M2 starts. Say the word.</span>
+    <li class="attn calm" data-attn-id="build-greenlight">
+      <div class="attn-text">
+        <strong>Green-light the build</strong>
+        <span><a href="https://docs.google.com/document/d/1Suf40x1f0MeoMVa429tSZKZDrRuAhXgYyuqKi0bE5lw/edit" target="_blank" rel="noopener">PRD</a> is locked. The open call is platform confirmation — Firebase web app per the PRD — then M2 starts. Say the word.</span>
+      </div>
+      <div class="attn-actions">
+        <button type="button" class="attn-btn primary" data-act="done">✓ Done</button>
+        <button type="button" class="attn-btn" data-act="info">Need more info</button>
+      </div>
+      <div class="attn-status" role="status"></div>
     </li>
-    <li class="calm">
-      <strong>Airtable base inventory</strong>
-      <span>Car Buddy is the first Airtable replacement, but the full shutdown plan needs the inventory of every remaining base. That's a separate dig — want me to start it?</span>
+    <li class="attn calm" data-attn-id="airtable-inventory">
+      <div class="attn-text">
+        <strong>Airtable base inventory</strong>
+        <span>Car Buddy is the first Airtable replacement, but the full shutdown plan needs the inventory of every remaining base. That's a separate dig — want me to start it?</span>
+      </div>
+      <div class="attn-actions">
+        <button type="button" class="attn-btn primary" data-act="done">✓ Done</button>
+        <button type="button" class="attn-btn" data-act="info">Need more info</button>
+      </div>
+      <div class="attn-status" role="status"></div>
     </li>
   </ul>
 
@@ -424,6 +457,115 @@
     if ((ev.metaKey || ev.ctrlKey) && ev.key === 'Enter') { ev.preventDefault(); dump(); }
   });
   resolveRepo().then(refreshUI);
+})();
+</script>
+<script>
+// ---- attention action buttons (dashboard reference: gen_basic_homepages.py ATTN_JS) ----
+(function(){
+  var tiles = document.querySelectorAll('.attn[data-attn-id]');
+  if (!tiles.length) return;
+  var dumpbox = document.querySelector('.dumpbox');
+  var bid = (dumpbox && dumpbox.getAttribute('data-buddy-id')) || (function(){
+    var p = location.pathname.replace(/\/+$/, '');
+    return p.substring(p.lastIndexOf('/') + 1);
+  })();
+  function lsGet(){ try { return JSON.parse(localStorage.getItem('buddyTree.v3') || '{}'); } catch(e){ return {}; } }
+  function lsSet(patch){ try { var s = lsGet(); for (var k in patch) s[k] = patch[k]; localStorage.setItem('buddyTree.v3', JSON.stringify(s)); } catch(e){} }
+  function token(){ return lsGet().ghToken || ''; }
+  function b64encode(str){
+    var bytes = new TextEncoder().encode(str), bin = '';
+    bytes.forEach(function(b){ bin += String.fromCharCode(b); });
+    return btoa(bin);
+  }
+  async function ghApi(path, method, body){
+    var t = token();
+    if (!t) throw new Error('Add a GitHub token first.');
+    var r = await fetch('https://api.github.com' + path, {
+      method: method || 'GET',
+      headers: {'Authorization': 'Bearer ' + t, 'Accept': 'application/vnd.github+json', 'Content-Type': 'application/json'},
+      body: body ? JSON.stringify(body) : undefined
+    });
+    if (!r.ok) throw new Error('GitHub ' + r.status);
+    return r.status === 204 ? null : await r.json();
+  }
+  async function ghGetFile(repo, path){
+    try {
+      var j = await ghApi('/repos/davedellaquila/' + repo + '/contents/' + path);
+      if (j && j.content) return {
+        text: new TextDecoder().decode(Uint8Array.from(atob(j.content.replace(/\n/g, '')), function(c){ return c.charCodeAt(0); })),
+        sha: j.sha
+      };
+    } catch(e){}
+    return null;
+  }
+  var repo = null, buddyName = bid;
+  async function resolveBuddy(){
+    try {
+      var r = await fetch('../buddies.json', {cache: 'no-store'});
+      var d = await r.json();
+      var buds = d.buddies || [];
+      for (var i = 0; i < buds.length; i++) {
+        if (buds[i].id === bid) {
+          if (buds[i].repo) repo = buds[i].repo;
+          if (buds[i].name) buddyName = buds[i].name;
+          break;
+        }
+      }
+    } catch(e){}
+  }
+  function rkey(aid, text){ return bid + '|' + (aid || ('text:' + text.slice(0, 60))); }
+  function isResolved(aid, text){ var m = lsGet().attnDone || {}; return !!m[rkey(aid, text)]; }
+  function setResolved(aid, text){ var s = lsGet(); var m = s.attnDone || {}; m[rkey(aid, text)] = 1; s.attnDone = m; lsSet(s); }
+  function paintResolved(tile, msg){
+    tile.classList.add('resolved');
+    var st = tile.querySelector('.attn-status');
+    if (st) st.textContent = msg;
+  }
+  async function sendAction(tile, entry, okMsg){
+    var st = tile.querySelector('.attn-status');
+    var btns = tile.querySelectorAll('.attn-btn');
+    if (!token()) { st.textContent = 'Add a GitHub token in the Brain dump section above to enable actions.'; return false; }
+    if (!repo) { st.textContent = 'No repo linked for this buddy yet.'; return false; }
+    btns.forEach(function(b){ b.disabled = true; });
+    st.textContent = 'Working…';
+    try {
+      var NL = String.fromCharCode(10);
+      var stamp = new Date().toLocaleString();
+      var cur = await ghGetFile(repo, 'docs/ingest.md');
+      var base = cur ? cur.text : '# Ingest log — ' + buddyName + NL + NL;
+      var body = {message: 'Attention action for ' + bid, content: b64encode(base + '## ' + stamp + NL + NL + entry + NL + NL)};
+      if (cur && cur.sha) body.sha = cur.sha;
+      await ghApi('/repos/davedellaquila/' + repo + '/contents/docs/ingest.md', 'PUT', body);
+      st.textContent = okMsg;
+      return true;
+    } catch(err){
+      st.textContent = 'Save failed: ' + (err.message || err);
+      btns.forEach(function(b){ b.disabled = false; });
+      return false;
+    }
+  }
+  tiles.forEach(function(tile){
+    var aid = tile.getAttribute('data-attn-id') || '';
+    var textEl = tile.querySelector('.attn-text');
+    var text = textEl ? textEl.textContent.trim().replace(/\s+/g, ' ') : '';
+    if (isResolved(aid, text)) { paintResolved(tile, 'Marked done'); return; }
+    tile.addEventListener('click', function(ev){
+      var btn = ev.target.closest ? ev.target.closest('.attn-btn') : null;
+      if (!btn || btn.disabled) return;
+      var act = btn.getAttribute('data-act');
+      var idBit = aid ? ' (attention id: ' + aid + ')' : '';
+      if (act === 'done') {
+        sendAction(tile,
+          'DONE — Dave marked this done on the homepage: "' + text + '"' + idBit + '. Please remove it from the attention list in buddies.json.',
+          'Marked done — the buddy will clear it.').then(function(ok){ if (ok) { setResolved(aid, text); paintResolved(tile, 'Marked done — the buddy will clear it.'); } });
+      } else if (act === 'info') {
+        sendAction(tile,
+          'FOLLOW-UP — Dave needs more info on: "' + text + '"' + idBit + '. Please follow up with him.',
+          'Sent — ' + buddyName + ' will follow up.');
+      }
+    });
+  });
+  resolveBuddy();
 })();
 </script>
 </body>

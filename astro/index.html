@@ -62,13 +62,14 @@
   .feed-more a{color:var(--accent);text-decoration:none;font-weight:600}
   .feed-empty{padding:24px;text-align:center;color:var(--muted)}
   .feed-hint{font-size:12px;color:var(--muted);margin:-6px 0 10px}
-  .donebtn{flex-shrink:0;align-self:center;border:1px solid var(--border);background:transparent;color:var(--dim);border-radius:999px;padding:8px 14px;font-size:13px;cursor:pointer;min-height:44px}
-  .donebtn:hover{border-color:var(--green);color:var(--green)}
-  .donebtn:disabled{opacity:.5;cursor:default}
-  .done-err{font-size:12px;color:var(--amber);align-self:center;max-width:230px;line-height:1.4}
-  .done-err a{color:var(--accent)}
-  .feed-item.acked{opacity:0;transition:opacity .45s}
-  @media (prefers-reduced-motion: reduce){.feed-item.acked{transition:none}}
+  .feed-item .attn-actions{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+  .attn-btn{border:1px solid var(--border);background:var(--bg);color:var(--text);border-radius:8px;padding:8px 14px;font-size:13px;font-weight:600;cursor:pointer;-webkit-tap-highlight-color:transparent;min-height:36px}
+  .attn-btn:hover{border-color:var(--accent)}
+  .attn-btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+  .attn-btn:disabled{opacity:.45;cursor:default}
+  .attn-status{font-size:13px;color:var(--muted);margin-top:6px;min-height:18px}
+  .feed-item.resolved{opacity:.55}
+  .feed-item.resolved .attn-actions{display:none}
   a.cardlink{text-decoration:none;color:inherit;display:block;cursor:pointer}
   a.cardlink:hover{border-color:var(--accent)}
   a.cardlink h3{margin-bottom:6px}
@@ -372,59 +373,99 @@
           var home=buddyHome(a.bid);
           var txt=esc(a.text);
           if(a.url){txt='<a href="'+esc(a.url)+'" target="_blank" rel="noopener">'+txt+'</a>';}
-          return '<div class="feed-item" data-bid="'+esc(a.bid)+'" data-aid="'+esc(a.aid)+'" data-atext="'+esc(a.text)+'"><div class="feed-icon">'+esc(a.icon)+'</div>'+
+          return '<div class="feed-item" data-bid="'+esc(a.bid)+'" data-aid="'+esc(a.aid)+'"><div class="feed-icon">'+esc(a.icon)+'</div>'+
             '<div class="feed-body"><div class="feed-buddy"><a href="'+home+'" target="_blank" rel="noopener">'+esc(a.name)+'</a></div>'+
             '<div class="feed-text">'+txt+'</div>'+
-            (a.date?'<div class="feed-date">'+esc(a.date)+'</div>':'')+'</div>'+
-            '<button class="donebtn" title="Mark handled — writes back and tells Astro">✓ Done</button></div>';
+            (a.date?'<div class="feed-date">'+esc(a.date)+'</div>':'')+
+            '<div class="attn-actions"><button type="button" class="attn-btn primary" data-act="done">✓ Done</button>'+
+            '<button type="button" class="attn-btn" data-act="info">Need more info</button></div>'+
+            '<div class="attn-status" role="status"></div></div></div>';
         }).join("")+
         (attn.length>show.length?'<div class="feed-more">+ '+(attn.length-show.length)+' more — see them all on the <a href="../">dashboard</a>.</div>':'');
       }
-      /* ---------- ✓ Done write-back: ack an attention item straight to buddies.json ---------- */
-      var LSKEY='buddyTree.v3';
-      function ghToken(){ try{ return JSON.parse(localStorage.getItem(LSKEY)||'{}').ghToken||''; }catch(e){ return ''; } }
-      function b64enc(str){ var b=new TextEncoder().encode(str),s=''; for(var i=0;i<b.length;i++) s+=String.fromCharCode(b[i]); return btoa(s); }
-      function b64dec(b64){ var bin=atob(String(b64).replace(/\n/g,'')),u=Uint8Array.from(bin,function(c){return c.charCodeAt(0);}); return new TextDecoder().decode(u); }
-      async function ackAttention(item){
-        var bid=item.getAttribute('data-bid'), aid=item.getAttribute('data-aid'), atext=item.getAttribute('data-atext');
-        var btn=item.querySelector('.donebtn');
-        var t=ghToken();
-        if(!t){ btn.outerHTML='<span class="done-err">Add your GitHub token on the <a href="../">dashboard</a> (Photos section) — same token the shared notes use.</span>'; return; }
-        btn.disabled=true; btn.textContent='…';
-        var headers={'Authorization':'Bearer '+t,'Accept':'application/vnd.github+json','Content-Type':'application/json'};
-        var api='https://api.github.com/repos/davedellaquila/buddy-system/contents/buddies.json';
-        try{
-          var g=await fetch(api,{headers:headers});
-          if(!g.ok) throw new Error('couldn\'t read buddies.json ('+g.status+')');
-          var gj=await g.json();
-          var data=JSON.parse(b64dec(gj.content));
-          var found=false, label='';
-          (data.buddies||[]).forEach(function(b){
-            if(b.id!==bid) return;
-            var att=b.attention||[];
-            for(var j=att.length-1;j>=0;j--){
-              if((aid && att[j].id===aid)||(!aid && att[j].text===atext)){ label=att[j].text||''; att.splice(j,1); found=true; break; }
+      /* ---------- attention actions: Done / Need more info → docs/ingest.md ---------- */
+      (function initAttnActions(){
+        var tiles = document.querySelectorAll('.feed-item[data-aid]');
+        if (!tiles.length) return;
+        var bid = 'astro', repo = 'buddy-system', buddyName = 'Astro';
+        function lsGet(){ try { return JSON.parse(localStorage.getItem('buddyTree.v3') || '{}'); } catch(e){ return {}; } }
+        function lsSet(patch){ try { var s = lsGet(); for (var k in patch) s[k] = patch[k]; localStorage.setItem('buddyTree.v3', JSON.stringify(s)); } catch(e){} }
+        function token(){ return lsGet().ghToken || ''; }
+        function b64encode(str){ var b = new TextEncoder().encode(str), s = ''; for (var i=0;i<b.length;i++) s += String.fromCharCode(b[i]); return btoa(s); }
+        async function ghApi(path, method, body){
+          var t = token();
+          if (!t) throw new Error('Add a GitHub token first.');
+          var r = await fetch('https://api.github.com' + path, {
+            method: method || 'GET',
+            headers: {'Authorization': 'Bearer ' + t, 'Accept': 'application/vnd.github+json', 'Content-Type': 'application/json'},
+            body: body ? JSON.stringify(body) : undefined
+          });
+          if (!r.ok) throw new Error('GitHub ' + r.status);
+          return r.status === 204 ? null : await r.json();
+        }
+        async function ghGetFile(repo, path){
+          try {
+            var j = await ghApi('/repos/davedellaquila/' + repo + '/contents/' + path);
+            if (j && j.content) {
+              var bin = atob(String(j.content).replace(/\n/g,''));
+              var u = Uint8Array.from(bin, function(c){ return c.charCodeAt(0); });
+              return { text: new TextDecoder().decode(u), sha: j.sha };
+            }
+          } catch(e){}
+          return null;
+        }
+        function rkey(aid, text){ return bid + '|' + (aid || ('text:' + text.slice(0, 60))); }
+        function isResolved(aid, text){ var m = lsGet().attnDone || {}; return !!m[rkey(aid, text)]; }
+        function setResolved(aid, text){ var s = lsGet(); var m = s.attnDone || {}; m[rkey(aid, text)] = 1; s.attnDone = m; lsSet(s); }
+        function paintResolved(tile, msg){
+          tile.classList.add('resolved');
+          var st = tile.querySelector('.attn-status');
+          if (st) st.textContent = msg;
+        }
+        async function sendAction(tile, entry, okMsg){
+          var st = tile.querySelector('.attn-status');
+          var btns = tile.querySelectorAll('.attn-btn');
+          if (!token()) { st.textContent = 'Add a GitHub token in the 🧠 Brain dump section below to enable actions.'; return false; }
+          btns.forEach(function(b){ b.disabled = true; });
+          st.textContent = 'Working…';
+          try {
+            var NL = String.fromCharCode(10);
+            var stamp = new Date().toLocaleString();
+            var cur = await ghGetFile(repo, 'docs/ingest.md');
+            var base = cur ? cur.text : '# Ingest log — ' + buddyName + NL + NL;
+            var body = {message: 'Attention action for ' + bid, content: b64encode(base + '## ' + stamp + NL + NL + entry + NL + NL)};
+            if (cur && cur.sha) body.sha = cur.sha;
+            await ghApi('/repos/davedellaquila/' + repo + '/contents/docs/ingest.md', 'PUT', body);
+            st.textContent = okMsg;
+            return true;
+          } catch(err){
+            st.textContent = 'Save failed: ' + (err.message || err);
+            btns.forEach(function(b){ b.disabled = false; });
+            return false;
+          }
+        }
+        tiles.forEach(function(tile){
+          var aid = tile.getAttribute('data-aid') || '';
+          var textEl = tile.querySelector('.feed-text');
+          var text = textEl ? textEl.textContent.trim() : '';
+          if (isResolved(aid, text)) { paintResolved(tile, 'Marked done'); return; }
+          tile.addEventListener('click', function(ev){
+            var btn = ev.target.closest ? ev.target.closest('.attn-btn') : null;
+            if (!btn || btn.disabled) return;
+            var act = btn.getAttribute('data-act');
+            var idBit = aid ? ' (attention id: ' + aid + ')' : '';
+            if (act === 'done') {
+              sendAction(tile,
+                'DONE — Dave marked this done on the homepage: "' + text + '"' + idBit + '. Please remove it from the attention list in buddies.json.',
+                'Marked done — the buddy will clear it.').then(function(ok){ if (ok) { setResolved(aid, text); paintResolved(tile, 'Marked done — the buddy will clear it.'); } });
+            } else if (act === 'info') {
+              sendAction(tile,
+                'FOLLOW-UP — Dave needs more info on: "' + text + '"' + idBit + '. Please follow up with him.',
+                'Sent — ' + buddyName + ' will follow up.');
             }
           });
-          if(found){
-            var p=await fetch(api,{method:'PUT',headers:headers,body:JSON.stringify({
-              message:'Ack attention: '+bid+' — '+(label||atext||'').slice(0,80),
-              content:b64enc(JSON.stringify(data,null,1)+'\n'), sha:gj.sha })});
-            if(p.status===409||p.status===422) throw new Error('buddies.json changed elsewhere — reload and retry');
-            if(!p.ok) throw new Error('write failed ('+p.status+')');
-          }
-          item.classList.add('acked');
-          setTimeout(function(){ item.remove(); },480);
-          var n=document.getElementById('st-attn');
-          if(n && /^\d+$/.test(n.textContent)) n.textContent=String(Math.max(0,parseInt(n.textContent,10)-1));
-        }catch(err){
-          btn.outerHTML='<span class="done-err">'+esc(String((err&&err.message)||err))+'</span>';
-        }
-      }
-      document.getElementById('feed').addEventListener('click',function(ev){
-        var b=ev.target.closest('.donebtn'); if(!b) return;
-        ackAttention(b.closest('.feed-item'));
-      });
+        });
+      })();
       var counts={};
       buds.forEach(function(b){var s=b.status||"Unknown";counts[s]=(counts[s]||0)+1;});
       var rows=Object.keys(counts).sort(function(a,b2){return counts[b2]-counts[a];});

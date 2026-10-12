@@ -20,6 +20,20 @@
     --note: #FFF4EC;
     --amber: #B98A2F;
   }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --paper: #171016; --card: #251823; --ink: #f0dee7; --dim: #bd97a5; --line: #4d3242;
+      --rose: #dd8fab; --rose-soft: #38222e; --plum: #d9a8bc; --gold: #d9a94f; --gold-soft: #3a2d18;
+      --note: #2b2119; --amber: #d9a94f;
+      --bg: #251823; --text: #f0dee7; --border: #4d3242; --accent: #dd8fab;
+    }
+    header.hero { background: linear-gradient(135deg, #2b1a26 0%, #331f2c 55%, #3a2531 100%); }
+    .pill.st, .fact.note-fact { border-color: #6b4257; }
+    .btn:hover { background: #b96f8d; }
+    .addrow input, .addrow textarea { background: #1e141d; }
+    .note .x:hover, .list-item .x:hover, .gift .x:hover { color: #e08aaa; }
+    .photo { box-shadow: 0 3px 10px rgba(0,0,0,.35); }
+  }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
     background: var(--paper); color: var(--ink);
@@ -67,6 +81,17 @@
   .mind .t { font-weight: 700; font-size: 15px; }
   .mind .d { color: var(--dim); font-size: 13.5px; }
   .mind a { color: var(--rose); font-weight: 600; }
+  .attn-actions { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
+  .attn-btn {
+    border: 1px solid var(--line); background: transparent; color: var(--rose);
+    border-radius: 8px; padding: 6px 13px; font-size: 12.5px; font-weight: 700; cursor: pointer;
+    -webkit-tap-highlight-color: transparent; font-family: inherit;
+  }
+  .attn-btn:hover { border-color: var(--rose); background: var(--rose-soft); }
+  .attn-btn:disabled { opacity: .45; cursor: default; }
+  .attn-status { font-size: 12.5px; color: var(--dim); margin-top: 6px; min-height: 17px; }
+  .mind.resolved { opacity: .55; }
+  .mind.resolved .attn-actions { display: none; }
 
   .facts { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 14px; margin-top: 14px; }
   .fact { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 16px 18px; }
@@ -209,25 +234,33 @@
   </header>
 
   <h2 class="serif">On my mind <span class="sub">What needs Dave's attention</span></h2>
-  <div class="mind">
+  <div class="mind" data-attn-id="surname-established">
     <div class="dot">🪪</div>
     <div><div class="t">Her surname is Amanda Perez — newly established</div>
-    <div class="d">Dave never knew her surname (the rent notice named her by first name only). Her <a href="https://facebook.com/amanda.i.perez" target="_blank" rel="noopener">Facebook profile</a> establishes <b>Amanda Ivelisse Perez</b>. The notice can now name her in full.</div></div>
+    <div class="d">Dave never knew her surname (the rent notice named her by first name only). Her <a href="https://facebook.com/amanda.i.perez" target="_blank" rel="noopener">Facebook profile</a> establishes <b>Amanda Ivelisse Perez</b>. The notice can now name her in full.</div>
+    <div class="attn-actions"><button type="button" class="attn-btn" data-act="done">✓ Done</button><button type="button" class="attn-btn" data-act="info">Need more info</button></div>
+    <div class="attn-status" role="status"></div></div>
   </div>
-  <div class="mind gold">
+  <div class="mind gold" data-attn-id="rent-notice-serve">
     <div class="dot">📄</div>
     <div><div class="t">Rent-increase notice: serve in person this trip</div>
-    <div class="d"><a href="https://docs.google.com/document/d/12uN9_JminrvogNoFXmyWxBUR2GDMClIFXE8jvNs1Rw8/edit" target="_blank" rel="noopener">The 90-day rent-increase notice</a>: $1,000 → $2,000/mo household, effective <b>Jan 7, 2027</b>. Applies to Amanda and Quentin jointly at 6929 Lenwood Way.</div></div>
+    <div class="d"><a href="https://docs.google.com/document/d/12uN9_JminrvogNoFXmyWxBUR2GDMClIFXE8jvNs1Rw8/edit" target="_blank" rel="noopener">The 90-day rent-increase notice</a>: $1,000 → $2,000/mo household, effective <b>Jan 7, 2027</b>. Applies to Amanda and Quentin jointly at 6929 Lenwood Way.</div>
+    <div class="attn-actions"><button type="button" class="attn-btn" data-act="done">✓ Done</button><button type="button" class="attn-btn" data-act="info">Need more info</button></div>
+    <div class="attn-status" role="status"></div></div>
   </div>
-  <div class="mind amber">
+  <div class="mind amber" data-attn-id="pest-control-company">
     <div class="dot">🐜</div>
     <div><div class="t">Pest-control company name still unknown — she's paying for it</div>
-    <div class="d">Dave was going to ask Amanda at dinner which company services Lenwood (not Green Grass). Still open.</div></div>
+    <div class="d">Dave was going to ask Amanda at dinner which company services Lenwood (not Green Grass). Still open.</div>
+    <div class="attn-actions"><button type="button" class="attn-btn" data-act="done">✓ Done</button><button type="button" class="attn-btn" data-act="info">Need more info</button></div>
+    <div class="attn-status" role="status"></div></div>
   </div>
-  <div class="mind">
+  <div class="mind" data-attn-id="engagement-wedding">
     <div class="dot">💍</div>
     <div><div class="t">Engagement newly confirmed — wedding ahead</div>
-    <div class="d">Dave confirmed Oct 9 that Amanda and Quentin are engaged (her <a href="https://facebook.com/amanda.i.perez" target="_blank" rel="noopener">post</a>: "August 10, 2026 marks the best day of my life"). No wedding date or plans yet — this dossier's next chapter.</div></div>
+    <div class="d">Dave confirmed Oct 9 that Amanda and Quentin are engaged (her <a href="https://facebook.com/amanda.i.perez" target="_blank" rel="noopener">post</a>: "August 10, 2026 marks the best day of my life"). No wedding date or plans yet — this dossier's next chapter.</div>
+    <div class="attn-actions"><button type="button" class="attn-btn" data-act="done">✓ Done</button><button type="button" class="attn-btn" data-act="info">Need more info</button></div>
+    <div class="attn-status" role="status"></div></div>
   </div>
 
   <h2 class="serif">Who Amanda is <span class="sub">Only what's known — unknowns stay unknown</span></h2>
@@ -545,6 +578,115 @@ renderNotes(); renderReminders(); renderDates(); renderGifts();
     if ((ev.metaKey || ev.ctrlKey) && ev.key === 'Enter') { ev.preventDefault(); dump(); }
   });
   resolveRepo().then(refreshUI);
+})();
+</script>
+<script>
+/* Attention action buttons — adapted from gen_basic_homepages.py ATTN_JS.
+   "Done" / "Need more info" on each .mind tile appends to the buddy repo's
+   docs/ingest.md via the shared ghToken; the tile resolves locally at once
+   and the state persists in localStorage. */
+(function(){
+  var tiles = document.querySelectorAll('.mind[data-attn-id]');
+  if (!tiles.length) return;
+  var dumpbox = document.querySelector('.dumpbox');
+  var bid = (dumpbox && dumpbox.getAttribute('data-buddy-id')) || 'amanda-buddy';
+  function lsGet(){ try { return JSON.parse(localStorage.getItem('buddyTree.v3') || '{}'); } catch(e){ return {}; } }
+  function lsSet(patch){ try { var s = lsGet(); for (var k in patch) s[k] = patch[k]; localStorage.setItem('buddyTree.v3', JSON.stringify(s)); } catch(e){} }
+  function token(){ return lsGet().ghToken || ''; }
+  function b64encode(str){
+    var bytes = new TextEncoder().encode(str), bin = '';
+    bytes.forEach(function(b){ bin += String.fromCharCode(b); });
+    return btoa(bin);
+  }
+  async function ghApi(path, method, body){
+    var t = token();
+    if (!t) throw new Error('Add a GitHub token first.');
+    var r = await fetch('https://api.github.com' + path, {
+      method: method || 'GET',
+      headers: {'Authorization': 'Bearer ' + t, 'Accept': 'application/vnd.github+json', 'Content-Type': 'application/json'},
+      body: body ? JSON.stringify(body) : undefined
+    });
+    if (!r.ok) throw new Error('GitHub ' + r.status);
+    return r.status === 204 ? null : await r.json();
+  }
+  async function ghGetFile(repo, path){
+    try {
+      var j = await ghApi('/repos/davedellaquila/' + repo + '/contents/' + path);
+      if (j && j.content) return {
+        text: new TextDecoder().decode(Uint8Array.from(atob(j.content.replace(/\n/g, '')), function(c){ return c.charCodeAt(0); })),
+        sha: j.sha
+      };
+    } catch(e){}
+    return null;
+  }
+  var repo = null, buddyName = 'Amanda Buddy';
+  async function resolveBuddy(){
+    try {
+      var r = await fetch('../buddies.json', {cache: 'no-store'});
+      var d = await r.json();
+      var buds = d.buddies || [];
+      for (var i = 0; i < buds.length; i++) {
+        if (buds[i].id === bid) {
+          if (buds[i].repo) repo = buds[i].repo;
+          if (buds[i].name) buddyName = buds[i].name;
+          break;
+        }
+      }
+    } catch(e){}
+  }
+  function rkey(aid, text){ return bid + '|' + (aid || ('text:' + text.slice(0, 60))); }
+  function isResolved(aid, text){ var m = lsGet().attnDone || {}; return !!m[rkey(aid, text)]; }
+  function setResolved(aid, text){ var s = lsGet(); var m = s.attnDone || {}; m[rkey(aid, text)] = 1; s.attnDone = m; lsSet(s); }
+  function paintResolved(tile, msg){
+    tile.classList.add('resolved');
+    var st = tile.querySelector('.attn-status');
+    if (st) st.textContent = msg;
+  }
+  async function sendAction(tile, entry, okMsg){
+    var st = tile.querySelector('.attn-status');
+    var btns = tile.querySelectorAll('.attn-btn');
+    if (!token()) { st.textContent = 'Add a GitHub token in the Brain dump section below to enable actions.'; return false; }
+    if (!repo) { st.textContent = 'No repo linked for this buddy yet.'; return false; }
+    btns.forEach(function(b){ b.disabled = true; });
+    st.textContent = 'Working…';
+    try {
+      var NL = String.fromCharCode(10);
+      var stamp = new Date().toLocaleString();
+      var cur = await ghGetFile(repo, 'docs/ingest.md');
+      var base = cur ? cur.text : '# Ingest log — ' + buddyName + NL + NL;
+      var body = {message: 'Attention action for ' + bid, content: b64encode(base + '## ' + stamp + NL + NL + entry + NL + NL)};
+      if (cur && cur.sha) body.sha = cur.sha;
+      await ghApi('/repos/davedellaquila/' + repo + '/contents/docs/ingest.md', 'PUT', body);
+      st.textContent = okMsg;
+      return true;
+    } catch(err){
+      st.textContent = 'Save failed: ' + (err.message || err);
+      btns.forEach(function(b){ b.disabled = false; });
+      return false;
+    }
+  }
+  tiles.forEach(function(tile){
+    var aid = tile.getAttribute('data-attn-id') || '';
+    var textEl = tile.querySelector('.t');
+    var text = textEl ? textEl.textContent.trim() : '';
+    if (isResolved(aid, text)) { paintResolved(tile, 'Marked done'); return; }
+    tile.addEventListener('click', function(ev){
+      var btn = ev.target.closest ? ev.target.closest('.attn-btn') : null;
+      if (!btn || btn.disabled) return;
+      var act = btn.getAttribute('data-act');
+      var idBit = aid ? ' (attention id: ' + aid + ')' : '';
+      if (act === 'done') {
+        sendAction(tile,
+          'DONE — Dave marked this done on the homepage: "' + text + '"' + idBit + '. Please remove it from the attention list in buddies.json.',
+          'Marked done — the buddy will clear it.').then(function(ok){ if (ok) { setResolved(aid, text); paintResolved(tile, 'Marked done — the buddy will clear it.'); } });
+      } else if (act === 'info') {
+        sendAction(tile,
+          'FOLLOW-UP — Dave needs more info on: "' + text + '"' + idBit + '. Please follow up with him.',
+          'Sent — ' + buddyName + ' will follow up.');
+      }
+    });
+  });
+  resolveBuddy();
 })();
 </script>
 </body>
