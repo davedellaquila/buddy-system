@@ -387,16 +387,17 @@ body:has(#token-pill) #view-buddy.sheet .bp-close-x{right:148px}
   #view-buddy.sheet .bp-sticky-head{padding-right:0}
 }
 #buddy-home{position:relative}
-#bp-resize{position:absolute;top:0;left:-14px;z-index:60;display:flex;align-items:center;justify-content:center;width:28px;height:100vh;cursor:ew-resize;
+#bp-resize{position:fixed;top:0;bottom:0;right:calc(var(--bpw, 380px) - 14px);z-index:60;display:flex;align-items:center;justify-content:center;width:28px;cursor:ew-resize;
   background:transparent;-webkit-tap-highlight-color:transparent;touch-action:none;user-select:none}
 /* Same dot-grid gripper language as #sb-resize */
-#bp-resize::after{content:'';width:14px;height:35px;transform:translateX(9px);
+#bp-resize::after{content:'';width:14px;height:35px;
   background-image:radial-gradient(circle,var(--gripdot,color-mix(in srgb,var(--muted) 34%,var(--border))) 1.6px,transparent 1.7px);
   background-size:7px 7px;background-position:center;background-repeat:repeat}
 #bp-resize:hover::after{--gripdot:var(--text2)}
 #bp-resize:active::after{--gripdot:var(--accent)}
 #bp-resize:hover{background:transparent}
 #view-buddy.active:not(.panel):not(.sheet) #bp-resize{display:none}
+#view-buddy.sheet.active #bp-resize{display:none}
 .pupload{height:150px;min-width:120px;border-radius:10px;border:1px dashed var(--border);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;background:var(--bg);flex:0 0 auto}
 .pupload .pbar{width:80px;height:6px;background:var(--border2);border-radius:3px;overflow:hidden}
 .pupload .pbar > div{height:100%;background:var(--accent);border-radius:3px;transition:width .2s}
@@ -1798,7 +1799,11 @@ function openFieldSettings(){
 }
 function applyPanelWidth(){
   const vb = document.getElementById('view-buddy');
-  if (vb && S.panelWidth) vb.style.width = Math.min(S.panelWidth, 560) + 'px';
+  if (vb && S.panelWidth) {
+    const w = Math.min(S.panelWidth, 560);
+    vb.style.width = w + 'px';
+    document.documentElement.style.setProperty('--bpw', w + 'px');
+  }
 }
 function applySbWidth(){
   const sb = document.getElementById('sidebar');
@@ -1826,6 +1831,7 @@ function initPanelResize(){
     }
     const w = Math.min(560, Math.max(320, sw + (sx - e.clientX)));
     vb.style.width = w + 'px';
+    document.documentElement.style.setProperty('--bpw', w + 'px');
   });
   h.addEventListener('pointerup', e => {
     if (sx === null) return;

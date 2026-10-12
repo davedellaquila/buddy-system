@@ -3,6 +3,11 @@
 All notable changes to the Buddies dashboard and buddy system. Newest first.
 `FEATURES.md` describes the current state; this file describes how it got there.
 
+## 2026-10-11 (Right-panel gripper stays put)
+
+### Fixed
+- **The right panel's resize gripper is now sticky:** it was `position:absolute` inside the scrolling panel, so it scrolled away with the content. It's now `position:fixed` tracking the panel edge via a `--bpw` variable (same pattern as the sidebar gripper), so it stays glued to the panel edge while you scroll. Hidden in bottom-sheet mode where a side gripper doesn't apply.
+
 ## 2026-10-11 (Dump success message goes green)
 
 ### Changed
