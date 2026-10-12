@@ -4441,18 +4441,24 @@ function openChangeParentDialog(bid){
   document.body.appendChild(m);
   const close = () => m.remove();
   const sel = m.querySelector('#cp-select'), filt = m.querySelector('#cp-filter');
-  const firstVisible = () => [...sel.options].find(o => !o.hidden && !o.disabled && o.value !== undefined);
   filt.addEventListener('input', () => {
     const q = filt.value.trim().toLowerCase();
     sel.querySelectorAll('option').forEach(o => {
       if (o.disabled || !o.value) return; // keep "No parent" and separators visible
       o.hidden = q && !o.textContent.toLowerCase().includes(q);
     });
-    const fv = firstVisible();
-    if (fv) sel.value = fv.value;
+    // Don't steal selection on every keystroke — only auto-select on Enter
   });
   filt.addEventListener('keydown', e => {
-    if (e.key === 'Enter') { e.preventDefault(); m.querySelector('#cp-save').click(); }
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      const q = filt.value.trim().toLowerCase();
+      if (q) {
+        const matches = [...sel.options].filter(o => !o.hidden && !o.disabled && o.value && o.textContent.toLowerCase().includes(q));
+        if (matches.length === 1) sel.value = matches[0].value;
+      }
+      m.querySelector('#cp-save').click();
+    }
   });
   const doSave = () => {
     const v = sel.value || null;
