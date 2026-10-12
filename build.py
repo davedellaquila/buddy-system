@@ -3756,7 +3756,7 @@ function openAvatarPicker(bid, anchorEl){
       if(!ghToken()){ openTokenPopover(); toast('Add a GitHub token first.'); return; }
       try{ await ghDeleteFile('buddy-system', 'avatars/' + cur + '.jpg', 'Remove avatar for ' + cur); toast('Avatar image removed.'); }
       catch(e){ toast('No custom image to remove.'); }
-      pk.classList.remove('show'); if(cur) renderBuddy(cur);
+      closeAvatarPicker(); if(cur) renderBuddy(cur);
     });
   }
   pk.dataset.bid = bid;
@@ -3766,17 +3766,28 @@ function openAvatarPicker(bid, anchorEl){
     cat.emojis.map(e => '<button data-emoji="' + e + '">' + e + '</button>').join('') + '</div>'
   ).join('');
   grid.querySelectorAll('button').forEach(btn => {
-    btn.addEventListener('click', () => { setBuddyIcon(bid, btn.dataset.emoji); pk.classList.remove('show'); });
+    btn.addEventListener('click', () => { setBuddyIcon(bid, btn.dataset.emoji); closeAvatarPicker(); });
   });
   const inp = document.getElementById('avatar-custom');
   inp.value = '';
-  inp.onchange = () => { const v = inp.value.trim(); if(v){ setBuddyIcon(bid, v); pk.classList.remove('show'); } };
+  inp.onchange = () => { const v = inp.value.trim(); if(v){ setBuddyIcon(bid, v); closeAvatarPicker(); } };
   const r = anchorEl.getBoundingClientRect();
   pk.style.left = Math.min(window.innerWidth - 340, r.left) + 'px';
   pk.style.top = (r.bottom + 8) + 'px';
+  // Detach any stale close listener from a previous open (it would instantly
+  // close the picker on this tap: the tap target is inside #bp-icon but is
+  // the inner span/img, not the anchor element itself).
+  if (pk._closeListener) { document.removeEventListener('click', pk._closeListener); pk._closeListener = null; }
   pk.classList.add('show');
-  const close = e => { if(!pk.contains(e.target) && e.target !== anchorEl){ pk.classList.remove('show'); document.removeEventListener('click', close); } };
+  const close = e => { if(!pk.contains(e.target) && !anchorEl.contains(e.target)){ closeAvatarPicker(); } };
+  pk._closeListener = close;
   setTimeout(() => document.addEventListener('click', close), 10);
+}
+function closeAvatarPicker(){
+  const pk = document.getElementById('avatar-picker');
+  if (!pk) return;
+  pk.classList.remove('show');
+  if (pk._closeListener) { document.removeEventListener('click', pk._closeListener); pk._closeListener = null; }
 }
 function fileToDataUrl(f){ return new Promise((res, rej) => { const r = new FileReader(); r.onload = () => res(r.result); r.onerror = rej; r.readAsDataURL(f); }); }
 function downscaleToJpeg(dataUrl, maxSize){
