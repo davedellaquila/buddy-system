@@ -3,6 +3,11 @@
 All notable changes to the Buddies dashboard and buddy system. Newest first.
 `FEATURES.md` describes the current state; this file describes how it got there.
 
+## 2026-10-11 (Release Notes entries go professional)
+
+### Changed
+- **Release Notes entries now use the Change Log row format:** each change renders as a professional row with a type-colored icon tile (green + for Added, blue ~ for Changed, red ✓ for Fixed), bold title, description, and date/type meta — instead of plain markdown.
+
 ## 2026-10-11 (Changelog/Release Notes no horizontal scroll)
 
 ### Fixed

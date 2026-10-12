@@ -2673,21 +2673,20 @@ function renderReleases(){
       const sp = whatsnewSplit(md);
       let html = '';
       if (sp.hasNew) {
-        html += '<h4 style="margin-top:0">New since you last looked</h4>' + changelogMdToHtml(sp.newMd, true);
+        html += '<h4 style="margin-top:0">New since you last looked</h4>' + releaseNotesToHtml(sp.newMd);
       } else {
         html += '<p class="fineprint" style="margin-top:0">You’re up to date — nothing new since you last looked.</p>';
       }
       if (sp.oldMd.trim()) {
         html += '<div style="display:flex;align-items:baseline;gap:16px;margin-top:12px;flex-wrap:wrap">'
           + '<details style="flex:1;min-width:0"><summary class="fineprint" style="cursor:pointer">Earlier history</summary>'
-          + changelogMdToHtml(sp.oldMd, true) + '</details>'
+          + releaseNotesToHtml(sp.oldMd) + '</details>'
           + '<p class="fineprint" style="margin:0;white-space:nowrap"><a href="https://github.com/davedellaquila/buddy-system/blob/master/CHANGELOG.md" target="_blank" rel="noopener">Earlier changes on GitHub</a></p>'
           + '</div>';
       } else {
         html += '<p class="fineprint"><a href="https://github.com/davedellaquila/buddy-system/blob/master/CHANGELOG.md" target="_blank" rel="noopener">Earlier changes on GitHub</a></p>';
       }
       body.innerHTML = html;
-      wireChangelogTypeFilter(body);
       whatsnewMarkSeen(md);
     })
     .catch(() => { body.innerHTML = '<p class="fineprint">Couldn’t load the release notes. <a href="https://github.com/davedellaquila/buddy-system/blob/master/CHANGELOG.md" target="_blank" rel="noopener">View on GitHub</a>.</p>'; });
@@ -4675,6 +4674,48 @@ function changelogMdToHtml(md, bare){
   html = stats + html;
   if (!bare) html += '<p class="fineprint"><a href="https://github.com/davedellaquila/buddy-system/blob/master/CHANGELOG.md" target="_blank" rel="noopener">Full changelog on GitHub</a></p>';
   return html;
+}
+/* Release Notes: render each change as a professional Change Log row
+   (icon tile + title + description + date/type meta) instead of plain markdown. */
+function releaseNotesToHtml(md){
+  const NL = String.fromCharCode(10);
+  const lines = String(md || '').split(NL);
+  const TYPE_STYLE = {
+    added:   ['#2f9e44', '+'],
+    changed: ['#1f6feb', '~'],
+    fixed:   ['#cf222e', '✓'],
+  };
+  let html = '', curDate = '', curRelease = '', curType = '';
+  const rows = [];
+  function flushRow(text){
+    const t = (curType || 'other').toLowerCase();
+    const st = TYPE_STYLE[t] || ['#57606a', '•'];
+    // Title = bold lead if present, else first ~70 chars
+    let title = text, desc = '';
+    const m = text.match(/^\*\*([^*]+)\*\*:?\s*(.*)$/);
+    if (m) { title = m[1].trim(); desc = m[2].trim(); }
+    else if (text.length > 80) { title = text.slice(0, 80).trim() + '…'; desc = text; }
+    rows.push('<div class="cl-row">'
+      + '<span class="cl-ic" style="color:' + st[0] + ';border:1px solid ' + st[0] + '55;background:' + st[0] + '14" aria-hidden="true">' + st[1] + '</span>'
+      + '<div class="cl-body">'
+      + '<div class="cl-title">' + escHtml(title).replace(/\*\*([^*]+)\*\*/g, '<b>$1</b>') + '</div>'
+      + (desc ? '<div class="cl-desc" style="-webkit-line-clamp:3">' + escHtml(desc).replace(/\*\*([^*]+)\*\*/g, '<b>$1</b>') + '</div>' : '')
+      + '<div class="cl-time">' + escHtml(curDate) + (curRelease ? ' · ' + escHtml(curRelease) : '') + ' · ' + escHtml(curType || 'Update') + '</div>'
+      + '</div></div>');
+  }
+  for (const raw of lines) {
+    const line = raw.replace(/\s+$/, '');
+    let m;
+    if ((m = line.match(/^## (\d{4}-\d{2}-\d{2})\s*(?:\(([^)]*)\))?/))) {
+      curDate = m[1]; curRelease = (m[2] || '').trim(); curType = '';
+    } else if ((m = line.match(/^### (.+)/))) {
+      curType = m[1].trim();
+    } else if ((m = line.match(/^- (.+)/))) {
+      flushRow(m[1].trim());
+    }
+  }
+  if (!rows.length) return '<p class="fineprint">No release notes found.</p>';
+  return rows.join('');
 }
 function wireChangelogTypeFilter(root){
   if (!root) return;
