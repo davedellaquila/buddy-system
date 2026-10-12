@@ -130,9 +130,10 @@ body{padding:0}
 .treewrap{position:relative;display:flex;gap:10px;align-items:flex-start}
 /* Beat .view.active{display:block} so the tree fills the viewport and #treezoom
    alone scrolls in both axes (fixes iOS axis-lock from nested X/Y scrollers). */
-#quick-answers{display:flex;align-items:center;gap:12px;padding:12px 16px;background:var(--panel);border:1px solid var(--border);border-radius:12px;margin:0 0 16px;flex-wrap:wrap}
+#quick-answers{display:flex;align-items:center;gap:12px;padding:10px 16px;background:var(--panel);border:1px solid var(--border);border-radius:12px;margin:0 0 16px;overflow:hidden}
 .qa-label{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);flex:none}
-.qa-links{display:flex;gap:8px;flex-wrap:wrap}
+.qa-links{display:flex;gap:8px;overflow-x:auto;flex:1;padding-bottom:2px;scrollbar-width:thin}
+.qa-links::-webkit-scrollbar{height:6px}
 .qa-link{display:flex;align-items:center;gap:8px;background:var(--bg);border:1px solid var(--border);border-radius:999px;padding:6px 14px;font-size:13px;color:var(--text);cursor:pointer;max-width:280px}
 .qa-link:hover{border-color:var(--accent)}
 .qa-icon{font-size:16px}
@@ -2776,7 +2777,7 @@ function nodeTag(b, depth){
     if (b.kind === 'standalone') return 'direct';
     return b.kind || 'family';
   }
-  return depth === 2 ? 'child' : 'grandchild';
+  return '';
 }
 function iconName(b){ return escHtml((b.icon ? b.icon + ' ' : '') + dispName(b)); }
 function gridKids(b){
@@ -5455,7 +5456,8 @@ function initVersionCheck(){
 // Pull-down at the top of any scrollable view triggers a manual update check.
 function initPullToRefresh(){
   const THRESHOLD = 70;
-  let pill = null, pillVisible = false;
+  const PILL_DELAY = 350;
+  let pill = null, pillVisible = false, pillTimer = null;
   function scrollableAncestor(el, doc){
     const d = doc || document;
     while (el && el !== d.body && el !== d.documentElement) {
@@ -5509,12 +5511,23 @@ function initPullToRefresh(){
       if (!track) return;
       const t = e.touches[0];
       const dy = t.clientY - track.y0, dx = t.clientX - track.x0;
-      if (Math.abs(dx) > Math.abs(dy) * 1.4) { track = null; hidePill(); return; }
-      if (dy > THRESHOLD) showPill('Release to check for updates');
-      else if (dy > 24) showPill('Keep pulling to check for updates');
-      else if (pillVisible) hidePill();
+      if (Math.abs(dx) > Math.abs(dy) * 1.4) { track = null; hidePill(); if (pillTimer) { clearTimeout(pillTimer); pillTimer = null; } return; }
+      if (dy > 24 && !pillTimer && !pillVisible) {
+        pillTimer = setTimeout(function(){
+          pillTimer = null;
+          if (!track) return;
+          showPill(dy > THRESHOLD ? 'Release to check for updates' : 'Keep pulling to check for updates');
+        }, PILL_DELAY);
+      } else if (dy > THRESHOLD && pillVisible) {
+        showPill('Release to check for updates');
+      } else if (dy <= 24 && pillVisible) {
+        hidePill();
+      } else if (dy <= 24 && pillTimer) {
+        clearTimeout(pillTimer); pillTimer = null;
+      }
     }, {passive: true});
     function onEnd(){
+      if (pillTimer) { clearTimeout(pillTimer); pillTimer = null; }
       if (!track) return;
       const engaged = pillVisible;
       track = null;
