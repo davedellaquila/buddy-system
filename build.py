@@ -392,7 +392,7 @@ body:has(#field-settings.show) #new-buddy-fab{display:none}
 #persona-picker .pp-card:hover{border-color:var(--accent)}
 #persona-picker .pp-card.sel{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent);background:var(--active)}
 #persona-picker .pp-name{font-size:13px;font-weight:700}
-#persona-picker .pp-blurb{font-size:12.5px;color:var(--muted);line-height:1.35;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;text-overflow:ellipsis}
+#persona-picker .pp-quote{font-size:12.5px;color:var(--muted);font-style:italic;line-height:1.35;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;text-overflow:ellipsis}#persona-picker .pp-blurb{font-size:12px;color:var(--muted);line-height:1.35;opacity:.85}
 #persona-picker .pp-actions{display:flex;gap:8px;flex-wrap:wrap;padding:12px 16px 16px;border-top:1px solid var(--border)}
 @media (max-width:639px){
   #persona-picker{align-items:flex-end;padding:0}
@@ -1144,7 +1144,15 @@ def build():
     for _line in open(f"{HERE}/../../persona-roster.md", encoding="utf-8"):
         _m = _re.match(r'\d+\.\s+\*\*(.+?)\*\*\s+[—–-]\s+(.*)', _line.strip())
         if _m:
-            _roster.append({"name": _m.group(1).strip(), "blurb": _m.group(2).strip()})
+            _name = _m.group(1).strip()
+            _rest = _m.group(2).strip()
+            # Extract the quoted voice sample (Dave's one-liner) from the front
+            _qm = _re.match(r'"([^"]+)"\s*(.*)', _rest)
+            if _qm:
+                _quote, _blurb = _qm.group(1).strip(), _qm.group(2).strip()
+            else:
+                _quote, _blurb = "", _rest
+            _roster.append({"name": _name, "quote": _quote, "blurb": _blurb})
     roster_js = json.dumps(_roster)
     n_buddies = len(buddies)
 
@@ -2579,12 +2587,14 @@ function openPersonaPicker(id){
   const close = () => m.remove();
   function renderGrid(){
     const q = filter.value.trim().toLowerCase();
-    const list = roster.filter(p => !q || p.name.toLowerCase().indexOf(q) >= 0 || p.blurb.toLowerCase().indexOf(q) >= 0);
+    const list = roster.filter(p => !q || p.name.toLowerCase().indexOf(q) >= 0 || p.blurb.toLowerCase().indexOf(q) >= 0 || (p.quote && p.quote.toLowerCase().indexOf(q) >= 0));
     const countEl = m.querySelector('#pp-count');
     if (countEl) countEl.textContent = list.length + ' of ' + roster.length;
     grid.innerHTML = list.map(p =>
       '<button type="button" class="pp-card' + (p.name === cur ? ' sel' : '') + '" data-persona="' + escHtml(p.name) + '">'
-      + '<span class="pp-name">' + escHtml(p.name) + '</span><span class="pp-blurb">' + escHtml(p.blurb) + '</span></button>').join('')
+      + '<span class="pp-name">' + escHtml(p.name) + '</span>'
+      + (p.quote ? '<span class="pp-quote">\u201c' + escHtml(p.quote) + '\u201d</span>' : '')
+      + '<span class="pp-blurb">' + escHtml(p.blurb) + '</span></button>').join('')
       || '<p class="bp-empty">No personas match that filter.</p>';
     grid.querySelectorAll('.pp-card').forEach(c => c.addEventListener('click', () => {
       const name = c.getAttribute('data-persona'); close(); setBuddyPersona(id, name);
