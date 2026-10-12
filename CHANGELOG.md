@@ -3,6 +3,11 @@
 All notable changes to the Buddies dashboard and buddy system. Newest first.
 `FEATURES.md` describes the current state; this file describes how it got there.
 
+## 2026-10-11 (Settings section order)
+
+### Changed
+- **Settings: Main views now sits above Buddy fields.**
+
 ## 2026-10-11 (＋ ↑ Parent / ＋ ↓ Child)
 
 ### Added
