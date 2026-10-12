@@ -370,7 +370,7 @@ body:has(#token-pill) #panel-open{right:148px}
 #field-settings .fset-sec + .fset-sec .fset-sec-h{margin-top:8px}
 #field-settings .fset-sec .fineprint{margin:10px 0 12px}
 #field-settings .fset-footer{padding:12px 20px;border-top:1px solid var(--border);display:flex;gap:8px;justify-content:space-between;align-items:center;background:var(--panel);flex:0 0 auto}
-#field-settings .fset-resize{position:absolute;right:3px;bottom:3px;width:14px;height:14px;cursor:nwse-resize;opacity:.55;
+#field-settings .fset-resize{position:absolute;right:3px;bottom:3px;width:14px;height:14px;cursor:nwse-resize;opacity:.55;touch-action:none;
   background:linear-gradient(135deg,transparent 55%,var(--muted) 55%);border-radius:0 0 8px 0}
 #field-settings .fset-resize:hover{opacity:1}
 #field-settings .fset-close-x{position:absolute;top:12px;right:12px;width:30px;height:30px;border-radius:50%;
@@ -1700,22 +1700,26 @@ function initFsetChrome(m){
     };
     window.addEventListener('mousemove', mv); window.addEventListener('mouseup', up);
   });
-  rz.addEventListener('mousedown', e => {
-    if (e.button !== 0) return;
+  rz.addEventListener('pointerdown', e => {
+    if (e.button !== undefined && e.button !== 0) return;
+    if (e.isPrimary === false) return;
     e.preventDefault(); e.stopPropagation();
-    const r = m.getBoundingClientRect(), sx = e.clientX, sy = e.clientY;
+    try { rz.setPointerCapture(e.pointerId); } catch (err) {}
+    const r = m.getBoundingClientRect(), sx = e.clientX, sy = e.clientY, pid = e.pointerId;
     const mv = ev => {
+      if (ev.pointerId !== pid) return;
       m.style.width = Math.max(300, Math.min(window.innerWidth - 40, r.width + ev.clientX - sx)) + 'px';
       m.style.height = Math.max(220, Math.min(window.innerHeight - 40, r.height + ev.clientY - sy)) + 'px';
       m.style.maxHeight = 'none';
     };
-    const up = () => {
-      window.removeEventListener('mousemove', mv); window.removeEventListener('mouseup', up);
+    const up = ev => {
+      if (ev.pointerId !== pid) return;
+      rz.removeEventListener('pointermove', mv); rz.removeEventListener('pointerup', up); rz.removeEventListener('pointercancel', up);
       const rr = m.getBoundingClientRect();
       S.fsetGeom = Object.assign(S.fsetGeom || {}, {w: Math.round(rr.width), h: Math.round(rr.height)});
       save();
     };
-    window.addEventListener('mousemove', mv); window.addEventListener('mouseup', up);
+    rz.addEventListener('pointermove', mv); rz.addEventListener('pointerup', up); rz.addEventListener('pointercancel', up);
   });
 }
 function openFieldSettings(){
