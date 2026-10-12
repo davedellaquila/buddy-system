@@ -241,11 +241,11 @@ body{padding:0}
 .mcol-row{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;cursor:pointer;border-bottom:1px solid var(--wash)}
 .mcol-row:hover{background:var(--wash)}
 .mcol-arrow{color:var(--muted)}
-.chart-terrain .terrain{display:flex;min-height:60vh;border-radius:12px;overflow:hidden;border:1px solid var(--border)}
+.chart-terrain .terrain{display:flex;flex-direction:column;min-height:60vh;border-radius:12px;overflow:hidden;border:1px solid var(--border)}
 .tm-tile{display:flex;flex-direction:column;min-width:0;min-height:0;border:1px solid var(--border);background:var(--panel);overflow:hidden}
 .tm-branch{padding:0}
 .tm-label{padding:8px 10px;font-weight:700;font-size:13px;background:var(--wash);cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.tm-kids{display:flex;flex:1;min-height:0}
+.tm-kids{display:flex;flex-direction:column;flex:1;min-height:0}
 .tm-leaf{align-items:center;justify-content:center;cursor:pointer;padding:8px}
 .tm-leaf:hover{background:var(--wash)}
 .tm-name{font-size:12px;font-weight:600;text-align:center;overflow:hidden;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical}
@@ -3273,10 +3273,9 @@ function renderOrgTree(){
   const kids = kidsOf[ROOT_ID] || [];
   let chartHtml;
   if (chartType === 'org') {
-    chartHtml = '<div class="chart"><div style="text-align:center"><div class="node root" data-buddy="'+ROOT_ID+'">'
-      + '<div class="name">' + iconName(root) + '</div>'
-      + '<div class="desc">' + escHtml(root.tagline || '') + '</div></div></div>'
-      + '<div class="root-stub"></div><div class="tree"><ul>'
+    // No root tile — the top level is the staff itself, side by side.
+    // (Astro is still the data-model parent; use Change-parent to go top-level.)
+    chartHtml = '<div class="chart"><div class="tree tree-no-root"><ul>'
       + kids.map(b => orgNode(b, 1)).join('') + '</ul></div></div>';
   } else {
     chartHtml = '<div class="chart chart-' + chartType + '">' + renderChartMain(chartType, root, kids) + '</div>';
