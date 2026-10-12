@@ -2432,7 +2432,8 @@ function homepageDumpSectionHtml(b){
       + '<button type="button" class="hp-dump-btn" data-hp-connect>Connect GitHub to enable</button></div>';
   } else {
     inner = '<textarea data-hp-dump placeholder="Dump a thought, link, or half-formed idea — it lands in this buddy\\u2019s docs/ingest.md" aria-label="Brain dump"></textarea>'
-      + '<div class="hp-dump-row"><button type="button" class="hp-dump-btn" data-hp-dump-btn>Dump it</button><span class="hp-dump-status" data-hp-dump-status></span></div>';
+      + '<div class="hp-dump-row"><button type="button" class="hp-dump-btn" data-hp-dump-btn>Dump it</button><span class="hp-dump-status" data-hp-dump-status></span></div>'
+      + '<div data-hp-dump-feed style="margin-top:12px"></div>';
   }
   return '<section class="hp-card hp-dumpsec" data-hp-dumpsec><div class="hp-dump"><h3 class="hp-kicker">🧠 Brain dump</h3>' + inner + '</div></section>';
 }
@@ -6414,7 +6415,7 @@ function openWhatsNew(){
       // Show build numbers at the top of the sheet (Dave's request 2026-10-12)
       const myBuild = '__BUILD__';
       let buildLine = '<p class="fineprint" style="margin-top:0">You\u2019re on build ' + escHtml(myBuild) + '.';
-      if (serverBuild && serverBuild !== '__BUILD__' && serverBuild !== myBuild) {
+      if (serverBuild && serverBuild !== '__BUILD__' && isNewerBuild(serverBuild, myBuild)) {
         buildLine += ' Build ' + escHtml(serverBuild) + ' is available.';
       }
       buildLine += '</p>';
@@ -6445,6 +6446,12 @@ function openWhatsNew(){
     .catch(() => { body.innerHTML = '<p class="fineprint">Couldn\u2019t load the changelog. <a href="https://github.com/davedellaquila/buddy-system/blob/master/CHANGELOG.md" target="_blank" rel="noopener">View it on GitHub</a>.</p>'; });
   const x = m.querySelector('.wn-x');
   if (x) x.focus();
+}
+function isNewerBuild(server, mine){
+  // Compare build numbers like 20261012.1028 — lexicographic works for zero-padded format
+  try {
+    return String(server).trim() > String(mine).trim();
+  } catch (e) { return false; }
 }
 function initVersionCheck(){
   const myBuild = '__BUILD__';
@@ -6478,7 +6485,7 @@ function initVersionCheck(){
         const clicked = parseInt(sessionStorage.getItem('updateClicked') || '0', 10);
         if (clicked && Date.now() - clicked < 10 * 60 * 1000) return 'suppressed';
       } catch (e) {}
-      if (serverBuild && serverBuild !== myBuild) {
+      if (serverBuild && isNewerBuild(serverBuild, myBuild)) {
         showUpdateBanner(serverBuild);
         return 'new';
       }

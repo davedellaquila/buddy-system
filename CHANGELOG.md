@@ -3,6 +3,15 @@
 All notable changes to the Buddies dashboard and buddy system. Newest first.
 `FEATURES.md` describes the current state; this file describes how it got there.
 
+## 2026-10-12 (BMW homepage repair plan; version comparison fix)
+
+### Added
+- **BMW Buddy homepage: Repair plan section.** Shows Hans's E61 fuel-system repair plan in priority order with parts pricing and product links (low-pressure pump, DMTL pump, EKP module, sensor, battery, injectors). Includes part-number corrections (DMTL 13907614005 does not exist, correct is 16137193479; pump 16147163212 superseded by 16117373521; sensor 13537547876 superseded by 13537622231).
+
+### Fixed
+- **Version comparison now checks ordering, not just inequality.** The update banner and What\u2019s New sheet no longer claim an older build "is available" when the local build is actually newer.
+- **What\u2019s New sheet shows actual changes.** Missing CHANGELOG entries added so the "new since you last looked" section reflects recent work.
+
 ## 2026-10-12 (Voice setting: per-buddy voice picker + voice notes toggle; persona header + audio previews)
 
 ### Added
