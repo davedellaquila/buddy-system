@@ -5525,8 +5525,9 @@ function whatsnewSplit(md){
     if (s.header && seenHeader && s.header === seenHeader) {
       foundSeen = true;
       // Same header but content changed (new bullets added under it) → still new.
+      // Legacy keys (no hash) can't prove what was seen, so show the section once.
       const curHash = whatsnewHash(s.body.join(NL));
-      if (seenHash && curHash !== seenHash) {
+      if (!seenHash || curHash !== seenHash) {
         newLines.push(s.header, ...s.body);
       } else {
         oldLines.push(s.header, ...s.body);
