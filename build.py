@@ -137,6 +137,10 @@ body{padding:0}
 .qa-link:hover{border-color:var(--accent)}
 .qa-icon{font-size:16px}
 .qa-text{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.qa-chip{display:flex;align-items:center;gap:0;background:var(--bg);border:1px solid var(--border);border-radius:999px;overflow:hidden}
+.qa-chip .qa-link{border:none;background:none;border-radius:0}
+.qa-done{flex:none;width:44px;height:44px;border:none;background:none;color:var(--muted);font-size:16px;cursor:pointer;touch-action:manipulation;display:flex;align-items:center;justify-content:center;border-left:1px solid var(--border)}
+.qa-done:hover{color:var(--grn-solid)}
 .node{position:relative}
 .collapse-pill{position:absolute;bottom:8px;right:8px;min-width:44px;height:28px;border-radius:999px;border:1px solid var(--border);background:var(--panel);color:var(--muted);font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:4px;padding:0 10px;z-index:2}
 .collapse-pill:hover{border-color:var(--accent);color:var(--accent)}
@@ -875,7 +879,7 @@ body.standalone .sa-bar{display:flex}
 .attn-open{font-size:11px;color:var(--accent)}
 .attn-date{font-size:12px;color:var(--muted);margin-top:5px}
 .seenbtn{flex:0 0 auto;background:var(--border2);border:1px solid var(--border);color:var(--text);
-  width:28px;height:28px;border-radius:50%;font-size:15px;line-height:1;padding:0;cursor:pointer;
+  width:44px;height:44px;border-radius:50%;font-size:18px;line-height:1;padding:0;cursor:pointer;touch-action:manipulation;
   display:flex;align-items:center;justify-content:center}
 .seenbtn:hover{border-color:var(--accent);color:var(--accent)}
 .attn-all .seenbtn{width:auto;height:auto;border-radius:999px;font-size:12.5px;padding:6px 12px}
@@ -2868,10 +2872,11 @@ function quickAnswersHtml(){
     });
   });
   if (!items.length) return '';
-  const links = items.slice(0, 12).map(({b, a}) =>
-    '<button class="qa-link" data-qa-buddy="'+b.id+'" title="'+escHtml(a.text || '')+'">'
+  const links = items.slice(0, 12).map(({b, a, key}) =>
+    '<span class="qa-chip"><button class="qa-link" data-qa-buddy="'+b.id+'" title="'+escHtml(a.text || '')+'">'
     + '<span class="qa-icon">'+escHtml(buddyDisplayIcon(b))+'</span>'
     + '<span class="qa-text">'+escHtml((a.text || '').slice(0, 60))+'</span></button>'
+    + '<button class="qa-done" data-qa-done="'+key+'" title="Mark done">\u2713</button></span>'
   ).join('');
   return '<div id="quick-answers"><div class="qa-label">Quick answers</div><div class="qa-links">'+links+'</div></div>';
 }
@@ -3475,6 +3480,13 @@ let nodeDragEndAt = 0; // timestamp of last node-drag gesture; used to swallow t
   document.addEventListener('dragend', () => { dragId = null; clearHl(); });
 })();
 document.addEventListener('click', e => {
+  const qd = e.target.closest('[data-qa-done]');
+  if (qd) {
+    e.stopPropagation();
+    S.seen[qd.dataset.qaDone] = Date.now();
+    save(); renderOrgTree(); renderNav();
+    return;
+  }
   const cp = e.target.closest('[data-collapse]');
   if (cp) {
     e.stopPropagation();
