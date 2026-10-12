@@ -4540,8 +4540,8 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') tipPopClose(
 document.addEventListener('click', e => {
   if (nodeDragEndAt && Date.now() - nodeDragEndAt < 400) return; // swallow the click that follows a node-drag gesture
   if (edgeOpenAt && Date.now() - edgeOpenAt < 400) return; // swallow the click that follows an edge-swipe open
-  const bb = e.target.closest && e.target.closest('.bp-build');
-  if (bb) { openWhatsNew(); return; }
+  const bpb = e.target.closest && e.target.closest('.bp-build');
+  if (bpb) { openWhatsNew(); return; }
   if (e.target.closest && e.target.closest('#bp-icon')) { const m = S.sel.match(/^buddy:(.+)$/); if (m) openAvatarPicker(m[1], e.target.closest('#bp-icon')); return; }
   const co = e.target.closest && e.target.closest('[data-close-order]');
   if (co) {
