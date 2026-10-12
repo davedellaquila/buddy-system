@@ -3,6 +3,11 @@
 All notable changes to the Buddies dashboard and buddy system. Newest first.
 `FEATURES.md` describes the current state; this file describes how it got there.
 
+## 2026-10-11 (Secret nerd settings: pan gearing slider)
+
+### Added
+- **🤓 Nerd settings (secret):** tap the build number 5 times to unlock a hidden settings panel. First knob: tree pan gearing slider (0.25×–3×, default 1×) — tune how fast the tree pans under your finger. Persists per device.
+
 ## 2026-10-11 (Scroll-to-top on the info panel)
 
 ### Added

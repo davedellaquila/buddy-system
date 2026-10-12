@@ -2873,9 +2873,11 @@ function attachPan(el){
     // Apply both axes every move — free diagonal pan (no axis lock).
     // Scale the finger delta by 1/zoom: scroll offsets live in the zoomed
     // coordinate space, so without this a 50% zoom pans at 2:1 (geared down).
+    // Then apply the nerd-setting pan gearing multiplier (default 1x).
     const zf = (S[zoomKey] || 100) / 100;
-    sc.scrollLeft = pan.sl - dx / zf;
-    sc.scrollTop = pan.st - dy / zf;
+    const gear = parseFloat(S.panGearing) || 1;
+    sc.scrollLeft = pan.sl - dx / zf * gear;
+    sc.scrollTop = pan.st - dy / zf * gear;
   }
   function endPan(pid){
     if (!pan) return;
@@ -3779,6 +3781,19 @@ async function ghPutFile(repo, path, b64, msg){
   const body = {message: msg, content: b64}; if (sha) body.sha = sha;
   await ghApi('/repos/davedellaquila/' + repo + '/contents/' + path, 'PUT', body);
 }
+/* ---------- Secret nerd settings (tap build number 5x to unlock) ---------- */
+#nerd-modal{position:fixed;inset:0;z-index:10000;display:flex;align-items:center;justify-content:center}
+#nerd-modal .nd-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.5)}
+#nerd-modal .nd-box{position:relative;background:var(--panel);border-radius:14px;padding:22px;width:min(92vw,360px);box-shadow:0 12px 40px rgba(0,0,0,.35)}
+#nerd-modal .nd-box h2{margin:0 0 4px;font-size:17px}
+#nerd-modal .nd-sub{color:var(--muted);font-size:13px;margin:0 0 8px}
+#nerd-modal .nd-row{margin:16px 0}
+#nerd-modal .nd-row label{display:flex;justify-content:space-between;font-size:13px;margin-bottom:8px}
+#nerd-modal .nd-row label b{font-variant-numeric:tabular-nums}
+#nerd-modal input[type=range]{width:100%;accent-color:var(--accent)}
+#nerd-modal .nd-actions{display:flex;gap:10px;margin-top:18px}
+#nerd-modal .nd-actions button{flex:1;font-size:14px;font-weight:600;padding:10px;border-radius:10px;border:1px solid var(--border);background:var(--bg);color:var(--text);cursor:pointer}
+#nerd-modal .nd-close{background:var(--accent)!important;color:#fff!important;border:none!important}
 /* ---------- Add child / sibling buddy from the info panel ---------- */
 const ADD_ICONS = ['🤖','👤','👥','🏠','📍','🚗','🐾','💼','🎯','📚','🎨','🎵','⚽','🌲','☕','💡','🔧','📷','✈️','🎬','🏥','💰','🛒','📱'];
 const ADD_KINDS = [['assistant','Assistant'],['family','Person'],['place','Place'],['project','Project'],['standalone','Other']];
@@ -4287,6 +4302,56 @@ function initBpToTop(){
     mo.observe(document.body, { attributes: true, attributeFilter: ['class'] });
   }
   sync();
+}
+function initNerdSettings(){
+  // Secret unlock: tap the build number 5 times within 2.5s (Android dev-options style)
+  let taps = [], unlocked = !!(S.nerdUnlocked);
+  document.addEventListener('click', function(e){
+    const el = e.target.closest ? e.target.closest('.bp-build') : null;
+    if (!el) return;
+    if (S.nerdUnlocked) { openNerdSettings(); return; }
+    const now = Date.now();
+    taps = taps.filter(t => now - t < 2500);
+    taps.push(now);
+    if (taps.length >= 5) {
+      taps = [];
+      S.nerdUnlocked = true; save();
+      toast('🤓 Nerd settings unlocked');
+      openNerdSettings();
+    } else if (taps.length >= 3) {
+      toast((5 - taps.length) + ' more taps for nerd settings…');
+    }
+  });
+}
+function openNerdSettings(){
+  closeNerdSettings();
+  const gear = parseFloat(S.panGearing) || 1;
+  const m = document.createElement('div');
+  m.id = 'nerd-modal';
+  m.innerHTML = '<div class="nd-backdrop"></div><div class="nd-box" role="dialog" aria-label="Nerd settings">'
+    + '<h2>🤓 Nerd settings</h2>'
+    + '<p class="nd-sub">Secret knobs. You didn\u2019t find this. It found you.</p>'
+    + '<div class="nd-row"><label>Tree pan gearing <b id="nd-gear-val">' + gear.toFixed(2) + '\u00d7</b></label>'
+    + '<input type="range" id="nd-gear" min="0.25" max="3" step="0.25" value="' + gear + '">'
+    + '<p class="fineprint" style="margin:8px 0 0">1\u00d7 = finger tracks content exactly. Higher = faster pan, lower = finer control.</p></div>'
+    + '<div class="nd-actions"><button id="nd-reset">Reset</button><button class="nd-close" id="nd-done">Done</button></div></div>';
+  document.body.appendChild(m);
+  const slider = m.querySelector('#nd-gear');
+  const val = m.querySelector('#nd-gear-val');
+  slider.addEventListener('input', function(){
+    const v = parseFloat(slider.value) || 1;
+    val.textContent = v.toFixed(2) + '\u00d7';
+    S.panGearing = v; save();
+  });
+  m.querySelector('#nd-reset').addEventListener('click', function(){
+    slider.value = 1; slider.dispatchEvent(new Event('input'));
+  });
+  m.querySelector('.nd-backdrop').addEventListener('click', closeNerdSettings);
+  m.querySelector('#nd-done').addEventListener('click', closeNerdSettings);
+}
+function closeNerdSettings(){
+  const m = document.getElementById('nerd-modal');
+  if (m) m.remove();
 }
 function isDrawerNav(){ return window.matchMedia('(max-width:639px)').matches; }
 function isSidebarOpen(){
@@ -5121,6 +5186,7 @@ initSearch();
 initGear();
 initSbToTop();
 initBpToTop();
+initNerdSettings();
 initEdgeSwipeOpen();
 initPanelSwipeGestures();
 initVersionCheck();
