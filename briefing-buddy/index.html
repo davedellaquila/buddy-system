@@ -193,12 +193,6 @@
     background:var(--paper);border:1px dashed var(--rule);border-radius:8px;
     padding:12px 14px;margin-bottom:12px;font-size:14px;
   }
-.dumpbox-connect{
-    background:var(--paper);border:1px dashed var(--rule);border-radius:8px;
-    padding:14px 16px;margin-bottom:12px;font-size:14px;
-  }
-.dumpbox-connect p { margin: 0 0 10px; }
-
   .dumpbox-token p{margin:0 0 8px}
   .dumpbox-tokenrow{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
   .dumpbox-tokenrow input{
@@ -234,11 +228,19 @@
       <div class="stack">
         <div class="card attention">
           <h3><span class="flag">Open</span>Full PRD — not started yet</h3>
-          <p>You asked for a full PRD after the brief. <a href="https://docs.google.com/document/d/1s9ghZ-kyp9dag2whTPnk24ULLUJP3JW_0UGtocAynbs/edit" target="_blank" rel="noopener">The brief</a> already queues the spec: user stories per feature, the sections library, per-briefing content mixing, scheduling &amp; send-time rules, the delivery contract with the assistant, and success criteria. Say the word and it's drafted.</p>
+          <p>You asked for a full PRD after the brief. The brief already queues the spec: user stories per feature, the sections library, per-briefing content mixing, scheduling &amp; send-time rules, the delivery contract with the assistant, and success criteria. Say the word and it's drafted.</p>
         </div>
         <div class="card attention">
-          <h3><span class="flag">Open</span>Product name: News Buddy or Briefing Buddy?</h3>
-          <p>This thread is <strong>Briefing Buddy</strong>, but the <a href="https://docs.google.com/document/d/11Zz2wGbuIKCqS7OSPOnjIAbz5VsmLQPvxS-OfRicSN0/edit">product brief</a> still says <strong>News Buddy</strong>. "Briefing Buddy" fits what it actually became — the design studio for your briefings. Your call which wins.</p>
+          <h3><span class="flag">Resolved</span>The News ⇄ Briefing split is live</h3>
+          <p>Settled Oct 11: <strong>Briefing Buddy</strong> assembles and delivers your morning/evening briefings; <strong>News Buddy</strong> is the separate news-sources expert with its own thread and brief. Briefing Buddy's own <a href="https://docs.google.com/document/d/1s9ghZ-kyp9dag2whTPnk24ULLUJP3JW_0UGtocAynbs/edit">brief</a> and private repo (davedellaquila/briefing-buddy) are live.</p>
+        </div>
+        <div class="card attention">
+          <h3><span class="flag">Open</span>Brief review still pending</h3>
+          <p>The <a href="https://docs.google.com/document/d/1s9ghZ-kyp9dag2whTPnk24ULLUJP3JW_0UGtocAynbs/edit">Briefing Buddy brief</a> went up for review Oct 11 — looks good, edits, or hold? The open questions inside (exact section lists, 6 AM / 6 PM still right, who else gets briefings, settings → job write-back) are what the PRD will settle.</p>
+        </div>
+        <div class="card attention">
+          <h3><span class="flag">Open</span>Two briefing rules set today</h3>
+          <p><strong>Morning north star:</strong> Dave finishes it in about 10 minutes — digestibility is the design rule now. <strong>Evening sports:</strong> 49ers' next-opponent scouting is now a standing section — the evening cron definition hasn't been updated to include it yet, so tonight's lineup ships without it.</p>
         </div>
       </div>
     </section>
@@ -252,6 +254,7 @@
           <p class="etype">Morning</p>
           <h3>The Morning Edition</h3>
           <p class="meta">Daily &middot; 6:00 AM PT</p>
+          <p class="meta">North-star rule: Dave finishes it in ~10 minutes — set Oct 11.</p>
           <span class="status">● Live — thread + email</span>
           <details>
             <summary>13 sections</summary>
@@ -279,9 +282,23 @@
       </div>
     </section>
 
+    <!-- LIVE DATA -->
+    <section>
+      <div class="sec-head"><span class="sec-num">No. 3</span><h2>Live briefing data</h2><span class="line"></span></div>
+      <p class="lede">What the briefings actually carry right now — snapshot from the morning edition (Oct 11, ~6:04 AM) plus what's next. This is the data the settings below act on.</p>
+      <div class="lib-grid">
+        <div class="card lib-item"><h4><span class="dot"></span>Weather — Fiddletown</h4><p>47&deg;F and clear right now; sunny today, high 67&deg; / low 47&deg;; tomorrow mostly sunny, 62&deg;/45&deg;.</p></div>
+        <div class="card lib-item"><h4><span class="dot"></span>Sky</h4><p>Sunrise 7:07 AM (official Fiddletown time); waxing crescent, ~1% lit — new moon was yesterday.</p></div>
+        <div class="card lib-item"><h4><span class="dot"></span>Fire &amp; air</h4><p>All clear: no red-flag warnings or alerts, air quality good (AQI 30).</p></div>
+        <div class="card lib-item"><h4><span class="dot"></span>AAPL</h4><p>Closed Friday at $336.64, down 1.1% on a Nikkei report of iPhone 18 Pro component-order cuts.</p></div>
+        <div class="card lib-item"><h4><span class="dot"></span>Awaiting your reply</h4><p>37 open questions &middot; 2 high-priority: the updated rent-notice copy and the trust paperwork.</p></div>
+        <div class="card lib-item"><h4><span class="dot"></span>Next: evening edition, 6:00 PM PT</h4><p>Top stories &middot; Markets &middot; Tech &amp; AI &middot; YouTube picks &middot; Podcast picks &middot; Sky &middot; Night sky &middot; Awaiting your reply &middot; Quick links &middot; the meal question.</p></div>
+      </div>
+    </section>
+
     <!-- DESIGNER -->
     <section>
-      <div class="sec-head"><span class="sec-num">No. 3</span><h2>The briefing designer</h2><span class="line"></span></div>
+      <div class="sec-head"><span class="sec-num">No. 4</span><h2>The briefing designer</h2><span class="line"></span></div>
       <p class="lede">The seed of the app. Decide how many briefings go out each day, when each lands, and what goes in it — a mix-and-match sections library. What you design here is what the assistant delivers.</p>
       <div class="designer-grid">
         <div class="card">
@@ -303,14 +320,14 @@
 
     <!-- LIBRARY -->
     <section>
-      <div class="sec-head"><span class="sec-num">No. 4</span><h2>Sections library</h2><span class="line"></span></div>
+      <div class="sec-head"><span class="sec-num">No. 5</span><h2>Sections library</h2><span class="line"></span></div>
       <p class="lede">Every building block a briefing can be made of. Check the boxes in the designer to mix and match.</p>
       <div class="lib-grid" id="library"></div>
     </section>
 
     <!-- TOPICS -->
     <section>
-      <div class="sec-head"><span class="sec-num">No. 5</span><h2>Topics I watch</h2><span class="line"></span></div>
+      <div class="sec-head"><span class="sec-num">No. 6</span><h2>Topics I watch</h2><span class="line"></span></div>
       <p class="lede">The personalization axis. Every story is ranked against these.</p>
       <div class="chips">
         <span class="chip">🤖 AI &amp; technology</span>
@@ -325,25 +342,20 @@
 
     <!-- MIND -->
     <section>
-      <div class="sec-head"><span class="sec-num">No. 6</span><h2>On my mind</h2><span class="line"></span></div>
+      <div class="sec-head"><span class="sec-num">No. 7</span><h2>On my mind</h2><span class="line"></span></div>
       <p class="lede">Open questions from the brief — the ones the PRD will have to settle.</p>
       <ul class="mind-list">
-        <li>One buddy app or a family of them? <span>— the Buddy Suite pattern is emerging.</span></li>
-        <li>Personalization depth: <span>explicit topic toggles only, or learned from reading behavior too?</span></li>
-        <li>Local news sourcing: <span>which outlets actually cover Amador County well?</span></li>
-        <li>Delivery mechanics: <span>how does a design in the app become the assistant's schedule?</span></li>
-        <li>Business model: <span>personal tool, or something shippable?</span></li>
+        <li>Exact final section lists: <span>what's confirmed vs still fluid? Today's two rulings feed this — the morning's 10-minute rule and the evening's new standing sports section.</span></li>
+        <li>Are 6:00 AM / 6:00 PM still the right times? <span>— the current daily cadence.</span></li>
+        <li>Who else gets briefings? <span>— family, or anyone else?</span></li>
+        <li>Settings → schedule: <span>how does a design in the app become the assistant's schedule — writing back to the jobs safely?</span></li>
       </ul>
     </section>
     <!-- BRAIN DUMP -->
     <section>
-      <div class="sec-head"><span class="sec-num">No. 7</span><h2>Brain dump</h2><span class="line"></span></div>
+      <div class="sec-head"><span class="sec-num">No. 8</span><h2>Brain dump</h2><span class="line"></span></div>
       <p class="lede">Dump what&rsquo;s on your mind about Briefing Buddy &mdash; raw and unfiltered. Each dump lands in the buddy&rsquo;s repo (<code>docs/ingest.md</code>) as a timestamped entry.</p>
       <div class="card dumpbox" data-buddy-id="briefing-buddy">
-        <div class="dumpbox-connect" hidden>
-          <p>🔒 Connect GitHub to unlock dumping. Paste a token once — it stays on this device only.</p>
-          <button type="button" class="dumpbox-btn">Connect GitHub to enable</button>
-        </div>
         <div class="dumpbox-token" hidden>
           <p>&#x1F512; Connect GitHub to unlock dumping. Paste a token once &mdash; it stays on this device only.</p>
           <div class="dumpbox-tokenrow">
@@ -363,7 +375,7 @@
 
   <footer>
     <span>Briefing Buddy · a living page · last refreshed <strong>October 11, 2026</strong></span>
-    <span><a href="https://docs.google.com/document/d/11Zz2wGbuIKCqS7OSPOnjIAbz5VsmLQPvxS-OfRicSN0/edit">Product brief</a> · editions live in the Briefings thread</span>
+    <span><a href="https://docs.google.com/document/d/1s9ghZ-kyp9dag2whTPnk24ULLUJP3JW_0UGtocAynbs/edit">Product brief</a> · editions live in the Briefings thread</span>
   </footer>
 </div>
 
@@ -413,6 +425,7 @@
     {id:"techai",     name:"Tech & AI",               desc:"2–3 headlines in Dave's lanes."},
     {id:"youtube",    name:"YouTube picks",           desc:"3–5 videos, links verified."},
     {id:"podcasts",   name:"Podcast picks",           desc:"2–3 episodes for the drive."},
+    {id:"sports",     name:"Sports",                  desc:"49ers' next-opponent scouting — standing evening section (Dave, Oct 11); cron update pending."},
     {id:"nightsky",   name:"Night sky",               desc:"What's up tonight over Fiddletown."},
     {id:"awaiting",   name:"Awaiting your reply",     desc:"Open questions, one line each."},
     {id:"links",      name:"Quick links",             desc:"Working docs, grouped."},
@@ -534,7 +547,7 @@
 })();
 </script>
 <script>
-// ---- dump-box JS (self-contained; no dependencies) ----
+// ---- brain-dump box (from docs/dumpbox-snippet.html; same write path as the dashboard ingest panel) ----
 (function(){
   var box = document.querySelector('.dumpbox');
   if (!box || box.dataset.dumpInit) return;
@@ -544,11 +557,9 @@
     return p.substring(p.lastIndexOf('/') + 1);
   })();
   var ta = box.querySelector('textarea'),
-      btn = box.querySelector('.dumpbox-row .dumpbox-btn'),
+      btn = box.querySelector('.dumpbox-btn'),
       st = box.querySelector('.dumpbox-status'),
-      tokWrap = box.querySelector('.dumpbox-token'),
-      connectWrap = box.querySelector('.dumpbox-connect'),
-      connectBtn = connectWrap.querySelector('.dumpbox-btn');
+      tokWrap = box.querySelector('.dumpbox-token');
   function lsGet(){ try { return JSON.parse(localStorage.getItem('buddyTree.v3') || '{}'); } catch(e){ return {}; } }
   function lsSet(patch){ try { var s = lsGet(); for (var k in patch) s[k] = patch[k]; localStorage.setItem('buddyTree.v3', JSON.stringify(s)); } catch(e){} }
   function token(){ return lsGet().ghToken || ''; }
@@ -591,8 +602,7 @@
   }
   function refreshUI(){
     var has = !!token();
-    connectWrap.hidden = has;
-    if (has) tokWrap.hidden = true;
+    tokWrap.hidden = has;
     var ok = has && !!repo;
     ta.disabled = !ok;
     btn.disabled = !ok;
@@ -601,16 +611,11 @@
   }
   var tokInput = tokWrap.querySelector('input'),
       tokSave = tokWrap.querySelector('button');
-  connectBtn.addEventListener('click', function(){
-    tokWrap.hidden = false;
-    if (tokInput) tokInput.focus();
-  });
   tokSave.addEventListener('click', function(){
     var v = tokInput.value.trim();
     if (!v) return;
     lsSet({ghToken: v});
     tokInput.value = '';
-    tokWrap.hidden = true;
     refreshUI();
     st.textContent = 'Token saved on this device.';
   });
