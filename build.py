@@ -180,6 +180,12 @@ body{padding:0}
   padding:12px;box-shadow:0 12px 40px var(--shadow);min-width:480px;
   animation:lensIn .18s ease-out}
 @keyframes lensIn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
+.lens-dropdown[hidden]{display:none}
+.lens-close{position:absolute;top:8px;right:8px;width:32px;height:32px;border-radius:50%;
+  border:1px solid var(--border);background:var(--bg);color:var(--muted);font-size:16px;
+  line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;
+  -webkit-tap-highlight-color:transparent;z-index:2}
+.lens-close:hover{color:var(--text);border-color:var(--accent)}
 .lens-card{display:flex;flex-direction:column;align-items:flex-start;gap:4px;
   padding:12px;border:1px solid var(--border);border-radius:12px;background:var(--bg);
   cursor:pointer;text-align:left;min-height:44px;-webkit-tap-highlight-color:transparent}
@@ -3131,6 +3137,14 @@ const CHART_TYPES = [
 ];
 function getChartType(){ return S.chartType || 'org'; }
 function setChartType(t){ S.chartType = t; save(); renderOrgTree(); }
+function closeLensPicker(){
+  const dd = document.getElementById('lens-dropdown');
+  const scrim = document.getElementById('lens-scrim');
+  const pill = document.getElementById('lens-pill');
+  if (dd) dd.hidden = true;
+  if (scrim) scrim.hidden = true;
+  if (pill) pill.setAttribute('aria-expanded', 'false');
+}
 // Atlas lens picker — Jonny's verdict: one quiet pill, tap to see seven pictures.
 // Thumbnails are stylized inline SVGs (icons with ambition, not live renders).
 const CHART_BLURBS = {
@@ -3163,6 +3177,7 @@ function chartSwitcherHtml(){
     + '<span class="lens-pill-icon">◉</span><span>' + curDef.label + '</span><span class="lens-pill-chev">▾</span>'
     + '</button>'
     + '<div class="lens-dropdown" id="lens-dropdown" hidden>'
+    + '<button class="lens-close" id="lens-close" aria-label="Close chart picker">&times;</button>'
     + CHART_TYPES.map(c => '<button class="lens-card' + (c.id === cur ? ' sel' : '') + '" data-chart="' + c.id + '">'
       + '<span class="lens-thumb">' + chartThumbSvg(c.id) + '</span>'
       + '<span class="lens-name">' + c.label + (c.id === cur ? ' ✓' : '') + '</span>'
@@ -6243,6 +6258,7 @@ document.addEventListener('click', e => {
   }
 });
 document.addEventListener('keydown', e => { if (e.key === 'Escape') tipPopClose(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLensPicker(); });
 document.addEventListener('input', e => {
   if (e.target && e.target.id === 'proj-search') {
     projSearch = e.target.value;
@@ -6328,7 +6344,7 @@ document.addEventListener('click', e => {
     if (pendingHighlight) { const id = pendingHighlight; pendingHighlight = null; highlightProjectRow(id); }
     return;
   }
-  // Atlas lens picker: pill toggles, cards switch, scrim/Escape closes
+  // Atlas lens picker: pill toggles, cards switch, scrim/close/Escape dismisses
   const pill = e.target.closest('#lens-pill');
   if (pill) {
     const dd = document.getElementById('lens-dropdown');
@@ -6338,23 +6354,18 @@ document.addEventListener('click', e => {
     pill.setAttribute('aria-expanded', open);
     return;
   }
+  const lclose = e.target.closest('#lens-close');
+  if (lclose) { closeLensPicker(); return; }
   const lcard = e.target.closest('.lens-card[data-chart]');
   if (lcard) {
-    const dd = document.getElementById('lens-dropdown');
-    const scrim = document.getElementById('lens-scrim');
-    if (dd) dd.hidden = true; if (scrim) scrim.hidden = true;
+    closeLensPicker();
     const chart = document.querySelector('#treezoom-main .chart');
     if (chart) chart.classList.add('chart-switching');
     setTimeout(() => setChartType(lcard.dataset.chart), 140);
     return;
   }
   const lscrim = e.target.closest('#lens-scrim');
-  if (lscrim) {
-    document.getElementById('lens-dropdown').hidden = true;
-    lscrim.hidden = true;
-    document.getElementById('lens-pill').setAttribute('aria-expanded', 'false');
-    return;
-  }
+  if (lscrim) { closeLensPicker(); return; }
   const pmb = e.target.closest('[data-proj-mode]');
   if (pmb) { projViewMode = pmb.dataset.projMode; renderProjects(); return; }
   if (e.target.closest && e.target.closest('#proj-search-clear')) { projSearch = ''; renderProjects(); const ps = document.getElementById('proj-search'); if (ps) ps.focus(); return; }
