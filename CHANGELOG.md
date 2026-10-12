@@ -3,6 +3,11 @@
 All notable changes to the Buddies dashboard and buddy system. Newest first.
 `FEATURES.md` describes the current state; this file describes how it got there.
 
+## 2026-10-11 (New Buddy request sheet)
+
+### Changed
+- **New Buddy is now a bottom sheet:** name field, scrollable persona picker (24 voices, tap the one that makes you grin), and a purpose textarea. The request (name + persona + purpose) lands in `docs/inbox/` for the watcher to pick up.
+
 ## 2026-10-11 (Floating New Buddy button)
 
 ### Added

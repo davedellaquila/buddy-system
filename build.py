@@ -227,6 +227,23 @@ body.sb-closed #sb-resize{display:none}
   background:var(--accent);color:#fff;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;
   box-shadow:0 4px 16px rgba(0,0,0,.35);-webkit-tap-highlight-color:transparent}
 #new-buddy-fab:active{transform:scale(.94)}
+/* New-buddy request bottom sheet */
+#newbuddy-sheet{position:fixed;inset:0;z-index:10000;display:flex;align-items:flex-end;justify-content:center}
+#newbuddy-sheet .nb-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.5);opacity:0;transition:opacity .25s}
+#newbuddy-sheet .nb-sheet{position:relative;background:var(--panel);border-radius:20px 20px 0 0;padding:12px 22px 26px;width:100%;max-width:560px;max-height:88vh;overflow-y:auto;
+  box-shadow:0 -8px 40px rgba(0,0,0,.4);transform:translateY(100%);transition:transform .3s cubic-bezier(.32,.72,.35,1)}
+#newbuddy-sheet.open .nb-backdrop{opacity:1}
+#newbuddy-sheet.open .nb-sheet{transform:translateY(0)}
+#newbuddy-sheet .nb-grab{width:44px;height:5px;border-radius:3px;background:var(--border);margin:0 auto 14px}
+#newbuddy-sheet h2{margin:0 0 4px;font-size:19px}
+#newbuddy-sheet label{display:block;font-size:12px;color:var(--muted);margin:14px 0 8px;text-transform:uppercase;letter-spacing:.8px}
+#newbuddy-sheet input[type=text],#newbuddy-sheet textarea{width:100%;box-sizing:border-box;font-size:16px;padding:10px 12px;border-radius:10px;border:1px solid var(--border);background:var(--bg);color:var(--text);font-family:inherit}
+#newbuddy-sheet textarea{resize:vertical;min-height:76px}
+#newbuddy-sheet .nb-personas{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;max-height:220px;overflow-y:auto;padding:2px}
+#newbuddy-sheet .nb-personas button{display:flex;flex-direction:column;align-items:center;gap:4px;padding:10px 6px;border-radius:12px;border:1px solid var(--border);background:var(--bg);color:var(--text);cursor:pointer;font-size:12px}
+#newbuddy-sheet .nb-personas button.sel{border-color:var(--accent);background:var(--wash)}
+#newbuddy-sheet .nb-p-emoji{font-size:24px}
+#newbuddy-sheet .nb-p-name{text-align:center;line-height:1.25}
 #bp-to-top:hover{color:var(--accent);border-color:var(--accent)}
 #bp-to-top:active{transform:scale(.96)}
 #bp-to-top svg{display:block}
@@ -3974,36 +3991,49 @@ function closeAddBuddyDialog(){
   const m = document.getElementById('addbuddy-modal');
   if (m) m.remove();
 }
-/* New-buddy request dialog (FAB) — writes a request file for Astro to pick up */
+/* New-buddy request sheet (FAB) — bottom sheet with name, persona picker, purpose */
+const REQUEST_PERSONAS = [
+  ['Hawaiian bruddah', '🤙'], ['Japanese zen master', '🧘'], ['Valley girl', '💅'],
+  ['Bruno Tonioli', '💃'], ['Hans, German master tech', '🔧'], ['Film noir detective', '🕵️'],
+  ['Southern grandmother', '👵'], ['Drill sergeant', '🎖️'], ['Deadpan British butler', '🤵'],
+  ['Pirate captain', '🏴‍☠️'], ['French existentialist', '🚬'], ['Auctioneer', '🔨'],
+  ['Cowboy ranch hand', '🤠'], ['Rastafarian elder', '🦁'], ['Dr. Evil', '😈'],
+  ['Shakespearean actor', '🎭'], ['Mafia consigliere', '🤌'], ['Italian nonna', '🍝'],
+  ['Surfer dude', '🏄'], ['Mad scientist', '🧪'], ['BBC documentarian', '🎥'],
+  ['Game show host', '🎤'], ['Sommelier', '🍷'], ['Viking warrior', '⚔️'],
+];
 function openNewBuddyRequest(){
   closeAddBuddyDialog();
   const m = document.createElement('div');
-  m.id = 'addbuddy-modal';
-  m.innerHTML = '<div class="ab-backdrop"></div><div class="ab-box" role="dialog" aria-label="Request a new buddy">'
+  m.id = 'newbuddy-sheet';
+  m.innerHTML = '<div class="nb-backdrop"></div><div class="nb-sheet" role="dialog" aria-label="Request a new buddy">'
+    + '<div class="nb-grab"></div>'
     + '<h2>New buddy</h2>'
     + '<p class="ab-sub">Tell Astro what you want — they\u2019ll run the full setup drill (repo, mission doc, side chat, homepage).</p>'
-    + '<label>Name</label><input type="text" id="ab-name" placeholder="Buddy name" autocomplete="off">'
-    + '<label>Icon</label><div class="ab-icons">' + ADD_ICONS.map((ic,i) => '<button data-ic="'+escHtml(ic)+'" class="'+(i===0?'sel':'')+'">'+escHtml(ic)+'</button>').join('') + '</div>'
-    + '<label>Type</label><div class="ab-kinds">' + ADD_KINDS.map((k,i) => '<button data-kind="'+k[0]+'" class="'+(i===0?'sel':'')+'">'+k[1]+'</button>').join('') + '</div>'
-    + '<div class="ab-err" id="ab-err"></div>'
-    + '<div class="ab-actions"><button class="ab-cancel" id="ab-cancel">Cancel</button><button class="ab-create" id="ab-create" disabled>Send request</button></div></div>';
+    + '<label>Name</label><input type="text" id="nb-name" placeholder="Buddy name" autocomplete="off">'
+    + '<label>Persona <span class="fineprint" style="text-transform:none;letter-spacing:0">— pick the voice that makes you grin</span></label>'
+    + '<div class="nb-personas">' + REQUEST_PERSONAS.map((p,i) =>
+        '<button type="button" data-persona="' + escHtml(p[0]) + '" class="' + (i===0?'sel':'') + '">'
+        + '<span class="nb-p-emoji">' + p[1] + '</span><span class="nb-p-name">' + escHtml(p[0]) + '</span></button>').join('') + '</div>'
+    + '<label>What should it do?</label><textarea id="nb-purpose" rows="3" placeholder="What do you want this buddy to do, or specialize in?"></textarea>'
+    + '<div class="ab-err" id="nb-err"></div>'
+    + '<div class="ab-actions"><button class="ab-cancel" id="nb-cancel">Cancel</button><button class="ab-create" id="nb-create" disabled>Send request</button></div></div>';
   document.body.appendChild(m);
-  const nameInput = m.querySelector('#ab-name');
-  const createBtn = m.querySelector('#ab-create');
-  const errEl = m.querySelector('#ab-err');
-  let icon = ADD_ICONS[0], kind = ADD_KINDS[0][0];
-  m.querySelector('.ab-backdrop').addEventListener('click', closeAddBuddyDialog);
-  m.querySelector('#ab-cancel').addEventListener('click', closeAddBuddyDialog);
-  m.querySelectorAll('.ab-icons button').forEach(b => b.addEventListener('click', () => {
-    m.querySelectorAll('.ab-icons button').forEach(x => x.classList.remove('sel'));
-    b.classList.add('sel'); icon = b.dataset.ic;
+  const nameInput = m.querySelector('#nb-name');
+  const purposeInput = m.querySelector('#nb-purpose');
+  const createBtn = m.querySelector('#nb-create');
+  const errEl = m.querySelector('#nb-err');
+  let persona = REQUEST_PERSONAS[0][0];
+  const close = () => m.remove();
+  m.querySelector('.nb-backdrop').addEventListener('click', close);
+  m.querySelector('#nb-cancel').addEventListener('click', close);
+  m.querySelectorAll('.nb-personas button').forEach(b => b.addEventListener('click', () => {
+    m.querySelectorAll('.nb-personas button').forEach(x => x.classList.remove('sel'));
+    b.classList.add('sel'); persona = b.dataset.persona;
   }));
-  m.querySelectorAll('.ab-kinds button').forEach(b => b.addEventListener('click', () => {
-    m.querySelectorAll('.ab-kinds button').forEach(x => x.classList.remove('sel'));
-    b.classList.add('sel'); kind = b.dataset.kind;
-  }));
-  nameInput.addEventListener('input', () => { createBtn.disabled = !nameInput.value.trim(); errEl.textContent = ''; });
-  nameInput.addEventListener('keydown', e => { if (e.key === 'Enter' && !createBtn.disabled) createBtn.click(); if (e.key === 'Escape') closeAddBuddyDialog(); });
+  const validate = () => { createBtn.disabled = !nameInput.value.trim(); errEl.textContent = ''; };
+  nameInput.addEventListener('input', validate);
+  purposeInput.addEventListener('input', validate);
   createBtn.addEventListener('click', async () => {
     errEl.textContent = '';
     createBtn.disabled = true;
@@ -4013,14 +4043,14 @@ function openNewBuddyRequest(){
       const stamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19);
       const req = {
         name: nameInput.value.trim(),
-        icon: icon,
-        kind: kind,
+        persona: persona,
+        purpose: purposeInput.value.trim(),
         requested_at: new Date().toISOString(),
         requested_from: 'dashboard-fab',
       };
       const path = 'docs/inbox/new-buddy-' + stamp + '.json';
       await ghPutFile('buddy-system', path, b64encode(JSON.stringify(req, null, 2)), 'New buddy request: ' + req.name);
-      closeAddBuddyDialog();
+      close();
       toast('Request sent — Astro will pick it up shortly.');
     } catch (e) {
       errEl.textContent = e.message || String(e);
@@ -4028,7 +4058,8 @@ function openNewBuddyRequest(){
       createBtn.textContent = 'Send request';
     }
   });
-  setTimeout(() => nameInput.focus(), 50);
+  requestAnimationFrame(() => m.classList.add('open'));
+  setTimeout(() => nameInput.focus(), 300);
 }
 function initNewBuddyFab(){
   const fab = document.getElementById('new-buddy-fab');
