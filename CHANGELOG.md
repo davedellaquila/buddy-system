@@ -3,6 +3,11 @@
 All notable changes to the Buddies dashboard and buddy system. Newest first.
 `FEATURES.md` describes the current state; this file describes how it got there.
 
+## 2026-10-12 (Dump fallback queue)
+
+### Changed
+- **Dumps no longer vanish when the GitHub write fails.** If there's no token, a bad token, or no network, the dump is queued in localStorage, shows in the feed with a "pending sync" badge, and flushes to the repo automatically on the next successful write or page load.
+
 ## 2026-10-12 (Section poof-away animation)
 
 ### Changed
