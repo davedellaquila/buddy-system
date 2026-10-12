@@ -3,6 +3,11 @@
 All notable changes to the Buddies dashboard and buddy system. Newest first.
 `FEATURES.md` describes the current state; this file describes how it got there.
 
+## 2026-10-11 (New Buddy sheet resizable)
+
+### Added
+- **Drag the grab handle** at the top of the New Buddy sheet to resize its height.
+
 ## 2026-10-11 (Buddy creation keyboard shortcuts)
 
 ### Added

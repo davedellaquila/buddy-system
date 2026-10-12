@@ -4074,6 +4074,28 @@ function openNewBuddyRequest(){
   });
   requestAnimationFrame(() => m.classList.add('open'));
   setTimeout(() => nameInput.focus(), 300);
+  // Drag the grab handle to resize sheet height
+  const sheet = m.querySelector('.nb-sheet');
+  const grab = m.querySelector('.nb-grab');
+  grab.style.cursor = 'ns-resize';
+  grab.style.touchAction = 'none';
+  grab.addEventListener('pointerdown', e => {
+    e.preventDefault();
+    const startY = e.clientY;
+    const startH = sheet.getBoundingClientRect().height;
+    const mv = ev => {
+      const dh = startY - ev.clientY;
+      const nh = Math.min(window.innerHeight * 0.94, Math.max(280, startH + dh));
+      sheet.style.height = nh + 'px';
+      sheet.style.maxHeight = 'none';
+    };
+    const up = () => {
+      window.removeEventListener('pointermove', mv);
+      window.removeEventListener('pointerup', up);
+    };
+    window.addEventListener('pointermove', mv);
+    window.addEventListener('pointerup', up);
+  });
 }
 function initNewBuddyFab(){
   const fab = document.getElementById('new-buddy-fab');
