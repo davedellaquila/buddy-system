@@ -925,6 +925,23 @@ body.standalone .sa-bar{display:flex}
 .bp-tagline{color:var(--muted);font-size:15px;margin:4px 0 8px}
 .bp-aka{color:var(--muted);font-size:13px;font-style:italic;margin-left:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:60%}
 .aka-pill{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;font-size:13px;background:var(--wash2);border:1px solid var(--border);border-radius:999px;color:var(--text)}
+/* Section poof-away (Dave 2026-10-12): when the last item in a section is
+   completed, the section dims, then poofs — sections below scooch up. */
+.bp-sec.poof-dim{
+  transition: opacity .3s ease;
+  opacity: .35;
+}
+.bp-sec.poof-gone{
+  transition: opacity .25s ease, transform .25s ease, max-height .45s ease, margin .45s ease, padding .45s ease;
+  opacity: 0 !important;
+  transform: scale(.96);
+  max-height: 0 !important;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  overflow: hidden;
+}
 .bp-sec{margin-top:30px}
 .bp-sec>h3{font-size:13px;letter-spacing:1.2px;text-transform:uppercase;color:var(--muted);margin:0 0 12px}
 .bp-sec>h3 .bp-add{float:right;font-size:12px;letter-spacing:0;text-transform:none;font-weight:600;color:var(--accent);background:none;border:1px solid var(--accent);border-radius:20px;padding:2px 10px;cursor:pointer}
@@ -3243,6 +3260,21 @@ function toastWithUndo(msg, onUndo){
   const kill = setTimeout(() => { if (t.parentNode) t.remove(); }, 6000);
   btn.addEventListener('click', () => { clearTimeout(kill); t.remove(); onUndo(); });
 }
+// Poof a panel section away when its last item is completed (Dave 2026-10-12).
+// Phase 1: text dims. Phase 2: fade + slight shrink + height collapse (sections below scooch up).
+// Then callback runs (typically the re-render).
+function poofSection(field, callback){
+  const sec = document.querySelector('.bp-sec[data-field="' + field + '"]');
+  if (!sec){ callback(); return; }
+  // Lock the current height so the collapse animates smoothly
+  sec.style.maxHeight = sec.offsetHeight + 'px';
+  sec.classList.add('poof-dim');
+  setTimeout(() => {
+    sec.classList.remove('poof-dim');
+    sec.classList.add('poof-gone');
+    setTimeout(callback, 550);
+  }, 320);
+}
 function markAttentionDone(attnId, btnEl){
   // Step 1: fill the circle with accent + white check (~200ms)
   if (btnEl) {
@@ -3258,15 +3290,26 @@ function markAttentionDone(attnId, btnEl){
     const doneAt = Date.now();
     S.seen[attnId] = doneAt;
     save();
-    // Step 3: glide the tile out, then rerender
+    // Step 3: glide the tile out, then rerender — poof the whole section if it was the last item
+    const buddyId = S.sel.slice(6);
+    const remaining = (byId[buddyId].attention || []).filter(a => !S.seen[a.id]);
     const tile = btnEl ? btnEl.closest('.attn') : null;
+    const rerender = () => { renderBuddy(buddyId); renderNav(); updateAppBadge(); };
     if (tile) {
       tile.style.transition = 'opacity .25s, transform .25s';
       tile.style.opacity = '0';
       tile.style.transform = 'translateX(24px)';
-      setTimeout(() => { renderBuddy(S.sel.slice(6)); renderNav(); updateAppBadge(); }, 250);
+      setTimeout(() => {
+        if (remaining.length === 0) {
+          // Last item: let the tile finish, then poof the section away
+          poofSection('attention', rerender);
+        } else {
+          rerender();
+        }
+      }, 250);
     } else {
-      renderBuddy(S.sel.slice(6)); renderNav(); updateAppBadge();
+      if (remaining.length === 0) poofSection('attention', rerender);
+      else rerender();
     }
     // Step 4: 6-second Undo toast
     toastWithUndo('Marked done.', () => {
@@ -3281,7 +3324,8 @@ function markAllAttentionDone(buddyId){
   const doneAt = Date.now();
   ids.forEach(id => S.seen[id] = doneAt);
   save();
-  renderBuddy(S.sel.slice(6)); renderNav(); updateAppBadge();
+  const rerender = () => { renderBuddy(S.sel.slice(6)); renderNav(); updateAppBadge(); };
+  poofSection('attention', rerender);
   toastWithUndo('Marked all done.', () => {
     ids.forEach(id => delete S.seen[id]);
     save();
