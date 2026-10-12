@@ -22,7 +22,8 @@ Build: `build.py` generates `index.html` from `buddies.json` + `plans.json`.
   own zoom slider + zoom-to-fit; split position and both zooms persist per
   device. Dragging an orphan tile onto a tree buddy reparents it.
 - **Zoom slider** — compact horizontal control (small▪ · range · large◼ + fit),
-  50–160%; Shift+scroll over a pane zooms that pane.
+  50–160%; Shift+scroll over a pane zooms that pane. Zoom scales only the
+  chart — the Quick answers row and the Atlas lens pill stay fixed above it.
 - **Shift+scroll zoom** — hold Shift and scroll over a tree pane to zoom it.
 - **Grab-to-pan** — click-drag the chart to slide it around; grab/grabbing
   cursors; small movements still count as clicks; the stray click after a
@@ -80,6 +81,9 @@ Build: `build.py` generates `index.html` from `buddies.json` + `plans.json`.
   buddies.
 - **Collapsible sections** — Views, Buddies, and Business Plans headers
   collapse their sections on click; state persists per device.
+- **Collapsible buddy rows** — buddies with children carry a chevron; click
+  toggles just that row, Shift+click collapses/expands the whole subtree.
+  State persists per device.
 - **Project view** — shows the current project's homepage full-bleed in the
   main view area (no margins); a floating "Open in a new tab" pill button
   overlays the top. Clicking a sidebar buddy loads its homepage if it has
