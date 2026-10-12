@@ -4145,7 +4145,7 @@ window.__bindEdgeSwipes = bindIframeEdgeSwipes;
 // Returns 'new' | 'current' | 'suppressed' | 'error' so manual triggers
 // (e.g. pull-to-refresh) can report the outcome.
 /* Renders the newest CHANGELOG.md sections as HTML for the What's-new modal */
-function changelogMdToHtml(md){
+function changelogMdToHtml(md, bare){
   const lines = String(md || '').split('\\n');
   let html = '', sections = 0, inList = false, curType = '';
   const typeCounts = {};
@@ -4155,7 +4155,7 @@ function changelogMdToHtml(md){
     const line = raw.replace(/\s+$/, '');
     if (/^## /.test(line)) {
       sections++;
-      if (sections > 3) break;
+      if (!bare && sections > 3) break;
       closeList();
       html += '<h4>' + escHtml(line.slice(3)) + '</h4>';
     } else if (/^### /.test(line)) {
@@ -4186,7 +4186,7 @@ function changelogMdToHtml(md){
       + '</div>';
   }
   html = stats + html;
-  html += '<p class="fineprint"><a href="https://github.com/davedellaquila/buddy-system/blob/master/CHANGELOG.md" target="_blank" rel="noopener">Full changelog on GitHub</a></p>';
+  if (!bare) html += '<p class="fineprint"><a href="https://github.com/davedellaquila/buddy-system/blob/master/CHANGELOG.md" target="_blank" rel="noopener">Full changelog on GitHub</a></p>';
   return html;
 }
 function wireChangelogTypeFilter(root){
@@ -4210,6 +4210,36 @@ function wireChangelogTypeFilter(root){
     });
   });
 }
+function whatsnewSeenKey(){ try { return localStorage.getItem('whatsnewSeen'); } catch (e) { return null; } }
+function whatsnewMarkSeen(md){
+  try {
+    const m = String(md || '').match(/^## .*/m);
+    if (m) localStorage.setItem('whatsnewSeen', m[0]);
+  } catch (e) {}
+}
+function whatsnewSplit(md){
+  const seen = whatsnewSeenKey();
+  const lines = String(md || '').split(String.fromCharCode(10));
+  const newLines = [], oldLines = [];
+  let foundSeen = false, inNew = true;
+  for (const line of lines) {
+    if (/^## /.test(line)) {
+      if (seen && line === seen) { foundSeen = true; inNew = false; }
+      else if (!foundSeen) inNew = true;
+    }
+    (inNew ? newLines : oldLines).push(line);
+  }
+  if (seen && !foundSeen) {
+    let sections = 0;
+    newLines.length = 0; oldLines.length = 0; inNew = true;
+    for (const line of lines) {
+      if (/^## /.test(line)) { sections++; inNew = sections <= 3; }
+      (inNew ? newLines : oldLines).push(line);
+    }
+  }
+  const NL = String.fromCharCode(10);
+  return { newMd: newLines.join(NL), oldMd: oldLines.join(NL), hasNew: newLines.some(l => /^- /.test(l)) };
+}
 function openWhatsNew(){
   let m = document.getElementById('whatsnew-modal');
   if (m) m.remove();
@@ -4224,9 +4254,39 @@ function openWhatsNew(){
   m.querySelector('.wn-backdrop').addEventListener('click', close);
   m.addEventListener('keydown', e => { if (e.key === 'Escape') close(); });
   const body = m.querySelector('.wn-body');
+  const head = m.querySelector('.wn-head');
+  // Update button (only shows if a newer build is actually available)
+  const updBtn = document.createElement('button');
+  updBtn.textContent = 'Update';
+  updBtn.style.cssText = 'margin-left:auto;margin-right:8px;padding:6px 14px;border-radius:8px;border:1px solid var(--accent);background:var(--accent);color:#fff;font-weight:600;cursor:pointer;display:none';
+  updBtn.addEventListener('click', () => {
+    try { sessionStorage.setItem('updateClicked', String(Date.now())); } catch (e) {}
+    location.href = location.pathname + '?v=' + Date.now() + location.hash;
+  });
+  head.insertBefore(updBtn, head.querySelector('.wn-x'));
+  fetch('version.txt?_=' + Date.now(), {cache: 'no-store'})
+    .then(r => r.ok ? r.text() : '')
+    .then(t => { if (t.trim() && t.trim() !== '__BUILD__') updBtn.style.display = ''; })
+    .catch(() => {});
   fetch('https://raw.githubusercontent.com/davedellaquila/buddy-system/master/CHANGELOG.md?_' + Date.now(), {cache: 'no-store'})
     .then(r => { if (!r.ok) throw new Error('fetch failed'); return r.text(); })
-    .then(md => { body.innerHTML = changelogMdToHtml(md); wireChangelogTypeFilter(body); })
+    .then(md => {
+      whatsnewMarkSeen(md);
+      const sp = whatsnewSplit(md);
+      let html = '';
+      if (sp.hasNew) {
+        html += '<h4 style="margin-top:0">New since you last looked</h4>' + changelogMdToHtml(sp.newMd, true);
+      } else {
+        html += '<p class="fineprint" style="margin-top:0">You\u2019re up to date \u2014 nothing new since you last looked.</p>';
+      }
+      if (sp.oldMd.trim()) {
+        html += '<details style="margin-top:12px"><summary class="fineprint" style="cursor:pointer">Earlier history</summary>'
+          + changelogMdToHtml(sp.oldMd, true) + '</details>';
+      }
+      html += '<p class="fineprint"><a href="https://github.com/davedellaquila/buddy-system/blob/master/CHANGELOG.md" target="_blank" rel="noopener">Full changelog on GitHub</a></p>';
+      body.innerHTML = html;
+      wireChangelogTypeFilter(body);
+    })
     .catch(() => { body.innerHTML = '<p class="fineprint">Couldn\u2019t load the changelog. <a href="https://github.com/davedellaquila/buddy-system/blob/master/CHANGELOG.md" target="_blank" rel="noopener">View it on GitHub</a>.</p>'; });
   const x = m.querySelector('.wn-x');
   if (x) x.focus();
