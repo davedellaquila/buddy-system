@@ -5636,8 +5636,6 @@ initSbBrandSticky();
   </div>
   <div class="nav-sec" id="buddies-sec">
   <h3 style="cursor:pointer" id="buddies-toggle"><span class="nav-arrow" id="buddies-arrow">\u203a</span> Buddies <span id="attn-pill" class="zero">0</span></h3><div id="buddy-nav"></div></div>
-  <div class="nav-sec" id="views-sec">
-  <h3 style="cursor:pointer" id="views-toggle"><span class="nav-arrow" id="views-arrow">\u203a</span> Views</h3><div id="view-nav"></div></div>
   <div class="sb-search-sticky">
     <div class="sb-search-wrap">
     <input type="search" id="buddy-search" placeholder="Search buddies\u2026" aria-label="Search buddies"
@@ -5646,6 +5644,8 @@ initSbBrandSticky();
     </div>
   </div>
   <div class="nav-sec" id="plans-sec"><h3 style="cursor:pointer" id="plans-toggle"><span id="plans-arrow">\u203a</span> Business Plans</h3><div id="plan-nav"></div></div>
+  <div class="nav-sec" id="views-sec">
+  <h3 style="cursor:pointer" id="views-toggle"><span class="nav-arrow" id="views-arrow">\u203a</span> Views</h3><div id="view-nav"></div></div>
 </aside>
 <div id="sb-resize" title="Drag left or right to resize the sidebar. Double-click to reset to default width."></div>
 <button type="button" id="sb-to-top" title="Scroll sidebar to top" aria-label="Scroll sidebar to top">
