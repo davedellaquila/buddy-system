@@ -717,7 +717,7 @@ body.standalone .sa-bar{display:flex}
 /* Phone tiles AFTER base .ptile so cascade wins (beat inline gap/display too) */
 @media (max-width:639px){
   #project-tiles,#changelog-tiles,#plans-tiles,#manifest-tiles,#project-status-tiles{
-    display:grid !important;grid-template-columns:1fr 1fr !important;
+    display:grid !important;grid-template-columns:1fr 1fr 1fr !important;
     gap:6px !important;max-width:none !important;width:100% !important;
     margin:0 0 12px !important;box-sizing:border-box;flex-wrap:unset !important}
   #project-tiles .ptile,#changelog-tiles .ptile,#plans-tiles .ptile,#manifest-tiles .ptile,
@@ -5494,25 +5494,52 @@ function whatsnewMarkSeen(md){
 }
 function whatsnewSplit(md){
   const seen = whatsnewSeenKey();
-  const lines = String(md || '').split(String.fromCharCode(10));
-  const newLines = [], oldLines = [];
-  let foundSeen = false, inNew = true;
+  const NL = String.fromCharCode(10);
+  const lines = String(md || '').split(NL);
+  // Split into sections: [{header, body[]}]
+  const sections = [];
+  let cur = null;
   for (const line of lines) {
-    if (/^## /.test(line)) {
-      if (seen && line === seen) { foundSeen = true; inNew = false; }
-      else if (!foundSeen) inNew = true;
+    if (/^## /.test(line)) { cur = {header: line, body: []}; sections.push(cur); }
+    else if (cur) cur.body.push(line);
+    else { cur = {header: '', body: [line]}; sections.push(cur); }
+  }
+  // Parse seen key: "header|hash" (new) or bare "header" (legacy).
+  let seenHeader = '', seenHash = '';
+  if (seen) {
+    const pipe = seen.lastIndexOf('|');
+    if (pipe > 0 && /^## /.test(seen.slice(0, pipe))) { seenHeader = seen.slice(0, pipe); seenHash = seen.slice(pipe + 1); }
+    else seenHeader = seen;
+  }
+  const newLines = [], oldLines = [];
+  let foundSeen = false;
+  for (const s of sections) {
+    if (s.header && seenHeader && s.header === seenHeader) {
+      foundSeen = true;
+      // Same header but content changed (new bullets added under it) → still new.
+      const curHash = whatsnewHash(s.body.join(NL));
+      if (seenHash && curHash !== seenHash) {
+        newLines.push(s.header, ...s.body);
+      } else {
+        oldLines.push(s.header, ...s.body);
+      }
+      // Everything after the seen section is old.
+      const idx = sections.indexOf(s);
+      for (let i = idx + 1; i < sections.length; i++) oldLines.push(sections[i].header, ...sections[i].body);
+      break;
     }
-    (inNew ? newLines : oldLines).push(line);
+    if (!foundSeen) newLines.push(s.header, ...s.body);
+    else oldLines.push(s.header, ...s.body);
   }
   if (seen && !foundSeen) {
-    let sections = 0;
-    newLines.length = 0; oldLines.length = 0; inNew = true;
-    for (const line of lines) {
-      if (/^## /.test(line)) { sections++; inNew = sections <= 3; }
-      (inNew ? newLines : oldLines).push(line);
+    // Seen header gone (or legacy mismatch): fall back to newest 3 sections as new.
+    let count = 0;
+    newLines.length = 0; oldLines.length = 0;
+    for (const s of sections) {
+      if (s.header && /^## /.test(s.header)) count++;
+      (count <= 3 ? newLines : oldLines).push(s.header, ...s.body);
     }
   }
-  const NL = String.fromCharCode(10);
   return { newMd: newLines.join(NL), oldMd: oldLines.join(NL), hasNew: newLines.some(l => /^- /.test(l)) };
 }
 function openWhatsNew(){
