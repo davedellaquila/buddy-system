@@ -3953,8 +3953,8 @@ function renderJournal(){
   const n = S.journal.length;
   const items = unseen.map(c => '<li>' + escHtml(c.desc) + changeOldNew(c)
     + '<span class="jtime">' + escHtml(new Date(c.t).toLocaleString()) + '</span></li>').join('');
-  bar.innerHTML = '<button class="linkbtn" id="j-revert">Revert (' + n + ')</button>'
-    + '<button class="linkbtn" id="j-toggle">What changed?</button>'
+  bar.innerHTML = '<button class="linkbtn" id="j-toggle">What changed?</button>'
+    + '<button class="linkbtn" id="j-revert">Revert (' + n + ')</button>'
     + '<ul>' + items + '</ul>'
     + '<button class="linkbtn" id="j-dismiss" style="margin-left:auto">Dismiss</button>';
   bar.classList.add('show');
