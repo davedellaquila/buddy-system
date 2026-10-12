@@ -679,6 +679,11 @@ body.standalone .sa-bar{display:flex}
 .proj-row.drop-target{background:var(--active);box-shadow:inset 0 0 0 2px var(--accent)}
 #view-projects .proj-row[data-buddy]{cursor:pointer}
 .proj-search-sticky{position:sticky;top:0;z-index:5;background:var(--bg);padding:8px 0;border-bottom:1px solid var(--border)}
+@media (max-width:640px){
+  /* Clear the floating panel open buttons (44-48px at top:12px) on phones */
+  .proj-search-sticky{top:64px}
+  body.sb-closed .proj-search-sticky{top:64px}
+}
 .proj-controls{display:flex;gap:8px;align-items:center}
 .proj-controls #proj-search{width:100%;box-sizing:border-box;background:var(--bg);border:1px solid var(--border);color:var(--text);border-radius:8px;padding:7px 30px 7px 10px;font-size:13px}
 .proj-controls #proj-search-clear{position:absolute;right:6px;top:50%;transform:translateY(-50%);border:none;background:transparent;color:var(--muted);font-size:18px;line-height:1;cursor:pointer;padding:4px 8px;border-radius:6px}
