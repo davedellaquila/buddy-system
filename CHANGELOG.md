@@ -3,6 +3,11 @@
 All notable changes to the Buddies dashboard and buddy system. Newest first.
 `FEATURES.md` describes the current state; this file describes how it got there.
 
+## 2026-10-11 (Dump success message goes green)
+
+### Changed
+- **"dumped ✓" now shows in the dashboard's green** (`--grn-tx`): the success confirmation under the dump field picks up the same green used for Live/Cleared states. Text unchanged.
+
 ## 2026-10-11 (Dump placeholder pulses gently)
 
 ### Changed

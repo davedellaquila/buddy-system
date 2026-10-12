@@ -993,6 +993,7 @@ body.standalone .sa-bar{display:flex}
 @keyframes placeholder-pulse{0%,100%{opacity:1}50%{opacity:.35}}
 #bp-ingest::placeholder{animation:placeholder-pulse 3.2s ease-in-out infinite}
 #bp-ingest::-webkit-input-placeholder{animation:placeholder-pulse 3.2s ease-in-out infinite}
+#ingest-status.dumped-ok{color:var(--grn-tx)}
 /* ---------- Secret nerd settings (tap build number 5x to unlock) ---------- */
 #nerd-modal{position:fixed;inset:0;z-index:10000;display:flex;align-items:center;justify-content:center}
 #nerd-modal .nd-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.5)}
@@ -2637,7 +2638,7 @@ function renderBuddy(id){
     + '<div class="bp-sec" data-field="shared"><h3>Shared notes<span class="info-tip" data-tip="Anybody with repo access can see this note. Saved to the buddy’s repo (docs/notes.md).">ⓘ</span></h3>'
     + '<textarea class="notes" id="bp-shared-notes" placeholder="Anybody with repo access can see this note."></textarea>'
     + '<p class="fineprint" id="shared-status"></p></div>'
-    + '<div class="bp-build">Build 20261011.2247</div>'
+    + '<div class="bp-build">Build 20261011.2255</div>'
     + '</div>';
   const nm = document.getElementById('bp-name');
   nm.addEventListener('keydown', e => { if (e.key === 'Enter'){ e.preventDefault(); nm.blur(); } });
@@ -2741,15 +2742,15 @@ function renderBuddy(id){
     ta.addEventListener('input', () => {
       clearTimeout(t);
       const txt = ta.value.trim();
-      if (!txt || txt === lastDumped) { if (st && !txt) st.textContent = ''; return; }
-      if (st) st.textContent = 'waiting…';
+      if (!txt || txt === lastDumped) { if (st && !txt) { st.textContent = ''; st.classList.remove('dumped-ok'); } return; }
+      if (st) { st.textContent = 'waiting…'; st.classList.remove('dumped-ok'); }
       t = setTimeout(async () => {
         const cur = ta.value.trim();
         if (!cur || cur === lastDumped) return;
-        if (st) st.textContent = 'dumping…';
+        if (st) { st.textContent = 'dumping…'; st.classList.remove('dumped-ok'); }
         await dumpIngest(bid, false);
         lastDumped = ta.value.trim();
-        if (st && lastDumped) st.textContent = 'dumped ✓';
+        if (st && lastDumped) { st.textContent = 'dumped ✓'; st.classList.add('dumped-ok'); }
       }, 2000);
     });
     ta.addEventListener('keydown', async e => {
@@ -2758,10 +2759,10 @@ function renderBuddy(id){
         clearTimeout(t);
         const cur = ta.value.trim();
         if (!cur || cur === lastDumped) return;
-        if (st) st.textContent = 'dumping…';
+        if (st) { st.textContent = 'dumping…'; st.classList.remove('dumped-ok'); }
         await dumpIngest(bid, false);
         lastDumped = '';
-        if (st) st.textContent = 'dumped ✓';
+        if (st) { st.textContent = 'dumped ✓'; st.classList.add('dumped-ok'); }
       }
     });
   })(id);
@@ -3573,7 +3574,7 @@ function renderPlan(id){
     + '<p class="fineprint">Saved on this device. (For your eyes only)</p></div>'
     + '<div class="bp-sec"><h3>Shared notes<span class="info-tip" data-tip="Visible to everyone with access to this project.">\u24d8</span></h3><textarea class="notes" id="bp-shared" placeholder="Shared notes\u2026 (visible to everyone with access)">'+escHtml((S.planShared||{})[id]||'')+'</textarea>'
     + '<p class="fineprint">Shared — visible to everyone with access.</p></div>'
-    + '<div class="bp-build">Build 20261011.2247</div>'
+    + '<div class="bp-build">Build 20261011.2255</div>'
     + '</div>';
   const nt = document.getElementById('bp-notes');
   let t = null;
@@ -5053,7 +5054,7 @@ function openWhatsNew(){
   head.insertBefore(updBtn, head.querySelector('.wn-x'));
   fetch('version.txt?_=' + Date.now(), {cache: 'no-store'})
     .then(r => r.ok ? r.text() : '')
-    .then(t => { if (t.trim() && t.trim() !== '20261011.2247') updBtn.style.display = ''; })
+    .then(t => { if (t.trim() && t.trim() !== '20261011.2255') updBtn.style.display = ''; })
     .catch(() => {});
   fetch('https://raw.githubusercontent.com/davedellaquila/buddy-system/master/CHANGELOG.md?_' + Date.now(), {cache: 'no-store'})
     .then(r => { if (!r.ok) throw new Error('fetch failed'); return r.text(); })
@@ -5081,7 +5082,7 @@ function openWhatsNew(){
   if (x) x.focus();
 }
 function initVersionCheck(){
-  const myBuild = '20261011.2247';
+  const myBuild = '20261011.2255';
   function showUpdateBanner(serverBuild){
     if (document.getElementById('update-banner')) return;
     const b = document.createElement('div');

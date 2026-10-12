@@ -845,6 +845,7 @@ body.standalone .sa-bar{display:flex}
 @keyframes placeholder-pulse{0%,100%{opacity:1}50%{opacity:.35}}
 #bp-ingest::placeholder{animation:placeholder-pulse 3.2s ease-in-out infinite}
 #bp-ingest::-webkit-input-placeholder{animation:placeholder-pulse 3.2s ease-in-out infinite}
+#ingest-status.dumped-ok{color:var(--grn-tx)}
 /* ---------- Secret nerd settings (tap build number 5x to unlock) ---------- */
 #nerd-modal{position:fixed;inset:0;z-index:10000;display:flex;align-items:center;justify-content:center}
 #nerd-modal .nd-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.5)}
@@ -2393,15 +2394,15 @@ function renderBuddy(id){
     ta.addEventListener('input', () => {
       clearTimeout(t);
       const txt = ta.value.trim();
-      if (!txt || txt === lastDumped) { if (st && !txt) st.textContent = ''; return; }
-      if (st) st.textContent = 'waiting\u2026';
+      if (!txt || txt === lastDumped) { if (st && !txt) { st.textContent = ''; st.classList.remove('dumped-ok'); } return; }
+      if (st) { st.textContent = 'waiting\u2026'; st.classList.remove('dumped-ok'); }
       t = setTimeout(async () => {
         const cur = ta.value.trim();
         if (!cur || cur === lastDumped) return;
-        if (st) st.textContent = 'dumping\u2026';
+        if (st) { st.textContent = 'dumping\u2026'; st.classList.remove('dumped-ok'); }
         await dumpIngest(bid, false);
         lastDumped = ta.value.trim();
-        if (st && lastDumped) st.textContent = 'dumped \u2713';
+        if (st && lastDumped) { st.textContent = 'dumped \u2713'; st.classList.add('dumped-ok'); }
       }, 2000);
     });
     ta.addEventListener('keydown', async e => {
@@ -2410,10 +2411,10 @@ function renderBuddy(id){
         clearTimeout(t);
         const cur = ta.value.trim();
         if (!cur || cur === lastDumped) return;
-        if (st) st.textContent = 'dumping\u2026';
+        if (st) { st.textContent = 'dumping\u2026'; st.classList.remove('dumped-ok'); }
         await dumpIngest(bid, false);
         lastDumped = '';
-        if (st) st.textContent = 'dumped \u2713';
+        if (st) { st.textContent = 'dumped \u2713'; st.classList.add('dumped-ok'); }
       }
     });
   })(id);
