@@ -3387,7 +3387,7 @@ function gridKids(b){
     + gridKids(c) + '</div></li>').join('') + '</ul>';
 }
 function orgNode(b, depth){
-  const kids = kidsOf[b.id] || [];
+  const kids = visibleKids(b.id);
   const kc = kids.length ? '<span class="kcount">' + kids.length + '</span>' : '';
   const collapsed = kids.length && S.collapsedNodes && S.collapsedNodes[b.id];
   const pill = kids.length ? '<button class="collapse-pill" data-collapse="' + b.id + '" title="' + (collapsed ? 'Expand' : 'Collapse') + ' children">'
@@ -3494,12 +3494,68 @@ function quickAnswersHtml(){
   ).join('');
   return '<div id="quick-answers"><div class="qa-label">Quick answers</div><div class="qa-links">'+links+'</div></div>';
 }
+function getSearchWords(){
+  const el = document.getElementById('buddy-search');
+  const q = (el ? el.value : '' || '').toLowerCase().trim();
+  return q.split(/\s+/).filter(Boolean);
+}
+function buddyMatchesSearch(b, words){
+  if (!words.length) return true;
+  const hay = (dispName(b) + ' ' + (b.name || '') + ' ' + (b.tagline || '') + ' ' + effAka(b).join(' ')).toLowerCase();
+  return words.every(w => hay.includes(w));
+}
+// Returns Set of visible buddy IDs under the current search filter, or null if no filter.
+// Visible = matching buddies + their ancestors (for hierarchy context) + their descendants.
+function getVisibleBuddyIds(){
+  const words = getSearchWords();
+  if (!words.length) return null;
+  const visible = new Set();
+  // Mark matching buddies and their descendants
+  function mark(id){
+    const b = byId[id];
+    if (!b) return false;
+    const selfMatch = buddyMatchesSearch(b, words);
+    let childMatch = false;
+    (kidsOf[id] || []).forEach(k => { if (mark(k.id)) childMatch = true; });
+    if (selfMatch || childMatch){
+      visible.add(id);
+      // Add all descendants of a matching buddy
+      if (selfMatch){
+        (function addDesc(pid){
+          (kidsOf[pid] || []).forEach(k => { visible.add(k.id); addDesc(k.id); });
+        })(id);
+      }
+      return true;
+    }
+    return false;
+  }
+  ROOT_ORDER.forEach(id => mark(id));
+  // Add ancestors of visible buddies for hierarchy context
+  const toAdd = [];
+  visible.forEach(id => {
+    let p = byId[id] ? effParent(byId[id]) : null;
+    while (p && !visible.has(p.id)){
+      toAdd.push(p.id);
+      p = effParent(p);
+    }
+  });
+  toAdd.forEach(id => visible.add(id));
+  return visible;
+}
+// Filtered children accessor — respects the search filter for Atlas lenses
+function visibleKids(id){
+  const kids = kidsOf[id] || [];
+  const vis = getVisibleBuddyIds();
+  if (!vis) return kids;
+  return kids.filter(k => vis.has(k.id));
+}
 function renderOrgTree(){
   const root = byId[ROOT_ID];
   const chartType = getChartType();
   // The org chart shows the real hierarchy: every direct report of the root,
   // side by side. Only truly parentless buddies land in the orphan section.
-  const kids = kidsOf[ROOT_ID] || [];
+  // Respects the buddy-list search filter (Dave's request 2026-10-12).
+  const kids = visibleKids(ROOT_ID);
   let chartHtml;
   if (chartType === 'org') {
     // No root tile — the top level is the staff itself, side by side.
@@ -3612,7 +3668,7 @@ function renderChartMain(type, root, kids){
 /* Ledger — indented list, the hierarchy as a perfected outline */
 function ledgerHtml(root){
   function row(b, depth){
-    const kids = kidsOf[b.id] || [];
+    const kids = visibleKids(b.id);
     const collapsed = kids.length && S.collapsedNodes && S.collapsedNodes[b.id];
     const chev = kids.length
       ? '<button class="ledger-chev' + (collapsed ? ' collapsed' : '') + '" data-collapse="' + b.id + '" title="' + (collapsed ? 'Expand' : 'Collapse') + '"><i>\u203a</i></button>'
@@ -3632,7 +3688,7 @@ function ledgerHtml(root){
 /* Lineage — horizontal org chart. Root on the left, generations flow right. */
 function lineageHtml(root, kids){
   function hNode(b){
-    const ch = kidsOf[b.id] || [];
+    const ch = visibleKids(b.id);
     return '<div class="hgen">'
       + '<div class="node" data-buddy="' + b.id + '"><div class="name">' + iconName(b) + '</div>'
       + '<div class="desc">' + escHtml(b.tagline || '') + '</div></div>'
@@ -3654,7 +3710,7 @@ function colonnadeHtml(root){
   let cols = '';
   valid.forEach((id, i) => {
     const b = byId[id];
-    const kids = kidsOf[id] || [];
+    const kids = visibleKids(id);
     const isLast = i === valid.length - 1;
     cols += '<div class="mcol' + (isLast ? ' mcol-active' : '') + '">'
       + '<div class="mcol-head">' + iconName(b) + '</div>'
@@ -3668,11 +3724,11 @@ function colonnadeHtml(root){
 function terrainHtml(root){
   function size(b){
     let n = 1;
-    (kidsOf[b.id] || []).forEach(k => { n += size(k); });
+    visibleKids(b.id).forEach(k => { n += size(k); });
     return n;
   }
   function tile(b){
-    const kids = kidsOf[b.id] || [];
+    const kids = visibleKids(b.id);
     const s = size(b);
     if (!kids.length) {
       return '<div class="tm-tile tm-leaf" data-buddy="' + b.id + '" style="flex:' + s + '">'
@@ -3705,7 +3761,7 @@ function initHalo(){
   // Rings: center, children, grandchildren
   function ring(b, r0, r1, a0, a1, depth){
     if (depth > 2) return;
-    const kids = kidsOf[b.id] || [];
+    const kids = visibleKids(b.id);
     if (!kids.length) return;
     const span = (a1 - a0) / kids.length;
     kids.forEach((k, i) => {
@@ -3763,7 +3819,7 @@ function initConstellation(){
     seen[b.id] = true;
     nodes.push({id: b.id, b: b, x: W/2 + (Math.random()-0.5)*W*0.6, y: H/2 + (Math.random()-0.5)*H*0.6,
       vx: 0, vy: 0, r: depth === 0 ? 14 : Math.max(6, 10 - depth)});
-    if (depth < 4) (kidsOf[b.id] || []).forEach(k => {
+    if (depth < 4) visibleKids(b.id).forEach(k => {
       if (!seen[k.id] && nodes.length < 120) edges.push([b.id, k.id]);
       walk(k, depth + 1);
     });
@@ -3998,7 +4054,7 @@ function renderProjects(){
     (function walk(id, depth){
       const b = byId[id]; if (!b) return;
       if (showIds && !showIds[id]) return;
-      const kids = kidsOf[id] || [];
+      const kids = visibleKids(id);
       const hasKids = kids.length > 0;
       const collapsed = (projFilter || statusFilter) ? false : !!S.projCollapsed[id];
       s += '<div class="proj-row d' + Math.min(depth, 3) + '" data-buddy="' + b.id + '">'
@@ -6602,12 +6658,16 @@ function initSearch(){
       bs.value = '';
       bs.dispatchEvent(new Event('input', {bubbles: true}));
       sync(); bs.focus();
+      // Clearing the filter restores the full Atlas view
+      if (S.view === 'tree' || S.sel === 'view:tree') renderOrgTree();
     });
   }
   if (bs && !bs.dataset.init) {
     bs.dataset.init = '1';
     bs.addEventListener('input', () => {
       renderNav();
+      // Atlas view follows the buddy-list filter (Dave's request 2026-10-12)
+      if (S.view === 'tree' || S.sel === 'view:tree') renderOrgTree();
       if (S.sel === 'view:tree') { const m = firstSearchMatch(); if (m) centerOnBuddy(m); }
     });
   }
