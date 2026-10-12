@@ -2624,7 +2624,7 @@ async function setBuddyPersona(id, name){
 function renderBuddy(id){
   const b = byId[id]; if(!b) return;
   try{ setBuddyFavicon(buddyDisplayIcon(b), buddyImageUrl(b)); }catch(e){}
-  const items = (b.attention || []).slice().sort((x,y) => (S.seen[x.id]?1:0) - (S.seen[y.id]?1:0));
+  const items = (b.attention || []).filter(a => !S.seen[a.id]);
   let arts = '';
   if (b.brief) arts += artRow(ICON_DOC, 'Mission statement', 'The canonical mission & intent — Google Doc', b.brief);
   if (b.homepageSource) arts += artRow(ICON_LINK, 'Homepage', 'Buddy homepage — opens on Muse', b.homepageSource);
@@ -2721,22 +2721,17 @@ function renderBuddy(id){
   if (!items.length) attn = '';
   else {
     attn = items.map(a => {
-      const seen = !!S.seen[a.id];
       const txt = escHtml(a.text || '');
       const body = a.url
         ? '<div class="attn-text"><a href="'+escHtml(a.url)+'" target="_blank" rel="noopener">'+txt+' <span class="attn-open">\u2197</span></a></div>'
         : '<div class="attn-text">'+txt+'</div>';
-      const seenAt = S.seen[a.id];
-      const doneNote = (seen && seenAt && typeof seenAt === 'number')
-        ? '<div class="attn-date">Done '+fmtSeenTime(seenAt)+'</div>' : '';
-      return '<div class="attn'+(seen?' seen':' unseen')+'" data-attn="'+a.id+'"><span class="adot"></span>'
+      return '<div class="attn unseen" data-attn="'+a.id+'"><span class="adot"></span>'
         + '<div class="attn-body">'+body
-        + (a.date ? '<div class="attn-date">Asked '+escHtml(a.date)+'</div>' : '')+doneNote+'</div>'
-        + '<button class="seenbtn'+(seen?' done':'')+'" data-seen="'+a.id+'" title="Mark seen" aria-label="Mark seen">'+(seen?'\u2713':'\u25cb')+'</button></div>';
+        + (a.date ? '<div class="attn-date">Asked '+escHtml(a.date)+'</div>' : '')+'</div>'
+        + '<button class="seenbtn" data-done="'+a.id+'" title="Mark done" aria-label="Mark done" role="checkbox" aria-checked="false">\u25cb</button></div>';
     }).join('');
-    const un = items.filter(a => !S.seen[a.id]).length;
-    unseenCount = un;
-    if (un > 1) attn += '<div class="attn-all"><button class="seenbtn" data-seen-all="'+id+'">Mark all seen</button></div>';
+    unseenCount = items.length;
+    if (items.length > 1) attn += '<div class="attn-all"><button class="seenbtn" data-done-all="'+id+'">Mark all done</button></div>';
   }
   document.getElementById('buddy-home').innerHTML =
     '<div class="bp-wrap">'
@@ -3058,6 +3053,63 @@ function toast(msg){
   t.className = 'toast'; t.textContent = msg;
   document.body.appendChild(t);
   setTimeout(() => { if (t.parentNode) t.remove(); }, 3400);
+}
+// Jonny's done interaction (2026-10-12): tap circle -> accent fill + white check
+// (200ms) -> tile glides out -> "Marked done. Undo." 6s toast. Undo restores.
+function toastWithUndo(msg, onUndo){
+  document.querySelectorAll('.toast').forEach(t => t.remove());
+  const t = document.createElement('div');
+  t.className = 'toast';
+  t.innerHTML = '<span>' + escHtml(msg) + '</span> <button style="margin-left:10px;background:none;border:none;color:var(--accent);font-weight:700;cursor:pointer;font-size:14px;padding:4px 8px">Undo</button>';
+  document.body.appendChild(t);
+  const btn = t.querySelector('button');
+  const kill = setTimeout(() => { if (t.parentNode) t.remove(); }, 6000);
+  btn.addEventListener('click', () => { clearTimeout(kill); t.remove(); onUndo(); });
+}
+function markAttentionDone(attnId, btnEl){
+  // Step 1: fill the circle with accent + white check (~200ms)
+  if (btnEl) {
+    btnEl.style.transition = 'background .2s, color .2s, border-color .2s';
+    btnEl.style.background = 'var(--accent)';
+    btnEl.style.borderColor = 'var(--accent)';
+    btnEl.style.color = '#fff';
+    btnEl.textContent = '\u2713';
+    btnEl.setAttribute('aria-checked', 'true');
+  }
+  setTimeout(() => {
+    // Step 2: record the done timestamp (answers Dave's question: yes, we record when)
+    const doneAt = Date.now();
+    S.seen[attnId] = doneAt;
+    save();
+    // Step 3: glide the tile out, then rerender
+    const tile = btnEl ? btnEl.closest('.attn') : null;
+    if (tile) {
+      tile.style.transition = 'opacity .25s, transform .25s';
+      tile.style.opacity = '0';
+      tile.style.transform = 'translateX(24px)';
+      setTimeout(() => { renderBuddy(S.sel.slice(6)); renderNav(); updateAppBadge(); }, 250);
+    } else {
+      renderBuddy(S.sel.slice(6)); renderNav(); updateAppBadge();
+    }
+    // Step 4: 6-second Undo toast
+    toastWithUndo('Marked done.', () => {
+      delete S.seen[attnId];
+      save();
+      renderBuddy(S.sel.slice(6)); renderNav(); updateAppBadge();
+    });
+  }, 200);
+}
+function markAllAttentionDone(buddyId){
+  const ids = (byId[buddyId].attention || []).map(a => a.id);
+  const doneAt = Date.now();
+  ids.forEach(id => S.seen[id] = doneAt);
+  save();
+  renderBuddy(S.sel.slice(6)); renderNav(); updateAppBadge();
+  toastWithUndo('Marked all done.', () => {
+    ids.forEach(id => delete S.seen[id]);
+    save();
+    renderBuddy(S.sel.slice(6)); renderNav(); updateAppBadge();
+  });
 }
 // Persistent top banner (e.g. dev-mode simulation). Sticky, high-contrast, dismissible via hideBanner.
 function showBanner(id, html, sticky){
@@ -6177,7 +6229,21 @@ function openWhatsNew(){
   head.insertBefore(updBtn, head.querySelector('.wn-x'));
   fetch('version.txt?_=' + Date.now(), {cache: 'no-store'})
     .then(r => r.ok ? r.text() : '')
-    .then(t => { if (t.trim() && t.trim() !== '__BUILD__') updBtn.style.display = ''; })
+    .then(t => {
+      const serverBuild = t.trim();
+      if (serverBuild && serverBuild !== '__BUILD__') {
+        updBtn.style.display = '';
+        updBtn.title = 'Update to build ' + serverBuild;
+      }
+      // Show build numbers at the top of the sheet (Dave's request 2026-10-12)
+      const myBuild = '__BUILD__';
+      let buildLine = '<p class="fineprint" style="margin-top:0">You\u2019re on build ' + escHtml(myBuild) + '.';
+      if (serverBuild && serverBuild !== '__BUILD__' && serverBuild !== myBuild) {
+        buildLine += ' Build ' + escHtml(serverBuild) + ' is available.';
+      }
+      buildLine += '</p>';
+      body.insertAdjacentHTML('afterbegin', buildLine);
+    })
     .catch(() => {});
   fetch('https://raw.githubusercontent.com/davedellaquila/buddy-system/master/CHANGELOG.md?_' + Date.now(), {cache: 'no-store'})
     .then(r => { if (!r.ok) throw new Error('fetch failed'); return r.text(); })
@@ -6210,7 +6276,7 @@ function initVersionCheck(){
     if (document.getElementById('update-banner')) return;
     const b = document.createElement('div');
     b.id = 'update-banner';
-    b.innerHTML = '<span>A newer version of Buddies is available (' + escHtml(serverBuild) + ').</span> '
+    b.innerHTML = '<span>You\u2019re on build ' + escHtml(myBuild) + '. Build ' + escHtml(serverBuild) + ' is available.</span> '
       + '<button id="update-whatsnew" style="margin-left:12px;background:none;border:none;color:var(--accent);font-size:14px;cursor:pointer;text-decoration:underline;padding:6px 4px">What\u2019s new</button>'
       + '<button id="update-now" style="margin-left:12px;padding:6px 14px;border-radius:8px;border:1px solid var(--accent);background:var(--accent);color:#fff;font-weight:600;cursor:pointer">Update now</button>'
       + '<button id="update-dismiss" aria-label="Dismiss" style="margin-left:8px;padding:6px 10px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--text);font-size:16px;cursor:pointer;line-height:1">×</button>';
@@ -6692,10 +6758,10 @@ document.addEventListener('click', e => {
     if (window.innerWidth < 640) { const sbo=document.getElementById('sidebar'); if(sbo) sbo.classList.remove('open'); const sco=document.getElementById('sb-scrim'); if(sco) sco.classList.remove('show'); }
     return;
   }
-  const sb = e.target.closest('[data-seen]');
-  if (sb) { S.seen[sb.dataset.seen] = Date.now(); save(); renderBuddy(S.sel.slice(6)); renderNav(); updateAppBadge(); return; }
-  const sa = e.target.closest('[data-seen-all]');
-  if (sa) { (byId[sa.dataset.seenAll].attention || []).forEach(a => S.seen[a.id] = Date.now()); save(); renderBuddy(S.sel.slice(6)); renderNav(); updateAppBadge(); return; }
+  const sb = e.target.closest('[data-done]');
+  if (sb) { markAttentionDone(sb.dataset.done, sb); return; }
+  const sa = e.target.closest('[data-done-all]');
+  if (sa) { markAllAttentionDone(sa.dataset.doneAll); return; }
   const gt = e.target.closest('[data-goto]');
   if (gt) { e.preventDefault(); show('buddy:' + gt.dataset.goto); return; }
   const nb = e.target.closest('[data-navbtn]');

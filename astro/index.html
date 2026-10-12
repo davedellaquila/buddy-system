@@ -377,13 +377,17 @@
             '<div class="feed-body"><div class="feed-buddy"><a href="'+home+'" target="_blank" rel="noopener">'+esc(a.name)+'</a></div>'+
             '<div class="feed-text">'+txt+'</div>'+
             (a.date?'<div class="feed-date">'+esc(a.date)+'</div>':'')+
-            '<div class="attn-actions"><button type="button" class="attn-btn primary" data-act="done">✓ Done</button>'+
-            '<button type="button" class="attn-btn" data-act="info">Need more info</button></div>'+
+            '<div class="attn-actions"><button type="button" class="attn-circle" data-act="done" title="Mark done" aria-label="Mark done" role="checkbox" aria-checked="false">○</button>'+
+            '<button type="button" class="attn-link" data-act="info">Need more info</button></div>'+
             '<div class="attn-status" role="status"></div></div></div>';
         }).join("")+
         (attn.length>show.length?'<div class="feed-more">+ '+(attn.length-show.length)+' more — see them all on the <a href="../">dashboard</a>.</div>':'');
       }
-      /* ---------- attention actions: Done / Need more info → docs/ingest.md ---------- */
+      .attn-circle{width:44px;height:44px;min-width:44px;border-radius:50%;border:2px solid var(--border,#ccc);background:transparent;color:inherit;font-size:22px;line-height:1;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;transition:background .2s,color .2s,border-color .2s;padding:0}
+.attn-circle:hover{border-color:var(--accent,#007aff)}
+.attn-link{background:none;border:none;color:var(--text-muted,#888);font-size:13px;cursor:pointer;text-decoration:underline;padding:8px 4px;margin-left:8px}
+.attn-link:hover{color:var(--text,#000)}
+/* ---------- attention actions: Done / Need more info → docs/ingest.md ---------- */
       (function initAttnActions(){
         var tiles = document.querySelectorAll('.feed-item[data-aid]');
         if (!tiles.length) return;
@@ -450,14 +454,34 @@
           var text = textEl ? textEl.textContent.trim() : '';
           if (isResolved(aid, text)) { paintResolved(tile, 'Marked done'); return; }
           tile.addEventListener('click', function(ev){
-            var btn = ev.target.closest ? ev.target.closest('.attn-btn') : null;
+            var btn = ev.target.closest ? ev.target.closest('.attn-circle, .attn-link') : null;
             if (!btn || btn.disabled) return;
             var act = btn.getAttribute('data-act');
             var idBit = aid ? ' (attention id: ' + aid + ')' : '';
             if (act === 'done') {
-              sendAction(tile,
-                'DONE — Dave marked this done on the homepage: "' + text + '"' + idBit + '. Please remove it from the attention list in buddies.json.',
-                'Marked done — the buddy will clear it.').then(function(ok){ if (ok) { setResolved(aid, text); paintResolved(tile, 'Marked done — the buddy will clear it.'); } });
+              // Jonny's circle: fill accent + white check (200ms), then glide out
+              btn.style.background = 'var(--accent,#007aff)';
+              btn.style.borderColor = 'var(--accent,#007aff)';
+              btn.style.color = '#fff';
+              btn.textContent = '\u2713';
+              btn.setAttribute('aria-checked', 'true');
+              setTimeout(function(){
+                sendAction(tile,
+                  'DONE — Dave marked this done on the homepage: "' + text + '"' + idBit + '. Please remove it from the attention list in buddies.json.',
+                  'Marked done — the buddy will clear it.').then(function(ok){
+                    if (ok) {
+                      setResolved(aid, text);
+                      tile.style.transition = 'opacity .25s, transform .25s';
+                      tile.style.opacity = '0';
+                      tile.style.transform = 'translateX(24px)';
+                      setTimeout(function(){ paintResolved(tile, 'Marked done — the buddy will clear it.'); tile.style.display = 'none'; }, 250);
+                    } else {
+                      // Restore the circle on failure
+                      btn.style.background = ''; btn.style.borderColor = ''; btn.style.color = '';
+                      btn.textContent = '\u25cb'; btn.setAttribute('aria-checked', 'false');
+                    }
+                  });
+              }, 200);
             } else if (act === 'info') {
               sendAction(tile,
                 'FOLLOW-UP — Dave needs more info on: "' + text + '"' + idBit + '. Please follow up with him.',
