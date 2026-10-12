@@ -1430,7 +1430,7 @@ function closeDetail(){
 const FIELD_DEFS = [
   {id:'ingest', label:'Ingest'},
   {id:'attention', label:'Needs your attention'},
-  {id:'reports', label:'Direct reports'},
+  {id:'reports', label:'Children'},
   {id:'siblings', label:'Siblings'},
   {id:'parent', label:'Parent'},
   {id:'links', label:'Linked buddies'},
@@ -2433,7 +2433,7 @@ function renderBuddy(id){
       + '<span class="art-ic">'+escHtml(k.icon || '')+'</span>'
       + '<span><span class="art-label">'+escHtml(dispName(k))+'</span><div class="art-sub">'+escHtml((k.tagline || k.mission || '').slice(0, 90))+'</div></span>'
       + '<span class="art-go" data-homepage="'+escHtml(k.id)+'" title="Open homepage">\\u2192</span></a>').join('');
-    reportsSec = '<div class="bp-sec" data-field="reports"><h3>Direct reports' + (kids.length ? ' <span class="attn-count">('+kids.length+')</span>' : '') + addBtn + '</h3>' + (rows || '<p class="bp-empty">No direct reports yet.</p>') + '</div>';
+    reportsSec = '<div class="bp-sec" data-field="reports"><h3>Children' + (kids.length ? ' <span class="attn-count">('+kids.length+')</span>' : '') + addBtn + '</h3>' + (rows || '<p class="bp-empty">No children yet.</p>') + '</div>';
   })();
   let parSec = '';
   (function(){
