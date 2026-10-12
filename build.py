@@ -2852,6 +2852,7 @@ function renderOrgTree(){
   document.getElementById('treezoom-main').innerHTML = chartHtml;
   document.getElementById('treezoom-orph').innerHTML = orphHtml;
   applyTreeSplit();
+  updateZoomMin();
   restoreScrollPos('tree:main', document.getElementById('treezoom-main'));
   restoreScrollPos('tree:orph', document.getElementById('treezoom-orph'));
 }
@@ -3032,6 +3033,26 @@ function applyZoom(){
   if (r1) r1.value = S.zoom || 100;
   if (r2) r2.value = S.zoomOrph || 100;
 }
+function fitZoomFor(paneId){
+  const sc = document.getElementById(paneId);
+  const content = sc ? (sc.querySelector('.chart') || sc.querySelector('.standalones')) : null;
+  if (!sc || !content) return 25;
+  const z = 1; // measure at natural size
+  const natW = content.scrollWidth, natH = content.scrollHeight;
+  const vw = sc.clientWidth, vh = sc.clientHeight;
+  if (!natW || !natH || !vw || !vh) return 25;
+  return Math.max(5, Math.min(100, Math.floor(Math.min(vw / natW, vh / natH) * 100 / 5) * 5));
+}
+function updateZoomMin(){
+  [['treezoom-main','zoomrange-main','zoom'],['treezoom-orph','zoomrange-orph','zoomOrph']].forEach(([pane, range, key]) => {
+    const r = document.getElementById(range);
+    if (!r) return;
+    const fit = fitZoomFor(pane);
+    r.min = fit;
+    if ((S[key] || 100) < fit) { S[key] = fit; }
+  });
+  save(); applyZoom();
+}
 function zoomToFit(paneId, zoomKey){
   const sc = document.getElementById(paneId);
   const content = sc ? (sc.querySelector('.chart') || sc.querySelector('.standalones')) : null;
@@ -3041,7 +3062,7 @@ function zoomToFit(paneId, zoomKey){
   const vw = sc.clientWidth, vh = sc.clientHeight;
   if (!natW || !natH || !vw || !vh) return;
   const fit = Math.min(vw / natW, vh / natH) * 100;
-  S[zoomKey] = Math.min(160, Math.max(25, Math.round(fit / 5) * 5));
+  S[zoomKey] = Math.min(160, Math.max(5, Math.round(fit / 5) * 5));
   save(); applyZoom();
   toast('Zoomed to fit (' + S[zoomKey] + '%).');
 }
@@ -3050,7 +3071,7 @@ function zoomToFit(paneId, zoomKey){
   function zoombarHTML(sfx, label){
     return '<div class="zoombar" id="zoombar-' + sfx + '" title="Zoom — pinch with two fingers, or Shift+scroll">'
       + '<span class="z-in" aria-hidden="true">\u25fc</span>'
-      + '<input type="range" class="zrange" id="zoomrange-' + sfx + '" min="25" max="160" step="5" value="100" aria-label="' + label + '" orient="vertical">'
+      + '<input type="range" class="zrange" id="zoomrange-' + sfx + '" min="5" max="160" step="5" value="100" aria-label="' + label + '" orient="vertical">'
       + '<span class="z-out" aria-hidden="true">\u25aa</span>'
       + '<button type="button" class="zfit" id="zoomfit-' + sfx + '" title="Zoom to fit" aria-label="Zoom to fit">\u26f6</button></div>';
   }
@@ -3621,7 +3642,7 @@ document.addEventListener('keydown', e => {
   if (e.key === 'Escape') { closeDetail(); return; }
   if (e.key === '/' && !e.target.matches('input, textarea, [contenteditable="true"]')) { e.preventDefault(); const bs = document.getElementById('buddy-search'); if (bs) bs.focus(); return; }
   if (e.key === '+' || e.key === '=') { S.zoom = Math.min(160, (S.zoom || 100) + 5); save(); applyZoom(); return; }
-  if (e.key === '-' || e.key === '_') { S.zoom = Math.max(25, (S.zoom || 100) - 5); save(); applyZoom(); return; }
+  if (e.key === '-' || e.key === '_') { S.zoom = Math.max(5, (S.zoom || 100) - 5); save(); applyZoom(); return; }
   if (e.key === '0') { zoomToFit(); return; }
   if (/^[1-9]$/.test(e.key)) {
     const vbtns = Array.from(document.querySelectorAll('#view-nav .navbtn[data-view]'));
