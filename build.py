@@ -2101,6 +2101,18 @@ function renderBuddy(id){
       + '<span><span class="art-label">'+escHtml(dispName(k))+'</span><div class="art-sub">'+escHtml((k.tagline || k.mission || '').slice(0, 90))+'</div></span>'
       + '<span class="art-go" data-homepage="'+escHtml(k.id)+'" title="Open homepage">\\u2192</span></a>').join('') + '</div>';
   })();
+  let parSec = '';
+  (function(){
+    const par = effParent(b);
+    if (!par) return;
+    const pb = byId[par];
+    if (!pb) return;
+    parSec = '<div class="bp-sec" data-field="parent"><h3>Parent</h3>'
+      + '<a class="art-row" data-buddy="'+escHtml(par)+'">'
+      + '<span class="art-ic">'+escHtml(pb.icon || '')+'</span>'
+      + '<span><span class="art-label">'+escHtml(dispName(pb))+'</span><div class="art-sub">'+escHtml((pb.tagline || pb.mission || '').slice(0, 90))+'</div></span>'
+      + '<span class="art-go" data-homepage="'+escHtml(par)+'" title="Open homepage">\\u2192</span></a></div>';
+  })();
   let sibSec = '';
   (function(){
     const par = effParent(b);
@@ -2191,6 +2203,7 @@ function renderBuddy(id){
     + '<div id="ingest-feed" style="margin-top:8px"></div></div>'
     + '<div class="bp-sec" data-field="mission"><h3>About<span class="info-tip" data-tip="The mission statement\\u2019s executive summary \\u2014 tweak it through the buddy\\u2019s chat thread and it updates everywhere.">\\u24d8</span></h3><p class="bp-mission">'+escHtml(b.mission)+'</p></div>'
     + reportsSec
+    + parSec
     + sibSec
     + linkSec
     + '<div class="bp-sec" data-field="homepage"><h3>Homepage URL</h3>'

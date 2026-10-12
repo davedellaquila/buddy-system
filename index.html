@@ -2446,6 +2446,18 @@ function renderBuddy(id){
       + '<span><span class="art-label">'+escHtml(dispName(k))+'</span><div class="art-sub">'+escHtml((k.tagline || k.mission || '').slice(0, 90))+'</div></span>'
       + '<span class="art-go" data-homepage="'+escHtml(k.id)+'" title="Open homepage">\u2192</span></a>').join('') + '</div>';
   })();
+  let parSec = '';
+  (function(){
+    const par = effParent(b);
+    if (!par) return;
+    const pb = byId[par];
+    if (!pb) return;
+    parSec = '<div class="bp-sec" data-field="parent"><h3>Parent</h3>'
+      + '<a class="art-row" data-buddy="'+escHtml(par)+'">'
+      + '<span class="art-ic">'+escHtml(pb.icon || '')+'</span>'
+      + '<span><span class="art-label">'+escHtml(dispName(pb))+'</span><div class="art-sub">'+escHtml((pb.tagline || pb.mission || '').slice(0, 90))+'</div></span>'
+      + '<span class="art-go" data-homepage="'+escHtml(par)+'" title="Open homepage">\u2192</span></a></div>';
+  })();
   let sibSec = '';
   (function(){
     const par = effParent(b);
@@ -2536,6 +2548,7 @@ function renderBuddy(id){
     + '<div id="ingest-feed" style="margin-top:8px"></div></div>'
     + '<div class="bp-sec" data-field="mission"><h3>About<span class="info-tip" data-tip="The mission statement\u2019s executive summary \u2014 tweak it through the buddy\u2019s chat thread and it updates everywhere.">\u24d8</span></h3><p class="bp-mission">'+escHtml(b.mission)+'</p></div>'
     + reportsSec
+    + parSec
     + sibSec
     + linkSec
     + '<div class="bp-sec" data-field="homepage"><h3>Homepage URL</h3>'
@@ -2556,7 +2569,7 @@ function renderBuddy(id){
     + '<div class="bp-sec" data-field="shared"><h3>Shared notes<span class="info-tip" data-tip="Anybody with repo access can see this note. Saved to the buddy’s repo (docs/notes.md).">ⓘ</span></h3>'
     + '<textarea class="notes" id="bp-shared-notes" placeholder="Anybody with repo access can see this note."></textarea>'
     + '<p class="fineprint" id="shared-status"></p></div>'
-    + '<div class="bp-build">Build 20261011.1908</div>'
+    + '<div class="bp-build">Build 20261011.1913</div>'
     + '</div>';
   const nm = document.getElementById('bp-name');
   nm.addEventListener('keydown', e => { if (e.key === 'Enter'){ e.preventDefault(); nm.blur(); } });
@@ -3428,7 +3441,7 @@ function renderPlan(id){
     + '<p class="fineprint">Saved on this device. (For your eyes only)</p></div>'
     + '<div class="bp-sec"><h3>Shared notes<span class="info-tip" data-tip="Visible to everyone with access to this project.">\u24d8</span></h3><textarea class="notes" id="bp-shared" placeholder="Shared notes\u2026 (visible to everyone with access)">'+escHtml((S.planShared||{})[id]||'')+'</textarea>'
     + '<p class="fineprint">Shared — visible to everyone with access.</p></div>'
-    + '<div class="bp-build">Build 20261011.1908</div>'
+    + '<div class="bp-build">Build 20261011.1913</div>'
     + '</div>';
   const nt = document.getElementById('bp-notes');
   let t = null;
@@ -4715,7 +4728,7 @@ function openWhatsNew(){
   head.insertBefore(updBtn, head.querySelector('.wn-x'));
   fetch('version.txt?_=' + Date.now(), {cache: 'no-store'})
     .then(r => r.ok ? r.text() : '')
-    .then(t => { if (t.trim() && t.trim() !== '20261011.1908') updBtn.style.display = ''; })
+    .then(t => { if (t.trim() && t.trim() !== '20261011.1913') updBtn.style.display = ''; })
     .catch(() => {});
   fetch('https://raw.githubusercontent.com/davedellaquila/buddy-system/master/CHANGELOG.md?_' + Date.now(), {cache: 'no-store'})
     .then(r => { if (!r.ok) throw new Error('fetch failed'); return r.text(); })
@@ -4741,7 +4754,7 @@ function openWhatsNew(){
   if (x) x.focus();
 }
 function initVersionCheck(){
-  const myBuild = '20261011.1908';
+  const myBuild = '20261011.1913';
   function showUpdateBanner(serverBuild){
     if (document.getElementById('update-banner')) return;
     const b = document.createElement('div');
