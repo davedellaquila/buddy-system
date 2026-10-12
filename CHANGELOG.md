@@ -3,6 +3,21 @@
 All notable changes to the Buddies dashboard and buddy system. Newest first.
 `FEATURES.md` describes the current state; this file describes how it got there.
 
+## 2026-10-12 (Personal Buddy: attention action buttons)
+
+### Added
+- **Attention action buttons** on the Personal Buddy homepage's "Needs your
+  attention" card (✓ Done / Need more info), per Dave's directive (rolled out
+  from the Dell'Aquilas homepage). "Done" appends a DONE entry to
+  personal-buddy/docs/ingest.md asking the buddy to clear the item from
+  buddies.json; "Need more info" appends a FOLLOW-UP entry. Tile resolves
+  immediately in the UI (fade + "Marked done", hides actions and the Read-the-
+  brief link) and persists the resolved state in localStorage; writes reuse the
+  brain-dump box's shared-token pattern (buddyTree.v3 / ghToken). Adapted from
+  gen_basic_homepages.py's ATTN_JS to the warm-paper theme; dark mode and
+  phone-friendly preserved. Write path verified end-to-end via the GitHub API
+  (test entry confirmed, then removed).
+
 ## 2026-10-12 (Discovery Buddy: attention action buttons)
 
 ### Added
