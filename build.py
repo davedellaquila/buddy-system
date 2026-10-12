@@ -845,6 +845,19 @@ body.standalone .sa-bar{display:flex}
 @keyframes placeholder-pulse{0%,100%{opacity:1}50%{opacity:.35}}
 #bp-ingest::placeholder{animation:placeholder-pulse 3.2s ease-in-out infinite}
 #bp-ingest::-webkit-input-placeholder{animation:placeholder-pulse 3.2s ease-in-out infinite}
+/* ---------- Secret nerd settings (tap build number 5x to unlock) ---------- */
+#nerd-modal{position:fixed;inset:0;z-index:10000;display:flex;align-items:center;justify-content:center}
+#nerd-modal .nd-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.5)}
+#nerd-modal .nd-box{position:relative;background:var(--panel);border-radius:14px;padding:22px;width:min(92vw,360px);box-shadow:0 12px 40px rgba(0,0,0,.35)}
+#nerd-modal .nd-box h2{margin:0 0 4px;font-size:17px}
+#nerd-modal .nd-sub{color:var(--muted);font-size:13px;margin:0 0 8px}
+#nerd-modal .nd-row{margin:16px 0}
+#nerd-modal .nd-row label{display:flex;justify-content:space-between;font-size:13px;margin-bottom:8px}
+#nerd-modal .nd-row label b{font-variant-numeric:tabular-nums}
+#nerd-modal input[type=range]{width:100%;accent-color:var(--accent)}
+#nerd-modal .nd-actions{display:flex;gap:10px;margin-top:18px}
+#nerd-modal .nd-actions button{flex:1;font-size:14px;font-weight:600;padding:10px;border-radius:10px;border:1px solid var(--border);background:var(--bg);color:var(--text);cursor:pointer}
+#nerd-modal .nd-close{background:var(--accent)!important;color:#fff!important;border:none!important}
 .fineprint{font-size:12.5px;color:var(--faint);margin-top:8px;line-height:1.5}
 .bp-empty{color:var(--muted);font-size:14px}
 .proj-row[data-plan]{cursor:pointer}
@@ -3785,19 +3798,6 @@ async function ghPutFile(repo, path, b64, msg){
   const body = {message: msg, content: b64}; if (sha) body.sha = sha;
   await ghApi('/repos/davedellaquila/' + repo + '/contents/' + path, 'PUT', body);
 }
-/* ---------- Secret nerd settings (tap build number 5x to unlock) ---------- */
-#nerd-modal{position:fixed;inset:0;z-index:10000;display:flex;align-items:center;justify-content:center}
-#nerd-modal .nd-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.5)}
-#nerd-modal .nd-box{position:relative;background:var(--panel);border-radius:14px;padding:22px;width:min(92vw,360px);box-shadow:0 12px 40px rgba(0,0,0,.35)}
-#nerd-modal .nd-box h2{margin:0 0 4px;font-size:17px}
-#nerd-modal .nd-sub{color:var(--muted);font-size:13px;margin:0 0 8px}
-#nerd-modal .nd-row{margin:16px 0}
-#nerd-modal .nd-row label{display:flex;justify-content:space-between;font-size:13px;margin-bottom:8px}
-#nerd-modal .nd-row label b{font-variant-numeric:tabular-nums}
-#nerd-modal input[type=range]{width:100%;accent-color:var(--accent)}
-#nerd-modal .nd-actions{display:flex;gap:10px;margin-top:18px}
-#nerd-modal .nd-actions button{flex:1;font-size:14px;font-weight:600;padding:10px;border-radius:10px;border:1px solid var(--border);background:var(--bg);color:var(--text);cursor:pointer}
-#nerd-modal .nd-close{background:var(--accent)!important;color:#fff!important;border:none!important}
 /* ---------- Add child / sibling buddy from the info panel ---------- */
 const ADD_ICONS = ['🤖','👤','👥','🏠','📍','🚗','🐾','💼','🎯','📚','🎨','🎵','⚽','🌲','☕','💡','🔧','📷','✈️','🎬','🏥','💰','🛒','📱'];
 const ADD_KINDS = [['assistant','Assistant'],['family','Person'],['place','Place'],['project','Project'],['standalone','Other']];

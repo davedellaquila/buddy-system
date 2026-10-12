@@ -993,6 +993,19 @@ body.standalone .sa-bar{display:flex}
 @keyframes placeholder-pulse{0%,100%{opacity:1}50%{opacity:.35}}
 #bp-ingest::placeholder{animation:placeholder-pulse 3.2s ease-in-out infinite}
 #bp-ingest::-webkit-input-placeholder{animation:placeholder-pulse 3.2s ease-in-out infinite}
+/* ---------- Secret nerd settings (tap build number 5x to unlock) ---------- */
+#nerd-modal{position:fixed;inset:0;z-index:10000;display:flex;align-items:center;justify-content:center}
+#nerd-modal .nd-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.5)}
+#nerd-modal .nd-box{position:relative;background:var(--panel);border-radius:14px;padding:22px;width:min(92vw,360px);box-shadow:0 12px 40px rgba(0,0,0,.35)}
+#nerd-modal .nd-box h2{margin:0 0 4px;font-size:17px}
+#nerd-modal .nd-sub{color:var(--muted);font-size:13px;margin:0 0 8px}
+#nerd-modal .nd-row{margin:16px 0}
+#nerd-modal .nd-row label{display:flex;justify-content:space-between;font-size:13px;margin-bottom:8px}
+#nerd-modal .nd-row label b{font-variant-numeric:tabular-nums}
+#nerd-modal input[type=range]{width:100%;accent-color:var(--accent)}
+#nerd-modal .nd-actions{display:flex;gap:10px;margin-top:18px}
+#nerd-modal .nd-actions button{flex:1;font-size:14px;font-weight:600;padding:10px;border-radius:10px;border:1px solid var(--border);background:var(--bg);color:var(--text);cursor:pointer}
+#nerd-modal .nd-close{background:var(--accent)!important;color:#fff!important;border:none!important}
 .fineprint{font-size:12.5px;color:var(--faint);margin-top:8px;line-height:1.5}
 .bp-empty{color:var(--muted);font-size:14px}
 .proj-row[data-plan]{cursor:pointer}
@@ -2624,7 +2637,7 @@ function renderBuddy(id){
     + '<div class="bp-sec" data-field="shared"><h3>Shared notes<span class="info-tip" data-tip="Anybody with repo access can see this note. Saved to the buddy’s repo (docs/notes.md).">ⓘ</span></h3>'
     + '<textarea class="notes" id="bp-shared-notes" placeholder="Anybody with repo access can see this note."></textarea>'
     + '<p class="fineprint" id="shared-status"></p></div>'
-    + '<div class="bp-build">Build 20261011.2243</div>'
+    + '<div class="bp-build">Build 20261011.2247</div>'
     + '</div>';
   const nm = document.getElementById('bp-name');
   nm.addEventListener('keydown', e => { if (e.key === 'Enter'){ e.preventDefault(); nm.blur(); } });
@@ -3560,7 +3573,7 @@ function renderPlan(id){
     + '<p class="fineprint">Saved on this device. (For your eyes only)</p></div>'
     + '<div class="bp-sec"><h3>Shared notes<span class="info-tip" data-tip="Visible to everyone with access to this project.">\u24d8</span></h3><textarea class="notes" id="bp-shared" placeholder="Shared notes\u2026 (visible to everyone with access)">'+escHtml((S.planShared||{})[id]||'')+'</textarea>'
     + '<p class="fineprint">Shared — visible to everyone with access.</p></div>'
-    + '<div class="bp-build">Build 20261011.2243</div>'
+    + '<div class="bp-build">Build 20261011.2247</div>'
     + '</div>';
   const nt = document.getElementById('bp-notes');
   let t = null;
@@ -4133,19 +4146,6 @@ async function ghPutFile(repo, path, b64, msg){
   const body = {message: msg, content: b64}; if (sha) body.sha = sha;
   await ghApi('/repos/davedellaquila/' + repo + '/contents/' + path, 'PUT', body);
 }
-/* ---------- Secret nerd settings (tap build number 5x to unlock) ---------- */
-#nerd-modal{position:fixed;inset:0;z-index:10000;display:flex;align-items:center;justify-content:center}
-#nerd-modal .nd-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.5)}
-#nerd-modal .nd-box{position:relative;background:var(--panel);border-radius:14px;padding:22px;width:min(92vw,360px);box-shadow:0 12px 40px rgba(0,0,0,.35)}
-#nerd-modal .nd-box h2{margin:0 0 4px;font-size:17px}
-#nerd-modal .nd-sub{color:var(--muted);font-size:13px;margin:0 0 8px}
-#nerd-modal .nd-row{margin:16px 0}
-#nerd-modal .nd-row label{display:flex;justify-content:space-between;font-size:13px;margin-bottom:8px}
-#nerd-modal .nd-row label b{font-variant-numeric:tabular-nums}
-#nerd-modal input[type=range]{width:100%;accent-color:var(--accent)}
-#nerd-modal .nd-actions{display:flex;gap:10px;margin-top:18px}
-#nerd-modal .nd-actions button{flex:1;font-size:14px;font-weight:600;padding:10px;border-radius:10px;border:1px solid var(--border);background:var(--bg);color:var(--text);cursor:pointer}
-#nerd-modal .nd-close{background:var(--accent)!important;color:#fff!important;border:none!important}
 /* ---------- Add child / sibling buddy from the info panel ---------- */
 const ADD_ICONS = ['🤖','👤','👥','🏠','📍','🚗','🐾','💼','🎯','📚','🎨','🎵','⚽','🌲','☕','💡','🔧','📷','✈️','🎬','🏥','💰','🛒','📱'];
 const ADD_KINDS = [['assistant','Assistant'],['family','Person'],['place','Place'],['project','Project'],['standalone','Other']];
@@ -5053,7 +5053,7 @@ function openWhatsNew(){
   head.insertBefore(updBtn, head.querySelector('.wn-x'));
   fetch('version.txt?_=' + Date.now(), {cache: 'no-store'})
     .then(r => r.ok ? r.text() : '')
-    .then(t => { if (t.trim() && t.trim() !== '20261011.2243') updBtn.style.display = ''; })
+    .then(t => { if (t.trim() && t.trim() !== '20261011.2247') updBtn.style.display = ''; })
     .catch(() => {});
   fetch('https://raw.githubusercontent.com/davedellaquila/buddy-system/master/CHANGELOG.md?_' + Date.now(), {cache: 'no-store'})
     .then(r => { if (!r.ok) throw new Error('fetch failed'); return r.text(); })
@@ -5081,7 +5081,7 @@ function openWhatsNew(){
   if (x) x.focus();
 }
 function initVersionCheck(){
-  const myBuild = '20261011.2243';
+  const myBuild = '20261011.2247';
   function showUpdateBanner(serverBuild){
     if (document.getElementById('update-banner')) return;
     const b = document.createElement('div');
