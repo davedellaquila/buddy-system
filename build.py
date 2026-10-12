@@ -129,6 +129,13 @@ body{padding:0}
 .treewrap{position:relative;display:flex;gap:10px;align-items:flex-start}
 /* Beat .view.active{display:block} so the tree fills the viewport and #treezoom
    alone scrolls in both axes (fixes iOS axis-lock from nested X/Y scrollers). */
+#quick-answers{display:flex;align-items:center;gap:12px;padding:12px 16px;background:var(--panel);border:1px solid var(--border);border-radius:12px;margin:0 0 16px;flex-wrap:wrap}
+.qa-label{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);flex:none}
+.qa-links{display:flex;gap:8px;flex-wrap:wrap}
+.qa-link{display:flex;align-items:center;gap:8px;background:var(--bg);border:1px solid var(--border);border-radius:999px;padding:6px 14px;font-size:13px;color:var(--text);cursor:pointer;max-width:280px}
+.qa-link:hover{border-color:var(--accent)}
+.qa-icon{font-size:16px}
+.qa-text{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 #view-tree.view.active{display:flex !important;flex-direction:column;
   margin:-36px -32px -80px;height:100vh;height:100dvh;overflow:hidden;min-height:0}
 #view-tree #zoomwrap{flex:1;min-height:0;min-width:0;align-items:stretch;display:flex;flex-direction:column}
@@ -2825,12 +2832,28 @@ function initTreeSplit(){
   sp.addEventListener('pointerup', end);
   sp.addEventListener('pointercancel', end);
 }
+function quickAnswersHtml(){
+  const items = [];
+  (BUDDIES || []).forEach(b => {
+    (b.attention || []).forEach(a => {
+      const key = b.id + ':' + (a.id || a.text);
+      if (!S.seen[key]) items.push({b, a, key});
+    });
+  });
+  if (!items.length) return '';
+  const links = items.slice(0, 12).map(({b, a}) =>
+    '<button class="qa-link" data-qa-buddy="'+b.id+'" title="'+escHtml(a.text || '')+'">'
+    + '<span class="qa-icon">'+escHtml(buddyDisplayIcon(b))+'</span>'
+    + '<span class="qa-text">'+escHtml((a.text || '').slice(0, 60))+'</span></button>'
+  ).join('');
+  return '<div id="quick-answers"><div class="qa-label">Quick answers</div><div class="qa-links">'+links+'</div></div>';
+}
 function renderOrgTree(){
   const root = byId[ROOT_ID];
   // The org chart shows the real hierarchy: every direct report of the root,
   // side by side. Only truly parentless buddies land in the orphan section.
   const kids = kidsOf[ROOT_ID] || [];
-  const chartHtml = '<div class="chart"><div style="text-align:center"><div class="node root" data-buddy="'+ROOT_ID+'">'
+  const chartHtml = '<div class="chart">' + quickAnswersHtml() + '<div style="text-align:center"><div class="node root" data-buddy="'+ROOT_ID+'">'
     + '<div class="name">' + iconName(root) + '</div>'
     + '<div class="desc">' + escHtml(root.tagline || '') + '</div></div></div>'
     + '<div class="root-stub"></div><div class="tree"><ul>'
@@ -3424,6 +3447,10 @@ let nodeDragEndAt = 0; // timestamp of last node-drag gesture; used to swallow t
   });
   document.addEventListener('dragend', () => { dragId = null; clearHl(); });
 })();
+document.addEventListener('click', e => {
+  const qa = e.target.closest('[data-qa-buddy]');
+  if (qa) { openBuddy(qa.dataset.qaBuddy); return; }
+});
 document.getElementById('view-tree').addEventListener('wheel', e => {
   if (!e.shiftKey) return;
   e.preventDefault();
