@@ -20,6 +20,18 @@ a { color:var(--accent); }
 ul { padding-left:20px; } li { margin:6px 0; }
 textarea { width:100%; min-height:70px; background:var(--bg); color:var(--text); border:1px solid var(--border); border-radius:8px; padding:10px; font:inherit; }
 button.dump { background:var(--accent); color:#fff; border:0; border-radius:8px; padding:9px 18px; font-size:1em; margin-top:8px; cursor:pointer; }
+.attn { background:var(--card); border:1px solid var(--border); border-left:4px solid var(--accent); border-radius:12px; padding:14px 16px; margin:12px 0; }
+.attn-actions { display:flex; gap:8px; margin-top:12px; flex-wrap:wrap; }
+.attn-btn { border:1px solid var(--border); background:var(--bg); color:var(--text); border-radius:8px; padding:7px 14px; font-size:13px; font-weight:600; cursor:pointer; font-family:inherit; -webkit-tap-highlight-color:transparent; }
+.attn-btn:hover { border-color:var(--accent); }
+.attn-btn.primary { background:var(--accent); border-color:var(--accent); color:#fff; }
+.attn-btn:disabled { opacity:.45; cursor:default; }
+.attn-status { font-size:13px; color:var(--muted); margin-top:8px; min-height:18px; }
+.attn.resolved { opacity:.6; }
+.attn.resolved .attn-actions { display:none; }
+.tokenrow { display:flex; gap:8px; margin-top:10px; }
+.tokenrow input { flex:1; min-width:0; background:var(--bg); color:var(--text); border:1px solid var(--border); border-radius:8px; padding:8px 10px; font:inherit; }
+.tokenrow button { background:var(--card); color:var(--text); border:1px solid var(--border); border-radius:8px; padding:8px 14px; font:inherit; font-size:.9em; cursor:pointer; }
 .stamp { text-align:right; font-size:.8em; color:var(--muted); margin-top:24px; }
 @media (max-width:560px){ .kv{grid-template-columns:1fr;} .kv dt{margin-top:8px;} }
 </style>
@@ -61,29 +73,103 @@ button.dump { background:var(--accent); color:#fff; border:0; border-radius:8px;
 
 <div class="card">
 <h2>Needs your attention</h2>
-<ul>
-<li><a href="https://docs.google.com/document/d/1IcfE4V-Q-r2nh2zLmwBvqBiZ3lJEFf82C0cXTrBqSXI/edit">Mission statement</a> — ready for your review.</li>
-<li>Invite James (and Joel?) over — timing TBD.</li>
-</ul>
+<div class="attn" data-attn-id="mission-review">
+<div class="attn-text"><a href="https://docs.google.com/document/d/1IcfE4V-Q-r2nh2zLmwBvqBiZ3lJEFf82C0cXTrBqSXI/edit">Mission statement</a> — ready for your review.</div>
+<div class="attn-actions"><button class="attn-btn primary" data-act="done">✓ Done</button><button class="attn-btn" data-act="info">Need more info</button></div>
+<div class="attn-status" role="status"></div>
+</div>
+<div class="attn" data-attn-id="invite-james-joel">
+<div class="attn-text">Invite James (and Joel?) over — timing TBD.</div>
+<div class="attn-actions"><button class="attn-btn primary" data-act="done">✓ Done</button><button class="attn-btn" data-act="info">Need more info</button></div>
+<div class="attn-status" role="status"></div>
+</div>
 </div>
 
 <div class="card">
 <h2>🧠 Brain dump</h2>
 <p class="muted">Dump a thought about James here — it lands in the repo's inbox.</p>
 <textarea id="dump" placeholder="Something about James…"></textarea><br>
-<button class="dump" onclick="dump()">Dump it</button>
+<button class="dump" id="dumpbtn">Dump it</button>
 <p class="muted" id="dumpmsg"></p>
+<div class="tokenrow" id="tokenrow">
+<input type="password" id="ghtoken" placeholder="GitHub token (enables actions)" autocomplete="off">
+<button id="tokensave">Save token</button>
+</div>
+<p class="muted" id="tokenmsg"></p>
 </div>
 
-<p class="stamp">Last refreshed: 2026-10-11 · living page</p>
+<p class="stamp">Last refreshed: 2026-10-12 · living page</p>
 </div>
 <script>
-function dump(){
-  var t = document.getElementById('dump').value.trim();
-  if(!t) return;
-  document.getElementById('dumpmsg').textContent = 'Noted — the full dump box wires up once the dashboard token is present.';
-  document.getElementById('dump').value = '';
-}
+(function(){
+  var bid = 'james-buddy', repo = 'james-buddy', buddyName = "James's Buddy";
+  function lsGet(){ try { return JSON.parse(localStorage.getItem('buddyTree.v3') || '{}'); } catch(e){ return {}; } }
+  function lsSet(patch){ try { var s = lsGet(); for (var k in patch) s[k] = patch[k]; localStorage.setItem('buddyTree.v3', JSON.stringify(s)); } catch(e){} }
+  function token(){ return lsGet().ghToken || ''; }
+  function b64encode(str){ var bytes = new TextEncoder().encode(str), bin=''; bytes.forEach(function(b){ bin += String.fromCharCode(b); }); return btoa(bin); }
+  async function ghApi(path, method, body){
+    var t = token(); if(!t) throw new Error('Add a GitHub token first.');
+    var r = await fetch('https://api.github.com'+path,{method:method||'GET',headers:{'Authorization':'Bearer '+t,'Accept':'application/vnd.github+json','Content-Type':'application/json'},body:body?JSON.stringify(body):undefined});
+    if(!r.ok) throw new Error('GitHub '+r.status);
+    return r.status===204?null:await r.json();
+  }
+  async function ghGetFile(path){
+    try{ var j = await ghApi('/repos/davedellaquila/'+repo+'/contents/'+path);
+      if(j&&j.content) return { text:new TextDecoder().decode(Uint8Array.from(atob(j.content.replace(/\n/g,'')),function(c){return c.charCodeAt(0);})), sha:j.sha };
+    }catch(e){}
+    return null;
+  }
+  async function appendIngest(entry){
+    var NL=String.fromCharCode(10), stamp=new Date().toLocaleString();
+    var cur=await ghGetFile('docs/ingest.md');
+    var base=cur?cur.text:'# Ingest log \u2014 '+buddyName+NL+NL;
+    var body={message:'Homepage action for '+bid,content:b64encode(base+'## '+stamp+NL+NL+entry+NL+NL)};
+    if(cur&&cur.sha) body.sha=cur.sha;
+    await ghApi('/repos/davedellaquila/'+repo+'/contents/docs/ingest.md','PUT',body);
+  }
+  var tokenrow=document.getElementById('tokenrow'), tokInput=document.getElementById('ghtoken'),
+      tokSave=document.getElementById('tokensave'), tokMsg=document.getElementById('tokenmsg');
+  function refreshTokenUI(){ tokenrow.style.display=token()?'none':''; }
+  tokSave.addEventListener('click',function(){ var v=tokInput.value.trim(); if(!v) return; lsSet({ghToken:v}); tokInput.value=''; refreshTokenUI(); tokMsg.textContent='Token saved on this device \u2014 actions enabled.'; });
+  refreshTokenUI();
+  var ta=document.getElementById('dump'), dumpBtn=document.getElementById('dumpbtn'), dumpMsg=document.getElementById('dumpmsg');
+  dumpBtn.addEventListener('click', async function(){
+    var t=ta.value.trim(); if(!t) return;
+    if(!token()){ dumpMsg.textContent='Add a GitHub token below to send this to the inbox.'; return; }
+    dumpBtn.disabled=true; dumpMsg.textContent='Sending\u2026';
+    try{ await appendIngest(t); ta.value=''; dumpMsg.textContent='Dumped to the inbox \u2014 will be triaged.'; }
+    catch(err){ dumpMsg.textContent='Save failed: '+(err.message||err); }
+    dumpBtn.disabled=false;
+  });
+  function rkey(aid,text){ return bid+'|'+(aid||('text:'+text.slice(0,60))); }
+  function isResolved(aid,text){ var m=lsGet().attnDone||{}; return !!m[rkey(aid,text)]; }
+  function setResolved(aid,text){ var s=lsGet(),m=s.attnDone||{}; m[rkey(aid,text)]=1; s.attnDone=m; lsSet(s); }
+  function paintResolved(tile,msg){ tile.classList.add('resolved'); var st=tile.querySelector('.attn-status'); if(st) st.textContent=msg; }
+  async function sendAction(tile,entry,okMsg){
+    var st=tile.querySelector('.attn-status'), btns=tile.querySelectorAll('.attn-btn');
+    if(!token()){ st.textContent='Add a GitHub token in the Brain dump section above to enable actions.'; return false; }
+    btns.forEach(function(b){ b.disabled=true; }); st.textContent='Working\u2026';
+    try{ await appendIngest(entry); st.textContent=okMsg; return true; }
+    catch(err){ st.textContent='Save failed: '+(err.message||err); btns.forEach(function(b){ b.disabled=false; }); return false; }
+  }
+  document.querySelectorAll('.attn[data-attn-id]').forEach(function(tile){
+    var aid=tile.getAttribute('data-attn-id')||'';
+    var textEl=tile.querySelector('.attn-text'), text=textEl?textEl.textContent.trim():'';
+    if(isResolved(aid,text)){ paintResolved(tile,'Marked done'); return; }
+    tile.addEventListener('click',function(ev){
+      var btn=ev.target.closest?ev.target.closest('.attn-btn'):null;
+      if(!btn||btn.disabled) return;
+      var act=btn.getAttribute('data-act');
+      var idBit=aid?' (attention id: '+aid+')':'';
+      if(act==='done'){
+        sendAction(tile,'DONE \u2014 Dave marked this done on the homepage: "'+text+'"'+idBit+'. Please remove it from the attention list in buddies.json.','Marked done \u2014 the buddy will clear it.')
+          .then(function(ok){ if(ok){ setResolved(aid,text); paintResolved(tile,'Marked done \u2014 the buddy will clear it.'); } });
+      }else if(act==='info'){
+        sendAction(tile,'FOLLOW-UP \u2014 Dave needs more info on: "'+text+'"'+idBit+'. Please follow up with him.','Sent \u2014 '+buddyName+' will follow up.');
+      }
+    });
+  });
+})();
 </script>
 </body>
 </html>
