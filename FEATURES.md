@@ -57,6 +57,11 @@ Build: `build.py` generates `index.html` from `buddies.json` + `plans.json`.
 - **Text size slider** — Settings → Advanced; scales text and UI throughout
   the app from 80% to 130% (default 100%), with live preview as you drag.
   Like the text-size slider on iPhone and Watch.
+- **Develop section** — Settings → Develop; pre-launch tools for readying the
+  app for new users. **Simulate new user** empties the data file in-memory so
+  you can preview the fresh-link experience; real data is stashed and restored
+  on toggle-off or page reload, with a persistent banner while active. Also
+  shows the build number and offers **Clear this device's local data**.
 
 ## Agent standing orders
 

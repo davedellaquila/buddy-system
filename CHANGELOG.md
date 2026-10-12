@@ -7,6 +7,7 @@ All notable changes to the Buddies dashboard and buddy system. Newest first.
 
 ### Added
 - **Text size slider** in Settings → Advanced — scales text and UI throughout the app from 80% to 130%, like the text-size slider on iPhone and Watch. Live preview as you drag.
+- **Develop section** in Settings — pre-launch tools: **Simulate new user** toggle (empties the data file in-memory to preview the fresh-link experience; your real data is stashed and restored on toggle-off or reload, with a persistent banner while active), build number display, and **Clear this device's local data**.
 
 ### Changed
 - **Org chart beauty pass** (Jony): generation pills (CHILD/GRANDCHILD) removed — depth is already encoded vertically; Quick Answers collapsed to one horizontally-scrolling row; connectors are 1px hairlines instead of 2px slate; parent/child gap tightened from 26px to 20px; the composition centers vertically in the pane when it fits instead of anchoring to the top.

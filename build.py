@@ -1711,6 +1711,62 @@ function renderSettingChecks(){
     });
   }
 }
+// ---- Develop tab: new-user simulation and pre-launch tools ----
+let devBackup = null; // {buddies, byId, S} stashed while simulating a new user
+function renderDevelopSection(){
+  const dev = document.getElementById('fset-develop');
+  if (!dev) return;
+  const simulating = !!devBackup;
+  const buildNum = '__BUILD__';
+  dev.innerHTML = ''
+    + '<label class="fset-check"><input type="checkbox" id="dev-empty-toggle"' + (simulating ? ' checked' : '') + '> <span><strong>Simulate new user</strong> — empty data file, as if opening the shared link fresh</span></label>'
+    + '<div class="fineprint" style="margin:8px 0 12px">Build <span style="font-family:monospace">' + escHtml(String(buildNum)) + '</span> · ' + BUDDIES.length + ' buddies in this file</div>'
+    + '<div style="display:flex;gap:10px;flex-wrap:wrap">'
+    + '<button class="linkbtn" id="dev-clear-local" type="button">Clear this device\u2019s local data</button>'
+    + '</div>'
+    + '<p class="fineprint" style="margin-top:10px">Simulation never touches your real data — it stashes everything in memory and restores it when you toggle off. Reloading the page also exits simulation.</p>';
+  dev.querySelector('#dev-empty-toggle').addEventListener('change', e => {
+    setSimulateEmpty(e.target.checked);
+    renderDevelopSection();
+  });
+  dev.querySelector('#dev-clear-local').addEventListener('click', () => {
+    if (!confirm('Clear ALL local data on this device (settings, seen items, overrides)? The buddy file itself is untouched.')) return;
+    try { localStorage.removeItem(LS_KEY); } catch (e) {}
+    toast('Local data cleared — reloading.');
+    setTimeout(() => location.reload(), 800);
+  });
+}
+function setSimulateEmpty(on){
+  if (on && !devBackup) {
+    devBackup = {
+      buddies: BUDDIES.slice(),
+      byId: Object.assign({}, byId),
+      S: JSON.parse(JSON.stringify(S)),
+      sel: S.sel, view: S.view
+    };
+    BUDDIES.length = 0;
+    for (const k in byId) delete byId[k];
+    const fresh = {seen:{}, notes:{}, names:{}, parents:{}, zoom:100, zoomOrph:100, sel:'view:tree', view:'tree', theme:S.theme};
+    for (const k in S) delete S[k];
+    Object.assign(S, fresh);
+    buildKids(); renderNav(); refreshViews(); applyFontScale();
+    showBanner('dev-sim', '\\u{1F6A7} SIMULATING NEW USER — empty data file. <button class="linkbtn" id="dev-sim-exit" style="color:#fff;text-decoration:underline">Exit simulation</button>', true);
+    const exit = document.getElementById('dev-sim-exit');
+    if (exit) exit.addEventListener('click', () => { setSimulateEmpty(false); const t = document.querySelector('#dev-empty-toggle'); if (t) t.checked = false; });
+    toast('New-user simulation on — your data is stashed safely.');
+  } else if (!on && devBackup) {
+    const b = devBackup; devBackup = null;
+    b.buddies.forEach(x => BUDDIES.push(x));
+    Object.assign(byId, b.byId);
+    for (const k in S) delete S[k];
+    Object.assign(S, b.S);
+    hideBanner('dev-sim');
+    buildKids(); renderNav(); refreshViews(); applyFontScale(); applyTheme();
+    S.sel = b.sel; S.view = b.view;
+    show(S.view, false);
+    toast('Simulation off — your data is back.');
+  }
+}
 function initFsetChrome(m){
   function applyGeom(){
     const g = S.fsetGeom || {};
@@ -1774,6 +1830,7 @@ function openFieldSettings(){
       + '<section class="fset-sec"><h3 class="fset-sec-h">Main views</h3><p class="fineprint">Drag to reorder. Number keys 1–9 follow this order.</p><div id="vset-list"></div></section>'
       + '<section class="fset-sec"><h3 class="fset-sec-h">Buddy fields</h3><p class="fineprint">Drag to reorder. Uncheck to hide.</p><div id="fset-list"></div></section>'
       + '<section class="fset-sec"><h3 class="fset-sec-h">Advanced</h3><div id="fset-advanced"></div></section>'
+      + '<section class="fset-sec"><h3 class="fset-sec-h">Develop</h3><p class="fineprint">Tools for preparing the app for new users. Nothing here affects your real data.</p><div id="fset-develop"></div></section>'
       + '</div>'
       + '<div class="fset-footer">'
       + '<div style="display:flex;gap:12px"><button class="linkbtn" id="fset-reset" title="Restore all settings to factory defaults">Reset defaults</button>'
@@ -1785,6 +1842,7 @@ function openFieldSettings(){
     m.querySelector('#fset-close').addEventListener('click', () => m.classList.remove('show'));
     m.querySelector('#fset-x').addEventListener('click', () => m.classList.remove('show'));
     renderSettingChecks();
+    renderDevelopSection();
     m.querySelector('#fset-reset').addEventListener('click', () => {
       if (!confirm('Reset all settings to factory defaults?')) return;
       resetToFactory(); renderSettingChecks(); openFieldSettings();
@@ -2732,6 +2790,21 @@ function toast(msg){
   t.className = 'toast'; t.textContent = msg;
   document.body.appendChild(t);
   setTimeout(() => { if (t.parentNode) t.remove(); }, 3400);
+}
+// Persistent top banner (e.g. dev-mode simulation). Sticky, high-contrast, dismissible via hideBanner.
+function showBanner(id, html, sticky){
+  hideBanner(id);
+  const b = document.createElement('div');
+  b.className = 'app-banner'; b.dataset.banner = id;
+  b.innerHTML = html;
+  b.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:9999;background:#b3541e;color:#fff;'
+    + 'font-size:13px;font-weight:600;text-align:center;padding:8px 12px;box-shadow:0 2px 8px rgba(0,0,0,.3)';
+  document.body.appendChild(b);
+  document.body.style.paddingTop = b.offsetHeight + 'px';
+}
+function hideBanner(id){
+  document.querySelectorAll('.app-banner' + (id ? '[data-banner="' + id + '"]' : '')).forEach(b => b.remove());
+  if (!document.querySelector('.app-banner')) document.body.style.paddingTop = '';
 }
 function setIcon(emoji){
   if (!emoji) return;
