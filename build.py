@@ -4963,7 +4963,7 @@ function initEdgeSwipeOpen(){
     return null;
   }
   function onStart(e){
-    if (!isDrawerNav() || isSidebarOpen()) { track = null; return; }
+    if (isSidebarOpen()) { track = null; return; }
     if (document.body.classList.contains('standalone')) { track = null; return; }
     const t = e.changedTouches && e.changedTouches[0];
     if (!t || t.clientX > EDGE_PX) { track = null; return; }
@@ -4984,7 +4984,7 @@ function initEdgeSwipeOpen(){
     const t = touchById(e.changedTouches, track.id);
     const x0 = track.x0, y0 = track.y0;
     track = null;
-    if (!t || !isDrawerNav() || isSidebarOpen()) return;
+    if (!t || isSidebarOpen()) return;
     if (document.body.classList.contains('standalone')) return;
     const dx = t.clientX - x0, dy = t.clientY - y0;
     if (dx >= MIN_DX && Math.abs(dx) > Math.abs(dy) * DOMINATE) {
