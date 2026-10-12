@@ -438,10 +438,12 @@ textarea[disabled]{opacity:.5;cursor:not-allowed}
 body:has(#view-buddy.active) #panel-open,
 body.standalone #panel-open{display:none}
 body:has(#token-pill) #panel-open{right:148px}
-.ctog{display:none;width:18px;height:18px;flex:0 0 18px;align-items:center;justify-content:center;
-  background:none;border:none;color:var(--muted);cursor:pointer;font-size:10px;padding:0;margin-right:2px}
-.brow:hover .ctog.has-kids{display:inline-flex}
-.ctog.has-kids.collapsed{transform:rotate(-90deg)}
+.ctog{display:none;width:22px;height:22px;flex:0 0 22px;align-items:center;justify-content:center;
+  background:none;border:none;color:var(--muted);cursor:pointer;font-size:14px;padding:0;margin-right:2px;border-radius:6px}
+.ctog.has-kids{display:inline-flex}
+.ctog.has-kids:hover{background:var(--hover);color:var(--text)}
+.ctog .chev{display:inline-block;transition:transform .15s;font-style:normal;line-height:1}
+.ctog.has-kids:not(.collapsed) .chev{transform:rotate(90deg)}
 #field-settings{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:2000;
   background:var(--panel);border:1px solid var(--border);border-radius:12px;width:340px;max-height:80vh;
   box-shadow:0 12px 40px var(--scrim);display:none;overflow:hidden}
@@ -500,10 +502,20 @@ body:has(#token-pill) #panel-open{right:148px}
   -webkit-tap-highlight-color:transparent}
 .bp-close-x:hover{color:var(--text);border-color:var(--border);background:var(--ghost)}
 .bp-close-x:active{opacity:.7}
-#view-buddy.panel .bp-close-x,#view-buddy.sheet .bp-close-x{display:flex}
-/* Portrait takeover uses the sticky back bar; keep ✕ for panel / landscape sheet */
+/* Open panel: the close button floats at the exact screen position of the
+   #panel-open expand button, styled as the same control */
+#view-buddy.panel .bp-close-x,#view-buddy.sheet .bp-close-x{display:flex;position:fixed;top:12px;right:12px;z-index:65;margin:0;
+  background:var(--panel);border:1px solid var(--border);border-radius:12px;box-shadow:0 2px 14px var(--shadow)}
+#view-buddy.panel .bp-close-x:hover,#view-buddy.sheet .bp-close-x:hover{color:var(--accent);border-color:var(--accent)}
+#view-buddy.panel .bp-close-x:active,#view-buddy.sheet .bp-close-x:active{transform:scale(.96)}
+body:has(#token-pill) #view-buddy.panel .bp-close-x,
+body:has(#token-pill) #view-buddy.sheet .bp-close-x{right:148px}
+/* Keep header content clear of the floating close button */
+#view-buddy.panel .bp-sticky-head,#view-buddy.sheet .bp-sticky-head{padding-right:52px}
+/* Portrait takeover uses the sticky back bar; keep close button for panel / landscape sheet */
 @media (max-width:639px) and (orientation:portrait){
   #view-buddy.sheet .bp-close-x{display:none}
+  #view-buddy.sheet .bp-sticky-head{padding-right:0}
 }
 #buddy-home{position:relative}
 #bp-resize{position:absolute;top:0;left:-14px;z-index:60;display:flex;align-items:center;justify-content:center;width:28px;height:100vh;cursor:ew-resize;
@@ -1525,16 +1537,21 @@ function renderNav(){
   }
   function row(id, depth){
     const b = byId[id]; if(!b) return;
+    if (!S.navCollapsed || typeof S.navCollapsed !== 'object') S.navCollapsed = {};
     if (words.length && !matches(b)) { (kidsOf[id] || []).forEach(c => row(c.id, depth+1)); return; }
     const un = descUnseen(id);
     const kind = b.kind === 'root' ? 'root' : (b.parent === ROOT_ID ? 'direct' : b.kind);
+    const kids = kidsOf[id] || [];
+    const hasKids = kids.length > 0;
+    const collapsed = hasKids && !words.length && !!S.navCollapsed[id];
     h += '<button class="brow'+((S.projectId===id || S.sel==='buddy:'+id)?' sel':'')+(un?' has-unseen':'')+'" data-buddy="'+id+'"'
       + ' draggable="'+(id===ROOT_ID?'false':'true')+'"'
       + ' style="padding-left:'+(8+depth*16)+'px" title="'+escHtml(b.tagline||'')+'">'
+      + (hasKids ? '<span class="ctog has-kids'+(collapsed?' collapsed':'')+'" data-ctog="'+id+'" title="'+(collapsed?'Expand':'Collapse')+'"><i class="chev">›</i></span>' : '')
       + '<span class="bdot"></span><span class="bicon">'+escHtml(b.icon||'')+'</span><span class="bname">'+escHtml(dispName(b))+'</span>'
       + '<span class="bkind">'+kind+'</span>'
       + '<span class="binfo" data-buddy-info="'+id+'" title="Open '+escHtml(dispName(b))+' details" style="margin-left:auto;padding:2px 6px;opacity:0;transition:opacity 0.15s;cursor:pointer" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0">ⓘ</span></button>';
-    (kidsOf[id] || []).forEach(c => row(c.id, depth+1));
+    if (!collapsed) kids.forEach(c => row(c.id, depth+1));
   }
   ROOT_ORDER.filter(id => { const b = byId[id]; const p = b ? effParent(b) : null; return p === null; })
     .forEach(id => row(id, 0));
@@ -2479,7 +2496,7 @@ function renderBuddy(id){
     + '<div class="bp-sec" data-field="shared"><h3>Shared notes<span class="info-tip" data-tip="Anybody with repo access can see this note. Saved to the buddy’s repo (docs/notes.md).">ⓘ</span></h3>'
     + '<textarea class="notes" id="bp-shared-notes" placeholder="Anybody with repo access can see this note."></textarea>'
     + '<p class="fineprint" id="shared-status"></p></div>'
-    + '<div class="bp-build">Build 20261011.1713</div>'
+    + '<div class="bp-build">Build 20261011.1717</div>'
     + '</div>';
   const nm = document.getElementById('bp-name');
   nm.addEventListener('keydown', e => { if (e.key === 'Enter'){ e.preventDefault(); nm.blur(); } });
@@ -3290,7 +3307,7 @@ function renderPlan(id){
     + '<p class="fineprint">Saved on this device. (For your eyes only)</p></div>'
     + '<div class="bp-sec"><h3>Shared notes<span class="info-tip" data-tip="Visible to everyone with access to this project.">\u24d8</span></h3><textarea class="notes" id="bp-shared" placeholder="Shared notes\u2026 (visible to everyone with access)">'+escHtml((S.planShared||{})[id]||'')+'</textarea>'
     + '<p class="fineprint">Shared — visible to everyone with access.</p></div>'
-    + '<div class="bp-build">Build 20261011.1713</div>'
+    + '<div class="bp-build">Build 20261011.1717</div>'
     + '</div>';
   const nt = document.getElementById('bp-notes');
   let t = null;
@@ -4493,7 +4510,7 @@ function openWhatsNew(){
   if (x) x.focus();
 }
 function initVersionCheck(){
-  const myBuild = '20261011.1713';
+  const myBuild = '20261011.1717';
   function showUpdateBanner(serverBuild){
     if (document.getElementById('update-banner')) return;
     const b = document.createElement('div');
@@ -4882,6 +4899,14 @@ document.addEventListener('click', e => {
   }
   const hp = e.target.closest('[data-homepage]');
   if (hp) { e.preventDefault(); selectProject(hp.dataset.homepage); return; }
+  const ctog = e.target.closest && e.target.closest('[data-ctog]');
+  if (ctog) {
+    const cid = ctog.getAttribute('data-ctog');
+    if (!S.navCollapsed || typeof S.navCollapsed !== 'object') S.navCollapsed = {};
+    if (S.navCollapsed[cid]) delete S.navCollapsed[cid]; else S.navCollapsed[cid] = true;
+    save(); renderNav();
+    return;
+  }
   const bb = e.target.closest('[data-buddy]');
   // Don't re-open the buddy when clicking an editable field (e.g. the name)
   // Panel behavior is view-aware: in Homepage view, clicking selects only
