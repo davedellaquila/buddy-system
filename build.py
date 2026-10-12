@@ -720,7 +720,29 @@ body.standalone .sa-bar{display:flex}
 .bp-aka{color:var(--muted);font-size:13px;font-style:italic;margin-left:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:60%}
 .bp-sec{margin-top:30px}
 .bp-sec>h3{font-size:13px;letter-spacing:1.2px;text-transform:uppercase;color:var(--muted);margin:0 0 12px}
+.bp-sec>h3 .bp-add{float:right;font-size:12px;letter-spacing:0;text-transform:none;font-weight:600;color:var(--accent);background:none;border:1px solid var(--accent);border-radius:20px;padding:2px 10px;cursor:pointer}
+.bp-sec>h3 .bp-add:active{transform:scale(.96)}
 .bp-sec[data-field="attention"]>h3{color:var(--amber)}
+/* Add-buddy dialog */
+#addbuddy-modal{position:fixed;inset:0;z-index:10000;display:flex;align-items:center;justify-content:center}
+#addbuddy-modal .ab-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.5)}
+#addbuddy-modal .ab-box{position:relative;background:var(--panel);border-radius:14px;padding:22px;width:min(92vw,380px);box-shadow:0 12px 40px rgba(0,0,0,.35)}
+#addbuddy-modal .ab-box h2{margin:0 0 4px;font-size:17px}
+#addbuddy-modal .ab-sub{color:var(--muted);font-size:13px;margin:0 0 16px}
+#addbuddy-modal label{display:block;font-size:12px;color:var(--muted);margin:12px 0 6px;text-transform:uppercase;letter-spacing:.8px}
+#addbuddy-modal input[type=text]{width:100%;box-sizing:border-box;font-size:16px;padding:10px 12px;border-radius:10px;border:1px solid var(--border);background:var(--bg);color:var(--text)}
+#addbuddy-modal .ab-icons{display:grid;grid-template-columns:repeat(8,1fr);gap:6px}
+#addbuddy-modal .ab-icons button{font-size:22px;padding:6px 0;background:var(--bg);border:1px solid var(--border);border-radius:10px;cursor:pointer}
+#addbuddy-modal .ab-icons button.sel{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent)}
+#addbuddy-modal .ab-kinds{display:flex;gap:8px;flex-wrap:wrap}
+#addbuddy-modal .ab-kinds button{font-size:13px;padding:8px 12px;border-radius:20px;border:1px solid var(--border);background:var(--bg);color:var(--text);cursor:pointer}
+#addbuddy-modal .ab-kinds button.sel{border-color:var(--accent);color:var(--accent);font-weight:700}
+#addbuddy-modal .ab-actions{display:flex;gap:10px;margin-top:20px}
+#addbuddy-modal .ab-actions button{flex:1;font-size:15px;font-weight:600;padding:12px;border-radius:12px;border:none;cursor:pointer}
+#addbuddy-modal .ab-cancel{background:var(--bg);color:var(--text);border:1px solid var(--border)}
+#addbuddy-modal .ab-create{background:var(--accent);color:#fff}
+#addbuddy-modal .ab-create:disabled{opacity:.45}
+#addbuddy-modal .ab-err{color:#e5484d;font-size:13px;margin-top:10px;min-height:18px}
 /* What's-new modal (from the update banner) */
 #whatsnew-modal{position:fixed;inset:0;z-index:10000}
 .cl-type-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(72px,1fr));gap:8px;margin:0 0 12px}
@@ -2098,20 +2120,25 @@ function renderBuddy(id){
   let reportsSec = '';
   (function(){
     const kids = (kidsOf[id] || []).filter(k => k && k.id !== id);
-    if (!kids.length) return;
-    reportsSec = '<div class="bp-sec" data-field="reports"><h3>Direct reports <span class="attn-count">('+kids.length+')</span></h3>' + kids.map(k =>
+    const addBtn = '<button class="bp-add" data-addbuddy="child" data-for="'+escHtml(id)+'">+ Child</button>';
+    const rows = kids.map(k =>
       '<a class="art-row" data-buddy="'+escHtml(k.id)+'">'
       + '<span class="art-ic">'+escHtml(k.icon || '')+'</span>'
       + '<span><span class="art-label">'+escHtml(dispName(k))+'</span><div class="art-sub">'+escHtml((k.tagline || k.mission || '').slice(0, 90))+'</div></span>'
-      + '<span class="art-go" data-homepage="'+escHtml(k.id)+'" title="Open homepage">\\u2192</span></a>').join('') + '</div>';
+      + '<span class="art-go" data-homepage="'+escHtml(k.id)+'" title="Open homepage">\\u2192</span></a>').join('');
+    reportsSec = '<div class="bp-sec" data-field="reports"><h3>Direct reports' + (kids.length ? ' <span class="attn-count">('+kids.length+')</span>' : '') + addBtn + '</h3>' + (rows || '<p class="bp-empty">No direct reports yet.</p>') + '</div>';
   })();
   let parSec = '';
   (function(){
     const par = effParent(b);
-    if (!par) return;
+    const addBtn = '<button class="bp-add" data-addbuddy="sibling" data-for="'+escHtml(id)+'">+ Sibling</button>';
+    if (!par) {
+      parSec = '<div class="bp-sec" data-field="parent"><h3>Parent'+addBtn+'</h3><p class="bp-empty">Top-level buddy — no parent.</p></div>';
+      return;
+    }
     const pb = byId[par];
     if (!pb) return;
-    parSec = '<div class="bp-sec" data-field="parent"><h3>Parent</h3>'
+    parSec = '<div class="bp-sec" data-field="parent"><h3>Parent'+addBtn+'</h3>'
       + '<a class="art-row" data-buddy="'+escHtml(par)+'">'
       + '<span class="art-ic">'+escHtml(pb.icon || '')+'</span>'
       + '<span><span class="art-label">'+escHtml(dispName(pb))+'</span><div class="art-sub">'+escHtml((pb.tagline || pb.mission || '').slice(0, 90))+'</div></span>'
@@ -3669,6 +3696,101 @@ async function ghPutFile(repo, path, b64, msg){
   const body = {message: msg, content: b64}; if (sha) body.sha = sha;
   await ghApi('/repos/davedellaquila/' + repo + '/contents/' + path, 'PUT', body);
 }
+/* ---------- Add child / sibling buddy from the info panel ---------- */
+const ADD_ICONS = ['🤖','👤','👥','🏠','📍','🚗','🐾','💼','🎯','📚','🎨','🎵','⚽','🌲','☕','💡','🔧','📷','✈️','🎬','🏥','💰','🛒','📱'];
+const ADD_KINDS = [['assistant','Assistant'],['family','Person'],['place','Place'],['project','Project'],['standalone','Other']];
+function slugifyBuddy(name){
+  return name.toLowerCase().trim().replace(/['']/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'').slice(0,40) || 'buddy';
+}
+function openAddBuddyDialog(mode, forId){
+  const ref = byId[forId]; if (!ref) return;
+  const parentId = mode === 'child' ? forId : effParent(ref);
+  const parentName = parentId && byId[parentId] ? dispName(byId[parentId]) : 'top level';
+  closeAddBuddyDialog();
+  const m = document.createElement('div');
+  m.id = 'addbuddy-modal';
+  m.innerHTML = '<div class="ab-backdrop"></div><div class="ab-box" role="dialog" aria-label="Add buddy">'
+    + '<h2>' + (mode === 'child' ? 'Add a child' : 'Add a sibling') + '</h2>'
+    + '<p class="ab-sub">' + (mode === 'child'
+        ? 'New buddy under <b>' + escHtml(dispName(ref)) + '</b>'
+        : 'New buddy alongside <b>' + escHtml(dispName(ref)) + '</b> (under ' + escHtml(parentName) + ')') + '</p>'
+    + '<label>Name</label><input type="text" id="ab-name" placeholder="Buddy name" autocomplete="off">'
+    + '<label>Icon</label><div class="ab-icons">' + ADD_ICONS.map((ic,i) => '<button data-ic="'+escHtml(ic)+'" class="'+(i===0?'sel':'')+'">'+escHtml(ic)+'</button>').join('') + '</div>'
+    + '<label>Type</label><div class="ab-kinds">' + ADD_KINDS.map((k,i) => '<button data-kind="'+k[0]+'" class="'+(i===0?'sel':'')+'">'+k[1]+'</button>').join('') + '</div>'
+    + '<div class="ab-err" id="ab-err"></div>'
+    + '<div class="ab-actions"><button class="ab-cancel" id="ab-cancel">Cancel</button><button class="ab-create" id="ab-create" disabled>Create</button></div></div>';
+  document.body.appendChild(m);
+  const nameInput = m.querySelector('#ab-name');
+  const createBtn = m.querySelector('#ab-create');
+  const errEl = m.querySelector('#ab-err');
+  let icon = ADD_ICONS[0], kind = ADD_KINDS[0][0];
+  m.querySelector('.ab-backdrop').addEventListener('click', closeAddBuddyDialog);
+  m.querySelector('#ab-cancel').addEventListener('click', closeAddBuddyDialog);
+  m.querySelectorAll('.ab-icons button').forEach(b => b.addEventListener('click', () => {
+    m.querySelectorAll('.ab-icons button').forEach(x => x.classList.remove('sel'));
+    b.classList.add('sel'); icon = b.dataset.ic;
+  }));
+  m.querySelectorAll('.ab-kinds button').forEach(b => b.addEventListener('click', () => {
+    m.querySelectorAll('.ab-kinds button').forEach(x => x.classList.remove('sel'));
+    b.classList.add('sel'); kind = b.dataset.kind;
+  }));
+  nameInput.addEventListener('input', () => { createBtn.disabled = !nameInput.value.trim(); errEl.textContent = ''; });
+  nameInput.addEventListener('keydown', e => { if (e.key === 'Enter' && !createBtn.disabled) createBtn.click(); if (e.key === 'Escape') closeAddBuddyDialog(); });
+  createBtn.addEventListener('click', () => createBuddyFromDialog(nameInput.value.trim(), icon, kind, parentId, errEl, createBtn));
+  setTimeout(() => nameInput.focus(), 50);
+}
+function closeAddBuddyDialog(){
+  const m = document.getElementById('addbuddy-modal');
+  if (m) m.remove();
+}
+async function createBuddyFromDialog(name, icon, kind, parentId, errEl, createBtn){
+  errEl.textContent = '';
+  createBtn.disabled = true;
+  createBtn.textContent = 'Creating…';
+  try {
+    if (!ghToken()) throw new Error('Add a GitHub token first (gear menu → GitHub token) so the dashboard can save.');
+    let base = slugifyBuddy(name), nid = base, n = 2;
+    while (byId[nid]) { nid = base + '-' + (n++); }
+    const today = new Date().toISOString().slice(0,10);
+    const entry = {
+      id: nid, name: name, icon: icon, kind: kind,
+      parent: parentId || null,
+      mission: '', tagline: 'New buddy — setup pending',
+      status: 'new', statusClass: 'new',
+      brief: '', docs: [], repo: '', homepage: '', photos: [],
+      setup_pending: true,
+      attention: [{id: 'setup-' + nid, date: today, text: 'New buddy added from the dashboard — run the full setup drill (mission doc, repo, side chat, homepage).'}]
+    };
+    // Fetch latest buddies.json from GitHub, append, write back
+    const raw = await ghGetFile('buddy-system', 'buddies.json');
+    if (!raw) throw new Error('Could not read buddies.json from GitHub.');
+    const data = JSON.parse(raw);
+    const arr = data.buddies || data;
+    if (arr.some(x => x.id === nid)) throw new Error('A buddy with that id already exists — try a different name.');
+    arr.push(entry);
+    await ghPutFile('buddy-system', 'buddies.json', b64encode(JSON.stringify(data, null, 1)), 'Add buddy ' + nid + ' (from dashboard info panel)');
+    // Optimistic local update
+    (BUDDIES).push(entry);
+    byId[nid] = entry;
+    const p = parentId || '__root';
+    (kidsOf[p] = kidsOf[p] || []).push(entry);
+    closeAddBuddyDialog();
+    save(); renderNav(); refreshViews();
+    if (S.projectId) renderBuddy(S.projectId);
+    toast('Buddy created — Astro will run the full setup drill.');
+  } catch (e) {
+    errEl.textContent = e.message || String(e);
+    createBtn.disabled = false;
+    createBtn.textContent = 'Create';
+  }
+}
+// Delegated clicks for the + Child / + Sibling buttons in the info panel
+document.addEventListener('click', e => {
+  const btn = e.target.closest('[data-addbuddy]');
+  if (!btn) return;
+  e.preventDefault(); e.stopPropagation();
+  openAddBuddyDialog(btn.dataset.addbuddy, btn.dataset.for);
+});
 async function ghDeleteFile(repo, path, msg){
   const t = ghToken(); if (!t) throw new Error('Add a GitHub token first.');
   // Get SHA first

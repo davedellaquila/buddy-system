@@ -114,6 +114,11 @@ Build: `build.py` generates `index.html` from `buddies.json` + `plans.json`.
   thread, and it lands in a durable inbox (`docs/ingest.md`) and gets routed
   to the buddy it actually belongs to. Dave never has to decide where a
   thought goes — capture is universal, routing is the staff's job.
+- **Add child / sibling from the panel** — the Parent section header has a
+  "+ Sibling" button, the Direct reports header has "+ Child". A dialog takes
+  the new buddy's name, icon, and type, then writes the entry straight to
+  `buddies.json` on GitHub (needs the GitHub token). New buddies are flagged
+  `setup_pending` with an attention item so Astro runs the full setup drill.
 - **Buddy links (many-to-many)** — buddies link to each other, Rae Assist
   style: everything can be linked to everything. A `links` array on a
   registry entry names linked buddy ids; the dashboard renders a "Linked

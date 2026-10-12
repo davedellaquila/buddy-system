@@ -3,6 +3,11 @@
 All notable changes to the Buddies dashboard and buddy system. Newest first.
 `FEATURES.md` describes the current state; this file describes how it got there.
 
+## 2026-10-11 (Add child/sibling from the info panel)
+
+### Added
+- **"+ Child" and "+ Sibling" buttons in the buddy info panel:** the Parent section header carries "+ Sibling", the Direct reports header carries "+ Child". Tapping either opens a dialog for the new buddy's name, icon (emoji picker), and type. The dashboard writes the new entry straight to `buddies.json` on GitHub (needs the GitHub token from the gear menu), flags it `setup_pending`, and adds an attention item so Astro runs the full setup drill (mission doc, repo, side chat, homepage).
+
 ## 2026-10-11 (Detail-panel polish: private notes, attention count, checkmarks, collapse fix, wider resize grips)
 
 ### Changed
