@@ -2650,7 +2650,7 @@ function renderBuddy(id){
     + '<div class="bp-sec" data-field="shared"><h3>Shared notes<span class="info-tip" data-tip="Anybody with repo access can see this note. Saved to the buddy’s repo (docs/notes.md).">ⓘ</span></h3>'
     + '<textarea class="notes" id="bp-shared-notes" placeholder="Anybody with repo access can see this note."></textarea>'
     + '<p class="fineprint" id="shared-status"></p></div>'
-    + '<div class="bp-build">Build 20261011.2315</div>'
+    + '<div class="bp-build">Build 20261011.2316</div>'
     + '</div>';
   const nm = document.getElementById('bp-name');
   nm.addEventListener('keydown', e => { if (e.key === 'Enter'){ e.preventDefault(); nm.blur(); } });
@@ -3620,7 +3620,7 @@ function renderPlan(id){
     + '<p class="fineprint">Saved on this device. (For your eyes only)</p></div>'
     + '<div class="bp-sec"><h3>Shared notes<span class="info-tip" data-tip="Visible to everyone with access to this project.">\u24d8</span></h3><textarea class="notes" id="bp-shared" placeholder="Shared notes\u2026 (visible to everyone with access)">'+escHtml((S.planShared||{})[id]||'')+'</textarea>'
     + '<p class="fineprint">Shared — visible to everyone with access.</p></div>'
-    + '<div class="bp-build">Build 20261011.2315</div>'
+    + '<div class="bp-build">Build 20261011.2316</div>'
     + '</div>';
   const nt = document.getElementById('bp-notes');
   let t = null;
@@ -5024,47 +5024,59 @@ function changelogMdToHtml(md, bare){
   if (!bare) html += '<p class="fineprint"><a href="https://github.com/davedellaquila/buddy-system/blob/master/CHANGELOG.md" target="_blank" rel="noopener">Full changelog on GitHub</a></p>';
   return html;
 }
-/* Release Notes: render each change as a professional Change Log row
-   (icon tile + title + description + date/type meta) instead of plain markdown. */
+/* Release Notes: render each change as a Change Log row, grouped by date
+   with day headers — matching the Change Log view format exactly. */
 function releaseNotesToHtml(md){
   const NL = String.fromCharCode(10);
   const lines = String(md || '').split(NL);
-  const TYPE_STYLE = {
-    added:   ['#2f9e44', '+'],
-    changed: ['#1f6feb', '~'],
-    fixed:   ['#cf222e', '✓'],
-  };
-  let html = '', curDate = '', curRelease = '', curType = '';
-  const rows = [];
-  function flushRow(text){
-    const t = (curType || 'other').toLowerCase();
-    const st = TYPE_STYLE[t] || ['#57606a', '•'];
-    // Title = bold lead if present, else first ~70 chars
-    let title = text, desc = '';
-    const m = text.match(/^\*\*([^*]+)\*\*:?\s*(.*)$/);
-    if (m) { title = m[1].trim(); desc = m[2].trim(); }
-    else if (text.length > 80) { title = text.slice(0, 80).trim() + '…'; desc = text; }
-    rows.push('<div class="cl-row">'
-      + '<span class="cl-ic" style="color:' + st[0] + ';border:1px solid ' + st[0] + '55;background:' + st[0] + '14" aria-hidden="true">' + st[1] + '</span>'
-      + '<div class="cl-body">'
-      + '<div class="cl-title">' + escHtml(title).replace(/\*\*([^*]+)\*\*/g, '<b>$1</b>') + '</div>'
-      + (desc ? '<div class="cl-desc" style="-webkit-line-clamp:3">' + escHtml(desc).replace(/\*\*([^*]+)\*\*/g, '<b>$1</b>') + '</div>' : '')
-      + '<div class="cl-time">' + escHtml(curDate) + (curRelease ? ' · ' + escHtml(curRelease) : '') + ' · ' + escHtml(curType || 'Update') + '</div>'
-      + '</div></div>');
+  const TYPE_ICON = { added: '+', changed: '~', fixed: '✓' };
+  const groups = [];
+  let curGroup = null, curType = '';
+  function newGroup(dateStr, release){
+    curGroup = { dateStr: dateStr, release: release, items: [] };
+    groups.push(curGroup);
   }
   for (const raw of lines) {
     const line = raw.replace(/\s+$/, '');
     let m;
     if ((m = line.match(/^## (\d{4}-\d{2}-\d{2})\s*(?:\(([^)]*)\))?/))) {
-      curDate = m[1]; curRelease = (m[2] || '').trim(); curType = '';
+      newGroup(m[1], (m[2] || '').trim());
+      curType = '';
     } else if ((m = line.match(/^### (.+)/))) {
       curType = m[1].trim();
-    } else if ((m = line.match(/^- (.+)/))) {
-      flushRow(m[1].trim());
+    } else if ((m = line.match(/^- (.+)/)) && curGroup) {
+      const text = m[1].trim();
+      const t = (curType || 'other').toLowerCase();
+      let title = text, desc = '';
+      const bm = text.match(/^\*\*([^*]+)\*\*:?\s*(.*)$/);
+      if (bm) { title = bm[1].trim(); desc = bm[2].trim(); }
+      else if (text.length > 80) { title = text.slice(0, 80).trim() + '…'; desc = text; }
+      curGroup.items.push({
+        icon: TYPE_ICON[t] || '•',
+        title: title, desc: desc, type: curType || 'Update',
+      });
     }
   }
-  if (!rows.length) return '<p class="fineprint">No release notes found.</p>';
-  return rows.join('');
+  if (!groups.length) return '<p class="fineprint">No release notes found.</p>';
+  return groups.map(g => {
+    let dLabel = g.dateStr;
+    try {
+      const dp = g.dateStr.split('-');
+      const d = new Date(+dp[0], +dp[1] - 1, +dp[2]);
+      dLabel = dayLabel(d);
+    } catch (e) {}
+    const rows = g.items.map(it =>
+      '<div class="cl-row">'
+      + '<span class="cl-ic" aria-hidden="true">' + escHtml(it.icon) + '</span>'
+      + '<div class="cl-body">'
+      + '<div class="cl-title">' + escHtml(it.title).replace(/\*\*([^*]+)\*\*/g, '<b>$1</b>') + '</div>'
+      + (it.desc ? '<div class="cl-desc">' + escHtml(it.desc).replace(/\*\*([^*]+)\*\*/g, '<b>$1</b>') + '</div>' : '')
+      + '<div class="cl-time">' + escHtml(g.release ? g.release + ' · ' : '') + escHtml(it.type) + '</div>'
+      + '</div></div>'
+    ).join('');
+    return '<h3 class="cl-day">' + escHtml(dLabel) + '</h3>'
+      + '<div class="cl-group">' + rows + '</div>';
+  }).join('');
 }
 function wireChangelogTypeFilter(root){
   if (!root) return;
@@ -5143,7 +5155,7 @@ function openWhatsNew(){
   head.insertBefore(updBtn, head.querySelector('.wn-x'));
   fetch('version.txt?_=' + Date.now(), {cache: 'no-store'})
     .then(r => r.ok ? r.text() : '')
-    .then(t => { if (t.trim() && t.trim() !== '20261011.2315') updBtn.style.display = ''; })
+    .then(t => { if (t.trim() && t.trim() !== '20261011.2316') updBtn.style.display = ''; })
     .catch(() => {});
   fetch('https://raw.githubusercontent.com/davedellaquila/buddy-system/master/CHANGELOG.md?_' + Date.now(), {cache: 'no-store'})
     .then(r => { if (!r.ok) throw new Error('fetch failed'); return r.text(); })
@@ -5171,7 +5183,7 @@ function openWhatsNew(){
   if (x) x.focus();
 }
 function initVersionCheck(){
-  const myBuild = '20261011.2315';
+  const myBuild = '20261011.2316';
   function showUpdateBanner(serverBuild){
     if (document.getElementById('update-banner')) return;
     const b = document.createElement('div');
