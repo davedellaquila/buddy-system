@@ -467,6 +467,8 @@ body.sb-closed #menu-btn{display:flex;align-items:center;justify-content:center;
 .linkbtn:hover{text-decoration:underline}
 .bp-topnav{margin-bottom:6px}
 .bp-build{margin:26px 0 6px;font-size:11px;color:var(--faint);text-align:center;cursor:pointer}
+.status.st-dormant{background:rgba(139,148,158,.15);color:var(--muted);border:1px solid var(--border)}
+.brow.dormant{opacity:.5}.brow.dormant .bname{font-style:italic}
 .bp-build:hover{color:var(--accent);text-decoration:underline}
 .pstrip{display:flex;gap:10px;overflow-x:auto;padding:2px 2px 6px}
 .pstrip a{flex:0 0 auto}
@@ -955,6 +957,12 @@ function standingOrdersHtml(){
 }
 const kidsOf = {};
 function effParent(b){ if (S.parents && b.id in S.parents) return S.parents[b.id]; return b.parent; }
+function isDormant(bid){ return !!(S.dormant && S.dormant[bid]); }
+function setDormant(bid, val){
+  if (!S.dormant || typeof S.dormant !== 'object') S.dormant = {};
+  if (val) S.dormant[bid] = true; else delete S.dormant[bid];
+  save(); renderBuddy(bid); renderNav(); refreshViews();
+}
 function buildKids(){
   for (const k in kidsOf) delete kidsOf[k];
   BUDDIES.forEach(b => { const p = effParent(b) || '__root'; (kidsOf[p] = kidsOf[p] || []).push(b); });
@@ -1013,7 +1021,7 @@ function homepageUrl(b){
   const base = window.location.origin + window.location.pathname.replace(/\/[^/]*$/, '/');
   return base + hp.replace(/^\//, '');
 }
-function unseenItems(b){ return (b.attention || []).filter(a => !S.seen[a.id]); }
+function unseenItems(b){ if (isDormant(b.id)) return []; return (b.attention || []).filter(a => !S.seen[a.id]); }
 function descUnseen(id){
   let n = 0;
   (function walk(x){ const b = byId[x]; if(!b) return; n += unseenItems(b).length;
@@ -1210,7 +1218,7 @@ function renderNav(){
     const kids = kidsOf[id] || [];
     const hasKids = kids.length > 0;
     const collapsed = hasKids && !words.length && !!S.navCollapsed[id];
-    h += '<button class="brow'+((S.projectId===id || S.sel==='buddy:'+id)?' sel':'')+(un?' has-unseen':'')+'" data-buddy="'+id+'"'
+    h += '<button class="brow'+((S.projectId===id || S.sel==='buddy:'+id)?' sel':'')+(un?' has-unseen':'')+(isDormant(id)?' dormant':'')+'" data-buddy="'+id+'"'
       + ' draggable="'+(id===ROOT_ID?'false':'true')+'"'
       + ' style="padding-left:'+(8+depth*16)+'px" title="'+escHtml(b.tagline||'')+'">'
       + (hasKids ? '<span class="ctog has-kids'+(collapsed?' collapsed':'')+'" data-ctog="'+id+'" title="'+(collapsed?'Expand':'Collapse')+'"><i class="chev">\u203a</i></span>' : '')
@@ -1853,6 +1861,7 @@ function buddyHomepageHtml(b){
   if (b.tagline) h += '<p class="hp-tagline">' + escHtml(b.tagline) + '</p>';
   let statHtml = stats;
   if (b.status) statHtml = '<span class="status ' + escHtml(b.statusClass || '') + '">' + escHtml(b.status) + '</span>' + statHtml;
+  + (isDormant(id) ? '<span class=\"status st-dormant\">💤 Dormant</span>' : '')
   if (statHtml) h += '<div class="hp-stats">' + statHtml + '</div>';
   h += '</div></header>';
   // main column
@@ -2151,6 +2160,7 @@ function renderBuddy(id){
     + '<div class="bp-topnav"><button class="linkbtn" data-navbtn="back">\u2190 Back</button>'
     + '<button class="linkbtn" data-navbtn="prev">\u2039 Prev</button><button class="linkbtn" data-navbtn="next">Next \u203a</button>'
     + '<span class="sep">\u00b7</span><button class="linkbtn" data-view="tree">All buddies</button>'
+    + '<span class=\"sep\">\\u00b7</span><button class=\"linkbtn\" id=\"bp-dormant\" title=\"Mark dormant / wake up\"></button>'
     + '<span class="sep">\u00b7</span><button class="linkbtn" id="bp-desktop">\U0001f4be Save to desktop</button></div>'
     + '<div class="bp-crumb">'+crumb(id)+'</div>'
     + '<p class="bp-tagline">'+escHtml(b.tagline||'')+'</p>'
@@ -2254,6 +2264,16 @@ function renderBuddy(id){
         try { document.execCommand('copy'); done(); } catch (err) {}
         ta.remove();
       }
+    });
+  }
+  const dbtn = document.getElementById('bp-dormant');
+  if (dbtn) {
+    const dor = isDormant(id);
+    dbtn.textContent = dor ? '\u23f0 Wake' : '💤 Mark dormant';
+    dbtn.addEventListener('click', e => {
+      e.stopPropagation();
+      setDormant(id, !isDormant(id));
+      toast(isDormant(id) ? 'Marked dormant.' : 'Welcomed back.');
     });
   }
   const hpo = document.getElementById('bp-homepage-open');
