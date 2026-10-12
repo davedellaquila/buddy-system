@@ -1757,8 +1757,8 @@ function openFieldSettings(){
     if (!def) return '';
     const vis = isFieldVisible(fid);
     return '<div class="fset-row" draggable="true" data-fid="' + fid + '">'
-      + '<span class="fh">\u2630</span><span class="fl">' + def.label + '</span>'
-      + '<input type="checkbox" ' + (vis ? 'checked' : '') + ' data-vis="' + fid + '" title="Show/hide"></div>';
+      + '<input type="checkbox" ' + (vis ? 'checked' : '') + ' data-vis="' + fid + '" title="Show/hide">'
+      + '<span class="fh">\u22ee\u22ee</span><span class="fl">' + def.label + '</span></div>';
   }).join('');
   function clearFsetDnD(listEl){
     if (listEl) {
@@ -1926,7 +1926,7 @@ function openFieldSettings(){
       const def = VIEW_DEFS.find(v => v[0] === vid);
       if (!def) return '';
       return '<div class="fset-row" draggable="true" data-vid="' + vid + '">'
-        + '<span class="fh">☰</span><span class="fl">' + def[1] + '</span></div>';
+        + '<span class="fh">\u22ee\u22ee</span><span class="fl">' + def[1] + '</span></div>';
     }).join('');
     bindFsetListDnD(vlist, r => r.dataset.vid, (fromId, beforeId) => {
       S.viewOrder = reorderBefore(getViewOrder(), fromId, beforeId);
