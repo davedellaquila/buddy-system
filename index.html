@@ -313,6 +313,79 @@ body{padding:0}
    still scrolls normally from the top. */
 .treescroll.fit-centered{display:flex}
 .treescroll.fit-centered .chart,.treescroll.fit-centered .standalones{margin:auto}
+/* ============ Atlas lens picker (Jonny's verdict) ============ */
+.lens-picker-wrap{position:relative;display:inline-block;margin:0 0 12px 12px;z-index:60}
+.lens-pill{display:flex;align-items:center;gap:8px;min-height:44px;padding:10px 16px;
+  background:var(--panel);border:1px solid var(--border);border-radius:999px;
+  color:var(--text);font-size:14px;font-weight:600;cursor:pointer;
+  box-shadow:0 2px 8px var(--shadow);-webkit-tap-highlight-color:transparent}
+.lens-pill:hover{border-color:var(--accent)}
+.lens-pill-icon{color:var(--accent)}
+.lens-pill-chev{color:var(--muted);font-size:12px}
+.lens-dropdown{position:absolute;top:calc(100% + 8px);left:0;z-index:61;
+  display:grid;grid-template-columns:repeat(2,minmax(220px,1fr));gap:8px;
+  background:var(--panel);border:1px solid var(--border);border-radius:16px;
+  padding:12px;box-shadow:0 12px 40px var(--shadow);min-width:480px;
+  animation:lensIn .18s ease-out}
+@keyframes lensIn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
+.lens-card{display:flex;flex-direction:column;align-items:flex-start;gap:4px;
+  padding:12px;border:1px solid var(--border);border-radius:12px;background:var(--bg);
+  cursor:pointer;text-align:left;min-height:44px;-webkit-tap-highlight-color:transparent}
+.lens-card:hover{border-color:var(--accent)}
+.lens-card.sel{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent)}
+.lens-thumb{color:var(--muted);display:block;margin-bottom:2px}
+.lens-card.sel .lens-thumb{color:var(--accent)}
+.lens-name{font-size:14px;font-weight:700;color:var(--text)}
+.lens-blurb{font-size:12px;color:var(--muted);line-height:1.35}
+.lens-scrim{position:fixed;inset:0;z-index:59;background:transparent}
+/* Phone: bottom sheet */
+@media (max-width:639px){
+  .lens-dropdown{position:fixed;left:12px;right:12px;bottom:12px;top:auto;min-width:0;
+    grid-template-columns:1fr 1fr;border-radius:20px;padding:16px 12px calc(16px + env(safe-area-inset-bottom));
+    animation:lensSheetIn .25s cubic-bezier(.32,.72,.35,1)}
+  .lens-dropdown::before{content:'';display:block;width:36px;height:4px;border-radius:2px;
+    background:var(--border);margin:0 auto 12px;grid-column:1/-1}
+  @keyframes lensSheetIn{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:none}}
+  .lens-scrim{background:rgba(0,0,0,.35)}
+}
+/* ============ Atlas chart types ============ */
+.chart-ledger .ledger{max-width:720px;margin:0 auto;padding:8px 0}
+.ledger-row{display:flex;align-items:baseline;gap:10px;padding:7px 12px;border-radius:8px;cursor:pointer}
+.ledger-row:hover{background:var(--wash)}
+.ledger-name{font-weight:600;font-size:15px;white-space:nowrap}
+.ledger-desc{color:var(--muted);font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.chart-lineage .lineage{overflow-x:auto;padding:16px 8px}
+.hgen{display:flex;align-items:center;gap:0}
+.hchildren{display:flex;flex-direction:column;gap:12px;margin-left:0;padding-left:28px;position:relative}
+.hchildren::before{content:'';position:absolute;left:14px;top:12px;bottom:12px;width:1px;background:var(--border)}
+.hgen .node{flex:none}
+.chart-colonnade .colonnade{display:flex;overflow-x:auto;min-height:420px;border:1px solid var(--border);border-radius:12px;background:var(--panel)}
+.mcol{flex:0 0 240px;border-right:1px solid var(--border);overflow-y:auto;max-height:70vh}
+.mcol-head{padding:12px 14px;font-weight:700;border-bottom:1px solid var(--border);position:sticky;top:0;background:var(--panel)}
+.mcol-row{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;cursor:pointer;border-bottom:1px solid var(--wash)}
+.mcol-row:hover{background:var(--wash)}
+.mcol-arrow{color:var(--muted)}
+.chart-terrain .terrain{display:flex;min-height:60vh;border-radius:12px;overflow:hidden;border:1px solid var(--border)}
+.tm-tile{display:flex;flex-direction:column;min-width:0;min-height:0;border:1px solid var(--border);background:var(--panel);overflow:hidden}
+.tm-branch{padding:0}
+.tm-label{padding:8px 10px;font-weight:700;font-size:13px;background:var(--wash);cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tm-kids{display:flex;flex:1;min-height:0}
+.tm-leaf{align-items:center;justify-content:center;cursor:pointer;padding:8px}
+.tm-leaf:hover{background:var(--wash)}
+.tm-name{font-size:12px;font-weight:600;text-align:center;overflow:hidden;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical}
+.chart-halo .halo-wrap{position:relative;max-width:640px;margin:0 auto}
+.chart-halo #halo-svg{width:100%;height:auto;display:block}
+.halo-arc{fill:var(--panel);stroke:var(--border);stroke-width:1;cursor:pointer}
+.halo-arc:hover{fill:var(--wash)}
+.halo-center{fill:var(--accent);opacity:.9;cursor:pointer}
+.halo-label{font-size:11px;fill:var(--text);pointer-events:none;font-family:-apple-system,sans-serif}
+.halo-center-label{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  font-weight:700;font-size:15px;pointer-events:none;text-align:center;max-width:140px;color:#fff}
+.chart-constellation .constellation-wrap{position:relative;min-height:60vh}
+.chart-constellation #constellation-canvas{display:block;cursor:pointer}
+/* Chart transition — Kin's curve */
+.chart{transition:opacity .28s cubic-bezier(.32,.72,.35,1)}
+.chart.chart-switching{opacity:0}
 /* Flash highlight for "All buddies" navigation — brief accent glow that fades */
 .proj-row.flash-highlight{outline:2px solid var(--accent);outline-offset:2px;border-radius:8px;
   animation:flashFade 2.5s ease-out forwards}
@@ -1550,7 +1623,7 @@ function linkify(escaped){
   return escaped.replace(/(https?:\/\/[^\s<>"']+)/g, '<a href="$1" target="_blank" rel="noopener">$1</a>');
 }
 const VIEW_DEFS = [
-  ['tree','Tree','▦'],
+  ['tree','Atlas','▦'],
   ['projects','Projects','☰'],
   ['plans','Business Plans','💼'],
   ['manifest','Manifest','✓'],
@@ -1559,7 +1632,7 @@ const VIEW_DEFS = [
   ['releases','Release Notes','🎁'],
 ];
 const VIEW_TIPS = {
-  tree: 'Tree view — visual hierarchy of all buddies. Click a node to open its details. Drag the background to pan, scroll to zoom. Drag a node onto another node to reparent it.',
+  tree: 'Atlas — seven lenses on your buddy hierarchy. Tap the pill to switch views. Click a node to open its details. Drag the background to pan, scroll to zoom. Drag a node onto another node to reparent it.',
   projects: 'Projects list — every buddy in hierarchy order with status. Click a tile to filter by attention status. Click the chevron to expand/collapse sections.',
   plans: 'Business Plans — real-world ventures as cards. Click a status tile to filter. Each card links to its mission statement and related buddies.',
   manifest: 'New-Project Manifest — the checklist every new buddy gets. Click AUTOMATIC or PLANNED tiles to filter the steps.',
@@ -1824,7 +1897,8 @@ function applySectionCollapse(bid){
   const home = document.getElementById('buddy-home');
   if (!home) return;
   if (!S.secCollapsed || typeof S.secCollapsed !== 'object') S.secCollapsed = {};
-  if (!S.secCollapsed[bid] || typeof S.secCollapsed[bid] !== 'object') S.secCollapsed[bid] = {};
+  // Collapse state is global per section (not per buddy): collapsing Artifacts
+  // on one buddy keeps it collapsed everywhere.
   home.querySelectorAll('.bp-sec[data-field] > h3').forEach(h3 => {
     if (h3.querySelector('.secarrow')) return;
     const sec = h3.parentElement;
@@ -1838,7 +1912,7 @@ function applySectionCollapse(bid){
     grip.textContent = '⋮⋮';
     grip.title = 'Drag to reorder sections';
     h3.appendChild(grip);
-    if (S.secCollapsed[bid][fid]) sec.classList.add('collapsed');
+    if (S.secCollapsed[fid]) sec.classList.add('collapsed');
     h3.title = 'Click to collapse/expand — Shift+click applies to all sections';
     h3.addEventListener('click', e => {
       if (e.target.closest('.info-tip')) return;
@@ -1848,11 +1922,11 @@ function applySectionCollapse(bid){
         // Shift-click: apply to all sections
         home.querySelectorAll('.bp-sec[data-field]').forEach(s2 => {
           s2.classList.toggle('collapsed', willCollapse);
-          S.secCollapsed[bid][s2.dataset.field] = willCollapse;
+          S.secCollapsed[s2.dataset.field] = willCollapse;
         });
       } else {
         sec.classList.toggle('collapsed');
-        S.secCollapsed[bid][fid] = sec.classList.contains('collapsed');
+        S.secCollapsed[fid] = sec.classList.contains('collapsed');
       }
       save();
     });
@@ -2075,7 +2149,7 @@ function renderDevelopSection(){
   const dev = document.getElementById('fset-develop');
   if (!dev) return;
   const simulating = !!devBackup;
-  const buildNum = '20261012.0721';
+  const buildNum = '20261012.0729';
   dev.innerHTML = ''
     + '<label class="fset-check"><input type="checkbox" id="dev-empty-toggle"' + (simulating ? ' checked' : '') + '> <span><strong>Simulate new user</strong> — empty data file, as if opening the shared link fresh</span></label>'
     + '<div class="fineprint" style="margin:8px 0 12px">Build <span style="font-family:monospace">' + escHtml(String(buildNum)) + '</span> · ' + BUDDIES.length + ' buddies in this file</div>'
@@ -2933,7 +3007,7 @@ function renderBuddy(id){
     + '<div class="bp-sec" data-field="shared"><h3>Shared notes<span class="info-tip" data-tip="Anybody with repo access can see this note. Saved to the buddy’s repo (docs/notes.md).">ⓘ</span></h3>'
     + '<textarea class="notes" id="bp-shared-notes" placeholder="Anybody with repo access can see this note."></textarea>'
     + '<p class="fineprint" id="shared-status"></p></div>'
-    + '<div class="bp-build">Build 20261012.0721</div>'
+    + '<div class="bp-build">Build 20261012.0729</div>'
     + '</div>';
   const nm = document.getElementById('bp-name');
   nm.addEventListener('keydown', e => { if (e.key === 'Enter'){ e.preventDefault(); nm.blur(); } });
@@ -3358,14 +3432,20 @@ function quickAnswersHtml(){
 }
 function renderOrgTree(){
   const root = byId[ROOT_ID];
+  const chartType = getChartType();
   // The org chart shows the real hierarchy: every direct report of the root,
   // side by side. Only truly parentless buddies land in the orphan section.
   const kids = kidsOf[ROOT_ID] || [];
-  const chartHtml = '<div class="chart">' + quickAnswersHtml() + '<div style="text-align:center"><div class="node root" data-buddy="'+ROOT_ID+'">'
-    + '<div class="name">' + iconName(root) + '</div>'
-    + '<div class="desc">' + escHtml(root.tagline || '') + '</div></div></div>'
-    + '<div class="root-stub"></div><div class="tree"><ul>'
-    + kids.map(b => orgNode(b, 1)).join('') + '</ul></div></div>';
+  let chartHtml;
+  if (chartType === 'org') {
+    chartHtml = '<div class="chart">' + quickAnswersHtml() + chartSwitcherHtml() + '<div style="text-align:center"><div class="node root" data-buddy="'+ROOT_ID+'">'
+      + '<div class="name">' + iconName(root) + '</div>'
+      + '<div class="desc">' + escHtml(root.tagline || '') + '</div></div></div>'
+      + '<div class="root-stub"></div><div class="tree"><ul>'
+      + kids.map(b => orgNode(b, 1)).join('') + '</ul></div></div>';
+  } else {
+    chartHtml = '<div class="chart chart-' + chartType + '">' + quickAnswersHtml() + chartSwitcherHtml() + renderChartMain(chartType, root, kids) + '</div>';
+  }
   let orphHtml = '';
   const orphans = (kidsOf['__root'] || []).filter(b => b.id !== ROOT_ID);
   if (orphans.length) {
@@ -3386,6 +3466,305 @@ function renderOrgTree(){
   updateZoomMin();
   restoreScrollPos('tree:main', document.getElementById('treezoom-main'));
   restoreScrollPos('tree:orph', document.getElementById('treezoom-orph'));
+  if (chartType === 'constellation') initConstellation();
+  if (chartType === 'halo') initHalo();
+}
+/* ============ Atlas chart types ============
+   Seven visualizations of the same hierarchy. chartType persists in S.
+   Each renderer returns the main-pane HTML; the orphan section is shared. */
+const CHART_TYPES = [
+  {id:'org', label:'Org chart'},
+  {id:'lineage', label:'Lineage'},
+  {id:'ledger', label:'Ledger'},
+  {id:'colonnade', label:'Colonnade'},
+  {id:'terrain', label:'Terrain'},
+  {id:'halo', label:'Halo'},
+  {id:'constellation', label:'Constellation'},
+];
+function getChartType(){ return S.chartType || 'org'; }
+function setChartType(t){ S.chartType = t; save(); renderOrgTree(); }
+// Atlas lens picker — Jonny's verdict: one quiet pill, tap to see seven pictures.
+// Thumbnails are stylized inline SVGs (icons with ambition, not live renders).
+const CHART_BLURBS = {
+  org: 'The classic. Top-down tree.',
+  halo: 'Radial sunburst — generations as rings.',
+  constellation: 'Force-directed — relationships as gravity.',
+  terrain: 'Treemap — the family as landscape.',
+  lineage: 'Horizontal org chart — time flows left to right.',
+  colonnade: 'Miller columns — one level at a time.',
+  ledger: 'The indented list, perfected.',
+};
+function chartThumbSvg(id){
+  const s = 'width="64" height="40" viewBox="0 0 64 40" fill="none" stroke="currentColor" stroke-width="1.5"';
+  switch(id){
+    case 'org': return '<svg ' + s + '><circle cx="32" cy="8" r="4"/><circle cx="16" cy="28" r="4"/><circle cx="48" cy="28" r="4"/><path d="M32 12v6m0 0l-14 6m14-6l14 6"/></svg>';
+    case 'halo': return '<svg ' + s + '><circle cx="32" cy="20" r="4"/><circle cx="32" cy="20" r="10"/><circle cx="32" cy="20" r="16"/></svg>';
+    case 'constellation': return '<svg ' + s + '><circle cx="14" cy="12" r="3"/><circle cx="34" cy="8" r="3"/><circle cx="50" cy="20" r="3"/><circle cx="28" cy="28" r="3"/><circle cx="46" cy="32" r="3"/><path d="M14 12l20-4m0 0l16 12m-36 8l14-16m18 4l-2 12"/></svg>';
+    case 'terrain': return '<svg ' + s + '><rect x="6" y="6" width="52" height="28"/><path d="M6 20h30m-12-14v28m32-28v28m-20-14h20"/></svg>';
+    case 'lineage': return '<svg ' + s + '><circle cx="10" cy="20" r="4"/><circle cx="30" cy="12" r="4"/><circle cx="30" cy="28" r="4"/><circle cx="52" cy="20" r="4"/><path d="M14 20h8m0 0l4-6m-4 6l4 6m4-14h12m-12 16h12"/></svg>';
+    case 'colonnade': return '<svg ' + s + '><rect x="8" y="6" width="12" height="28"/><rect x="26" y="6" width="12" height="28"/><rect x="44" y="6" width="12" height="28"/></svg>';
+    case 'ledger': return '<svg ' + s + '><path d="M8 10h24m-24 8h16m0 8h24m-24 8h12"/></svg>';
+    default: return '';
+  }
+}
+function chartSwitcherHtml(){
+  const cur = getChartType();
+  const curDef = CHART_TYPES.find(c => c.id === cur) || CHART_TYPES[0];
+  return '<div class="lens-picker-wrap">'
+    + '<button class="lens-pill" id="lens-pill" aria-haspopup="true" aria-expanded="false">'
+    + '<span class="lens-pill-icon">◉</span><span>' + curDef.label + '</span><span class="lens-pill-chev">▾</span>'
+    + '</button>'
+    + '<div class="lens-dropdown" id="lens-dropdown" hidden>'
+    + CHART_TYPES.map(c => '<button class="lens-card' + (c.id === cur ? ' sel' : '') + '" data-chart="' + c.id + '">'
+      + '<span class="lens-thumb">' + chartThumbSvg(c.id) + '</span>'
+      + '<span class="lens-name">' + c.label + (c.id === cur ? ' ✓' : '') + '</span>'
+      + '<span class="lens-blurb">' + CHART_BLURBS[c.id] + '</span>'
+      + '</button>').join('')
+    + '</div></div>'
+    + '<div class="lens-scrim" id="lens-scrim" hidden></div>';
+}
+function renderChartMain(type, root, kids){
+  switch(type){
+    case 'ledger': return ledgerHtml(root);
+    case 'lineage': return lineageHtml(root, kids);
+    case 'colonnade': return colonnadeHtml(root);
+    case 'terrain': return terrainHtml(root);
+    case 'halo': return haloHtml(root);
+    case 'constellation': return constellationHtml(root);
+    default: return '';
+  }
+}
+/* Ledger — indented list, the hierarchy as a perfected outline */
+function ledgerHtml(root){
+  function row(b, depth){
+    const kids = kidsOf[b.id] || [];
+    let s = '<div class="ledger-row" data-buddy="' + b.id + '" style="padding-left:' + (depth * 24 + 12) + 'px">'
+      + '<span class="ledger-name">' + iconName(b) + '</span>'
+      + (b.tagline ? '<span class="ledger-desc">' + escHtml(b.tagline) + '</span>' : '')
+      + '</div>';
+    kids.forEach(k => { s += row(k, depth + 1); });
+    return s;
+  }
+  return '<div class="ledger">' + row(root, 0) + '</div>';
+}
+/* Lineage — horizontal org chart. Root on the left, generations flow right. */
+function lineageHtml(root, kids){
+  function hNode(b){
+    const ch = kidsOf[b.id] || [];
+    return '<div class="hgen">'
+      + '<div class="node" data-buddy="' + b.id + '"><div class="name">' + iconName(b) + '</div>'
+      + '<div class="desc">' + escHtml(b.tagline || '') + '</div></div>'
+      + (ch.length ? '<div class="hchildren">' + ch.map(hNode).join('') + '</div>' : '')
+      + '</div>';
+  }
+  return '<div class="lineage"><div class="hgen hroot">'
+    + '<div class="node root" data-buddy="' + root.id + '"><div class="name">' + iconName(root) + '</div>'
+    + '<div class="desc">' + escHtml(root.tagline || '') + '</div></div>'
+    + '<div class="hchildren">' + kids.map(hNode).join('') + '</div>'
+    + '</div></div>';
+}
+/* Colonnade — Miller columns. Each generation is a column; tap to drill. */
+function colonnadeHtml(root){
+  const colStack = S.colonnadePath || [ROOT_ID];
+  // Validate path still exists
+  const valid = colStack.filter(id => byId[id]);
+  if (!valid.length) valid.push(ROOT_ID);
+  let cols = '';
+  valid.forEach((id, i) => {
+    const b = byId[id];
+    const kids = kidsOf[id] || [];
+    const isLast = i === valid.length - 1;
+    cols += '<div class="mcol' + (isLast ? ' mcol-active' : '') + '">'
+      + '<div class="mcol-head">' + iconName(b) + '</div>'
+      + kids.map(k => '<div class="mcol-row" data-buddy="' + k.id + '" data-col="' + i + '">'
+        + '<span>' + iconName(k) + '</span><span class="mcol-arrow">›</span></div>').join('')
+      + '</div>';
+  });
+  return '<div class="colonnade">' + cols + '</div>';
+}
+/* Terrain — treemap. Tile area scales with subtree size. */
+function terrainHtml(root){
+  function size(b){
+    let n = 1;
+    (kidsOf[b.id] || []).forEach(k => { n += size(k); });
+    return n;
+  }
+  function tile(b){
+    const kids = kidsOf[b.id] || [];
+    const s = size(b);
+    if (!kids.length) {
+      return '<div class="tm-tile tm-leaf" data-buddy="' + b.id + '" style="flex:' + s + '">'
+        + '<span class="tm-name">' + iconName(b) + '</span></div>';
+    }
+    return '<div class="tm-tile tm-branch" style="flex:' + s + '">'
+      + '<div class="tm-label" data-buddy="' + b.id + '">' + iconName(b) + '</div>'
+      + '<div class="tm-kids">' + kids.map(tile).join('') + '</div></div>';
+  }
+  return '<div class="terrain">' + tile(root) + '</div>';
+}
+/* Halo — radial sunburst. The selected buddy is the sun; generations orbit. */
+function haloHtml(root){
+  const centerId = S.haloCenter || ROOT_ID;
+  const center = byId[centerId] || root;
+  return '<div class="halo-wrap">'
+    + '<svg id="halo-svg" viewBox="0 0 600 600" data-center="' + center.id + '"></svg>'
+    + '<div class="halo-center-label" data-buddy="' + center.id + '">' + iconName(center) + '</div>'
+    + '</div>';
+}
+function initHalo(){
+  const svg = document.getElementById('halo-svg');
+  if (!svg) return;
+  const centerId = svg.dataset.center;
+  const center = byId[centerId];
+  if (!center) return;
+  const NS = 'http://www.w3.org/2000/svg';
+  const cx = 300, cy = 300;
+  svg.innerHTML = '';
+  // Rings: center, children, grandchildren
+  function ring(b, r0, r1, a0, a1, depth){
+    if (depth > 2) return;
+    const kids = kidsOf[b.id] || [];
+    if (!kids.length) return;
+    const span = (a1 - a0) / kids.length;
+    kids.forEach((k, i) => {
+      const sa = a0 + i * span, ea = a0 + (i + 1) * span;
+      const path = document.createElementNS(NS, 'path');
+      const x0 = cx + r0 * Math.cos(sa), y0 = cy + r0 * Math.sin(sa);
+      const x1 = cx + r1 * Math.cos(sa), y1 = cy + r1 * Math.sin(sa);
+      const x2 = cx + r1 * Math.cos(ea), y2 = cy + r1 * Math.sin(ea);
+      const x3 = cx + r0 * Math.cos(ea), y3 = cy + r0 * Math.sin(ea);
+      const large = (ea - sa) > Math.PI ? 1 : 0;
+      path.setAttribute('d', 'M' + x0 + ',' + y0 + ' L' + x1 + ',' + y1
+        + ' A' + r1 + ',' + r1 + ' 0 ' + large + ' 1 ' + x2 + ',' + y2
+        + ' L' + x3 + ',' + y3
+        + ' A' + r0 + ',' + r0 + ' 0 ' + large + ' 0 ' + x0 + ',' + y0 + ' Z');
+      path.setAttribute('class', 'halo-arc');
+      path.dataset.buddy = k.id;
+      // Label
+      const mid = (sa + ea) / 2, lr = (r0 + r1) / 2;
+      const tx = cx + lr * Math.cos(mid), ty = cy + lr * Math.sin(mid);
+      const text = document.createElementNS(NS, 'text');
+      text.setAttribute('x', tx); text.setAttribute('y', ty);
+      text.setAttribute('class', 'halo-label');
+      text.setAttribute('text-anchor', 'middle');
+      text.textContent = (k.icon ? k.icon + ' ' : '') + dispName(k);
+      text.dataset.buddy = k.id;
+      svg.appendChild(path); svg.appendChild(text);
+      ring(k, r1 + 8, r1 + 68, sa, ea, depth + 1);
+    });
+  }
+  // Center circle
+  const c = document.createElementNS(NS, 'circle');
+  c.setAttribute('cx', cx); c.setAttribute('cy', cy); c.setAttribute('r', 70);
+  c.setAttribute('class', 'halo-center');
+  c.dataset.buddy = center.id;
+  svg.appendChild(c);
+  ring(center, 78, 148, 0, Math.PI * 2, 0);
+}
+/* Constellation — force-directed star map. Relationships as gravity. */
+function constellationHtml(root){
+  return '<div class="constellation-wrap"><canvas id="constellation-canvas"></canvas></div>';
+}
+function initConstellation(){
+  const canvas = document.getElementById('constellation-canvas');
+  if (!canvas) return;
+  const wrap = canvas.parentElement;
+  const W = wrap.clientWidth || 800, H = Math.max(500, wrap.clientHeight || 600);
+  canvas.width = W * 2; canvas.height = H * 2;
+  canvas.style.width = W + 'px'; canvas.style.height = H + 'px';
+  const ctx = canvas.getContext('2d');
+  ctx.scale(2, 2);
+  // Build node list (cap at 120 for perf)
+  const nodes = [], edges = [], seen = {};
+  function walk(b, depth){
+    if (seen[b.id] || nodes.length >= 120) return;
+    seen[b.id] = true;
+    nodes.push({id: b.id, b: b, x: W/2 + (Math.random()-0.5)*W*0.6, y: H/2 + (Math.random()-0.5)*H*0.6,
+      vx: 0, vy: 0, r: depth === 0 ? 14 : Math.max(6, 10 - depth)});
+    if (depth < 4) (kidsOf[b.id] || []).forEach(k => {
+      if (!seen[k.id] && nodes.length < 120) edges.push([b.id, k.id]);
+      walk(k, depth + 1);
+    });
+  }
+  walk(byId[ROOT_ID], 0);
+  const byNodeId = {};
+  nodes.forEach(n => { byNodeId[n.id] = n; });
+  // Physics loop
+  let ticks = 0;
+  function tick(){
+    if (ticks++ > 300) return;
+    // Repulsion
+    for (let i = 0; i < nodes.length; i++) {
+      for (let j = i + 1; j < nodes.length; j++) {
+        const a = nodes[i], b = nodes[j];
+        let dx = a.x - b.x, dy = a.y - b.y;
+        let d2 = dx*dx + dy*dy;
+        if (d2 < 1) d2 = 1;
+        if (d2 > 40000) continue;
+        const f = 3200 / d2;
+        const d = Math.sqrt(d2);
+        dx /= d; dy /= d;
+        a.vx += dx * f; a.vy += dy * f;
+        b.vx -= dx * f; b.vy -= dy * f;
+      }
+    }
+    // Springs
+    edges.forEach(([id1, id2]) => {
+      const a = byNodeId[id1], b = byNodeId[id2];
+      if (!a || !b) return;
+      const dx = b.x - a.x, dy = b.y - a.y;
+      const d = Math.sqrt(dx*dx + dy*dy) || 1;
+      const f = (d - 90) * 0.02;
+      a.vx += dx / d * f; a.vy += dy / d * f;
+      b.vx -= dx / d * f; b.vy -= dy / d * f;
+    });
+    // Gravity to center + damping
+    nodes.forEach(n => {
+      n.vx += (W/2 - n.x) * 0.002; n.vy += (H/2 - n.y) * 0.002;
+      n.vx *= 0.85; n.vy *= 0.85;
+      n.x += n.vx; n.y += n.vy;
+      n.x = Math.max(30, Math.min(W - 30, n.x));
+      n.y = Math.max(30, Math.min(H - 30, n.y));
+    });
+    draw();
+    requestAnimationFrame(tick);
+  }
+  function draw(){
+    ctx.clearRect(0, 0, W, H);
+    const isLight = document.documentElement.classList.contains('light');
+    // Edges
+    ctx.strokeStyle = isLight ? 'rgba(31,35,40,.14)' : 'rgba(255,255,255,.12)';
+    ctx.lineWidth = 1;
+    edges.forEach(([id1, id2]) => {
+      const a = byNodeId[id1], b = byNodeId[id2];
+      if (!a || !b) return;
+      ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
+    });
+    // Nodes
+    nodes.forEach(n => {
+      ctx.beginPath(); ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2);
+      ctx.fillStyle = n.id === ROOT_ID ? '#f0a35e' : (isLight ? '#fff' : '#161b22');
+      ctx.fill();
+      ctx.strokeStyle = isLight ? '#d0d7de' : '#30363d';
+      ctx.stroke();
+      // Label
+      ctx.fillStyle = isLight ? '#1f2328' : '#e6edf3';
+      ctx.font = '11px -apple-system, sans-serif';
+      ctx.textAlign = 'center';
+      const label = (n.b.icon ? n.b.icon + ' ' : '') + dispName(n.b);
+      ctx.fillText(label.length > 18 ? label.slice(0, 17) + '…' : label, n.x, n.y + n.r + 13);
+    });
+  }
+  // Click to open buddy
+  canvas.addEventListener('click', e => {
+    const r = canvas.getBoundingClientRect();
+    const mx = e.clientX - r.left, my = e.clientY - r.top;
+    for (const n of nodes) {
+      const d = Math.hypot(n.x - mx, n.y - my);
+      if (d < n.r + 8) { show('buddy:' + n.id); break; }
+    }
+  });
+  tick();
 }
 /* Release Notes view — same format as the What's New update modal:
    "new since you last looked" on top, earlier history below. */
@@ -4071,7 +4450,7 @@ function renderPlan(id){
     + '<p class="fineprint">Saved on this device. (For your eyes only)</p></div>'
     + '<div class="bp-sec"><h3>Shared notes<span class="info-tip" data-tip="Visible to everyone with access to this project.">\u24d8</span></h3><textarea class="notes" id="bp-shared" placeholder="Shared notes\u2026 (visible to everyone with access)">'+escHtml((S.planShared||{})[id]||'')+'</textarea>'
     + '<p class="fineprint">Shared — visible to everyone with access.</p></div>'
-    + '<div class="bp-build">Build 20261012.0721</div>'
+    + '<div class="bp-build">Build 20261012.0729</div>'
     + '</div>';
   const nt = document.getElementById('bp-notes');
   let t = null;
@@ -5931,7 +6310,7 @@ function openWhatsNew(){
   head.insertBefore(updBtn, head.querySelector('.wn-x'));
   fetch('version.txt?_=' + Date.now(), {cache: 'no-store'})
     .then(r => r.ok ? r.text() : '')
-    .then(t => { if (t.trim() && t.trim() !== '20261012.0721') updBtn.style.display = ''; })
+    .then(t => { if (t.trim() && t.trim() !== '20261012.0729') updBtn.style.display = ''; })
     .catch(() => {});
   fetch('https://raw.githubusercontent.com/davedellaquila/buddy-system/master/CHANGELOG.md?_' + Date.now(), {cache: 'no-store'})
     .then(r => { if (!r.ok) throw new Error('fetch failed'); return r.text(); })
@@ -5959,7 +6338,7 @@ function openWhatsNew(){
   if (x) x.focus();
 }
 function initVersionCheck(){
-  const myBuild = '20261012.0721';
+  const myBuild = '20261012.0729';
   function showUpdateBanner(serverBuild){
     if (document.getElementById('update-banner')) return;
     const b = document.createElement('div');
@@ -6299,6 +6678,33 @@ document.addEventListener('click', e => {
     show('view:' + vb.dataset.view);
     if (window.innerWidth < 640) { const sbo=document.getElementById('sidebar'); if(sbo) sbo.classList.remove('open'); const sco=document.getElementById('sb-scrim'); if(sco) sco.classList.remove('show'); }
     if (pendingHighlight) { const id = pendingHighlight; pendingHighlight = null; highlightProjectRow(id); }
+    return;
+  }
+  // Atlas lens picker: pill toggles, cards switch, scrim/Escape closes
+  const pill = e.target.closest('#lens-pill');
+  if (pill) {
+    const dd = document.getElementById('lens-dropdown');
+    const scrim = document.getElementById('lens-scrim');
+    const open = dd.hidden;
+    dd.hidden = !open; scrim.hidden = !open;
+    pill.setAttribute('aria-expanded', open);
+    return;
+  }
+  const lcard = e.target.closest('.lens-card[data-chart]');
+  if (lcard) {
+    const dd = document.getElementById('lens-dropdown');
+    const scrim = document.getElementById('lens-scrim');
+    if (dd) dd.hidden = true; if (scrim) scrim.hidden = true;
+    const chart = document.querySelector('#treezoom-main .chart');
+    if (chart) chart.classList.add('chart-switching');
+    setTimeout(() => setChartType(lcard.dataset.chart), 140);
+    return;
+  }
+  const lscrim = e.target.closest('#lens-scrim');
+  if (lscrim) {
+    document.getElementById('lens-dropdown').hidden = true;
+    lscrim.hidden = true;
+    document.getElementById('lens-pill').setAttribute('aria-expanded', 'false');
     return;
   }
   const pmb = e.target.closest('[data-proj-mode]');
