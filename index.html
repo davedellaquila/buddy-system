@@ -614,7 +614,8 @@ body.sb-closed #menu-btn{display:flex;align-items:center;justify-content:center;
 .linkbtn{background:none;border:none;color:var(--accent);cursor:pointer;font-size:13px;padding:2px 4px}
 .linkbtn:hover{text-decoration:underline}
 .bp-topnav{margin-bottom:6px}
-.bp-build{margin:26px 0 6px;font-size:11px;color:var(--faint);text-align:center}
+.bp-build{margin:26px 0 6px;font-size:11px;color:var(--faint);text-align:center;cursor:pointer}
+.bp-build:hover{color:var(--accent);text-decoration:underline}
 .pstrip{display:flex;gap:10px;overflow-x:auto;padding:2px 2px 6px}
 .pstrip a{flex:0 0 auto}
 /* ---- standalone buddy mode ---- */
@@ -4776,6 +4777,8 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') tipPopClose(
 document.addEventListener('click', e => {
   if (nodeDragEndAt && Date.now() - nodeDragEndAt < 400) return; // swallow the click that follows a node-drag gesture
   if (edgeOpenAt && Date.now() - edgeOpenAt < 400) return; // swallow the click that follows an edge-swipe open
+  const bb = e.target.closest && e.target.closest('.bp-build');
+  if (bb) { openWhatsNew(); return; }
   if (e.target.closest && e.target.closest('#bp-icon')) { const m = S.sel.match(/^buddy:(.+)$/); if (m) openAvatarPicker(m[1], e.target.closest('#bp-icon')); return; }
   const co = e.target.closest && e.target.closest('[data-close-order]');
   if (co) {
