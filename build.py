@@ -797,7 +797,7 @@ body.standalone .sa-bar{display:flex}
 #addbuddy-modal{position:fixed;inset:0;z-index:10000;display:flex;align-items:center;justify-content:center}
 #addbuddy-modal .ab-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.5)}
 #addbuddy-modal .ab-box{position:relative;background:var(--panel);border-radius:14px;padding:22px;width:min(92vw,380px);box-shadow:0 12px 40px rgba(0,0,0,.35)}
-#addbuddy-modal .ab-box h2{margin:0 0 4px;font-size:17px}
+#addbuddy-modal .ab-box h2{margin:0 0 4px;font-size:17px;overflow-wrap:break-word}
 #addbuddy-modal .ab-sub{color:var(--muted);font-size:13px;margin:0 0 16px}
 #addbuddy-modal label{display:block;font-size:12px;color:var(--muted);margin:12px 0 6px;text-transform:uppercase;letter-spacing:.8px}
 #addbuddy-modal input[type=text]{width:100%;box-sizing:border-box;font-size:16px;padding:10px 12px;border-radius:10px;border:1px solid var(--border);background:var(--bg);color:var(--text)}
