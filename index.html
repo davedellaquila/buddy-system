@@ -912,6 +912,7 @@ body.standalone .sa-bar{display:flex}
 .bp-sec{margin-top:30px}
 .bp-sec>h3{font-size:13px;letter-spacing:1.2px;text-transform:uppercase;color:var(--muted);margin:0 0 12px}
 .bp-sec>h3 .bp-add{float:right;font-size:12px;letter-spacing:0;text-transform:none;font-weight:600;color:var(--accent);background:none;border:1px solid var(--accent);border-radius:20px;padding:2px 10px;cursor:pointer}
+.bp-sec>h3 .bp-circle-add{float:right;font-size:18px;line-height:1;color:var(--accent);background:none;border:none;cursor:pointer;min-width:44px;min-height:44px;display:inline-flex;align-items:center;justify-content:center}
 .bp-sec>h3 .bp-add:active{transform:scale(.96)}
 .bp-sec[data-field="attention"]>h3{color:var(--amber)}
 /* Add-buddy dialog */
@@ -2589,7 +2590,7 @@ function renderBuddy(id){
   let reportsSec = '';
   (function(){
     const kids = (kidsOf[id] || []).filter(k => k && k.id !== id);
-    const addBtn = '<button class="bp-add" data-addbuddy="child" data-for="'+escHtml(id)+'" title="Add a direct report / subordinate below this buddy">＋ ↓ Child</button>';
+    const addBtn = '<button class="bp-circle-add" data-addbuddy="child" data-for="'+escHtml(id)+'" title="Add a child buddy below this one" aria-label="Add a child buddy">⊕</button>';
     const rows = kids.map(k =>
       '<a class="art-row" data-buddy="'+escHtml(k.id)+'">'
       + '<span class="art-ic">'+escHtml(k.icon || '')+'</span>'
@@ -2603,12 +2604,12 @@ function renderBuddy(id){
     const addParentBtn = '<button class="bp-add" data-addbuddy="parent" data-for="'+escHtml(id)+'" title="Add a parent/manager above this buddy">＋ ↑ Parent</button>';
     const addSibBtn = '<button class="bp-add" data-addbuddy="sibling" data-for="'+escHtml(id)+'">+ Sibling</button>';
     if (!par) {
-      parSec = '<div class="bp-sec" data-field="parent"><h3>Parent'+addParentBtn+'</h3><p class="bp-empty">Top-level buddy — no parent.</p></div>';
+      parSec = '<div class="bp-sec" data-field="parent"><h3>Parent'+addParentBtn+'<button class="bp-add" data-changeparent="'+escHtml(id)+'" title="Set this buddy’s parent">Set parent</button></h3><p class="bp-empty">Top-level buddy — no parent.</p></div>';
       return;
     }
     const pb = byId[par];
     if (!pb) return;
-    parSec = '<div class="bp-sec" data-field="parent"><h3>Parent'+addParentBtn+'</h3>'
+    parSec = '<div class="bp-sec" data-field="parent"><h3>Parent'+addParentBtn+'<button class="bp-add" data-changeparent="'+escHtml(id)+'" title="Change this buddy’s parent">Change</button></h3>'
       + '<a class="art-row" data-buddy="'+escHtml(par)+'">'
       + '<span class="art-ic">'+escHtml(pb.icon || '')+'</span>'
       + '<span><span class="art-label">'+escHtml(dispName(pb))+'</span><div class="art-sub">'+escHtml((pb.tagline || pb.mission || '').slice(0, 90))+'</div></span>'
@@ -2729,7 +2730,7 @@ function renderBuddy(id){
     + '<div class="bp-sec" data-field="shared"><h3>Shared notes<span class="info-tip" data-tip="Anybody with repo access can see this note. Saved to the buddy’s repo (docs/notes.md).">ⓘ</span></h3>'
     + '<textarea class="notes" id="bp-shared-notes" placeholder="Anybody with repo access can see this note."></textarea>'
     + '<p class="fineprint" id="shared-status"></p></div>'
-    + '<div class="bp-build">Build 20261012.0007</div>'
+    + '<div class="bp-build">Build 20261012.0709</div>'
     + '</div>';
   const nm = document.getElementById('bp-name');
   nm.addEventListener('keydown', e => { if (e.key === 'Enter'){ e.preventDefault(); nm.blur(); } });
@@ -3747,7 +3748,7 @@ function renderPlan(id){
     + '<p class="fineprint">Saved on this device. (For your eyes only)</p></div>'
     + '<div class="bp-sec"><h3>Shared notes<span class="info-tip" data-tip="Visible to everyone with access to this project.">\u24d8</span></h3><textarea class="notes" id="bp-shared" placeholder="Shared notes\u2026 (visible to everyone with access)">'+escHtml((S.planShared||{})[id]||'')+'</textarea>'
     + '<p class="fineprint">Shared — visible to everyone with access.</p></div>'
-    + '<div class="bp-build">Build 20261012.0007</div>'
+    + '<div class="bp-build">Build 20261012.0709</div>'
     + '</div>';
   const nt = document.getElementById('bp-notes');
   let t = null;
@@ -4593,6 +4594,62 @@ document.addEventListener('click', e => {
   e.preventDefault(); e.stopPropagation();
   openAddBuddyDialog(btn.dataset.addbuddy, btn.dataset.for);
 });
+// Change-parent picker: select a new parent for a buddy (excludes self + descendants to prevent cycles)
+document.addEventListener('click', e => {
+  const btn = e.target.closest('[data-changeparent]');
+  if (!btn) return;
+  e.preventDefault(); e.stopPropagation();
+  openChangeParentDialog(btn.dataset.changeparent);
+});
+function descendantsOf(bid){
+  const out = new Set(); const stack = [bid];
+  while (stack.length){ const cur = stack.pop();
+    (kidsOf[cur] || []).forEach(k => { if (k && k.id && !out.has(k.id)){ out.add(k.id); stack.push(k.id); } });
+  }
+  return out;
+}
+function openChangeParentDialog(bid){
+  const b = byId[bid]; if (!b) return;
+  const bad = descendantsOf(bid); bad.add(bid);
+  const opts = BUDDIES.filter(x => x && x.id && !bad.has(x.id))
+    .sort((a,c) => dispName(a).localeCompare(dispName(c)));
+  const cur = effParent(b);
+  const m = document.createElement('div'); m.id = 'addbuddy-modal';
+  const optHtml = x => '<option value="' + escHtml(x.id) + '"' + (x.id === cur ? ' selected' : '') + '>' + escHtml((x.icon || '') + ' ' + dispName(x)) + '</option>';
+  m.innerHTML = '<div class="ab-backdrop"></div><div class="ab-box" role="dialog" aria-modal="true" aria-label="Change parent">'
+    + '<h2>Change parent</h2><p class="ab-sub">Pick a new parent for ' + escHtml(dispName(b)) + '.</p>'
+    + '<label for="cp-filter">Filter</label>'
+    + '<input type="text" id="cp-filter" placeholder="Type to filter…" autocomplete="off" style="margin-bottom:10px">'
+    + '<label for="cp-select">Parent</label>'
+    + '<select id="cp-select" size="8" style="width:100%;box-sizing:border-box;font-size:15px;padding:10px 12px;border-radius:10px;border:1px solid var(--border);background:var(--bg);color:var(--text)">'
+    + '<option value="" disabled>— Top level —</option>'
+    + '<option value="">No parent (top level)</option>'
+    + '<option value="" disabled>──────────</option>'
+    + opts.map(optHtml).join('')
+    + '</select>'
+    + '<div style="display:flex;gap:10px;justify-content:flex-end;margin-top:18px">'
+    + '<button class="linkbtn" id="cp-cancel" type="button">Cancel</button>'
+    + '<button class="linkbtn" id="cp-save" type="button" style="font-weight:600">Save</button>'
+    + '</div></div>';
+  document.body.appendChild(m);
+  const close = () => m.remove();
+  const sel = m.querySelector('#cp-select'), filt = m.querySelector('#cp-filter');
+  filt.addEventListener('input', () => {
+    const q = filt.value.trim().toLowerCase();
+    sel.querySelectorAll('option[value]:not([disabled])').forEach(o => {
+      if (!o.value) return; // keep the "No parent" row always visible
+      o.hidden = q && !o.textContent.toLowerCase().includes(q);
+    });
+  });
+  m.querySelector('.ab-backdrop').addEventListener('click', close);
+  m.querySelector('#cp-cancel').addEventListener('click', close);
+  m.querySelector('#cp-save').addEventListener('click', () => {
+    const v = sel.value || null;
+    applyParentOverride(bid, v); save(); buildKids(); renderNav(); refreshViews();
+    if (S.sel === 'buddy:' + bid) renderBuddy(bid);
+    close(); toast('Parent updated.');
+  });
+}
 async function ghDeleteFile(repo, path, msg){
   const t = ghToken(); if (!t) throw new Error('Add a GitHub token first.');
   // Get SHA first
@@ -5459,7 +5516,7 @@ function openWhatsNew(){
   head.insertBefore(updBtn, head.querySelector('.wn-x'));
   fetch('version.txt?_=' + Date.now(), {cache: 'no-store'})
     .then(r => r.ok ? r.text() : '')
-    .then(t => { if (t.trim() && t.trim() !== '20261012.0007') updBtn.style.display = ''; })
+    .then(t => { if (t.trim() && t.trim() !== '20261012.0709') updBtn.style.display = ''; })
     .catch(() => {});
   fetch('https://raw.githubusercontent.com/davedellaquila/buddy-system/master/CHANGELOG.md?_' + Date.now(), {cache: 'no-store'})
     .then(r => { if (!r.ok) throw new Error('fetch failed'); return r.text(); })
@@ -5487,7 +5544,7 @@ function openWhatsNew(){
   if (x) x.focus();
 }
 function initVersionCheck(){
-  const myBuild = '20261012.0007';
+  const myBuild = '20261012.0709';
   function showUpdateBanner(serverBuild){
     if (document.getElementById('update-banner')) return;
     const b = document.createElement('div');
