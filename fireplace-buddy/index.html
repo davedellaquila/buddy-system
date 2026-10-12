@@ -1,9 +1,10 @@
+<!-- BUDDY-BASIC-TEMPLATE v2 -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>🔥 Fireplace Buddy</title>
+<title>Fireplace Buddy</title>
 <style>
 :root {
   --bg: #ffffff;
@@ -11,11 +12,7 @@
   --muted: #666;
   --card: #f5f5f5;
   --border: #e0e0e0;
-  --accent: #c2410c;
-  --accent-soft: #fff7ed;
-  --good: #2f9e44;
-  --warn: #e8890c;
-  --bad: #c92a2a;
+  --accent: #0066cc;
 }
 @media (prefers-color-scheme: dark) {
   :root {
@@ -24,8 +21,7 @@
     --muted: #999;
     --card: #2a2a2a;
     --border: #3a3a3a;
-    --accent: #fb923c;
-    --accent-soft: #431407;
+    --accent: #4da6ff;
   }
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -38,7 +34,7 @@ body {
   max-width: 800px;
   margin: 0 auto;
 }
-.header { text-align: center; margin-bottom: 36px; }
+.header { text-align: center; margin-bottom: 40px; }
 .icon { font-size: 64px; margin-bottom: 16px; }
 h1 { font-size: 32px; margin-bottom: 8px; }
 .tagline { color: var(--muted); font-size: 18px; }
@@ -50,31 +46,7 @@ h1 { font-size: 32px; margin-bottom: 8px; }
   margin-bottom: 32px;
   font-size: 17px;
 }
-h2 { font-size: 22px; margin: 36px 0 6px; }
-.section-sub { color: var(--muted); font-size: 14px; margin-bottom: 16px; }
-.chart-card {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 20px 20px 8px;
-  margin-bottom: 8px;
-  overflow-x: auto;
-}
-.spec-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  gap: 12px;
-  margin-bottom: 8px;
-}
-.spec {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 14px 16px;
-}
-.spec-label { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; margin-bottom: 4px; }
-.spec-value { font-size: 18px; font-weight: 700; }
-.spec-note { font-size: 12px; color: var(--muted); margin-top: 2px; }
+h2 { font-size: 22px; margin: 32px 0 16px; }
 .attn {
   background: var(--card);
   border-left: 4px solid var(--accent);
@@ -82,8 +54,29 @@ h2 { font-size: 22px; margin: 36px 0 6px; }
   padding: 16px 20px;
   margin-bottom: 12px;
 }
-.attn.urgent { border-left-color: var(--bad); }
 .attn-date { color: var(--muted); font-size: 14px; margin-top: 8px; }
+.attn-actions { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
+.attn-btn {
+  border: 1px solid var(--border); background: var(--bg); color: var(--text);
+  border-radius: 8px; padding: 7px 14px; font-size: 13px; font-weight: 600; cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.attn-btn:hover { border-color: var(--accent); }
+.attn-btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+.attn-btn:disabled { opacity: .45; cursor: default; }
+.attn-status { font-size: 13px; color: var(--muted); margin-top: 8px; min-height: 18px; }
+.attn.resolved { opacity: .6; }
+.attn.resolved .attn-actions { display: none; }
+.children { display: flex; flex-wrap: wrap; gap: 12px; }
+.child {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px 20px;
+  text-decoration: none;
+  color: var(--text);
+}
+.child:hover { border-color: var(--accent); }
 .footer {
   margin-top: 48px;
   padding-top: 24px;
@@ -92,7 +85,7 @@ h2 { font-size: 22px; margin: 36px 0 6px; }
   font-size: 14px;
   text-align: center;
 }
-.last-updated { color: var(--muted); font-size: 13px; text-align: center; margin-top: 24px; font-style: italic; }
+.empty { color: var(--muted); font-style: italic; }
 
 .dumpbox {
   background: var(--card);
@@ -132,92 +125,18 @@ h2 { font-size: 22px; margin: 36px 0 6px; }
   border-radius: 8px; padding: 7px 14px; font-size: 13px; font-weight: 600; cursor: pointer;
 }
 .dumpbox-tokenrow a { color: var(--accent); font-size: 13px; }
+
 </style>
 </head>
 <body>
 <div class="header">
 <div class="icon">🔥</div>
 <h1>Fireplace Buddy</h1>
-<div class="tagline">Keeping the Fiddletown cabin warm — wood, chimney, winter readiness.</div>
+<div class="tagline"></div>
 </div>
 
-<div class="mission">The cabin's Fireplace Xtrordinair 36-Elite is a proper wood burner — up to a 10-hour burn, heating 2,500 sq ft. My job: make sure there's always dry wood stacked, the chimney stays clean, and winter never catches us cold.</div>
+<div class="mission">Keeps the Fiddletown cabin fireplace burning — wood supply, chimney, winter readiness.</div>
 
-<h2>Are we ready for winter?</h2>
-<p class="section-sub">The one number that matters — cords on hand vs. what the season will ask for.</p>
-<div class="chart-card">
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 300" width="100%" role="img" aria-label="Winter wood readiness" style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;max-width:720px;display:block">
-<title>Winter Wood Readiness — cords on hand vs projected need (estimates)</title>
-<text x="28" y="34" font-size="26" font-weight="700" fill="var(--text)">~2.5 of ~5 cords</text>
-<text x="28" y="58" font-size="13.5" fill="var(--muted)" font-style="italic">projected winter need — all figures are estimates until Dave confirms</text>
-<rect x="28.0" y="130" width="199.2" height="44" rx="8" fill="#2f9e44"/>
-<text x="127.6" y="200.0" text-anchor="middle" font-size="13.5" font-weight="600" fill="var(--text)">Ready to burn</text>
-<text x="127.6" y="220.0" text-anchor="middle" font-size="13" fill="var(--muted)">~1.5 cords</text>
-<rect x="227.2" y="130" width="132.8" height="44" rx="8" fill="#e8890c"/>
-<text x="293.6" y="200.0" text-anchor="middle" font-size="13.5" font-weight="600" fill="var(--text)">In progress</text>
-<text x="293.6" y="220.0" text-anchor="middle" font-size="13" fill="var(--muted)">~1 cords</text>
-<rect x="360.0" y="130" width="332.0" height="44" rx="8" fill="var(--card)" stroke="var(--muted)" stroke-width="1.5" stroke-dasharray="7 5"/>
-<text x="526.0" y="200.0" text-anchor="middle" font-size="13.5" font-weight="600" fill="var(--text)">Still needed</text>
-<text x="526.0" y="220.0" text-anchor="middle" font-size="13" fill="var(--muted)">~2.5 cords</text>
-<line x1="28.0" y1="174" x2="28.0" y2="182" stroke="var(--muted)" stroke-width="1"/>
-<text x="28.0" y="246.0" text-anchor="middle" font-size="10.5" fill="var(--muted)">0</text>
-<line x1="160.8" y1="174" x2="160.8" y2="182" stroke="var(--muted)" stroke-width="1"/>
-<text x="160.8" y="246.0" text-anchor="middle" font-size="10.5" fill="var(--muted)">1</text>
-<line x1="293.6" y1="174" x2="293.6" y2="182" stroke="var(--muted)" stroke-width="1"/>
-<text x="293.6" y="246.0" text-anchor="middle" font-size="10.5" fill="var(--muted)">2</text>
-<line x1="426.4" y1="174" x2="426.4" y2="182" stroke="var(--muted)" stroke-width="1"/>
-<text x="426.4" y="246.0" text-anchor="middle" font-size="10.5" fill="var(--muted)">3</text>
-<line x1="559.2" y1="174" x2="559.2" y2="182" stroke="var(--muted)" stroke-width="1"/>
-<text x="559.2" y="246.0" text-anchor="middle" font-size="10.5" fill="var(--muted)">4</text>
-<line x1="692.0" y1="174" x2="692.0" y2="182" stroke="var(--muted)" stroke-width="1"/>
-<text x="692.0" y="246.0" text-anchor="middle" font-size="10.5" fill="var(--muted)">5</text>
-<text x="28" y="286" font-size="11.5" fill="var(--muted)" font-style="italic">(!) Estimates: burn rate and current stock still open questions — correct me and I re-cut.</text>
-</svg>
-</div>
-
-<h2>The stove</h2>
-<p class="section-sub">Fireplace Xtrordinair 36-Elite (Travis Industries) — from the owner's manual on file.</p>
-<div class="spec-grid">
-<div class="spec"><div class="spec-label">Firebox</div><div class="spec-value">3.7 cu ft</div><div class="spec-note">max log length 24"</div></div>
-<div class="spec"><div class="spec-label">Burn time</div><div class="spec-value">up to 10 hrs</div><div class="spec-note">overnight-capable</div></div>
-<div class="spec"><div class="spec-label">Heats</div><div class="spec-value">2,500 sq ft</div><div class="spec-note">10,300–66,000 BTU/hr</div></div>
-<div class="spec"><div class="spec-label">Blower</div><div class="spec-value">388 CFM</div><div class="spec-note">thermostat-controlled</div></div>
-<div class="spec"><div class="spec-label">Fuel</div><div class="spec-value">Cord wood</div><div class="spec-note">dry &amp; seasoned only</div></div>
-<div class="spec"><div class="spec-label">Chimney rule</div><div class="spec-value">2× / year</div><div class="spec-note">inspect for creosote</div></div>
-</div>
-
-<h2>Chimney watch</h2>
-<p class="section-sub">Twice-yearly inspection per the manual. Last sweep date: unknown — flagged.</p>
-<div class="chart-card">
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 250" width="100%" role="img" aria-label="Chimney inspection timeline" style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;max-width:720px;display:block">
-<title>Chimney inspections — twice-yearly cadence per the manual</title>
-<text x="72" y="34" font-size="20" font-weight="700" fill="var(--text)">Chimney inspections</text>
-<text x="72" y="56" font-size="13" fill="var(--muted)" font-style="italic">twice a year per the 36-Elite manual</text>
-<line x1="72" y1="120" x2="648" y2="120" stroke="var(--border)" stroke-width="2"/>
-<circle cx="72.0" cy="120" r="11" fill="#c92a2a"/>
-<text x="72.0" y="126" text-anchor="middle" font-size="14" font-weight="700" fill="white">?</text>
-<text x="72.0" y="94.0" text-anchor="middle" font-size="13.5" font-weight="600" fill="var(--text)">Last sweep</text>
-<text x="72.0" y="154.0" text-anchor="middle" font-size="12.5" fill="var(--muted)" font-style="italic">unknown — flagged</text>
-<circle cx="216.0" cy="120" r="11" fill="#e8890c"/>
-<text x="216.0" y="94.0" text-anchor="middle" font-size="13.5" font-weight="600" fill="var(--text)">Fall 2026</text>
-<text x="216.0" y="154.0" text-anchor="middle" font-size="12.5" fill="var(--muted)" font-style="italic">due now</text>
-<circle cx="360.0" cy="120" r="9" fill="var(--card)" stroke="var(--muted)" stroke-width="2"/>
-<text x="360.0" y="94.0" text-anchor="middle" font-size="13.5" font-weight="600" fill="var(--muted)">Spring 2027</text>
-<text x="360.0" y="154.0" text-anchor="middle" font-size="12.5" fill="var(--muted)" font-style="italic">scheduled</text>
-<circle cx="504.0" cy="120" r="9" fill="var(--card)" stroke="var(--muted)" stroke-width="2"/>
-<text x="504.0" y="94.0" text-anchor="middle" font-size="13.5" font-weight="600" fill="var(--muted)">Fall 2027</text>
-<text x="504.0" y="154.0" text-anchor="middle" font-size="12.5" fill="var(--muted)" font-style="italic">scheduled</text>
-<circle cx="648.0" cy="120" r="9" fill="var(--card)" stroke="var(--muted)" stroke-width="2"/>
-<text x="648.0" y="94.0" text-anchor="middle" font-size="13.5" font-weight="600" fill="var(--muted)">Spring 2028</text>
-<text x="648.0" y="154.0" text-anchor="middle" font-size="12.5" fill="var(--muted)" font-style="italic">scheduled</text>
-</svg>
-</div>
-
-<h2>Needs attention</h2>
-<div class="attn urgent"><div><strong>Chimney sweep — last date unknown.</strong> Manual requires twice-yearly inspection. Pro-Sweep Chimney Services (Pine Grove, 209-296-6226) is the closest option. Get it swept before winter.</div><div class="attn-date">2026-10-12</div></div>
-<div class="attn"><div><strong>Firewood backlog:</strong> split the fresh cut → borrow Carl's splitter → stack wet/dry separate → cover the pile.</div><div class="attn-date">2026-10-12</div></div>
-<div class="attn"><div><strong>Open questions for Dave:</strong> typical winter burn rate? Current cords on hand? Is Robert's Fri/Sat rhythm still active?</div><div class="attn-date">2026-10-12</div></div>
-<div class="attn"><div>Mission statement awaiting Dave review</div><div class="attn-date">2026-10-12</div></div>
 
 <section class="dumpbox" data-buddy-id="fireplace-buddy">
 <h2>🧠 Brain dump</h2>
@@ -237,10 +156,15 @@ h2 { font-size: 22px; margin: 36px 0 6px; }
 </div>
 </section>
 
-<p class="last-updated">Last refreshed 2026-10-12 — charts: winter wood readiness + chimney timeline (estimates until Dave confirms).</p>
+
+<h2>Needs Attention</h2>
+<div class="attn" data-attn-id="mission-review"><div class="attn-text">Mission statement awaiting Dave review</div><div class="attn-date">2026-10-12</div><div class="attn-actions"><button type="button" class="attn-btn primary" data-act="done">✓ Done</button><button type="button" class="attn-btn" data-act="info">Need more info</button></div><div class="attn-status" role="status"></div></div>
+
+
+
 
 <div class="footer">
-Part of the Buddy System
+Generated 2026-10-12 · Part of the Buddy System
 </div>
 
 <script>
@@ -320,6 +244,7 @@ Part of the Buddy System
     if (!text) return;
     if (!token()) { refreshUI(); return; }
     if (!repo) { st.textContent = 'No repo linked for this buddy yet.'; return; }
+    st.textContent = 'Dumping…';
     btn.disabled = true;
     try {
       var stamp = new Date().toLocaleString();
@@ -340,6 +265,116 @@ Part of the Buddy System
     if ((ev.metaKey || ev.ctrlKey) && ev.key === 'Enter') { ev.preventDefault(); dump(); }
   });
   resolveRepo().then(refreshUI);
+})();
+</script>
+
+
+<script>
+(function(){
+  var tiles = document.querySelectorAll('.attn[data-attn-id]');
+  if (!tiles.length) return;
+  var dumpbox = document.querySelector('.dumpbox');
+  var bid = (dumpbox && dumpbox.getAttribute('data-buddy-id')) || (function(){
+    var p = location.pathname.replace(/\/+$/, '');
+    return p.substring(p.lastIndexOf('/') + 1);
+  })();
+  function lsGet(){ try { return JSON.parse(localStorage.getItem('buddyTree.v3') || '{}'); } catch(e){ return {}; } }
+  function lsSet(patch){ try { var s = lsGet(); for (var k in patch) s[k] = patch[k]; localStorage.setItem('buddyTree.v3', JSON.stringify(s)); } catch(e){} }
+  function token(){ return lsGet().ghToken || ''; }
+  function b64encode(str){
+    var bytes = new TextEncoder().encode(str), bin = '';
+    bytes.forEach(function(b){ bin += String.fromCharCode(b); });
+    return btoa(bin);
+  }
+  async function ghApi(path, method, body){
+    var t = token();
+    if (!t) throw new Error('Add a GitHub token first.');
+    var r = await fetch('https://api.github.com' + path, {
+      method: method || 'GET',
+      headers: {'Authorization': 'Bearer ' + t, 'Accept': 'application/vnd.github+json', 'Content-Type': 'application/json'},
+      body: body ? JSON.stringify(body) : undefined
+    });
+    if (!r.ok) throw new Error('GitHub ' + r.status);
+    return r.status === 204 ? null : await r.json();
+  }
+  async function ghGetFile(repo, path){
+    try {
+      var j = await ghApi('/repos/davedellaquila/' + repo + '/contents/' + path);
+      if (j && j.content) return {
+        text: new TextDecoder().decode(Uint8Array.from(atob(j.content.replace(/\n/g, '')), function(c){ return c.charCodeAt(0); })),
+        sha: j.sha
+      };
+    } catch(e){}
+    return null;
+  }
+  var repo = null, buddyName = bid;
+  async function resolveBuddy(){
+    try {
+      var r = await fetch('../buddies.json', {cache: 'no-store'});
+      var d = await r.json();
+      var buds = d.buddies || [];
+      for (var i = 0; i < buds.length; i++) {
+        if (buds[i].id === bid) {
+          if (buds[i].repo) repo = buds[i].repo;
+          if (buds[i].name) buddyName = buds[i].name;
+          break;
+        }
+      }
+    } catch(e){}
+  }
+  function rkey(aid, text){ return bid + '|' + (aid || ('text:' + text.slice(0, 60))); }
+  function isResolved(aid, text){ var m = lsGet().attnDone || {}; return !!m[rkey(aid, text)]; }
+  function setResolved(aid, text){ var s = lsGet(); var m = s.attnDone || {}; m[rkey(aid, text)] = 1; s.attnDone = m; lsSet(s); }
+  function paintResolved(tile, msg){
+    tile.classList.add('resolved');
+    var st = tile.querySelector('.attn-status');
+    if (st) st.textContent = msg;
+  }
+  async function sendAction(tile, entry, okMsg){
+    var st = tile.querySelector('.attn-status');
+    var btns = tile.querySelectorAll('.attn-btn');
+    if (!token()) { st.textContent = 'Add a GitHub token in the Brain dump section above to enable actions.'; return false; }
+    if (!repo) { st.textContent = 'No repo linked for this buddy yet.'; return false; }
+    btns.forEach(function(b){ b.disabled = true; });
+    st.textContent = 'Working…';
+    try {
+      var NL = String.fromCharCode(10);
+      var stamp = new Date().toLocaleString();
+      var cur = await ghGetFile(repo, 'docs/ingest.md');
+      var base = cur ? cur.text : '# Ingest log — ' + buddyName + NL + NL;
+      var body = {message: 'Attention action for ' + bid, content: b64encode(base + '## ' + stamp + NL + NL + entry + NL + NL)};
+      if (cur && cur.sha) body.sha = cur.sha;
+      await ghApi('/repos/davedellaquila/' + repo + '/contents/docs/ingest.md', 'PUT', body);
+      st.textContent = okMsg;
+      return true;
+    } catch(err){
+      st.textContent = 'Save failed: ' + (err.message || err);
+      btns.forEach(function(b){ b.disabled = false; });
+      return false;
+    }
+  }
+  tiles.forEach(function(tile){
+    var aid = tile.getAttribute('data-attn-id') || '';
+    var textEl = tile.querySelector('.attn-text');
+    var text = textEl ? textEl.textContent.trim() : '';
+    if (isResolved(aid, text)) { paintResolved(tile, 'Marked done'); return; }
+    tile.addEventListener('click', function(ev){
+      var btn = ev.target.closest ? ev.target.closest('.attn-btn') : null;
+      if (!btn || btn.disabled) return;
+      var act = btn.getAttribute('data-act');
+      var idBit = aid ? ' (attention id: ' + aid + ')' : '';
+      if (act === 'done') {
+        sendAction(tile,
+          'DONE — Dave marked this done on the homepage: "' + text + '"' + idBit + '. Please remove it from the attention list in buddies.json.',
+          'Marked done — the buddy will clear it.').then(function(ok){ if (ok) { setResolved(aid, text); paintResolved(tile, 'Marked done — the buddy will clear it.'); } });
+      } else if (act === 'info') {
+        sendAction(tile,
+          'FOLLOW-UP — Dave needs more info on: "' + text + '"' + idBit + '. Please follow up with him.',
+          'Sent — ' + buddyName + ' will follow up.');
+      }
+    });
+  });
+  resolveBuddy();
 })();
 </script>
 

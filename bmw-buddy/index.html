@@ -1,3 +1,4 @@
+<!-- BUDDY-BASIC-TEMPLATE v2 -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -11,102 +12,87 @@
   --muted: #666;
   --card: #f5f5f5;
   --border: #e0e0e0;
-  --accent: #1c69d3;      /* BMW blue */
-  --accent-soft: #e8f0fb;
-  --amber: #d99a26;       /* chart amber (Charts Buddy) */
+  --accent: #0066cc;
 }
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg: #101418;
-    --text: #e6edf3;
-    --muted: #9aa4ad;
-    --card: #161b22;
-    --border: #2d333b;
-    --accent: #5b9dff;
-    --accent-soft: #16283f;
+    --bg: #1a1a1a;
+    --text: #e0e0e0;
+    --muted: #999;
+    --card: #2a2a2a;
+    --border: #3a3a3a;
+    --accent: #4da6ff;
   }
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   background: var(--bg);
   color: var(--text);
   line-height: 1.6;
   padding: 40px 20px;
-  max-width: 880px;
+  max-width: 800px;
   margin: 0 auto;
 }
-.header { text-align: center; margin-bottom: 32px; }
-.icon { font-size: 64px; margin-bottom: 12px; }
-h1 { font-size: 34px; margin-bottom: 6px; }
+.header { text-align: center; margin-bottom: 40px; }
+.icon { font-size: 64px; margin-bottom: 16px; }
+h1 { font-size: 32px; margin-bottom: 8px; }
 .tagline { color: var(--muted); font-size: 18px; }
 .mission {
   background: var(--card);
   border: 1px solid var(--border);
   border-radius: 12px;
-  padding: 22px 24px;
-  margin-bottom: 28px;
-  font-size: 16.5px;
+  padding: 24px;
+  margin-bottom: 32px;
+  font-size: 17px;
 }
-h2 { font-size: 22px; margin: 34px 0 14px; }
-
-.chart-card {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  padding: 24px 22px 18px;
-  margin-bottom: 28px;
-}
-.chart-card .lede { color: var(--muted); font-size: 15px; margin-bottom: 12px; }
-#road-to-200k { max-width: 720px; margin: 0 auto; }
-.logrow {
-  display: flex; gap: 10px; flex-wrap: wrap; align-items: center;
-  margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border);
-}
-.logrow input {
-  background: var(--bg); border: 1px solid var(--border); border-radius: 8px;
-  padding: 8px 12px; font-size: 14px; color: var(--text); font-family: inherit;
-}
-.logrow input[type="number"] { width: 170px; }
-.logrow button {
-  background: var(--accent); color: #fff; border: none; border-radius: 8px;
-  padding: 9px 20px; font-size: 14px; font-weight: 600; cursor: pointer;
-}
-.logrow button:disabled { opacity: .45; cursor: default; }
-.lognote { font-size: 12.5px; color: var(--muted); margin-top: 8px; font-style: italic; }
-.logstatus { font-size: 13px; color: var(--muted); }
-
+h2 { font-size: 22px; margin: 32px 0 16px; }
 .attn {
   background: var(--card);
-  border-left: 4px solid var(--amber);
+  border-left: 4px solid var(--accent);
   border-radius: 0 8px 8px 0;
   padding: 16px 20px;
   margin-bottom: 12px;
 }
-.attn strong { display: block; margin-bottom: 2px; }
-.attn-date { color: var(--muted); font-size: 13.5px; margin-top: 6px; }
-.attn a { color: var(--accent); }
-
-.statgrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-bottom: 8px; }
-.stat {
-  background: var(--card); border: 1px solid var(--border); border-radius: 10px;
-  padding: 14px 16px;
+.attn-date { color: var(--muted); font-size: 14px; margin-top: 8px; }
+.attn-actions { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
+.attn-btn {
+  border: 1px solid var(--border); background: var(--bg); color: var(--text);
+  border-radius: 8px; padding: 7px 14px; font-size: 13px; font-weight: 600; cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
 }
-.stat .v { font-size: 24px; font-weight: 700; }
-.stat .k { font-size: 12.5px; color: var(--muted); margin-top: 2px; }
-.stat .v.amber { color: var(--amber); }
-
-.links { display: flex; flex-wrap: wrap; gap: 12px; }
-.link {
-  background: var(--card); border: 1px solid var(--border); border-radius: 8px;
-  padding: 12px 20px; text-decoration: none; color: var(--text); font-size: 15px;
+.attn-btn:hover { border-color: var(--accent); }
+.attn-btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+.attn-btn:disabled { opacity: .45; cursor: default; }
+.attn-status { font-size: 13px; color: var(--muted); margin-top: 8px; min-height: 18px; }
+.attn.resolved { opacity: .6; }
+.attn.resolved .attn-actions { display: none; }
+.children { display: flex; flex-wrap: wrap; gap: 12px; }
+.child {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px 20px;
+  text-decoration: none;
+  color: var(--text);
 }
-.link:hover { border-color: var(--accent); }
-.link span { margin-right: 8px; }
+.child:hover { border-color: var(--accent); }
+.footer {
+  margin-top: 48px;
+  padding-top: 24px;
+  border-top: 1px solid var(--border);
+  color: var(--muted);
+  font-size: 14px;
+  text-align: center;
+}
+.empty { color: var(--muted); font-style: italic; }
 
 .dumpbox {
-  background: var(--card); border: 1px solid var(--border); border-radius: 12px;
-  padding: 20px 22px; margin-bottom: 28px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px 22px;
+  margin-bottom: 32px;
 }
 .dumpbox h2 { margin: 0 0 6px; font-size: 20px; }
 .dumpbox-sub { color: var(--muted); font-size: 14px; margin-bottom: 14px; }
@@ -140,64 +126,21 @@ h2 { font-size: 22px; margin: 34px 0 14px; }
 }
 .dumpbox-tokenrow a { color: var(--accent); font-size: 13px; }
 
-.footer {
-  margin-top: 44px; padding-top: 22px; border-top: 1px solid var(--border);
-  color: var(--muted); font-size: 13.5px; text-align: center;
-}
 </style>
 </head>
 <body>
 <div class="header">
 <div class="icon">🚗</div>
-<h1 id="buddy-name">BMW</h1>
-<div class="tagline" id="buddy-tagline">~191k miles — rough idle under diagnosis</div>
+<h1>BMW</h1>
+<div class="tagline">~191k miles — rough idle under diagnosis</div>
 </div>
 
-<div class="mission">
-Dave's BMW — maintenance, diagnostics, and longevity tracking as it closes in on 200,000 miles.
-The mission is simple: keep the E61 running strong for a long, long time.
-</div>
+<div class="mission">Dave&#x27;s BMW — maintenance and diagnostics as it approaches 200k miles.</div>
 
-<div class="chart-card">
-<h2 style="margin-top:0">🛣️ The road to 200k</h2>
-<p class="lede">Every mile this car runs is earned longevity. Log the odometer at fill-ups and services —
-each reading sharpens the projection.</p>
-<div id="road-to-200k"></div>
-<div class="logrow">
-<input type="date" id="odo-date" aria-label="Reading date">
-<input type="number" id="odo-miles" placeholder="Odometer (mi)" min="0" aria-label="Odometer miles">
-<button type="button" id="odo-log">Log reading</button>
-<span class="logstatus" id="odo-status" role="status"></span>
-</div>
-<p class="lognote">Saved on this device only — brain-dump the reading below (or just tell the BMW thread) so it becomes permanent.</p>
-</div>
 
-<h2>Right now</h2>
-<div class="statgrid">
-<div class="stat"><div class="v">191,119</div><div class="k">miles · Oct 11, 2026</div></div>
-<div class="stat"><div class="v amber">8,881</div><div class="k">miles to 200,000</div></div>
-<div class="stat"><div class="v">~Jul 2027</div><div class="k">projected 200k crossing</div></div>
-</div>
-
-<h2>Needs attention</h2>
-<div class="attn">
-<strong>Rough idle on cold start and at intersections</strong>
-Quentin's AutoLogic scan: <strong>2A17</strong> (DMTL system fault, P1434 — not currently present)
-and <strong>2AAF</strong> (fuel pump plausibility, frequency 255 — very persistent).
-Hans is diagnosing; parts recommendations with purchase links to follow.
-<div class="attn-date">Oct 11, 2026 · <a href="https://github.com/davedellaquila/hans-buddy/blob/main/docs/bmw-e61-diagnosis.md" target="_blank" rel="noopener">Hans's diagnostic report</a></div>
-</div>
-
-<h2>Links</h2>
-<div class="links">
-<a class="link" href="https://docs.google.com/document/d/1WMq1NM0RMiJtT2UhjLRunPNYzS8oHRMlLdXJtI1--aQ/edit" target="_blank" rel="noopener"><span>📋</span>Spec Sheet</a>
-<a class="link" href="https://github.com/davedellaquila/bmw-buddy" target="_blank" rel="noopener"><span>💻</span>Repo</a>
-<a class="link" href="https://davedellaquila.github.io/buddy-system/" target="_blank" rel="noopener"><span>📊</span>Dashboard</a>
-</div>
-
-<section class="dumpbox" data-buddy-id="bmw-buddy" style="margin-top:28px">
+<section class="dumpbox" data-buddy-id="bmw-buddy">
 <h2>🧠 Brain dump</h2>
-<p class="dumpbox-sub">Dump what's on your mind about the BMW — raw and unfiltered. Each dump lands in the buddy's repo (docs/ingest.md) as a timestamped entry.</p>
+<p class="dumpbox-sub">Dump what's on your mind about BMW — raw and unfiltered. Each dump lands in the buddy's repo (docs/ingest.md) as a timestamped entry.</p>
 <div class="dumpbox-token" hidden>
 <p>🔒 Connect GitHub to unlock dumping. Paste a token once — it stays on this device only.</p>
 <div class="dumpbox-tokenrow">
@@ -206,171 +149,25 @@ Hans is diagnosing; parts recommendations with purchase links to follow.
 <a href="https://github.com/settings/tokens" target="_blank" rel="noopener">Get a token</a>
 </div>
 </div>
-<textarea rows="4" placeholder="Dump what's on your mind about the BMW…"></textarea>
+<textarea rows="4" placeholder="Dump what's on your mind about BMW…"></textarea>
 <div class="dumpbox-row">
 <button type="button" class="dumpbox-btn">Dump it</button>
 <span class="dumpbox-status" role="status"></span>
 </div>
 </section>
 
+
+<h2>Needs Attention</h2>
+<div class="attn" data-attn-id="bmw-rough-idle"><div class="attn-text">Rough idle: codes 2A17 + 2AAF — Hans diagnosing</div><div class="attn-date">2026-10-11</div><div class="attn-actions"><button type="button" class="attn-btn primary" data-act="done">✓ Done</button><button type="button" class="attn-btn" data-act="info">Need more info</button></div><div class="attn-status" role="status"></div></div>
+
+
+
+
 <div class="footer">
-Last refreshed Oct 12, 2026 · Chart by Charts Buddy ("The road to 200k") · Part of the Buddy System
+Generated 2026-10-12 · Part of the Buddy System
 </div>
 
 <script>
-/* BMW Buddy — "The road to 200k": odometer trajectory to 200,000 miles.
- * Courtesy of Charts Buddy (charts-buddy repo, charts/bmw_road_to_200k.js).
- * The page owns the data: add a reading per fuel stop / service.
- */
-
-const ROAD_TO_200K = {
-  goal: 200000,
-  assumed_miles_per_year: 12000, // daily-driver assumption until 2+ verified readings
-  readings: [
-    { date: "2026-10-11", miles: 191119, estimated: false, note: "Dave" }
-  ]
-};
-
-const DAY = 86400000;
-function d(s) { const [y, m, dd] = s.split("-").map(Number); return new Date(y, m - 1, dd); }
-function iso(dt) { return dt.getFullYear() + "-" + String(dt.getMonth() + 1).padStart(2, "0") + "-" + String(dt.getDate()).padStart(2, "0"); }
-function monName(dt) { return ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"][dt.getMonth()]; }
-
-function computeProjection(data) {
-  const real = data.readings.filter(r => !r.estimated).sort((a, b) => d(a.date) - d(b.date));
-  const last = real[real.length - 1];
-  let milesPerDay, basis;
-  if (real.length >= 2) {
-    const x0 = d(real[0].date).getTime();
-    const xs = real.map(r => (d(r.date).getTime() - x0) / DAY);
-    const ys = real.map(r => r.miles);
-    const mx = xs.reduce((a, b) => a + b, 0) / xs.length;
-    const my = ys.reduce((a, b) => a + b, 0) / ys.length;
-    let num = 0, den = 0;
-    xs.forEach((x, i) => { num += (x - mx) * (ys[i] - my); den += (x - mx) * (x - mx); });
-    milesPerDay = den > 0 ? num / den : data.assumed_miles_per_year / 365.25;
-    basis = "fitted from " + real.length + " logged readings";
-  } else {
-    milesPerDay = data.assumed_miles_per_year / 365.25;
-    basis = "assumes ~" + Math.round(data.assumed_miles_per_year / 12).toLocaleString() + " mi/mo \u2014 each logged reading sharpens it";
-  }
-  const toGo = data.goal - last.miles;
-  const days = toGo / milesPerDay;
-  return { last, toGo, milesPerDay, days,
-           crossing: new Date(d(last.date).getTime() + days * DAY), basis };
-}
-
-function buildRoadTo200kSVG(data) {
-  const p = computeProjection(data);
-  const pts = data.readings.slice().sort((a, b) => d(a.date) - d(b.date));
-  const x0 = d(pts[0].date).getTime() - 20 * DAY;
-  const x1 = p.crossing.getTime() + 25 * DAY;
-  const allM = pts.map(r => r.miles).concat([data.goal]);
-  const y0 = Math.min(...allM) - 1500, y1 = data.goal + 800;
-  const W = 720, H = 400, ml = 56, mr = 20, mt = 96, mb = 44;
-  const X = t => ml + (t - x0) / (x1 - x0) * (W - ml - mr);
-  const Y = m => mt + (1 - (m - y0) / (y1 - y0)) * (H - mt - mb);
-  const AMBER = "#d99a26";
-  const F = "font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif";
-  let s = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" width="100%" role="img" aria-label="Odometer trajectory to 200,000 miles" style="${F};max-width:720px;display:block">`;
-  s += `<title>The road to 200k — odometer trajectory</title>`;
-  s += `<text x="${ml}" y="36" font-size="30" font-weight="700" fill="var(--text)">${Math.round(p.toGo).toLocaleString()} miles to go</text>`;
-  s += `<text x="${ml}" y="62" font-size="13.5" fill="var(--muted)" font-style="italic">200k ~ ${monName(p.crossing)} ${p.crossing.getFullYear()} at current pace</text>`;
-  s += `<line x1="${ml}" y1="${Y(data.goal)}" x2="${W - mr}" y2="${Y(data.goal)}" stroke="var(--muted)" stroke-width="1.5" stroke-dasharray="8 5"/>`;
-  s += `<text x="${ml + 4}" y="${Y(data.goal) - 8}" font-size="12.5" font-weight="700" fill="var(--muted)">200,000</text>`;
-  for (let m = Math.ceil(y0 / 5000) * 5000; m < data.goal; m += 5000) {
-    s += `<line x1="${ml}" y1="${Y(m)}" x2="${W - mr}" y2="${Y(m)}" stroke="var(--border)" stroke-width="1"/>`;
-    s += `<text x="${ml - 8}" y="${Y(m) + 4}" text-anchor="end" font-size="10.5" fill="var(--muted)">${Math.round(m / 1000)}k</text>`;
-  }
-  let cur = new Date(d(pts[0].date).getFullYear(), d(pts[0].date).getMonth(), 1);
-  while (cur.getTime() < x1) {
-    if (cur.getTime() > x0) {
-      s += `<text x="${X(cur.getTime())}" y="${H - 16}" text-anchor="middle" font-size="10.5" fill="var(--muted)">${monName(cur)}</text>`;
-    }
-    cur = new Date(cur.getFullYear(), cur.getMonth() + 1, 1);
-  }
-  const lx0 = d(p.last.date).getTime(), lm0 = p.last.miles;
-  const lx1 = p.crossing.getTime(), lm1 = data.goal;
-  const ex = lx1 + (x1 - x0) * 0.02, em = lm1 + p.milesPerDay * (x1 - x0) * 0.02 / DAY;
-  s += `<line x1="${X(lx0)}" y1="${Y(lm0)}" x2="${X(ex)}" y2="${Y(em)}" stroke="${AMBER}" stroke-width="2.5" stroke-dasharray="7 5"/>`;
-  pts.forEach(r => {
-    const cx = X(d(r.date).getTime()), cy = Y(r.miles);
-    if (r.estimated) {
-      s += `<circle cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" r="6" fill="var(--card)" stroke="${AMBER}" stroke-width="2"/>`;
-    } else {
-      s += `<circle cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" r="7" fill="${AMBER}"/>`;
-    }
-  });
-  s += `<text x="${X(lx0)}" y="${Y(lm0) - 14}" text-anchor="middle" font-size="12" font-weight="600" fill="var(--text)">${p.last.miles.toLocaleString()} mi</text>`;
-  s += `<text x="${X(lx0)}" y="${Y(lm0) + 24}" text-anchor="middle" font-size="10.5" fill="var(--muted)" font-style="italic">${p.last.date}</text>`;
-  s += `<circle cx="${X(lx1)}" cy="${Y(lm1)}" r="7" fill="none" stroke="${AMBER}" stroke-width="2.5"/>`;
-  s += `<text x="${X(lx1) - 16}" y="${Y(lm1) - 14}" text-anchor="end" font-size="12" font-weight="700" fill="var(--text)">~ ${monName(p.crossing)} ${p.crossing.getFullYear()}</text>`;
-  s += `<text x="${ml}" y="${H - 34}" font-size="11" fill="var(--muted)" font-style="italic">Projection ${p.basis}.</text>`;
-  s += `</svg>`;
-  return s;
-}
-
-function renderRoadTo200k(el) {
-  el.innerHTML = buildRoadTo200kSVG(ROAD_TO_200K);
-}
-renderRoadTo200k(document.getElementById("road-to-200k"));
-</script>
-
-<script>
-/* Odometer logger: readings logged on this device sharpen the projection locally.
-   Tell the BMW thread / brain-dump a reading to bake it into the page permanently. */
-(function(){
-  var KEY = "bmw-odometer-readings";
-  function get(){ try { return JSON.parse(localStorage.getItem(KEY) || "[]"); } catch(e){ return []; } }
-  function save(v){ try { localStorage.setItem(KEY, JSON.stringify(v)); } catch(e){} }
-  function merge(){
-    var extra = get(), added = false;
-    extra.forEach(function(r){
-      if (!ROAD_TO_200K.readings.some(function(x){ return x.date === r.date; })) {
-        ROAD_TO_200K.readings.push(r); added = true;
-      }
-    });
-    if (added) renderRoadTo200k(document.getElementById("road-to-200k"));
-  }
-  var dateEl = document.getElementById("odo-date"),
-      milesEl = document.getElementById("odo-miles"),
-      btn = document.getElementById("odo-log"),
-      st = document.getElementById("odo-status");
-  dateEl.value = new Date().toISOString().slice(0, 10);
-  merge();
-  btn.addEventListener("click", function(){
-    var miles = parseInt(milesEl.value, 10), dt = dateEl.value;
-    if (!dt || !miles || miles <= 0) { st.textContent = "Enter a date and an odometer reading."; return; }
-    var arr = get().filter(function(r){ return r.date !== dt; });
-    arr.push({ date: dt, miles: miles, estimated: false, note: "Dave (this device)" });
-    save(arr);
-    ROAD_TO_200K.readings = ROAD_TO_200K.readings.filter(function(r){ return r.date !== dt; });
-    ROAD_TO_200K.readings.push({ date: dt, miles: miles, estimated: false, note: "Dave (this device)" });
-    renderRoadTo200k(document.getElementById("road-to-200k"));
-    milesEl.value = "";
-    st.textContent = "Logged on this device — tell the BMW thread so it becomes permanent.";
-  });
-})();
-</script>
-
-<script>
-/* Live name binding: reflect registry renames without a rebuild (fail-safe). */
-(function(){
-  fetch("../buddies.json", {cache: "no-store"}).then(function(r){ return r.json(); }).then(function(data){
-    var buds = data.buddies || [];
-    for (var i = 0; i < buds.length; i++) {
-      if (buds[i].id === "bmw-buddy") {
-        if (buds[i].name) document.getElementById("buddy-name").textContent = buds[i].name;
-        if (buds[i].tagline) document.getElementById("buddy-tagline").textContent = buds[i].tagline;
-        break;
-      }
-    }
-  }).catch(function(){});
-})();
-</script>
-
-<script>
-/* Standard repo-backed brain-dump box (docs/ingest.md). */
 (function(){
   var box = document.querySelector('.dumpbox');
   if (!box || box.dataset.dumpInit) return;
@@ -468,6 +265,116 @@ renderRoadTo200k(document.getElementById("road-to-200k"));
     if ((ev.metaKey || ev.ctrlKey) && ev.key === 'Enter') { ev.preventDefault(); dump(); }
   });
   resolveRepo().then(refreshUI);
+})();
+</script>
+
+
+<script>
+(function(){
+  var tiles = document.querySelectorAll('.attn[data-attn-id]');
+  if (!tiles.length) return;
+  var dumpbox = document.querySelector('.dumpbox');
+  var bid = (dumpbox && dumpbox.getAttribute('data-buddy-id')) || (function(){
+    var p = location.pathname.replace(/\/+$/, '');
+    return p.substring(p.lastIndexOf('/') + 1);
+  })();
+  function lsGet(){ try { return JSON.parse(localStorage.getItem('buddyTree.v3') || '{}'); } catch(e){ return {}; } }
+  function lsSet(patch){ try { var s = lsGet(); for (var k in patch) s[k] = patch[k]; localStorage.setItem('buddyTree.v3', JSON.stringify(s)); } catch(e){} }
+  function token(){ return lsGet().ghToken || ''; }
+  function b64encode(str){
+    var bytes = new TextEncoder().encode(str), bin = '';
+    bytes.forEach(function(b){ bin += String.fromCharCode(b); });
+    return btoa(bin);
+  }
+  async function ghApi(path, method, body){
+    var t = token();
+    if (!t) throw new Error('Add a GitHub token first.');
+    var r = await fetch('https://api.github.com' + path, {
+      method: method || 'GET',
+      headers: {'Authorization': 'Bearer ' + t, 'Accept': 'application/vnd.github+json', 'Content-Type': 'application/json'},
+      body: body ? JSON.stringify(body) : undefined
+    });
+    if (!r.ok) throw new Error('GitHub ' + r.status);
+    return r.status === 204 ? null : await r.json();
+  }
+  async function ghGetFile(repo, path){
+    try {
+      var j = await ghApi('/repos/davedellaquila/' + repo + '/contents/' + path);
+      if (j && j.content) return {
+        text: new TextDecoder().decode(Uint8Array.from(atob(j.content.replace(/\n/g, '')), function(c){ return c.charCodeAt(0); })),
+        sha: j.sha
+      };
+    } catch(e){}
+    return null;
+  }
+  var repo = null, buddyName = bid;
+  async function resolveBuddy(){
+    try {
+      var r = await fetch('../buddies.json', {cache: 'no-store'});
+      var d = await r.json();
+      var buds = d.buddies || [];
+      for (var i = 0; i < buds.length; i++) {
+        if (buds[i].id === bid) {
+          if (buds[i].repo) repo = buds[i].repo;
+          if (buds[i].name) buddyName = buds[i].name;
+          break;
+        }
+      }
+    } catch(e){}
+  }
+  function rkey(aid, text){ return bid + '|' + (aid || ('text:' + text.slice(0, 60))); }
+  function isResolved(aid, text){ var m = lsGet().attnDone || {}; return !!m[rkey(aid, text)]; }
+  function setResolved(aid, text){ var s = lsGet(); var m = s.attnDone || {}; m[rkey(aid, text)] = 1; s.attnDone = m; lsSet(s); }
+  function paintResolved(tile, msg){
+    tile.classList.add('resolved');
+    var st = tile.querySelector('.attn-status');
+    if (st) st.textContent = msg;
+  }
+  async function sendAction(tile, entry, okMsg){
+    var st = tile.querySelector('.attn-status');
+    var btns = tile.querySelectorAll('.attn-btn');
+    if (!token()) { st.textContent = 'Add a GitHub token in the Brain dump section above to enable actions.'; return false; }
+    if (!repo) { st.textContent = 'No repo linked for this buddy yet.'; return false; }
+    btns.forEach(function(b){ b.disabled = true; });
+    st.textContent = 'Working…';
+    try {
+      var NL = String.fromCharCode(10);
+      var stamp = new Date().toLocaleString();
+      var cur = await ghGetFile(repo, 'docs/ingest.md');
+      var base = cur ? cur.text : '# Ingest log — ' + buddyName + NL + NL;
+      var body = {message: 'Attention action for ' + bid, content: b64encode(base + '## ' + stamp + NL + NL + entry + NL + NL)};
+      if (cur && cur.sha) body.sha = cur.sha;
+      await ghApi('/repos/davedellaquila/' + repo + '/contents/docs/ingest.md', 'PUT', body);
+      st.textContent = okMsg;
+      return true;
+    } catch(err){
+      st.textContent = 'Save failed: ' + (err.message || err);
+      btns.forEach(function(b){ b.disabled = false; });
+      return false;
+    }
+  }
+  tiles.forEach(function(tile){
+    var aid = tile.getAttribute('data-attn-id') || '';
+    var textEl = tile.querySelector('.attn-text');
+    var text = textEl ? textEl.textContent.trim() : '';
+    if (isResolved(aid, text)) { paintResolved(tile, 'Marked done'); return; }
+    tile.addEventListener('click', function(ev){
+      var btn = ev.target.closest ? ev.target.closest('.attn-btn') : null;
+      if (!btn || btn.disabled) return;
+      var act = btn.getAttribute('data-act');
+      var idBit = aid ? ' (attention id: ' + aid + ')' : '';
+      if (act === 'done') {
+        sendAction(tile,
+          'DONE — Dave marked this done on the homepage: "' + text + '"' + idBit + '. Please remove it from the attention list in buddies.json.',
+          'Marked done — the buddy will clear it.').then(function(ok){ if (ok) { setResolved(aid, text); paintResolved(tile, 'Marked done — the buddy will clear it.'); } });
+      } else if (act === 'info') {
+        sendAction(tile,
+          'FOLLOW-UP — Dave needs more info on: "' + text + '"' + idBit + '. Please follow up with him.',
+          'Sent — ' + buddyName + ' will follow up.');
+      }
+    });
+  });
+  resolveBuddy();
 })();
 </script>
 
