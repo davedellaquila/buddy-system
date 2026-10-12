@@ -3,6 +3,29 @@
 All notable changes to the Buddies dashboard and buddy system. Newest first.
 `FEATURES.md` describes the current state; this file describes how it got there.
 
+## 2026-10-12 (Voice setting: per-buddy voice picker + voice notes toggle; persona header + audio previews)
+
+### Added
+- **Per-buddy Voice setting.** New "Voice" section in the info panel (next to
+  Persona): pick from 1,066 TTS voices via a searchable picker, with a
+  "Voice notes in threads" toggle (default OFF per Dave's token-concern
+  decision). Voice + toggle persist to buddies.json via the GitHub API route.
+  Voice catalog lives in voice-catalog.json — extensible file format, add a
+  voice by editing the JSON and rebuilding. (Pinned: user voice
+  exchange/sharing.)
+- **Voice preview samples.** 30 curated voices have "Preview" buttons in the
+  Voice section — hear "Hello, I'm [name]" right from the panel.
+- **Persona header shows selection.** Collapsed Persona section now reads
+  "PERSONA: Pirate captain" instead of bare "PERSONA".
+- **Persona audio previews.** Expanded Persona section shows the voice-sample
+  quote in italics plus a "Hear it" button — 87 personas have pre-generated
+  audio of their signature line. (29 personas have no quoted line in the
+  roster, so no button for those.)
+
+### Changed
+- **Persona picker** now shows the voice-sample quote on each card (parsed
+  from the roster), per Dave's "add it back" request.
+
 ## 2026-10-12 (Done affordance: Jonny's circle + Undo; build numbers on What's new)
 
 ### Added
