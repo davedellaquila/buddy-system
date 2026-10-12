@@ -1137,6 +1137,12 @@ def build():
     order_js = json.dumps(ROOT_ORDER)
     plans = json.load(open(f"{HERE}/plans.json"))["plans"]
     plans_js = json.dumps(plans)
+    # Voice catalog (voice-catalog.json) -> baked into the dashboard.
+    # EXTENSIBLE: to add voices, edit voice-catalog.json (id, name, desc,
+    # gender, accent, tone) and rebuild. Future: user voice sharing/exchange
+    # builds on this file format (pinned 2026-10-12).
+    _voices = json.load(open(f"{HERE}/voice-catalog.json", encoding="utf-8"))
+    voices_js = json.dumps(_voices)
     # Persona roster (~/workspace/persona-roster.md) -> baked into the dashboard
     # so the info-panel persona picker offers the full 116-entry list.
     import re as _re
@@ -1191,7 +1197,8 @@ def build():
 
     js = """const BUDDIES = BUDDIES_JSON;
 const ROOT_ORDER = ORDER_JSON;
-const PERSONA_ROSTER = PERSONA_ROSTER_JSON; // 116-entry persona list, baked at build time
+const PERSONA_ROSTER = PERSONA_ROSTER_JSON;
+const VOICE_CATALOG = [{"id": "avocado_v2:MAI_01", "name": "Aria", "desc": "Feminine, American, Friendly, Warm"}, {"id": "avocado_v2:MAI_03", "name": "Helio", "desc": "Masculine, American, Gentle, Reassuring"}, {"id": "avocado_v2:Karen", "name": "Regal Icicle", "desc": "Feminine, American, Sharp, Menacing"}, {"id": "avocado_v2:nova", "name": "Deadpan Gumball", "desc": "Feminine, American, Friendly, Sarcastic"}, {"id": "avocado_v2:vincent", "name": "Gruff Brick", "desc": "Masculine, American, Direct, Blunt"}, {"id": "avocado_v2:bud", "name": "Neighborly Syrup", "desc": "Masculine, Southern American, Deep, Slow"}, {"id": "avocado_v2:isabella", "name": "Soothing Ribbon", "desc": "Feminine, British, Soothing, Polished"}, {"id": "avocado_v2:magnus", "name": "Boomy Mountain", "desc": "Masculine, British, Deep, Regal"}, {"id": "avocado_v2:paloma", "name": "Lilting Swing", "desc": "Feminine, British, Friendly, Light"}, {"id": "avocado_v2:ronan", "name": "Fluid Hammock", "desc": "Masculine, American, Friendly, Casual"}, {"id": "avocado_v2:lumi", "name": "Bubbly Pompom", "desc": "Feminine, Finnish, Bubbly, Energetic"}, {"id": "avocado_v2:rumi", "name": "Cheeky Bubble", "desc": "Feminine, American, Bubbly, Sarcastic"}, {"id": "avocado_v2:mudiwa", "name": "Dramatic Canyon", "desc": "Masculine, Zimbabwean, Deep, Dramatic"}, {"id": "avocado_v2:myrtle", "name": "Homespun Basket", "desc": "Feminine, American, Reedy, Kindly"}, {"id": "avocado_v2:hubert", "name": "Loud Gravel", "desc": "Masculine, New York, Loud, Raspy"}, {"id": "avocado_v2:conor", "name": "Polished Coin", "desc": "Masculine, Irish, Relaxed, Professional"}, {"id": "avocado_v2:miles", "name": "Satiny Moon", "desc": "Masculine, American, Deep, Soothing"}, {"id": "avocado_v2:briggs", "name": "Husky Campfire", "desc": "Masculine, Southern American, Husky, Warm"}, {"id": "avocado_v2:chip", "name": "Warm Pebble", "desc": "Masculine, American, Warm, Professional"}, {"id": "avocado_v2:lady_macbeth", "name": "Coppery Crown", "desc": "Feminine, Scottish, Commanding, Regal"}, {"id": "avocado_v2:melody", "name": "Dynamic Sparkler", "desc": "Feminine, American, Confident, Dynamic"}, {"id": "avocado_v2:marisol", "name": "Zippy Cork", "desc": "Feminine, American, Zippy, Warm"}, {"id": "avocado_v2:atlas", "name": "Burnished Trophy", "desc": "Masculine, Australian, Deep, Dramatic"}, {"id": "avocado_v2:casper", "name": "Confident Trumpet", "desc": "Masculine, American, Confident, Storyteller"}, {"id": "avocado_v2:ElvenWizard", "name": "Ethereal Star", "desc": "Neutral, American, Otherworldly, Mysterious"}, {"id": "avocado_v2:TruthTeller", "name": "Wise Lighthouse", "desc": "Masculine, American, Calm, Wise"}, {"id": "avocado_v2:Vanessa", "name": "Cheerful Sunflower", "desc": "Feminine, American, Bright, Friendly"}, {"id": "avocado_v2:Lily", "name": "Mellow Saxophone", "desc": "Feminine, American, Smooth, Smoky"}, {"id": "avocado_v2:Twenty", "name": "Bold Flag", "desc": "Masculine, American, Heroic, Bold"}, {"id": "avocado_v2:Caitlin", "name": "Heroic Bugle", "desc": "Feminine, American, Heroic, Confident"}]; // 116-entry persona list, baked at build time
 const byId = Object.fromEntries(BUDDIES.map(b => [b.id, b]));
 const ROOT_ID = 'astro'; // chief of staff sits at the root of the tree
 BUDDIES.forEach(b => { (b.links || []).forEach(lid => { const t = byId[lid]; if (t && lid !== b.id) { (t.linkedBy = t.linkedBy || []).push(b.id); } }); });
@@ -2554,18 +2561,55 @@ function personaBlurb(name){
   const e = (typeof PERSONA_ROSTER !== 'undefined' ? PERSONA_ROSTER : []).find(x => x.name === name);
   return e ? e.blurb : '';
 }
+function personaQuote(name){
+  const e = (typeof PERSONA_ROSTER !== 'undefined' ? PERSONA_ROSTER : []).find(x => x.name === name);
+  return e ? (e.quote || '') : '';
+}
 function personaSecHtml(b){
   const p = b.persona || '';
+  const pq = p ? personaQuote(p) : '';
   const cur = p
     ? '<div class="bp-persona-cur"><div class="bp-persona-name">' + escHtml(p) + '</div>'
-      + (personaBlurb(p) ? '<div class="bp-persona-blurb">' + escHtml(personaBlurb(p)) + '</div>' : '') + '</div>'
+      + (pq ? '<div class="bp-persona-quote" style="font-style:italic;color:var(--muted);margin:6px 0;font-size:13px">\u201c' + escHtml(pq) + '\u201d</div>' : '')
+      + (personaBlurb(p) ? '<div class="bp-persona-blurb">' + escHtml(personaBlurb(p)) + '</div>' : '')
+      + (pq ? '<button class="linkbtn" id="bp-persona-play" type="button" style="margin-top:8px">\u25b6\ufe0e Hear it</button>' : '')
+      + '</div>'
     : '<p class="bp-empty">No persona set — this buddy speaks in its default voice.</p>';
-  return '<div class="bp-sec" data-field="persona"><h3>Persona<span class="info-tip" data-tip="The voice this buddy speaks in. Pick the one that makes you grin \\u2014 it shapes how its messages and notifications sound.">\\u24d8</span></h3>'
+  const headerName = p ? ': ' + escHtml(p) : '';
+  return '<div class="bp-sec" data-field="persona"><h3>Persona' + headerName + '<span class="info-tip" data-tip="The voice this buddy speaks in. Pick the one that makes you grin \\u2014 it shapes how its messages and notifications sound.">\\u24d8</span></h3>'
     + cur
     + '<div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap">'
     + '<button class="linkbtn" id="bp-persona-change" type="button">Change persona</button>'
     + '<button class="linkbtn" id="bp-persona-surprise" type="button" title="Pick a random persona from the roster">\\uD83C\\uDFB2 Surprise me</button>'
     + '</div><p class="fineprint" id="bp-persona-status"></p></div>';
+}
+/* ---- Voice picker (info panel) ---- */
+function voiceName(id){
+  const e = (typeof VOICE_CATALOG !== 'undefined' ? VOICE_CATALOG : []).find(x => x.id === id);
+  return e ? e.name : '';
+}
+function voiceDesc(id){
+  const e = (typeof VOICE_CATALOG !== 'undefined' ? VOICE_CATALOG : []).find(x => x.id === id);
+  return e ? e.desc : '';
+}
+function voiceSecHtml(b){
+  const v = b.voice || '';
+  const vn = v ? voiceName(v) : '';
+  const cur = v && vn
+    ? '<div class="bp-persona-cur"><div class="bp-persona-name">' + escHtml(vn) + '</div>'
+      + (voiceDesc(v) ? '<div class="bp-persona-blurb">' + escHtml(voiceDesc(v)) + '</div>' : '') + '</div>'
+    : '<p class="bp-empty">Default voice — this buddy has no specific voice assigned.</p>';
+  const notesOn = !!b.voiceNotes;
+  return '<div class="bp-sec" data-field="voice"><h3>Voice<span class="info-tip" data-tip="The spoken voice for this buddy\\u2019s voice notes. Pick one, then enable voice notes below to hear it in threads.">\\u24d8</span></h3>'
+    + cur
+    + '<div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;align-items:center">'
+    + '<button class="linkbtn" id="bp-voice-change" type="button">Change voice</button>'
+    + (v ? '<button class="linkbtn" id="bp-voice-preview" type="button" title="Hear a sample of this voice">\u25b6\ufe0e Preview</button>' : '')
+    + '<label style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text);cursor:pointer">'
+    + '<input type="checkbox" id="bp-voice-notes" ' + (notesOn ? 'checked' : '') + ' style="width:18px;height:18px;accent-color:var(--accent)">'
+    + 'Voice notes in threads</label>'
+    + '</div><p class="fineprint" id="bp-voice-status"></p>'
+    + '<p class="fineprint" style="margin-top:6px">Voice notes are off by default to save tokens. Enable per buddy.</p></div>';
 }
 function openPersonaPicker(id){
   const b = byId[id]; if (!b) return;
@@ -2611,6 +2655,94 @@ function openPersonaPicker(id){
   });
   m.addEventListener('keydown', e => { if (e.key === 'Escape') close(); });
   filter.focus();
+}
+function openVoicePicker(id){
+  const b = byId[id]; if (!b) return;
+  const cur = b.voice || '';
+  const catalog = (typeof VOICE_CATALOG !== 'undefined' ? VOICE_CATALOG : []);
+  const m = document.createElement('div');
+  m.id = 'persona-picker';
+  m.innerHTML = '<div class="pp-backdrop"></div><div class="pp-sheet" role="dialog" aria-label="Choose a voice">'
+    + '<div class="pp-head"><h2>Voice</h2><p class="fineprint">Pick the spoken voice for this buddy\\u2019s voice notes.</p></div>'
+    + '<div style="display:flex;align-items:center;gap:8px;margin:12px 16px 0"><input type="search" id="pp-filter" placeholder="Filter the ' + catalog.length + ' voices…" aria-label="Filter voices" autocomplete="off" style="flex:1;margin:0;width:auto">'
+    + '<span id="pp-count" class="fineprint" style="font-size:12px;color:var(--muted);white-space:nowrap"></span></div>'
+    + '<div class="pp-grid" id="pp-grid"></div>'
+    + '<div class="pp-actions"><button class="linkbtn" id="pp-none" type="button">Default voice</button>'
+    + '<button class="linkbtn" id="pp-cancel" type="button">Cancel</button></div></div>';
+  document.body.appendChild(m);
+  const grid = m.querySelector('#pp-grid');
+  const filter = m.querySelector('#pp-filter');
+  const close = () => m.remove();
+  function renderGrid(){
+    const q = filter.value.trim().toLowerCase();
+    const list = catalog.filter(v => !q || v.name.toLowerCase().indexOf(q) >= 0 || v.desc.toLowerCase().indexOf(q) >= 0 || v.accent.toLowerCase().indexOf(q) >= 0 || v.tone.toLowerCase().indexOf(q) >= 0);
+    const countEl = m.querySelector('#pp-count');
+    if (countEl) countEl.textContent = list.length + ' of ' + catalog.length;
+    grid.innerHTML = list.map(v =>
+      '<button type="button" class="pp-card' + (v.id === cur ? ' sel' : '') + '" data-voice="' + escHtml(v.id) + '">'
+      + '<span class="pp-name">' + escHtml(v.name) + '</span>'
+      + '<span class="pp-blurb">' + escHtml(v.desc) + (v.accent ? ' · ' + escHtml(v.accent) : '') + '</span></button>').join('')
+      || '<p class="bp-empty">No voices match that filter.</p>';
+    grid.querySelectorAll('.pp-card').forEach(c => c.addEventListener('click', () => {
+      const vid = c.getAttribute('data-voice'); close(); setBuddyVoice(id, vid);
+    }));
+  }
+  filter.addEventListener('input', renderGrid);
+  renderGrid();
+  m.querySelector('.pp-backdrop').addEventListener('click', close);
+  m.querySelector('#pp-cancel').addEventListener('click', close);
+  m.querySelector('#pp-none').addEventListener('click', () => { close(); setBuddyVoice(id, ''); });
+  m.addEventListener('keydown', e => { if (e.key === 'Escape') close(); });
+  filter.focus();
+}
+async function setBuddyVoice(id, voiceId){
+  const st = document.getElementById('bp-voice-status');
+  try {
+    if (!ghToken()) throw new Error('Add a GitHub token first (gear menu \u2192 GitHub token) so the dashboard can save.');
+    if (st) st.textContent = 'Saving…';
+    const raw = await ghGetFile('buddy-system', 'buddies.json');
+    if (!raw) throw new Error('Could not read buddies.json from GitHub.');
+    const data = JSON.parse(raw);
+    const arr = data.buddies || data;
+    const e = arr.find(x => x.id === id);
+    if (!e) throw new Error('Buddy not found in the registry.');
+    if (voiceId) e.voice = voiceId; else delete e.voice;
+    await ghPutFile('buddy-system', 'buddies.json', b64encode(JSON.stringify(data, null, 1)), 'Set voice for ' + id + ' (dashboard info panel)');
+    const b = byId[id];
+    if (b) { if (voiceId) b.voice = voiceId; else delete b.voice; }
+    save(); renderBuddy(id);
+    const vn = voiceName(voiceId);
+    toast(voiceId ? 'Voice set to ' + vn + '.' : 'Voice cleared — back to default.');
+  } catch (err) {
+    if (st) st.textContent = '';
+    toast('Could not save voice: ' + (err.message || err));
+  }
+}
+async function setBuddyVoiceNotes(id, enabled){
+  const st = document.getElementById('bp-voice-status');
+  try {
+    if (!ghToken()) throw new Error('Add a GitHub token first (gear menu \u2192 GitHub token) so the dashboard can save.');
+    if (st) st.textContent = 'Saving…';
+    const raw = await ghGetFile('buddy-system', 'buddies.json');
+    if (!raw) throw new Error('Could not read buddies.json from GitHub.');
+    const data = JSON.parse(raw);
+    const arr = data.buddies || data;
+    const e = arr.find(x => x.id === id);
+    if (!e) throw new Error('Buddy not found in the registry.');
+    if (enabled) e.voiceNotes = true; else delete e.voiceNotes;
+    await ghPutFile('buddy-system', 'buddies.json', b64encode(JSON.stringify(data, null, 1)), (enabled ? 'Enable' : 'Disable') + ' voice notes for ' + id + ' (dashboard info panel)');
+    const b = byId[id];
+    if (b) { if (enabled) b.voiceNotes = true; else delete b.voiceNotes; }
+    save();
+    if (st) st.textContent = '';
+    toast(enabled ? 'Voice notes enabled for this buddy.' : 'Voice notes disabled.');
+  } catch (err) {
+    if (st) st.textContent = '';
+    toast('Could not save: ' + (err.message || err));
+    // Revert the checkbox on failure
+    const cb = document.getElementById('bp-voice-notes');
+    if (cb) cb.checked = !enabled;
+  }
 }
 async function setBuddyPersona(id, name){
   const st = document.getElementById('bp-persona-status');
@@ -2783,6 +2915,7 @@ function renderBuddy(id){
     + '<div style="display:flex;gap:8px"><input type="text" id="bp-aka-input" placeholder="Add a nickname…" aria-label="Add a nickname" style="flex:1;min-width:0;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:8px 12px;font-size:13px;color:var(--text)">'
     + '<button class="linkbtn" id="bp-aka-add" type="button">Add</button></div></div>'
     + personaSecHtml(b)
+    + voiceSecHtml(b)
     + reportsSec
     + parSec
     + sibSec
@@ -2901,6 +3034,36 @@ function renderBuddy(id){
       const roster = (typeof PERSONA_ROSTER !== 'undefined' ? PERSONA_ROSTER : []);
       if (!roster.length) { toast('Persona roster is empty.'); return; }
       setBuddyPersona(id, roster[Math.floor(Math.random() * roster.length)].name);
+    });
+    const playBtn = document.getElementById('bp-persona-play');
+    if (playBtn) playBtn.addEventListener('click', e => {
+      e.stopPropagation();
+      const b = byId[id];
+      const pname = b && b.persona ? b.persona : '';
+      if (!pname) { toast('No persona selected.'); return; }
+      // Filename: sanitized persona name
+      const fname = pname.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') + '.mp3';
+      const audio = new Audio('personas/samples/' + fname);
+      audio.play().catch(() => toast('Could not play the sample.'));
+    });
+  })();
+  /* Voice picker + voice notes toggle — persisted to buddies.json via GitHub */
+  (function initVoice(){
+    const changeBtn = document.getElementById('bp-voice-change');
+    const notesCb = document.getElementById('bp-voice-notes');
+    if (changeBtn) changeBtn.addEventListener('click', e => { e.stopPropagation(); openVoicePicker(id); });
+    const previewBtn = document.getElementById('bp-voice-preview');
+    if (previewBtn) previewBtn.addEventListener('click', e => {
+      e.stopPropagation();
+      const voiceId = (byId[id] && byId[id].voice) || '';
+      if (!voiceId) { toast('No voice selected.'); return; }
+      const fname = voiceId.replace(/:/g, '_').replace(/\//g, '_') + '.mp3';
+      const audio = new Audio('voices/samples/' + fname);
+      audio.play().catch(() => toast('Could not play the preview.'));
+    });
+    if (notesCb) notesCb.addEventListener('change', e => {
+      e.stopPropagation();
+      setBuddyVoiceNotes(id, notesCb.checked);
     });
   })();
   /* A.K.A. editor — device-local alias list, searchable */
