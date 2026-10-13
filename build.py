@@ -85,6 +85,15 @@ body{padding:0}
   color:var(--text);border-radius:8px;padding:7px 30px 7px 10px;font-size:13px}
 .sb-search-wrap{position:relative;display:flex;align-items:center}
 #buddy-search-clear{position:absolute;right:6px;top:50%;transform:translateY(-50%);border:none;background:transparent;color:var(--muted);font-size:18px;line-height:1;cursor:pointer;padding:4px 8px;border-radius:6px}
+/* Autocomplete dropdown for buddy search (Dave 2026-10-12) */
+#buddy-ac{position:absolute;top:100%;left:0;right:0;z-index:5000;background:var(--panel);border:1px solid var(--border);border-radius:12px;margin-top:6px;box-shadow:0 12px 32px var(--shadow);overflow:hidden;max-height:320px;overflow-y:auto}
+#buddy-ac[hidden]{display:none}
+.bac-row{display:flex;align-items:center;gap:10px;width:100%;padding:10px 14px;border:none;background:none;color:var(--text);cursor:pointer;text-align:left;font-size:14px}
+.bac-row:hover,.bac-row.hot{background:var(--active)}
+.bac-row .bicon{font-size:18px;flex-shrink:0}
+.bac-row .bname{font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bac-row .bctx{font-size:11px;color:var(--muted);margin-left:auto;flex-shrink:0}
+.bac-empty{padding:14px;font-size:13px;color:var(--muted);text-align:center}
 #buddy-search-clear:hover{color:var(--text);background:rgba(127,127,127,.18)}
 .brand .eyebrow{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);white-space:nowrap;padding-right:96px;overflow:hidden;text-overflow:ellipsis}
 .brand h1{font-size:22px;margin:4px 0 0}
@@ -1605,8 +1614,8 @@ function closeDetail(){
 const FIELD_DEFS = [
   {id:'ingest', label:'Ingest'},
   {id:'attention', label:'Needs your attention'},
-  {id:'reports', label:'Children'},
-  {id:'siblings', label:'Siblings'},
+  {id:'reports', label:'Direct reports'},
+  {id:'siblings', label:'Peers'},
   {id:'parent', label:'Parent'},
   {id:'links', label:'Linked buddies'},
   {id:'photos', label:'Photos'},
@@ -2848,7 +2857,7 @@ function renderBuddy(id){
   (function(){
     const par = effParent(b);
     const addParentBtn = '<button class="bp-add" data-addbuddy="parent" data-for="'+escHtml(id)+'" title="Add a parent/manager above this buddy">＋ ↑ Parent</button>';
-    const addSibBtn = '<button class="bp-add" data-addbuddy="sibling" data-for="'+escHtml(id)+'">+ Sibling</button>';
+    const addSibBtn = '<button class="bp-add" data-addbuddy="sibling" data-for="'+escHtml(id)+'">+ Peer</button>';
     if (!par) {
       parSec = '<div class="bp-sec" data-field="parent"><h3>Parent'+addParentBtn+'<button class="bp-add" data-changeparent="'+escHtml(id)+'" title="Set this buddy\u2019s parent">Set parent</button></h3><p class="bp-empty">Top-level buddy — no parent.</p></div>';
       return;
@@ -2871,11 +2880,11 @@ function renderBuddy(id){
       + '<span class="art-ic">'+escHtml(k.icon || '')+'</span>'
       + '<span class="art-label">'+escHtml(dispName(k))+'</span></a>').join('');
     const sibMore = sibs.length > SHOW_SIBS
-      ? '<button class="linkbtn" id="sib-showall" style="margin-top:6px">Show all '+sibs.length+' siblings</button><div id="sib-rest" hidden>' + sibs.slice(SHOW_SIBS).map(k =>
+      ? '<button class="linkbtn" id="sib-showall" style="margin-top:6px">Show all '+sibs.length+' peers</button><div id="sib-rest" hidden>' + sibs.slice(SHOW_SIBS).map(k =>
         '<a class="art-row sib-compact" data-buddy="'+escHtml(k.id)+'">'
         + '<span class="art-ic">'+escHtml(k.icon || '')+'</span>'
         + '<span class="art-label">'+escHtml(dispName(k))+'</span></a>').join('') + '</div>' : '';
-    sibSec = '<div class="bp-sec" data-field="siblings"><h3>Siblings <span class="attn-count">('+sibs.length+')</span></h3>' + sibRows + sibMore + '</div>';
+    sibSec = '<div class="bp-sec" data-field="siblings"><h3>Peers <span class="attn-count">('+sibs.length+')</span></h3>' + sibRows + sibMore + '</div>';
   })();
   let linkSec = '';
   (function(){
@@ -3439,7 +3448,7 @@ function moveBuddy(src, target){
    root side by side; only truly parentless buddies go to the orphan section. */
 function nodeTag(b, depth){
   if (depth === 1) {
-    if (b.kind === 'work') return 'direct child';
+    if (b.kind === 'work') return 'direct report';
     if (b.kind === 'meta') return 'meta';
     if (b.kind === 'standalone') return 'direct';
     return b.kind || 'family';
@@ -5364,7 +5373,7 @@ function openAddBuddyDialog(mode, forId){
   const ref = byId[forId]; if (!ref) return;
   const parentId = mode === 'child' ? forId : mode === 'parent' ? effParent(ref) : effParent(ref);
   const parentName = parentId && byId[parentId] ? dispName(byId[parentId]) : 'top level';
-  const title = mode === 'child' ? 'Add a child' : mode === 'parent' ? 'Add a parent' : 'Add a sibling';
+  const title = mode === 'child' ? 'Add a direct report' : mode === 'parent' ? 'Add a parent' : 'Add a peer';
   const sub = mode === 'child'
     ? 'New buddy under <b>' + escHtml(dispName(ref)) + '</b> — a direct report, subordinate, device, or activity.'
     : mode === 'parent'
@@ -5427,8 +5436,8 @@ function openNewBuddyRequest(){
     + '<p class="ab-sub">Tell Astro what you want — they\u2019ll run the full onboarding (repo, mission doc, side chat, homepage).</p>'
     + '<label>Name</label><input type="text" id="nb-name" placeholder="e.g. Car Buddy" autocomplete="off">'
     + '<label>Place in tree</label><div class="nb-place" role="tablist" aria-label="Where in the tree">'
-    + '<button type="button" data-place="child" class="sel" role="tab" aria-selected="true">Child</button>'
-    + '<button type="button" data-place="sibling" role="tab" aria-selected="false">Sibling</button>'
+    + '<button type="button" data-place="child" class="sel" role="tab" aria-selected="true">Direct report</button>'
+    + '<button type="button" data-place="sibling" role="tab" aria-selected="false">Peer</button>'
     + '<button type="button" data-place="parent" role="tab" aria-selected="false">Parent</button></div>'
     + '<div id="nb-place-pick" style="margin-top:8px"><select id="nb-ref" style="width:100%;box-sizing:border-box;font-size:15px;padding:10px 12px;border-radius:10px;border:1px solid var(--border);background:var(--bg);color:var(--text)">'
     + '<option value="">— Top level —</option>'
@@ -5459,10 +5468,10 @@ function openNewBuddyRequest(){
     const ref = refSel.value ? byId[refSel.value] : null;
     const rn = ref ? dispName(ref) : 'top level';
     placeHint.textContent = placeMode === 'child'
-      ? (ref ? 'As a child of ' + rn + '.' : 'At top level (no parent).')
+      ? (ref ? 'As a direct report of ' + rn + '.' : 'At top level (no parent).')
       : placeMode === 'sibling'
       ? (ref ? 'Alongside ' + rn + ' (same parent).' : 'Pick a buddy to sit alongside.')
-      : (ref ? 'As the parent of ' + rn + ' — ' + rn + ' becomes its child.' : 'Pick a buddy to become the child of the new buddy.');
+      : (ref ? 'As the parent of ' + rn + ' — ' + rn + ' becomes its direct report.' : 'Pick a buddy to become a direct report of the new buddy.');
   };
   m.querySelectorAll('.nb-place button').forEach(b => b.addEventListener('click', () => {
     m.querySelectorAll('.nb-place button').forEach(x => { x.classList.remove('sel'); x.setAttribute('aria-selected', 'false'); });
@@ -6815,11 +6824,81 @@ function initSearch(){
   }
   if (bs && !bs.dataset.init) {
     bs.dataset.init = '1';
+    // Autocomplete dropdown (Dave 2026-10-12) — matches narrow as you type
+    const wrap = bs.closest('.sb-search-sticky') || bs.parentElement;
+    if (wrap && getComputedStyle(wrap).position === 'static') wrap.style.position = 'relative';
+    let ac = document.getElementById('buddy-ac');
+    if (!ac && wrap) {
+      ac = document.createElement('div');
+      ac.id = 'buddy-ac'; ac.hidden = true;
+      ac.setAttribute('role', 'listbox');
+      wrap.appendChild(ac);
+    }
+    let acHot = -1;
+    const acClose = () => { if (ac){ ac.hidden = true; } acHot = -1; };
+    const acMatches = (q) => {
+      const words = q.toLowerCase().trim().split(/\s+/).filter(Boolean);
+      if (!words.length) return [];
+      return BUDDIES.filter(b => {
+        if (b.id === ROOT_ID) return false;
+        const hay = (dispName(b) + ' ' + (b.name || '') + ' ' + (b.tagline || '') + ' ' + effAka(b).join(' ')).toLowerCase();
+        return words.every(w => hay.includes(w));
+      }).slice(0, 8);
+    };
+    const acParentName = (b) => {
+      const p = b.parent ? byId[b.parent] : null;
+      return p ? dispName(p) : '';
+    };
+    const acRender = () => {
+      if (!ac) return;
+      const q = bs.value.trim();
+      if (!q){ acClose(); return; }
+      const ms = acMatches(q);
+      acHot = ms.length ? 0 : -1;
+      ac.innerHTML = ms.length
+        ? ms.map((b, i) => '<button type="button" class="bac-row' + (i === acHot ? ' hot' : '') + '" role="option" data-buddy="' + b.id + '">'
+          + '<span class="bicon">' + escHtml(b.icon || '') + '</span>'
+          + '<span class="bname">' + escHtml(dispName(b)) + '</span>'
+          + (acParentName(b) ? '<span class="bctx">' + escHtml(acParentName(b)) + '</span>' : '')
+          + '</button>').join('')
+        : '<div class="bac-empty">No buddies match.</div>';
+      ac.hidden = false;
+      ac.querySelectorAll('.bac-row').forEach(row => {
+        row.addEventListener('click', () => {
+          const bid = row.dataset.buddy;
+          acClose(); bs.value = ''; bs.dispatchEvent(new Event('input', {bubbles: true}));
+          selectBuddy(bid);
+        });
+      });
+    };
+    const acMove = (dir) => {
+      if (!ac || ac.hidden) return;
+      const rows = ac.querySelectorAll('.bac-row');
+      if (!rows.length) return;
+      acHot = (acHot + dir + rows.length) % rows.length;
+      rows.forEach((r, i) => r.classList.toggle('hot', i === acHot));
+      rows[acHot].scrollIntoView({block: 'nearest'});
+    };
     bs.addEventListener('input', () => {
       renderNav();
+      acRender();
       // Atlas view follows the buddy-list filter (Dave's request 2026-10-12)
       if (S.view === 'tree' || S.sel === 'view:tree') renderOrgTree();
       if (S.sel === 'view:tree') { const m = firstSearchMatch(); if (m) centerOnBuddy(m); }
+    });
+    bs.addEventListener('keydown', (e) => {
+      if (!ac || ac.hidden) return;
+      if (e.key === 'ArrowDown'){ e.preventDefault(); acMove(1); }
+      else if (e.key === 'ArrowUp'){ e.preventDefault(); acMove(-1); }
+      else if (e.key === 'Enter' && acHot >= 0){
+        e.preventDefault();
+        const rows = ac.querySelectorAll('.bac-row');
+        if (rows[acHot]) rows[acHot].click();
+      }
+      else if (e.key === 'Escape'){ acClose(); }
+    });
+    document.addEventListener('click', (e) => {
+      if (ac && !ac.hidden && !ac.contains(e.target) && e.target !== bs) acClose();
     });
   }
 }
