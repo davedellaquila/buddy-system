@@ -3,6 +3,11 @@
 All notable changes to the Buddies dashboard and buddy system. Newest first.
 `FEATURES.md` describes the current state; this file describes how it got there.
 
+## 2026-10-13 (Frosted-glass + button)
+
+### Changed
+- **New-buddy + button goes iOS frosted-glass.** Dropped the solid blue circle (was 72% opacity) for a translucent frosted circle with backdrop blur — matches the AssistiveTouch look Dave sent from his iPhone Shortcuts screen. Dark: translucent dark gray, white +; light: translucent white, dark +.
+
 ## 2026-10-12 (Full-screen phone panels)
 
 ### Changed

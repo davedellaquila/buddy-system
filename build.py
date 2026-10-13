@@ -353,12 +353,13 @@ body.sb-closed #sb-resize{display:none}
   transition:opacity .18s ease,transform .18s ease,color .15s,border-color .15s;
   -webkit-tap-highlight-color:transparent}
 #bp-to-top.show{opacity:1;pointer-events:auto;transform:none}
-/* Floating + button for new buddy requests — sticky, round, always visible */
+/* Floating + button — iOS frosted-glass translucency (Jonny-approved look, Dave 2026-10-13) */
 #new-buddy-fab{position:fixed;right:20px;bottom:20px;z-index:9000;width:56px;height:56px;border-radius:50%;
-  background:var(--accent);color:#fff;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;
-  box-shadow:0 4px 16px rgba(0,0,0,.35);-webkit-tap-highlight-color:transparent;
-  opacity:.72;transition:opacity .2s}
-#new-buddy-fab:hover{opacity:1}
+  background:rgba(50,50,52,.55);color:#fff;border:.5px solid rgba(255,255,255,.25);cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  -webkit-backdrop-filter:blur(20px) saturate(180%);backdrop-filter:blur(20px) saturate(180%);
+  box-shadow:0 4px 16px rgba(0,0,0,.25);-webkit-tap-highlight-color:transparent}
+html.light #new-buddy-fab{background:rgba(255,255,255,.55);color:#1c1c1e;border-color:rgba(0,0,0,.08)}
 /* Hide the FAB while Settings is open — it overlapped the Done button */
 body:has(#field-settings.show) #new-buddy-fab{display:none}
 #new-buddy-fab:active{transform:scale(.94)}
