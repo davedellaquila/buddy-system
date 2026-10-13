@@ -3,6 +3,11 @@
 All notable changes to the Buddies dashboard and buddy system. Newest first.
 `FEATURES.md` describes the current state; this file describes how it got there.
 
+## 2026-10-12 (Voice picker previews)
+
+### Changed
+- **Voice picker cards now have play buttons.** The 30 voices with audio samples get a ▶ button right on the card — hear the voice before picking it, without selecting first.
+
 ## 2026-10-12 (Dump fallback queue)
 
 ### Changed
