@@ -3,6 +3,11 @@
 All notable changes to the Buddies dashboard and buddy system. Newest first.
 `FEATURES.md` describes the current state; this file describes how it got there.
 
+## 2026-10-12 (New Buddy sheet clipping fix)
+
+### Fixed
+- **New Buddy sheet no longer bleeds off the right edge on phones.** The sheet's width didn't account for its padding (box-model bug). Now uses proper gutters with `box-sizing:border-box` — Jonny's verdict, Dave-approved.
+
 ## 2026-10-12 (Voice picker previews)
 
 ### Changed
