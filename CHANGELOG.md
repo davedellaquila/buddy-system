@@ -999,3 +999,6 @@ All notable changes to the Buddies dashboard and buddy system. Newest first.
 
 ## 2026-10-13
 - Fixed: removed a stale Oct 11 duplicate `bp-homepage-open` handler that revived on rebuild and broke page JS (blank dashboard). One Open handler remains: opens the buddy's homepage URL in a new tab.
+
+## 2026-10-13
+- Org fix (Johnny's verdict): Family Buddy is now a top-level root (the Family org head); The Dell'Aquilas nests under it. The reparent had merged in the wrong direction — people belong to domains, never the reverse.
