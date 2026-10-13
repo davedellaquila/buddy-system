@@ -3,6 +3,11 @@
 All notable changes to the Buddies dashboard and buddy system. Newest first.
 `FEATURES.md` describes the current state; this file describes how it got there.
 
+## 2026-10-12 (Buddy search autocomplete)
+
+### Added
+- **Buddy search now has an autocomplete dropdown.** Type in the search box and a dropdown appears with up to 8 matching buddies (icon, name, parent context) — narrows as you type. Arrow keys to move, Enter to jump, Escape/click-outside to dismiss. Classic typeahead pattern.
+
 ## 2026-10-12 (Dump delete fixes)
 
 ### Fixed
