@@ -3,6 +3,16 @@
 All notable changes to the Buddies dashboard and buddy system. Newest first.
 `FEATURES.md` describes the current state; this file describes how it got there.
 
+## 2026-10-13 (Settings sheet: effect preview, responsive labels, two-column lists; sidebar kind column)
+
+### Added
+- **Live "Attention header effect" preview** (Dave's ask 2026-10-13): the Advanced setting now shows a mini "Needs your attention (3)" header running the selected effect (pulse/glow/shake/blink/none) so you can see what each one does before picking it. Updates live when the selection changes.
+
+### Changed
+- **Settings sheet goes two-column when resized wide** (Dave's ask 2026-10-13): past 640px the "Main views" and "Buddy fields" sections sit side by side (views left, fields right), each list scrolling independently — via container queries, so it follows the sheet's drag-resized width.
+- **Setting labels stack above their controls on narrow sheets** (Dave's ask 2026-10-13): below 440px the label takes its own line instead of getting scrunched beside the control.
+- **Narrow sidebar drops the kind column** (Dave's ask 2026-10-13): below 290px the buddy list hides the right-hand type labels (ROOT/DIRECT/STANDALONE…) so buddy names get the full width.
+
 ## 2026-10-13 (Persona previews: 7 missing voice samples restored)
 
 ### Fixed
