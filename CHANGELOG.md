@@ -3,6 +3,11 @@
 All notable changes to the Buddies dashboard and buddy system. Newest first.
 `FEATURES.md` describes the current state; this file describes how it got there.
 
+## 2026-10-13 (Persona previews: 7 missing voice samples restored)
+
+### Fixed
+- **Regenerated the 7 missing persona voice-sample MP3s** (`personas/samples/`): auctioneer, forensic-accountant, italian-nonna, japanese-zen-master, jonny-jony-ive, ninja, tenured-professor. They were absent from the 2026-10-12 batch (TTS backend gaps, same class of failure as the empty camp-counselor.mp3), so the info-panel "Hear it" preview failed for those personas. Each sample speaks the persona's roster one-liner in a fitting voice (Jonny's is an original Jony-ism: "This is so much more than a dashboard. The edge is chamfered. The rest... is inevitable.").
+
 ## 2026-10-13 (Info panel: "Ingest" renamed to "Dump box")
 
 ### Changed
