@@ -855,8 +855,7 @@ body.standalone .sa-bar{display:flex}
 /* ---------- Project view: stat tiles + buddy homepage embed ---------- */
 #project-tiles{display:flex;gap:14px;margin:2px auto 20px;max-width:860px;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:thin}
 #project-status-tiles{display:flex;gap:14px;margin:2px auto 20px;max-width:860px;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:thin}
-#project-status-tiles .ptile{flex:0 0 auto}
-.ptile{flex:0 0 auto;background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:12px 14px;position:relative;overflow:hidden;cursor:pointer;transition:transform .15s ease,box-shadow .15s ease}
+.ptile{flex:0 0 152px;background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:12px 14px;position:relative;overflow:hidden;cursor:pointer;transition:transform .15s ease,box-shadow .15s ease}
 .ptile:hover{transform:translateY(-2px);box-shadow:0 4px 16px rgba(0,0,0,.12)}
 .ptile::before{content:'';position:absolute;left:0;top:0;bottom:0;width:5px;background:var(--tint)}
 /* ---- Business Plans cards ---- */
@@ -881,7 +880,7 @@ body.standalone .sa-bar{display:flex}
     gap:8px !important;max-width:none !important;width:100% !important;
     margin:0 0 12px !important;box-sizing:border-box;scrollbar-width:thin}
   #project-tiles .ptile,#changelog-tiles .ptile,#plans-tiles .ptile,#manifest-tiles .ptile,
-  #project-status-tiles .ptile{flex:0 0 auto !important;max-width:none !important;min-width:0 !important}
+  #project-status-tiles .ptile{flex:0 0 112px !important;max-width:none !important;min-width:0 !important}
   .ptile{padding:6px 8px 5px !important;border-radius:10px !important}
   .ptile::before{width:3px}
   .ptile-label{font-size:9px !important;letter-spacing:.08em;line-height:1.15}
@@ -895,7 +894,7 @@ body.standalone .sa-bar{display:flex}
     gap:8px !important;max-width:none !important;width:100% !important;
     margin:0 0 10px !important;box-sizing:border-box;scrollbar-width:thin}
   #project-tiles .ptile,#changelog-tiles .ptile,#plans-tiles .ptile,#manifest-tiles .ptile,
-  #project-status-tiles .ptile{flex:0 0 auto !important;max-width:none !important;min-width:0 !important}
+  #project-status-tiles .ptile{flex:0 0 112px !important;max-width:none !important;min-width:0 !important}
   .ptile{padding:5px 7px 4px !important;border-radius:10px !important}
   .ptile::before{width:3px}
   .ptile-label{font-size:9px !important;letter-spacing:.08em;line-height:1.15}
@@ -1332,9 +1331,10 @@ function buildKids(){
 }
 const LS_KEY = 'buddyTree.v3';
 const SB_DEFAULT_W = 308;
-let S = {seen:{}, notes:{}, names:{}, parents:{}, zoom:100, sel:'view:tree', view:'tree'};
+let S = {seen:{}, notes:{}, names:{}, parents:{}, zoom:100, sel:'view:tree', view:'tree', tileClicks:{}};
 try { Object.assign(S, JSON.parse(localStorage.getItem(LS_KEY) || '{}')); } catch(e) {}
 S.parents = S.parents || {};
+S.tileClicks = S.tileClicks || {};
 S.zoom = S.zoom || 100;
 S.zoomOrph = S.zoomOrph || 100;
 initTheme();
@@ -2337,10 +2337,22 @@ function initPanelResize(){
   h.addEventListener('dblclick', () => closeDetail());
 }
 function tileHtml(label, num, tint, sub, fkey, sel, tip){
-  return '<div class="ptile' + (sel ? ' sel' : '') + '"' + (fkey ? ' data-tile="' + fkey + '"' : '') + (tip ? ' title="' + escHtml(tip) + '"' : '') + ' style="--tint:' + tint + ';flex:0 0 auto">'
+  return '<div class="ptile' + (sel ? ' sel' : '') + '"' + (fkey ? ' data-tile="' + fkey + '"' : '') + (tip ? ' title="' + escHtml(tip) + '"' : '') + ' style="--tint:' + tint + '">'
     + '<div class="ptile-label">' + escHtml(label) + '</div>'
     + '<div class="ptile-num">' + escHtml(String(num)) + '</div>'
     + '<div class="ptile-sub">' + escHtml(sub) + '</div></div>';
+}
+/* Dave 2026-10-13: stat tiles self-order by popularity — every tile click is
+   counted (persisted in S.tileClicks) and each row renders most-clicked first.
+   Array.sort is stable, so ties keep their original order. */
+function bumpTileClick(fkey){
+  if (!fkey) return;
+  S.tileClicks = S.tileClicks || {};
+  S.tileClicks[fkey] = (S.tileClicks[fkey] || 0) + 1;
+  save();
+}
+function tileClickRank(fkey){
+  return (S.tileClicks && S.tileClicks[fkey]) || 0;
 }
 let projFilter = null, clFilter = null, planFilter = null, manifestFilter = null, statusFilter = null, projSearch = '', projViewMode = 'hier', projStickObs = null;
 function applyManifestFilter(){
@@ -4125,14 +4137,22 @@ function renderProjects(){
   if (statusCounts['PRD review']) revBits.push(statusCounts['PRD review'] + ' PRD');
   if (statusCounts['Spec review']) revBits.push(statusCounts['Spec review'] + ' spec');
   const revSub = revBits.length ? revBits.join(' \u00b7 ') : 'Needs your attention';
+  // Dave 2026-10-13: each tile row self-orders by popularity — most-clicked renders leftmost
+  const topTiles = [
+    ['unseen', tileHtml('TO REVIEW', Object.keys(unseenIds).length, '#a371f7', revSub, 'unseen', projFilter === 'unseen')],
+    ['fresh', tileHtml('FRESH', Object.keys(freshIds).length, '#d97a1f', 'Added in the last 7 days', 'fresh', projFilter === 'fresh')],
+    ['cleared', tileHtml('CLEARED', Object.keys(clearedIds).length, '#2f9e44', 'Reviewed & cleared', 'cleared', projFilter === 'cleared')]
+  ];
+  topTiles.sort((a, b) => tileClickRank(b[0]) - tileClickRank(a[0]));
+  const statusTiles = statusOrder.map(st => ['status:' + st,
+    tileHtml(st.replace(/^Live · /i, '').toUpperCase(), statusCounts[st], statusTints[st] || '#8b949e', '', 'status:' + st, statusFilter === st, 'Click to filter by ' + st + ' status. Click again to clear.')]);
+  statusTiles.sort((a, b) => tileClickRank(b[0]) - tileClickRank(a[0]));
   let s = '<section class="projects-view" style="margin-top:24px">'
     + '<div id="project-tiles">'
-    + tileHtml('TO REVIEW', Object.keys(unseenIds).length, '#a371f7', revSub, 'unseen', projFilter === 'unseen')
-    + tileHtml('FRESH', Object.keys(freshIds).length, '#d97a1f', 'Added in the last 7 days', 'fresh', projFilter === 'fresh')
-    + tileHtml('CLEARED', Object.keys(clearedIds).length, '#2f9e44', 'Reviewed & cleared', 'cleared', projFilter === 'cleared')
+    + topTiles.map(t => t[1]).join('')
     + '</div>'
     + '<div id="project-status-tiles" style="margin-top:12px">'
-    + statusOrder.map(st => tileHtml(st.replace(/^Live · /i, '').toUpperCase(), statusCounts[st], statusTints[st] || '#8b949e', '', 'status:' + st, statusFilter === st, 'Click to filter by ' + st + ' status. Click again to clear.')).join('')
+    + statusTiles.map(t => t[1]).join('')
     + '</div>'
     + '<h2>Projects by Buddy</h2>'
     + '<div class="proj-search-sentinel" aria-hidden="true"></div>'
@@ -7224,11 +7244,13 @@ document.addEventListener('click', e => {
   }
   const projTile = e.target.closest('#project-tiles [data-tile]');
   if (projTile) {
+    bumpTileClick(projTile.dataset.tile);
     projFilter = projFilter === projTile.dataset.tile ? null : projTile.dataset.tile;
     renderProjects(); return;
   }
   const statusTile = e.target.closest('#project-status-tiles [data-tile]');
   if (statusTile) {
+    bumpTileClick(statusTile.dataset.tile);
     const st = statusTile.dataset.tile.replace(/^status:/, '');
     statusFilter = statusFilter === st ? null : st;
     // Clear the attention filter when using status filter (mutually exclusive)

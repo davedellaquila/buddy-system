@@ -3,6 +3,12 @@
 All notable changes to the Buddies dashboard and buddy system. Newest first.
 `FEATURES.md` describes the current state; this file describes how it got there.
 
+## 2026-10-13 (Stat tiles: uniform width + popularity ordering — Dave's override of Jonny)
+
+### Changed
+- **Stat tiles are now a uniform width** (Dave's call 2026-10-13, overriding Jonny's auto-width verdict): every `.ptile` is `flex:0 0 152px` on desktop and `112px` on phones, so all tiles match regardless of label length. Both tile rows keep their horizontal scroll. The redundant `#project-status-tiles .ptile` rule and the inline `flex` in `tileHtml` are gone — CSS is the single source of truth.
+- **Tile rows self-order by popularity** (Dave's ask 2026-10-13): every click on a `#project-tiles` or `#project-status-tiles` tile is counted in `S.tileClicks` (persisted via `save()`), and each row re-renders most-clicked-first — the most-used filter is always leftmost. Ties keep their original order (stable sort); the order updates live after each click since the row re-renders.
+
 ## 2026-10-13 (Attention effects: wiggle, bounce, swing)
 
 ### Added
