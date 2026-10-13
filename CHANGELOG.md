@@ -3,6 +3,11 @@
 All notable changes to the Buddies dashboard and buddy system. Newest first.
 `FEATURES.md` describes the current state; this file describes how it got there.
 
+## 2026-10-13 (Privacy scrub — house numbers)
+
+### Fixed
+- **House numbers scrubbed from the public dashboard.** Dave learned the whole dashboard is a public site and made privacy top priority. Street numbers removed everywhere they appeared: Fiddletown cabin (cabin/tech homepages) and the San Jose house (lenwood/quentin/sawyer/amanda/tech homepages, registry, page fragments). Street names stay — they're already public buddy names. First step toward the public/private buddy model (brief in progress).
+
 ## 2026-10-13 (Frosted-glass + button)
 
 ### Changed
