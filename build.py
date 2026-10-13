@@ -1614,7 +1614,7 @@ function closeDetail(){
   } catch (e) {}
 }
 const FIELD_DEFS = [
-  {id:'ingest', label:'Ingest'},
+  {id:'ingest', label:'Dump box'},
   {id:'attention', label:'Needs your attention'},
   {id:'reports', label:'Direct reports'},
   {id:'siblings', label:'Peers'},
@@ -2970,7 +2970,7 @@ function renderBuddy(id){
     + '<button class="linkbtn" id="ghtok2-save">Save token</button>'
     + '<a href="https://github.com/settings/tokens" target="_blank" rel="noopener" class="linkbtn" style="text-decoration:none" title="Open GitHub token settings in a new tab">Get a token</a></div></div>'
     + standingOrdersHtml()
-    + '<div class="bp-sec" data-field="ingest"><h3>Ingest<span class="info-tip" data-tip="Brain-dump anything about this buddy \u2014 raw and unfiltered. Each dump lands in the buddy\u2019s repo (docs/ingest.md) as a timestamped entry.">\u24d8</span></h3>'
+    + '<div class="bp-sec" data-field="ingest"><h3>Dump box<span class="info-tip" data-tip="Brain-dump anything about this buddy \u2014 raw and unfiltered. Each dump lands in the buddy\u2019s repo (docs/ingest.md) as a timestamped entry.">\u24d8</span></h3>'
     + '<textarea class="notes" id="bp-ingest" placeholder="Dump what\u2019s in your head about '+escHtml(dispName(b))+'\u2026"></textarea>'
     + '<div style="margin-top:8px"><span class="fineprint" id="ingest-status"></span></div>'
     + '<div id="ingest-feed" style="margin-top:8px"></div></div>'

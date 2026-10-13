@@ -3,6 +3,11 @@
 All notable changes to the Buddies dashboard and buddy system. Newest first.
 `FEATURES.md` describes the current state; this file describes how it got there.
 
+## 2026-10-13 (Info panel: "Ingest" renamed to "Dump box")
+
+### Changed
+- **The info panel's ingest section is now labeled "Dump box"** (Dave's ask 2026-10-13). The underlying `ingest` field id and `docs/ingest.md` storage are unchanged — only the visible label.
+
 ## 2026-10-13 (Astro homepage: script-block parse error fixed)
 
 ### Fixed
