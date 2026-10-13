@@ -156,6 +156,11 @@
   .dumpbox-tokenrow input{flex:1;min-width:170px;background:var(--panel);border:1px solid var(--border);border-radius:8px;padding:7px 10px;font-size:13px;color:var(--text)}
   .dumpbox-tokenrow button{background:transparent;color:var(--accent);border:1px solid var(--accent);border-radius:8px;padding:7px 14px;font-size:13px;font-weight:600;cursor:pointer}
   .dumpbox-tokenrow a{color:var(--accent);font-size:13px}
+  /* attention Done circles (moved out of the script block — raw CSS there was a JS parse error) */
+  .attn-circle{width:44px;height:44px;min-width:44px;border-radius:50%;border:2px solid var(--border,#ccc);background:transparent;color:inherit;font-size:22px;line-height:1;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;transition:background .2s,color .2s,border-color .2s;padding:0}
+  .attn-circle:hover{border-color:var(--accent,#007aff)}
+  .attn-link{background:none;border:none;color:var(--text-muted,#888);font-size:13px;cursor:pointer;text-decoration:underline;padding:8px 4px;margin-left:8px}
+  .attn-link:hover{color:var(--text,#000)}
 </style>
 </head>
 <body>
@@ -392,10 +397,6 @@
         }).join("")+
         (attn.length>show.length?'<div class="feed-more">+ '+(attn.length-show.length)+' more — see them all on the <a href="../">dashboard</a>.</div>':'');
       }
-      .attn-circle{width:44px;height:44px;min-width:44px;border-radius:50%;border:2px solid var(--border,#ccc);background:transparent;color:inherit;font-size:22px;line-height:1;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;transition:background .2s,color .2s,border-color .2s;padding:0}
-.attn-circle:hover{border-color:var(--accent,#007aff)}
-.attn-link{background:none;border:none;color:var(--text-muted,#888);font-size:13px;cursor:pointer;text-decoration:underline;padding:8px 4px;margin-left:8px}
-.attn-link:hover{color:var(--text,#000)}
 /* ---------- attention actions: Done / Need more info → docs/ingest.md ---------- */
       (function initAttnActions(){
         var tiles = document.querySelectorAll('.feed-item[data-aid]');

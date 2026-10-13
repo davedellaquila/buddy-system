@@ -3,6 +3,11 @@
 All notable changes to the Buddies dashboard and buddy system. Newest first.
 `FEATURES.md` describes the current state; this file describes how it got there.
 
+## 2026-10-13 (Astro homepage: script-block parse error fixed)
+
+### Fixed
+- **Moved stray CSS out of the main `<script>` block on the Astro homepage** (introduced in 6b075b2 "Jonny's Done affordance"): four raw CSS rules (`.attn-circle`, `.attn-link`) sitting inside the script were a JS parse-time error that silently killed the whole block — stats, the "Needs Dave's attention" feed, pinned items, and the activity log were all dead client-side. Rules moved into the `<style>` block; all four inline script blocks now pass `node --check`. Page interactivity restored.
+
 ## 2026-10-13 (Astro homepage: "Awaiting Dave's reply" section)
 
 ### Added
