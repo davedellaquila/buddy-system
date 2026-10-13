@@ -356,7 +356,9 @@ body.sb-closed #sb-resize{display:none}
 /* Floating + button for new buddy requests — sticky, round, always visible */
 #new-buddy-fab{position:fixed;right:20px;bottom:20px;z-index:9000;width:56px;height:56px;border-radius:50%;
   background:var(--accent);color:#fff;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;
-  box-shadow:0 4px 16px rgba(0,0,0,.35);-webkit-tap-highlight-color:transparent}
+  box-shadow:0 4px 16px rgba(0,0,0,.35);-webkit-tap-highlight-color:transparent;
+  opacity:.72;transition:opacity .2s}
+#new-buddy-fab:hover{opacity:1}
 /* Hide the FAB while Settings is open — it overlapped the Done button */
 body:has(#field-settings.show) #new-buddy-fab{display:none}
 #new-buddy-fab:active{transform:scale(.94)}
