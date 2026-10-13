@@ -3,6 +3,12 @@
 All notable changes to the Buddies dashboard and buddy system. Newest first.
 `FEATURES.md` describes the current state; this file describes how it got there.
 
+## 2026-10-12 (Dump delete fixes)
+
+### Fixed
+- **Dump count now updates immediately on delete** (was waiting for the 6-second undo window).
+- **Deleting the last dump poofs the list** — the dump list fades and collapses, but the textarea stays. The section minimizes to its add controls instead of disappearing entirely (Dave's "minimized section" pattern).
+
 ## 2026-10-12 (New Buddy sheet clipping fix)
 
 ### Fixed
