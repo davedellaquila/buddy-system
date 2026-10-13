@@ -3214,15 +3214,6 @@ function renderBuddy(id){
       toast(isDormant(id) ? 'Marked dormant.' : 'Welcomed back.');
     });
   }
-  const hpo = document.getElementById('bp-homepage-open');
-  if (hpo) {
-    hpo.addEventListener('click', e => {
-      e.stopPropagation();
-      const url = (document.getElementById('bp-homepage-url') || {}).value || getHomepage(b);
-      if (!url) { toast('No homepage URL set for this buddy.'); return; }
-      show('view:project');
-    });
-  }
   const nt = document.getElementById('bp-notes');
   let t = null, notesBefore = null;
   nt.addEventListener('focus', () => { notesBefore = nt.value; });

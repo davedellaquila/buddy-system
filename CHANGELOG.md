@@ -996,3 +996,6 @@ All notable changes to the Buddies dashboard and buddy system. Newest first.
   (`b1a7606`)
 - App rename to Buddies, per-buddy icons, sidebar drag-to-reparent,
   Business Plans view. (`04d8bda`)
+
+## 2026-10-13
+- Fixed: removed a stale Oct 11 duplicate `bp-homepage-open` handler that revived on rebuild and broke page JS (blank dashboard). One Open handler remains: opens the buddy's homepage URL in a new tab.
