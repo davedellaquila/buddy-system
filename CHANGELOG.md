@@ -3,6 +3,11 @@
 All notable changes to the Buddies dashboard and buddy system. Newest first.
 `FEATURES.md` describes the current state; this file describes how it got there.
 
+## 2026-10-13 (Sidebar sections draggable)
+
+### Added
+- **Drag the sidebar sections to rearrange them** (Dave's ask 2026-10-13): grab any section header (Buddies / Business Plans / Views) and drop it above or below another — order saves on the device. (Mouse/trackpad drag; touch drag not wired yet.)
+
 ## 2026-10-13 (Settings sheet: effect preview, responsive labels, two-column lists; sidebar kind column)
 
 ### Added

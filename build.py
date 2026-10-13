@@ -571,6 +571,11 @@ body:has(#token-pill) #panel-open{right:148px}
 @container (max-width:290px){
   #sidebar .bkind{display:none}
 }
+/* Sidebar section drag-to-reorder */
+#sidebar .nav-sec>h3{cursor:grab!important}
+#sidebar .nav-sec.sec-dragging{opacity:.35}
+#sidebar .nav-sec.sec-drop-before{box-shadow:0 -2px 0 var(--accent)}
+#sidebar .nav-sec.sec-drop-after{box-shadow:0 2px 0 var(--accent)}
 #field-settings input[type=checkbox],
 .fset-check input[type=checkbox]{
   -webkit-appearance:none;appearance:none;width:28px;height:28px;margin:0;flex:0 0 28px;
@@ -6094,6 +6099,66 @@ function initNavSecToggles(){
     });
   });
 }
+/* Drag-to-reorder for the sidebar sections (Buddies / Business Plans / Views).
+   Drag by the section header; order persists on this device (S.navSecOrder). */
+function applyNavSecOrder(){
+  const order = S.navSecOrder;
+  if (!order || !order.length) return;
+  const sb = document.getElementById('sidebar');
+  if (!sb) return;
+  order.forEach(id => { const s = document.getElementById(id); if (s) sb.appendChild(s); });
+}
+function saveNavSecOrder(){
+  S.navSecOrder = [...document.querySelectorAll('#sidebar .nav-sec')].map(s => s.id);
+  save();
+}
+function initNavSecDnD(){
+  const sb = document.getElementById('sidebar');
+  if (!sb || sb.dataset.secdnd) return;
+  sb.dataset.secdnd = '1';
+  let dragId = null;
+  const clearHints = () => sb.querySelectorAll('.nav-sec').forEach(s => s.classList.remove('sec-drop-before', 'sec-drop-after'));
+  sb.querySelectorAll('.nav-sec > h3').forEach(h => {
+    h.draggable = true;
+    h.addEventListener('dragstart', e => {
+      dragId = h.parentElement.id;
+      e.dataTransfer.effectAllowed = 'move';
+      try { e.dataTransfer.setData('text/plain', dragId); } catch (err) {}
+      h.parentElement.classList.add('sec-dragging');
+    });
+    h.addEventListener('dragend', () => {
+      const p = h.parentElement;
+      if (p) p.classList.remove('sec-dragging');
+      clearHints();
+      dragId = null;
+    });
+  });
+  sb.querySelectorAll('.nav-sec').forEach(sec => {
+    sec.addEventListener('dragover', e => {
+      if (!dragId || sec.id === dragId) return;
+      e.preventDefault();
+      e.dataTransfer.dropEffect = 'move';
+      const r = sec.getBoundingClientRect();
+      const before = (e.clientY - r.top) < r.height / 2;
+      sec.classList.toggle('sec-drop-before', before);
+      sec.classList.toggle('sec-drop-after', !before);
+    });
+    sec.addEventListener('dragleave', () => sec.classList.remove('sec-drop-before', 'sec-drop-after'));
+    sec.addEventListener('drop', e => {
+      if (!dragId || sec.id === dragId) return;
+      e.preventDefault();
+      const r = sec.getBoundingClientRect();
+      const before = (e.clientY - r.top) < r.height / 2;
+      const dragged = document.getElementById(dragId);
+      if (dragged) {
+        sec.parentElement.insertBefore(dragged, before ? sec : sec.nextSibling);
+        saveNavSecOrder();
+        toast('Sidebar order saved.');
+      }
+      clearHints();
+    });
+  });
+}
 /* Keep --sb-brand-h in sync so .sb-search-sticky stacks under the brand chrome. */
 function syncSbBrandStickyHeight(){
   const sb = document.getElementById('sidebar');
@@ -7317,6 +7382,8 @@ initVersionCheck();
 initPullToRefresh();
 initPlansToggle();
 initNavSecToggles();
+initNavSecDnD();
+applyNavSecOrder();
 initSbBrandSticky();
 """
     js = js.replace("BUDDIES_JSON", buddies_js).replace("ORDER_JSON", order_js).replace("PLANS_JSON", plans_js).replace("PERSONA_ROSTER_JSON", roster_js)
