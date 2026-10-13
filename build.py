@@ -390,6 +390,8 @@ body:has(#field-settings.show) #new-buddy-fab{display:none}
 #persona-picker .pp-grid{flex:1;min-height:0;overflow-y:auto;display:grid;grid-template-columns:repeat(2,1fr);gap:8px;padding:12px 16px;scrollbar-width:thin;scrollbar-color:var(--border) transparent}
 #persona-picker .pp-card{display:flex;flex-direction:column;align-items:flex-start;gap:4px;padding:10px 12px;border-radius:12px;border:1px solid var(--border);background:var(--bg);color:var(--text);cursor:pointer;text-align:left;min-height:44px;-webkit-tap-highlight-color:transparent}
 #persona-picker .pp-card:hover{border-color:var(--accent)}
+#persona-picker .pp-play{display:inline-block;margin-left:6px;font-size:12px;color:var(--accent);cursor:pointer;padding:2px 6px;border-radius:6px;vertical-align:middle}
+#persona-picker .pp-play:hover{background:var(--active)}
 #persona-picker .pp-card.sel{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent);background:var(--active)}
 #persona-picker .pp-name{font-size:13px;font-weight:700}
 #persona-picker .pp-quote{font-size:12.5px;color:var(--muted);font-style:italic;line-height:1.35;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;text-overflow:ellipsis}#persona-picker .pp-blurb{font-size:12px;color:var(--muted);line-height:1.35;opacity:.85}
@@ -2697,12 +2699,33 @@ function openVoicePicker(id){
     const list = catalog.filter(v => !q || v.name.toLowerCase().indexOf(q) >= 0 || v.desc.toLowerCase().indexOf(q) >= 0 || v.accent.toLowerCase().indexOf(q) >= 0 || v.tone.toLowerCase().indexOf(q) >= 0);
     const countEl = m.querySelector('#pp-count');
     if (countEl) countEl.textContent = list.length + ' of ' + catalog.length;
+    // Voices with audio samples (Dave 2026-10-12) — baked list of the 30 sampled voices
+    const sampledVoices = {'avocado_v2:MAI_01':1,'avocado_v2:MAI_03':1,'avocado_v2:Karen':1,'avocado_v2:nova':1,'avocado_v2:bud':1,'avocado_v2:isabella':1,'avocado_v2:rumi':1,'avocado_v2:mudiwa':1,'avocado_v2:myrtle':1,'avocado_v2:hubert':1,'avocado_v2:conor':1,'avocado_v2:miles':1,'avocado_v2:briggs':1,'avocado_v2:chip':1,'avocado_v2:lady_macbeth':1,'avocado_v2:melody':1,'avocado_v2:marisol':1,'avocado_v2:atlas':1,'avocado_v2:casper':1,'avocado_v2:ElvenWizard':1,'avocado_v2:TruthTeller':1,'avocado_v2:Vanessa':1,'avocado_v2:Lily':1,'avocado_v2:Twenty':1,'avocado_v2:Caitlin':1,'avocado_v2:paloma':1,'avocado_v2:ronan':1,'avocado_v2:lumi':1,'avocado_v2:magnus':1,'avocado_v2:vincent':1};
+    let curAudio = null;
     grid.innerHTML = list.map(v =>
       '<button type="button" class="pp-card' + (v.id === cur ? ' sel' : '') + '" data-voice="' + escHtml(v.id) + '">'
-      + '<span class="pp-name">' + escHtml(v.name) + '</span>'
+      + '<span class="pp-name">' + escHtml(v.name)
+      + (sampledVoices[v.id] ? ' <span class="pp-play" data-play="' + escHtml(v.id) + '" title="Hear this voice" role="button" tabindex="0">\u25b6\ufe0e</span>' : '')
+      + '</span>'
       + '<span class="pp-blurb">' + escHtml(v.desc) + (v.accent ? ' · ' + escHtml(v.accent) : '') + '</span></button>').join('')
       || '<p class="bp-empty">No voices match that filter.</p>';
+    // Play buttons: stop propagation so tapping play doesn't select the voice
+    grid.querySelectorAll('[data-play]').forEach(pb => {
+      const playIt = (ev) => {
+        ev.stopPropagation(); ev.preventDefault();
+        if (curAudio){ curAudio.pause(); curAudio = null; }
+        const vid = pb.getAttribute('data-play');
+        const fname = vid.replace(/:/g, '_').replace(/\//g, '_') + '.mp3';
+        curAudio = new Audio('voices/samples/' + fname);
+        pb.textContent = '\u23f8\ufe0e';
+        curAudio.onended = () => { pb.textContent = '\u25b6\ufe0e'; curAudio = null; };
+        curAudio.play().catch(() => { pb.textContent = '\u25b6\ufe0e'; toast('Could not play the preview.'); });
+      };
+      pb.addEventListener('click', playIt);
+      pb.addEventListener('keydown', (ev) => { if (ev.key === 'Enter' || ev.key === ' ') playIt(ev); });
+    });
     grid.querySelectorAll('.pp-card').forEach(c => c.addEventListener('click', () => {
+      if (curAudio){ curAudio.pause(); curAudio = null; }
       const vid = c.getAttribute('data-voice'); close(); setBuddyVoice(id, vid);
     }));
   }
