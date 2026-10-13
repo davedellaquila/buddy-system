@@ -1038,11 +1038,17 @@ body.standalone .sa-bar{display:flex}
 @keyframes attn-glow-red{0%,100%{text-shadow:0 0 0 rgba(0,0,0,0)}50%{text-shadow:0 0 14px var(--danger)}}
 @keyframes attn-shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-3px)}75%{transform:translateX(3px)}}
 @keyframes attn-blink{0%,100%{opacity:1}50%{opacity:.2}}
+@keyframes attn-wiggle{0%,100%{transform:rotate(0deg)}20%{transform:rotate(-2.5deg)}40%{transform:rotate(2.5deg)}60%{transform:rotate(-1.5deg)}80%{transform:rotate(1.5deg)}}
+@keyframes attn-bounce{0%,100%{transform:translateY(0)}30%{transform:translateY(-4px)}55%{transform:translateY(0)}70%{transform:translateY(-2px)}}
+@keyframes attn-swing{0%,100%{transform:rotate(0deg)}25%{transform:rotate(1.1deg)}75%{transform:rotate(-1.1deg)}}
 .bp-sec[data-field="attention"].fx-pulse>h3{animation:attn-pulse 1.6s ease-in-out infinite}
 .bp-sec[data-field="attention"].fx-glow>h3{animation:attn-glow 1.8s ease-in-out infinite}
 .bp-sec[data-field="attention"].fx-glow.attn-high>h3{animation-name:attn-glow-red}
 .bp-sec[data-field="attention"].fx-shake>h3{animation:attn-shake 1.2s ease-in-out infinite}
 .bp-sec[data-field="attention"].fx-blink>h3{animation:attn-blink 1.1s steps(2,jump-none) infinite}
+.bp-sec[data-field="attention"].fx-wiggle>h3{animation:attn-wiggle 1.6s ease-in-out infinite}
+.bp-sec[data-field="attention"].fx-bounce>h3{animation:attn-bounce 1.8s ease-in-out infinite}
+.bp-sec[data-field="attention"].fx-swing>h3{transform-origin:top center;animation:attn-swing 3s ease-in-out infinite}
 @media (prefers-reduced-motion:reduce){.bp-sec[data-field="attention"]>h3{animation:none!important}}
 .bp-mission{font-size:15.5px;line-height:1.7;background:var(--panel);border:1px solid var(--border);
   border-radius:12px;padding:16px 18px;margin:0}
@@ -1821,7 +1827,7 @@ function isViewVisible(vid){
 const SETTING_DEFS = [
   {id:'hideBuddyWord', label:'Hide the word “Buddy” in names', type:'bool', def:false},
   {id:'autoOpenPanel', label:'Always open detail panel on buddy click', type:'bool', def:false, tip:'When off (default), the panel auto-opens in every view EXCEPT Homepage — there, use the \u24d8 icon. When on, the panel opens on every click in every view.'},
-  {id:'attnEffect', label:'Attention header effect', type:'choice', options:['pulse','glow','shake','blink','none'], def:'pulse', advanced:true, tip:'How the \u201cNeeds your attention\u201d section header grabs your eye when items are waiting.'},
+  {id:'attnEffect', label:'Attention header effect', type:'choice', options:['pulse','glow','shake','blink','wiggle','bounce','swing','none'], def:'pulse', advanced:true, tip:'How the \u201cNeeds your attention\u201d section header grabs your eye when items are waiting.'},
   {id:'nbSheetWidth', label:'New buddy sheet width', type:'number', def:560, min:320, max:900, advanced:true, tip:'Fixed width of the New Buddy bottom sheet, in pixels. Height follows the content; drag the grab handle to resize vertically.', unit:'px'},
   {id:'shiftLeftAction', label:'Shift+← action', type:'choice', options:['promote','go to parent','nothing'], def:'promote', advanced:true, tip:'What Shift+Left arrow does for the selected buddy. Promote moves it up one level; Go to parent just navigates there.'},
   {id:'fontScale', label:'Text size', type:'slider', def:100, min:80, max:130, step:5, advanced:true, tip:'Scales text and UI throughout the app — like the text-size slider on iPhone and Watch.', unit:'%'},
@@ -2999,11 +3005,7 @@ function renderBuddy(id){
     + '</div>'
     + '<div class="bp-crumb">'+crumb(id)+'</div>'
     + '<p class="bp-tagline">'+escHtml(b.tagline||'')+'</p>'
-    + '<div id="token-banner"><h4>\U0001f511 Connect GitHub to unlock this buddy</h4>'
-    + '<p>Photos, shared notes, and ingest save to the buddy\u2019s repo. Paste a token once \u2014 it stays on this device.</p>'
-    + '<div class="ghtoken"><input type="password" id="ghtok2" placeholder="GitHub token (repo scope)" aria-label="GitHub token">'
-    + '<button class="linkbtn" id="ghtok2-save">Save token</button>'
-    + '<a href="https://github.com/settings/tokens" target="_blank" rel="noopener" class="linkbtn" style="text-decoration:none" title="Open GitHub token settings in a new tab">Get a token</a></div></div>'
+    + '<div id="token-warn-slot"></div>'
     + standingOrdersHtml()
     + '<div class="bp-sec" data-field="ingest"><h3>Dump box<span class="info-tip" data-tip="Brain-dump anything about this buddy \u2014 raw and unfiltered. Each dump lands in the buddy\u2019s repo (docs/ingest.md) as a timestamped entry.">\u24d8</span></h3>'
     + '<textarea class="notes" id="bp-ingest" placeholder="Dump what\u2019s in your head about '+escHtml(dispName(b))+'\u2026"></textarea>'
@@ -7150,14 +7152,6 @@ document.addEventListener('click', e => {
     setSidebarOpen(!isSidebarOpen()); return;
   }
   if (e.target.closest && e.target.closest('#sb-scrim')) { setSidebarOpen(false); return; }
-  if (e.target.closest && e.target.closest('#ghtok2-save')) {
-    const v = document.getElementById('ghtok2').value.trim();
-    if (!v) return;
-    S.ghToken = v; save();
-    const m2 = S.sel.match(/^buddy:(.+)$/); refreshTokenUI(m2 ? m2[1] : null);
-    toast('Token saved on this device.');
-    return;
-  }
   if (e.target.closest && e.target.closest('#bp-desktop')) { const m = S.sel.match(/^buddy:(.+)$/); if (m) saveToDesktop(m[1]); return; }
   if (e.target.closest && e.target.closest('#bp-settings')) { openFieldSettings(); return; }
   if (e.target.closest && e.target.closest('#sa-full')) { try { location.hash = '#/' + S.sel; } catch (e) {} document.body.classList.remove('standalone'); return; }

@@ -3,6 +3,11 @@
 All notable changes to the Buddies dashboard and buddy system. Newest first.
 `FEATURES.md` describes the current state; this file describes how it got there.
 
+## 2026-10-13 (Attention effects: wiggle, bounce, swing)
+
+### Added
+- **Three new attention header effects** (Dave's ask 2026-10-13): wiggle, bounce, and swing join pulse, glow, shake, and blink in Settings → Attention header effect. The live preview shows each one as you pick it.
+
 ## 2026-10-13 (Sidebar sections draggable)
 
 ### Added
