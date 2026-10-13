@@ -5196,6 +5196,31 @@ async function commitDumpDelete(pd){
   } catch (err) { toast('Delete failed: ' + (err.message || err)); }
   renderIngestFeed(pd.id);
 }
+// Poof the dump list away when the last dump is deleted (Dave 2026-10-12).
+// The section minimizes to just its add controls (the textarea) — the list
+// poofs, but the ability to add dumps never disappears. Inheritable pattern:
+// any section's item list can poof while its input controls stay.
+function poofDumpList(id){
+  const feed = document.getElementById('ingest-feed');
+  if (!feed) return;
+  const dumps = feed.querySelector('.dumps');
+  if (!dumps) return;
+  dumps.style.maxHeight = dumps.offsetHeight + 'px';
+  dumps.style.overflow = 'hidden';
+  dumps.style.transition = 'opacity .3s ease, transform .3s ease, max-height .45s ease .1s, margin .45s ease .1s';
+  requestAnimationFrame(() => {
+    dumps.style.opacity = '0';
+    dumps.style.transform = 'scale(.97)';
+    setTimeout(() => {
+      dumps.style.maxHeight = '0';
+      dumps.style.margin = '0';
+      setTimeout(() => {
+        if (dumps.parentNode) dumps.parentNode.removeChild(dumps);
+        feed._entries = [];
+      }, 500);
+    }, 300);
+  });
+}
 async function deleteDumpWithUndo(id, idx, btn){
   const feed = document.getElementById('ingest-feed');
   // One pending delete at a time: commit any earlier one first, then
@@ -5218,7 +5243,17 @@ async function deleteDumpWithUndo(id, idx, btn){
     card.style.maxHeight = card.scrollHeight + 'px';
     void card.offsetHeight;
     card.classList.add('dump-removing');
-    setTimeout(function(){ if (card.parentNode) card.parentNode.removeChild(card); }, 340);
+    setTimeout(function(){
+      if (card.parentNode) card.parentNode.removeChild(card);
+      // Update count and entries cache immediately (Dave 2026-10-12)
+      if (feed && feed._entries) {
+        feed._entries.splice(idx, 1);
+        const head = feed.querySelector('.dumps-head h4');
+        if (head) head.textContent = 'Dumps (' + feed._entries.length + ')';
+        // Last dump gone: poof the list, keep the add controls (minimized section)
+        if (feed._entries.length === 0) poofDumpList(id);
+      }
+    }, 340);
   }
   const pd = {id:id, op:op, timer:null};
   pd.timer = setTimeout(function(){ commitDumpDelete(pd); }, 6000);
