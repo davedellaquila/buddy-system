@@ -3468,7 +3468,7 @@ function nodeTag(b, depth){
 }
 function iconName(b){ return escHtml((b.icon ? b.icon + ' ' : '') + dispName(b)); }
 function gridKids(b){
-  const kids = kidsOf[b.id] || [];
+  const kids = visibleKids(b.id);
   if (!kids.length) return '';
   return '<ul class="subkids">' + kids.map(c =>
     '<li><div class="node ' + c.kind + '" data-buddy="' + c.id + '"><div class="name">' + iconName(c) + '</div>'
@@ -3655,7 +3655,8 @@ function renderOrgTree(){
     chartHtml = '<div class="chart chart-' + chartType + '">' + renderChartMain(chartType, root, kids) + '</div>';
   }
   let orphHtml = '';
-  const orphans = (kidsOf['__root'] || []).filter(b => b.id !== ROOT_ID);
+  const visOrph = getVisibleBuddyIds();
+  const orphans = (kidsOf['__root'] || []).filter(b => b.id !== ROOT_ID && (!visOrph || visOrph.has(b.id)));
   if (orphans.length) {
     orphHtml += '<section class="standalones"><h2>Orphaned buddies</h2>'
       + '<p class="sub">No parent yet &mdash; drag one onto a buddy in the tree to give it a home, or drop it here to detach.</p>'
