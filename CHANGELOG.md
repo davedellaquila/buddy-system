@@ -3,6 +3,12 @@
 All notable changes to the Buddies dashboard and buddy system. Newest first.
 `FEATURES.md` describes the current state; this file describes how it got there.
 
+## 2026-10-13 (Stat-tile row redesign — Jonny's verdict)
+
+### Fixed
+- **Stat tiles size to their content — clipping is now impossible.** Killed the fixed tile widths (`.ptile` was `flex:1 1 170px`; status tiles were capped at 25% width) that clipped longer labels mid-word ("MISSIO", "UNKNO", "SHIPPE") and even clipped the number "54". Tiles are now `flex:0 0 auto` with `white-space:nowrap` labels: each tile is exactly as wide as its words. Labels stay on one line so all tile numbers snap back into horizontal alignment. The strip scrolls horizontally (`overflow-x:auto`, quiet scrollbar) on desktop and phone instead of squeezing — data strips scroll, they never squash. Phone tile grid replaced with the same scroll-strip treatment.
+- **Dropped the redundant "LIVE ·" tile prefix** (Jonny: the green edge already says live) — "M2 SHIPPED" and "PRE-ALPHA" read cleaner. Filter keys and tints unchanged.
+
 ## 2026-10-13 (Info panel: Open homepage button)
 
 ### Added

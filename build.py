@@ -828,10 +828,10 @@ body.standalone .sa-bar{display:flex}
 #bp-close{display:none}
 #view-buddy.panel #bp-close,#view-buddy.sheet #bp-close{display:inline-block}
 /* ---------- Project view: stat tiles + buddy homepage embed ---------- */
-#project-tiles{display:flex;gap:14px;margin:2px auto 20px;max-width:860px;flex-wrap:wrap}
-#project-status-tiles{display:flex;gap:14px;margin:2px auto 20px;max-width:860px;flex-wrap:wrap}
-#project-status-tiles .ptile{flex:1 1 180px;max-width:calc(25% - 11px)}
-.ptile{flex:1 1 170px;background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:14px 18px 12px;position:relative;overflow:hidden;cursor:pointer;transition:transform .15s ease,box-shadow .15s ease}
+#project-tiles{display:flex;gap:14px;margin:2px auto 20px;max-width:860px;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:thin}
+#project-status-tiles{display:flex;gap:14px;margin:2px auto 20px;max-width:860px;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:thin}
+#project-status-tiles .ptile{flex:0 0 auto}
+.ptile{flex:0 0 auto;background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:12px 14px;position:relative;overflow:hidden;cursor:pointer;transition:transform .15s ease,box-shadow .15s ease}
 .ptile:hover{transform:translateY(-2px);box-shadow:0 4px 16px rgba(0,0,0,.12)}
 .ptile::before{content:'';position:absolute;left:0;top:0;bottom:0;width:5px;background:var(--tint)}
 /* ---- Business Plans cards ---- */
@@ -844,7 +844,7 @@ body.standalone .sa-bar{display:flex}
 .plan-card-desc{font-size:13.5px;color:var(--muted);line-height:1.5;margin-bottom:12px}
 .plan-card-link{display:inline-block;margin:4px 8px 0 0;font-size:13px;color:var(--accent);text-decoration:none}
 .plan-card-link:hover{text-decoration:underline}
-.ptile-label{font-size:11px;letter-spacing:.14em;font-weight:700;color:var(--muted)}
+.ptile-label{font-size:11px;letter-spacing:.14em;font-weight:700;color:var(--muted);white-space:nowrap}
 .ptile-num{font-size:42px;font-weight:800;color:var(--tint);line-height:1.25}
 .ptile-sub{font-size:13px;color:var(--muted)}
 .ptile[data-tile]{cursor:pointer}
@@ -852,11 +852,11 @@ body.standalone .sa-bar{display:flex}
 /* Phone tiles AFTER base .ptile so cascade wins (beat inline gap/display too) */
 @media (max-width:639px){
   #project-tiles,#changelog-tiles,#plans-tiles,#manifest-tiles,#project-status-tiles{
-    display:grid !important;grid-template-columns:1fr 1fr 1fr !important;
-    gap:6px !important;max-width:none !important;width:100% !important;
-    margin:0 0 12px !important;box-sizing:border-box;flex-wrap:unset !important}
+    display:flex !important;flex-wrap:nowrap !important;overflow-x:auto !important;
+    gap:8px !important;max-width:none !important;width:100% !important;
+    margin:0 0 12px !important;box-sizing:border-box;scrollbar-width:thin}
   #project-tiles .ptile,#changelog-tiles .ptile,#plans-tiles .ptile,#manifest-tiles .ptile,
-  #project-status-tiles .ptile{flex:none !important;max-width:none !important;min-width:0 !important}
+  #project-status-tiles .ptile{flex:0 0 auto !important;max-width:none !important;min-width:0 !important}
   .ptile{padding:6px 8px 5px !important;border-radius:10px !important}
   .ptile::before{width:3px}
   .ptile-label{font-size:9px !important;letter-spacing:.08em;line-height:1.15}
@@ -866,11 +866,11 @@ body.standalone .sa-bar{display:flex}
 /* Landscape phones are often >639px wide — key off short height instead */
 @media (orientation:landscape) and (max-height:520px){
   #project-tiles,#changelog-tiles,#plans-tiles,#manifest-tiles,#project-status-tiles{
-    display:grid !important;grid-template-columns:repeat(auto-fit,minmax(96px,1fr)) !important;
-    gap:6px !important;max-width:none !important;width:100% !important;
-    margin:0 0 10px !important;box-sizing:border-box;flex-wrap:unset !important}
+    display:flex !important;flex-wrap:nowrap !important;overflow-x:auto !important;
+    gap:8px !important;max-width:none !important;width:100% !important;
+    margin:0 0 10px !important;box-sizing:border-box;scrollbar-width:thin}
   #project-tiles .ptile,#changelog-tiles .ptile,#plans-tiles .ptile,#manifest-tiles .ptile,
-  #project-status-tiles .ptile{flex:none !important;max-width:none !important;min-width:0 !important}
+  #project-status-tiles .ptile{flex:0 0 auto !important;max-width:none !important;min-width:0 !important}
   .ptile{padding:5px 7px 4px !important;border-radius:10px !important}
   .ptile::before{width:3px}
   .ptile-label{font-size:9px !important;letter-spacing:.08em;line-height:1.15}
@@ -2296,7 +2296,7 @@ function initPanelResize(){
   h.addEventListener('dblclick', () => closeDetail());
 }
 function tileHtml(label, num, tint, sub, fkey, sel, tip){
-  return '<div class="ptile' + (sel ? ' sel' : '') + '"' + (fkey ? ' data-tile="' + fkey + '"' : '') + (tip ? ' title="' + escHtml(tip) + '"' : '') + ' style="--tint:' + tint + ';flex:1">'
+  return '<div class="ptile' + (sel ? ' sel' : '') + '"' + (fkey ? ' data-tile="' + fkey + '"' : '') + (tip ? ' title="' + escHtml(tip) + '"' : '') + ' style="--tint:' + tint + ';flex:0 0 auto">'
     + '<div class="ptile-label">' + escHtml(label) + '</div>'
     + '<div class="ptile-num">' + escHtml(String(num)) + '</div>'
     + '<div class="ptile-sub">' + escHtml(sub) + '</div></div>';
@@ -4095,7 +4095,7 @@ function renderProjects(){
     + tileHtml('CLEARED', Object.keys(clearedIds).length, '#2f9e44', 'Reviewed & cleared', 'cleared', projFilter === 'cleared')
     + '</div>'
     + '<div id="project-status-tiles" style="margin-top:12px">'
-    + statusOrder.map(st => tileHtml(st.toUpperCase(), statusCounts[st], statusTints[st] || '#8b949e', '', 'status:' + st, statusFilter === st, 'Click to filter by ' + st + ' status. Click again to clear.')).join('')
+    + statusOrder.map(st => tileHtml(st.replace(/^Live · /i, '').toUpperCase(), statusCounts[st], statusTints[st] || '#8b949e', '', 'status:' + st, statusFilter === st, 'Click to filter by ' + st + ' status. Click again to clear.')).join('')
     + '</div>'
     + '<h2>Projects by Buddy</h2>'
     + '<div class="proj-search-sentinel" aria-hidden="true"></div>'
