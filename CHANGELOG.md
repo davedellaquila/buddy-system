@@ -3,6 +3,11 @@
 All notable changes to the Buddies dashboard and buddy system. Newest first.
 `FEATURES.md` describes the current state; this file describes how it got there.
 
+## 2026-10-13 (Info panel: Open homepage button)
+
+### Added
+- **"Open" button next to "Copy" in the Homepage URL section** of the buddy info panel — opens the buddy's homepage in a new tab. Dave's ask from the panel: the URL field should just be a link.
+
 ## 2026-10-13 (Privacy scrub — house numbers)
 
 ### Fixed

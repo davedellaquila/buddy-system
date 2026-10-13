@@ -2989,6 +2989,7 @@ function renderBuddy(id){
     + '<div style="display:flex;align-items:center;gap:8px">'
     + '<input type="url" id="bp-homepage-url" value="'+escHtml(homepageUrl(b))+'" placeholder="Paste homepage URL here…" style="flex:1;min-width:0;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:8px 12px;font-size:13px;color:var(--text)" title="The full URL for this buddy\u2019s homepage. Paste a URL and click away to save.">'
     + '<button class="linkbtn" id="bp-homepage-copy" title="Copy homepage URL to clipboard" style="flex-shrink:0">Copy</button>'
+    + '<button class="linkbtn" id="bp-homepage-open" title="Open homepage in a new tab" style="flex-shrink:0">Open</button>'
     + '</div></div>'
     + (unseenCount > 0 ? (function(){ const fx = getSetting('attnEffect') || 'none'; const high = items.some(a => !S.seen[a.id] && a.priority === 'high'); return '<div class="bp-sec fx-'+fx+(high?' attn-high':'')+'" data-field="attention"><h3>Needs your attention <span class="attn-count">('+unseenCount+')</span></h3>'+attn+'</div>'; })() : '')
     + photos
@@ -3193,6 +3194,14 @@ function renderBuddy(id){
         try { document.execCommand('copy'); done(); } catch (err) {}
         ta.remove();
       }
+    });
+  }
+  const hpo = document.getElementById('bp-homepage-open');
+  if (hpo) {
+    hpo.addEventListener('click', e => {
+      e.stopPropagation();
+      const url = (document.getElementById('bp-homepage-url') || {}).value || getHomepage(b);
+      if (url) window.open(url, '_blank', 'noopener');
     });
   }
   const dbtn = document.getElementById('bp-dormant');
