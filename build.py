@@ -713,7 +713,7 @@ body.standalone .sa-bar{display:flex}
      pointer-events:none while closed so the off-screen drawer never steals the
      left-edge swipe / tree pan hit target (transform alone is not enough on iOS). */
   #sidebar{position:fixed;left:0;top:0;bottom:0;z-index:95;height:100vh;height:100dvh;
-    transform:translateX(-105%);transition:transform .28s cubic-bezier(.32,.72,.35,1);width:min(85vw,340px);flex:none;
+    transform:translateX(-105%);transition:transform .28s cubic-bezier(.32,.72,.35,1);width:100vw;max-width:100vw;flex:none;
     pointer-events:none}
   #sidebar.open{transform:none;box-shadow:12px 0 40px rgba(0,0,0,.35);pointer-events:auto}
   /* Sidebar resize: sibling of #sidebar; visibility gated by #sidebar.open ~ #sb-resize above */
@@ -731,13 +731,12 @@ body.standalone .sa-bar{display:flex}
   .zoombar .z-out,.zoombar .z-in{padding:4px 0}
   /* Chunkier tree nodes for touch */
   #treezoom .node{padding:15px 14px;min-height:60px}
-  /* Bottom sheet panel — taller, grabbable */
-  #view-buddy.sheet{position:fixed;left:0;right:0;bottom:0;top:6%;z-index:96;
-    background:var(--bg);border-top:1px solid var(--border);border-radius:20px 20px 0 0;
-    overflow-y:auto;overflow-x:hidden;padding:8px 18px 60px;box-shadow:0 -12px 40px rgba(0,0,0,.35);
+  /* Buddy panel — full screen on phone */
+  #view-buddy.sheet{position:fixed;left:0;right:0;bottom:0;top:0;z-index:96;
+    background:var(--bg);border-top:1px solid var(--border);border-radius:0;
+    overflow-y:auto;overflow-x:hidden;padding:8px 18px calc(60px + env(safe-area-inset-bottom));box-shadow:0 -12px 40px rgba(0,0,0,.35);
     -webkit-overflow-scrolling:touch}
-  #view-buddy.sheet::before{content:'';display:block;width:48px;height:5px;border-radius:3px;
-    background:var(--border);margin:4px auto 14px;flex:none}
+  #view-buddy.sheet::before{display:none}
   /* Plans: single column cards */
   .plan-grid{display:block;max-width:none}
   .plan-card{margin-bottom:12px}

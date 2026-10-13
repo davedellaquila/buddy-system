@@ -3,6 +3,11 @@
 All notable changes to the Buddies dashboard and buddy system. Newest first.
 `FEATURES.md` describes the current state; this file describes how it got there.
 
+## 2026-10-12 (Full-screen phone panels)
+
+### Changed
+- **Side panels go full-screen on iPhone.** The buddy-list drawer and the buddy info panel each take the whole screen when open (both keep their close boxes); with both closed you see the main view. No more 85%-width drawer or bottom-sheet peek — Dave's call from the hot tub.
+
 ## 2026-10-12 (Buddy search autocomplete)
 
 ### Added
