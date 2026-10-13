@@ -354,9 +354,10 @@ body:has(#field-settings.show) #new-buddy-fab{display:none}
 /* New-buddy request bottom sheet */
 #newbuddy-sheet{position:fixed;inset:0;z-index:10000;display:flex;align-items:flex-end;justify-content:center}
 #newbuddy-sheet .nb-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.5);opacity:0;transition:opacity .25s}
-#newbuddy-sheet .nb-sheet{position:relative;background:var(--panel);border-radius:20px 20px 0 0;padding:12px 22px 0;width:100%;max-width:560px;height:auto;max-height:88vh;display:flex;flex-direction:column;
+#newbuddy-sheet .nb-sheet{position:relative;background:var(--panel);border-radius:20px 20px 0 0;padding:12px 22px 0;margin:0 16px;width:100%;max-width:560px;box-sizing:border-box;height:auto;max-height:88vh;display:flex;flex-direction:column;min-width:0;
   box-shadow:0 -8px 40px rgba(0,0,0,.4);transform:translateY(100%);transition:transform .3s cubic-bezier(.32,.72,.35,1)}
-#newbuddy-sheet .nb-body{overflow-y:auto;padding-bottom:16px}
+#newbuddy-sheet .nb-body{overflow-y:auto;padding-bottom:16px;min-width:0}
+#newbuddy-sheet .nb-body > *{min-width:0;max-width:100%}
 #newbuddy-sheet .nb-actions{position:sticky;bottom:0;background:var(--panel);padding:14px 0 26px;border-top:1px solid var(--border2);display:flex;gap:10px;justify-content:flex-end;margin:0 -22px;padding-left:22px;padding-right:22px}
 #newbuddy-sheet .nb-actions button{font-size:14px;font-weight:600;padding:10px 22px;border-radius:20px;cursor:pointer;border:1px solid var(--border)}
 #newbuddy-sheet .nb-actions .ab-cancel{background:none;color:var(--text)}
