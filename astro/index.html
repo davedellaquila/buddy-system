@@ -62,6 +62,11 @@
   .feed-more a{color:var(--accent);text-decoration:none;font-weight:600}
   .feed-empty{padding:24px;text-align:center;color:var(--muted)}
   .feed-hint{font-size:12px;color:var(--muted);margin:-6px 0 10px}
+  .feed-date a{color:var(--accent);text-decoration:none}
+  .feed-date a:hover{text-decoration:underline}
+  .awaiting-label{font-size:12px;text-transform:uppercase;letter-spacing:.1em;color:var(--dim);margin:18px 0 6px}
+  .awaiting-label b{color:var(--text);font-family:var(--mono);font-weight:700}
+  .awaiting-label:first-child{margin-top:2px}
   .feed-item .attn-actions{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
   .attn-btn{border:1px solid var(--border);background:var(--bg);color:var(--text);border-radius:8px;padding:8px 14px;font-size:13px;font-weight:600;cursor:pointer;-webkit-tap-highlight-color:transparent;min-height:36px}
   .attn-btn:hover{border-color:var(--accent)}
@@ -175,6 +180,10 @@
   <h2>🔔 Needs Dave's attention</h2>
   <div class="feed-hint">Tap ✓ Done on anything you've handled — it writes back to the repo and tells Astro, so it clears everywhere.</div>
   <div class="feed" id="feed"><div class="feed-empty">Loading the attention feed…</div></div>
+
+  <h2>📬 Awaiting Dave's reply</h2>
+  <div class="feed-hint">Tap a thread to jump to it — say "resurface" there and Astro re-asks the question fresh.</div>
+  <div id="awaiting"><div class="feed-empty">updating…</div></div>
 
   <h2>📌 Pinned — we'll come back to this</h2>
   <div class="feed" id="pinned"><div class="feed-empty">Loading pinned items…</div></div>
@@ -639,6 +648,46 @@
     if ((ev.metaKey || ev.ctrlKey) && ev.key === 'Enter') { ev.preventDefault(); dump(); }
   });
   resolveRepo().then(refreshUI);
+})();
+</script>
+<script>
+/* ---------- Awaiting Dave's reply — renders astro/awaiting-reply.json ---------- */
+(function(){
+  function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
+  function renderAwaiting(d){
+    var box=document.getElementById("awaiting");
+    if(!box)return;
+    var defs=[
+      ["urgent","🚨 Urgent","var(--red)"],
+      ["recent","🆕 New this week","var(--accent)"],
+      ["decisions","🗳️ Open decisions","var(--amber)"],
+      ["questions","❓ Unanswered questions","var(--dim)"]
+    ];
+    var h="";
+    defs.forEach(function(g){
+      var items=(d.groups&&d.groups[g[0]])||[];
+      h+='<div class="awaiting-label" style="color:'+g[2]+'">'+g[1]+' <b>'+items.length+'</b></div>';
+      if(!items.length){h+='<div class="feed-empty" style="padding:10px">None right now.</div>';}
+      else{
+        h+='<div class="feed">'+items.map(function(it){
+          var meta=it.thread?esc(it.thread):"";
+          if(it.thread_url&&meta){meta='<a href="'+esc(it.thread_url)+'" target="_blank" rel="noopener">'+meta+'</a>';}
+          if(it.date){meta+=(meta?" · ":"")+esc(it.date);}
+          return '<div class="feed-item"><div class="feed-icon">📬</div>'+
+            '<div class="feed-body"><div class="feed-text"><b>'+esc(it.title)+'</b></div>'+
+            (it.summary?'<div class="feed-text" style="color:var(--muted);font-size:14px;margin-top:4px">'+esc(it.summary)+'</div>':'')+
+            (meta?'<div class="feed-date">'+meta+'</div>':'')+'</div></div>';
+        }).join("")+'</div>';
+      }
+    });
+    var gen=(d.generated||"").slice(0,10);
+    h+='<div class="feed-more">updated '+esc(gen)+' · from the awaiting-reply registry</div>';
+    box.innerHTML=h;
+  }
+  fetch("awaiting-reply.json",{cache:"no-store"})
+    .then(function(r){if(!r.ok)throw new Error("http "+r.status);return r.json();})
+    .then(renderAwaiting)
+    .catch(function(){var b=document.getElementById("awaiting");if(b)b.innerHTML='<div class="feed-empty">updating…</div>';});
 })();
 </script>
 </body>

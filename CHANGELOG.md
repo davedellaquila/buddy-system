@@ -3,6 +3,11 @@
 All notable changes to the Buddies dashboard and buddy system. Newest first.
 `FEATURES.md` describes the current state; this file describes how it got there.
 
+## 2026-10-13 (Astro homepage: "Awaiting Dave's reply" section)
+
+### Added
+- **"📬 Awaiting Dave's reply" section on the Astro homepage** (Dave's ask 2026-10-13): a live attention surface fed by the awaiting-reply registry. `~/workspace/tools/gen-awaiting-reply.py` parses `~/workspace/briefings/awaiting-reply.md` into `astro/awaiting-reply.json` (groups: urgent / recent / decisions / questions, each item with title, date, thread, thread deep-link, summary, high flag); the page renders four counted groups — Urgent, New this week, Open decisions, Unanswered questions — after "Needs Dave's attention" and before Pinned, reusing the feed card styles in dark/light. Fetch failure degrades to an "updating…" placeholder, never a blank hole.
+
 ## 2026-10-13 (Stat-tile row redesign — Jonny's verdict)
 
 ### Fixed
