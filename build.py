@@ -612,7 +612,7 @@ body:has(#token-pill) #view-buddy.sheet .bp-close-x{right:148px}
 .bp-sec > h3 .secgrip:hover{color:var(--muted);background:var(--ghost)}
 .bp-sec > h3 .secgrip:active{cursor:grabbing}
 .bp-sec.sec-dragging{opacity:0.4}
-.bp-sec > h3 .secarrow{font-size:25px;color:var(--muted);transition:transform .15s;display:inline-block;line-height:1}
+.bp-sec > h3 .secarrow{font-size:25px;color:var(--muted);transition:transform .15s;display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:50%;background:var(--ghost);line-height:1;flex:0 0 auto}
 .bp-sec.collapsed > *:not(h3){display:none !important} /* !important beats inline display styles (e.g. homepage URL row) */
 .bp-sec .secarrow{transform:rotate(90deg)}
 .bp-sec.collapsed .secarrow{transform:rotate(0deg)}
@@ -2523,6 +2523,17 @@ function initHomepageDumpbox(root, b){
   if (dumpBtn && !dumpBtn._hpWired) {
     dumpBtn._hpWired = true;
     dumpBtn.addEventListener('click', function(){ homepageDumpSubmit(root, b.id); });
+  }
+  // Enter dumps, Shift+Enter for newline (Dave 2026-10-12)
+  const ta = root.querySelector('[data-hp-dump]');
+  if (ta && !ta._hpEnterWired) {
+    ta._hpEnterWired = true;
+    ta.addEventListener('keydown', function(e){
+      if (e.key === 'Enter' && !e.shiftKey && !e.metaKey && !e.ctrlKey && !e.altKey) {
+        e.preventDefault();
+        homepageDumpSubmit(root, b.id);
+      }
+    });
   }
   const connectBtn = root.querySelector('[data-hp-connect]');
   if (connectBtn && !connectBtn._hpWired) {
