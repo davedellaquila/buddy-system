@@ -71,8 +71,19 @@ body{padding:0}
   box-shadow:0 8px 32px var(--shadow-soft);
   -webkit-backdrop-filter:blur(20px) saturate(1.4);backdrop-filter:blur(20px) saturate(1.4);
   transition:transform .5s cubic-bezier(.32,.72,.35,1), visibility 0s}
-body.sb-closed #sidebar{transform:translateX(-115%);visibility:hidden;
-  transition:transform .5s cubic-bezier(.32,.72,.35,1), visibility 0s linear .5s}
+body.sb-closed #sidebar{width:64px;padding:0 8px;overflow:hidden}
+body.sb-closed #sidebar .brand, body.sb-closed #sidebar .sb-search-sticky,
+body.sb-closed #sidebar #buddies-sec, body.sb-closed #sidebar #plans-sec,
+body.sb-closed #sidebar .sb-tipjar, body.sb-closed #sidebar #sb-tools #sb-gear,
+body.sb-closed #sidebar .navbtn span:not(.nic), body.sb-closed #sidebar .nav-sec h3,
+body.sb-closed #sidebar #views-sec h3{display:none}
+body.sb-closed #sidebar .sb-brand-sticky{padding:12px 0 4px;display:flex;justify-content:center}
+body.sb-closed #sidebar #sb-tools{display:flex;justify-content:center}
+body.sb-closed #sidebar #views-sec{margin-top:8px}
+body.sb-closed #sidebar #view-nav{gap:4px;align-items:center}
+body.sb-closed #sidebar #view-nav .navbtn{width:44px;height:44px;justify-content:center;padding:0;border-radius:12px}
+body.sb-closed #sidebar #view-nav .navbtn .nic{width:auto;font-size:18px}
+body.sb-closed #menu-btn{display:none}
 /* Floating-panel illusion (Dave, 2026-10-14 — Apple Messages style): fully floating
    inset panel — 12px from all viewport edges, rounded on all four corners,
    translucent with backdrop blur. Fixed overlay — the main view stays full-width
