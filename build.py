@@ -1933,7 +1933,7 @@ function applySectionCollapse(bid){
     const fid = sec.dataset.field;
     const arrow = document.createElement('span');
     arrow.className = 'secarrow';
-    arrow.textContent = '\u203a';
+    arrow.textContent = (typeof BP_SECTION_ICONS !== 'undefined' && BP_SECTION_ICONS[fid]) || '\u203a'; arrow.style.fontSize = '18px';
     h3.insertBefore(arrow, h3.firstChild);
     const grip = document.createElement('span');
     grip.className = 'secgrip';
