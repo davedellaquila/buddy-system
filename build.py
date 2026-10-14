@@ -66,12 +66,16 @@ body{background:var(--bg);color:var(--text)}
 body{padding:0}
 .app{display:flex;min-height:100vh;align-items:stretch}
 #sidebar{width:308px;background:var(--panel);container-type:inline-size;
-  padding:0 14px 32px;position:fixed;left:12px;top:12px;bottom:12px;overflow-y:auto;overflow-x:hidden;overflow-wrap:break-word;
-  z-index:40;border:1px solid var(--border);border-radius:18px;
-  box-shadow:0 8px 28px var(--shadow-soft)}
-/* Floating-panel illusion (Dave, 2026-10-13 — Muse-app style): rounded on all four
-   corners, lifted over the canvas with a soft shadow. Fixed overlay — the main view
-   stays full-width underneath and never shifts when the sidebar toggles. */
+  padding:0 14px 32px;position:fixed;left:0;top:12px;bottom:12px;overflow-y:auto;overflow-x:hidden;overflow-wrap:break-word;
+  z-index:40;border:1px solid var(--border);border-left:none;border-radius:0 18px 18px 0;
+  box-shadow:8px 0 28px var(--shadow-soft);
+  transition:transform .5s cubic-bezier(.32,.72,.35,1), visibility 0s}
+body.sb-closed #sidebar{transform:translateX(-115%);visibility:hidden;
+  transition:transform .5s cubic-bezier(.32,.72,.35,1), visibility 0s linear .5s}
+/* Floating-panel illusion (Dave, 2026-10-13 — Muse-app style): left edge anchored
+   flush to the viewport; only the right side (and its rounded corners) moves when
+   resizing. Fixed overlay — the main view stays full-width underneath and never
+   shifts when the sidebar toggles. */
 #main{flex:1;min-width:0;padding:36px 32px 80px;position:relative;z-index:1}
 .brand{padding:22px 8px 14px;background:var(--panel)}
 /* Brand chrome (eyebrow/title/subtitle + gear/close) pins at top; Views scroll under */
@@ -333,7 +337,7 @@ input[type=range].zrange::-moz-range-thumb{width:16px;height:16px;border-radius:
 /* Fixed to viewport at sidebar edge so vertical #sidebar scroll doesn't move it.
    MUST be a DOM sibling of #sidebar (not a child): overflow on #sidebar clips
    hit-testing/paint for fixed descendants, which made the gripper invisible. */
-#sb-resize{position:fixed;top:12px;left:calc(var(--sbw, 308px) - 2px);z-index:50;
+#sb-resize{position:fixed;top:12px;left:calc(var(--sbw, 308px) - 14px);z-index:50;
   display:flex;align-items:center;justify-content:center;width:28px;height:calc(100vh - 24px);height:calc(100dvh - 24px);cursor:ew-resize;
   background:transparent;-webkit-tap-highlight-color:transparent;touch-action:none;user-select:none}
 /* 2x5 dot-grid gripper (Jonny's pick, 2026-10-11): honest affordance, no hover required */
@@ -350,7 +354,7 @@ body.sb-closed #sb-resize{display:none}
   #sidebar.open ~ #sb-resize{display:flex}
 }
 /* Sidebar scroll-to-top — Muse-ish frosted chip, pinned to bottom of left panel */
-#sb-to-top{position:fixed;bottom:16px;left:calc(12px + var(--sbw, 308px) / 2 - 22px);z-index:48;
+#sb-to-top{position:fixed;bottom:16px;left:calc(var(--sbw, 308px) / 2 - 22px);z-index:48;
   width:44px;height:44px;border-radius:12px;padding:0;
   display:flex;align-items:center;justify-content:center;
   background:color-mix(in srgb, var(--panel) 78%, transparent);border:1px solid var(--border);
@@ -705,8 +709,7 @@ body.no-write .pdel,body.no-write [data-dump-del],body.no-write [data-dump-edit]
 #sb-close:hover{color:var(--muted)}
 #sb-close .xmark-x{stroke:var(--bg)}
 #sidebar .brand{padding-right:112px}
-/* Collapsed sidebar (iPad/desktop): hide panel, show hamburger to reopen */
-body.sb-closed #sidebar{display:none}
+/* Collapsed sidebar (iPad/desktop): slide-out animation handled above; show hamburger to reopen */
 body.sb-closed #menu-btn{display:flex;align-items:center;justify-content:center;position:fixed;top:12px;left:12px;z-index:90;
   background:var(--panel);border:1px solid var(--border);border-radius:12px;color:var(--text);font-size:27px;
   width:48px;height:48px;cursor:pointer;box-shadow:0 2px 12px var(--shadow)}
@@ -773,9 +776,11 @@ body.standalone .sa-bar{display:flex}
      pointer-events:none while closed so the off-screen drawer never steals the
      left-edge swipe / tree pan hit target (transform alone is not enough on iOS). */
   #sidebar{position:fixed;left:12px;top:12px;bottom:12px;z-index:95;height:auto;
-    transform:translateX(-115%);transition:transform .28s cubic-bezier(.32,.72,.35,1);width:calc(100vw - 24px);max-width:420px;flex:none;
-    pointer-events:none;margin-left:0}
-  #sidebar.open{transform:none;box-shadow:12px 0 40px rgba(0,0,0,.35);pointer-events:auto}
+    transform:translateX(-115%);width:calc(100vw - 24px);max-width:420px;flex:none;
+    pointer-events:none;margin-left:0;visibility:hidden;
+    transition:transform .5s cubic-bezier(.32,.72,.35,1), visibility 0s linear .5s}
+  #sidebar.open{transform:none;box-shadow:12px 0 40px rgba(0,0,0,.35);pointer-events:auto;visibility:visible;
+    transition:transform .5s cubic-bezier(.32,.72,.35,1), visibility 0s}
   /* Sidebar resize: sibling of #sidebar; visibility gated by #sidebar.open ~ #sb-resize above */
   #sb-resize{touch-action:none}
   html,body{overflow-x:clip}
@@ -862,10 +867,10 @@ body.standalone .sa-bar{display:flex}
 @media (min-width:640px) and (max-width:1100px){
   /* Keep a real left sidebar — do not stack above main (iPad portrait is ~744–834px). */
   .app{display:flex;flex-direction:row;align-items:stretch}
-  #sidebar{width:250px;position:fixed;left:12px;top:12px;bottom:12px;
+  #sidebar{width:250px;position:fixed;left:0;top:12px;bottom:12px;
     overflow-y:auto;overflow-x:hidden;
-    z-index:40;background:var(--panel);border:1px solid var(--border);border-radius:18px;
-    box-shadow:0 8px 28px var(--shadow-soft)}
+    z-index:40;background:var(--panel);border:1px solid var(--border);border-left:none;border-radius:0 18px 18px 0;
+    box-shadow:8px 0 28px var(--shadow-soft)}
   #main{flex:1;min-width:0;padding:28px 22px 64px;position:relative;z-index:1}
   #main.homepage-mode{padding:0}
   .node{width:max-content;min-width:180px;max-width:320px}
@@ -880,6 +885,12 @@ body.standalone .sa-bar{display:flex}
     padding:24px 20px 48px;box-shadow:0 16px 48px var(--shadow)}
 }
 #view-buddy.panel.active,#view-buddy.sheet.active{display:block}
+/* Buddy panel slide animation (Dave, 2026-10-13): slow, visible open/close movement.
+   Animates `right` (not transform) so the fixed close button keeps its viewport anchor. */
+#main #view-buddy.panel{display:block;right:-600px;visibility:hidden;
+  transition:right .5s cubic-bezier(.32,.72,.35,1), visibility 0s linear .5s}
+#main #view-buddy.panel.active{right:12px;visibility:visible;
+  transition:right .5s cubic-bezier(.32,.72,.35,1), visibility 0s}
 #main .view{display:none}
 #main .view.active{display:block}
 #main #view-project.active{display:flex;flex-direction:column;min-height:calc(100vh - 116px)}
