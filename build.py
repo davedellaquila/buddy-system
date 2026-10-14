@@ -407,13 +407,13 @@ body:has(#field-settings.show) #new-buddy-fab{display:none}
 #persona-picker .pp-head h2{margin:0 0 2px;font-size:17px}
 #persona-picker #pp-filter{padding:10px 12px;font-size:16px;border-radius:10px;border:1px solid var(--border);background:var(--bg);color:var(--text);font-family:inherit;box-sizing:border-box}
 #persona-picker .pp-grid{flex:1;min-height:0;overflow-y:auto;display:grid;grid-template-columns:repeat(2,1fr);gap:8px;padding:12px 16px;scrollbar-width:thin;scrollbar-color:var(--border) transparent}
-#persona-picker .pp-card{display:flex;flex-direction:column;align-items:flex-start;gap:4px;padding:10px 12px;border-radius:12px;border:1px solid var(--border);background:var(--bg);color:var(--text);cursor:pointer;text-align:left;min-height:44px;-webkit-tap-highlight-color:transparent}
+#persona-picker .pp-card{display:flex;flex-direction:column;align-items:flex-start;gap:4px;padding:10px 12px;border-radius:12px;border:1px solid var(--border);background:var(--bg);color:var(--text);cursor:pointer;text-align:left;min-height:44px;-webkit-tap-highlight-color:transparent;overflow:hidden;min-width:0}
 #persona-picker .pp-card:hover{border-color:var(--accent)}
 #persona-picker .pp-play{display:inline-block;margin-left:6px;font-size:12px;color:var(--accent);cursor:pointer;padding:2px 6px;border-radius:6px;vertical-align:middle}
 #persona-picker .pp-play:hover{background:var(--active)}
 #persona-picker .pp-card.sel{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent);background:var(--active)}
 #persona-picker .pp-name{font-size:13px;font-weight:700}
-#persona-picker .pp-quote{font-size:12.5px;color:var(--muted);font-style:italic;line-height:1.35;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;text-overflow:ellipsis}#persona-picker .pp-blurb{font-size:12px;color:var(--muted);line-height:1.35;opacity:.85}
+#persona-picker .pp-quote{font-size:12.5px;color:var(--muted);font-style:italic;line-height:1.35;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;text-overflow:ellipsis}#persona-picker .pp-blurb{font-size:12.5px;color:var(--muted);line-height:1.35;opacity:.85;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;text-overflow:ellipsis}
 #persona-picker .pp-actions{display:flex;gap:8px;flex-wrap:wrap;padding:12px 16px 16px;border-top:1px solid var(--border)}
 @media (max-width:639px){
   #persona-picker{align-items:flex-end;padding:0}
@@ -2880,7 +2880,8 @@ function openPersonaPicker(id){
   document.body.appendChild(m);
   const grid = m.querySelector('#pp-grid');
   const filter = m.querySelector('#pp-filter');
-  const close = () => m.remove();
+  let ppSaying = null; // play button currently previewing, if any
+  const close = () => { try { if (window.speechSynthesis) window.speechSynthesis.cancel(); } catch (err) {} ppSaying = null; m.remove(); };
   function renderGrid(){
     const q = filter.value.trim().toLowerCase();
     const list = roster.filter(p => !q || p.name.toLowerCase().indexOf(q) >= 0 || p.blurb.toLowerCase().indexOf(q) >= 0 || (p.quote && p.quote.toLowerCase().indexOf(q) >= 0));
@@ -2888,10 +2889,30 @@ function openPersonaPicker(id){
     if (countEl) countEl.textContent = list.length + ' of ' + roster.length;
     grid.innerHTML = list.map(p =>
       '<button type="button" class="pp-card' + (p.name === cur ? ' sel' : '') + '" data-persona="' + escHtml(p.name) + '">'
-      + '<span class="pp-name">' + escHtml(p.name) + '</span>'
+      + '<span class="pp-name">' + escHtml(p.name)
+      + ' <span class="pp-play" data-say="' + escHtml(p.quote || p.blurb) + '" title="Hear a sample" role="button" tabindex="0">\u25b6\ufe0e</span></span>'
       + (p.quote ? '<span class="pp-quote">\u201c' + escHtml(p.quote) + '\u201d</span>' : '')
       + '<span class="pp-blurb">' + escHtml(p.blurb) + '</span></button>').join('')
       || '<p class="bp-empty">No personas match that filter.</p>';
+    // Sample previews: speak the persona's quote (or blurb) via device TTS.
+    // Tapping play never selects the persona; tapping again stops the sample.
+    grid.querySelectorAll('[data-say]').forEach(pb => {
+      const sayIt = (ev) => {
+        ev.stopPropagation(); ev.preventDefault();
+        try {
+          const synth = window.speechSynthesis;
+          if (!synth) return;
+          if (ppSaying === pb) { synth.cancel(); ppSaying = null; return; }
+          synth.cancel(); ppSaying = pb;
+          const u = new SpeechSynthesisUtterance(pb.getAttribute('data-say'));
+          u.onend = () => { if (ppSaying === pb) ppSaying = null; };
+          u.onerror = () => { if (ppSaying === pb) ppSaying = null; };
+          synth.speak(u);
+        } catch (err) {}
+      };
+      pb.addEventListener('click', sayIt);
+      pb.addEventListener('keydown', (ev) => { if (ev.key === 'Enter' || ev.key === ' ') sayIt(ev); });
+    });
     grid.querySelectorAll('.pp-card').forEach(c => c.addEventListener('click', () => {
       const name = c.getAttribute('data-persona'); close(); setBuddyPersona(id, name);
     }));

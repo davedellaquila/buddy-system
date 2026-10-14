@@ -3,6 +3,14 @@
 All notable changes to the Buddies dashboard and buddy system. Newest first.
 `FEATURES.md` describes the current state; this file describes how it got there.
 
+## 2026-10-13 (Persona picker: description overflow fixed + sample previews)
+
+### Fixed
+- **Persona descriptions no longer spill past their cards** (Dave's screenshot catch 2026-10-13): the `.pp-blurb` line had no line clamp, so long descriptions rendered straight through the card border onto the tile below. Applied Jonny's approved verdict — 2-line clamp + ellipsis at 12.5px muted on the blurb, plus `overflow:hidden` (and `min-width:0`) on the card as containment.
+
+### Added
+- **▶ Sample button on every persona card** (Dave's ask 2026-10-13): tapping it reads the persona's quote (or blurb) aloud via the device speech engine — tap again to stop. Play never selects the persona; closing the picker stops playback. Same `.pp-play` affordance as the voice picker.
+
 ## 2026-10-13 (Tree zoom is pure scale — no more scrunching)
 
 ### Fixed
