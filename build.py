@@ -73,7 +73,7 @@ body{padding:0}
    corners, lifted over the canvas with a soft shadow. Fixed overlay — the main view
    stays full-width underneath and never shifts when the sidebar toggles. */
 #main{flex:1;min-width:0;padding:36px 32px 80px;position:relative;z-index:1}
-.brand{padding:22px 8px 14px;background:var(--bg)}
+.brand{padding:22px 8px 14px;background:var(--panel)}
 /* Brand chrome (eyebrow/title/subtitle + gear/close) pins at top; Views scroll under */
 /* Tip jar — quiet footer link pinned to the bottom of the sidebar. Muted, small,
    never in the way. Same ko-fi destination as the News Buddy voice picker. */
@@ -862,9 +862,10 @@ body.standalone .sa-bar{display:flex}
 @media (min-width:640px) and (max-width:1100px){
   /* Keep a real left sidebar — do not stack above main (iPad portrait is ~744–834px). */
   .app{display:flex;flex-direction:row;align-items:stretch}
-  #sidebar{width:250px;flex:0 0 250px;position:sticky;top:0;height:100vh;height:100dvh;
-    max-height:none;border-right:1px solid var(--border2);border-bottom:0;overflow-y:auto;overflow-x:hidden;
-    z-index:40;background:var(--bg)}
+  #sidebar{width:250px;position:fixed;left:12px;top:12px;bottom:12px;
+    overflow-y:auto;overflow-x:hidden;
+    z-index:40;background:var(--panel);border:1px solid var(--border);border-radius:18px;
+    box-shadow:0 8px 28px var(--shadow-soft)}
   #main{flex:1;min-width:0;padding:28px 22px 64px;position:relative;z-index:1}
   #main.homepage-mode{padding:0}
   .node{width:max-content;min-width:180px;max-width:320px}
