@@ -3,6 +3,11 @@
 All notable changes to the Buddies dashboard and buddy system. Newest first.
 `FEATURES.md` describes the current state; this file describes how it got there.
 
+## 2026-10-13 (Sidebar: drag-to-reorder items within each section)
+
+### Added
+- **Drag items within each sidebar section** (Dave's ask 2026-10-13): grab any row inside Views, Business Plans, or Buddies and drop it before/after another row — box-shadow insert hints, "Order saved." toast. Views persist via `S.viewOrder`, plans via new `S.planOrder` (`getPlanOrder()` mirrors `getViewOrder()`), buddies via new `S.buddyOrder = {parentKey: [childIds]}` (`'__root__'` for top-level). Buddy rows reorder only among siblings sharing an effective parent — never reparenting. Event delegation on each section container survives `renderNav()` re-renders; reordering is disabled while the buddy search filter is active. (Mouse/trackpad drag, matching the section headers; touch not wired yet.)
+
 ## 2026-10-13 (Stat tiles: uniform width + popularity ordering — Dave's override of Jonny)
 
 ### Changed

@@ -576,6 +576,9 @@ body:has(#token-pill) #panel-open{right:148px}
 #sidebar .nav-sec.sec-dragging{opacity:.35}
 #sidebar .nav-sec.sec-drop-before{box-shadow:0 -2px 0 var(--accent)}
 #sidebar .nav-sec.sec-drop-after{box-shadow:0 2px 0 var(--accent)}
+#sidebar .navbtn.drop-before,#sidebar .brow.drop-before{box-shadow:0 -2px 0 var(--accent)}
+#sidebar .navbtn.drop-after,#sidebar .brow.drop-after{box-shadow:0 2px 0 var(--accent)}
+#sidebar .navbtn.item-dragging,#sidebar .brow.item-dragging{opacity:.35}
 #field-settings input[type=checkbox],
 .fset-check input[type=checkbox]{
   -webkit-appearance:none;appearance:none;width:28px;height:28px;margin:0;flex:0 0 28px;
@@ -1434,6 +1437,65 @@ function getViewOrder(){
   S.viewOrder = clean;
   return clean;
 }
+function getPlanOrder(){
+  const ids = PLANS.map(p => p.id);
+  if (!Array.isArray(S.planOrder)) S.planOrder = ids.slice();
+  const clean = S.planOrder.filter(id => ids.indexOf(id) >= 0);
+  ids.forEach(id => { if (clean.indexOf(id) < 0) clean.push(id); });
+  S.planOrder = clean;
+  return clean;
+}
+/* Sibling ordering for the buddy tree. parentKey is the effective parent id,
+   or '__root__' for top-level. Stored per parent in S.buddyOrder. */
+function buddyParentKey(id){
+  const b = byId[id];
+  const p = b ? effParent(b) : null;
+  return (p === null || p === undefined) ? '__root__' : p;
+}
+function getBuddyOrder(pk){
+  if (!S.buddyOrder || typeof S.buddyOrder !== 'object') S.buddyOrder = {};
+  const o = S.buddyOrder[pk];
+  return Array.isArray(o) ? o : [];
+}
+/* Sort ids by the stored order for parent pk; ids absent from the stored
+   order keep their original relative order at the end. Byte-identical to
+   the input when no custom order exists. */
+function sortSiblingsByOrder(ids, pk){
+  const order = getBuddyOrder(pk);
+  if (!order.length) return ids;
+  const rank = {};
+  order.forEach((oid, i) => { if (!(oid in rank)) rank[oid] = i; });
+  const head = [], tail = [];
+  ids.forEach(id => ((id in rank) ? head : tail).push(id));
+  head.sort((a, b) => rank[a] - rank[b]);
+  return head.concat(tail);
+}
+/* Top-level copy of the field-settings reorder logic (that one is nested inside
+   openFieldSettings); used by the sidebar item drag-to-reorder. */
+function reorderBefore(order, fromId, beforeId){
+  const from = order.indexOf(fromId);
+  if (from < 0) return order;
+  const next = order.slice();
+  const [moved] = next.splice(from, 1);
+  if (!beforeId) next.push(moved);
+  else {
+    const to = next.indexOf(beforeId);
+    if (to < 0) next.push(moved);
+    else next.splice(to, 0, moved);
+  }
+  return next;
+}
+/* Current rendered sibling id list for the group containing id. */
+function buddySiblingIds(id){
+  const pk = buddyParentKey(id);
+  let raw;
+  if (pk === '__root__') {
+    raw = ROOT_ORDER.filter(rid => { const b = byId[rid]; const p = b ? effParent(b) : null; return p === null; });
+  } else {
+    raw = (kidsOf[pk] || []).map(b => b.id);
+  }
+  return sortSiblingsByOrder(raw, pk);
+}
 // The views-list selection changes ONLY on view interaction (view-menu clicks,
 // number-key shortcuts, initial load). Buddy/plan selection never touches it.
 if (!S.view || VIEW_DEFS.every(v => v[0] !== S.view)) S.view = (typeof S.sel === 'string' && S.sel.indexOf('view:') === 0) ? S.sel.slice(5) : 'tree';
@@ -1569,7 +1631,7 @@ function renderChangelog(){
 function renderNav(){
   const views = getViewOrder().map(id => VIEW_DEFS.find(v => v[0] === id)).filter(Boolean).filter(([v]) => isViewVisible(v));
   document.getElementById('view-nav').innerHTML = views.map(([v,l,ic]) =>
-    '<button class="navbtn'+(S.view===v?' sel':'')+'" data-view="'+v+'" title="'+(VIEW_TIPS[v]||l)+'"><span class="nic">'+ic+'</span>'+l+'</button>').join('');
+    '<button class="navbtn'+(S.view===v?' sel':'')+'" data-view="'+v+'" draggable="true" title="'+(VIEW_TIPS[v]||l)+'"><span class="nic">'+ic+'</span>'+l+'</button>').join('');
   const q = (document.getElementById('buddy-search').value || '').toLowerCase().trim();
   const words = q.split(/\s+/).filter(Boolean);
   let h = '';
@@ -1585,6 +1647,7 @@ function renderNav(){
     const un = descUnseen(id);
     const kind = b.kind === 'root' ? 'root' : (b.parent === ROOT_ID ? 'direct' : b.kind);
     const kids = kidsOf[id] || [];
+    const kidIds = sortSiblingsByOrder(kids.map(k => k.id), id);
     const hasKids = kids.length > 0;
     const collapsed = hasKids && !words.length && !!S.navCollapsed[id];
     h += '<button class="brow'+((S.projectId===id || S.sel==='buddy:'+id)?' sel':'')+(un?' has-unseen':'')+(isDormant(id)?' dormant':'')+'" data-buddy="'+id+'"'
@@ -1594,9 +1657,9 @@ function renderNav(){
       + '<span class="bdot"></span><span class="bicon">'+escHtml(b.icon||'')+'</span><span class="bname">'+escHtml(dispName(b))+'</span>'
       + '<span class="bkind">'+kind+'</span>'
       + '<span class="binfo" data-buddy-info="'+id+'" title="Open '+escHtml(dispName(b))+' details" style="margin-left:auto;padding:2px 6px;opacity:0;transition:opacity 0.15s;cursor:pointer" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0">\u24d8</span></button>';
-    if (!collapsed) kids.forEach(c => row(c.id, depth+1));
+    if (!collapsed) kidIds.forEach(kid => row(kid, depth+1));
   }
-  ROOT_ORDER.filter(id => { const b = byId[id]; const p = b ? effParent(b) : null; return p === null; })
+  sortSiblingsByOrder(ROOT_ORDER.filter(id => { const b = byId[id]; const p = b ? effParent(b) : null; return p === null; }), '__root__')
     .forEach(id => row(id, 0));
   document.getElementById('buddy-nav').innerHTML = h;
   if (Object.keys(S.parents).length) {
@@ -1607,8 +1670,8 @@ function renderNav(){
   const t = totalUnseen();
   const pill = document.getElementById('attn-pill');
   pill.textContent = t; pill.classList.toggle('zero', t === 0);
-  document.getElementById('plan-nav').innerHTML = PLANS.map(p =>
-    '<button class="brow prow'+(S.sel==='plan:'+p.id?' sel':'')+'" data-plan="'+p.id+'" style="padding-left:8px">'
+  document.getElementById('plan-nav').innerHTML = getPlanOrder().map(pid => PLANS.find(p => p.id === pid)).filter(Boolean).map(p =>
+    '<button class="brow prow'+(S.sel==='plan:'+p.id?' sel':'')+'" data-plan="'+p.id+'" draggable="true" style="padding-left:8px">'
     + '<span class="bicon">'+escHtml(p.icon||'')+'</span><span class="bname pname">'+escHtml(p.name)+'</span></button>').join('');
   watchScrollPos('sidebar', document.getElementById('sidebar'));
   restoreScrollPos('sidebar', document.getElementById('sidebar'));
@@ -6181,6 +6244,105 @@ function initNavSecDnD(){
     });
   });
 }
+/* Drag-to-reorder items WITHIN each sidebar section (views, plans, buddies).
+   Same idiom as the section headers: HTML5 mouse DnD, box-shadow insert hints,
+   toast on drop. Buddy rows reorder only among siblings sharing an effective
+   parent (no reparenting). Delegated on the section containers so renderNav()
+   re-renders don't need re-binding. */
+function initNavItemDnD(){
+  const sb = document.getElementById('sidebar');
+  if (!sb || sb.dataset.itemdnd) return;
+  sb.dataset.itemdnd = '1';
+  const clearItemHints = () => sb.querySelectorAll('.navbtn.drop-before,.navbtn.drop-after,.brow.drop-before,.brow.drop-after')
+    .forEach(el => el.classList.remove('drop-before', 'drop-after'));
+  const clearDragging = () => sb.querySelectorAll('.navbtn.item-dragging,.brow.item-dragging')
+    .forEach(el => el.classList.remove('item-dragging'));
+  function bindItemList(containerId, itemSel, idAttr, cfg){
+    const c = document.getElementById(containerId);
+    if (!c || c.dataset.itemdnd) return;
+    c.dataset.itemdnd = '1';
+    let dragId = null;
+    c.addEventListener('dragstart', e => {
+      const item = e.target && e.target.closest ? e.target.closest(itemSel) : null;
+      if (!item || item.draggable !== true) return;
+      if (cfg.guard && !cfg.guard(item)) { e.preventDefault(); return; }
+      dragId = item.getAttribute(idAttr);
+      e.dataTransfer.effectAllowed = 'move';
+      try { e.dataTransfer.setData('text/plain', dragId); } catch (err) {}
+      item.classList.add('item-dragging');
+    });
+    const endDrag = () => { clearDragging(); clearItemHints(); dragId = null; };
+    c.addEventListener('dragend', endDrag);
+    c.addEventListener('dragover', e => {
+      if (!dragId) return;
+      const item = e.target && e.target.closest ? e.target.closest(itemSel) : null;
+      const tid = item ? item.getAttribute(idAttr) : null;
+      if (!item || tid === dragId || (cfg.sameGroup && !cfg.sameGroup(dragId, tid))) {
+        clearItemHints();
+        return;
+      }
+      e.preventDefault();
+      e.dataTransfer.dropEffect = 'move';
+      const r = item.getBoundingClientRect();
+      const before = (e.clientY - r.top) < r.height / 2;
+      clearItemHints();
+      item.classList.toggle('drop-before', before);
+      item.classList.toggle('drop-after', !before);
+    });
+    c.addEventListener('dragleave', e => {
+      if (!c.contains(e.relatedTarget)) clearItemHints();
+    });
+    c.addEventListener('drop', e => {
+      if (!dragId) return;
+      e.preventDefault();
+      const item = e.target && e.target.closest ? e.target.closest(itemSel) : null;
+      const tid = item ? item.getAttribute(idAttr) : null;
+      let beforeId = null;
+      if (item && tid !== dragId && (!cfg.sameGroup || cfg.sameGroup(dragId, tid))) {
+        const ord = cfg.orderFor(dragId);
+        const ti = ord.indexOf(tid);
+        const r = item.getBoundingClientRect();
+        const before = (e.clientY - r.top) < r.height / 2;
+        beforeId = before ? tid : (ti >= 0 && ti + 1 < ord.length ? ord[ti + 1] : null);
+      } else if (item) {
+        endDrag();
+        return; // not a sibling (or self): no-op, never reparent
+      }
+      // Dropped on container background: append at end of the dragged item's group.
+      const movedId = dragId;
+      endDrag();
+      cfg.applyOrder(movedId, beforeId);
+    });
+  }
+  bindItemList('view-nav', 'button.navbtn', 'data-view', {
+    orderFor: () => getViewOrder(),
+    applyOrder: (dragId, beforeId) => {
+      S.viewOrder = reorderBefore(getViewOrder(), dragId, beforeId);
+      save(); renderNav(); toast('Order saved.');
+    }
+  });
+  bindItemList('plan-nav', 'button.prow', 'data-plan', {
+    orderFor: () => getPlanOrder(),
+    applyOrder: (dragId, beforeId) => {
+      S.planOrder = reorderBefore(getPlanOrder(), dragId, beforeId);
+      save(); renderNav(); toast('Order saved.');
+    }
+  });
+  bindItemList('buddy-nav', 'button.brow[data-buddy]', 'data-buddy', {
+    guard: () => {
+      const q = document.getElementById('buddy-search');
+      return !(q && (q.value || '').trim());
+    },
+    sameGroup: (a, b) => buddyParentKey(a) === buddyParentKey(b),
+    orderFor: (dragId) => buddySiblingIds(dragId),
+    applyOrder: (dragId, beforeId) => {
+      const pk = buddyParentKey(dragId);
+      getBuddyOrder(pk); // ensure S.buddyOrder exists
+      S.buddyOrder[pk] = reorderBefore(buddySiblingIds(dragId), dragId, beforeId);
+      save(); renderNav(); toast('Order saved.');
+    }
+  });
+}
 /* Keep --sb-brand-h in sync so .sb-search-sticky stacks under the brand chrome. */
 function syncSbBrandStickyHeight(){
   const sb = document.getElementById('sidebar');
@@ -7399,6 +7561,7 @@ initPullToRefresh();
 initPlansToggle();
 initNavSecToggles();
 initNavSecDnD();
+initNavItemDnD();
 applyNavSecOrder();
 initSbBrandSticky();
 """
