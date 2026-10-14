@@ -767,6 +767,16 @@ body.sb-closed #menu-btn{display:flex;align-items:center;justify-content:center;
   border-radius:8px;padding:8px;font-size:14px;text-align:center}
 .info-tip{position:relative;display:inline-block;margin-left:6px;cursor:help;color:var(--muted);font-size:15px;line-height:1}
 .info-tip:hover{color:var(--text)}
+/* Attribute row pattern (Dave 2026-10-14): › DISCLOSURE  LABEL: value  ⓘ — tap row to edit */
+.attr-row{display:flex;align-items:center;gap:12px;width:100%;padding:8px 2px;background:none;border:0;cursor:pointer;font:inherit;color:var(--text);text-align:left;border-radius:10px}
+.attr-row:hover{background:var(--hover)}
+.attr-disc{flex:none;width:34px;height:34px;border-radius:50%;background:var(--ghost);display:flex;align-items:center;justify-content:center;font-size:19px;line-height:1;color:var(--muted)}
+.attr-row:hover .attr-disc{color:var(--text)}
+.attr-text{flex:1;min-width:0;font-size:13px;letter-spacing:.05em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.attr-label{color:var(--muted);font-weight:600}
+.attr-value{color:var(--text);font-weight:700}
+.attr-value.attr-none{color:var(--faint);font-weight:500}
+.attr-row .info-tip{margin-left:0;font-size:17px}
 /* Tooltips are JS popovers (see tipPop code) — hover on mouse, tap-to-pin with × on touch */
 .tip-pop{position:fixed;z-index:1000;max-width:240px;background:var(--panel);border:1px solid var(--border);
   color:var(--text);padding:10px 12px;border-radius:10px;font-size:12.5px;line-height:1.5;text-transform:none;
@@ -3162,17 +3172,19 @@ function renderBuddy(id){
   let parSec = '';
   (function(){
     const par = effParent(b);
-    const addParentBtn = '<button class="bp-add" data-addbuddy="parent" data-for="'+escHtml(id)+'" title="Add a parent/manager above this buddy">＋ ↑ Parent</button>';
-    const addSibBtn = '<button class="bp-add" data-addbuddy="sibling" data-for="'+escHtml(id)+'">+ Peer</button>';
+    const tip = 'This buddy\u2019s parent in the hierarchy. Tap the row to change it.';
+    const rowOpen = '<div class="bp-sec" data-field="parent"><button class="attr-row" data-changeparent="'+escHtml(id)+'"';
     if (!par) {
-      parSec = '<div class="bp-sec" data-field="parent"><h3>Parent'+addParentBtn+'<button class="bp-add" data-changeparent="'+escHtml(id)+'" title="Set this buddy\u2019s parent">Set parent</button></h3><p class="bp-empty">Top-level buddy — no parent.</p></div>';
+      parSec = rowOpen + ' title="Set this buddy\u2019s parent"><span class="attr-disc">\u203a</span>'
+        + '<span class="attr-text"><span class="attr-label">PARENT:</span> <span class="attr-value attr-none">Top level</span></span>'
+        + '<span class="info-tip" data-tip="'+tip+'">\u24d8</span></button></div>';
       return;
     }
     const pb = byId[par];
     if (!pb) return;
-    parSec = '<div class="bp-sec" data-field="parent"><h3>Parent<button class="bp-add" data-changeparent="'+escHtml(id)+'" title="Change this buddy\u2019s parent">Change</button></h3>'
-      + '<a class="bp-parent-link" data-buddy="'+escHtml(par)+'" title="Open '+escHtml(dispName(pb))+'">'
-      + escHtml(dispName(pb)) + '<span class="bp-parent-kind"> (' + escHtml(pb.kind || 'buddy') + ')</span></a></div>';
+    parSec = rowOpen + ' title="Change this buddy\u2019s parent"><span class="attr-disc">\u203a</span>'
+      + '<span class="attr-text"><span class="attr-label">PARENT:</span> <span class="attr-value">'+escHtml(dispName(pb))+'</span></span>'
+      + '<span class="info-tip" data-tip="'+tip+'">\u24d8</span></button></div>';
   })();
   let sibSec = '';
   (function(){
@@ -6057,6 +6069,7 @@ document.addEventListener('click', e => {
   }
   const btn = e.target.closest('[data-changeparent]');
   if (!btn) return;
+  if (e.target.closest('.info-tip')) return; // the ⓘ popover handles its own taps
   e.preventDefault(); e.stopPropagation();
   openChangeParentDialog(btn.dataset.changeparent);
 });
