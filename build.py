@@ -1081,7 +1081,8 @@ body.standalone .sa-bar{display:flex}
 .bp-top{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
 /* Compact sticky identity bar — one row; nav / crumb / tagline scroll away */
 .bp-sticky-head{position:sticky;top:0;z-index:6;background:var(--panel);
-  padding:6px 0;margin:0 0 2px;border-bottom:1px solid var(--border)}
+  margin:-6px -4px 10px;padding:10px 12px;border-bottom:1px solid var(--border);
+  box-shadow:0 3px 10px rgba(0,0,0,.10)}
 .bp-sticky-head .bp-top{gap:8px;flex-wrap:nowrap;min-width:0;align-items:center}
 .bp-sticky-head .bp-icon{font-size:20px;line-height:1;flex:0 0 auto}
 .bp-sticky-head .bp-name{font-size:16px;font-weight:700;margin:0;padding:0;min-width:0;
