@@ -7091,6 +7091,8 @@ function setSidebarOpen(open){
     sb.classList.remove('open');
     if (sc) sc.classList.remove('show');
     if (typeof applySbWidth === 'function') applySbWidth();
+    const _tab = document.getElementById('sb-tab');
+    if (_tab) _tab.style.display = open ? '' : 'none';
   }
 }
 /* Right panel section rail (Dave, 2026-10-14): collapsed floating pill with section icons */
