@@ -719,7 +719,8 @@ window.NBVoice = (function(){
 ;
 
 /* Suggestions box (section pages): like the brain dump, but writes to
-   docs/suggestions.md — a separate box for readers' suggestions, not Dave's notes. */
+   docs/suggestions.md \u2014 a separate box for readers' suggestions, not Dave's notes.
+   No-token behavior: queue in a localStorage outbox, auto-flush when a token appears. */
 (function(){
   var box = document.querySelector('.suggestbox');
   if (!box || box.dataset.sugInit) return;
@@ -728,8 +729,11 @@ window.NBVoice = (function(){
   var ta = box.querySelector('textarea'),
       btn = box.querySelector('.sug-btn'),
       st = box.querySelector('.sug-status');
+  var OUTBOX = 'nb_sug_outbox_v1';
   function lsGet(){ try { return JSON.parse(localStorage.getItem('buddyTree.v3') || '{}'); } catch(e){ return {}; } }
   function token(){ return lsGet().ghToken || ''; }
+  function getOutbox(){ try { var a = JSON.parse(localStorage.getItem(OUTBOX) || '[]'); return Array.isArray(a) ? a : []; } catch(e){ return []; } }
+  function setOutbox(a){ try { localStorage.setItem(OUTBOX, JSON.stringify(a)); } catch(e){} }
   function b64encode(str){
     var bytes = new TextEncoder().encode(str), bin = '';
     bytes.forEach(function(b){ bin += String.fromCharCode(b); });
@@ -760,28 +764,57 @@ window.NBVoice = (function(){
   fetch('../buddies.json', {cache: 'no-store'}).then(function(r){ return r.json(); }).then(function(d){
     var buds = d.buddies || [];
     for (var i = 0; i < buds.length; i++) if (buds[i].id === bid && buds[i].repo) { repo = buds[i].repo; break; }
+    flushOutbox(true);
   }).catch(function(){});
+  async function sendItem(item){
+    var NL = String.fromCharCode(10);
+    var cur = await ghGetFile(repo, 'docs/suggestions.md');
+    var base = cur ? cur.text : '# Suggestions \u2014 News Buddy' + NL + NL +
+      'Reader suggestions from the newspaper\u2019s section pages. Separate from Dave\u2019s brain dump (docs/ingest.md).' + NL + NL;
+    var line = '## ' + item.stamp + NL + 'Page: ' + item.page + NL + NL + item.text + NL + NL;
+    var body = {message: 'Reader suggestion for ' + bid, content: b64encode(base + line)};
+    if (cur && cur.sha) body.sha = cur.sha;
+    await ghApi('/repos/davedellaquila/' + repo + '/contents/docs/suggestions.md', 'PUT', body);
+  }
+  async function flushOutbox(quiet){
+    var q = getOutbox();
+    if (!q.length || !token() || !repo) return 0;
+    var sent = 0;
+    for (var i = 0; i < q.length; i++){
+      try { await sendItem(q[i]); sent++; }
+      catch(e){ break; }
+    }
+    if (sent) setOutbox(q.slice(sent));
+    if (sent && !quiet) st.textContent = 'Sent ' + sent + ' saved suggestion' + (sent > 1 ? 's' : '') + ' to the newsroom.';
+    return sent;
+  }
   btn.addEventListener('click', async function(){
     var text = ta.value.trim();
     if (!text) { st.textContent = 'Write something first.'; return; }
-    if (!token() || !repo) { st.textContent = 'The newsroom inbox isn\u2019t connected on this device yet.'; return; }
-    st.textContent = 'Sending…'; btn.disabled = true;
+    var item = {text: text, page: document.title || '', section: bid,
+                stamp: new Date().toLocaleString()};
+    if (!token() || !repo){
+      var q = getOutbox(); q.push(item); setOutbox(q); ta.value = '';
+      var n = q.length;
+      st.textContent = 'Saved on this device (' + n + ' queued) \u2014 it\u2019ll be delivered to the newsroom inbox automatically once this device is connected. Nothing is lost.';
+      return;
+    }
+    st.textContent = 'Sending\u2026'; btn.disabled = true;
     try {
-      var NL = String.fromCharCode(10);
-      var stamp = new Date().toLocaleString();
-      var page = document.title || '';
-      var cur = await ghGetFile(repo, 'docs/suggestions.md');
-      var base = cur ? cur.text : '# Suggestions — News Buddy' + NL + NL +
-        'Reader suggestions from the newspaper\u2019s section pages. Separate from Dave\u2019s brain dump (docs/ingest.md).' + NL + NL;
-      var line = '## ' + stamp + NL + 'Page: ' + page + NL + NL + text + NL + NL;
-      var body = {message: 'Reader suggestion for ' + bid, content: b64encode(base + line)};
-      if (cur && cur.sha) body.sha = cur.sha;
-      await ghApi('/repos/davedellaquila/' + repo + '/contents/docs/suggestions.md', 'PUT', body);
+      var sent = await flushOutbox(true);
+      await sendItem(item);
       ta.value = '';
-      st.textContent = 'Thanks — suggestion sent to the newsroom.';
+      var extra = sent ? ' (plus ' + sent + ' saved earlier)' : '';
+      st.textContent = 'Thanks \u2014 suggestion sent to the newsroom.' + extra;
     } catch(e){ st.textContent = 'Couldn\u2019t send. Try again in a bit.'; }
     btn.disabled = false;
   });
+  if (!token()){
+    var pending = getOutbox().length;
+    st.textContent = pending
+      ? pending + ' suggestion' + (pending > 1 ? 's' : '') + ' saved on this device \u2014 ' + (pending > 1 ? 'they' : 'it') + '\u2019ll send automatically once the newsroom inbox is connected.'
+      : 'No account needed \u2014 suggestions are delivered to the newsroom inbox.';
+  }
 })();
 
 ;
