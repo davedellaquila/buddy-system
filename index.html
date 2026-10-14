@@ -249,6 +249,10 @@ body.sb-closed #sidebar{transform:translateX(-115%);visibility:hidden;
    inset panel — 12px from all viewport edges, rounded on all four corners,
    translucent with backdrop blur. Fixed overlay — the main view stays full-width
    underneath and never shifts when the sidebar toggles. */
+body.sb-anchored #sidebar{left:0;background:var(--panel);border-left:none;border-radius:0 18px 18px 0;
+  box-shadow:8px 0 28px var(--shadow-soft);
+  -webkit-backdrop-filter:none;backdrop-filter:none}
+body.sb-anchored #sidebar .brand, body.sb-anchored #sidebar .sb-tipjar{background:var(--panel)}
 #main{flex:1;min-width:0;padding:36px 32px 80px;position:relative;z-index:1}
 .brand{padding:22px 8px 14px;background:transparent}
 /* Brand chrome (eyebrow/title/subtitle + gear/close) pins at top; Views scroll under */
@@ -2528,6 +2532,7 @@ const SETTING_DEFS = [
   {id:'nbSheetWidth', label:'New buddy sheet width', type:'number', def:560, min:320, max:900, advanced:true, tip:'Fixed width of the New Buddy bottom sheet, in pixels. Height follows the content; drag the grab handle to resize vertically.', unit:'px'},
   {id:'shiftLeftAction', label:'Shift+← action', type:'choice', options:['promote','go to parent','nothing'], def:'promote', advanced:true, tip:'What Shift+Left arrow does for the selected buddy. Promote moves it up one level; Go to parent just navigates there.'},
   {id:'fontScale', label:'Text size', type:'slider', def:100, min:80, max:130, step:5, advanced:true, tip:'Scales text and UI throughout the app — like the text-size slider on iPhone and Watch.', unit:'%'},
+  {id:'sidebarStyle', label:'Sidebar panel style', type:'choice', options:['floating','anchored'], def:'floating', tip:'Floating: inset translucent panel with rounded corners (Apple Messages style). Anchored: flush to the left edge with rounded right corners.'},
 ];
 function getSetting(id){
   const def = SETTING_DEFS.find(s => s.id === id);
@@ -2539,6 +2544,9 @@ function applyFontScale(){
   const scale = (typeof v === 'number' && !isNaN(v) ? v : 100) / 100;
   document.body.style.zoom = scale === 1 ? '' : String(scale);
 }
+function applySidebarStyle(){
+  document.body.classList.toggle('sb-anchored', getSetting('sidebarStyle') === 'anchored');
+}
 function snapshotSettable(){
   return {
     hideBuddyWord: !!S.hideBuddyWord,
@@ -2548,12 +2556,14 @@ function snapshotSettable(){
     viewOrder: getViewOrder().slice(),
     sbWidth: S.sbWidth || SB_DEFAULT_W,
     panelWidth: S.panelWidth || BP_DEFAULT_W,
+    sidebarStyle: S.sidebarStyle || 'floating',
   };
 }
 function resetToFactory(){
   const f = S.factory || {};
   S.hideBuddyWord = !!f.hideBuddyWord;
   S.autoOpenPanel = !!f.autoOpenPanel;
+  S.sidebarStyle = f.sidebarStyle || 'floating';
   if (Array.isArray(f.fieldOrder) && f.fieldOrder.length) S.fieldOrder = f.fieldOrder.slice();
   if (f.fieldHidden && typeof f.fieldHidden === 'object') S.fieldHidden = Object.assign({}, f.fieldHidden);
   if (Array.isArray(f.viewOrder) && f.viewOrder.length) S.viewOrder = f.viewOrder.slice();
@@ -2580,6 +2590,7 @@ function renderSettingChecks(){
   sdiv.querySelectorAll('[data-setting]').forEach(el => {
     el.addEventListener('change', () => {
       S[el.dataset.setting] = (el.type === 'checkbox') ? el.checked : el.value; save();
+      applySidebarStyle();
       show(S.sel, false);
     });
   });
@@ -2641,7 +2652,7 @@ function renderDevelopSection(){
   const dev = document.getElementById('fset-develop');
   if (!dev) return;
   const simulating = !!devBackup;
-  const buildNum = '20261014.1119';
+  const buildNum = '20261014.1123';
   dev.innerHTML = ''
     + '<label class="fset-check"><input type="checkbox" id="dev-empty-toggle"' + (simulating ? ' checked' : '') + '> <span><strong>Simulate new user</strong> — empty data file, as if opening the shared link fresh</span></label>'
     + '<div class="fineprint" style="margin:8px 0 12px">Build <span style="font-family:monospace">' + escHtml(String(buildNum)) + '</span> · ' + BUDDIES.length + ' buddies in this file</div>'
@@ -2773,7 +2784,7 @@ function openFieldSettings(){
     m.querySelector('#fset-reset').addEventListener('click', () => {
       if (!confirm('Reset all settings to factory defaults?')) return;
       resetToFactory(); renderSettingChecks(); openFieldSettings();
-      applySbWidth(); applyPanelWidth(); applyFontScale();
+      applySbWidth(); applyPanelWidth(); applyFontScale(); applySidebarStyle();
       show(S.sel, false);
     });
     m.querySelector('#fset-update').addEventListener('click', () => {
@@ -3843,7 +3854,7 @@ function renderBuddy(id){
       'Anybody with repo access can see this note. Saved to the buddy’s repo (docs/notes.md).')
     + '<div class="attr-body"><textarea class="notes" id="bp-shared-notes" placeholder="Anybody with repo access can see this note."></textarea>'
     + '<p class="fineprint" id="shared-status"></p></div></div>'
-    + '<div class="bp-build">Build 20261014.1119</div>'
+    + '<div class="bp-build">Build 20261014.1123</div>'
     + '</div>';
   // Update every visible label for a buddy after a rename/re-icon, across all
   // Atlas lenses. A rename changes no structure, so labels are patched in place
@@ -5627,7 +5638,7 @@ function renderPlan(id){
     + '<p class="fineprint">Saved on this device. (For your eyes only)</p></div>'
     + '<div class="bp-sec"><h3>Shared notes<span class="info-tip" data-tip="Visible to everyone with access to this project.">\u24d8</span></h3><textarea class="notes" id="bp-shared" placeholder="Shared notes\u2026 (visible to everyone with access)">'+escHtml((S.planShared||{})[id]||'')+'</textarea>'
     + '<p class="fineprint">Shared — visible to everyone with access.</p></div>'
-    + '<div class="bp-build">Build 20261014.1119</div>'
+    + '<div class="bp-build">Build 20261014.1123</div>'
     + '</div>';
   const nt = document.getElementById('bp-notes');
   let t = null;
@@ -5827,6 +5838,7 @@ document.addEventListener('keydown', e => {
   const sb = document.getElementById('sidebar');
   applySbWidth();
   applyFontScale();
+  applySidebarStyle();
   updateAppBadge();
   const h = document.getElementById('sb-resize');
   let sx = null, sw = 0, sdrag = false, snapped = false;
@@ -7773,14 +7785,14 @@ function openWhatsNew(){
     .then(r => r.ok ? r.text() : '')
     .then(t => {
       const serverBuild = t.trim();
-      if (serverBuild && serverBuild !== '20261014.1119') {
+      if (serverBuild && serverBuild !== '20261014.1123') {
         updBtn.style.display = '';
         updBtn.title = 'Update to build ' + serverBuild;
       }
       // Show build numbers at the top of the sheet (Dave's request 2026-10-12)
-      const myBuild = '20261014.1119';
+      const myBuild = '20261014.1123';
       let buildLine = '<p class="fineprint" style="margin-top:0">You’re on build ' + escHtml(myBuild) + '.';
-      if (serverBuild && serverBuild !== '20261014.1119' && isNewerBuild(serverBuild, myBuild)) {
+      if (serverBuild && serverBuild !== '20261014.1123' && isNewerBuild(serverBuild, myBuild)) {
         buildLine += ' Build ' + escHtml(serverBuild) + ' is available.';
       }
       buildLine += '</p>';
@@ -7819,7 +7831,7 @@ function isNewerBuild(server, mine){
   } catch (e) { return false; }
 }
 function initVersionCheck(){
-  const myBuild = '20261014.1119';
+  const myBuild = '20261014.1123';
   function showUpdateBanner(serverBuild){
     if (document.getElementById('update-banner')) return;
     const b = document.createElement('div');

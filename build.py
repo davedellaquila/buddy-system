@@ -77,6 +77,10 @@ body.sb-closed #sidebar{transform:translateX(-115%);visibility:hidden;
    inset panel — 12px from all viewport edges, rounded on all four corners,
    translucent with backdrop blur. Fixed overlay — the main view stays full-width
    underneath and never shifts when the sidebar toggles. */
+body.sb-anchored #sidebar{left:0;background:var(--panel);border-left:none;border-radius:0 18px 18px 0;
+  box-shadow:8px 0 28px var(--shadow-soft);
+  -webkit-backdrop-filter:none;backdrop-filter:none}
+body.sb-anchored #sidebar .brand, body.sb-anchored #sidebar .sb-tipjar{background:var(--panel)}
 #main{flex:1;min-width:0;padding:36px 32px 80px;position:relative;z-index:1}
 .brand{padding:22px 8px 14px;background:transparent}
 /* Brand chrome (eyebrow/title/subtitle + gear/close) pins at top; Views scroll under */
@@ -2173,6 +2177,7 @@ const SETTING_DEFS = [
   {id:'nbSheetWidth', label:'New buddy sheet width', type:'number', def:560, min:320, max:900, advanced:true, tip:'Fixed width of the New Buddy bottom sheet, in pixels. Height follows the content; drag the grab handle to resize vertically.', unit:'px'},
   {id:'shiftLeftAction', label:'Shift+← action', type:'choice', options:['promote','go to parent','nothing'], def:'promote', advanced:true, tip:'What Shift+Left arrow does for the selected buddy. Promote moves it up one level; Go to parent just navigates there.'},
   {id:'fontScale', label:'Text size', type:'slider', def:100, min:80, max:130, step:5, advanced:true, tip:'Scales text and UI throughout the app — like the text-size slider on iPhone and Watch.', unit:'%'},
+  {id:'sidebarStyle', label:'Sidebar panel style', type:'choice', options:['floating','anchored'], def:'floating', tip:'Floating: inset translucent panel with rounded corners (Apple Messages style). Anchored: flush to the left edge with rounded right corners.'},
 ];
 function getSetting(id){
   const def = SETTING_DEFS.find(s => s.id === id);
@@ -2184,6 +2189,9 @@ function applyFontScale(){
   const scale = (typeof v === 'number' && !isNaN(v) ? v : 100) / 100;
   document.body.style.zoom = scale === 1 ? '' : String(scale);
 }
+function applySidebarStyle(){
+  document.body.classList.toggle('sb-anchored', getSetting('sidebarStyle') === 'anchored');
+}
 function snapshotSettable(){
   return {
     hideBuddyWord: !!S.hideBuddyWord,
@@ -2193,12 +2201,14 @@ function snapshotSettable(){
     viewOrder: getViewOrder().slice(),
     sbWidth: S.sbWidth || SB_DEFAULT_W,
     panelWidth: S.panelWidth || BP_DEFAULT_W,
+    sidebarStyle: S.sidebarStyle || 'floating',
   };
 }
 function resetToFactory(){
   const f = S.factory || {};
   S.hideBuddyWord = !!f.hideBuddyWord;
   S.autoOpenPanel = !!f.autoOpenPanel;
+  S.sidebarStyle = f.sidebarStyle || 'floating';
   if (Array.isArray(f.fieldOrder) && f.fieldOrder.length) S.fieldOrder = f.fieldOrder.slice();
   if (f.fieldHidden && typeof f.fieldHidden === 'object') S.fieldHidden = Object.assign({}, f.fieldHidden);
   if (Array.isArray(f.viewOrder) && f.viewOrder.length) S.viewOrder = f.viewOrder.slice();
@@ -2225,6 +2235,7 @@ function renderSettingChecks(){
   sdiv.querySelectorAll('[data-setting]').forEach(el => {
     el.addEventListener('change', () => {
       S[el.dataset.setting] = (el.type === 'checkbox') ? el.checked : el.value; save();
+      applySidebarStyle();
       show(S.sel, false);
     });
   });
@@ -2418,7 +2429,7 @@ function openFieldSettings(){
     m.querySelector('#fset-reset').addEventListener('click', () => {
       if (!confirm('Reset all settings to factory defaults?')) return;
       resetToFactory(); renderSettingChecks(); openFieldSettings();
-      applySbWidth(); applyPanelWidth(); applyFontScale();
+      applySbWidth(); applyPanelWidth(); applyFontScale(); applySidebarStyle();
       show(S.sel, false);
     });
     m.querySelector('#fset-update').addEventListener('click', () => {
@@ -5472,6 +5483,7 @@ document.addEventListener('keydown', e => {
   const sb = document.getElementById('sidebar');
   applySbWidth();
   applyFontScale();
+  applySidebarStyle();
   updateAppBadge();
   const h = document.getElementById('sb-resize');
   let sx = null, sw = 0, sdrag = false, snapped = false;
