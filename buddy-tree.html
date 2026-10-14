@@ -54,6 +54,30 @@
   }
   .root-stub { width: 0; height: 20px; border-left: 1px solid #2a3547; margin: 0 auto; }
 
+  /* Horizontal org chart (Dave, 2026-10-13) — generations flow left to right.
+     Mirrors the vertical connector logic: vertical spine at left, horizontal stubs. */
+  .tree.tree-horizontal, .tree.tree-horizontal ul { flex-direction: column; justify-content: center; }
+  .tree.tree-horizontal ul { padding-top: 0; padding-left: 0; }
+  .tree.tree-horizontal li { display: flex; align-items: center; padding: 9px 0 9px 26px; text-align: left; }
+  .tree.tree-horizontal li::before, .tree.tree-horizontal li::after {
+    content: ''; position: absolute; left: 0; top: 50%;
+    width: 26px; height: 0; border-top: 1px solid #2a3547; border-left: none; border-right: none;
+  }
+  .tree.tree-horizontal li::after {
+    top: 0; bottom: 0; width: 0; height: auto;
+    border-top: none; border-left: 1px solid #2a3547;
+  }
+  .tree.tree-horizontal li:only-child::before, .tree.tree-horizontal li:only-child::after { display: none; }
+  .tree.tree-horizontal li:only-child { padding-left: 0; }
+  .tree.tree-horizontal li:first-child::after { top: 50%; }
+  .tree.tree-horizontal li:last-child::after { bottom: 50%; }
+  .tree.tree-horizontal ul ul { position: relative; padding-left: 26px; }
+  .tree.tree-horizontal ul ul::before {
+    content: ''; position: absolute; left: 0; top: 50%;
+    width: 26px; height: 0; border-left: none; border-top: 1px solid #2a3547;
+  }
+  .tree.tree-horizontal .root-stub { display: none; }
+
   .node {
     display: inline-block; width: 196px; vertical-align: top; position: relative;
     background: var(--panel); border: 1px solid var(--border); border-top: 3px solid var(--muted);

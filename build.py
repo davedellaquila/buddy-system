@@ -200,6 +200,15 @@ body.sb-closed #sidebar{transform:translateX(-115%);visibility:hidden;
 .zoomcontent{transform-origin:0 0}
 /* ============ Atlas lens picker (Jonny's verdict) ============ */
 .lens-picker-wrap{position:relative;display:inline-block;margin:0 0 12px 12px;z-index:60}
+/* Orientation tabs (Dave, 2026-10-13): segmented Vertical/Horizontal control
+   sitting just right of the Atlas lens picker. */
+.orient-tabs{display:inline-flex;margin:0 0 12px 8px;vertical-align:top;
+  background:var(--panel);border:1px solid var(--border);border-radius:999px;padding:3px;gap:2px}
+.orient-tabs button{border:none;background:transparent;color:var(--muted);
+  font-size:13px;font-weight:600;padding:8px 14px;border-radius:999px;cursor:pointer;
+  -webkit-tap-highlight-color:transparent}
+.orient-tabs button.sel{background:var(--accent);color:#fff}
+.orient-tabs button:not(.sel):hover{color:var(--text)}
 .lens-pill{display:flex;align-items:center;gap:8px;min-height:44px;padding:10px 16px;
   background:var(--panel);border:1px solid var(--border);border-radius:999px;
   color:var(--text);font-size:14px;font-weight:600;cursor:pointer;
@@ -3946,7 +3955,9 @@ function renderOrgTree(){
   if (chartType === 'org') {
     // No root tile — the top level is the staff itself, side by side.
     // (Astro is still the data-model parent; use Change-parent to go top-level.)
-    chartHtml = '<div class="chart"><div class="tree tree-no-root"><ul>'
+    // Horizontal orientation (Dave, 2026-10-13): generations flow left to right.
+    const horiz = (S.orgOrientation || 'vertical') === 'horizontal';
+    chartHtml = '<div class="chart"><div class="tree tree-no-root' + (horiz ? ' tree-horizontal' : '') + '"><ul>'
       + kids.map(b => orgNode(b, 1)).join('') + '</ul></div></div>';
   } else {
     chartHtml = '<div class="chart chart-' + chartType + '">' + renderChartMain(chartType, root, kids) + '</div>';
@@ -4027,6 +4038,14 @@ function chartThumbSvg(id){
 function chartSwitcherHtml(){
   const cur = getChartType();
   const curDef = CHART_TYPES.find(c => c.id === cur) || CHART_TYPES[0];
+  /* Orientation tabs (Dave, 2026-10-13): Vertical/Horizontal for the org chart,
+     sitting just right of the Atlas lens picker. */
+  const orientTabs = cur === 'org'
+    ? '<div class="orient-tabs" id="orient-tabs" role="tablist" aria-label="Org chart orientation">'
+      + '<button type="button" role="tab" data-orient="vertical" class="' + ((S.orgOrientation || 'vertical') === 'vertical' ? 'sel' : '') + '" aria-selected="' + ((S.orgOrientation || 'vertical') === 'vertical') + '">Vertical</button>'
+      + '<button type="button" role="tab" data-orient="horizontal" class="' + ((S.orgOrientation || 'vertical') === 'horizontal' ? 'sel' : '') + '" aria-selected="' + ((S.orgOrientation || 'vertical') === 'horizontal') + '">Horizontal</button>'
+      + '</div>'
+    : '';
   return '<div class="lens-picker-wrap">'
     + '<button class="lens-pill" id="lens-pill" aria-haspopup="true" aria-expanded="false">'
     + '<span class="lens-pill-icon">◉</span><span>' + curDef.label + '</span><span class="lens-pill-chev">▾</span>'
@@ -4039,6 +4058,7 @@ function chartSwitcherHtml(){
       + '<span class="lens-blurb">' + CHART_BLURBS[c.id] + '</span>'
       + '</button>').join('')
     + '</div></div>'
+    + orientTabs
     + '<div class="lens-scrim" id="lens-scrim" hidden></div>';
 }
 function renderChartMain(type, root, kids){
@@ -7638,6 +7658,15 @@ document.addEventListener('click', e => {
     const chart = document.querySelector('#treezoom-main .chart');
     if (chart) chart.classList.add('chart-switching');
     setTimeout(() => setChartType(lcard.dataset.chart), 140);
+    return;
+  }
+  /* Orientation tabs (Dave, 2026-10-13): Vertical/Horizontal for the org chart. */
+  const otab = e.target.closest('#orient-tabs [data-orient]');
+  if (otab) {
+    S.orgOrientation = otab.dataset.orient; save();
+    const chart = document.querySelector('#treezoom-main .chart');
+    if (chart) chart.classList.add('chart-switching');
+    setTimeout(() => renderOrgTree(), 140);
     return;
   }
   const lscrim = e.target.closest('#lens-scrim');
