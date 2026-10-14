@@ -3,6 +3,12 @@
 All notable changes to the Buddies dashboard and buddy system. Newest first.
 `FEATURES.md` describes the current state; this file describes how it got there.
 
+## 2026-10-13 (Floating panels, Muse-app style)
+
+### Changed
+- **Sidebar + buddy panel now float** (Dave's ask 2026-10-13, ref: Muse app's rounded slide-out panel): both panels are rounded on all four corners (18px), lifted off the canvas with a soft shadow and a 12px margin, reading as floating over the content underneath instead of full-bleed chrome. Panels use the `--panel` surface token against the `--bg` canvas for the tonal step. Sidebar resize handle and scroll-to-top button re-anchored to the new geometry; phone drawer floats too (12px insets).
+- **Native `color-scheme` declared** (dark by default, light under `html.light`): browser chrome — scrollbars, form controls, overscroll — now matches the theme instead of flashing light. Should mitigate the white flash Dave saw arrowing through buddies in dark mode; confirm with him.
+
 ## 2026-10-13 (Feedback widgets: buddy pages + awaiting-reply)
 
 ### Added

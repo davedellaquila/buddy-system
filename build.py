@@ -25,6 +25,7 @@ ROOT_ORDER = [
 NEW_CSS = """
 /* ---- theme variables ---- */
 :root{
+  color-scheme:dark; /* native scrollbars/controls match dark theme — kills white flashes */
   --bg:#0d1117; --panel:#161b22; --hover:#1c2128; --active:#1f6feb33;
   --wash:#1f6feb22; --wash2:#1c2b4a;
   --border:#30363d; --border2:#21262d;
@@ -40,6 +41,7 @@ NEW_CSS = """
   --canvas:color-mix(in srgb, var(--bg) 97.5%, black); /* whisper-dark chart canvas (Jonny, 2026-10-11) */
 }
 html.light{
+  color-scheme:light;
   --bg:#ffffff; --panel:#f6f8fa; --hover:#eaeef2; --active:#ddf4ff;
   --wash:#ddf4ff; --wash2:#e8f0fe;
   --border:#d0d7de; --border2:#e5e8eb;
@@ -63,25 +65,28 @@ body{background:var(--bg);color:var(--text)}
 /* ---- app shell ---- */
 body{padding:0}
 .app{display:flex;min-height:100vh;align-items:stretch}
-#sidebar{width:308px;flex:0 0 308px;background:var(--bg);border-right:1px solid var(--border2);container-type:inline-size;
-  padding:0 14px 32px;position:sticky;top:0;height:100vh;overflow-y:auto;overflow-x:hidden;overflow-wrap:break-word;
-  z-index:40}
+#sidebar{width:308px;flex:0 0 308px;background:var(--panel);container-type:inline-size;
+  padding:0 14px 32px;position:sticky;top:12px;height:calc(100vh - 24px);overflow-y:auto;overflow-x:hidden;overflow-wrap:break-word;
+  z-index:40;border:1px solid var(--border);border-radius:18px;margin-left:12px;
+  box-shadow:0 8px 28px var(--shadow-soft)}
+/* Floating-panel illusion (Dave, 2026-10-13 — Muse-app style): rounded on all four
+   corners, lifted over the canvas with a soft shadow. */
 #main{flex:1;min-width:0;padding:36px 32px 80px;position:relative;z-index:1}
 .brand{padding:22px 8px 14px;background:var(--bg)}
 /* Brand chrome (eyebrow/title/subtitle + gear/close) pins at top; Views scroll under */
 /* Tip jar — quiet footer link pinned to the bottom of the sidebar. Muted, small,
    never in the way. Same ko-fi destination as the News Buddy voice picker. */
-.sb-tipjar{position:sticky;bottom:0;z-index:7;background:var(--bg);margin:12px -14px -32px;padding:10px 14px;border-top:1px solid var(--border);text-align:center}
+.sb-tipjar{position:sticky;bottom:0;z-index:7;background:var(--panel);margin:12px -14px -32px;padding:10px 14px;border-top:1px solid var(--border);text-align:center}
 .sb-tipjar a{font-size:12px;color:var(--muted);text-decoration:none}
 .sb-tipjar a:hover{color:var(--accent);text-decoration:underline}
 .sb-brand-sticky{
-  position:sticky;top:0;z-index:7;background:var(--bg);
+  position:sticky;top:0;z-index:7;background:var(--panel);
   margin:0 -14px;padding:0 14px;
   border-bottom:1px solid var(--border)}
 .sb-brand-sticky #sb-tools{position:absolute;top:8px;right:8px;z-index:10}
 /* Search stacks under brand sticky block; --sb-brand-h set from measured brand height */
 .sb-search-sticky{
-  position:sticky;top:var(--sb-brand-h,96px);z-index:6;background:var(--bg);
+  position:sticky;top:var(--sb-brand-h,96px);z-index:6;background:var(--panel);
   margin:0 -14px;padding:10px 14px 10px;
   border-bottom:1px solid var(--border);
   box-shadow:0 8px 14px -10px rgba(0,0,0,.55)}
@@ -327,8 +332,8 @@ input[type=range].zrange::-moz-range-thumb{width:16px;height:16px;border-radius:
 /* Fixed to viewport at sidebar edge so vertical #sidebar scroll doesn't move it.
    MUST be a DOM sibling of #sidebar (not a child): overflow on #sidebar clips
    hit-testing/paint for fixed descendants, which made the gripper invisible. */
-#sb-resize{position:fixed;top:0;left:calc(var(--sbw, 308px) - 14px);z-index:50;
-  display:flex;align-items:center;justify-content:center;width:28px;height:100vh;height:100dvh;cursor:ew-resize;
+#sb-resize{position:fixed;top:12px;left:calc(var(--sbw, 308px) - 2px);z-index:50;
+  display:flex;align-items:center;justify-content:center;width:28px;height:calc(100vh - 24px);height:calc(100dvh - 24px);cursor:ew-resize;
   background:transparent;-webkit-tap-highlight-color:transparent;touch-action:none;user-select:none}
 /* 2x5 dot-grid gripper (Jonny's pick, 2026-10-11): honest affordance, no hover required */
 #sb-resize::after{content:'';width:14px;height:35px;transform:translateX(-9px);
@@ -344,7 +349,7 @@ body.sb-closed #sb-resize{display:none}
   #sidebar.open ~ #sb-resize{display:flex}
 }
 /* Sidebar scroll-to-top — Muse-ish frosted chip, pinned to bottom of left panel */
-#sb-to-top{position:fixed;bottom:16px;left:calc(var(--sbw, 308px) / 2 - 22px);z-index:48;
+#sb-to-top{position:fixed;bottom:16px;left:calc(12px + var(--sbw, 308px) / 2 - 22px);z-index:48;
   width:44px;height:44px;border-radius:12px;padding:0;
   display:flex;align-items:center;justify-content:center;
   background:color-mix(in srgb, var(--panel) 78%, transparent);border:1px solid var(--border);
@@ -441,7 +446,7 @@ body.standalone #bp-to-top{opacity:0!important;pointer-events:none!important}
 body.sb-closed #sb-to-top,
 body.standalone #sb-to-top{opacity:0!important;pointer-events:none!important}
 @media (max-width:639px){
-  #sb-to-top{bottom:20px;z-index:101;left:calc(var(--sbw, 308px) / 2 - 22px)}
+  #sb-to-top{bottom:20px;z-index:101;left:calc(12px + min(100vw - 24px, 420px) / 2 - 22px)}
   /* Only while the drawer is open — sibling selector */
   #sb-to-top{opacity:0;pointer-events:none}
   #sidebar.open ~ #sb-to-top.show{opacity:1;pointer-events:auto}
@@ -451,7 +456,7 @@ body.standalone #sb-to-top{opacity:0!important;pointer-events:none!important}
 /* Takeover back bar: hidden everywhere except the portrait-phone takeover (see below) */
 .bp-takeover-back{display:none;align-items:center;gap:4px;position:sticky;top:0;z-index:20;
   width:calc(100% + 36px);margin:0 -18px 4px;padding:14px 18px;min-height:52px;
-  background:var(--bg);border:none;border-bottom:1px solid var(--border);
+  background:var(--panel);border:none;border-bottom:1px solid var(--border);
   color:var(--accent);font-size:17px;font-weight:600;text-align:left;cursor:pointer;
   -webkit-tap-highlight-color:transparent}
 .bp-takeover-back:active{opacity:.6}
@@ -766,9 +771,9 @@ body.standalone .sa-bar{display:flex}
   /* Sidebar drawer with scrim.
      pointer-events:none while closed so the off-screen drawer never steals the
      left-edge swipe / tree pan hit target (transform alone is not enough on iOS). */
-  #sidebar{position:fixed;left:0;top:0;bottom:0;z-index:95;height:100vh;height:100dvh;
-    transform:translateX(-105%);transition:transform .28s cubic-bezier(.32,.72,.35,1);width:100vw;max-width:100vw;flex:none;
-    pointer-events:none}
+  #sidebar{position:fixed;left:12px;top:12px;bottom:12px;z-index:95;height:auto;
+    transform:translateX(-115%);transition:transform .28s cubic-bezier(.32,.72,.35,1);width:calc(100vw - 24px);max-width:420px;flex:none;
+    pointer-events:none;margin-left:0}
   #sidebar.open{transform:none;box-shadow:12px 0 40px rgba(0,0,0,.35);pointer-events:auto}
   /* Sidebar resize: sibling of #sidebar; visibility gated by #sidebar.open ~ #sb-resize above */
   #sb-resize{touch-action:none}
@@ -862,15 +867,15 @@ body.standalone .sa-bar{display:flex}
   #main{flex:1;min-width:0;padding:28px 22px 64px;position:relative;z-index:1}
   #main.homepage-mode{padding:0}
   .node{width:max-content;min-width:180px;max-width:320px}
-  #view-buddy.panel{position:fixed;top:0;right:0;bottom:0;width:min(380px,calc(100vw - 250px));z-index:30;
-    background:var(--bg);border-left:1px solid var(--border);overflow-y:auto;overflow-x:hidden;
-    padding:20px 18px 48px;box-shadow:-8px 0 32px var(--shadow)}
+  #view-buddy.panel{position:fixed;top:12px;right:12px;bottom:12px;width:min(380px,calc(100vw - 250px));z-index:30;
+    background:var(--panel);border:1px solid var(--border);border-radius:18px;overflow-y:auto;overflow-x:hidden;
+    padding:20px 18px 48px;box-shadow:0 16px 48px var(--shadow)}
 }
 /* ---- Large: >1100px (desktop) ---- */
 @media (min-width:1101px){
-  #view-buddy.panel{position:fixed;top:0;right:0;bottom:0;width:400px;z-index:60;
-    background:var(--bg);border-left:1px solid var(--border);overflow-y:auto;overflow-x:hidden;
-    padding:24px 20px 48px;box-shadow:-8px 0 32px var(--shadow)}
+  #view-buddy.panel{position:fixed;top:12px;right:12px;bottom:12px;width:400px;z-index:60;
+    background:var(--panel);border:1px solid var(--border);border-radius:18px;overflow-y:auto;overflow-x:hidden;
+    padding:24px 20px 48px;box-shadow:0 16px 48px var(--shadow)}
 }
 #view-buddy.panel.active,#view-buddy.sheet.active{display:block}
 #main .view{display:none}
@@ -973,7 +978,7 @@ body.standalone .sa-bar{display:flex}
 .bp-crumb b{color:var(--text);font-weight:600}
 .bp-top{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
 /* Compact sticky identity bar — one row; nav / crumb / tagline scroll away */
-.bp-sticky-head{position:sticky;top:0;z-index:6;background:var(--bg);
+.bp-sticky-head{position:sticky;top:0;z-index:6;background:var(--panel);
   padding:6px 0;margin:0 0 2px;border-bottom:1px solid var(--border)}
 .bp-sticky-head .bp-top{gap:8px;flex-wrap:nowrap;min-width:0;align-items:center}
 .bp-sticky-head .bp-icon{font-size:20px;line-height:1;flex:0 0 auto}
