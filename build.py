@@ -354,8 +354,8 @@ body.sb-closed #sb-resize{display:none}
   #sidebar.open ~ #sb-resize{display:flex}
 }
 /* Sidebar scroll-to-top — Muse-ish frosted chip, pinned to bottom of left panel */
-#sb-to-top{position:fixed;bottom:16px;left:calc(var(--sbw, 308px) / 2 - 22px);z-index:48;
-  width:44px;height:44px;border-radius:12px;padding:0;
+#sb-to-top{position:fixed;bottom:68px;left:calc(var(--sbw, 308px) / 2 - 22px);z-index:48;
+  width:44px;height:44px;border-radius:50%;padding:0;
   display:flex;align-items:center;justify-content:center;
   background:color-mix(in srgb, var(--panel) 78%, transparent);border:1px solid var(--border);
   color:var(--muted);cursor:pointer;
@@ -370,7 +370,7 @@ body.sb-closed #sb-resize{display:none}
 #sb-to-top svg{display:block}
 /* Buddy-panel scroll-to-top — same chip, centered at the bottom of the info panel */
 #bp-to-top{position:fixed;bottom:16px;z-index:48;
-  width:44px;height:44px;border-radius:12px;padding:0;
+  width:44px;height:44px;border-radius:50%;padding:0;
   display:flex;align-items:center;justify-content:center;
   background:color-mix(in srgb, var(--panel) 78%, transparent);border:1px solid var(--border);
   color:var(--muted);cursor:pointer;
@@ -451,7 +451,7 @@ body.standalone #bp-to-top{opacity:0!important;pointer-events:none!important}
 body.sb-closed #sb-to-top,
 body.standalone #sb-to-top{opacity:0!important;pointer-events:none!important}
 @media (max-width:639px){
-  #sb-to-top{bottom:20px;z-index:101;left:calc(12px + min(100vw - 24px, 420px) / 2 - 22px)}
+  #sb-to-top{bottom:68px;z-index:101;left:calc(12px + min(100vw - 24px, 420px) / 2 - 22px)}
   /* Only while the drawer is open — sibling selector */
   #sb-to-top{opacity:0;pointer-events:none}
   #sidebar.open ~ #sb-to-top.show{opacity:1;pointer-events:auto}
