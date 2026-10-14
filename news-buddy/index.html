@@ -142,6 +142,11 @@
   .story-listen:hover{border-color:var(--accent);color:var(--accent)}
   .story-listen.playing{background:var(--accent);border-color:var(--accent);color:#fff}
   article.story.reading{outline:2px solid var(--accent);outline-offset:3px}
+  /* ---------- story votes ---------- */
+  .story-vote{background:transparent;border:1px solid var(--rule);color:var(--muted);border-radius:20px;padding:2px 9px;font-size:12px;line-height:1.6;cursor:pointer;margin-left:6px;vertical-align:middle;-webkit-tap-highlight-color:transparent;white-space:nowrap}
+  .story-vote:hover{border-color:var(--accent);color:var(--accent)}
+  .story-vote.on-up{background:#1a7f37;border-color:#1a7f37;color:#fff}
+  .story-vote.on-down{background:#b42318;border-color:#b42318;color:#fff}
   .footer{
     margin-top:48px;padding-top:24px;border-top:1px solid var(--rule-strong);
     color:var(--muted);font-size:13.5px;text-align:center;
@@ -759,6 +764,105 @@
     h3.appendChild(b);
   });
   window.addEventListener('pagehide', function(){ try { synth.cancel(); } catch(e){} });
+})();
+</script>
+<script>
+/* Story votes: thumbs up/down per article. Instant state in localStorage; durable log appended to the repo's docs/story-votes.md (same GitHub token as the brain-dump box). */
+(function(){
+  var box = document.querySelector('.dumpbox');
+  var bid = (box && box.getAttribute('data-buddy-id')) || 'news-buddy';
+  function lsGet(){ try { return JSON.parse(localStorage.getItem('buddyTree.v3') || '{}'); } catch(e){ return {}; } }
+  function lsSet(patch){ try { var s = lsGet(); for (var k in patch) s[k] = patch[k]; localStorage.setItem('buddyTree.v3', JSON.stringify(s)); } catch(e){} }
+  function token(){ return lsGet().ghToken || ''; }
+  function b64encode(str){
+    var bytes = new TextEncoder().encode(str), bin = '';
+    bytes.forEach(function(b){ bin += String.fromCharCode(b); });
+    return btoa(bin);
+  }
+  async function ghApi(path, method, body){
+    var t = token();
+    if (!t) throw new Error('Add a GitHub token first.');
+    var r = await fetch('https://api.github.com' + path, {
+      method: method || 'GET',
+      headers: {'Authorization': 'Bearer ' + t, 'Accept': 'application/vnd.github+json', 'Content-Type': 'application/json'},
+      body: body ? JSON.stringify(body) : undefined
+    });
+    if (!r.ok) throw new Error('GitHub ' + r.status);
+    return r.status === 204 ? null : await r.json();
+  }
+  async function ghGetFile(repo, path){
+    try {
+      var j = await ghApi('/repos/davedellaquila/' + repo + '/contents/' + path);
+      if (j && j.content) return {
+        text: new TextDecoder().decode(Uint8Array.from(atob(j.content.replace(/\n/g, '')), function(c){ return c.charCodeAt(0); })),
+        sha: j.sha
+      };
+    } catch(e){}
+    return null;
+  }
+  var repo = null;
+  fetch('../buddies.json', {cache: 'no-store'}).then(function(r){ return r.json(); }).then(function(d){
+    var buds = d.buddies || [];
+    for (var i = 0; i < buds.length; i++) if (buds[i].id === bid && buds[i].repo) { repo = buds[i].repo; break; }
+  }).catch(function(){});
+  function vkey(article){
+    var a = article.querySelector('h3 a');
+    var url = a ? a.getAttribute('href') : '';
+    if (url) return 'vote|' + url;
+    var h3 = article.querySelector('h3');
+    return 'vote|text:' + (h3 ? h3.textContent.trim().slice(0, 60) : '');
+  }
+  function getVote(k){ var m = lsGet().storyVotes || {}; return m[k] || 0; }
+  function setVote(k, v){ var s = lsGet(); var m = s.storyVotes || {}; if (v) m[k] = v; else delete m[k]; s.storyVotes = m; lsSet(s); }
+  function meta(article){
+    var h3 = article.querySelector('h3'), head = '';
+    if (h3) { var c = h3.cloneNode(true); c.querySelectorAll('.thin,.story-listen,.story-vote').forEach(function(s){ s.remove(); }); head = c.textContent.trim().replace(/\s+/g, ' '); }
+    var a = article.querySelector('h3 a');
+    var sec = article.closest('section');
+    var h2 = sec ? sec.querySelector('.sec-head h2') : null;
+    return {headline: head, url: a ? a.getAttribute('href') : '', section: h2 ? h2.textContent.trim() : ''};
+  }
+  async function logVote(action, m){
+    if (!token() || !repo) return;
+    try {
+      var NL = String.fromCharCode(10);
+      var stamp = new Date().toLocaleString();
+      var cur = await ghGetFile(repo, 'docs/story-votes.md');
+      var base = cur ? cur.text : '# Story votes \u2014 News Buddy' + NL + NL + 'Dave\u2019s thumbs up/down on newspaper stories. +1 = more like this, -1 = less like this.' + NL + NL;
+      var line = '## ' + stamp + NL + action + ' | ' + m.section + ' | "' + m.headline.replace(/"/g, "'") + '"' + (m.url ? ' | ' + m.url : '') + NL + NL;
+      var body = {message: 'Story vote for ' + bid, content: b64encode(base + line)};
+      if (cur && cur.sha) body.sha = cur.sha;
+      await ghApi('/repos/davedellaquila/' + repo + '/contents/docs/story-votes.md', 'PUT', body);
+    } catch(e){}
+  }
+  function paint(article){
+    var v = getVote(vkey(article));
+    var up = article.querySelector('.story-vote.up'), dn = article.querySelector('.story-vote.dn');
+    if (up) up.classList.toggle('on-up', v === 1);
+    if (dn) dn.classList.toggle('on-down', v === -1);
+  }
+  document.querySelectorAll('article.story h3').forEach(function(h3){
+    var article = h3.closest('article');
+    if (!article) return;
+    function mk(cls, label, emoji, val){
+      var b = document.createElement('button');
+      b.type = 'button'; b.className = 'story-vote ' + cls; b.textContent = emoji;
+      b.title = label; b.setAttribute('aria-label', label);
+      b.addEventListener('click', function(ev){
+        ev.preventDefault(); ev.stopPropagation();
+        var k = vkey(article), cur = getVote(k);
+        var next = (cur === val) ? 0 : val;
+        setVote(k, next);
+        paint(article);
+        var m = meta(article);
+        logVote(next === 1 ? 'UPVOTE +1' : next === -1 ? 'DOWNVOTE -1' : 'UNVOTE', m);
+      });
+      return b;
+    }
+    h3.appendChild(mk('up', 'More like this', '\uD83D\uDC4D', 1));
+    h3.appendChild(mk('dn', 'Less like this', '\uD83D\uDC4E', -1));
+    paint(article);
+  });
 })();
 </script>
 
