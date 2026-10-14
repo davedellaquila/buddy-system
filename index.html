@@ -1078,14 +1078,14 @@ body.standalone .sa-bar{display:flex}
   #main{flex:1;min-width:0;padding:28px 22px 64px;position:relative;z-index:1}
   #main.homepage-mode{padding:0}
   .node{width:max-content;min-width:180px;max-width:320px}
-  #view-buddy.panel{position:fixed;top:12px;right:12px;bottom:12px;width:min(380px,calc(100vw - 250px));z-index:30;
-    background:var(--panel);border:1px solid var(--border);border-radius:18px;overflow-y:auto;overflow-x:hidden;
+  #view-buddy.panel{position:fixed;top:12px;right:0;bottom:12px;width:min(380px,calc(100vw - 250px));z-index:30;
+    background:var(--panel);border:1px solid var(--border);border-right:none;border-radius:18px 0 0 18px;overflow-y:auto;overflow-x:hidden;
     padding:20px 18px 48px;box-shadow:0 16px 48px var(--shadow)}
 }
 /* ---- Large: >1100px (desktop) ---- */
 @media (min-width:1101px){
-  #view-buddy.panel{position:fixed;top:12px;right:12px;bottom:12px;width:400px;z-index:60;
-    background:var(--panel);border:1px solid var(--border);border-radius:18px;overflow-y:auto;overflow-x:hidden;
+  #view-buddy.panel{position:fixed;top:12px;right:0;bottom:12px;width:400px;z-index:60;
+    background:var(--panel);border:1px solid var(--border);border-right:none;border-radius:18px 0 0 18px;overflow-y:auto;overflow-x:hidden;
     padding:24px 20px 48px;box-shadow:0 16px 48px var(--shadow)}
 }
 #view-buddy.panel.active,#view-buddy.sheet.active{display:block}
@@ -1093,7 +1093,7 @@ body.standalone .sa-bar{display:flex}
    Animates `right` (not transform) so the fixed close button keeps its viewport anchor. */
 #main #view-buddy.panel{display:block;right:-600px;visibility:hidden;
   transition:right .5s cubic-bezier(.32,.72,.35,1), visibility 0s linear .5s}
-#main #view-buddy.panel.active{right:12px;visibility:visible;
+#main #view-buddy.panel.active{right:0;visibility:visible;
   transition:right .5s cubic-bezier(.32,.72,.35,1), visibility 0s}
 #main .view{display:none}
 #main .view.active{display:block}
