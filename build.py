@@ -2539,7 +2539,7 @@ function initPanelResize(){
       closeDetail();
       return;
     }
-    const w = Math.min(560, Math.max(320, raw));
+    const w = Math.min(560, Math.max(220, raw));
     vb.style.width = w + 'px';
     document.documentElement.style.setProperty('--bpw', w + 'px');
   });
