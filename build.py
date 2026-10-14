@@ -996,6 +996,24 @@ body.standalone .sa-bar{display:flex}
     padding:24px 20px 48px;box-shadow:0 16px 48px var(--shadow);box-sizing:border-box}
 }
 #view-buddy.panel.active,#view-buddy.sheet.active{display:block}
+/* Right panel collapsed to floating section pill (Dave, 2026-10-14) */
+body.bp-collapsed #view-buddy.panel.active, body.bp-collapsed #view-buddy.sheet.active{display:none}
+#bp-rail{position:fixed;right:12px;top:76px;z-index:64;display:none;flex-direction:column;gap:4px;
+  padding:10px 8px;border-radius:18px;
+  background:color-mix(in srgb, var(--panel) 82%, transparent);
+  -webkit-backdrop-filter:blur(20px) saturate(1.8);backdrop-filter:blur(20px) saturate(1.8);
+  border:1px solid var(--border);box-shadow:0 8px 32px var(--shadow)}
+body.bp-collapsed #bp-rail{display:flex}
+#bp-rail button{width:44px;height:44px;border-radius:12px;border:0;background:none;cursor:pointer;
+  font-size:20px;display:flex;align-items:center;justify-content:center;color:var(--muted);
+  -webkit-tap-highlight-color:transparent}
+#bp-rail button:hover{background:var(--hover);color:var(--text)}
+#bp-rail button:active{transform:scale(.94)}
+.bp-collapse-btn{width:44px;height:44px;border-radius:12px;border:1px solid transparent;background:none;
+  color:var(--muted);font-size:20px;cursor:pointer;display:none;align-items:center;justify-content:center;flex:0 0 auto;
+  -webkit-tap-highlight-color:transparent}
+#view-buddy.panel .bp-collapse-btn,#view-buddy.sheet .bp-collapse-btn{display:flex}
+.bp-collapse-btn:hover{color:var(--text);border-color:var(--border);background:var(--ghost)}
 /* Buddy panel slide animation (Dave, 2026-10-13): slow, visible open/close movement.
    Animates `right` (not transform) so the fixed close button keeps its viewport anchor. */
 #main #view-buddy.panel{display:block;right:-600px;visibility:hidden;
@@ -3466,6 +3484,7 @@ function renderBuddy(id){
     + '<h2 class="bp-name" id="bp-name" contenteditable="true" spellcheck="false" data-buddy="'+id+'">'+escHtml(dispName(b))+'</h2>'
     + '<span class="status '+b.statusClass+'">'+escHtml(b.status)+'</span>'
     + (function(){ const ak = effAka(b); return ak.length ? '<span class="bp-aka" title="Also known as">aka '+escHtml(ak.join(', '))+'</span>' : ''; })()
+    + '<button class="bp-collapse-btn" id="bp-collapse-btn" type="button" title="Collapse to section icons" aria-label="Collapse to section icons">\u2039</button>'
     + '<button class="bp-close-x" id="bp-close-x" type="button" title="Close detail \u2014 back to main view" aria-label="Close detail \u2014 back to main view">\u203a</button></div>'
     + '</div>'
     + '<div class="bp-crumb">'+crumb(id)+'</div>'
@@ -7041,6 +7060,44 @@ function setSidebarOpen(open){
     if (typeof applySbWidth === 'function') applySbWidth();
   }
 }
+/* Right panel section rail (Dave, 2026-10-14): collapsed floating pill with section icons */
+const BP_SECTION_ICONS = {
+  attention: '🔔', persona: '🎭', voice: '🎤',
+  photos: '📷', plans: '💼', reports: '👥',
+  parent: '⬆️', siblings: '👯', links: '🔗',
+  mission: '🎯', notes: '📝', aka: '📛',
+  homepage: '🏠', ingest: '📥', artifacts: '📦',
+  shared: '🤝', tree: '🌳'
+};
+const BP_SECTION_LABELS = {
+  attention: 'Attention', persona: 'Persona', voice: 'Voice',
+  photos: 'Photos', plans: 'Business plans', reports: 'Children',
+  parent: 'Parent', siblings: 'Peers', links: 'Linked buddies',
+  mission: 'Mission', notes: 'Notes', aka: 'Also known as',
+  homepage: 'Homepage', ingest: 'Inbox', artifacts: 'Artifacts',
+  shared: 'Shared', tree: 'Tree'
+};
+function setPanelCollapsed(collapsed) {
+  document.body.classList.toggle('bp-collapsed', !!collapsed);
+  if (collapsed) renderBpRail();
+}
+function renderBpRail() {
+  let rail = document.getElementById('bp-rail');
+  if (!rail) {
+    rail = document.createElement('div');
+    rail.id = 'bp-rail';
+    document.body.appendChild(rail);
+  }
+  const vb = document.getElementById('view-buddy');
+  if (!vb) return;
+  const secs = Array.from(vb.querySelectorAll('.bp-sec[data-field]')).filter(s => s.offsetParent !== null);
+  rail.innerHTML = secs.map(s => {
+    const f = s.dataset.field;
+    const ic = BP_SECTION_ICONS[f] || '\u25CF';
+    const lb = BP_SECTION_LABELS[f] || f;
+    return '<button type="button" data-sec="' + f + '" title="' + lb + '" aria-label="' + lb + '">' + ic + '</button>';
+  }).join('');
+}
 /* Left-edge swipe opens the mobile drawer.
    Rightward swipe that begins within EDGE_PX of the left screen edge.
    Tree pan yields this strip; a short click-swallow window prevents the
@@ -7881,6 +7938,16 @@ document.addEventListener('click', e => {
     return;
   }
   if (e.target.closest && (e.target.closest('#bp-close-x') || e.target.closest('#bp-takeover-back'))) { closeDetail(); return; }
+  if (e.target.closest && e.target.closest('#bp-collapse-btn')) { setPanelCollapsed(true); return; }
+  if (e.target.closest && e.target.closest('#bp-rail button')) {
+    const sec = e.target.closest('#bp-rail button').dataset.sec;
+    setPanelCollapsed(false);
+    setTimeout(() => {
+      const el = document.querySelector('#view-buddy .bp-sec[data-field="' + sec + '"]');
+      if (el) el.scrollIntoView({behavior:'smooth', block:'start'});
+    }, 100);
+    return;
+  }
   if (e.target.closest && e.target.closest('#panel-open')) {
     const id = (S.projectId && byId[S.projectId]) ? S.projectId : ROOT_ID;
     openBuddy(id);
