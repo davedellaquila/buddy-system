@@ -3355,6 +3355,19 @@ async function setBuddyPersona(id, name){
 function renderBuddy(id){
   const b = byId[id]; if(!b) return;
   const _vb = document.getElementById('view-buddy'); if (_vb) _vb.dataset.buddy = id;
+  // Direct click binding for the buddy icon (Finder Get Info style)
+  setTimeout(() => {
+    const _icon = document.getElementById('bp-icon');
+    if (_icon && !_icon.dataset.bound) {
+      _icon.dataset.bound = '1';
+      _icon.addEventListener('click', (ev) => {
+        ev.stopPropagation();
+        const _vb2 = document.getElementById('view-buddy');
+        const _bid = _vb2 && _vb2.dataset.buddy;
+        if (_bid) openAvatarPicker(_bid, _icon);
+      });
+    }
+  }, 50);
   try{ setBuddyFavicon(buddyDisplayIcon(b), buddyImageUrl(b)); }catch(e){}
   const items = (b.attention || []).filter(a => !S.seen[a.id]);
   let arts = '';
