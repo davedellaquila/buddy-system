@@ -3,6 +3,11 @@
 All notable changes to the Buddies dashboard and buddy system. Newest first.
 `FEATURES.md` describes the current state; this file describes how it got there.
 
+## 2026-10-13 (Views list: touch-friendly drag grippers)
+
+### Added
+- **⋮⋮ drag grippers on the Views list** (Dave's ask 2026-10-13): each row in the sidebar Views list (including Home) now carries a right-side grip in the same language as the info panel's section grips. Dragging the grip uses pointer events (mouse + touch) with live reorder — the touch path the old HTML5 mouse-only DnD couldn't reach, so views are now reorderable on iPad/iPhone too. Grip taps never switch views; order persists to `S.viewOrder` per device as before.
+
 ## 2026-10-13 (Investment Buddy homepage: market dashboard)
 
 ### Added

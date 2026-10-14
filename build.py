@@ -643,6 +643,12 @@ body:has(#token-pill) #view-buddy.sheet .bp-close-x{right:148px}
 .bp-sec > h3 .secgrip:hover{color:var(--muted);background:var(--ghost)}
 .bp-sec > h3 .secgrip:active{cursor:grabbing}
 .bp-sec.sec-dragging{opacity:0.4}
+/* Views-list ⋮⋮ grip: same language as the info-panel section grips.
+   This is the touch path for reordering — HTML5 DnD can't start from touch. */
+#view-nav .navbtn .navgrip{cursor:grab;color:var(--faint);font-size:14px;line-height:1;padding:6px 4px;border-radius:4px;
+  margin-left:auto;touch-action:none;flex:none}
+#view-nav .navbtn .navgrip:hover{color:var(--muted);background:var(--ghost)}
+#view-nav .navbtn .navgrip:active{cursor:grabbing}
 .bp-sec > h3 .secarrow{font-size:25px;color:var(--muted);transition:transform .15s;display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:50%;background:var(--ghost);line-height:1;flex:0 0 auto}
 .bp-sec.collapsed > *:not(h3){display:none !important} /* !important beats inline display styles (e.g. homepage URL row) */
 .bp-sec .secarrow{transform:rotate(90deg)}
@@ -1631,7 +1637,8 @@ function renderChangelog(){
 function renderNav(){
   const views = getViewOrder().map(id => VIEW_DEFS.find(v => v[0] === id)).filter(Boolean).filter(([v]) => isViewVisible(v));
   document.getElementById('view-nav').innerHTML = views.map(([v,l,ic]) =>
-    '<button class="navbtn'+(S.view===v?' sel':'')+'" data-view="'+v+'" draggable="true" title="'+(VIEW_TIPS[v]||l)+'"><span class="nic">'+ic+'</span>'+l+'</button>').join('');
+    '<button class="navbtn'+(S.view===v?' sel':'')+'" data-view="'+v+'" draggable="true" title="'+(VIEW_TIPS[v]||l)+'"><span class="nic">'+ic+'</span>'+l+'<span class="navgrip" title="Drag to reorder views">\u22ee\u22ee</span></button>').join('');
+  applyViewGripDrag();
   const q = (document.getElementById('buddy-search').value || '').toLowerCase().trim();
   const words = q.split(/\s+/).filter(Boolean);
   let h = '';
@@ -1852,6 +1859,82 @@ function applySectionDrag(){
     }
     const c = secDrag.cand;
     if (c && e.pointerId === c.pid) secDrag.cand = null;
+  }
+  window.addEventListener('pointerup', end);
+  window.addEventListener('pointercancel', end);
+})();
+/* ---------- views-list reorder: drag the ⋮⋮ grip on a view row ----------
+   Pointer-based (mouse + touch) — the touch path HTML5 DnD can't reach.
+   Same idiom as the info-panel section grips: press the grip and move to
+   live-reorder the rows; on release the DOM order is persisted to
+   S.viewOrder. The grip never switches views (see the .navgrip click guard). */
+const viewGripDrag = { cand: null, drag: null };
+function applyViewGripDrag(){
+  const nav = document.getElementById('view-nav');
+  if (!nav) return;
+  nav.querySelectorAll('.navgrip').forEach(grip => {
+    if (grip.dataset.vdrag) return;
+    grip.dataset.vdrag = '1';
+    grip.addEventListener('pointerdown', e => {
+      if (e.button !== undefined && e.button !== 0) return;
+      if (e.isPrimary === false) return;
+      e.preventDefault(); e.stopPropagation();
+      const btn = grip.closest('button.navbtn');
+      if (btn) btn.draggable = false; // this gesture is pointer-driven; suppress native DnD
+      viewGripDrag.cand = { grip: grip, btn: btn, y0: e.clientY, pid: e.pointerId };
+    });
+  });
+}
+(function initViewGripDrag(){
+  window.addEventListener('pointermove', e => {
+    if (viewGripDrag.drag) {
+      if (e.pointerId !== viewGripDrag.drag.pid) return;
+      const d = viewGripDrag.drag;
+      const nav = document.getElementById('view-nav');
+      if (!nav || !d.btn) return;
+      let target = null;
+      const rows = Array.from(nav.querySelectorAll(':scope > button.navbtn[data-view]')).filter(b => b !== d.btn);
+      for (const r of rows) {
+        const rect = r.getBoundingClientRect();
+        if (e.clientY < rect.top + rect.height / 2) { target = r; break; }
+      }
+      if (target) nav.insertBefore(d.btn, target);
+      else nav.appendChild(d.btn);
+      e.preventDefault();
+      return;
+    }
+    const c = viewGripDrag.cand;
+    if (c && e.pointerId === c.pid) {
+      if (Math.abs(e.clientY - c.y0) > 6) {
+        viewGripDrag.drag = c; viewGripDrag.cand = null;
+        if (c.btn) c.btn.classList.add('item-dragging');
+        try { c.grip.setPointerCapture(c.pid); } catch (err) {}
+      }
+    }
+  }, { passive: false });
+  function end(e){
+    const d = viewGripDrag.drag;
+    if (d && e.pointerId === d.pid) {
+      if (d.btn) {
+        d.btn.classList.remove('item-dragging');
+        d.btn.draggable = true;
+      }
+      const nav = document.getElementById('view-nav');
+      if (nav) {
+        const order = Array.from(nav.querySelectorAll(':scope > button.navbtn[data-view]')).map(b => b.dataset.view);
+        const cur = getViewOrder();
+        const seen = new Set(order);
+        S.viewOrder = order.concat(cur.filter(id => !seen.has(id)));
+        save(); renderNav(); toast('Order saved.');
+      }
+      viewGripDrag.drag = null;
+      return;
+    }
+    const c = viewGripDrag.cand;
+    if (c && e.pointerId === c.pid) {
+      if (c.btn) c.btn.draggable = true;
+      viewGripDrag.cand = null;
+    }
   }
   window.addEventListener('pointerup', end);
   window.addEventListener('pointercancel', end);
@@ -7365,6 +7448,7 @@ document.addEventListener('click', e => {
       });
     return;
   }
+  if (e.target.closest('.navgrip')) return; // view-list grip: drags/reorders; never switches views
   const vb = e.target.closest('[data-view]');
   if (vb) {
     // "All buddies" from the info panel: remember the buddy so the projects
