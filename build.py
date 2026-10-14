@@ -65,23 +65,24 @@ body{background:var(--bg);color:var(--text)}
 /* ---- app shell ---- */
 body{padding:0}
 .app{display:flex;min-height:100vh;align-items:stretch}
-#sidebar{width:336px;box-sizing:border-box;background:var(--panel);container-type:inline-size;
-  padding:0 14px;position:fixed;left:0;top:12px;bottom:12px;overflow-y:auto;overflow-x:hidden;overflow-wrap:break-word;
-  z-index:40;border:1px solid var(--border);border-left:none;border-radius:0 18px 18px 0;
-  box-shadow:8px 0 28px var(--shadow-soft);
+#sidebar{width:336px;box-sizing:border-box;background:color-mix(in srgb, var(--panel) 82%, transparent);container-type:inline-size;
+  padding:0 14px;position:fixed;left:12px;top:12px;bottom:12px;overflow-y:auto;overflow-x:hidden;overflow-wrap:break-word;
+  z-index:40;border:1px solid var(--border);border-radius:18px;
+  box-shadow:0 8px 32px var(--shadow-soft);
+  -webkit-backdrop-filter:blur(20px) saturate(1.4);backdrop-filter:blur(20px) saturate(1.4);
   transition:transform .5s cubic-bezier(.32,.72,.35,1), visibility 0s}
 body.sb-closed #sidebar{transform:translateX(-115%);visibility:hidden;
   transition:transform .5s cubic-bezier(.32,.72,.35,1), visibility 0s linear .5s}
-/* Floating-panel illusion (Dave, 2026-10-13 — Muse-app style): left edge anchored
-   flush to the viewport; only the right side (and its rounded corners) moves when
-   resizing. Fixed overlay — the main view stays full-width underneath and never
-   shifts when the sidebar toggles. */
+/* Floating-panel illusion (Dave, 2026-10-14 — Apple Messages style): fully floating
+   inset panel — 12px from all viewport edges, rounded on all four corners,
+   translucent with backdrop blur. Fixed overlay — the main view stays full-width
+   underneath and never shifts when the sidebar toggles. */
 #main{flex:1;min-width:0;padding:36px 32px 80px;position:relative;z-index:1}
-.brand{padding:22px 8px 14px;background:var(--panel)}
+.brand{padding:22px 8px 14px;background:transparent}
 /* Brand chrome (eyebrow/title/subtitle + gear/close) pins at top; Views scroll under */
 /* Tip jar — quiet footer link pinned to the bottom of the sidebar. Muted, small,
    never in the way. Same ko-fi destination as the News Buddy voice picker. */
-.sb-tipjar{position:sticky;bottom:0;z-index:7;background:var(--panel);margin:12px -14px 0;padding:10px 14px;border-top:1px solid var(--border);text-align:center;overflow:hidden}
+.sb-tipjar{position:sticky;bottom:0;z-index:7;background:transparent;margin:12px -14px 0;padding:10px 14px;border-top:1px solid var(--border);text-align:center;overflow:hidden}
 .sb-tipjar a{font-size:12px;color:var(--muted);text-decoration:none;display:inline-block;transform-origin:center}
 .sb-tipjar a:hover{color:var(--accent);text-decoration:underline}
 /* Tip jar party: slide → wiggle → flip → bounce → explode → shake → glow, then rest (Dave 2026-10-14) */
