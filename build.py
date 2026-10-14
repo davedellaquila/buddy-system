@@ -219,6 +219,8 @@ body.sb-anchored #sidebar .brand, body.sb-anchored #sidebar .sb-tipjar{backgroun
 #view-tree.view.active{display:flex !important;flex-direction:column;
   margin:-36px -32px -80px;height:100vh;height:100dvh;overflow:hidden;min-height:0}
 #view-tree #zoomwrap{flex:1;min-height:0;min-width:0;align-items:stretch;display:flex;flex-direction:column}
+/* Chart viewport padding (Dave, 2026-10-14): half-screen padding so open side panels never obscure chart content */
+#view-tree .treescroll > div:first-child{margin:50vh 50vw}
 /* Two stacked panes (buddy tree on top, orphaned buddies below) with a draggable
    splitter; each pane is its own 2D scrollport with its own zoom control. */
 #treezoom{flex:1;min-width:0;min-height:0;display:flex;flex-direction:column;overflow:hidden;
