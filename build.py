@@ -811,6 +811,18 @@ body.sb-closed #menu-btn{display:flex;align-items:center;justify-content:center;
 .bp-sec.expanded .attr-body{display:block}
 .attr-row .attr-disc{transition:transform .18s ease}
 .bp-sec.expanded .attr-row .attr-disc{transform:rotate(90deg)}
+/* Attribute header pattern (Dave 2026-10-14): toggle + LABEL: value + pills + tip */
+.attr-head{display:flex;align-items:center;gap:10px;width:100%;padding:8px 2px}
+.attr-toggle{flex:none;width:34px;height:34px;border-radius:50%;border:0;background:var(--ghost);display:flex;align-items:center;justify-content:center;font-size:19px;line-height:1;color:var(--muted);cursor:pointer;transition:transform .18s ease}
+.attr-toggle:hover{color:var(--text)}
+.bp-sec.expanded .attr-toggle{transform:rotate(90deg)}
+.attr-head .attr-text{flex:1;min-width:0;font-size:13px;letter-spacing:.05em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.attr-head .info-tip{margin-left:0;font-size:17px;flex:none}
+.pill-btn{flex:none;font-size:13px;font-weight:600;color:var(--accent);background:none;border:1.5px solid var(--accent);border-radius:20px;padding:5px 14px;cursor:pointer;white-space:nowrap}
+.pill-btn:hover{background:color-mix(in srgb,var(--accent) 12%,transparent)}
+.pill-btn:active{transform:scale(.96)}
+.pill-btn-danger{color:var(--danger);border-color:var(--danger)}
+.pill-btn-danger:hover{background:color-mix(in srgb,var(--danger) 12%,transparent)}
 /* Tooltips are JS popovers (see tipPop code) — hover on mouse, tap-to-pin with × on touch */
 .tip-pop{position:fixed;z-index:1000;max-width:240px;background:var(--panel);border:1px solid var(--border);
   color:var(--text);padding:10px 12px;border-radius:10px;font-size:12.5px;line-height:1.5;text-transform:none;
@@ -3293,19 +3305,30 @@ function renderBuddy(id){
   let parSec = '';
   (function(){
     const par = effParent(b);
-    const tip = 'This buddy\u2019s parent in the hierarchy. Tap the row to change it.';
-    const rowOpen = '<div class="bp-sec" data-field="parent"><button class="attr-row" data-changeparent="'+escHtml(id)+'"';
+    const tip = 'This buddy\u2019s parent in the hierarchy.';
+    // Attribute header pattern (Dave 2026-10-14): ›/﹀ LABEL: value  [Change] [Clear] ⓘ
+    function attrHead(field, label, valueHtml, buttons){
+      return '<div class="attr-head"><button class="attr-toggle" data-expand="'+field+'" aria-label="Expand">\u203a</button>'
+        + '<span class="attr-text"><span class="attr-label">'+label+':</span> '+valueHtml+'</span>'
+        + buttons
+        + '<span class="info-tip" data-tip="'+tip+'">\u24d8</span></div>';
+    }
     if (!par) {
-      parSec = rowOpen + ' title="Set this buddy\u2019s parent"><span class="attr-disc">\u203a</span>'
-        + '<span class="attr-text"><span class="attr-label">PARENT:</span> <span class="attr-value attr-none">Top level</span></span>'
-        + '<span class="info-tip" data-tip="'+tip+'">\u24d8</span></button></div>';
+      parSec = '<div class="bp-sec" data-field="parent">'
+        + attrHead('parent', 'PARENT', '<span class="attr-value attr-none">Top level</span>',
+          '<button class="pill-btn" data-changeparent="'+escHtml(id)+'">Change</button>')
+        + '</div>';
       return;
     }
     const pb = byId[par];
     if (!pb) return;
-    parSec = rowOpen + ' title="Change this buddy\u2019s parent"><span class="attr-disc">\u203a</span>'
-      + '<span class="attr-text"><span class="attr-label">PARENT:</span> <span class="attr-value">'+escHtml(dispName(pb))+'</span></span>'
-      + '<span class="info-tip" data-tip="'+tip+'">\u24d8</span></button></div>';
+    parSec = '<div class="bp-sec" data-field="parent">'
+      + attrHead('parent', 'PARENT', '<span class="attr-value">'+escHtml(dispName(pb))+'</span>',
+        '<button class="pill-btn" data-changeparent="'+escHtml(id)+'">Change</button>'
+        + '<button class="pill-btn pill-btn-danger" data-clearparent="'+escHtml(id)+'" title="Remove parent (make top-level)">Clear</button>')
+      + '<div class="attr-body"><a class="bp-parent-link" data-buddy="'+escHtml(par)+'" title="Open '+escHtml(dispName(pb))+'">'
+      + escHtml(dispName(pb)) + '<span class="bp-parent-kind"> (' + escHtml(pb.kind || 'buddy') + ')</span></a></div>'
+      + '</div>';
   })();
   let sibSec = '';
   (function(){
@@ -6193,6 +6216,22 @@ document.addEventListener('click', e => {
     if (e.target.closest('.info-tip')) return; // the ⓘ popover handles its own taps
     e.preventDefault(); e.stopPropagation();
     openChangeParentDialog(btn.dataset.changeparent);
+    return;
+  }
+  const clr = e.target.closest('[data-clearparent]');
+  if (clr) {
+    e.preventDefault(); e.stopPropagation();
+    const cid = clr.dataset.clearparent;
+    const cb = byId[cid];
+    if (cb) {
+      const beforeParent = effParent(cb);
+      S.parents = S.parents || {};
+      S.parents[cid] = null;
+      logChange('move', cid, 'Cleared parent of \u201c' + dispName(cb) + '\u201d (now top-level)', beforeParent, null);
+      save(); buildKids(); renderNav(); refreshViews();
+      if (S.sel === 'buddy:' + cid) renderBuddy(cid);
+      toast('Parent cleared — now top-level.');
+    }
     return;
   }
   const exp = e.target.closest('[data-expand]');
