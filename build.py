@@ -2657,7 +2657,12 @@ function applyPanelWidth(){
 }
 function applySbWidth(){
   const sb = document.getElementById('sidebar');
-  if (sb) { const w = sbClampW(S.sbWidth || SB_DEFAULT_W); sb.style.width = w + 'px'; sb.style.flex = '0 0 ' + w + 'px'; document.documentElement.style.setProperty('--sbw', w + 'px'); }
+  if (!sb) return;
+  if (document.body.classList.contains('sb-closed')) {
+    sb.style.width = '64px'; sb.style.flex = '0 0 64px';
+    return;
+  }
+  const w = sbClampW(S.sbWidth || SB_DEFAULT_W); sb.style.width = w + 'px'; sb.style.flex = '0 0 ' + w + 'px'; document.documentElement.style.setProperty('--sbw', w + 'px');
 }
 /* Sidebar width clamp: desktop max 560, but never wider than 92% of the viewport (drawer on phones) */
 function sbClampW(w){ return Math.min(Math.min(560, Math.floor(window.innerWidth * 0.92)), Math.max(200, w)); }
@@ -7015,6 +7020,7 @@ function setSidebarOpen(open){
     document.body.classList.toggle('sb-closed', !open);
     sb.classList.remove('open');
     if (sc) sc.classList.remove('show');
+    if (typeof applySbWidth === 'function') applySbWidth();
   }
 }
 /* Left-edge swipe opens the mobile drawer.
