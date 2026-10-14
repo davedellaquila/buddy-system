@@ -3,6 +3,11 @@
 All notable changes to the Buddies dashboard and buddy system. Newest first.
 `FEATURES.md` describes the current state; this file describes how it got there.
 
+## 2026-10-14 (Connie Ko onboarding)
+
+### Added
+- **Connie Ko buddy onboarded** (Dave's approval 2026-10-14): full new-buddy package — mission statement doc in Buddy Docs, private GitHub repo (davedellaquila/connie-ko), custom homepage with dark mode at /connie-ko/, brain-dump box, attention item for the Thu 10/15 10:30am internal review. Status flipped from new/setup-pending to active.
+
 ## 2026-10-14 (Buddy icons for Save to Desktop)
 
 ### Added
