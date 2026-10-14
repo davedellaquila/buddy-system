@@ -147,12 +147,96 @@
   .story-vote:hover{border-color:var(--accent);color:var(--accent)}
   .story-vote.on-up{background:#1a7f37;border-color:#1a7f37;color:#fff}
   .story-vote.on-down{background:#b42318;border-color:#b42318;color:#fff}
+  /* ---------- voice picker ---------- */
+  .vp-overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:1000;display:flex;align-items:center;justify-content:center;padding:20px}
+  .vp-card{background:var(--paper);color:var(--ink);border:1px solid var(--rule);border-radius:14px;max-width:480px;width:100%;max-height:82vh;display:flex;flex-direction:column;box-shadow:0 12px 40px rgba(0,0,0,.35)}
+  .vp-head{padding:14px 16px;border-bottom:1px solid var(--rule);display:flex;align-items:center;justify-content:space-between;flex:none}
+  .vp-head h3{margin:0;font-size:16px}
+  .vp-close{background:none;border:none;font-size:18px;cursor:pointer;color:var(--muted);padding:4px 8px}
+  .vp-sub{padding:10px 16px 2px;font-size:12px;color:var(--muted);flex:none}
+  .vp-list{overflow-y:auto;padding:6px 8px;-webkit-overflow-scrolling:touch}
+  .vp-row{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:10px;cursor:pointer;border:1px solid transparent}
+  .vp-row:hover{background:rgba(127,127,127,.12)}
+  .vp-row.current{border-color:var(--accent)}
+  .vp-row .nm{flex:1;min-width:0}
+  .vp-row .nm b{display:block;font-size:14px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .vp-row .nm span{font-size:12px;color:var(--muted)}
+  .vp-prev{background:transparent;border:1px solid var(--rule);color:var(--ink);border-radius:50%;width:36px;height:36px;font-size:13px;cursor:pointer;flex:none}
+  .vp-prev:hover{border-color:var(--accent)}
+  .vp-check{flex:none;width:22px;text-align:center;color:var(--accent);font-weight:700}
+  .vp-row.locked{opacity:.5;cursor:default}
+  .vp-row.locked:hover{background:none}
+  .vp-tip{padding:12px 16px 16px;border-top:1px solid var(--rule);font-size:13px;color:var(--muted);text-align:center;flex:none;line-height:1.5}
+  .vp-tip a{color:var(--accent);font-weight:600}
+  .voice-change{background:transparent;color:var(--muted);border:1px solid var(--rule);border-radius:8px;padding:7px 10px;font-size:13px;cursor:pointer;-webkit-tap-highlight-color:transparent;margin-left:8px}
+  .voice-change:hover{border-color:var(--accent);color:var(--accent)}
+  article.story.clickable{cursor:pointer}
+  /* ---------- story controls row: headline wraps, controls pinned top-right ---------- */
+  article.story h3{display:flex;align-items:flex-start;gap:8px}
+  article.story h3>a:first-child{flex:1 1 auto;min-width:0}
+  article.story h3>span.h{flex:1 1 auto;min-width:0}
+  article.story h3 .thin{flex:none;align-self:center}
+  .story-controls{flex:none;display:flex;align-items:center;gap:6px;margin-left:auto;padding-top:1px}
+  .story-controls .story-listen,.story-controls .story-vote{margin-left:0}
+  .story-thumb{float:right;width:132px;height:96px;object-fit:cover;border-radius:8px;margin:2px 0 8px 12px;background:var(--rule)}
+  .no-thumbs .story-thumb{display:none}
+  @media(max-width:640px){.story-thumb{width:104px;height:76px}}
+  /* ---------- section refresh ---------- */
+  .sec-refresh{background:transparent;border:1px solid var(--rule);color:var(--muted);border-radius:50%;width:28px;height:28px;font-size:14px;line-height:1;cursor:pointer;flex:none;padding:0}
+  .sec-refresh:hover{border-color:var(--accent);color:var(--accent)}
+  .sec-refresh:disabled{opacity:.5;cursor:default}
+  /* ---------- settings dialog ---------- */
+  .set-sec{padding:14px 16px;border-bottom:1px solid var(--rule)}
+  .set-sec h4{margin:0 0 10px;font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+  .tpills{display:flex;flex-wrap:wrap;gap:8px}
+  .tpill{border:1px solid var(--rule);background:transparent;color:var(--ink);border-radius:20px;padding:7px 14px;font-size:13px;cursor:pointer}
+  .tpill[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:600}
+  .set-row{display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:14px;padding:6px 0}
+  .set-row small{display:block;color:var(--muted);font-size:12px;margin-top:2px}
+  .set-voice .vp-list{max-height:300px}
+  /* ---------- suggestions box (section pages) ---------- */
+  .suggestbox{border:1px dashed var(--rule);border-radius:12px;padding:16px 18px;margin:26px 0}
+  .suggestbox h2{font-size:18px;margin:0 0 6px}
+  .sug-sub{font-size:13px;color:var(--muted);margin:0 0 10px;line-height:1.5}
+  .suggestbox textarea{width:100%;box-sizing:border-box;border:1px solid var(--rule);border-radius:8px;background:var(--paper);color:var(--ink);padding:10px;font-size:14px;font-family:inherit;resize:vertical}
+  .sug-row{display:flex;align-items:center;gap:10px;margin-top:8px}
+  .sug-btn{background:var(--accent);color:#fff;border:none;border-radius:8px;padding:8px 16px;font-size:13px;font-weight:600;cursor:pointer}
+  .sug-status{font-size:12px;color:var(--muted)}
   .footer{
     margin-top:48px;padding-top:24px;border-top:1px solid var(--rule-strong);
     color:var(--muted);font-size:13.5px;text-align:center;
   }
   .footer .stamp{font-weight:600;color:var(--ink);text-transform:uppercase;letter-spacing:1.5px;font-size:12.5px}
-</style>
+
+  .sec-head h2 a{color:inherit;text-decoration:none;border-bottom:2px solid transparent}
+  .sec-head h2 a:hover{color:var(--accent);border-bottom-color:var(--accent)}
+  .mini-mast{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 20px;border-bottom:3px double var(--ink);margin-bottom:8px;flex-wrap:wrap}
+  .mini-mast a.brand{font-family:Georgia,'Times New Roman',serif;font-weight:700;font-size:20px;color:var(--ink);text-decoration:none}
+  .mini-mast .ed{font-size:12px;color:var(--muted)}
+  .kicker{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:18px 0 4px}
+  .kicker a{color:var(--accent);text-decoration:none}
+  .detail h1{font-family:Georgia,'Times New Roman',serif;font-size:clamp(26px,5vw,40px);line-height:1.15;margin:6px 0 10px;letter-spacing:-.01em}
+  .detail h4.sec{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--accent);margin:22px 0 6px}
+  .detail p.body{font-size:16px;line-height:1.65;margin:0 0 12px;max-width:68ch}
+  .sourcebox{border:1px solid var(--rule);border-left:4px solid var(--accent);border-radius:8px;padding:12px 16px;margin:18px 0;max-width:68ch}
+  .sourcebox p{font-size:14px;line-height:1.6;margin:6px 0}
+  .sourcebox .flag{display:inline-block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;background:#fde68a;color:#7c2d12;border-radius:4px;padding:2px 8px;margin-bottom:4px}
+  .read-original{display:inline-block;margin:10px 0;padding:10px 20px;background:var(--accent);color:#fff !important;border-radius:8px;font-weight:700;text-decoration:none;font-size:15px}
+  .related{margin-top:28px;border-top:1px solid var(--rule);padding-top:14px}
+  .related h4.sec{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:0 0 10px}
+  .related ul{list-style:none;margin:0;padding:0}
+  .related li{margin:0 0 10px;font-size:15px;line-height:1.45}
+  .related a{color:var(--ink);text-decoration:none;border-bottom:1px solid var(--rule)}
+  .related a:hover{color:var(--accent);border-bottom-color:var(--accent)}
+  .backfoot{margin:30px 0 40px;font-size:14px}
+  .backfoot a{color:var(--accent);text-decoration:none;font-weight:600}
+  .secpage .storyitem{border-bottom:1px solid var(--rule);padding:16px 0}
+  .secpage .storyitem h3{font-size:20px;margin:0 0 6px;line-height:1.3}
+  .secpage .storyitem h3 a{color:var(--ink);text-decoration:none}
+  .secpage .storyitem h3 a:hover{color:var(--accent)}
+  .secpage .lede{font-size:16px;line-height:1.65;color:var(--ink);max-width:70ch;margin:10px 0 6px}
+
+  </style>
 </head>
 <body>
 <div class="wrap">
@@ -176,19 +260,21 @@
 </div>
 
 <section>
-  <div class="sec-head"><span class="sec-num">Front page</span><h2>Top Stories</h2><span class="line"></span></div>
+  <div class="sec-head"><span class="sec-num">Front page</span><h2><a href="sections/top-stories.html">Top Stories</a></h2><span class="line"></span></div><span class="line"></span></div>
   <div class="stack">
-    <article class="card story lead">
+    <article class="card story lead" data-article="articles/2026-10-13-apples-welcome-home-is-today-the-homeview-hub-takes-the.html">
+      <img class="story-thumb" src="https://images.macrumors.com/t/Xl9wKPBYDhzmRMLcxwoOY9va4rc=/2500x/article-new/2026/10/Apple-TV-4K-HomeView-HomePod-Mini-tweaked.jpg" alt="" loading="lazy">
       <h3><a href="https://www.macrumors.com/2026/10/11/apple-tv-4k-homeview-homepod-mini-2-leaks/" target="_blank" rel="noopener">Apple&rsquo;s &lsquo;Welcome Home&rsquo; is today: the HomeView hub takes the stage</a></h3>
       <p class="dek">Press releases land at 9am ET from the Tribeca &ldquo;Apple Experience&rdquo; &mdash; Bloomberg&rsquo;s Mark Gurman has the shape of it: a new smart-home hub reportedly called <strong>HomeView</strong> (A18 chip, Siri AI, tabletop and wall-mount versions, ~$350, shipping around mid-November) flanked by a HomePod mini 2 and an A19 Apple TV 4K. No livestream &mdash; watch for Newsroom posts and hands-on coverage this morning. A second wave (OLED touchscreen MacBook Pro, M6 Macs, OLED iPad mini) is still expected around Oct 27.</p>
       <p class="byline">MacRumors, relaying Bloomberg&rsquo;s Mark Gurman &middot; Oct 11</p>
     </article>
-    <article class="card story">
+    <article class="card story" data-article="articles/2026-10-13-earnings-tuesday-banks-are-in-futures-mixed-cpi-lands-t.html">
       <h3><a href="https://www.investopedia.com/5-things-to-know-before-the-stock-market-opens-on-tuesday-october-13-2026-12171477" target="_blank" rel="noopener">Earnings Tuesday: banks are in, futures mixed, CPI lands tomorrow</a></h3>
       <p class="dek">JPMorgan Chase and Goldman Sachs reported this morning to open the busiest earnings day of the week; Dow futures are up ~0.9% while S&amp;P and Nasdaq futures slipped. Memory stocks are sinking for a second straight day on an apparent Chinese chipmaker breakthrough; UnitedHealth beat and Johnson &amp; Johnson narrowly missed. The 10-year sits at 5.19% and September CPI &mdash; forecast 3.7% &mdash; drops Wednesday.</p>
       <p class="byline">Investopedia &middot; Oct 13</p>
     </article>
-    <article class="card story">
+    <article class="card story" data-article="articles/2026-10-13-anthropic-small-ai-models-are-months-from-self-replicat.html">
+      <img class="story-thumb" src="https://www.tbsnews.net/sites/default/files/styles/big_730/public/images/2026/09/29/screenshot_2026-09-29_110038.png" alt="" loading="lazy">
       <h3><a href="https://www.tbsnews.net/world/ai-models-may-soon-self-replicate-without-access-data-centres-anthropic-1571301" target="_blank" rel="noopener">Anthropic: small AI models are months from self-replicating on IoT devices</a></h3>
       <p class="dek">Anthropic&rsquo;s latest experiments suggest models under 30B parameters can already complete most of the steps needed to copy themselves onto poorly secured devices &mdash; smart TVs, off-brand Android boxes, smart appliances &mdash; and may manage end-to-end autonomous replication by year&rsquo;s end at historical improvement rates. The warning: self-replicating models would be hard to shut down, with no central switch-off point.</p>
       <p class="byline">Reuters, via TBS News &middot; Oct 13</p>
@@ -197,19 +283,19 @@
 </section>
 
 <section>
-  <div class="sec-head"><span class="sec-num">Section I</span><h2>AI &amp; Technology</h2><span class="line"></span></div>
+  <div class="sec-head"><span class="sec-num">Section I</span><h2><a href="sections/ai-technology.html">AI &amp; Technology</a></h2><span class="line"></span></div><span class="line"></span></div>
   <div class="stack">
-    <article class="card story">
+    <article class="card story" data-article="articles/2026-10-13-anthropic-says-new-safeguards-cut-ai-distillation-attac.html">
       <h3><a href="https://www.reuters.com/world/china/anthropic-says-new-safeguards-sharply-reduce-ai-distillation-attacks-2026-10-13/" target="_blank" rel="noopener">Anthropic says new safeguards cut AI &lsquo;distillation attacks&rsquo; 90&ndash;99%</a></h3>
       <p class="dek">Anthropic says measures restricting access to Claude&rsquo;s reasoning have reduced harvested data by &ldquo;10 to 100 times&rdquo; &mdash; and names Chinese startup Z.ai (Zhipu) as having tried to distill Claude while building GLM-5.3. The company banned tens of thousands of accounts tied to distillation campaigns, calling the practice a safety and national-security risk. No outside party has verified the figures.</p>
       <p class="byline">Reuters &middot; Oct 13</p>
     </article>
-    <article class="card story">
+    <article class="card story" data-article="articles/2026-10-13-uk-regains-pre-release-access-to-frontier-ai-models-for.html">
       <h3><a href="https://www.reuters.com/legal/litigation/uk-given-access-safety-test-latest-ai-models-minister-says-2026-10-12/" target="_blank" rel="noopener">UK regains pre-release access to frontier AI models for safety testing</a></h3>
       <p class="dek">Britain&rsquo;s AI Security Institute is once again evaluating advanced models before deployment &mdash; including Gemini 4 Argon &mdash; after the White House reversed a request that OpenAI and Anthropic withhold new models from British testers. AI minister Kanishka Narayan confirmed the reversal Monday; Microsoft&rsquo;s Brad Smith said Britain is &ldquo;well placed&rdquo; to lead on AI safety guidelines.</p>
       <p class="byline">Reuters &middot; Oct 12</p>
     </article>
-    <article class="card story">
+    <article class="card story" data-article="articles/2026-10-13-meta-launches-muse-wonder-its-newest-frontier-model.html">
       <h3><a href="https://www.kucoin.com/news/flash/meta-launches-muse-wonder-ai-model-signals-larger-future-investments" target="_blank" rel="noopener">Meta launches Muse Wonder, its newest frontier model</a><span class="thin" title="Single exchange-news flash; awaiting tier-1 confirmation">thin sourcing</span></h3>
       <p class="dek">Meta claims Muse Wonder outperforms comparable models from OpenAI and Anthropic in certain tests, with better memory and complex-task handling; chief AI officer Alexandr Wang says it competes with today&rsquo;s leading frontier models and suits personal and professional agents. Zuckerberg told the FT the company is &ldquo;already developing the next stage&rdquo; &mdash; no pullback in capex planned.</p>
       <p class="byline">KuCoin News flash &middot; Oct 12</p>
@@ -218,19 +304,20 @@
 </section>
 
 <section>
-  <div class="sec-head"><span class="sec-num">Section II</span><h2>Markets</h2><span class="line"></span></div>
+  <div class="sec-head"><span class="sec-num">Section II</span><h2><a href="sections/markets.html">Markets</a></h2><span class="line"></span></div><span class="line"></span></div>
   <div class="stack">
-    <article class="card story">
+    <article class="card story" data-article="articles/2026-10-13-memory-stocks-sink-a-second-day-on-apparent-chinese-chi.html">
       <h3><a href="https://www.investopedia.com/5-things-to-know-before-the-stock-market-opens-on-tuesday-october-13-2026-12171477" target="_blank" rel="noopener">Memory stocks sink a second day on apparent Chinese chipmaker breakthrough</a></h3>
       <p class="dek">Investopedia&rsquo;s morning brief flags the session&rsquo;s clearest stress point: memory names falling for a second straight day after news of an apparent breakthrough from a Chinese chipmaker, dragging the Nasdaq futures ~0.7% lower even as Dow futures rose. Details on the breakthrough remain thin &mdash; watch the sector tape.</p>
       <p class="byline">Investopedia &middot; Oct 13</p>
     </article>
-    <article class="card story">
+    <article class="card story" data-article="articles/2026-10-13-asia-the-ai-trade-under-renewed-pressure-ahead-of-earni.html">
+      <img class="story-thumb" src="https://bl-i.thgim.com/public/incoming/oe6xzh/article71574876.ece/alternates/LANDSCAPE_1200/PO20_Stock_chart.jpg" alt="" loading="lazy">
       <h3><a href="https://www.thehindubusinessline.com/markets/sensex-nifty50-today-stock-market-live-updates-13-october-2026/article71574859.ece" target="_blank" rel="noopener">Asia: the AI trade under renewed pressure ahead of earnings</a></h3>
       <p class="dek">The MSCI Asia Pacific Index lost 0.9%, set for its weakest close since mid-August, as shares retreated in South Korea and Japan &mdash; the AI trade, one of the hottest corners of the market this year, coming under renewed pressure ahead of the key earnings season. India&rsquo;s Sensex, by contrast, jumped over 1,100 points on an IT rally.</p>
       <p class="byline">The Hindu BusinessLine &middot; Oct 13</p>
     </article>
-    <article class="card story">
+    <article class="card story" data-article="articles/2026-10-13-cross-asset-check-crude-off-after-saudi-attacks-gold-4.html">
       <h3><a href="https://www.investopedia.com/5-things-to-know-before-the-stock-market-opens-on-tuesday-october-13-2026-12171477" target="_blank" rel="noopener">Cross-asset check: crude off after Saudi attacks, gold $4,210, bitcoin $83,100</a></h3>
       <p class="dek">WTI crude fell 1.6% to $92.20 a barrel after rising Monday on new attacks in Saudi Arabia; the 10-year Treasury yield sits at 5.19%, down from Friday&rsquo;s 5.24% close (bonds were closed Monday for the federal holiday). Gold futures are up 0.5% at $4,210 an ounce; bitcoin trades near $83,100.</p>
       <p class="byline">Investopedia &middot; Oct 13</p>
@@ -239,24 +326,24 @@
 </section>
 
 <section>
-  <div class="sec-head"><span class="sec-num">Section III</span><h2>Product Design</h2><span class="line"></span></div>
+  <div class="sec-head"><span class="sec-num">Section III</span><h2><a href="sections/product-design.html">Product Design</a></h2><span class="line"></span></div><span class="line"></span></div>
   <div class="stack">
-    <article class="card story">
+    <article class="card story" data-article="articles/2026-10-13-iphone-duo-lands-oct-23-and-apple-is-racing-devs-to-des.html">
       <h3><a href="https://www.webpronews.com/apple-opens-app-store-gates-for-iphone-duo-optimization-as-october-23-launch-nears/" target="_blank" rel="noopener">iPhone Duo lands Oct 23 &mdash; and Apple is racing devs to design for it</a><span class="thin" title="Secondhand relay of Apple's developer guidance">thin sourcing</span></h3>
       <p class="dek">With the foldable iPhone Duo launching Friday, October 23, Apple is pushing third-party teams to submit Duo-optimized builds now: size-class recommendations replace hard-coded orientations, a Device Hub preview tool stands in for physical prototypes, and Figma and Sketch design kits are out for marketing assets. The bet: adaptive interfaces become the platform norm; clunky day-one layouts risk making the new form factor look niche.</p>
       <p class="byline">WebProNews &middot; Oct 2026</p>
     </article>
-    <article class="card story">
+    <article class="card story" data-article="articles/2026-10-13-oled-touchscreen-macbook-pro-expected-around-oct-27.html">
       <h3><a href="https://macdailynews.com/2026/10/06/second-october-product-launch-expected-as-apple-lines-up-more-late-month-hardware/" target="_blank" rel="noopener">OLED touchscreen MacBook Pro expected around Oct 27</a><span class="thin" title="Relayed via aggregator from MacRumors/Bloomberg reporting">thin sourcing</span></h3>
       <p class="dek">Apple&rsquo;s second October wave is expected to include its first touchscreen Mac &mdash; 14- and 16-inch MacBook Pros with OLED displays, an M6 chip, a Dynamic Island replacing the notch, and a chassis significantly lighter though only marginally thinner. An OLED iPad mini and M6 iMac round out the rumored slate, aimed squarely at creative pros.</p>
       <p class="byline">MacDailyNews &middot; Oct 6</p>
     </article>
-    <article class="card story">
+    <article class="card story" data-article="articles/2026-10-13-designers-guild-gets-a-second-life-under-sanderson.html">
       <h3><a href="https://businessofhome.com/articles/sanderson-to-revive-designers-guild-brand" target="_blank" rel="noopener">Designers Guild gets a second life under Sanderson</a><span class="thin" title="Story is from late September; still the current state">timing</span></h3>
       <p class="dek">Weeks after the 56-year-old luxury interiors house entered administration and shed 93 jobs, Sanderson Design Group signed a 10-year licensing deal with Dunelm (which bought the brand in 2025) for the sole global rights to design, manufacture, and sell Designers Guild wallpapers, fabrics, and paint &mdash; plus access to its archive library. CEO Lisa Montague calls founder Tricia Guild &ldquo;a creative visionary&rdquo; and promises a new platform for the brand.</p>
       <p class="byline">Business of Home &middot; Sept 2026</p>
     </article>
-    <article class="card story">
+    <article class="card story" data-article="articles/2026-10-13-ai-rendering-is-shrinking-furniture-design-revision-cyc.html">
       <h3><a href="https://www.interiordaily.com/article/9881677/designers-can-test-several-layouts-in-minutes-so-revision-cycles-shrink-from-weeks-to-hours/" target="_blank" rel="noopener">AI rendering is shrinking furniture-design revision cycles &lsquo;from weeks to hours&rsquo;</a><span class="thin" title="Single trade outlet; vendor executive is the quoted source">thin sourcing</span></h3>
       <p class="dek">Interior Daily&rsquo;s look at AI visualization platforms argues the same workflow shift hitting code is hitting showrooms: one digital asset rendered across countless room layouts and lighting conditions, photorealistic concept pieces tested against market response before production, and designers showing clients their own room with the scheme in place instead of swatches and mood boards. The knock-on: fewer returns from spatial mismatch.</p>
       <p class="byline">Interior Daily &middot; Oct 12</p>
@@ -265,24 +352,25 @@
 </section>
 
 <section>
-  <div class="sec-head"><span class="sec-num">Section IV</span><h2>Engineering</h2><span class="line"></span></div>
+  <div class="sec-head"><span class="sec-num">Section IV</span><h2><a href="sections/engineering.html">Engineering</a></h2><span class="line"></span></div><span class="line"></span></div>
   <div class="stack">
-    <article class="card story">
+    <article class="card story" data-article="articles/2026-10-13-ai-coding-agents-add-30-more-code-not-more-software.html">
       <h3><a href="https://tech-insider.org/ai-coding-agents-30-percent-more-code-not-software-2026/" target="_blank" rel="noopener">AI coding agents add 30% more code, not more software</a><span class="thin" title="Harvard study cited via AI-industry roundup; original paper not verified directly">thin sourcing</span></h3>
       <p class="dek">A Harvard study across 700+ firms found developers with AI coding agents write roughly 30% more code &mdash; yet shipped issues don&rsquo;t budge. Commits rose ~20% and PRs ~23%, but issue and epic resolution rates barely moved. The researchers&rsquo; diagnosis: human code review is now the chokepoint, and it hasn&rsquo;t widened just because the code got bigger. Same week, Microsoft unveiled a redesigned Copilot built around three surfaces.</p>
       <p class="byline">Tech Insider &middot; Oct 12</p>
     </article>
-    <article class="card story">
+    <article class="card story" data-article="articles/2026-10-13-epic-reportedly-goes-ai-first-on-a-new-disney-shooter-n.html">
       <h3><a href="https://www.nintendolife.com/news/2026/10/no-more-hand-written-code-epic-reportedly-adopts-ai-first-production-model-on-new-disney-shooter" target="_blank" rel="noopener">Epic reportedly goes &lsquo;AI first&rsquo; on a new Disney shooter &mdash; &lsquo;no more hand-written code&rsquo;</a><span class="thin" title="Bloomberg reporting relayed by a games outlet">secondhand</span></h3>
       <p class="dek">Bloomberg&rsquo;s Jason Schreier reports developers on Epic&rsquo;s delayed Disney collaboration &mdash; a shooter with Marvel and Star Wars characters, part of Disney&rsquo;s $1.5B Epic stake from 2024 &mdash; were told to implement an &ldquo;AI first&rdquo; production model using tools like Anthropic&rsquo;s Claude, with humans managing and guiding. A game director reportedly told staff there would be &ldquo;no more hand-written code&rdquo; and art would be AI-generated; some Epic developers were &ldquo;stunned.&rdquo; If accurate, it&rsquo;s the first major game built primarily with AI.</p>
       <p class="byline">Nintendo Life, via Bloomberg &middot; Oct 12</p>
     </article>
-    <article class="card story">
+    <article class="card story" data-article="articles/2026-10-13-react-19-3s-browser-api-a-90k-google-rce-and-a-github-i.html">
       <h3><a href="http://dev.to/magnus_ferm/dev-news-digest-12-oct-2026-1800-3mal" target="_blank" rel="noopener">React 19.3&rsquo;s browser() API, a $90K Google RCE, and a GitHub incident</a><span class="thin" title="Community digest relaying InfoQ, Cloudflare, GitHub Status">thin sourcing</span></h3>
       <p class="dek">The evening dev digest&rsquo;s headlines: React 19.3 adds a <code>browser()</code> API giving client-only rendering an explicit first-class API; a writeup details a $90,000 remote-code-execution bounty on a Google developer docs site via an unsafely handled Flask session; and GitHub&rsquo;s status page reported a service incident affecting Actions, Pull Requests, and Issues &mdash; check it if your CI or reviews are stalled.</p>
       <p class="byline">DEV Community digest &middot; Oct 12</p>
     </article>
-    <article class="card story">
+    <article class="card story" data-article="articles/2026-10-13-stack-overflow-ai-is-pushing-more-developers-to-freelan.html">
+      <img class="story-thumb" src="https://www.computerweekly.com/visuals/ComputerWeekly/Hero%20Images/software-code-error-flaw-adobe.jpeg" alt="" loading="lazy">
       <h3><a href="https://www.computerweekly.com/news/366651934/AI-may-be-driving-more-software-developers-to-freelance" target="_blank" rel="noopener">Stack Overflow: AI is pushing more developers to freelance</a></h3>
       <p class="dek">The 2026 Developer Survey (30,903 responses, 169 countries, published Oct 6) found the share of developers working as a company of one jumped from 4% last year to 10% &mdash; Stack Overflow credits AI tools making solo work viable across expertise areas. Meanwhile 45.1% of developers call themselves &ldquo;complacent&rdquo; at work; one DEV analysis notes the survey&rsquo;s top day-to-day friction is actually unclear priorities (16.6%), not AI.</p>
       <p class="byline">Computer Weekly &middot; Oct 7</p>
@@ -291,19 +379,20 @@
 </section>
 
 <section>
-  <div class="sec-head"><span class="sec-num">Section V</span><h2>Motorsport</h2><span class="line"></span></div>
+  <div class="sec-head"><span class="sec-num">Section V</span><h2><a href="sections/motorsport.html">Motorsport</a></h2><span class="line"></span></div><span class="line"></span></div>
   <div class="stack">
-    <article class="card story">
+    <article class="card story" data-article="articles/2026-10-13-nascar-heads-to-phoenix-eight-drivers-on-the-eliminatio.html">
       <h3><a href="https://beyondtheflag.com/chase-elliott-among-8-nascar-cup-drivers-facing-elimination-after-charlotte-01m4qfv0xv83" target="_blank" rel="noopener">NASCAR heads to Phoenix: eight drivers on the elimination brink</a><span class="thin" title="Specialist blog; points math checks against NASCAR's published format">thin sourcing</span></h3>
       <p class="dek">With four races left in the 10-race Chase, Kyle Larson (+49 over Denny Hamlin) remains the man to catch after Chase Briscoe&rsquo;s back-to-back wins (Vegas, Charlotte). The math at Phoenix this Sunday: Ty Gibbs, Hocevar, Bubba Wallace, Chase Elliott, William Byron, Suarez, Buescher, and Preece are all more than 152 points back &mdash; anyone falling past 228 behind Larson is mathematically done with three races to go.</p>
       <p class="byline">Beyond the Flag &middot; Oct 12</p>
     </article>
-    <article class="card story">
+    <article class="card story" data-article="articles/2026-10-13-aprilia-seizes-the-motogp-constructors-lead-after-the-m.html">
       <h3><a href="https://shorty-news.com/sports/aprilia-sweeps-indonesian-motogp-championship/" target="_blank" rel="noopener">Aprilia seizes the MotoGP constructors&rsquo; lead after the Mandalika sweep</a><span class="thin" title="Short-form outlet; results corroborated by Reuters/AP race reports">thin sourcing</span></h3>
       <p class="dek">Aprilia&rsquo;s historic 1-2-3-4 at Mandalika &mdash; Bezzecchi&rsquo;s win (his fifth of the season, the 300th by an Italian rider in the top class), Fern&aacute;ndez second on two broken fingers, Mart&iacute;n third &mdash; did more than reshuffle the riders&rsquo; table (Mart&iacute;n 355, M&aacute;rquez 353): it pushed Aprilia past Ducati to lead the constructors&rsquo; championship, the team&rsquo;s eighth GP victory of the season and fourth podium lockout.</p>
       <p class="byline">Shorty News &middot; Oct 12</p>
     </article>
-    <article class="card story">
+    <article class="card story" data-article="articles/2026-10-13-phillip-islands-last-dance-motogp-says-goodbye-oct-2325.html">
+      <img class="story-thumb" src="https://www.crash.net/sites/default/files/2026-07/gng_1275167_hires.jpg?width=1600&amp;aspect_ratio=16:9" alt="" loading="lazy">
       <h3><a href="https://www.crash.net/motogp/news/1107259/1/when-next-motogp-race-australian-grand-prix-dates-and-schedule" target="_blank" rel="noopener">Phillip Island&rsquo;s last dance: MotoGP says goodbye Oct 23&ndash;25</a></h3>
       <p class="dek">The Australian Grand Prix on Oct 23&ndash;25 &mdash; the first leg of a closing triple-header, with Mart&iacute;n and M&aacute;rquez separated by two points and five rounds to go &mdash; is MotoGP&rsquo;s final visit to Phillip Island: from 2027 the race moves to a street track in Adelaide, a hugely controversial call among fans of one of the calendar&rsquo;s most beloved circuits. Fern&aacute;ndez won there last year for Trackhouse Aprilia.</p>
       <p class="byline">Crash.net &middot; Oct 11</p>
@@ -312,19 +401,19 @@
 </section>
 
 <section>
-  <div class="sec-head"><span class="sec-num">Section VI</span><h2>Live Music</h2><span class="line"></span></div>
+  <div class="sec-head"><span class="sec-num">Section VI</span><h2><a href="sections/live-music.html">Live Music</a></h2><span class="line"></span></div><span class="line"></span></div>
   <div class="stack">
-    <article class="card story">
+    <article class="card story" data-article="articles/2026-10-13-tonight-shovels-rope-at-harlows-bonnie-raitt-in-modesto.html">
       <h3><a href="https://www.jambase.com/show/shovels-rope-harlows-20261013" target="_blank" rel="noopener">Tonight: Shovels &amp; Rope at Harlow&rsquo;s; Bonnie Raitt in Modesto</a><span class="thin" title="Listings, not reviews; venue/date pairs from JamBase">event</span></h3>
       <p class="dek">Shovels &amp; Rope play Harlow&rsquo;s in Sacramento at 7pm tonight; This Wild Life is at Goldfield Roseville. Worth the drive south: Bonnie Raitt with Jon Cleary &amp; The Absolute Monster Gentlemen at the Gallo Center for the Arts in Modesto.</p>
       <p class="byline">JamBase listings &middot; Oct 13</p>
     </article>
-    <article class="card story">
+    <article class="card story" data-article="articles/2026-10-13-sacramento-the-rest-of-this-week-hot-flash-heat-wave-ju.html">
       <h3><a href="https://www.jambase.com/concerts/us/california/concerts-in-sacramento-area/page/2" target="_blank" rel="noopener">Sacramento the rest of this week: Hot Flash Heat Wave, Juanes, Aquabats</a><span class="thin" title="Listings; curated by the desk from JamBase">event</span></h3>
       <p class="dek">Wed Oct 14: Hot Flash Heat Wave (Starlet Room) and Bumpin Uglies (Goldfield Roseville). Thu Oct 15: Juanes (Hard Rock Live Wheatland), The Aquabats (Ace of Spades). Sat Oct 17: She Wants Revenge (Ace of Spades). Sun Oct 18: Hovvdy (Harlow&rsquo;s).</p>
       <p class="byline">JamBase listings &middot; Oct 2026</p>
     </article>
-    <article class="card story">
+    <article class="card story" data-article="articles/2026-10-13-reminder-doja-cats-chase-center-show-is-now-sun-oct-25.html">
       <h3><a href="https://hitsculture.com/article/doja-cat-san-francisco-concert-rescheduled-wnba-finals" target="_blank" rel="noopener">Reminder: Doja Cat&rsquo;s Chase Center show is now Sun Oct 25</a><span class="thin" title="Aggregator relaying Chase Center listings">thin sourcing</span></h3>
       <p class="dek">Doja Cat moved from Mon Oct 19 to Sun Oct 25 (7:30pm) to clear Chase Center for Game 2 of the WNBA Finals &mdash; the Golden State Valkyries&rsquo; first-ever Finals appearance (vs Atlanta Dream). Original tickets honored; Latto still the special guest.</p>
       <p class="byline">HitsCulture &middot; Oct 11</p>
@@ -333,25 +422,25 @@
 </section>
 
 <section>
-  <div class="sec-head"><span class="sec-num">Section VII</span><h2>Amador County</h2><span class="line"></span></div>
+  <div class="sec-head"><span class="sec-num">Section VII</span><h2><a href="sections/amador-county.html">Amador County</a></h2><span class="line"></span></div><span class="line"></span></div>
   <p class="lede">Fiddletown and the county &mdash; the stuff the national papers never carry. Sourcing is thin this morning; what&rsquo;s uncertain is labeled.</p>
   <div class="stack">
-    <article class="card story">
+    <article class="card story" data-article="articles/2026-10-13-supervisors-pick-up-the-fiddlers-jams-event-fees-41.html">
       <h3><a href="https://tspntv.com/news-archive/item/3043-fiddlers-jam-event-fees-to-be-picked-up-by-supes" target="_blank" rel="noopener">Supervisors pick up the Fiddlers Jam&rsquo;s event fees, 4&ndash;1</a><span class="thin" title="TSPN item date ambiguous; the 75th Fiddlers' Jam already ran Sept 19 per the Ledger Dispatch">timing uncertain</span></h3>
       <p class="dek">The Board of Supervisors voted 4&ndash;1 to waive the $620 county encroachment fee for the Fiddletown Fiddlers Jam &mdash; the fundraiser for the Fiddletown Community Center &mdash; paying it from supervisors&rsquo; recreation funds, with Boitano the lone no vote. The item was brought back for reconsideration by District 5&rsquo;s Brian Oneto, who had first offered to cover it from his own discretionary funds.</p>
       <p class="byline">TSPN TV &middot; date ambiguous</p>
     </article>
-    <article class="card story">
+    <article class="card story" data-article="articles/2026-10-13-rabies-warning-8-positive-tests-in-2026-more-than-the-l.html">
       <h3><a href="https://citizenportal.ai/articles/10604845/california/amador-county/public-health-official-warns-of-more-positive-rabies-tests-this-year-urges-trapping-and-prompt-reporting" target="_blank" rel="noopener">Rabies warning: 8 positive tests in 2026, more than the last two years combined</a><span class="thin" title="AI-generated civic newsletter summarizing a board presentation">thin sourcing</span></h3>
       <p class="dek">Amador County has tested 52 specimens so far in 2026 with 8 positive rabies results, public health educator Fernando Gutierrez told the board &mdash; more positives than the prior two years combined. He urged trapping and prompt reporting of exposures, and reviewed quarantine rules and pet-vaccination recommendations.</p>
       <p class="byline">Citizen Portal &middot; Oct 7</p>
     </article>
-    <article class="card story">
+    <article class="card story" data-article="articles/2026-10-13-amador-county-gas-premium-averaging-6-43-low-of-6-03.html">
       <h3><a href="https://goldcountrytoday.com/where-could-drivers-find-the-cheapest-gas-in-cities-within-amador-county-in-week-ending-sept-26" target="_blank" rel="noopener">Amador County gas: premium averaging $6.43, low of $6.03</a><span class="thin" title="GasBuddy-customer-report aggregator">thin sourcing</span></h3>
       <p class="dek">In the week ending Sept 26, premium gas averaged $6.43 per gallon across Amador County, with the week&rsquo;s lowest reported price $6.03 at one station. Prices climbed sharply this spring as Middle East tensions disrupted shipments and refinery outages tightened supply; AAA had the national average for regular above $4 in early April.</p>
       <p class="byline">Gold Country Today &middot; Oct 6</p>
     </article>
-    <article class="card story">
+    <article class="card story" data-article="articles/2026-10-13-fire-burn-status-permits-still-suspended-todays-status.html">
       <h3>Fire &amp; burn status: permits still suspended, today&rsquo;s status by phone only</h3>
       <p class="dek">CAL FIRE&rsquo;s Amador-El Dorado Unit suspended residential burn permits June 15 and nothing indicates the suspension has lifted. Today&rsquo;s burn-day status is only published via the Amador Air District line (209-223-6246) &mdash; no web source carries it. Fire danger for the Sierra foothills was flagged high through the weekend.</p>
       <p class="byline">News Buddy status note &middot; Oct 13</p>
@@ -505,366 +594,15 @@
   resolveRepo().then(refreshUI);
 })();
 </script>
-<script>
-/* Attention action buttons — writes to the buddy repo's docs/ingest.md via the shared GitHub token (same pattern as the brain-dump box). Reference: gen_basic_homepages.py ATTN_JS. */
-(function(){
-  var tiles = document.querySelectorAll('.attn[data-attn-id]');
-  if (!tiles.length) return;
-  var dumpbox = document.querySelector('.dumpbox');
-  var bid = (dumpbox && dumpbox.getAttribute('data-buddy-id')) || (function(){
-    var p = location.pathname.replace(/\/+$/, '');
-    return p.substring(p.lastIndexOf('/') + 1);
-  })();
-  function lsGet(){ try { return JSON.parse(localStorage.getItem('buddyTree.v3') || '{}'); } catch(e){ return {}; } }
-  function lsSet(patch){ try { var s = lsGet(); for (var k in patch) s[k] = patch[k]; localStorage.setItem('buddyTree.v3', JSON.stringify(s)); } catch(e){} }
-  function token(){ return lsGet().ghToken || ''; }
-  function b64encode(str){
-    var bytes = new TextEncoder().encode(str), bin = '';
-    bytes.forEach(function(b){ bin += String.fromCharCode(b); });
-    return btoa(bin);
-  }
-  async function ghApi(path, method, body){
-    var t = token();
-    if (!t) throw new Error('Add a GitHub token first.');
-    var r = await fetch('https://api.github.com' + path, {
-      method: method || 'GET',
-      headers: {'Authorization': 'Bearer ' + t, 'Accept': 'application/vnd.github+json', 'Content-Type': 'application/json'},
-      body: body ? JSON.stringify(body) : undefined
-    });
-    if (!r.ok) throw new Error('GitHub ' + r.status);
-    return r.status === 204 ? null : await r.json();
-  }
-  async function ghGetFile(repo, path){
-    try {
-      var j = await ghApi('/repos/davedellaquila/' + repo + '/contents/docs/ingest.md');
-      if (j && j.content) return {
-        text: new TextDecoder().decode(Uint8Array.from(atob(j.content.replace(/\n/g, '')), function(c){ return c.charCodeAt(0); })),
-        sha: j.sha
-      };
-    } catch(e){}
-    return null;
-  }
-  var repo = null, buddyName = bid;
-  async function resolveBuddy(){
-    try {
-      var r = await fetch('../buddies.json', {cache: 'no-store'});
-      var d = await r.json();
-      var buds = d.buddies || [];
-      for (var i = 0; i < buds.length; i++) {
-        if (buds[i].id === bid) {
-          if (buds[i].repo) repo = buds[i].repo;
-          if (buds[i].name) buddyName = buds[i].name;
-          break;
-        }
-      }
-    } catch(e){}
-  }
-  function rkey(aid, text){ return bid + '|' + (aid || ('text:' + text.slice(0, 60))); }
-  function isResolved(aid, text){ var m = lsGet().attnDone || {}; return !!m[rkey(aid, text)]; }
-  function setResolved(aid, text){ var s = lsGet(); var m = s.attnDone || {}; m[rkey(aid, text)] = 1; s.attnDone = m; lsSet(s); }
-  function token(){ return lsGet().ghToken || ''; }
-  function b64encode(str){
-    var bytes = new TextEncoder().encode(str), bin = '';
-    bytes.forEach(function(b){ bin += String.fromCharCode(b); });
-    return btoa(bin);
-  }
-  async function ghApi(path, method, body){
-    var t = token();
-    if (!t) throw new Error('Add a GitHub token first.');
-    var r = await fetch('https://api.github.com' + path, {
-      method: method || 'GET',
-      headers: {'Authorization': 'Bearer ' + t, 'Accept': 'application/vnd.github+json', 'Content-Type': 'application/json'},
-      body: body ? JSON.stringify(body) : undefined
-    });
-    if (!r.ok) throw new Error('GitHub ' + r.status);
-    return r.status === 204 ? null : await r.json();
-  }
-  async function ghGetFile(repo, path){
-    try {
-      var j = await ghApi('/repos/davedellaquila/' + repo + '/contents/' + path);
-      if (j && j.content) return {
-        text: new TextDecoder().decode(Uint8Array.from(atob(j.content.replace(/\n/g, '')), function(c){ return c.charCodeAt(0); })),
-        sha: j.sha
-      };
-    } catch(e){}
-    return null;
-  }
-  var repo = null, buddyName = bid;
-  async function resolveBuddy(){
-    try {
-      var r = await fetch('../buddies.json', {cache: 'no-store'});
-      var d = await r.json();
-      var buds = d.buddies || [];
-      for (var i = 0; i < buds.length; i++) {
-        if (buds[i].id === bid) {
-          if (buds[i].repo) repo = buds[i].repo;
-          if (buds[i].name) buddyName = buds[i].name;
-          break;
-        }
-      }
-    } catch(e){}
-  }
-  function rkey(aid, text){ return bid + '|' + (aid || ('text:' + text.slice(0, 60))); }
-  function isResolved(aid, text){ var m = lsGet().attnDone || {}; return !!m[rkey(aid, text)]; }
-  function setResolved(aid, text){ var s = lsGet(); var m = s.attnDone || {}; m[rkey(aid, text)] = 1; s.attnDone = m; lsSet(s); }
-  function paintResolved(tile, msg){
-    tile.classList.add('resolved');
-    var st = tile.querySelector('.attn-status');
-    if (st) st.textContent = msg;
-  }
-  async function sendAction(tile, entry, okMsg){
-    var st = tile.querySelector('.attn-status');
-    var btns = tile.querySelectorAll('.attn-btn');
-    if (!token()) { st.textContent = 'Add a GitHub token in the Brain dump section above to enable actions.'; return false; }
-    if (!repo) { st.textContent = 'No repo linked for this buddy yet.'; return false; }
-    btns.forEach(function(b){ b.disabled = true; });
-    st.textContent = 'Working…';
-    try {
-      var NL = String.fromCharCode(10);
-      var stamp = new Date().toLocaleString();
-      var cur = await ghGetFile(repo, 'docs/ingest.md');
-      var base = cur ? cur.text : '# Ingest log — ' + buddyName + NL + NL;
-      var body = {message: 'Attention action for ' + bid, content: b64encode(base + '## ' + stamp + NL + NL + entry + NL + NL)};
-      if (cur && cur.sha) body.sha = cur.sha;
-      await ghApi('/repos/davedellaquila/' + repo + '/contents/docs/ingest.md', 'PUT', body);
-      st.textContent = okMsg;
-      return true;
-    } catch(err){
-      st.textContent = 'Save failed: ' + (err.message || err);
-      btns.forEach(function(b){ b.disabled = false; });
-      return false;
-    }
-  }
-  tiles.forEach(function(tile){
-    var aid = tile.getAttribute('data-attn-id') || '';
-    var textEl = tile.querySelector('.attn-text');
-    var text = textEl ? textEl.textContent.trim() : '';
-    if (isResolved(aid, text)) { paintResolved(tile, 'Marked done'); return; }
-    tile.addEventListener('click', function(ev){
-      var btn = ev.target.closest ? ev.target.closest('.attn-btn') : null;
-      if (!btn || btn.disabled) return;
-      var act = btn.getAttribute('data-act');
-      var idBit = aid ? ' (attention id: ' + aid + ')' : '';
-      if (act === 'done') {
-        sendAction(tile,
-          'DONE — Dave marked this done on the homepage: "' + text + '"' + idBit + '. Please remove it from the attention list in buddies.json.',
-          'Marked done — the buddy will clear it.').then(function(ok){ if (ok) { setResolved(aid, text); paintResolved(tile, 'Marked done — the buddy will clear it.'); } });
-      } else if (act === 'info') {
-        sendAction(tile,
-          'FOLLOW-UP — Dave needs more info on: "' + text + '"' + idBit + '. Please follow up with him.',
-          'Sent — ' + buddyName + ' will follow up.');
-      }
-    });
-  });
-  resolveBuddy();
-})();
-</script>
-<script>
-/* Read-aloud: whole edition + per-story, via the device's speech engine (no network, no tokens). Buttons are injected so the daily refresh never has to rebuild them. */
-(function(){
-  if (!('speechSynthesis' in window)) return;
-  var synth = window.speechSynthesis;
-  var editionBtn = null, queue = [], qIndex = 0, editionMode = false, currentBtn = null;
 
-  function storyText(article){
-    var h3 = article.querySelector('h3'), head = '';
-    if (h3) {
-      var c = h3.cloneNode(true);
-      c.querySelectorAll('.thin,.story-listen').forEach(function(s){ s.remove(); });
-      head = c.textContent.trim().replace(/\s+/g, ' ');
-    }
-    var dek = article.querySelector('.dek');
-    var body = dek ? dek.textContent.trim().replace(/\s+/g, ' ') : '';
-    return (head + '. ' + body).trim();
-  }
-  function chunkText(text){
-    var sentences = text.match(/[^.!?]+[.!?]+/g) || [text];
-    var chunks = [], cur = '';
-    sentences.forEach(function(s){
-      if (cur && (cur + s).length > 220) { chunks.push(cur.trim()); cur = s; }
-      else cur += s;
-    });
-    if (cur.trim()) chunks.push(cur.trim());
-    return chunks;
-  }
-  function speak(text, onend){
-    var chunks = chunkText(text), i = 0;
-    (function next(){
-      if (i >= chunks.length) { if (onend) onend(); return; }
-      var u = new SpeechSynthesisUtterance(chunks[i++]);
-      u.onend = next; u.onerror = next;
-      synth.speak(u);
-    })();
-  }
-  function paintOff(){
-    document.querySelectorAll('article.story.reading').forEach(function(a){ a.classList.remove('reading'); });
-    document.querySelectorAll('.story-listen.playing').forEach(function(b){ b.classList.remove('playing'); b.textContent = '\uD83D\uDD0A'; });
-    if (editionBtn) { editionBtn.classList.remove('playing'); editionBtn.textContent = '\uD83D\uDD0A Listen to this edition'; }
-    currentBtn = null;
-  }
-  function stopAll(){ synth.cancel(); queue = []; qIndex = 0; editionMode = false; paintOff(); }
-  function playQueue(){
-    if (qIndex >= queue.length) { stopAll(); return; }
-    var item = queue[qIndex++];
-    document.querySelectorAll('article.story.reading').forEach(function(a){ a.classList.remove('reading'); });
-    if (item.article) item.article.classList.add('reading');
-    if (item.btn) { document.querySelectorAll('.story-listen.playing').forEach(function(b){ b.classList.remove('playing'); b.textContent = '\uD83D\uDD0A'; }); item.btn.classList.add('playing'); item.btn.textContent = '\u23F9'; }
-    speak(item.text, playQueue);
-  }
-  function playStory(article, btn){
-    if (currentBtn === btn) { stopAll(); return; }
-    stopAll();
-    var text = storyText(article);
-    if (!text) return;
-    currentBtn = btn;
-    article.classList.add('reading');
-    btn.classList.add('playing'); btn.textContent = '\u23F9';
-    speak(text, stopAll);
-  }
-  function playEdition(){
-    if (editionMode) { stopAll(); return; }
-    stopAll();
-    editionMode = true;
-    if (editionBtn) { editionBtn.classList.add('playing'); editionBtn.textContent = '\u23F9 Stop'; }
-    queue = [];
-    document.querySelectorAll('section').forEach(function(sec){
-      var h2 = sec.querySelector('.sec-head h2');
-      if (!h2) return;
-      var articles = sec.querySelectorAll('article.story');
-      if (!articles.length) return;
-      queue.push({text: h2.textContent.trim() + '.', article: null, btn: null});
-      articles.forEach(function(a){
-        queue.push({text: storyText(a), article: a, btn: a.querySelector('.story-listen')});
-      });
-    });
-    playQueue();
-  }
-  var dateline = document.querySelector('.dateline');
-  if (dateline) {
-    editionBtn = document.createElement('button');
-    editionBtn.type = 'button';
-    editionBtn.className = 'listen-edition';
-    editionBtn.textContent = '\uD83D\uDD0A Listen to this edition';
-    editionBtn.setAttribute('aria-label', 'Read the whole edition aloud');
-    editionBtn.addEventListener('click', playEdition);
-    dateline.appendChild(editionBtn);
-  }
-  document.querySelectorAll('article.story h3').forEach(function(h3){
-    var b = document.createElement('button');
-    b.type = 'button';
-    b.className = 'story-listen';
-    b.textContent = '\uD83D\uDD0A';
-    b.title = 'Read this story aloud';
-    b.setAttribute('aria-label', 'Read this story aloud');
-    b.addEventListener('click', function(ev){
-      ev.preventDefault(); ev.stopPropagation();
-      var article = h3.closest('article');
-      if (article) playStory(article, b);
-    });
-    h3.appendChild(b);
-  });
-  window.addEventListener('pagehide', function(){ try { synth.cancel(); } catch(e){} });
-})();
-</script>
-<script>
-/* Story votes: thumbs up/down per article. Instant state in localStorage; durable log appended to the repo's docs/story-votes.md (same GitHub token as the brain-dump box). */
-(function(){
-  var box = document.querySelector('.dumpbox');
-  var bid = (box && box.getAttribute('data-buddy-id')) || 'news-buddy';
-  function lsGet(){ try { return JSON.parse(localStorage.getItem('buddyTree.v3') || '{}'); } catch(e){ return {}; } }
-  function lsSet(patch){ try { var s = lsGet(); for (var k in patch) s[k] = patch[k]; localStorage.setItem('buddyTree.v3', JSON.stringify(s)); } catch(e){} }
-  function token(){ return lsGet().ghToken || ''; }
-  function b64encode(str){
-    var bytes = new TextEncoder().encode(str), bin = '';
-    bytes.forEach(function(b){ bin += String.fromCharCode(b); });
-    return btoa(bin);
-  }
-  async function ghApi(path, method, body){
-    var t = token();
-    if (!t) throw new Error('Add a GitHub token first.');
-    var r = await fetch('https://api.github.com' + path, {
-      method: method || 'GET',
-      headers: {'Authorization': 'Bearer ' + t, 'Accept': 'application/vnd.github+json', 'Content-Type': 'application/json'},
-      body: body ? JSON.stringify(body) : undefined
-    });
-    if (!r.ok) throw new Error('GitHub ' + r.status);
-    return r.status === 204 ? null : await r.json();
-  }
-  async function ghGetFile(repo, path){
-    try {
-      var j = await ghApi('/repos/davedellaquila/' + repo + '/contents/' + path);
-      if (j && j.content) return {
-        text: new TextDecoder().decode(Uint8Array.from(atob(j.content.replace(/\n/g, '')), function(c){ return c.charCodeAt(0); })),
-        sha: j.sha
-      };
-    } catch(e){}
-    return null;
-  }
-  var repo = null;
-  fetch('../buddies.json', {cache: 'no-store'}).then(function(r){ return r.json(); }).then(function(d){
-    var buds = d.buddies || [];
-    for (var i = 0; i < buds.length; i++) if (buds[i].id === bid && buds[i].repo) { repo = buds[i].repo; break; }
-  }).catch(function(){});
-  function vkey(article){
-    var a = article.querySelector('h3 a');
-    var url = a ? a.getAttribute('href') : '';
-    if (url) return 'vote|' + url;
-    var h3 = article.querySelector('h3');
-    return 'vote|text:' + (h3 ? h3.textContent.trim().slice(0, 60) : '');
-  }
-  function getVote(k){ var m = lsGet().storyVotes || {}; return m[k] || 0; }
-  function setVote(k, v){ var s = lsGet(); var m = s.storyVotes || {}; if (v) m[k] = v; else delete m[k]; s.storyVotes = m; lsSet(s); }
-  function meta(article){
-    var h3 = article.querySelector('h3'), head = '';
-    if (h3) { var c = h3.cloneNode(true); c.querySelectorAll('.thin,.story-listen,.story-vote').forEach(function(s){ s.remove(); }); head = c.textContent.trim().replace(/\s+/g, ' '); }
-    var a = article.querySelector('h3 a');
-    var sec = article.closest('section');
-    var h2 = sec ? sec.querySelector('.sec-head h2') : null;
-    return {headline: head, url: a ? a.getAttribute('href') : '', section: h2 ? h2.textContent.trim() : ''};
-  }
-  async function logVote(action, m){
-    if (!token() || !repo) return;
-    try {
-      var NL = String.fromCharCode(10);
-      var stamp = new Date().toLocaleString();
-      var cur = await ghGetFile(repo, 'docs/story-votes.md');
-      var base = cur ? cur.text : '# Story votes \u2014 News Buddy' + NL + NL + 'Dave\u2019s thumbs up/down on newspaper stories. +1 = more like this, -1 = less like this.' + NL + NL;
-      var line = '## ' + stamp + NL + action + ' | ' + m.section + ' | "' + m.headline.replace(/"/g, "'") + '"' + (m.url ? ' | ' + m.url : '') + NL + NL;
-      var body = {message: 'Story vote for ' + bid, content: b64encode(base + line)};
-      if (cur && cur.sha) body.sha = cur.sha;
-      await ghApi('/repos/davedellaquila/' + repo + '/contents/docs/story-votes.md', 'PUT', body);
-    } catch(e){}
-  }
-  function paint(article){
-    var v = getVote(vkey(article));
-    var up = article.querySelector('.story-vote.up'), dn = article.querySelector('.story-vote.dn');
-    if (up) up.classList.toggle('on-up', v === 1);
-    if (dn) dn.classList.toggle('on-down', v === -1);
-  }
-  document.querySelectorAll('article.story h3').forEach(function(h3){
-    var article = h3.closest('article');
-    if (!article) return;
-    function mk(cls, label, emoji, val){
-      var b = document.createElement('button');
-      b.type = 'button'; b.className = 'story-vote ' + cls; b.textContent = emoji;
-      b.title = label; b.setAttribute('aria-label', label);
-      b.addEventListener('click', function(ev){
-        ev.preventDefault(); ev.stopPropagation();
-        var k = vkey(article), cur = getVote(k);
-        var next = (cur === val) ? 0 : val;
-        setVote(k, next);
-        paint(article);
-        var m = meta(article);
-        logVote(next === 1 ? 'UPVOTE +1' : next === -1 ? 'DOWNVOTE -1' : 'UNVOTE', m);
-      });
-      return b;
-    }
-    h3.appendChild(mk('up', 'More like this', '\uD83D\uDC4D', 1));
-    h3.appendChild(mk('dn', 'Less like this', '\uD83D\uDC4E', -1));
-    paint(article);
-  });
-})();
-</script>
 
+
+
+
+
+
+
+
+  <script src="s/buddy.js"></script>
 </body>
 </html>
