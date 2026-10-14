@@ -3015,6 +3015,20 @@ function attrCountRow(label, items, nameFn, opts){
   else display = ' <span class="attr-value">(' + items.length + ')</span>';
   return attrRow(label, display, opts);
 }
+/* Attribute header pattern (Dave 2026-10-14): ›/﹀ LABEL: value  [buttons] ⓘ + expandable body */
+function attrHead(field, label, valueHtml, buttons, tip){
+  return '<div class="attr-head"><button class="attr-toggle" data-expand="'+field+'" aria-label="Expand">\u203a</button>'
+    + '<span class="attr-text"><span class="attr-label">'+label+':</span> '+valueHtml+'</span>'
+    + (buttons || '')
+    + (tip ? '<span class="info-tip" data-tip="'+tip+'">\u24d8</span>' : '') + '</div>';
+}
+function wordCount(s){ s = (s || '').trim(); return s ? s.split(/\s+/).length : 0; }
+function updateNotesCounts(){
+  const n1 = document.getElementById('bp-notes'), c1 = document.getElementById('bp-notes-count');
+  if (n1 && c1) c1.textContent = '(' + wordCount(n1.value) + ')';
+  const n2 = document.getElementById('bp-shared-notes'), c2 = document.getElementById('bp-shared-count');
+  if (n2 && c2) c2.textContent = '(' + wordCount(n2.value) + ')';
+}
 /* ---- Persona picker (info panel) ---- */
 function personaBlurb(name){
   const e = (typeof PERSONA_ROSTER !== 'undefined' ? PERSONA_ROSTER : []).find(x => x.name === name);
@@ -3027,6 +3041,9 @@ function personaQuote(name){
 function personaSecHtml(b){
   const p = b.persona || '';
   const pq = p ? personaQuote(p) : '';
+  const valueHtml = p
+    ? '<span class="attr-value">' + escHtml(p) + '</span>'
+    : '<span class="attr-value attr-none">Default</span>';
   const cur = p
     ? '<div class="bp-persona-cur"><div class="bp-persona-name">' + escHtml(p) + '</div>'
       + (pq ? '<div class="bp-persona-quote" style="font-style:italic;color:var(--muted);margin:6px 0;font-size:13px">\u201c' + escHtml(pq) + '\u201d</div>' : '')
@@ -3034,13 +3051,16 @@ function personaSecHtml(b){
       + (pq ? '<button class="linkbtn" id="bp-persona-play" type="button" style="margin-top:8px">\u25b6\ufe0e Hear it</button>' : '')
       + '</div>'
     : '<p class="bp-empty">No persona set — this buddy speaks in its default voice.</p>';
-  const headerName = p ? ': ' + escHtml(p) : '';
-  return '<div class="bp-sec" data-field="persona"><h3>Persona' + headerName + '<span class="info-tip" data-tip="The voice this buddy speaks in. Pick the one that makes you grin \\u2014 it shapes how its messages and notifications sound.">\\u24d8</span></h3>'
+  return '<div class="bp-sec" data-field="persona">'
+    + attrHead('persona', 'PERSONA', valueHtml,
+      '<button class="pill-btn" id="bp-persona-change" type="button">Change</button>',
+      'The voice this buddy speaks in. Pick the one that makes you grin \u2014 it shapes how its messages and notifications sound.')
+    + '<div class="attr-body">'
     + cur
     + '<div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap">'
-    + '<button class="linkbtn" id="bp-persona-change" type="button">Change persona</button>'
-    + '<button class="linkbtn" id="bp-persona-surprise" type="button" title="Pick a random persona from the roster">\\uD83C\\uDFB2 Surprise me</button>'
-    + '</div><p class="fineprint" id="bp-persona-status"></p></div>';
+    + '<button class="linkbtn" id="bp-persona-surprise" type="button" title="Pick a random persona from the roster">\U0001F3B2 Surprise me</button>'
+    + '</div><p class="fineprint" id="bp-persona-status"></p>'
+    + '</div></div>';
 }
 /* ---- Voice picker (info panel) ---- */
 function voiceName(id){
@@ -3054,21 +3074,28 @@ function voiceDesc(id){
 function voiceSecHtml(b){
   const v = b.voice || '';
   const vn = v ? voiceName(v) : '';
+  const valueHtml = (v && vn)
+    ? '<span class="attr-value">' + escHtml(vn) + '</span>'
+    : '<span class="attr-value attr-none">Default voice</span>';
   const cur = v && vn
     ? '<div class="bp-persona-cur"><div class="bp-persona-name">' + escHtml(vn) + '</div>'
       + (voiceDesc(v) ? '<div class="bp-persona-blurb">' + escHtml(voiceDesc(v)) + '</div>' : '') + '</div>'
     : '<p class="bp-empty">Default voice — this buddy has no specific voice assigned.</p>';
   const notesOn = !!b.voiceNotes;
-  return '<div class="bp-sec" data-field="voice"><h3>Voice<span class="info-tip" data-tip="The spoken voice for this buddy\\u2019s voice notes. Pick one, then enable voice notes below to hear it in threads.">\\u24d8</span></h3>'
+  return '<div class="bp-sec" data-field="voice">'
+    + attrHead('voice', 'VOICE', valueHtml,
+      '<button class="pill-btn" id="bp-voice-change" type="button">Change</button>',
+      'The spoken voice for this buddy\u2019s voice notes. Pick one, then enable voice notes below to hear it in threads.')
+    + '<div class="attr-body">'
     + cur
     + '<div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;align-items:center">'
-    + '<button class="linkbtn" id="bp-voice-change" type="button">Change voice</button>'
     + (v ? '<button class="linkbtn" id="bp-voice-preview" type="button" title="Hear a sample of this voice">\u25b6\ufe0e Preview</button>' : '')
     + '<label style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text);cursor:pointer">'
     + '<input type="checkbox" id="bp-voice-notes" ' + (notesOn ? 'checked' : '') + ' style="width:18px;height:18px;accent-color:var(--accent)">'
     + 'Voice notes in threads</label>'
     + '</div><p class="fineprint" id="bp-voice-status"></p>'
-    + '<p class="fineprint" style="margin-top:6px">Voice notes are off by default to save tokens. Enable per buddy.</p></div>';
+    + '<p class="fineprint" style="margin-top:6px">Voice notes are off by default to save tokens. Enable per buddy.</p>'
+    + '</div></div>';
 }
 function openPersonaPicker(id){
   const b = byId[id]; if (!b) return;
@@ -3306,17 +3333,10 @@ function renderBuddy(id){
   (function(){
     const par = effParent(b);
     const tip = 'This buddy\u2019s parent in the hierarchy.';
-    // Attribute header pattern (Dave 2026-10-14): ›/﹀ LABEL: value  [Change] [Clear] ⓘ
-    function attrHead(field, label, valueHtml, buttons){
-      return '<div class="attr-head"><button class="attr-toggle" data-expand="'+field+'" aria-label="Expand">\u203a</button>'
-        + '<span class="attr-text"><span class="attr-label">'+label+':</span> '+valueHtml+'</span>'
-        + buttons
-        + '<span class="info-tip" data-tip="'+tip+'">\u24d8</span></div>';
-    }
     if (!par) {
       parSec = '<div class="bp-sec" data-field="parent">'
         + attrHead('parent', 'PARENT', '<span class="attr-value attr-none">Top level</span>',
-          '<button class="pill-btn" data-changeparent="'+escHtml(id)+'">Change</button>')
+          '<button class="pill-btn" data-changeparent="'+escHtml(id)+'">Change</button>', tip)
         + '</div>';
       return;
     }
@@ -3325,7 +3345,7 @@ function renderBuddy(id){
     parSec = '<div class="bp-sec" data-field="parent">'
       + attrHead('parent', 'PARENT', '<span class="attr-value">'+escHtml(dispName(pb))+'</span>',
         '<button class="pill-btn" data-changeparent="'+escHtml(id)+'">Change</button>'
-        + '<button class="pill-btn pill-btn-danger" data-clearparent="'+escHtml(id)+'" title="Remove parent (make top-level)">Clear</button>')
+        + '<button class="pill-btn pill-btn-danger" data-clearparent="'+escHtml(id)+'" title="Remove parent (make top-level)">Clear</button>', tip)
       + '<div class="attr-body"><a class="bp-parent-link" data-buddy="'+escHtml(par)+'" title="Open '+escHtml(dispName(pb))+'">'
       + escHtml(dispName(pb)) + '<span class="bp-parent-kind"> (' + escHtml(pb.kind || 'buddy') + ')</span></a></div>'
       + '</div>';
@@ -3419,11 +3439,16 @@ function renderBuddy(id){
     + '<textarea class="notes" id="bp-ingest" placeholder="Dump what\u2019s in your head about '+escHtml(dispName(b))+'\u2026"></textarea>'
     + '<div style="margin-top:8px"><span class="fineprint" id="ingest-status"></span></div>'
     + '<div id="ingest-feed" style="margin-top:8px"></div></div>'
-    + '<div class="bp-sec" data-field="mission"><h3>About<span class="info-tip" data-tip="The mission statement\\u2019s executive summary \\u2014 tweak it through the buddy\\u2019s chat thread and it updates everywhere.">\\u24d8</span></h3><p class="bp-mission">'+escHtml(b.mission)+'</p></div>'
-    + '<div class="bp-sec" data-field="aka"><h3>A.K.A.<span class="info-tip" data-tip="Other names for this buddy \\u2014 nicknames, aliases, what people actually call them. Searchable.">\\u24d8</span></h3>'
-    + '<div id="bp-aka-list" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px"></div>'
+    + '<div class="bp-sec" data-field="mission">'
+    + attrHead('mission', 'ABOUT', '<span class="attr-value">(' + wordCount(b.mission) + ')</span>', '',
+      'The mission statement\u2019s executive summary \u2014 tweak it through the buddy\u2019s chat thread and it updates everywhere.')
+    + '<div class="attr-body"><p class="bp-mission">'+escHtml(b.mission)+'</p></div></div>'
+    + '<div class="bp-sec" data-field="aka">'
+    + attrHead('aka', 'A.K.A.', '<span class="attr-value" id="bp-aka-count">(' + effAka(b).length + ')</span>', '',
+      'Other names for this buddy \u2014 nicknames, aliases, what people actually call them. Searchable.')
+    + '<div class="attr-body"><div id="bp-aka-list" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px"></div>'
     + '<div style="display:flex;gap:8px"><input type="text" id="bp-aka-input" placeholder="Add a nickname…" aria-label="Add a nickname" style="flex:1;min-width:0;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:8px 12px;font-size:13px;color:var(--text)">'
-    + '<button class="linkbtn" id="bp-aka-add" type="button">Add</button></div></div>'
+    + '<button class="linkbtn" id="bp-aka-add" type="button">Add</button></div></div></div>'
     + personaSecHtml(b)
     + voiceSecHtml(b)
     + reportsSec
@@ -3444,11 +3469,16 @@ function renderBuddy(id){
         : '')
     + '<div class="bp-sec" data-field="artifacts"><h3>Artifacts</h3>'+arts+'</div>'
     + planSec
-    + '<div class="bp-sec" data-field="notes"><h3>Private notes<span class="info-tip" data-tip="Saved on this device. (For your eyes only)">\u24d8</span></h3><textarea class="notes" id="bp-notes" placeholder="Scratch pad for this buddy\u2026 (For your eyes only)">'+escHtml(S.notes[id]||'')+'</textarea>'
+    + '<div class="bp-sec" data-field="notes">'
+    + attrHead('notes', 'PRIVATE NOTES', '<span class="attr-value" id="bp-notes-count">(0)</span>', '',
+      'Saved on this device. (For your eyes only)')
+    + '<div class="attr-body"><textarea class="notes" id="bp-notes" placeholder="Scratch pad for this buddy\u2026 (For your eyes only)">'+escHtml(S.notes[id]||'')+'</textarea></div>'
     + '</div>'
-    + '<div class="bp-sec" data-field="shared"><h3>Shared notes<span class="info-tip" data-tip="Anybody with repo access can see this note. Saved to the buddy\u2019s repo (docs/notes.md).">\u24d8</span></h3>'
-    + '<textarea class="notes" id="bp-shared-notes" placeholder="Anybody with repo access can see this note."></textarea>'
-    + '<p class="fineprint" id="shared-status"></p></div>'
+    + '<div class="bp-sec" data-field="shared">'
+    + attrHead('shared', 'SHARED NOTES', '<span class="attr-value" id="bp-shared-count">(0)</span>', '',
+      'Anybody with repo access can see this note. Saved to the buddy\u2019s repo (docs/notes.md).')
+    + '<div class="attr-body"><textarea class="notes" id="bp-shared-notes" placeholder="Anybody with repo access can see this note."></textarea>'
+    + '<p class="fineprint" id="shared-status"></p></div></div>'
     + '<div class="bp-build">Build __BUILD__</div>'
     + '</div>';
   // Update every visible label for a buddy after a rename/re-icon, across all
@@ -3598,6 +3628,8 @@ function renderBuddy(id){
           + escHtml(a)
           + '<button type="button" class="linkbtn" data-aka-del="' + i + '" aria-label="Remove nickname" style="padding:0 2px">×</button></span>').join('')
         : '<span class="fineprint">No nicknames yet.</span>';
+      const cc = document.getElementById('bp-aka-count');
+      if (cc) cc.textContent = '(' + arr.length + ')';
     }
     list.addEventListener('click', e => {
       const del = e.target.closest('[data-aka-del]');
@@ -3662,7 +3694,8 @@ function renderBuddy(id){
   const nt = document.getElementById('bp-notes');
   let t = null, notesBefore = null;
   nt.addEventListener('focus', () => { notesBefore = nt.value; });
-  nt.addEventListener('input', () => { clearTimeout(t); t = setTimeout(() => { S.notes[id] = nt.value; save(); }, 400); });
+  nt.addEventListener('input', () => { clearTimeout(t); t = setTimeout(() => { S.notes[id] = nt.value; save(); }, 400); updateNotesCounts(); });
+  updateNotesCounts();
   nt.addEventListener('blur', () => {
     if (notesBefore !== null && notesBefore !== nt.value) logChange('notes', id, 'Edited notes for \u201c' + dispName(byId[id]) + '\u201d', notesBefore, nt.value);
     notesBefore = null;
@@ -7699,10 +7732,12 @@ async function loadSharedNotes(id){
   if (st) st.textContent = 'Loading\u2026';
   const txt = await ghGetFile(b.repo, 'docs/notes.md');
   ta.value = txt || '';
+  updateNotesCounts();
   if (st) st.textContent = txt == null ? 'No shared notes yet.' : 'Synced from ' + b.repo + '/docs/notes.md';
   let t = null;
   ta.addEventListener('input', () => {
     clearTimeout(t);
+    updateNotesCounts();
     if (st) st.textContent = 'Saving\u2026';
     t = setTimeout(async () => {
       try { await ghPutFile(b.repo, 'docs/notes.md', b64encode(ta.value), 'Update shared notes'); if (st) st.textContent = 'Saved to ' + b.repo + '/docs/notes.md'; }
