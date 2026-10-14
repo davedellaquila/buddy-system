@@ -250,12 +250,18 @@ body{padding:0}
 .ledger-row.drag-src{opacity:.4}
 .ledger-row.drop-target{background:var(--active);box-shadow:inset 0 0 0 2px var(--accent)}
 .ledger-row.drop-invalid{box-shadow:inset 0 0 0 2px #e0533d}
-.chart-lineage .lineage{overflow-x:auto;padding:16px 8px}
+/* Zoom-canvas invariant: chart internals must NOT create nested scroll containers.
+   The tree pane (.treescroll) is the single 2D scrollport and .zoomsizer is measured
+   from .zoomcontent's scrollWidth/scrollHeight — a nested overflow:auto/scroll clips
+   its content's overflow from ancestors, so the sizer measures wrong (Lineage once
+   collapsed to 3px wide) and iOS locks the first gesture axis. Internal carousels
+   with capped heights (.qa-links, .mcol) are the deliberate exception. */
+.chart-lineage .lineage{overflow:visible;padding:16px 8px}
 .hgen{display:flex;align-items:center;gap:0}
 .hchildren{display:flex;flex-direction:column;gap:12px;margin-left:0;padding-left:28px;position:relative}
 .hchildren::before{content:'';position:absolute;left:14px;top:12px;bottom:12px;width:1px;background:var(--border)}
 .hgen .node{flex:none}
-.chart-colonnade .colonnade{display:flex;overflow-x:auto;min-height:420px;border:1px solid var(--border);border-radius:12px;background:var(--panel)}
+.chart-colonnade .colonnade{display:flex;overflow:visible;min-height:420px;border:1px solid var(--border);border-radius:12px;background:var(--panel)}
 .mcol{flex:0 0 240px;border-right:1px solid var(--border);overflow-y:auto;max-height:70vh}
 .mcol-head{padding:12px 14px;font-weight:700;border-bottom:1px solid var(--border);position:sticky;top:0;background:var(--panel)}
 .mcol-row{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;cursor:pointer;border-bottom:1px solid var(--wash)}

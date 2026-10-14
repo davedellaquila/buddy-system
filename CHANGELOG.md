@@ -3,6 +3,11 @@
 All notable changes to the Buddies dashboard and buddy system. Newest first.
 `FEATURES.md` describes the current state; this file describes how it got there.
 
+## 2026-10-13 (Lineage low-zoom collapse — nested scrollers)
+
+### Fixed
+- **Lineage/Colonnade collapsed to a 3px sliver at low zoom** (caught by live browser verification 2026-10-13): `.lineage{overflow-x:auto}` and `.colonnade{overflow-x:auto}` were nested scroll containers, which clip their content's overflow from ancestors — so the zoom sizer's `scrollWidth` measurement could never see the true chart width. Removed the nested scrollers (`overflow:visible`); the tree pane remains the single 2D scrollport. Documented the zoom-canvas invariant in CSS (no nested scroll containers inside chart canvases; `.qa-links`/`.mcol` carousels are the deliberate exception).
+
 ## 2026-10-13 (Tip jar links on the dashboard)
 
 ### Added
