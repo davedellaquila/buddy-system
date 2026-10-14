@@ -71,7 +71,10 @@ body{padding:0}
   box-shadow:0 8px 32px var(--shadow-soft);
   -webkit-backdrop-filter:blur(20px) saturate(1.4);backdrop-filter:blur(20px) saturate(1.4);
   transition:transform .5s cubic-bezier(.32,.72,.35,1), visibility 0s}
-body.sb-closed #sidebar{width:64px;padding:12px 8px;overflow:visible;height:auto;max-height:calc(100dvh - 24px);top:12px;bottom:auto;border-radius:18px}
+body.sb-closed #sidebar{width:64px;padding:12px 8px;overflow:visible;height:auto;max-height:calc(100dvh - 24px);top:12px;bottom:auto;border-radius:18px;
+  left:12px;background:color-mix(in srgb, var(--panel) 82%, transparent);
+  -webkit-backdrop-filter:blur(20px) saturate(1.8);backdrop-filter:blur(20px) saturate(1.8);
+  border:1px solid var(--border);box-shadow:0 8px 32px var(--shadow)}
 body.sb-closed #sidebar .brand, body.sb-closed #sidebar .sb-search-sticky,
 body.sb-closed #sidebar #buddies-sec, body.sb-closed #sidebar #plans-sec,
 body.sb-closed #sidebar .sb-tipjar, body.sb-closed #sidebar #sb-tools #sb-gear,
@@ -414,7 +417,7 @@ input[type=range].zrange::-moz-range-thumb{width:16px;height:16px;border-radius:
   background-size:6px 7px;background-position:center;background-repeat:repeat}
 #sb-tab:hover{border-color:var(--accent)}
 #sb-tab:hover::after{--gripdot:var(--accent)}
-body.sb-closed #sb-tab{display:none}
+body.sb-closed #sb-tab{display:none !important}
 @media (max-width:640px){#sb-tab{display:none !important}}
 /* 2x5 dot-grid gripper (Jonny's pick, 2026-10-11): honest affordance, no hover required */
 #sb-resize::after{content:'';width:14px;height:35px;transform:translateX(-9px);
