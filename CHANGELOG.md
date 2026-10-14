@@ -3,6 +3,11 @@
 All notable changes to the Buddies dashboard and buddy system. Newest first.
 `FEATURES.md` describes the current state; this file describes how it got there.
 
+## 2026-10-13 (Pops' Buddy dossier from dellaquila.com)
+
+### Fixed
+- **Pops' Buddy identity corrected + dossier populated** (Dave's ask 2026-10-13): the registry entry still treated "Pops" as an unidentified third person; corrected to Dave Dell'Aquila per his 2026-10-09 confirmation ("Pops and Dave are the same thing. I'm Pops."). Added a full `about` from [dellaquila.com](https://dellaquila.com) and the [portfolio](https://www.dellaquila.com/portfolio): Apple WWSF (2023–present) and Marcom (2015–2022), eBay Motors (2011–2014, eBay Garage), WebEx, Phoenix HyperSpace, MightyDB, Cisco BCP, Rae Assist (1992–1995), design philosophy, UC Davis background, Sports Car Adventures, cycling/photography. The pops-buddy homepage now carries a 📋 Dossier section with the career timeline. Stale "identity unknown" attention text updated.
+
 ## 2026-10-13 (Lineage low-zoom collapse — nested scrollers)
 
 ### Fixed
