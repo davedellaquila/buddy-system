@@ -3,6 +3,16 @@
 All notable changes to the Buddies dashboard and buddy system. Newest first.
 `FEATURES.md` describes the current state; this file describes how it got there.
 
+## 2026-10-13 (News Buddy: read-aloud on section + article pages)
+
+### Added
+- **🔊 Listen buttons on section pages** (Dave's ask 2026-10-13 — Amador County page had no read-aloud at all): every story on a section page now gets a speaker button in its headline row (reads headline + story body), plus a "Listen to this section" button after the lede that reads the whole section start to finish. Previously the read-aloud module only targeted the homepage's `article.story` cards; section pages use `div.storyitem` and were silently skipped.
+- **🔊 "Listen to this article" on article detail pages** (Dave's ask 2026-10-13): a prominent button after the byline reads the full article — headline plus every section (what it's about, why it matters, about the source) — with the currently-read story highlighted.
+
+### Changed
+- **Voice picker on every play click** (Dave's ask 2026-10-13): tapping any play/speaker button now opens the voice picker panel first (saved voice pre-checked); choosing a voice starts the audio, dismissing the panel plays nothing. Previously the picker only appeared when no voice had been chosen yet. Applies to homepage, section, and article pages.
+- Read-aloud remains 100% on-device (`speechSynthesis`) — no network calls, no pre-generated audio files, zero token cost.
+
 ## 2026-10-13 (Floating panels, Muse-app style)
 
 ### Changed

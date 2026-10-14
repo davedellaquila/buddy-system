@@ -317,22 +317,48 @@ window.NBVoice = (function(){
 
 ;
 
-/* Read-aloud: whole edition + per-story, via the device's speech engine (no network, no tokens). Buttons are injected so the daily refresh never has to rebuild them. */
+/* Read-aloud: whole edition + per-story + full article, via the device's speech
+   engine (no network, no tokens, nothing pre-generated). Buttons are injected so
+   the daily refresh never has to rebuild them.
+   Play flow: every play click opens the voice picker panel (saved voice
+   pre-checked); choosing a voice starts the audio; dismissing plays nothing. */
 (function(){
   if (!('speechSynthesis' in window)) return;
   var synth = window.speechSynthesis;
-  var editionBtn = null, queue = [], qIndex = 0, editionMode = false, currentBtn = null;
+  var editionBtn = null, sectionBtn = null, articleBtn = null;
+  var queue = [], qIndex = 0;
+  var editionMode = false, sectionMode = false, articleMode = false;
+  var currentBtn = null, detailArticle = null;
 
-  function storyText(article){
-    var h3 = article.querySelector('h3'), head = '';
-    if (h3) {
-      var c = h3.cloneNode(true);
-      c.querySelectorAll('.thin,.story-listen,.story-vote,.story-controls').forEach(function(s){ s.remove(); });
-      head = c.textContent.trim().replace(/\s+/g, ' ');
+  function clean(t){ return String(t || '').trim().replace(/\s+/g, ' '); }
+  function headText(h3){
+    if (!h3) return '';
+    var c = h3.cloneNode(true);
+    c.querySelectorAll('.thin,.story-listen,.story-vote,.story-controls').forEach(function(s){ s.remove(); });
+    return clean(c.textContent);
+  }
+  /* Headline + summary: homepage cards (h3 + .dek) and section items (h3 + p.body). */
+  function storyText(el){
+    var head = headText(el.querySelector('h3'));
+    var body = '';
+    var dek = el.querySelector('.dek');
+    if (dek) body = clean(dek.textContent);
+    else {
+      var parts = [];
+      el.querySelectorAll('p.body').forEach(function(p){ var t = clean(p.textContent); if (t) parts.push(t); });
+      body = parts.join(' ');
     }
-    var dek = article.querySelector('.dek');
-    var body = dek ? dek.textContent.trim().replace(/\s+/g, ' ') : '';
     return (head + '. ' + body).trim();
+  }
+  /* Full article detail page: headline + every section (what it's about, why it
+     matters, about the source). */
+  function articleFullText(article){
+    var parts = [headText(article.querySelector('h3'))];
+    article.querySelectorAll('h4.sec, p.body').forEach(function(el){
+      var t = clean(el.textContent);
+      if (t) parts.push(t);
+    });
+    return parts.filter(Boolean).join('. ');
   }
   function chunkText(text){
     var sentences = text.match(/[^.!?]+[.!?]+/g) || [text];
@@ -355,64 +381,102 @@ window.NBVoice = (function(){
     })();
   }
   function paintOff(){
-    document.querySelectorAll('article.story.reading').forEach(function(a){ a.classList.remove('reading'); });
+    document.querySelectorAll('article.story.reading, .storyitem.reading').forEach(function(a){ a.classList.remove('reading'); });
     document.querySelectorAll('.story-listen.playing').forEach(function(b){ b.classList.remove('playing'); b.textContent = '\uD83D\uDD0A'; });
     if (editionBtn) { editionBtn.classList.remove('playing'); editionBtn.textContent = '\uD83D\uDD0A Listen to this edition'; }
+    if (sectionBtn) { sectionBtn.classList.remove('playing'); sectionBtn.textContent = '\uD83D\uDD0A Listen to this section'; }
+    if (articleBtn) { articleBtn.classList.remove('playing'); articleBtn.textContent = '\uD83D\uDD0A Listen to this article'; }
     currentBtn = null;
   }
-  function stopAll(){ synth.cancel(); queue = []; qIndex = 0; editionMode = false; paintOff(); }
+  function stopAll(){ synth.cancel(); queue = []; qIndex = 0; editionMode = false; sectionMode = false; articleMode = false; paintOff(); }
   function playQueue(){
     if (qIndex >= queue.length) { stopAll(); return; }
     var item = queue[qIndex++];
-    document.querySelectorAll('article.story.reading').forEach(function(a){ a.classList.remove('reading'); });
-    if (item.article) item.article.classList.add('reading');
+    document.querySelectorAll('article.story.reading, .storyitem.reading').forEach(function(a){ a.classList.remove('reading'); });
+    if (item.el) item.el.classList.add('reading');
     if (item.btn) { document.querySelectorAll('.story-listen.playing').forEach(function(b){ b.classList.remove('playing'); b.textContent = '\uD83D\uDD0A'; }); item.btn.classList.add('playing'); item.btn.textContent = '\u23F9'; }
     speak(item.text, playQueue);
+  }
+  function withVoice(fn){
+    if (!window.NBVoice) { fn(); return; }
+    NBVoice.openPicker(fn);
   }
   function storyControls(h3){
     var c = h3.querySelector('.story-controls');
     if (!c) { c = document.createElement('span'); c.className = 'story-controls'; h3.appendChild(c); }
     return c;
   }
-  function playStory(article, btn){
+  function playStory(el, btn){
     if (currentBtn === btn) { stopAll(); return; }
-    window.NBVoice.ensure(function(){
-    stopAll();
-    var text = storyText(article);
-    if (!text) return;
-    currentBtn = btn;
-    article.classList.add('reading');
-    btn.classList.add('playing'); btn.textContent = '\u23F9';
-    speak(text, stopAll);
+    withVoice(function(){
+      stopAll();
+      var text = storyText(el);
+      if (!text) return;
+      currentBtn = btn;
+      el.classList.add('reading');
+      btn.classList.add('playing'); btn.textContent = '\u23F9';
+      speak(text, stopAll);
     });
   }
   function playEdition(){
     if (editionMode) { stopAll(); return; }
-    window.NBVoice.ensure(function(){
-    stopAll();
-    editionMode = true;
-    if (editionBtn) { editionBtn.classList.add('playing'); editionBtn.textContent = '\u23F9 Stop'; }
-    queue = [];
-    document.querySelectorAll('section').forEach(function(sec){
-      var h2 = sec.querySelector('.sec-head h2');
-      if (!h2) return;
-      var articles = sec.querySelectorAll('article.story');
-      if (!articles.length) return;
-      queue.push({text: h2.textContent.trim() + '.', article: null, btn: null});
-      articles.forEach(function(a){
-        queue.push({text: storyText(a), article: a, btn: a.querySelector('.story-listen')});
+    withVoice(function(){
+      stopAll();
+      editionMode = true;
+      if (editionBtn) { editionBtn.classList.add('playing'); editionBtn.textContent = '\u23F9 Stop'; }
+      queue = [];
+      document.querySelectorAll('section').forEach(function(sec){
+        var h2 = sec.querySelector('.sec-head h2');
+        if (!h2) return;
+        var articles = sec.querySelectorAll('article.story');
+        if (!articles.length) return;
+        queue.push({text: clean(h2.textContent) + '.', el: null, btn: null});
+        articles.forEach(function(a){
+          queue.push({text: storyText(a), el: a, btn: a.querySelector('.story-listen')});
+        });
       });
-    });
-    playQueue();
+      playQueue();
     });
   }
+  function playSection(){
+    if (sectionMode) { stopAll(); return; }
+    withVoice(function(){
+      stopAll();
+      sectionMode = true;
+      if (sectionBtn) { sectionBtn.classList.add('playing'); sectionBtn.textContent = '\u23F9 Stop'; }
+      queue = [];
+      var h1 = document.querySelector('main.secpage h1');
+      if (h1) queue.push({text: clean(h1.textContent) + '.', el: null, btn: null});
+      document.querySelectorAll('.storyitem').forEach(function(si){
+        queue.push({text: storyText(si), el: si, btn: si.querySelector('.story-listen')});
+      });
+      playQueue();
+    });
+  }
+  function playArticle(){
+    if (!detailArticle) return;
+    if (articleMode) { stopAll(); return; }
+    withVoice(function(){
+      stopAll();
+      var text = articleFullText(detailArticle);
+      if (!text) return;
+      articleMode = true;
+      detailArticle.classList.add('reading');
+      if (articleBtn) { articleBtn.classList.add('playing'); articleBtn.textContent = '\u23F9 Stop'; }
+      speak(text, stopAll);
+    });
+  }
+  function listenButton(label, aria){
+    var b = document.createElement('button');
+    b.type = 'button'; b.className = 'listen-edition';
+    b.textContent = '\uD83D\uDD0A ' + label;
+    b.setAttribute('aria-label', aria);
+    return b;
+  }
+  /* Homepage: edition button + voice switcher in the dateline. */
   var dateline = document.querySelector('.dateline');
   if (dateline) {
-    editionBtn = document.createElement('button');
-    editionBtn.type = 'button';
-    editionBtn.className = 'listen-edition';
-    editionBtn.textContent = '\uD83D\uDD0A Listen to this edition';
-    editionBtn.setAttribute('aria-label', 'Read the whole edition aloud');
+    editionBtn = listenButton('Listen to this edition', 'Read the whole edition aloud');
     editionBtn.addEventListener('click', playEdition);
     dateline.appendChild(editionBtn);
     var vb = document.createElement('button');
@@ -424,7 +488,28 @@ window.NBVoice = (function(){
     vb.addEventListener('click', function(){ if (window.NBVoice) NBVoice.openPicker(); });
     dateline.appendChild(vb);
   }
-  document.querySelectorAll('article.story h3').forEach(function(h3){
+  /* Section pages: "Listen to this section" after the lede. */
+  var secpage = document.querySelector('main.secpage');
+  if (secpage) {
+    sectionBtn = listenButton('Listen to this section', 'Read this section aloud');
+    sectionBtn.addEventListener('click', playSection);
+    var lede = secpage.querySelector('p.lede') || secpage.querySelector('h1');
+    if (lede && lede.after) lede.after(sectionBtn);
+    else secpage.insertBefore(sectionBtn, secpage.firstChild);
+  }
+  /* Article detail pages: the article with h4.sec sections gets a full-article button. */
+  document.querySelectorAll('article.story').forEach(function(a){
+    if (a.querySelector('h4.sec')) detailArticle = a;
+  });
+  if (detailArticle) {
+    articleBtn = listenButton('Listen to this article', 'Read this article aloud');
+    articleBtn.addEventListener('click', playArticle);
+    var byline = detailArticle.querySelector('p.byline');
+    if (byline && byline.after) byline.after(articleBtn);
+    else detailArticle.insertBefore(articleBtn, detailArticle.firstChild);
+  }
+  /* Per-story speaker buttons: homepage cards and section-page items. */
+  document.querySelectorAll('article.story h3, .storyitem h3').forEach(function(h3){
     var b = document.createElement('button');
     b.type = 'button';
     b.className = 'story-listen';
@@ -433,8 +518,8 @@ window.NBVoice = (function(){
     b.setAttribute('aria-label', 'Read this story aloud');
     b.addEventListener('click', function(ev){
       ev.preventDefault(); ev.stopPropagation();
-      var article = h3.closest('article');
-      if (article) playStory(article, b);
+      var el = h3.closest('article.story, .storyitem');
+      if (el) playStory(el, b);
     });
     storyControls(h3).appendChild(b);
   });
@@ -442,7 +527,6 @@ window.NBVoice = (function(){
 })();
 
 ;
-
 /* Story votes: thumbs up/down per article. Instant state in localStorage; durable log appended to the repo's docs/story-votes.md (same GitHub token as the brain-dump box). */
 (function(){
   var box = document.querySelector('.dumpbox');
