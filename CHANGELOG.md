@@ -3,6 +3,12 @@
 All notable changes to the Buddies dashboard and buddy system. Newest first.
 `FEATURES.md` describes the current state; this file describes how it got there.
 
+## 2026-10-13 (Feedback widgets: buddy pages + awaiting-reply)
+
+### Added
+- **💬 Feedback section on Pops' Buddy homepage** (Dave's ask 2026-10-13): quick-reply choices (This is AWESOME! / Needs a tweak / Let's discuss — tapping one sends immediately, mirroring chat quick replies) plus a freeform text box. Submissions write to `docs/feedback.md` in the buddy's repo via the existing GitHub token flow, for Astro to pick up.
+- **Awaiting-reply item detail view** (Dave's ask 2026-10-13): items in the Astro homepage's "Awaiting Dave's reply" section are now clickable — a detail modal shows the full summary, date, thread (+ Open thread link), and a reply section with standard quick choices (Done / Yes / No / Remind me later / Need more info — per-item `choices` in the JSON override these when present) plus a freeform text box. Replies write to `astro/feedback.md` in the buddy-system repo. Keyboard accessible (Enter/Space to open, Esc to close).
+
 ## 2026-10-13 (Tree zoom measured while hidden)
 
 ### Fixed

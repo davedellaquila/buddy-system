@@ -107,6 +107,32 @@ h2 { font-size: 22px; margin: 32px 0 16px; }
 .dossier-src { color: var(--muted); font-size: 13px; margin-top: 16px; }
 .dossier-src a { color: var(--accent); }
 
+/* Feedback — quick replies + freeform, mirroring the chat quick-reply pattern */
+.feedback {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px 22px;
+  margin-bottom: 32px;
+}
+.feedback h2 { margin: 0 0 6px; font-size: 20px; }
+.feedback-sub { color: var(--muted); font-size: 14px; margin-bottom: 14px; }
+.feedback-choices { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
+.feedback-choice {
+  border: 1px solid var(--border); background: var(--bg); color: var(--text);
+  border-radius: 999px; padding: 8px 16px; font-size: 14px; font-weight: 600; cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.feedback-choice:hover { border-color: var(--accent); }
+.feedback-choice:disabled { opacity: .45; cursor: default; }
+.feedback textarea {
+  width: 100%; min-height: 72px; resize: vertical;
+  background: var(--bg); border: 1px solid var(--border); border-radius: 8px;
+  padding: 10px 12px; font-size: 14px; color: var(--text); font-family: inherit;
+}
+.feedback textarea:focus { outline: none; border-color: var(--accent); }
+.feedback textarea:disabled { opacity: .55; }
+
 .dumpbox {
   background: var(--card);
   border: 1px solid var(--border);
@@ -183,6 +209,21 @@ h2 { font-size: 22px; margin: 32px 0 16px; }
 <h3>Outside the studio</h3>
 <p>Side project: <strong>Sports Car Adventures</strong> — bespoke vintage sports-car driving experiences on Northern California back roads. Avid cyclist (former competitor, master mechanic) and photographer (high-school yearbook/newspaper photographer, film SLRs through the early-2000s digital transition). Active in the Northern California vintage car rally scene. Lives in Fiddletown, CA.</p>
 <p class="dossier-src">Source: <a href="https://dellaquila.com" target="_blank" rel="noopener">dellaquila.com</a> · <a href="https://www.dellaquila.com/portfolio" target="_blank" rel="noopener">portfolio</a> — synced October 2026</p>
+</section>
+
+<section class="feedback" data-buddy-id="pops-buddy">
+<h2>💬 Feedback</h2>
+<p class="feedback-sub">What do you think of this page? Tap a quick reply — or write it out below. It lands in the buddy's repo for Astro to pick up.</p>
+<div class="feedback-choices">
+<button type="button" class="feedback-choice" data-choice="This is AWESOME!">This is AWESOME!</button>
+<button type="button" class="feedback-choice" data-choice="Needs a tweak">Needs a tweak</button>
+<button type="button" class="feedback-choice" data-choice="Let's discuss">Let's discuss</button>
+</div>
+<textarea rows="3" placeholder="Type feedback here… (optional — a quick reply above sends on its own)"></textarea>
+<div class="dumpbox-row">
+<button type="button" class="dumpbox-btn feedback-send">Send feedback</button>
+<span class="dumpbox-status feedback-status" role="status"></span>
+</div>
 </section>
 
 
@@ -423,6 +464,110 @@ Generated 2026-10-13 · Part of the Buddy System
     });
   });
   resolveBuddy();
+})();
+</script>
+
+<script>
+(function(){
+  var sec = document.querySelector('.feedback');
+  if (!sec || sec.dataset.fbInit) return;
+  sec.dataset.fbInit = '1';
+  var bid = sec.getAttribute('data-buddy-id') || (function(){
+    var p = location.pathname.replace(/\/+$/, '');
+    return p.substring(p.lastIndexOf('/') + 1);
+  })();
+  var ta = sec.querySelector('textarea'),
+      sendBtn = sec.querySelector('.feedback-send'),
+      st = sec.querySelector('.feedback-status'),
+      choices = sec.querySelectorAll('.feedback-choice');
+  function lsGet(){ try { return JSON.parse(localStorage.getItem('buddyTree.v3') || '{}'); } catch(e){ return {}; } }
+  function token(){ return lsGet().ghToken || ''; }
+  function b64encode(str){
+    var bytes = new TextEncoder().encode(str), bin = '';
+    bytes.forEach(function(b){ bin += String.fromCharCode(b); });
+    return btoa(bin);
+  }
+  async function ghApi(path, method, body){
+    var t = token();
+    if (!t) throw new Error('Add a GitHub token first.');
+    var r = await fetch('https://api.github.com' + path, {
+      method: method || 'GET',
+      headers: {'Authorization': 'Bearer ' + t, 'Accept': 'application/vnd.github+json', 'Content-Type': 'application/json'},
+      body: body ? JSON.stringify(body) : undefined
+    });
+    if (!r.ok) throw new Error('GitHub ' + r.status);
+    return r.status === 204 ? null : await r.json();
+  }
+  async function ghGetFile(repo, path){
+    try {
+      var j = await ghApi('/repos/davedellaquila/' + repo + '/contents/' + path);
+      if (j && j.content) return {
+        text: new TextDecoder().decode(Uint8Array.from(atob(j.content.replace(/\n/g, '')), function(c){ return c.charCodeAt(0); })),
+        sha: j.sha
+      };
+    } catch(e){}
+    return null;
+  }
+  var repo = null, buddyName = bid;
+  async function resolveRepo(){
+    try {
+      var r = await fetch('../buddies.json', {cache: 'no-store'});
+      var d = await r.json();
+      var buds = d.buddies || [];
+      for (var i = 0; i < buds.length; i++) {
+        if (buds[i].id === bid) {
+          if (buds[i].repo) repo = buds[i].repo;
+          if (buds[i].name) buddyName = buds[i].name;
+          break;
+        }
+      }
+    } catch(e){}
+    refreshUI();
+  }
+  function refreshUI(){
+    var ok = !!token() && !!repo;
+    ta.disabled = !ok;
+    sendBtn.disabled = !ok;
+    choices.forEach(function(c){ c.disabled = !ok; });
+    if (!token()) st.textContent = 'Add a GitHub token in the Brain dump section below to enable feedback.';
+    else if (!repo) st.textContent = 'No repo linked for this buddy yet.';
+    else st.textContent = '';
+  }
+  async function sendFeedback(choice, note){
+    if (!token()) { refreshUI(); return; }
+    if (!repo) { st.textContent = 'No repo linked for this buddy yet.'; return; }
+    st.textContent = 'Sending…';
+    sendBtn.disabled = true;
+    choices.forEach(function(c){ c.disabled = true; });
+    try {
+      var NL = String.fromCharCode(10);
+      var stamp = new Date().toLocaleString();
+      var entry = '## ' + stamp + NL + NL
+        + (choice ? '**Quick reply:** ' + choice + NL + NL : '')
+        + (note ? note + NL + NL : '');
+      var cur = await ghGetFile(repo, 'docs/feedback.md');
+      var base = cur ? cur.text : '# Feedback — ' + buddyName + NL + NL;
+      var body = {message: 'Feedback for ' + bid, content: b64encode(base + entry)};
+      if (cur && cur.sha) body.sha = cur.sha;
+      await ghApi('/repos/davedellaquila/' + repo + '/contents/docs/feedback.md', 'PUT', body);
+      ta.value = '';
+      st.textContent = '✓ Feedback sent — Astro will pick it up.';
+    } catch(err){ st.textContent = 'Send failed: ' + (err.message || err); }
+    sendBtn.disabled = false;
+    choices.forEach(function(c){ c.disabled = false; });
+    refreshUI();
+  }
+  choices.forEach(function(c){
+    c.addEventListener('click', function(){
+      sendFeedback(c.getAttribute('data-choice'), ta.value.trim());
+    });
+  });
+  sendBtn.addEventListener('click', function(){
+    var note = ta.value.trim();
+    if (!note) { st.textContent = 'Type some feedback first — or tap a quick reply above.'; return; }
+    sendFeedback('', note);
+  });
+  resolveRepo();
 })();
 </script>
 

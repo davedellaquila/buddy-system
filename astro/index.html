@@ -75,6 +75,25 @@
   .attn-status{font-size:13px;color:var(--muted);margin-top:6px;min-height:18px}
   .feed-item.resolved{opacity:.55}
   .feed-item.resolved .attn-actions{display:none}
+  /* ---------- awaiting item detail (click-through) ---------- */
+  #awaiting .feed-item[data-await-idx]{cursor:pointer}
+  #awaiting .feed-item[data-await-idx]:hover{background:var(--panel2)}
+  .await-modal{position:fixed;inset:0;z-index:9000;background:rgba(0,0,0,.45);display:flex;align-items:flex-start;justify-content:center;padding:48px 16px;overflow-y:auto}
+  .await-modal[hidden]{display:none}
+  .await-card{background:var(--bg);border:1px solid var(--border);border-radius:16px;max-width:560px;width:100%;padding:24px;box-shadow:0 24px 64px rgba(0,0,0,.25)}
+  .await-card h3{font-size:20px;margin:0 0 8px;padding-right:32px}
+  .await-meta{font-size:13px;color:var(--muted);margin-bottom:12px}
+  .await-meta a{color:var(--accent);text-decoration:none;font-weight:600}
+  .await-summary{font-size:15px;line-height:1.55;margin-bottom:18px;white-space:pre-wrap}
+  .await-reply-label{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--dim);margin:0 0 8px}
+  .await-choices{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+  .await-choices .attn-btn{border-radius:999px}
+  .await-card textarea{width:100%;min-height:76px;resize:vertical;background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:10px 12px;font-size:14px;color:var(--text);font-family:inherit;margin-bottom:12px}
+  .await-card textarea:focus{outline:none;border-color:var(--accent)}
+  .await-card textarea:disabled{opacity:.55}
+  .await-close{position:absolute;top:14px;right:16px;background:none;border:none;font-size:20px;color:var(--muted);cursor:pointer;line-height:1}
+  .await-close:hover{color:var(--text)}
+  .await-card{position:relative}
   a.cardlink{text-decoration:none;color:inherit;display:block;cursor:pointer}
   a.cardlink:hover{border-color:var(--accent)}
   a.cardlink h3{margin-bottom:6px}
@@ -653,16 +672,20 @@
 </script>
 <script>
 /* ---------- Awaiting Dave's reply — renders astro/awaiting-reply.json ---------- */
+/* Click an item for a detail view with quick-reply + freeform feedback. */
 (function(){
   function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
+  var awaitingItems=[]; // flat lookup for the detail view
+  var STANDARD_CHOICES=["\u2705 Done \u2014 handled","\uD83D\uDC4D Yes / approved","\uD83D\uDC4E No / not today","\uD83D\uDD01 Remind me later","\u2753 Need more info"];
   function renderAwaiting(d){
     var box=document.getElementById("awaiting");
     if(!box)return;
+    awaitingItems=[];
     var defs=[
-      ["urgent","🚨 Urgent","var(--red)"],
-      ["recent","🆕 New this week","var(--accent)"],
-      ["decisions","🗳️ Open decisions","var(--amber)"],
-      ["questions","❓ Unanswered questions","var(--dim)"]
+      ["urgent","\uD83D\uDEA8 Urgent","var(--red)"],
+      ["recent","\uD83C\uDD95 New this week","var(--accent)"],
+      ["decisions","\uD83D\uDDF3\uFE0F Open decisions","var(--amber)"],
+      ["questions","\u2753 Unanswered questions","var(--dim)"]
     ];
     var h="";
     defs.forEach(function(g){
@@ -671,10 +694,12 @@
       if(!items.length){h+='<div class="feed-empty" style="padding:10px">None right now.</div>';}
       else{
         h+='<div class="feed">'+items.map(function(it){
+          var idx=awaitingItems.length; awaitingItems.push(it);
           var meta=it.thread?esc(it.thread):"";
           if(it.thread_url&&meta){meta='<a href="'+esc(it.thread_url)+'" target="_blank" rel="noopener">'+meta+'</a>';}
-          if(it.date){meta+=(meta?" · ":"")+esc(it.date);}
-          return '<div class="feed-item"><div class="feed-icon">📬</div>'+
+          if(it.date){meta+=(meta?" \u00B7 ":"")+esc(it.date);}
+          return '<div class="feed-item" data-await-idx="'+idx+'" tabindex="0" role="button" aria-label="Details: '+esc(it.title)+'">'+
+            '<div class="feed-icon">\uD83D\uDCEC</div>'+
             '<div class="feed-body"><div class="feed-text"><b>'+esc(it.title)+'</b></div>'+
             (it.summary?'<div class="feed-text" style="color:var(--muted);font-size:14px;margin-top:4px">'+esc(it.summary)+'</div>':'')+
             (meta?'<div class="feed-date">'+meta+'</div>':'')+'</div></div>';
@@ -682,13 +707,114 @@
       }
     });
     var gen=(d.generated||"").slice(0,10);
-    h+='<div class="feed-more">updated '+esc(gen)+' · from the awaiting-reply registry</div>';
+    h+='<div class="feed-more">updated '+esc(gen)+' \u00B7 from the awaiting-reply registry</div>';
     box.innerHTML=h;
   }
+  /* ----- detail modal ----- */
+  var modal=null;
+  function lsGet(){try{return JSON.parse(localStorage.getItem("buddyTree.v3")||"{}");}catch(e){return{};}}
+  function token(){return lsGet().ghToken||"";}
+  function b64encode(str){var b=new TextEncoder().encode(str),bin="";b.forEach(function(x){bin+=String.fromCharCode(x);});return btoa(bin);}
+  async function ghApi(path,method,body){
+    var t=token(); if(!t)throw new Error("no-token");
+    var r=await fetch("https://api.github.com"+path,{method:method||"GET",
+      headers:{"Authorization":"Bearer "+t,"Accept":"application/vnd.github+json","Content-Type":"application/json"},
+      body:body?JSON.stringify(body):undefined});
+    if(!r.ok)throw new Error("GitHub "+r.status);
+    return r.status===204?null:await r.json();
+  }
+  async function ghGetFile(repo,path){
+    try{var j=await ghApi("/repos/davedellaquila/"+repo+"/contents/"+path);
+      if(j&&j.content)return{text:new TextDecoder().decode(Uint8Array.from(atob(j.content.replace(/\n/g,"")),function(c){return c.charCodeAt(0);})),sha:j.sha};
+    }catch(e){}
+    return null;
+  }
+  function ensureModal(){
+    if(modal)return modal;
+    modal=document.createElement("div");
+    modal.className="await-modal"; modal.hidden=true;
+    modal.innerHTML='<div class="await-card" role="dialog" aria-modal="true">'+
+      '<button class="await-close" aria-label="Close">\u2715</button>'+
+      '<h3 class="await-title"></h3><div class="await-meta"></div>'+
+      '<div class="await-summary"></div>'+
+      '<p class="await-reply-label">Your reply</p><div class="await-choices"></div>'+
+      '<textarea rows="3" placeholder="Type a reply\u2026 (optional \u2014 a quick reply above sends on its own)"></textarea>'+
+      '<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">'+
+      '<button class="attn-btn primary await-send">Send reply</button>'+
+      '<span class="attn-status await-status" role="status"></span></div></div>';
+    document.body.appendChild(modal);
+    modal.addEventListener("click",function(e){if(e.target===modal||e.target.classList.contains("await-close"))closeModal();});
+    document.addEventListener("keydown",function(e){if(e.key==="Escape"&&modal&&!modal.hidden)closeModal();});
+    return modal;
+  }
+  function openDetail(idx){
+    var it=awaitingItems[idx]; if(!it)return;
+    var m=ensureModal();
+    m.querySelector(".await-title").textContent=it.title||"";
+    var metaHtml="";
+    if(it.date)metaHtml+=esc(it.date);
+    if(it.thread)metaHtml+=(metaHtml?" \u00B7 ":"")+esc(it.thread);
+    if(it.thread_url)metaHtml+=' \u00B7 <a href="'+esc(it.thread_url)+'" target="_blank" rel="noopener">Open thread \u2192</a>';
+    m.querySelector(".await-meta").innerHTML=metaHtml;
+    m.querySelector(".await-summary").textContent=it.summary||"No further details recorded.";
+    var ch=m.querySelector(".await-choices"); ch.innerHTML="";
+    var choices=(it.choices&&it.choices.length)?it.choices:STANDARD_CHOICES;
+    choices.forEach(function(c){
+      var b=document.createElement("button");
+      b.type="button"; b.className="attn-btn"; b.textContent=c;
+      b.addEventListener("click",function(){sendReply(it,c);});
+      ch.appendChild(b);
+    });
+    var ta=m.querySelector("textarea"); ta.value="";
+    var st=m.querySelector(".await-status"); st.textContent="";
+    m.querySelector(".await-send").onclick=function(){
+      var note=ta.value.trim();
+      if(!note){st.textContent="Type a reply first \u2014 or tap a quick reply above.";return;}
+      sendReply(it,"",note);
+    };
+    m.hidden=false;
+    document.body.style.overflow="hidden";
+  }
+  function closeModal(){if(modal){modal.hidden=true;document.body.style.overflow="";}}
+  async function sendReply(it,choice,note){
+    var m=ensureModal();
+    var st=m.querySelector(".await-status");
+    var btns=m.querySelectorAll(".await-choices .attn-btn, .await-send");
+    if(!token()){st.textContent="Add a GitHub token (Brain dump on any buddy page) to enable replies.";return;}
+    st.textContent="Sending\u2026";
+    btns.forEach(function(b){b.disabled=true;});
+    try{
+      var NL=String.fromCharCode(10);
+      var stamp=new Date().toLocaleString();
+      var entry="## "+stamp+NL+NL+"**Item:** "+(it.title||"") +NL
+        +(it.thread?"**Thread:** "+it.thread+(it.thread_url?" ("+it.thread_url+")":"")+NL:"")
+        +(choice?"**Quick reply:** "+choice+NL+NL:"")
+        +(note?note+NL+NL:"");
+      var cur=await ghGetFile("buddy-system","astro/feedback.md");
+      var base=cur?cur.text:"# Awaiting-reply feedback"+NL+NL;
+      var body={message:"Awaiting-reply feedback",content:b64encode(base+entry)};
+      if(cur&&cur.sha)body.sha=cur.sha;
+      await ghApi("/repos/davedellaquila/buddy-system/contents/astro/feedback.md","PUT",body);
+      st.textContent="\u2713 Reply sent \u2014 Astro will pick it up.";
+      m.querySelector("textarea").value="";
+    }catch(err){st.textContent="Send failed: "+(err.message||err);}
+    btns.forEach(function(b){b.disabled=false;});
+  }
+  document.getElementById("awaiting").addEventListener("click",function(e){
+    if(e.target.closest("a"))return; // let thread links work normally
+    var item=e.target.closest('.feed-item[data-await-idx]');
+    if(item)openDetail(parseInt(item.getAttribute("data-await-idx"),10));
+  });
+  document.getElementById("awaiting").addEventListener("keydown",function(e){
+    if((e.key==="Enter"||e.key===" ")&&e.target.classList.contains("feed-item")){
+      e.preventDefault();
+      openDetail(parseInt(e.target.getAttribute("data-await-idx"),10));
+    }
+  });
   fetch("awaiting-reply.json",{cache:"no-store"})
     .then(function(r){if(!r.ok)throw new Error("http "+r.status);return r.json();})
     .then(renderAwaiting)
-    .catch(function(){var b=document.getElementById("awaiting");if(b)b.innerHTML='<div class="feed-empty">updating…</div>';});
+    .catch(function(){var b=document.getElementById("awaiting");if(b)b.innerHTML='<div class="feed-empty">updating\u2026</div>';});
 })();
 </script>
 </body>
