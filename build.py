@@ -176,7 +176,13 @@ body{padding:0}
    margin:auto on the flex child centers only when there's extra space — overflowing content
    still scrolls normally from the top. */
 .treescroll.fit-centered{display:flex}
-.treescroll.fit-centered .chart,.treescroll.fit-centered .standalones{margin:auto}
+.treescroll.fit-centered .zoomsizer{margin:auto}
+/* Pure-scale zoom: layout is computed once at natural size inside .zoomcontent;
+   zoom applies only transform:scale() — it never reflows the chart, so tiles
+   can't scrunch in either dimension at any zoom level. .zoomsizer carries the
+   scaled scroll extents (transforms don't affect scrolling). */
+.zoomsizer{position:relative;flex:none}
+.zoomcontent{transform-origin:0 0}
 /* ============ Atlas lens picker (Jonny's verdict) ============ */
 .lens-picker-wrap{position:relative;display:inline-block;margin:0 0 12px 12px;z-index:60}
 .lens-pill{display:flex;align-items:center;gap:8px;min-height:44px;padding:10px 16px;
@@ -3468,6 +3474,16 @@ function renderBuddy(id){
       const mc = tw.querySelector('.bp-mini-chart');
       mc.innerHTML = srcEl.innerHTML;
       mc.querySelectorAll('.zoombar,#tree-split').forEach(x => x.remove());
+      // Unwrap the main panes' pure-scale zoom wrappers so the mini preview
+      // keeps its own (CSS-zoom) behavior instead of double-scaling.
+      mc.querySelectorAll('.zoomsizer').forEach(sz => {
+        const zc = sz.querySelector(':scope > .zoomcontent');
+        const inner = zc || sz;
+        if (zc) zc.style.transform = '';
+        const frag = document.createDocumentFragment();
+        while (inner.firstChild) frag.appendChild(inner.firstChild);
+        sz.replaceWith(frag);
+      });
       const zw = mc.querySelector('#zoomwrap'); if (zw) { zw.style.display = 'block'; }
       const tz = mc.querySelector('#treezoom'); if (tz) { tz.style.overflow = 'visible'; tz.style.height = 'auto'; tz.style.display = 'block'; tz.removeAttribute('id'); }
       mc.querySelectorAll('.treescroll').forEach(x => { x.style.overflow = 'visible'; x.style.height = 'auto'; });
@@ -3872,8 +3888,8 @@ function renderOrgTree(){
   // UI chrome (Quick answers + lens picker) lives outside the zoomed scroll pane
   // so the zoom control only scales the chart itself.
   document.getElementById('tree-chrome-main').innerHTML = quickAnswersHtml() + chartSwitcherHtml();
-  document.getElementById('treezoom-main').innerHTML = chartHtml;
-  document.getElementById('treezoom-orph').innerHTML = orphHtml;
+  setPaneContent('treezoom-main', chartHtml);
+  setPaneContent('treezoom-orph', orphHtml);
   applyTreeSplit();
   updateZoomMin();
   restoreScrollPos('tree:main', document.getElementById('treezoom-main'));
@@ -4389,11 +4405,46 @@ function refreshViews(){
   renderOrgTree();
   renderProjects();
 }
+/* Zoom is pure scale: the chart is laid out once at natural size inside
+   .zoomcontent, and zoom only sets transform:scale() on it. The old CSS-zoom
+   approach re-ran layout at the zoomed size, which scrunched tiles instead of
+   just scaling them. .zoomsizer gets the scaled dimensions explicitly so the
+   scrollport scrolls correctly (transforms don't affect scroll extents).
+   scrollWidth/scrollHeight ignore the element's own transform, so measuring
+   .zoomcontent always yields the natural size. */
+function paneContentEl(paneId){
+  const sc = document.getElementById(paneId);
+  if (!sc) return null;
+  let sizer = sc.querySelector(':scope > .zoomsizer');
+  if (!sizer) {
+    sizer = document.createElement('div');
+    sizer.className = 'zoomsizer';
+    const content = document.createElement('div');
+    content.className = 'zoomcontent';
+    while (sc.firstChild) content.appendChild(sc.firstChild);
+    sizer.appendChild(content);
+    sc.appendChild(sizer);
+  }
+  return sizer.querySelector(':scope > .zoomcontent');
+}
+function setPaneContent(paneId, html){
+  const c = paneContentEl(paneId);
+  if (c) c.innerHTML = html;
+  applyZoom();
+}
 function applyZoom(){
-  const m = document.getElementById('treezoom-main');
-  const o = document.getElementById('treezoom-orph');
-  if (m) m.style.zoom = (S.zoom || 100) + '%';
-  if (o) o.style.zoom = (S.zoomOrph || 100) + '%';
+  [['treezoom-main','zoom'],['treezoom-orph','zoomOrph']].forEach(([paneId, key]) => {
+    const sc = document.getElementById(paneId);
+    if (!sc) return;
+    sc.style.zoom = ''; // retired: zoom is transform scale now, never the CSS zoom property
+    const content = paneContentEl(paneId);
+    if (!content) return;
+    const z = (S[key] || 100) / 100;
+    content.style.transform = 'scale(' + z + ')';
+    const sizer = content.parentElement;
+    sizer.style.width = Math.ceil(content.scrollWidth * z) + 'px';
+    sizer.style.height = Math.ceil(content.scrollHeight * z) + 'px';
+  });
   const r1 = document.getElementById('zoomrange-main');
   const r2 = document.getElementById('zoomrange-orph');
   if (r1) r1.value = S.zoom || 100;
@@ -4404,17 +4455,17 @@ function centerIfFits(){
   [['treezoom-main'],['treezoom-orph']].forEach(([paneId]) => {
     const sc = document.getElementById(paneId);
     if (!sc) return;
-    const content = sc.querySelector('.chart') || sc.querySelector('.standalones');
-    if (!content) return;
-    const fits = content.scrollHeight <= sc.clientHeight + 1 && content.scrollWidth <= sc.clientWidth + 1;
+    const sizer = sc.querySelector(':scope > .zoomsizer');
+    if (!sizer) return;
+    const fits = sizer.offsetWidth <= sc.clientWidth + 1 && sizer.offsetHeight <= sc.clientHeight + 1;
     sc.classList.toggle('fit-centered', fits);
   });
 }
 function fitZoomFor(paneId){
   const sc = document.getElementById(paneId);
-  const content = sc ? (sc.querySelector('.chart') || sc.querySelector('.standalones')) : null;
+  const content = sc ? sc.querySelector(':scope > .zoomsizer > .zoomcontent') : null;
   if (!sc || !content) return 25;
-  const z = 1; // measure at natural size
+  // scrollWidth/Height ignore the element's own transform: always natural size.
   const natW = content.scrollWidth, natH = content.scrollHeight;
   const vw = sc.clientWidth, vh = sc.clientHeight;
   if (!natW || !natH || !vw || !vh) return 25;
@@ -4432,10 +4483,10 @@ function updateZoomMin(){
 }
 function zoomToFit(paneId, zoomKey){
   const sc = document.getElementById(paneId);
-  const content = sc ? (sc.querySelector('.chart') || sc.querySelector('.standalones')) : null;
+  const content = sc ? sc.querySelector(':scope > .zoomsizer > .zoomcontent') : null;
   if (!sc || !content) return;
-  const z = (S[zoomKey] || 100) / 100;
-  const natW = content.scrollWidth / z, natH = content.scrollHeight / z;
+  // scrollWidth/Height ignore the element's own transform: already natural size.
+  const natW = content.scrollWidth, natH = content.scrollHeight;
   const vw = sc.clientWidth, vh = sc.clientHeight;
   if (!natW || !natH || !vw || !vh) return;
   const fit = Math.min(vw / natW, vh / natH) * 100;

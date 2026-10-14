@@ -3,6 +3,11 @@
 All notable changes to the Buddies dashboard and buddy system. Newest first.
 `FEATURES.md` describes the current state; this file describes how it got there.
 
+## 2026-10-13 (Tree zoom is pure scale — no more scrunching)
+
+### Fixed
+- **Zoom no longer scrunches tiles** (Dave's screenshot catch 2026-10-13): the tree panes zoomed with the CSS `zoom` property, which re-runs layout at the zoomed size — zooming out squeezed Lineage tiles into narrow strips instead of scaling them. Zoom is now pure `transform: scale()`: the chart is laid out once at natural size inside a `.zoomcontent` wrapper, and a `.zoomsizer` carries the scaled scroll extents. Pinch, slider, keyboard, and zoom-to-fit all use the same path; pan math is unchanged. The buddy-panel mini preview unwraps the new structure so it keeps its own behavior (no double-scaling).
+
 ## 2026-10-13 (Views list: touch-friendly drag grippers)
 
 ### Added
