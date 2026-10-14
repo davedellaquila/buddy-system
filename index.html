@@ -1047,7 +1047,7 @@ body.standalone .sa-bar{display:flex}
 /* ---------- Project view: stat tiles + buddy homepage embed ---------- */
 #project-tiles{display:flex;gap:14px;margin:2px auto 20px;max-width:860px;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:thin}
 #project-status-tiles{display:flex;gap:14px;margin:2px auto 20px;max-width:860px;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:thin}
-.ptile{flex:0 0 152px;background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:12px 14px;position:relative;overflow:hidden;cursor:pointer;transition:transform .15s ease,box-shadow .15s ease}
+.ptile{flex:none;width:auto;background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:12px 14px;position:relative;overflow:hidden;cursor:pointer;transition:transform .15s ease,box-shadow .15s ease}
 .ptile:hover{transform:translateY(-2px);box-shadow:0 4px 16px rgba(0,0,0,.12)}
 .ptile::before{content:'';position:absolute;left:0;top:0;bottom:0;width:5px;background:var(--tint)}
 /* ---- Business Plans cards ---- */
@@ -1072,7 +1072,7 @@ body.standalone .sa-bar{display:flex}
     gap:8px !important;max-width:none !important;width:100% !important;
     margin:0 0 12px !important;box-sizing:border-box;scrollbar-width:thin}
   #project-tiles .ptile,#changelog-tiles .ptile,#plans-tiles .ptile,#manifest-tiles .ptile,
-  #project-status-tiles .ptile{flex:0 0 112px !important;max-width:none !important;min-width:0 !important}
+  #project-status-tiles .ptile{flex:none !important;width:auto !important;max-width:none !important;min-width:0 !important}
   .ptile{padding:6px 8px 5px !important;border-radius:10px !important}
   .ptile::before{width:3px}
   .ptile-label{font-size:9px !important;letter-spacing:.08em;line-height:1.15}
@@ -1086,7 +1086,7 @@ body.standalone .sa-bar{display:flex}
     gap:8px !important;max-width:none !important;width:100% !important;
     margin:0 0 10px !important;box-sizing:border-box;scrollbar-width:thin}
   #project-tiles .ptile,#changelog-tiles .ptile,#plans-tiles .ptile,#manifest-tiles .ptile,
-  #project-status-tiles .ptile{flex:0 0 112px !important;max-width:none !important;min-width:0 !important}
+  #project-status-tiles .ptile{flex:none !important;width:auto !important;max-width:none !important;min-width:0 !important}
   .ptile{padding:5px 7px 4px !important;border-radius:10px !important}
   .ptile::before{width:3px}
   .ptile-label{font-size:9px !important;letter-spacing:.08em;line-height:1.15}
@@ -2456,7 +2456,7 @@ function renderDevelopSection(){
   const dev = document.getElementById('fset-develop');
   if (!dev) return;
   const simulating = !!devBackup;
-  const buildNum = '20261013.2323';
+  const buildNum = '20261013.2325';
   dev.innerHTML = ''
     + '<label class="fset-check"><input type="checkbox" id="dev-empty-toggle"' + (simulating ? ' checked' : '') + '> <span><strong>Simulate new user</strong> — empty data file, as if opening the shared link fresh</span></label>'
     + '<div class="fineprint" style="margin:8px 0 12px">Build <span style="font-family:monospace">' + escHtml(String(buildNum)) + '</span> · ' + BUDDIES.length + ' buddies in this file</div>'
@@ -3589,7 +3589,7 @@ function renderBuddy(id){
     + '<div class="bp-sec" data-field="shared"><h3>Shared notes<span class="info-tip" data-tip="Anybody with repo access can see this note. Saved to the buddy’s repo (docs/notes.md).">ⓘ</span></h3>'
     + '<textarea class="notes" id="bp-shared-notes" placeholder="Anybody with repo access can see this note."></textarea>'
     + '<p class="fineprint" id="shared-status"></p></div>'
-    + '<div class="bp-build">Build 20261013.2323</div>'
+    + '<div class="bp-build">Build 20261013.2325</div>'
     + '</div>';
   // Update every visible label for a buddy after a rename/re-icon, across all
   // Atlas lenses. A rename changes no structure, so labels are patched in place
@@ -5333,7 +5333,7 @@ function renderPlan(id){
     + '<p class="fineprint">Saved on this device. (For your eyes only)</p></div>'
     + '<div class="bp-sec"><h3>Shared notes<span class="info-tip" data-tip="Visible to everyone with access to this project.">\u24d8</span></h3><textarea class="notes" id="bp-shared" placeholder="Shared notes\u2026 (visible to everyone with access)">'+escHtml((S.planShared||{})[id]||'')+'</textarea>'
     + '<p class="fineprint">Shared — visible to everyone with access.</p></div>'
-    + '<div class="bp-build">Build 20261013.2323</div>'
+    + '<div class="bp-build">Build 20261013.2325</div>'
     + '</div>';
   const nt = document.getElementById('bp-notes');
   let t = null;
@@ -7443,14 +7443,14 @@ function openWhatsNew(){
     .then(r => r.ok ? r.text() : '')
     .then(t => {
       const serverBuild = t.trim();
-      if (serverBuild && serverBuild !== '20261013.2323') {
+      if (serverBuild && serverBuild !== '20261013.2325') {
         updBtn.style.display = '';
         updBtn.title = 'Update to build ' + serverBuild;
       }
       // Show build numbers at the top of the sheet (Dave's request 2026-10-12)
-      const myBuild = '20261013.2323';
+      const myBuild = '20261013.2325';
       let buildLine = '<p class="fineprint" style="margin-top:0">You’re on build ' + escHtml(myBuild) + '.';
-      if (serverBuild && serverBuild !== '20261013.2323' && isNewerBuild(serverBuild, myBuild)) {
+      if (serverBuild && serverBuild !== '20261013.2325' && isNewerBuild(serverBuild, myBuild)) {
         buildLine += ' Build ' + escHtml(serverBuild) + ' is available.';
       }
       buildLine += '</p>';
@@ -7489,7 +7489,7 @@ function isNewerBuild(server, mine){
   } catch (e) { return false; }
 }
 function initVersionCheck(){
-  const myBuild = '20261013.2323';
+  const myBuild = '20261013.2325';
   function showUpdateBanner(serverBuild){
     if (document.getElementById('update-banner')) return;
     const b = document.createElement('div');

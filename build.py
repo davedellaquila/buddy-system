@@ -899,7 +899,7 @@ body.standalone .sa-bar{display:flex}
 /* ---------- Project view: stat tiles + buddy homepage embed ---------- */
 #project-tiles{display:flex;gap:14px;margin:2px auto 20px;max-width:860px;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:thin}
 #project-status-tiles{display:flex;gap:14px;margin:2px auto 20px;max-width:860px;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:thin}
-.ptile{flex:0 0 152px;background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:12px 14px;position:relative;overflow:hidden;cursor:pointer;transition:transform .15s ease,box-shadow .15s ease}
+.ptile{flex:none;width:auto;background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:12px 14px;position:relative;overflow:hidden;cursor:pointer;transition:transform .15s ease,box-shadow .15s ease}
 .ptile:hover{transform:translateY(-2px);box-shadow:0 4px 16px rgba(0,0,0,.12)}
 .ptile::before{content:'';position:absolute;left:0;top:0;bottom:0;width:5px;background:var(--tint)}
 /* ---- Business Plans cards ---- */
@@ -924,7 +924,7 @@ body.standalone .sa-bar{display:flex}
     gap:8px !important;max-width:none !important;width:100% !important;
     margin:0 0 12px !important;box-sizing:border-box;scrollbar-width:thin}
   #project-tiles .ptile,#changelog-tiles .ptile,#plans-tiles .ptile,#manifest-tiles .ptile,
-  #project-status-tiles .ptile{flex:0 0 112px !important;max-width:none !important;min-width:0 !important}
+  #project-status-tiles .ptile{flex:none !important;width:auto !important;max-width:none !important;min-width:0 !important}
   .ptile{padding:6px 8px 5px !important;border-radius:10px !important}
   .ptile::before{width:3px}
   .ptile-label{font-size:9px !important;letter-spacing:.08em;line-height:1.15}
@@ -938,7 +938,7 @@ body.standalone .sa-bar{display:flex}
     gap:8px !important;max-width:none !important;width:100% !important;
     margin:0 0 10px !important;box-sizing:border-box;scrollbar-width:thin}
   #project-tiles .ptile,#changelog-tiles .ptile,#plans-tiles .ptile,#manifest-tiles .ptile,
-  #project-status-tiles .ptile{flex:0 0 112px !important;max-width:none !important;min-width:0 !important}
+  #project-status-tiles .ptile{flex:none !important;width:auto !important;max-width:none !important;min-width:0 !important}
   .ptile{padding:5px 7px 4px !important;border-radius:10px !important}
   .ptile::before{width:3px}
   .ptile-label{font-size:9px !important;letter-spacing:.08em;line-height:1.15}
