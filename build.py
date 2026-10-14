@@ -65,7 +65,7 @@ body{background:var(--bg);color:var(--text)}
 /* ---- app shell ---- */
 body{padding:0}
 .app{display:flex;min-height:100vh;align-items:stretch}
-#sidebar{width:308px;background:var(--panel);container-type:inline-size;
+#sidebar{width:336px;box-sizing:border-box;background:var(--panel);container-type:inline-size;
   padding:0 14px 32px;position:fixed;left:0;top:12px;bottom:12px;overflow-y:auto;overflow-x:hidden;overflow-wrap:break-word;
   z-index:40;border:1px solid var(--border);border-left:none;border-radius:0 18px 18px 0;
   box-shadow:8px 0 28px var(--shadow-soft);
@@ -337,7 +337,7 @@ input[type=range].zrange::-moz-range-thumb{width:16px;height:16px;border-radius:
 /* Fixed to viewport at sidebar edge so vertical #sidebar scroll doesn't move it.
    MUST be a DOM sibling of #sidebar (not a child): overflow on #sidebar clips
    hit-testing/paint for fixed descendants, which made the gripper invisible. */
-#sb-resize{position:fixed;top:12px;left:calc(var(--sbw, 308px) - 14px);z-index:50;
+#sb-resize{position:fixed;top:12px;left:calc(var(--sbw, 336px) - 14px);z-index:50;
   display:flex;align-items:center;justify-content:center;width:28px;height:calc(100vh - 24px);height:calc(100dvh - 24px);cursor:ew-resize;
   background:transparent;-webkit-tap-highlight-color:transparent;touch-action:none;user-select:none}
 /* 2x5 dot-grid gripper (Jonny's pick, 2026-10-11): honest affordance, no hover required */
@@ -350,11 +350,11 @@ input[type=range].zrange::-moz-range-thumb{width:16px;height:16px;border-radius:
 body.sb-closed #sb-resize{display:none}
 /* Phone drawer: stay fixed (sibling of #sidebar); show only while drawer is open */
 @media (max-width:639px){
-  #sb-resize{display:none;left:calc(var(--sbw, 308px) - 14px);width:28px;z-index:96}
+  #sb-resize{display:none;left:calc(var(--sbw, 336px) - 14px);width:28px;z-index:96}
   #sidebar.open ~ #sb-resize{display:flex}
 }
 /* Sidebar scroll-to-top — Muse-ish frosted chip, pinned to bottom of left panel */
-#sb-to-top{position:fixed;bottom:68px;left:calc(var(--sbw, 308px) / 2 - 22px);z-index:48;
+#sb-to-top{position:fixed;bottom:68px;left:calc(var(--sbw, 336px) / 2 - 22px);z-index:48;
   width:44px;height:44px;border-radius:50%;padding:0;
   display:flex;align-items:center;justify-content:center;
   background:color-mix(in srgb, var(--panel) 78%, transparent);border:1px solid var(--border);
@@ -775,7 +775,7 @@ body.standalone .sa-bar{display:flex}
   /* Sidebar drawer with scrim.
      pointer-events:none while closed so the off-screen drawer never steals the
      left-edge swipe / tree pan hit target (transform alone is not enough on iOS). */
-  #sidebar{position:fixed;left:12px;top:12px;bottom:12px;z-index:95;height:auto;
+  #sidebar{position:fixed;left:12px;top:12px;bottom:12px;z-index:95;height:auto;box-sizing:border-box;
     transform:translateX(-115%);width:calc(100vw - 24px);max-width:420px;flex:none;
     pointer-events:none;margin-left:0;visibility:hidden;
     transition:transform .5s cubic-bezier(.32,.72,.35,1), visibility 0s linear .5s}
@@ -867,7 +867,7 @@ body.standalone .sa-bar{display:flex}
 @media (min-width:640px) and (max-width:1100px){
   /* Keep a real left sidebar — do not stack above main (iPad portrait is ~744–834px). */
   .app{display:flex;flex-direction:row;align-items:stretch}
-  #sidebar{width:250px;position:fixed;left:0;top:12px;bottom:12px;
+  #sidebar{width:278px;box-sizing:border-box;position:fixed;left:0;top:12px;bottom:12px;
     overflow-y:auto;overflow-x:hidden;
     z-index:40;background:var(--panel);border:1px solid var(--border);border-left:none;border-radius:0 18px 18px 0;
     box-shadow:8px 0 28px var(--shadow-soft)}
@@ -1375,7 +1375,7 @@ function buildKids(){
   BUDDIES.forEach(b => { const p = effParent(b) || '__root'; (kidsOf[p] = kidsOf[p] || []).push(b); });
 }
 const LS_KEY = 'buddyTree.v3';
-const SB_DEFAULT_W = 308;
+const SB_DEFAULT_W = 336;
 let S = {seen:{}, notes:{}, names:{}, parents:{}, zoom:100, sel:'view:tree', view:'tree', tileClicks:{}};
 try { Object.assign(S, JSON.parse(localStorage.getItem(LS_KEY) || '{}')); } catch(e) {}
 S.parents = S.parents || {};
