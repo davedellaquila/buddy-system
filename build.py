@@ -678,7 +678,7 @@ body:has(#token-pill) #view-buddy.sheet .bp-close-x{right:148px}
   #view-buddy.sheet .bp-sticky-head{padding-right:0}
 }
 #buddy-home{position:relative}
-#bp-resize{position:fixed;top:0;bottom:0;right:calc(var(--bpw, 380px) - 14px);z-index:60;display:flex;align-items:center;justify-content:center;width:28px;cursor:ew-resize;
+#bp-resize{position:fixed;top:0;bottom:0;right:calc(var(--bpw, 440px) - 14px);z-index:60;display:flex;align-items:center;justify-content:center;width:28px;cursor:ew-resize;
   background:transparent;-webkit-tap-highlight-color:transparent;touch-action:none;user-select:none}
 /* Same dot-grid gripper language as #sb-resize */
 #bp-resize::after{content:'';width:14px;height:35px;
@@ -906,15 +906,15 @@ body.standalone .sa-bar{display:flex}
   #main{flex:1;min-width:0;padding:28px 22px 64px;position:relative;z-index:1}
   #main.homepage-mode{padding:0}
   .node{width:max-content;min-width:180px;max-width:320px}
-  #view-buddy.panel{position:fixed;top:12px;right:0;bottom:12px;width:min(380px,calc(100vw - 250px));z-index:30;
+  #view-buddy.panel{position:fixed;top:12px;right:0;bottom:12px;width:min(416px,calc(100vw - 250px));z-index:30;
     background:var(--panel);border:1px solid var(--border);border-right:none;border-radius:18px 0 0 18px;overflow-y:auto;overflow-x:hidden;
-    padding:20px 18px 48px;box-shadow:0 16px 48px var(--shadow)}
+    padding:20px 18px 48px;box-shadow:0 16px 48px var(--shadow);box-sizing:border-box}
 }
 /* ---- Large: >1100px (desktop) ---- */
 @media (min-width:1101px){
-  #view-buddy.panel{position:fixed;top:12px;right:0;bottom:12px;width:400px;z-index:60;
+  #view-buddy.panel{position:fixed;top:12px;right:0;bottom:12px;width:440px;z-index:60;
     background:var(--panel);border:1px solid var(--border);border-right:none;border-radius:18px 0 0 18px;overflow-y:auto;overflow-x:hidden;
-    padding:24px 20px 48px;box-shadow:0 16px 48px var(--shadow)}
+    padding:24px 20px 48px;box-shadow:0 16px 48px var(--shadow);box-sizing:border-box}
 }
 #view-buddy.panel.active,#view-buddy.sheet.active{display:block}
 /* Buddy panel slide animation (Dave, 2026-10-13): slow, visible open/close movement.
@@ -1408,6 +1408,7 @@ function buildKids(){
 }
 const LS_KEY = 'buddyTree.v3';
 const SB_DEFAULT_W = 336;
+const BP_DEFAULT_W = 440;
 let S = {seen:{}, notes:{}, names:{}, parents:{}, zoom:100, sel:'view:tree', view:'tree', tileClicks:{}};
 try { Object.assign(S, JSON.parse(localStorage.getItem(LS_KEY) || '{}')); } catch(e) {}
 S.parents = S.parents || {};
@@ -2065,7 +2066,7 @@ function snapshotSettable(){
     fieldHidden: Object.assign({}, S.fieldHidden || {}),
     viewOrder: getViewOrder().slice(),
     sbWidth: S.sbWidth || SB_DEFAULT_W,
-    panelWidth: S.panelWidth || SB_DEFAULT_W,
+    panelWidth: S.panelWidth || BP_DEFAULT_W,
   };
 }
 function resetToFactory(){
@@ -2075,7 +2076,7 @@ function resetToFactory(){
   if (Array.isArray(f.fieldOrder) && f.fieldOrder.length) S.fieldOrder = f.fieldOrder.slice();
   if (f.fieldHidden && typeof f.fieldHidden === 'object') S.fieldHidden = Object.assign({}, f.fieldHidden);
   if (Array.isArray(f.viewOrder) && f.viewOrder.length) S.viewOrder = f.viewOrder.slice();
-  S.sbWidth = f.sbWidth || SB_DEFAULT_W; S.panelWidth = f.panelWidth || SB_DEFAULT_W;
+  S.sbWidth = f.sbWidth || SB_DEFAULT_W; S.panelWidth = f.panelWidth || BP_DEFAULT_W;
   save();
 }
 function updateFactory(){
