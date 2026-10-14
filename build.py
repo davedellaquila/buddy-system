@@ -977,6 +977,7 @@ body.standalone .sa-bar{display:flex}
     box-shadow:0 6px 20px var(--shadow);border-bottom:1px solid var(--border)}
 }
 .proj-controls{display:flex;gap:8px;align-items:center}
+.proj-column{max-width:860px;margin:0 auto;padding:0 16px}
 .proj-controls #proj-search{width:100%;box-sizing:border-box;background:var(--bg);border:1px solid var(--border);color:var(--text);border-radius:8px;padding:7px 30px 7px 10px;font-size:13px}
 .proj-controls #proj-search-clear{position:absolute;right:6px;top:50%;transform:translateY(-50%);border:none;background:transparent;color:var(--muted);font-size:18px;line-height:1;cursor:pointer;padding:4px 8px;border-radius:6px}
 .proj-controls #proj-search-clear:hover{color:var(--text);background:rgba(127,127,127,.18)}
@@ -4371,7 +4372,7 @@ function renderProjects(){
     + '<div id="project-status-tiles" style="margin-top:12px">'
     + statusTiles.map(t => t[1]).join('')
     + '</div>'
-    + '<h2>Projects by Buddy</h2>'
+    + '<div class="proj-column"><h2>Projects by Buddy</h2>'
     + '<div class="proj-search-sentinel" aria-hidden="true"></div>'
     + '<div class="proj-search-sticky"><div class="proj-controls">'
     + '<div class="sb-search-wrap" style="flex:1;min-width:0">'
@@ -4434,7 +4435,7 @@ function renderProjects(){
       if (!collapsed) kids.forEach(c => walk(c.id, depth + 1));
     })(ROOT_ID, 0);
   }
-  s += '</div></section>';
+  s += '</div></div></section>';
   const vp = document.getElementById('view-projects');
   vp.innerHTML = s;
   // Stuck-state detection for the search pill: sentinel scrolls away -> pill is stuck
