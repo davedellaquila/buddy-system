@@ -3,6 +3,11 @@
 All notable changes to the Buddies dashboard and buddy system. Newest first.
 `FEATURES.md` describes the current state; this file describes how it got there.
 
+## 2026-10-13 (Stat tiles: natural width)
+
+### Changed
+- **Stat tiles use natural width** (Jonny's verdict, 2026-10-13): killed the fixed 152px/112px tile widths — tiles are now as wide as their words (`width:auto`, `flex:none`, nowrap labels), so labels never clip mid-word. The row scrolls horizontally instead of squeezing.
+
 ## 2026-10-13 (News Buddy: read-aloud on section + article pages)
 
 ### Added
