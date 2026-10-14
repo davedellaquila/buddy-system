@@ -329,6 +329,7 @@ window.NBVoice = (function(){
   var queue = [], qIndex = 0;
   var editionMode = false, sectionMode = false, articleMode = false;
   var currentBtn = null, detailArticle = null;
+  var stopFlag = false; /* set by stopAll so a cancel() onend can't restart the chunk chain */
 
   function clean(t){ return String(t || '').trim().replace(/\s+/g, ' '); }
   function headText(h3){
@@ -372,7 +373,9 @@ window.NBVoice = (function(){
   }
   function speak(text, onend){
     var chunks = chunkText(text), i = 0;
+    stopFlag = false;
     (function next(){
+      if (stopFlag) return;
       if (i >= chunks.length) { if (onend) onend(); return; }
       var u = new SpeechSynthesisUtterance(chunks[i++]);
       u.onend = next; u.onerror = next;
@@ -388,7 +391,7 @@ window.NBVoice = (function(){
     if (articleBtn) { articleBtn.classList.remove('playing'); articleBtn.textContent = '\uD83D\uDD0A Listen to this article'; }
     currentBtn = null;
   }
-  function stopAll(){ synth.cancel(); queue = []; qIndex = 0; editionMode = false; sectionMode = false; articleMode = false; paintOff(); }
+  function stopAll(){ stopFlag = true; synth.cancel(); queue = []; qIndex = 0; editionMode = false; sectionMode = false; articleMode = false; paintOff(); }
   function playQueue(){
     if (qIndex >= queue.length) { stopAll(); return; }
     var item = queue[qIndex++];
