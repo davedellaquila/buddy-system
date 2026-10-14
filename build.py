@@ -65,12 +65,13 @@ body{background:var(--bg);color:var(--text)}
 /* ---- app shell ---- */
 body{padding:0}
 .app{display:flex;min-height:100vh;align-items:stretch}
-#sidebar{width:308px;flex:0 0 308px;background:var(--panel);container-type:inline-size;
-  padding:0 14px 32px;position:sticky;top:12px;height:calc(100vh - 24px);overflow-y:auto;overflow-x:hidden;overflow-wrap:break-word;
-  z-index:40;border:1px solid var(--border);border-radius:18px;margin-left:12px;
+#sidebar{width:308px;background:var(--panel);container-type:inline-size;
+  padding:0 14px 32px;position:fixed;left:12px;top:12px;bottom:12px;overflow-y:auto;overflow-x:hidden;overflow-wrap:break-word;
+  z-index:40;border:1px solid var(--border);border-radius:18px;
   box-shadow:0 8px 28px var(--shadow-soft)}
 /* Floating-panel illusion (Dave, 2026-10-13 — Muse-app style): rounded on all four
-   corners, lifted over the canvas with a soft shadow. */
+   corners, lifted over the canvas with a soft shadow. Fixed overlay — the main view
+   stays full-width underneath and never shifts when the sidebar toggles. */
 #main{flex:1;min-width:0;padding:36px 32px 80px;position:relative;z-index:1}
 .brand{padding:22px 8px 14px;background:var(--bg)}
 /* Brand chrome (eyebrow/title/subtitle + gear/close) pins at top; Views scroll under */
