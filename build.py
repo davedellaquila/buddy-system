@@ -5163,6 +5163,15 @@ function show(sel, push){
   if (push !== false && S.sel && sel !== S.sel) { navHist.push(S.sel); if (navHist.length > 60) navHist.shift(); }
   S.sel = sel;
   if (sel.indexOf('view:') === 0) S.view = sel.slice(5);
+  // Selecting a buddy (by any means) also makes it the homepage buddy, so the
+  // homepage/project view follows the selection (Dave 2026-10-14).
+  if (sel.indexOf('buddy:') === 0) {
+    const bid = sel.slice(6);
+    if (byId[bid] && S.projectId !== bid) {
+      S.projectId = bid;
+      if (S.view === 'project') renderProjectView();
+    }
+  }
   save();
   const h = hashFor(sel);
   try { if (typeof location !== 'undefined' && location.hash !== h) location.hash = h; } catch (e) {}
