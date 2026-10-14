@@ -75,7 +75,7 @@ body.sb-closed #sidebar{width:64px;padding:12px 8px;overflow:visible;height:auto
 body.sb-closed #sidebar .brand, body.sb-closed #sidebar .sb-search-sticky,
 body.sb-closed #sidebar #buddies-sec, body.sb-closed #sidebar #plans-sec,
 body.sb-closed #sidebar .sb-tipjar, body.sb-closed #sidebar #sb-tools #sb-gear,
-body.sb-closed #sidebar .navbtn span:not(.nic), body.sb-closed #sidebar .nav-sec h3,
+body.sb-closed #sidebar .navbtn .nlab, body.sb-closed #sidebar .navbtn .navgrip, body.sb-closed #sidebar .nav-sec h3,
 body.sb-closed #sidebar #views-sec h3{display:none}
 body.sb-closed #sidebar .sb-brand-sticky{padding:12px 0 4px;display:flex;justify-content:center}
 body.sb-closed #sidebar #sb-tools{display:flex;justify-content:center}
@@ -414,7 +414,7 @@ input[type=range].zrange::-moz-range-thumb{width:16px;height:16px;border-radius:
   background-size:6px 7px;background-position:center;background-repeat:repeat}
 #sb-tab:hover{border-color:var(--accent)}
 #sb-tab:hover::after{--gripdot:var(--accent)}
-body.sb-closed #sb-tab{display:flex}
+body.sb-closed #sb-tab{display:none}
 @media (max-width:640px){#sb-tab{display:none !important}}
 /* 2x5 dot-grid gripper (Jonny's pick, 2026-10-11): honest affordance, no hover required */
 #sb-resize::after{content:'';width:14px;height:35px;transform:translateX(-9px);
@@ -1786,7 +1786,7 @@ function renderChangelog(){
 function renderNav(){
   const views = getViewOrder().map(id => VIEW_DEFS.find(v => v[0] === id)).filter(Boolean).filter(([v]) => isViewVisible(v));
   document.getElementById('view-nav').innerHTML = views.map(([v,l,ic]) =>
-    '<button class="navbtn'+(S.view===v?' sel':'')+'" data-view="'+v+'" draggable="true" title="'+(VIEW_TIPS[v]||l)+'"><span class="nic">'+ic+'</span>'+l+'<span class="navgrip" title="Drag to reorder views">\u22ee\u22ee</span></button>').join('');
+    '<button class="navbtn'+(S.view===v?' sel':'')+'" data-view="'+v+'" draggable="true" title="'+(VIEW_TIPS[v]||l)+'"><span class="nic">'+ic+'</span><span class="nlab">'+l+'</span><span class="navgrip" title="Drag to reorder views">\u22ee\u22ee</span></button>').join('');
   applyViewGripDrag();
   const q = (document.getElementById('buddy-search').value || '').toLowerCase().trim();
   const words = q.split(/\s+/).filter(Boolean);
@@ -7931,6 +7931,8 @@ document.addEventListener('click', e => {
     const fromPanel = vb.id === 'bp-allbuddies' || (vb.dataset.view === 'projects' && S.sel && S.sel.startsWith('buddy:'));
     if (fromPanel && S.sel && S.sel.startsWith('buddy:')) pendingHighlight = S.sel.slice(6);
     show('view:' + vb.dataset.view);
+    // Tapping a view icon in the collapsed rail expands the sidebar
+    if (document.body.classList.contains('sb-closed')) setSidebarOpen(true);
     if (window.innerWidth < 640) { const sbo=document.getElementById('sidebar'); if(sbo) sbo.classList.remove('open'); const sco=document.getElementById('sb-scrim'); if(sco) sco.classList.remove('show'); }
     if (pendingHighlight) { const id = pendingHighlight; pendingHighlight = null; highlightProjectRow(id); }
     return;
