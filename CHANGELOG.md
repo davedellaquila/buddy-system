@@ -3,6 +3,11 @@
 All notable changes to the Buddies dashboard and buddy system. Newest first.
 `FEATURES.md` describes the current state; this file describes how it got there.
 
+## 2026-10-13 (Tip jar links on the dashboard)
+
+### Added
+- **🫙 Tip the jar** (Dave's ask 2026-10-13): two quiet, tasteful spots linking to ko-fi.com/davedellaquila — a muted sticky footer link at the bottom of the sidebar, and a Support section in the Settings sheet. Same destination as the News Buddy voice picker's tip link.
+
 ## 2026-10-13 (Persona picker: description overflow fixed + sample previews)
 
 ### Fixed

@@ -69,6 +69,11 @@ body{padding:0}
 #main{flex:1;min-width:0;padding:36px 32px 80px;position:relative;z-index:1}
 .brand{padding:22px 8px 14px;background:var(--bg)}
 /* Brand chrome (eyebrow/title/subtitle + gear/close) pins at top; Views scroll under */
+/* Tip jar — quiet footer link pinned to the bottom of the sidebar. Muted, small,
+   never in the way. Same ko-fi destination as the News Buddy voice picker. */
+.sb-tipjar{position:sticky;bottom:0;z-index:7;background:var(--bg);margin:12px -14px -32px;padding:10px 14px;border-top:1px solid var(--border);text-align:center}
+.sb-tipjar a{font-size:12px;color:var(--muted);text-decoration:none}
+.sb-tipjar a:hover{color:var(--accent);text-decoration:underline}
 .sb-brand-sticky{
   position:sticky;top:0;z-index:7;background:var(--bg);
   margin:0 -14px;padding:0 14px;
@@ -2212,6 +2217,7 @@ function openFieldSettings(){
       + '<section class="fset-sec"><h3 class="fset-sec-h">Buddy fields</h3><p class="fineprint">Drag to reorder. Uncheck to hide.</p><div id="fset-list"></div></section>'
       + '</div>'
       + '<section class="fset-sec"><h3 class="fset-sec-h">Advanced</h3><div id="fset-advanced"></div></section>'
+      + '<section class="fset-sec"><h3 class="fset-sec-h">Support</h3><p class="fineprint">Enjoying the buddy system? <a href="https://ko-fi.com/davedellaquila" target="_blank" rel="noopener" style="color:var(--accent)">\U0001FAD9 Tip the jar</a> \u2014 every tip keeps the lights on.</p></section>'
       + '<section class="fset-sec"><h3 class="fset-sec-h">Develop</h3><p class="fineprint">Tools for preparing the app for new users. Nothing here affects your real data.</p><div id="fset-develop"></div></section>'
       + '</div>'
       + '<div class="fset-footer">'
@@ -7773,6 +7779,7 @@ initSbBrandSticky();
   <div class="nav-sec" id="plans-sec"><h3 style="cursor:pointer" id="plans-toggle"><span id="plans-arrow">\u203a</span> Business Plans</h3><div id="plan-nav"></div></div>
   <div class="nav-sec" id="views-sec">
   <h3 style="cursor:pointer" id="views-toggle"><span class="nav-arrow" id="views-arrow">\u203a</span> Views</h3><div id="view-nav"></div></div>
+  <div class="sb-tipjar"><a href="https://ko-fi.com/davedellaquila" target="_blank" rel="noopener" title="Support the buddy system">\U0001FAD9 Tip the jar</a></div>
 </aside>
 <div id="sb-resize" title="Drag left or right to resize the sidebar. Double-click to close."></div>
 <button type="button" id="sb-to-top" title="Scroll sidebar to top" aria-label="Scroll sidebar to top">
