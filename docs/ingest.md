@@ -92,3 +92,7 @@ Also while we're at it, make it slightly shorter so there's some margin on the t
 
 FOLLOW-UP — Dave needs more info on: "New buddy added from the dashboard — run the full onboarding (mission doc, repo, side chat, homepage)." (attention id: setup-kyle-dell-aquila). Please follow up with him.
 
+## 10/13/2026, 10:46:02 PM
+
+DONE — Dave marked this done on the homepage: "New buddy added from the dashboard — run the full onboarding (mission doc, repo, side chat, homepage)." (attention id: setup-kyle-dell-aquila). Please remove it from the attention list in buddies.json.
+
