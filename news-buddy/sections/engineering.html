@@ -203,6 +203,9 @@
   .sug-row{display:flex;align-items:center;gap:10px;margin-top:8px}
   .sug-btn{background:var(--accent);color:#fff;border:none;border-radius:8px;padding:8px 16px;font-size:13px;font-weight:600;cursor:pointer}
   .sug-status{font-size:12px;color:var(--muted)}
+  .votestrip{display:flex;align-items:center;justify-content:space-between;gap:12px;border:1px solid var(--rule);border-radius:10px;padding:10px 14px;margin:14px 0;font-size:13px;color:var(--muted)}
+  .votestrip a{color:var(--accent);font-weight:600;text-decoration:none;white-space:nowrap}
+  .votestrip a:hover{text-decoration:underline}
   .footer{
     margin-top:48px;padding-top:24px;border-top:1px solid var(--rule-strong);
     color:var(--muted);font-size:13.5px;text-align:center;
@@ -237,38 +240,67 @@
   .secpage .storyitem h3 a:hover{color:var(--accent)}
   .secpage .lede{font-size:16px;line-height:1.65;color:var(--ink);max-width:70ch;margin:10px 0 6px}
 
+  
+  .sec-head h2 a{color:inherit;text-decoration:none;border-bottom:2px solid transparent}
+  .sec-head h2 a:hover{color:var(--accent);border-bottom-color:var(--accent)}
+  .mini-mast{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 20px;border-bottom:3px double var(--ink);margin-bottom:8px;flex-wrap:wrap}
+  .mini-mast a.brand{font-family:Georgia,'Times New Roman',serif;font-weight:700;font-size:20px;color:var(--ink);text-decoration:none}
+  .mini-mast .ed{font-size:12px;color:var(--muted)}
+  .kicker{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:18px 0 4px}
+  .kicker a{color:var(--accent);text-decoration:none}
+  .detail h1{font-family:Georgia,'Times New Roman',serif;font-size:clamp(26px,5vw,40px);line-height:1.15;margin:6px 0 10px;letter-spacing:-.01em}
+  .detail h4.sec{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--accent);margin:22px 0 6px}
+  .detail p.body{font-size:16px;line-height:1.65;margin:0 0 12px;max-width:68ch}
+  .sourcebox{border:1px solid var(--rule);border-left:4px solid var(--accent);border-radius:8px;padding:12px 16px;margin:18px 0;max-width:68ch}
+  .sourcebox p{font-size:14px;line-height:1.6;margin:6px 0}
+  .sourcebox .flag{display:inline-block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;background:#fde68a;color:#7c2d12;border-radius:4px;padding:2px 8px;margin-bottom:4px}
+  .read-original{display:inline-block;margin:10px 0;padding:10px 20px;background:var(--accent);color:#fff !important;border-radius:8px;font-weight:700;text-decoration:none;font-size:15px}
+  .related{margin-top:28px;border-top:1px solid var(--rule);padding-top:14px}
+  .related h4.sec{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:0 0 10px}
+  .related ul{list-style:none;margin:0;padding:0}
+  .related li{margin:0 0 10px;font-size:15px;line-height:1.45}
+  .related a{color:var(--ink);text-decoration:none;border-bottom:1px solid var(--rule)}
+  .related a:hover{color:var(--accent);border-bottom-color:var(--accent)}
+  .backfoot{margin:30px 0 40px;font-size:14px}
+  .backfoot a{color:var(--accent);text-decoration:none;font-weight:600}
+  .secpage .storyitem{border-bottom:1px solid var(--rule);padding:16px 0}
+  .secpage .storyitem h3{font-size:20px;margin:0 0 6px;line-height:1.3}
+  .secpage .storyitem h3 a{color:var(--ink);text-decoration:none}
+  .secpage .storyitem h3 a:hover{color:var(--accent)}
+  .secpage .lede{font-size:16px;line-height:1.65;color:var(--ink);max-width:70ch;margin:10px 0 6px}
+
   </style>
 </head>
 <body>
 <header class="mini-mast">
   <a class="brand" href="../index.html">📰 The Morning Edition</a>
-  <span class="ed">Tuesday, October 13, 2026</span>
+  <span class="ed">Wednesday, October 14, 2026</span>
   <button id="themeBtn" class="voice-change" style="margin-left:0">Theme: Auto</button>
 </header>
 <main class="detail secpage" style="max-width:860px;margin:0 auto;padding:0 20px">
   <p class="kicker">Section</p>
   <h1>Engineering</h1>
-  <p class="lede">The day&#x27;s engineering theme is AI&#x27;s collision with how software gets built: agents write 30% more code without shipping more software, Epic goes &quot;AI first&quot; on a Disney title, and one in ten developers now works solo. Plus the usual framework-and-security churn.</p>
+  <p class="lede">The AI-coding reckoning continues: Sweeney confirms Epic&#x27;s &#x27;AI-first&#x27; pivot on the delayed Disney shooter while the Harvard/Jellyfish numbers get sharper (review time +49%, shipped issues flat). Plus npm supply-chain hygiene, TanStack Start 1.0, and agents that learn frameworks.</p>
   <div class="storyitem">
-      <h3><a href="../articles/2026-10-13-ai-coding-agents-add-30-more-code-not-more-software.html">AI coding agents add 30% more code, not more software</a></h3>
-      <p class="byline">Tech Insider · Oct 12</p>
-      <p class="body">A Harvard study across 700+ firms found developers with AI coding agents write roughly 30% more code — yet shipped issues don’t budge. Commits rose ~20% and PRs ~23%, but issue and epic resolution rates barely moved. The researchers’ diagnosis: human code review is now the chokepoint, and it hasn’t widened just because the code got bigger. Same week, Microsoft unveiled a redesigned Copilot built around three surfaces.</p>
-      <p class="body"><em>Why it matters:</em> 30% more code, zero more shipped software: the Harvard numbers give shape to the AI-coding unease — activity is up, outcomes aren&#x27;t. Relevant to how any team measures AI-assisted work.</p>
+      <h3><a href="../articles/2026-10-14-epic-games-goes-ai-first-on-delayed-disney-shooter-swee.html">Epic Games goes “AI-first” on delayed Disney shooter, Sweeney confirms</a></h3>
+      <p class="byline">Radio Times, via Bloomberg · Oct 13</p>
+      <p class="body">Bloomberg reported Epic’s Disney-backed shooter (Marvel and Star Wars characters, part of Disney’s $1.5B Epic investment) was delayed from its March 2027 window as directors imposed directives like ’no more hand-written code’ and AI-generated art workflows. Staff were reportedly stunned; CEO Tim Sweeney confirmed the ’huge pivot’ on X on Oct 12, insisting the goal is more and better output, not fewer people — months after Epic laid off 1,000+ employees.</p>
+      <p class="body"><em>Why it matters:</em> The highest-profile test yet of an AI-first mandate at a AAA studio — and a useful counterpoint to the Harvard study&#x27;s review-bottleneck finding for someone who runs his own Cursor/auto-fetch workflows.</p>
     </div><div class="storyitem">
-      <h3><a href="../articles/2026-10-13-epic-reportedly-goes-ai-first-on-a-new-disney-shooter-n.html">Epic reportedly goes ‘AI first’ on a new Disney shooter — ‘no more hand-written code’</a></h3>
-      <p class="byline">Nintendo Life, via Bloomberg · Oct 12</p>
-      <p class="body">Bloomberg’s Jason Schreier reports developers on Epic’s delayed Disney collaboration — a shooter with Marvel and Star Wars characters, part of Disney’s $1.5B Epic stake from 2024 — were told to implement an “AI first” production model using tools like Anthropic’s Claude, with humans managing and guiding. A game director reportedly told staff there would be “no more hand-written code” and art would be AI-generated; some Epic developers were “stunned.” If accurate, it’s the first major game built primarily with AI.</p>
-      <p class="body"><em>Why it matters:</em> &quot;No more hand-written code&quot; at Epic, via Schreier — the strongest signal yet that AI-first development has reached AAA game studios, Disney money included.</p>
+      <h3><a href="../articles/2026-10-14-harvard-study-ai-coding-agents-add-30-more-code-but-shi.html">Harvard study: AI coding agents add 30% more code, but shipped output is flat</a></h3>
+      <p class="byline">Models at Work, via Ars Technica · Oct 12</p>
+      <p class="body">Harvard economists Fiona Chen and James Stratton analyzed ~300M work events across 700,000+ employees at 700+ firms via Jellyfish data, as first reported by Ars Technica on Oct 9. After agent adoption, lines of code rose 30%, commits 20%, and PRs 23% — but resolved Jira issues/epics didn’t move, because PR review time rose 49%, change requests nearly doubled, and 14% more workers shifted into review. No measurable employment change either.</p>
+      <p class="body"><em>Why it matters:</em> His team ships tools with AI assistance, and the study pinpoints review capacity — not code generation — as the real constraint, a tradeoff his own prototyping and buddy-system code reviews will feel.</p>
     </div><div class="storyitem">
-      <h3><a href="../articles/2026-10-13-react-19-3s-browser-api-a-90k-google-rce-and-a-github-i.html">React 19.3’s browser() API, a $90K Google RCE, and a GitHub incident</a></h3>
-      <p class="byline">DEV Community digest · Oct 12</p>
-      <p class="body">The evening dev digest’s headlines: React 19.3 adds a browser() API giving client-only rendering an explicit first-class API; a writeup details a $90,000 remote-code-execution bounty on a Google developer docs site via an unsafely handled Flask session; and GitHub’s status page reported a service incident affecting Actions, Pull Requests, and Issues — check it if your CI or reviews are stalled.</p>
-      <p class="body"><em>Why it matters:</em> React 19.3&#x27;s browser() API plus a $90K Google RCE writeup: the usual Tuesday mix of framework evolution and security reality checks.</p>
+      <h3><a href="../articles/2026-10-14-github-adds-48-hour-expiry-to-unvalidated-npm-trusted-p.html">GitHub adds 48-hour expiry to unvalidated npm trusted-publishing configs</a></h3>
+      <p class="byline">DEV Community · Oct 13</p>
+      <p class="body">Following a Bloom Security investigation (reported to GitHub on June 6, 2026), GitHub is closing a supply-chain loophole where attackers could claim abandoned repository slugs and publish package updates without credentials. Unvalidated trusted-publishing settings now expire automatically 48 hours after creation, becoming permanent only after a successful publish. The research flagged over 1,500 vulnerable packages with 10M+ combined downloads; npm also now rejects requests from certain automated bot processes.</p>
+      <p class="body"><em>Why it matters:</em> He publishes and ships code — this is the kind of quiet npm hygiene change that decides whether a dependency attack ever reaches his machine, amid the ongoing Shai-Hulud npm worm wave.</p>
     </div><div class="storyitem">
-      <h3><a href="../articles/2026-10-13-stack-overflow-ai-is-pushing-more-developers-to-freelan.html">Stack Overflow: AI is pushing more developers to freelance</a></h3>
-      <p class="byline">Computer Weekly · Oct 7</p>
-      <p class="body">The 2026 Developer Survey (30,903 responses, 169 countries, published Oct 6) found the share of developers working as a company of one jumped from 4% last year to 10% — Stack Overflow credits AI tools making solo work viable across expertise areas. Meanwhile 45.1% of developers call themselves “complacent” at work; one DEV analysis notes the survey’s top day-to-day friction is actually unclear priorities (16.6%), not AI.</p>
-      <p class="body"><em>Why it matters:</em> One in ten developers now works solo, up from 4% — Stack Overflow credits AI tooling. The &quot;company of one&quot; is becoming a real labor category.</p>
+      <h3><a href="../articles/2026-10-14-tanstack-start-1-0-goes-stable-as-the-client-first-full.html">TanStack Start 1.0 goes stable as the client-first full-stack alternative</a></h3>
+      <p class="byline">This Week in React · Oct 14</p>
+      <p class="body">TanStack Start hit 1.0 (stable, production-ready), positioning as a client-first full-stack React/Solid framework with SPA-style routing, typed server functions, and opt-in React Server Components. Notably it ships agent-ready: TanStack Intent skills so coding agents learn its APIs and best practices, with optimized type checking kept consistent for humans and agents alike. The same newsletter notes Deno’s team is joining Cloudflare (Deno Deploy sunsetting) and a Next.js security update landing Oct 14.</p>
+      <p class="body"><em>Why it matters:</em> He builds apps and thinks in frameworks and design systems — a client-first, agent-ready challenger to the Next.js server-first model is a fresh option worth knowing before his next build.</p>
     </div>
   <section class="suggestbox" data-buddy-id="news-buddy">
     <h2>Suggestions</h2>

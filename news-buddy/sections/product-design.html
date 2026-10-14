@@ -203,6 +203,9 @@
   .sug-row{display:flex;align-items:center;gap:10px;margin-top:8px}
   .sug-btn{background:var(--accent);color:#fff;border:none;border-radius:8px;padding:8px 16px;font-size:13px;font-weight:600;cursor:pointer}
   .sug-status{font-size:12px;color:var(--muted)}
+  .votestrip{display:flex;align-items:center;justify-content:space-between;gap:12px;border:1px solid var(--rule);border-radius:10px;padding:10px 14px;margin:14px 0;font-size:13px;color:var(--muted)}
+  .votestrip a{color:var(--accent);font-weight:600;text-decoration:none;white-space:nowrap}
+  .votestrip a:hover{text-decoration:underline}
   .footer{
     margin-top:48px;padding-top:24px;border-top:1px solid var(--rule-strong);
     color:var(--muted);font-size:13.5px;text-align:center;
@@ -237,38 +240,67 @@
   .secpage .storyitem h3 a:hover{color:var(--accent)}
   .secpage .lede{font-size:16px;line-height:1.65;color:var(--ink);max-width:70ch;margin:10px 0 6px}
 
+  
+  .sec-head h2 a{color:inherit;text-decoration:none;border-bottom:2px solid transparent}
+  .sec-head h2 a:hover{color:var(--accent);border-bottom-color:var(--accent)}
+  .mini-mast{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 20px;border-bottom:3px double var(--ink);margin-bottom:8px;flex-wrap:wrap}
+  .mini-mast a.brand{font-family:Georgia,'Times New Roman',serif;font-weight:700;font-size:20px;color:var(--ink);text-decoration:none}
+  .mini-mast .ed{font-size:12px;color:var(--muted)}
+  .kicker{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:18px 0 4px}
+  .kicker a{color:var(--accent);text-decoration:none}
+  .detail h1{font-family:Georgia,'Times New Roman',serif;font-size:clamp(26px,5vw,40px);line-height:1.15;margin:6px 0 10px;letter-spacing:-.01em}
+  .detail h4.sec{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--accent);margin:22px 0 6px}
+  .detail p.body{font-size:16px;line-height:1.65;margin:0 0 12px;max-width:68ch}
+  .sourcebox{border:1px solid var(--rule);border-left:4px solid var(--accent);border-radius:8px;padding:12px 16px;margin:18px 0;max-width:68ch}
+  .sourcebox p{font-size:14px;line-height:1.6;margin:6px 0}
+  .sourcebox .flag{display:inline-block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;background:#fde68a;color:#7c2d12;border-radius:4px;padding:2px 8px;margin-bottom:4px}
+  .read-original{display:inline-block;margin:10px 0;padding:10px 20px;background:var(--accent);color:#fff !important;border-radius:8px;font-weight:700;text-decoration:none;font-size:15px}
+  .related{margin-top:28px;border-top:1px solid var(--rule);padding-top:14px}
+  .related h4.sec{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:0 0 10px}
+  .related ul{list-style:none;margin:0;padding:0}
+  .related li{margin:0 0 10px;font-size:15px;line-height:1.45}
+  .related a{color:var(--ink);text-decoration:none;border-bottom:1px solid var(--rule)}
+  .related a:hover{color:var(--accent);border-bottom-color:var(--accent)}
+  .backfoot{margin:30px 0 40px;font-size:14px}
+  .backfoot a{color:var(--accent);text-decoration:none;font-weight:600}
+  .secpage .storyitem{border-bottom:1px solid var(--rule);padding:16px 0}
+  .secpage .storyitem h3{font-size:20px;margin:0 0 6px;line-height:1.3}
+  .secpage .storyitem h3 a{color:var(--ink);text-decoration:none}
+  .secpage .storyitem h3 a:hover{color:var(--accent)}
+  .secpage .lede{font-size:16px;line-height:1.65;color:var(--ink);max-width:70ch;margin:10px 0 6px}
+
   </style>
 </head>
 <body>
 <header class="mini-mast">
   <a class="brand" href="../index.html">📰 The Morning Edition</a>
-  <span class="ed">Tuesday, October 13, 2026</span>
+  <span class="ed">Wednesday, October 14, 2026</span>
   <button id="themeBtn" class="voice-change" style="margin-left:0">Theme: Auto</button>
 </header>
 <main class="detail secpage" style="max-width:860px;margin:0 auto;padding:0 20px">
   <p class="kicker">Section</p>
   <h1>Product Design</h1>
-  <p class="lede">Apple&#x27;s hardware autumn dominates: the foldable Duo lands in ten days with developers racing to adapt, and a touchscreen MacBook Pro may follow on the 27th. Beyond Cupertino: a heritage interiors brand&#x27;s second life and AI compressing furniture-design cycles.</p>
+  <p class="lede">Apple&#x27;s hardware autumn, confirmed: the $299 HomeView hub (Nov 13) anchors the smart-home push, indie devs are already bending the $1,999 iPhone Duo into a virtual Walkman, and a touchscreen MacBook Pro is expected Oct 27. Beyond Cupertino: Jaguar&#x27;s 1,015-hp electric reset, the Type 01.</p>
   <div class="storyitem">
-      <h3><a href="../articles/2026-10-13-iphone-duo-lands-oct-23-and-apple-is-racing-devs-to-des.html">iPhone Duo lands Oct 23 — and Apple is racing devs to design for it</a></h3>
-      <p class="byline">WebProNews · Oct 2026</p>
-      <p class="body">With the foldable iPhone Duo launching Friday, October 23, Apple is pushing third-party teams to submit Duo-optimized builds now: size-class recommendations replace hard-coded orientations, a Device Hub preview tool stands in for physical prototypes, and Figma and Sketch design kits are out for marketing assets. The bet: adaptive interfaces become the platform norm; clunky day-one layouts risk making the new form factor look niche.</p>
-      <p class="body"><em>Why it matters:</em> This one&#x27;s personal — the Duo lands in ten days and Apple is racing developers to be ready. Foldable UI is now a design problem you get to have opinions about.</p>
+      <h3><a href="../articles/2026-10-14-apple-announces-homeview-smart-home-hub-at-welcome-home.html">Apple announces HomeView smart-home hub at Welcome Home event</a></h3>
+      <p class="byline">MacRumors, relaying Bloomberg’s Mark Gurman · Oct 13</p>
+      <p class="body">Apple unveiled the HomeView, its first smart-home hub, at the October 13 ’Welcome Home’ event in New York. The $299 device pairs a 7-inch Liquid Retina display with an A18 chip, face recognition for up to six household profiles, and Siri AI, shipping November 13 after preorders opened on launch day. A refreshed HomePod mini and Apple TV 4K follow on October 30, and HomeView supports Matter and Thread with co-designed accessories from LG and Schneider Electric — but no dedicated App Store.</p>
+      <p class="body"><em>Why it matters:</em> His company&#x27;s first smart-home hub and the showcase for the new Siri AI — directly adjacent to his day job — plus a design story with iMac G4 roots that the Designer side of him will want to judge firsthand.</p>
     </div><div class="storyitem">
-      <h3><a href="../articles/2026-10-13-oled-touchscreen-macbook-pro-expected-around-oct-27.html">OLED touchscreen MacBook Pro expected around Oct 27</a></h3>
-      <p class="byline">MacDailyNews · Oct 6</p>
-      <p class="body">Apple’s second October wave is expected to include its first touchscreen Mac — 14- and 16-inch MacBook Pros with OLED displays, an M6 chip, a Dynamic Island replacing the notch, and a chassis significantly lighter though only marginally thinner. An OLED iPad mini and M6 iMac round out the rumored slate, aimed squarely at creative pros.</p>
-      <p class="body"><em>Why it matters:</em> A touchscreen Mac would end a forty-year argument at Apple. If the Oct 27 wave is real, it&#x27;s the biggest Mac input change since the trackpad.</p>
+      <h3><a href="../articles/2026-10-14-indie-developers-are-already-making-the-foldable-iphone.html">Indie developers are already making the foldable iPhone Duo sing</a></h3>
+      <p class="byline">WebProNews, via TechCrunch and Axios · Oct 11</p>
+      <p class="body">Ahead of the $1,999 iPhone Duo’s October 23 launch, a Bitrig hackathon in San Francisco produced 73 hinge-native prototypes, led by Duo-Man — indie dev Vidit Bhargava’s app that turns the Duo into a virtual Sony Walkman, with real cassette clicks recorded from actual hardware. Apple opened App Store submissions for Duo-optimized apps on October 5 via Xcode 27.1 (with an ’optimized for iPhone Duo’ badge), and new APIs like onHingeChange and ArrangementView let interfaces react to the fold angle in real time. From April 2027, every App Store submission must include iPhone Duo screenshots.</p>
+      <p class="body"><em>Why it matters:</em> As both an Apple employee and a designer, the Duo is a brand-new hardware grammar — hinge-as-input, half-open postures — and indie devs probing it is the best preview of how the platform&#x27;s design language will evolve.</p>
     </div><div class="storyitem">
-      <h3><a href="../articles/2026-10-13-designers-guild-gets-a-second-life-under-sanderson.html">Designers Guild gets a second life under Sanderson</a></h3>
-      <p class="byline">Business of Home · Sept 2026</p>
-      <p class="body">Weeks after the 56-year-old luxury interiors house entered administration and shed 93 jobs, Sanderson Design Group signed a 10-year licensing deal with Dunelm (which bought the brand in 2025) for the sole global rights to design, manufacture, and sell Designers Guild wallpapers, fabrics, and paint — plus access to its archive library. CEO Lisa Montague calls founder Tricia Guild “a creative visionary” and promises a new platform for the brand.</p>
-      <p class="body"><em>Why it matters:</em> A 56-year-old luxury interiors house gets a second life via licensing — the kind of brand rescue that either works beautifully or dilutes into nothing.</p>
+      <h3><a href="../articles/2026-10-14-bloomberg-first-touchscreen-macbook-pro-due-october-27.html">Bloomberg: first touchscreen MacBook Pro due October 27</a></h3>
+      <p class="byline">9to5Mac, relaying Bloomberg’s Mark Gurman · Oct 8</p>
+      <p class="body">Apple will introduce its first touchscreen Mac on or around Tuesday, October 27, according to Bloomberg’s Mark Gurman: redesigned 14- and 16-inch MacBook Pros with tandem OLED touchscreens, a Dynamic Island replacing the notch, ’significantly lighter’ chassis, and M5 Pro/Max chips. The launch will also bring an OLED iPad mini with a landscape FaceTime camera, plus M6-powered 14-inch MacBook Pro and 24-inch iMac in current designs. The rollout is expected to mirror the October 13 smart-home event format — online video plus hands-on sessions aimed at creative professionals.</p>
+      <p class="body"><em>Why it matters:</em> An engineer at Apple watching the biggest reversal in Mac history — a decade of &#x27;touch doesn&#x27;t belong on a Mac&#x27; ending with a touchscreen OLED flagship, with real implications for how macOS itself will change.</p>
     </div><div class="storyitem">
-      <h3><a href="../articles/2026-10-13-ai-rendering-is-shrinking-furniture-design-revision-cyc.html">AI rendering is shrinking furniture-design revision cycles ‘from weeks to hours’</a></h3>
-      <p class="byline">Interior Daily · Oct 12</p>
-      <p class="body">Interior Daily’s look at AI visualization platforms argues the same workflow shift hitting code is hitting showrooms: one digital asset rendered across countless room layouts and lighting conditions, photorealistic concept pieces tested against market response before production, and designers showing clients their own room with the scheme in place instead of swatches and mood boards. The knock-on: fewer returns from spatial mismatch.</p>
-      <p class="body"><em>Why it matters:</em> AI rendering compressing furniture-design cycles from weeks to hours is the same workflow shock hitting code — worth watching as a leading indicator for design tooling.</p>
+      <h3><a href="../articles/2026-10-14-jaguars-type-01-ev-the-brands-130-500-electric-reset.html">Jaguar’s Type 01 EV: the brand’s $130,500 electric reset</a></h3>
+      <p class="byline">Dezeen · Oct 7</p>
+      <p class="body">Jaguar unveiled the production Type 01 at a New York launch event, the first car in the brand’s ’complete reset’ after its controversial 2024 rebrand. The four-door GT keeps a long bonnet, no rear window, thin headlights, and a low 1.4-meter stance on the new Jaguar Electric Architecture. The tri-motor setup makes 1,030 PS (1,015 hp) with 0–62 mph in 3.2 seconds, a 118 kWh battery good for ~400 miles EPA range, and 350 kW charging; US pricing starts at $130,500 with orders opening in early 2027 and production at Solihull.</p>
+      <p class="body"><em>Why it matters:</em> Motorsport fan first: a 1,015-horsepower grand tourer channeling the E-Type is impossible to ignore, and he&#x27;ll appreciate Jaguar&#x27;s &#x27;Jaguar first, EV second&#x27; stance against homogenous electric-car design.</p>
     </div>
   <section class="suggestbox" data-buddy-id="news-buddy">
     <h2>Suggestions</h2>

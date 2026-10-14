@@ -203,6 +203,9 @@
   .sug-row{display:flex;align-items:center;gap:10px;margin-top:8px}
   .sug-btn{background:var(--accent);color:#fff;border:none;border-radius:8px;padding:8px 16px;font-size:13px;font-weight:600;cursor:pointer}
   .sug-status{font-size:12px;color:var(--muted)}
+  .votestrip{display:flex;align-items:center;justify-content:space-between;gap:12px;border:1px solid var(--rule);border-radius:10px;padding:10px 14px;margin:14px 0;font-size:13px;color:var(--muted)}
+  .votestrip a{color:var(--accent);font-weight:600;text-decoration:none;white-space:nowrap}
+  .votestrip a:hover{text-decoration:underline}
   .footer{
     margin-top:48px;padding-top:24px;border-top:1px solid var(--rule-strong);
     color:var(--muted);font-size:13.5px;text-align:center;
@@ -237,33 +240,62 @@
   .secpage .storyitem h3 a:hover{color:var(--accent)}
   .secpage .lede{font-size:16px;line-height:1.65;color:var(--ink);max-width:70ch;margin:10px 0 6px}
 
+  
+  .sec-head h2 a{color:inherit;text-decoration:none;border-bottom:2px solid transparent}
+  .sec-head h2 a:hover{color:var(--accent);border-bottom-color:var(--accent)}
+  .mini-mast{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 20px;border-bottom:3px double var(--ink);margin-bottom:8px;flex-wrap:wrap}
+  .mini-mast a.brand{font-family:Georgia,'Times New Roman',serif;font-weight:700;font-size:20px;color:var(--ink);text-decoration:none}
+  .mini-mast .ed{font-size:12px;color:var(--muted)}
+  .kicker{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:18px 0 4px}
+  .kicker a{color:var(--accent);text-decoration:none}
+  .detail h1{font-family:Georgia,'Times New Roman',serif;font-size:clamp(26px,5vw,40px);line-height:1.15;margin:6px 0 10px;letter-spacing:-.01em}
+  .detail h4.sec{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--accent);margin:22px 0 6px}
+  .detail p.body{font-size:16px;line-height:1.65;margin:0 0 12px;max-width:68ch}
+  .sourcebox{border:1px solid var(--rule);border-left:4px solid var(--accent);border-radius:8px;padding:12px 16px;margin:18px 0;max-width:68ch}
+  .sourcebox p{font-size:14px;line-height:1.6;margin:6px 0}
+  .sourcebox .flag{display:inline-block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;background:#fde68a;color:#7c2d12;border-radius:4px;padding:2px 8px;margin-bottom:4px}
+  .read-original{display:inline-block;margin:10px 0;padding:10px 20px;background:var(--accent);color:#fff !important;border-radius:8px;font-weight:700;text-decoration:none;font-size:15px}
+  .related{margin-top:28px;border-top:1px solid var(--rule);padding-top:14px}
+  .related h4.sec{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:0 0 10px}
+  .related ul{list-style:none;margin:0;padding:0}
+  .related li{margin:0 0 10px;font-size:15px;line-height:1.45}
+  .related a{color:var(--ink);text-decoration:none;border-bottom:1px solid var(--rule)}
+  .related a:hover{color:var(--accent);border-bottom-color:var(--accent)}
+  .backfoot{margin:30px 0 40px;font-size:14px}
+  .backfoot a{color:var(--accent);text-decoration:none;font-weight:600}
+  .secpage .storyitem{border-bottom:1px solid var(--rule);padding:16px 0}
+  .secpage .storyitem h3{font-size:20px;margin:0 0 6px;line-height:1.3}
+  .secpage .storyitem h3 a{color:var(--ink);text-decoration:none}
+  .secpage .storyitem h3 a:hover{color:var(--accent)}
+  .secpage .lede{font-size:16px;line-height:1.65;color:var(--ink);max-width:70ch;margin:10px 0 6px}
+
   </style>
 </head>
 <body>
 <header class="mini-mast">
   <a class="brand" href="../index.html">📰 The Morning Edition</a>
-  <span class="ed">Tuesday, October 13, 2026</span>
+  <span class="ed">Wednesday, October 14, 2026</span>
   <button id="themeBtn" class="voice-change" style="margin-left:0">Theme: Auto</button>
 </header>
 <main class="detail secpage" style="max-width:860px;margin:0 auto;padding:0 20px">
   <p class="kicker">Section</p>
   <h1>Markets</h1>
-  <p class="lede">Earnings season opens with the banks while the AI trade wobbles on both sides of the Pacific — a Chinese chipmaker breakthrough pressing memory stocks here, Asia sliding there. Plus the full cross-asset board: crude, gold, bitcoin, the 10-year.</p>
+  <p class="lede">CPI day: the hot print sent the 10-year to 5.29% and doubled October hike odds. Bank earnings day two split — Goldman smashed it, BofA ate a $1.2B fine — while Asia&#x27;s AI-chip rout (CXMT&#x27;s memory breakthrough, Kospi -5.5%) rolled into the cross-asset board.</p>
   <div class="storyitem">
-      <h3><a href="../articles/2026-10-13-memory-stocks-sink-a-second-day-on-apparent-chinese-chi.html">Memory stocks sink a second day on apparent Chinese chipmaker breakthrough</a></h3>
-      <p class="byline">Investopedia · Oct 13</p>
-      <p class="body">Investopedia’s morning brief flags the session’s clearest stress point: memory names falling for a second straight day after news of an apparent breakthrough from a Chinese chipmaker, dragging the Nasdaq futures ~0.7% lower even as Dow futures rose. Details on the breakthrough remain thin — watch the sector tape.</p>
-      <p class="body"><em>Why it matters:</em> A Chinese chipmaker breakthrough is pressuring memory stocks two days running — this is the concrete version of the AI-trade anxiety spreading across the market pages.</p>
+      <h3><a href="../articles/2026-10-14-hot-september-cpi-rattles-rate-bets-10-year-pops-to-5-2.html">Hot September CPI rattles rate bets, 10-year pops to 5.29%</a></h3>
+      <p class="byline">Barron’s · Oct 14</p>
+      <p class="body">September CPI came in hot: headline up 3.7% year-on-year versus 3.6% expected, core at 2.6% versus 2.5%, with core rising 0.3% on the month against 0.2% expected, per FactSet. Stock futures tumbled (Nasdaq 100 down 0.6%) and the 10-year yield spiked to 5.29%, the 2-year to 4.91%. Markets had priced roughly a 22% chance of a quarter-point Fed hike at the October 28 meeting heading into the print, and New York Fed president John Williams said the Fed may need to raise once more this year.</p>
+      <p class="body"><em>Why it matters:</em> The worst case for growth-tech valuations and Apple stock: a hot print with the 10-year at 5.29% reopens the October hike debate he watches every morning.</p>
     </div><div class="storyitem">
-      <h3><a href="../articles/2026-10-13-asia-the-ai-trade-under-renewed-pressure-ahead-of-earni.html">Asia: the AI trade under renewed pressure ahead of earnings</a></h3>
-      <p class="byline">The Hindu BusinessLine · Oct 13</p>
-      <p class="body">The MSCI Asia Pacific Index lost 0.9%, set for its weakest close since mid-August, as shares retreated in South Korea and Japan — the AI trade, one of the hottest corners of the market this year, coming under renewed pressure ahead of the key earnings season. India’s Sensex, by contrast, jumped over 1,100 points on an IT rally.</p>
-      <p class="body"><em>Why it matters:</em> The AI trade&#x27;s wobble looks global, not local — Asia&#x27;s 0.9% slide is the same story as the Nasdaq&#x27;s, seen from the other side of the Pacific.</p>
+      <h3><a href="../articles/2026-10-14-bank-earnings-day-two-bofa-hit-by-1-21b-fine-goldman-sm.html">Bank earnings day two: BofA hit by $1.21B fine; Goldman smashed it</a></h3>
+      <p class="byline">Reuters · Oct 14</p>
+      <p class="body">Bank of America, Morgan Stanley, BlackRock and State Street report before the open, with BofA down 1.5% premarket after disclosing a $1.21 billion regulatory fine that could weigh on Q3 results. Tuesday’s openers were mixed: Goldman Sachs posted a monster quarter — EPS of $17.01 versus $13.09 expected on $18.7B revenue, up 23% — while JPMorgan missed (EPS $5.75 vs $5.93 expected), Wells Fargo fell ~3% and Citigroup beat. Shares of Morgan Stanley edged 0.7% higher ahead of its report.</p>
+      <p class="body"><em>Why it matters:</em> Beyond the beats and misses, the banks&#x27; IB pipelines and credit commentary are the read-through on whether companies are still spending on AI buildout — the same spending cycle that underwrites his day job.</p>
     </div><div class="storyitem">
-      <h3><a href="../articles/2026-10-13-cross-asset-check-crude-off-after-saudi-attacks-gold-4.html">Cross-asset check: crude off after Saudi attacks, gold $4,210, bitcoin $83,100</a></h3>
-      <p class="byline">Investopedia · Oct 13</p>
-      <p class="body">WTI crude fell 1.6% to $92.20 a barrel after rising Monday on new attacks in Saudi Arabia; the 10-year Treasury yield sits at 5.19%, down from Friday’s 5.24% close (bonds were closed Monday for the federal holiday). Gold futures are up 0.5% at $4,210 an ounce; bitcoin trades near $83,100.</p>
-      <p class="body"><em>Why it matters:</em> Crude, gold, bitcoin, the 10-year: the whole risk board in one glance. Gold at $4,210 says fear; bitcoin at $83,100 says greed. Both at once.</p>
+      <h3><a href="../articles/2026-10-14-asias-ai-chip-rout-kospi-5-5-on-cxmt-breakthrough-gold.html">Asia’s AI chip rout: Kospi -5.5% on CXMT breakthrough; gold over $4,200</a></h3>
+      <p class="byline">The Wall Street Journal · Oct 14</p>
+      <p class="body">Overnight, China’s CXMT claimed a memory-tech breakthrough that sparked a global AI selloff: Korea’s Kospi plunged 5.5% (trading briefly paused) with Samsung down 7.4% and SK Hynix 10%, Japan’s Nikkei fell 1.8%, and ASML dropped 3.2% in Europe. The cross-asset picture: the 10-year Treasury around 5.18–5.20%, gold futures above $4,200/oz, bitcoin near $83,000–83,900, and Brent crude holding around $104–105.50 a barrel amid Houthi attacks on Saudi Arabia and reports of vessel strikes in the Strait of Hormuz.</p>
+      <p class="body"><em>Why it matters:</em> The CXMT/memory-chip scare cuts straight to the AI-infrastructure thesis he follows closely, and gold over $4,200 plus ~$105 crude frame the risk backdrop for his tech-stock-heavy portfolio.</p>
     </div>
   <section class="suggestbox" data-buddy-id="news-buddy">
     <h2>Suggestions</h2>

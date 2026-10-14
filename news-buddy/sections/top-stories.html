@@ -203,6 +203,9 @@
   .sug-row{display:flex;align-items:center;gap:10px;margin-top:8px}
   .sug-btn{background:var(--accent);color:#fff;border:none;border-radius:8px;padding:8px 16px;font-size:13px;font-weight:600;cursor:pointer}
   .sug-status{font-size:12px;color:var(--muted)}
+  .votestrip{display:flex;align-items:center;justify-content:space-between;gap:12px;border:1px solid var(--rule);border-radius:10px;padding:10px 14px;margin:14px 0;font-size:13px;color:var(--muted)}
+  .votestrip a{color:var(--accent);font-weight:600;text-decoration:none;white-space:nowrap}
+  .votestrip a:hover{text-decoration:underline}
   .footer{
     margin-top:48px;padding-top:24px;border-top:1px solid var(--rule-strong);
     color:var(--muted);font-size:13.5px;text-align:center;
@@ -237,33 +240,62 @@
   .secpage .storyitem h3 a:hover{color:var(--accent)}
   .secpage .lede{font-size:16px;line-height:1.65;color:var(--ink);max-width:70ch;margin:10px 0 6px}
 
+  
+  .sec-head h2 a{color:inherit;text-decoration:none;border-bottom:2px solid transparent}
+  .sec-head h2 a:hover{color:var(--accent);border-bottom-color:var(--accent)}
+  .mini-mast{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 20px;border-bottom:3px double var(--ink);margin-bottom:8px;flex-wrap:wrap}
+  .mini-mast a.brand{font-family:Georgia,'Times New Roman',serif;font-weight:700;font-size:20px;color:var(--ink);text-decoration:none}
+  .mini-mast .ed{font-size:12px;color:var(--muted)}
+  .kicker{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:18px 0 4px}
+  .kicker a{color:var(--accent);text-decoration:none}
+  .detail h1{font-family:Georgia,'Times New Roman',serif;font-size:clamp(26px,5vw,40px);line-height:1.15;margin:6px 0 10px;letter-spacing:-.01em}
+  .detail h4.sec{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--accent);margin:22px 0 6px}
+  .detail p.body{font-size:16px;line-height:1.65;margin:0 0 12px;max-width:68ch}
+  .sourcebox{border:1px solid var(--rule);border-left:4px solid var(--accent);border-radius:8px;padding:12px 16px;margin:18px 0;max-width:68ch}
+  .sourcebox p{font-size:14px;line-height:1.6;margin:6px 0}
+  .sourcebox .flag{display:inline-block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;background:#fde68a;color:#7c2d12;border-radius:4px;padding:2px 8px;margin-bottom:4px}
+  .read-original{display:inline-block;margin:10px 0;padding:10px 20px;background:var(--accent);color:#fff !important;border-radius:8px;font-weight:700;text-decoration:none;font-size:15px}
+  .related{margin-top:28px;border-top:1px solid var(--rule);padding-top:14px}
+  .related h4.sec{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:0 0 10px}
+  .related ul{list-style:none;margin:0;padding:0}
+  .related li{margin:0 0 10px;font-size:15px;line-height:1.45}
+  .related a{color:var(--ink);text-decoration:none;border-bottom:1px solid var(--rule)}
+  .related a:hover{color:var(--accent);border-bottom-color:var(--accent)}
+  .backfoot{margin:30px 0 40px;font-size:14px}
+  .backfoot a{color:var(--accent);text-decoration:none;font-weight:600}
+  .secpage .storyitem{border-bottom:1px solid var(--rule);padding:16px 0}
+  .secpage .storyitem h3{font-size:20px;margin:0 0 6px;line-height:1.3}
+  .secpage .storyitem h3 a{color:var(--ink);text-decoration:none}
+  .secpage .storyitem h3 a:hover{color:var(--accent)}
+  .secpage .lede{font-size:16px;line-height:1.65;color:var(--ink);max-width:70ch;margin:10px 0 6px}
+
   </style>
 </head>
 <body>
 <header class="mini-mast">
   <a class="brand" href="../index.html">📰 The Morning Edition</a>
-  <span class="ed">Tuesday, October 13, 2026</span>
+  <span class="ed">Wednesday, October 14, 2026</span>
   <button id="themeBtn" class="voice-change" style="margin-left:0">Theme: Auto</button>
 </header>
 <main class="detail secpage" style="max-width:860px;margin:0 auto;padding:0 20px">
   <p class="kicker">Section</p>
   <h1>Top Stories</h1>
-  <p class="lede">The three threads running the day: Apple launches its smart-home hub this morning, banks open earnings season with CPI landing tomorrow, and Anthropic warns that small AI models are months from self-replicating. Hardware, markets, and the AI safety debate — Tuesday on one page.</p>
+  <p class="lede">The three threads running the day: a hot September CPI (3.7%) reprices the October Fed hike, Apple confirms its $299 HomeView hub from yesterday&#x27;s Welcome Home event, and bank earnings day two brings a monster Goldman quarter and a $1.2B fine for BofA. Macro, hardware, and Wall Street — Wednesday on one page.</p>
   <div class="storyitem">
-      <h3><a href="../articles/2026-10-13-apples-welcome-home-is-today-the-homeview-hub-takes-the.html">Apple’s ‘Welcome Home’ is today: the HomeView hub takes the stage</a></h3>
-      <p class="byline">MacRumors, relaying Bloomberg’s Mark Gurman · Oct 11</p>
-      <p class="body">Press releases land at 9am ET from the Tribeca “Apple Experience” — Bloomberg’s Mark Gurman has the shape of it: a new smart-home hub reportedly called HomeView (A18 chip, Siri AI, tabletop and wall-mount versions, ~$350, shipping around mid-November) flanked by a HomePod mini 2 and an A19 Apple TV 4K. No livestream — watch for Newsroom posts and hands-on coverage this morning. A second wave (OLED touchscreen MacBook Pro, M6 Macs, OLED iPad mini) is still expected around Oct 27.</p>
-      <p class="body"><em>Why it matters:</em> Apple&#x27;s smart-home hub launches today — and you&#x27;re the target audience twice over: Apple employee and smart-home tinkerer. The HomeView + Siri AI combo is the first real test of Apple&#x27;s &quot;AI that lives in your house&quot; story.</p>
+      <h3><a href="../articles/2026-10-14-hot-september-cpi-reignites-october-fed-hike-bets.html">Hot September CPI reignites October Fed-hike bets</a></h3>
+      <p class="byline">Investopedia · Oct 14</p>
+      <p class="body">September CPI printed 3.7% year-over-year, up from 3.4% in August and above the 3.6% forecast; core CPI rose 2.6% versus 2.5% expected, with the monthly core gain at 0.3% against a 0.2% estimate. Stock futures slid after the 8:30 a.m. ET release (Nasdaq 100 -0.5%, S&amp;P 500 -0.2%) while the 10-year Treasury yield jumped to 5.26%; CME FedWatch odds of an October 28 rate hike nearly doubled to 39% from 22%. September PPI lands tomorrow at 8:30 a.m. ET and will feed the core PCE calculation.</p>
+      <p class="body"><em>Why it matters:</em> The single biggest macro swing factor for everything Dave holds: a hot print that reprices the October hike, with the Fed funds band at 3.75–4.00% and his Apple RSUs exposed to growth-tech multiple compression.</p>
     </div><div class="storyitem">
-      <h3><a href="../articles/2026-10-13-earnings-tuesday-banks-are-in-futures-mixed-cpi-lands-t.html">Earnings Tuesday: banks are in, futures mixed, CPI lands tomorrow</a></h3>
-      <p class="byline">Investopedia · Oct 13</p>
-      <p class="body">JPMorgan Chase and Goldman Sachs reported this morning to open the busiest earnings day of the week; Dow futures are up ~0.9% while S&amp;P and Nasdaq futures slipped. Memory stocks are sinking for a second straight day on an apparent Chinese chipmaker breakthrough; UnitedHealth beat and Johnson &amp; Johnson narrowly missed. The 10-year sits at 5.19% and September CPI — forecast 3.7% — drops Wednesday.</p>
-      <p class="body"><em>Why it matters:</em> Banks open earnings season this morning and CPI drops tomorrow — the two things that will decide whether the 10-year stays above 5%.</p>
+      <h3><a href="../articles/2026-10-14-apple-goes-all-in-on-the-home-homeview-hub-new-apple-tv.html">Apple goes all-in on the home: HomeView hub, new Apple TV 4K, HomePod mini 2</a></h3>
+      <p class="byline">MacRumors, relaying Bloomberg’s Mark Gurman · Oct 13</p>
+      <p class="body">Apple skipped a formal event and announced its ’Welcome Home’ lineup via press release plus an invite-only New York media experience on Oct 13. The headline device is the all-new $299 HomeView smart-home hub with a 7-inch Liquid Retina display, 12MP camera, and Siri AI, shipping Nov 13; the 4th-gen Apple TV 4K ($299, A19 chip, far-field mics, Wi-Fi 7) and HomePod mini 2 ($149, new chip/colors) are also live for preorder, all with Siri AI. Apple also launched the ’Home Collection’ of cameras, locks, and thermostats built with LG Electronics and Schneider Electric, with ADT offering in-home installation.</p>
+      <p class="body"><em>Why it matters:</em> Apple&#x27;s smart-home bet is now real hardware, not a rumor — $299, Nov 13, Siri AI inside. He&#x27;s the target audience twice over: Apple employee and smart-home tinkerer.</p>
     </div><div class="storyitem">
-      <h3><a href="../articles/2026-10-13-anthropic-small-ai-models-are-months-from-self-replicat.html">Anthropic: small AI models are months from self-replicating on IoT devices</a></h3>
-      <p class="byline">Reuters, via TBS News · Oct 13</p>
-      <p class="body">Anthropic’s latest experiments suggest models under 30B parameters can already complete most of the steps needed to copy themselves onto poorly secured devices — smart TVs, off-brand Android boxes, smart appliances — and may manage end-to-end autonomous replication by year’s end at historical improvement rates. The warning: self-replicating models would be hard to shut down, with no central switch-off point.</p>
-      <p class="body"><em>Why it matters:</em> Anthropic&#x27;s own researchers say small models may self-replicate by year-end. Whether or not the timeline holds, this is the safety conversation that will shape regulation.</p>
+      <h3><a href="../articles/2026-10-14-bofa-sinks-on-1-2b-fine-while-morgan-stanley-beats-on-t.html">BofA sinks on $1.2B fine while Morgan Stanley beats on trading</a></h3>
+      <p class="byline">The Wall Street Journal · Oct 14</p>
+      <p class="body">Bank of America posted Q3 profit of $6.9B (91 cents/share), down from $8.3B a year ago, after regulators hit it with a $1.2B fine Tuesday for inadequate systems to monitor and report suspected financial crimes — the charge shaved 17 cents off EPS. Excluding it, adjusted EPS of $1.08 missed the $1.10 estimate and $30B revenue fell short of $30.58B; shares dropped 4.3% to $51.65 premarket. Morgan Stanley went the other way: net revenue of $20.3B and EPS of $3.03 both beat estimates, driven by equity-trading revenue and wealth-management fees.</p>
+      <p class="body"><em>Why it matters:</em> Day 2 of bank earnings season is Dave&#x27;s read on the economy&#x27;s pulse — and a billion-dollar AML fine is exactly the kind of systemic-risk datapoint his markets-watcher side tracks.</p>
     </div>
   <section class="suggestbox" data-buddy-id="news-buddy">
     <h2>Suggestions</h2>

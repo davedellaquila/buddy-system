@@ -203,6 +203,9 @@
   .sug-row{display:flex;align-items:center;gap:10px;margin-top:8px}
   .sug-btn{background:var(--accent);color:#fff;border:none;border-radius:8px;padding:8px 16px;font-size:13px;font-weight:600;cursor:pointer}
   .sug-status{font-size:12px;color:var(--muted)}
+  .votestrip{display:flex;align-items:center;justify-content:space-between;gap:12px;border:1px solid var(--rule);border-radius:10px;padding:10px 14px;margin:14px 0;font-size:13px;color:var(--muted)}
+  .votestrip a{color:var(--accent);font-weight:600;text-decoration:none;white-space:nowrap}
+  .votestrip a:hover{text-decoration:underline}
   .footer{
     margin-top:48px;padding-top:24px;border-top:1px solid var(--rule-strong);
     color:var(--muted);font-size:13.5px;text-align:center;
@@ -237,33 +240,67 @@
   .secpage .storyitem h3 a:hover{color:var(--accent)}
   .secpage .lede{font-size:16px;line-height:1.65;color:var(--ink);max-width:70ch;margin:10px 0 6px}
 
+  
+  .sec-head h2 a{color:inherit;text-decoration:none;border-bottom:2px solid transparent}
+  .sec-head h2 a:hover{color:var(--accent);border-bottom-color:var(--accent)}
+  .mini-mast{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 20px;border-bottom:3px double var(--ink);margin-bottom:8px;flex-wrap:wrap}
+  .mini-mast a.brand{font-family:Georgia,'Times New Roman',serif;font-weight:700;font-size:20px;color:var(--ink);text-decoration:none}
+  .mini-mast .ed{font-size:12px;color:var(--muted)}
+  .kicker{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:18px 0 4px}
+  .kicker a{color:var(--accent);text-decoration:none}
+  .detail h1{font-family:Georgia,'Times New Roman',serif;font-size:clamp(26px,5vw,40px);line-height:1.15;margin:6px 0 10px;letter-spacing:-.01em}
+  .detail h4.sec{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--accent);margin:22px 0 6px}
+  .detail p.body{font-size:16px;line-height:1.65;margin:0 0 12px;max-width:68ch}
+  .sourcebox{border:1px solid var(--rule);border-left:4px solid var(--accent);border-radius:8px;padding:12px 16px;margin:18px 0;max-width:68ch}
+  .sourcebox p{font-size:14px;line-height:1.6;margin:6px 0}
+  .sourcebox .flag{display:inline-block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;background:#fde68a;color:#7c2d12;border-radius:4px;padding:2px 8px;margin-bottom:4px}
+  .read-original{display:inline-block;margin:10px 0;padding:10px 20px;background:var(--accent);color:#fff !important;border-radius:8px;font-weight:700;text-decoration:none;font-size:15px}
+  .related{margin-top:28px;border-top:1px solid var(--rule);padding-top:14px}
+  .related h4.sec{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:0 0 10px}
+  .related ul{list-style:none;margin:0;padding:0}
+  .related li{margin:0 0 10px;font-size:15px;line-height:1.45}
+  .related a{color:var(--ink);text-decoration:none;border-bottom:1px solid var(--rule)}
+  .related a:hover{color:var(--accent);border-bottom-color:var(--accent)}
+  .backfoot{margin:30px 0 40px;font-size:14px}
+  .backfoot a{color:var(--accent);text-decoration:none;font-weight:600}
+  .secpage .storyitem{border-bottom:1px solid var(--rule);padding:16px 0}
+  .secpage .storyitem h3{font-size:20px;margin:0 0 6px;line-height:1.3}
+  .secpage .storyitem h3 a{color:var(--ink);text-decoration:none}
+  .secpage .storyitem h3 a:hover{color:var(--accent)}
+  .secpage .lede{font-size:16px;line-height:1.65;color:var(--ink);max-width:70ch;margin:10px 0 6px}
+
   </style>
 </head>
 <body>
 <header class="mini-mast">
   <a class="brand" href="../index.html">📰 The Morning Edition</a>
-  <span class="ed">Tuesday, October 13, 2026</span>
+  <span class="ed">Wednesday, October 14, 2026</span>
   <button id="themeBtn" class="voice-change" style="margin-left:0">Theme: Auto</button>
 </header>
 <main class="detail secpage" style="max-width:860px;margin:0 auto;padding:0 20px">
   <p class="kicker">Section</p>
   <h1>AI &amp; Technology</h1>
-  <p class="lede">A safety-heavy day in AI: Anthropic reports its safeguards are working (and names a Chinese lab), the UK gets its pre-release model access back, and Meta plants a new frontier-model flag — thinly sourced, but loud.</p>
+  <p class="lede">A consequential day in AI: Anthropic names a Chinese lab for distilling Claude, Meta&#x27;s Muse Wonder gets tier-1 confirmation as a real frontier model, the UK&#x27;s pre-release testing access is restored — and Anthropic holds a pre-IPO investor day today ahead of a possible $2T listing.</p>
   <div class="storyitem">
-      <h3><a href="../articles/2026-10-13-anthropic-says-new-safeguards-cut-ai-distillation-attac.html">Anthropic says new safeguards cut AI ‘distillation attacks’ 90–99%</a></h3>
-      <p class="byline">Reuters · Oct 13</p>
-      <p class="body">Anthropic says measures restricting access to Claude’s reasoning have reduced harvested data by “10 to 100 times” — and names Chinese startup Z.ai (Zhipu) as having tried to distill Claude while building GLM-5.3. The company banned tens of thousands of accounts tied to distillation campaigns, calling the practice a safety and national-security risk. No outside party has verified the figures.</p>
-      <p class="body"><em>Why it matters:</em> Anthropic publicly naming a Chinese lab for distilling Claude turns a research problem into a geopolitical one. Watch for export-control echoes.</p>
-    </div><div class="storyitem">
-      <h3><a href="../articles/2026-10-13-uk-regains-pre-release-access-to-frontier-ai-models-for.html">UK regains pre-release access to frontier AI models for safety testing</a></h3>
+      <h3><a href="../articles/2026-10-14-anthropic-names-chinas-z-ai-as-a-claude-copycat-says-ne.html">Anthropic names China’s Z.ai as a Claude copycat, says new defenses cut data theft 90–99%</a></h3>
       <p class="byline">Reuters · Oct 12</p>
-      <p class="body">Britain’s AI Security Institute is once again evaluating advanced models before deployment — including Gemini 4 Argon — after the White House reversed a request that OpenAI and Anthropic withhold new models from British testers. AI minister Kanishka Narayan confirmed the reversal Monday; Microsoft’s Brad Smith said Britain is “well placed” to lead on AI safety guidelines.</p>
-      <p class="body"><em>Why it matters:</em> The UK getting pre-release model access back matters because safety testing only works if testers see models before deployment — this was briefly not the case.</p>
+      <p class="body">In a research post Monday, Anthropic said new safeguards that restrict access to Claude’s step-by-step reasoning have reduced data harvested in so-called distillation attacks by about 90% to 99%, with reasoning tokens extracted now 10 to 100 times lower than before. The company banned tens of thousands of linked accounts and named Chinese startup Z.ai (Zhipu) as a company that tried to distill Claude’s capabilities while building its GLM-5.3 model, warning the practice poses safety and national-security risks. Z.ai did not immediately respond to a request for comment.</p>
+      <p class="body"><em>Why it matters:</em> Model distillation is the IP-theft vector for frontier AI, and the US-China angle shapes how labs — and Apple — guard their models. Directly in his wheelhouse as an engineer building internal tools.</p>
     </div><div class="storyitem">
-      <h3><a href="../articles/2026-10-13-meta-launches-muse-wonder-its-newest-frontier-model.html">Meta launches Muse Wonder, its newest frontier model</a></h3>
-      <p class="byline">KuCoin News flash · Oct 12</p>
-      <p class="body">Meta claims Muse Wonder outperforms comparable models from OpenAI and Anthropic in certain tests, with better memory and complex-task handling; chief AI officer Alexandr Wang says it competes with today’s leading frontier models and suits personal and professional agents. Zuckerberg told the FT the company is “already developing the next stage” — no pullback in capex planned.</p>
-      <p class="body"><em>Why it matters:</em> Treat the benchmark claims as marketing until a tier-one outlet confirms them — but Meta planting a &quot;frontier model&quot; flag matters for the AI race narrative.</p>
+      <h3><a href="../articles/2026-10-14-metas-muse-wonder-arrives-first-frontier-model-since-th.html">Meta’s Muse Wonder arrives: first frontier model since the Alexandr Wang reboot</a></h3>
+      <p class="byline">Startup Fortune, via TechCrunch and Reuters · Oct 12</p>
+      <p class="body">Meta’s Superintelligence Labs unveiled Muse Wonder and Muse Wonder Full on Oct 12, calling them the company’s first genuinely frontier-class models since Llama 4 — trained at the Prometheus data center in Ohio with a 1M-token context window. Wonder sells via the Meta Model API at $4/$20 per million input/output tokens; the stronger Wonder Full is restricted to $50–$200 Muse Code subscriptions. Zuckerberg told the Financial Times the launch brings Meta ’to the frontier’ and rejected calls for a coordinated industry slowdown; Meta stock rose more than 3% on the news.</p>
+      <p class="body"><em>Why it matters:</em> The four-way frontier race is now real — Meta back alongside OpenAI, Anthropic, Google — which moves model pricing he pays as a builder, Meta&#x27;s stock as a markets watcher, and the agent angle as a designer.</p>
+    </div><div class="storyitem">
+      <h3><a href="../articles/2026-10-14-white-house-restores-uk-access-to-pre-release-frontier.html">White House restores UK access to pre-release frontier models after 17-day freeze</a></h3>
+      <p class="byline">TechDefused · Oct 12</p>
+      <p class="body">The Trump administration lifted its Sept 24 order asking OpenAI and Anthropic to withhold pre-release models from Britain’s AI Security Institute pending a US cybersecurity review; access was restored Oct 11 after lobbying by UK AI minister Kanishka Narayan. During the freeze, at least one model release — Anthropic’s Claude Mythos 5.1 — went out to US organizations only. AISI screens frontier models for cyber, fraud, and bioweapon risks before public release; the restored access still rests on voluntary agreements, not binding law.</p>
+      <p class="body"><em>Why it matters:</em> Shows how fragile the global AI safety-testing infrastructure is — one executive order cut Britain out of pre-release evaluation for over two weeks. Worth tracking for an Apple engineer shipping products built on these models.</p>
+    </div><div class="storyitem">
+      <h3><a href="../articles/2026-10-14-anthropic-holds-pre-ipo-investor-day-today-eyeing-a-nov.html">Anthropic holds pre-IPO investor day today, eyeing a November blockbuster listing</a></h3>
+      <p class="byline">The Hindu BusinessLine, relaying Bloomberg · Oct 14</p>
+      <p class="body">Anthropic is meeting a select group of institutional investors at its San Francisco headquarters today, Oct 14, ahead of its IPO, with invitations just sent out, per people familiar with the matter. The company could start formal IPO marketing as soon as the week of Nov 9, targeting trading before Thanksgiving. Investors estimate a fair valuation of $1.8–2 trillion, and Anthropic expects to match or beat the size of SpaceX’s IPO — while OpenAI has postponed its own IPO plans and is instead raising at least $30B at a ~$1.4T valuation.</p>
+      <p class="body"><em>Why it matters:</em> A ~$2T Anthropic listing would be one of the largest IPOs in history and sets the valuation benchmark for the entire frontier-lab economy — against OpenAI sitting out at ~$1.4T.</p>
     </div>
   <section class="suggestbox" data-buddy-id="news-buddy">
     <h2>Suggestions</h2>
