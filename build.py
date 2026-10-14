@@ -309,6 +309,15 @@ body.sb-closed #sidebar{transform:translateX(-115%);visibility:hidden;
   touch-action:none;z-index:4}
 #tree-split .split-grip{width:52px;height:4px;border-radius:2px;background:var(--border2)}
 #tree-split:hover .split-grip,#tree-split:active .split-grip{background:var(--accent)}
+/* Orphan pane mini mode (Dave, 2026-10-13): at minimum split height, vertically center
+   the "Orphaned buddies" heading instead of clipping it at the bottom. */
+#treepane-orph.mini .treescroll{overflow:hidden}
+#treepane-orph.mini .zoomsizer{height:100% !important;display:flex;align-items:center;justify-content:center}
+#treepane-orph.mini .zoomcontent{width:100%}
+#treepane-orph.mini .standalones{padding:0;text-align:center}
+#treepane-orph.mini .standalones h2{margin:0;font-size:15px}
+#treepane-orph.mini .standalones .sub,#treepane-orph.mini .standalones .grid{display:none}
+#treepane-orph.mini .zoombar{display:none}
 /* Slim vertical zoom — right edge of each pane; no panel chrome; large◼ · slider · small▪ · fit */
 .zoombar{position:absolute;top:50%;right:28px;transform:translateY(-50%);z-index:5;
   display:flex;flex-direction:column;align-items:center;gap:6px;width:auto;height:auto;
@@ -3808,6 +3817,12 @@ function applyTreeSplit(){
   const s = clampTreeSplit(S.treeSplit);
   mainPane.style.flex = s + ' ' + s + ' 0';
   orphPane.style.flex = (1 - s) + ' ' + (1 - s) + ' 0';
+  /* Mini mode (Dave, 2026-10-13): when the orphan pane is near its minimum height,
+     center the heading instead of clipping it at the bottom. */
+  requestAnimationFrame(() => {
+    const h = orphPane.getBoundingClientRect().height;
+    orphPane.classList.toggle('mini', h <= 90);
+  });
 }
 function initTreeSplit(){
   const sp = document.getElementById('tree-split');
