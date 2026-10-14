@@ -8,6 +8,9 @@ All notable changes to the Buddies dashboard and buddy system. Newest first.
 ### Added
 - **📈 Investment Buddy homepage** (Dave's commission 2026-10-13): a full market-overview dashboard at `investment-buddy/index.html`, replacing the basic template (custom design, never auto-overwritten). Market-now strip (S&P 500, Nasdaq 100, Dow, 10-yr yield, VIX with green/red day pills); hero chart — S&P 500 monthly closes, 10 years (+271% annotated); the horse race — S&P 500 vs Nasdaq 100 vs Dow, past 12 months rebased to 100; the last 3 months, rebased; "The Lookout" — four quick-take cards (10-yr ≈5.2% 24-yr high, VIX ≈15 calm, CPI Oct 14, Q3 earnings week); about section + device-local brain dump; "not financial advice" footer. Hand-rolled SVG charts (no dependencies), hover tooltips, dark+light mode, responsive. All market series are real Finnhub CFD-proxy closes as of Oct 12, 2026 (269 daily / 241 monthly points embedded); every chart labeled with source + as-of. Yield/VIX history couldn't be honestly sourced — shown as current readings only.
 
+### Fixed
+- **About-section list styling** (Dave's screenshot catch 2026-10-13): the `ul`/`li` rules still targeted a dead `.about-grid` selector (leftover from a refactor — the markup uses `.grid2`), so the "About this buddy" bullets rendered unstyled and cramped. Retargeted to `.grid2 .card ul/li` with the intended 14px muted styling, indent, item spacing, and line-height.
+
 ## 2026-10-13 (Project tiles: locked top row + TOTAL tile; settings/info-panel field parity; text-size readout clipping)
 
 ### Changed
