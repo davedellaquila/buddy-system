@@ -310,7 +310,7 @@ body.sb-closed #sidebar{transform:translateX(-115%);visibility:hidden;
 #tree-split .split-grip{width:52px;height:4px;border-radius:2px;background:var(--border2)}
 #tree-split:hover .split-grip,#tree-split:active .split-grip{background:var(--accent)}
 /* Slim vertical zoom — right edge of each pane; no panel chrome; large◼ · slider · small▪ · fit */
-.zoombar{position:absolute;top:50%;right:10px;transform:translateY(-50%);z-index:5;
+.zoombar{position:absolute;top:50%;right:28px;transform:translateY(-50%);z-index:5;
   display:flex;flex-direction:column;align-items:center;gap:6px;width:auto;height:auto;
   padding:0;margin:0;background:none;border:none;border-radius:0;box-shadow:none;
   -webkit-tap-highlight-color:transparent}
