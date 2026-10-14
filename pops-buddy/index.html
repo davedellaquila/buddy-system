@@ -87,52 +87,6 @@ h2 { font-size: 22px; margin: 32px 0 16px; }
 }
 .empty { color: var(--muted); font-style: italic; }
 
-/* Dossier — Dave's background, career, and interests (synced from dellaquila.com) */
-.dossier {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 24px;
-  margin-bottom: 32px;
-}
-.dossier h2 { margin-top: 0; }
-.dossier h3 { font-size: 17px; margin: 20px 0 10px; }
-.dossier-lede { font-size: 17px; margin-bottom: 8px; }
-.dossier p { margin-bottom: 10px; }
-.timeline { list-style: none; }
-.timeline li { margin-bottom: 14px; padding-left: 4px; }
-.timeline li strong { color: var(--text); }
-.philosophy { margin: 0 0 10px 24px; }
-.philosophy li { margin-bottom: 4px; }
-.dossier-src { color: var(--muted); font-size: 13px; margin-top: 16px; }
-.dossier-src a { color: var(--accent); }
-
-/* Feedback — quick replies + freeform, mirroring the chat quick-reply pattern */
-.feedback {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 20px 22px;
-  margin-bottom: 32px;
-}
-.feedback h2 { margin: 0 0 6px; font-size: 20px; }
-.feedback-sub { color: var(--muted); font-size: 14px; margin-bottom: 14px; }
-.feedback-choices { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
-.feedback-choice {
-  border: 1px solid var(--border); background: var(--bg); color: var(--text);
-  border-radius: 999px; padding: 8px 16px; font-size: 14px; font-weight: 600; cursor: pointer;
-  -webkit-tap-highlight-color: transparent;
-}
-.feedback-choice:hover { border-color: var(--accent); }
-.feedback-choice:disabled { opacity: .45; cursor: default; }
-.feedback textarea {
-  width: 100%; min-height: 72px; resize: vertical;
-  background: var(--bg); border: 1px solid var(--border); border-radius: 8px;
-  padding: 10px 12px; font-size: 14px; color: var(--text); font-family: inherit;
-}
-.feedback textarea:focus { outline: none; border-color: var(--accent); }
-.feedback textarea:disabled { opacity: .55; }
-
 .dumpbox {
   background: var(--card);
   border: 1px solid var(--border);
@@ -183,49 +137,6 @@ h2 { font-size: 22px; margin: 32px 0 16px; }
 
 <div class="mission">Pops Buddy is Dave Dell&#x27;Aquila&#x27;s personal buddy — the one place for everything about Dave: who he is, what he&#x27;s done, key facts, important dates, notes, and reminders. &#x27;Pops&#x27; is what his family calls him.</div>
 
-<section class="dossier">
-<h2>📋 Dossier</h2>
-<p class="dossier-lede">Dave Dell&#x27;Aquila is a UX and product designer with 30+ years of experience in data-driven enterprise software and consumer applications — and the human at the center of the buddy system.</p>
-<h3>Career</h3>
-<ul class="timeline">
-<li><strong>Apple — World Wide Sales Finance</strong> (2023–present)<br>Sr. UX Designer / Lead Application Designer on an internal data-warehouse app for processing and analyzing retail sales data from Apple&#x27;s global retail partners.</li>
-<li><strong>Apple — Marcom Interactive</strong> (2015–2022)<br>Lead Application Designer for the internal CMS that publishes Apple product content globally on apple.com — requirements through wireframes, prototypes, high-fidelity mockups, and design specs.</li>
-<li><strong>eBay Motors</strong> (2011–2014)<br>Led UX design for Parts &amp; Accessories and Vehicles (10M+ monthly visitors). Spearheaded eBay Garage — 270,000 vehicles shared in its first year, the largest online automotive community.</li>
-<li><strong>WebEx</strong> (2010)<br>Designed the Small Business Portal — video conferencing and collaboration tools made manageable for non-technical small-business customers.</li>
-<li><strong>Phoenix Technologies</strong> (2008–2009)<br>Lead UI/UX designer for HyperSpace — instant-on access to essential apps without waiting for Windows to boot, with Instant On/Off and constant connectivity.</li>
-<li><strong>Mighty</strong> (2008)<br>Lead UI/UX designer on MightyDB, a web-based database application development environment (in the spirit of today&#x27;s Airtable).</li>
-<li><strong>Cisco</strong> (2005–2008)<br>Designed an internal Business Continuity Plan tool for Supply Chain Risk Management — tracking BCP status across global suppliers.</li>
-<li><strong>Rae Technology</strong> (1992–1995)<br>Created <strong>Rae Assist</strong> — one of the first free-form personal information managers for early tablets. Link any object to any other: contacts, tasks, calendar events in many-to-many relationships. The direct ancestor of the buddy system&#x27;s linked-objects philosophy.</li>
-<li><strong>The Bare Facts</strong> (1990)<br>The Bare Facts Video Guide — a comprehensive pre-internet guide to on-screen nudity in film and TV.</li>
-</ul>
-<h3>Design philosophy</h3>
-<ol class="philosophy">
-<li>Make it Useful</li>
-<li>Make it Useable</li>
-<li>Make it Beautiful</li>
-</ol>
-<h3>Background</h3>
-<p>Born in Tokyo, raised in Silicon Valley before and during the microcomputer revolution. His father was an early employee at Hewlett-Packard and Fairchild Semiconductor. UC Davis — Computer Science with Psychology, Sociology, and Art; the arrival of the Macintosh during his school years set the course.</p>
-<h3>Outside the studio</h3>
-<p>Side project: <strong>Sports Car Adventures</strong> — bespoke vintage sports-car driving experiences on Northern California back roads. Avid cyclist (former competitor, master mechanic) and photographer (high-school yearbook/newspaper photographer, film SLRs through the early-2000s digital transition). Active in the Northern California vintage car rally scene. Lives in Fiddletown, CA.</p>
-<p class="dossier-src">Source: <a href="https://dellaquila.com" target="_blank" rel="noopener">dellaquila.com</a> · <a href="https://www.dellaquila.com/portfolio" target="_blank" rel="noopener">portfolio</a> — synced October 2026</p>
-</section>
-
-<section class="feedback" data-buddy-id="pops-buddy">
-<h2>💬 Feedback</h2>
-<p class="feedback-sub">What do you think of this page? Tap a quick reply — or write it out below. It lands in the buddy's repo for Astro to pick up.</p>
-<div class="feedback-choices">
-<button type="button" class="feedback-choice" data-choice="This is AWESOME!">This is AWESOME!</button>
-<button type="button" class="feedback-choice" data-choice="Needs a tweak">Needs a tweak</button>
-<button type="button" class="feedback-choice" data-choice="Let's discuss">Let's discuss</button>
-</div>
-<textarea rows="3" placeholder="Type feedback here… (optional — a quick reply above sends on its own)"></textarea>
-<div class="dumpbox-row">
-<button type="button" class="dumpbox-btn feedback-send">Send feedback</button>
-<span class="dumpbox-status feedback-status" role="status"></span>
-</div>
-</section>
-
 
 <section class="dumpbox" data-buddy-id="pops-buddy">
 <h2>🧠 Brain dump</h2>
@@ -253,7 +164,7 @@ h2 { font-size: 22px; margin: 32px 0 16px; }
 
 
 <div class="footer">
-Generated 2026-10-13 · Part of the Buddy System
+Generated 2026-10-14 · Part of the Buddy System
 </div>
 
 <script>
@@ -464,110 +375,6 @@ Generated 2026-10-13 · Part of the Buddy System
     });
   });
   resolveBuddy();
-})();
-</script>
-
-<script>
-(function(){
-  var sec = document.querySelector('.feedback');
-  if (!sec || sec.dataset.fbInit) return;
-  sec.dataset.fbInit = '1';
-  var bid = sec.getAttribute('data-buddy-id') || (function(){
-    var p = location.pathname.replace(/\/+$/, '');
-    return p.substring(p.lastIndexOf('/') + 1);
-  })();
-  var ta = sec.querySelector('textarea'),
-      sendBtn = sec.querySelector('.feedback-send'),
-      st = sec.querySelector('.feedback-status'),
-      choices = sec.querySelectorAll('.feedback-choice');
-  function lsGet(){ try { return JSON.parse(localStorage.getItem('buddyTree.v3') || '{}'); } catch(e){ return {}; } }
-  function token(){ return lsGet().ghToken || ''; }
-  function b64encode(str){
-    var bytes = new TextEncoder().encode(str), bin = '';
-    bytes.forEach(function(b){ bin += String.fromCharCode(b); });
-    return btoa(bin);
-  }
-  async function ghApi(path, method, body){
-    var t = token();
-    if (!t) throw new Error('Add a GitHub token first.');
-    var r = await fetch('https://api.github.com' + path, {
-      method: method || 'GET',
-      headers: {'Authorization': 'Bearer ' + t, 'Accept': 'application/vnd.github+json', 'Content-Type': 'application/json'},
-      body: body ? JSON.stringify(body) : undefined
-    });
-    if (!r.ok) throw new Error('GitHub ' + r.status);
-    return r.status === 204 ? null : await r.json();
-  }
-  async function ghGetFile(repo, path){
-    try {
-      var j = await ghApi('/repos/davedellaquila/' + repo + '/contents/' + path);
-      if (j && j.content) return {
-        text: new TextDecoder().decode(Uint8Array.from(atob(j.content.replace(/\n/g, '')), function(c){ return c.charCodeAt(0); })),
-        sha: j.sha
-      };
-    } catch(e){}
-    return null;
-  }
-  var repo = null, buddyName = bid;
-  async function resolveRepo(){
-    try {
-      var r = await fetch('../buddies.json', {cache: 'no-store'});
-      var d = await r.json();
-      var buds = d.buddies || [];
-      for (var i = 0; i < buds.length; i++) {
-        if (buds[i].id === bid) {
-          if (buds[i].repo) repo = buds[i].repo;
-          if (buds[i].name) buddyName = buds[i].name;
-          break;
-        }
-      }
-    } catch(e){}
-    refreshUI();
-  }
-  function refreshUI(){
-    var ok = !!token() && !!repo;
-    ta.disabled = !ok;
-    sendBtn.disabled = !ok;
-    choices.forEach(function(c){ c.disabled = !ok; });
-    if (!token()) st.textContent = 'Add a GitHub token in the Brain dump section below to enable feedback.';
-    else if (!repo) st.textContent = 'No repo linked for this buddy yet.';
-    else st.textContent = '';
-  }
-  async function sendFeedback(choice, note){
-    if (!token()) { refreshUI(); return; }
-    if (!repo) { st.textContent = 'No repo linked for this buddy yet.'; return; }
-    st.textContent = 'Sending…';
-    sendBtn.disabled = true;
-    choices.forEach(function(c){ c.disabled = true; });
-    try {
-      var NL = String.fromCharCode(10);
-      var stamp = new Date().toLocaleString();
-      var entry = '## ' + stamp + NL + NL
-        + (choice ? '**Quick reply:** ' + choice + NL + NL : '')
-        + (note ? note + NL + NL : '');
-      var cur = await ghGetFile(repo, 'docs/feedback.md');
-      var base = cur ? cur.text : '# Feedback — ' + buddyName + NL + NL;
-      var body = {message: 'Feedback for ' + bid, content: b64encode(base + entry)};
-      if (cur && cur.sha) body.sha = cur.sha;
-      await ghApi('/repos/davedellaquila/' + repo + '/contents/docs/feedback.md', 'PUT', body);
-      ta.value = '';
-      st.textContent = '✓ Feedback sent — Astro will pick it up.';
-    } catch(err){ st.textContent = 'Send failed: ' + (err.message || err); }
-    sendBtn.disabled = false;
-    choices.forEach(function(c){ c.disabled = false; });
-    refreshUI();
-  }
-  choices.forEach(function(c){
-    c.addEventListener('click', function(){
-      sendFeedback(c.getAttribute('data-choice'), ta.value.trim());
-    });
-  });
-  sendBtn.addEventListener('click', function(){
-    var note = ta.value.trim();
-    if (!note) { st.textContent = 'Type some feedback first — or tap a quick reply above.'; return; }
-    sendFeedback('', note);
-  });
-  resolveRepo();
 })();
 </script>
 
