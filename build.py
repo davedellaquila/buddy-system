@@ -4747,6 +4747,26 @@ function initPan(){
   attachPan(document.getElementById('treezoom-orph'));
   attachPan(document.getElementById('view-projects'));
   attachPan(document.getElementById('view-manifest'));
+  /* Trackpad wheel: pan both axes directly (Dave, 2026-10-13 — native trackpad
+     scroll was axis-locking on the org chart). Apply raw deltas so diagonal
+     just works. Shift+wheel stays zoom; Ctrl+wheel (pinch) is untouched. */
+  ['treezoom-main','treezoom-orph'].forEach(pid => {
+    const pane = document.getElementById(pid);
+    if (!pane || pane.dataset.wheelPan) return;
+    pane.dataset.wheelPan = '1';
+    pane.addEventListener('wheel', e => {
+      if (e.shiftKey || e.ctrlKey || e.metaKey) return; // zoom gestures stay native
+      const dx = e.deltaX, dy = e.deltaY;
+      if (!dx && !dy) return;
+      const canX = pane.scrollWidth > pane.clientWidth + 1;
+      const canY = pane.scrollHeight > pane.clientHeight + 1;
+      if (!canX && !canY) return;
+      e.preventDefault();
+      const zf = ((S[pane.dataset.zoomkey || 'zoom']) || 100) / 100;
+      if (canX) pane.scrollLeft += dx / zf;
+      if (canY) pane.scrollTop += dy / zf;
+    }, { passive: false });
+  });
 }
 initPan();
 /* ---------- tree node drag-to-reparent (pointer events: mouse + touch) ----------
