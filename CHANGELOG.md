@@ -3,6 +3,11 @@
 All notable changes to the Buddies dashboard and buddy system. Newest first.
 `FEATURES.md` describes the current state; this file describes how it got there.
 
+## 2026-10-14 (Buddy icons for Save to Desktop)
+
+### Added
+- **Buddy icons on saved pages** (Dave's ask 2026-10-14): buddy homepages now include `apple-touch-icon` (using the buddy's emoji/custom icon), so saving a buddy's page to desktop/home screen from Safari uses that buddy's icon instead of a generic one. The dashboard already swaps its icon dynamically when you select a buddy.
+
 ## 2026-10-13 (Sidebar resize fix)
 
 ### Fixed
