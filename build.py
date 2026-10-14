@@ -3354,6 +3354,7 @@ async function setBuddyPersona(id, name){
 }
 function renderBuddy(id){
   const b = byId[id]; if(!b) return;
+  const _vb = document.getElementById('view-buddy'); if (_vb) _vb.dataset.buddy = id;
   try{ setBuddyFavicon(buddyDisplayIcon(b), buddyImageUrl(b)); }catch(e){}
   const items = (b.attention || []).filter(a => !S.seen[a.id]);
   let arts = '';
@@ -7930,7 +7931,7 @@ document.addEventListener('click', e => {
   if (edgeOpenAt && Date.now() - edgeOpenAt < 400) return; // swallow the click that follows an edge-swipe open
   const bpb = e.target.closest && e.target.closest('.bp-build');
   if (bpb) { openWhatsNew(); return; }
-  if (e.target.closest && e.target.closest('#bp-icon')) { const m = S.sel.match(/^buddy:(.+)$/); if (m) openAvatarPicker(m[1], e.target.closest('#bp-icon')); return; }
+  if (e.target.closest && e.target.closest('#bp-icon')) { const _vb2 = document.getElementById('view-buddy'); const _bid = _vb2 && _vb2.dataset.buddy; if (_bid) openAvatarPicker(_bid, e.target.closest('#bp-icon')); return; }
   const co = e.target.closest && e.target.closest('[data-close-order]');
   if (co) {
     const oid = co.getAttribute('data-close-order');
