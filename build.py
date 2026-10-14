@@ -66,7 +66,7 @@ body{background:var(--bg);color:var(--text)}
 body{padding:0}
 .app{display:flex;min-height:100vh;align-items:stretch}
 #sidebar{width:336px;box-sizing:border-box;background:var(--panel);container-type:inline-size;
-  padding:0 14px 32px;position:fixed;left:0;top:12px;bottom:12px;overflow-y:auto;overflow-x:hidden;overflow-wrap:break-word;
+  padding:0 14px;position:fixed;left:0;top:12px;bottom:12px;overflow-y:auto;overflow-x:hidden;overflow-wrap:break-word;
   z-index:40;border:1px solid var(--border);border-left:none;border-radius:0 18px 18px 0;
   box-shadow:8px 0 28px var(--shadow-soft);
   transition:transform .5s cubic-bezier(.32,.72,.35,1), visibility 0s}
@@ -81,7 +81,7 @@ body.sb-closed #sidebar{transform:translateX(-115%);visibility:hidden;
 /* Brand chrome (eyebrow/title/subtitle + gear/close) pins at top; Views scroll under */
 /* Tip jar — quiet footer link pinned to the bottom of the sidebar. Muted, small,
    never in the way. Same ko-fi destination as the News Buddy voice picker. */
-.sb-tipjar{position:sticky;bottom:0;z-index:7;background:var(--panel);margin:12px -14px -32px;padding:10px 14px;border-top:1px solid var(--border);text-align:center}
+.sb-tipjar{position:sticky;bottom:0;z-index:7;background:var(--panel);margin:12px -14px 0;padding:10px 14px;border-top:1px solid var(--border);text-align:center}
 .sb-tipjar a{font-size:12px;color:var(--muted);text-decoration:none}
 .sb-tipjar a:hover{color:var(--accent);text-decoration:underline}
 .sb-brand-sticky{
