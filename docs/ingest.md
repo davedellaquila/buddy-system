@@ -88,3 +88,7 @@ For the side panel behavior this is definitely an improvement. I like how the le
 
 Also while we're at it, make it slightly shorter so there's some margin on the top and bottom, and round the corners as well to soften it up a little bit. I like the exact same behavior on the right side panel. When you click the chevron icon, it slides out and there's a chevron icon in the opposite direction to slide it back. Same rounded corners, same margins around the edges
 
+## 10/13/2026, 10:45:57 PM
+
+FOLLOW-UP — Dave needs more info on: "New buddy added from the dashboard — run the full onboarding (mission doc, repo, side chat, homepage)." (attention id: setup-kyle-dell-aquila). Please follow up with him.
+
