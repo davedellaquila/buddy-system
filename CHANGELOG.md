@@ -3,6 +3,11 @@
 All notable changes to the Buddies dashboard and buddy system. Newest first.
 `FEATURES.md` describes the current state; this file describes how it got there.
 
+## 2026-10-13 (Tree zoom measured while hidden)
+
+### Fixed
+- **Sizer read 0×0 on fresh load with a persisted low zoom** (polish, Dave's ask 2026-10-13): `refreshViews()` renders the tree before `show()` makes the view visible, and `display:none` makes `scrollWidth` read 0 — so the zoom sizer started at 0×0 and only self-corrected on the next zoom touch. Now `show('view:tree')` re-runs `updateZoomMin()` + scroll restore in a `requestAnimationFrame` once the pane is actually visible. Also fixes persisted scroll positions silently failing to restore on fresh load.
+
 ## 2026-10-13 (Pops' Buddy dossier from dellaquila.com)
 
 ### Fixed

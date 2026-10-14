@@ -5102,6 +5102,13 @@ function show(sel, push){
       if (ev) ev.classList.add('active');
       if (sel === 'view:changelog') renderChangelog();
       if (sel === 'view:releases') renderReleases();
+      if (sel === 'view:tree') requestAnimationFrame(() => {
+        // Init renders the tree while display:none (scrollWidth reads 0), so
+        // re-measure once visible and restore the persisted scroll position.
+        updateZoomMin();
+        restoreScrollPos('tree:main', document.getElementById('treezoom-main'));
+        restoreScrollPos('tree:orph', document.getElementById('treezoom-orph'));
+      });
     } else if (sel.startsWith('plan:')) {
       closeDetail();
       vb.style.width = '';
