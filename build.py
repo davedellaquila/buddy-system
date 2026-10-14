@@ -4099,8 +4099,8 @@ function applyTreeSplit(){
   const hasOrph = orphScroll.innerHTML.trim().length > 0;
   split.style.display = ''; orphPane.style.display = '';
   if (!hasOrph) {
-    /* No orphans: keep a slim drop strip so buddies can always be detached here */
-    mainPane.style.flex = '1 1 0'; orphPane.style.flex = '0 0 auto'; return;
+    /* No orphans (Dave, 2026-10-14): hide the bottom pane and splitter entirely */
+    mainPane.style.flex = '1 1 0'; orphPane.style.display = 'none'; split.style.display = 'none'; return;
   }
   const s = clampTreeSplit(S.treeSplit);
   mainPane.style.flex = s + ' ' + s + ' 0';
