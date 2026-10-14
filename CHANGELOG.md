@@ -3,6 +3,11 @@
 All notable changes to the Buddies dashboard and buddy system. Newest first.
 `FEATURES.md` describes the current state; this file describes how it got there.
 
+## 2026-10-13 (Sidebar resize fix)
+
+### Fixed
+- **Sidebar drag no longer jumps** (Dave's catch 2026-10-13): the sidebar used `content-box`, so the drag handler measured the border-box but set the content-box — growing the panel 28px per drag and leaving the gripper misaligned. Switched to `border-box`; gripper now tracks the panel edge.
+
 ## 2026-10-13 (Stat tiles: natural width)
 
 ### Changed
