@@ -340,6 +340,20 @@ input[type=range].zrange::-moz-range-thumb{width:16px;height:16px;border-radius:
 #sb-resize{position:fixed;top:12px;left:calc(var(--sbw, 336px) - 14px);z-index:50;
   display:flex;align-items:center;justify-content:center;width:28px;height:calc(100vh - 24px);height:calc(100dvh - 24px);cursor:ew-resize;
   background:transparent;-webkit-tap-highlight-color:transparent;touch-action:none;user-select:none}
+/* Drawer-pull tab (Dave, 2026-10-13): half a tab protrudes from the left edge when the
+   sidebar is closed. Clicking opens the sidebar to its last width; the tab hands off
+   to the resize gripper once open. */
+#sb-tab{position:fixed;left:0;top:50%;transform:translate(-50%,-50%);z-index:39;
+  width:30px;height:76px;background:var(--panel);border:1px solid var(--border);border-left:none;
+  border-radius:0 15px 15px 0;cursor:pointer;display:none;align-items:center;justify-content:flex-end;
+  padding:0 5px 0 0;box-shadow:4px 0 16px var(--shadow-soft)}
+#sb-tab::after{content:'';width:12px;height:35px;flex:none;
+  background-image:radial-gradient(circle,var(--gripdot,color-mix(in srgb,var(--muted) 34%,var(--border))) 1.6px,transparent 1.7px);
+  background-size:6px 7px;background-position:center;background-repeat:repeat}
+#sb-tab:hover{border-color:var(--accent)}
+#sb-tab:hover::after{--gripdot:var(--accent)}
+body.sb-closed #sb-tab{display:flex}
+@media (max-width:640px){#sb-tab{display:none !important}}
 /* 2x5 dot-grid gripper (Jonny's pick, 2026-10-11): honest affordance, no hover required */
 #sb-resize::after{content:'';width:14px;height:35px;transform:translateX(-9px);
   background-image:radial-gradient(circle,var(--gripdot,color-mix(in srgb,var(--muted) 34%,var(--border))) 1.6px,transparent 1.7px);
@@ -6712,7 +6726,7 @@ function initEdgeSwipeOpen(){
     if (!t || t.clientX > EDGE_PX) { track = null; return; }
     // Don't steal the hamburger / chrome taps in the top-left
     const el = document.elementFromPoint(t.clientX, t.clientY);
-    if (el && el.closest && el.closest('#menu-btn,#sb-to-top,#sb-resize')) { track = null; return; }
+    if (el && el.closest && el.closest('#menu-btn,#sb-tab,#sb-to-top,#sb-resize')) { track = null; return; }
     track = { id: t.identifier, x0: t.clientX, y0: t.clientY };
   }
   function onMove(e){
@@ -6761,7 +6775,7 @@ function initPanelSwipeGestures(){
     return null;
   }
   function blockedEl(el){
-    return !!(el && el.closest && el.closest('input,textarea,select,[contenteditable="true"],#bp-resize,#sb-resize,#panel-open,#menu-btn'));
+    return !!(el && el.closest && el.closest('input,textarea,select,[contenteditable="true"],#bp-resize,#sb-resize,#sb-tab,#panel-open,#menu-btn'));
   }
   function onStart(e){
     track = null;
@@ -7530,6 +7544,7 @@ document.addEventListener('click', e => {
     if (_vb && _vb.classList.contains('active') && (_vb.classList.contains('panel') || _vb.classList.contains('sheet'))) { closeDetail(); return; }
     setSidebarOpen(!isSidebarOpen()); return;
   }
+  if (e.target.closest && e.target.closest('#sb-tab')) { setSidebarOpen(true); return; }
   if (e.target.closest && e.target.closest('#sb-scrim')) { setSidebarOpen(false); return; }
   if (e.target.closest && e.target.closest('#bp-desktop')) { const m = S.sel.match(/^buddy:(.+)$/); if (m) saveToDesktop(m[1]); return; }
   if (e.target.closest && e.target.closest('#bp-settings')) { openFieldSettings(); return; }
@@ -7814,6 +7829,7 @@ initSbBrandSticky();
   <div class="sb-tipjar"><a href="https://ko-fi.com/davedellaquila" target="_blank" rel="noopener" title="Support the buddy system">\U0001FAD9 Tip the jar</a></div>
 </aside>
 <div id="sb-resize" title="Drag left or right to resize the sidebar. Double-click to close."></div>
+<button type="button" id="sb-tab" title="Open sidebar" aria-label="Open sidebar"></button>
 <button type="button" id="sb-to-top" title="Scroll sidebar to top" aria-label="Scroll sidebar to top">
   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5"/><path d="M6 11l6-6 6 6"/></svg>
 </button>
