@@ -81,9 +81,37 @@ body.sb-closed #sidebar{transform:translateX(-115%);visibility:hidden;
 /* Brand chrome (eyebrow/title/subtitle + gear/close) pins at top; Views scroll under */
 /* Tip jar — quiet footer link pinned to the bottom of the sidebar. Muted, small,
    never in the way. Same ko-fi destination as the News Buddy voice picker. */
-.sb-tipjar{position:sticky;bottom:0;z-index:7;background:var(--panel);margin:12px -14px 0;padding:10px 14px;border-top:1px solid var(--border);text-align:center}
-.sb-tipjar a{font-size:12px;color:var(--muted);text-decoration:none}
+.sb-tipjar{position:sticky;bottom:0;z-index:7;background:var(--panel);margin:12px -14px 0;padding:10px 14px;border-top:1px solid var(--border);text-align:center;overflow:hidden}
+.sb-tipjar a{font-size:12px;color:var(--muted);text-decoration:none;display:inline-block;transform-origin:center}
 .sb-tipjar a:hover{color:var(--accent);text-decoration:underline}
+/* Tip jar party: slide → wiggle → flip → bounce → explode → shake → glow, then rest (Dave 2026-10-14) */
+@keyframes tipjar-party{
+  0%{transform:translateX(-46px) rotate(0deg) scale(1);opacity:0}
+  7%{transform:translateX(0) rotate(0deg) scale(1);opacity:1}
+  11%{transform:rotate(-5deg) scale(1.08)}
+  14%{transform:rotate(5deg) scale(1.08)}
+  17%{transform:rotate(-3deg) scale(1.04)}
+  20%{transform:rotate(0deg) scale(1)}
+  26%{transform:rotateY(0deg)}
+  38%{transform:rotateY(360deg)}
+  44%{transform:translateY(0) scale(1)}
+  49%{transform:translateY(-9px) scale(1.06)}
+  54%{transform:translateY(0) scale(1)}
+  59%{transform:translateY(-5px) scale(1.03)}
+  64%{transform:translateY(0) scale(1)}
+  69%{transform:scale(1)}
+  75%{transform:scale(1.4) rotate(4deg)}
+  81%{transform:scale(1) rotate(0deg)}
+  85%{transform:translateX(0)}
+  88%{transform:translateX(-4px)}
+  91%{transform:translateX(4px)}
+  94%{transform:translateX(0)}
+  100%{transform:translateX(0) rotate(0deg) scale(1);opacity:1}
+}
+@keyframes tipjar-glow{0%,100%{text-shadow:0 0 0 rgba(0,0,0,0)}50%{text-shadow:0 0 12px var(--accent)}}
+.sb-tipjar a{animation:tipjar-party 9s ease-in-out infinite}
+.sb-tipjar a:hover{animation:tipjar-party 9s ease-in-out infinite,tipjar-glow 1.2s ease-in-out infinite}
+@media (prefers-reduced-motion:reduce){.sb-tipjar a{animation:none}}
 .sb-brand-sticky{
   position:sticky;top:0;z-index:7;background:var(--panel);
   margin:0 -14px;padding:0 14px;
@@ -702,6 +730,8 @@ body:has(#token-pill) #view-buddy.sheet .bp-close-x{right:148px}
 .bp-sec > h3 .secgrip:hover{color:var(--muted);background:var(--ghost)}
 .bp-sec > h3 .secgrip:active{cursor:grabbing}
 .bp-sec.sec-dragging{opacity:0.4}
+#sec-drag-divider{position:absolute;height:0;border-top:3px solid var(--accent);z-index:50;pointer-events:none;box-shadow:0 0 8px var(--accent)}
+#view-drag-divider{position:absolute;height:0;border-top:3px solid var(--accent);z-index:50;pointer-events:none;box-shadow:0 0 8px var(--accent)}
 /* Views-list ⋮⋮ grip: same language as the info-panel section grips.
    This is the touch path for reordering — HTML5 DnD can't start from touch. */
 #view-nav .navbtn .navgrip{cursor:grab;color:var(--faint);font-size:14px;line-height:1;padding:6px 4px;border-radius:4px;
@@ -777,6 +807,10 @@ body.sb-closed #menu-btn{display:flex;align-items:center;justify-content:center;
 .attr-value{color:var(--text);font-weight:700}
 .attr-value.attr-none{color:var(--faint);font-weight:500}
 .attr-row .info-tip{margin-left:0;font-size:17px}
+.attr-body{display:none;padding:4px 2px 8px 46px}
+.bp-sec.expanded .attr-body{display:block}
+.attr-row .attr-disc{transition:transform .18s ease}
+.bp-sec.expanded .attr-row .attr-disc{transform:rotate(90deg)}
 /* Tooltips are JS popovers (see tipPop code) — hover on mouse, tap-to-pin with × on touch */
 .tip-pop{position:fixed;z-index:1000;max-width:240px;background:var(--panel);border:1px solid var(--border);
   color:var(--text);padding:10px 12px;border-radius:10px;font-size:12.5px;line-height:1.5;text-transform:none;
@@ -1870,10 +1904,24 @@ function applySectionCollapse(bid){
   });
 }
 /* ---------- direct section reorder: drag the ⋮⋮ grip on a section title ----------
-   Pointer-based (mouse + touch). Live-reorders .bp-sec elements inside .bp-wrap;
-   on release the DOM order is persisted to S.fieldOrder. The grip uses pointer
-   capture so the follow-up click lands on the grip, which never toggles collapse. */
+   Pointer-based (mouse + touch). Shows a divider line at the landing spot while
+   dragging; on release the section moves there and the DOM order is persisted
+   to S.fieldOrder. The grip uses pointer capture so the follow-up click lands
+   on the grip, which never toggles collapse. (Divider-line UX — Dave 2026-10-14) */
 const secDrag = { cand: null, drag: null };
+function secDragDivider(){
+  let el = document.getElementById('sec-drag-divider');
+  if (!el) {
+    el = document.createElement('div');
+    el.id = 'sec-drag-divider';
+    document.body.appendChild(el);
+  }
+  return el;
+}
+function secDragHideDivider(){
+  const el = document.getElementById('sec-drag-divider');
+  if (el) el.remove();
+}
 function applySectionDrag(){
   const home = document.getElementById('buddy-home');
   if (!home) return;
@@ -1901,14 +1949,30 @@ function applySectionDrag(){
       const wrap = d.sec.parentElement;
       if (!wrap) return;
       const build = wrap.querySelector(':scope > .bp-build');
-      let target = null;
+      let target = null, before = true;
       for (const s of secsOf(d.sec)) {
         const r = s.getBoundingClientRect();
-        if (e.clientY < r.top + r.height / 2) { target = s; break; }
+        if (e.clientY < r.top + r.height / 2) { target = s; before = true; break; }
+        target = s; before = false;
       }
-      if (target) wrap.insertBefore(d.sec, target);
-      else if (build) wrap.insertBefore(d.sec, build);
-      else wrap.appendChild(d.sec);
+      // Divider line at the landing spot (Dave 2026-10-14) — move happens on drop.
+      const div = secDragDivider();
+      d.landing = { target: target, before: before };
+      const wrapRect = wrap.getBoundingClientRect();
+      let y;
+      if (target) {
+        const r = target.getBoundingClientRect();
+        y = (before ? r.top : r.bottom) - wrapRect.top + wrap.scrollTop;
+      } else if (build) {
+        const r = build.getBoundingClientRect();
+        y = r.top - wrapRect.top + wrap.scrollTop;
+      } else {
+        y = wrap.scrollHeight;
+      }
+      div.style.top = y + 'px';
+      div.style.left = '0'; div.style.right = '0';
+      if (div.parentElement !== wrap) wrap.appendChild(div);
+      if (getComputedStyle(wrap).position === 'static') wrap.style.position = 'relative';
       e.preventDefault();
       return;
     }
@@ -1926,6 +1990,15 @@ function applySectionDrag(){
     if (d && e.pointerId === d.pid) {
       d.sec.classList.remove('sec-dragging');
       const wrap = d.sec.parentElement;
+      // Move to the divider's landing spot on drop (Dave 2026-10-14).
+      if (wrap && d.landing) {
+        const build = wrap.querySelector(':scope > .bp-build');
+        const t = d.landing.target;
+        if (t && t.parentElement === wrap) wrap.insertBefore(d.sec, d.landing.before ? t : t.nextSibling);
+        else if (build) wrap.insertBefore(d.sec, build);
+        else wrap.appendChild(d.sec);
+      }
+      secDragHideDivider();
       if (wrap) {
         const order = Array.from(wrap.querySelectorAll(':scope > .bp-sec[data-field]')).map(s => s.dataset.field);
         const cur = getFieldOrder();
@@ -1971,14 +2044,28 @@ function applyViewGripDrag(){
       const d = viewGripDrag.drag;
       const nav = document.getElementById('view-nav');
       if (!nav || !d.btn) return;
-      let target = null;
+      let target = null, before = true;
       const rows = Array.from(nav.querySelectorAll(':scope > button.navbtn[data-view]')).filter(b => b !== d.btn);
       for (const r of rows) {
         const rect = r.getBoundingClientRect();
-        if (e.clientY < rect.top + rect.height / 2) { target = r; break; }
+        if (e.clientY < rect.top + rect.height / 2) { target = r; before = true; break; }
+        target = r; before = false;
       }
-      if (target) nav.insertBefore(d.btn, target);
-      else nav.appendChild(d.btn);
+      // Divider line at the landing spot (Dave 2026-10-14) — move happens on drop.
+      d.landing = { target: target, before: before };
+      let div = document.getElementById('view-drag-divider');
+      if (!div) { div = document.createElement('div'); div.id = 'view-drag-divider'; }
+      const navRect = nav.getBoundingClientRect();
+      let y;
+      if (target) {
+        const r = target.getBoundingClientRect();
+        y = (before ? r.top : r.bottom) - navRect.top + nav.scrollTop;
+      } else {
+        y = nav.scrollHeight;
+      }
+      div.style.top = y + 'px'; div.style.left = '0'; div.style.right = '0';
+      if (div.parentElement !== nav) nav.appendChild(div);
+      if (getComputedStyle(nav).position === 'static') nav.style.position = 'relative';
       e.preventDefault();
       return;
     }
@@ -1999,6 +2086,14 @@ function applyViewGripDrag(){
         d.btn.draggable = true;
       }
       const nav = document.getElementById('view-nav');
+      // Move to the divider's landing spot on drop (Dave 2026-10-14).
+      const vdiv = document.getElementById('view-drag-divider');
+      if (vdiv) vdiv.remove();
+      if (nav && d.btn && d.landing) {
+        const t = d.landing.target;
+        if (t && t.parentElement === nav) nav.insertBefore(d.btn, d.landing.before ? t : t.nextSibling);
+        else nav.appendChild(d.btn);
+      }
       if (nav) {
         const order = Array.from(nav.querySelectorAll(':scope > button.navbtn[data-view]')).map(b => b.dataset.view);
         const cur = getViewOrder();
@@ -2881,6 +2976,32 @@ function renderProjectView(){
     wrap.appendChild(content);
   }
   pv.appendChild(wrap);
+}
+/* ---- Attr-row pattern (Dave 2026-10-14): › LABEL: value  or  › LABEL (N) ---- */
+/* 0 items → (0), 1 item → : name, N items → (N). Tap row to expand or edit. */
+function attrRow(label, display, opts){
+  opts = opts || {};
+  const tip = opts.tip ? '<span class="info-tip" data-tip="' + opts.tip + '">\u24d8</span>' : '';
+  return '<button class="attr-row"' + (opts.action ? ' ' + opts.action : '') + (opts.title ? ' title="' + opts.title + '"' : '')
+    + (opts.expand ? ' data-expand="' + opts.expand + '"' : '') + '>'
+    + '<span class="attr-disc">\u203a</span>'
+    + '<span class="attr-text"><span class="attr-label">' + label + '</span> ' + display + '</span>'
+    + tip + '</button>';
+}
+function attrValueRow(label, value, opts){
+  opts = opts || {};
+  const v = (value === null || value === undefined || value === '')
+    ? '<span class="attr-value attr-none">—</span>'
+    : '<span class="attr-value">' + escHtml(String(value)) + '</span>';
+  return attrRow(label, ': ' + v, opts);
+}
+function attrCountRow(label, items, nameFn, opts){
+  opts = opts || {};
+  let display;
+  if (!items.length) display = '<span class="attr-value attr-none">(0)</span>';
+  else if (items.length === 1 && nameFn) display = ': <span class="attr-value">' + escHtml(String(nameFn(items[0]))) + '</span>';
+  else display = ' <span class="attr-value">(' + items.length + ')</span>';
+  return attrRow(label, display, opts);
 }
 /* ---- Persona picker (info panel) ---- */
 function personaBlurb(name){
@@ -6068,10 +6189,20 @@ document.addEventListener('click', e => {
     return;
   }
   const btn = e.target.closest('[data-changeparent]');
-  if (!btn) return;
-  if (e.target.closest('.info-tip')) return; // the ⓘ popover handles its own taps
-  e.preventDefault(); e.stopPropagation();
-  openChangeParentDialog(btn.dataset.changeparent);
+  if (btn) {
+    if (e.target.closest('.info-tip')) return; // the ⓘ popover handles its own taps
+    e.preventDefault(); e.stopPropagation();
+    openChangeParentDialog(btn.dataset.changeparent);
+    return;
+  }
+  const exp = e.target.closest('[data-expand]');
+  if (exp) {
+    if (e.target.closest('.info-tip')) return; // the ⓘ popover handles its own taps
+    e.preventDefault(); e.stopPropagation();
+    const sec = exp.closest('.bp-sec');
+    if (sec) sec.classList.toggle('expanded');
+    return;
+  }
 });
 function descendantsOf(bid){
   const out = new Set(); const stack = [bid];
