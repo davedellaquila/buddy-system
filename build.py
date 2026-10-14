@@ -811,6 +811,11 @@ body.sb-closed #menu-btn{display:flex;align-items:center;justify-content:center;
 .bp-sec.expanded .attr-body{display:block}
 .bp-sec[data-field="parent"] .attr-head .pill-btn{display:none}
 .bp-sec[data-field="parent"].expanded .attr-head .pill-btn{display:inline-block}
+.bp-sec[data-field="persona"] .attr-head .pill-btn{display:none}
+.bp-sec[data-field="persona"].expanded .attr-head .pill-btn{display:inline-block}
+/* Parent info icon: hover-only so it doesn't collide with the reorder gripper */
+.bp-sec[data-field="parent"] .attr-head .info-tip{opacity:0;transition:opacity .15s ease}
+.bp-sec[data-field="parent"] .attr-head:hover .info-tip{opacity:1}
 .attr-row .attr-disc{transition:transform .18s ease}
 .bp-sec.expanded .attr-row .attr-disc{transform:rotate(90deg)}
 /* Attribute header pattern (Dave 2026-10-14): toggle + LABEL: value + pills + tip */
