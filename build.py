@@ -809,6 +809,8 @@ body.sb-closed #menu-btn{display:flex;align-items:center;justify-content:center;
 .attr-row .info-tip{margin-left:0;font-size:17px}
 .attr-body{display:none;padding:4px 2px 8px 46px}
 .bp-sec.expanded .attr-body{display:block}
+.bp-sec[data-field="parent"] .attr-head .pill-btn{display:none}
+.bp-sec[data-field="parent"].expanded .attr-head .pill-btn{display:inline-block}
 .attr-row .attr-disc{transition:transform .18s ease}
 .bp-sec.expanded .attr-row .attr-disc{transform:rotate(90deg)}
 /* Attribute header pattern (Dave 2026-10-14): toggle + LABEL: value + pills + tip */
