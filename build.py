@@ -2432,6 +2432,7 @@ function openFieldSettings(){
       + '<button id="fset-close" style="font-size:14px;font-weight:600;padding:8px 24px;border:none;border-radius:20px;background:var(--accent);color:#fff;cursor:pointer">Done</button></div>'
       + '<div class="fset-resize" id="fset-resize" title="Drag to resize"></div>';
     document.body.appendChild(m);
+  if (prefillName) { const ni = document.getElementById('nb-name'); if (ni) ni.value = prefillName; }
     initFsetChrome(m);
     m.querySelector('#fset-close').addEventListener('click', () => m.classList.remove('show'));
     m.querySelector('#fset-x').addEventListener('click', () => m.classList.remove('show'));
@@ -5313,6 +5314,23 @@ function locHash(){ try { return (typeof location !== 'undefined' && location.ha
 function isStandalone(){ return /(^|\/)standalone$/.test(locHash().replace(/^#\//, '')); }
 function hashFor(sel){ return '#/' + sel + (isStandalone() ? '/standalone' : ''); }
 document.addEventListener('keydown', e => {
+  // / focuses buddy search, N creates new buddy (when not typing in a field)
+  const tag = (document.activeElement && document.activeElement.tagName) || '';
+  const typing = tag === 'INPUT' || tag === 'TEXTAREA' || (document.activeElement && document.activeElement.isContentEditable);
+  if (!typing && !e.metaKey && !e.ctrlKey && !e.altKey) {
+    if (e.key === '/') {
+      e.preventDefault();
+      if (!isSidebarOpen()) setSidebarOpen(true);
+      const bs = document.getElementById('buddy-search');
+      if (bs) { bs.focus(); bs.select(); }
+      return;
+    }
+    if (e.key === 'n' || e.key === 'N') {
+      e.preventDefault();
+      openNewBuddyRequest();
+      return;
+    }
+  }
   // Cmd+, (Mac) or Ctrl+, toggles Settings
   if ((e.metaKey || e.ctrlKey) && e.key === ',') {
     e.preventDefault();
@@ -6061,7 +6079,7 @@ const REQUEST_PERSONAS = [
   ['Surfer dude', '🏄'], ['Mad scientist', '🧪'], ['BBC documentarian', '🎥'],
   ['Game show host', '🎤'], ['Sommelier', '🍷'], ['Viking warrior', '⚔️'],
 ];
-function openNewBuddyRequest(){
+function openNewBuddyRequest(prefillName){
   closeAddBuddyDialog();
   const m = document.createElement('div');
   m.id = 'newbuddy-sheet';
@@ -7684,10 +7702,21 @@ function initSearch(){
           + '<span class="bname">' + escHtml(dispName(b)) + '</span>'
           + (acParentName(b) ? '<span class="bctx">' + escHtml(acParentName(b)) + '</span>' : '')
           + '</button>').join('')
-        : '<div class="bac-empty">No buddies match.</div>';
+        : '<div class="bac-empty">No buddies match.</div>'
+          + '<button type="button" class="bac-row bac-create" data-create="1">'
+          + '<span class="bicon">\u2295</span>'
+          + '<span class="bname">Create new buddy</span>'
+          + '<span class="bctx">"' + escHtml(q) + '"</span>'
+          + '</button>';
       ac.hidden = false;
       ac.querySelectorAll('.bac-row').forEach(row => {
         row.addEventListener('click', () => {
+          if (row.dataset.create) {
+            const name = bs.value.trim();
+            acClose(); bs.value = ''; bs.dispatchEvent(new Event('input', {bubbles: true}));
+            openNewBuddyRequest(name);
+            return;
+          }
           const bid = row.dataset.buddy;
           acClose(); bs.value = ''; bs.dispatchEvent(new Event('input', {bubbles: true}));
           selectBuddy(bid);
