@@ -3,6 +3,18 @@
 All notable changes to the Buddies dashboard and buddy system. Newest first.
 `FEATURES.md` describes the current state; this file describes how it got there.
 
+## 2026-10-13 (Project tiles: locked top row + TOTAL tile; settings/info-panel field parity; text-size readout clipping)
+
+### Changed
+- **Top tile row is now locked** (Dave's ask 2026-10-13): the four tiles render in fixed order — TO REVIEW, FRESH, CLEARED, TOTAL — no more popularity self-sorting on the top row. The bottom (status) row keeps the click-count ordering.
+- **Settings "Buddy fields" ↔ info panel parity** (Dave's catch 2026-10-13): added the missing **Voice** field to `FIELD_DEFS` (it rendered in the info panel but had no settings toggle and always pinned itself last), and renamed the settings label **"Direct reports" → "Children"** to match the info panel's CHILDREN heading.
+
+### Added
+- **TOTAL tile** (Dave's ask 2026-10-13 — the logical fourth tile): shows the full buddy count; clicking it clears all filters (it's the reset button the row was missing). It reads selected when no filter is active.
+
+### Fixed
+- **Text-size readout spill** (Dave's screenshot 2026-10-13): the "100%" number could spill outside the Settings row on narrow sheets. Per Dave's call — when the number doesn't fit, don't show it: the slider row now clips (`overflow:hidden`, container `min-width:0`) instead of overflowing, so the readout is cut off rather than spilling past the sheet edge.
+
 ## 2026-10-13 (Sidebar: drag-to-reorder items within each section)
 
 ### Added

@@ -2039,7 +2039,7 @@ function closeDetail(){
 const FIELD_DEFS = [
   {id:'ingest', label:'Dump box'},
   {id:'attention', label:'Needs your attention'},
-  {id:'reports', label:'Direct reports'},
+  {id:'reports', label:'Children'},
   {id:'siblings', label:'Peers'},
   {id:'parent', label:'Parent'},
   {id:'links', label:'Linked buddies'},
@@ -2053,6 +2053,7 @@ const FIELD_DEFS = [
   {id:'aka', label:'A.K.A.'},
   {id:'persona', label:'Persona'},
   {id:'homepage', label:'Homepage URL'},
+  {id:'voice', label:'Voice'},
 ];
 function getFieldOrder(){
   if (!S.fieldOrder || !Array.isArray(S.fieldOrder)) S.fieldOrder = FIELD_DEFS.map(f => f.id);
@@ -2290,7 +2291,7 @@ function renderSettingChecks(){
         if (s.id === 'attnEffect') return rowHtml + '<div class="attnfx-preview"><div class="bp-sec fx-' + val + '" data-field="attention" id="attnfx-demo"><h3>Needs your attention <span class="attn-count">(3)</span></h3></div><p class="fineprint">Live preview \u2014 this is what the header will do.</p></div>';
         return rowHtml;
       }
-      if (s.type === 'slider') return '<label class="fset-choice"><span>' + s.label + (s.tip ? ' <span class="info-tip" data-tip="' + escHtml(s.tip) + '">\u24d8</span>' : '') + '</span><span style="display:flex;align-items:center;gap:8px;white-space:nowrap;min-width:180px;flex:1"><span class="fineprint" style="font-size:11px">A</span><input type="range" data-setting="' + s.id + '" value="' + val + '"' + (s.min !== undefined ? ' min="' + s.min + '"' : '') + (s.max !== undefined ? ' max="' + s.max + '"' : '') + (s.step !== undefined ? ' step="' + s.step + '"' : '') + ' style="flex:1;accent-color:var(--accent)"><span class="fineprint" style="font-size:15px">A</span><span class="fineprint" data-scale-val="' + s.id + '" style="min-width:42px;text-align:right">' + val + (s.unit || '') + '</span></span></label>';
+      if (s.type === 'slider') return '<label class="fset-choice"><span>' + s.label + (s.tip ? ' <span class="info-tip" data-tip="' + escHtml(s.tip) + '">\u24d8</span>' : '') + '</span><span style="display:flex;align-items:center;gap:8px;white-space:nowrap;min-width:0;flex:1;overflow:hidden"><span class="fineprint" style="font-size:11px">A</span><input type="range" data-setting="' + s.id + '" value="' + val + '"' + (s.min !== undefined ? ' min="' + s.min + '"' : '') + (s.max !== undefined ? ' max="' + s.max + '"' : '') + (s.step !== undefined ? ' step="' + s.step + '"' : '') + ' style="flex:1;min-width:0;accent-color:var(--accent)"><span class="fineprint" style="font-size:15px">A</span><span class="fineprint" data-scale-val="' + s.id + '" style="flex:none;min-width:42px;text-align:right">' + val + (s.unit || '') + '</span></span></label>';
       return '';
     }).join('');
     adv.querySelectorAll('[data-setting]').forEach(el => {
@@ -2336,7 +2337,7 @@ function renderDevelopSection(){
   const dev = document.getElementById('fset-develop');
   if (!dev) return;
   const simulating = !!devBackup;
-  const buildNum = '20261014.0123';
+  const buildNum = '20261013.2007';
   dev.innerHTML = ''
     + '<label class="fset-check"><input type="checkbox" id="dev-empty-toggle"' + (simulating ? ' checked' : '') + '> <span><strong>Simulate new user</strong> — empty data file, as if opening the shared link fresh</span></label>'
     + '<div class="fineprint" style="margin:8px 0 12px">Build <span style="font-family:monospace">' + escHtml(String(buildNum)) + '</span> · ' + BUDDIES.length + ' buddies in this file</div>'
@@ -2736,7 +2737,9 @@ function tileHtml(label, num, tint, sub, fkey, sel, tip){
 }
 /* Dave 2026-10-13: stat tiles self-order by popularity — every tile click is
    counted (persisted in S.tileClicks) and each row renders most-clicked first.
-   Array.sort is stable, so ties keep their original order. */
+   Array.sort is stable, so ties keep their original order.
+   Dave 2026-10-13 (later): top row is now LOCKED — fixed four tiles, no
+   self-ordering. The bottom (status) row keeps the popularity sort. */
 function bumpTileClick(fkey){
   if (!fkey) return;
   S.tileClicks = S.tileClicks || {};
@@ -3445,7 +3448,7 @@ function renderBuddy(id){
     + '<div class="bp-sec" data-field="shared"><h3>Shared notes<span class="info-tip" data-tip="Anybody with repo access can see this note. Saved to the buddy’s repo (docs/notes.md).">ⓘ</span></h3>'
     + '<textarea class="notes" id="bp-shared-notes" placeholder="Anybody with repo access can see this note."></textarea>'
     + '<p class="fineprint" id="shared-status"></p></div>'
-    + '<div class="bp-build">Build 20261014.0123</div>'
+    + '<div class="bp-build">Build 20261013.2007</div>'
     + '</div>';
   // Update every visible label for a buddy after a rename/re-icon, across all
   // Atlas lenses. A rename changes no structure, so labels are patched in place
@@ -4529,13 +4532,14 @@ function renderProjects(){
   if (statusCounts['PRD review']) revBits.push(statusCounts['PRD review'] + ' PRD');
   if (statusCounts['Spec review']) revBits.push(statusCounts['Spec review'] + ' spec');
   const revSub = revBits.length ? revBits.join(' · ') : 'Needs your attention';
-  // Dave 2026-10-13: each tile row self-orders by popularity — most-clicked renders leftmost
+  // Dave 2026-10-13: top row is LOCKED — four fixed tiles in this order, no
+  // popularity sort. Bottom (status) row keeps the self-order by clicks.
   const topTiles = [
     ['unseen', tileHtml('TO REVIEW', Object.keys(unseenIds).length, '#a371f7', revSub, 'unseen', projFilter === 'unseen')],
     ['fresh', tileHtml('FRESH', Object.keys(freshIds).length, '#d97a1f', 'Added in the last 7 days', 'fresh', projFilter === 'fresh')],
-    ['cleared', tileHtml('CLEARED', Object.keys(clearedIds).length, '#2f9e44', 'Reviewed & cleared', 'cleared', projFilter === 'cleared')]
+    ['cleared', tileHtml('CLEARED', Object.keys(clearedIds).length, '#2f9e44', 'Reviewed & cleared', 'cleared', projFilter === 'cleared')],
+    ['total', tileHtml('TOTAL', Object.keys(byId).length, '#8b949e', 'All buddies', 'total', !projFilter && !statusFilter, 'Click to clear all filters.')]
   ];
-  topTiles.sort((a, b) => tileClickRank(b[0]) - tileClickRank(a[0]));
   const statusTiles = statusOrder.map(st => ['status:' + st,
     tileHtml(st.replace(/^Live · /i, '').toUpperCase(), statusCounts[st], statusTints[st] || '#8b949e', '', 'status:' + st, statusFilter === st, 'Click to filter by ' + st + ' status. Click again to clear.')]);
   statusTiles.sort((a, b) => tileClickRank(b[0]) - tileClickRank(a[0]));
@@ -5143,7 +5147,7 @@ function renderPlan(id){
     + '<p class="fineprint">Saved on this device. (For your eyes only)</p></div>'
     + '<div class="bp-sec"><h3>Shared notes<span class="info-tip" data-tip="Visible to everyone with access to this project.">\u24d8</span></h3><textarea class="notes" id="bp-shared" placeholder="Shared notes\u2026 (visible to everyone with access)">'+escHtml((S.planShared||{})[id]||'')+'</textarea>'
     + '<p class="fineprint">Shared — visible to everyone with access.</p></div>'
-    + '<div class="bp-build">Build 20261014.0123</div>'
+    + '<div class="bp-build">Build 20261013.2007</div>'
     + '</div>';
   const nt = document.getElementById('bp-notes');
   let t = null;
@@ -7246,14 +7250,14 @@ function openWhatsNew(){
     .then(r => r.ok ? r.text() : '')
     .then(t => {
       const serverBuild = t.trim();
-      if (serverBuild && serverBuild !== '20261014.0123') {
+      if (serverBuild && serverBuild !== '20261013.2007') {
         updBtn.style.display = '';
         updBtn.title = 'Update to build ' + serverBuild;
       }
       // Show build numbers at the top of the sheet (Dave's request 2026-10-12)
-      const myBuild = '20261014.0123';
+      const myBuild = '20261013.2007';
       let buildLine = '<p class="fineprint" style="margin-top:0">You’re on build ' + escHtml(myBuild) + '.';
-      if (serverBuild && serverBuild !== '20261014.0123' && isNewerBuild(serverBuild, myBuild)) {
+      if (serverBuild && serverBuild !== '20261013.2007' && isNewerBuild(serverBuild, myBuild)) {
         buildLine += ' Build ' + escHtml(serverBuild) + ' is available.';
       }
       buildLine += '</p>';
@@ -7292,7 +7296,7 @@ function isNewerBuild(server, mine){
   } catch (e) { return false; }
 }
 function initVersionCheck(){
-  const myBuild = '20261014.0123';
+  const myBuild = '20261013.2007';
   function showUpdateBanner(serverBuild){
     if (document.getElementById('update-banner')) return;
     const b = document.createElement('div');
@@ -7736,7 +7740,11 @@ document.addEventListener('click', e => {
   const projTile = e.target.closest('#project-tiles [data-tile]');
   if (projTile) {
     bumpTileClick(projTile.dataset.tile);
-    projFilter = projFilter === projTile.dataset.tile ? null : projTile.dataset.tile;
+    if (projTile.dataset.tile === 'total') {
+      projFilter = null; statusFilter = null;
+    } else {
+      projFilter = projFilter === projTile.dataset.tile ? null : projTile.dataset.tile;
+    }
     renderProjects(); return;
   }
   const statusTile = e.target.closest('#project-status-tiles [data-tile]');
