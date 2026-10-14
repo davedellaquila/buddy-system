@@ -135,6 +135,13 @@
   .attn-status{font-size:13px;color:var(--muted);margin-top:8px;min-height:18px}
   .attn.resolved{opacity:.6}
   .attn.resolved .attn-actions{display:none}
+  /* ---------- read aloud ---------- */
+  .listen-edition{background:transparent;color:var(--accent);border:1px solid var(--accent);border-radius:8px;padding:7px 14px;font-size:13px;font-weight:600;cursor:pointer;-webkit-tap-highlight-color:transparent;margin-left:8px}
+  .listen-edition.playing{background:var(--accent);color:#fff}
+  .story-listen{background:transparent;border:1px solid var(--rule);color:var(--muted);border-radius:20px;padding:2px 10px;font-size:12px;line-height:1.6;cursor:pointer;margin-left:10px;vertical-align:middle;-webkit-tap-highlight-color:transparent;white-space:nowrap}
+  .story-listen:hover{border-color:var(--accent);color:var(--accent)}
+  .story-listen.playing{background:var(--accent);border-color:var(--accent);color:#fff}
+  article.story.reading{outline:2px solid var(--accent);outline-offset:3px}
   .footer{
     margin-top:48px;padding-top:24px;border-top:1px solid var(--rule-strong);
     color:var(--muted);font-size:13.5px;text-align:center;
@@ -351,7 +358,6 @@
 <section class="attn-section">
 <h2>Needs Attention</h2>
 <p class="attn-sub">From the editor's desk &mdash; things that need Dave's call. Take care of them right here.</p>
-<div class="attn" data-attn-id="homepage-review"><div class="attn-text">Morning Edition homepage awaiting Dave's review.</div><div class="attn-date">2026-10-12</div><div class="attn-actions"><button type="button" class="attn-btn primary" data-act="done">&check; Done</button><button type="button" class="attn-btn" data-act="info">Need more info</button></div><div class="attn-status" role="status"></div></div>
 <div class="attn" data-attn-id="prd-not-started"><div class="attn-text">Product PRD not started &mdash; needs Dave's go-ahead on scope.</div><div class="attn-date">2026-10-12</div><div class="attn-actions"><button type="button" class="attn-btn primary" data-act="done">&check; Done</button><button type="button" class="attn-btn" data-act="info">Need more info</button></div><div class="attn-status" role="status"></div></div>
 </section>
 
@@ -646,6 +652,113 @@
     });
   });
   resolveBuddy();
+})();
+</script>
+<script>
+/* Read-aloud: whole edition + per-story, via the device's speech engine (no network, no tokens). Buttons are injected so the daily refresh never has to rebuild them. */
+(function(){
+  if (!('speechSynthesis' in window)) return;
+  var synth = window.speechSynthesis;
+  var editionBtn = null, queue = [], qIndex = 0, editionMode = false, currentBtn = null;
+
+  function storyText(article){
+    var h3 = article.querySelector('h3'), head = '';
+    if (h3) {
+      var c = h3.cloneNode(true);
+      c.querySelectorAll('.thin,.story-listen').forEach(function(s){ s.remove(); });
+      head = c.textContent.trim().replace(/\s+/g, ' ');
+    }
+    var dek = article.querySelector('.dek');
+    var body = dek ? dek.textContent.trim().replace(/\s+/g, ' ') : '';
+    return (head + '. ' + body).trim();
+  }
+  function chunkText(text){
+    var sentences = text.match(/[^.!?]+[.!?]+/g) || [text];
+    var chunks = [], cur = '';
+    sentences.forEach(function(s){
+      if (cur && (cur + s).length > 220) { chunks.push(cur.trim()); cur = s; }
+      else cur += s;
+    });
+    if (cur.trim()) chunks.push(cur.trim());
+    return chunks;
+  }
+  function speak(text, onend){
+    var chunks = chunkText(text), i = 0;
+    (function next(){
+      if (i >= chunks.length) { if (onend) onend(); return; }
+      var u = new SpeechSynthesisUtterance(chunks[i++]);
+      u.onend = next; u.onerror = next;
+      synth.speak(u);
+    })();
+  }
+  function paintOff(){
+    document.querySelectorAll('article.story.reading').forEach(function(a){ a.classList.remove('reading'); });
+    document.querySelectorAll('.story-listen.playing').forEach(function(b){ b.classList.remove('playing'); b.textContent = '\uD83D\uDD0A'; });
+    if (editionBtn) { editionBtn.classList.remove('playing'); editionBtn.textContent = '\uD83D\uDD0A Listen to this edition'; }
+    currentBtn = null;
+  }
+  function stopAll(){ synth.cancel(); queue = []; qIndex = 0; editionMode = false; paintOff(); }
+  function playQueue(){
+    if (qIndex >= queue.length) { stopAll(); return; }
+    var item = queue[qIndex++];
+    document.querySelectorAll('article.story.reading').forEach(function(a){ a.classList.remove('reading'); });
+    if (item.article) item.article.classList.add('reading');
+    if (item.btn) { document.querySelectorAll('.story-listen.playing').forEach(function(b){ b.classList.remove('playing'); b.textContent = '\uD83D\uDD0A'; }); item.btn.classList.add('playing'); item.btn.textContent = '\u23F9'; }
+    speak(item.text, playQueue);
+  }
+  function playStory(article, btn){
+    if (currentBtn === btn) { stopAll(); return; }
+    stopAll();
+    var text = storyText(article);
+    if (!text) return;
+    currentBtn = btn;
+    article.classList.add('reading');
+    btn.classList.add('playing'); btn.textContent = '\u23F9';
+    speak(text, stopAll);
+  }
+  function playEdition(){
+    if (editionMode) { stopAll(); return; }
+    stopAll();
+    editionMode = true;
+    if (editionBtn) { editionBtn.classList.add('playing'); editionBtn.textContent = '\u23F9 Stop'; }
+    queue = [];
+    document.querySelectorAll('section').forEach(function(sec){
+      var h2 = sec.querySelector('.sec-head h2');
+      if (!h2) return;
+      var articles = sec.querySelectorAll('article.story');
+      if (!articles.length) return;
+      queue.push({text: h2.textContent.trim() + '.', article: null, btn: null});
+      articles.forEach(function(a){
+        queue.push({text: storyText(a), article: a, btn: a.querySelector('.story-listen')});
+      });
+    });
+    playQueue();
+  }
+  var dateline = document.querySelector('.dateline');
+  if (dateline) {
+    editionBtn = document.createElement('button');
+    editionBtn.type = 'button';
+    editionBtn.className = 'listen-edition';
+    editionBtn.textContent = '\uD83D\uDD0A Listen to this edition';
+    editionBtn.setAttribute('aria-label', 'Read the whole edition aloud');
+    editionBtn.addEventListener('click', playEdition);
+    dateline.appendChild(editionBtn);
+  }
+  document.querySelectorAll('article.story h3').forEach(function(h3){
+    var b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'story-listen';
+    b.textContent = '\uD83D\uDD0A';
+    b.title = 'Read this story aloud';
+    b.setAttribute('aria-label', 'Read this story aloud');
+    b.addEventListener('click', function(ev){
+      ev.preventDefault(); ev.stopPropagation();
+      var article = h3.closest('article');
+      if (article) playStory(article, b);
+    });
+    h3.appendChild(b);
+  });
+  window.addEventListener('pagehide', function(){ try { synth.cancel(); } catch(e){} });
 })();
 </script>
 
