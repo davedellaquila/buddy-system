@@ -3,6 +3,11 @@
 All notable changes to the Buddies dashboard and buddy system. Newest first.
 `FEATURES.md` describes the current state; this file describes how it got there.
 
+## 2026-10-15 (Emil's estate buddies)
+
+### Added
+- **Four new buddies for Emil Dell'Aquila's estate** (Dave approved 2026-10-15 — "create the necessary buddy objects to manage this"): 🏛️ **Emil's Estate** (`emil-estate`, child of Family Buddy, linked to Emil Buddy + Finance Buddy) — asset inventory, realtor document flow, title transfers, inheritance timing; 🏷️ **Emil's House Sale** (`emil-house-sale`, child of Emil's Estate) — the active-sale deal desk, listing → offers → closing; 🏠 **Melody Lane** (`melody-lane`, child of Emil's Estate) — the rental property Field Guide; 🔑 **Larry Osana** (`larry-osana`, child of Melody Lane) — person buddy for the tenant; urgent item: new lease contract naming the estate as landlord. All four have private repos, Buddy Docs briefs, side threads, and review asks. Realtor name/email, house address, Melody Lane lease terms all open questions — never invented.
+
 ## 2026-10-15 (Buddy homepage children nav)
 
 ### Added
