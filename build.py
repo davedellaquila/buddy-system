@@ -1656,7 +1656,25 @@ function standingOrdersHtml(){
   }).join('');
 }
 const kidsOf = {};
-function effParent(b){ if (S.parents && b.id in S.parents) return S.parents[b.id]; return b.parent; }
+/* effParent: first effective parent (or null) — kept for single-parent call
+   sites. Now array-aware so buddies with parents:[] resolve correctly. */
+function effParent(b){ const ps = effParents(b); return ps.length ? ps[0] : null; }
+/* Dave 2026-10-15: multi-parent support. A buddy may have parents: [array] in
+   buddies.json, legacy parent: "string", or a per-device S.parents override
+   (array, single string, or null for top-level). effParent stays for single-
+   parent call sites and returns the first parent. */
+function effParents(b){
+  if (S.parents && b.id in S.parents) {
+    const o = S.parents[b.id];
+    if (o === null || o === undefined) return [];
+    return Array.isArray(o) ? o.slice() : [o];
+  }
+  if (Array.isArray(b.parents)) return b.parents.slice();
+  if (b.parent) return [b.parent];
+  return [];
+}
+function normParents(p){ if (p === null || p === undefined) return []; return Array.isArray(p) ? p.slice() : [p]; }
+function parentsEqual(a, b){ const na = normParents(a), nb = normParents(b); return na.length === nb.length && na.every((x, i) => x === nb[i]); }
 function isDormant(bid){ return !!(S.dormant && S.dormant[bid]); }
 function setDormant(bid, val){
   if (!S.dormant || typeof S.dormant !== 'object') S.dormant = {};
@@ -1665,7 +1683,12 @@ function setDormant(bid, val){
 }
 function buildKids(){
   for (const k in kidsOf) delete kidsOf[k];
-  BUDDIES.forEach(b => { const p = effParent(b) || '__root'; (kidsOf[p] = kidsOf[p] || []).push(b); });
+  BUDDIES.forEach(b => {
+    /* Dave 2026-10-15: multi-parent — a buddy appears under EACH of its parents. */
+    const ps = effParents(b);
+    if (!ps.length) { (kidsOf['__root'] = kidsOf['__root'] || []).push(b); }
+    else ps.forEach(p => { (kidsOf[p] = kidsOf[p] || []).push(b); });
+  });
   /* Dave 2026-10-14: stored sibling order (S.buddyOrder, from sidebar or
      project-row drags) applies everywhere. Byte-identical when no custom
      order exists. Root key mapping: kidsOf uses '__root', order uses '__root__'. */
@@ -1742,8 +1765,8 @@ function homepageUrl(b){
 }
 function unseenItems(b){ if (isDormant(b.id)) return []; return (b.attention || []).filter(a => !S.seen[a.id]); }
 function descUnseen(id){
-  let n = 0;
-  (function walk(x){ const b = byId[x]; if(!b) return; n += unseenItems(b).length;
+  let n = 0; const seen = new Set();
+  (function walk(x){ if (seen.has(x)) return; seen.add(x); const b = byId[x]; if(!b) return; n += unseenItems(b).length;
     (kidsOf[x] || []).forEach(c => walk(c.id)); })(id);
   return n;
 }
@@ -1798,8 +1821,8 @@ function getPlanOrder(){
    or '__root__' for top-level. Stored per parent in S.buddyOrder. */
 function buddyParentKey(id){
   const b = byId[id];
-  const p = b ? effParent(b) : null;
-  return (p === null || p === undefined) ? '__root__' : p;
+  const ps = b ? effParents(b) : [];
+  return ps.length ? ps[0] : '__root__';
 }
 function getBuddyOrder(pk){
   if (!S.buddyOrder || typeof S.buddyOrder !== 'object') S.buddyOrder = {};
@@ -1839,7 +1862,7 @@ function buddySiblingIds(id){
   const pk = buddyParentKey(id);
   let raw;
   if (pk === '__root__') {
-    raw = ROOT_ORDER.filter(rid => { const b = byId[rid]; const p = b ? effParent(b) : null; return p === null; });
+    raw = ROOT_ORDER.filter(rid => { const b = byId[rid]; return b && effParents(b).length === 0; });
   } else {
     raw = (kidsOf[pk] || []).map(b => b.id);
   }
@@ -1994,8 +2017,11 @@ function renderNav(){
     const hay = (dispName(b) + ' ' + (b.name || '') + ' ' + (b.tagline || '') + ' ' + effAka(b).join(' ')).toLowerCase();
     return words.every(w => hay.includes(w));
   }
-  function row(id, depth){
+  /* Dave 2026-10-15: per-branch ancestor chain — a buddy under two parents
+     (a DAG diamond) renders under both; a true cycle can't loop the sidebar. */
+  function row(id, depth, chain){
     const b = byId[id]; if(!b) return;
+    const anc = chain ? new Set(chain) : new Set(); anc.add(id);
     if (!S.navCollapsed || typeof S.navCollapsed !== 'object') S.navCollapsed = {};
     if (words.length && !matches(b)) { (kidsOf[id] || []).forEach(c => row(c.id, depth+1)); return; }
     const un = descUnseen(id);
@@ -2011,9 +2037,9 @@ function renderNav(){
       + '<span class="bdot"></span><span class="bicon">'+escHtml(b.icon||'')+'</span><span class="bname">'+escHtml(dispName(b))+'</span>'
       + '<span class="bkind">'+kind+'</span>'
       + '<span class="binfo" data-buddy-info="'+id+'" title="Open '+escHtml(dispName(b))+' details" style="margin-left:auto;padding:2px 6px;opacity:0;transition:opacity 0.15s;cursor:pointer" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0">\u24d8</span></button>';
-    if (!collapsed) kidIds.forEach(kid => row(kid, depth+1));
+    if (!collapsed) kidIds.forEach(kid => { if (!anc.has(kid)) row(kid, depth+1, anc); });
   }
-  sortSiblingsByOrder(ROOT_ORDER.filter(id => { const b = byId[id]; const p = b ? effParent(b) : null; return p === null; }), '__root__')
+  sortSiblingsByOrder(ROOT_ORDER.filter(id => { const b = byId[id]; return b && effParents(b).length === 0; }), '__root__')
     .forEach(id => row(id, 0));
   document.getElementById('buddy-nav').innerHTML = h;
   if (Object.keys(S.parents).length) {
@@ -2066,7 +2092,7 @@ const FIELD_DEFS = [
   {id:'attention', label:'Needs your attention'},
   {id:'reports', label:'Children'},
   {id:'siblings', label:'Peers'},
-  {id:'parent', label:'Parent'},
+  {id:'parent', label:'Parents'},
   {id:'links', label:'Linked buddies'},
   {id:'photos', label:'Photos'},
   {id:'tree', label:'The Buddy Tree'},
@@ -3491,31 +3517,40 @@ function renderBuddy(id){
     reportsSec = '<div class="bp-sec" data-field="reports"><h3>Children <span class="attn-count">('+kids.length+')</span>' + addBtn + '</h3>' + (rows || '<p class="bp-empty">No children yet.</p>') + '</div>';
   })();
   let parSec = '';
+  /* Dave 2026-10-15: multi-parent — list every parent with its own remove
+     button; "+ Add parent" opens the picker in add mode. */
   (function(){
-    const par = effParent(b);
-    const tip = 'This buddy\u2019s parent in the hierarchy.';
-    if (!par) {
+    const pars = effParents(b).filter(pid => pid && byId[pid]);
+    const tip = 'This buddy\u2019s parents in the hierarchy.';
+    const addBtn = '<button class="pill-btn" data-addparent="'+escHtml(id)+'" title="Add another parent">+ Add parent</button>';
+    if (!pars.length) {
       parSec = '<div class="bp-sec" data-field="parent">'
-        + attrHead('parent', 'PARENT', '<span class="attr-value attr-none">Top level</span>',
-          '<button class="pill-btn" data-changeparent="'+escHtml(id)+'">Change</button>', tip)
+        + attrHead('parent', 'PARENTS', '<span class="attr-value attr-none">Top level</span>', addBtn, tip)
         + '</div>';
       return;
     }
-    const pb = byId[par];
-    if (!pb) return;
+    const rows = pars.map(pid => {
+      const pb = byId[pid];
+      return '<div class="attr-body"><a class="bp-parent-link" data-buddy="'+escHtml(pid)+'" title="Open '+escHtml(dispName(pb))+'">'
+        + escHtml(dispName(pb)) + '<span class="bp-parent-kind"> (' + escHtml(pb.kind || 'buddy') + ')</span></a>'
+        + ' <button class="pill-btn pill-btn-danger" data-removeparent="'+escHtml(id)+':'+escHtml(pid)+'" title="Remove this parent">\u00d7</button></div>';
+    }).join('');
     parSec = '<div class="bp-sec" data-field="parent">'
-      + attrHead('parent', 'PARENT', '<span class="attr-value">'+escHtml(dispName(pb))+'</span>',
-        '<button class="pill-btn" data-changeparent="'+escHtml(id)+'">Change</button>'
-        + '<button class="pill-btn pill-btn-danger" data-clearparent="'+escHtml(id)+'" title="Remove parent (make top-level)">Clear</button>', tip)
-      + '<div class="attr-body"><a class="bp-parent-link" data-buddy="'+escHtml(par)+'" title="Open '+escHtml(dispName(pb))+'">'
-      + escHtml(dispName(pb)) + '<span class="bp-parent-kind"> (' + escHtml(pb.kind || 'buddy') + ')</span></a></div>'
+      + attrHead('parent', 'PARENTS <span class="attn-count">('+pars.length+')</span>',
+        '<span class="attr-value">'+pars.map(pid => escHtml(dispName(byId[pid]))).join(', ')+'</span>', addBtn, tip)
+      + rows
       + '</div>';
   })();
   let sibSec = '';
+  /* Dave 2026-10-15: peers = union of children of ALL parents, deduped. */
   (function(){
-    const par = effParent(b);
-    if (!par) return;
-    const sibs = (kidsOf[par] || []).filter(k => k && k.id !== id && k.id !== par);
+    const parIds = {}; effParents(b).forEach(p => { parIds[p] = 1; });
+    const seen = {}; const sibs = [];
+    Object.keys(parIds).forEach(par => {
+      (kidsOf[par] || []).forEach(k => {
+        if (k && k.id !== id && !parIds[k.id] && !seen[k.id]) { seen[k.id] = 1; sibs.push(k); }
+      });
+    });
     if (!sibs.length) return;
     const SHOW_SIBS = 5;
     const sibRows = sibs.slice(0, SHOW_SIBS).map(k =>
@@ -4063,8 +4098,15 @@ function setIcon(emoji){
   } catch (e) {}
 }
 function isDesc(id, anc){
-  let p = byId[id] ? effParent(byId[id]) : null;
-  while (p) { if (p === anc) return true; p = byId[p] ? effParent(byId[p]) : null; }
+  /* Dave 2026-10-15: multi-parent aware — walks every parent chain so a
+     cycle can't be created through a non-first parent. */
+  const seen = new Set(); const stack = [id];
+  while (stack.length){
+    const cur = stack.pop();
+    if (seen.has(cur)) continue; seen.add(cur);
+    const ps = byId[cur] ? effParents(byId[cur]) : [];
+    for (const p of ps){ if (p === anc) return true; stack.push(p); }
+  }
   return false;
 }
 let pendingMoveUndo = null; // {src, beforeParent, timer} — one pending move undo at a time
@@ -4073,15 +4115,30 @@ function clearPendingMoveUndo(){
   hideUndoToast();
 }
 function applyParentOverride(src, parentId){
+  /* Dave 2026-10-15: parentId may be a string, null, or an array of ids.
+     Clears the override entirely when it matches the registry data. */
   const b = byId[src]; if (!b) return;
-  if (parentId === b.parent) delete S.parents[src]; else S.parents[src] = parentId;
+  const reg = Array.isArray(b.parents) ? b.parents : b.parent;
+  if (parentsEqual(parentId, reg)) delete S.parents[src]; else S.parents[src] = parentId;
 }
-function undoMove(src, beforeParent){
+function addParentOverride(bid, pid){
+  const b = byId[bid]; if (!b || !pid) return;
+  const ps = effParents(b).filter(p => p !== pid);
+  ps.push(pid);
+  applyParentOverride(bid, ps.length === 1 ? ps[0] : ps);
+}
+function removeParentOverride(bid, pid){
+  const b = byId[bid]; if (!b || !pid) return;
+  const ps = effParents(b).filter(p => p !== pid);
+  applyParentOverride(bid, ps.length ? (ps.length === 1 ? ps[0] : ps) : null);
+}
+function undoMove(src, beforeParents){
+  /* Dave 2026-10-15: beforeParents is an array (possibly empty for top-level). */
   const b = byId[src]; if (!b) return;
-  const wasParent = effParent(b);
-  applyParentOverride(src, beforeParent);
-  const dest = beforeParent ? byId[beforeParent] : null;
-  logChange('move', src, 'Undid move of \u201c' + dispName(b) + '\u201d', wasParent, beforeParent);
+  const wasParents = effParents(b);
+  applyParentOverride(src, beforeParents && beforeParents.length ? beforeParents : null);
+  const dest = (beforeParents && beforeParents[0]) ? byId[beforeParents[0]] : null;
+  logChange('move', src, 'Undid move of \u201c' + dispName(b) + '\u201d', wasParents.join(','), (beforeParents || []).join(','));
   save(); buildKids(); renderNav(); refreshViews();
   if (S.sel === 'buddy:' + src || S.sel === 'buddy:' + ROOT_ID) renderBuddy(S.sel.slice(6));
   toast(dispName(b) + (dest ? ' moved back under ' + dispName(dest) + '.' : ' restored as an orphan.'));
@@ -4100,7 +4157,8 @@ function moveBuddy(src, target){
   if (!src || !target || src === target) return;
   const b = byId[src]; if (!b || !byId[target]) return;
   if (isDesc(target, src)) { toast('Can\u2019t move ' + dispName(b) + ' under ' + dispName(byId[target]) + ' \u2014 that would create a loop.'); return; }
-  const beforeParent = effParent(b);
+  const beforeParents = effParents(b);
+  const beforeParent = beforeParents[0] || null;
   applyParentOverride(src, target);
   /* Dave 2026-10-14: keep the stored sibling order tidy — the moved buddy
      goes to the end of its new parent's order and leaves the old parent's. */
@@ -4113,10 +4171,10 @@ function moveBuddy(src, target){
     no.push(src);
     S.buddyOrder[newPk] = no;
   }
-  logChange('move', src, 'Moved \u201c' + dispName(byId[src]) + '\u201d under \u201c' + dispName(byId[target]) + '\u201d', beforeParent, target);
+  logChange('move', src, 'Moved \u201c' + dispName(byId[src]) + '\u201d under \u201c' + dispName(byId[target]) + '\u201d', beforeParents.join(','), target);
   save(); buildKids(); renderNav(); refreshViews();
   if (S.sel === 'buddy:' + src || S.sel === 'buddy:' + target || S.sel === 'buddy:' + ROOT_ID) renderBuddy(S.sel.slice(6));
-  offerMoveUndo(src, beforeParent, dispName(b) + ' moved under ' + dispName(byId[target]) + '.');
+  offerMoveUndo(src, beforeParents, dispName(b) + ' moved under ' + dispName(byId[target]) + '.');
 }
 /* FAMKINDS retired 2026-10-11: the org chart now shows every direct report of the
    root side by side; only truly parentless buddies go to the orphan section. */
@@ -5754,14 +5812,14 @@ function projInsertMove(srcId, targetId, pos){
       // Dropped on blank background: detach (no parent)
       const b = byId[src];
       if (b) {
-        const beforeParent = effParent(b);
+        const beforeParents = effParents(b);
         if (b.parent) { /* has real parent in data */ }
         // Set explicit orphan: parent = null override
         S.parents[src] = null;
-        logChange('move', src, 'Detached \u201c' + dispName(b) + '\u201d (now orphaned)', beforeParent, null);
+        logChange('move', src, 'Detached \u201c' + dispName(b) + '\u201d (now orphaned)', beforeParents.join(','), null);
         save(); buildKids(); renderNav(); refreshViews();
         if (S.sel === 'buddy:' + src || S.sel === 'buddy:' + ROOT_ID) renderBuddy(S.sel.slice(6));
-        offerMoveUndo(src, beforeParent, dispName(b) + ' detached \u2014 now an orphan.');
+        offerMoveUndo(src, beforeParents, dispName(b) + ' detached \u2014 now an orphan.');
       }
     }
   });
@@ -6861,26 +6919,29 @@ document.addEventListener('click', e => {
     e.target.closest('#sib-showall').remove();
     return;
   }
-  const btn = e.target.closest('[data-changeparent]');
-  if (btn) {
+  /* Dave 2026-10-15: multi-parent — "+ Add parent" opens the picker in add
+     mode; each parent row's × removes just that parent. */
+  const addp = e.target.closest('[data-addparent]');
+  if (addp) {
     if (e.target.closest('.info-tip')) return; // the ⓘ popover handles its own taps
     e.preventDefault(); e.stopPropagation();
-    openChangeParentDialog(btn.dataset.changeparent);
+    openChangeParentDialog(addp.dataset.addparent, 'add');
     return;
   }
-  const clr = e.target.closest('[data-clearparent]');
-  if (clr) {
+  const rmp = e.target.closest('[data-removeparent]');
+  if (rmp) {
     e.preventDefault(); e.stopPropagation();
-    const cid = clr.dataset.clearparent;
+    const val = rmp.dataset.removeparent || '';
+    const sep = val.indexOf(':');
+    const cid = sep < 0 ? val : val.slice(0, sep);
+    const pid = sep < 0 ? '' : val.slice(sep + 1);
     const cb = byId[cid];
-    if (cb) {
-      const beforeParent = effParent(cb);
-      S.parents = S.parents || {};
-      S.parents[cid] = null;
-      logChange('move', cid, 'Cleared parent of \u201c' + dispName(cb) + '\u201d (now top-level)', beforeParent, null);
+    if (cb && pid) {
+      removeParentOverride(cid, pid);
+      logChange('move', cid, 'Removed parent \u201c' + dispName(byId[pid] || {name:pid}) + '\u201d of \u201c' + dispName(cb) + '\u201d', pid, null);
       save(); buildKids(); renderNav(); refreshViews();
       if (S.sel === 'buddy:' + cid) renderBuddy(cid);
-      toast('Parent cleared — now top-level.');
+      toast('Parent removed' + (effParents(cb).length ? '.' : ' \u2014 now top-level.'));
     }
     return;
   }
@@ -6929,26 +6990,30 @@ function descendantsOf(bid){
   }
   return out;
 }
-function openChangeParentDialog(bid){
+/* Dave 2026-10-15: mode 'add' adds a parent to the list instead of replacing;
+   "No parent (top level)" is hidden in add mode. */
+function openChangeParentDialog(bid, mode){
   const b = byId[bid]; if (!b) return;
+  const addMode = mode === 'add';
   const bad = descendantsOf(bid); bad.add(bid);
-  const opts = BUDDIES.filter(x => x && x.id && !bad.has(x.id))
+  const curParents = effParents(b);
+  const opts = BUDDIES.filter(x => x && x.id && !bad.has(x.id) && !(addMode && curParents.indexOf(x.id) >= 0))
     .sort((a,c) => dispName(a).localeCompare(dispName(c)));
-  const cur = effParent(b);
+  const cur = addMode ? null : effParent(b);
+  const title = addMode ? 'Add parent' : 'Change parent';
   const m = document.createElement('div'); m.id = 'addbuddy-modal';
   const optHtml = x => '<option value="' + escHtml(x.id) + '"' + (x.id === cur ? ' selected' : '') + '>' + escHtml((x.icon || '') + ' ' + dispName(x)) + '</option>';
   const hiddenCount = BUDDIES.length - opts.length;
-  m.innerHTML = '<div class="ab-backdrop"></div><div class="ab-box" role="dialog" aria-modal="true" aria-label="Change parent">'
-    + '<h2>Change parent</h2><p class="ab-sub">Pick a new parent for ' + escHtml(dispName(b)) + '.</p>'
+  m.innerHTML = '<div class="ab-backdrop"></div><div class="ab-box" role="dialog" aria-modal="true" aria-label="' + title + '">'
+    + '<h2>' + title + '</h2><p class="ab-sub">' + (addMode ? 'Pick a parent to add for ' : 'Pick a new parent for ') + escHtml(dispName(b)) + '.</p>'
     + '<label for="cp-filter">Filter</label>'
-    + '<input type="text" id="cp-filter" placeholder="Type to filter…" autocomplete="off" style="margin-bottom:10px">'
+    + '<input type="text" id="cp-filter" placeholder="Type to filter\u2026" autocomplete="off" style="margin-bottom:10px">'
     + '<label for="cp-select">Parent</label>'
     + '<select id="cp-select" size="8" style="width:100%;box-sizing:border-box;font-size:15px;padding:10px 12px;border-radius:10px;border:1px solid var(--border);background:var(--bg);color:var(--text)">'
-    + '<option value="">No parent (top level)</option>'
-    + '<option value="" disabled>──────────</option>'
+    + (addMode ? '' : '<option value="">No parent (top level)</option><option value="" disabled>\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500</option>')
     + opts.map(optHtml).join('')
     + '</select>'
-    + (hiddenCount > 0 ? '<p class="fineprint" style="margin-top:6px">' + hiddenCount + ' hidden — a buddy can\u2019t be its own ancestor.</p>' : '')
+    + (hiddenCount > 0 ? '<p class="fineprint" style="margin-top:6px">' + hiddenCount + ' hidden \u2014 a buddy can\u2019t be its own ancestor.</p>' : '')
     + '<div style="display:flex;gap:10px;justify-content:flex-end;margin-top:18px">'
     + '<button class="linkbtn" id="cp-cancel" type="button">Cancel</button>'
     + '<button class="linkbtn" id="cp-save" type="button" style="font-weight:600">Save</button>'
@@ -6977,11 +7042,19 @@ function openChangeParentDialog(bid){
   });
   const doSave = () => {
     const v = sel.value || null;
-    const beforeParent = effParent(b);
+    if (addMode) {
+      if (!v) { close(); return; }
+      addParentOverride(bid, v); save(); buildKids(); renderNav(); refreshViews();
+      if (S.sel === 'buddy:' + bid) renderBuddy(bid);
+      close();
+      toast(dispName(byId[v]) + ' added as a parent of ' + dispName(b) + '.');
+      return;
+    }
+    const beforeParents = effParents(b);
     applyParentOverride(bid, v); save(); buildKids(); renderNav(); refreshViews();
     if (S.sel === 'buddy:' + bid) renderBuddy(bid);
     close();
-    offerMoveUndo(bid, beforeParent, 'Parent updated.');
+    offerMoveUndo(bid, beforeParents, 'Parent updated.');
   };
   m.querySelector('.ab-backdrop').addEventListener('click', close);
   m.querySelector('#cp-cancel').addEventListener('click', close);
@@ -8341,8 +8414,9 @@ function initSearch(){
       }).slice(0, 8);
     };
     const acParentName = (b) => {
-      const p = b.parent ? byId[b.parent] : null;
-      return p ? dispName(p) : '';
+      /* Dave 2026-10-15: show every parent, not just one. */
+      const ps = effParents(b).map(p => byId[p]).filter(Boolean);
+      return ps.map(p => dispName(p)).join(' + ');
     };
     const acRender = () => {
       if (!ac) return;

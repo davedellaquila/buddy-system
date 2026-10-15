@@ -3,6 +3,12 @@
 All notable changes to the Buddies dashboard and buddy system. Newest first.
 `FEATURES.md` describes the current state; this file describes how it got there.
 
+## 2026-10-15 (Multiple parents per buddy)
+
+### Added
+- **Multiple parents per buddy** (Dave 2026-10-15 ❤️): a buddy can now have `parents: ["id1", "id2"]` in buddies.json (legacy single `parent: "id"` still works). New `effParents()` returns all effective parents; `effParent()` now resolves to the first. The sidebar tree and org chart list the buddy under EACH parent (Penny Luedtke now appears under both Acquaintances and Testers). Info panel PARENT section became PARENTS with a count badge, a clickable link row per parent, a × remove button per parent, and a "+ Add parent" button; the old Change/Clear buttons are gone. The parent picker gained an "Add parent" mode (hides the "No parent (top level)" option and excludes existing parents). Peers section now shows the union of siblings across all parents, deduped. Per-device overrides (`S.parents`) accept an array, a single id, or null; move/undo/detach preserve the full parent list.
+- **Cycle guards** (Dave 2026-10-15): the sidebar tree walk carries a per-branch ancestor set so a true cycle can't loop it (a buddy under two parents is a diamond, not a cycle, and renders twice). `isDesc()` now walks every parent chain so drag-moves can't create a loop through a non-first parent, and `descUnseen()` is visited-set safe.
+
 ## 2026-10-15 (Buddy homepage parent links + root photo wall)
 
 ### Added
