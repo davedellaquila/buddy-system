@@ -3,6 +3,11 @@
 All notable changes to the Buddies dashboard and buddy system. Newest first.
 `FEATURES.md` describes the current state; this file describes how it got there.
 
+## 2026-10-15 (News Buddy voices)
+
+### Added
+- **Newsreader personas** (Dave 2026-10-15): each voice in the "Choose your newsreader" picker now has a 1–2 sentence persona description on the right side of its row (dialog widened 480→560px to fit). Tapping ▶ previews the voice's signature sample line instead of the generic intro. Hand-written personas for Cellos, Yuna, Lana, Satu, Mónica; other voices get a generated description from their language.
+
 ## 2026-10-14 (Collapsed panels + tile rows)
 
 ### Changed

@@ -162,6 +162,49 @@ window.NBVoice = (function(){
   var KEY = 'newsBuddyVoiceURI';
   var TIP_URL = 'https://ko-fi.com/davedellaquila';
   var FREE_N = 10;
+  /* Hand-written persona for each newsreader voice: a 1-2 sentence description
+     (shown in the picker) and a signature sample line (spoken on preview). */
+  var VOICE_PERSONAS = {
+    'cellos': {
+      desc: 'Deep, unhurried, and reassuring — the evening-bulletin voice. Cellos reads every story like it matters, because to him it does.',
+      sample: 'Good morning. Here is what the world did while you were sleeping.'
+    },
+    'yuna': {
+      desc: 'Bright and precise with a morning-show spark. Yuna delivers the headlines at a clip — for listeners who like their news quick and clean.',
+      sample: '좋은 아침입니다. 오늘의 주요 뉴스를 전해드리겠습니다.'
+    },
+    'lana': {
+      desc: 'Warm and melodic, like a friend catching you up over coffee. Lana softens the hard news without ever hiding it.',
+      sample: 'Dobro jutro. Evo što se događa u svijetu.'
+    },
+    'satu': {
+      desc: 'Calm, dry, and wonderfully deadpan — "satu" means fairy tale, and she reads the news like one for grown-ups. Nothing rattles her.',
+      sample: 'Hyvää huomenta. Tässä päivän uutiset, rauhallisesti.'
+    },
+    'mónica': {
+      desc: 'Vivid and expressive with a storyteller\u2019s flair. Mónica doesn\u2019t just read the news — she performs it.',
+      sample: 'Buenos días. Estas son las noticias que no te puedes perder.'
+    }
+  };
+  function languageName(code){
+    var m = {en:'English', ko:'Korean', hr:'Croatian', fi:'Finnish', es:'Spanish', de:'German',
+      fr:'French', it:'Italian', pt:'Portuguese', nl:'Dutch', sv:'Swedish', da:'Danish',
+      nb:'Norwegian', zh:'Chinese', ja:'Japanese', ru:'Russian', ar:'Arabic', hi:'Hindi',
+      pl:'Polish', tr:'Turkish', cs:'Czech', el:'Greek', he:'Hebrew', hu:'Hungarian',
+      ro:'Romanian', sk:'Slovak', th:'Thai', uk:'Ukrainian', vi:'Vietnamese', id:'Indonesian',
+      ms:'Malay'};
+    var p = String(code || '').split(/[-_]/)[0].toLowerCase();
+    return m[p] || 'another language';
+  }
+  function baseName(v){ return String(v.name).split('(')[0].trim(); }
+  function voicePersona(v){
+    var hit = VOICE_PERSONAS[baseName(v).toLowerCase()];
+    if (hit) return hit;
+    return {
+      desc: 'Reads your morning briefing in ' + languageName(v.lang) + ' with a steady broadcast cadence. A reliable voice for the daily edition.',
+      sample: 'Good morning. Here are today\u2019s headlines.'
+    };
+  }
   var voices = [], loaded = false, waiters = [];
   var freeVoices = [], lockedVoices = [];
   var supported = ('speechSynthesis' in window);
@@ -211,8 +254,7 @@ window.NBVoice = (function(){
     if (!supported) return;
     try {
       window.speechSynthesis.cancel();
-      var nm = String(v.name).split('(')[0].trim();
-      var u = new SpeechSynthesisUtterance("Hi, I'm " + nm + ". This is how I'll read you the morning news.");
+      var u = new SpeechSynthesisUtterance(voicePersona(v).sample);
       u.voice = v;
       window.speechSynthesis.speak(u);
     } catch(e){}
@@ -229,20 +271,22 @@ window.NBVoice = (function(){
     if (locked) {
       var lk = document.createElement('div'); lk.className = 'vp-check'; lk.textContent = '🔒';
       var nm = document.createElement('div'); nm.className = 'nm';
-      var b = document.createElement('b'); b.textContent = String(v.name).split('(')[0].trim();
+      var b = document.createElement('b'); b.textContent = baseName(v);
       var s = document.createElement('span'); s.textContent = (v.lang || '') + ' · unlock with a tip';
       nm.appendChild(b); nm.appendChild(s);
-      r.appendChild(lk); r.appendChild(nm);
+      var dl = document.createElement('div'); dl.className = 'vp-desc'; dl.textContent = voicePersona(v).desc;
+      r.appendChild(lk); r.appendChild(nm); r.appendChild(dl);
     } else {
       var pv = document.createElement('button');
       pv.className = 'vp-prev'; pv.textContent = '▶'; pv.title = 'Preview this voice'; pv.setAttribute('aria-label', 'Preview ' + v.name);
       pv.addEventListener('click', function(ev){ ev.stopPropagation(); preview(v); });
       var nm2 = document.createElement('div'); nm2.className = 'nm';
-      var b2 = document.createElement('b'); b2.textContent = String(v.name).split('(')[0].trim();
+      var b2 = document.createElement('b'); b2.textContent = baseName(v);
       var s2 = document.createElement('span'); s2.textContent = (v.lang || '') + (v.default ? ' · device default' : '');
       nm2.appendChild(b2); nm2.appendChild(s2);
+      var d2 = document.createElement('div'); d2.className = 'vp-desc'; d2.textContent = voicePersona(v).desc;
       var ck = document.createElement('div'); ck.className = 'vp-check'; ck.textContent = isCurrent ? '✓' : '';
-      r.appendChild(pv); r.appendChild(nm2); r.appendChild(ck);
+      r.appendChild(pv); r.appendChild(nm2); r.appendChild(d2); r.appendChild(ck);
     }
     return r;
   }
