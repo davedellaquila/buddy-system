@@ -3,6 +3,11 @@
 All notable changes to the Buddies dashboard and buddy system. Newest first.
 `FEATURES.md` describes the current state; this file describes how it got there.
 
+## 2026-10-15 (Eric buddy)
+
+### Added
+- **Eric** (Dave 2026-10-15): person buddy for Eric, met at Gibson's Roadhouse on reggae night (Oct 14, 2026). 🎸 icon, child of Relationship Buddy. Living dossier (only a first name known so far; open questions: last name, what he does, contact info, photo). Dossier: https://docs.google.com/document/d/19FtdrF4c6PhyjeHhHxrS7RTpnqvIVuJS1Va7QoEJ6To/edit — Repo: davedellaquila/eric (private) with standard files (SOUL, KNOWLEDGE, DECISIONS, ACCOMPLISHMENTS, dossier mirror, ingest). Custom homepage (reggae-night warmth, dark+light, brain-dump box) at eric/.
+
 ## 2026-10-15 (Default View styles)
 
 ### Added
