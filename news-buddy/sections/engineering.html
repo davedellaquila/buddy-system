@@ -269,38 +269,67 @@
   .secpage .storyitem h3 a:hover{color:var(--accent)}
   .secpage .lede{font-size:16px;line-height:1.65;color:var(--ink);max-width:70ch;margin:10px 0 6px}
 
+  
+  .sec-head h2 a{color:inherit;text-decoration:none;border-bottom:2px solid transparent}
+  .sec-head h2 a:hover{color:var(--accent);border-bottom-color:var(--accent)}
+  .mini-mast{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 20px;border-bottom:3px double var(--ink);margin-bottom:8px;flex-wrap:wrap}
+  .mini-mast a.brand{font-family:Georgia,'Times New Roman',serif;font-weight:700;font-size:20px;color:var(--ink);text-decoration:none}
+  .mini-mast .ed{font-size:12px;color:var(--muted)}
+  .kicker{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:18px 0 4px}
+  .kicker a{color:var(--accent);text-decoration:none}
+  .detail h1{font-family:Georgia,'Times New Roman',serif;font-size:clamp(26px,5vw,40px);line-height:1.15;margin:6px 0 10px;letter-spacing:-.01em}
+  .detail h4.sec{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--accent);margin:22px 0 6px}
+  .detail p.body{font-size:16px;line-height:1.65;margin:0 0 12px;max-width:68ch}
+  .sourcebox{border:1px solid var(--rule);border-left:4px solid var(--accent);border-radius:8px;padding:12px 16px;margin:18px 0;max-width:68ch}
+  .sourcebox p{font-size:14px;line-height:1.6;margin:6px 0}
+  .sourcebox .flag{display:inline-block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;background:#fde68a;color:#7c2d12;border-radius:4px;padding:2px 8px;margin-bottom:4px}
+  .read-original{display:inline-block;margin:10px 0;padding:10px 20px;background:var(--accent);color:#fff !important;border-radius:8px;font-weight:700;text-decoration:none;font-size:15px}
+  .related{margin-top:28px;border-top:1px solid var(--rule);padding-top:14px}
+  .related h4.sec{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:0 0 10px}
+  .related ul{list-style:none;margin:0;padding:0}
+  .related li{margin:0 0 10px;font-size:15px;line-height:1.45}
+  .related a{color:var(--ink);text-decoration:none;border-bottom:1px solid var(--rule)}
+  .related a:hover{color:var(--accent);border-bottom-color:var(--accent)}
+  .backfoot{margin:30px 0 40px;font-size:14px}
+  .backfoot a{color:var(--accent);text-decoration:none;font-weight:600}
+  .secpage .storyitem{border-bottom:1px solid var(--rule);padding:16px 0}
+  .secpage .storyitem h3{font-size:20px;margin:0 0 6px;line-height:1.3}
+  .secpage .storyitem h3 a{color:var(--ink);text-decoration:none}
+  .secpage .storyitem h3 a:hover{color:var(--accent)}
+  .secpage .lede{font-size:16px;line-height:1.65;color:var(--ink);max-width:70ch;margin:10px 0 6px}
+
   </style>
 </head>
 <body>
 <header class="mini-mast">
   <a class="brand" href="../index.html">📰 The Morning Edition</a>
-  <span class="ed">Wednesday, October 14, 2026</span>
+  <span class="ed">Thursday, October 15, 2026</span>
   <button id="themeBtn" class="voice-change" style="margin-left:0">Theme: Auto</button>
 </header>
 <main class="detail secpage" style="max-width:860px;margin:0 auto;padding:0 20px">
   <p class="kicker">Section</p>
   <h1>Engineering</h1>
-  <p class="lede">The AI-coding reckoning continues: Sweeney confirms Epic&#x27;s &#x27;AI-first&#x27; pivot on the delayed Disney shooter while the Harvard/Jellyfish numbers get sharper (review time +49%, shipped issues flat). Plus npm supply-chain hygiene, TanStack Start 1.0, and agents that learn frameworks.</p>
+  <p class="lede">Patch day: Vercel shipped an out-of-band Next.js security update with two critical RCEs and no workarounds. The SlugFest disclosure explains the npm trusted-publishing flaw behind GitHub&#x27;s 48-hour expiry (1,500+ packages exposed), TanStack Start went 1.0 as the agent-ready alternative, and GitHub&#x27;s AI-assisted Copilot rewrite — 800K lines, 5.25s to 292ms — is the boldest AI porting case study yet.</p>
   <div class="storyitem">
-      <h3><a href="../articles/2026-10-14-epic-games-goes-ai-first-on-delayed-disney-shooter-swee.html">Epic Games goes “AI-first” on delayed Disney shooter, Sweeney confirms</a></h3>
-      <p class="byline">Radio Times, via Bloomberg · Oct 13</p>
-      <p class="body">Bloomberg reported Epic’s Disney-backed shooter (Marvel and Star Wars characters, part of Disney’s $1.5B Epic investment) was delayed from its March 2027 window as directors imposed directives like ’no more hand-written code’ and AI-generated art workflows. Staff were reportedly stunned; CEO Tim Sweeney confirmed the ’huge pivot’ on X on Oct 12, insisting the goal is more and better output, not fewer people — months after Epic laid off 1,000+ employees.</p>
-      <p class="body"><em>Why it matters:</em> The highest-profile test yet of an AI-first mandate at a AAA studio — and a useful counterpoint to the Harvard study&#x27;s review-bottleneck finding for someone who runs his own Cursor/auto-fetch workflows.</p>
+      <h3><a href="../articles/2026-10-15-next-js-security-update-two-critical-rces-patched-no-wo.html">Next.js security update: two critical RCEs patched, no workarounds</a></h3>
+      <p class="byline">Next.js · Oct 14</p>
+      <p class="body">Vercel shipped an out-of-band Next.js security update on October 14, patching three vulnerabilities via Next.js 16.4.1 (Active LTS) and 15.5.28 (Maintenance LTS). Two are critical unauthenticated remote code execution flaws: GHSA-673q-mjm6-r5xr, triggered when an App Router ’use cache’ function returns multiple typed arrays (no workaround — upgrade immediately), and CVE-2026-96889, a memory bug in the upstream sharp image library affecting the Image Optimization API with SVGs on glibc-based Linux. The third, GHSA-p3m5-59mp-jv5r, is a high-severity Server Actions denial-of-service via crafted requests that exhaust CPU. Every 16.3 release, including 16.3.8, is affected — 16.3 users must move lines.</p>
+      <p class="body"><em>Why it matters:</em> Critical RCEs with no workarounds in the framework his world runs on — every 16.3 release is affected, so anyone shipping Next.js patches today, no exceptions.</p>
     </div><div class="storyitem">
-      <h3><a href="../articles/2026-10-14-harvard-study-ai-coding-agents-add-30-more-code-but-shi.html">Harvard study: AI coding agents add 30% more code, but shipped output is flat</a></h3>
-      <p class="byline">Models at Work, via Ars Technica · Oct 12</p>
-      <p class="body">Harvard economists Fiona Chen and James Stratton analyzed ~300M work events across 700,000+ employees at 700+ firms via Jellyfish data, as first reported by Ars Technica on Oct 9. After agent adoption, lines of code rose 30%, commits 20%, and PRs 23% — but resolved Jira issues/epics didn’t move, because PR review time rose 49%, change requests nearly doubled, and 14% more workers shifted into review. No measurable employment change either.</p>
-      <p class="body"><em>Why it matters:</em> His team ships tools with AI assistance, and the study pinpoints review capacity — not code generation — as the real constraint, a tradeoff his own prototyping and buddy-system code reviews will feel.</p>
+      <h3><a href="../articles/2026-10-15-slugfest-npm-trusted-publishing-flaw-exposed-1-500-pack.html">SlugFest: npm trusted-publishing flaw exposed 1,500+ packages to takeover</a></h3>
+      <p class="byline">Help Net Security · Oct 13</p>
+      <p class="body">Bloom Security’s Golan Myers disclosed ’SlugFest,’ a flaw in npm’s OpenID Connect trusted publishing: configurations trusted a repository name rather than GitHub’s immutable repository ID, so an attacker could reclaim an abandoned GitHub repo slug and publish malicious versions under the legitimate package name — with a valid provenance signature. Bloom found over 1,500 vulnerable packages with more than 10 million combined downloads. GitHub validated the report in June and on October 2 introduced the 48-hour expiry: unvalidated publisher configs now expire 48 hours after creation, and npm blocks OIDC token exchange from issue_comment workflows. Myers notes AI coding agents make this class of flaw reach further — agents install ~70 packages/month on a typical endpoint without reviewing them.</p>
+      <p class="body"><em>Why it matters:</em> The full SlugFest story behind GitHub&#x27;s 48-hour expiry — 1,500+ packages with 10M+ downloads reachable via repo-slug squatting, and the AI-agents supply-chain angle ties straight to the Anthropic story he upvoted.</p>
     </div><div class="storyitem">
-      <h3><a href="../articles/2026-10-14-github-adds-48-hour-expiry-to-unvalidated-npm-trusted-p.html">GitHub adds 48-hour expiry to unvalidated npm trusted-publishing configs</a></h3>
-      <p class="byline">DEV Community · Oct 13</p>
-      <p class="body">Following a Bloom Security investigation (reported to GitHub on June 6, 2026), GitHub is closing a supply-chain loophole where attackers could claim abandoned repository slugs and publish package updates without credentials. Unvalidated trusted-publishing settings now expire automatically 48 hours after creation, becoming permanent only after a successful publish. The research flagged over 1,500 vulnerable packages with 10M+ combined downloads; npm also now rejects requests from certain automated bot processes.</p>
-      <p class="body"><em>Why it matters:</em> He publishes and ships code — this is the kind of quiet npm hygiene change that decides whether a dependency attack ever reaches his machine, amid the ongoing Shai-Hulud npm worm wave.</p>
+      <h3><a href="../articles/2026-10-15-tanstack-start-1-0-is-stable-the-client-first-full-stac.html">TanStack Start 1.0 is stable — the client-first full-stack alternative</a></h3>
+      <p class="byline">TanStack · Oct 13</p>
+      <p class="body">TanStack declared TanStack Start 1.0 stable on October 13, formally committing to stable APIs for its full-stack React (and Solid) framework after a long RC period — the post notes enterprise teams and Fortune 500 companies insisted on running it in production even while it was in beta. Highlights: end-to-end type-safe routing, per-route rendering modes, typed createServerFn server functions, and a reported ~5.5x SSR throughput gain from profiling work. Agent-ready by design: packages ship TanStack Intent skills so AI agents learn Start’s APIs and best practices. RSC support exists but is opt-in.</p>
+      <p class="body"><em>Why it matters:</em> A client-first, agent-ready challenger to the Next.js server-first model going stable is a genuine option worth knowing before his next build — he thinks in frameworks and design systems.</p>
     </div><div class="storyitem">
-      <h3><a href="../articles/2026-10-14-tanstack-start-1-0-goes-stable-as-the-client-first-full.html">TanStack Start 1.0 goes stable as the client-first full-stack alternative</a></h3>
-      <p class="byline">This Week in React · Oct 14</p>
-      <p class="body">TanStack Start hit 1.0 (stable, production-ready), positioning as a client-first full-stack React/Solid framework with SPA-style routing, typed server functions, and opt-in React Server Components. Notably it ships agent-ready: TanStack Intent skills so coding agents learn its APIs and best practices, with optimized type checking kept consistent for humans and agents alike. The same newsletter notes Deno’s team is joining Cloudflare (Deno Deploy sunsetting) and a Next.js security update landing Oct 14.</p>
-      <p class="body"><em>Why it matters:</em> He builds apps and thinks in frameworks and design systems — a client-first, agent-ready challenger to the Next.js server-first model is a fresh option worth knowing before his next build.</p>
+      <h3><a href="../articles/2026-10-15-github-rewrote-copilots-runtime-in-rust-with-ai-help-5.html">GitHub rewrote Copilot’s runtime in Rust with AI help: 5.25s to 292ms</a></h3>
+      <p class="byline">Sourcetrail · Oct 14</p>
+      <p class="body">GitHub migrated the runtime behind the Copilot CLI, Copilot app, and Copilot SDK from TypeScript/Node.js to Rust in an AI-assisted rewrite: over 800,000 lines of production code replaced in roughly 14.5 weeks across 128 pull requests, delivered incrementally with temporary NAPI interop so existing end-to-end tests kept exercising new code. The headline number: a measured startup/session/single-turn scenario dropped from 5.25 seconds to 292 milliseconds, and embedding via a C ABI eliminates the ~100 MB of working set per client the old process-boundary design required.</p>
+      <p class="body"><em>Why it matters:</em> The boldest real-world AI-assisted rewrite on record: 800K lines of TypeScript to Rust in 14.5 weeks, and a 5.25s→292ms startup win — exactly the workflow his team is probing with agents.</p>
     </div>
   <section class="suggestbox" data-buddy-id="news-buddy">
     <h2>Suggestions</h2>

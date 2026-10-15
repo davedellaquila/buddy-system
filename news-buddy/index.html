@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>News Buddy — Morning Edition, Oct 14 2026</title>
+<title>News Buddy — Morning Edition, Oct 15 2026</title>
 <style>
   :root{
     --paper:#faf6ee; --card:#fffdf7; --ink:#221b12; --muted:#7d7060;
@@ -150,7 +150,7 @@
   .story-vote.on-down{background:#b42318;border-color:#b42318;color:#fff}
   /* ---------- voice picker ---------- */
   .vp-overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:1000;display:flex;align-items:center;justify-content:center;padding:20px}
-  .vp-card{background:var(--paper);color:var(--ink);border:1px solid var(--rule);border-radius:14px;max-width:560px;width:100%;max-height:82vh;display:flex;flex-direction:column;box-shadow:0 12px 40px rgba(0,0,0,.35)}
+  .vp-card{background:var(--paper);color:var(--ink);border:1px solid var(--rule);border-radius:14px;max-width:480px;width:100%;max-height:82vh;display:flex;flex-direction:column;box-shadow:0 12px 40px rgba(0,0,0,.35)}
   .vp-head{padding:14px 16px;border-bottom:1px solid var(--rule);display:flex;align-items:center;justify-content:space-between;flex:none}
   .vp-head h3{margin:0;font-size:16px}
   .vp-close{background:none;border:none;font-size:18px;cursor:pointer;color:var(--muted);padding:4px 8px}
@@ -159,10 +159,9 @@
   .vp-row{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:10px;cursor:pointer;border:1px solid transparent}
   .vp-row:hover{background:rgba(127,127,127,.12)}
   .vp-row.current{border-color:var(--accent)}
-  .vp-row .nm{flex:none;min-width:0;max-width:38%}
+  .vp-row .nm{flex:1;min-width:0}
   .vp-row .nm b{display:block;font-size:14px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .vp-row .nm span{font-size:12px;color:var(--muted)}
-  .vp-row .vp-desc{flex:1;min-width:0;font-size:12px;line-height:1.4;color:var(--muted)}
   .vp-prev{background:transparent;border:1px solid var(--rule);color:var(--ink);border-radius:50%;width:36px;height:36px;font-size:13px;cursor:pointer;flex:none}
   .vp-prev:hover{border-color:var(--accent)}
   .vp-check{flex:none;width:22px;text-align:center;color:var(--accent);font-weight:700}
@@ -270,6 +269,35 @@
   .secpage .storyitem h3 a:hover{color:var(--accent)}
   .secpage .lede{font-size:16px;line-height:1.65;color:var(--ink);max-width:70ch;margin:10px 0 6px}
 
+  
+  .sec-head h2 a{color:inherit;text-decoration:none;border-bottom:2px solid transparent}
+  .sec-head h2 a:hover{color:var(--accent);border-bottom-color:var(--accent)}
+  .mini-mast{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 20px;border-bottom:3px double var(--ink);margin-bottom:8px;flex-wrap:wrap}
+  .mini-mast a.brand{font-family:Georgia,'Times New Roman',serif;font-weight:700;font-size:20px;color:var(--ink);text-decoration:none}
+  .mini-mast .ed{font-size:12px;color:var(--muted)}
+  .kicker{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:18px 0 4px}
+  .kicker a{color:var(--accent);text-decoration:none}
+  .detail h1{font-family:Georgia,'Times New Roman',serif;font-size:clamp(26px,5vw,40px);line-height:1.15;margin:6px 0 10px;letter-spacing:-.01em}
+  .detail h4.sec{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--accent);margin:22px 0 6px}
+  .detail p.body{font-size:16px;line-height:1.65;margin:0 0 12px;max-width:68ch}
+  .sourcebox{border:1px solid var(--rule);border-left:4px solid var(--accent);border-radius:8px;padding:12px 16px;margin:18px 0;max-width:68ch}
+  .sourcebox p{font-size:14px;line-height:1.6;margin:6px 0}
+  .sourcebox .flag{display:inline-block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;background:#fde68a;color:#7c2d12;border-radius:4px;padding:2px 8px;margin-bottom:4px}
+  .read-original{display:inline-block;margin:10px 0;padding:10px 20px;background:var(--accent);color:#fff !important;border-radius:8px;font-weight:700;text-decoration:none;font-size:15px}
+  .related{margin-top:28px;border-top:1px solid var(--rule);padding-top:14px}
+  .related h4.sec{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:0 0 10px}
+  .related ul{list-style:none;margin:0;padding:0}
+  .related li{margin:0 0 10px;font-size:15px;line-height:1.45}
+  .related a{color:var(--ink);text-decoration:none;border-bottom:1px solid var(--rule)}
+  .related a:hover{color:var(--accent);border-bottom-color:var(--accent)}
+  .backfoot{margin:30px 0 40px;font-size:14px}
+  .backfoot a{color:var(--accent);text-decoration:none;font-weight:600}
+  .secpage .storyitem{border-bottom:1px solid var(--rule);padding:16px 0}
+  .secpage .storyitem h3{font-size:20px;margin:0 0 6px;line-height:1.3}
+  .secpage .storyitem h3 a{color:var(--ink);text-decoration:none}
+  .secpage .storyitem h3 a:hover{color:var(--accent)}
+  .secpage .lede{font-size:16px;line-height:1.65;color:var(--ink);max-width:70ch;margin:10px 0 6px}
+
   </style>
 </head>
 <body>
@@ -280,33 +308,32 @@
   <h1>News <span class="amp">Buddy</span></h1>
   <p class="tagline">The morning edition, assembled from your topics.</p>
   <div class="dateline">
-    <span>Wednesday, October 14, 2026 &middot; Morning Edition &middot; Fiddletown, CA</span>
+    <span>Thursday, October 15, 2026 &middot; Morning Edition &middot; Fiddletown, CA</span>
     <button class="theme-btn" id="themeBtn" type="button">Theme: Auto</button>
   </div>
 </div>
 
 <div class="desknote">
-<strong>From the news desk.</strong> CPI day gives this edition its spine: September printed hot at 3.7% (core 2.6%), the 10-year popped to 5.29%, and October Fed-hike odds nearly doubled. Apple confirmed the Welcome Home lineup &mdash; a $299 HomeView hub shipping Nov 13 &mdash; while bank earnings rolled into day two with a $1.2B fine denting BofA. AI is thick with first-tier reporting (Reuters, Bloomberg relays, and a tier-1-confirmed Meta frontier model); motorsport and Amador County lean on specialist outlets and AI-generated meeting summaries (flagged <span class="thin" style="margin-left:0">thin sourcing</span>); live music is listings, as always. One correction: Bumpin Uglies plays the <em>Sacramento</em> Goldfield tonight, not Roseville &mdash; yesterday&rsquo;s listing had the wrong room. What&rsquo;s thin is labeled, not hidden.
+<strong>From the news desk.</strong> Wholesale inflation detonated Thursday morning: September PPI jumped 1.3% &mdash; the biggest monthly advance since March 2022 &mdash; one day after the hot CPI print (3.7%) nearly doubled October Fed-hike odds. Korea&rsquo;s Kospi crashed 7.6%, triggering a full trading halt, while the 10-year eased to ~5.09% as money ran for safety. Fed Chair Warsh gets the last word tonight in Bangkok before the Saturday blackout. In AI, Anthropic told investors Q3 revenue hit $16.8B (+45%) and pitched a $2T+ IPO after the midterms &mdash; the morning after, NYC&rsquo;s comptroller urged it to pause the listing; Google countered with flagship Gemini 4 Argon. Hands-on reviews of Apple&rsquo;s $299 HomeView landed (Amazon already shaved $9 off the preorder). NASCAR&rsquo;s elimination race is Sunday at Phoenix; in Amador County, the Red Flag Warning runs through Friday 10 AM and PG&amp;E says ~4,557 county customers could lose power. What&rsquo;s <span class="thin" style="margin-left:0">thin</span> is labeled, not hidden.
 </div>
 
 <section>
   <div class="sec-head"><span class="sec-num">Front page</span><h2><a href="sections/top-stories.html">Top Stories</a></h2><span class="line"></span></div>
   <div class="stack">
-    <article class="card story lead" data-article="articles/2026-10-14-hot-september-cpi-reignites-october-fed-hike-bets.html">
-      <h3><a href="https://www.investopedia.com/stock-market-today-dow-jones-s-and-p-500-10142026-12173010" target="_blank" rel="noopener">Hot September CPI reignites October Fed-hike bets</a></h3>
-      <p class="dek">September CPI printed 3.7% year-over-year, up from 3.4% in August and above the 3.6% forecast; core CPI rose 2.6% versus 2.5% expected, with the monthly core gain at 0.3% against a 0.2% estimate. Stock futures slid after the 8:30 a.m. ET release (Nasdaq 100 -0.5%, S&amp;P 500 -0.2%) while the 10-year Treasury yield jumped to 5.26%; CME FedWatch odds of an October 28 rate hike nearly doubled to 39% from 22%. September PPI lands tomorrow at 8:30 a.m. ET and will feed the core PCE calculation.</p>
-      <p class="byline">Investopedia · Oct 14</p>
+    <article class="card story lead" data-article="articles/2026-10-15-ppi-detonates-wholesale-prices-jump-1-3-biggest-in-four.html">
+      <h3><a href="https://www.barrons.com/articles/ppi-inflation-report-september-producer-prices-6be6e2bb" target="_blank" rel="noopener">PPI detonates: wholesale prices jump 1.3%, biggest in four years</a></h3>
+      <p class="dek">September PPI rose 1.3% month-over-month — the largest monthly advance since March 2022 and far above the 0.5% FactSet consensus — lifting the annual rate to 6.3%, per the BLS; August&rsquo;s annual figure was revised to 5.6%. The 8:30 a.m. ET reading lands one day after hot September CPI (3.7% headline, core 2.6%) and strengthens the case for a Fed hike at the Oct. 27–28 meeting.</p>
+      <p class="byline">Barron&rsquo;s · Oct 15</p>
     </article>
-    <article class="card story" data-article="articles/2026-10-14-apple-goes-all-in-on-the-home-homeview-hub-new-apple-tv.html">
-      <img class="story-thumb" src="https://images.macrumors.com/t/0BXtT5XH3pfN6zIia4tIsWsvF18=/400x0/article-new/2026/10/Everything-Apple-Announced-at-Welcome-Home-Feature.jpg?lossy" alt="" loading="lazy">
-      <h3><a href="https://www.macrumors.com/2026/10/13/apple-october-13-recap/" target="_blank" rel="noopener">Apple goes all-in on the home: HomeView hub, new Apple TV 4K, HomePod mini 2</a></h3>
-      <p class="dek">Apple skipped a formal event and announced its &rsquo;Welcome Home&rsquo; lineup via press release plus an invite-only New York media experience on Oct 13. The headline device is the all-new $299 HomeView smart-home hub with a 7-inch Liquid Retina display, 12MP camera, and Siri AI, shipping Nov 13; the 4th-gen Apple TV 4K ($299, A19 chip, far-field mics, Wi-Fi 7) and HomePod mini 2 ($149, new chip/colors) are also live for preorder, all with Siri AI. Apple also launched the &rsquo;Home Collection&rsquo; of cameras, locks, and thermostats built with LG Electronics and Schneider Electric, with ADT offering in-home installation.</p>
-      <p class="byline">MacRumors, relaying Bloomberg&rsquo;s Mark Gurman · Oct 13</p>
+    <article class="card story" data-article="articles/2026-10-15-kospi-crashes-7-6-triggers-trading-halt-as-ai-chip-rout.html">
+      <h3><a href="https://www.ajupress.com/view/20261015165925041" target="_blank" rel="noopener">Kospi crashes 7.6%, triggers trading halt as AI chip rout deepens</a></h3>
+      <p class="dek">South Korea&rsquo;s Kospi tumbled 7.57% to close at 5,554.22 on Thursday — its steepest drop since July 28, its seventh straight decline (−21% over the streak), and its lowest close since April 7. Sell-side circuit breakers fired on both Kospi and Kosdaq, followed by a 20-minute full trading halt as the index fell more than 8% intraday; Samsung fell 9.5% and SK Hynix 11.4%, with SK Hynix now down 57% from its June peak. Japan&rsquo;s Nikkei sank 4.8% and Taiwan&rsquo;s Taiex −3%, driven by hot U.S. CPI reviving Fed-hike fears plus AI-return doubts.</p>
+      <p class="byline">Aju Press · Oct 15</p>
     </article>
-    <article class="card story" data-article="articles/2026-10-14-bofa-sinks-on-1-2b-fine-while-morgan-stanley-beats-on-t.html">
-      <h3><a href="https://www.wsj.com/business/earnings/bank-of-america-settlement-charge-hits-profit-morgan-stanley-profit-climbs-d9cde716" target="_blank" rel="noopener">BofA sinks on $1.2B fine while Morgan Stanley beats on trading</a></h3>
-      <p class="dek">Bank of America posted Q3 profit of $6.9B (91 cents/share), down from $8.3B a year ago, after regulators hit it with a $1.2B fine Tuesday for inadequate systems to monitor and report suspected financial crimes — the charge shaved 17 cents off EPS. Excluding it, adjusted EPS of $1.08 missed the $1.10 estimate and $30B revenue fell short of $30.58B; shares dropped 4.3% to $51.65 premarket. Morgan Stanley went the other way: net revenue of $20.3B and EPS of $3.03 both beat estimates, driven by equity-trading revenue and wealth-management fees.</p>
-      <p class="byline">The Wall Street Journal · Oct 14</p>
+    <article class="card story" data-article="articles/2026-10-15-supreme-court-again-sides-with-trump-in-campaign-ad-dis.html">
+      <h3><a href="https://www.usatoday.com/story/news/politics/2026/10/14/supreme-court-trump-campaign-ad-fcc-democrats/92206841007/" target="_blank" rel="noopener">Supreme Court again sides with Trump in campaign-ad dispute</a></h3>
+      <p class="dek">In an unsigned opinion, the Supreme Court blocked a lower court from ordering the FCC to respond to Democrats&rsquo; objections over a new policy letting political parties use the same low ad rates stations must offer candidates — extending a previous pause. Justices Sotomayor and Jackson dissented. The ruling, weeks before the November midterms, benefits Republicans, whose committees have raised far more than Democrats&rsquo;; a lower court had called the FCC&rsquo;s stall &rsquo;gamesmanship.&rsquo;</p>
+      <p class="byline">USA Today · Oct 14</p>
     </article>
   </div>
 </section>
@@ -314,25 +341,25 @@
 <section>
   <div class="sec-head"><span class="sec-num">Section I</span><h2><a href="sections/ai-technology.html">AI &amp; Technology</a></h2><span class="line"></span></div>
   <div class="stack">
-    <article class="card story" data-article="articles/2026-10-14-anthropic-names-chinas-z-ai-as-a-claude-copycat-says-ne.html">
-      <h3><a href="https://985theriver.com/2026/10/12/anthropic-says-new-safeguards-sharply-reduce-ai-distillation-attacks/" target="_blank" rel="noopener">Anthropic names China&rsquo;s Z.ai as a Claude copycat, says new defenses cut data theft 90–99%</a></h3>
-      <p class="dek">In a research post Monday, Anthropic said new safeguards that restrict access to Claude&rsquo;s step-by-step reasoning have reduced data harvested in so-called distillation attacks by about 90% to 99%, with reasoning tokens extracted now 10 to 100 times lower than before. The company banned tens of thousands of linked accounts and named Chinese startup Z.ai (Zhipu) as a company that tried to distill Claude&rsquo;s capabilities while building its GLM-5.3 model, warning the practice poses safety and national-security risks. Z.ai did not immediately respond to a request for comment.</p>
-      <p class="byline">Reuters · Oct 12</p>
+    <article class="card story lead" data-article="articles/2026-10-15-anthropic-told-investors-q3-revenue-hit-16-8b-pitched-a.html">
+      <h3><a href="https://www.reuters.com/business/finance/anthropics-q3-revenue-surges-45-nearly-17-billion-2026-10-14/" target="_blank" rel="noopener">Anthropic told investors Q3 revenue hit $16.8B, pitched a $2T+ November IPO</a></h3>
+      <p class="dek">At a Wednesday investor day at its San Francisco HQ, Anthropic disclosed third-quarter revenue of $16.8 billion — up 45% from Q2&rsquo;s $11.6B and from $4.7B in Q1 — and said it made an adjusted profit for the quarter, according to attendees who spoke to Reuters. The company is targeting a valuation above $2 trillion for an IPO now expected after the November 3 U.S. midterms, with formal marketing potentially starting the week of Nov. 9 and a trading debut before Thanksgiving — even as it asks markets to fund ~$518B in decade-long compute commitments to Google and Amazon.</p>
+      <p class="byline">Reuters · Oct 14</p>
     </article>
-    <article class="card story" data-article="articles/2026-10-14-metas-muse-wonder-arrives-first-frontier-model-since-th.html">
-      <h3><a href="https://startupfortune.com/zuckerberg-says-metas-muse-wonder-ai-has-reached-the-frontier-and-keeps-building-anyway/" target="_blank" rel="noopener">Meta&rsquo;s Muse Wonder arrives: first frontier model since the Alexandr Wang reboot</a></h3>
-      <p class="dek">Meta&rsquo;s Superintelligence Labs unveiled Muse Wonder and Muse Wonder Full on Oct 12, calling them the company&rsquo;s first genuinely frontier-class models since Llama 4 — trained at the Prometheus data center in Ohio with a 1M-token context window. Wonder sells via the Meta Model API at $4/$20 per million input/output tokens; the stronger Wonder Full is restricted to $50–$200 Muse Code subscriptions. Zuckerberg told the Financial Times the launch brings Meta &rsquo;to the frontier&rsquo; and rejected calls for a coordinated industry slowdown; Meta stock rose more than 3% on the news.</p>
-      <p class="byline">Startup Fortune, via TechCrunch and Reuters · Oct 12</p>
+    <article class="card story" data-article="articles/2026-10-15-google-launches-flagship-gemini-4-argon-for-developers.html">
+      <h3><a href="https://www.reuters.com/business/google-launches-flagship-ai-model-gemini-4-argon-developers-businesses-2026-10-13/" target="_blank" rel="noopener">Google launches flagship Gemini 4 Argon for developers and businesses</a></h3>
+      <p class="dek">Alphabet&rsquo;s Google released Gemini 4 Argon, its flagship AI model, seeking to regain ground against OpenAI and Anthropic after months of delays and a DeepMind leadership shakeup that saw Demis Hassabis step aside. The model targets &rsquo;deep work&rsquo; on complex multi-step tasks in coding, finance, law, cybersecurity, and science; API pricing starts at $2 per million input tokens and $10 per million output tokens, doubling after November 30. Google also opened its Fairwind Program — vetted cybersecurity defenders get a version without cyber guardrails — to hundreds more partners.</p>
+      <p class="byline">Reuters · Oct 14</p>
     </article>
-    <article class="card story" data-article="articles/2026-10-14-white-house-restores-uk-access-to-pre-release-frontier.html">
-      <h3><a href="https://techdefused.com/a/2FgWYph/us-restores-uk-access-to-pre-release-ai-models" target="_blank" rel="noopener">White House restores UK access to pre-release frontier models after 17-day freeze</a><span class="thin" title="Small outlet; underlying fact Reuters-confirmed Oct 12">secondhand</span></h3>
-      <p class="dek">The Trump administration lifted its Sept 24 order asking OpenAI and Anthropic to withhold pre-release models from Britain&rsquo;s AI Security Institute pending a US cybersecurity review; access was restored Oct 11 after lobbying by UK AI minister Kanishka Narayan. During the freeze, at least one model release — Anthropic&rsquo;s Claude Mythos 5.1 — went out to US organizations only. AISI screens frontier models for cyber, fraud, and bioweapon risks before public release; the restored access still rests on voluntary agreements, not binding law.</p>
-      <p class="byline">TechDefused · Oct 12</p>
+    <article class="card story" data-article="articles/2026-10-15-nyc-comptroller-urges-anthropic-to-pause-its-ipo-over-s.html">
+      <h3><a href="https://www.reuters.com/business/nyc-comptroller-levine-urges-anthropic-pause-us-ipo-cnbc-reports-2026-10-15/" target="_blank" rel="noopener">NYC comptroller urges Anthropic to pause its IPO over safety concerns</a><span class="thin" title="Reuters relaying CNBC&#x27;s report of the letter; no comment from either side yet">secondhand</span></h3>
+      <p class="dek">New York City Comptroller Mark Levine urged Anthropic in a letter to CEO Dario Amodei to delay its U.S. IPO until it addresses concerns about AI safety, governance, and the pace of development, CNBC reported Thursday. &rsquo;Instead of proceeding headlong with its IPO, the company should focus its energies on addressing these unprecedented risks,&rsquo; Levine wrote; neither his office nor Anthropic immediately responded. The letter comes one day after Anthropic&rsquo;s investor day pitched a $2T+ November IPO.</p>
+      <p class="byline">Reuters, via CNBC · Oct 15</p>
     </article>
-    <article class="card story" data-article="articles/2026-10-14-anthropic-holds-pre-ipo-investor-day-today-eyeing-a-nov.html">
-      <h3><a href="https://www.thehindubusinessline.com/news/world/anthropic-is-said-to-plan-pre-ipo-investor-day-as-listing-nears/article71582153.ece" target="_blank" rel="noopener">Anthropic holds pre-IPO investor day today, eyeing a November blockbuster listing</a><span class="thin" title="BusinessLine relaying Bloomberg reporting">secondhand</span></h3>
-      <p class="dek">Anthropic is meeting a select group of institutional investors at its San Francisco headquarters today, Oct 14, ahead of its IPO, with invitations just sent out, per people familiar with the matter. The company could start formal IPO marketing as soon as the week of Nov 9, targeting trading before Thanksgiving. Investors estimate a fair valuation of $1.8–2 trillion, and Anthropic expects to match or beat the size of SpaceX&rsquo;s IPO — while OpenAI has postponed its own IPO plans and is instead raising at least $30B at a ~$1.4T valuation.</p>
-      <p class="byline">The Hindu BusinessLine, relaying Bloomberg · Oct 14</p>
+    <article class="card story" data-article="articles/2026-10-15-deepmind-and-singapore-built-an-on-device-ai-that-spots.html">
+      <h3><a href="https://fintechnews.sg/138945/ai/google-deepmind-govtech-scam-detection-model/" target="_blank" rel="noopener">DeepMind and Singapore built an on-device AI that spots scams without phoning home</a><span class="thin" title="Trade outlet; underlying facts from DeepMind&#x27;s Oct 14 blog post, corroborated by ITBrief Asia">thin sourcing</span></h3>
+      <p class="dek">Unveiled in a DeepMind blog post on Oct. 14 and presented at Singapore International Cyber Week, the model — a fine-tuned version of Google&rsquo;s lightweight Gemma, trained on local scam conversations including impersonations of public institutions, banks, and local figures — screens smartphone conversations for manipulation patterns entirely on-device. A two-stage design (a lightweight classifier first, then the fine-tuned Gemma for confirmation) conserves battery; when scam patterns are found, it shows a real-time warning before money is sent. Neither Google nor the Singapore government can view the conversations.</p>
+      <p class="byline">Fintech News Singapore · Oct 14</p>
     </article>
   </div>
 </section>
@@ -340,20 +367,20 @@
 <section>
   <div class="sec-head"><span class="sec-num">Section II</span><h2><a href="sections/markets.html">Markets</a></h2><span class="line"></span></div>
   <div class="stack">
-    <article class="card story" data-article="articles/2026-10-14-hot-september-cpi-rattles-rate-bets-10-year-pops-to-5-2.html">
-      <h3><a href="https://www.barrons.com/livecoverage/stock-market-news-today-101426/card/stocks-drop-and-yields-pop-after-hot-cpi-LCzp7ZNQSI1QQni2Rk1R" target="_blank" rel="noopener">Hot September CPI rattles rate bets, 10-year pops to 5.29%</a></h3>
-      <p class="dek">September CPI came in hot: headline up 3.7% year-on-year versus 3.6% expected, core at 2.6% versus 2.5%, with core rising 0.3% on the month against 0.2% expected, per FactSet. Stock futures tumbled (Nasdaq 100 down 0.6%) and the 10-year yield spiked to 5.29%, the 2-year to 4.91%. Markets had priced roughly a 22% chance of a quarter-point Fed hike at the October 28 meeting heading into the print, and New York Fed president John Williams said the Fed may need to raise once more this year.</p>
-      <p class="byline">Barron&rsquo;s · Oct 14</p>
+    <article class="card story lead" data-article="articles/2026-10-15-warshs-quiet-fed-draws-vocal-pushback-october-hike-now.html">
+      <h3><a href="https://www.reuters.com/markets/us/warshs-quest-quiet-fed-gets-vocal-pushback-2026-10-15/" target="_blank" rel="noopener">Warsh&rsquo;s &rsquo;quiet Fed&rsquo; draws vocal pushback; October hike now a coin toss</a></h3>
+      <p class="dek">Reuters reports Fed Chair Kevin Warsh&rsquo;s push for a &rsquo;quieter&rsquo; central bank is facing open pushback from colleagues: 40+ appearances by Fed officials have convinced traders to scale back hike bets mounted after September&rsquo;s rate increase. After hot CPI (3.7% y/y; core 0.3% m/m vs 0.2% expected), CME FedWatch has an October hike as roughly a coin toss — spiking to ~44–50% right after the CPI print, then easing under 40% later Wednesday. Warsh gets the last word before the blackout period (which starts Saturday): he speaks tonight at 11:30 p.m. ET (8:30 p.m. PT) with IMF chief Kristalina Georgieva at the IMF meetings in Bangkok.</p>
+      <p class="byline">Reuters · Oct 15</p>
     </article>
-    <article class="card story" data-article="articles/2026-10-14-bank-earnings-day-two-bofa-hit-by-1-21b-fine-goldman-sm.html">
-      <h3><a href="https://www.reuters.com/business/sp-500-dow-futures-rise-ahead-big-bank-results-cpi-data-2026-10-14/" target="_blank" rel="noopener">Bank earnings day two: BofA hit by $1.21B fine; Goldman smashed it</a></h3>
-      <p class="dek">Bank of America, Morgan Stanley, BlackRock and State Street report before the open, with BofA down 1.5% premarket after disclosing a $1.21 billion regulatory fine that could weigh on Q3 results. Tuesday&rsquo;s openers were mixed: Goldman Sachs posted a monster quarter — EPS of $17.01 versus $13.09 expected on $18.7B revenue, up 23% — while JPMorgan missed (EPS $5.75 vs $5.93 expected), Wells Fargo fell ~3% and Citigroup beat. Shares of Morgan Stanley edged 0.7% higher ahead of its report.</p>
-      <p class="byline">Reuters · Oct 14</p>
+    <article class="card story" data-article="articles/2026-10-15-the-morning-brief-futures-red-yields-pull-back-gold-reb.html">
+      <h3><a href="https://www.investopedia.com/5-things-to-know-before-the-stock-market-opens-on-thursday-october-15-2026-12174793" target="_blank" rel="noopener">The morning brief: futures red, yields pull back, gold rebounds</a></h3>
+      <p class="dek">Nasdaq and S&amp;P 500 futures pointed lower (−1.2% and −0.3% respectively; Dow futures flat) as the tech sell-off continued after Wednesday&rsquo;s CPI; the 10-year Treasury yield pulled back to ~5.09%, a three-week low after spiking to 5.33% post-CPI; today&rsquo;s data calendar (PPI, retail sales, jobless claims); and TSMC shares slipping despite a solid Q3 earnings beat. Also: WTI at ~$94.17, gold futures up 1.4% to $4,165, bitcoin at $80,800 after falling from above $84,000. Wednesday&rsquo;s close: S&amp;P 500 7,718.94 (−1.1%, worst day since July 29), Nasdaq 26,692.87 (−1.9%), Dow 51,621.48 (−0.1%).</p>
+      <p class="byline">Investopedia · Oct 15</p>
     </article>
-    <article class="card story" data-article="articles/2026-10-14-asias-ai-chip-rout-kospi-5-5-on-cxmt-breakthrough-gold.html">
-      <h3><a href="https://www.wsj.com/finance/stocks/nasdaq-futures-fall-as-global-ai-selloff-intensifies-fe149717" target="_blank" rel="noopener">Asia&rsquo;s AI chip rout: Kospi -5.5% on CXMT breakthrough; gold over $4,200</a></h3>
-      <p class="dek">Overnight, China&rsquo;s CXMT claimed a memory-tech breakthrough that sparked a global AI selloff: Korea&rsquo;s Kospi plunged 5.5% (trading briefly paused) with Samsung down 7.4% and SK Hynix 10%, Japan&rsquo;s Nikkei fell 1.8%, and ASML dropped 3.2% in Europe. The cross-asset picture: the 10-year Treasury around 5.18–5.20%, gold futures above $4,200/oz, bitcoin near $83,000–83,900, and Brent crude holding around $104–105.50 a barrel amid Houthi attacks on Saudi Arabia and reports of vessel strikes in the Strait of Hormuz.</p>
-      <p class="byline">The Wall Street Journal · Oct 14</p>
+    <article class="card story" data-article="articles/2026-10-15-u-s-bancorp-tops-q3-estimates-raises-full-year-guidance.html">
+      <h3><a href="https://seekingalpha.com/news/4653309-us-bancorp-q3-earnings-beat-as-expense-control-offsets-revenue-miss" target="_blank" rel="noopener">U.S. Bancorp tops Q3 estimates, raises full-year guidance</a><span class="thin" title="Contributor write-up; primary source is the company&#x27;s own earnings release">secondhand</span></h3>
+      <p class="dek">The fifth-largest U.S. commercial bank reported Thursday morning: adjusted EPS of $1.41 vs. $1.32 consensus, GAAP EPS $1.34 (+10% from $1.22 a year ago), net income up 10% to $2.21B. Record net revenue of $7.97B (+8.7%), with capital-markets revenue up 69.3%, payments transformation driving 6.5% combined revenue growth, and efficiency ratio improving to 55.9%. Management raised FY26 guidance: net revenue growth of 8–9% with ~300bp of positive operating leverage.</p>
+      <p class="byline">Seeking Alpha · Oct 15</p>
     </article>
   </div>
 </section>
@@ -361,26 +388,27 @@
 <section>
   <div class="sec-head"><span class="sec-num">Section III</span><h2><a href="sections/product-design.html">Product Design</a></h2><span class="line"></span></div>
   <div class="stack">
-    <article class="card story" data-article="articles/2026-10-14-apple-announces-homeview-smart-home-hub-at-welcome-home.html">
-      <img class="story-thumb" src="https://images.macrumors.com/t/1U5jJDQOvDnh0hrmAj5AK0BhypU=/400x0/article-new/2026/10/Home-Hub-Command-Center-with-Dome-Base-Colors-Feature.jpg?lossy" alt="" loading="lazy">
-      <h3><a href="https://www.macrumors.com/2026/10/11/apple-homeview-smart-home-hub-ship-next-month/" target="_blank" rel="noopener">Apple announces HomeView smart-home hub at Welcome Home event</a></h3>
-      <p class="dek">Apple unveiled the HomeView, its first smart-home hub, at the October 13 &rsquo;Welcome Home&rsquo; event in New York. The $299 device pairs a 7-inch Liquid Retina display with an A18 chip, face recognition for up to six household profiles, and Siri AI, shipping November 13 after preorders opened on launch day. A refreshed HomePod mini and Apple TV 4K follow on October 30, and HomeView supports Matter and Thread with co-designed accessories from LG and Schneider Electric — but no dedicated App Store.</p>
-      <p class="byline">MacRumors, relaying Bloomberg&rsquo;s Mark Gurman · Oct 13</p>
+    <article class="card story lead" data-article="articles/2026-10-15-apples-homeview-display-is-the-companys-biggest-new-rel.html">
+      <h3><a href="https://www.cnn.com/cnn-underscored/electronics/apple-homeview-hands-on?cid=external-feeds_iluminar_meta" target="_blank" rel="noopener">&ldquo;Apple&rsquo;s HomeView display is the company&rsquo;s biggest new release in years — and we saw it&rdquo;</a></h3>
+      <p class="dek">CNN Underscored&rsquo;s hands-on with Apple&rsquo;s $299 HomeView smart display calls it one of the most intriguing and truly new Apple products in years. The 7-inch squarish Liquid Retina display sits atop a dome-shaped speaker base (a wall-mounted option exists), recognizes up to six users with personalized home screens styled like blown-up Apple Watch faces, and is anchored by Siri AI with multi-app requests. The same hands-on covers the new Apple TV 4K ($299, Nov. 13, A19 chip with 50% faster CPU and 2× graphics, far-field mics, four-speaker surround) and HomePod Mini 2 ($149, Oct. 30, new Sound Glow light that pulsates with music).</p>
+      <p class="byline">CNN Underscored · Oct 14</p>
     </article>
-    <article class="card story" data-article="articles/2026-10-14-indie-developers-are-already-making-the-foldable-iphone.html">
-      <h3><a href="https://www.webpronews.com/developers-turn-apples-2000-foldable-into-a-virtual-walkman-and-accordion/" target="_blank" rel="noopener">Indie developers are already making the foldable iPhone Duo sing</a><span class="thin" title="Aggregator relaying TechCrunch/Axios reporting">secondhand</span></h3>
-      <p class="dek">Ahead of the $1,999 iPhone Duo&rsquo;s October 23 launch, a Bitrig hackathon in San Francisco produced 73 hinge-native prototypes, led by Duo-Man — indie dev Vidit Bhargava&rsquo;s app that turns the Duo into a virtual Sony Walkman, with real cassette clicks recorded from actual hardware. Apple opened App Store submissions for Duo-optimized apps on October 5 via Xcode 27.1 (with an &rsquo;optimized for iPhone Duo&rsquo; badge), and new APIs like onHingeChange and ArrangementView let interfaces react to the fold angle in real time. From April 2027, every App Store submission must include iPhone Duo screenshots.</p>
-      <p class="byline">WebProNews, via TechCrunch and Axios · Oct 11</p>
+    <article class="card story" data-article="articles/2026-10-15-amazon-rolls-out-the-first-pre-order-discount-on-apple.html">
+      <h3><a href="https://macdailynews.com/2026/10/14/amazon-offers-first-pre-order-discounts-on-apple-homeview/" target="_blank" rel="noopener">Amazon rolls out the first pre-order discount on Apple HomeView</a><span class="thin" title="Tier-3 deals aggregator; real price observation, single-source">thin sourcing</span></h3>
+      <p class="dek">Barely 24 hours after Apple&rsquo;s October 13 unveiling, Amazon cut the tabletop HomeView to $289.99 in Space Gray and Starlight — a $9 discount off Apple&rsquo;s $299 that makes Amazon the cheapest pre-order option since Apple offers no trade-ins on the new category. The discount applies only to those two finishes and the tabletop model; Silver, Rose Pink, and the wall-mounted edition remain full price, and no other major retailer has matched it. Delivery estimates still point to the November 13 launch window.</p>
+      <p class="byline">MacDailyNews · Oct 14</p>
     </article>
-    <article class="card story" data-article="articles/2026-10-14-bloomberg-first-touchscreen-macbook-pro-due-october-27.html">
-      <h3><a href="https://9to5mac.com/2026/10/08/apple-to-launch-touchscreen-macbook-pro-and-more-on-october-27-report/" target="_blank" rel="noopener">Bloomberg: first touchscreen MacBook Pro due October 27</a></h3>
-      <p class="dek">Apple will introduce its first touchscreen Mac on or around Tuesday, October 27, according to Bloomberg&rsquo;s Mark Gurman: redesigned 14- and 16-inch MacBook Pros with tandem OLED touchscreens, a Dynamic Island replacing the notch, &rsquo;significantly lighter&rsquo; chassis, and M5 Pro/Max chips. The launch will also bring an OLED iPad mini with a landscape FaceTime camera, plus M6-powered 14-inch MacBook Pro and 24-inch iMac in current designs. The rollout is expected to mirror the October 13 smart-home event format — online video plus hands-on sessions aimed at creative professionals.</p>
-      <p class="byline">9to5Mac, relaying Bloomberg&rsquo;s Mark Gurman · Oct 8</p>
+    <article class="card story" data-article="articles/2026-10-15-people-need-to-be-able-to-afford-to-adapt-to-climate-ch.html">
+      <img class="story-thumb" src="https://static.dezeen.com/uploads/2026/10/aimee-daniels-shaded-interview-hero_dezeen_2364_col_0-852x479.jpg" alt="" loading="lazy">
+      <h3><a href="https://www.dezeen.com/2026/10/15/aimee-daniels-shaded-interview/" target="_blank" rel="noopener">&rsquo;People need to be able to afford to adapt to climate change&rsquo;: the £89 awning that keeps selling out</a></h3>
+      <p class="dek">In a Dezeen In Depth interview published today, London architect Aimée Daniels discusses Shaded, the &rsquo;clean-tech startup&rsquo; she founded in 2023 after the 2022 40-degree UK summer. Its first product is a simple, colorful, detachable external awning for sash windows retailing at £89 — clipped on from inside with zero installation cost, no drilling, and no planning-permission headache, positioned as an alternative to air conditioning. The awning has sold out three times since launching earlier this year, which Daniels says validates an appetite for affordable passive-cooling products that also look good.</p>
+      <p class="byline">Dezeen · Oct 15</p>
     </article>
-    <article class="card story" data-article="articles/2026-10-14-jaguars-type-01-ev-the-brands-130-500-electric-reset.html">
-      <h3><a href="https://www.dezeen.com/2026/10/07/jaguar-type-01-electric-car/" target="_blank" rel="noopener">Jaguar&rsquo;s Type 01 EV: the brand&rsquo;s $130,500 electric reset</a><span class="thin" title="Story is from Oct 7; still the current state">timing</span></h3>
-      <p class="dek">Jaguar unveiled the production Type 01 at a New York launch event, the first car in the brand&rsquo;s &rsquo;complete reset&rsquo; after its controversial 2024 rebrand. The four-door GT keeps a long bonnet, no rear window, thin headlights, and a low 1.4-meter stance on the new Jaguar Electric Architecture. The tri-motor setup makes 1,030 PS (1,015 hp) with 0–62 mph in 3.2 seconds, a 118 kWh battery good for ~400 miles EPA range, and 350 kW charging; US pricing starts at $130,500 with orders opening in early 2027 and production at Solihull.</p>
-      <p class="byline">Dezeen · Oct 7</p>
+    <article class="card story" data-article="articles/2026-10-15-armadillo-furniture-clad-in-reused-1800s-facade-shingle.html">
+      <img class="story-thumb" src="https://static.dezeen.com/uploads/2026/10/Lukas-Wegwerth-Corinna-Dehn-companions_dezeen_2364_col_hero-852x479.jpg" alt="" loading="lazy">
+      <h3><a href="https://www.dezeen.com/2026/10/14/armadillo-furniture-reused-shingles-friendly-monsters/" target="_blank" rel="noopener">Armadillo furniture, clad in reused 1800s facade shingles, resembles &rsquo;friendly monsters&rsquo;</a></h3>
+      <p class="dek">Designers Lukas Wegwerth and Corinna Dehn unveiled six new Armadillo pieces — two cabinets, a sideboard, a birdhouse, a dining table, and a stand-alone screen — at the Companions exhibition at London&rsquo;s Gallery Fumi. Every piece is clad in wooden facade shingles salvaged from buildings in Germany&rsquo;s Vogelsberg region (some from Wegwerth&rsquo;s grandmother&rsquo;s house, weathered since the 1800s; others from demolition sites), cleaned, sanded, and stained watercolor-style or ebonised with tannins, rust, and slaked lime. On show October 6 to November 21, 2026.</p>
+      <p class="byline">Dezeen · Oct 14</p>
     </article>
   </div>
 </section>
@@ -388,27 +416,25 @@
 <section>
   <div class="sec-head"><span class="sec-num">Section IV</span><h2><a href="sections/engineering.html">Engineering</a></h2><span class="line"></span></div>
   <div class="stack">
-    <article class="card story" data-article="articles/2026-10-14-epic-games-goes-ai-first-on-delayed-disney-shooter-swee.html">
-      <h3><a href="https://www.radiotimes.com/technology/gaming/epic-games-disney-project-delayed-ai-first-development-newsupdate/" target="_blank" rel="noopener">Epic Games goes &ldquo;AI-first&rdquo; on delayed Disney shooter, Sweeney confirms</a><span class="thin" title="Bloomberg reporting relayed by a UK magazine">secondhand</span></h3>
-      <p class="dek">Bloomberg reported Epic&rsquo;s Disney-backed shooter (Marvel and Star Wars characters, part of Disney&rsquo;s $1.5B Epic investment) was delayed from its March 2027 window as directors imposed directives like &rsquo;no more hand-written code&rsquo; and AI-generated art workflows. Staff were reportedly stunned; CEO Tim Sweeney confirmed the &rsquo;huge pivot&rsquo; on X on Oct 12, insisting the goal is more and better output, not fewer people — months after Epic laid off 1,000+ employees.</p>
-      <p class="byline">Radio Times, via Bloomberg · Oct 13</p>
+    <article class="card story lead" data-article="articles/2026-10-15-next-js-security-update-two-critical-rces-patched-no-wo.html">
+      <h3><a href="https://nextjs.org/blog/nextjs-security-update-october-14-2026" target="_blank" rel="noopener">Next.js security update: two critical RCEs patched, no workarounds</a></h3>
+      <p class="dek">Vercel shipped an out-of-band Next.js security update on October 14, patching three vulnerabilities via Next.js 16.4.1 (Active LTS) and 15.5.28 (Maintenance LTS). Two are critical unauthenticated remote code execution flaws: GHSA-673q-mjm6-r5xr, triggered when an App Router &rsquo;use cache&rsquo; function returns multiple typed arrays (no workaround — upgrade immediately), and CVE-2026-96889, a memory bug in the upstream sharp image library affecting the Image Optimization API with SVGs on glibc-based Linux. The third, GHSA-p3m5-59mp-jv5r, is a high-severity Server Actions denial-of-service via crafted requests that exhaust CPU. Every 16.3 release, including 16.3.8, is affected — 16.3 users must move lines.</p>
+      <p class="byline">Next.js · Oct 14</p>
     </article>
-    <article class="card story" data-article="articles/2026-10-14-harvard-study-ai-coding-agents-add-30-more-code-but-shi.html">
-      <h3><a href="https://modelsatwork.news/article/harvard-jellyfish-study-ai-coding-agents-code-review-up-49-percent-no-more-issues-closed" target="_blank" rel="noopener">Harvard study: AI coding agents add 30% more code, but shipped output is flat</a><span class="thin" title="Ars Technica reporting relayed by an AI-industry outlet">secondhand</span></h3>
-      <p class="dek">Harvard economists Fiona Chen and James Stratton analyzed ~300M work events across 700,000+ employees at 700+ firms via Jellyfish data, as first reported by Ars Technica on Oct 9. After agent adoption, lines of code rose 30%, commits 20%, and PRs 23% — but resolved Jira issues/epics didn&rsquo;t move, because PR review time rose 49%, change requests nearly doubled, and 14% more workers shifted into review. No measurable employment change either.</p>
-      <p class="byline">Models at Work, via Ars Technica · Oct 12</p>
+    <article class="card story" data-article="articles/2026-10-15-slugfest-npm-trusted-publishing-flaw-exposed-1-500-pack.html">
+      <h3><a href="https://www.helpnetsecurity.com/2026/10/13/slugfest-npm-trusted-publishing-flaw/" target="_blank" rel="noopener">SlugFest: npm trusted-publishing flaw exposed 1,500+ packages to takeover</a></h3>
+      <p class="dek">Bloom Security&rsquo;s Golan Myers disclosed &rsquo;SlugFest,&rsquo; a flaw in npm&rsquo;s OpenID Connect trusted publishing: configurations trusted a repository name rather than GitHub&rsquo;s immutable repository ID, so an attacker could reclaim an abandoned GitHub repo slug and publish malicious versions under the legitimate package name — with a valid provenance signature. Bloom found over 1,500 vulnerable packages with more than 10 million combined downloads. GitHub validated the report in June and on October 2 introduced the 48-hour expiry: unvalidated publisher configs now expire 48 hours after creation, and npm blocks OIDC token exchange from issue_comment workflows. Myers notes AI coding agents make this class of flaw reach further — agents install ~70 packages/month on a typical endpoint without reviewing them.</p>
+      <p class="byline">Help Net Security · Oct 13</p>
     </article>
-    <article class="card story" data-article="articles/2026-10-14-github-adds-48-hour-expiry-to-unvalidated-npm-trusted-p.html">
-      <img class="story-thumb" src="https://media2.dev.to/dynamic/image/width=1000,height=420,fit=cover,gravity=auto/https%3A%2F%2Fhacks.gr%2Fwp-content%2Fuploads%2F2026%2F10%2Fgit-npm.webp" alt="" loading="lazy">
-      <h3><a href="https://dev.to/hacksgr/new-stricter-rules-from-github-for-code-packages-after-security-investigation-1j5" target="_blank" rel="noopener">GitHub adds 48-hour expiry to unvalidated npm trusted-publishing configs</a><span class="thin" title="Single trade outlet">thin sourcing</span></h3>
-      <p class="dek">Following a Bloom Security investigation (reported to GitHub on June 6, 2026), GitHub is closing a supply-chain loophole where attackers could claim abandoned repository slugs and publish package updates without credentials. Unvalidated trusted-publishing settings now expire automatically 48 hours after creation, becoming permanent only after a successful publish. The research flagged over 1,500 vulnerable packages with 10M+ combined downloads; npm also now rejects requests from certain automated bot processes.</p>
-      <p class="byline">DEV Community · Oct 13</p>
+    <article class="card story" data-article="articles/2026-10-15-tanstack-start-1-0-is-stable-the-client-first-full-stac.html">
+      <h3><a href="https://tanstack.com/blog/tanstack-start-1-0" target="_blank" rel="noopener">TanStack Start 1.0 is stable — the client-first full-stack alternative</a></h3>
+      <p class="dek">TanStack declared TanStack Start 1.0 stable on October 13, formally committing to stable APIs for its full-stack React (and Solid) framework after a long RC period — the post notes enterprise teams and Fortune 500 companies insisted on running it in production even while it was in beta. Highlights: end-to-end type-safe routing, per-route rendering modes, typed createServerFn server functions, and a reported ~5.5x SSR throughput gain from profiling work. Agent-ready by design: packages ship TanStack Intent skills so AI agents learn Start&rsquo;s APIs and best practices. RSC support exists but is opt-in.</p>
+      <p class="byline">TanStack · Oct 13</p>
     </article>
-    <article class="card story" data-article="articles/2026-10-14-tanstack-start-1-0-goes-stable-as-the-client-first-full.html">
-      <img class="story-thumb" src="https://thisweekinreact.com/emails/issues/301/tanstack-start.jpg" alt="" loading="lazy">
-      <h3><a href="https://thisweekinreact.com/newsletter/301" target="_blank" rel="noopener">TanStack Start 1.0 goes stable as the client-first full-stack alternative</a></h3>
-      <p class="dek">TanStack Start hit 1.0 (stable, production-ready), positioning as a client-first full-stack React/Solid framework with SPA-style routing, typed server functions, and opt-in React Server Components. Notably it ships agent-ready: TanStack Intent skills so coding agents learn its APIs and best practices, with optimized type checking kept consistent for humans and agents alike. The same newsletter notes Deno&rsquo;s team is joining Cloudflare (Deno Deploy sunsetting) and a Next.js security update landing Oct 14.</p>
-      <p class="byline">This Week in React · Oct 14</p>
+    <article class="card story" data-article="articles/2026-10-15-github-rewrote-copilots-runtime-in-rust-with-ai-help-5.html">
+      <h3><a href="https://www.sourcetrail.com/rust/rusts-surge-ai-rewrites-benchmark-debates-and-malware/" target="_blank" rel="noopener">GitHub rewrote Copilot&rsquo;s runtime in Rust with AI help: 5.25s to 292ms</a><span class="thin" title="Roundup compiling GitHub&#x27;s own disclosure and other outlets; not first-hand reporting">secondhand</span></h3>
+      <p class="dek">GitHub migrated the runtime behind the Copilot CLI, Copilot app, and Copilot SDK from TypeScript/Node.js to Rust in an AI-assisted rewrite: over 800,000 lines of production code replaced in roughly 14.5 weeks across 128 pull requests, delivered incrementally with temporary NAPI interop so existing end-to-end tests kept exercising new code. The headline number: a measured startup/session/single-turn scenario dropped from 5.25 seconds to 292 milliseconds, and embedding via a C ABI eliminates the ~100 MB of working set per client the old process-boundary design required.</p>
+      <p class="byline">Sourcetrail · Oct 14</p>
     </article>
   </div>
 </section>
@@ -416,21 +442,20 @@
 <section>
   <div class="sec-head"><span class="sec-num">Section V</span><h2><a href="sections/motorsport.html">Motorsport</a></h2><span class="line"></span></div>
   <div class="stack">
-    <article class="card story" data-article="articles/2026-10-14-nascars-phoenix-elimination-race-eight-drivers-on-the-b.html">
-      <h3><a href="https://beyondtheflag.com/chase-elliott-among-8-nascar-cup-drivers-facing-elimination-after-charlotte-01m4qfv0xv83" target="_blank" rel="noopener">NASCAR&rsquo;s Phoenix elimination race: eight drivers on the brink Sunday</a><span class="thin" title="Specialist blog; points math checks against NASCAR&#x27;s published format">thin sourcing</span></h3>
-      <p class="dek">Kyle Larson leads the 16-driver Chase heading into Sunday&rsquo;s Freeway Insurance 500 at Phoenix Raceway (3:00 p.m. ET, USA Network). Any driver more than 152 points back — Ty Gibbs (-156), Carson Hocevar (-180), Bubba Wallace and Chase Elliott (-185 each), William Byron (-208), Daniel Suarez (-215), Chris Buescher (-216), and Ryan Preece (-227) — can be mathematically eliminated with three races remaining. Only five drivers sit within 100 points of Larson.</p>
-      <p class="byline">Beyond the Flag · Oct 12</p>
+    <article class="card story lead" data-article="articles/2026-10-15-nascar-cup-preview-larson-arrives-at-phoenix-with-chase.html">
+      <h3><a href="https://speedwaydigest.com/index.php/news/nascar-cup-series-news/894126-nascar-cup-series-preview-larson-arrives-at-phoenix-with-chase-lead-under-pressure/" target="_blank" rel="noopener">NASCAR Cup preview: Larson arrives at Phoenix with Chase lead under pressure</a><span class="thin" title="Specialist preview; no new driver quotes">thin sourcing</span></h3>
+      <p class="dek">Kyle Larson takes a 49-point lead over Denny Hamlin into Sunday&rsquo;s Freeway Insurance 500 at Phoenix Raceway (12:00 p.m. PT, USA Network) — the first fall Phoenix race since 2019 that isn&rsquo;t the season finale. Ryan Blaney seeks a third straight Phoenix win after taking both the fall 2025 and spring 2026 races, Christopher Bell led 176 laps in March before finishing second, and Chase Briscoe arrives on back-to-back wins at Las Vegas and Charlotte. Hamlin, the 2025 heartbreak loser at this track, nearly needs a win before the Talladega chaos race on Oct 25.</p>
+      <p class="byline">Speedway Digest · Oct 14</p>
     </article>
-    <article class="card story" data-article="articles/2026-10-14-ducatis-tardozzi-phillip-island-could-decide-whether-ma.html">
-      <img class="story-thumb" src="https://cdn1.motogpnews.com/uploads/88/2026/10/GettyImages-2299639213-1140x760.jpg" alt="" loading="lazy">
-      <h3><a href="https://www.motogpnews.com/2026/10/13/davide-tardozzi-suggests-phillip-island-could-prove-marc-marquez-has-no-chance-to-win-the-2026-title/" target="_blank" rel="noopener">Ducati&rsquo;s Tardozzi: Phillip Island could decide whether Marquez has any chance left</a><span class="thin" title="Single trade outlet; quotes via Sky Sports Italy">thin sourcing</span></h3>
-      <p class="dek">Jorge Martin still leads Marc Marquez by two points after Marco Bezzecchi&rsquo;s Indonesian GP win — Aprilia&rsquo;s first-ever 1-2-3-4 — while Marquez finished sixth, 10.8 seconds adrift. Ducati team manager Davide Tardozzi told Sky Sports Italy that Phillip Island&rsquo;s long, fast left-handers will favor Aprilia&rsquo;s superior mid-corner grip, and if Marquez can&rsquo;t defend there (Oct 23-25), the title fight may be over. Aprilia CEO Massimo Rivola disagrees, expecting Marquez — a four-time premier-class Phillip Island winner — to be the &rsquo;strongest&rsquo; rider on track.</p>
-      <p class="byline">MotoGP News, quotes via Sky Sports Italy · Oct 13</p>
+    <article class="card story" data-article="articles/2026-10-15-form-guide-2026-australian-motogp-the-title-fight-lands.html">
+      <h3><a href="https://amcn.com.au/editorial/form-guide-2026-australian-gp/" target="_blank" rel="noopener">Form guide: 2026 Australian MotoGP — the title fight lands at Phillip Island</a><span class="thin" title="Preview with analysis flavor; rider quotes sparse">analysis</span></h3>
+      <p class="dek">Jorge Martín (355) leads Marc Márquez (353) by two points heading into MotoGP&rsquo;s final-ever Phillip Island round, Oct 23–25, before the series moves to Adelaide in 2027. AMCN&rsquo;s form guide picks over a compelling three-rider fight — Martín&rsquo;s momentum, Márquez&rsquo;s recovery from a 102-point deficit after a crash in France left his right arm numb, and Marco Bezzecchi&rsquo;s commanding Mandalika win — and argues up to eight riders could realistically contest the Island podium. Ducati&rsquo;s Davide Tardozzi says Phillip Island&rsquo;s long, high-lean-angle corners could favor the Aprilia RS-GP.</p>
+      <p class="byline">Australian Motorcycle News · Oct 14</p>
     </article>
-    <article class="card story" data-article="articles/2026-10-14-red-bull-named-title-sponsor-as-australian-gp-moves-to.html">
-      <h3><a href="https://news.imotorbike.com/en/2026/10/red-bull-named-title-sponsor-for-adelaide-motogp/" target="_blank" rel="noopener">Red Bull named title sponsor as Australian GP moves to Adelaide in 2027</a><span class="thin" title="Single trade outlet">thin sourcing</span></h3>
-      <p class="dek">Red Bull will back the Adelaide MotoGP Grand Prix as title sponsor for 2027 and 2028, on a temporary Parklands street circuit that takes over from Phillip Island after the Oct 23-25 farewell round. MotoGP deputy CEO Carlos Ezpeleta called it a landmark new era, while South Australian Premier Peter Malinauskas framed it as international exposure for Adelaide. Notably, the final Phillip Island race is currently listed without a title sponsor.</p>
-      <p class="byline">iMotorbike News · Oct 12</p>
+    <article class="card story" data-article="articles/2026-10-15-rossi-logs-134-laps-in-indycars-new-ir28-chassis-at-seb.html">
+      <h3><a href="https://www.indystar.com/story/sports/motor/2026/10/13/alexander-rossi-completes-sebring-ir28-test-for-practical-application-of-indycars-new-car/92240268007/" target="_blank" rel="noopener">Rossi logs 134 laps in IndyCar&rsquo;s new IR28 chassis at Sebring</a></h3>
+      <p class="dek">Alexander Rossi logged 134 laps in IndyCar&rsquo;s new-for-2028 Dallara IR28 chassis at Sebring on Oct 13, a day after Alex Palou&rsquo;s session ended at 43 laps with a fuel system issue. Unlike the summer IMS shakedowns, drivers were told to run the car &rsquo;as if it&rsquo;s your race car&rsquo; — Sebring&rsquo;s rough, street-course-like surface is the first non-IMS validation of the wider-cockpit, better-cooled chassis. Palou also drives an Indy NXT car for the first time at Friday&rsquo;s Chris Griffis Memorial Test at IMS, filling in for the injured Carson Etter.</p>
+      <p class="byline">Indianapolis Star · Oct 13</p>
     </article>
   </div>
 </section>
@@ -438,58 +463,52 @@
 <section>
   <div class="sec-head"><span class="sec-num">Section VI</span><h2><a href="sections/live-music.html">Live Music</a></h2><span class="line"></span></div>
   <div class="stack">
-    <article class="card story" data-article="articles/2026-10-14-hot-flash-heat-wave-the-starlet-room-at-harlows-sacrame.html">
-      <h3><a href="https://www.jambase.com/show/hot-flash-heat-wave-the-starlet-room-at-harlows-20261014" target="_blank" rel="noopener">Hot Flash Heat Wave — the Starlet Room at Harlow&rsquo;s, Sacramento — tonight</a><span class="thin" title="Listings, not reviews; venue/date pairs from JamBase">event</span></h3>
-      <p class="dek">SF indie-dream-pop trio Hot Flash Heat Wave plays the upstairs Starlet Room at Harlow&rsquo;s (2708 J St, Sacramento) tonight, doors 7 pm / show 8 pm, all ages. Presented by Harlow&rsquo;s and FolkYeah! with support from Carpool Tunnel and 60 Juno. Tickets via AXS.</p>
-      <p class="byline">JamBase listings · Oct 14</p>
+    <article class="card story lead" data-article="articles/2026-10-15-the-aquabats-ace-of-spades-sacramento-tonight.html">
+      <h3><a href="https://sacramento-ca.events/venue/ace-of-spades/" target="_blank" rel="noopener">The Aquabats — Ace of Spades, Sacramento — tonight</a><span class="thin" title="Listings, not reviews; venue/date pairs from the listing">event</span></h3>
+      <p class="dek">The Aquabats bring their &rsquo;Trick-or-Treat to the Beat&rsquo; tour to Ace of Spades (1417 R St, Sacramento) tonight, Thursday Oct 15, doors 6 pm, with Manic Hispanic and Sullvn; tickets from about $39 on the venue listing. Costumed ska-comedy chaos is a Sacramento-October tradition.</p>
+      <p class="byline">Ace of Spades listings · Oct 15</p>
     </article>
-    <article class="card story" data-article="articles/2026-10-14-bumpin-uglies-goldfield-trading-post-sacramento-tonight.html">
-      <h3><a href="https://SeatGeek.com/bumpin-uglies-tickets" target="_blank" rel="noopener">Bumpin Uglies — Goldfield Trading Post, Sacramento — tonight (venue corrected)</a><span class="thin" title="Listings; venue corrected from yesterday&#x27;s edition">event</span></h3>
-      <p class="dek">Reggae-rock veterans Bumpin Uglies play Goldfield Trading Post&rsquo;s Sacramento room (1630 J St) tonight at 7 pm, with tickets listed around $46–$54 on SeatGeek. Correction to yesterday&rsquo;s edition: the show is at the Sacramento Goldfield, not the Roseville location. Expect ska-punk horns and sing-along choruses.</p>
-      <p class="byline">SeatGeek listings · Oct 14</p>
+    <article class="card story" data-article="articles/2026-10-15-juanes-hard-rock-live-wheatland-tonight.html">
+      <h3><a href="https://tickets.songkick.com/venues/4440781-hard-rock-live-sacramento" target="_blank" rel="noopener">Juanes — Hard Rock Live, Wheatland — tonight</a><span class="thin" title="Listings, not reviews; venue/date pairs from the listing">event</span></h3>
+      <p class="dek">Colombian rock superstar Juanes plays Hard Rock Live (3317 Forty Mile Rd, Wheatland) tonight, Thursday Oct 15 at 8 pm, with Andrea Bejar. Wheatland is the easy north-of-Sacramento casino venue on the Fiddletown-to-Sacramento corridor.</p>
+      <p class="byline">Songkick listings · Oct 15</p>
     </article>
-    <article class="card story" data-article="articles/2026-10-14-juanes-hard-rock-live-wheatland-thu-oct-15.html">
-      <img class="story-thumb" src="https://www.jambase.com/wp-content/uploads/2026/09/juanes-1200x675.png" alt="" loading="lazy">
-      <h3><a href="https://www.jambase.com/show/juanes-hard-rock-live-20261015" target="_blank" rel="noopener">Juanes — Hard Rock Live, Wheatland — Thu Oct 15</a><span class="thin" title="Listings, not reviews; venue/date pairs from JamBase">event</span></h3>
-      <p class="dek">Colombian rock superstar Juanes plays Hard Rock Live (3317 Forty Mile Rd, Wheatland) tomorrow, Thursday Oct 15 at 8 pm, with tickets from about $61.70 on JamBase. Wheatland is the easy north-of-Sacramento casino venue on the Fiddletown-to-Sacramento corridor.</p>
-      <p class="byline">JamBase listings · Oct 15</p>
+    <article class="card story" data-article="articles/2026-10-15-she-wants-revenge-ace-of-spades-sacramento-sat-oct-17.html">
+      <h3><a href="https://sacramento-ca.events/venue/ace-of-spades/" target="_blank" rel="noopener">She Wants Revenge — Ace of Spades, Sacramento — Sat Oct 17</a><span class="thin" title="Listings, not reviews; venue/date pairs from the listing">event</span></h3>
+      <p class="dek">She Wants Revenge plays Ace of Spades (1417 R St, Sacramento) Saturday, Oct 17 at 8 pm, with Rosegarden Funeral Party; tickets from about $37 on the venue listing. Dark-wave nostalgia on the R Street corridor.</p>
+      <p class="byline">Ace of Spades listings · Oct 15</p>
     </article>
-    <article class="card story" data-article="articles/2026-10-14-the-aquabats-ace-of-spades-sacramento-thu-oct-15.html">
-      <h3><a href="https://seatgeek.com/the-aquabats-tickets/sacramento" target="_blank" rel="noopener">The Aquabats — Ace of Spades, Sacramento — Thu Oct 15</a><span class="thin" title="Listings; relayed via ticketing aggregator">event</span></h3>
-      <p class="dek">The Aquabats bring their &rsquo;Trick-or-Treat to the Beat&rsquo; tour to Ace of Spades (1417 R St, Sacramento) tomorrow, Thursday Oct 15, doors 6 pm, with Manic Hispanic and Sullvn; tickets around $53–$60 on SeatGeek. Costumed ska-comedy chaos is a Sacramento-October tradition.</p>
-      <p class="byline">SeatGeek listings · Oct 15</p>
+    <article class="card story" data-article="articles/2026-10-15-demon-hunter-goldfield-trading-post-roseville-sat-oct-1.html">
+      <h3><a href="https://tickets.songkick.com/venues/4410617-goldfield-trading-post-roseville" target="_blank" rel="noopener">Demon Hunter — Goldfield Trading Post, Roseville — Sat Oct 17</a><span class="thin" title="Listings, not reviews; venue/date pairs from the listing">event</span></h3>
+      <p class="dek">Demon Hunter brings its metalcore tour to the Goldfield Trading Post&rsquo;s Roseville room (238 Vernon St) Saturday, Oct 17 at 6:30 pm, with Bloodlines and Wolves at the Gate; tickets from about $47. Note the room: this is the Roseville Goldfield, not Sacramento.</p>
+      <p class="byline">Songkick listings · Oct 15</p>
     </article>
   </div>
 </section>
 
 <section>
   <div class="sec-head"><span class="sec-num">Section VII</span><h2><a href="sections/amador-county.html">Amador County</a></h2><span class="line"></span></div>
-  <p class="lede">Fiddletown and the county — the stuff the national papers never carry. Sourcing is thin this morning; what&rsquo;s uncertain is labeled.</p>
+  <p class="lede">Fire weather and the heat wave dominate the county this morning: the Red Flag Warning runs through Friday 10 AM, PG&amp;E warns ~4,557 Amador customers could lose power, and Jackson still tops out at 88°F Saturday. What&rsquo;s thin is labeled, not hidden.</p>
   <div class="stack">
-    <article class="card story" data-article="articles/2026-10-14-heat-wave-builds-across-the-motherlode-highs-near-89f-s.html">
-      <h3><a href="https://forecast.weather.gov/product.php?site=NWS&amp;issuedby=STO&amp;product=ZFP&amp;format=CI&amp;version=7&amp;glossary=0" target="_blank" rel="noopener">Heat wave builds across the Motherlode: highs near 89°F Saturday</a></h3>
-      <p class="dek">Jackson hits 77°F today, climbing to 89°F Saturday with single-digit humidity by Friday and no rain through the weekend; NWS Sacramento&rsquo;s Central Motherlode zone forecast shows lows in the 50s with light winds. AQI in Amador County is sitting Good (weather.com shows 17 this morning). Burn-day status could not be verified from any dated source — the Amador Air District page on record is a 2021 Caldor Fire-era advisory; residents should call (209) 223-6246 or Cal Fire (209) 267-5215 immediately before burning.</p>
-      <p class="byline">National Weather Service Sacramento · Oct 14</p>
+    <article class="card story lead" data-article="articles/2026-10-15-pg-e-warns-of-possible-public-safety-power-shutoff-4-55.html">
+      <h3><a href="https://www.prnewswire.com/news-releases/with-change-statewide-fire-weather-forecast-planned-pge-public-safety-power-shutoff-event-now-includes-88-000-customers-in-portions-of-twenty-nine-counties-302908830.html" target="_blank" rel="noopener">PG&amp;E warns of possible Public Safety Power Shutoff: ~4,557 Amador customers in scope</a><span class="thin" title="Utility&#x27;s own press release; per-county shutoff timing unconfirmed">thin sourcing</span></h3>
+      <p class="dek">PG&amp;E now says ~88,000 customers across 29 counties may be shut off as the fire-weather forecast hardened, including roughly 4,557 customers in Amador County (401 medical baseline) and 10,793 in Calaveras (554 medical baseline). The shutoff is tied to the same wind event driving today&rsquo;s Red Flag Warning. Customers can check status at pge.com/pspsupdates.</p>
+      <p class="byline">PG&amp;E, via PR Newswire · Oct 14</p>
     </article>
-    <article class="card story" data-article="articles/2026-10-14-rabies-positives-in-amador-county-top-prior-two-years-c.html">
-      <h3><a href="https://citizenportal.ai/articles/10604845/california/amador-county/public-health-official-warns-of-more-positive-rabies-tests-this-year-urges-trapping-and-prompt-reporting" target="_blank" rel="noopener">Rabies positives in Amador County top prior two years combined</a><span class="thin" title="AI-generated civic newsletter summarizing a board presentation">secondhand</span></h3>
-      <p class="dek">Public health educator Fernando Gutierrez told the Board of Supervisors on Oct 7 that 52 specimens tested so far in 2026 yielded 8 positive rabies results — more than the prior two years combined. He reviewed exposure response, quarantine rules, and pet-vaccination recommendations for the board.</p>
-      <p class="byline">Citizen Portal, via Amador County Board of Supervisors · Oct 7</p>
+    <article class="card story" data-article="articles/2026-10-15-red-flag-warning-through-friday-10-am-jackson-hits-88f.html">
+      <h3><a href="https://inedc.com/26/news/red-flag-warning-puts-el-dorado-county-on-fire-alert/" target="_blank" rel="noopener">Red Flag Warning through Friday 10 AM; Jackson hits 88°F Saturday</a></h3>
+      <p class="dek">NWS Sacramento&rsquo;s Red Flag Warning remains in effect until 10 AM Friday for the Sierra and adjacent foothills including Amador: northeast-to-east winds 15–25 mph gusting 25–45 mph, daytime humidity 10–20% with possible single digits and poor overnight recovery — &rsquo;any fires that develop will spread rapidly.&rsquo; Jackson forecast: Thu 82°F, Fri 86°F, Sat 88°F (heat wave holds), cool-down Monday (high 69°F, showers possible Tuesday).</p>
+      <p class="byline">InEDC · Oct 14</p>
     </article>
-    <article class="card story" data-article="articles/2026-10-14-amador-countys-2025-crop-report-wine-grapes-soft-cattle.html">
-      <h3><a href="https://citizenportal.ai/articles/10604854/california/amador-county/agricultural-commissioner-presents-2025-crop-report-warns-on-pests-and-changing-markets" target="_blank" rel="noopener">Amador County&rsquo;s 2025 crop report: wine grapes soft, cattle strong, timber down</a><span class="thin" title="AI-generated civic newsletter summarizing a board presentation">secondhand</span></h3>
-      <p class="dek">Ag Commissioner Eric Mayberry presented the 2025 crop report Oct 7, walking the board through a $40.9M county total: wine-grape production and prices fell so far some growers skipped harvest entirely, high cattle prices buoyed livestock totals, and timber products declined. Deputy Barry Clark also described a May 2026 glassy-winged sharpshooter shipment incident and the county&rsquo;s delimitation-trap response.</p>
-      <p class="byline">Citizen Portal, via Amador County Board of Supervisors · Oct 7</p>
+    <article class="card story" data-article="articles/2026-10-15-chris-cain-sutter-creek-theatre-sat-oct-17.html">
+      <h3><a href="https://bestofamador.com/events/category/concert/" target="_blank" rel="noopener">Chris Cain — Sutter Creek Theatre — Sat Oct 17</a><span class="thin" title="Listings curated by the desk">event</span></h3>
+      <p class="dek">Alligator Records blues guitarist/vocalist Chris Cain brings his road-tested band (Steve Evans, Greg Rahn, drummers sharing the skins) to the intimate 215-seat Sutter Creek Theatre on Saturday, Oct 17 at 7 pm; venue listing shows $24 advance / $28 day-of. Last Gold Country stop before he heads to Argentina and then the Legendary Rhythm &amp; Blues Cruise Oct 31 — he&rsquo;s touring his album Raisin&rsquo; Cain.</p>
+      <p class="byline">Best of Amador · Oct 15</p>
     </article>
-    <article class="card story" data-article="articles/2026-10-14-this-weekend-in-amador-chris-cain-at-sutter-creek-theat.html">
-      <h3><a href="https://bestofamador.com/events/category/music/list/" target="_blank" rel="noopener">This weekend in Amador: Chris Cain at Sutter Creek Theatre, Preston Castle Haunt</a><span class="thin" title="Listings curated by the desk">event</span></h3>
-      <p class="dek">Blues guitarist Chris Cain plays the Sutter Creek Theatre Saturday, Oct 17 at 7 PM ($30), blending blues with jazz influences in the B.B. King/Albert King lineage. The Preston Castle Haunt is running weekend nights through October at 900 Palm Drive in Ione ($35), and the Kennedy Gold Mine Speakers Series presents &rsquo;Ancient Amador: An Inside Look at the Mokelumne Fossil Site&rsquo; on Thursday, Oct 15.</p>
-      <p class="byline">Best of Amador listings · Oct 14</p>
-    </article>
-    <article class="card story" data-article="articles/2026-10-14-jackson-chevron-regular-averaging-about-6-35-a-gallon.html">
-      <h3><a href="https://www.dmv-test-pro.com/gas-prices/brand/chevron/california/jackson" target="_blank" rel="noopener">Jackson Chevron regular averaging about $6.35 a gallon</a><span class="thin" title="Vendor-quoted price aggregator">thin sourcing</span></h3>
-      <p class="dek">The latest Jackson Chevron average shows regular at $6.349/gal, mid-grade $6.585, premium $6.776, and diesel $8.348 — down about 5 cents from a week ago but well above the ~$5.87 level a month prior.</p>
-      <p class="byline">DMV Test Pro · Oct 14</p>
+    <article class="card story" data-article="articles/2026-10-15-gas-prices-hit-an-october-record-california-tops-6-34-a.html">
+      <h3><a href="https://motoringchronicle.com/gas-prices-hit-a-record-high-for-october-as-california-tops-6-34-a-gallon/" target="_blank" rel="noopener">Gas prices hit an October record: California tops $6.34 a gallon</a><span class="thin" title="Statewide/national data solid; no Amador-specific price found today">thin sourcing</span></h3>
+      <p class="dek">AAA&rsquo;s daily survey puts the national average at $4.36 — the highest ever recorded for this point in October — with California leading at $6.34 a gallon, up ~$1.25 from a year ago. Analysts cite refinery maintenance plus Iran-conflict disruptions; the national average has now topped $4 for 158 consecutive days, a record. No fresh Jackson-specific price surfaced today — the last Jackson Chevron reading (Oct 14) was about $6.35 regular.</p>
+      <p class="byline">Motoring Chronicle · Oct 15</p>
     </article>
   </div>
 </section>
@@ -527,7 +546,7 @@
 </section>
 
 <div class="footer">
-  <p class="stamp">Last refreshed Wednesday, October 14, 2026 &middot; 5:49AM PT</p>
+  <p class="stamp">Last refreshed Thursday, October 15, 2026 &middot; 6:12 AM PT</p>
   <p>Part of the <a href="https://davedellaquila.github.io/buddy-system/">Buddy System</a> &middot; News Buddy &middot; Morning Edition</p>
 </div>
 
