@@ -274,7 +274,7 @@ body.sb-anchored #sidebar .brand, body.sb-anchored #sidebar .sb-tipjar{backgroun
 /* Brand chrome (eyebrow/title/subtitle + gear/close) pins at top; Views scroll under */
 /* Tip jar — quiet footer link pinned to the bottom of the sidebar. Muted, small,
    never in the way. Same ko-fi destination as the News Buddy voice picker. */
-.sb-tipjar{position:sticky;bottom:0;z-index:7;background:transparent;margin:12px -14px 0;padding:10px 14px;border-top:1px solid var(--border);text-align:center;overflow:hidden}
+.sb-tipjar{position:sticky;bottom:0;z-index:7;background:transparent;margin:12px -14px 0;padding:10px 14px 2px;border-top:1px solid var(--border);text-align:center;overflow:hidden}
 .sb-tipjar a{font-size:12px;color:var(--muted);text-decoration:none;display:inline-block;transform-origin:center}
 .sb-tipjar a:hover{color:var(--accent);text-decoration:underline}
 /* Tip jar party: slide → wiggle → flip → bounce → explode → shake → glow, then rest (Dave 2026-10-14) */
@@ -471,6 +471,94 @@ body.sb-anchored #sidebar .brand, body.sb-anchored #sidebar .sb-tipjar{backgroun
   @keyframes lensSheetIn{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:none}}
   .lens-scrim{background:rgba(0,0,0,.35)}
 }
+/* ============ Default View styles (Dave 2026-10-15) ============
+   Four visual languages for the auto-generated buddy homepage ("show
+   everything"), hierarchy-aware: root = system rollups, parents = children
+   summaries, leaves = own data. Picker reuses the .lens-* pill/dropdown
+   pattern from the Atlas lens picker; style cards use .dv-card[data-dvstyle]. */
+.dv-wrap{max-width:1080px;margin:0 auto;padding:36px 28px 56px;color:var(--text)}
+.dv-picker-row{display:flex;justify-content:flex-end;margin-bottom:6px;position:sticky;top:0;z-index:40;background:var(--bg);padding:10px 0}
+/* ---- Bento: the feature quilt ---- */
+.dv-bento .dv-beyebrow{font-size:11px;font-weight:700;letter-spacing:.1em;color:var(--muted);margin-bottom:6px}
+.dv-bento h1{font-size:30px;font-weight:700;letter-spacing:-.02em;margin-bottom:18px}
+.dv-bgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.dv-btile{background:var(--panel);border:1px solid var(--border);border-radius:20px;padding:18px;box-shadow:0 1px 3px rgba(0,0,0,.05)}
+.dv-btile.span2{grid-column:span 2}
+.dv-bhero .dv-bnum{font-size:52px;font-weight:700;letter-spacing:-.03em;line-height:1}
+.dv-bhero .dv-bsub{margin-top:6px;font-size:14px;color:var(--text)}
+.dv-bhero .dv-bmeta{margin-top:10px;font-size:12px;color:var(--muted)}
+.dv-balert{background:rgba(255,159,10,.12);border-color:rgba(255,159,10,.35)}
+.dv-balert .dv-bnum{font-size:34px;font-weight:700;color:var(--amber-tx,#b25e09);letter-spacing:-.02em}
+.dv-balert .dv-bgo{margin-top:6px;font-size:13px;font-weight:600;color:var(--amber-tx,#b25e09)}
+.dv-borg .dv-bemoji{font-size:28px}
+.dv-borg .dv-bcount{font-size:24px;font-weight:700;letter-spacing:-.02em;margin-top:8px}
+.dv-borg .dv-bname{font-size:13px;font-weight:600;margin-top:2px}
+.dv-borg .dv-bstate{font-size:11px;color:var(--muted);margin-top:3px}
+.dv-bmini .dv-bnum{font-size:24px;font-weight:700}
+.dv-bmini .dv-bname{font-size:13px;font-weight:600;margin-top:2px}
+.dv-bmini .dv-bstate{font-size:11px;color:var(--muted);margin-top:3px}
+/* ---- Ledger: the morning paper ---- */
+.dv-ledger{font-family:Georgia,"Times New Roman",serif}
+.dv-ledger .dv-leyebrow{font-size:11px;font-weight:700;letter-spacing:.22em;color:var(--muted);text-align:center;font-family:-apple-system,system-ui,sans-serif}
+.dv-ledger h1{font-size:36px;font-weight:400;letter-spacing:-.01em;text-align:center;margin:10px 0 6px;line-height:1.15}
+.dv-ledger .dv-ldateline{text-align:center;font-size:13px;color:var(--muted);margin-bottom:4px;font-family:-apple-system,system-ui,sans-serif}
+.dv-ledger .dv-lrule{border:0;border-top:1px solid var(--text);margin:20px 0;opacity:.7}
+.dv-ledger .dv-lrule.thin{border-top:1px solid var(--border);opacity:1}
+.dv-ledger h2{font-size:21px;font-weight:400;margin:26px 0 4px}
+.dv-ledger h2 .dv-lrn{color:var(--muted);font-size:15px;margin-right:8px}
+.dv-ledger .dv-llede{font-size:15px;line-height:1.6;color:var(--text);margin-bottom:6px;opacity:.85}
+.dv-ledger .dv-litem{display:flex;justify-content:space-between;align-items:baseline;padding:11px 0;border-bottom:1px solid var(--border);font-size:15px;font-family:-apple-system,system-ui,sans-serif}
+.dv-ledger .dv-litem:last-child{border-bottom:0}
+.dv-ledger .dv-litem .dv-lv{font-variant-numeric:tabular-nums;color:var(--muted)}
+.dv-ledger .dv-litem .dv-lv b{color:var(--text);font-weight:600}
+.dv-ledger .dv-lflag{color:var(--amber-tx,#b25e09);font-weight:600}
+.dv-ledger .dv-lpull{text-align:center;margin:30px 0 6px}
+.dv-ledger .dv-lpull .dv-lbig{font-size:76px;line-height:1;letter-spacing:-.02em}
+.dv-ledger .dv-lpull .dv-lcap{font-size:13px;color:var(--muted);margin-top:6px;letter-spacing:.06em;font-family:-apple-system,system-ui,sans-serif}
+.dv-ledger .dv-lvitals{display:flex;justify-content:space-between;margin-top:8px;font-family:-apple-system,system-ui,sans-serif}
+.dv-ledger .dv-lvital .dv-ln{font-family:Georgia,serif;font-size:30px}
+.dv-ledger .dv-lvital .dv-ll{font-size:11px;letter-spacing:.12em;color:var(--muted);margin-top:2px}
+/* ---- Console: mission control (dark-first by design) ---- */
+.dv-console{background:#0a0a0c;color:#e8e8ea;border-radius:16px;padding:18px 0 8px;font-family:ui-monospace,"SF Mono",Menlo,monospace;font-size:13px;margin:0 -8px}
+.dv-console .dv-ctag{padding:0 18px;font-size:10px;letter-spacing:.14em;color:#636366;margin-bottom:14px}
+.dv-console .dv-cstrip{display:flex;justify-content:space-between;align-items:center;padding:0 18px 14px;border-bottom:1px solid #1e1e22;font-size:11px;letter-spacing:.12em}
+.dv-console .dv-cok{color:#30d158}
+.dv-console .dv-cwarn{color:#ff9f0a}
+.dv-console .dv-creadouts{display:flex;gap:26px;padding:18px;border-bottom:1px solid #1e1e22;flex-wrap:wrap}
+.dv-console .dv-cro .dv-cn{font-size:30px;font-weight:700;letter-spacing:-.02em}
+.dv-console .dv-cro .dv-cl{font-size:10px;letter-spacing:.14em;color:#636366;margin-top:4px}
+.dv-console .dv-cro.alert .dv-cn{color:#ff9f0a}
+.dv-console .dv-csec{padding:16px 18px 6px;font-size:10px;letter-spacing:.14em;color:#636366}
+.dv-console .dv-crow{display:flex;align-items:center;gap:10px;padding:11px 18px;border-bottom:1px solid #161619}
+.dv-console .dv-cdot{width:7px;height:7px;border-radius:50%;flex:none}
+.dv-console .dv-cdot.g{background:#30d158;box-shadow:0 0 6px rgba(48,209,88,.7)}
+.dv-console .dv-cdot.a{background:#ff9f0a;box-shadow:0 0 6px rgba(255,159,10,.7)}
+.dv-console .dv-crow .dv-cname{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.dv-console .dv-crow .dv-cval{color:#98989d;font-variant-numeric:tabular-nums;flex:none}
+.dv-console .dv-crow .dv-cval b{color:#e8e8ea}
+.dv-console .dv-cfoot{padding:18px;font-size:10px;color:#3a3a3c;letter-spacing:.1em}
+/* ---- Pulse: right now ---- */
+.dv-pulse .dv-peyebrow{font-size:11px;font-weight:700;letter-spacing:.1em;color:var(--muted);margin-bottom:6px}
+.dv-pulse h1{font-size:30px;font-weight:700;letter-spacing:-.02em;margin-bottom:4px}
+.dv-pulse .dv-psub{font-size:14px;color:var(--muted);margin-bottom:8px}
+.dv-pulse .dv-pera{margin-top:22px}
+.dv-pulse .dv-pera-head{display:flex;align-items:center;gap:10px;margin-bottom:4px}
+.dv-pulse .dv-pera-dot{width:10px;height:10px;border-radius:50%;flex:none}
+.dv-pulse .dv-pera-dot.now{background:#ff9f0a;box-shadow:0 0 0 4px rgba(255,159,10,.18)}
+.dv-pulse .dv-pera-dot.today{background:#007aff;box-shadow:0 0 0 4px rgba(0,122,255,.14)}
+.dv-pulse .dv-pera-dot.week{background:var(--border)}
+.dv-pulse .dv-pera-title{font-size:12px;font-weight:700;letter-spacing:.12em;color:var(--text)}
+.dv-pulse .dv-pspine{margin-left:4px;padding-left:16px;border-left:2px solid var(--border)}
+.dv-pulse .dv-pbeat{display:flex;gap:12px;align-items:flex-start;padding:14px 0;border-bottom:1px solid var(--border)}
+.dv-pulse .dv-pbeat:last-child{border-bottom:0}
+.dv-pulse .dv-pic{font-size:24px;flex:none}
+.dv-pulse .dv-ptx{flex:1;min-width:0}
+.dv-pulse .dv-pt{font-size:15px;line-height:1.45}
+.dv-pulse .dv-pt b{font-weight:600}
+.dv-pulse .dv-pwhen{font-size:12px;color:var(--muted);margin-top:3px}
+.dv-pulse .dv-ptick{flex:none;width:30px;height:30px;border-radius:50%;border:1.5px solid var(--border);color:var(--muted);background:none;font-size:14px;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.dv-pulse .dv-ptick:hover{border-color:var(--accent);color:var(--accent)}
+@media (max-width:960px){.dv-wrap{padding:26px 16px 44px}}
 /* ============ Atlas chart types ============ */
 .chart-ledger .ledger{max-width:720px;margin:0 auto;padding:8px 0}
 .ledger-row{display:flex;align-items:baseline;gap:10px;padding:7px 12px;border-radius:8px;cursor:pointer}
@@ -2766,7 +2854,7 @@ function renderDevelopSection(){
   const dev = document.getElementById('fset-develop');
   if (!dev) return;
   const simulating = !!devBackup;
-  const buildNum = '20261015.1822';
+  const buildNum = '20261015.1857';
   dev.innerHTML = ''
     + '<label class="fset-check"><input type="checkbox" id="dev-empty-toggle"' + (simulating ? ' checked' : '') + '> <span><strong>Simulate new user</strong> — empty data file, as if opening the shared link fresh</span></label>'
     + '<div class="fineprint" style="margin:8px 0 12px">Build <span style="font-family:monospace">' + escHtml(String(buildNum)) + '</span> · ' + BUDDIES.length + ' buddies in this file</div>'
@@ -3205,57 +3293,14 @@ function applyPlanFilter(){
   });
 }
 function buddyHomepageHtml(b){
-  const kids = (b.children || []).map(cid => byId[cid]).filter(Boolean);
-  const arts = b.artifacts || [];
-  const allPlans = (typeof PLANS !== 'undefined' && PLANS) || [];
-  const plans = allPlans.filter(p => (p.buddies || []).includes(b.id));
-  const attnItems = (b.attention || []).filter(a => !S.seen[b.id + ':' + (a.id || a.text)]);
-  let stats = '';
-  if (attnItems.length) stats += '<span class="hp-stat"><b>' + attnItems.length + '</b> need attention</span>';
-  if (kids.length) stats += '<span class="hp-stat"><b>' + kids.length + '</b> sub-buddies</span>';
-  if (plans.length) stats += '<span class="hp-stat"><b>' + plans.length + '</b> plans</span>';
-  if (arts.length) stats += '<span class="hp-stat"><b>' + arts.length + '</b> artifacts</span>';
+  /* Default View style system (Dave 2026-10-15): the auto-generated homepage
+     renders in the selected style (Bento/Ledger/Console/Pulse), hierarchy-aware.
+     The .hp-* rules below stay for the brain-dump section. */
   let h = '<style>'
     + '.hp{max-width:1080px;margin:0 auto;padding:36px 28px 56px;color:var(--text);font-family:inherit}'
-    + '.hp-grid{display:grid;gap:22px;grid-template-columns:minmax(0,1fr) 340px;grid-template-areas:"head head" "main rail" "dump dump"}'
-    + '.hp-head{grid-area:head;display:flex;align-items:center;gap:20px;min-width:0}'
-    + '.hp-icon{width:78px;height:78px;flex:none;border-radius:24px;background:var(--panel);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:42px;box-shadow:var(--shadow-soft)}'
-    + '.hp-headtxt{min-width:0}'
-    + '.hp-name{margin:0;font-size:30px;letter-spacing:-0.02em;line-height:1.15;overflow-wrap:break-word}'
-    + '.hp-tagline{margin:8px 0 0;color:var(--muted);font-size:15px;line-height:1.55;max-width:660px}'
-    + '.hp-stats{margin-top:12px;display:flex;flex-wrap:wrap;gap:8px;align-items:center}'
-    + '.hp-stat{font-size:12.5px;color:var(--muted);background:var(--panel);border:1px solid var(--border);border-radius:999px;padding:4px 12px;white-space:nowrap}'
-    + '.hp-stat b{color:var(--text)}'
-    + '.hp-main{grid-area:main;min-width:0;display:flex;flex-direction:column;gap:22px}'
-    + '.hp-rail{grid-area:rail;min-width:0;display:flex;flex-direction:column;gap:22px}'
     + '.hp-card{background:var(--panel);border:1px solid var(--border);border-radius:16px;padding:20px 22px;min-width:0}'
     + '.hp-kicker{margin:0 0 6px;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.09em;color:var(--muted)}'
-    + '.hp-mission{margin:8px 0 0;font-size:15px;line-height:1.7;overflow-wrap:break-word}'
-    + '.hp-attn{border-color:var(--amber-bd)}'
-    + '.hp-attn .hp-kicker{color:var(--amber-tx)}'
-    + '.hp-aitem{display:flex;gap:10px;padding:10px 0;font-size:14px;line-height:1.5}'
-    + '.hp-aitem + .hp-aitem{border-top:1px solid var(--border)}'
-    + '.hp-adot{color:var(--amber);flex:none;font-size:11px;line-height:2}'
-    + '.hp-atext{min-width:0;overflow-wrap:break-word}'
-    + '.hp-adate{color:var(--faint);font-size:12px;margin-top:3px}'
-    + '.hp-more{font-size:12.5px;color:var(--muted);margin:10px 0 0}'
-    + '.hp-chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}'
-    + '.hp-chip{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:8px 12px;font-size:13.5px;white-space:nowrap}'
-    + '.hp-plan{display:flex;gap:12px;padding:14px 0;min-width:0}'
-    + '.hp-plan + .hp-plan{border-top:1px solid var(--border)}'
-    + '.hp-picon{font-size:26px;flex:none;line-height:1.2}'
-    + '.hp-pbody{min-width:0}'
-    + '.hp-pname{font-weight:650;font-size:15px;overflow-wrap:break-word}'
-    + '.hp-pill{display:inline-block;vertical-align:1px;font-size:11px;font-weight:700;background:var(--wash);color:var(--accent-hi);border-radius:999px;padding:3px 10px;margin-left:8px;white-space:nowrap}'
-    + '.hp-pdesc{margin:6px 0 0;color:var(--muted);font-size:13.5px;line-height:1.55;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;overflow-wrap:break-word}'
-    + '.hp-pdoc{display:inline-block;margin-top:8px;font-size:13px;color:var(--accent);text-decoration:none}'
-    + '.hp-pdoc:hover{text-decoration:underline}'
-    + '.hp-art{display:flex;align-items:center;gap:10px;padding:10px 0;font-size:14.5px;min-width:0}'
-    + '.hp-art + .hp-art{border-top:1px solid var(--border)}'
-    + '.hp-art a{color:var(--accent);text-decoration:none;overflow-wrap:break-word;min-width:0}'
-    + '.hp-art a:hover{text-decoration:underline}'
-    + '.hp-go{margin-left:auto;color:var(--faint);flex:none}'
-    + '.hp-dumpsec{grid-area:dump}'
+    + '.hp-dumpsec{max-width:1080px;margin:0 auto}'
     + '.hp-dump textarea{display:block;width:100%;box-sizing:border-box;min-height:92px;background:var(--bg);border:1px solid var(--border);border-radius:10px;color:var(--text);padding:12px 14px;font:inherit;font-size:14px;line-height:1.55;resize:vertical;margin-top:10px}'
     + '.hp-dump textarea:focus{outline:none;border-color:var(--accent)}'
     + '.hp-dump-row{display:flex;align-items:center;gap:14px;margin-top:12px;flex-wrap:wrap}'
@@ -3263,80 +3308,10 @@ function buddyHomepageHtml(b){
     + '.hp-dump-btn:hover{filter:brightness(1.08)}'
     + '.hp-dump-status{font-size:13px;color:var(--muted)}'
     + '.hp-dump-status a{color:var(--accent)}'
-    + '.hp-note{text-align:center;color:var(--muted);font-size:12px;margin:34px 0 0}'
+    + '.hp-note{text-align:center;color:var(--muted);font-size:12px;margin:34px auto;max-width:1080px}'
     + '.hp-locked{margin-top:10px;background:var(--bg);border:1px dashed var(--border);border-radius:10px;padding:14px 16px}'
-    + '@media (max-width:960px){'
-    + '.hp-grid{grid-template-columns:minmax(0,1fr);grid-template-areas:"head" "rail" "main" "dump"}'
-    + '.hp{padding:26px 16px 44px}'
-    + '.hp-icon{width:62px;height:62px;font-size:34px;border-radius:18px}'
-    + '.hp-name{font-size:24px}'
-    + '.hp-card{padding:16px 18px}'
-    + '}'
     + '</style>';
-  h += '<div class="hp"><div class="hp-grid">';
-  // header
-  h += '<header class="hp-head"><div class="hp-icon">' + escHtml(b.icon || '🤖') + '</div><div class="hp-headtxt">';
-  h += '<h1 class="hp-name">' + escHtml(dispName(b)) + '</h1>';
-  if (b.tagline) h += '<p class="hp-tagline">' + escHtml(b.tagline) + '</p>';
-  let statHtml = stats;
-  if (b.status) statHtml = '<span class="status ' + escHtml(b.statusClass || '') + '">' + escHtml(b.status) + '</span>' + statHtml;
-  + (isDormant(id) ? '<span class="status st-dormant">💤 Dormant</span>' : '')
-  if (statHtml) h += '<div class="hp-stats">' + statHtml + '</div>';
-  h += '</div></header>';
-  // main column
-  h += '<div class="hp-main">';
-  if (b.mission) {
-    h += '<section class="hp-card"><h3 class="hp-kicker">About</h3><p class="hp-mission">' + escHtml(b.mission) + '</p></section>';
-  }
-  if (plans.length) {
-    h += '<section class="hp-card"><h3 class="hp-kicker">Plans (' + plans.length + ')</h3>';
-    plans.forEach(p => {
-      h += '<div class="hp-plan"><div class="hp-picon">' + escHtml(p.icon || '💼') + '</div><div class="hp-pbody">';
-      h += '<div class="hp-pname">' + escHtml(p.name || 'Untitled plan');
-      if (p.status) h += '<span class="hp-pill">' + escHtml(p.status) + '</span>';
-      h += '</div>';
-      if (p.desc) h += '<p class="hp-pdesc">' + escHtml(p.desc) + '</p>';
-      if (p.docs && p.docs[0] && p.docs[0].url) h += '<a class="hp-pdoc" href="' + escHtml(p.docs[0].url) + '" target="_blank" rel="noopener">' + escHtml(p.docs[0].label || 'Open doc') + ' →</a>';
-      h += '</div></div>';
-    });
-    h += '</section>';
-  }
-  if (arts.length) {
-    h += '<section class="hp-card"><h3 class="hp-kicker">Artifacts (' + arts.length + ')</h3>';
-    arts.slice(0, 6).forEach(a => {
-      h += '<div class="hp-art"><a href="' + escHtml(a.url || '#') + '" target="_blank" rel="noopener">' + escHtml(a.title || a.name || 'Artifact') + '</a><span class="hp-go">→</span></div>';
-    });
-    if (arts.length > 6) h += '<p class="hp-more">+' + (arts.length - 6) + ' more</p>';
-    h += '</section>';
-  }
-  h += '</div>';
-  // rail
-  h += '<aside class="hp-rail">';
-  if (attnItems.length) {
-    h += '<section class="hp-card hp-attn"><h3 class="hp-kicker">Needs attention (' + attnItems.length + ')</h3>';
-    attnItems.slice(0, 5).forEach(a => {
-      h += '<div class="hp-aitem"><span class="hp-adot">●</span><div class="hp-atext">';
-      if (a.url) h += '<a href="' + escHtml(a.url) + '" target="_blank" rel="noopener" style="color:inherit">' + escHtml(a.text || a) + ' ↗</a>';
-      else h += escHtml(a.text || a);
-      if (a.date) h += '<div class="hp-adate">Asked ' + escHtml(a.date) + '</div>';
-      h += '</div></div>';
-    });
-    if (attnItems.length > 5) h += '<p class="hp-more">+' + (attnItems.length - 5) + ' more</p>';
-    h += '</section>';
-  }
-  if (kids.length) {
-    h += '<section class="hp-card"><h3 class="hp-kicker">Sub-buddies (' + kids.length + ')</h3><div class="hp-chips">';
-    kids.forEach(k => {
-      h += '<span class="hp-chip">' + escHtml(k.icon || '🤖') + ' ' + escHtml(dispName(k)) + '</span>';
-    });
-    h += '</div></section>';
-  }
-  h += '</aside>';
-  // brain dump (full width, two-state: functional when a token is present)
-  h += homepageDumpSectionHtml(b);
-  h += '</div>';
-  h += '<p class="hp-note">Auto-generated homepage — set a custom URL in the Homepage URL field to override.</p>';
-  h += '</div>';
+  h += dvRender(b);
   return h;
 }
 function homepageDumpSectionHtml(b){
@@ -3989,7 +3964,7 @@ function renderBuddy(id){
       'Anybody with repo access can see this note. Saved to the buddy’s repo (docs/notes.md).')
     + '<div class="attr-body"><textarea class="notes" id="bp-shared-notes" placeholder="Anybody with repo access can see this note."></textarea>'
     + '<p class="fineprint" id="shared-status"></p></div></div>'
-    + '<div class="bp-build">Build 20261015.1822</div>'
+    + '<div class="bp-build">Build 20261015.1857</div>'
     + '</div>';
   // Update every visible label for a buddy after a rename/re-icon, across all
   // Atlas lenses. A rename changes no structure, so labels are patched in place
@@ -4771,6 +4746,288 @@ function chartSwitcherHtml(){
     + '</div></div>'
     + orientTabs
     + '<div class="lens-scrim" id="lens-scrim" hidden></div>';
+}
+/* ============ Default View styles (Dave 2026-10-15) ============
+   The auto-generated buddy homepage ("show everything") rendered in four
+   visual languages. Hierarchy-aware: root (Astro) = system rollups,
+   parents = children summaries, leaves = own data. Style persists per
+   device in S.dvStyle (Bento default), picker mirrors the Atlas lens
+   picker: a quiet pill opening a flyout with wireframe thumbnails. */
+const DV_STYLES = [
+  {id:'bento', label:'Bento'},
+  {id:'ledger', label:'Ledger'},
+  {id:'console', label:'Console'},
+  {id:'pulse', label:'Pulse'},
+];
+const DV_BLURBS = {
+  bento: 'The feature quilt — everything at a glance.',
+  ledger: 'The morning paper — the system as a document.',
+  console: 'Mission control — maximum signal per pixel.',
+  pulse: 'Right now — the system as it happens.',
+};
+function getDvStyle(){ return S.dvStyle || 'bento'; }
+function setDvStyle(s){ S.dvStyle = s; save(); renderProjectView(); }
+function closeDvPicker(){
+  const dd = document.getElementById('dv-dropdown');
+  const scrim = document.getElementById('dv-scrim');
+  const pill = document.getElementById('dv-pill');
+  if (dd) dd.hidden = true;
+  if (scrim) scrim.hidden = true;
+  if (pill) pill.setAttribute('aria-expanded', 'false');
+}
+function dvThumbSvg(id){
+  const s = 'width="64" height="40" viewBox="0 0 64 40" fill="none" stroke="currentColor" stroke-width="1.5"';
+  switch(id){
+    case 'bento': return '<svg ' + s + '><rect x="6" y="6" width="24" height="28" rx="2"/><rect x="34" y="6" width="24" height="13" rx="2"/><rect x="34" y="21" width="24" height="13" rx="2"/></svg>';
+    case 'ledger': return '<svg ' + s + '><path d="M8 10h48M8 18h48M8 26h32M8 34h40"/></svg>';
+    case 'console': return '<svg ' + s + '><circle cx="10" cy="10" r="2" fill="currentColor" stroke="none"/><circle cx="10" cy="18" r="2" fill="currentColor" stroke="none"/><circle cx="10" cy="26" r="2" fill="currentColor" stroke="none"/><path d="M16 10h42M16 18h42M16 26h42"/></svg>';
+    case 'pulse': return '<svg ' + s + '><path d="M32 6v28"/><circle cx="32" cy="12" r="3" fill="currentColor" stroke="none"/><circle cx="32" cy="22" r="3" fill="currentColor" stroke="none"/><circle cx="32" cy="32" r="3" fill="currentColor" stroke="none"/></svg>';
+    default: return '';
+  }
+}
+function dvPickerHtml(){
+  const cur = getDvStyle();
+  const curDef = DV_STYLES.find(s => s.id === cur) || DV_STYLES[0];
+  return '<div class="dv-picker-row"><div class="lens-picker-wrap" style="margin:0">'
+    + '<button class="lens-pill" id="dv-pill" aria-haspopup="true" aria-expanded="false" title="Change Default View style">'
+    + '<span class="lens-pill-icon">◨</span><span>' + curDef.label + '</span><span class="lens-pill-chev">▾</span>'
+    + '</button>'
+    + '<div class="lens-dropdown" id="dv-dropdown" hidden>'
+    + '<button class="lens-close" id="dv-close" aria-label="Close style picker">&times;</button>'
+    + DV_STYLES.map(s => '<button class="lens-card dv-card' + (s.id === cur ? ' sel' : '') + '" data-dvstyle="' + s.id + '">'
+      + '<span class="lens-thumb">' + dvThumbSvg(s.id) + '</span>'
+      + '<span class="lens-name">' + s.label + (s.id === cur ? ' ✓' : '') + '</span>'
+      + '<span class="lens-blurb">' + DV_BLURBS[s.id] + '</span>'
+      + '</button>').join('')
+    + '</div></div></div>'
+    + '<div class="lens-scrim" id="dv-scrim" hidden></div>';
+}
+/* Hierarchy-aware data: descendant + unseen-attention counts for a subtree. */
+function dvDescCount(id){
+  let n = 0;
+  visibleKids(id).forEach(k => { n += 1 + dvDescCount(k.id); });
+  return n;
+}
+function dvUnseen(b){
+  return (b.attention || []).filter(a => !S.seen[b.id + ':' + (a.id || a.text)]);
+}
+function dvAttnCount(id){
+  const b = byId[id];
+  let n = b ? dvUnseen(b).length : 0;
+  visibleKids(id).forEach(k => { n += dvAttnCount(k.id); });
+  return n;
+}
+function dvTotalAttn(){
+  let n = 0;
+  Object.values(byId).forEach(b => { n += dvUnseen(b).length; });
+  return n;
+}
+function dvRender(b){
+  const picker = dvPickerHtml();
+  const dump = (typeof homepageDumpSectionHtml === 'function') ? homepageDumpSectionHtml(b) : '';
+  const note = '<p class="hp-note">Auto-generated homepage — set a custom URL in the Homepage URL field to override.</p>';
+  let body = '';
+  switch(getDvStyle()){
+    case 'ledger': body = dvLedgerHtml(b); break;
+    case 'console': body = dvConsoleHtml(b); break;
+    case 'pulse': body = dvPulseHtml(b); break;
+    default: body = dvBentoHtml(b);
+  }
+  return '<div class="dv-wrap">' + picker + body + '</div>' + dump + note;
+}
+/* ---- Bento ---- */
+function dvBentoHtml(b){
+  const kids = visibleKids(b.id);
+  const isRoot = b.id === ROOT_ID;
+  const attn = dvUnseen(b);
+  const totalAttn = dvAttnCount(b.id);
+  let h = '<div class="dv-bento">';
+  h += '<div class="dv-beyebrow">' + escHtml(dispName(b)).toUpperCase() + ' · DEFAULT VIEW</div>';
+  h += '<h1>' + (isRoot ? 'The whole system' : escHtml(dispName(b))) + '</h1>';
+  h += '<div class="dv-bgrid">';
+  if (isRoot){
+    const total = Object.keys(byId).length;
+    const orgs = kids.length;
+    h += '<div class="dv-btile dv-bhero span2"><div class="dv-bnum">' + total + '</div>'
+      + '<div class="dv-bsub">buddies · one family</div>'
+      + '<div class="dv-bmeta">' + orgs + ' orgs · ' + totalAttn + ' need you · updated just now</div></div>';
+  } else {
+    h += '<div class="dv-btile dv-bhero span2"><div class="dv-bnum">' + escHtml(b.icon || '🤖') + ' ' + escHtml(dispName(b)) + '</div>'
+      + (b.tagline ? '<div class="dv-bsub">' + escHtml(b.tagline) + '</div>' : '')
+      + '<div class="dv-bmeta">' + kids.length + ' sub-buddies · ' + totalAttn + ' need you</div></div>';
+  }
+  if (totalAttn){
+    h += '<div class="dv-btile dv-balert span2"><div class="dv-bnum">' + totalAttn + ' need you</div>'
+      + '<div class="dv-bgo">Review them →</div></div>';
+  }
+  if (kids.length){
+    kids.forEach(k => {
+      const ka = dvAttnCount(k.id);
+      const kc = dvDescCount(k.id);
+      h += '<div class="dv-btile dv-borg"><div class="dv-bemoji">' + escHtml(k.icon || '🤖') + '</div>'
+        + '<div class="dv-bcount">' + (kc + 1) + '</div>'
+        + '<div class="dv-bname">' + escHtml(dispName(k)) + '</div>'
+        + '<div class="dv-bstate">' + (ka ? ka + ' need you' : 'all quiet') + '</div></div>';
+    });
+  } else {
+    // Leaf: own data as mini tiles
+    if (b.mission) h += '<div class="dv-btile dv-bmini span2"><div class="dv-bname">About</div><div class="dv-bstate" style="font-size:13px;line-height:1.6;white-space:normal">' + escHtml(b.mission.slice(0, 220)) + (b.mission.length > 220 ? '…' : '') + '</div></div>';
+    const docs = (b.docs || []).length, arts = (b.artifacts || []).length;
+    const allPlans = (typeof PLANS !== 'undefined' && PLANS) || [];
+    const plans = allPlans.filter(p => (p.buddies || []).includes(b.id)).length;
+    h += '<div class="dv-btile dv-bmini"><div class="dv-bnum">' + docs + '</div><div class="dv-bname">Docs</div><div class="dv-bstate">linked documents</div></div>';
+    h += '<div class="dv-btile dv-bmini"><div class="dv-bnum">' + arts + '</div><div class="dv-bname">Artifacts</div><div class="dv-bstate">shipped things</div></div>';
+    h += '<div class="dv-btile dv-bmini"><div class="dv-bnum">' + plans + '</div><div class="dv-bname">Plans</div><div class="dv-bstate">business plans</div></div>';
+    h += '<div class="dv-btile dv-bmini"><div class="dv-bnum">' + attn.length + '</div><div class="dv-bname">Attention</div><div class="dv-bstate">open items</div></div>';
+  }
+  h += '</div></div>';
+  return h;
+}
+/* ---- Ledger ---- */
+function dvLedgerHtml(b){
+  const kids = visibleKids(b.id);
+  const isRoot = b.id === ROOT_ID;
+  const attn = dvUnseen(b);
+  const totalAttn = dvAttnCount(b.id);
+  const today = new Date().toLocaleDateString('en-US', {weekday:'long', month:'long', day:'numeric', year:'numeric'});
+  let h = '<div class="dv-ledger">';
+  h += '<div class="dv-leyebrow">THE BUDDY SYSTEM</div>';
+  h += '<h1>' + (isRoot ? 'The State of<br>the System' : escHtml(dispName(b))) + '</h1>';
+  h += '<div class="dv-ldateline">' + escHtml(today) + ' · ' + (isRoot ? "Astro's overview" : escHtml(dispName(b))) + '</div>';
+  h += '<hr class="dv-lrule">';
+  const total = isRoot ? Object.keys(byId).length : dvDescCount(b.id) + 1;
+  h += '<div class="dv-lpull"><div class="dv-lbig">' + total + '</div><div class="dv-lcap">' + (isRoot ? 'BUDDIES · ONE FAMILY' : 'IN THIS CORNER') + '</div></div>';
+  let rn = 1;
+  const roman = ['I','II','III','IV','V'];
+  if (totalAttn){
+    h += '<h2><span class="dv-lrn">' + roman[rn-1] + '.</span>Attention</h2>';
+    h += '<p class="dv-llede"><span class="dv-lflag">' + totalAttn + (totalAttn === 1 ? ' item' : ' items') + '</span> need your eye — '
+      + 'briefs awaiting review, threads gone quiet, budgets near their edge.</p>';
+    rn++;
+  }
+  if (kids.length){
+    h += '<h2><span class="dv-lrn">' + roman[rn-1] + '.</span>' + (isRoot ? 'The orgs' : 'Sub-buddies') + '</h2>';
+    kids.forEach(k => {
+      const ka = dvAttnCount(k.id), kc = dvDescCount(k.id);
+      h += '<div class="dv-litem"><span>' + escHtml(dispName(k)) + '</span>'
+        + '<span class="dv-lv"><b>' + (kc + 1) + '</b> · ' + (ka ? ka + ' need you' : 'all quiet') + '</span></div>';
+    });
+    rn++;
+  }
+  if (b.mission){
+    h += '<h2><span class="dv-lrn">' + roman[rn-1] + '.</span>About</h2>';
+    h += '<p class="dv-llede">' + escHtml(b.mission) + '</p>';
+    rn++;
+  }
+  h += '<h2><span class="dv-lrn">' + roman[rn-1] + '.</span>Vitals</h2>';
+  h += '<div class="dv-lvitals">'
+    + '<div class="dv-lvital"><div class="dv-ln">' + total + '</div><div class="dv-ll">BUDDIES</div></div>'
+    + '<div class="dv-lvital"><div class="dv-ln">' + kids.length + '</div><div class="dv-ll">' + (isRoot ? 'ORGS' : 'SUB-BUDDIES') + '</div></div>'
+    + '<div class="dv-lvital"><div class="dv-ln">' + totalAttn + '</div><div class="dv-ll">NEED YOU</div></div>'
+    + '</div>';
+  h += '<hr class="dv-lrule thin"></div>';
+  return h;
+}
+/* ---- Console ---- */
+function dvConsoleHtml(b){
+  const kids = visibleKids(b.id);
+  const isRoot = b.id === ROOT_ID;
+  const totalAttn = dvAttnCount(b.id);
+  const total = isRoot ? Object.keys(byId).length : dvDescCount(b.id) + 1;
+  let h = '<div class="dv-console">';
+  h += '<div class="dv-ctag">DEFAULT VIEW — CONSOLE</div>';
+  h += '<div class="dv-cstrip"><span class="dv-cok">● ' + escHtml(dispName(b)).toUpperCase() + ' // SYS.OVERVIEW</span>'
+    + '<span class="dv-cwarn">' + totalAttn + ' FLAGS</span></div>';
+  h += '<div class="dv-creadouts">'
+    + '<div class="dv-cro"><div class="dv-cn">' + total + '</div><div class="dv-cl">BUDDIES</div></div>'
+    + '<div class="dv-cro"><div class="dv-cn">' + String(kids.length).padStart(2,'0') + '</div><div class="dv-cl">' + (isRoot ? 'ORGS' : 'SUBS') + '</div></div>'
+    + '<div class="dv-cro alert"><div class="dv-cn">' + totalAttn + '</div><div class="dv-cl">FLAGS</div></div>'
+    + '</div>';
+  // sparkline of attention per org/child
+  if (kids.length){
+    const vals = kids.map(k => dvAttnCount(k.id));
+    const max = Math.max(1, ...vals);
+    const pts = vals.map((v,i) => (i * (400/Math.max(1,vals.length-1))).toFixed(0) + ',' + (32 - Math.round(v/max*24)).toFixed(0)).join(' ');
+    h += '<div style="padding:6px 18px 0"><svg width="100%" height="36" viewBox="0 0 400 36" preserveAspectRatio="none">'
+      + '<polyline points="' + pts + '" fill="none" stroke="#30d158" stroke-width="1.5"/></svg></div>';
+    h += '<div class="dv-csec">' + (isRoot ? 'ORGS' : 'SUB-BUDDIES') + '</div>';
+    kids.forEach(k => {
+      const ka = dvAttnCount(k.id), kc = dvDescCount(k.id);
+      h += '<div class="dv-crow"><span class="dv-cdot ' + (ka ? 'a' : 'g') + '"></span>'
+        + '<span class="dv-cname">' + escHtml(dispName(k)).toUpperCase() + '</span>'
+        + '<span class="dv-cval"><b>' + (kc + 1) + '</b> · ' + (ka ? ka + ' flags' : 'quiet') + '</span></div>';
+    });
+  }
+  // latest flags
+  const flags = [];
+  (function collect(id){
+    const kb = byId[id];
+    if (kb) dvUnseen(kb).forEach(a => flags.push({b:kb, a:a}));
+    visibleKids(id).forEach(k => collect(k.id));
+  })(b.id);
+  flags.sort((x,y) => String(y.a.date||'').localeCompare(String(x.a.date||'')));
+  if (flags.length){
+    h += '<div class="dv-csec">FLAGS — LATEST</div>';
+    flags.slice(0,5).forEach(f => {
+      const txt = String(f.a.text || f.a);
+      h += '<div class="dv-crow"><span class="dv-cdot a"></span>'
+        + '<span class="dv-cname">' + escHtml(dispName(f.b)) + ' — ' + escHtml(txt.slice(0,60)) + (txt.length > 60 ? '…' : '') + '</span>'
+        + '<span class="dv-cval">' + escHtml(f.a.date || '') + '</span></div>';
+    });
+  }
+  h += '<div class="dv-cfoot">READ-ONLY · V1</div></div>';
+  return h;
+}
+/* ---- Pulse ---- */
+function dvPulseHtml(b){
+  const kids = visibleKids(b.id);
+  const isRoot = b.id === ROOT_ID;
+  const flags = [];
+  (function collect(id){
+    const kb = byId[id];
+    if (kb) dvUnseen(kb).forEach(a => flags.push({b:kb, a:a, key:kb.id + ':' + (a.id || a.text)}));
+    visibleKids(id).forEach(k => collect(k.id));
+  })(b.id);
+  flags.sort((x,y) => String(y.a.date||'').localeCompare(String(x.a.date||'')));
+  const totalAttn = flags.length;
+  let h = '<div class="dv-pulse">';
+  h += '<div class="dv-peyebrow">' + escHtml(dispName(b)).toUpperCase() + ' · DEFAULT VIEW</div>';
+  h += '<h1>Right now</h1><div class="dv-psub">The system as it’s happening.</div>';
+  h += '<div class="dv-pera"><div class="dv-pera-head"><span class="dv-pera-dot now"></span>'
+    + '<span class="dv-pera-title">NOW · ' + totalAttn + ' NEED YOU</span></div><div class="dv-pspine">';
+  if (flags.length){
+    flags.slice(0,5).forEach(f => {
+      const txt = String(f.a.text || f.a);
+      h += '<div class="dv-pbeat"><span class="dv-pic">' + escHtml(f.b.icon || '📌') + '</span>'
+        + '<div class="dv-ptx"><div class="dv-pt"><b>' + escHtml(dispName(f.b)) + '</b> — ' + escHtml(txt.slice(0,90)) + (txt.length > 90 ? '…' : '') + '</div>'
+        + (f.a.date ? '<div class="dv-pwhen">' + escHtml(f.a.date) + '</div>' : '') + '</div>'
+        + '<button class="dv-ptick" data-dv-done="' + escHtml(f.key) + '" title="Mark done" aria-label="Mark done">✓</button></div>';
+    });
+    if (flags.length > 5) h += '<div class="dv-pbeat"><div class="dv-ptx"><div class="dv-pwhen">+' + (flags.length - 5) + ' more in the attention feed</div></div></div>';
+  } else {
+    h += '<div class="dv-pbeat"><div class="dv-ptx"><div class="dv-pt">All quiet — nothing needs you right now.</div></div></div>';
+  }
+  h += '</div></div>';
+  h += '<div class="dv-pera"><div class="dv-pera-head"><span class="dv-pera-dot today"></span><span class="dv-pera-title">TODAY</span></div><div class="dv-pspine">';
+  const total = isRoot ? Object.keys(byId).length : dvDescCount(b.id) + 1;
+  h += '<div class="dv-pbeat"><span class="dv-pic">📊</span><div class="dv-ptx"><div class="dv-pt"><b>' + total + '</b> buddies under ' + escHtml(dispName(b)) + ' · <b>' + totalAttn + '</b> open</div><div class="dv-pwhen">snapshot · today</div></div></div>';
+  if (b.status) h += '<div class="dv-pbeat"><span class="dv-pic">' + escHtml(b.icon || '🤖') + '</span><div class="dv-ptx"><div class="dv-pt">Status: <b>' + escHtml(b.status) + '</b></div><div class="dv-pwhen">' + escHtml(dispName(b)) + '</div></div></div>';
+  h += '</div></div>';
+  h += '<div class="dv-pera"><div class="dv-pera-head"><span class="dv-pera-dot week"></span><span class="dv-pera-title">THIS WEEK</span></div><div class="dv-pspine">';
+  if (kids.length){
+    kids.forEach(k => {
+      const ka = dvAttnCount(k.id);
+      h += '<div class="dv-pbeat"><span class="dv-pic">' + escHtml(k.icon || '🤖') + '</span>'
+        + '<div class="dv-ptx"><div class="dv-pt">' + escHtml(dispName(k)) + '</div>'
+        + '<div class="dv-pwhen">' + (ka ? ka + (ka === 1 ? ' item needs' : ' items need') + ' you' : 'all quiet') + '</div></div></div>';
+    });
+  } else if (b.mission){
+    h += '<div class="dv-pbeat"><span class="dv-pic">' + escHtml(b.icon || '🤖') + '</span><div class="dv-ptx"><div class="dv-pt">' + escHtml(b.mission.slice(0,120)) + (b.mission.length > 120 ? '…' : '') + '</div><div class="dv-pwhen">mission</div></div></div>';
+  } else {
+    h += '<div class="dv-pbeat"><div class="dv-ptx"><div class="dv-pwhen">Nothing scheduled — the week is open.</div></div></div>';
+  }
+  h += '</div></div></div>';
+  return h;
 }
 function renderChartMain(type, root, kids){
   switch(type){
@@ -5919,7 +6176,7 @@ function renderPlan(id){
     + '<p class="fineprint">Saved on this device. (For your eyes only)</p></div>'
     + '<div class="bp-sec"><h3>Shared notes<span class="info-tip" data-tip="Visible to everyone with access to this project.">\u24d8</span></h3><textarea class="notes" id="bp-shared" placeholder="Shared notes\u2026 (visible to everyone with access)">'+escHtml((S.planShared||{})[id]||'')+'</textarea>'
     + '<p class="fineprint">Shared — visible to everyone with access.</p></div>'
-    + '<div class="bp-build">Build 20261015.1822</div>'
+    + '<div class="bp-build">Build 20261015.1857</div>'
     + '</div>';
   const nt = document.getElementById('bp-notes');
   let t = null;
@@ -5963,6 +6220,8 @@ document.addEventListener('keydown', e => {
   }
   // Escape closes settings or detail panel
   if (e.key === 'Escape') {
+    const dvdd = document.getElementById('dv-dropdown');
+    if (dvdd && !dvdd.hidden) { closeDvPicker(); e.preventDefault(); return; }
     const m = document.getElementById('field-settings');
     if (m && m.classList.contains('show')) {
       m.classList.remove('show');
@@ -8147,14 +8406,14 @@ function openWhatsNew(){
     .then(r => r.ok ? r.text() : '')
     .then(t => {
       const serverBuild = t.trim();
-      if (serverBuild && serverBuild !== '20261015.1822') {
+      if (serverBuild && serverBuild !== '20261015.1857') {
         updBtn.style.display = '';
         updBtn.title = 'Update to build ' + serverBuild;
       }
       // Show build numbers at the top of the sheet (Dave's request 2026-10-12)
-      const myBuild = '20261015.1822';
+      const myBuild = '20261015.1857';
       let buildLine = '<p class="fineprint" style="margin-top:0">You’re on build ' + escHtml(myBuild) + '.';
-      if (serverBuild && serverBuild !== '20261015.1822' && isNewerBuild(serverBuild, myBuild)) {
+      if (serverBuild && serverBuild !== '20261015.1857' && isNewerBuild(serverBuild, myBuild)) {
         buildLine += ' Build ' + escHtml(serverBuild) + ' is available.';
       }
       buildLine += '</p>';
@@ -8193,7 +8452,7 @@ function isNewerBuild(server, mine){
   } catch (e) { return false; }
 }
 function initVersionCheck(){
-  const myBuild = '20261015.1822';
+  const myBuild = '20261015.1857';
   function showUpdateBanner(serverBuild){
     if (document.getElementById('update-banner')) return;
     const b = document.createElement('div');
@@ -8661,6 +8920,40 @@ document.addEventListener('click', e => {
   }
   const lscrim = e.target.closest('#lens-scrim');
   if (lscrim) { closeLensPicker(); return; }
+  // Default View style picker (Dave 2026-10-15): pill toggles, cards switch style, scrim/close/Escape dismisses
+  const dvpill = e.target.closest('#dv-pill');
+  if (dvpill) {
+    const dd = document.getElementById('dv-dropdown');
+    const scrim = document.getElementById('dv-scrim');
+    const open = dd.hidden;
+    dd.hidden = !open; scrim.hidden = !open;
+    dvpill.setAttribute('aria-expanded', open);
+    return;
+  }
+  const dvclose = e.target.closest('#dv-close');
+  if (dvclose) { closeDvPicker(); return; }
+  const dvcard = e.target.closest('.dv-card[data-dvstyle]');
+  if (dvcard) {
+    closeDvPicker();
+    setDvStyle(dvcard.dataset.dvstyle);
+    return;
+  }
+  const dvscrim = e.target.closest('#dv-scrim');
+  if (dvscrim) { closeDvPicker(); return; }
+  // Pulse style: ✓ dismisses an attention item (same S.seen key as the homepage)
+  const dvTick = e.target.closest('[data-dv-done]');
+  if (dvTick) {
+    const key = dvTick.getAttribute('data-dv-done');
+    S.seen[key] = Date.now();
+    save();
+    renderProjectView();
+    toastWithUndo('Marked done.', () => {
+      delete S.seen[key];
+      save();
+      renderProjectView();
+    });
+    return;
+  }
   const pmb = e.target.closest('[data-proj-mode]');
   if (pmb) { projViewMode = pmb.dataset.projMode; renderProjects(); return; }
   if (e.target.closest && e.target.closest('#proj-search-clear')) { projSearch = ''; renderProjects(); const ps = document.getElementById('proj-search'); if (ps) ps.focus(); return; }

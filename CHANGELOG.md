@@ -3,6 +3,15 @@
 All notable changes to the Buddies dashboard and buddy system. Newest first.
 `FEATURES.md` describes the current state; this file describes how it got there.
 
+## 2026-10-15 (Default View styles)
+
+### Added
+- **Default View style picker** (Dave 2026-10-15): the auto-generated buddy homepage ("show everything") now renders in four selectable styles — **Bento** (the feature quilt, default), **Ledger** (the morning paper), **Console** (mission control, dark-first), **Pulse** (right now, time-ordered spine). Picker mirrors the Atlas lens picker: a quiet pill (sticky, top-right of the Default View) opens a flyout with wireframe thumbnail previews; choice persists per device. Hierarchy-aware: Astro shows system rollups, parents show children summaries, leaves show their own data. Pulse ✓ buttons mark attention items done with the standard 6s undo. Brain-dump box carries over in every style.
+- **Astro homepage stat tiles are clickable** (Dave 2026-10-15, first pass): Buddies Tracked → dashboard tree, Need Dave's Reply → awaiting-reply section, Briefs/PRDs in Review → attention feed, Live & Piloting → dashboard Projects view. Tiles get pointer cursor, press animation, keyboard support (Enter/Space), and tooltips.
+
+### Changed
+- **Tip jar spacing tightened** (Dave 2026-10-15): bottom padding 10px → 2px so the tip jar sits flush with the sidebar footer edge; whitespace now lives above the divider line.
+
 ## 2026-10-15 (Marketing Buddy)
 
 ### Added
