@@ -3,6 +3,11 @@
 All notable changes to the Buddies dashboard and buddy system. Newest first.
 `FEATURES.md` describes the current state; this file describes how it got there.
 
+## 2026-10-15 (Sticky buddy page header)
+
+### Changed
+- **Sticky page header on all buddy web pages** (Dave 2026-10-15): every buddy homepage now pins a slim sticky header — icon left of the page name — with content scrolling underneath, so it's always clear which page is being viewed. Implemented in `gen_basic_homepages.py` TEMPLATE (all 53 template pages regenerated) and on Finance Buddy's custom page. This is the default for all pages going forward; custom thread-owned designs keep their own unless their threads adopt it. Also added the missing `homepage: tester-buddy/` registry field (page existed, registry link didn't).
+
 ## 2026-10-15 (Brain dump queues locally on failure)
 
 ### Fixed
