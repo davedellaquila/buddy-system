@@ -6,6 +6,9 @@ All notable changes to the Buddies dashboard and buddy system. Newest first.
 ## 2026-10-14 (Collapsed panels + tile rows)
 
 ### Changed
+- **One content width on every content page** (Dave 2026-10-14): Plans, Manifest, and Changelog now use the Projects pattern — 860px outer with 16px gutters. They were running 32px wider with full-bleed headings; now all page boundaries line up.
+
+### Changed
 - **Top tile row: four equal tiles distributed across the full content width** (Dave 2026-10-14): edges align with the content area; equal widths on phones too.
 - **Status tile row at ~70% size** (Dave 2026-10-14): 105px tiles (100px phones), scaled-down type, still horizontal scroll + click-rank order.
 - **Collapsed sidebar: reopen button removed** (Dave 2026-10-14): the › button no longer shows next to the collapsed icon rail — tapping any rail icon expands the sidebar.
