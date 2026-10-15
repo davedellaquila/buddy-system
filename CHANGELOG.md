@@ -3,6 +3,13 @@
 All notable changes to the Buddies dashboard and buddy system. Newest first.
 `FEATURES.md` describes the current state; this file describes how it got there.
 
+## 2026-10-15 (Buddy homepage parent links + root photo wall)
+
+### Added
+- **Parent breadcrumb on every buddy homepage** (Dave 2026-10-15): all 99 non-root buddy homepages now show a "← Parent Buddy Name" link at the top, linking to the parent's homepage. Top-level buddies (no parent) link to Astro, the root buddy. Dave: "all the web pages will need to be updated to include a link to its parent."
+- **Buddy photo wall on Astro's page** (Dave 2026-10-15): Astro's homepage (the root buddy) now has a "🧑‍🤝‍🧑 The crew — who's here" grid showing all 100 buddies. Real photos where available (Astro's avatar, Penny's selfie); emoji icons as placeholders for the rest. Each tile links to that buddy's homepage.
+
+
 ## 2026-10-15 (New-buddy sheet name pre-fill)
 
 ### Fixed

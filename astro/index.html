@@ -189,6 +189,17 @@
   .about-strip strong{color:var(--text)}
   .about-strip a{color:var(--accent);font-weight:600;text-decoration:none;white-space:nowrap}
   .about-strip a:hover{text-decoration:underline}
+
+  /* ---- buddy photo wall ---- */
+  .wall-hint{color:var(--muted);font-size:14px;margin:-6px 0 14px}
+  .buddy-wall{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:10px;margin-bottom:8px}
+  .wall-tile{display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 6px;border:1px solid var(--border);
+    border-radius:12px;background:var(--panel,var(--card,#fff));text-decoration:none;transition:transform .15s ease,border-color .15s ease}
+  .wall-tile:hover{transform:translateY(-2px);border-color:var(--accent)}
+  .wall-emoji{font-size:34px;line-height:1}
+  .wall-tile img{width:52px;height:52px;border-radius:50%;object-fit:cover}
+  .wall-name{font-size:11px;color:var(--muted);text-align:center;line-height:1.3;
+    display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 </style>
 </head>
 <body>
@@ -201,6 +212,113 @@
     <div class="term"><span class="p">$</span> astro --tonight <span class="c"># ship it, verify it, link the docs</span><span class="blink">▊</span></div>
     <div class="about-strip"><strong>What is Astro?</strong> Dave's chief of staff and builder-in-residence &mdash; the direct interface to the buddy system. <a href="about.html">About Astro &rarr;</a></div>
   </header>
+
+<!-- buddy-wall -->
+<h2>🧑‍🤝‍🧑 The crew — who's here</h2>
+<div class="wall-hint">Every buddy in the system. Tap one to visit their homepage.</div>
+<div class="buddy-wall">
+<a class="wall-tile" href="https://davedellaquila.github.io/buddy-system/accident/" title="Accident"><span class="wall-emoji">🔧</span><span class="wall-name">Accident</span></a>
+<a class="wall-tile" href="https://davedellaquila.github.io/buddy-system/acquaintances/" title="Acquaintances"><span class="wall-emoji">👋</span><span class="wall-name">Acquaintances</span></a>
+<a class="wall-tile" href="https://davedellaquila.github.io/buddy-system/ali/" title="Ali"><span class="wall-emoji">👓</span><span class="wall-name">Ali</span></a>
+<a class="wall-tile" href="https://davedellaquila.github.io/buddy-system/amador-county/" title="Amador County"><span class="wall-emoji">🏞</span><span class="wall-name">Amador County</span></a>
+<a class="wall-tile" href="https://davedellaquila.github.io/buddy-system/amanda-buddy/" title="Amanda Perez"><span class="wall-emoji">🏈</span><span class="wall-name">Amanda Perez</span></a>
+<a class="wall-tile" href="https://davedellaquila.github.io/buddy-system/andy-ire-tide/" title="Andy (Ire Tide)"><span class="wall-emoji">🎸</span><span class="wall-name">Andy (Ire Tide)</span></a>
+<a class="wall-tile" href="https://davedellaquila.github.io/buddy-system/architect-buddy/" title="Architect Buddy"><span class="wall-emoji">📐</span><span class="wall-name">Architect Buddy</span></a>
+<a class="wall-tile" href="https://davedellaquila.github.io/buddy-system/astro/" title="Astro"><img src="astro/avatar.webp" alt="Astro" loading="lazy"><span class="wall-name">Astro</span></a>
+<a class="wall-tile" href="https://davedellaquila.github.io/buddy-system/birthday-buddy/" title="Birthday Buddy"><span class="wall-emoji">🎂</span><span class="wall-name">Birthday Buddy</span></a>
+<a class="wall-tile" href="https://davedellaquila.github.io/buddy-system/bmw-buddy/" title="BMW"><span class="wall-emoji">🚗</span><span class="wall-name">BMW</span></a>
+<a class="wall-tile" href="https://davedellaquila.github.io/buddy-system/briefing-buddy/" title="Briefing Buddy"><span class="wall-emoji">📋</span><span class="wall-name">Briefing Buddy</span></a>
+<a class="wall-tile" href="https://davedellaquila.github.io/buddy-system/buddy-types/" title="Buddy Buddy"><span class="wall-emoji">🧬</span><span class="wall-name">Buddy Buddy</span></a>
+<a class="wall-tile" href="https://davedellaquila.github.io/buddy-system/buddy-suite/" title="Buddy Suite"><span class="wall-emoji">🧩</span><span class="wall-name">Buddy Suite</span></a>
+<a class="wall-tile" href="https://davedellaquila.github.io/buddy-system/cabin-buddy/" title="Cabin Buddy"><span class="wall-emoji">🏕️</span><span class="wall-name">Cabin Buddy</span></a>
+<a class="wall-tile" href="https://davedellaquila.github.io/buddy-system/calendar-buddy/" title="Calendar Buddy"><span class="wall-emoji">📆</span><span class="wall-name">Calendar Buddy</span></a>
+<a class="wall-tile" href="https://davedellaquila.github.io/buddy-system/car-buddy/" title="Car Buddy"><span class="wall-emoji">🚗</span><span class="wall-name">Car Buddy</span></a>
+<a class="wall-tile" href="https://davedellaquila.github.io/buddy-system/career-buddy/" title="Career Buddy"><span class="wall-emoji">💼</span><span class="wall-name">Career Buddy</span></a>
+<a class="wall-tile" href="https://davedellaquila.github.io/buddy-system/carl-buddy/" title="Carl Towne"><span class="wall-emoji">🛻</span><span class="wall-name">Carl Towne</span></a>
+<a class="wall-tile" href="https://davedellaquila.github.io/buddy-system/charts-buddy/" title="Charts Buddy"><span class="wall-emoji">📊</span><span class="wall-name">Charts Buddy</span></a>
+<a class="wall-tile" href="https://davedellaquila.github.io/buddy-system/connie-ko/" title="Connie Ko"><span class="wall-emoji">👤</span><span class="wall-name">Connie Ko</span></a>
+<a class="wall-tile" href="https://davedellaquila.github.io/buddy-system/crush-pizzeria/" title="Crush Pizzeria"><span class="wall-emoji">🍕</span><span class="wall-name">Crush Pizzeria</span></a>
+<a class="wall-tile" href="https://davedellaquila.github.io/buddy-system/dave-nancy/" title="Dave &amp; Nancy"><span class="wall-emoji">🤖</span><span class="wall-name">Dave &amp; Nancy</span></a>
+<a class="wall-tile" href="https://davedellaquila.github.io/buddy-system/design-buddy/" title="Designer"><span class="wall-emoji">🎨</span><span class="wall-name">Designer</span></a>
+<a class="wall-tile" href="https://davedellaquila.github.io/buddy-system/discovery-buddy/" title="Discovery Buddy"><span class="wall-emoji">🔍</span><span class="wall-name">Discovery Buddy</span></a>
+<a class="wall-tile" href="https://davedellaquila.github.io/buddy-system/document-buddy/" title="Document Buddy"><span class="wall-emoji">📄</span><span class="wall-name">Document Buddy</span></a>
+<a class="wall-tile" href="https://davedellaquila.github.io/buddy-system/dr-travis-lyman/" title="Dr. Travis Lyman"><span class="wall-emoji">👁️</span><span class="wall-name">Dr. Travis Lyman</span></a>
+<a class="wall-tile" href="https://davedellaquila.github.io/buddy-system/dream-buddy/" title="Dream Buddy"><span class="wall-emoji">💭</span><span class="wall-name">Dream Buddy</span></a>
+<a class="wall-tile" href="https://davedellaquila.github.io/buddy-system/em-sarah/" title="Em &amp; Sarah"><span class="wall-emoji">🤖</span><span class="wall-name">Em &amp; Sarah</span></a>
+<a class="wall-tile" href="https://davedellaquila.github.io/buddy-system/emil-buddy/" title="Emil Dell'Aquila"><span class="wall-emoji">🤵</span><span class="wall-name">Emil Dell'Aquila</span></a>
+<a class="wall-tile" href="https://davedellaquila.github.io/buddy-system/emile-buddy/" title="Emile Dell'Aquila"><span class="wall-emoji">🧔</span><span class="wall-name">Emile Dell'Aquila</span></a>
+<a class="wall-tile" href="https://davedellaquila.github.io/buddy-system/eric/" title="Eric"><span class="wall-emoji">🎸</span><span class="wall-name">Eric</span></a>
+<a class="wall-tile" href="https://davedellaquila.github.io/buddy-system/family-buddy/" title="Family Buddy"><span class="wall-emoji">👨‍👩‍👧‍👦</span><span class="wall-name">Family Buddy</span></a>
+<a class="wall-tile" href="https://davedellaquila.github.io/buddy-system/feedback-buddy/" title="Feedback Buddy"><span class="wall-emoji">📣</span><span class="wall-name">Feedback Buddy</span></a>
+<a class="wall-tile" href="https://davedellaquila.github.io/buddy-system/finance-buddy/" title="Finance Buddy"><span class="wall-emoji">💰</span><span class="wall-name">Finance Buddy</span></a>
+<a class="wall-tile" href="https://davedellaquila.github.io/buddy-system/fireplace-buddy/" title="Fireplace Buddy"><span class="wall-emoji">🔥</span><span class="wall-name">Fireplace Buddy</span></a>
+<a class="wall-tile" href="https://davedellaquila.github.io/buddy-system/guardian-buddy/" title="Guardian Buddy"><span class="wall-emoji">🛡️</span><span class="wall-name">Guardian Buddy</span></a>
+<a class="wall-tile" href="https://davedellaquila.github.io/buddy-system/hans-buddy/" title="Hans"><span class="wall-emoji">👨‍🔧</span><span class="wall-name">Hans</span></a>
+<a class="wall-tile" href="https://davedellaquila.github.io/buddy-system/health-buddy/" title="Health Buddy"><span class="wall-emoji">🏥</span><span class="wall-name">Health Buddy</span></a>
+<a class="wall-tile" href="https://davedellaquila.github.io/buddy-system/hiking-buddy/" title="Hiking Buddy"><span class="wall-emoji">🥾</span><span class="wall-name">Hiking Buddy</span></a>
+<a class="wall-tile" href="https://davedellaquila.github.io/buddy-system/hot-tub-buddy/" title="Hot Tub Buddy"><span class="wall-emoji">♨️</span><span class="wall-name">Hot Tub Buddy</span></a>
+<a class="wall-tile" href="https://davedellaquila.github.io/buddy-system/housing-buddy/" title="Housing Buddy"><span class="wall-emoji">🏘️</span><span class="wall-name">Housing Buddy</span></a>
+<a class="wall-tile" href="https://davedellaquila.github.io/buddy-system/idea-buddy/" title="Idea Buddy"><span class="wall-emoji">💡</span><span class="wall-name">Idea Buddy</span></a>
+<a class="wall-tile" href="https://davedellaquila.github.io/buddy-system/investment-buddy/" title="Investment Buddy"><span class="wall-emoji">📈</span><span class="wall-name">Investment Buddy</span></a>
+<a class="wall-tile" href="https://davedellaquila.github.io/buddy-system/james-buddy/" title="James Michael Day"><span class="wall-emoji">🎹</span><span class="wall-name">James Michael Day</span></a>
+<a class="wall-tile" href="https://davedellaquila.github.io/buddy-system/jessica-buddy/" title="Jessica"><span class="wall-emoji">👱‍♀️</span><span class="wall-name">Jessica</span></a>
+<a class="wall-tile" href="https://davedellaquila.github.io/buddy-system/job-buddy/" title="Job Buddy"><span class="wall-emoji">🔎</span><span class="wall-name">Job Buddy</span></a>
+<a class="wall-tile" href="https://davedellaquila.github.io/buddy-system/joel-buddy/" title="Joel Nelson"><span class="wall-emoji">🎤</span><span class="wall-name">Joel Nelson</span></a>
+<a class="wall-tile" href="https://davedellaquila.github.io/buddy-system/johnny/" title="Johnny"><span class="wall-emoji">🖥️</span><span class="wall-name">Johnny</span></a>
+<a class="wall-tile" href="https://davedellaquila.github.io/buddy-system/keelan/" title="Keelan"><span class="wall-emoji">🍺</span><span class="wall-name">Keelan</span></a>
+<a class="wall-tile" href="https://davedellaquila.github.io/buddy-system/kyle-dell-aquila/" title="Kyle Dell’Aquila"><span class="wall-emoji">📍</span><span class="wall-name">Kyle Dell’Aquila</span></a>
+<a class="wall-tile" href="https://davedellaquila.github.io/buddy-system/school-buddy/" title="Learning Buddy"><span class="wall-emoji">🎓</span><span class="wall-name">Learning Buddy</span></a>
+<a class="wall-tile" href="https://davedellaquila.github.io/buddy-system/lenwood-buddy/" title="Lenwood Buddy"><span class="wall-emoji">🏡</span><span class="wall-name">Lenwood Buddy</span></a>
+<a class="wall-tile" href="https://davedellaquila.github.io/buddy-system/life-insurance/" title="Life Insurance"><span class="wall-emoji">🛡️</span><span class="wall-name">Life Insurance</span></a>
+<a class="wall-tile" href="https://davedellaquila.github.io/buddy-system/little-guy-buddy/" title="Little Guy"><span class="wall-emoji">🐱</span><span class="wall-name">Little Guy</span></a>
+<a class="wall-tile" href="https://davedellaquila.github.io/buddy-system/marketing-buddy/" title="Marketing Buddy"><span class="wall-emoji">🥃</span><span class="wall-name">Marketing Buddy</span></a>
+<a class="wall-tile" href="https://davedellaquila.github.io/buddy-system/marley-buddy/" title="Marley"><span class="wall-emoji">🐱</span><span class="wall-name">Marley</span></a>
+<a class="wall-tile" href="https://davedellaquila.github.io/buddy-system/martha-buddy/" title="Martha Dell'Aquila"><span class="wall-emoji">💃</span><span class="wall-name">Martha Dell'Aquila</span></a>
+<a class="wall-tile" href="https://davedellaquila.github.io/buddy-system/mei-ying-buddy/" title="Mei-ying Dell'Aquila"><span class="wall-emoji">🌸</span><span class="wall-name">Mei-ying Dell'Aquila</span></a>
+<a class="wall-tile" href="https://davedellaquila.github.io/buddy-system/mga-buddy/" title="MGA Buddy"><span class="wall-emoji">🏎️</span><span class="wall-name">MGA Buddy</span></a>
+<a class="wall-tile" href="https://davedellaquila.github.io/buddy-system/ml500-buddy/" title="ML500 Buddy"><span class="wall-emoji">🚙</span><span class="wall-name">ML500 Buddy</span></a>
+<a class="wall-tile" href="https://davedellaquila.github.io/buddy-system/money-buddy/" title="Money Buddy"><span class="wall-emoji">💵</span><span class="wall-name">Money Buddy</span></a>
+<a class="wall-tile" href="https://davedellaquila.github.io/buddy-system/music-buddy/" title="Music Buddy"><span class="wall-emoji">🎵</span><span class="wall-name">Music Buddy</span></a>
+<a class="wall-tile" href="https://davedellaquila.github.io/buddy-system/nancy-buddy/" title="Nancy Dell'Aquila"><span class="wall-emoji">👩‍🍳</span><span class="wall-name">Nancy Dell'Aquila</span></a>
+<a class="wall-tile" href="https://davedellaquila.github.io/buddy-system/neighborhood-buddy/" title="Neighborhood Buddy"><span class="wall-emoji">📡</span><span class="wall-name">Neighborhood Buddy</span></a>
+<a class="wall-tile" href="https://davedellaquila.github.io/buddy-system/news-buddy/" title="News Buddy"><span class="wall-emoji">📰</span><span class="wall-name">News Buddy</span></a>
+<a class="wall-tile" href="https://davedellaquila.github.io/buddy-system/nina/" title="Nina"><span class="wall-emoji">💫</span><span class="wall-name">Nina</span></a>
+<a class="wall-tile" href="https://davedellaquila.github.io/buddy-system/onboarding-buddy/" title="Onboarding Buddy"><span class="wall-emoji">👋</span><span class="wall-name">Onboarding Buddy</span></a>
+<a class="wall-tile" href="https://davedellaquila.github.io/buddy-system/party-buddy/" title="Party Buddy"><span class="wall-emoji">🎉</span><span class="wall-name">Party Buddy</span></a>
+<a class="wall-tile" href="https://davedellaquila.github.io/buddy-system/penny-luedtke/" title="Penny Luedtke"><img src="penny-luedtke/penny-selfie.jpg" alt="Penny Luedtke" loading="lazy"><span class="wall-name">Penny Luedtke</span></a>
+<a class="wall-tile" href="https://davedellaquila.github.io/buddy-system/personal-buddy/" title="Personal Buddy"><span class="wall-emoji">🙋</span><span class="wall-name">Personal Buddy</span></a>
+<a class="wall-tile" href="https://davedellaquila.github.io/buddy-system/pet-buddy/" title="Pet Buddy"><span class="wall-emoji">🐾</span><span class="wall-name">Pet Buddy</span></a>
+<a class="wall-tile" href="https://davedellaquila.github.io/buddy-system/pops-buddy/" title="Pops' Buddy"><span class="wall-emoji">👴</span><span class="wall-name">Pops' Buddy</span></a>
+<a class="wall-tile" href="https://davedellaquila.github.io/buddy-system/portfolio-buddy/" title="Portfolio Buddy"><span class="wall-emoji">📸</span><span class="wall-name">Portfolio Buddy</span></a>
+<a class="wall-tile" href="https://davedellaquila.github.io/buddy-system/project-buddy/" title="Project Buddy"><span class="wall-emoji">🧭</span><span class="wall-name">Project Buddy</span></a>
+<a class="wall-tile" href="https://davedellaquila.github.io/buddy-system/property-buddy/" title="Property Buddy"><span class="wall-emoji">🏠</span><span class="wall-name">Property Buddy</span></a>
+<a class="wall-tile" href="https://davedellaquila.github.io/buddy-system/quentin-buddy/" title="Quentin Dell'Aquila"><span class="wall-emoji">🧑</span><span class="wall-name">Quentin Dell'Aquila</span></a>
+<a class="wall-tile" href="https://davedellaquila.github.io/buddy-system/rachel-buddy/" title="Rachel"><span class="wall-emoji">🔧</span><span class="wall-name">Rachel</span></a>
+<a class="wall-tile" href="https://davedellaquila.github.io/buddy-system/relationship-buddy/" title="Relationship Buddy"><span class="wall-emoji">💞</span><span class="wall-name">Relationship Buddy</span></a>
+<a class="wall-tile" href="https://davedellaquila.github.io/buddy-system/reminder-buddy/" title="Reminder Buddy"><span class="wall-emoji">⏰</span><span class="wall-name">Reminder Buddy</span></a>
+<a class="wall-tile" href="https://davedellaquila.github.io/buddy-system/renee/" title="Renee"><span class="wall-emoji">📋</span><span class="wall-name">Renee</span></a>
+<a class="wall-tile" href="https://davedellaquila.github.io/buddy-system/rocky-buddy/" title="Rocky"><span class="wall-emoji">🐈</span><span class="wall-name">Rocky</span></a>
+<a class="wall-tile" href="https://davedellaquila.github.io/buddy-system/ron-mei/" title="Ron &amp; Mei"><span class="wall-emoji">🤖</span><span class="wall-name">Ron &amp; Mei</span></a>
+<a class="wall-tile" href="https://davedellaquila.github.io/buddy-system/ron-buddy/" title="Ron Dell'Aquila"><span class="wall-emoji">👨‍🦳</span><span class="wall-name">Ron Dell'Aquila</span></a>
+<a class="wall-tile" href="https://davedellaquila.github.io/buddy-system/sarah-buddy/" title="Sarah Dell'Aquila"><span class="wall-emoji">💌</span><span class="wall-name">Sarah Dell'Aquila</span></a>
+<a class="wall-tile" href="https://davedellaquila.github.io/buddy-system/sawyer-buddy/" title="Sawyer Dell'Aquila"><span class="wall-emoji">👦</span><span class="wall-name">Sawyer Dell'Aquila</span></a>
+<a class="wall-tile" href="https://davedellaquila.github.io/buddy-system/sawyer-s/" title="Sawyer’s"><span class="wall-emoji">🤖</span><span class="wall-name">Sawyer’s</span></a>
+<a class="wall-tile" href="https://davedellaquila.github.io/buddy-system/scaffold-buddy/" title="Scaffold Buddy"><span class="wall-emoji">🏗️</span><span class="wall-name">Scaffold Buddy</span></a>
+<a class="wall-tile" href="https://davedellaquila.github.io/buddy-system/sharing-buddy/" title="Sharing Buddy"><span class="wall-emoji">🔗</span><span class="wall-name">Sharing Buddy</span></a>
+<a class="wall-tile" href="https://davedellaquila.github.io/buddy-system/shopping-buddy/" title="Shopping Buddy"><span class="wall-emoji">🏷️</span><span class="wall-name">Shopping Buddy</span></a>
+<a class="wall-tile" href="https://davedellaquila.github.io/buddy-system/social-media-buddy/" title="Social Media Buddy"><span class="wall-emoji">📣</span><span class="wall-name">Social Media Buddy</span></a>
+<a class="wall-tile" href="https://davedellaquila.github.io/buddy-system/tech-buddy/" title="Tech Buddy"><span class="wall-emoji">🤖</span><span class="wall-name">Tech Buddy</span></a>
+<a class="wall-tile" href="https://davedellaquila.github.io/buddy-system/dellaquilas-buddy/" title="The Dell'Aquilas"><span class="wall-emoji">👪</span><span class="wall-name">The Dell'Aquilas</span></a>
+<a class="wall-tile" href="https://davedellaquila.github.io/buddy-system/ticket-buddy/" title="Ticket Buddy"><span class="wall-emoji">🎟️</span><span class="wall-name">Ticket Buddy</span></a>
+<a class="wall-tile" href="https://davedellaquila.github.io/buddy-system/travel-buddy/" title="Travel Buddy"><span class="wall-emoji">✈️</span><span class="wall-name">Travel Buddy</span></a>
+<a class="wall-tile" href="https://davedellaquila.github.io/buddy-system/trudy/" title="Trudy"><span class="wall-emoji">👒</span><span class="wall-name">Trudy</span></a>
+<a class="wall-tile" href="https://davedellaquila.github.io/buddy-system/tv-buddy/" title="TV Buddy"><span class="wall-emoji">📺</span><span class="wall-name">TV Buddy</span></a>
+<a class="wall-tile" href="https://davedellaquila.github.io/buddy-system/venue-buddy/" title="Venue Buddy"><span class="wall-emoji">📍</span><span class="wall-name">Venue Buddy</span></a>
+<a class="wall-tile" href="https://davedellaquila.github.io/buddy-system/wisdom-buddy/" title="Wisdom Buddy"><span class="wall-emoji">🦉</span><span class="wall-name">Wisdom Buddy</span></a>
+<a class="wall-tile" href="https://davedellaquila.github.io/buddy-system/work-buddy/" title="Work Buddy"><span class="wall-emoji">💻</span><span class="wall-name">Work Buddy</span></a>
+<a class="wall-tile" href="https://davedellaquila.github.io/buddy-system/zen-buddy/" title="Zen Buddy"><span class="wall-emoji">🧘</span><span class="wall-name">Zen Buddy</span></a>
+</div>
+
 
   <h2>📊 The system, live</h2>
   <div class="stats" id="stats">
