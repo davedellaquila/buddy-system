@@ -32,6 +32,51 @@ with open('buddies.json') as f:
 by_id = {b['id']: b for b in d['buddies']}
 
 # ---------------------------------------------------------------------------
+# Family nav: parent crumb + children links (Dave 2026-10-15).
+# Multi-parent aware: shows all parents, lists children under each parent.
+BASE_URL = 'https://davedellaquila.github.io/buddy-system/'
+CRUMB_STYLE = ("padding:14px 20px 0;font-family:-apple-system,BlinkMacSystemFont,"
+               "'Segoe UI',sans-serif;font-size:14px;line-height:1.4;")
+KIDS_STYLE = ("padding:6px 20px 0;font-family:-apple-system,BlinkMacSystemFont,"
+              "'Segoe UI',sans-serif;font-size:14px;line-height:1.9;")
+
+def eff_parents(b):
+    ps = list(b.get('parents') or [])
+    if b.get('parent') and b['parent'] not in ps:
+        ps.append(b['parent'])
+    return [p for p in ps if p in by_id]
+
+def family_nav(b):
+    """Parent crumb + children nav HTML for the top of a buddy homepage."""
+    bid = b['id']
+    parts = []
+    parents = eff_parents(b)
+    if parents:
+        links = ' · '.join(
+            '<a href="%s%s/" style="color:inherit;opacity:.65;text-decoration:none;">← %s</a>'
+            % (BASE_URL, p, html.escape(by_id[p].get('name', p)))
+            for p in parents)
+        parts.append('<nav data-buddy-crumb style="%s">%s</nav>' % (CRUMB_STYLE, links))
+    elif bid != 'astro':
+        # Top-level buddies link to Astro (root)
+        parts.append('<nav data-buddy-crumb style="%s">'
+                     '<a href="%sastro/" style="color:inherit;opacity:.65;text-decoration:none;">← Astro</a>'
+                     '</nav>' % (CRUMB_STYLE, BASE_URL))
+    kids = sorted(
+        (x for x in d['buddies'] if bid in eff_parents(x)),
+        key=lambda x: x.get('name', ''))
+    if kids:
+        links = ' '.join(
+            '<a href="%s%s/" style="color:inherit;text-decoration:none;margin-right:14px;white-space:nowrap;">%s %s</a>'
+            % (BASE_URL, k['id'], k.get('icon', ''),
+               html.escape(k.get('name', k['id'])))
+            for k in kids)
+        parts.append('<nav data-buddy-kids style="%s">'
+                     '<span style="opacity:.65;">Children:</span> %s</nav>'
+                     % (KIDS_STYLE, links))
+    return '\n'.join(parts)
+
+# ---------------------------------------------------------------------------
 # Dump box: self-contained brain-dump snippet (HTML+CSS+JS).
 # Same GitHub write path as the dashboard's ingest panel: reads the shared
 # GitHub token from the dashboard origin's localStorage (key 'buddyTree.v3',
@@ -424,6 +469,7 @@ h2 {{ font-size: 22px; margin: 32px 0 16px; }}
 </style>
 </head>
 <body>
+{family_nav}
 <div class="topbar"><span class="topbar-icon">{icon}</span><span class="topbar-name">{name}</span></div>
 <div class="header">
 <div class="icon">{icon}</div>
@@ -498,10 +544,10 @@ for b in d['buddies']:
     else:
         attention_section = '<h2>Needs Attention</h2>\n<p class="empty">Nothing needs attention right now.</p>'
 
-    # Children
+    # Children — multi-parent aware (Dave 2026-10-15)
     children = [by_id[cid] for cid in b.get('children', []) if cid in by_id]
-    # Also find buddies with this as parent
-    kids = [x for x in d['buddies'] if x.get('parent') == bid]
+    # Also find buddies with this as parent (parents[] or legacy parent)
+    kids = [x for x in d['buddies'] if bid in eff_parents(x)]
     all_kids = {c['id']: c for c in children + kids}.values()
     if all_kids:
         kids_html = '<h2>Sub-buddies</h2>\n<div class="children">\n'
@@ -521,6 +567,7 @@ for b in d['buddies']:
         icon=icon,
         tagline=tagline,
         mission=mission,
+        family_nav=family_nav(b),
         attention_section=attention_section,
         children_section=children_section,
         date=today,

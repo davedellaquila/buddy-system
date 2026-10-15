@@ -3,6 +3,11 @@
 All notable changes to the Buddies dashboard and buddy system. Newest first.
 `FEATURES.md` describes the current state; this file describes how it got there.
 
+## 2026-10-15 (Buddy homepage children nav)
+
+### Added
+- **Children listed alongside parent on all buddy homepages** (Dave 2026-10-15): every buddy homepage now shows a "Children:" row directly below the parent breadcrumb at the top of the page, with icon + name links to each child's homepage (same-tab web navigation). Children are computed with the multi-parent model (`parents[]` + legacy `parent`), so a child with multiple parents lists under each parent (verified: Penny appears under both Acquaintances and Testers). Both homepage generators (`gen_basic_homepages.py` TEMPLATE via `{family_nav}`, `gen_default_homepages.py` v3 via `{family_nav}`) now emit the nav, so future regenerations keep it. Also restored the parent breadcrumb on template pages (it had been wiped by the sticky-header regeneration) and made it multi-parent aware (Penny shows "← Acquaintances · ← Testers"). Siblings intentionally omitted per Dave ("i don't know about siblings though").
+
 ## 2026-10-15 (Sticky buddy page header)
 
 ### Changed

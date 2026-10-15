@@ -52,6 +52,41 @@ def parent_chain(buddies, b):
         cur = p
     return chain
 
+# Multi-parent helpers (Dave 2026-10-15)
+BASE_URL = 'https://davedellaquila.github.io/buddy-system/'
+
+def eff_parents(buddies, b):
+    ps = list(b.get('parents') or [])
+    if b.get('parent') and b['parent'] not in ps:
+        ps.append(b['parent'])
+    return [p for p in ps if p in buddies]
+
+def family_nav(buddies, b):
+    """Parent crumb + children nav HTML for the top of a buddy homepage."""
+    bid = b['id']
+    parts = []
+    parents = eff_parents(buddies, b)
+    if parents:
+        links = ' · '.join(
+            '<a href="%s%s/" style="color:var(--muted);text-decoration:none;">← %s</a>'
+            % (BASE_URL, p, esc(buddies[p].get('name', p)))
+            for p in parents)
+        parts.append('<nav data-buddy-crumb style="margin-bottom:14px;font-size:14px;">%s</nav>' % links)
+    elif bid != 'astro':
+        parts.append('<nav data-buddy-crumb style="margin-bottom:14px;font-size:14px;">'
+                     '<a href="%sastro/" style="color:var(--muted);text-decoration:none;">← Astro</a></nav>' % BASE_URL)
+    kids = sorted(
+        (x for x in buddies.values() if bid in eff_parents(buddies, x)),
+        key=lambda x: x.get('name', ''))
+    if kids:
+        links = ' '.join(
+            '<a href="%s%s/" style="margin-right:14px;white-space:nowrap;">%s %s</a>'
+            % (BASE_URL, k['id'], esc(k.get('icon', '')), esc(k.get('name', k['id'])))
+            for k in kids)
+        parts.append('<nav data-buddy-kids style="margin-bottom:18px;font-size:14px;line-height:1.9;">'
+                     '<span style="color:var(--muted);">Children:</span> %s</nav>' % links)
+    return ''.join(parts)
+
 def memory_files(b):
     """Memory pages whose filename matches the buddy id or name slug."""
     hits = []
@@ -82,10 +117,11 @@ def build_page(buddies, plans, b):
     name = b.get('name', bid)
     icon = b.get('icon', '🤖')
     chain = parent_chain(buddies, b)
-    kids = sorted([x for x in buddies.values() if x.get('parent') == bid],
+    kids = sorted([x for x in buddies.values() if bid in eff_parents(buddies, x)],
                   key=lambda x: x.get('name', ''))
     sibs = sorted([x for x in buddies.values()
-                   if x.get('parent') == b.get('parent') and x['id'] != bid],
+                   if x['id'] != bid and
+                   set(eff_parents(buddies, x)) & set(eff_parents(buddies, b))],
                   key=lambda x: x.get('name', ''))
     fwd_links = [l for l in (b.get('links') or [])]
     rev_links = sorted([x['id'] for x in buddies.values()
@@ -199,8 +235,8 @@ def build_page(buddies, plans, b):
 
     # Connections
     conn = ''
-    if b.get('parent') and buddies.get(b['parent']):
-        conn += '<div class="connrow"><span class="connlabel">Parent</span>%s</div>' % buddy_link(buddies, b['parent'])
+    for p in eff_parents(buddies, b):
+        conn += '<div class="connrow"><span class="connlabel">Parent</span>%s</div>' % buddy_link(buddies, p)
     if sibs:
         conn += '<div class="connrow"><span class="connlabel">Siblings</span>%s</div>' % ', '.join(buddy_link(buddies, s['id']) for s in sibs)
     if fwd_links:
@@ -229,6 +265,7 @@ def build_page(buddies, plans, b):
     page = PAGE
     for k, v in {
         'title': esc(name), 'icon': esc(icon), 'name': esc(name),
+        'family_nav': family_nav(buddies, b),
         'tagline': '<p class="tagline">%s</p>' % esc(b['tagline']) if b.get('tagline') else '',
         'stats': '<div class="stats">' + ''.join(stats) + '</div>' if stats else '',
         'about_sec': about_sec, 'fact_sec': fact_sec, 'attn_sec': attn_sec,
@@ -241,7 +278,7 @@ def build_page(buddies, plans, b):
         page = page.replace('{' + k + '}', v)
     return page
 
-PAGE = '<!-- DEFAULT-HOMEPAGE v3 — "The Dossier" -->\n<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<meta name="viewport" content="width=device-width, initial-scale=1">\n<meta name="color-scheme" content="dark light">\n<title>{title} — Buddy Dossier</title>\n<style>\n:root{color-scheme:dark light;--bg:#0d1117;--card:#161b22;--border:#30363d;--text:#e6edf3;--muted:#8b949e;--accent:#58a6ff;--amber:#f0b429;--amber-bd:#7d5e00}\n@media (prefers-color-scheme:light){:root{--bg:#ffffff;--card:#f6f8fa;--border:#d0d7de;--text:#1f2328;--muted:#57606a;--accent:#0969da}}\nbody{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;margin:0;line-height:1.6}\n.wrap{max-width:860px;margin:0 auto;padding:40px 22px 60px}\nheader.hero{display:flex;gap:18px;align-items:center;margin-bottom:8px}\n.heroicon{width:72px;height:72px;flex:none;border-radius:20px;background:var(--card);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:38px}\nh1{margin:0;font-size:30px;letter-spacing:-.02em}\n.tagline{color:var(--muted);margin:6px 0 0;font-size:15px}\n.stats{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0 28px}\n.stat{font-size:12.5px;color:var(--muted);background:var(--card);border:1px solid var(--border);border-radius:999px;padding:4px 12px}\n.stat b{color:var(--text)}\n.status{font-size:12.5px;font-weight:700;border-radius:999px;padding:4px 12px;background:var(--card);border:1px solid var(--border)}\n.card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px 22px;margin-bottom:20px}\n.kicker{margin:0 0 10px;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:var(--muted)}\n.mission{font-size:16px;margin:0 0 10px}\n.brief{color:var(--muted);font-size:14px}\n.persona{font-size:14px;margin:8px 0 0}\n.facts{margin:0;display:grid;gap:2px}\n.fact{display:grid;grid-template-columns:150px 1fr;gap:12px;padding:7px 0;border-top:1px solid var(--border);font-size:14px}\n.fact:first-child{border-top:0}\n.fact dt{color:var(--muted);font-weight:600}\n.fact dd{margin:0;overflow-wrap:break-word}\ncode{background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:1px 6px;font-size:13px}\na{color:var(--accent);text-decoration:none}\na:hover{text-decoration:underline}\n.aitem{display:flex;gap:10px;padding:10px 0;font-size:14px}\n.aitem+.aitem{border-top:1px solid var(--border)}\n.adot{color:var(--amber);font-size:11px;line-height:2;flex:none}\n.adate{color:var(--muted);font-size:12px;margin-top:2px}\n.plan{display:flex;gap:12px;padding:12px 0}\n.plan+.plan{border-top:1px solid var(--border)}\n.picon{font-size:24px;flex:none}\n.pname{font-weight:650;font-size:15px}\n.pill{display:inline-block;font-size:11px;font-weight:700;background:var(--bg);border:1px solid var(--border);color:var(--accent);border-radius:999px;padding:2px 10px;margin-left:8px}\n.pdesc{margin:6px 0 0;color:var(--muted);font-size:13.5px}\n.pdoc{display:inline-block;margin-top:6px;font-size:13px}\n.docrow{padding:8px 0;font-size:14.5px}\n.docrow+.docrow{border-top:1px solid var(--border)}\n.kids{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px}\n.kid{display:flex;align-items:center;gap:10px;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:10px 12px;color:var(--text)}\n.kid:hover{text-decoration:none;border-color:var(--accent)}\n.kidicon{font-size:22px}\n.kidname{font-size:14px;font-weight:600}\n.connrow{display:flex;gap:12px;padding:8px 0;font-size:14px;align-items:baseline}\n.connrow+.connrow{border-top:1px solid var(--border)}\n.connlabel{flex:none;width:110px;color:var(--muted);font-weight:600;font-size:13px}\n.pinrow{padding:6px 0;font-size:14px}\n.muted{color:var(--muted);font-size:13px}\n.empty{color:var(--muted);font-style:italic;margin:4px 0}\nfooter{margin-top:36px;padding-top:18px;border-top:1px solid var(--border);color:var(--muted);font-size:12.5px;text-align:center}\n{dumpbox_css}\n@media (max-width:640px){.fact{grid-template-columns:1fr;gap:2px}.connlabel{width:88px}.wrap{padding:28px 16px 48px}h1{font-size:24px}}\n</style>\n</head>\n<body>\n<div class="wrap">\n<header class="hero">\n<div class="heroicon">{icon}</div>\n<div><h1>{name}</h1>{tagline}</div>\n</header>\n{stats}\n{about_sec}\n{fact_sec}\n{attn_sec}\n{plans_sec}\n{docs_sec}\n{kids_sec}\n{conn_sec}\n{rm_sec}\n{dumpbox_html}\n<footer>Default Homepage v3 — "The Dossier" · Generated {date} · Part of the Buddy System<br>\n<span class="muted">Archived PDF snapshots live in the buddy-system archive folder.</span></footer>\n</div>\n{dumpbox_js}\n{attn_js}\n</body>\n</html>\n'
+PAGE = '<!-- DEFAULT-HOMEPAGE v3 — "The Dossier" -->\n<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<meta name="viewport" content="width=device-width, initial-scale=1">\n<meta name="color-scheme" content="dark light">\n<title>{title} — Buddy Dossier</title>\n<style>\n:root{color-scheme:dark light;--bg:#0d1117;--card:#161b22;--border:#30363d;--text:#e6edf3;--muted:#8b949e;--accent:#58a6ff;--amber:#f0b429;--amber-bd:#7d5e00}\n@media (prefers-color-scheme:light){:root{--bg:#ffffff;--card:#f6f8fa;--border:#d0d7de;--text:#1f2328;--muted:#57606a;--accent:#0969da}}\nbody{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;margin:0;line-height:1.6}\n.wrap{max-width:860px;margin:0 auto;padding:40px 22px 60px}\nheader.hero{display:flex;gap:18px;align-items:center;margin-bottom:8px}\n.heroicon{width:72px;height:72px;flex:none;border-radius:20px;background:var(--card);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:38px}\nh1{margin:0;font-size:30px;letter-spacing:-.02em}\n.tagline{color:var(--muted);margin:6px 0 0;font-size:15px}\n.stats{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0 28px}\n.stat{font-size:12.5px;color:var(--muted);background:var(--card);border:1px solid var(--border);border-radius:999px;padding:4px 12px}\n.stat b{color:var(--text)}\n.status{font-size:12.5px;font-weight:700;border-radius:999px;padding:4px 12px;background:var(--card);border:1px solid var(--border)}\n.card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px 22px;margin-bottom:20px}\n.kicker{margin:0 0 10px;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:var(--muted)}\n.mission{font-size:16px;margin:0 0 10px}\n.brief{color:var(--muted);font-size:14px}\n.persona{font-size:14px;margin:8px 0 0}\n.facts{margin:0;display:grid;gap:2px}\n.fact{display:grid;grid-template-columns:150px 1fr;gap:12px;padding:7px 0;border-top:1px solid var(--border);font-size:14px}\n.fact:first-child{border-top:0}\n.fact dt{color:var(--muted);font-weight:600}\n.fact dd{margin:0;overflow-wrap:break-word}\ncode{background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:1px 6px;font-size:13px}\na{color:var(--accent);text-decoration:none}\na:hover{text-decoration:underline}\n.aitem{display:flex;gap:10px;padding:10px 0;font-size:14px}\n.aitem+.aitem{border-top:1px solid var(--border)}\n.adot{color:var(--amber);font-size:11px;line-height:2;flex:none}\n.adate{color:var(--muted);font-size:12px;margin-top:2px}\n.plan{display:flex;gap:12px;padding:12px 0}\n.plan+.plan{border-top:1px solid var(--border)}\n.picon{font-size:24px;flex:none}\n.pname{font-weight:650;font-size:15px}\n.pill{display:inline-block;font-size:11px;font-weight:700;background:var(--bg);border:1px solid var(--border);color:var(--accent);border-radius:999px;padding:2px 10px;margin-left:8px}\n.pdesc{margin:6px 0 0;color:var(--muted);font-size:13.5px}\n.pdoc{display:inline-block;margin-top:6px;font-size:13px}\n.docrow{padding:8px 0;font-size:14.5px}\n.docrow+.docrow{border-top:1px solid var(--border)}\n.kids{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px}\n.kid{display:flex;align-items:center;gap:10px;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:10px 12px;color:var(--text)}\n.kid:hover{text-decoration:none;border-color:var(--accent)}\n.kidicon{font-size:22px}\n.kidname{font-size:14px;font-weight:600}\n.connrow{display:flex;gap:12px;padding:8px 0;font-size:14px;align-items:baseline}\n.connrow+.connrow{border-top:1px solid var(--border)}\n.connlabel{flex:none;width:110px;color:var(--muted);font-weight:600;font-size:13px}\n.pinrow{padding:6px 0;font-size:14px}\n.muted{color:var(--muted);font-size:13px}\n.empty{color:var(--muted);font-style:italic;margin:4px 0}\nfooter{margin-top:36px;padding-top:18px;border-top:1px solid var(--border);color:var(--muted);font-size:12.5px;text-align:center}\n{dumpbox_css}\n@media (max-width:640px){.fact{grid-template-columns:1fr;gap:2px}.connlabel{width:88px}.wrap{padding:28px 16px 48px}h1{font-size:24px}}\n</style>\n</head>\n<body>\n<div class="wrap">\n<header class="hero">\n<div class="heroicon">{icon}</div>\n<div><h1>{name}</h1>{tagline}</div>\n</header>\n{family_nav}\n{stats}\n{about_sec}\n{fact_sec}\n{attn_sec}\n{plans_sec}\n{docs_sec}\n{kids_sec}\n{conn_sec}\n{rm_sec}\n{dumpbox_html}\n<footer>Default Homepage v3 — "The Dossier" · Generated {date} · Part of the Buddy System<br>\n<span class="muted">Archived PDF snapshots live in the buddy-system archive folder.</span></footer>\n</div>\n{dumpbox_js}\n{attn_js}\n</body>\n</html>\n'
 
 
 def main():
