@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Penny Luedtke — Living dossier</title>
+<style>
+  :root{
+    --bg:#16130f; --card:#211c16; --text:#f5efe3; --muted:#b3a894; --dim:#857a66;
+    --border:#38302a; --accent:#e8b4d0; --accent2:#9d7bc9; --green:#3fb950; --amber:#d29922;
+  }
+  @media (prefers-color-scheme: light){
+    :root{ --bg:#fdf8f2; --card:#ffffff; --text:#33291d; --muted:#7d6f5c; --dim:#ab9c85;
+      --border:#efe0d0; --accent:#b45a8e; --accent2:#7a5cc9; }
+  }
+  *{box-sizing:border-box; margin:0; padding:0}
+  body{background:var(--bg); color:var(--text); font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text",Segoe UI,sans-serif;
+    line-height:1.55; padding:20px 16px 60px; max-width:760px; margin:0 auto}
+  header{text-align:center; padding:28px 0 8px}
+  .avatar{font-size:64px}
+  h1{font-size:30px; margin:8px 0 4px; letter-spacing:-.01em}
+  .tagline{color:var(--muted); font-size:16px}
+  .pill{display:inline-block; margin-top:10px; font-size:12px; padding:4px 12px; border-radius:999px;
+    border:1px solid var(--border); color:var(--muted)}
+  section{background:var(--card); border:1px solid var(--border); border-radius:14px; padding:20px 22px; margin-top:18px}
+  section h2{font-size:19px; margin-bottom:10px}
+  section h2 .e{margin-right:6px}
+  .facts{display:grid; grid-template-columns:130px 1fr; gap:8px 12px; font-size:15px}
+  .facts dt{color:var(--dim); font-size:13px; text-transform:uppercase; letter-spacing:.05em; padding-top:2px}
+  .facts dd{margin:0}
+  a{color:var(--accent); text-decoration:none; font-weight:600}
+  a:hover{text-decoration:underline}
+  ul{padding-left:20px}
+  li{margin-bottom:8px}
+  .open-q{border-left:3px solid var(--amber); padding:2px 0 2px 12px; margin-bottom:10px}
+  .links{display:flex; gap:10px; flex-wrap:wrap; margin-top:4px}
+  .btnlink{display:inline-block; padding:10px 18px; border-radius:999px; border:1px solid var(--accent);
+    color:var(--accent); font-size:14px; font-weight:700; text-decoration:none; min-height:44px; line-height:1.4}
+  .btnlink:hover{background:var(--accent); color:#fff; text-decoration:none}
+  footer{text-align:center; color:var(--dim); font-size:13px; margin-top:32px}
+  /* correspondence */
+  .corr-item{border-bottom:1px solid var(--border); padding:12px 0}
+  .corr-item:last-child{border-bottom:none}
+  .corr-meta{display:flex; gap:8px; align-items:center; flex-wrap:wrap; margin-bottom:4px}
+  .corr-dir{font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.06em;
+    padding:2px 8px; border-radius:999px; border:1px solid var(--border)}
+  .corr-dir.out{color:var(--accent); border-color:var(--accent)}
+  .corr-dir.in{color:var(--accent2); border-color:var(--accent2)}
+  .corr-subject{font-size:15px; font-weight:700}
+  .corr-subject a{color:var(--text)}
+  .corr-subject a:hover{color:var(--accent)}
+  .corr-date{color:var(--dim); font-size:13px}
+  .corr-snippet{color:var(--muted); font-size:14px; margin-top:4px}
+  .corr-note{background:var(--bg); border:1px dashed var(--border); border-radius:8px;
+    padding:10px 14px; margin-top:12px; font-size:13px; color:var(--muted)}
+  /* needs-attention */
+  .attn{background:var(--bg); border:1px solid var(--border); border-left:4px solid var(--accent);
+    border-radius:0 10px 10px 0; padding:14px 16px; margin-bottom:12px}
+  .attn-text{font-size:15px}
+  .attn-date{color:var(--dim); font-size:13px; margin-top:6px}
+  /* dump-box */
+  .dumpbox{background:var(--card); border:1px solid var(--border); border-radius:12px; padding:20px 22px; margin-top:18px}
+  .dumpbox h2{margin:0 0 6px; font-size:19px}
+  .dumpbox-sub{color:var(--muted); font-size:14px; margin-bottom:14px}
+  .dumpbox textarea{width:100%; min-height:96px; resize:vertical; background:var(--bg);
+    border:1px solid var(--border); border-radius:8px; padding:10px 12px; font-size:14px; color:var(--text); font-family:inherit}
+  .dumpbox textarea:focus{outline:none; border-color:var(--accent)}
+  .dumpbox-row{display:flex; align-items:center; gap:12px; margin-top:10px; flex-wrap:wrap}
+  .dumpbox-btn{background:var(--accent); color:#fff; border:none; border-radius:8px; padding:9px 22px;
+    font-size:14px; font-weight:600; cursor:pointer; min-height:44px}
+  .dumpbox-status{font-size:13px; color:var(--muted)}
+</style>
+</head>
+<body>
+<header>
+  <div class="avatar">🌟</div>
+  <h1>Penny Luedtke</h1>
+  <div class="tagline">Living dossier — Buddy System tester #1, ex-Rae Assist evangelist.</div>
+  <div class="pill">Created Oct 15, 2026 · child of Relationship Buddy</div>
+</header>
+
+<section>
+  <h2><span class="e">📇</span>The dossier</h2>
+  <dl class="facts">
+    <dt>Name</dt><dd><strong>Penny Luedtke</strong></dd>
+    <dt>Email</dt><dd>pennyagent@gmail.com</dd>
+    <dt>Role</dt><dd>Buddy System tester #1 — invited Oct 15, 2026</dd>
+    <dt>History</dt><dd>Was a <strong>Rae Assist</strong> user back in the day; still talks about it</dd>
+    <dt>Cat</dt><dd><strong>Mozart</strong> (male, him/his) — walks him, meets neighbors</dd>
+    <dt>Devices</dt><dd>Apple computers + Samsung Fold phone</dd>
+    <dt>Contacts</dt><dd>Uses occupations as surnames (e.g. "Stonemason") — wants everything in one place</dd>
+  </dl>
+</section>
+
+<section>
+  <h2><span class="e">💌</span>Correspondence</h2>
+  <p style="color:var(--muted);font-size:14px;margin-bottom:8px">Every email with Penny, auto-tracked. Newest first.</p>
+  <div id="corr-list">
+    <div class="corr-item">
+      <div class="corr-meta"><span class="corr-dir out">Dave → Penny</span><span class="corr-date">Oct 15, 9:27 AM</span></div>
+      <div class="corr-subject"><a href="https://mail.google.com/mail/u/0/#search/pennyagent%40gmail.com" target="_blank" rel="noopener">A little teaser</a></div>
+      <div class="corr-snippet">Buddy OS one-shot teaser page — "I just asked my chief buddy to build this, and it did."</div>
+    </div>
+    <div class="corr-item">
+      <div class="corr-meta"><span class="corr-dir out">Dave → Penny</span><span class="corr-date">Oct 15, 8:18 AM</span></div>
+      <div class="corr-subject"><a href="https://mail.google.com/mail/u/0/#search/pennyagent%40gmail.com" target="_blank" rel="noopener">Mozart gets a buddy</a></div>
+      <div class="corr-snippet">Mozart will have his own buddy + web page: medical history, pictures, vet visits, walking routes.</div>
+    </div>
+    <div class="corr-item">
+      <div class="corr-meta"><span class="corr-dir in">Penny → Dave</span><span class="corr-date">Oct 15, 8:14 AM</span></div>
+      <div class="corr-subject"><a href="https://mail.google.com/mail/u/0/#search/pennyagent%40gmail.com" target="_blank" rel="noopener">Re: Rae Assist</a></div>
+      <div class="corr-snippet">"OK, I just watched the 1987 Knowledge Navigator. What????? Wow...."</div>
+    </div>
+    <div class="corr-item">
+      <div class="corr-meta"><span class="corr-dir in">Penny → Dave</span><span class="corr-date">Oct 15, 8:05 AM</span></div>
+      <div class="corr-subject"><a href="https://mail.google.com/mail/u/0/#search/pennyagent%40gmail.com" target="_blank" rel="noopener">Re: A little something to read</a></div>
+      <div class="corr-snippet">The system sounds like how she used Rae — but with connectivity, no remembering to check lists.</div>
+    </div>
+    <div class="corr-item">
+      <div class="corr-meta"><span class="corr-dir out">Dave → Penny</span><span class="corr-date">Oct 15, 7:51 AM</span></div>
+      <div class="corr-subject"><a href="https://mail.google.com/mail/u/0/#search/pennyagent%40gmail.com" target="_blank" rel="noopener">A little something to read</a></div>
+      <div class="corr-snippet">The Buddy System white paper ("The Buddy System — A Friendly White Paper").</div>
+    </div>
+    <div class="corr-item">
+      <div class="corr-meta"><span class="corr-dir in">Penny → Dave</span><span class="corr-date">Oct 15, 7:07 AM</span></div>
+      <div class="corr-subject"><a href="https://mail.google.com/mail/u/0/#search/pennyagent%40gmail.com" target="_blank" rel="noopener">Re: Rae Assist</a></div>
+      <div class="corr-snippet">"OH MY GOD! YES, YES, YES!!!" — accepted the tester invitation. Still talks about Rae Assist.</div>
+    </div>
+    <div class="corr-item">
+      <div class="corr-meta"><span class="corr-dir out">Dave → Penny</span><span class="corr-date">Oct 15, ~6:35 AM</span></div>
+      <div class="corr-subject"><a href="https://mail.google.com/mail/u/0/#search/pennyagent%40gmail.com" target="_blank" rel="noopener">Rae Assist</a></div>
+      <div class="corr-snippet">The initial tester invitation.</div>
+    </div>
+  </div>
+  <div class="corr-note">📬 This section auto-updates: every email Dave sends to or receives from <strong>pennyagent@gmail.com</strong> lands here. Pilot of the every-person-buddy correspondence feature.</div>
+</section>
+
+<section>
+  <h2><span class="e">⚠️</span>Needs attention</h2>
+  <div class="attn">
+    <div class="attn-text">Dossier ready for Dave's review — looks good, edits, or defer?</div>
+    <div class="attn-date">Oct 15, 2026</div>
+  </div>
+  <div class="attn">
+    <div class="attn-text">Clean onboarding must be tested ASAP before anything rolls out to Penny. Dave reviews everything first.</div>
+    <div class="attn-date">Oct 15, 2026</div>
+  </div>
+  <div class="attn">
+    <div class="attn-text">Mozart's buddy promised but not yet created (medical history, pictures, vet visits, walking routes).</div>
+    <div class="attn-date">Oct 15, 2026</div>
+  </div>
+</section>
+
+<section>
+  <h2><span class="e">🐈</span>Mozart</h2>
+  <p>Penny's male cat (him/his). Dave promised Mozart his own buddy and web page tracking medical history, pictures, vet visits, walking routes, and other supplied information. <strong>Not yet created</strong> — pending the full pet-buddy drill.</p>
+</section>
+
+<section>
+  <h2><span class="e">❓</span>Open questions</h2>
+  <div class="open-q">What does Penny receive first in the onboarding flow?</div>
+  <div class="open-q">What are the real OS/device requirements for her Apple + Samsung Fold setup?</div>
+  <div class="open-q">Does the fresh-account onboarding path work end to end?</div>
+  <div class="open-q">When is she ready for the Muse invite code (KKMI6O)?</div>
+</section>
+
+<section>
+  <h2><span class="e">🔗</span>Quick links</h2>
+  <div class="links">
+    <a class="btnlink" href="https://docs.google.com/document/d/1TpkMCixbSvoRKnotTwkwT3keTMkrBcuPH6_CK3JenuY/edit" target="_blank" rel="noopener">📄 Dossier</a>
+    <a class="btnlink" href="https://github.com/davedellaquila/penny-luedtke" target="_blank" rel="noopener">💻 Repo</a>
+    <a class="btnlink" href="https://davedellaquila.github.io/buddy-system/" target="_blank" rel="noopener">🌳 Dashboard</a>
+  </div>
+</section>
+
+<section class="dumpbox" data-buddy-id="penny-luedtke">
+<h2>🧠 Brain dump</h2>
+<p class="dumpbox-sub">Dump what's on your mind about Penny — raw and unfiltered. Each dump lands in the buddy's repo (docs/ingest.md) as a timestamped entry.</p>
+<textarea rows="4" placeholder="Dump what's on your mind about Penny…"></textarea>
+<div class="dumpbox-row">
+<button type="button" class="dumpbox-btn">Dump it</button>
+<span class="dumpbox-status" role="status"></span>
+</div>
+</section>
+
+<footer>🌟 Penny Luedtke · living dossier · child of <strong>Relationship Buddy</strong></footer>
+</body>
+</html>
