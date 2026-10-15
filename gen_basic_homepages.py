@@ -360,6 +360,15 @@ body {{
   margin: 0 auto;
 }}
 .header {{ text-align: center; margin-bottom: 40px; }}
+.topbar {{
+  position: sticky; top: 0; z-index: 50;
+  display: flex; align-items: center; gap: 10px;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+  padding: 10px 2px; margin-bottom: 24px;
+  font-size: 17px; font-weight: 700;
+}}
+.topbar-icon {{ font-size: 22px; line-height: 1; }}
 .icon {{ font-size: 64px; margin-bottom: 16px; }}
 h1 {{ font-size: 32px; margin-bottom: 8px; }}
 .tagline {{ color: var(--muted); font-size: 18px; }}
@@ -415,6 +424,7 @@ h2 {{ font-size: 22px; margin: 32px 0 16px; }}
 </style>
 </head>
 <body>
+<div class="topbar"><span class="topbar-icon">{icon}</span><span class="topbar-name">{name}</span></div>
 <div class="header">
 <div class="icon">{icon}</div>
 <h1>{name}</h1>

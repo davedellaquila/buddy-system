@@ -35,6 +35,15 @@ body {
   margin: 0 auto;
 }
 .header { text-align: center; margin-bottom: 40px; }
+.topbar {
+  position: sticky; top: 0; z-index: 50;
+  display: flex; align-items: center; gap: 10px;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+  padding: 10px 2px; margin-bottom: 24px;
+  font-size: 17px; font-weight: 700;
+}
+.topbar-icon { font-size: 22px; line-height: 1; }
 .icon { font-size: 64px; margin-bottom: 16px; }
 h1 { font-size: 32px; margin-bottom: 8px; }
 .tagline { color: var(--muted); font-size: 18px; }
@@ -129,15 +138,14 @@ h2 { font-size: 22px; margin: 32px 0 16px; }
 </style>
 </head>
 <body>
-<nav data-buddy-crumb style="padding:14px 20px 0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:14px;line-height:1.4;"><a href="https://davedellaquila.github.io/buddy-system/relationship-buddy/" style="color:inherit;opacity:.65;text-decoration:none;">← Relationship Buddy</a></nav>
-
+<div class="topbar"><span class="topbar-icon">🧪</span><span class="topbar-name">Testers</span></div>
 <div class="header">
 <div class="icon">🧪</div>
-<h1>🧪 Testers</h1>
-<div class="tagline">People testing the buddy system before wider rollout.</div>
+<h1>Testers</h1>
+<div class="tagline"></div>
 </div>
 
-<div class="mission">Testers are the people helping Dave shake down the buddy system before wider rollout — early users whose feedback shapes what this becomes.</div>
+<div class="mission">No mission yet.</div>
 
 
 <section class="dumpbox" data-buddy-id="tester-buddy">
@@ -151,7 +159,7 @@ h2 { font-size: 22px; margin: 32px 0 16px; }
 <a href="https://github.com/settings/tokens" target="_blank" rel="noopener">Get a token</a>
 </div>
 </div>
-<textarea rows="4" placeholder="Dump what's on your mind about Acquaintances…"></textarea>
+<textarea rows="4" placeholder="Dump what's on your mind about Testers…"></textarea>
 <div class="dumpbox-row">
 <button type="button" class="dumpbox-btn">Dump it</button>
 <span class="dumpbox-status" role="status"></span>
@@ -162,17 +170,7 @@ h2 { font-size: 22px; margin: 32px 0 16px; }
 <h2>Needs Attention</h2>
 <p class="empty">Nothing needs attention right now.</p>
 
-<h2>Sub-buddies</h2>
-<div class="children">
-<a class="child" href="../ali/">👓 Ali</a>
-<a class="child" href="../andy-ire-tide/">🎸 Andy (Ire Tide)</a>
-<a class="child" href="../dr-travis-lyman/">👁️ Dr. Travis Lyman</a>
-<a class="child" href="../johnny/">🖥️ Johnny</a>
-<a class="child" href="../keelan/">🍺 Keelan</a>
-<a class="child" href="../nina/">💫 Nina</a>
-<a class="child" href="../renee/">📋 Renee</a>
-<a class="child" href="../trudy/">👒 Trudy</a>
-</div>
+
 
 <div class="footer">
 Generated 2026-10-15 · Part of the Buddy System
