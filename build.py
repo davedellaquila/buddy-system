@@ -1095,7 +1095,7 @@ body.bp-collapsed #bp-rail{display:flex}
 #homepage-wrap{flex:1;display:flex;flex-direction:column;min-height:0;margin:0;position:relative}
 #homepage-open{display:none}
 #homepage-open:hover{border-color:var(--accent);color:var(--accent)}
-#homepage-frame{flex:1;width:100%;min-height:0;border:0;border-radius:0;background:#fff;display:block}
+#homepage-frame{flex:1;width:100%;min-height:0;border:0;border-radius:0;background:var(--bg);display:block}
 @media (max-width:760px){#main #view-project.active{min-height:calc(100vh - 88px)}
 #main.homepage-mode{padding:0}
 #main.homepage-mode #view-project.active{min-height:100vh}}
