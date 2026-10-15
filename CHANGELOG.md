@@ -3,6 +3,15 @@
 All notable changes to the Buddies dashboard and buddy system. Newest first.
 `FEATURES.md` describes the current state; this file describes how it got there.
 
+## 2026-10-14 (Collapsed panels + tile rows)
+
+### Changed
+- **Top tile row: four equal tiles distributed across the full content width** (Dave 2026-10-14): edges align with the content area; equal widths on phones too.
+- **Status tile row at ~70% size** (Dave 2026-10-14): 105px tiles (100px phones), scaled-down type, still horizontal scroll + click-rank order.
+- **Collapsed sidebar: reopen button removed** (Dave 2026-10-14): the › button no longer shows next to the collapsed icon rail — tapping any rail icon expands the sidebar.
+- **Info-panel expand button is now an ⓘ info icon** (Dave 2026-10-14): replaced the left chevron on #panel-open.
+- **Round fills on collapsed-panel controls** (Dave 2026-10-14): #panel-open, #bp-rail buttons, and the paired .bp-close-x are now circular.
+
 ## 2026-10-14 (Stat tiles — Dave's call)
 
 ### Changed
