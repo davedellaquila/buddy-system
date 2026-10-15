@@ -1142,6 +1142,18 @@ a.plan-card-name:hover{text-decoration:underline}
 .node.drop-target{outline:2px solid var(--accent);outline-offset:3px}
 .proj-row.drop-target{background:var(--active);box-shadow:inset 0 0 0 2px var(--accent)}
 #view-projects .proj-row[data-buddy]{cursor:pointer}
+/* Dave 2026-10-14: drag to rearrange / reparent project rows — grip + drop indicators */
+.proj-grip{display:inline-block;flex:0 0 auto;align-self:center;vertical-align:middle;width:22px;height:22px;
+  cursor:grab;touch-action:none;opacity:.45;border-radius:6px;
+  background-image:radial-gradient(circle,var(--gripdot,color-mix(in srgb,var(--muted) 42%,var(--border))) 1.5px,transparent 1.6px);
+  background-size:7px 7px;background-position:center;background-repeat:no-repeat}
+.proj-row-head:hover .proj-grip{opacity:.95}
+.proj-grip:active{cursor:grabbing}
+#view-projects .proj-row.drop-before{box-shadow:0 -2px 0 var(--accent)}
+#view-projects .proj-row.drop-after{box-shadow:0 2px 0 var(--accent)}
+#view-projects .proj-row.drop-invalid{background:var(--active);box-shadow:inset 0 0 0 2px #e0533d}
+#view-projects .proj-row.drag-src{opacity:.4}
+body.proj-dragging,body.proj-dragging *{cursor:grabbing !important}
 .proj-search-sticky{position:sticky;top:0;z-index:5;background:var(--bg);padding:8px 0;border-bottom:1px solid var(--border);
   transition:margin .28s ease,top .28s ease,border-radius .28s ease,box-shadow .28s ease,background .28s ease,border-color .28s ease}
 @media (max-width:640px){
@@ -1558,6 +1570,19 @@ function setDormant(bid, val){
 function buildKids(){
   for (const k in kidsOf) delete kidsOf[k];
   BUDDIES.forEach(b => { const p = effParent(b) || '__root'; (kidsOf[p] = kidsOf[p] || []).push(b); });
+  /* Dave 2026-10-14: stored sibling order (S.buddyOrder, from sidebar or
+     project-row drags) applies everywhere. Byte-identical when no custom
+     order exists. Root key mapping: kidsOf uses '__root', order uses '__root__'. */
+  for (const pk in kidsOf){
+    const order = getBuddyOrder(pk === '__root' ? '__root__' : pk);
+    if (!order.length) continue;
+    const rank = {};
+    order.forEach((oid, i) => { if (!(oid in rank)) rank[oid] = i; });
+    const head = [], tail = [];
+    kidsOf[pk].forEach(b => (((b.id in rank) ? head : tail).push(b)));
+    head.sort((a, b) => rank[a.id] - rank[b.id]);
+    kidsOf[pk] = head.concat(tail);
+  }
 }
 const LS_KEY = 'buddyTree.v3';
 const SB_DEFAULT_W = 336;
@@ -4068,6 +4093,17 @@ function moveBuddy(src, target){
   if (isDesc(target, src)) { toast('Can\u2019t move ' + dispName(b) + ' under ' + dispName(byId[target]) + ' \u2014 that would create a loop.'); return; }
   const beforeParent = effParent(b);
   applyParentOverride(src, target);
+  /* Dave 2026-10-14: keep the stored sibling order tidy — the moved buddy
+     goes to the end of its new parent's order and leaves the old parent's. */
+  if (S.buddyOrder && typeof S.buddyOrder === 'object'){
+    const oldPk = (beforeParent === null || beforeParent === undefined) ? '__root__' : beforeParent;
+    const newPk = target || '__root__';
+    if (oldPk !== newPk && Array.isArray(S.buddyOrder[oldPk]))
+      S.buddyOrder[oldPk] = S.buddyOrder[oldPk].filter(id => id !== src);
+    const no = getBuddyOrder(newPk).filter(id => id !== src);
+    no.push(src);
+    S.buddyOrder[newPk] = no;
+  }
   logChange('move', src, 'Moved \u201c' + dispName(byId[src]) + '\u201d under \u201c' + dispName(byId[target]) + '\u201d', beforeParent, target);
   save(); buildKids(); renderNav(); refreshViews();
   if (S.sel === 'buddy:' + src || S.sel === 'buddy:' + target || S.sel === 'buddy:' + ROOT_ID) renderBuddy(S.sel.slice(6));
@@ -4795,6 +4831,7 @@ function renderProjects(){
       const collapsed = (projFilter || statusFilter) ? false : !!S.projCollapsed[id];
       s += '<div class="proj-row d' + Math.min(depth, 3) + '" data-buddy="' + b.id + '">'
         + '<div class="proj-row-head">'
+        + '<span class="proj-grip" data-proj-grip="' + b.id + '" title="Drag to move ' + escHtml(dispName(b)) + '"></span>'
         + (hasKids ? '<span class="parrow ' + (collapsed ? '' : 'expanded') + '" data-proj-toggle="' + b.id + '">\u203a</span>' : '')
         + '<span class="pname">' + iconName(b) + '</span>'
         + '<span class="status ' + b.statusClass + '">' + escHtml(b.status) + '</span>'
@@ -5264,6 +5301,138 @@ let nodeDragEndAt = 0; // timestamp of last node-drag gesture; used to swallow t
       if (src) src.classList.remove('drag-armed');
       cand = null;
     }
+  }
+  window.addEventListener('pointerup', function(e){ finish(e, false); });
+  window.addEventListener('pointercancel', function(e){ finish(e, true); });
+})();
+/* Dave 2026-10-14: drag project rows to rearrange / reparent.
+   Grip arms immediately (explicit affordance, like ledger rows). Drop zones:
+   - middle of a row -> reparent under that buddy (moveBuddy, cycle-checked)
+   - top/bottom edge -> insert before/after that row (takes on its parent + position)
+   Pointer-based so touch works; the nodeDragEndAt click-swallow guard covers
+   the follow-up tap. Alpha (A-Z) mode has no grips — its order is the sort. */
+function projInsertMove(srcId, targetId, pos){
+  const src = byId[srcId], target = byId[targetId];
+  if (!src || !target || srcId === targetId) return;
+  if (isDesc(targetId, srcId)) { toast('Can\u2019t move ' + dispName(src) + ' there \u2014 that would create a loop.'); return; }
+  const newParent = effParent(target); /* null => top level */
+  const oldParent = effParent(src);
+  const newPk = (newParent === null || newParent === undefined) ? '__root__' : newParent;
+  if (newParent !== oldParent) applyParentOverride(srcId, newParent);
+  const rawKids = (kidsOf[newParent || '__root'] || []).map(b => b.id).filter(id => id !== srcId);
+  const sibIds = sortSiblingsByOrder(rawKids, newPk);
+  let beforeId = null;
+  if (pos === 'before') beforeId = targetId;
+  else {
+    const ti = sibIds.indexOf(targetId);
+    beforeId = (ti >= 0 && ti + 1 < sibIds.length) ? sibIds[ti + 1] : null;
+  }
+  const ord = sibIds.concat([srcId]);
+  S.buddyOrder[newPk] = reorderBefore(ord, srcId, beforeId);
+  if (newParent !== oldParent){
+    const oldPk = (oldParent === null || oldParent === undefined) ? '__root__' : oldParent;
+    if (S.buddyOrder && Array.isArray(S.buddyOrder[oldPk]))
+      S.buddyOrder[oldPk] = S.buddyOrder[oldPk].filter(id => id !== srcId);
+    logChange('move', srcId, 'Moved \u201c' + dispName(src) + '\u201d ' + (newParent ? 'to ' + dispName(byId[newParent]) + '\u2019s level' : 'to top level'), oldParent, newParent);
+  } else {
+    logChange('reorder', srcId, 'Reordered \u201c' + dispName(src) + '\u201d', oldParent, newParent);
+  }
+  save(); buildKids(); renderNav(); refreshViews();
+  toast('Moved ' + dispName(src) + '.');
+}
+(function initProjDrag(){
+  const vp = document.getElementById('view-projects');
+  if (!vp) return;
+  const THRESH = 6, TOUCH_SLOP = 16;
+  let cand = null, drag = null;
+  function rowFrom(el){ return (el && el.closest) ? el.closest('#view-projects .proj-row[data-buddy]') : null; }
+  function rowAt(x, y, touch){
+    if (!touch) return rowFrom(document.elementFromPoint(x, y));
+    let best = null, bestArea = Infinity;
+    vp.querySelectorAll('.proj-row[data-buddy]').forEach(function(n){
+      const r = n.getBoundingClientRect();
+      if (x >= r.left - TOUCH_SLOP && x <= r.right + TOUCH_SLOP && y >= r.top - TOUCH_SLOP && y <= r.bottom + TOUCH_SLOP){
+        const area = r.width * r.height;
+        if (area < bestArea){ bestArea = area; best = n; }
+      }
+    });
+    return best;
+  }
+  function clearHl(){
+    vp.querySelectorAll('.proj-row.drop-target,.proj-row.drop-invalid,.proj-row.drop-before,.proj-row.drop-after')
+      .forEach(x => x.classList.remove('drop-target', 'drop-invalid', 'drop-before', 'drop-after'));
+  }
+  function moveGhost(x, y){ if (drag && drag.ghost){ drag.ghost.style.left = x + 'px'; drag.ghost.style.top = y + 'px'; } }
+  function updateTarget(x, y){
+    clearHl(); drag.mode = null; drag.target = null;
+    const n = rowAt(x, y, drag.touch);
+    if (!n) return;
+    const tid = n.dataset.buddy;
+    if (!tid || tid === drag.id) return;
+    if (isDesc(tid, drag.id)){ n.classList.add('drop-invalid'); return; }
+    const r = n.getBoundingClientRect();
+    const edge = Math.max(10, r.height * 0.25);
+    if (y - r.top < edge){ n.classList.add('drop-before'); drag.mode = 'before'; drag.target = tid; }
+    else if (r.bottom - y < edge){ n.classList.add('drop-after'); drag.mode = 'after'; drag.target = tid; }
+    else { n.classList.add('drop-target'); drag.mode = 'under'; drag.target = tid; }
+  }
+  function cleanup(){
+    clearHl();
+    vp.querySelectorAll('.proj-row.drag-src').forEach(x => x.classList.remove('drag-src'));
+    if (drag && drag.ghost && drag.ghost.parentNode) drag.ghost.parentNode.removeChild(drag.ghost);
+    document.body.classList.remove('proj-dragging');
+    drag = null; cand = null;
+  }
+  function beginDrag(x, y){
+    const c = cand, id = c.id;
+    const ghost = document.createElement('div');
+    ghost.className = 'node-drag-ghost';
+    const nm = document.createElement('div');
+    nm.className = 'name';
+    nm.textContent = (byId[id] ? dispName(byId[id]) : id).slice(0, 60);
+    ghost.appendChild(nm);
+    document.body.appendChild(ghost);
+    drag = { id: id, pid: c.pid, ghost: ghost, target: null, mode: null, touch: !!c.touch };
+    cand = null;
+    const srcRow = vp.querySelector('.proj-row[data-buddy="' + id + '"]');
+    if (srcRow) srcRow.classList.add('drag-src');
+    document.body.classList.add('proj-dragging');
+    moveGhost(x, y);
+    updateTarget(x, y);
+  }
+  vp.addEventListener('pointerdown', function(e){
+    if (e.button !== undefined && e.button !== 0) return;
+    if (e.isPrimary === false) return;
+    const g = e.target.closest ? e.target.closest('[data-proj-grip]') : null;
+    if (!g) return;
+    const id = g.dataset.projGrip;
+    if (!id || id === ROOT_ID) return;
+    cand = { id: id, x0: e.clientX, y0: e.clientY, pid: e.pointerId, touch: e.pointerType === 'touch' };
+  });
+  window.addEventListener('pointermove', function(e){
+    if (drag){
+      if (e.pointerId !== drag.pid) return;
+      moveGhost(e.clientX, e.clientY);
+      updateTarget(e.clientX, e.clientY);
+      return;
+    }
+    if (cand && e.pointerId === cand.pid){
+      const dx = e.clientX - cand.x0, dy = e.clientY - cand.y0;
+      if (dx * dx + dy * dy > THRESH * THRESH) beginDrag(e.clientX, e.clientY);
+    }
+  }, { passive: true });
+  function finish(e, cancelled){
+    if (drag && e.pointerId === drag.pid){
+      const src = drag.id, tid = drag.target, mode = drag.mode;
+      cleanup();
+      nodeDragEndAt = Date.now();
+      if (!cancelled && tid && mode){
+        if (mode === 'under') moveBuddy(src, tid);
+        else projInsertMove(src, tid, mode);
+      }
+      return;
+    }
+    if (cand && e.pointerId === cand.pid) cand = null;
   }
   window.addEventListener('pointerup', function(e){ finish(e, false); });
   window.addEventListener('pointercancel', function(e){ finish(e, true); });
