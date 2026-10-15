@@ -3,6 +3,12 @@
 All notable changes to the Buddies dashboard and buddy system. Newest first.
 `FEATURES.md` describes the current state; this file describes how it got there.
 
+## 2026-10-15 (Relationship reorganization)
+
+### Changed
+- **Friends moved from Relationship Buddy to Acquaintances** (Dave 2026-10-15): Relationship Buddy was meant for healthy/romantic relationships, but everyone under it was friends/acquaintances. Joel Nelson, James Michael Day, Carl Towne, and Eric are now children of Acquaintances. Jody Reed was already under Acquaintances. Penny remains under Acquaintances + Testers (multi-parent). Testers stays under Relationship Buddy (system/testing category, not a person). Relationship Buddy is kept in place (now nearly empty) for its original romantic/healthy-relationship purpose later.
+- **"friend" added as an AKA for the Acquaintances buddy** (Dave 2026-10-15): searching "friend" in the dashboard sidebar now matches Acquaintances (sidebar search includes `effAka`). Rendered as "aka friend" next to the name and in the A.K.A. info-panel section.
+
 ## 2026-10-15 (Zoom controls stay visible with panel open)
 
 ### Fixed
