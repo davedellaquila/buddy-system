@@ -7020,7 +7020,11 @@ document.addEventListener('click', e => {
     const scroller = exp.closest('#view-buddy.panel, #view-buddy.sheet');
     const beforeTop = exp.getBoundingClientRect().top;
     const beforeScroll = scroller ? scroller.scrollTop : 0;
-    if (sec) sec.classList.toggle('expanded');
+    if (sec) {
+      const willExpand = !sec.classList.contains('expanded');
+      sec.classList.toggle('expanded', willExpand);
+      sec.classList.remove('collapsed'); // ensure collapsed never blocks expanded
+    }
     requestAnimationFrame(() => {
       if (!scroller) return;
       const delta = exp.getBoundingClientRect().top - beforeTop;
@@ -7041,7 +7045,11 @@ document.addEventListener('click', e => {
     const scroller = ahead.closest('#view-buddy.panel, #view-buddy.sheet');
     const beforeTop = ahead.getBoundingClientRect().top;
     const beforeScroll = scroller ? scroller.scrollTop : 0;
-    if (sec) sec.classList.toggle('expanded');
+    if (sec) {
+      const willExpand = !sec.classList.contains('expanded');
+      sec.classList.toggle('expanded', willExpand);
+      sec.classList.remove('collapsed'); // ensure collapsed never blocks expanded
+    }
     requestAnimationFrame(() => {
       if (!scroller) return;
       const delta = ahead.getBoundingClientRect().top - beforeTop;
