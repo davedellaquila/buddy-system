@@ -9,6 +9,9 @@ All notable changes to the Buddies dashboard and buddy system. Newest first.
 - **Penny's photo** (Dave 2026-10-15): Penny sent her selfie ("I don't even let family members take pics of me. I hate being in photos. But there it is.") — now on her homepage header as a circular avatar, plus two new correspondence entries (photo email, Wispr Flow reply).
 - **Beethoven mentioned** (Dave 2026-10-15): Penny's other pet, alongside Mozart. Dossier "Cat" row became "Pets"; dossier doc "Mozart" section became "Pets". Beethoven will become a child buddy of Penny's buddy in her own Buddy System later, same as Mozart.
 
+### Fixed
+- **Buddy cross-links** (Dave 2026-10-15): "child of Relationship Buddy" (header pill + footer) is now a clickable link to Relationship Buddy's homepage, per Dave's standing rule that every buddy name gets its homepage link. Mozart/Beethoven buddies don't exist yet — no links until they're created.
+
 ## 2026-10-15 (Eric buddy)
 
 ### Added
