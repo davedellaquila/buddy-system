@@ -17,6 +17,11 @@ All notable changes to the Buddies dashboard and buddy system. Newest first.
 - **Atlas lens menu vs info panel** (Dave 2026-10-15): the lens picker and orientation tabs sit top-left; the info panel slides in from the right — spatially separated on desktop. Lens dropdown (z-61) renders above the panel (z-60). On phone the panel is a full-screen sheet (correct modal behavior); the lens menu is reachable when the sheet is closed.
 - **Panel-section 404s**: the console 404s are expected missing optional resources (`avatars/<id>.jpg` fallback via `buddyImageUrl`, GitHub API photo/note fetches) — each self-cleans via `onerror` handlers. Unrelated to the expand bug.
 
+## 2026-10-15 (Defensibility ledger drill-down pages)
+
+### Added
+- **Click a ledger bubble → detail page** (Dave 2026-10-15): all eight defensibility-ledger bubbles on the Guardian homepage are now links to `guardian-buddy/ledger/<slug>/` detail pages. Each page explains what the bubble represents, why it sits at its chart position (ease-of-copying × business value), current risk/defensibility, and Guardian's recommendation/next action — with position tags, a back link to the ledger, dark/light theme (shared `guardian-buddy-theme` key), and phone layouts. Added `id="ledger"` anchor to the chart heading; bubble hover/focus states for linked circles.
+
 ## 2026-10-15 (Persona roster expansion: F1, presidents, historical figures)
 
 ### Added

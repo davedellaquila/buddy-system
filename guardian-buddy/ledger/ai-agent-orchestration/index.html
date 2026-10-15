@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI agent orchestration — Defensibility ledger — Guardian Buddy</title>
+<style>
+  :root{
+    --bg:#0d1117; --panel:#161b22; --card:#1c2330; --border:#2a3342;
+    --text:#e6edf3; --muted:#8b949e;
+    --amber:#d99a26; --green:#3fb950; --red:#f85149; --accent:#58a6ff;
+  }
+  html[data-theme="light"]{
+    --bg:#f7f7f7; --panel:#ffffff; --card:#ffffff; --border:#e0e0e0;
+    --text:#1f2328; --muted:#59636e;
+    --amber:#9a6700; --green:#1a7f37; --red:#d1242c; --accent:#0969da;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--text);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;
+    line-height:1.65;min-height:100vh}
+  .wrap{max-width:720px;margin:0 auto;padding:40px 22px 72px}
+  .theme-btn{position:fixed;top:14px;right:14px;background:var(--panel);
+    border:1px solid var(--border);border-radius:999px;color:var(--text);
+    padding:8px 14px;font-size:14px;cursor:pointer;z-index:10}
+  .theme-btn:hover{border-color:var(--amber)}
+  .back{display:inline-block;margin-bottom:18px;color:var(--accent);
+    text-decoration:none;font-weight:600;font-size:15px}
+  .back:hover{text-decoration:underline}
+  .kicker{font-size:12px;text-transform:uppercase;letter-spacing:.14em;
+    color:var(--muted);margin-bottom:8px}
+  h1{font-size:30px;letter-spacing:-.5px;margin-bottom:10px;line-height:1.25}
+  .pos{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 6px}
+  .tag{font-size:12px;font-weight:700;letter-spacing:.06em;border-radius:999px;
+    padding:5px 12px;border:1px solid var(--border);color:var(--muted)}
+  .tag.moat{background:rgba(63,185,80,.13);color:var(--green);border-color:var(--green)}
+  .tag.husk{background:rgba(248,81,73,.13);color:var(--red);border-color:var(--red)}
+  .tag.mid{background:rgba(217,154,38,.13);color:var(--amber);border-color:var(--amber)}
+  section{background:var(--panel);border:1px solid var(--border);border-radius:12px;
+    padding:18px 22px;margin-top:14px}
+  section h2{font-size:13px;text-transform:uppercase;letter-spacing:.12em;
+    color:var(--muted);margin-bottom:8px}
+  section p{font-size:15.5px;margin-bottom:10px}
+  section p:last-child{margin-bottom:0}
+  section strong{color:var(--text)}
+  .reco{border-left:4px solid var(--amber);border-radius:0 12px 12px 0}
+  .reco h2{color:var(--amber)}
+  footer{margin-top:34px;color:var(--muted);font-size:13px;font-style:italic}
+  footer a{color:var(--accent);text-decoration:none;font-style:normal;font-weight:600}
+  @media (max-width:560px){
+    .wrap{padding:28px 16px 56px}
+    h1{font-size:24px}
+    section{padding:15px 17px}
+  }
+</style>
+</head>
+<body>
+<button class="theme-btn" id="themeBtn" aria-label="Toggle theme">\u2600\uFE0F</button>
+<div class="wrap">
+  <a class="back" href="../../#ledger">\u2190 Defensibility ledger</a>
+  <div class="kicker">Guardian \u00b7 Defensibility ledger \u00b7 drill-down</div>
+  <h1>AI agent orchestration</h1>
+  <div class="pos"><span class="tag moat">THE MOAT</span><span class="tag moat">hard to copy</span><span class="tag moat">the business itself</span></div>
+  <section><h2>What this is</h2><p>The staff itself: how Astro dispatches to sub-buddies, how side threads keep context, how memory, skills, connectors, and tools compose into something that acts like a chief of staff rather than a chatbot. The prompts, the handoffs, the standing rules, the judgment.</p><p>This is the only bubble Guardian would describe as <strong>irreplaceable</strong>.</p></section>
+  <section><h2>Why it sits here on the chart</h2><p>Highest bubble on the value axis: <strong>this is the business</strong>. Everything else is scaffolding around it. Left of center: <strong>hard to copy</strong> — not because the techniques are secret, but because the value is in two years of accumulated judgment about one specific human being.</p><p>Large bubble: load-bearing asset number three, and the largest of the three.</p></section>
+  <section><h2>Current risk \u0026 defensibility</h2><p><strong>Risk: low on copying, real on leakage.</strong> Nobody can copy the relationship — but the <em>patterns</em> can leak: system prompts in repos, skill files in the open, architecture described in public posts. Each leak teaches competitors, even if it doesn't transfer the asset.</p><p>The subtler risk is <em>prompt extraction</em> by users of a future public tier — a known, unsolved class of problem. Assume anything the model can see, a determined user can eventually read.</p></section>
+  <section class="reco"><h2>Guardian\u2019s recommendation</h2><p><strong>Invest here above all else.</strong> This is the compounding asset: every correction Dave makes, every standing rule, every memory — the moat deepens daily. Protect the prompts and skills as trade secrets, keep the memory architecture server-side, and never expose raw system instructions to untrusted input.</p><p>Next action: inventory which prompts/skills live in public repos vs private ones; move the crown jewels private before any public tier launches.</p></section>
+  <footer>Guardian\u2019s working assessment \u2014 judgment calls, not measured data.<br>
+  <a href="../../#ledger">Back to the ledger</a></footer>
+</div>
+<script>(function(){
+  var root=document.documentElement,btn=document.getElementById('themeBtn');
+  function apply(t){root.setAttribute('data-theme',t);
+    btn.textContent=(t==='light')?'\uD83C\uDF19':'\u2600\uFE0F';
+    try{localStorage.setItem('guardian-buddy-theme',t);}catch(e){}}
+  var saved=null;
+  try{saved=localStorage.getItem('guardian-buddy-theme');}catch(e){}
+  apply(saved||((window.matchMedia&&matchMedia('(prefers-color-scheme: light)').matches)?'light':'dark'));
+  btn.addEventListener('click',function(){
+    apply(root.getAttribute('data-theme')==='light'?'dark':'light');});
+})();</script>
+</body>
+</html>
