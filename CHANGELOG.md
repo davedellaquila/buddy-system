@@ -3,6 +3,11 @@
 All notable changes to the Buddies dashboard and buddy system. Newest first.
 `FEATURES.md` describes the current state; this file describes how it got there.
 
+## 2026-10-15 (Jody Reed buddy)
+
+### Added
+- **Jody Reed buddy** (Dave 2026-10-15): new person buddy — proprietor of Ham's Station (restaurant off Highway 88) and a realtor. Child of Acquaintances. Dossier, private repo, dashboard entry (#102), homepage. Spelling TBD: "Jody" (Dave) vs "Jodie" (dashboard request). Persona: warm/professional (the request's "Italian nonna" suggestion deliberately not used — real business contact). Two-role contact — the concrete case for the roles-as-buddies pattern.
+
 ## 2026-10-15 (Atlas center-on-buddy)
 
 ### Added
