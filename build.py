@@ -1076,6 +1076,10 @@ section.changelog{padding:0 16px;box-sizing:border-box}
 .plan-card-desc{font-size:13.5px;color:var(--muted);line-height:1.5;margin-bottom:12px}
 .plan-card-link{display:inline-block;margin:4px 8px 0 0;font-size:13px;color:var(--accent);text-decoration:none}
 .plan-card-link:hover{text-decoration:underline}
+/* Dave 2026-10-14: the whole card opens the plan (first doc); inner links keep their own targets */
+.plan-card[data-url]{cursor:pointer}
+a.plan-card-name{color:inherit;text-decoration:none}
+a.plan-card-name:hover{text-decoration:underline}
 .ptile-label{font-size:11px;letter-spacing:.14em;font-weight:700;color:var(--muted);white-space:nowrap}
 .ptile-num{font-size:42px;font-weight:800;color:var(--tint);line-height:1.25}
 .ptile-sub{font-size:13px;color:var(--muted)}
@@ -1437,16 +1441,24 @@ def build():
     n_buddies = len(buddies)
 
     plan_rows = "".join(
-        f'<div class="plan-card" data-plan="{p["id"]}" data-status="{esc(p["status"])}">'
-        f'<div class="plan-card-head"><span class="plan-card-icon">{esc(p["icon"])}</span>'
-        f'<span class="plan-card-name">{esc(p["name"])}</span>'
-        f'<span class="status {p["statusClass"]}" style="margin-left:auto">{esc(p["status"])}</span></div>'
-        f'<div class="plan-card-desc">{esc(p["desc"][:200])}{"…" if len(p["desc"]) > 200 else ""}</div>'
-        + ("".join(
-            f'<a class="plan-card-link" href="{esc(d["url"])}" target="_blank" rel="noopener">📄 {esc(d["label"])}</a>'
-            for d in p.get("docs", [])
-        ))
-        + '</div>'
+        (
+            f'<div class="plan-card" data-plan="{p["id"]}" data-status="{esc(p["status"])}"'
+            + (f' data-url="{esc(p["docs"][0]["url"])}"' if p.get("docs") else '')
+            + '>'
+            f'<div class="plan-card-head"><span class="plan-card-icon">{esc(p["icon"])}</span>'
+            + (
+                f'<a class="plan-card-name" href="{esc(p["docs"][0]["url"])}" target="_blank" rel="noopener">{esc(p["name"])}</a>'
+                if p.get("docs")
+                else f'<span class="plan-card-name">{esc(p["name"])}</span>'
+            )
+            + f'<span class="status {p["statusClass"]}" style="margin-left:auto">{esc(p["status"])}</span></div>'
+            f'<div class="plan-card-desc">{esc(p["desc"][:200])}{"…" if len(p["desc"]) > 200 else ""}</div>'
+            + ("".join(
+                f'<a class="plan-card-link" href="{esc(d["url"])}" target="_blank" rel="noopener">📄 {esc(d["label"])}</a>'
+                for d in p.get("docs", [])
+            ))
+            + '</div>'
+        )
         for p in plans
     )
     status_tints = {'Live': '#2f9e44', 'Active': '#1f6feb', 'Mission review': '#a371f7',
@@ -8153,6 +8165,14 @@ document.addEventListener('click', e => {
   if (manTile) {
     manifestFilter = manifestFilter === manTile.dataset.tile ? null : manTile.dataset.tile;
     applyManifestFilter(); return;
+  }
+  // Dave 2026-10-14: clicking anywhere on a business-plan card opens the plan
+  // (its first doc); a click on an inner link follows that link instead.
+  const planCard = e.target.closest('#view-plans .plan-card[data-url]');
+  if (planCard) {
+    if (e.target.closest('a')) return;
+    window.open(planCard.dataset.url, '_blank', 'noopener');
+    return;
   }
   const buddyInfo = e.target.closest('[data-buddy-info]');
   if (buddyInfo) {
