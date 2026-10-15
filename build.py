@@ -603,7 +603,7 @@ textarea[disabled]{opacity:.5;cursor:not-allowed}
 #token-pop .saved-check{display:none;color:var(--grn-tx);font-size:14px;font-weight:600;margin-top:8px}
 #token-pop .saved-check.show{display:block}
 /* Reopen right detail panel when closed (Muse-ish fixed chrome) */
-#panel-open{position:fixed;top:12px;right:12px;z-index:85;width:44px;height:44px;border-radius:12px;
+#panel-open{position:fixed;top:12px;right:12px;z-index:85;width:44px;height:44px;border-radius:50%;
   background:var(--panel);border:1px solid var(--border);color:var(--muted);cursor:pointer;
   display:flex;align-items:center;justify-content:center;padding:0;
   box-shadow:0 2px 14px var(--shadow);-webkit-tap-highlight-color:transparent;transition:border-color .15s,color .15s,transform .15s}
@@ -714,7 +714,7 @@ body:has(#token-pill) #panel-open{right:148px}
 /* Open panel: the close button floats at the exact screen position of the
    #panel-open expand button, styled as the same control */
 #view-buddy.panel .bp-close-x,#view-buddy.sheet .bp-close-x{display:flex;position:fixed;top:12px;right:12px;z-index:65;margin:0;
-  background:var(--panel);border:1px solid var(--border);border-radius:12px;box-shadow:0 2px 14px var(--shadow)}
+  background:var(--panel);border:1px solid var(--border);border-radius:50%;box-shadow:0 2px 14px var(--shadow)}
 #view-buddy.panel .bp-close-x:hover,#view-buddy.sheet .bp-close-x:hover{color:var(--accent);border-color:var(--accent)}
 #view-buddy.panel .bp-close-x:active,#view-buddy.sheet .bp-close-x:active{transform:scale(.96)}
 body:has(#token-pill) #view-buddy.panel .bp-close-x,
@@ -803,10 +803,9 @@ body.no-write .pdel,body.no-write [data-dump-del],body.no-write [data-dump-edit]
 #sb-close:hover{color:var(--muted)}
 #sb-close .xmark-x{stroke:var(--bg)}
 #sidebar .brand{padding-right:112px}
-/* Collapsed sidebar (iPad/desktop): slide-out animation handled above; show hamburger to reopen */
-body.sb-closed #menu-btn{display:flex;align-items:center;justify-content:center;position:fixed;top:12px;left:12px;z-index:90;
-  background:var(--panel);border:1px solid var(--border);border-radius:12px;color:var(--text);font-size:27px;
-  width:48px;height:48px;cursor:pointer;box-shadow:0 2px 12px var(--shadow)}
+/* Dave 2026-10-14: NO reopen button when the sidebar is collapsed — the
+   collapsed icon rail is the affordance (tapping any icon expands it).
+   (body.sb-closed #menu-btn stays display:none per the rule above.) */
 #plans-sec.collapsed #plan-nav{display:none}
 #plans-sec #plans-arrow{transform:rotate(90deg);display:inline-block}
 #plans-sec.collapsed #plans-arrow{transform:rotate(0deg)}
@@ -1020,7 +1019,7 @@ body.bp-collapsed #view-buddy.panel.active, body.bp-collapsed #view-buddy.sheet.
   -webkit-backdrop-filter:blur(20px) saturate(1.8);backdrop-filter:blur(20px) saturate(1.8);
   border:1px solid var(--border);box-shadow:0 8px 32px var(--shadow)}
 body.bp-collapsed #bp-rail{display:flex}
-#bp-rail button{width:44px;height:44px;border-radius:12px;border:0;background:none;cursor:pointer;
+#bp-rail button{width:44px;height:44px;border-radius:50%;border:0;background:none;cursor:pointer;
   font-size:20px;display:flex;align-items:center;justify-content:center;color:var(--muted);
   -webkit-tap-highlight-color:transparent}
 #bp-rail button:hover{background:var(--hover);color:var(--text)}
@@ -1042,14 +1041,20 @@ body.bp-collapsed #bp-rail{display:flex}
 #bp-close{display:none}
 #view-buddy.panel #bp-close,#view-buddy.sheet #bp-close{display:inline-block}
 /* ---------- Project view: stat tiles + buddy homepage embed ---------- */
-#project-tiles{display:flex;gap:14px;margin:2px auto 20px;max-width:860px;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:thin}
-#project-status-tiles{display:flex;gap:14px;margin:2px auto 20px;max-width:860px;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:thin}
+#project-tiles{display:flex;gap:14px;margin:2px auto 20px;max-width:860px;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:thin;padding:0 16px;box-sizing:border-box}
+#project-status-tiles{display:flex;gap:12px;margin:2px auto 20px;max-width:860px;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:thin;padding:0 16px;box-sizing:border-box}
 .ptile{flex:none;width:auto;background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:12px 14px;position:relative;overflow:hidden;cursor:pointer;transition:transform .15s ease,box-shadow .15s ease}
+/* Dave 2026-10-14: top row — four EQUAL tiles distributed across the full
+   content width, edges aligned with the content area. */
+#project-tiles .ptile{flex:1 1 0;min-width:0}
 /* Dave 2026-10-14 (overriding Jonny's auto-width verdict): status tiles are
-   EQUAL width and scroll horizontally; ordered 5th-most-selected on down
-   by click rank, since the locked top row holds the four most selected. */
-#project-status-tiles .ptile{width:150px}
-#project-status-tiles .ptile-label{overflow:hidden;text-overflow:ellipsis}
+   EQUAL width at ~70% size, horizontal scroll, ordered by click rank — 5th
+   most selected on down, since the locked top row holds the four most selected. */
+#project-status-tiles .ptile{width:105px;padding:8px 10px;border-radius:10px}
+#project-status-tiles .ptile::before{width:4px}
+#project-status-tiles .ptile-label{font-size:8px;letter-spacing:.1em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#project-status-tiles .ptile-num{font-size:30px;line-height:1.1}
+#project-status-tiles .ptile-sub{font-size:9px}
 .ptile:hover{transform:translateY(-2px);box-shadow:0 4px 16px rgba(0,0,0,.12)}
 .ptile::before{content:'';position:absolute;left:0;top:0;bottom:0;width:5px;background:var(--tint)}
 /* ---- Business Plans cards ---- */
@@ -1073,8 +1078,9 @@ body.bp-collapsed #bp-rail{display:flex}
     display:flex !important;flex-wrap:nowrap !important;overflow-x:auto !important;
     gap:8px !important;max-width:none !important;width:100% !important;
     margin:0 0 12px !important;box-sizing:border-box;scrollbar-width:thin}
-  #project-tiles .ptile,#changelog-tiles .ptile,#plans-tiles .ptile,#manifest-tiles .ptile{flex:none !important;width:auto !important;max-width:none !important;min-width:0 !important}
-  #project-status-tiles .ptile{flex:none !important;width:118px !important;max-width:none !important;min-width:0 !important}
+  #changelog-tiles .ptile,#plans-tiles .ptile,#manifest-tiles .ptile{flex:none !important;width:auto !important;max-width:none !important;min-width:0 !important}
+  #project-tiles .ptile{flex:1 1 0 !important;min-width:0 !important;width:auto !important;max-width:none !important}
+  #project-status-tiles .ptile{flex:none !important;width:100px !important;max-width:none !important;min-width:0 !important}
   .ptile{padding:6px 8px 5px !important;border-radius:10px !important}
   .ptile::before{width:3px}
   .ptile-label{font-size:9px !important;letter-spacing:.08em;line-height:1.15}
@@ -1087,8 +1093,9 @@ body.bp-collapsed #bp-rail{display:flex}
     display:flex !important;flex-wrap:nowrap !important;overflow-x:auto !important;
     gap:8px !important;max-width:none !important;width:100% !important;
     margin:0 0 10px !important;box-sizing:border-box;scrollbar-width:thin}
-  #project-tiles .ptile,#changelog-tiles .ptile,#plans-tiles .ptile,#manifest-tiles .ptile{flex:none !important;width:auto !important;max-width:none !important;min-width:0 !important}
-  #project-status-tiles .ptile{flex:none !important;width:118px !important;max-width:none !important;min-width:0 !important}
+  #changelog-tiles .ptile,#plans-tiles .ptile,#manifest-tiles .ptile{flex:none !important;width:auto !important;max-width:none !important;min-width:0 !important}
+  #project-tiles .ptile{flex:1 1 0 !important;min-width:0 !important;width:auto !important;max-width:none !important}
+  #project-status-tiles .ptile{flex:none !important;width:100px !important;max-width:none !important;min-width:0 !important}
   .ptile{padding:5px 7px 4px !important;border-radius:10px !important}
   .ptile::before{width:3px}
   .ptile-label{font-size:9px !important;letter-spacing:.08em;line-height:1.15}
@@ -8293,7 +8300,7 @@ initSbBrandSticky();
 <div class="app">
 <button id="menu-btn" aria-label="Open sidebar">\u203a</button>
 <button type="button" id="panel-open" title="Open buddy details" aria-label="Open buddy details">
-  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.5 5.5L8 12l6.5 6.5"/></svg>
+  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
 </button>
 <div id="sb-scrim"></div>
 <aside id="sidebar">
