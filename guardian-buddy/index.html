@@ -73,6 +73,8 @@
     min-height:44px}
   .attn-btn[data-act="done"]:hover{border-color:var(--green);color:var(--green)}
   .attn-btn[data-act="info"]:hover{border-color:var(--amber);color:var(--amber)}
+  .attn-btn[data-act="opt"]:hover{border-color:var(--accent);color:var(--accent)}
+  .attn-options{display:flex;gap:8px;flex-wrap:wrap;margin:2px 0 10px}
   .attn-btn:disabled{opacity:.5;cursor:default}
   .attn-status{font-size:13px;color:var(--muted);margin-top:8px;min-height:20px}
   .dumpbox{background:var(--panel);border:1px solid var(--border);border-radius:14px;
@@ -387,9 +389,16 @@ Living page — last refreshed 2026-10-12 · Guardian Buddy
         tile.setAttribute('data-attn-id', aid);
         var textHtml = esc(text);
         if (a.url) textHtml += ' <a href="' + esc(a.url) + '" target="_blank" rel="noopener">Open \u2192</a>';
+        var optsHtml = '';
+        if (a.options && a.options.length) {
+          optsHtml = '<div class="attn-options">' + a.options.map(function(o){
+            return '<button class="attn-btn" data-act="opt" data-opt="' + esc(o) + '">' + esc(o) + '</button>';
+          }).join('') + '</div>';
+        }
         tile.innerHTML =
           '<div class="attn-text">' + textHtml + '</div>' +
           (a.date ? '<div class="attn-date">' + esc(a.date) + '</div>' : '') +
+          optsHtml +
           '<div class="attn-actions"><button class="attn-btn" data-act="done">\u2713 Done</button>' +
           '<button class="attn-btn" data-act="info">Need more info</button></div>' +
           '<div class="attn-status" role="status"></div>';
@@ -402,21 +411,23 @@ Living page — last refreshed 2026-10-12 · Guardian Buddy
         tile.addEventListener('click', function(ev){
           var btn = ev.target.closest ? ev.target.closest('.attn-btn') : null;
           if (!btn || btn.disabled) return;
-          handleAction(tile, aid, text, btn.getAttribute('data-act'));
+          handleAction(tile, aid, text, btn.getAttribute('data-act'), btn.getAttribute('data-opt') || '');
         });
       });
     } catch(e){
       list.innerHTML = '<div class="attn"><div class="attn-text" style="color:var(--muted)">Couldn\u2019t load attention items.</div></div>';
     }
   }
-  async function handleAction(tile, aid, text, act){
+  async function handleAction(tile, aid, text, act, opt){
     var st = tile.querySelector('.attn-status');
     var btns = tile.querySelectorAll('.attn-btn');
     if (!token()) { st.textContent = 'Add a GitHub token in the Brain dump section above to enable actions.'; return; }
     if (!repo) { st.textContent = 'No repo linked for this buddy yet.'; return; }
     var idBit = aid ? ' (attention id: ' + aid + ')' : '';
     var NL = String.fromCharCode(10);
-    var entry = (act === 'done')
+    var entry = (act === 'opt')
+      ? 'DECISION \u2014 Dave chose "' + opt + '" on the homepage for: "' + text + '"' + idBit + '. Please act on it and remove it from the attention list in buddies.json.'
+      : (act === 'done')
       ? 'DONE \u2014 Dave marked this done on the homepage: "' + text + '"' + idBit + '. Please remove it from the attention list in buddies.json.'
       : 'FOLLOW-UP \u2014 Dave needs more info on: "' + text + '"' + idBit + '. Please follow up with him.';
     btns.forEach(function(b){ b.disabled = true; });
@@ -428,10 +439,10 @@ Living page — last refreshed 2026-10-12 · Guardian Buddy
       var body = {message: 'Attention action for ' + bid, content: b64encode(base + '## ' + stamp + NL + NL + entry + NL + NL)};
       if (cur && cur.sha) body.sha = cur.sha;
       await ghApi('/repos/davedellaquila/' + repo + '/contents/docs/ingest.md', 'PUT', body);
-      if (act === 'done') {
+      if (act === 'opt' || act === 'done') {
         setResolved(aid, text);
         tile.classList.add('resolved');
-        st.textContent = 'Marked done \u2014 the buddy will clear it.';
+        st.textContent = (act === 'opt') ? 'Decided: ' + opt + ' \u2014 on it.' : 'Marked done \u2014 the buddy will clear it.';
       } else {
         st.textContent = 'Sent \u2014 ' + buddyName + ' will follow up.';
         btns.forEach(function(b){ b.disabled = false; });
