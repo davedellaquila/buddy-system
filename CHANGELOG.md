@@ -3,6 +3,12 @@
 All notable changes to the Buddies dashboard and buddy system. Newest first.
 `FEATURES.md` describes the current state; this file describes how it got there.
 
+## 2026-10-15 (Penny Luedtke buddy)
+
+### Added
+- **Penny Luedtke buddy** (Dave 2026-10-15): first Buddy System tester (ex-Rae Assist user). Dossier, private repo (davedellaquila/penny-luedtke), dashboard entry (child of Relationship Buddy, 🌟 icon), homepage with dark mode. Pilot of the **Correspondence section** — every person buddy homepage now auto-lists all emails with that person (Dave ↔ pennyagent@gmail.com: 7 emails tracked Oct 15).
+- **Correspondence section** (new standard person-buddy feature): a 💌 section on every person buddy homepage listing all emails with that person, newest first, with direction badges (Dave → / → Dave), dates, subjects, and snippets. Penny is the pilot; rolls out to every person buddy.
+
 ## 2026-10-15 (News Buddy voices)
 
 ### Added
