@@ -3,6 +3,11 @@
 All notable changes to the Buddies dashboard and buddy system. Newest first.
 `FEATURES.md` describes the current state; this file describes how it got there.
 
+## 2026-10-15 (Zoom controls stay visible with panel open)
+
+### Fixed
+- **Zoom controls shift left when info panel opens** (Dave 2026-10-15): the main-view zoombar (slider, fit, ⌖ center buttons) was obscured behind the sliding info panel. Now `body:has(#view-buddy.panel.active)` shifts `#zoombar-main` and `#zoombar-orph` left by the panel width (`--bpw`), with a smooth transition matching the panel's slide timing. Skipped when panel is collapsed to rail, and on mobile where the panel is a full-screen sheet.
+
 ## 2026-10-15 (Browser back/forward navigation history)
 
 ### Added
