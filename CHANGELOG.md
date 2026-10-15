@@ -3,6 +3,12 @@
 All notable changes to the Buddies dashboard and buddy system. Newest first.
 `FEATURES.md` describes the current state; this file describes how it got there.
 
+## 2026-10-14 (Acquaintances + 8 new people buddies)
+
+### Added
+- **Acquaintances buddy** (👋, new top-level shelf, Dave's request 2026-10-14): "acquaintances different from friends different from family" — the landing spot for people Dave has met and wants to remember but isn't close to yet. New faces land here first; the ones that matter graduate to Friends.
+- **8 new people buddies, all parented under Acquaintances** (Dave's approval 2026-10-14 — everyone he met today): Johnny (🖥️, software lifer since the '70s, met at Gibson's), Trudy (👒, with Johnny at Gibson's), Keelan (🍺, beer server at Gibson's), Nina (💫, barstool philosophy at Gibson's — future, distributed future, particle vs wave), Andy of Ire Tide (🎸, reggae band member from Gustine; wedding-band candidate for Quentin & Amanda — contact on file, phone stays in memory only), Dr. Travis Lyman (👁️, optometrist at Amador Eye Care — exam summary in mission), Renee (📋, Amador Eye Care front desk), Ali (👓, frames at Amador Eye Care — November check-back attention item). Each got a template homepage (mission, attention items, brain-dump box) via gen_basic_homepages.py.
+
 ## 2026-10-14 (Briefing Buddy section detail pages)
 
 ### Added
