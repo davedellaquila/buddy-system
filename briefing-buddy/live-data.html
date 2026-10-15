@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="auto">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Live briefing data — Briefing Buddy</title>
+<style>
+  :root{
+    --paper:#faf6ee; --card:#fffdf7; --ink:#221b12; --muted:#7d7060;
+    --accent:#b45309; --accent-ink:#8a3f06; --accent-soft:#f6e8d2;
+    --rule:#e2d7c0; --rule-strong:#221b12;
+    --shadow:0 2px 14px rgba(80,55,15,.09);
+    --chip:#f1e9d8;
+  }
+  @media (prefers-color-scheme:dark){
+    :root[data-theme="auto"]{
+      --paper:#131009; --card:#1e1912; --ink:#f2e9d6; --muted:#a79a82;
+      --accent:#f0a83e; --accent-ink:#f5bd67; --accent-soft:#33270f;
+      --rule:#38301f; --rule-strong:#f2e9d6;
+      --shadow:0 2px 18px rgba(0,0,0,.45);
+      --chip:#2b2314;
+    }
+  }
+  :root[data-theme="dark"]{
+    --paper:#131009; --card:#1e1912; --ink:#f2e9d6; --muted:#a79a82;
+    --accent:#f0a83e; --accent-ink:#f5bd67; --accent-soft:#33270f;
+    --rule:#38301f; --rule-strong:#f2e9d6;
+    --shadow:0 2px 18px rgba(0,0,0,.45);
+    --chip:#2b2314;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; background:var(--paper); color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    line-height:1.6; -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:880px;margin:0 auto;padding:0 20px 64px}
+  .masthead{text-align:center;padding:40px 0 8px}
+  .masthead .kicker{
+    font-size:11px;letter-spacing:4px;color:var(--muted);
+    text-transform:uppercase;margin:0 0 10px;
+  }
+  .masthead .kicker a{color:var(--accent);text-decoration:none;font-weight:600}
+  .masthead .kicker a:hover{text-decoration:underline}
+  .masthead h1{
+    font-family:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,"Times New Roman",serif;
+    font-size:clamp(2rem,6vw,3.2rem);font-weight:700;margin:0;line-height:1.05;
+  }
+  .masthead .tagline{font-size:16px;color:var(--muted);margin:10px 0 0;font-style:italic;font-family:Georgia,serif}
+  .dateline{
+    display:flex;justify-content:space-between;align-items:center;gap:12px;
+    border-top:3px double var(--rule-strong);border-bottom:1px solid var(--rule-strong);
+    margin:22px 0 0;padding:9px 2px;font-size:12.5px;color:var(--muted);
+    text-transform:uppercase;letter-spacing:1.5px;flex-wrap:wrap;
+  }
+  .theme-btn{
+    border:1px solid var(--rule);background:var(--card);color:var(--ink);
+    border-radius:999px;padding:5px 14px;font-size:12px;cursor:pointer;letter-spacing:.5px;
+  }
+  .theme-btn:hover{border-color:var(--accent)}
+  section{margin-top:36px}
+  .sec-head{display:flex;align-items:baseline;gap:14px;margin-bottom:14px}
+  .sec-head h2{
+    font-family:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
+    font-size:22px;margin:0;font-weight:700;
+  }
+  .sec-head .line{flex:1;height:1px;background:var(--rule);align-self:center}
+  .lede{color:var(--muted);font-size:15px;margin:0 0 16px;max-width:62ch}
+  .card{
+    background:var(--card);border:1px solid var(--rule);border-radius:12px;
+    box-shadow:var(--shadow);padding:20px 22px;margin-bottom:14px;
+  }
+  .card h3{margin:0 0 8px;font-size:16px}
+  .card p{margin:8px 0;font-size:14.5px;color:var(--muted)}
+  .card p strong{color:var(--ink)}
+  .card ul{margin:8px 0;padding-left:20px;font-size:14.5px;color:var(--muted)}
+  .card li{margin:4px 0}
+  .card a{color:var(--accent);font-weight:600}
+  .flag{
+    display:inline-block;background:var(--accent);color:#fff;
+    font-size:10.5px;letter-spacing:1.5px;padding:2px 9px;border-radius:999px;
+    vertical-align:2px;margin-right:8px;text-transform:uppercase;
+  }
+  :root[data-theme="dark"] .flag{color:#1a1206}
+  @media (prefers-color-scheme:dark){ :root[data-theme="auto"] .flag{color:#1a1206} }
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  @media (max-width:640px){.grid2{grid-template-columns:1fr}}
+  table{width:100%;border-collapse:collapse;font-size:14px;margin:10px 0}
+  th{text-align:left;padding:8px 10px;border-bottom:2px solid var(--rule-strong);color:var(--ink)}
+  td{padding:8px 10px;border-bottom:1px solid var(--rule);color:var(--muted);vertical-align:top}
+  td:first-child{color:var(--ink);font-weight:600;white-space:nowrap}
+  footer{margin-top:48px;border-top:3px double var(--rule-strong);padding-top:16px;
+    display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;
+    font-size:13px;color:var(--muted)}
+  footer a{color:var(--accent);font-weight:600;text-decoration:none}
+  footer a:hover{text-decoration:underline}
+  .back{display:inline-block;margin-top:8px;font-size:14px;color:var(--accent);font-weight:600;text-decoration:none}
+  .back:hover{text-decoration:underline}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="masthead">
+    <p class="kicker"><a href="index.html">&larr; Briefing Buddy</a> &middot; Section 3 of 8</p>
+    <h1>Live briefing data</h1>
+    <p class="tagline">What the briefings actually carry right now — the snapshot behind the settings.</p>
+    <div class="dateline">
+      <span>Briefing Buddy &middot; snapshot refreshes 5:41 AM &amp; PM PT</span>
+      <button class="theme-btn" id="themeBtn" title="Toggle light / dark">&#x25D0; Theme</button>
+    </div>
+  </header>
+  <main>
+    <section>
+      <p class="lede">This is the data the briefings are built from. The homepage snapshot refreshes twice daily — 5:41 AM and 5:41 PM PT, just ahead of each edition — so what you see here is what the next briefing will carry. For the current values, check the homepage tiles.</p>
+      <div class="sec-head"><h2>What's in the snapshot</h2><span class="line"></span></div>
+      <div class="grid2">
+        <div class="card"><h3>Weather &mdash; Fiddletown</h3><p>Current conditions plus today's high/low and tomorrow's outlook. The warm-up watch lives here.</p></div>
+        <div class="card"><h3>Sky</h3><p>Sunrise/sunset times, moon phase and illumination. New-moon and full-moon markers included.</p></div>
+        <div class="card"><h3>Fire &amp; air</h3><p>NWS alerts (red-flag warnings, etc.) and the current AQI. All-clear reads as good news, not an empty slot.</p></div>
+        <div class="card"><h3>AAPL</h3><p>Last close, day change, and the intraday story — Dave's bellwether, always in the briefing.</p></div>
+        <div class="card"><h3>Awaiting your reply</h3><p>Open-question count with the high-priority items named. The registry behind the briefings thread.</p></div>
+        <div class="card"><h3>Next edition</h3><p>Which briefing ships next, when, and its full section lineup.</p></div>
+      </div>
+      <div class="sec-head"><h2>Data sources</h2><span class="line"></span></div>
+      <div class="card">
+        <table>
+          <tr><th>Feed</th><th>Source</th></tr>
+          <tr><td>Weather</td><td>Open-Meteo &mdash; Fiddletown + San Jose</td></tr>
+          <tr><td>Sunrise / sunset</td><td>NOAA solar equation (60-day trends charted)</td></tr>
+          <tr><td>Markets</td><td>Yahoo Finance &mdash; Dow, S&amp;P 500, Nasdaq, AAPL</td></tr>
+          <tr><td>Alerts</td><td>National Weather Service</td></tr>
+          <tr><td>Air quality</td><td>AQI feed, Fiddletown</td></tr>
+          <tr><td>Calendar</td><td>Google Calendar</td></tr>
+          <tr><td>Inbox</td><td>Gmail &mdash; last 24 hours</td></tr>
+          <tr><td>Bills</td><td>The expense tracker</td></tr>
+        </table>
+      </div>
+      <a class="back" href="index.html">&larr; Back to the homepage</a>
+    </section>
+  </main>
+  <footer>
+    <span><a href="index.html">&larr; Back to Briefing Buddy</a></span>
+    <span>Briefing Buddy &middot; a living page</span>
+  </footer>
+</div>
+<script>
+(function(){
+  "use strict";
+  var root = document.documentElement, btn = document.getElementById("themeBtn");
+  function currentTheme(){
+    var t = root.getAttribute("data-theme");
+    if(t === "light" || t === "dark") return t;
+    return (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) ? "dark" : "light";
+  }
+  function paint(){ btn.textContent = currentTheme() === "dark" ? "\u2600 Theme" : "\u25D0 Theme"; }
+  btn.addEventListener("click", function(){
+    root.setAttribute("data-theme", currentTheme() === "dark" ? "light" : "dark");
+    try{ localStorage.setItem("bb-theme", root.getAttribute("data-theme")); }catch(e){}
+    paint();
+  });
+  try{
+    var saved = localStorage.getItem("bb-theme");
+    if(saved === "light" || saved === "dark") root.setAttribute("data-theme", saved);
+  }catch(e){}
+  paint();
+})();
+</script>
+</body>
+</html>

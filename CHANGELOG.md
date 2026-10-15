@@ -3,6 +3,11 @@
 All notable changes to the Buddies dashboard and buddy system. Newest first.
 `FEATURES.md` describes the current state; this file describes how it got there.
 
+## 2026-10-14 (Briefing Buddy section detail pages)
+
+### Added
+- **Drill-down detail pages for all 8 Briefing Buddy homepage sections** (Dave's request 2026-10-14): each `sec-head` ("No. 1 Needs your attention" through "No. 8 Brain dump") is now a link to a dedicated detail page (attention.html, editions.html, live-data.html, designer.html, library.html, topics.html, on-my-mind.html, brain-dump.html) with deeper content about that section — full section catalogs, data-source tables, how-it-works explainers, and the open product questions. Same newsroom aesthetic, dark+light theme toggle, back links to the homepage. Hovering a section header reveals a › affordance.
+
 ## 2026-10-14 (Connie Ko onboarding)
 
 ### Added

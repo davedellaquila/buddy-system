@@ -72,6 +72,10 @@
     font-size:24px;margin:0;font-weight:700;
   }
   .sec-head .line{flex:1;height:1px;background:var(--rule);align-self:center}
+  .sec-head h2 a{color:inherit;text-decoration:none}
+  .sec-head h2 a:hover{color:var(--accent)}
+  .sec-head h2 a::after{content:" \203A";color:var(--accent);opacity:0;transition:opacity .15s}
+  .sec-head h2 a:hover::after{opacity:1}
   .lede{color:var(--muted);font-size:15px;margin:-6px 0 18px;max-width:62ch}
   .card{
     background:var(--card);border:1px solid var(--rule);border-radius:12px;
@@ -241,7 +245,7 @@
   <main>
     <!-- ATTENTION -->
     <section>
-      <div class="sec-head"><span class="sec-num">No. 1</span><h2>Needs your attention</h2><span class="line"></span></div>
+      <div class="sec-head"><span class="sec-num">No. 1</span><h2><a href="attention.html">Needs your attention</a></h2><span class="line"></span></div>
       <div class="stack">
         <div class="card attention" data-attn-id="attn-prd">
           <h3><span class="flag">Open</span>Full PRD — not started yet</h3>
@@ -272,7 +276,7 @@
 
     <!-- EDITIONS -->
     <section>
-      <div class="sec-head"><span class="sec-num">No. 2</span><h2>Today&rsquo;s editions</h2><span class="line"></span></div>
+      <div class="sec-head"><span class="sec-num">No. 2</span><h2><a href="editions.html">Today&rsquo;s editions</a></h2><span class="line"></span></div>
       <p class="lede">Two editions a day, built by your assistant and delivered to the Briefings thread — plus a styled HTML email. This is the service the product grows out of.</p>
       <div class="editions">
         <div class="card edition">
@@ -333,7 +337,7 @@
 
     <!-- LIVE DATA -->
     <section>
-      <div class="sec-head"><span class="sec-num">No. 3</span><h2>Live briefing data</h2><span class="line"></span></div>
+      <div class="sec-head"><span class="sec-num">No. 3</span><h2><a href="live-data.html">Live briefing data</a></h2><span class="line"></span></div>
       <p class="lede">What the briefings actually carry right now — snapshot refreshed for the evening edition (Oct 14, ~5:41 PM) plus what's next. This is the data the settings below act on.</p>
       <div class="lib-grid">
         <div class="card lib-item"><h4><span class="dot"></span>Weather — Fiddletown</h4><p>47&deg;F and clear this morning; today sunny, high 74&deg; / low 53&deg;; Thursday sunny, high 83&deg; / low 65&deg; — a real warm-up.</p></div>
@@ -347,7 +351,7 @@
 
     <!-- DESIGNER -->
     <section>
-      <div class="sec-head"><span class="sec-num">No. 4</span><h2>The briefing designer</h2><span class="line"></span></div>
+      <div class="sec-head"><span class="sec-num">No. 4</span><h2><a href="designer.html">The briefing designer</a></h2><span class="line"></span></div>
       <p class="lede">The seed of the app. Decide how many briefings go out each day, when each lands, and what goes in it — a mix-and-match sections library. What you design here is what the assistant delivers.</p>
       <div class="designer-grid">
         <div class="card">
@@ -369,14 +373,14 @@
 
     <!-- LIBRARY -->
     <section>
-      <div class="sec-head"><span class="sec-num">No. 5</span><h2>Sections library</h2><span class="line"></span></div>
+      <div class="sec-head"><span class="sec-num">No. 5</span><h2><a href="library.html">Sections library</a></h2><span class="line"></span></div>
       <p class="lede">Every building block a briefing can be made of. Check the boxes in the designer to mix and match.</p>
       <div class="lib-grid" id="library"></div>
     </section>
 
     <!-- TOPICS -->
     <section>
-      <div class="sec-head"><span class="sec-num">No. 6</span><h2>Topics I watch</h2><span class="line"></span></div>
+      <div class="sec-head"><span class="sec-num">No. 6</span><h2><a href="topics.html">Topics I watch</a></h2><span class="line"></span></div>
       <p class="lede">The personalization axis. Every story is ranked against these.</p>
       <div class="chips">
         <span class="chip">🤖 AI &amp; technology</span>
@@ -391,7 +395,7 @@
 
     <!-- MIND -->
     <section>
-      <div class="sec-head"><span class="sec-num">No. 7</span><h2>On my mind</h2><span class="line"></span></div>
+      <div class="sec-head"><span class="sec-num">No. 7</span><h2><a href="on-my-mind.html">On my mind</a></h2><span class="line"></span></div>
       <p class="lede">Open questions from the brief — the ones the PRD will have to settle.</p>
       <ul class="mind-list">
         <li>Exact final section lists: <span>what's confirmed vs still fluid? Today's two rulings feed this — the morning's 10-minute rule and the evening's new standing sports section.</span></li>
@@ -402,7 +406,7 @@
     </section>
     <!-- BRAIN DUMP -->
     <section>
-      <div class="sec-head"><span class="sec-num">No. 8</span><h2>Brain dump</h2><span class="line"></span></div>
+      <div class="sec-head"><span class="sec-num">No. 8</span><h2><a href="brain-dump.html">Brain dump</a></h2><span class="line"></span></div>
       <p class="lede">Dump what&rsquo;s on your mind about Briefing Buddy &mdash; raw and unfiltered. Each dump lands in the buddy&rsquo;s repo (<code>docs/ingest.md</code>) as a timestamped entry.</p>
       <div class="card dumpbox" data-buddy-id="briefing-buddy">
         <div class="dumpbox-token" hidden>
