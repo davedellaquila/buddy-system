@@ -802,9 +802,13 @@ body.no-write .pdel,body.no-write [data-dump-del],body.no-write [data-dump-edit]
 #sb-close{color:var(--faint)}
 #sb-close:hover{color:var(--muted)}
 #sb-close .xmark-x{stroke:var(--bg)}
+/* Dave 2026-10-14: the rail-top control flips — ‹ collapses when open,
+   › expands when collapsed. Round fills on the rail controls. */
+body.sb-closed #sb-close svg{transform:rotate(180deg)}
+#sb-tools button{border-radius:50% !important}
 #sidebar .brand{padding-right:112px}
 /* Dave 2026-10-14: NO reopen button when the sidebar is collapsed — the
-   collapsed icon rail is the affordance (tapping any icon expands it).
+   top rail control (‹/›) expands/collapses; rail icons only switch views.
    (body.sb-closed #menu-btn stays display:none per the rule above.) */
 #plans-sec.collapsed #plan-nav{display:none}
 #plans-sec #plans-arrow{transform:rotate(90deg);display:inline-block}
@@ -7128,6 +7132,12 @@ function setSidebarOpen(open){
     if (typeof applySbWidth === 'function') applySbWidth();
     const _tab = document.getElementById('sb-tab');
     if (_tab) _tab.style.display = open ? '' : 'none';
+    // Dave 2026-10-14: the rail-top control flips its meaning — keep its label honest
+    const _sbc = document.getElementById('sb-close');
+    if (_sbc) {
+      const lbl = document.body.classList.contains('sb-closed') ? 'Expand sidebar' : 'Collapse sidebar';
+      _sbc.title = lbl; _sbc.setAttribute('aria-label', lbl);
+    }
   }
 }
 /* Right panel section rail (Dave, 2026-10-14): collapsed floating pill with section icons */
@@ -8040,7 +8050,7 @@ document.addEventListener('click', e => {
     openBuddy(id);
     return;
   }
-  if (e.target.closest && e.target.closest('#sb-close')) { setSidebarOpen(false); return; }
+  if (e.target.closest && e.target.closest('#sb-close')) { setSidebarOpen(document.body.classList.contains('sb-closed')); return; }
   if (e.target.closest && e.target.closest('#menu-btn')) {
     // State-dependent per Dave's rule: with the right (detail) panel open, the
     // floating › closes it (same screen position as the drawer's open chevron).
@@ -8085,8 +8095,8 @@ document.addEventListener('click', e => {
     const fromPanel = vb.id === 'bp-allbuddies' || (vb.dataset.view === 'projects' && S.sel && S.sel.startsWith('buddy:'));
     if (fromPanel && S.sel && S.sel.startsWith('buddy:')) pendingHighlight = S.sel.slice(6);
     show('view:' + vb.dataset.view);
-    // Tapping a view icon in the collapsed rail expands the sidebar
-    if (document.body.classList.contains('sb-closed')) setSidebarOpen(true);
+    // Dave 2026-10-14: rail icons only switch the main view — the top
+    // rail control (‹/›) is the expand/collapse affordance.
     if (window.innerWidth < 640) { const sbo=document.getElementById('sidebar'); if(sbo) sbo.classList.remove('open'); const sco=document.getElementById('sb-scrim'); if(sco) sco.classList.remove('show'); }
     if (pendingHighlight) { const id = pendingHighlight; pendingHighlight = null; highlightProjectRow(id); }
     return;

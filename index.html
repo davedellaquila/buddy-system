@@ -974,9 +974,13 @@ body.no-write .pdel,body.no-write [data-dump-del],body.no-write [data-dump-edit]
 #sb-close{color:var(--faint)}
 #sb-close:hover{color:var(--muted)}
 #sb-close .xmark-x{stroke:var(--bg)}
+/* Dave 2026-10-14: the rail-top control flips — ‹ collapses when open,
+   › expands when collapsed. Round fills on the rail controls. */
+body.sb-closed #sb-close svg{transform:rotate(180deg)}
+#sb-tools button{border-radius:50% !important}
 #sidebar .brand{padding-right:112px}
 /* Dave 2026-10-14: NO reopen button when the sidebar is collapsed — the
-   collapsed icon rail is the affordance (tapping any icon expands it).
+   top rail control (‹/›) expands/collapses; rail icons only switch views.
    (body.sb-closed #menu-btn stays display:none per the rule above.) */
 #plans-sec.collapsed #plan-nav{display:none}
 #plans-sec #plans-arrow{transform:rotate(90deg);display:inline-block}
@@ -2725,7 +2729,7 @@ function renderDevelopSection(){
   const dev = document.getElementById('fset-develop');
   if (!dev) return;
   const simulating = !!devBackup;
-  const buildNum = '20261014.2320';
+  const buildNum = '20261014.2324';
   dev.innerHTML = ''
     + '<label class="fset-check"><input type="checkbox" id="dev-empty-toggle"' + (simulating ? ' checked' : '') + '> <span><strong>Simulate new user</strong> — empty data file, as if opening the shared link fresh</span></label>'
     + '<div class="fineprint" style="margin:8px 0 12px">Build <span style="font-family:monospace">' + escHtml(String(buildNum)) + '</span> · ' + BUDDIES.length + ' buddies in this file</div>'
@@ -3948,7 +3952,7 @@ function renderBuddy(id){
       'Anybody with repo access can see this note. Saved to the buddy’s repo (docs/notes.md).')
     + '<div class="attr-body"><textarea class="notes" id="bp-shared-notes" placeholder="Anybody with repo access can see this note."></textarea>'
     + '<p class="fineprint" id="shared-status"></p></div></div>'
-    + '<div class="bp-build">Build 20261014.2320</div>'
+    + '<div class="bp-build">Build 20261014.2324</div>'
     + '</div>';
   // Update every visible label for a buddy after a rename/re-icon, across all
   // Atlas lenses. A rename changes no structure, so labels are patched in place
@@ -5734,7 +5738,7 @@ function renderPlan(id){
     + '<p class="fineprint">Saved on this device. (For your eyes only)</p></div>'
     + '<div class="bp-sec"><h3>Shared notes<span class="info-tip" data-tip="Visible to everyone with access to this project.">\u24d8</span></h3><textarea class="notes" id="bp-shared" placeholder="Shared notes\u2026 (visible to everyone with access)">'+escHtml((S.planShared||{})[id]||'')+'</textarea>'
     + '<p class="fineprint">Shared — visible to everyone with access.</p></div>'
-    + '<div class="bp-build">Build 20261014.2320</div>'
+    + '<div class="bp-build">Build 20261014.2324</div>'
     + '</div>';
   const nt = document.getElementById('bp-notes');
   let t = null;
@@ -7475,6 +7479,12 @@ function setSidebarOpen(open){
     if (typeof applySbWidth === 'function') applySbWidth();
     const _tab = document.getElementById('sb-tab');
     if (_tab) _tab.style.display = open ? '' : 'none';
+    // Dave 2026-10-14: the rail-top control flips its meaning — keep its label honest
+    const _sbc = document.getElementById('sb-close');
+    if (_sbc) {
+      const lbl = document.body.classList.contains('sb-closed') ? 'Expand sidebar' : 'Collapse sidebar';
+      _sbc.title = lbl; _sbc.setAttribute('aria-label', lbl);
+    }
   }
 }
 /* Right panel section rail (Dave, 2026-10-14): collapsed floating pill with section icons */
@@ -7956,14 +7966,14 @@ function openWhatsNew(){
     .then(r => r.ok ? r.text() : '')
     .then(t => {
       const serverBuild = t.trim();
-      if (serverBuild && serverBuild !== '20261014.2320') {
+      if (serverBuild && serverBuild !== '20261014.2324') {
         updBtn.style.display = '';
         updBtn.title = 'Update to build ' + serverBuild;
       }
       // Show build numbers at the top of the sheet (Dave's request 2026-10-12)
-      const myBuild = '20261014.2320';
+      const myBuild = '20261014.2324';
       let buildLine = '<p class="fineprint" style="margin-top:0">You’re on build ' + escHtml(myBuild) + '.';
-      if (serverBuild && serverBuild !== '20261014.2320' && isNewerBuild(serverBuild, myBuild)) {
+      if (serverBuild && serverBuild !== '20261014.2324' && isNewerBuild(serverBuild, myBuild)) {
         buildLine += ' Build ' + escHtml(serverBuild) + ' is available.';
       }
       buildLine += '</p>';
@@ -8002,7 +8012,7 @@ function isNewerBuild(server, mine){
   } catch (e) { return false; }
 }
 function initVersionCheck(){
-  const myBuild = '20261014.2320';
+  const myBuild = '20261014.2324';
   function showUpdateBanner(serverBuild){
     if (document.getElementById('update-banner')) return;
     const b = document.createElement('div');
@@ -8387,7 +8397,7 @@ document.addEventListener('click', e => {
     openBuddy(id);
     return;
   }
-  if (e.target.closest && e.target.closest('#sb-close')) { setSidebarOpen(false); return; }
+  if (e.target.closest && e.target.closest('#sb-close')) { setSidebarOpen(document.body.classList.contains('sb-closed')); return; }
   if (e.target.closest && e.target.closest('#menu-btn')) {
     // State-dependent per Dave's rule: with the right (detail) panel open, the
     // floating › closes it (same screen position as the drawer's open chevron).
@@ -8432,8 +8442,8 @@ document.addEventListener('click', e => {
     const fromPanel = vb.id === 'bp-allbuddies' || (vb.dataset.view === 'projects' && S.sel && S.sel.startsWith('buddy:'));
     if (fromPanel && S.sel && S.sel.startsWith('buddy:')) pendingHighlight = S.sel.slice(6);
     show('view:' + vb.dataset.view);
-    // Tapping a view icon in the collapsed rail expands the sidebar
-    if (document.body.classList.contains('sb-closed')) setSidebarOpen(true);
+    // Dave 2026-10-14: rail icons only switch the main view — the top
+    // rail control (‹/›) is the expand/collapse affordance.
     if (window.innerWidth < 640) { const sbo=document.getElementById('sidebar'); if(sbo) sbo.classList.remove('open'); const sco=document.getElementById('sb-scrim'); if(sco) sco.classList.remove('show'); }
     if (pendingHighlight) { const id = pendingHighlight; pendingHighlight = null; highlightProjectRow(id); }
     return;
