@@ -805,12 +805,18 @@ body.no-write .pdel,body.no-write [data-dump-del],body.no-write [data-dump-edit]
 #sb-close:hover{color:var(--muted)}
 #sb-close .xmark-x{stroke:var(--bg)}
 /* Dave 2026-10-14: the rail-top control flips — ‹ collapses when open,
-   › expands when collapsed. Round fills on the rail controls. */
+   › expands when collapsed. Round fills on the rail controls.
+   The collapsed rail's expand affordance is the first icon in #view-nav
+   (#sb-expand-btn); #sb-tools stays hidden while collapsed. */
 body.sb-closed #sb-close svg{transform:rotate(180deg)}
 #sb-tools button{border-radius:50% !important}
+#sb-expand-btn{display:none}
+body.sb-closed #sb-expand-btn{display:flex}
+body.sb-closed #sidebar #sb-tools{display:none}
 #sidebar .brand{padding-right:112px}
-/* Dave 2026-10-14: NO reopen button when the sidebar is collapsed — the
-   top rail control (‹/›) expands/collapses; rail icons only switch views.
+/* Dave 2026-10-14: NO floating reopen button when the sidebar is collapsed —
+   the expand control is the first icon in the rail's own icon stack
+   (#sb-expand-btn); the rest of the rail icons only switch views.
    (body.sb-closed #menu-btn stays display:none per the rule above.) */
 #plans-sec.collapsed #plan-nav{display:none}
 #plans-sec #plans-arrow{transform:rotate(90deg);display:inline-block}
@@ -1883,7 +1889,11 @@ function renderChangelog(){
 }
 function renderNav(){
   const views = getViewOrder().map(id => VIEW_DEFS.find(v => v[0] === id)).filter(Boolean).filter(([v]) => isViewVisible(v));
-  document.getElementById('view-nav').innerHTML = views.map(([v,l,ic]) =>
+  /* Dave 2026-10-14: the expand control lives IN the rail's icon stack (first icon),
+     styled exactly like the other rail icons — no separate box. Visible only when collapsed. */
+  document.getElementById('view-nav').innerHTML =
+    '<button class="navbtn" id="sb-expand-btn" title="Expand sidebar" aria-label="Expand sidebar"><span class="nic"><svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M9.5 5.5L16 12l-6.5 6.5" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span></button>'
+    + views.map(([v,l,ic]) =>
     '<button class="navbtn'+(S.view===v?' sel':'')+'" data-view="'+v+'" draggable="true" title="'+(VIEW_TIPS[v]||l)+'"><span class="nic">'+ic+'</span><span class="nlab">'+l+'</span><span class="navgrip" title="Drag to reorder views">\u22ee\u22ee</span></button>').join('');
   applyViewGripDrag();
   const q = (document.getElementById('buddy-search').value || '').toLowerCase().trim();
@@ -7086,7 +7096,7 @@ function initNavItemDnD(){
       if (!dragId) return;
       const item = e.target && e.target.closest ? e.target.closest(itemSel) : null;
       const tid = item ? item.getAttribute(idAttr) : null;
-      if (!item || tid === dragId || (cfg.sameGroup && !cfg.sameGroup(dragId, tid))) {
+      if (!item || !tid || item.id === 'sb-expand-btn' || tid === dragId || (cfg.sameGroup && !cfg.sameGroup(dragId, tid))) {
         clearItemHints();
         return;
       }
@@ -8222,6 +8232,7 @@ document.addEventListener('click', e => {
     return;
   }
   if (e.target.closest && e.target.closest('#sb-close')) { setSidebarOpen(document.body.classList.contains('sb-closed')); return; }
+  if (e.target.closest && e.target.closest('#sb-expand-btn')) { setSidebarOpen(true); return; }
   if (e.target.closest && e.target.closest('#menu-btn')) {
     // State-dependent per Dave's rule: with the right (detail) panel open, the
     // floating › closes it (same screen position as the drawer's open chevron).
