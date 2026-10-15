@@ -3,6 +3,11 @@
 All notable changes to the Buddies dashboard and buddy system. Newest first.
 `FEATURES.md` describes the current state; this file describes how it got there.
 
+## 2026-10-15 (Marketing Buddy)
+
+### Added
+- **Marketing Buddy** (Dave 2026-10-15): Dave's marketing department — owns all Buddy System messaging (taglines, testimonials, social rollout, positioning, launch copy). Don Draper persona: confident, poetic, slightly world-weary; sells the feeling, not the product. 🥃 icon, child of Project Buddy. Mission statement, private repo (davedellaquila/marketing-buddy) with SOUL.md capturing the Draper voice, KNOWLEDGE.md seeded with the messaging canon, taglines.md + testimonials.md moved in from ~/workspace/user/marketing/. Dashboard homepage with dark mode, mid-century styling, pull-quote, canon section, brain-dump box.
+
 ## 2026-10-15 (Penny Luedtke buddy)
 
 ### Added
