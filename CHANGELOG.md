@@ -3,6 +3,12 @@
 All notable changes to the Buddies dashboard and buddy system. Newest first.
 `FEATURES.md` describes the current state; this file describes how it got there.
 
+## 2026-10-15 (Penny Luedtke homepage)
+
+### Added
+- **Penny's photo** (Dave 2026-10-15): Penny sent her selfie ("I don't even let family members take pics of me. I hate being in photos. But there it is.") — now on her homepage header as a circular avatar, plus two new correspondence entries (photo email, Wispr Flow reply).
+- **Beethoven mentioned** (Dave 2026-10-15): Penny's other pet, alongside Mozart. Dossier "Cat" row became "Pets"; dossier doc "Mozart" section became "Pets". Beethoven will become a child buddy of Penny's buddy in her own Buddy System later, same as Mozart.
+
 ## 2026-10-15 (Eric buddy)
 
 ### Added
