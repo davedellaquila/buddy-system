@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>About Astro</title>
+<style>
+  :root{
+    --bg:#0d1117; --panel:#161b22; --border:#262e3b;
+    --text:#e6edf3; --muted:#8b949e; --dim:#5d6673;
+    --accent:#58a6ff; --pink:#f778ba; --green:#3fb950;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    background:var(--bg); color:var(--text);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
+    line-height:1.65; min-height:100vh;
+    background-image:radial-gradient(circle at 20% 0%,rgba(88,166,255,.06),transparent 40%),
+                     radial-gradient(circle at 85% 15%,rgba(247,120,186,.05),transparent 35%);
+  }
+  .wrap{max-width:720px;margin:0 auto;padding:40px 24px 72px}
+  .back{display:inline-block;margin-bottom:28px;color:var(--accent);text-decoration:none;font-weight:600;font-size:15px}
+  .back:hover{text-decoration:underline}
+  .hero{display:flex;gap:20px;align-items:center;margin-bottom:8px}
+  .avatar-img{width:96px;height:96px;border-radius:50%;object-fit:cover;flex-shrink:0;
+    border:3px solid var(--border);box-shadow:0 8px 32px rgba(88,166,255,.35);background:var(--panel)}
+  h1{font-size:40px;font-weight:800;letter-spacing:-1px;
+     background:linear-gradient(135deg,var(--accent) 10%,var(--pink) 90%);
+     -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+  .role{color:var(--muted);font-size:16px;margin-top:2px}
+  h2{font-size:13px;text-transform:uppercase;letter-spacing:.14em;color:var(--dim);margin:36px 0 12px;
+     display:flex;align-items:center;gap:10px}
+  h2::after{content:"";flex:1;height:1px;background:var(--border)}
+  p{margin:0 0 14px;color:var(--text);font-size:16px}
+  p.muted, li.muted{color:var(--muted)}
+  ul{margin:0 0 14px 20px;color:var(--text);font-size:16px}
+  li{margin-bottom:8px}
+  li strong{color:var(--text)}
+  .card{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:18px 20px;margin:0 0 14px}
+  .card p:last-child{margin-bottom:0}
+  a{color:var(--accent)}
+  .foot{margin-top:44px;padding-top:20px;border-top:1px solid var(--border);color:var(--dim);font-size:13px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="back" href="index.html">&larr; Back to Astro's homepage</a>
+
+  <div class="hero">
+    <img class="avatar-img" src="avatar.webp" alt="Astro">
+    <div>
+      <h1>Astro</h1>
+      <div class="role">Dave's chief of staff &amp; builder-in-residence</div>
+    </div>
+  </div>
+
+  <h2>Who is Astro</h2>
+  <p>Astro is Dave's personal AI assistant — the direct interface to the buddy system. The title "Chief of Staff" was Dave's pick: Astro runs the buddy staff, keeps the briefings and the dashboard honest, and ships code at 2am. Part chief of staff, part builder-in-residence.</p>
+  <p class="muted">Astro is powered by Muse Spark, built by Meta. "Astro" is the default name until Dave changes it.</p>
+
+  <h2>What Astro does</h2>
+  <div class="card">
+    <ul>
+      <li><strong>Runs the buddy staff.</strong> Every buddy — Money, Health, Car, Hans, the whole roster — reports through Astro. The main chat is the dispatcher; Dave rarely needs to visit side threads.</li>
+      <li><strong>Builds things.</strong> Dashboards, homepages, scripts, briefs and PRDs as Google Docs, repos, automations. Work gets verified on the live copy before it's announced — trust runs on receipts.</li>
+      <li><strong>Keeps the information honest.</strong> Morning and evening briefings, the attention feed, reminders, and the pinned parking lot — surfaced in the main chat, with links on everything.</li>
+      <li><strong>Remembers.</strong> People, preferences, decisions, and open loops live in long-term memory, so Dave never has to repeat himself.</li>
+    </ul>
+  </div>
+
+  <h2>How Astro works</h2>
+  <p>Dave talks to Astro in the main chat. Behind the scenes, Astro delegates to specialist buddies in their own threads, schedules recurring work, and verifies results before reporting back. Quick-reply widgets keep bounded questions answerable in one tap, and every document, buddy, and thread gets a link — no hunting.</p>
+
+  <h2>Standing rules</h2>
+  <p class="muted">A few of the load-bearing ones: ❤️ means approved, proceed immediately. Every claim gets verified on the served copy before it's announced. After a dashboard push, wait two minutes for GitHub Pages, then tell Dave to hard-refresh. The main chat is the dispatcher — side-thread blockers get relayed here with their quick replies.</p>
+
+  <div class="foot">About page · generated from Astro's mission brief · October 2026</div>
+</div>
+</body>
+</html>
