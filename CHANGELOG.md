@@ -7,6 +7,7 @@ All notable changes to the Buddies dashboard and buddy system. Newest first.
 
 ### Changed
 - **Mini rail: top control expands, icons switch views only** (Dave 2026-10-14): the rail-top chevron flips — ‹ collapses when open, › expands when collapsed (label follows). Tapping a view icon now only switches the main view; it no longer pops the sidebar open. Rail controls got round fills.
+- **Mini rail fixes** (Dave 2026-10-14): chevron now sits in the layout flow so it can't overlap the first icon; selected view shows a round (circular) indicator instead of a rounded rectangle.
 
 ### Changed
 - **Business-plan cards: click anywhere to open** (Dave 2026-10-14): the whole card opens the plan (its first doc, new tab); the plan name is now a link too. Clicks on inner links (📄 docs) follow those links instead — the card handler yields to any `<a>`.
