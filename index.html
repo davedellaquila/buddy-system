@@ -253,7 +253,9 @@ body.sb-closed #sidebar .sb-tipjar, body.sb-closed #sidebar #sb-tools #sb-gear,
 body.sb-closed #sidebar .navbtn .nlab, body.sb-closed #sidebar .navbtn .navgrip, body.sb-closed #sidebar .nav-sec h3,
 body.sb-closed #sidebar #views-sec h3{display:none}
 body.sb-closed #sidebar .sb-brand-sticky{padding:12px 0 4px;display:flex;justify-content:center}
-body.sb-closed #sidebar #sb-tools{display:flex;justify-content:center}
+body.sb-closed #sidebar #sb-tools{position:static;display:flex;justify-content:center;margin:0 auto}
+/* Dave 2026-10-14: round selection indicator on the mini rail (not a rounded rect) */
+body.sb-closed #view-nav .navbtn.sel{border-radius:50%;box-shadow:none}
 body.sb-closed #sidebar #views-sec{margin-top:8px}
 body.sb-closed #sidebar #view-nav{gap:4px;align-items:center}
 body.sb-closed #sidebar #view-nav .navbtn{width:44px;height:44px;justify-content:center;padding:0;border-radius:12px}
@@ -2729,7 +2731,7 @@ function renderDevelopSection(){
   const dev = document.getElementById('fset-develop');
   if (!dev) return;
   const simulating = !!devBackup;
-  const buildNum = '20261014.2324';
+  const buildNum = '20261014.2330';
   dev.innerHTML = ''
     + '<label class="fset-check"><input type="checkbox" id="dev-empty-toggle"' + (simulating ? ' checked' : '') + '> <span><strong>Simulate new user</strong> — empty data file, as if opening the shared link fresh</span></label>'
     + '<div class="fineprint" style="margin:8px 0 12px">Build <span style="font-family:monospace">' + escHtml(String(buildNum)) + '</span> · ' + BUDDIES.length + ' buddies in this file</div>'
@@ -3952,7 +3954,7 @@ function renderBuddy(id){
       'Anybody with repo access can see this note. Saved to the buddy’s repo (docs/notes.md).')
     + '<div class="attr-body"><textarea class="notes" id="bp-shared-notes" placeholder="Anybody with repo access can see this note."></textarea>'
     + '<p class="fineprint" id="shared-status"></p></div></div>'
-    + '<div class="bp-build">Build 20261014.2324</div>'
+    + '<div class="bp-build">Build 20261014.2330</div>'
     + '</div>';
   // Update every visible label for a buddy after a rename/re-icon, across all
   // Atlas lenses. A rename changes no structure, so labels are patched in place
@@ -5738,7 +5740,7 @@ function renderPlan(id){
     + '<p class="fineprint">Saved on this device. (For your eyes only)</p></div>'
     + '<div class="bp-sec"><h3>Shared notes<span class="info-tip" data-tip="Visible to everyone with access to this project.">\u24d8</span></h3><textarea class="notes" id="bp-shared" placeholder="Shared notes\u2026 (visible to everyone with access)">'+escHtml((S.planShared||{})[id]||'')+'</textarea>'
     + '<p class="fineprint">Shared — visible to everyone with access.</p></div>'
-    + '<div class="bp-build">Build 20261014.2324</div>'
+    + '<div class="bp-build">Build 20261014.2330</div>'
     + '</div>';
   const nt = document.getElementById('bp-notes');
   let t = null;
@@ -7966,14 +7968,14 @@ function openWhatsNew(){
     .then(r => r.ok ? r.text() : '')
     .then(t => {
       const serverBuild = t.trim();
-      if (serverBuild && serverBuild !== '20261014.2324') {
+      if (serverBuild && serverBuild !== '20261014.2330') {
         updBtn.style.display = '';
         updBtn.title = 'Update to build ' + serverBuild;
       }
       // Show build numbers at the top of the sheet (Dave's request 2026-10-12)
-      const myBuild = '20261014.2324';
+      const myBuild = '20261014.2330';
       let buildLine = '<p class="fineprint" style="margin-top:0">You’re on build ' + escHtml(myBuild) + '.';
-      if (serverBuild && serverBuild !== '20261014.2324' && isNewerBuild(serverBuild, myBuild)) {
+      if (serverBuild && serverBuild !== '20261014.2330' && isNewerBuild(serverBuild, myBuild)) {
         buildLine += ' Build ' + escHtml(serverBuild) + ' is available.';
       }
       buildLine += '</p>';
@@ -8012,7 +8014,7 @@ function isNewerBuild(server, mine){
   } catch (e) { return false; }
 }
 function initVersionCheck(){
-  const myBuild = '20261014.2324';
+  const myBuild = '20261014.2330';
   function showUpdateBanner(serverBuild){
     if (document.getElementById('update-banner')) return;
     const b = document.createElement('div');

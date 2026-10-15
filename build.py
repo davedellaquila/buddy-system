@@ -81,7 +81,9 @@ body.sb-closed #sidebar .sb-tipjar, body.sb-closed #sidebar #sb-tools #sb-gear,
 body.sb-closed #sidebar .navbtn .nlab, body.sb-closed #sidebar .navbtn .navgrip, body.sb-closed #sidebar .nav-sec h3,
 body.sb-closed #sidebar #views-sec h3{display:none}
 body.sb-closed #sidebar .sb-brand-sticky{padding:12px 0 4px;display:flex;justify-content:center}
-body.sb-closed #sidebar #sb-tools{display:flex;justify-content:center}
+body.sb-closed #sidebar #sb-tools{position:static;display:flex;justify-content:center;margin:0 auto}
+/* Dave 2026-10-14: round selection indicator on the mini rail (not a rounded rect) */
+body.sb-closed #view-nav .navbtn.sel{border-radius:50%;box-shadow:none}
 body.sb-closed #sidebar #views-sec{margin-top:8px}
 body.sb-closed #sidebar #view-nav{gap:4px;align-items:center}
 body.sb-closed #sidebar #view-nav .navbtn{width:44px;height:44px;justify-content:center;padding:0;border-radius:12px}
