@@ -6,6 +6,9 @@ All notable changes to the Buddies dashboard and buddy system. Newest first.
 ## 2026-10-14 (Collapsed panels + tile rows)
 
 ### Changed
+- **Business-plan cards: click anywhere to open** (Dave 2026-10-14): the whole card opens the plan (its first doc, new tab); the plan name is now a link too. Clicks on inner links (📄 docs) follow those links instead — the card handler yields to any `<a>`.
+
+### Changed
 - **One content width on every content page** (Dave 2026-10-14): Plans, Manifest, and Changelog now use the Projects pattern — 860px outer with 16px gutters. They were running 32px wider with full-bleed headings; now all page boundaries line up.
 
 ### Changed
