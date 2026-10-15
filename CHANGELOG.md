@@ -3,6 +3,11 @@
 All notable changes to the Buddies dashboard and buddy system. Newest first.
 `FEATURES.md` describes the current state; this file describes how it got there.
 
+## 2026-10-15 (Brain dump queues locally on failure)
+
+### Fixed
+- **Homepage 🧠 Brain dump no longer loses text on save failure** (Dave 2026-10-15): `homepageDumpSubmit` previously showed "Save failed: <reason>" and left the text sitting in the textarea — one navigation away and it was gone. It now follows the standing `token_gated_client_writes` rule: any failure (no token, GitHub 404, network error) queues the entry (text + timestamp + buddy id) in the shared `pendingDumps` localStorage queue, clears the textarea, and shows "Queued on this device — will sync when GitHub is connected (N queued)" with a token-settings link. The brain-dump textarea is now always rendered when a repo is linked (previously hidden behind a locked box with no token — Dave's Safari had no token); the locked notice remains but invites queuing. Queued items render in the dump feed with a "pending sync" badge, auto-flush when a successful dump lands or when a token is saved, and the feed refreshes after flushing.
+
 ## 2026-10-15 (Dashboard fixes batch)
 
 ### Fixed

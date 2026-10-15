@@ -3026,11 +3026,14 @@ function homepageDumpSectionHtml(b){
   let inner;
   if (!b.repo) {
     inner = '<p class="hp-dump-status" style="margin:10px 0 0">No repo linked for this buddy yet — dumps are disabled.</p>';
-  } else if (!ghToken()) {
-    inner = '<div class="hp-locked"><p class="hp-dump-status" style="margin:0 0 12px">🔒 Connect GitHub to unlock dumping. The token stays on this device only.</p>'
-      + '<button type="button" class="hp-dump-btn" data-hp-connect>Connect GitHub to enable</button></div>';
   } else {
-    inner = '<textarea data-hp-dump placeholder="Dump a thought, link, or half-formed idea — it lands in this buddy\\u2019s docs/ingest.md" aria-label="Brain dump"></textarea>'
+    // Dave 2026-10-15: the textarea is ALWAYS available when a repo is linked —
+    // without a token, dumps queue on this device (localStorage) instead of failing.
+    const locked = ghToken() ? ''
+      : '<div class="hp-locked"><p class="hp-dump-status" style="margin:0 0 12px">🔒 No GitHub token on this device — dumps queue here and sync automatically once you add one. The token stays on this device only.</p>'
+      + '<button type="button" class="hp-dump-btn" data-hp-connect>Connect GitHub</button></div>';
+    inner = locked
+      + '<textarea data-hp-dump placeholder="Dump a thought, link, or half-formed idea — it lands in this buddy\\u2019s docs/ingest.md" aria-label="Brain dump"></textarea>'
       + '<div class="hp-dump-row"><button type="button" class="hp-dump-btn" data-hp-dump-btn>Dump it</button><span class="hp-dump-status" data-hp-dump-status></span></div>'
       + '<div data-hp-dump-feed style="margin-top:12px"></div>';
   }
@@ -3058,6 +3061,23 @@ function refreshHomepageDumpbox(){
   sec.replaceWith(fresh);
   initHomepageDumpbox(fresh, b);
 }
+function renderHpDumpFeed(root, id){
+  // Dave 2026-10-15: show device-queued dumps in the homepage feed so nothing
+  // is silently lost and queued items can be revisited. Reuses the same
+  // pendingDumps queue as the dashboard panel path.
+  const feed = root.querySelector('[data-hp-dump-feed]');
+  if (!feed) return;
+  const pending = getPendingDumps().filter(function(p){ return p.buddyId === id; }).reverse();
+  if (!pending.length) { feed.innerHTML = ''; return; }
+  feed.innerHTML = '<p class="hp-dump-status" style="margin:0 0 8px">⏳ ' + pending.length
+    + ' queued on this device — will sync to GitHub when a token is available.</p>'
+    + pending.map(function(p){
+      return '<div class="attn"><div class="attn-body"><div class="attn-text">'
+        + linkify(escHtml(p.body.slice(0, 300))) + (p.body.length > 300 ? '\\u2026' : '')
+        + '<span class="dump-pending-badge">pending sync</span></div><div class="attn-date">'
+        + escHtml(p.stamp) + '</div></div></div>';
+    }).join('');
+}
 async function homepageDumpSubmit(root, id){
   const ta = root.querySelector('[data-hp-dump]');
   const st = root.querySelector('[data-hp-dump-status]');
@@ -3065,26 +3085,34 @@ async function homepageDumpSubmit(root, id){
   if (!ta || !b) return;
   const text = ta.value.trim();
   if (!text) return;
+  const stamp = new Date().toLocaleString();
+  if (!b.repo) { if (st) st.textContent = 'No repo linked for this buddy yet.'; return; }
   // Re-check the token fresh from storage — it may have been added in another tab.
   if (!ghToken()) {
     const freshTok = lsToken();
     if (freshTok) { S.ghToken = freshTok; }
-    else {
-      if (st) st.innerHTML = 'Add a GitHub token to unlock ingest. <a href="https://github.com/settings/tokens" target="_blank" rel="noopener">Get one here</a>.';
-      refreshHomepageDumpbox();
-      return;
-    }
   }
-  const stamp = new Date().toLocaleString();
+  // Dave 2026-10-15: ANY failure (no token, 404, network) queues the dump on
+  // this device instead of dropping it. The textarea is cleared because the
+  // text is safely stored in localStorage.
+  const queueIt = function(){
+    queuePendingDump(id, stamp, text);
+    ta.value = '';
+    const n = getPendingDumps().filter(function(p){ return p.buddyId === id; }).length;
+    if (st) st.innerHTML = 'Queued on this device — will sync when GitHub is connected (' + n + ' queued). <a href="https://github.com/settings/tokens" target="_blank" rel="noopener">Get a token</a>.';
+    renderHpDumpFeed(root, id);
+  };
+  if (!ghToken()) { queueIt(); return; }
   const entry = '## ' + stamp + String.fromCharCode(10,10) + text + String.fromCharCode(10,10);
-  if (!b.repo) { if (st) st.textContent = 'No repo linked for this buddy yet.'; return; }
   if (st) st.textContent = 'Dumping…';
   try {
     const cur = await ghGetFile(b.repo, 'docs/ingest.md') || '# Ingest log — ' + b.name + String.fromCharCode(10,10);
     await ghPutFile(b.repo, 'docs/ingest.md', b64encode(cur + entry), 'Ingest dump for ' + id);
     ta.value = '';
     if (st) st.textContent = 'Dumped to ' + b.repo + '/docs/ingest.md';
-  } catch (err) { if (st) st.textContent = 'Save failed: ' + (err.message || err); }
+    // Now that we know the token works, flush anything queued earlier
+    flushPendingDumps().then(function(){ renderHpDumpFeed(root, id); });
+  } catch (err) { queueIt(); }
 }
 function initHomepageDumpbox(root, b){
   if (!root || !b) return;
@@ -3109,6 +3137,8 @@ function initHomepageDumpbox(root, b){
     connectBtn._hpWired = true;
     connectBtn.addEventListener('click', function(){ openTokenPopover(); });
   }
+  // Show anything already queued on this device (Dave 2026-10-15)
+  renderHpDumpFeed(root, b.id);
 }
 
 function renderProjectView(){
@@ -6351,6 +6381,9 @@ async function flushPendingDumps(){
     // Some flushed — refresh the feed if we're looking at a buddy
     const m = (S.sel || '').match(/^buddy:(.+)/);
     if (m) renderIngestFeed(m[1]);
+    // ... and the homepage dump feed, if one is showing (Dave 2026-10-15)
+    const hpSec = document.querySelector('[data-hp-dumpsec]');
+    if (hpSec) { try { renderHpDumpFeed(hpSec, projectId()); } catch(e){} }
   }
 }
 async function dumpIngest(id, keepText){
@@ -8607,6 +8640,8 @@ function refreshTokenUI(id){
   updateTokenPill();
   updateTokenGating(id);
   refreshHomepageDumpbox();
+  // A token may just have appeared — auto-flush the device queue (Dave 2026-10-15)
+  flushPendingDumps();
   // renderBuddy(id) means the panel is showing this buddy — load its feed
   // regardless of S.sel (which stays 'view:xxx' when the panel opens from a view).
   if (id) {
