@@ -2641,7 +2641,6 @@ function openFieldSettings(){
       + '<button id="fset-close" style="font-size:14px;font-weight:600;padding:8px 24px;border:none;border-radius:20px;background:var(--accent);color:#fff;cursor:pointer">Done</button></div>'
       + '<div class="fset-resize" id="fset-resize" title="Drag to resize"></div>';
     document.body.appendChild(m);
-  if (prefillName) { const ni = document.getElementById('nb-name'); if (ni) ni.value = prefillName; }
     initFsetChrome(m);
     m.querySelector('#fset-close').addEventListener('click', () => m.classList.remove('show'));
     m.querySelector('#fset-x').addEventListener('click', () => m.classList.remove('show'));
@@ -6685,6 +6684,13 @@ function openNewBuddyRequest(prefillName){
     validate();
   }));
   const validate = () => { createBtn.disabled = !(nameInput.value.trim() && persona); errEl.textContent = ''; };
+  // Pre-fill name: explicit arg wins, otherwise fall back to the current sidebar search query (Dave 2026-10-15)
+  let prefill = (prefillName || '').trim();
+  if (!prefill) {
+    const sbSearch = document.getElementById('buddy-search');
+    if (sbSearch) prefill = sbSearch.value.trim();
+  }
+  if (prefill) { nameInput.value = prefill; validate(); }
   nameInput.addEventListener('input', validate);
   purposeInput.addEventListener('input', validate);
   createBtn.addEventListener('click', async () => {

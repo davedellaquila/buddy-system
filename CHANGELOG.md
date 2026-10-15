@@ -3,6 +3,12 @@
 All notable changes to the Buddies dashboard and buddy system. Newest first.
 `FEATURES.md` describes the current state; this file describes how it got there.
 
+## 2026-10-15 (New-buddy sheet name pre-fill)
+
+### Fixed
+- **Name pre-filled from search** (Dave 2026-10-15): opening the New Buddy sheet while the sidebar search has text now pre-fills the name field with that query (trimmed). Works from the FAB, the `n` shortcut, and the autocomplete "Create new buddy" row (which passed the name but the sheet never applied it). Dave: "i clicked 'create new buddy' and the new buddy sheet is asking for a name. i would expect the name to be already filled in with what i searched for."
+- **Stray `prefillName` crash in Settings** (found while fixing the above): a leftover line in `openFieldSettings` referenced an undeclared `prefillName` variable, which would have thrown a ReferenceError and killed the settings sheet render. Removed.
+
 ## 2026-10-15 (Info panel count badges)
 
 ### Added
