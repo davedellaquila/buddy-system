@@ -1,4 +1,3 @@
-<!-- BUDDY-BASIC-TEMPLATE v2 -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -13,6 +12,10 @@
   --card: #f5f5f5;
   --border: #e0e0e0;
   --accent: #0066cc;
+  --green: #1a7f37;
+  --gold: #9a6700;
+  --bar: #0066cc;
+  --bar-warn: #d1242f;
 }
 @media (prefers-color-scheme: dark) {
   :root {
@@ -22,6 +25,10 @@
     --card: #2a2a2a;
     --border: #3a3a3a;
     --accent: #4da6ff;
+    --green: #3fb950;
+    --gold: #d29922;
+    --bar: #4da6ff;
+    --bar-warn: #ff7b72;
   }
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -34,7 +41,7 @@ body {
   max-width: 800px;
   margin: 0 auto;
 }
-.header { text-align: center; margin-bottom: 40px; }
+.header { text-align: center; margin-bottom: 32px; }
 .icon { font-size: 64px; margin-bottom: 16px; }
 h1 { font-size: 32px; margin-bottom: 8px; }
 .tagline { color: var(--muted); font-size: 18px; }
@@ -47,6 +54,26 @@ h1 { font-size: 32px; margin-bottom: 8px; }
   font-size: 17px;
 }
 h2 { font-size: 22px; margin: 32px 0 16px; }
+.cash-note { color: var(--muted); font-size: 14px; margin-bottom: 18px; }
+.park { display: flex; flex-direction: column; gap: 14px; margin-bottom: 8px; }
+.park-row { display: block; }
+.park-top { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; margin-bottom: 6px; }
+.park-name { font-weight: 600; font-size: 15px; }
+.park-name .tag {
+  display: inline-block; font-size: 11px; font-weight: 700; color: var(--green);
+  border: 1px solid var(--green); border-radius: 20px; padding: 1px 8px; margin-left: 8px;
+  vertical-align: 1px;
+}
+.park-yield { font-size: 15px; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.park-yield .after { font-weight: 700; }
+.park-yield .nom { color: var(--muted); font-size: 13px; }
+.park-bar { height: 10px; background: var(--card); border: 1px solid var(--border); border-radius: 6px; overflow: hidden; }
+.park-fill { height: 100%; background: var(--bar); border-radius: 6px; }
+.park-row.warn .park-fill { background: var(--bar-warn); }
+.park-row.warn .park-name { color: var(--bar-warn); }
+.park-sub { color: var(--muted); font-size: 13px; margin-top: 4px; }
+.park-foot { color: var(--muted); font-size: 13px; margin-top: 16px; }
+.park-foot strong { color: var(--text); }
 .attn {
   background: var(--card);
   border-left: 4px solid var(--accent);
@@ -55,18 +82,6 @@ h2 { font-size: 22px; margin: 32px 0 16px; }
   margin-bottom: 12px;
 }
 .attn-date { color: var(--muted); font-size: 14px; margin-top: 8px; }
-.attn-actions { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
-.attn-btn {
-  border: 1px solid var(--border); background: var(--bg); color: var(--text);
-  border-radius: 8px; padding: 7px 14px; font-size: 13px; font-weight: 600; cursor: pointer;
-  -webkit-tap-highlight-color: transparent;
-}
-.attn-btn:hover { border-color: var(--accent); }
-.attn-btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
-.attn-btn:disabled { opacity: .45; cursor: default; }
-.attn-status { font-size: 13px; color: var(--muted); margin-top: 8px; min-height: 18px; }
-.attn.resolved { opacity: .6; }
-.attn.resolved .attn-actions { display: none; }
 .children { display: flex; flex-wrap: wrap; gap: 12px; }
 .child {
   background: var(--card);
@@ -132,11 +147,56 @@ h2 { font-size: 22px; margin: 32px 0 16px; }
 <div class="header">
 <div class="icon">💰</div>
 <h1>Finance Buddy</h1>
-<div class="tagline">Parent container for money projects</div>
+<div class="tagline">Lead of the money team</div>
 </div>
 
-<div class="mission">Finance Buddy is the parent container for all money projects — Money Buddy (the expense tracker) and Investment Buddy (the investing module) live here.</div>
+<div class="mission">Finance Buddy is the lead of Dave's money projects — Money Buddy (the expense tracker) and Investment Buddy (the investing module) are its direct reports. One financial home: spending, budgets, investments, and the money conversations that span them.</div>
 
+<h2>Where to park cash — California resident</h2>
+<p class="cash-note">Ranked by after-tax yield. After-tax assumes 35% federal / 12.3% CA; T-bill interest is exempt from CA state tax. Yields move — I keep this fresh.</p>
+<div class="park">
+  <div class="park-row">
+    <div class="park-top"><span class="park-name">26-week T-bill <span class="tag">TOP PICK</span></span><span class="park-yield"><span class="after">2.83%</span> <span class="nom">after-tax · 4.351% nominal (Oct 13)</span></span></div>
+    <div class="park-bar"><div class="park-fill" style="width:100%"></div></div>
+    <div class="park-sub">CA-exempt. Min $100. Brokerage-held bills can be sold; TreasuryDirect can't.</div>
+  </div>
+  <div class="park-row">
+    <div class="park-top"><span class="park-name">13-week T-bill</span><span class="park-yield"><span class="after">2.72%</span> <span class="nom">after-tax · 4.185% nominal (Oct 13)</span></span></div>
+    <div class="park-bar"><div class="park-fill" style="width:96.1%"></div></div>
+    <div class="park-sub">Same CA treatment, cash back sooner.</div>
+  </div>
+  <div class="park-row">
+    <div class="park-top"><span class="park-name">VUSXX <span class="tag">SCHWAB-FRIENDLY*</span></span><span class="park-yield"><span class="after">2.51%</span> <span class="nom">after-tax · 3.86% nominal (Oct 12)</span></span></div>
+    <div class="park-bar"><div class="park-fill" style="width:88.7%"></div></div>
+    <div class="park-sub">Vanguard Treasury money fund, 100% state-exempt. *$74.95 purchase fee at Schwab unless waived.</div>
+  </div>
+  <div class="park-row">
+    <div class="park-top"><span class="park-name">VMFXX</span><span class="park-yield"><span class="after">2.32%</span> <span class="nom">after-tax · 3.81% nominal (Oct 12)</span></span></div>
+    <div class="park-bar"><div class="park-fill" style="width:82%"></div></div>
+    <div class="park-sub">Vanguard Federal money fund, ~67% state-exempt (2025 figure).</div>
+  </div>
+  <div class="park-row">
+    <div class="park-top"><span class="park-name">SNSXX</span><span class="park-yield"><span class="after">2.29%</span> <span class="nom">after-tax · 3.53% nominal (Sep 30)</span></span></div>
+    <div class="park-bar"><div class="park-fill" style="width:80.9%"></div></div>
+    <div class="park-sub">Schwab's own Treasury money fund, 98.6% CA-exempt, no fee or minimum at Schwab. The clean one-click answer.</div>
+  </div>
+  <div class="park-row">
+    <div class="park-top"><span class="park-name">High-yield savings (top)</span><span class="park-yield"><span class="after">2.29%</span> <span class="nom">after-tax · 4.34% APY (Oct 13)</span></span></div>
+    <div class="park-bar"><div class="park-fill" style="width:80.9%"></div></div>
+    <div class="park-sub">FDIC-insured, but rates move and interest is fully CA-taxable.</div>
+  </div>
+  <div class="park-row">
+    <div class="park-top"><span class="park-name">SWVXX</span><span class="park-yield"><span class="after">1.95%</span> <span class="nom">after-tax · 3.70% nominal (Oct 9)</span></span></div>
+    <div class="park-bar"><div class="park-fill" style="width:68.9%"></div></div>
+    <div class="park-sub">Schwab's prime money fund — fully CA-taxable, so it trails the Treasury funds for you.</div>
+  </div>
+  <div class="park-row warn">
+    <div class="park-top"><span class="park-name">Schwab Bank Sweep ⚠</span><span class="park-yield"><span class="after">~0.01%</span> <span class="nom">where cash sits if you do nothing</span></span></div>
+    <div class="park-bar"><div class="park-fill" style="width:1.5%"></div></div>
+    <div class="park-sub">Sale proceeds land here by default. You must manually buy a money fund — nothing happens automatically.</div>
+  </div>
+</div>
+<p class="park-foot"><strong>Reading this:</strong> bars show after-tax yield, the number that actually lands in your pocket. Nominal yields in gray. Updated <strong>Oct 15, 2026</strong> — I refresh it when the numbers move.</p>
 
 <section class="dumpbox" data-buddy-id="finance-buddy">
 <h2>🧠 Brain dump</h2>
@@ -160,14 +220,14 @@ h2 { font-size: 22px; margin: 32px 0 16px; }
 <h2>Needs Attention</h2>
 <p class="empty">Nothing needs attention right now.</p>
 
-<h2>Sub-buddies</h2>
+<h2>Direct reports</h2>
 <div class="children">
 <a class="child" href="../investment-buddy/">📈 Investment Buddy</a>
 <a class="child" href="../money-buddy/">💵 Money Buddy</a>
 </div>
 
 <div class="footer">
-Generated 2026-10-15 · Part of the Buddy System
+Finance Buddy · custom homepage · updated Oct 15, 2026 · Part of the Buddy System
 </div>
 
 <script>
@@ -345,7 +405,7 @@ Generated 2026-10-15 · Part of the Buddy System
       var stamp = new Date().toLocaleString();
       var cur = await ghGetFile(repo, 'docs/ingest.md');
       var base = cur ? cur.text : '# Ingest log — ' + buddyName + NL + NL;
-      var body = {message: 'Attention action for ' + bid, content: b64encode(base + '## ' + stamp + NL + NL + entry + NL + NL)};
+      var body = {message: 'Ingest dump for ' + bid, content: b64encode(base + '## ' + stamp + NL + NL + entry + NL + NL)};
       if (cur && cur.sha) body.sha = cur.sha;
       await ghApi('/repos/davedellaquila/' + repo + '/contents/docs/ingest.md', 'PUT', body);
       st.textContent = okMsg;
