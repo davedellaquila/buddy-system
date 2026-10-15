@@ -80,7 +80,7 @@ body.sb-closed #sidebar #buddies-sec, body.sb-closed #sidebar #plans-sec,
 body.sb-closed #sidebar .sb-tipjar, body.sb-closed #sidebar #sb-tools #sb-gear,
 body.sb-closed #sidebar .navbtn .nlab, body.sb-closed #sidebar .navbtn .navgrip, body.sb-closed #sidebar .nav-sec h3,
 body.sb-closed #sidebar #views-sec h3{display:none}
-body.sb-closed #sidebar .sb-brand-sticky{padding:12px 0 4px;display:flex;justify-content:center}
+body.sb-closed #sidebar .sb-brand-sticky{display:none} /* Dave 2026-10-15: empty bar serves no purpose on the collapsed rail */
 body.sb-closed #sidebar #sb-tools{position:static;display:flex;justify-content:center;margin:0 auto}
 /* Dave 2026-10-14: round selection indicator on the mini rail (not a rounded rect) */
 body.sb-closed #view-nav .navbtn.sel{border-radius:50%;box-shadow:none}
@@ -2166,6 +2166,7 @@ function applySectionCollapse(bid){
     h3.addEventListener('click', e => {
       if (e.target.closest('.info-tip')) return;
       if (e.target.closest('.secgrip')) return; // grip drags; never toggles collapse
+      e.stopPropagation(); // block the document-level [data-buddy] handler (Dave 2026-10-15: it re-rendered the panel on every section click)
       // Preserve the header's viewport position so content above doesn't jump (Dave 2026-10-15)
       const scroller = h3.closest('#view-buddy.panel, #view-buddy.sheet');
       const beforeTop = h3.getBoundingClientRect().top;
@@ -5315,7 +5316,7 @@ function zoomToFit(paneId, zoomKey){
   const vw = sc.clientWidth, vh = sc.clientHeight;
   if (!natW || !natH || !vw || !vh) return;
   const fit = Math.min(vw / natW, vh / natH) * 100;
-  S[zoomKey] = Math.min(160, Math.max(5, Math.round(fit / 5) * 5));
+  S[zoomKey] = Math.min(160, Math.max(5, Math.round(fit / 2) * 2));
   save(); applyZoom();
   toast('Zoomed to fit (' + S[zoomKey] + '%).');
 }
@@ -5324,7 +5325,7 @@ function zoomToFit(paneId, zoomKey){
   function zoombarHTML(sfx, label){
     return '<div class="zoombar" id="zoombar-' + sfx + '" title="Zoom — pinch with two fingers, or Shift+scroll">'
       + '<span class="z-in" aria-hidden="true">\u25fc</span>'
-      + '<input type="range" class="zrange" id="zoomrange-' + sfx + '" min="5" max="160" step="5" value="100" aria-label="' + label + '" orient="vertical">'
+      + '<input type="range" class="zrange" id="zoomrange-' + sfx + '" min="5" max="160" step="2" value="100" aria-label="' + label + '" orient="vertical">'
       + '<span class="z-out" aria-hidden="true">\u25aa</span>'
       + '<button type="button" class="zfit" id="zoomfit-' + sfx + '" title="Zoom to fit" aria-label="Zoom to fit">\u26f6</button>'
       + (sfx === 'main' ? '<button type="button" class="zcenter" id="zoomcenter-' + sfx + '" title="Center on current buddy" aria-label="Center on current buddy">\u2316</button>' : '')
@@ -5447,7 +5448,7 @@ function attachPan(el){
   function movePinch(){
     if (!pinch || pts.size < 2) return;
     const d = pinchDist();
-    const next = Math.min(160, Math.max(25, Math.round((pinch.z0 * (d / pinch.d0)) / 5) * 5));
+    const next = Math.min(160, Math.max(25, Math.round((pinch.z0 * (d / pinch.d0)) / 2) * 2));
     if (next !== (S[zoomKey] || 100)) { S[zoomKey] = next; applyZoom(); }
   }
   function endPinchFinger(pid){
@@ -5878,7 +5879,7 @@ document.getElementById('view-tree').addEventListener('wheel', e => {
   e.preventDefault();
   const pane = e.target && e.target.closest ? e.target.closest('.treescroll') : null;
   const key = (pane && pane.dataset.zoomkey) || 'zoom';
-  S[key] = Math.min(160, Math.max(25, (S[key] || 100) + (e.deltaY > 0 ? -5 : 5)));
+  S[key] = Math.min(160, Math.max(25, (S[key] || 100) + (e.deltaY > 0 ? -2 : 2)));
   save(); applyZoom();
 }, { passive: false });
 let dragId = null;
@@ -6990,13 +6991,13 @@ document.addEventListener('click', e => {
   const addp = e.target.closest('[data-addparent]');
   if (addp) {
     if (e.target.closest('.info-tip')) return; // the ⓘ popover handles its own taps
-    e.preventDefault(); e.stopPropagation();
+    e.preventDefault(); e.stopImmediatePropagation(); // block the later document-level [data-buddy] handler (Dave 2026-10-15: it re-rendered the panel and wiped the toggle)
     openChangeParentDialog(addp.dataset.addparent, 'add');
     return;
   }
   const rmp = e.target.closest('[data-removeparent]');
   if (rmp) {
-    e.preventDefault(); e.stopPropagation();
+    e.preventDefault(); e.stopImmediatePropagation(); // block the later document-level [data-buddy] handler (Dave 2026-10-15: it re-rendered the panel and wiped the toggle)
     const val = rmp.dataset.removeparent || '';
     const sep = val.indexOf(':');
     const cid = sep < 0 ? val : val.slice(0, sep);
@@ -7014,7 +7015,7 @@ document.addEventListener('click', e => {
   const exp = e.target.closest('[data-expand]');
   if (exp) {
     if (e.target.closest('.info-tip')) return; // the ⓘ popover handles its own taps
-    e.preventDefault(); e.stopPropagation();
+    e.preventDefault(); e.stopImmediatePropagation(); // block the later document-level [data-buddy] handler (Dave 2026-10-15: it re-rendered the panel and wiped the toggle)
     const sec = exp.closest('.bp-sec');
     const scroller = exp.closest('#view-buddy.panel, #view-buddy.sheet');
     const beforeTop = exp.getBoundingClientRect().top;
@@ -7038,7 +7039,7 @@ document.addEventListener('click', e => {
     if (e.target.closest('button')) return; // Change button etc. handles its own clicks
     if (e.target.closest('a')) return;
     if (e.target.closest('input')) return;
-    e.preventDefault(); e.stopPropagation();
+    e.preventDefault(); e.stopImmediatePropagation(); // block the later document-level [data-buddy] handler (Dave 2026-10-15: it re-rendered the panel and wiped the toggle)
     const sec = ahead.closest('.bp-sec');
     // Preserve header viewport position so content above doesn't jump
     const scroller = ahead.closest('#view-buddy.panel, #view-buddy.sheet');
@@ -8574,6 +8575,7 @@ function initSearch(){
       rows[acHot].scrollIntoView({block: 'nearest'});
     };
     bs.addEventListener('input', () => {
+      S.buddySearch = bs.value; save(); // Dave 2026-10-15: retain filter across refresh
       renderNav();
       acRender();
       // Atlas view follows the buddy-list filter (Dave's request 2026-10-12)
@@ -8594,6 +8596,11 @@ function initSearch(){
     document.addEventListener('click', (e) => {
       if (ac && !ac.hidden && !ac.contains(e.target) && e.target !== bs) acClose();
     });
+  }
+  // Dave 2026-10-15: restore the persisted filter across refresh
+  if (bs && S.buddySearch) {
+    bs.value = S.buddySearch;
+    bs.dispatchEvent(new Event('input', {bubbles: true}));
   }
 }
 function refreshTokenUI(id){

@@ -3,6 +3,25 @@
 All notable changes to the Buddies dashboard and buddy system. Newest first.
 `FEATURES.md` describes the current state; this file describes how it got there.
 
+## 2026-10-15 (Dashboard fixes batch)
+
+### Fixed
+- **Info-panel section toggles no longer silently re-render** (Dave 2026-10-15): root-caused the stubborn "PARENTS section won't expand" bug. Two document-level click listeners are registered on `document`; the panel toggle handler called `e.stopPropagation()`, which does NOT block other listeners on the same target. The later handler's `[data-buddy]` branch matched `#view-buddy` (which carries `data-buddy`) and called `openBuddy()` → `renderBuddy()` rebuilt the panel, wiping the just-toggled `expanded` class and resetting scroll to top. Fix: `stopImmediatePropagation()` in the panel toggle's terminal branches (`[data-expand]`, `.attr-head`, `[data-addparent]`, `[data-removeparent]`), plus `stopPropagation()` on the h3 section-toggle handler (which had none at all — every section click was re-rendering the panel, masked for h3 sections because their state persists in `S.secCollapsed`).
+- **Sidebar search filter retained across refresh** (Dave 2026-10-15): the `#buddy-search` filter value is now persisted in `S.buddySearch` on every input and restored on boot (re-applied via a synthetic `input` event). Buddy selection and panel-open state were already persisted via `S.sel`.
+- **Collapsed sidebar rail starts cleanly** (Dave 2026-10-15): the empty `.sb-brand-sticky` bar (white rounded bar with no content when collapsed) is now `display:none` under `body.sb-closed`, so the rail starts directly with the › expand button.
+
+### Changed
+- **Zoom gearing smoothed out** (Dave 2026-10-15, "smooth out the zoom factor"): Shift+wheel zoom step ±5% → ±2%; slider `step` 5 → 2 (both main and orph); pinch-zoom rounding `/5)*5` → `/2)*2`; zoom-to-fit rounding `/5)*5` → `/2)*2`. Min/max clamps unchanged (wheel 25–160, slider 5–160).
+
+### Verified (no change needed)
+- **Atlas lens menu vs info panel** (Dave 2026-10-15): the lens picker and orientation tabs sit top-left; the info panel slides in from the right — spatially separated on desktop. Lens dropdown (z-61) renders above the panel (z-60). On phone the panel is a full-screen sheet (correct modal behavior); the lens menu is reachable when the sheet is closed.
+- **Panel-section 404s**: the console 404s are expected missing optional resources (`avatars/<id>.jpg` fallback via `buddyImageUrl`, GitHub API photo/note fetches) — each self-cleans via `onerror` handlers. Unrelated to the expand bug.
+
+## 2026-10-15 (Persona roster expansion: F1, presidents, historical figures)
+
+### Added
+- **119 new personas — roster now 238** (Dave 2026-10-15, "no upper limit"): 26 Formula 1 personalities (#120–145: Vettel, Alonso, Räikkönen, Briatore + Hamilton, Verstappen, Schumacher, Senna, Prost, Lauda, Mansell, Button, Rosberg, Ricciardo, Norris, Leclerc, Piastri, Russell, Wolff, Horner, Steiner, Ecclestone, Brawn, Newey, Brundle, Murray Walker), 44 ex-presidents Washington→Biden (#146–189, sitting president excluded), 49 historical figures (#190–238: Einstein, Newton, Darwin, Curie, da Vinci, Shakespeare, Mozart, Beethoven, Napoleon, Churchill, Gandhi, MLK, Mandela, Cleopatra, Joan of Arc, Caesar, Alexander, Elizabeth I, Victoria, Tubman, Douglass, Earhart, Austen, Twain, Wilde, Kahlo, Picasso, van Gogh, Chanel, Jobs, Turing, Lovelace, Hawking + more). Each with a voice-sample quote and personality blurb; baked into the dashboard's persona picker.
+
 ## 2026-10-15 (Relationship reorganization)
 
 ### Changed
