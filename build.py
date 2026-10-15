@@ -1045,6 +1045,11 @@ body.bp-collapsed #bp-rail{display:flex}
 #project-tiles{display:flex;gap:14px;margin:2px auto 20px;max-width:860px;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:thin}
 #project-status-tiles{display:flex;gap:14px;margin:2px auto 20px;max-width:860px;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:thin}
 .ptile{flex:none;width:auto;background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:12px 14px;position:relative;overflow:hidden;cursor:pointer;transition:transform .15s ease,box-shadow .15s ease}
+/* Dave 2026-10-14 (overriding Jonny's auto-width verdict): status tiles are
+   EQUAL width and scroll horizontally; ordered 5th-most-selected on down
+   by click rank, since the locked top row holds the four most selected. */
+#project-status-tiles .ptile{width:150px}
+#project-status-tiles .ptile-label{overflow:hidden;text-overflow:ellipsis}
 .ptile:hover{transform:translateY(-2px);box-shadow:0 4px 16px rgba(0,0,0,.12)}
 .ptile::before{content:'';position:absolute;left:0;top:0;bottom:0;width:5px;background:var(--tint)}
 /* ---- Business Plans cards ---- */
@@ -1068,8 +1073,8 @@ body.bp-collapsed #bp-rail{display:flex}
     display:flex !important;flex-wrap:nowrap !important;overflow-x:auto !important;
     gap:8px !important;max-width:none !important;width:100% !important;
     margin:0 0 12px !important;box-sizing:border-box;scrollbar-width:thin}
-  #project-tiles .ptile,#changelog-tiles .ptile,#plans-tiles .ptile,#manifest-tiles .ptile,
-  #project-status-tiles .ptile{flex:none !important;width:auto !important;max-width:none !important;min-width:0 !important}
+  #project-tiles .ptile,#changelog-tiles .ptile,#plans-tiles .ptile,#manifest-tiles .ptile{flex:none !important;width:auto !important;max-width:none !important;min-width:0 !important}
+  #project-status-tiles .ptile{flex:none !important;width:118px !important;max-width:none !important;min-width:0 !important}
   .ptile{padding:6px 8px 5px !important;border-radius:10px !important}
   .ptile::before{width:3px}
   .ptile-label{font-size:9px !important;letter-spacing:.08em;line-height:1.15}
@@ -1082,8 +1087,8 @@ body.bp-collapsed #bp-rail{display:flex}
     display:flex !important;flex-wrap:nowrap !important;overflow-x:auto !important;
     gap:8px !important;max-width:none !important;width:100% !important;
     margin:0 0 10px !important;box-sizing:border-box;scrollbar-width:thin}
-  #project-tiles .ptile,#changelog-tiles .ptile,#plans-tiles .ptile,#manifest-tiles .ptile,
-  #project-status-tiles .ptile{flex:none !important;width:auto !important;max-width:none !important;min-width:0 !important}
+  #project-tiles .ptile,#changelog-tiles .ptile,#plans-tiles .ptile,#manifest-tiles .ptile{flex:none !important;width:auto !important;max-width:none !important;min-width:0 !important}
+  #project-status-tiles .ptile{flex:none !important;width:118px !important;max-width:none !important;min-width:0 !important}
   .ptile{padding:5px 7px 4px !important;border-radius:10px !important}
   .ptile::before{width:3px}
   .ptile-label{font-size:9px !important;letter-spacing:.08em;line-height:1.15}
@@ -4683,7 +4688,9 @@ function renderProjects(){
   if (statusCounts['Spec review']) revBits.push(statusCounts['Spec review'] + ' spec');
   const revSub = revBits.length ? revBits.join(' \u00b7 ') : 'Needs your attention';
   // Dave 2026-10-13: top row is LOCKED — four fixed tiles in this order, no
-  // popularity sort. Bottom (status) row keeps the self-order by clicks.
+  // popularity sort. Dave 2026-10-14 (overriding Jonny): the status row is
+  // EQUAL-width tiles, horizontal scroll, ordered by click rank — 5th most
+  // selected on down, since the top row holds the four most selected.
   const topTiles = [
     ['unseen', tileHtml('TO REVIEW', Object.keys(unseenIds).length, '#a371f7', revSub, 'unseen', projFilter === 'unseen')],
     ['fresh', tileHtml('FRESH', Object.keys(freshIds).length, '#d97a1f', 'Added in the last 7 days', 'fresh', projFilter === 'fresh')],
