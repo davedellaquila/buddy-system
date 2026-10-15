@@ -1,389 +1,156 @@
-<!doctype html>
+<!-- DEFAULT-HOMEPAGE v3 — "The Dossier" -->
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <meta name="color-scheme" content="light dark" />
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏠</text></svg>"
-  <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏠</text></svg>" /> />
-  <title>Lenwood Buddy</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      color-scheme: light dark;
-      --bg: #faf6ee;
-      --surface: #fffdf8;
-      --surface-soft: #f4ecdd;
-      --ink: #2c2318;
-      --muted: #6f6152;
-      --faint: #9a8c79;
-      --line: #e7dcc6;
-      --terra: #bc5a2e;
-      --terra-soft: #fbe9dc;
-      --terra-ink: #8f3f1d;
-      --sage: #5f7355;
-      --sage-soft: #e7efe2;
-      --amber: #96650a;
-      --amber-soft: #fdf3d3;
-      --shadow: 0 16px 40px rgba(80, 58, 32, .09);
-      --serif: "Fraunces", Georgia, serif;
-      --sans: "Manrope", ui-sans-serif, system-ui, sans-serif;
-      --radius: 18px;
-    }
-    @media (prefers-color-scheme: dark) {
-      :root {
-        --bg: #161210;
-        --surface: #201a16;
-        --surface-soft: #2a231d;
-        --ink: #f3e9d8;
-        --muted: #bfae97;
-        --faint: #8d7f6c;
-        --line: #3a3128;
-        --terra: #e08a5a;
-        --terra-soft: #3a2417;
-        --terra-ink: #f0b98c;
-        --sage: #93ad84;
-        --sage-soft: #22301f;
-        --amber: #eec25e;
-        --amber-soft: #3a2f14;
-        --shadow: 0 16px 40px rgba(0, 0, 0, .28);
-      }
-    }
-    * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      background: var(--bg);
-      color: var(--ink);
-      font-family: var(--sans);
-      font-size: 15px;
-      line-height: 1.55;
-      -webkit-font-smoothing: antialiased;
-    }
-    a { color: var(--terra); }
-    .wrap { max-width: 880px; margin: 0 auto; padding: 0 22px 72px; }
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark light">
+<title>Lenwood Buddy — Buddy Dossier</title>
+<style>
+:root{color-scheme:dark light;--bg:#0d1117;--card:#161b22;--border:#30363d;--text:#e6edf3;--muted:#8b949e;--accent:#58a6ff;--amber:#f0b429;--amber-bd:#7d5e00}
+@media (prefers-color-scheme:light){:root{--bg:#ffffff;--card:#f6f8fa;--border:#d0d7de;--text:#1f2328;--muted:#57606a;--accent:#0969da}}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;margin:0;line-height:1.6}
+.wrap{max-width:860px;margin:0 auto;padding:40px 22px 60px}
+header.hero{display:flex;gap:18px;align-items:center;margin-bottom:8px}
+.heroicon{width:72px;height:72px;flex:none;border-radius:20px;background:var(--card);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:38px}
+h1{margin:0;font-size:30px;letter-spacing:-.02em}
+.tagline{color:var(--muted);margin:6px 0 0;font-size:15px}
+.stats{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0 28px}
+.stat{font-size:12.5px;color:var(--muted);background:var(--card);border:1px solid var(--border);border-radius:999px;padding:4px 12px}
+.stat b{color:var(--text)}
+.status{font-size:12.5px;font-weight:700;border-radius:999px;padding:4px 12px;background:var(--card);border:1px solid var(--border)}
+.card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px 22px;margin-bottom:20px}
+.kicker{margin:0 0 10px;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:var(--muted)}
+.mission{font-size:16px;margin:0 0 10px}
+.brief{color:var(--muted);font-size:14px}
+.persona{font-size:14px;margin:8px 0 0}
+.facts{margin:0;display:grid;gap:2px}
+.fact{display:grid;grid-template-columns:150px 1fr;gap:12px;padding:7px 0;border-top:1px solid var(--border);font-size:14px}
+.fact:first-child{border-top:0}
+.fact dt{color:var(--muted);font-weight:600}
+.fact dd{margin:0;overflow-wrap:break-word}
+code{background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:1px 6px;font-size:13px}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
+.aitem{display:flex;gap:10px;padding:10px 0;font-size:14px}
+.aitem+.aitem{border-top:1px solid var(--border)}
+.adot{color:var(--amber);font-size:11px;line-height:2;flex:none}
+.adate{color:var(--muted);font-size:12px;margin-top:2px}
+.plan{display:flex;gap:12px;padding:12px 0}
+.plan+.plan{border-top:1px solid var(--border)}
+.picon{font-size:24px;flex:none}
+.pname{font-weight:650;font-size:15px}
+.pill{display:inline-block;font-size:11px;font-weight:700;background:var(--bg);border:1px solid var(--border);color:var(--accent);border-radius:999px;padding:2px 10px;margin-left:8px}
+.pdesc{margin:6px 0 0;color:var(--muted);font-size:13.5px}
+.pdoc{display:inline-block;margin-top:6px;font-size:13px}
+.docrow{padding:8px 0;font-size:14.5px}
+.docrow+.docrow{border-top:1px solid var(--border)}
+.kids{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px}
+.kid{display:flex;align-items:center;gap:10px;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:10px 12px;color:var(--text)}
+.kid:hover{text-decoration:none;border-color:var(--accent)}
+.kidicon{font-size:22px}
+.kidname{font-size:14px;font-weight:600}
+.connrow{display:flex;gap:12px;padding:8px 0;font-size:14px;align-items:baseline}
+.connrow+.connrow{border-top:1px solid var(--border)}
+.connlabel{flex:none;width:110px;color:var(--muted);font-weight:600;font-size:13px}
+.pinrow{padding:6px 0;font-size:14px}
+.muted{color:var(--muted);font-size:13px}
+.empty{color:var(--muted);font-style:italic;margin:4px 0}
+footer{margin-top:36px;padding-top:18px;border-top:1px solid var(--border);color:var(--muted);font-size:12.5px;text-align:center}
 
-    /* top bar */
-    .topbar {
-      display: flex; align-items: center; gap: 12px;
-      padding: 18px 0 6px;
-    }
-    .mark {
-      width: 44px; height: 44px; border-radius: 14px;
-      background: var(--terra-soft);
-      display: grid; place-items: center; font-size: 24px;
-      box-shadow: var(--shadow);
-    }
-    .topbar .name { font-family: var(--serif); font-weight: 700; font-size: 19px; }
-    .topbar .sub { color: var(--muted); font-size: 13px; }
-    .pill {
-      margin-left: auto; font-size: 12.5px; font-weight: 700;
-      padding: 6px 13px; border-radius: 999px;
-      background: var(--amber-soft); color: var(--amber);
-      border: 1px solid var(--line); white-space: nowrap;
-    }
+.dumpbox {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px 22px;
+  margin-bottom: 32px;
+}
+.dumpbox h2 { margin: 0 0 6px; font-size: 20px; }
+.dumpbox-sub { color: var(--muted); font-size: 14px; margin-bottom: 14px; }
+.dumpbox textarea {
+  width: 100%; min-height: 96px; resize: vertical;
+  background: var(--bg); border: 1px solid var(--border); border-radius: 8px;
+  padding: 10px 12px; font-size: 14px; color: var(--text); font-family: inherit;
+}
+.dumpbox textarea:focus { outline: none; border-color: var(--accent); }
+.dumpbox textarea:disabled { opacity: .55; }
+.dumpbox-row { display: flex; align-items: center; gap: 12px; margin-top: 10px; flex-wrap: wrap; }
+.dumpbox-btn {
+  background: var(--accent); color: #fff; border: none; border-radius: 8px;
+  padding: 9px 22px; font-size: 14px; font-weight: 600; cursor: pointer;
+}
+.dumpbox-btn:disabled { opacity: .45; cursor: default; }
+.dumpbox-status { font-size: 13px; color: var(--muted); }
+.dumpbox-token {
+  background: var(--bg); border: 1px dashed var(--border); border-radius: 8px;
+  padding: 12px 14px; margin-bottom: 12px; font-size: 14px;
+}
+.dumpbox-token p { margin-bottom: 8px; }
+.dumpbox-tokenrow { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.dumpbox-tokenrow input {
+  flex: 1; min-width: 170px; background: var(--card); border: 1px solid var(--border);
+  border-radius: 8px; padding: 7px 10px; font-size: 13px; color: var(--text);
+}
+.dumpbox-tokenrow button {
+  background: transparent; color: var(--accent); border: 1px solid var(--accent);
+  border-radius: 8px; padding: 7px 14px; font-size: 13px; font-weight: 600; cursor: pointer;
+}
+.dumpbox-tokenrow a { color: var(--accent); font-size: 13px; }
 
-    /* hero */
-    .hero { padding: 34px 0 8px; }
-    .hero .kicker {
-      font-size: 12.5px; font-weight: 700; letter-spacing: .12em;
-      text-transform: uppercase; color: var(--terra); margin-bottom: 12px;
-    }
-    .hero h1 {
-      font-family: var(--serif); font-weight: 600;
-      font-size: clamp(30px, 5.4vw, 46px); line-height: 1.12;
-      margin: 0 0 14px; letter-spacing: -0.01em;
-    }
-    .hero p.lede { font-size: 17px; color: var(--muted); max-width: 62ch; margin: 0 0 6px; }
-    .address {
-      display: inline-flex; align-items: center; gap: 8px;
-      margin-top: 14px; font-size: 13.5px; color: var(--muted);
-      background: var(--surface); border: 1px solid var(--line);
-      padding: 8px 14px; border-radius: 999px;
-    }
-
-    /* attention card */
-    .attention {
-      margin: 26px 0 8px; border-radius: var(--radius);
-      background: var(--amber-soft); border: 1px solid var(--line);
-      padding: 20px 22px; box-shadow: var(--shadow);
-    }
-    .attention h2 { font-family: var(--serif); font-size: 20px; margin: 0 0 6px; }
-    .attention p { margin: 0 0 14px; color: var(--muted); }
-
-    /* attention action buttons */
-    .attn-actions { display: flex; gap: 8px; margin-top: 14px; flex-wrap: wrap; }
-    .attn-btn {
-      border: 1px solid var(--line); background: var(--surface); color: var(--ink);
-      border-radius: 999px; padding: 9px 18px; font-size: 13.5px; font-weight: 700;
-      cursor: pointer; font-family: var(--sans);
-      -webkit-tap-highlight-color: transparent;
-    }
-    .attn-btn.primary { background: var(--terra); border-color: var(--terra); color: #fff; }
-    @media (prefers-color-scheme: dark) { .attn-btn.primary { color: #1d130c; } }
-    .attn-btn:disabled { opacity: .45; cursor: default; }
-    .attn-status { font-size: 13px; color: var(--muted); margin-top: 8px; min-height: 18px; }
-    .attention.resolved { opacity: .65; }
-    .attention.resolved .attn-actions { display: none; }
-    .btnrow { display: flex; flex-wrap: wrap; gap: 10px; }
-    .btn {
-      display: inline-flex; align-items: center; gap: 8px;
-      font-weight: 700; font-size: 14px; text-decoration: none;
-      padding: 10px 18px; border-radius: 999px; border: 1px solid var(--line);
-      background: var(--surface); color: var(--ink);
-    }
-    .btn.primary { background: var(--terra); border-color: var(--terra); color: #fff; }
-    @media (prefers-color-scheme: dark) { .btn.primary { color: #1d130c; } }
-
-    /* pipeline */
-    .pipe { display: flex; align-items: stretch; gap: 0; margin: 26px 0 8px; }
-    .step {
-      flex: 1; text-align: center; padding: 14px 8px;
-      background: var(--surface); border: 1px solid var(--line);
-      font-size: 13px; font-weight: 600; color: var(--muted);
-      position: relative;
-    }
-    .step:first-child { border-radius: 14px 0 0 14px; }
-    .step:last-child { border-radius: 0 14px 14px 0; }
-    .step + .step { border-left: 0; }
-    .step.now {
-      background: var(--terra-soft); color: var(--terra-ink);
-      border-color: var(--terra);
-    }
-    .step .dot {
-      display: block; width: 10px; height: 10px; border-radius: 50%;
-      background: var(--faint); margin: 0 auto 8px;
-    }
-    .step.now .dot { background: var(--terra); box-shadow: 0 0 0 5px var(--terra-soft); }
-    .step.done .dot { background: var(--sage); }
-
-    /* sections */
-    section.block { margin-top: 34px; }
-    section.block > h2 {
-      font-family: var(--serif); font-size: 23px; margin: 0 0 4px;
-      display: flex; align-items: center; gap: 10px;
-    }
-    section.block > p.note { color: var(--muted); margin: 0 0 16px; font-size: 14px; }
-    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; }
-    .card {
-      background: var(--surface); border: 1px solid var(--line);
-      border-radius: var(--radius); padding: 18px; box-shadow: var(--shadow);
-    }
-    .card h3 { font-size: 15px; margin: 0 0 6px; }
-    .card p { margin: 0; color: var(--muted); font-size: 14px; }
-    .card .tag {
-      display: inline-block; font-size: 11.5px; font-weight: 700;
-      letter-spacing: .06em; text-transform: uppercase;
-      color: var(--sage); margin-bottom: 8px;
-    }
-
-    /* idea shelf */
-    .shelf {
-      border: 2px dashed var(--line); border-radius: var(--radius);
-      padding: 34px 24px; text-align: center; color: var(--muted);
-      background: var(--surface);
-    }
-    .shelf .big { font-size: 34px; margin-bottom: 10px; }
-    .shelf h3 { font-family: var(--serif); color: var(--ink); margin: 0 0 6px; font-size: 19px; }
-    .shelf p { margin: 0; font-size: 14px; }
-
-    /* brain dump box */
-    .dumpbox {
-      background: var(--surface); border: 1px solid var(--line);
-      border-radius: var(--radius); padding: 22px;
-      box-shadow: var(--shadow); margin-top: 34px;
-    }
-    .dumpbox h2 { font-family: var(--serif); font-size: 23px; margin: 0 0 6px; }
-    .dumpbox-sub { color: var(--muted); font-size: 14px; margin: 0 0 14px; }
-    .dumpbox textarea {
-      width: 100%; min-height: 96px; resize: vertical; box-sizing: border-box;
-      background: var(--surface-soft); border: 1px solid var(--line);
-      border-radius: 12px; padding: 12px 14px; font-size: 14px;
-      color: var(--ink); font-family: var(--sans);
-    }
-    .dumpbox textarea:focus { outline: none; border-color: var(--terra); }
-    .dumpbox textarea:disabled { opacity: .55; }
-    .dumpbox-row { display: flex; align-items: center; gap: 12px; margin-top: 12px; flex-wrap: wrap; }
-    .dumpbox-btn {
-      background: var(--terra); color: #fff; border: none; border-radius: 999px;
-      padding: 10px 24px; font-size: 14px; font-weight: 700; cursor: pointer;
-      font-family: var(--sans);
-    }
-    @media (prefers-color-scheme: dark) { .dumpbox-btn { color: #1d130c; } }
-    .dumpbox-btn:disabled { opacity: .45; cursor: default; }
-    .dumpbox-status { font-size: 13px; color: var(--muted); }
-    .dumpbox-connect {
-      background: var(--surface-soft); border: 1px dashed var(--line);
-      border-radius: 12px; padding: 12px 14px; margin-bottom: 12px; font-size: 14px;
-    }
-    .dumpbox-connect p { margin: 0 0 8px; color: var(--muted); }
-
-    .dumpbox-token {
-      background: var(--surface-soft); border: 1px dashed var(--line);
-      border-radius: 12px; padding: 12px 14px; margin-bottom: 12px; font-size: 14px;
-    }
-    .dumpbox-token p { margin: 0 0 8px; color: var(--muted); }
-    .dumpbox-tokenrow { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
-    .dumpbox-tokenrow input {
-      flex: 1; min-width: 170px; background: var(--surface);
-      border: 1px solid var(--line); border-radius: 999px;
-      padding: 8px 14px; font-size: 13px; color: var(--ink); font-family: var(--sans);
-    }
-    .dumpbox-tokenrow button {
-      background: transparent; color: var(--terra); border: 1px solid var(--terra);
-      border-radius: 999px; padding: 8px 16px; font-size: 13px; font-weight: 700;
-      cursor: pointer; font-family: var(--sans);
-    }
-    .dumpbox-tokenrow a { color: var(--terra); font-size: 13px; }
-
-    /* scope line */
-    .scope {
-      margin-top: 34px; padding: 16px 20px; border-radius: var(--radius);
-      background: var(--surface-soft); border: 1px solid var(--line);
-      font-size: 14px; color: var(--muted);
-    }
-    .scope strong { color: var(--ink); }
-
-    footer {
-      margin-top: 44px; padding-top: 18px; border-top: 1px solid var(--line);
-      color: var(--faint); font-size: 12.5px;
-      display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px;
-    }
-  </style>
+@media (max-width:640px){.fact{grid-template-columns:1fr;gap:2px}.connlabel{width:88px}.wrap{padding:28px 16px 48px}h1{font-size:24px}}
+</style>
 </head>
 <body>
-  <div class="wrap">
+<div class="wrap">
+<header class="hero">
+<div class="heroicon">🏡</div>
+<div><h1>Lenwood Buddy</h1><p class="tagline">Ideas for the future of the San Jose house</p></div>
+</header>
+<div class="stats"><span class="status st-brief">Mission review</span><span class="stat"><b>1</b> need attention</span><span class="stat"><b>2</b> documents</span></div>
+<section class="card"><h2 class="kicker">About</h2><p class="mission">Lenwood Buddy is the shared repository for ideas on what to do with Lenwood — Lenwood Way, San Jose — the house Quentin, Amanda, and Sawyer rent. Document sharing plus idea capture for the property&#x27;s future, with room to grow into voting, financials, and decision tracking.</p><p class="brief">https://docs.google.com/document/d/1t4s5skvUo8vTQ1cknWxuEobTQp6aMwMD68NNUl-xUY4/edit</p><p class="persona">🎭 Persona: Judge</p></section>
+<section class="card"><h2 class="kicker">Fact sheet — the data chain</h2><dl class="facts"><div class="fact"><dt>Buddy ID</dt><dd><code>lenwood-buddy</code></dd></div><div class="fact"><dt>Kind</dt><dd>property</dd></div><div class="fact"><dt>Parent chain</dt><dd><a href="../astro/">🚀 Astro</a> › <a href="../property-buddy/">🏠 Property Buddy</a></dd></div><div class="fact"><dt>Repository</dt><dd><a href="https://github.com/davedellaquila/lenwood-buddy" target="_blank" rel="noopener">davedellaquila/lenwood-buddy</a></dd></div><div class="fact"><dt>Homepage URL</dt><dd><code>lenwood-buddy/</code></dd></div></dl></section>
+<section class="card"><h2 class="kicker">Needs attention (1)</h2><div class="attn"><div class="aitem"><span class="adot">●</span><div><div><a href="https://docs.google.com/document/d/1t4s5skvUo8vTQ1cknWxuEobTQp6aMwMD68NNUl-xUY4/edit" target="_blank" rel="noopener">Product brief ready for review — looks good, edits, or defer? ↗</a></div><div class="adate">2026-10-08</div></div></div></div></section>
 
-    <div class="topbar">
-      <div class="mark">🏠</div>
-      <div>
-        <div class="name">Lenwood Buddy</div>
-        <div class="sub">Ideas for the future of the San Jose house</div>
-      </div>
-      <div class="pill">● Brief review</div>
-    </div>
+<section class="card"><h2 class="kicker">Documents (2)</h2><div class="docrow"><a href="https://docs.google.com/document/d/1jY1qxnbT8fp4jrEUTOUnP5MIiONhH9iDL3-NS7YxscA/edit" target="_blank" rel="noopener">Rent Increase and Property Terms — Quentin and Amanda (DRAFT)</a></div><div class="docrow"><a href="https://docs.google.com/document/d/1Dxb8QPaHMEb7xzUH_LmRrYNWE24WYK7rm-QLmQTtk00/edit" target="_blank" rel="noopener">Lenwood Property Terms — Text Drafts to Quentin, Amanda, Sawyer</a></div></section>
+<section class="card"><h2 class="kicker">Sub-buddies (0)</h2><p class="empty">No sub-buddies.</p></section>
+<section class="card"><h2 class="kicker">Connections</h2><div class="connrow"><span class="connlabel">Parent</span><a href="../property-buddy/">🏠 Property Buddy</a></div><div class="connrow"><span class="connlabel">Siblings</span><a href="../cabin-buddy/">🏕️ Cabin Buddy</a>, <a href="../fireplace-buddy/">🔥 Fireplace Buddy</a>, <a href="../housing-buddy/">🏘️ Housing Buddy</a>, <a href="../neighborhood-buddy/">📡 Neighborhood Buddy</a></div></section>
+<section class="card"><h2 class="kicker">Repository &amp; memory</h2><div class="connrow"><span class="connlabel">Repo</span><a href="https://github.com/davedellaquila/lenwood-buddy" target="_blank" rel="noopener">davedellaquila/lenwood-buddy</a> <span class="muted">— brain dumps land in docs/ingest.md</span></div></section>
 
-    <div class="hero">
-      <div class="kicker">A shared home for ideas</div>
-      <h1>What should become of Lenwood?</h1>
-      <p class="lede">Lenwood Buddy is the shared repository for ideas about what to do with Lenwood — a place to capture, share, and discuss proposals for the property's future, with room to attach documents and let the thinking evolve over time. Document sharing meets idea capture, focused on one property.</p>
-      <span class="address">📍 Lenwood Way, San Jose — home to Quentin, Amanda &amp; Sawyer</span>
-    </div>
+<section class="dumpbox" data-buddy-id="lenwood-buddy">
+<h2>🧠 Brain dump</h2>
+<p class="dumpbox-sub">Dump what's on your mind about Lenwood Buddy — raw and unfiltered. Each dump lands in the buddy's repo (docs/ingest.md) as a timestamped entry.</p>
+<div class="dumpbox-token" hidden>
+<p>🔒 Connect GitHub to unlock dumping. Paste a token once — it stays on this device only.</p>
+<div class="dumpbox-tokenrow">
+<input type="password" placeholder="GitHub token (repo scope)" aria-label="GitHub token">
+<button type="button">Save token</button>
+<a href="https://github.com/settings/tokens" target="_blank" rel="noopener">Get a token</a>
+</div>
+</div>
+<textarea rows="4" placeholder="Dump what's on your mind about Lenwood Buddy…"></textarea>
+<div class="dumpbox-row">
+<button type="button" class="dumpbox-btn">Dump it</button>
+<span class="dumpbox-status" role="status"></span>
+</div>
+</section>
 
-    <div class="attention attn" data-attn-id="lenwood-buddy-brief">
-      <h2 class="attn-text">📋 The brief is ready for your review</h2>
-      <p>It covers the idea, how it works, who it's for, room for growth, what's out of scope for v1, and the open questions. Once reviewed, the next call is whether to go to a PRD.</p>
-      <div class="btnrow">
-        <a class="btn primary" href="https://docs.google.com/document/d/1t4s5skvUo8vTQ1cknWxuEobTQp6aMwMD68NNUl-xUY4/edit" target="_blank" rel="noopener">Read the brief</a>
-        <a class="btn" href="https://github.com/davedellaquila/lenwood-buddy" target="_blank" rel="noopener">View the repo</a>
-      </div>
-      <div class="attn-actions">
-        <button type="button" class="attn-btn primary" data-act="done">✓ Done</button>
-        <button type="button" class="attn-btn" data-act="info">Need more info</button>
-      </div>
-      <div class="attn-status" role="status"></div>
-    </div>
-
-    <div class="pipe">
-      <div class="step done"><span class="dot"></span>Idea captured</div>
-      <div class="step now"><span class="dot"></span>Brief review</div>
-      <div class="step"><span class="dot"></span>PRD decision</div>
-      <div class="step"><span class="dot"></span>Build</div>
-    </div>
-
-    <section class="block">
-      <h2>💡 The idea shelf</h2>
-      <p class="note">Every proposal for Lenwood's future lands here — a few sentences or a full plan, with documents attached and discussion kept alongside.</p>
-      <div class="shelf">
-        <div class="big">🫧</div>
-        <h3>The shelf is empty</h3>
-        <p>No ideas captured yet. The first proposal about Lenwood's future will land here.</p>
-      </div>
-    </section>
-
-    <section class="dumpbox" data-buddy-id="lenwood-buddy">
-      <h2>🧠 Brain dump</h2>
-      <p class="dumpbox-sub">Dump what's on your mind about Lenwood Buddy — raw and unfiltered. Each dump lands in the buddy's repo (docs/ingest.md) as a timestamped entry.</p>
-      <div class="dumpbox-connect" hidden>
-        <p>🔒 Connect GitHub to unlock dumping. Paste a token once — it stays on this device only.</p>
-        <button type="button" class="dumpbox-btn">Connect GitHub to enable</button>
-      </div>
-      <div class="dumpbox-token" hidden>
-        <p>🔒 Connect GitHub to unlock dumping. Paste a token once — it stays on this device only.</p>
-        <div class="dumpbox-tokenrow">
-          <input type="password" placeholder="GitHub token (repo scope)" aria-label="GitHub token">
-          <button type="button">Save token</button>
-          <a href="https://github.com/settings/tokens" target="_blank" rel="noopener">Get a token</a>
-        </div>
-      </div>
-      <textarea rows="4" placeholder="Dump what's on your mind about Lenwood Buddy…"></textarea>
-      <div class="dumpbox-row">
-        <button type="button" class="dumpbox-btn">Dump it</button>
-        <span class="dumpbox-status" role="status"></span>
-      </div>
-    </section>
-
-    <section class="block">
-      <h2>❓ Open questions</h2>
-      <p class="note">From the brief — these get answered before (or during) the PRD.</p>
-      <div class="grid">
-        <div class="card"><h3>Who gets invited first?</h3><p>Family and stakeholders in Lenwood's future — Dave curates who gets in.</p></div>
-        <div class="card"><h3>What documents at launch?</h3><p>Photos, comps, sketches, links — which types should ideas support on day one?</p></div>
-        <div class="card"><h3>Accounts or shared space?</h3><p>Does it need accounts and permissions, or is a shared space enough to start?</p></div>
-        <div class="card"><h3>Web app or something lighter?</h3><p>A web app like the other buddies — or a lighter shape for v1?</p></div>
-      </div>
-    </section>
-
-    <section class="block">
-      <h2>⚙️ How it works</h2>
-      <p class="note">The shape, as described in the brief.</p>
-      <div class="grid">
-        <div class="card"><span class="tag">1 · Capture</span><h3>Anyone invited can add an idea</h3><p>A few sentences or a full proposal — low friction by design.</p></div>
-        <div class="card"><span class="tag">2 · Attach</span><h3>Ideas carry documents</h3><p>Photos, documents, comps, sketches, links — the evidence lives with the idea.</p></div>
-        <div class="card"><span class="tag">3 · Discuss</span><h3>Discussion stays on the idea</h3><p>Reasoning stays with the proposal instead of scattered across texts.</p></div>
-        <div class="card"><span class="tag">4 · Evolve</span><h3>Everything stays visible</h3><p>Organized in one place, with room for the thinking to evolve over time.</p></div>
-      </div>
-    </section>
-
-    <section class="block">
-      <h2>🌱 Room to grow</h2>
-      <p class="note">Deliberately out of v1 — but the shape has room.</p>
-      <div class="grid">
-        <div class="card"><h3>Voting &amp; ranking</h3><p>Surface the strongest ideas as the collection grows.</p></div>
-        <div class="card"><h3>Financials</h3><p>Cost estimates, comps, and tax implications attached to ideas.</p></div>
-        <div class="card"><h3>Timelines &amp; decisions</h3><p>Track ideas as they turn into plans, and record the calls made.</p></div>
-        <div class="card"><h3>Other properties</h3><p>If the pattern works, the same shape could serve other properties.</p></div>
-      </div>
-    </section>
-
-    <div class="scope">
-      <strong>Out of scope for v1:</strong> this is not a property-management system — maintenance, vendors, and insurance are a different job (that's Property Buddy territory, Lenwood Buddy's parent).
-    </div>
-
-    <footer>
-      <span>🏠 Lenwood Buddy · child of Property Buddy</span>
-      <span>Homepage seeded 2026-10-09</span>
-    </footer>
-
-  </div>
+<footer>Default Homepage v3 — "The Dossier" · Generated 2026-10-14 · Part of the Buddy System<br>
+<span class="muted">Archived PDF snapshots live in the buddy-system archive folder.</span></footer>
+</div>
 
 <script>
-// ---- dump-box JS (self-contained; no dependencies) ----
 (function(){
   var box = document.querySelector('.dumpbox');
   if (!box || box.dataset.dumpInit) return;
   box.dataset.dumpInit = '1';
   var bid = box.getAttribute('data-buddy-id') || (function(){
-    var p = location.pathname.replace(/\/+$/, '');
+    var p = location.pathname.replace(/\\/+$/, '');
     return p.substring(p.lastIndexOf('/') + 1);
   })();
   var ta = box.querySelector('textarea'),
-      btn = box.querySelector('.dumpbox-row .dumpbox-btn'),
+      btn = box.querySelector('.dumpbox-btn'),
       st = box.querySelector('.dumpbox-status'),
-      tokWrap = box.querySelector('.dumpbox-token'),
-      connectWrap = box.querySelector('.dumpbox-connect'),
-      connectBtn = connectWrap.querySelector('.dumpbox-btn');
+      tokWrap = box.querySelector('.dumpbox-token');
   function lsGet(){ try { return JSON.parse(localStorage.getItem('buddyTree.v3') || '{}'); } catch(e){ return {}; } }
   function lsSet(patch){ try { var s = lsGet(); for (var k in patch) s[k] = patch[k]; localStorage.setItem('buddyTree.v3', JSON.stringify(s)); } catch(e){} }
   function token(){ return lsGet().ghToken || ''; }
@@ -407,7 +174,7 @@
     try {
       var j = await ghApi('/repos/davedellaquila/' + repo + '/contents/' + path);
       if (j && j.content) return {
-        text: new TextDecoder().decode(Uint8Array.from(atob(j.content.replace(/\n/g, '')), function(c){ return c.charCodeAt(0); })),
+        text: new TextDecoder().decode(Uint8Array.from(atob(j.content.replace(/\\n/g, '')), function(c){ return c.charCodeAt(0); })),
         sha: j.sha
       };
     } catch(e){}
@@ -426,8 +193,7 @@
   }
   function refreshUI(){
     var has = !!token();
-    connectWrap.hidden = has;
-    if (has) tokWrap.hidden = true;
+    tokWrap.hidden = has;
     var ok = has && !!repo;
     ta.disabled = !ok;
     btn.disabled = !ok;
@@ -436,16 +202,11 @@
   }
   var tokInput = tokWrap.querySelector('input'),
       tokSave = tokWrap.querySelector('button');
-  connectBtn.addEventListener('click', function(){
-    tokWrap.hidden = false;
-    if (tokInput) tokInput.focus();
-  });
   tokSave.addEventListener('click', function(){
     var v = tokInput.value.trim();
     if (!v) return;
     lsSet({ghToken: v});
     tokInput.value = '';
-    tokWrap.hidden = true;
     refreshUI();
     st.textContent = 'Token saved on this device.';
   });
@@ -477,14 +238,15 @@
   resolveRepo().then(refreshUI);
 })();
 </script>
-<script>
 
+
+<script>
 (function(){
   var tiles = document.querySelectorAll('.attn[data-attn-id]');
   if (!tiles.length) return;
   var dumpbox = document.querySelector('.dumpbox');
   var bid = (dumpbox && dumpbox.getAttribute('data-buddy-id')) || (function(){
-    var p = location.pathname.replace(/\/+$/, '');
+    var p = location.pathname.replace(/\\/+$/, '');
     return p.substring(p.lastIndexOf('/') + 1);
   })();
   function lsGet(){ try { return JSON.parse(localStorage.getItem('buddyTree.v3') || '{}'); } catch(e){ return {}; } }
@@ -510,7 +272,7 @@
     try {
       var j = await ghApi('/repos/davedellaquila/' + repo + '/contents/' + path);
       if (j && j.content) return {
-        text: new TextDecoder().decode(Uint8Array.from(atob(j.content.replace(/\n/g, '')), function(c){ return c.charCodeAt(0); })),
+        text: new TextDecoder().decode(Uint8Array.from(atob(j.content.replace(/\\n/g, '')), function(c){ return c.charCodeAt(0); })),
         sha: j.sha
       };
     } catch(e){}
@@ -585,7 +347,7 @@
   });
   resolveBuddy();
 })();
-
 </script>
+
 </body>
 </html>
