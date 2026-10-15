@@ -599,6 +599,8 @@ body:has(#field-settings.show) #new-buddy-fab{display:none}
 #persona-picker .pp-head h2{margin:0 0 2px;font-size:17px}
 #persona-picker #pp-filter{padding:10px 12px;font-size:16px;border-radius:10px;border:1px solid var(--border);background:var(--bg);color:var(--text);font-family:inherit;box-sizing:border-box}
 #persona-picker .pp-grid{flex:1;min-height:0;overflow-y:auto;display:grid;grid-template-columns:repeat(2,1fr);gap:8px;padding:12px 16px;scrollbar-width:thin;scrollbar-color:var(--border) transparent}
+#persona-picker .pp-group-h{grid-column:1/-1;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:8px 0 0}
+#persona-picker .pp-group-h:first-child{margin-top:0}
 #persona-picker .pp-card{display:flex;flex-direction:column;align-items:flex-start;gap:4px;padding:10px 12px;border-radius:12px;border:1px solid var(--border);background:var(--bg);color:var(--text);cursor:pointer;text-align:left;min-height:44px;-webkit-tap-highlight-color:transparent;overflow:hidden;min-width:0}
 #persona-picker .pp-card:hover{border-color:var(--accent)}
 #persona-picker .pp-play{display:inline-block;margin-left:6px;font-size:12px;color:var(--accent);cursor:pointer;padding:2px 6px;border-radius:6px;vertical-align:middle}
@@ -3237,7 +3239,7 @@ function openPersonaPicker(id){
   m.id = 'persona-picker';
   m.innerHTML = '<div class="pp-backdrop"></div><div class="pp-sheet" role="dialog" aria-label="Choose a persona">'
     + '<div class="pp-head"><h2>Persona</h2><p class="fineprint">Pick the voice that makes you grin.</p></div>'
-    + '<div style="display:flex;align-items:center;gap:8px;margin:12px 16px 0"><input type="search" id="pp-filter" placeholder="Filter the 116 personas…" aria-label="Filter personas" autocomplete="off" style="flex:1;margin:0;width:auto">'
+    + '<div style="display:flex;align-items:center;gap:8px;margin:12px 16px 0"><input type="search" id="pp-filter" placeholder="Filter personas…" aria-label="Filter personas" autocomplete="off" style="flex:1;margin:0;width:auto">'
     + '<span id="pp-count" class="fineprint" style="font-size:12px;color:var(--muted);white-space:nowrap"></span></div>'
     + '<div class="pp-grid" id="pp-grid"></div>'
     + '<div class="pp-actions"><button class="linkbtn" id="pp-none" type="button">No persona (default voice)</button>'
@@ -3250,16 +3252,27 @@ function openPersonaPicker(id){
   const close = () => { try { if (window.speechSynthesis) window.speechSynthesis.cancel(); } catch (err) {} ppSaying = null; m.remove(); };
   function renderGrid(){
     const q = filter.value.trim().toLowerCase();
+    // Default personas come first as a group (Dave 2026-10-15)
+    const defaults = [
+      {name: 'Default male', quote: '', blurb: 'The standard voice — masculine.'},
+      {name: 'Default female', quote: '', blurb: 'The standard voice — feminine.'},
+      {name: 'Default child', quote: '', blurb: 'The standard voice — child.'},
+    ];
+    const matchDefaults = defaults.filter(p => !q || p.name.toLowerCase().indexOf(q) >= 0 || p.blurb.toLowerCase().indexOf(q) >= 0);
     const list = roster.filter(p => !q || p.name.toLowerCase().indexOf(q) >= 0 || p.blurb.toLowerCase().indexOf(q) >= 0 || (p.quote && p.quote.toLowerCase().indexOf(q) >= 0));
     const countEl = m.querySelector('#pp-count');
-    if (countEl) countEl.textContent = list.length + ' of ' + roster.length;
-    grid.innerHTML = list.map(p =>
-      '<button type="button" class="pp-card' + (p.name === cur ? ' sel' : '') + '" data-persona="' + escHtml(p.name) + '">'
+    if (countEl) countEl.textContent = (matchDefaults.length + list.length) + ' of ' + (defaults.length + roster.length);
+    function cardHtml(p){
+      return '<button type="button" class="pp-card' + (p.name === cur ? ' sel' : '') + '" data-persona="' + escHtml(p.name) + '">'
       + '<span class="pp-name">' + escHtml(p.name)
       + ' <span class="pp-play" data-say="' + escHtml(p.quote || p.blurb) + '" title="Hear a sample" role="button" tabindex="0">\u25b6\ufe0e</span></span>'
       + (p.quote ? '<span class="pp-quote">\u201c' + escHtml(p.quote) + '\u201d</span>' : '')
-      + '<span class="pp-blurb">' + escHtml(p.blurb) + '</span></button>').join('')
-      || '<p class="bp-empty">No personas match that filter.</p>';
+      + '<span class="pp-blurb">' + escHtml(p.blurb) + '</span></button>';
+    }
+    let html = '';
+    if (matchDefaults.length) html += '<div class="pp-group-h">Defaults</div>' + matchDefaults.map(cardHtml).join('');
+    if (list.length) html += '<div class="pp-group-h">All personas</div>' + list.map(cardHtml).join('');
+    grid.innerHTML = html || '<p class="bp-empty">No personas match that filter.</p>';
     // Sample previews: speak the persona's quote (or blurb) via device TTS.
     // Tapping play never selects the persona; tapping again stops the sample.
     grid.querySelectorAll('[data-say]').forEach(pb => {

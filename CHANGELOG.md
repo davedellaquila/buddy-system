@@ -17,6 +17,7 @@ All notable changes to the Buddies dashboard and buddy system. Newest first.
 ### Fixed
 - **Section expand scroll jump** (Dave 2026-10-15): expanding/collapsing a section no longer shifts content above the click point. The header's viewport position is preserved via requestAnimationFrame scroll correction, plus `overflow-anchor:none` on the panel to disable browser scroll-anchoring interference.
 - **PERSONA (and all attr-head sections) clickable** (Dave 2026-10-15): clicking anywhere on the PERSONA/VOICE/ABOUT/etc. header row now expands/collapses the section — previously only the tiny › toggle button worked, so clicking the header text did nothing. The Change button and other controls still handle their own clicks.
+- **Persona picker grouped** (Dave 2026-10-15): the picker now shows "Defaults" group first (Default male, Default female, Default child) followed by "All personas" (the full roster). Filter placeholder updated.
 
 ## 2026-10-15 (Penny Luedtke homepage)
 
