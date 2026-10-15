@@ -3,6 +3,11 @@
 All notable changes to the Buddies dashboard and buddy system. Newest first.
 `FEATURES.md` describes the current state; this file describes how it got there.
 
+## 2026-10-14 (Stat tiles — Dave's call)
+
+### Changed
+- **Status-tile row: equal-width tiles, horizontal scroll, click-rank order** (Dave's decision 2026-10-14, overriding Jonny's auto-width verdict): second-row tiles are now a uniform 150px (118px on phones), scroll horizontally, and stay ordered by Dave's click rank — 5th most selected on down, since the locked top row holds the four most selected. Labels get ellipsis containment as a safety net.
+
 ## 2026-10-14 (Homepage iframe theme background)
 
 ### Fixed
