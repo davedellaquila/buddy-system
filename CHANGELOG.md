@@ -3,6 +3,15 @@
 All notable changes to the Buddies dashboard and buddy system. Newest first.
 `FEATURES.md` describes the current state; this file describes how it got there.
 
+## 2026-10-15 (Info panel count badges)
+
+### Added
+- **Section count badges** (Dave 2026-10-15): every list-style eyebrow section header in the buddy info panel now shows a subtle count badge — Artifacts, Photos, Business plans, Linked buddies, Children (now always shown, was hidden at 0). Uses the existing `.attn-count` style (small, muted). Dave: "it would be nice to know without having to expand it that there is at least one in there."
+
+### Fixed
+- **Section expand scroll jump** (Dave 2026-10-15): expanding/collapsing a section no longer shifts content above the click point. The header's viewport position is preserved via requestAnimationFrame scroll correction, plus `overflow-anchor:none` on the panel to disable browser scroll-anchoring interference.
+- **PERSONA (and all attr-head sections) clickable** (Dave 2026-10-15): clicking anywhere on the PERSONA/VOICE/ABOUT/etc. header row now expands/collapses the section — previously only the tiny › toggle button worked, so clicking the header text did nothing. The Change button and other controls still handle their own clicks.
+
 ## 2026-10-15 (Penny Luedtke homepage)
 
 ### Added

@@ -950,7 +950,7 @@ body.sb-closed #sidebar #sb-tools{display:none}
 .attr-row .attr-disc{transition:transform .18s ease}
 .bp-sec.expanded .attr-row .attr-disc{transform:rotate(90deg)}
 /* Attribute header pattern (Dave 2026-10-14): toggle + LABEL: value + pills + tip */
-.attr-head{display:flex;align-items:center;gap:10px;width:100%;padding:8px 2px}
+.attr-head{display:flex;align-items:center;gap:10px;width:100%;padding:8px 2px;cursor:pointer;user-select:none}
 .attr-toggle{flex:none;width:34px;height:34px;border-radius:50%;border:0;background:var(--ghost);display:flex;align-items:center;justify-content:center;font-size:19px;line-height:1;color:var(--muted);cursor:pointer;transition:transform .18s ease}
 .attr-toggle:hover{color:var(--text)}
 .bp-sec.expanded .attr-toggle{transform:rotate(90deg)}
@@ -1101,13 +1101,13 @@ body.standalone .sa-bar{display:flex}
   #main.homepage-mode{padding:0}
   .node{width:max-content;min-width:180px;max-width:320px}
   #view-buddy.panel{position:fixed;top:12px;right:0;bottom:12px;width:min(416px,calc(100vw - 250px));z-index:30;
-    background:var(--panel);border:1px solid var(--border);border-right:none;border-radius:18px 0 0 18px;overflow-y:auto;overflow-x:hidden;
+    background:var(--panel);border:1px solid var(--border);border-right:none;border-radius:18px 0 0 18px;overflow-y:auto;overflow-x:hidden;overflow-anchor:none;
     padding:20px 18px 48px;box-shadow:0 16px 48px var(--shadow);box-sizing:border-box}
 }
 /* ---- Large: >1100px (desktop) ---- */
 @media (min-width:1101px){
   #view-buddy.panel{position:fixed;top:12px;right:0;bottom:12px;width:440px;z-index:60;
-    background:var(--panel);border:1px solid var(--border);border-right:none;border-radius:18px 0 0 18px;overflow-y:auto;overflow-x:hidden;
+    background:var(--panel);border:1px solid var(--border);border-right:none;border-radius:18px 0 0 18px;overflow-y:auto;overflow-x:hidden;overflow-anchor:none;
     padding:24px 20px 48px;box-shadow:0 16px 48px var(--shadow);box-sizing:border-box}
 }
 #view-buddy.panel.active,#view-buddy.sheet.active{display:block}
@@ -2121,6 +2121,10 @@ function applySectionCollapse(bid){
     h3.addEventListener('click', e => {
       if (e.target.closest('.info-tip')) return;
       if (e.target.closest('.secgrip')) return; // grip drags; never toggles collapse
+      // Preserve the header's viewport position so content above doesn't jump (Dave 2026-10-15)
+      const scroller = h3.closest('#view-buddy.panel, #view-buddy.sheet');
+      const beforeTop = h3.getBoundingClientRect().top;
+      const beforeScroll = scroller ? scroller.scrollTop : 0;
       const willCollapse = !sec.classList.contains('collapsed');
       if (e.shiftKey) {
         // Shift-click: apply to all sections
@@ -2133,6 +2137,12 @@ function applySectionCollapse(bid){
         S.secCollapsed[fid] = sec.classList.contains('collapsed');
       }
       save();
+      // After layout, nudge scroll so the header sits where it was
+      requestAnimationFrame(() => {
+        if (!scroller) return;
+        const delta = h3.getBoundingClientRect().top - beforeTop;
+        if (delta !== 0) scroller.scrollTop = beforeScroll + delta;
+      });
     });
   });
 }
@@ -3436,20 +3446,22 @@ function renderBuddy(id){
   try{ setBuddyFavicon(buddyDisplayIcon(b), buddyImageUrl(b)); }catch(e){}
   const items = (b.attention || []).filter(a => !S.seen[a.id]);
   let arts = '';
-  if (b.brief) arts += artRow(ICON_DOC, 'Mission statement', 'The canonical mission & intent — Google Doc', b.brief);
-  if (b.homepageSource) arts += artRow(ICON_LINK, 'Homepage', 'Buddy homepage — opens on Muse', b.homepageSource);
-  if (b.repo) arts += artRow(ICON_REPO, 'GitHub Repo', 'davedellaquila/'+b.repo+' (private)', 'https://github.com/davedellaquila/'+b.repo);
-  (b.docs || []).forEach(d => { arts += artRow(ICON_LINK, d.label, 'Related document — Google Doc', d.url); });
+  let artCount = 0;
+  if (b.brief) { arts += artRow(ICON_DOC, 'Mission statement', 'The canonical mission & intent — Google Doc', b.brief); artCount++; }
+  if (b.homepageSource) { arts += artRow(ICON_LINK, 'Homepage', 'Buddy homepage — opens on Muse', b.homepageSource); artCount++; }
+  if (b.repo) { arts += artRow(ICON_REPO, 'GitHub Repo', 'davedellaquila/'+b.repo+' (private)', 'https://github.com/davedellaquila/'+b.repo); artCount++; }
+  (b.docs || []).forEach(d => { arts += artRow(ICON_LINK, d.label, 'Related document — Google Doc', d.url); artCount++; });
   if (!arts) arts = '<p class="bp-empty">No artifacts yet — the drill adds the mission statement and repo here when they exist.</p>';
   let photos = '';
+  const photoCount = (b.photos || []).length;
   const seedStrip = (b.photos || []).map(u => '<a href="'+escHtml(u)+'" target="_blank" rel="noopener"><img src="'+escHtml(u)+'" loading="lazy" alt=""></a>').join('');
-  photos = '<div class="bp-sec" data-field="photos"><h3 id="photos-h3">Photos</h3><div class="prow"><div class="pstrip" id="pstrip">' + seedStrip + '</div>'
+  photos = '<div class="bp-sec" data-field="photos"><h3 id="photos-h3">Photos <span class="attn-count">('+photoCount+')</span></h3><div class="prow"><div class="pstrip" id="pstrip">' + seedStrip + '</div>'
     + '<div class="pdrop" id="pdrop">Drop photos here or click to choose<br><span style="font-size:12px">JPEG, PNG, GIF, WebP, HEIC \\u2014 all supported</span></div></div>'
     + '<p class="fineprint" id="pstat"></p></div>';
   const linkedPlans = PLANS.filter(p => (p.buddies || []).includes(id));
   let planSec = '';
   if (linkedPlans.length) {
-    planSec = '<div class="bp-sec" data-field="plans"><h3>Business plans</h3>' + linkedPlans.map(p =>
+    planSec = '<div class="bp-sec" data-field="plans"><h3>Business plans <span class="attn-count">('+linkedPlans.length+')</span></h3>' + linkedPlans.map(p =>
       '<a class="art-row" href="#" data-plan="'+p.id+'">'
       + '<span class="art-ic">'+escHtml(p.icon||'💼')+'</span>'
       + '<span><span class="art-label">'+escHtml(p.name)+'</span><div class="art-sub">BRD / business plan · '+escHtml(p.status)+'</div></span>'
@@ -3464,7 +3476,7 @@ function renderBuddy(id){
       + '<span class="art-ic">'+escHtml(k.icon || '')+'</span>'
       + '<span><span class="art-label">'+escHtml(dispName(k))+'</span><div class="art-sub">'+escHtml((k.tagline || k.mission || '').slice(0, 90))+'</div></span>'
       + '<span class="art-go" data-homepage="'+escHtml(k.id)+'" title="Open homepage">\\u2192</span></a>').join('');
-    reportsSec = '<div class="bp-sec" data-field="reports"><h3>Children' + (kids.length ? ' <span class="attn-count">('+kids.length+')</span>' : '') + addBtn + '</h3>' + (rows || '<p class="bp-empty">No children yet.</p>') + '</div>';
+    reportsSec = '<div class="bp-sec" data-field="reports"><h3>Children <span class="attn-count">('+kids.length+')</span>' + addBtn + '</h3>' + (rows || '<p class="bp-empty">No children yet.</p>') + '</div>';
   })();
   let parSec = '';
   (function(){
@@ -3512,7 +3524,7 @@ function renderBuddy(id){
     const all = out.concat(inc);
     if (!all.length) return;
     function prettyId(s){ return s.replace(/-buddy$/, "'s Buddy").replace(/(^|-)([a-z])/g, function(m, p, c){ return (p === '-' ? ' ' : '') + c.toUpperCase(); }); }
-    linkSec = '<div class="bp-sec" data-field="links"><h3>Linked buddies</h3>' + all.map(lid => {
+    linkSec = '<div class="bp-sec" data-field="links"><h3>Linked buddies <span class="attn-count">('+all.length+')</span></h3>' + all.map(lid => {
       const lb = byId[lid];
       if (lb) return '<a class="art-row" data-buddy="' + escHtml(lid) + '">'
         + '<span class="art-ic">' + escHtml(lb.icon || '') + '</span>'
@@ -3605,7 +3617,7 @@ function renderBuddy(id){
         ? '<div class="bp-sec" data-field="tree"><h3>The Buddy Tree</h3><div class="bp-tree-wrap"></div>'
           + '<p class="fineprint"><button class="linkbtn" data-view="tree">Open the tree as its own view \\u2192</button></p></div>'
         : '')
-    + '<div class="bp-sec" data-field="artifacts"><h3>Artifacts</h3>'+arts+'</div>'
+    + '<div class="bp-sec" data-field="artifacts"><h3>Artifacts <span class="attn-count">('+artCount+')</span></h3>'+arts+'</div>'
     + planSec
     + '<div class="bp-sec" data-field="notes">'
     + attrHead('notes', 'PRIVATE NOTES', '<span class="attr-value" id="bp-notes-count">(0)</span>', '',
@@ -6858,7 +6870,36 @@ document.addEventListener('click', e => {
     if (e.target.closest('.info-tip')) return; // the ⓘ popover handles its own taps
     e.preventDefault(); e.stopPropagation();
     const sec = exp.closest('.bp-sec');
+    const scroller = exp.closest('#view-buddy.panel, #view-buddy.sheet');
+    const beforeTop = exp.getBoundingClientRect().top;
+    const beforeScroll = scroller ? scroller.scrollTop : 0;
     if (sec) sec.classList.toggle('expanded');
+    requestAnimationFrame(() => {
+      if (!scroller) return;
+      const delta = exp.getBoundingClientRect().top - beforeTop;
+      if (delta !== 0) scroller.scrollTop = beforeScroll + delta;
+    });
+    return;
+  }
+  // Clicking anywhere on an attr-head (not just the › toggle) expands/collapses — Dave 2026-10-15
+  const ahead = e.target.closest('.attr-head');
+  if (ahead) {
+    if (e.target.closest('.info-tip')) return;
+    if (e.target.closest('button')) return; // Change button etc. handles its own clicks
+    if (e.target.closest('a')) return;
+    if (e.target.closest('input')) return;
+    e.preventDefault(); e.stopPropagation();
+    const sec = ahead.closest('.bp-sec');
+    // Preserve header viewport position so content above doesn't jump
+    const scroller = ahead.closest('#view-buddy.panel, #view-buddy.sheet');
+    const beforeTop = ahead.getBoundingClientRect().top;
+    const beforeScroll = scroller ? scroller.scrollTop : 0;
+    if (sec) sec.classList.toggle('expanded');
+    requestAnimationFrame(() => {
+      if (!scroller) return;
+      const delta = ahead.getBoundingClientRect().top - beforeTop;
+      if (delta !== 0) scroller.scrollTop = beforeScroll + delta;
+    });
     return;
   }
 });
