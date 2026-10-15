@@ -496,6 +496,16 @@ input[type=range].zrange::-moz-range-thumb{width:16px;height:16px;border-radius:
   font-size:13px;width:22px;height:22px;padding:0;cursor:pointer;line-height:1;
   text-shadow:0 0 4px var(--bg),0 0 8px var(--bg)}
 .zcenter:hover{color:var(--text);background:transparent}
+/* Dave 2026-10-15: keep zoom controls visible when the info panel is open.
+   The panel slides in from the right (z-index above the zoombar), so shift
+   the zoombar left by the panel width. Smooth transition matches the panel's
+   slide timing. Only applies to the side-panel layout (desktop/tablet) —
+   on mobile the panel is a full-screen sheet (correct modal behavior). */
+.zoombar{transition:right .5s cubic-bezier(.32,.72,.35,1)}
+body:has(#view-buddy.panel.active):not(.bp-collapsed) #zoombar-main,
+body:has(#view-buddy.panel.active):not(.bp-collapsed) #zoombar-orph{
+  right:calc(28px + var(--bpw, 440px));
+}
 /* Fixed to viewport at sidebar edge so vertical #sidebar scroll doesn't move it.
    MUST be a DOM sibling of #sidebar (not a child): overflow on #sidebar clips
    hit-testing/paint for fixed descendants, which made the gripper invisible. */
