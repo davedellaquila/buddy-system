@@ -3,6 +3,12 @@
 All notable changes to the Buddies dashboard and buddy system. Newest first.
 `FEATURES.md` describes the current state; this file describes how it got there.
 
+## 2026-10-15 (Browser back/forward navigation history)
+
+### Added
+- **Browser back/forward walks the buddy viewing history** (Dave 2026-10-15): every buddy selection, view switch, panel open, and Atlas lens change now pushes a real `history.pushState` entry carrying `{sel, projectId, view, chartType, panel}` — enough to fully restore the view. The browser's own back/forward buttons walk backwards/forwards through everything Dave viewed, Raycast-style. A `popstate` listener restores the selection, view, Atlas lens, and detail-panel open/closed; entries without a state object (old bookmarks, direct hash edits) fall back to the existing hash parsing. Consecutive duplicate states are never pushed. The in-app ← Back button now delegates to `history.back()`.
+- **Initial state seeding**: `initRoute` seeds `history.state` via `replaceState` so the first back traversal already has a state object (no extra history entry).
+
 ## 2026-10-15 (Jody Reed buddy)
 
 ### Added

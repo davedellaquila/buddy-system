@@ -1896,12 +1896,14 @@ function selectBuddy(id){
     S.projectId = id; save();
     renderProjectView();
     renderNav();
+    pushNavState(); // Dave 2026-10-15: browser back/forward tracks buddy selection
   } else {
     const inView = (S.sel || '').startsWith('view:');
     S.projectId = id; save();
     if (inView) {
       // Update selection highlight without opening the panel
       renderNav();
+      pushNavState(); // Dave 2026-10-15: browser back/forward tracks buddy selection
     } else {
       show('buddy:' + id);
     }
@@ -1922,6 +1924,7 @@ function openBuddy(id){
     vb.classList.toggle('sheet', window.innerWidth < 640);
     renderBuddy(id);
     renderNav();
+    pushNavState(); // Dave 2026-10-15: panel-open is its own back/forward step
   }
 }
 function shortVal(v){
@@ -4428,7 +4431,7 @@ const CHART_TYPES = [
   {id:'constellation', label:'Constellation'},
 ];
 function getChartType(){ return S.chartType || 'org'; }
-function setChartType(t){ S.chartType = t; save(); renderOrgTree(); }
+function setChartType(t){ S.chartType = t; save(); renderOrgTree(); pushNavState(); /* Dave 2026-10-15: lens switch is a back/forward step */ }
 function closeLensPicker(){
   const dd = document.getElementById('lens-dropdown');
   const scrim = document.getElementById('lens-scrim');
@@ -5940,6 +5943,37 @@ const navHist = [];
 function locHash(){ try { return (typeof location !== 'undefined' && location.hash) || ''; } catch (e) { return ''; } }
 function isStandalone(){ return /(^|\/)standalone$/.test(locHash().replace(/^#\//, '')); }
 function hashFor(sel){ return '#/' + sel + (isStandalone() ? '/standalone' : ''); }
+/* ---------- browser navigation history (Dave 2026-10-15) ----------
+   Every buddy/view selection pushes a real browser history entry via
+   history.pushState, so the browser's own back/forward buttons walk
+   through the buddy viewing history (Raycast-style). The state object
+   carries enough to restore the view: sel, projectId, view, chartType
+   (Atlas lens), and whether the detail panel was open. */
+let suppressHist = false;
+function navState(){
+  const vb = (typeof document !== 'undefined') ? document.getElementById('view-buddy') : null;
+  return {
+    sel: S.sel, projectId: S.projectId, view: S.view,
+    chartType: S.chartType || null,
+    panel: !!(vb && vb.classList.contains('active'))
+  };
+}
+function sameNavState(a, b){
+  return !!(a && b && a.sel === b.sel && a.projectId === b.projectId &&
+    a.view === b.view && (a.chartType || null) === (b.chartType || null) &&
+    !!a.panel === !!b.panel);
+}
+function pushNavState(){
+  if (suppressHist) return;
+  try {
+    const st = navState();
+    if (sameNavState(history.state, st)) return; // no duplicate consecutive entries
+    history.pushState(st, '', hashFor(S.sel));
+  } catch (e) {}
+}
+function replaceNavState(){
+  try { history.replaceState(navState(), '', hashFor(S.sel)); } catch (e) {}
+}
 document.addEventListener('keydown', e => {
   // / focuses buddy search, N creates new buddy (when not typing in a field)
   const tag = (document.activeElement && document.activeElement.tagName) || '';
@@ -6048,8 +6082,6 @@ function show(sel, push){
     }
   }
   save();
-  const h = hashFor(sel);
-  try { if (typeof location !== 'undefined' && location.hash !== h) location.hash = h; } catch (e) {}
   document.body.classList.toggle('standalone', isStandalone());
   const vb = document.getElementById('view-buddy');
   const asOverlay = sel.startsWith('buddy:') && !isStandalone();
@@ -6101,6 +6133,8 @@ function show(sel, push){
   setIcon(sel.startsWith('plan:') ? ((planById[sel.slice(5)] || {}).icon)
     : sel === 'view:project' ? ((byId[projectId()] || {}).icon)
     : sel.startsWith('buddy:') ? ((byId[sel.slice(6)] || {}).icon) : byId[ROOT_ID].icon);
+  // Dave 2026-10-15: browser history — back/forward walks the viewing history.
+  if (push === false) replaceNavState(); else pushNavState();
 }
 /* ---------- keyboard nav ---------- */
 document.addEventListener('keydown', e => {
@@ -6191,7 +6225,9 @@ document.addEventListener('keydown', e => {
   window.addEventListener('resize', () => { applySbWidth(); centerIfFits(); }); /* re-clamp drawer on rotate/resize */
 })();
 /* ---------- prev/next/back ---------- */
-function goBack(){ const p = navHist.pop(); show(p || 'view:tree', false); }
+// Dave 2026-10-15: the in-app back button is now the browser back button —
+// every selection pushes a real history entry (see pushNavState).
+function goBack(){ try { history.back(); } catch (e) { show('view:tree', false); } }
 function stepBuddy(d){
   const ids = BUDDIES.map(b => b.id);
   let i = S.sel.startsWith('buddy:') ? ids.indexOf(S.sel.slice(6)) : (d > 0 ? -1 : 0);
@@ -8953,6 +8989,9 @@ document.addEventListener('click', e => {
 });
 refreshViews();
 (function initRoute(){
+  // Dave 2026-10-15: seed the initial history.state so the first back/forward
+  // traversal carries a state object (replaceState = no extra entry).
+  try { history.replaceState(navState(), '', locHash() || hashFor(S.sel || 'view:tree')); } catch (e) {}
   const m = locHash().match(/^#\/(buddy:[^\/]+|view:[^\/]+|plan:[^\/]+)(\/standalone)?$/);
   if (m) { document.body.classList.toggle('standalone', !!m[2]); show(m[1], false); }
   else show(S.sel || 'view:tree');
@@ -8961,6 +9000,42 @@ refreshViews();
     if (!mm) return;
     document.body.classList.toggle('standalone', !!mm[2]);
     if (mm[1] !== S.sel) show(mm[1], false);
+  });
+  // Dave 2026-10-15: browser back/forward — restore the full view from the
+  // history entry's state object (sel + selected buddy + view + Atlas lens +
+  // panel open/closed). Entries without our state (older bookmarks, direct
+  // hash edits) fall back to hash parsing.
+  window.addEventListener('popstate', (e) => {
+    const st = e && e.state;
+    if (st && typeof st.sel === 'string') {
+      suppressHist = true;
+      try {
+        if (st.projectId && byId[st.projectId]) S.projectId = st.projectId;
+        if (st.view) S.view = st.view;
+        if (st.chartType) S.chartType = st.chartType;
+        save();
+        show(st.sel, false);
+        const vb = document.getElementById('view-buddy');
+        if (vb) {
+          const wantOpen = !!st.panel && st.projectId && byId[st.projectId] && !isStandalone();
+          if (wantOpen) {
+            vb.classList.add('active');
+            vb.classList.toggle('panel', window.innerWidth >= 640);
+            vb.classList.toggle('sheet', window.innerWidth < 640);
+            renderBuddy(st.projectId);
+            renderNav();
+          } else if (!st.sel.startsWith('buddy:')) {
+            vb.classList.remove('active', 'panel', 'sheet');
+          }
+        }
+      } finally { suppressHist = false; }
+    } else {
+      const mm = locHash().match(/^#\/(buddy:[^\/]+|view:[^\/]+|plan:[^\/]+)(\/standalone)?$/);
+      if (mm) {
+        document.body.classList.toggle('standalone', !!mm[2]);
+        if (mm[1] !== S.sel) show(mm[1], false);
+      }
+    }
   });
 })();
 renderJournal();
