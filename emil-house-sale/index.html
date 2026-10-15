@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Emil's House Sale — Deal Pipeline</title>
+<style>
+  :root {
+    --bg: #141210;
+    --bg2: #1d1a16;
+    --card: #232019;
+    --border: #38322a;
+    --text: #f2ead9;
+    --muted: #b3a68d;
+    --accent: #e0a458;
+    --green: #8fce7e;
+    --blue: #7db8e8;
+    --red: #e88a7d;
+    --stage-dim: #4a4438;
+  }
+  @media (prefers-color-scheme: light) {
+    :root {
+      --bg: #faf7f0;
+      --bg2: #f1ebdd;
+      --card: #fffdf7;
+      --border: #e2d6bd;
+      --text: #2b2417;
+      --muted: #7d6f56;
+      --accent: #a86f14;
+      --green: #4e7d3a;
+      --blue: #2f6ea3;
+      --red: #b3402f;
+      --stage-dim: #d8cdb4;
+    }
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg); color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+    line-height: 1.55; padding: 0 0 72px;
+  }
+  /* Slim sticky header — Dave always knows which page he's on */
+  .stickybar {
+    position: sticky; top: 0; z-index: 50;
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 20px;
+    background: color-mix(in srgb, var(--bg) 88%, transparent);
+    -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border);
+    font-size: 15px; font-weight: 600;
+  }
+  .stickybar .icon { font-size: 18px; }
+  .stickybar a { color: var(--muted); font-weight: 400; font-size: 13px; margin-left: auto; text-decoration: none; }
+  .stickybar a:hover { color: var(--accent); }
+  .wrap { max-width: 860px; margin: 0 auto; padding: 0 22px; }
+  .hero { padding: 44px 0 8px; }
+  .kicker { text-transform: uppercase; letter-spacing: 3px; font-size: 12px; color: var(--accent); margin-bottom: 10px; }
+  h1 { font-family: Georgia, "Times New Roman", serif; font-size: 40px; font-weight: 600; letter-spacing: -0.5px; }
+  .tagline { color: var(--muted); font-size: 17px; margin-top: 6px; max-width: 620px; }
+  .statuspill {
+    display: inline-block; margin-top: 14px; padding: 6px 14px; border-radius: 999px;
+    border: 1px solid var(--accent); color: var(--accent); font-size: 13px; font-weight: 600;
+  }
+  h2 { font-family: Georgia, "Times New Roman", serif; font-size: 22px; margin: 38px 0 14px; display: flex; align-items: center; gap: 10px; }
+  h2 .rule { flex: 1; height: 1px; background: var(--border); }
+  .card {
+    background: var(--card); border: 1px solid var(--border); border-radius: 12px;
+    padding: 18px 20px; margin-bottom: 14px;
+  }
+  .card h3 { font-size: 16px; margin-bottom: 6px; }
+  .card p, .card li { color: var(--muted); font-size: 14.5px; }
+  .card ul { margin: 8px 0 0 18px; }
+  .card a { color: var(--accent); }
+  /* Pipeline visual */
+  .pipeline { display: flex; align-items: stretch; gap: 0; margin: 6px 0 4px; }
+  .stage {
+    flex: 1; text-align: center; padding: 16px 8px; border-radius: 12px;
+    border: 1px solid var(--border); background: var(--card); position: relative;
+  }
+  .stage + .stage { margin-left: 26px; }
+  .stage + .stage::before {
+    content: "→"; position: absolute; left: -24px; top: 50%; transform: translateY(-50%);
+    color: var(--muted); font-size: 18px; width: 22px;
+  }
+  .stage .dot {
+    width: 14px; height: 14px; border-radius: 50%; margin: 0 auto 8px;
+    background: var(--stage-dim); border: 2px solid var(--stage-dim);
+  }
+  .stage.active .dot { background: var(--accent); border-color: var(--accent); box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 25%, transparent); }
+  .stage.done .dot { background: var(--green); border-color: var(--green); }
+  .stage .sname { font-weight: 700; font-size: 15px; }
+  .stage .snote { color: var(--muted); font-size: 12.5px; margin-top: 4px; }
+  .stage.active { border-color: var(--accent); }
+  .empty {
+    border: 1px dashed var(--border); border-radius: 12px; padding: 22px;
+    color: var(--muted); font-size: 14.5px; text-align: center; margin-bottom: 14px;
+  }
+  .needs li { margin-bottom: 10px; }
+  .needs strong { color: var(--text); }
+  .linkgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px; }
+  .linkgrid a {
+    display: block; background: var(--card); border: 1px solid var(--border); border-radius: 10px;
+    padding: 12px 14px; text-decoration: none; color: var(--text); font-size: 14px; font-weight: 600;
+  }
+  .linkgrid a span { display: block; font-weight: 400; color: var(--muted); font-size: 12.5px; margin-top: 2px; }
+  .linkgrid a:hover { border-color: var(--accent); }
+  /* Brain dump box */
+  .dumpbox { margin-top: 38px; }
+  .dumpbox-sub { color: var(--muted); font-size: 14px; margin-bottom: 12px; }
+  .dumpbox textarea {
+    width: 100%; background: var(--card); border: 1px solid var(--border); border-radius: 10px;
+    color: var(--text); padding: 12px 14px; font-size: 14.5px; font-family: inherit; resize: vertical;
+  }
+  .dumpbox-row { display: flex; align-items: center; gap: 12px; margin-top: 10px; }
+  .dumpbox-btn {
+    background: var(--accent); color: #111; border: none; border-radius: 8px;
+    padding: 9px 20px; font-size: 14px; font-weight: 700; cursor: pointer;
+  }
+  .dumpbox-btn:disabled { opacity: 0.45; cursor: default; }
+  .dumpbox-status { font-size: 13.5px; color: var(--muted); }
+  .dumpbox-token {
+    background: var(--bg2); border: 1px dashed var(--border); border-radius: 8px;
+    padding: 12px 14px; margin-bottom: 12px; font-size: 14px;
+  }
+  .dumpbox-token p { margin-bottom: 8px; color: var(--muted); }
+  .dumpbox-tokenrow { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+  .dumpbox-tokenrow input {
+    flex: 1; min-width: 170px; background: var(--card); border: 1px solid var(--border);
+    border-radius: 8px; padding: 7px 10px; font-size: 13px; color: var(--text);
+  }
+  .dumpbox-tokenrow button {
+    background: transparent; color: var(--accent); border: 1px solid var(--accent);
+    border-radius: 8px; padding: 7px 14px; font-size: 13px; font-weight: 600; cursor: pointer;
+  }
+  .dumpbox-tokenrow a { color: var(--accent); font-size: 13px; }
+  .footer { margin-top: 48px; color: var(--muted); font-size: 12.5px; text-align: center; }
+  .footer a { color: var(--accent); }
+  @media (max-width: 560px) {
+    h1 { font-size: 30px; }
+    .pipeline { flex-direction: column; }
+    .stage + .stage { margin-left: 0; margin-top: 22px; }
+    .stage + .stage::before { content: "↓"; left: 50%; top: -21px; transform: translateX(-50%); }
+  }
+</style>
+</head>
+<body>
+<div class="stickybar"><span class="icon">🏷️</span><span>Emil's House Sale</span><a href="https://davedellaquila.github.io/buddy-system/">← Dashboard</a></div>
+<div class="wrap">
+
+  <div class="hero">
+    <div class="kicker">Deal desk · Property</div>
+    <h1>Emil's House Sale</h1>
+    <div class="tagline">The active sale of Dad Emil's house — tracked end to end: listing → offers → closing, every document filed by stage and date.</div>
+    <span class="statuspill">● Active — awaiting first documents</span>
+  </div>
+
+  <h2>Deal pipeline <span class="rule"></span></h2>
+  <div class="pipeline" role="img" aria-label="Deal pipeline: listing in progress, offers and closing not started">
+    <div class="stage active">
+      <div class="dot"></div>
+      <div class="sname">Listing</div>
+      <div class="snote">Realtor actively selling · docs arriving by text + email</div>
+    </div>
+    <div class="stage">
+      <div class="dot"></div>
+      <div class="sname">Offers</div>
+      <div class="snote">No offers on file yet</div>
+    </div>
+    <div class="stage">
+      <div class="dot"></div>
+      <div class="sname">Closing</div>
+      <div class="snote">Not started</div>
+    </div>
+  </div>
+
+  <h2>Listing status <span class="rule"></span></h2>
+  <div class="card">
+    <h3>🏡 On the market</h3>
+    <p>Dave hired a realtor who is on the ball and actively selling. She sends lots of documents — some by text, some by email.</p>
+    <ul>
+      <li>Property address: <strong style="color:var(--text)">not yet on file</strong> — Dave to confirm</li>
+      <li>Realtor name/contact: <strong style="color:var(--text)">not yet on file</strong></li>
+      <li>List price / list date: <strong style="color:var(--text)">not yet on file</strong></li>
+    </ul>
+  </div>
+
+  <h2>Offers <span class="rule"></span></h2>
+  <div class="empty">No offers on file yet. When offers come in, each gets its own card here — buyer, price, terms, contingencies, dates.</div>
+
+  <h2>Documents by stage <span class="rule"></span></h2>
+  <div class="empty">
+    No documents filed yet.<br>
+    📧 Email is auto-watched — realtor's emailed documents land here on their own.<br>
+    📱 Texts need Dave to forward them here.
+  </div>
+
+  <h2>What needs Dave <span class="rule"></span></h2>
+  <div class="card needs">
+    <ul>
+      <li><strong>Forward the realtor's texts</strong> — paste them in this thread or dump them below; email is already auto-watched.</li>
+      <li><strong>Confirm the property address</strong> so the listing card is real.</li>
+      <li><strong>Realtor's name + contact</strong> for the record.</li>
+      <li><strong>Review the mission statement</strong> — <a href="https://docs.google.com/document/d/1pdSY9EV_Z0x0chAQnaEsTehcPYZrE98LNR1bYvTxliY/edit">Emil's House Sale — Mission Statement</a>.</li>
+    </ul>
+  </div>
+
+  <h2>Scope notes <span class="rule"></span></h2>
+  <div class="card">
+    <p>Estate-level topics (inheritance timing, other assets) live with the parent, <a href="https://muse.ai/chat/4249e4ef-9c59-4781-b821-05a65c232fb7">🏛️ Emil's Estate</a>. This is a different house — and a different deal — from the <a href="https://davedellaquila.github.io/buddy-system/">Morgan Hill house</a> Dave is co-selling with Emile and Ron. And: Emil (dad, deceased) ≠ Emile (brother).</p>
+  </div>
+
+  <h2>Links <span class="rule"></span></h2>
+  <div class="linkgrid">
+    <a href="https://docs.google.com/document/d/1pdSY9EV_Z0x0chAQnaEsTehcPYZrE98LNR1bYvTxliY/edit">📄 Mission statement<span>Under Dave's review</span></a>
+    <a href="https://github.com/davedellaquila/emil-house-sale">💻 Repo<span>davedellaquila/emil-house-sale (private)</span></a>
+    <a href="https://muse.ai/chat/4249e4ef-9c59-4781-b821-05a65c232fb7">🏛️ Emil's Estate<span>Parent thread — estate-level topics</span></a>
+    <a href="https://davedellaquila.github.io/buddy-system/">🗂️ Dashboard<span>Buddy System home</span></a>
+  </div>
+
+  <section class="dumpbox" data-buddy-id="emil-house-sale">
+    <h2>🧠 Brain dump <span class="rule"></span></h2>
+    <p class="dumpbox-sub">Dump what's on your mind about the sale — raw and unfiltered. Each dump lands in the buddy's repo (docs/ingest.md) as a timestamped entry.</p>
+    <div class="dumpbox-token" hidden>
+      <p>🔒 Connect GitHub to unlock dumping. Paste a token once — it stays on this device only.</p>
+      <div class="dumpbox-tokenrow">
+        <input type="password" placeholder="GitHub token (repo scope)" aria-label="GitHub token">
+        <button type="button">Save token</button>
+        <a href="https://github.com/settings/tokens" target="_blank" rel="noopener">Get a token</a>
+      </div>
+    </div>
+    <textarea rows="4" placeholder="Dump what's on your mind about Emil's house sale…"></textarea>
+    <div class="dumpbox-row">
+      <button type="button" class="dumpbox-btn">Dump it</button>
+      <span class="dumpbox-status" role="status"></span>
+    </div>
+  </section>
+
+  <div class="footer">
+    Generated 2026-10-15 · Part of the <a href="https://davedellaquila.github.io/buddy-system/">Buddy System</a>
+  </div>
+</div>
+
+<script>
+(function(){
+  var box = document.querySelector('.dumpbox');
+  if (!box || box.dataset.dumpInit) return;
+  box.dataset.dumpInit = '1';
+  var bid = box.getAttribute('data-buddy-id') || (function(){
+    var p = location.pathname.replace(/\/+$/, '');
+    return p.substring(p.lastIndexOf('/') + 1);
+  })();
+  var ta = box.querySelector('textarea'),
+      btn = box.querySelector('.dumpbox-btn'),
+      st = box.querySelector('.dumpbox-status'),
+      tokWrap = box.querySelector('.dumpbox-token');
+  function lsGet(){ try { return JSON.parse(localStorage.getItem('buddyTree.v3') || '{}'); } catch(e){ return {}; } }
+  function lsSet(patch){
+    try { var s = lsGet(); for (var k in patch) s[k] = patch[k]; localStorage.setItem('buddyTree.v3', JSON.stringify(s)); } catch(e){}
+  }
+  function token(){ return lsGet().ghToken || ''; }
+  function b64encode(str){
+    var bytes = new TextEncoder().encode(str), bin = '';
+    bytes.forEach(function(b){ bin += String.fromCharCode(b); });
+    return btoa(bin);
+  }
+  async function ghApi(path, method, body){
+    var t = token();
+    if (!t) throw new Error('Add a GitHub token first.');
+    var r = await fetch('https://api.github.com' + path, {
+      method: method || 'GET',
+      headers: {'Authorization': 'Bearer ' + t, 'Accept': 'application/vnd.github+json', 'Content-Type': 'application/json'},
+      body: body ? JSON.stringify(body) : undefined
+    });
+    if (!r.ok) throw new Error('GitHub ' + r.status);
+    return r.status === 204 ? null : await r.json();
+  }
+  async function ghGetFile(repo, path){
+    try {
+      var j = await ghApi('/repos/davedellaquila/' + repo + '/contents/' + path);
+      if (j && j.content) return {
+        text: new TextDecoder().decode(Uint8Array.from(atob(j.content.replace(/\n/g, '')), function(c){ return c.charCodeAt(0); })),
+        sha: j.sha
+      };
+    } catch(e){}
+    return null;
+  }
+  var repo = null, repoName = bid;
+  async function resolveRepo(){
+    try {
+      var r = await fetch('../buddies.json', {cache: 'no-store'});
+      var d = await r.json();
+      var buds = d.buddies || [];
+      for (var i = 0; i < buds.length; i++) {
+        if (buds[i].id === bid && buds[i].repo) { repo = buds[i].repo; repoName = buds[i].name || bid; break; }
+      }
+    } catch(e){}
+  }
+  function refreshUI(){
+    var has = !!token();
+    tokWrap.hidden = has;
+    var ok = has && !!repo;
+    ta.disabled = !ok;
+    btn.disabled = !ok;
+    if (!has) { st.textContent = ''; }
+    else if (!repo) { st.textContent = 'No repo linked for this buddy yet.'; }
+  }
+  var tokInput = tokWrap.querySelector('input'),
+      tokSave = tokWrap.querySelector('button');
+  tokSave.addEventListener('click', function(){
+    var v = tokInput.value.trim();
+    if (!v) return;
+    lsSet({ghToken: v});
+    tokInput.value = '';
+    refreshUI();
+    st.textContent = 'Token saved on this device.';
+  });
+  async function dump(){
+    var text = ta.value.trim();
+    if (!text) return;
+    if (!token()) { refreshUI(); return; }
+    if (!repo) { st.textContent = 'No repo linked for this buddy yet.'; return; }
+    st.textContent = 'Dumping…';
+    btn.disabled = true;
+    try {
+      var stamp = new Date().toLocaleString();
+      var NL = String.fromCharCode(10);
+      var entry = '## ' + stamp + NL + NL + text + NL + NL;
+      var cur = await ghGetFile(repo, 'docs/ingest.md');
+      var base = cur ? cur.text : '# Ingest log — ' + repoName + NL + NL;
+      var body = {message: 'Ingest dump for ' + bid, content: b64encode(base + entry)};
+      if (cur && cur.sha) body.sha = cur.sha;
+      await ghApi('/repos/davedellaquila/' + repo + '/contents/docs/ingest.md', 'PUT', body);
+      ta.value = '';
+      st.textContent = '✓ Dumped to ' + repo + '/docs/ingest.md';
+    } catch(err){ st.textContent = 'Save failed: ' + (err.message || err); }
+    btn.disabled = false;
+  }
+  btn.addEventListener('click', dump);
+  ta.addEventListener('keydown', function(ev){
+    if ((ev.metaKey || ev.ctrlKey) && ev.key === 'Enter') { ev.preventDefault(); dump(); }
+  });
+  resolveRepo().then(refreshUI);
+})();
+</script>
+</body>
+</html>
