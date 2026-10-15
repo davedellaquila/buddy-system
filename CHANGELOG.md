@@ -3,6 +3,11 @@
 All notable changes to the Buddies dashboard and buddy system. Newest first.
 `FEATURES.md` describes the current state; this file describes how it got there.
 
+## 2026-10-15 (Larry Osana custom homepage)
+
+### Added
+- **🔑 Larry Osana custom homepage** (thread-owned, `larry-osana/index.html`): the tenant record — contact card (unknowns marked unknown, never invented), ⚠️ priority banner for the new contract naming the estate as landlord, 🕰️ lease-status timeline (Emil → Jul 1 2026 → landlord gap → new contract) as the charts-directive alternative visual, property context (Melody Lane, address unverified), empty communication log, standard 🧠 brain-dump box (same GitHub write path to `larry-osana/docs/ingest.md`), slim sticky header, dark + light, all viewports. Links: dossier, repo, thread, Melody Lane, Emil's Estate. Footer deliberately omits the "Part of the Buddy System" signature so `gen_basic_homepages.py` never overwrites it (thread-owned custom design).
+
 ## 2026-10-15 (Emil's estate buddies)
 
 ### Added
