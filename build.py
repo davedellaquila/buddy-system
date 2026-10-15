@@ -491,6 +491,11 @@ input[type=range].zrange::-moz-range-thumb{width:16px;height:16px;border-radius:
   font-size:12px;width:22px;height:22px;padding:0;cursor:pointer;line-height:1;
   text-shadow:0 0 4px var(--bg),0 0 8px var(--bg)}
 .zfit:hover{color:var(--text);background:transparent}
+/* Center-on-buddy (Dave 2026-10-15): crosshair button under the zoom-fit button */
+.zcenter{flex:0 0 auto;background:none;border:none;border-radius:6px;color:var(--faint);
+  font-size:13px;width:22px;height:22px;padding:0;cursor:pointer;line-height:1;
+  text-shadow:0 0 4px var(--bg),0 0 8px var(--bg)}
+.zcenter:hover{color:var(--text);background:transparent}
 /* Fixed to viewport at sidebar edge so vertical #sidebar scroll doesn't move it.
    MUST be a DOM sibling of #sidebar (not a child): overflow on #sidebar clips
    hit-testing/paint for fixed descendants, which made the gripper invisible. */
@@ -1020,7 +1025,7 @@ body.standalone .sa-bar{display:flex}
   /* Vertical zoom on the right — fat hit areas (≈44px), no filled panel */
   .zoombar{right:4px;z-index:30;padding:8px 4px;gap:4px}
   input[type=range].zrange{width:44px;height:140px}
-  .zfit{width:44px;height:44px;font-size:14px;display:flex;align-items:center;justify-content:center}
+  .zfit,.zcenter{width:44px;height:44px;font-size:14px;display:flex;align-items:center;justify-content:center}
   .zoombar .z-out,.zoombar .z-in{padding:4px 0}
   /* Chunkier tree nodes for touch */
   #treezoom .node{padding:15px 14px;min-height:60px}
@@ -4937,6 +4942,7 @@ function initConstellation(){
   walk(byId[ROOT_ID], 0);
   const byNodeId = {};
   nodes.forEach(n => { byNodeId[n.id] = n; });
+  canvas._buddyNodes = byNodeId; /* live node map for centerOnBuddy (Dave 2026-10-15) */
   // Physics loop
   let ticks = 0;
   function tick(){
@@ -5308,7 +5314,9 @@ function zoomToFit(paneId, zoomKey){
       + '<span class="z-in" aria-hidden="true">\u25fc</span>'
       + '<input type="range" class="zrange" id="zoomrange-' + sfx + '" min="5" max="160" step="5" value="100" aria-label="' + label + '" orient="vertical">'
       + '<span class="z-out" aria-hidden="true">\u25aa</span>'
-      + '<button type="button" class="zfit" id="zoomfit-' + sfx + '" title="Zoom to fit" aria-label="Zoom to fit">\u26f6</button></div>';
+      + '<button type="button" class="zfit" id="zoomfit-' + sfx + '" title="Zoom to fit" aria-label="Zoom to fit">\u26f6</button>'
+      + (sfx === 'main' ? '<button type="button" class="zcenter" id="zoomcenter-' + sfx + '" title="Center on current buddy" aria-label="Center on current buddy">\u2316</button>' : '')
+      + '</div>';
   }
   vt.insertAdjacentHTML('afterbegin',
     '<div class="treewrap" id="zoomwrap"><div id="treezoom">'
@@ -5328,6 +5336,14 @@ function zoomToFit(paneId, zoomKey){
     S.zoom = parseInt(e.target.value, 10) || 100; save(); applyZoom();
   });
   document.getElementById('zoomfit-main').addEventListener('click', () => zoomToFit('treezoom-main', 'zoom'));
+  /* Center-on-buddy button (Dave 2026-10-15): smooth-scrolls the Atlas pane so
+     the current buddy's node lands centered. */
+  const zcMain = document.getElementById('zoomcenter-main');
+  if (zcMain) zcMain.addEventListener('click', () => {
+    const id = atlasFocusBuddyId();
+    if (!id) { toast('No buddy selected.'); return; }
+    if (!centerOnBuddy(id)) toast('Buddy not visible in this view.');
+  });
   document.getElementById('zoomrange-orph').addEventListener('input', e => {
     S.zoomOrph = parseInt(e.target.value, 10) || 100; save(); applyZoom();
   });
@@ -6017,6 +6033,9 @@ document.addEventListener('keydown', e => {
 });
 function show(sel, push){
   if (push !== false && S.sel && sel !== S.sel) { navHist.push(S.sel); if (navHist.length > 60) navHist.shift(); }
+  /* Center-on-buddy (Dave 2026-10-15): remember the buddy we're coming from so
+     switching to the Atlas view can center on it. */
+  const prevBuddy = (S.sel && typeof S.sel === 'string' && S.sel.indexOf('buddy:') === 0) ? S.sel.slice(6) : null;
   S.sel = sel;
   if (sel.indexOf('view:') === 0) S.view = sel.slice(5);
   // Selecting a buddy (by any means) also makes it the homepage buddy, so the
@@ -6058,9 +6077,11 @@ function show(sel, push){
       if (sel === 'view:releases') renderReleases();
       if (sel === 'view:tree') requestAnimationFrame(() => {
         // Init renders the tree while display:none (scrollWidth reads 0), so
-        // re-measure once visible and restore the persisted scroll position.
+        // re-measure once visible. Coming from a buddy: center on it
+        // (Dave 2026-10-15). Otherwise restore the persisted scroll position.
         updateZoomMin();
-        restoreScrollPos('tree:main', document.getElementById('treezoom-main'));
+        if (!(prevBuddy && byId[prevBuddy] && centerOnBuddy(prevBuddy)))
+          restoreScrollPos('tree:main', document.getElementById('treezoom-main'));
         restoreScrollPos('tree:orph', document.getElementById('treezoom-orph'));
       });
     } else if (sel.startsWith('plan:')) {
@@ -7242,14 +7263,54 @@ function initTokenPill(){
   });
   updateTokenPill();
 }
-function centerOnBuddy(id){
+/* The "current buddy" for Atlas centering (Dave 2026-10-15): an explicitly
+   selected buddy wins, then the project/homepage buddy. */
+function atlasFocusBuddyId(){
+  if (S.sel && typeof S.sel === 'string' && S.sel.indexOf('buddy:') === 0) {
+    const id = S.sel.slice(6);
+    if (byId[id]) return id;
+  }
+  if (S.projectId && byId[S.projectId]) return S.projectId;
+  return null;
+}
+function atlasScrollToCenter(sc, vx, vy, instant){
+  if (!sc) return;
+  const sr = sc.getBoundingClientRect();
+  const left = Math.max(0, sc.scrollLeft + (vx - (sr.left + sr.width / 2)));
+  const top = Math.max(0, sc.scrollTop + (vy - (sr.top + sr.height / 2)));
+  try {
+    sc.scrollTo({left: left, top: top, behavior: instant ? 'auto' : 'smooth'});
+  } catch (e) { sc.scrollLeft = left; sc.scrollTop = top; }
+}
+/* Center on a buddy in the Atlas view (Dave 2026-10-15): smooth-scrolls the
+   pane so the buddy's node lands centered. Works across all lenses — DOM nodes
+   via [data-buddy], constellation via its canvas node map. Returns true when
+   the buddy was found and centered. */
+function centerOnBuddy(id, instant){
+  if (!id || !byId[id]) return false;
   const tz = document.getElementById('treezoom');
-  const node = tz ? tz.querySelector('.node[data-buddy="' + id + '"]') : null;
-  if (!tz || !node) return;
+  if (!tz) return false;
+  const chartType = (typeof getChartType === 'function') ? getChartType() : 'org';
+  if (chartType === 'constellation') {
+    const cv = document.getElementById('constellation-canvas');
+    const nodes = cv && cv._buddyNodes;
+    const n = nodes && nodes[id];
+    if (n && cv) {
+      const sc = cv.closest('.treescroll');
+      if (!sc) return false;
+      const cr = cv.getBoundingClientRect();
+      const w = cv.clientWidth || 1, h = cv.clientHeight || 1;
+      atlasScrollToCenter(sc, cr.left + (n.x / w) * cr.width, cr.top + (n.y / h) * cr.height, instant);
+      return true;
+    }
+    return false;
+  }
+  const node = tz.querySelector('[data-buddy="' + id + '"]');
+  if (!node) return false;
   const sc = (node.closest && node.closest('.treescroll')) || tz;
-  const nr = node.getBoundingClientRect(), tr = sc.getBoundingClientRect();
-  sc.scrollLeft += (nr.left + nr.width / 2) - (tr.left + tr.width / 2);
-  sc.scrollTop += (nr.top + nr.height / 2) - (tr.top + tr.height / 2);
+  const nr = node.getBoundingClientRect();
+  atlasScrollToCenter(sc, nr.left + nr.width / 2, nr.top + nr.height / 2, instant);
+  return true;
 }
 function firstSearchMatch(){
   const q = (document.getElementById('buddy-search').value || '').toLowerCase().trim();
@@ -8464,7 +8525,7 @@ function initSearch(){
       acRender();
       // Atlas view follows the buddy-list filter (Dave's request 2026-10-12)
       if (S.view === 'tree' || S.sel === 'view:tree') renderOrgTree();
-      if (S.sel === 'view:tree') { const m = firstSearchMatch(); if (m) centerOnBuddy(m); }
+      if (S.sel === 'view:tree') { const m = firstSearchMatch(); if (m) centerOnBuddy(m, true); }
     });
     bs.addEventListener('keydown', (e) => {
       if (!ac || ac.hidden) return;

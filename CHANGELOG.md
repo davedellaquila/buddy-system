@@ -3,6 +3,13 @@
 All notable changes to the Buddies dashboard and buddy system. Newest first.
 `FEATURES.md` describes the current state; this file describes how it got there.
 
+## 2026-10-15 (Atlas center-on-buddy)
+
+### Added
+- **Center-on-current-buddy for Atlas lenses** (Dave 2026-10-15): switching to the org chart (or any Atlas lens) from a buddy now auto-centers the chart on that buddy instead of restoring the old scroll position. Dave: "i would expect that the buddy would be centered on the org chart."
+- **⌖ center button on the zoom bar** (Dave 2026-10-15): a crosshair button under the zoom-fit control re-centers the Atlas pane on the current buddy at any time (explicit selection first, then the project/homepage buddy). Smooth animated scroll; toasts when no buddy is selected or the buddy isn't visible in the current lens.
+- **Cross-lens centering**: the upgraded `centerOnBuddy()` finds the buddy's node via `[data-buddy]` in every DOM-based lens (org, lineage, ledger, colonnade, terrain, halo) and via the live canvas node map in constellation. Search-as-you-type centering stays instant to avoid scroll queuing.
+
 ## 2026-10-15 (Multiple parents per buddy)
 
 ### Added
