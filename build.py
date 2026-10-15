@@ -1040,6 +1040,15 @@ body.bp-collapsed #bp-rail{display:flex}
 #main #view-project.active{display:flex;flex-direction:column;min-height:calc(100vh - 116px)}
 #bp-close{display:none}
 #view-buddy.panel #bp-close,#view-buddy.sheet #bp-close{display:inline-block}
+/* Dave 2026-10-14: ONE content width on every content page — 860px outer
+   with 16px gutters (the Projects pattern). Plans/Manifest/Changelog were
+   running 32px wider (no gutters); headings were full-bleed. */
+#plans-tiles{padding:0 16px;box-sizing:border-box}
+.plan-grid{padding:0 16px;box-sizing:border-box}
+#manifest-tiles{padding:0 16px;box-sizing:border-box}
+#view-manifest .proj-list{padding:0 16px;box-sizing:border-box}
+#view-plans h2,#view-plans p.sub,#view-manifest h2,#view-manifest p.sub{max-width:860px;margin-left:auto;margin-right:auto;padding:0 16px;box-sizing:border-box}
+section.changelog{padding:0 16px;box-sizing:border-box}
 /* ---------- Project view: stat tiles + buddy homepage embed ---------- */
 #project-tiles{display:flex;gap:14px;margin:2px auto 20px;max-width:860px;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:thin;padding:0 16px;box-sizing:border-box}
 #project-status-tiles{display:flex;gap:12px;margin:2px auto 20px;max-width:860px;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:thin;padding:0 16px;box-sizing:border-box}
