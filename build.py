@@ -946,7 +946,7 @@ body.sb-closed #sidebar #sb-tools{display:none}
 .attr-value.attr-none{color:var(--faint);font-weight:500}
 .attr-row .info-tip{margin-left:0;font-size:17px}
 .attr-body{display:none;padding:4px 2px 8px 46px}
-.bp-sec.expanded .attr-body{display:block}
+.bp-sec.expanded .attr-body{display:block !important}
 .bp-sec[data-field="parent"] .attr-head .pill-btn{display:none}
 .bp-sec[data-field="parent"].expanded .attr-head .pill-btn{display:inline-block}
 .bp-sec[data-field="persona"] .attr-head .pill-btn{display:none}
