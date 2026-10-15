@@ -3,6 +3,11 @@
 All notable changes to the Buddies dashboard and buddy system. Newest first.
 `FEATURES.md` describes the current state; this file describes how it got there.
 
+## 2026-10-14 (Homepage iframe theme background)
+
+### Fixed
+- **White flash between buddy homepages** (Dave's report 2026-10-14): arrow-key navigating the buddy list flashed white between page loads — the homepage iframe had a hardcoded `background:#fff`. Now follows the theme (`var(--bg)`): dark `#0d1117` in dark mode, white in light mode.
+
 ## 2026-10-14 (Acquaintances + 8 new people buddies)
 
 ### Added
