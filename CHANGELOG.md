@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-10-16 (Gallery: public photo URLs)
+
+### Fixed
+- **Gallery photos 404'd** (Dave 2026-10-16): the baked URLs came from the buddy's private repo with expiring `?token=` params. Photos are now mirrored to the public `buddy-system/photos/<id>/` (same place the dashboard info panel looks), and the generator prefers those clean public URLs. Ford's 3 photos verified loading (HTTP 200).
+
 ## 2026-10-16 (Social Media Buddy homepage refresh)
 
 ### Changed

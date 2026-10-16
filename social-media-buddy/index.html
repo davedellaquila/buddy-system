@@ -1,10 +1,10 @@
-<!-- THREAD-OWNED: Social Media Buddy custom homepage (2026-10-16). Not generator-managed. -->
+<!-- BUDDY-BASIC-TEMPLATE v2 -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>📣 Social Media Buddy</title>
+<title data-buddy-name>Social Media Buddy</title>
 <style>
 :root {
   --bg: #ffffff;
@@ -12,95 +12,108 @@
   --muted: #666;
   --card: #f5f5f5;
   --border: #e0e0e0;
-  --accent: #b3540a;
-  --accent-soft: rgba(179, 84, 10, .12);
-  --ok: #1a7f37;
-  --warn: #9a6700;
+  --accent: #0066cc;
+  --ok: #1b7a2e;
 }
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg: #14100c;
-    --text: #f0e8dc;
-    --muted: #a89880;
-    --card: #211b14;
-    --border: #38301f;
-    --accent: #f0a44a;
-    --accent-soft: rgba(240, 164, 74, .12);
-    --ok: #4cc38a;
-    --warn: #e0a93e;
+    --bg: #1a1a1a;
+    --text: #e0e0e0;
+    --muted: #999;
+    --card: #2a2a2a;
+    --border: #3a3a3a;
+    --accent: #4da6ff;
+    --ok: #5fd08a;
   }
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  background: var(--bg); color: var(--text); line-height: 1.6;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  padding: 40px 20px;
+  max-width: 800px;
+  margin: 0 auto;
 }
-/* Slim sticky header: icon left of the page name, content scrolls underneath. */
-.stickybar {
+.header { text-align: center; margin-bottom: 40px; }
+.topbar {
   position: sticky; top: 0; z-index: 50;
   display: flex; align-items: center; gap: 10px;
-  padding: 10px 20px;
-  background: var(--bg); border-bottom: 1px solid var(--border);
-  font-size: 15px; font-weight: 700;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+  padding: 10px 2px; margin-bottom: 24px;
+  font-size: 17px; font-weight: 700;
 }
-.stickybar .crumb { margin-left: auto; font-weight: 400; font-size: 13px; }
-.stickybar a { color: var(--muted); text-decoration: none; }
-.wrap { max-width: 860px; margin: 0 auto; padding: 28px 20px 60px; }
-.hero { text-align: center; margin: 12px 0 28px; }
-.hero .icon { font-size: 56px; }
-.hero h1 { font-size: 30px; margin: 6px 0 4px; }
-.hero .tagline { color: var(--muted); font-size: 17px; }
-.card {
-  background: var(--card); border: 1px solid var(--border);
-  border-radius: 14px; padding: 20px 22px; margin-bottom: 20px;
+.topbar-icon { font-size: 22px; line-height: 1; }
+.topbar-refresh {
+  margin-left: auto; background: none; border: 1px solid transparent; border-radius: 8px;
+  color: var(--muted); font-size: 16px; cursor: pointer; padding: 4px 10px; line-height: 1;
 }
-.card h2 { font-size: 20px; margin-bottom: 10px; }
-.card p { margin-bottom: 10px; }
-.card p:last-child { margin-bottom: 0; }
-.muted { color: var(--muted); }
-/* Pipeline strip */
-.pipe { display: flex; align-items: stretch; gap: 6px; margin: 14px 0 6px; flex-wrap: wrap; }
-.stage {
-  flex: 1 1 0; min-width: 96px; text-align: center;
-  background: var(--bg); border: 1px solid var(--border); border-radius: 10px;
-  padding: 10px 6px;
+.topbar-refresh:hover { color: var(--text); border-color: var(--border); }
+.icon { font-size: 64px; margin-bottom: 16px; }
+h1 { font-size: 32px; margin-bottom: 8px; }
+.tagline { color: var(--muted); font-size: 18px; }
+.mission {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 32px;
+  font-size: 17px;
 }
-.stage.hot { border-color: var(--accent); background: var(--accent-soft); }
-.stage .n { font-size: 26px; font-weight: 800; color: var(--accent); }
-.stage .lbl { font-size: 12px; color: var(--muted); line-height: 1.3; }
-.pipe-arrow { align-self: center; color: var(--muted); font-size: 18px; }
-/* Queue list */
-.qlist { list-style: none; margin-top: 12px; }
-.qlist li {
-  display: flex; align-items: baseline; gap: 10px;
-  padding: 9px 4px; border-bottom: 1px solid var(--border); font-size: 15px;
+h2 { font-size: 22px; margin: 32px 0 16px; }
+.attn {
+  background: var(--card);
+  border-left: 4px solid var(--accent);
+  border-radius: 0 8px 8px 0;
+  padding: 16px 20px;
+  margin-bottom: 12px;
 }
-.qlist li:last-child { border-bottom: none; }
-.qlist .date { color: var(--muted); font-size: 13px; white-space: nowrap; min-width: 118px; }
-.qlist .t { flex: 1; }
-.chip {
-  font-size: 11px; font-weight: 700; letter-spacing: .4px; text-transform: uppercase;
-  border: 1px solid var(--border); border-radius: 20px; padding: 2px 10px;
-  color: var(--muted); white-space: nowrap;
+.attn-date { color: var(--muted); font-size: 14px; margin-top: 8px; }
+.attn-actions { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
+.attn-btn {
+  border: 1px solid var(--border); background: var(--bg); color: var(--text);
+  border-radius: 8px; padding: 7px 14px; font-size: 13px; font-weight: 600; cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
 }
-.chip.hold { color: var(--warn); border-color: var(--warn); }
-.chip.lead { color: var(--accent); border-color: var(--accent); }
-/* Chart placeholder */
-.chart-empty {
-  border: 1px dashed var(--border); border-radius: 12px;
-  padding: 28px 20px; text-align: center; color: var(--muted); font-size: 15px;
+.attn-btn:hover { border-color: var(--accent); }
+.attn-btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+.attn-btn:disabled { opacity: .45; cursor: default; }
+.attn-status { font-size: 13px; color: var(--muted); margin-top: 8px; min-height: 18px; }
+.attn.resolved { opacity: .6; }
+.attn.resolved .attn-actions { display: none; }
+.children { display: flex; flex-wrap: wrap; gap: 12px; }
+.child {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px 20px;
+  text-decoration: none;
+  color: var(--text);
 }
-/* Links */
-.linkgrid { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 8px; }
-.linkgrid a {
-  background: var(--bg); border: 1px solid var(--border); border-radius: 10px;
-  padding: 10px 16px; color: var(--text); text-decoration: none; font-size: 14px; font-weight: 600;
+.child:hover { border-color: var(--accent); }
+.footer {
+  margin-top: 48px;
+  padding-top: 24px;
+  border-top: 1px solid var(--border);
+  color: var(--muted);
+  font-size: 14px;
+  text-align: center;
 }
-.linkgrid a:hover { border-color: var(--accent); }
-/* Brain dump (standard snippet) */
+.empty { color: var(--muted); font-style: italic; }
+/* Dave 2026-10-16: photo gallery — baked in at generation time from the buddy's repo photos/ */
+.gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; margin-bottom: 8px; }
+.gallery a { display: block; border-radius: 12px; overflow: hidden; border: 1px solid var(--border); background: var(--card); }
+.gallery img { width: 100%; height: 160px; object-fit: cover; display: block; transition: transform .25s ease; }
+.gallery a:hover img { transform: scale(1.04); }
+
 .dumpbox {
-  background: var(--card); border: 1px solid var(--border); border-radius: 14px;
-  padding: 20px 22px; margin-bottom: 20px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px 22px;
+  margin-bottom: 32px;
 }
 .dumpbox h2 { margin: 0 0 6px; font-size: 20px; }
 .dumpbox-sub { color: var(--muted); font-size: 14px; margin-bottom: 14px; }
@@ -110,6 +123,7 @@ body {
   padding: 10px 12px; font-size: 14px; color: var(--text); font-family: inherit;
 }
 .dumpbox textarea:focus { outline: none; border-color: var(--accent); }
+.dumpbox textarea:disabled { opacity: .55; }
 .dumpbox-row { display: flex; align-items: center; gap: 12px; margin-top: 10px; flex-wrap: wrap; }
 .dumpbox-btn {
   background: var(--accent); color: #fff; border: none; border-radius: 8px;
@@ -135,76 +149,22 @@ body {
   border-radius: 8px; padding: 7px 14px; font-size: 13px; font-weight: 600; cursor: pointer;
 }
 .dumpbox-tokenrow a { color: var(--accent); font-size: 13px; }
-.footer {
-  margin-top: 36px; padding-top: 20px; border-top: 1px solid var(--border);
-  color: var(--muted); font-size: 13px; text-align: center;
-}
-@media (max-width: 560px) {
-  .qlist .date { min-width: 0; }
-  .stage { min-width: 80px; }
-}
+
 </style>
 </head>
 <body>
-<header class="stickybar"><span>📣</span><span data-buddy-name>Social Media Buddy</span><span class="crumb"><a href="https://davedellaquila.github.io/buddy-system/personal-buddy/">← Personal Buddy</a></span></header>
-<div class="wrap">
-
-<div class="hero">
+<nav data-buddy-crumb style="padding:14px 20px 0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:14px;line-height:1.4;"><a href="https://davedellaquila.github.io/buddy-system/personal-buddy/" style="color:inherit;opacity:.65;text-decoration:none;">← Personal Buddy</a></nav>
+<div class="topbar"><span class="topbar-icon">📣</span><span class="topbar-name" data-buddy-name>Social Media Buddy</span><button class="topbar-refresh" title="Reload this page" onclick="location.reload()">&#8635;</button></div>
+<div class="header">
 <div class="icon">📣</div>
 <h1 data-buddy-name>Social Media Buddy</h1>
-<div class="tagline">Dave's voice online — I draft, Dave approves, nothing posts solo.</div>
+<div class="tagline">Dave&#x27;s voice online — drafts, Dave approves, nothing posts solo</div>
 </div>
 
-<div class="card">
-<h2>The job</h2>
-<p>I draft posts in how Dave actually talks — product praise, tech tips, building-in-public — and stage every one for his one-tap approval. Nothing ever posts without his sign-off.</p>
-<p class="muted">Mission statement approved 2026-10-16. The current campaign: the Buddy System social rollout — Knowledge Navigator (1987) → Rae Assist (1993) → Buddy OS (2026). "The vision took 40 years. We're building it now."</p>
-</div>
+<div class="mission">Social Media Buddy is Dave&#x27;s voice on social media: it drafts posts in his voice (product praise, tips, building-in-public), stages them for one-tap approval, and never posts without his sign-off.</div>
 
-<div class="card">
-<h2>📮 Post queue</h2>
-<p class="muted">The LinkedIn Teaser Bank, live as a pipeline. Fourteen posts staged, proposed drip Tue 2026-10-20 → Mon 2026-11-02, LinkedIn first.</p>
-<div class="pipe">
-<div class="stage"><div class="n">0</div><div class="lbl">Ideas</div></div><div class="pipe-arrow">→</div>
-<div class="stage hot"><div class="n">14</div><div class="lbl">Drafted</div></div><div class="pipe-arrow">→</div>
-<div class="stage"><div class="n">0</div><div class="lbl">Awaiting<br>review</div></div><div class="pipe-arrow">→</div>
-<div class="stage"><div class="n">0</div><div class="lbl">Scheduled</div></div><div class="pipe-arrow">→</div>
-<div class="stage"><div class="n">0</div><div class="lbl">Posted</div></div>
-</div>
-<ul class="qlist">
-<li><span class="date">Tue 10-20</span><span class="t">The 40-year arc</span><span class="chip lead">Lead</span><span class="chip">Draft</span></li>
-<li><span class="date">Wed 10-21</span><span class="t">The Knowledge Navigator</span><span class="chip">Draft</span></li>
-<li><span class="date">Thu 10-22</span><span class="t">Rae Assist, 1993</span><span class="chip">Draft</span></li>
-<li><span class="date">Fri 10-23</span><span class="t">The fall</span><span class="chip">Draft</span></li>
-<li><span class="date">Sat 10-24</span><span class="t">Penny's return</span><span class="chip hold">Hold · consent</span></li>
-<li><span class="date">Sun 10-25</span><span class="t">Why now</span><span class="chip">Draft</span></li>
-<li><span class="date">Mon 10-26</span><span class="t">What it is</span><span class="chip">Draft</span></li>
-<li><span class="date">Tue 10-27</span><span class="t">The trojan horse</span><span class="chip">Draft</span></li>
-<li><span class="date">Wed 10-28</span><span class="t">Forgotten subscriptions</span><span class="chip">Draft</span></li>
-<li><span class="date">Thu 10-29</span><span class="t">Double-charged</span><span class="chip">Draft</span></li>
-<li><span class="date">Fri 10-30</span><span class="t">The eyeglasses story</span><span class="chip">Draft</span></li>
-<li><span class="date">Sat 10-31</span><span class="t">One picture</span><span class="chip">Draft</span></li>
-<li><span class="date">Sun 11-01</span><span class="t">The staff grows</span><span class="chip">Draft</span></li>
-<li><span class="date">Mon 11-02</span><span class="t">The tip jar</span><span class="chip hold">Hold · Ko-fi</span></li>
-</ul>
-<p class="muted" style="margin-top:10px;font-size:13px;">Full post texts live in the <a href="https://docs.google.com/document/d/1-tPJ-a_aHb6OnP3KtQyXgjB0GASdkuIol_YUrGTaYL8/edit" style="color:var(--accent);">LinkedIn Teaser Bank</a> (Buddy Docs).</p>
-</div>
 
-<div class="card">
-<h2>📊 The Post Pipeline</h2>
-<div class="chart-empty">The pipeline chart is being built by 📊 Charts Buddy in the Kin chart language — a funnel of live counts per stage, dark- and light-aware. It lands here when it's delivered.</div>
-</div>
 
-<div class="card">
-<h2>Docs & links</h2>
-<div class="linkgrid">
-<a href="https://docs.google.com/document/d/1q8grbAWJuFDLUE1--r7epe9NI3AkhpsyVCDZPcnWT4k/edit">Mission statement</a>
-<a href="https://docs.google.com/document/d/1myGzxngZjRjXy8v3BTbeHkgr_kDTotEz4v6bHJIq5Fw/edit">Rollout plan</a>
-<a href="https://docs.google.com/document/d/1O8H3oRyF4k_1rEfym7p_OLpiTKJHJmQF1PfW2aByS3U/edit">Rollout brief</a>
-<a href="https://docs.google.com/document/d/1-tPJ-a_aHb6OnP3KtQyXgjB0GASdkuIol_YUrGTaYL8/edit">Teaser bank</a>
-<a href="https://github.com/davedellaquila/social-media-buddy">Repo</a>
-</div>
-</div>
 
 <section class="dumpbox" data-buddy-id="social-media-buddy">
 <h2>🧠 Brain dump</h2>
@@ -225,11 +185,17 @@ body {
 <p class="dumpbox-hint">Enter dumps it &middot; Shift+Enter for a new line</p>
 </section>
 
+
+<h2>Needs Attention</h2>
+<div class="attn" data-attn-id="social-media-buddy-mission"><div class="attn-text">Mission statement ready for review — looks good, edits, or defer? Dave&#x27;s voice on social: drafts posts in his voice, staged for one-tap approval, never posts without his sign-off.</div><div class="attn-date">2026-10-11</div><div class="attn-actions"><button type="button" class="attn-btn primary" data-act="done">✓ Done</button><button type="button" class="attn-btn" data-act="info">Need more info</button></div><div class="attn-status" role="status"></div></div>
+
+
+
+
 <div class="footer">
-Refreshed 2026-10-16 · Custom thread-owned design · Part of the Buddy System
+Generated 2026-10-16 · Part of the Buddy System
 </div>
 
-</div>
 <script>
 (function(){
   var box = document.querySelector('.dumpbox');
@@ -283,6 +249,11 @@ Refreshed 2026-10-16 · Custom thread-owned design · Part of the Buddy System
       }
     } catch(e){}
   }
+  /* Local fallback (Dave 2026-10-15, widened 2026-10-16): dumping always works,
+     even with no GitHub token AND no repo linked — entries are saved in this
+     device's localStorage until the GitHub write path can take them. The backlog
+     flushes into the repo on the next successful GitHub dump (once a repo is
+     linked and a token is present). */
   function localKey(){ return 'buddyTree.ingest.' + bid; }
   function localBacklog(){
     try { var a = JSON.parse(localStorage.getItem(localKey()) || '[]'); return Array.isArray(a) ? a : []; }
@@ -296,6 +267,7 @@ Refreshed 2026-10-16 · Custom thread-owned design · Part of the Buddy System
   function refreshUI(){
     var has = !!token();
     tokWrap.hidden = has;
+    /* The box always works: no token and/or no repo just means local saves. */
     ta.disabled = false;
     btn.disabled = false;
     var n = localBacklog().length;
@@ -306,11 +278,13 @@ Refreshed 2026-10-16 · Custom thread-owned design · Part of the Buddy System
       return;
     }
     st.textContent = has
-      ? (n ? n + ' local ' + (n === 1 ? 'dumps' : 'dumps') + ' will sync on next dump.' : '')
+      ? (n ? n + ' local ' + (n === 1 ? 'dump' : 'dumps') + ' will sync on next dump.' : '')
       : 'No GitHub token — dumps save on this device for now.';
   }
   var tokInput = tokWrap.querySelector('input'),
       tokSave = tokWrap.querySelector('button');
+  /* Visual save confirmation (Dave 2026-10-16): the button flashes green
+     with a ✓ for ~2s on every successful save, so the save is unmissable. */
   function flashSaved(){
     var label = btn.textContent;
     btn.classList.add('saved');
@@ -336,6 +310,7 @@ Refreshed 2026-10-16 · Custom thread-owned design · Part of the Buddy System
     var stamp = new Date().toLocaleString();
     var NL = String.fromCharCode(10);
     if (!repo) {
+      /* No repo linked yet — save on this device; syncs once one is linked. */
       localSave({t: stamp, text: text});
       ta.value = '';
       refreshUI();
@@ -344,6 +319,7 @@ Refreshed 2026-10-16 · Custom thread-owned design · Part of the Buddy System
       return;
     }
     if (!token()) {
+      /* Temporary workaround: no token → save on this device. */
       localSave({t: stamp, text: text});
       ta.value = '';
       st.textContent = '✓ Saved on this device — add a GitHub token to sync it to the repo.';
@@ -353,6 +329,7 @@ Refreshed 2026-10-16 · Custom thread-owned design · Part of the Buddy System
     st.textContent = 'Dumping…';
     btn.disabled = true;
     try {
+      /* Flush any locally-saved backlog first, then the new entry. */
       var backlog = localBacklog();
       var parts = backlog.map(function(b){ return '## ' + b.t + NL + NL + b.text + NL + NL; });
       parts.push('## ' + stamp + NL + NL + text + NL + NL);
@@ -370,11 +347,124 @@ Refreshed 2026-10-16 · Custom thread-owned design · Part of the Buddy System
   }
   btn.addEventListener('click', dump);
   ta.addEventListener('keydown', function(ev){
+    /* Dave 2026-10-16: plain Return dumps, like the button. Shift+Return for a newline. */
     if (ev.key === 'Enter' && !ev.shiftKey && !ev.altKey) { ev.preventDefault(); dump(); }
   });
   resolveRepo().then(refreshUI);
 })();
 </script>
+
+
+<script>
+(function(){
+  var tiles = document.querySelectorAll('.attn[data-attn-id]');
+  if (!tiles.length) return;
+  var dumpbox = document.querySelector('.dumpbox');
+  var bid = (dumpbox && dumpbox.getAttribute('data-buddy-id')) || (function(){
+    var p = location.pathname.replace(/\/+$/, '');
+    return p.substring(p.lastIndexOf('/') + 1);
+  })();
+  function lsGet(){ try { return JSON.parse(localStorage.getItem('buddyTree.v3') || '{}'); } catch(e){ return {}; } }
+  function lsSet(patch){ try { var s = lsGet(); for (var k in patch) s[k] = patch[k]; localStorage.setItem('buddyTree.v3', JSON.stringify(s)); } catch(e){} }
+  function token(){ return lsGet().ghToken || ''; }
+  function b64encode(str){
+    var bytes = new TextEncoder().encode(str), bin = '';
+    bytes.forEach(function(b){ bin += String.fromCharCode(b); });
+    return btoa(bin);
+  }
+  async function ghApi(path, method, body){
+    var t = token();
+    if (!t) throw new Error('Add a GitHub token first.');
+    var r = await fetch('https://api.github.com' + path, {
+      method: method || 'GET',
+      headers: {'Authorization': 'Bearer ' + t, 'Accept': 'application/vnd.github+json', 'Content-Type': 'application/json'},
+      body: body ? JSON.stringify(body) : undefined
+    });
+    if (!r.ok) throw new Error('GitHub ' + r.status);
+    return r.status === 204 ? null : await r.json();
+  }
+  async function ghGetFile(repo, path){
+    try {
+      var j = await ghApi('/repos/davedellaquila/' + repo + '/contents/' + path);
+      if (j && j.content) return {
+        text: new TextDecoder().decode(Uint8Array.from(atob(j.content.replace(/\n/g, '')), function(c){ return c.charCodeAt(0); })),
+        sha: j.sha
+      };
+    } catch(e){}
+    return null;
+  }
+  var repo = null, buddyName = bid;
+  async function resolveBuddy(){
+    try {
+      var r = await fetch('../buddies.json', {cache: 'no-store'});
+      var d = await r.json();
+      var buds = d.buddies || [];
+      for (var i = 0; i < buds.length; i++) {
+        if (buds[i].id === bid) {
+          if (buds[i].repo) repo = buds[i].repo;
+          if (buds[i].name) buddyName = buds[i].name;
+          break;
+        }
+      }
+    } catch(e){}
+  }
+  function rkey(aid, text){ return bid + '|' + (aid || ('text:' + text.slice(0, 60))); }
+  function isResolved(aid, text){ var m = lsGet().attnDone || {}; return !!m[rkey(aid, text)]; }
+  function setResolved(aid, text){ var s = lsGet(); var m = s.attnDone || {}; m[rkey(aid, text)] = 1; s.attnDone = m; lsSet(s); }
+  function paintResolved(tile, msg){
+    tile.classList.add('resolved');
+    var st = tile.querySelector('.attn-status');
+    if (st) st.textContent = msg;
+  }
+  async function sendAction(tile, entry, okMsg){
+    var st = tile.querySelector('.attn-status');
+    var btns = tile.querySelectorAll('.attn-btn');
+    if (!token()) { st.textContent = 'Add a GitHub token in the Brain dump section above to enable actions.'; return false; }
+    if (!repo) { st.textContent = 'No repo linked for this buddy yet.'; return false; }
+    btns.forEach(function(b){ b.disabled = true; });
+    st.textContent = 'Working…';
+    try {
+      var NL = String.fromCharCode(10);
+      var stamp = new Date().toLocaleString();
+      var cur = await ghGetFile(repo, 'docs/ingest.md');
+      var base = cur ? cur.text : '# Ingest log — ' + buddyName + NL + NL;
+      var body = {message: 'Attention action for ' + bid, content: b64encode(base + '## ' + stamp + NL + NL + entry + NL + NL)};
+      if (cur && cur.sha) body.sha = cur.sha;
+      await ghApi('/repos/davedellaquila/' + repo + '/contents/docs/ingest.md', 'PUT', body);
+      st.textContent = okMsg;
+      return true;
+    } catch(err){
+      st.textContent = 'Save failed: ' + (err.message || err);
+      btns.forEach(function(b){ b.disabled = false; });
+      return false;
+    }
+  }
+  tiles.forEach(function(tile){
+    var aid = tile.getAttribute('data-attn-id') || '';
+    var textEl = tile.querySelector('.attn-text');
+    var text = textEl ? textEl.textContent.trim() : '';
+    if (isResolved(aid, text)) { paintResolved(tile, 'Marked done'); return; }
+    tile.addEventListener('click', function(ev){
+      var btn = ev.target.closest ? ev.target.closest('.attn-btn') : null;
+      if (!btn || btn.disabled) return;
+      var act = btn.getAttribute('data-act');
+      var idBit = aid ? ' (attention id: ' + aid + ')' : '';
+      if (act === 'done') {
+        sendAction(tile,
+          'DONE — Dave marked this done on the homepage: "' + text + '"' + idBit + '. Please remove it from the attention list in buddies.json.',
+          'Marked done — the buddy will clear it.').then(function(ok){ if (ok) { setResolved(aid, text); paintResolved(tile, 'Marked done — the buddy will clear it.'); } });
+      } else if (act === 'info') {
+        sendAction(tile,
+          'FOLLOW-UP — Dave needs more info on: "' + text + '"' + idBit + '. Please follow up with him.',
+          'Sent — ' + buddyName + ' will follow up.');
+      }
+    });
+  });
+  resolveBuddy();
+})();
+</script>
+
+
 <script>
 (function(){
   var parts = location.pathname.split('/');
@@ -395,6 +485,9 @@ Refreshed 2026-10-16 · Custom thread-owned design · Part of the Buddy System
       }
     }).catch(function(){});
   } catch(e){}
+  /* Live rename (Dave 2026-10-16): the dashboard broadcasts renames via
+     localStorage, so an open page updates its name without a refresh.
+     Same browser only — other devices pick it up on their next load. */
   window.addEventListener('storage', function(e){
     if (e.key !== 'buddyTree.rename' || !e.newValue) return;
     try {
@@ -404,5 +497,6 @@ Refreshed 2026-10-16 · Custom thread-owned design · Part of the Buddy System
   });
 })();
 </script>
+
 </body>
 </html>

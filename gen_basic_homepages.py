@@ -641,7 +641,24 @@ def get_buddy_photos(b):
         return _photo_cache[bid]
     urls = list(b.get('photos') or [])
     seen = set(urls)
-    # Check the buddy's repo photos/ folder via gh CLI
+    # Dave 2026-10-16: prefer the PUBLIC buddy-system/photos/<id>/ copies — the
+    # buddy repo is often private, and its API download_urls carry expiring
+    # ?token= params that 404 for page viewers. Public raw URLs just work.
+    try:
+        import subprocess, json as _json
+        out = subprocess.run(['gh', 'api', f'repos/davedellaquila/buddy-system/contents/photos/{bid}'],
+                             capture_output=True, text=True, timeout=15)
+        if out.returncode == 0:
+            files = _json.loads(out.stdout)
+            for fl in files if isinstance(files, list) else []:
+                if fl.get('type') == 'file':
+                    # Build a clean public raw URL (no token params)
+                    u = f"https://raw.githubusercontent.com/davedellaquila/buddy-system/master/photos/{bid}/{fl.get('name')}"
+                    if u not in seen:
+                        urls.append(u); seen.add(u)
+    except Exception:
+        pass
+    # Fall back to the buddy's own repo photos/ (may be private — URLs can 404)
     repo = b.get('repo')
     if repo:
         try:
@@ -652,7 +669,7 @@ def get_buddy_photos(b):
                 files = _json.loads(out.stdout)
                 for fl in files if isinstance(files, list) else []:
                     if fl.get('type') == 'file':
-                        u = fl.get('download_url')
+                        u = fl.get('download_url', '').split('?')[0]
                         if u and u not in seen:
                             urls.append(u); seen.add(u)
         except Exception:
