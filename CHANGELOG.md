@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026-10-16 (Global rename: info-panel rename writes through to the registry)
+
+### Added
+- **Global rename** (Dave 2026-10-16 — "when i rename a buddy using the info panel, that name should immediately propagate throughout the system"): the info-panel name field now edits the buddy's REGISTRY `name`, not a per-device nickname. The new name applies instantly in memory (sidebar, panel, all Atlas lenses via the existing `refreshBuddyLabels`) and writes through to `buddies.json` via the GitHub token route (`writeGlobalName`, same pattern as persona/voice). Without a token the rename is queued in `S.pendingRenames`, applied to the local registry at boot, and flushed on the next sync (`flushPendingRenames`, called at boot next to `flushPendingDumps`). A global rename clears any per-device `S.names` nickname override for that buddy; the journal revert path restores the registry name and writes it back. Buddy homepages now re-read the registry on every load (`NAMESYNC_JS` in the template: `[data-buddy-name]` elements + dump-box placeholder patched from `../buddies.json`, baked-in names as the offline fallback) — a rename shows on the homepage after a refresh, no rebuild needed. 54 template pages regenerated; dashboard rebuilt; all inline scripts node-checked; name-sync verified with a stubbed DOM/fetch test.
+
+### Fixed
+- The old rename only set a per-device `S.names` nickname, so renames never left the device and never reached homepages.
+
 ## 2026-10-16 (Documentarian custom homepage)
 
 ### Added

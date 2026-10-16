@@ -4,7 +4,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Melody Lane</title>
+<title data-buddy-name>Melody Lane</title>
 <style>
 :root {
   --bg: #ffffff;
@@ -140,10 +140,10 @@ h2 { font-size: 22px; margin: 32px 0 16px; }
 <body>
 <nav data-buddy-crumb style="padding:14px 20px 0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:14px;line-height:1.4;"><a href="https://davedellaquila.github.io/buddy-system/emil-estate/" style="color:inherit;opacity:.65;text-decoration:none;">← Emil&#x27;s Estate</a></nav>
 <nav data-buddy-kids style="padding:6px 20px 0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:14px;line-height:1.9;"><span style="opacity:.65;">Children:</span> <a href="https://davedellaquila.github.io/buddy-system/larry-osana/" style="color:inherit;text-decoration:none;margin-right:14px;white-space:nowrap;">🔑 Larry Osana</a></nav>
-<div class="topbar"><span class="topbar-icon">🏠</span><span class="topbar-name">Melody Lane</span></div>
+<div class="topbar"><span class="topbar-icon">🏠</span><span class="topbar-name" data-buddy-name>Melody Lane</span></div>
 <div class="header">
 <div class="icon">🏠</div>
-<h1>Melody Lane</h1>
+<h1 data-buddy-name>Melody Lane</h1>
 <div class="tagline">Emil&#x27;s rental on Dave&#x27;s childhood street</div>
 </div>
 
@@ -152,7 +152,7 @@ h2 { font-size: 22px; margin: 32px 0 16px; }
 
 <section class="dumpbox" data-buddy-id="melody-lane">
 <h2>🧠 Brain dump</h2>
-<p class="dumpbox-sub">Dump what's on your mind about Melody Lane — raw and unfiltered. Each dump lands in the buddy's repo (docs/ingest.md) as a timestamped entry — or saves on this device until a repo is linked and a token is connected.</p>
+<p class="dumpbox-sub">Dump what's on your mind about <span data-buddy-name>Melody Lane</span> — raw and unfiltered. Each dump lands in the buddy's repo (docs/ingest.md) as a timestamped entry — or saves on this device until a repo is linked and a token is connected.</p>
 <div class="dumpbox-token" hidden>
 <p>🔒 Connect GitHub to unlock dumping. Paste a token once — it stays on this device only.</p>
 <div class="dumpbox-tokenrow">
@@ -430,6 +430,30 @@ Generated 2026-10-16 · Part of the Buddy System
     });
   });
   resolveBuddy();
+})();
+</script>
+
+
+<script>
+(function(){
+  var parts = location.pathname.split('/');
+  var bid = '';
+  for (var i = parts.length - 1; i >= 0; i--) { if (parts[i]) { bid = parts[i]; break; } }
+  function applyName(name){
+    if (!name) return;
+    var els = document.querySelectorAll('[data-buddy-name]');
+    for (var k = 0; k < els.length; k++) els[k].textContent = name;
+    var ta = document.querySelector('.dumpbox textarea');
+    if (ta) ta.setAttribute('placeholder', "Dump what's on your mind about " + name + "…");
+  }
+  try {
+    fetch('../buddies.json', {cache: 'no-store'}).then(function(r){ return r.json(); }).then(function(d){
+      var buds = (d && d.buddies) || [];
+      for (var j = 0; j < buds.length; j++) {
+        if (buds[j].id === bid && buds[j].name) { applyName(buds[j].name); break; }
+      }
+    }).catch(function(){});
+  } catch(e){}
 })();
 </script>
 

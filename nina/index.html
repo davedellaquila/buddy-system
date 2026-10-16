@@ -4,7 +4,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Nina</title>
+<title data-buddy-name>Nina</title>
 <style>
 :root {
   --bg: #ffffff;
@@ -139,10 +139,10 @@ h2 { font-size: 22px; margin: 32px 0 16px; }
 </head>
 <body>
 <nav data-buddy-crumb style="padding:14px 20px 0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:14px;line-height:1.4;"><a href="https://davedellaquila.github.io/buddy-system/acquaintances/" style="color:inherit;opacity:.65;text-decoration:none;">← Acquaintances</a></nav>
-<div class="topbar"><span class="topbar-icon">💫</span><span class="topbar-name">Nina</span></div>
+<div class="topbar"><span class="topbar-icon">💫</span><span class="topbar-name" data-buddy-name>Nina</span></div>
 <div class="header">
 <div class="icon">💫</div>
-<h1>Nina</h1>
+<h1 data-buddy-name>Nina</h1>
 <div class="tagline">Barstool philosopher at Gibson’s</div>
 </div>
 
@@ -151,7 +151,7 @@ h2 { font-size: 22px; margin: 32px 0 16px; }
 
 <section class="dumpbox" data-buddy-id="nina">
 <h2>🧠 Brain dump</h2>
-<p class="dumpbox-sub">Dump what's on your mind about Nina — raw and unfiltered. Each dump lands in the buddy's repo (docs/ingest.md) as a timestamped entry — or saves on this device until a repo is linked and a token is connected.</p>
+<p class="dumpbox-sub">Dump what's on your mind about <span data-buddy-name>Nina</span> — raw and unfiltered. Each dump lands in the buddy's repo (docs/ingest.md) as a timestamped entry — or saves on this device until a repo is linked and a token is connected.</p>
 <div class="dumpbox-token" hidden>
 <p>🔒 Connect GitHub to unlock dumping. Paste a token once — it stays on this device only.</p>
 <div class="dumpbox-tokenrow">
@@ -425,6 +425,30 @@ Generated 2026-10-16 · Part of the Buddy System
     });
   });
   resolveBuddy();
+})();
+</script>
+
+
+<script>
+(function(){
+  var parts = location.pathname.split('/');
+  var bid = '';
+  for (var i = parts.length - 1; i >= 0; i--) { if (parts[i]) { bid = parts[i]; break; } }
+  function applyName(name){
+    if (!name) return;
+    var els = document.querySelectorAll('[data-buddy-name]');
+    for (var k = 0; k < els.length; k++) els[k].textContent = name;
+    var ta = document.querySelector('.dumpbox textarea');
+    if (ta) ta.setAttribute('placeholder', "Dump what's on your mind about " + name + "…");
+  }
+  try {
+    fetch('../buddies.json', {cache: 'no-store'}).then(function(r){ return r.json(); }).then(function(d){
+      var buds = (d && d.buddies) || [];
+      for (var j = 0; j < buds.length; j++) {
+        if (buds[j].id === bid && buds[j].name) { applyName(buds[j].name); break; }
+      }
+    }).catch(function(){});
+  } catch(e){}
 })();
 </script>
 

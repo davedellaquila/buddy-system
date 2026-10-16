@@ -128,7 +128,7 @@ DUMPBOX_CSS = """
 DUMPBOX_HTML = """
 <section class="dumpbox" data-buddy-id="__BID__">
 <h2>🧠 Brain dump</h2>
-<p class="dumpbox-sub">Dump what's on your mind about __BNAME__ — raw and unfiltered. Each dump lands in the buddy's repo (docs/ingest.md) as a timestamped entry — or saves on this device until a repo is linked and a token is connected.</p>
+<p class="dumpbox-sub">Dump what's on your mind about <span data-buddy-name>__BNAME__</span> — raw and unfiltered. Each dump lands in the buddy's repo (docs/ingest.md) as a timestamped entry — or saves on this device until a repo is linked and a token is connected.</p>
 <div class="dumpbox-token" hidden>
 <p>🔒 Connect GitHub to unlock dumping. Paste a token once — it stays on this device only.</p>
 <div class="dumpbox-tokenrow">
@@ -289,6 +289,37 @@ DUMPBOX_JS = """
 """
 
 # ---------------------------------------------------------------------------
+# Name sync: every page re-reads the registry on load so a global rename in
+# the dashboard info panel shows up here without a rebuild (Dave 2026-10-16).
+# Elements carrying data-buddy-name are patched; baked-in names are the
+# offline fallback if the fetch fails.
+# ---------------------------------------------------------------------------
+NAMESYNC_JS = """
+<script>
+(function(){
+  var parts = location.pathname.split('/');
+  var bid = '';
+  for (var i = parts.length - 1; i >= 0; i--) { if (parts[i]) { bid = parts[i]; break; } }
+  function applyName(name){
+    if (!name) return;
+    var els = document.querySelectorAll('[data-buddy-name]');
+    for (var k = 0; k < els.length; k++) els[k].textContent = name;
+    var ta = document.querySelector('.dumpbox textarea');
+    if (ta) ta.setAttribute('placeholder', "Dump what's on your mind about " + name + "…");
+  }
+  try {
+    fetch('../buddies.json', {cache: 'no-store'}).then(function(r){ return r.json(); }).then(function(d){
+      var buds = (d && d.buddies) || [];
+      for (var j = 0; j < buds.length; j++) {
+        if (buds[j].id === bid && buds[j].name) { applyName(buds[j].name); break; }
+      }
+    }).catch(function(){});
+  } catch(e){}
+})();
+</script>
+"""
+
+# ---------------------------------------------------------------------------
 # Attention actions: per-tile follow-up buttons ("Done", "Need more info").
 # Same GitHub write path as the dump box: the shared token from localStorage
 # ('buddyTree.v3' / 'ghToken') appends a timestamped entry to the buddy's
@@ -414,7 +445,7 @@ TEMPLATE = """<!-- BUDDY-BASIC-TEMPLATE v2 -->
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>{name}</title>
+<title data-buddy-name>{name}</title>
 <style>
 :root {{
   --bg: #ffffff;
@@ -510,10 +541,10 @@ h2 {{ font-size: 22px; margin: 32px 0 16px; }}
 </head>
 <body>
 {family_nav}
-<div class="topbar"><span class="topbar-icon">{icon}</span><span class="topbar-name">{name}</span></div>
+<div class="topbar"><span class="topbar-icon">{icon}</span><span class="topbar-name" data-buddy-name>{name}</span></div>
 <div class="header">
 <div class="icon">{icon}</div>
-<h1>{name}</h1>
+<h1 data-buddy-name>{name}</h1>
 <div class="tagline">{tagline}</div>
 </div>
 
@@ -530,6 +561,7 @@ Generated {date} · Part of the Buddy System
 </div>
 {dumpbox_js}
 {attn_js}
+{namesync_js}
 </body>
 </html>
 """
@@ -621,6 +653,7 @@ for b in d['buddies']:
         dumpbox_html=dumpbox_html,
         dumpbox_js=DUMPBOX_JS,
         attn_js=ATTN_JS,
+        namesync_js=NAMESYNC_JS,
     )
 
     # Write to <bid>/index.html

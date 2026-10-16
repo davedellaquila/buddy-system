@@ -1723,6 +1723,9 @@ const SB_DEFAULT_W = 336;
 const BP_DEFAULT_W = 440;
 let S = {seen:{}, notes:{}, names:{}, parents:{}, zoom:100, sel:'view:tree', view:'tree', tileClicks:{}};
 try { Object.assign(S, JSON.parse(localStorage.getItem(LS_KEY) || '{}')); } catch(e) {}
+/* Apply queued global renames to this device's registry (Dave 2026-10-16) --
+   the write-through flush happens at boot via flushPendingRenames(). */
+try { Object.entries(S.pendingRenames || {}).forEach(([pid, nm]) => { const b = byId[pid]; if (b) { b.name = nm; delete S.names[pid]; } }); } catch(e) {}
 S.parents = S.parents || {};
 S.tileClicks = S.tileClicks || {};
 S.zoom = S.zoom || 100;
@@ -3514,6 +3517,47 @@ async function setBuddyPersona(id, name){
     toast('Could not save persona: ' + (err.message || err));
   }
 }
+/* ---------- Global rename write-through (Dave 2026-10-16) ----------
+   The info-panel rename edits the buddy's REGISTRY name (not a per-device
+   nickname). It writes through to buddies.json via the GitHub token route,
+   same as persona/voice. Without a token the rename is queued in
+   S.pendingRenames and flushed on the next sync. The in-memory entry updates
+   immediately so the rename feels instant on this device. */
+async function writeGlobalName(id, name){
+  if (!S.pendingRenames || typeof S.pendingRenames !== 'object') S.pendingRenames = {};
+  S.pendingRenames[id] = name;
+  if (!ghToken()) {
+    save();
+    toast('Name updated on this device - will sync to the registry when a GitHub token is connected.');
+    return;
+  }
+  try {
+    const raw = await ghGetFile('buddy-system', 'buddies.json');
+    if (!raw) throw new Error('Could not read buddies.json from GitHub.');
+    const data = JSON.parse(raw);
+    const arr = data.buddies || data;
+    const applied = [];
+    Object.keys(S.pendingRenames).forEach(pid => {
+      const e = arr.find(x => x.id === pid);
+      if (e) { e.name = S.pendingRenames[pid]; applied.push(pid); }
+    });
+    await ghPutFile('buddy-system', 'buddies.json', b64encode(JSON.stringify(data, null, 1)), 'Rename ' + id + ' -> ' + name + ' (dashboard info panel, global)');
+    applied.forEach(pid => { delete S.pendingRenames[pid]; });
+    if (!Object.keys(S.pendingRenames).length) delete S.pendingRenames;
+    save();
+    toast('Renamed everywhere - registry updated.');
+  } catch (err) {
+    save();
+    toast('Name updated on this device - sync failed (' + (err.message || err) + '); will retry when a token is connected.');
+  }
+}
+async function flushPendingRenames(){
+  const p = S.pendingRenames;
+  if (!p || !Object.keys(p).length || !ghToken()) return;
+  Object.keys(p).forEach(pid => { const b = byId[pid]; if (b) { b.name = p[pid]; delete S.names[pid]; } });
+  const first = Object.keys(p)[0];
+  await writeGlobalName(first, p[first]);
+}
 function renderBuddy(id){
   const b = byId[id]; if(!b) return;
   const _vb = document.getElementById('view-buddy'); if (_vb) _vb.dataset.buddy = id;
@@ -3765,12 +3809,22 @@ function renderBuddy(id){
   const nm = document.getElementById('bp-name');
   nm.addEventListener('keydown', e => { if (e.key === 'Enter'){ e.preventDefault(); nm.blur(); } });
   nm.addEventListener('blur', () => {
+    // GLOBAL rename (Dave 2026-10-16): the info-panel name is the registry name.
+    // It writes through to buddies.json so every surface picks it up; buddy
+    // homepages re-read the registry on load, no rebuild needed.
     const v = nm.textContent.trim();
-    const before = S.names[id] != null ? S.names[id] : null;
-    const beforeLabel = dispName(b);
-    if (v && v !== beforeLabel) S.names[id] = v; else delete S.names[id];
-    const after = S.names[id] != null ? S.names[id] : null;
-    if (before !== after) logChange('rename', id, 'Renamed \u201c' + beforeLabel + '\u201d \u2192 \u201c' + dispName(byId[id]) + '\u201d', before, after);
+    const beforeGlobal = b.name;
+    if (!v || v === beforeGlobal) {
+      // Cleared, or typed back to the registry name: drop any local nickname.
+      if (S.names[id] != null) {
+        delete S.names[id]; save(); renderNav(); refreshBuddyLabels(id); renderBuddy(id);
+        toast('Local nickname cleared - back to the registry name.');
+      } else renderBuddy(id);
+      return;
+    }
+    delete S.names[id]; // a global rename supersedes any per-device nickname
+    b.name = v;         // instant in memory
+    logChange('rename', id, 'Renamed \u201c' + beforeGlobal + '\u201d \u2192 \u201c' + v + '\u201d (global)', beforeGlobal, v);
     save(); renderNav();
     // Immediately reflect the new name in the current view
     if (S.view === 'project' && S.projectId === id) renderProjectView();
@@ -3779,6 +3833,8 @@ function renderBuddy(id){
     refreshBuddyLabels(id);
     // Update the panel itself to show the new name (in case hideBuddyWord applies)
     renderBuddy(id);
+    // Write through to the registry (token-gated; queued when offline)
+    writeGlobalName(id, v);
   });
   // Homepage URL field: editable text input, saves to S.homepages override
   const hpu = document.getElementById('bp-homepage-url');
@@ -6311,7 +6367,13 @@ function applyBrand(){
 function revertJournal(){
   const js = S.journal.slice().reverse(), n = js.length;
   js.forEach(c => {
-    if (c.type === 'rename') { if (c.before == null) delete S.names[c.buddy]; else S.names[c.buddy] = c.before; }
+    if (c.type === 'rename') {
+      const rb = byId[c.buddy];
+      if (rb && c.before != null) {
+        rb.name = c.before; delete S.names[c.buddy];
+        writeGlobalName(c.buddy, c.before); // best-effort write-through of the revert
+      } else delete S.names[c.buddy];
+    }
     else if (c.type === 'brand') { if (c.before == null) delete S.appName; else S.appName = c.before; applyBrand(); }
     else if (c.type === 'notes') { S.notes[c.buddy] = c.before || ''; }
     else if (c.type === 'move') { const reg = (byId[c.buddy] || {}).parent; if (c.before === reg) delete S.parents[c.buddy]; else S.parents[c.buddy] = c.before; }
@@ -9118,6 +9180,8 @@ updateTokenGating();
 initSearch();
 // Flush any dumps that were queued while offline or token-less (Dave 2026-10-12)
 flushPendingDumps();
+// Flush any global renames queued while offline or token-less (Dave 2026-10-16)
+flushPendingRenames();
 initGear();
 initSbToTop();
 initBpToTop();

@@ -4,7 +4,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Acquaintances</title>
+<title data-buddy-name>Acquaintances</title>
 <style>
 :root {
   --bg: #ffffff;
@@ -140,10 +140,10 @@ h2 { font-size: 22px; margin: 32px 0 16px; }
 <body>
 <nav data-buddy-crumb style="padding:14px 20px 0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:14px;line-height:1.4;"><a href="https://davedellaquila.github.io/buddy-system/astro/" style="color:inherit;opacity:.65;text-decoration:none;">← Astro</a></nav>
 <nav data-buddy-kids style="padding:6px 20px 0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:14px;line-height:1.9;"><span style="opacity:.65;">Children:</span> <a href="https://davedellaquila.github.io/buddy-system/ali/" style="color:inherit;text-decoration:none;margin-right:14px;white-space:nowrap;">👓 Ali</a> <a href="https://davedellaquila.github.io/buddy-system/andy-ire-tide/" style="color:inherit;text-decoration:none;margin-right:14px;white-space:nowrap;">🎸 Andy (Ire Tide)</a> <a href="https://davedellaquila.github.io/buddy-system/carl-buddy/" style="color:inherit;text-decoration:none;margin-right:14px;white-space:nowrap;">🛻 Carl Towne</a> <a href="https://davedellaquila.github.io/buddy-system/dr-travis-lyman/" style="color:inherit;text-decoration:none;margin-right:14px;white-space:nowrap;">👁️ Dr. Travis Lyman</a> <a href="https://davedellaquila.github.io/buddy-system/eric/" style="color:inherit;text-decoration:none;margin-right:14px;white-space:nowrap;">🎸 Eric</a> <a href="https://davedellaquila.github.io/buddy-system/james-buddy/" style="color:inherit;text-decoration:none;margin-right:14px;white-space:nowrap;">🎹 James Michael Day</a> <a href="https://davedellaquila.github.io/buddy-system/jody-reed/" style="color:inherit;text-decoration:none;margin-right:14px;white-space:nowrap;">🍹 Jody Reed</a> <a href="https://davedellaquila.github.io/buddy-system/joel-buddy/" style="color:inherit;text-decoration:none;margin-right:14px;white-space:nowrap;">🎤 Joel Nelson</a> <a href="https://davedellaquila.github.io/buddy-system/johnny/" style="color:inherit;text-decoration:none;margin-right:14px;white-space:nowrap;">🖥️ Johnny</a> <a href="https://davedellaquila.github.io/buddy-system/keelan/" style="color:inherit;text-decoration:none;margin-right:14px;white-space:nowrap;">🍺 Keelan</a> <a href="https://davedellaquila.github.io/buddy-system/nina/" style="color:inherit;text-decoration:none;margin-right:14px;white-space:nowrap;">💫 Nina</a> <a href="https://davedellaquila.github.io/buddy-system/penny-luedtke/" style="color:inherit;text-decoration:none;margin-right:14px;white-space:nowrap;">🌟 Penny Luedtke</a> <a href="https://davedellaquila.github.io/buddy-system/renee/" style="color:inherit;text-decoration:none;margin-right:14px;white-space:nowrap;">📋 Renee</a> <a href="https://davedellaquila.github.io/buddy-system/trudy/" style="color:inherit;text-decoration:none;margin-right:14px;white-space:nowrap;">👒 Trudy</a></nav>
-<div class="topbar"><span class="topbar-icon">👋</span><span class="topbar-name">Acquaintances</span></div>
+<div class="topbar"><span class="topbar-icon">👋</span><span class="topbar-name" data-buddy-name>Acquaintances</span></div>
 <div class="header">
 <div class="icon">👋</div>
-<h1>Acquaintances</h1>
+<h1 data-buddy-name>Acquaintances</h1>
 <div class="tagline">New faces, worth remembering</div>
 </div>
 
@@ -152,7 +152,7 @@ h2 { font-size: 22px; margin: 32px 0 16px; }
 
 <section class="dumpbox" data-buddy-id="acquaintances">
 <h2>🧠 Brain dump</h2>
-<p class="dumpbox-sub">Dump what's on your mind about Acquaintances — raw and unfiltered. Each dump lands in the buddy's repo (docs/ingest.md) as a timestamped entry — or saves on this device until a repo is linked and a token is connected.</p>
+<p class="dumpbox-sub">Dump what's on your mind about <span data-buddy-name>Acquaintances</span> — raw and unfiltered. Each dump lands in the buddy's repo (docs/ingest.md) as a timestamped entry — or saves on this device until a repo is linked and a token is connected.</p>
 <div class="dumpbox-token" hidden>
 <p>🔒 Connect GitHub to unlock dumping. Paste a token once — it stays on this device only.</p>
 <div class="dumpbox-tokenrow">
@@ -442,6 +442,30 @@ Generated 2026-10-16 · Part of the Buddy System
     });
   });
   resolveBuddy();
+})();
+</script>
+
+
+<script>
+(function(){
+  var parts = location.pathname.split('/');
+  var bid = '';
+  for (var i = parts.length - 1; i >= 0; i--) { if (parts[i]) { bid = parts[i]; break; } }
+  function applyName(name){
+    if (!name) return;
+    var els = document.querySelectorAll('[data-buddy-name]');
+    for (var k = 0; k < els.length; k++) els[k].textContent = name;
+    var ta = document.querySelector('.dumpbox textarea');
+    if (ta) ta.setAttribute('placeholder', "Dump what's on your mind about " + name + "…");
+  }
+  try {
+    fetch('../buddies.json', {cache: 'no-store'}).then(function(r){ return r.json(); }).then(function(d){
+      var buds = (d && d.buddies) || [];
+      for (var j = 0; j < buds.length; j++) {
+        if (buds[j].id === bid && buds[j].name) { applyName(buds[j].name); break; }
+      }
+    }).catch(function(){});
+  } catch(e){}
 })();
 </script>
 
