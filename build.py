@@ -5453,6 +5453,9 @@ function setPaneContent(paneId, html){
   applyZoom();
 }
 function applyZoom(){
+  // Dave 2026-10-16: clamp to the 125 max (slider is biased toward zoomed-out)
+  if (S.zoom > 125) S.zoom = 125;
+  if (S.zoomOrph > 125) S.zoomOrph = 125;
   [['treezoom-main','zoom'],['treezoom-orph','zoomOrph']].forEach(([paneId, key]) => {
     const sc = document.getElementById(paneId);
     if (!sc) return;
@@ -5469,6 +5472,11 @@ function applyZoom(){
   const r2 = document.getElementById('zoomrange-orph');
   if (r1) r1.value = S.zoom || 100;
   if (r2) r2.value = S.zoomOrph || 100;
+  // Dave 2026-10-16: anchor the zoom on the selected buddy — it stays
+  // centered in view at any magnification.
+  if (S.projectId && typeof centerOnBuddy === 'function') {
+    try { centerOnBuddy(S.projectId, true); } catch(e) {}
+  }
   requestAnimationFrame(centerIfFits);
 }
 function centerIfFits(){
@@ -5510,7 +5518,7 @@ function zoomToFit(paneId, zoomKey){
   const vw = sc.clientWidth, vh = sc.clientHeight;
   if (!natW || !natH || !vw || !vh) return;
   const fit = Math.min(vw / natW, vh / natH) * 100;
-  S[zoomKey] = Math.min(160, Math.max(5, Math.round(fit / 2) * 2));
+  S[zoomKey] = Math.min(125, Math.max(5, Math.round(fit / 2) * 2));
   save(); applyZoom();
   toast('Zoomed to fit (' + S[zoomKey] + '%).');
 }
@@ -5538,7 +5546,7 @@ function setTreePane(which, show){
   function zoombarHTML(sfx, label){
     return '<div class="zoombar" id="zoombar-' + sfx + '" title="Zoom — pinch with two fingers, or Shift+scroll">'
       + '<span class="z-out" aria-hidden="true">\u25aa</span>'
-      + '<input type="range" class="zrange" id="zoomrange-' + sfx + '" min="5" max="160" step="1" value="100" aria-label="' + label + '">'
+      + '<input type="range" class="zrange" id="zoomrange-' + sfx + '" min="5" max="125" step="1" value="100" aria-label="' + label + '">'
       + '<span class="z-in" aria-hidden="true">\u25fc</span>'
       + '<button type="button" class="zfit" id="zoomfit-' + sfx + '" title="Zoom to fit" aria-label="Zoom to fit">\u26f6</button>'
       + (sfx === 'main' ? '<button type="button" class="zcenter" id="zoomcenter-' + sfx + '" title="Center on current buddy" aria-label="Center on current buddy">\u2316</button>' : '')
@@ -6092,7 +6100,7 @@ document.getElementById('view-tree').addEventListener('wheel', e => {
   e.preventDefault();
   const pane = e.target && e.target.closest ? e.target.closest('.treescroll') : null;
   const key = (pane && pane.dataset.zoomkey) || 'zoom';
-  S[key] = Math.min(160, Math.max(25, (S[key] || 100) + (e.deltaY > 0 ? -1 : 1)));
+  S[key] = Math.min(125, Math.max(25, (S[key] || 100) + (e.deltaY > 0 ? -1 : 1)));
   save(); applyZoom();
 }, { passive: false });
 let dragId = null;
@@ -6396,7 +6404,7 @@ document.addEventListener('keydown', e => {
   if (e.target && e.target.matches && e.target.matches('input, textarea, [contenteditable="true"]')) return;
   if (e.key === 'Escape') { closeDetail(); return; }
   if (e.key === '/' && !e.target.matches('input, textarea, [contenteditable="true"]')) { e.preventDefault(); const bs = document.getElementById('buddy-search'); if (bs) bs.focus(); return; }
-  if (e.key === '+' || e.key === '=') { S.zoom = Math.min(160, (S.zoom || 100) + 5); save(); applyZoom(); return; }
+  if (e.key === '+' || e.key === '=') { S.zoom = Math.min(125, (S.zoom || 100) + 5); save(); applyZoom(); return; }
   if (e.key === '-' || e.key === '_') { S.zoom = Math.max(5, (S.zoom || 100) - 5); save(); applyZoom(); return; }
   if (e.key === '0') { zoomToFit(); return; }
   if (/^[1-9]$/.test(e.key)) {
