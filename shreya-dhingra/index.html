@@ -1,4 +1,4 @@
-<!-- BUDDY-BASIC-TEMPLATE v2 -->
+<!-- CUSTOM HOMEPAGE — do not regenerate from template -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,102 +8,205 @@
 <style>
 :root {
   --bg: #ffffff;
-  --text: #1a1a1a;
-  --muted: #666;
-  --card: #f5f5f5;
-  --border: #e0e0e0;
-  --accent: #0066cc;
+  --panel: #f6f8fa;
+  --hover: #eaeef2;
+  --border: #d0d7de;
+  --border2: #e5e8eb;
+  --text: #1f2328;
+  --text2: #424a53;
+  --muted: #57606a;
+  --accent: #0969da;
+  --accent-soft: #ddf4ff;
+  --amber: #9a6700;
+  --amber-bg: #fff8c5;
+  --amber-border: #d4a017;
+  --green: #1a7f37;
+  --green-bg: #dafbe1;
+  --tile-shadow: 0 1px 2px rgba(31,35,40,.08);
 }
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg: #1a1a1a;
-    --text: #e0e0e0;
-    --muted: #999;
-    --card: #2a2a2a;
-    --border: #3a3a3a;
-    --accent: #4da6ff;
+    --bg: #0d1117;
+    --panel: #161b22;
+    --hover: #1c2128;
+    --border: #30363d;
+    --border2: #21262d;
+    --text: #e6edf3;
+    --text2: #c9d1d9;
+    --muted: #8b949e;
+    --accent: #58a6ff;
+    --accent-soft: #1f6feb33;
+    --amber: #f0b429;
+    --amber-bg: #f0b4291a;
+    --amber-border: #f0b42966;
+    --green: #3fb950;
+    --green-bg: #3fb9501a;
+    --tile-shadow: none;
   }
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
+html { -webkit-text-size-adjust: 100%; }
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
   background: var(--bg);
   color: var(--text);
-  line-height: 1.6;
-  padding: 40px 20px;
-  max-width: 800px;
+  line-height: 1.55;
+}
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* Crumb back to parent */
+.crumb {
+  padding: 14px 20px 0;
+  font-size: 14px;
+  max-width: 1080px;
   margin: 0 auto;
 }
-.header { text-align: center; margin-bottom: 40px; }
+.crumb a { color: var(--text); opacity: .65; }
+.crumb a:hover { opacity: 1; text-decoration: none; }
+
+/* Slim sticky header — content scrolls underneath */
 .topbar {
   position: sticky; top: 0; z-index: 50;
   display: flex; align-items: center; gap: 10px;
   background: var(--bg);
-  border-bottom: 1px solid var(--border);
-  padding: 10px 2px; margin-bottom: 24px;
+  border-bottom: 1px solid var(--border2);
+  padding: 10px 20px;
   font-size: 17px; font-weight: 700;
 }
 .topbar-icon { font-size: 22px; line-height: 1; }
-.icon { font-size: 64px; margin-bottom: 16px; }
-h1 { font-size: 32px; margin-bottom: 8px; }
-.tagline { color: var(--muted); font-size: 18px; }
-.mission {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 24px;
-  margin-bottom: 32px;
-  font-size: 17px;
+.topbar .updated {
+  margin-left: auto; font-size: 12px; font-weight: 400; color: var(--muted);
+  white-space: nowrap;
 }
-h2 { font-size: 22px; margin: 32px 0 16px; }
-.attn {
-  background: var(--card);
-  border-left: 4px solid var(--accent);
-  border-radius: 0 8px 8px 0;
-  padding: 16px 20px;
-  margin-bottom: 12px;
-}
-.attn-date { color: var(--muted); font-size: 14px; margin-top: 8px; }
-.attn-actions { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
-.attn-btn {
-  border: 1px solid var(--border); background: var(--bg); color: var(--text);
-  border-radius: 8px; padding: 7px 14px; font-size: 13px; font-weight: 600; cursor: pointer;
-  -webkit-tap-highlight-color: transparent;
-}
-.attn-btn:hover { border-color: var(--accent); }
-.attn-btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
-.attn-btn:disabled { opacity: .45; cursor: default; }
-.attn-status { font-size: 13px; color: var(--muted); margin-top: 8px; min-height: 18px; }
-.attn.resolved { opacity: .6; }
-.attn.resolved .attn-actions { display: none; }
-.children { display: flex; flex-wrap: wrap; gap: 12px; }
-.child {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 12px 20px;
-  text-decoration: none;
-  color: var(--text);
-}
-.child:hover { border-color: var(--accent); }
-.footer {
-  margin-top: 48px;
-  padding-top: 24px;
-  border-top: 1px solid var(--border);
-  color: var(--muted);
-  font-size: 14px;
-  text-align: center;
-}
-.empty { color: var(--muted); font-style: italic; }
 
-.dumpbox {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 20px 22px;
-  margin-bottom: 32px;
+.wrap { max-width: 1080px; margin: 0 auto; padding: 28px 20px 60px; min-width: 0; }
+
+/* Hero — the briefing desk header */
+.hero {
+  display: flex; gap: 18px; align-items: flex-start;
+  margin-bottom: 8px;
 }
-.dumpbox h2 { margin: 0 0 6px; font-size: 20px; }
+.hero-icon {
+  font-size: 52px; line-height: 1; flex: none;
+  width: 76px; height: 76px;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--panel); border: 1px solid var(--border);
+  border-radius: 20px; box-shadow: var(--tile-shadow);
+}
+.hero h1 { font-size: 30px; letter-spacing: -0.01em; line-height: 1.2; }
+.hero .role { color: var(--muted); font-size: 16px; margin-top: 4px; }
+.hero .desk {
+  margin-top: 12px; font-size: 15px; color: var(--text2);
+  border-left: 3px solid var(--accent);
+  padding-left: 12px; max-width: 60ch;
+}
+
+/* Attention banner */
+.attn-banner {
+  margin: 20px 0 24px;
+  background: var(--amber-bg);
+  border: 1px solid var(--amber-border);
+  border-radius: 12px;
+  padding: 14px 16px;
+  display: flex; gap: 12px; align-items: flex-start;
+  box-shadow: var(--tile-shadow);
+}
+.attn-banner .dot { font-size: 18px; line-height: 1.4; flex: none; }
+.attn-banner .lbl {
+  font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em;
+  color: var(--amber); margin-bottom: 2px;
+}
+.attn-banner .txt { font-size: 15px; }
+
+/* Card grid */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+  gap: 14px;
+  margin-bottom: 28px;
+}
+.card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 18px;
+  box-shadow: var(--tile-shadow);
+  min-width: 0;
+}
+.card.wide { grid-column: 1 / -1; }
+.card h2 {
+  font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: .07em;
+  color: var(--muted); margin-bottom: 12px;
+  display: flex; align-items: center; gap: 8px;
+}
+.card h2 .ico { font-size: 16px; }
+
+/* Priority stack */
+.stack { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+.stack li {
+  display: flex; gap: 12px; align-items: flex-start;
+  background: var(--bg); border: 1px solid var(--border2); border-radius: 10px;
+  padding: 10px 12px;
+}
+.stack .n {
+  flex: none; width: 26px; height: 26px; border-radius: 50%;
+  background: var(--accent); color: #fff; font-size: 14px; font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+}
+.stack .n.dim { background: var(--muted); }
+.stack .t { font-size: 15px; font-weight: 600; }
+.stack .d { font-size: 13.5px; color: var(--muted); margin-top: 2px; }
+.pill {
+  display: inline-block; font-size: 12px; font-weight: 700;
+  padding: 2px 9px; border-radius: 999px; margin-top: 6px;
+}
+.pill.open { background: var(--green-bg); color: var(--green); border: 1px solid currentColor; }
+.pill.wait { background: var(--amber-bg); color: var(--amber); border: 1px solid currentColor; }
+.fine { font-size: 13.5px; color: var(--muted); margin-top: 12px; }
+
+/* Definition / rhythm rows */
+.rows { list-style: none; display: flex; flex-direction: column; gap: 0; }
+.rows li {
+  padding: 9px 0; border-top: 1px solid var(--border2); font-size: 15px;
+  display: flex; gap: 10px; align-items: baseline; min-width: 0;
+}
+.rows li:first-child { border-top: none; padding-top: 0; }
+.rows .k { flex: none; color: var(--muted); font-size: 13.5px; min-width: 92px; }
+.rows .v { min-width: 0; overflow-wrap: anywhere; }
+
+/* Team chips */
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip {
+  display: inline-flex; align-items: center; gap: 7px;
+  background: var(--bg); border: 1px solid var(--border);
+  border-radius: 999px; padding: 7px 13px; font-size: 14px; font-weight: 600;
+  color: var(--text); white-space: nowrap;
+}
+.chip small { font-weight: 400; color: var(--muted); }
+a.chip:hover { text-decoration: none; border-color: var(--accent); }
+
+/* Link list */
+.links { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+.links a {
+  display: flex; align-items: center; gap: 10px;
+  background: var(--bg); border: 1px solid var(--border2); border-radius: 10px;
+  padding: 10px 13px; font-size: 14.5px; font-weight: 600; color: var(--text);
+  min-width: 0;
+}
+.links a:hover { text-decoration: none; border-color: var(--accent); }
+.links a .go { margin-left: auto; color: var(--muted); flex: none; }
+.links a .sub { display: block; font-weight: 400; font-size: 12.5px; color: var(--muted); }
+
+/* Brain dump — standard snippet styling */
+.dumpbox {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 20px 22px;
+  box-shadow: var(--tile-shadow);
+}
+.dumpbox h2 { font-size: 20px; margin-bottom: 6px; }
 .dumpbox-sub { color: var(--muted); font-size: 14px; margin-bottom: 14px; }
 .dumpbox textarea {
   width: 100%; min-height: 96px; resize: vertical;
@@ -116,6 +219,7 @@ h2 { font-size: 22px; margin: 32px 0 16px; }
 .dumpbox-btn {
   background: var(--accent); color: #fff; border: none; border-radius: 8px;
   padding: 9px 22px; font-size: 14px; font-weight: 600; cursor: pointer;
+  min-height: 44px;
 }
 .dumpbox-btn:disabled { opacity: .45; cursor: default; }
 .dumpbox-status { font-size: 13px; color: var(--muted); }
@@ -126,56 +230,155 @@ h2 { font-size: 22px; margin: 32px 0 16px; }
 .dumpbox-token p { margin-bottom: 8px; }
 .dumpbox-tokenrow { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
 .dumpbox-tokenrow input {
-  flex: 1; min-width: 170px; background: var(--card); border: 1px solid var(--border);
+  flex: 1; min-width: 170px; background: var(--panel); border: 1px solid var(--border);
   border-radius: 8px; padding: 7px 10px; font-size: 13px; color: var(--text);
 }
 .dumpbox-tokenrow button {
   background: transparent; color: var(--accent); border: 1px solid var(--accent);
   border-radius: 8px; padding: 7px 14px; font-size: 13px; font-weight: 600; cursor: pointer;
+  min-height: 44px;
 }
 .dumpbox-tokenrow a { color: var(--accent); font-size: 13px; }
 
+.footer {
+  margin-top: 28px; padding-top: 16px; border-top: 1px solid var(--border2);
+  font-size: 13px; color: var(--muted);
+  display: flex; flex-wrap: wrap; gap: 8px 20px; align-items: center;
+}
+
+@media (max-width: 560px) {
+  .wrap { padding: 20px 14px 48px; }
+  .hero h1 { font-size: 25px; }
+  .hero-icon { width: 62px; height: 62px; font-size: 42px; border-radius: 16px; }
+  .topbar .updated { display: none; }
+  .card.wide .stack { gap: 8px; }
+}
 </style>
 </head>
 <body>
-<nav data-buddy-crumb style="padding:14px 20px 0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:14px;line-height:1.4;"><a href="https://davedellaquila.github.io/buddy-system/work-buddy/" style="color:inherit;opacity:.65;text-decoration:none;">← Work Buddy</a></nav>
-<div class="topbar"><span class="topbar-icon">💼</span><span class="topbar-name">Shreya Dhingra</span></div>
-<div class="header">
-<div class="icon">💼</div>
-<h1>Shreya Dhingra</h1>
-<div class="tagline">Dave&#x27;s Apple manager — STIX team lead</div>
-</div>
 
-<div class="mission">Collaboration record for Dave&#x27;s work with Shreya Dhingra, his manager at Apple — leads the STIX team (Dave, Connie Ko, Sparsh). Tracks her priorities, review cadence, decisions, and meeting context. Oct 2026 priority reset: partner config + partner info are the top items, Jira is the source of truth, Sparsh covers while Shreya and Connie are on vacation.</div>
+<nav class="crumb" aria-label="Breadcrumb"><a href="https://davedellaquila.github.io/buddy-system/work-buddy/">← Work Buddy</a></nav>
 
+<div class="topbar"><span class="topbar-icon">💼</span><span>Shreya Dhingra</span><span class="updated">Updated Oct 15, 2026</span></div>
 
-<section class="dumpbox" data-buddy-id="shreya-dhingra">
-<h2>🧠 Brain dump</h2>
-<p class="dumpbox-sub">Dump what's on your mind about Shreya Dhingra — raw and unfiltered. Each dump lands in the buddy's repo (docs/ingest.md) as a timestamped entry.</p>
-<div class="dumpbox-token" hidden>
-<p>🔒 Connect GitHub to unlock dumping. Paste a token once — it stays on this device only.</p>
-<div class="dumpbox-tokenrow">
-<input type="password" placeholder="GitHub token (repo scope)" aria-label="GitHub token">
-<button type="button">Save token</button>
-<a href="https://github.com/settings/tokens" target="_blank" rel="noopener">Get a token</a>
-</div>
-</div>
-<textarea rows="4" placeholder="Dump what's on your mind about Shreya Dhingra…"></textarea>
-<div class="dumpbox-row">
-<button type="button" class="dumpbox-btn">Dump it</button>
-<span class="dumpbox-status" role="status"></span>
-</div>
-</section>
+<div class="wrap">
 
+  <header class="hero">
+    <div class="hero-icon" aria-hidden="true">💼</div>
+    <div>
+      <h1>Shreya Dhingra</h1>
+      <div class="role">Dave's manager at Apple — STIX team lead</div>
+      <p class="desk">The living collaboration record: her priorities, the review rhythm, decisions made together, and everything owed to her. Pull this desk before a 1:1 or a status update.</p>
+    </div>
+  </header>
 
-<h2>Needs Attention</h2>
-<div class="attn" data-attn-id="shreya-dhingra-dossier"><div class="attn-text">Dossier ready for Dave&#x27;s review — looks good, edits, or defer?</div><div class="attn-date">2026-10-15</div><div class="attn-actions"><button type="button" class="attn-btn primary" data-act="done">✓ Done</button><button type="button" class="attn-btn" data-act="info">Need more info</button></div><div class="attn-status" role="status"></div></div>
+  <div class="attn-banner" role="note">
+    <span class="dot">🟡</span>
+    <div>
+      <div class="lbl">Needs Dave's attention</div>
+      <div class="txt"><a href="https://docs.google.com/document/d/1BWA9AqukAsH7J2Dn0Hpl1PYVi_ytrGRTZtlMKTpyA_M/edit">Shreya Dhingra — Dossier</a> is ready for review: looks good, edits, or defer?</div>
+    </div>
+  </div>
 
+  <div class="grid">
 
+    <section class="card wide" aria-label="Current priorities">
+      <h2><span class="ico">🎯</span>Right now — Oct 15 priority reset</h2>
+      <ol class="stack">
+        <li><span class="n">1</span><div><div class="t">Partner config</div><div class="d">Top priority from today's Slack thread.</div></div></li>
+        <li><span class="n">2</span><div><div class="t">Partner info</div><div class="d">Top priority from today's Slack thread.</div></div></li>
+        <li><span class="n dim">3</span><div><div class="t">One small miscellaneous item</div><div class="d">Still needs definition.</div><span class="pill wait">Needs definition</span></div></li>
+      </ol>
+      <p class="fine">Roughly 1–2 weeks of design work. <strong>Jira is the source of truth</strong> (not Dave's notes) — Connie created the epic from Shreya's ask, tagging the data capture team. Proper components and 'child of' epic associations.</p>
+    </section>
 
+    <section class="card" aria-label="Coverage">
+      <h2><span class="ico">🏖️</span>Coverage</h2>
+      <ul class="rows">
+        <li><span class="k">Out</span><span class="v">Shreya + Connie on vacation ~2 weeks from Oct 16</span></li>
+        <li><span class="k">Point person</span><span class="v">Sparsh — helping Dave with Jira while they're out</span></li>
+        <li><span class="k">Fallback</span><span class="v">Track in a Slack thread: Dave, Shreya, Connie, Sparsh</span></li>
+      </ul>
+      <p class="fine">Dave isn't Jira-fluent — Sparsh bridges the gap.</p>
+    </section>
 
-<div class="footer">
-Generated 2026-10-16 · Part of the Buddy System
+    <section class="card" aria-label="What she cares about">
+      <h2><span class="ico">📌</span>What she cares about</h2>
+      <ul class="rows">
+        <li><span class="k">Priorities</span><span class="v">Focus on the real priorities. Her Oct 15 note flagged the same asks sitting in progress while non-priority work moved forward — she wants that pattern broken.</span></li>
+        <li><span class="k">Surprises</span><span class="v">No surprises — keep her in the loop.</span></li>
+        <li><span class="k">Direction</span><span class="v">Clear design direction for downstream teams. The team can't become IS&amp;T's roadblock.</span></li>
+      </ul>
+    </section>
+
+    <section class="card" aria-label="Review rhythm">
+      <h2><span class="ico">🔁</span>Review rhythm</h2>
+      <ul class="rows">
+        <li><span class="k">Internal</span><span class="v">Mon / Thu 9am internal reviews (with Connie)</span></li>
+        <li><span class="k">Status cadence</span><span class="v">Dave offered updates at whatever interval she wants — floated EOD Friday</span></li>
+      </ul>
+      <p class="fine"><span class="pill wait">Cadence unconfirmed</span></p>
+    </section>
+
+    <section class="card" aria-label="Owed to Shreya">
+      <h2><span class="ico">📝</span>Owed to Shreya</h2>
+      <ul class="rows">
+        <li><span class="k">Jira update</span><span class="v">Partner config / partner info / misc with components + 'child of' epics <span class="pill open">Open</span></span></li>
+        <li><span class="k">Misc item</span><span class="v">Define the third priority item <span class="pill open">Open</span></span></li>
+        <li><span class="k">Cadence</span><span class="v">Confirm the status-update interval <span class="pill open">Open</span></span></li>
+      </ul>
+      <p class="fine">From the 4:30pm review with Connie the same day: Dave finishes remaining ACV prototype items by noon Friday Oct 16 and shares with Liz; bulk action buttons need more workshopping; two-button bulk update waits for Liz until Connie returns.</p>
+    </section>
+
+    <section class="card" aria-label="The team">
+      <h2><span class="ico">👥</span>The team</h2>
+      <div class="chips">
+        <span class="chip">💼 Shreya <small>leads STIX</small></span>
+        <span class="chip">👨 Dave <small>reports to Shreya</small></span>
+        <a class="chip" href="https://davedellaquila.github.io/buddy-system/connie-ko/">👤 Connie Ko <small>teammate</small></a>
+        <span class="chip">👤 Sparsh <small>teammate · point person</small></span>
+        <span class="chip">👤 Stephen <small>Shreya's manager</small></span>
+      </div>
+      <p class="fine">Shreya leads the STIX team: Dave, Connie Ko, Sparsh. Her own manager is Stephen. Parent buddy: <a href="https://davedellaquila.github.io/buddy-system/work-buddy/">💻 Work Buddy</a>.</p>
+    </section>
+
+    <section class="card" aria-label="Docs and links">
+      <h2><span class="ico">📚</span>Docs &amp; links</h2>
+      <ul class="links">
+        <li><a href="https://docs.google.com/document/d/1BWA9AqukAsH7J2Dn0Hpl1PYVi_ytrGRTZtlMKTpyA_M/edit">📄 Shreya Dhingra — Dossier<span class="go">→</span></a></li>
+        <li><a href="https://github.com/davedellaquila/shreya-dhingra/blob/master/docs/mission-statement.md">📋 Mission statement<span class="sub">docs/mission-statement.md in the repo</span><span class="go">→</span></a></li>
+        <li><a href="https://github.com/davedellaquila/shreya-dhingra">🐙 Repo: davedellaquila/shreya-dhingra<span class="sub">SOUL · KNOWLEDGE · DECISIONS · ACCOMPLISHMENTS</span><span class="go">→</span></a></li>
+        <li><a href="https://davedellaquila.github.io/buddy-system/work-buddy/">💻 Work Buddy<span class="sub">Parent — Dave's work life</span><span class="go">→</span></a></li>
+        <li><a href="https://davedellaquila.github.io/buddy-system/connie-ko/">👤 Connie Ko<span class="sub">Teammate — collaboration hub</span><span class="go">→</span></a></li>
+        <li><a href="https://davedellaquila.github.io/buddy-system/">🗂️ Buddy System dashboard<span class="go">→</span></a></li>
+      </ul>
+    </section>
+
+  </div>
+
+  <section class="dumpbox" data-buddy-id="shreya-dhingra">
+    <h2>🧠 Brain dump</h2>
+    <p class="dumpbox-sub">Dump what's on your mind about Shreya Dhingra — raw and unfiltered. Each dump lands in the buddy's repo (docs/ingest.md) as a timestamped entry.</p>
+    <div class="dumpbox-token" hidden>
+      <p>🔒 Connect GitHub to unlock dumping. Paste a token once — it stays on this device only.</p>
+      <div class="dumpbox-tokenrow">
+        <input type="password" placeholder="GitHub token (repo scope)" aria-label="GitHub token">
+        <button type="button">Save token</button>
+        <a href="https://github.com/settings/tokens" target="_blank" rel="noopener">Get a token</a>
+      </div>
+    </div>
+    <textarea rows="4" placeholder="Dump what's on your mind about Shreya Dhingra…"></textarea>
+    <div class="dumpbox-row">
+      <button type="button" class="dumpbox-btn">Dump it</button>
+      <span class="dumpbox-status" role="status"></span>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <span>Shreya Dhingra's buddy — the collaboration record. Nothing goes out about Shreya without Dave's sign-off.</span>
+    <a href="https://davedellaquila.github.io/buddy-system/">Buddy System dashboard</a>
+  </footer>
+
 </div>
 
 <script>
@@ -276,116 +479,6 @@ Generated 2026-10-16 · Part of the Buddy System
     if ((ev.metaKey || ev.ctrlKey) && ev.key === 'Enter') { ev.preventDefault(); dump(); }
   });
   resolveRepo().then(refreshUI);
-})();
-</script>
-
-
-<script>
-(function(){
-  var tiles = document.querySelectorAll('.attn[data-attn-id]');
-  if (!tiles.length) return;
-  var dumpbox = document.querySelector('.dumpbox');
-  var bid = (dumpbox && dumpbox.getAttribute('data-buddy-id')) || (function(){
-    var p = location.pathname.replace(/\/+$/, '');
-    return p.substring(p.lastIndexOf('/') + 1);
-  })();
-  function lsGet(){ try { return JSON.parse(localStorage.getItem('buddyTree.v3') || '{}'); } catch(e){ return {}; } }
-  function lsSet(patch){ try { var s = lsGet(); for (var k in patch) s[k] = patch[k]; localStorage.setItem('buddyTree.v3', JSON.stringify(s)); } catch(e){} }
-  function token(){ return lsGet().ghToken || ''; }
-  function b64encode(str){
-    var bytes = new TextEncoder().encode(str), bin = '';
-    bytes.forEach(function(b){ bin += String.fromCharCode(b); });
-    return btoa(bin);
-  }
-  async function ghApi(path, method, body){
-    var t = token();
-    if (!t) throw new Error('Add a GitHub token first.');
-    var r = await fetch('https://api.github.com' + path, {
-      method: method || 'GET',
-      headers: {'Authorization': 'Bearer ' + t, 'Accept': 'application/vnd.github+json', 'Content-Type': 'application/json'},
-      body: body ? JSON.stringify(body) : undefined
-    });
-    if (!r.ok) throw new Error('GitHub ' + r.status);
-    return r.status === 204 ? null : await r.json();
-  }
-  async function ghGetFile(repo, path){
-    try {
-      var j = await ghApi('/repos/davedellaquila/' + repo + '/contents/' + path);
-      if (j && j.content) return {
-        text: new TextDecoder().decode(Uint8Array.from(atob(j.content.replace(/\n/g, '')), function(c){ return c.charCodeAt(0); })),
-        sha: j.sha
-      };
-    } catch(e){}
-    return null;
-  }
-  var repo = null, buddyName = bid;
-  async function resolveBuddy(){
-    try {
-      var r = await fetch('../buddies.json', {cache: 'no-store'});
-      var d = await r.json();
-      var buds = d.buddies || [];
-      for (var i = 0; i < buds.length; i++) {
-        if (buds[i].id === bid) {
-          if (buds[i].repo) repo = buds[i].repo;
-          if (buds[i].name) buddyName = buds[i].name;
-          break;
-        }
-      }
-    } catch(e){}
-  }
-  function rkey(aid, text){ return bid + '|' + (aid || ('text:' + text.slice(0, 60))); }
-  function isResolved(aid, text){ var m = lsGet().attnDone || {}; return !!m[rkey(aid, text)]; }
-  function setResolved(aid, text){ var s = lsGet(); var m = s.attnDone || {}; m[rkey(aid, text)] = 1; s.attnDone = m; lsSet(s); }
-  function paintResolved(tile, msg){
-    tile.classList.add('resolved');
-    var st = tile.querySelector('.attn-status');
-    if (st) st.textContent = msg;
-  }
-  async function sendAction(tile, entry, okMsg){
-    var st = tile.querySelector('.attn-status');
-    var btns = tile.querySelectorAll('.attn-btn');
-    if (!token()) { st.textContent = 'Add a GitHub token in the Brain dump section above to enable actions.'; return false; }
-    if (!repo) { st.textContent = 'No repo linked for this buddy yet.'; return false; }
-    btns.forEach(function(b){ b.disabled = true; });
-    st.textContent = 'Working…';
-    try {
-      var NL = String.fromCharCode(10);
-      var stamp = new Date().toLocaleString();
-      var cur = await ghGetFile(repo, 'docs/ingest.md');
-      var base = cur ? cur.text : '# Ingest log — ' + buddyName + NL + NL;
-      var body = {message: 'Attention action for ' + bid, content: b64encode(base + '## ' + stamp + NL + NL + entry + NL + NL)};
-      if (cur && cur.sha) body.sha = cur.sha;
-      await ghApi('/repos/davedellaquila/' + repo + '/contents/docs/ingest.md', 'PUT', body);
-      st.textContent = okMsg;
-      return true;
-    } catch(err){
-      st.textContent = 'Save failed: ' + (err.message || err);
-      btns.forEach(function(b){ b.disabled = false; });
-      return false;
-    }
-  }
-  tiles.forEach(function(tile){
-    var aid = tile.getAttribute('data-attn-id') || '';
-    var textEl = tile.querySelector('.attn-text');
-    var text = textEl ? textEl.textContent.trim() : '';
-    if (isResolved(aid, text)) { paintResolved(tile, 'Marked done'); return; }
-    tile.addEventListener('click', function(ev){
-      var btn = ev.target.closest ? ev.target.closest('.attn-btn') : null;
-      if (!btn || btn.disabled) return;
-      var act = btn.getAttribute('data-act');
-      var idBit = aid ? ' (attention id: ' + aid + ')' : '';
-      if (act === 'done') {
-        sendAction(tile,
-          'DONE — Dave marked this done on the homepage: "' + text + '"' + idBit + '. Please remove it from the attention list in buddies.json.',
-          'Marked done — the buddy will clear it.').then(function(ok){ if (ok) { setResolved(aid, text); paintResolved(tile, 'Marked done — the buddy will clear it.'); } });
-      } else if (act === 'info') {
-        sendAction(tile,
-          'FOLLOW-UP — Dave needs more info on: "' + text + '"' + idBit + '. Please follow up with him.',
-          'Sent — ' + buddyName + ' will follow up.');
-      }
-    });
-  });
-  resolveBuddy();
 })();
 </script>
 

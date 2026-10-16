@@ -3,6 +3,11 @@
 All notable changes to the Buddies dashboard and buddy system. Newest first.
 `FEATURES.md` describes the current state; this file describes how it got there.
 
+## 2026-10-15 (Shreya Dhingra custom homepage)
+
+### Added
+- **💼 Shreya Dhingra custom homepage** (thread-owned, `shreya-dhingra/index.html`): "the briefing desk" — the living collaboration record for Dave's Apple manager. Full-bleed priority stack (partner config #1, partner info #2, misc item #3 — needs definition, ~1–2 weeks of design work, Jira as source of truth), coverage card (Shreya + Connie on vacation ~2 weeks from Oct 16, Sparsh is point person), what she cares about (real priorities, no surprises, never IS&T's roadblock), review rhythm (Mon/Thu 9am; EOD-Friday status cadence unconfirmed), "Owed to Shreya" open items, team chips (Shreya, Dave, Connie Ko, Sparsh, Stephen), docs & links (dossier, mission statement, repo, Work Buddy, Connie Ko, dashboard), attention banner for the dossier review, standard 🧠 brain-dump box (same GitHub write path to `shreya-dhingra/docs/ingest.md`), slim sticky header, dark + light via prefers-color-scheme, phone/tablet/desktop layouts. Carries the CUSTOM HOMEPAGE marker so `gen_basic_homepages.py` never overwrites it.
+
 ## 2026-10-15 (Shreya Dhingra buddy)
 
 ### Added
