@@ -9327,7 +9327,10 @@ document.addEventListener('click', e => {
   // Panel behavior is view-aware: in Homepage view, clicking selects only
   // (use the ⓘ icon for the panel). In other views, clicking opens the panel.
   // The autoOpenPanel setting overrides to always open.
-  if (bb && !e.target.closest('[contenteditable="true"],input,textarea,select,button')) {
+  // Dave 2026-10-16: sidebar rows are <button>s — allow the click when the
+  // control IS the buddy row, only skip inner form controls.
+  const fc = e.target.closest('[contenteditable="true"],input,textarea,select,button');
+  if (bb && (!fc || fc === bb)) {
     const wantPanel = S.autoOpenPanel || S.view !== 'project';
     if (wantPanel) openBuddy(bb.dataset.buddy);
     else selectBuddy(bb.dataset.buddy);
