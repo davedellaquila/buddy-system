@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-10-16 (1931 Ford Model A sale page — draft)
+
+### Added
+- **Sale page draft** (Dave 2026-10-16): `model-a-buddy/sale/` — a for-sale page designed from Johnny's council brief (docs/sale-page-brief.md): Bonhams-arc story (Emil the steward → evidence of care → the handoff), single facts object with "To be confirmed" unknowns, no price, walk-around gallery, trust signals (REG 5 stated plainly, inspection by appointment, enclosed transport, documentation inventory), and Enquire / Book an inspection / Call Dave CTAs. Warm paper / charcoal / oxblood / brass; dark+light first-class; banned words honored; no exclamation marks.
+- Gallery mixes Dave's 3 real repo photographs (front 3/4 hero, rear 3/4, interior) with 2 clearly labeled AI visualizations (profile, engine bay) and 3 "photograph coming" slots. Draft banner throughout — not the live listing. Placeholder manifest lives in the model-a-buddy repo (docs/placeholder-manifest.md).
+- Default buddy page now links to the sale draft (surgical "For sale — private treaty" card + docs[] entry).
+
 ## 2026-10-16 (Dump box: Enter submits + save flash)
 
 ### Changed

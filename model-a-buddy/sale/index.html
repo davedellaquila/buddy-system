@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="auto">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>1931 Ford Model A — Offered by Private Treaty</title>
+<style>
+:root{
+  --paper:#f7f2e8; --paper2:#efe7d6; --ink:#211c14; --muted:#6f6455;
+  --line:#c9b68c; --oxblood:#6e1a26; --brass:#a8823f; --ok:#1b7a2e;
+}
+html[data-theme="dark"]{
+  --paper:#161310; --paper2:#1e1a15; --ink:#ece3d0; --muted:#a2937c;
+  --line:#3d3423; --oxblood:#d08a8a; --brass:#c9a35a; --ok:#5fd08a;
+}
+@media (prefers-color-scheme: dark){
+  html[data-theme="auto"]{
+    --paper:#161310; --paper2:#1e1a15; --ink:#ece3d0; --muted:#a2937c;
+    --line:#3d3423; --oxblood:#d08a8a; --brass:#c9a35a; --ok:#5fd08a;
+  }
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  background:var(--paper); color:var(--ink);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Helvetica,Arial,sans-serif;
+  line-height:1.65; padding:0 20px 60px;
+}
+.wrap{max-width:860px;margin:0 auto}
+.draft{
+  border:1px solid var(--oxblood); color:var(--oxblood);
+  border-radius:10px; padding:12px 16px; margin:22px 0 0; font-size:13.5px;
+}
+.draft strong{font-weight:700}
+.topbar{display:flex;justify-content:flex-end;padding:14px 0 0}
+.theme-btn{
+  background:transparent;border:1px solid var(--line);color:var(--muted);
+  border-radius:999px;padding:6px 14px;font-size:12.5px;cursor:pointer;
+}
+header.mast{padding:56px 0 8px;text-align:center}
+.kicker{
+  font-size:12.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--brass);
+  margin-bottom:14px;
+}
+h1{
+  font-family:Georgia,"Palatino Linotype","Book Antiqua",serif;
+  font-weight:400;font-size:clamp(38px,7vw,64px);line-height:1.08;margin-bottom:12px;
+}
+.sub{font-size:17px;color:var(--muted);max-width:620px;margin:0 auto}
+.rule{border:0;border-top:1px solid var(--line);margin:34px auto;max-width:220px}
+.hero{margin:10px 0 8px}
+.hero img{width:100%;height:auto;display:block;border-radius:10px;border:1px solid var(--line)}
+.caption{font-size:13px;color:var(--muted);margin-top:8px;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.badge{
+  display:inline-block;font-size:11px;letter-spacing:.08em;text-transform:uppercase;
+  border:1px solid var(--brass);color:var(--brass);border-radius:999px;padding:2px 10px;white-space:nowrap;
+}
+.badge.ai{border-color:var(--oxblood);color:var(--oxblood)}
+h2.sec{
+  font-family:Georgia,"Palatino Linotype","Book Antiqua",serif;font-weight:400;
+  font-size:30px;margin:52px 0 6px;
+}
+.sec-sub{color:var(--muted);font-size:15px;margin-bottom:18px}
+.story p{margin:0 0 16px;font-size:16.5px;max-width:68ch}
+.story p.lede::first-letter{
+  font-family:Georgia,serif;font-size:3.2em;float:left;line-height:.9;
+  padding-right:10px;color:var(--oxblood);
+}
+.facts{width:100%;border-collapse:collapse;margin-top:6px;font-size:15px}
+.facts th,.facts td{text-align:left;padding:11px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+.facts th{width:38%;font-weight:600;color:var(--muted);font-size:13.5px;letter-spacing:.04em;text-transform:uppercase}
+.facts td{font-size:15.5px}
+.tbc{color:var(--muted);font-style:italic}
+.gallery{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:8px}
+@media (max-width:640px){.gallery{grid-template-columns:1fr}}
+.gallery figure{margin:0}
+.gallery .ph{
+  width:100%;aspect-ratio:4/3;object-fit:cover;display:block;
+  border-radius:10px;border:1px solid var(--line);background:var(--paper2);
+}
+.ph-card{
+  aspect-ratio:4/3;border:1px dashed var(--line);border-radius:10px;background:var(--paper2);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;
+  color:var(--muted);font-size:14px;text-align:center;padding:20px;
+}
+.ph-card .big{font-size:26px}
+.trust{display:grid;gap:0;margin-top:8px;border-top:1px solid var(--line)}
+.trust .item{padding:18px 4px;border-bottom:1px solid var(--line)}
+.trust .item h3{font-size:16px;margin-bottom:6px}
+.trust .item h3 .n{
+  display:inline-block;width:26px;height:26px;border:1px solid var(--brass);color:var(--brass);
+  border-radius:50%;text-align:center;font-size:13px;line-height:24px;margin-right:10px;
+}
+.trust .item p{font-size:15px;color:var(--muted);margin-left:36px;max-width:62ch}
+.ctas{display:flex;gap:12px;flex-wrap:wrap;margin:34px 0 8px}
+.cta{
+  display:inline-block;padding:13px 26px;border-radius:999px;font-size:15px;font-weight:700;
+  text-decoration:none;cursor:pointer;border:1px solid var(--oxblood);
+}
+.cta.primary{background:var(--oxblood);color:#fff;border-color:var(--oxblood)}
+html[data-theme="dark"] .cta.primary{color:#161310}
+.cta.ghost{background:transparent;color:var(--oxblood)}
+.cta.disabled{opacity:.45;cursor:not-allowed}
+.cta-note{font-size:13px;color:var(--muted);margin-top:10px}
+.dump{margin-top:56px;border-top:1px solid var(--line);padding-top:26px}
+.dump h2{font-family:Georgia,serif;font-weight:400;font-size:22px;margin-bottom:6px}
+.dump p{font-size:13.5px;color:var(--muted);margin-bottom:12px}
+.dump textarea{
+  width:100%;min-height:84px;resize:vertical;background:var(--paper2);
+  border:1px solid var(--line);border-radius:8px;padding:10px 12px;
+  font-size:14px;color:var(--ink);font-family:inherit;
+}
+.dump textarea:focus{outline:2px solid var(--brass);outline-offset:1px}
+.dump .row{display:flex;gap:10px;align-items:center;margin-top:10px;flex-wrap:wrap}
+.dump .btn{
+  background:var(--brass);color:#fff;border:0;border-radius:999px;
+  padding:9px 20px;font-size:14px;font-weight:700;cursor:pointer;
+}
+.dump .btn.saved{background:var(--ok)}
+.dump .hint{font-size:12px;color:var(--muted)}
+footer.foot{
+  margin-top:60px;padding-top:20px;border-top:1px solid var(--line);
+  font-size:13px;color:var(--muted);display:flex;justify-content:space-between;
+  gap:12px;flex-wrap:wrap;
+}
+footer.foot a{color:var(--brass)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="draft"><strong>Working draft — not the live listing.</strong> Three of Dave&rsquo;s photographs are in place. The remaining gallery slots hold clearly labeled AI visualizations standing in for photographs not yet taken. Nothing here has been shown to a buyer.</div>
+
+<div class="topbar"><button class="theme-btn" id="themeBtn" aria-label="Toggle dark / light mode">☾ Dark</button></div>
+
+<header class="mast">
+  <div class="kicker">Offered by private treaty</div>
+  <h1>1931 Ford Model A</h1>
+  <p class="sub">A concours-condition coupe from the estate of Emil Dell&rsquo;Aquila, offered by his son from the family.</p>
+</header>
+
+<hr class="rule">
+
+<figure class="hero">
+  <img src="photos/hero-front34.jpg" alt="1931 Ford Model A, front three-quarter view">
+  <figcaption class="caption"><span>Front three-quarter</span><span class="badge">Photograph</span></figcaption>
+</figure>
+
+<h2 class="sec">The car and its keeper</h2>
+<div class="story">
+<p class="lede">This Model A belonged to Emil Dell&rsquo;Aquila, who died on July 1, 2026. It is a concours-condition car, and everything about how it presents says it was kept by someone who understood what that takes.</p>
+<p>The car now resides at On the Road Again Classics in Morgan Hill, California — a British classic restoration shop — where it has been since October 10, 2026. The paint is red over black, the interior tan, the tires whitewall, and a period trunk rides on the rear rack. The photographs on this page were taken where the car sits today.</p>
+<p>The paperwork is being handled the same careful way. Transfer of the California title is in progress under REG 5; the forty-day waiting period has elapsed and confirmation from the DMV clerk is pending. What is known is stated below. What is not yet confirmed is marked as such — nothing here is filled in or guessed at.</p>
+<p>It is offered by private treaty from the family estate by Emil&rsquo;s son, Dave. Inspection is by appointment at On the Road Again Classics, and enclosed transport can be coordinated at the buyer&rsquo;s expense. Emil&rsquo;s 1952 MG TD — visible in the background of one photograph — is not part of this sale.</p>
+</div>
+
+<h2 class="sec">Facts</h2>
+<p class="sec-sub">One facts object drives this table. Unknowns read &ldquo;To be confirmed&rdquo; — never blank, never invented.</p>
+<table class="facts" id="factsTable"></table>
+
+<h2 class="sec">Gallery</h2>
+<p class="sec-sub">In walk-around order. Real photographs first; labeled visualizations hold the angles not yet photographed.</p>
+<div class="gallery" id="gallery"></div>
+
+<h2 class="sec">Buying with confidence</h2>
+<div class="trust">
+  <div class="item">
+    <h3><span class="n">1</span>Title, stated plainly</h3>
+    <p>California REG 5 transfer in progress. The forty-day waiting period has elapsed; DMV clerk confirmation is pending. This will be confirmed in writing before any money changes hands.</p>
+  </div>
+  <div class="item">
+    <h3><span class="n">2</span>Inspection by appointment</h3>
+    <p>The car may be inspected at On the Road Again Classics in Morgan Hill, California, by appointment. Bring your own expert — it is welcomed.</p>
+  </div>
+  <div class="item">
+    <h3><span class="n">3</span>Transport, handled</h3>
+    <p>Enclosed transport is required for a car of this condition, and it can be coordinated at the buyer&rsquo;s expense. Recent enclosed quotes for this route have run $700–$1,000 per car.</p>
+  </div>
+  <div class="item">
+    <h3><span class="n">4</span>Documentation</h3>
+    <p>The documentation file is being assembled. Service records, restoration receipts, the owner&rsquo;s manual, tools, and spares will each be listed here as &ldquo;with the car&rdquo; or &ldquo;to be confirmed&rdquo; once verified — not before.</p>
+  </div>
+</div>
+
+<div class="ctas">
+  <a class="cta primary" href="mailto:dave@dellaquila.com?subject=Enquiry%3A%201931%20Ford%20Model%20A&body=Hello%20Dave%2C%0A%0AI%27m%20writing%20about%20the%201931%20Ford%20Model%20A.%0A%0A">Enquire about this car</a>
+  <a class="cta ghost" href="mailto:dave@dellaquila.com?subject=Inspection%20request%3A%201931%20Ford%20Model%20A&body=Hello%20Dave%2C%0A%0AI%27d%20like%20to%20arrange%20an%20inspection%20of%20the%201931%20Ford%20Model%20A%20at%20On%20the%20Road%20Again%20Classics.%0A%0A">Book an inspection</a>
+  <span class="cta ghost disabled" title="Phone number to be confirmed">Call Dave</span>
+</div>
+<p class="cta-note">The call button will carry Dave&rsquo;s sale phone number once confirmed. Enquiries go to dave@dellaquila.com.</p>
+
+<div class="dump">
+  <h2>Notes on the sale</h2>
+  <p>Dave&rsquo;s working notes on this listing — saved on this device. Enter saves · Shift+Enter for a new line.</p>
+  <textarea id="saleNotes" placeholder="e.g. Ask Rachel about the service records…"></textarea>
+  <div class="row">
+    <button class="btn" id="saleNotesBtn">Save note</button>
+    <span class="hint" id="saleNotesHint"></span>
+  </div>
+</div>
+
+<footer class="foot">
+  <span>Prepared by the 🚗 1931 Ford Model A buddy · Draft for Dave&rsquo;s review</span>
+  <span><a href="https://davedellaquila.github.io/buddy-system/model-a-buddy/">Buddy page</a> · <a href="https://davedellaquila.github.io/buddy-system/car-buddy/">Car Buddy</a></span>
+</footer>
+
+</div>
+<script>
+/* One facts object drives the table. Unknowns render "To be confirmed" — never blank, never invented. */
+const FACTS = [
+  ["Year", "1931"],
+  ["Make", "Ford"],
+  ["Model", "Model A"],
+  ["Body style", "Coupe"],
+  ["Exterior", "Red over black"],
+  ["Interior", "Tan"],
+  ["Wheels & tires", "Whitewall tires on wire wheels"],
+  ["Rear luggage", "Period trunk on rear rack"],
+  ["VIN", null],
+  ["Mileage", null],
+  ["Condition", "Concours"],
+  ["Restoration history", null],
+  ["Title", "California REG 5 transfer in progress — forty-day waiting period elapsed; DMV clerk confirmation pending"],
+  ["Location", "Morgan Hill, California — On the Road Again Classics"],
+  ["Insurance / registration", null]
+];
+const TBC = '<span class="tbc">To be confirmed</span>';
+document.getElementById('factsTable').innerHTML = FACTS.map(function(r){
+  return '<tr><th>' + r[0] + '</th><td>' + (r[1] == null ? TBC : r[1]) + '</td></tr>';
+}).join('');
+
+/* Gallery in walk-around order. Real photographs first; labeled AI
+   visualizations hold the angles not yet photographed. */
+const AI_STAMP = 'PLACEHOLDER — AI visualization, not an actual photograph.';
+const GALLERY = [
+  {src:"photos/hero-front34.jpg", cap:"Front three-quarter", real:true},
+  {src:"photos/rear34.jpg", cap:"Rear three-quarter", real:true},
+  {src:"placeholders/media-generation-ext-profile-0-dd9fc1ae-dfb7-471c-af59-f9350c597948.webp", cap:"Profile", real:false},
+  {src:"photos/interior.jpg", cap:"Interior", real:true},
+  {src:"placeholders/media-generation-engine-bay-0-944e0f10-36b4-4387-a059-3b3c40268ac3.webp", cap:"Engine bay", real:false},
+  {src:null, cap:"Details — badges, gauges, brightwork, lamps", real:null},
+  {src:null, cap:"Underside — suspension, floor pans, exhaust", real:null},
+  {src:null, cap:"Imperfections — honest close-ups", real:null}
+];
+document.getElementById('gallery').innerHTML = GALLERY.map(function(g){
+  var badge = g.real === true ? '<span class="badge">Photograph</span>'
+            : g.real === false ? '<span class="badge ai">AI visualization</span>'
+            : '<span class="badge">Photograph coming</span>';
+  var visual = g.src
+    ? '<img class="ph" src="' + g.src + '" alt="' + g.cap + (g.real ? '' : ' — ' + AI_STAMP) + '" loading="lazy">'
+    : '<div class="ph-card"><span class="big">◌</span><span>' + g.cap.split(' — ')[0] + '<br>photograph coming</span></div>';
+  var stamp = g.real === false ? '<div class="caption"><span>' + AI_STAMP + '</span></div>' : '';
+  return '<figure>' + visual +
+    '<figcaption class="caption"><span>' + g.cap + '</span>' + badge + '</figcaption>' + stamp + '</figure>';
+}).join('');
+
+/* Theme toggle */
+(function(){
+  var root = document.documentElement, btn = document.getElementById('themeBtn');
+  function current(){
+    var t = root.getAttribute('data-theme');
+    if (t !== 'auto') return t;
+    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  }
+  function paint(){ btn.textContent = current() === 'dark' ? '☀ Light' : '☾ Dark'; }
+  btn.addEventListener('click', function(){
+    root.setAttribute('data-theme', current() === 'dark' ? 'light' : 'dark');
+    try{ localStorage.setItem('modelA-sale-theme', root.getAttribute('data-theme')); }catch(e){}
+    paint();
+  });
+  try{
+    var saved = localStorage.getItem('modelA-sale-theme');
+    if (saved) root.setAttribute('data-theme', saved);
+  }catch(e){}
+  paint();
+})();
+
+/* Sale notes: quiet local box. Enter saves, Shift+Enter for a newline, button flashes on save. */
+(function(){
+  var box = document.getElementById('saleNotes'),
+      btn = document.getElementById('saleNotesBtn'),
+      hint = document.getElementById('saleNotesHint'),
+      KEY = 'modelA-sale-notes';
+  function save(){
+    var text = box.value.trim();
+    if(!text) return;
+    var items = [];
+    try{ items = JSON.parse(localStorage.getItem(KEY) || '[]'); }catch(e){}
+    items.unshift({t: Date.now(), text: text});
+    try{ localStorage.setItem(KEY, JSON.stringify(items)); }catch(e){}
+    box.value = '';
+    var label = btn.textContent;
+    btn.textContent = '✓ Saved'; btn.classList.add('saved');
+    hint.textContent = items.length + (items.length === 1 ? ' note' : ' notes') + ' saved on this device.';
+    setTimeout(function(){ btn.textContent = label; btn.classList.remove('saved'); }, 1800);
+  }
+  btn.addEventListener('click', save);
+  box.addEventListener('keydown', function(ev){
+    if (ev.key === 'Enter' && !ev.shiftKey && !ev.altKey) { ev.preventDefault(); save(); }
+  });
+})();
+</script>
+</body>
+</html>
