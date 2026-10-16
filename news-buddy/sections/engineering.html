@@ -150,7 +150,7 @@
   .story-vote.on-down{background:#b42318;border-color:#b42318;color:#fff}
   /* ---------- voice picker ---------- */
   .vp-overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:1000;display:flex;align-items:center;justify-content:center;padding:20px}
-  .vp-card{background:var(--paper);color:var(--ink);border:1px solid var(--rule);border-radius:14px;max-width:480px;width:100%;max-height:82vh;display:flex;flex-direction:column;box-shadow:0 12px 40px rgba(0,0,0,.35)}
+  .vp-card{background:var(--paper);color:var(--ink);border:1px solid var(--rule);border-radius:14px;max-width:560px;width:100%;max-height:82vh;display:flex;flex-direction:column;box-shadow:0 12px 40px rgba(0,0,0,.35)}
   .vp-head{padding:14px 16px;border-bottom:1px solid var(--rule);display:flex;align-items:center;justify-content:space-between;flex:none}
   .vp-head h3{margin:0;font-size:16px}
   .vp-close{background:none;border:none;font-size:18px;cursor:pointer;color:var(--muted);padding:4px 8px}
@@ -159,9 +159,10 @@
   .vp-row{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:10px;cursor:pointer;border:1px solid transparent}
   .vp-row:hover{background:rgba(127,127,127,.12)}
   .vp-row.current{border-color:var(--accent)}
-  .vp-row .nm{flex:1;min-width:0}
+  .vp-row .nm{flex:none;min-width:0;max-width:38%}
   .vp-row .nm b{display:block;font-size:14px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .vp-row .nm span{font-size:12px;color:var(--muted)}
+  .vp-row .vp-desc{flex:1;min-width:0;font-size:12px;line-height:1.4;color:var(--muted)}
   .vp-prev{background:transparent;border:1px solid var(--rule);color:var(--ink);border-radius:50%;width:36px;height:36px;font-size:13px;cursor:pointer;flex:none}
   .vp-prev:hover{border-color:var(--accent)}
   .vp-check{flex:none;width:22px;text-align:center;color:var(--accent);font-weight:700}
@@ -298,38 +299,67 @@
   .secpage .storyitem h3 a:hover{color:var(--accent)}
   .secpage .lede{font-size:16px;line-height:1.65;color:var(--ink);max-width:70ch;margin:10px 0 6px}
 
+  
+  .sec-head h2 a{color:inherit;text-decoration:none;border-bottom:2px solid transparent}
+  .sec-head h2 a:hover{color:var(--accent);border-bottom-color:var(--accent)}
+  .mini-mast{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 20px;border-bottom:3px double var(--ink);margin-bottom:8px;flex-wrap:wrap}
+  .mini-mast a.brand{font-family:Georgia,'Times New Roman',serif;font-weight:700;font-size:20px;color:var(--ink);text-decoration:none}
+  .mini-mast .ed{font-size:12px;color:var(--muted)}
+  .kicker{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:18px 0 4px}
+  .kicker a{color:var(--accent);text-decoration:none}
+  .detail h1{font-family:Georgia,'Times New Roman',serif;font-size:clamp(26px,5vw,40px);line-height:1.15;margin:6px 0 10px;letter-spacing:-.01em}
+  .detail h4.sec{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--accent);margin:22px 0 6px}
+  .detail p.body{font-size:16px;line-height:1.65;margin:0 0 12px;max-width:68ch}
+  .sourcebox{border:1px solid var(--rule);border-left:4px solid var(--accent);border-radius:8px;padding:12px 16px;margin:18px 0;max-width:68ch}
+  .sourcebox p{font-size:14px;line-height:1.6;margin:6px 0}
+  .sourcebox .flag{display:inline-block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;background:#fde68a;color:#7c2d12;border-radius:4px;padding:2px 8px;margin-bottom:4px}
+  .read-original{display:inline-block;margin:10px 0;padding:10px 20px;background:var(--accent);color:#fff !important;border-radius:8px;font-weight:700;text-decoration:none;font-size:15px}
+  .related{margin-top:28px;border-top:1px solid var(--rule);padding-top:14px}
+  .related h4.sec{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:0 0 10px}
+  .related ul{list-style:none;margin:0;padding:0}
+  .related li{margin:0 0 10px;font-size:15px;line-height:1.45}
+  .related a{color:var(--ink);text-decoration:none;border-bottom:1px solid var(--rule)}
+  .related a:hover{color:var(--accent);border-bottom-color:var(--accent)}
+  .backfoot{margin:30px 0 40px;font-size:14px}
+  .backfoot a{color:var(--accent);text-decoration:none;font-weight:600}
+  .secpage .storyitem{border-bottom:1px solid var(--rule);padding:16px 0}
+  .secpage .storyitem h3{font-size:20px;margin:0 0 6px;line-height:1.3}
+  .secpage .storyitem h3 a{color:var(--ink);text-decoration:none}
+  .secpage .storyitem h3 a:hover{color:var(--accent)}
+  .secpage .lede{font-size:16px;line-height:1.65;color:var(--ink);max-width:70ch;margin:10px 0 6px}
+
   </style>
 </head>
 <body>
 <header class="mini-mast">
   <a class="brand" href="../index.html">📰 The Morning Edition</a>
-  <span class="ed">Thursday, October 15, 2026</span>
+  <span class="ed">Friday, October 16, 2026</span>
   <button id="themeBtn" class="voice-change" style="margin-left:0">Theme: Auto</button>
 </header>
 <main class="detail secpage" style="max-width:860px;margin:0 auto;padding:0 20px">
   <p class="kicker">Section</p>
   <h1>Engineering</h1>
-  <p class="lede">Patch day: Vercel shipped an out-of-band Next.js security update with two critical RCEs and no workarounds. The SlugFest disclosure explains the npm trusted-publishing flaw behind GitHub&#x27;s 48-hour expiry (1,500+ packages exposed), TanStack Start went 1.0 as the agent-ready alternative, and GitHub&#x27;s AI-assisted Copilot rewrite — 800K lines, 5.25s to 292ms — is the boldest AI porting case study yet.</p>
+  <p class="lede">The coding-agent story grew up this week: less &#x27;look how much code,&#x27; more &#x27;who controls the agents.&#x27; Model pinning, OS sandboxes, managed worktrees, review-as-API — and an open-source counterweight claiming 40% fewer tokens.</p>
   <div class="storyitem">
-      <h3><a href="../articles/2026-10-15-next-js-security-update-two-critical-rces-patched-no-wo.html">Next.js security update: two critical RCEs patched, no workarounds</a></h3>
-      <p class="byline">Next.js · Oct 14</p>
-      <p class="body">Vercel shipped an out-of-band Next.js security update on October 14, patching three vulnerabilities via Next.js 16.4.1 (Active LTS) and 15.5.28 (Maintenance LTS). Two are critical unauthenticated remote code execution flaws: GHSA-673q-mjm6-r5xr, triggered when an App Router ’use cache’ function returns multiple typed arrays (no workaround — upgrade immediately), and CVE-2026-96889, a memory bug in the upstream sharp image library affecting the Image Optimization API with SVGs on glibc-based Linux. The third, GHSA-p3m5-59mp-jv5r, is a high-severity Server Actions denial-of-service via crafted requests that exhaust CPU. Every 16.3 release, including 16.3.8, is affected — 16.3 users must move lines.</p>
-      <p class="body"><em>Why it matters:</em> Critical RCEs with no workarounds in the framework his world runs on — every 16.3 release is affected, so anyone shipping Next.js patches today, no exceptions.</p>
+      <h3><a href="../articles/2026-10-16-the-coding-agent-race-pivots-from-better-code-to-contro.html">The coding-agent race pivots from better code to control: pinning, sandboxes, worktrees</a></h3>
+      <p class="byline">AM Data Lakehouse newsletter · Oct 14</p>
+      <p class="body">The week’s coding-agent releases weren’t about writing better code — they were about control. Claude Code 2.1.296 adds workflow-level model pinning so one subagent can’t quietly run the whole bill on a premium model; GitHub’s local sandboxing for Copilot CLI and VS Code went generally available; Codex CLI gained managed Git worktrees so parallel agents stop colliding.</p>
+      <p class="body"><em>Why it matters:</em> The story shifted from &#x27;agents write more code&#x27; to &#x27;who controls the agents&#x27; — model pinning to stop budget bleed, OS-level sandboxes, managed worktrees. This is the week the tooling grew up.</p>
     </div><div class="storyitem">
-      <h3><a href="../articles/2026-10-15-slugfest-npm-trusted-publishing-flaw-exposed-1-500-pack.html">SlugFest: npm trusted-publishing flaw exposed 1,500+ packages to takeover</a></h3>
-      <p class="byline">Help Net Security · Oct 13</p>
-      <p class="body">Bloom Security’s Golan Myers disclosed ’SlugFest,’ a flaw in npm’s OpenID Connect trusted publishing: configurations trusted a repository name rather than GitHub’s immutable repository ID, so an attacker could reclaim an abandoned GitHub repo slug and publish malicious versions under the legitimate package name — with a valid provenance signature. Bloom found over 1,500 vulnerable packages with more than 10 million combined downloads. GitHub validated the report in June and on October 2 introduced the 48-hour expiry: unvalidated publisher configs now expire 48 hours after creation, and npm blocks OIDC token exchange from issue_comment workflows. Myers notes AI coding agents make this class of flaw reach further — agents install ~70 packages/month on a typical endpoint without reviewing them.</p>
-      <p class="body"><em>Why it matters:</em> The full SlugFest story behind GitHub&#x27;s 48-hour expiry — 1,500+ packages with 10M+ downloads reachable via repo-slug squatting, and the AI-agents supply-chain angle ties straight to the Anthropic story he upvoted.</p>
+      <h3><a href="../articles/2026-10-16-pi-1-0-open-source-coding-agent-claims-40-prompt-token.html">Pi 1.0: open-source coding agent claims 40% prompt-token cut</a></h3>
+      <p class="byline">Tech Insider · Oct 14</p>
+      <p class="body">Earendil’s MIT-licensed Pi 1.0 works across 15+ model providers and claims its Codemode cuts prompt tokens by about 40%. The real takeaway from this release window: developers are choosing between two bets — openness and control (Pi, OpenCode) versus polish and tight model integration (Claude Code, Codex, Copilot).</p>
+      <p class="body"><em>Why it matters:</em> MIT-licensed, 15+ providers, 40% fewer prompt tokens — the open-source counterweight to the vendor CLIs. The openness-vs-polish framing is the clearest articulation yet of the choice every team is making.</p>
     </div><div class="storyitem">
-      <h3><a href="../articles/2026-10-15-tanstack-start-1-0-is-stable-the-client-first-full-stac.html">TanStack Start 1.0 is stable — the client-first full-stack alternative</a></h3>
-      <p class="byline">TanStack · Oct 13</p>
-      <p class="body">TanStack declared TanStack Start 1.0 stable on October 13, formally committing to stable APIs for its full-stack React (and Solid) framework after a long RC period — the post notes enterprise teams and Fortune 500 companies insisted on running it in production even while it was in beta. Highlights: end-to-end type-safe routing, per-route rendering modes, typed createServerFn server functions, and a reported ~5.5x SSR throughput gain from profiling work. Agent-ready by design: packages ship TanStack Intent skills so AI agents learn Start’s APIs and best practices. RSC support exists but is opt-in.</p>
-      <p class="body"><em>Why it matters:</em> A client-first, agent-ready challenger to the Next.js server-first model going stable is a genuine option worth knowing before his next build — he thinks in frameworks and design systems.</p>
+      <h3><a href="../articles/2026-10-16-github-turns-copilot-code-review-into-a-pipeline-primit.html">GitHub turns Copilot code review into a pipeline primitive</a></h3>
+      <p class="byline">TechScoop newsletter · Oct 15</p>
+      <p class="body">Copilot code review can now be requested through REST and GraphQL APIs, with the effort level adjustable per request — review becomes a programmable pipeline component, not a button someone clicks. Meanwhile the built-in default deepened from Lite to Balanced. If agents write the code autonomously, verification is the bottleneck; this starts to remove it.</p>
+      <p class="body"><em>Why it matters:</em> Review as infrastructure: requestable via API with adjustable effort. If a team ever automates verification, this is the shape of it — and the Harvard finding about the review bottleneck makes it urgent.</p>
     </div><div class="storyitem">
-      <h3><a href="../articles/2026-10-15-github-rewrote-copilots-runtime-in-rust-with-ai-help-5.html">GitHub rewrote Copilot’s runtime in Rust with AI help: 5.25s to 292ms</a></h3>
-      <p class="byline">Sourcetrail · Oct 14</p>
-      <p class="body">GitHub migrated the runtime behind the Copilot CLI, Copilot app, and Copilot SDK from TypeScript/Node.js to Rust in an AI-assisted rewrite: over 800,000 lines of production code replaced in roughly 14.5 weeks across 128 pull requests, delivered incrementally with temporary NAPI interop so existing end-to-end tests kept exercising new code. The headline number: a measured startup/session/single-turn scenario dropped from 5.25 seconds to 292 milliseconds, and embedding via a C ABI eliminates the ~100 MB of working set per client the old process-boundary design required.</p>
-      <p class="body"><em>Why it matters:</em> The boldest real-world AI-assisted rewrite on record: 800K lines of TypeScript to Rust in 14.5 weeks, and a 5.25s→292ms startup win — exactly the workflow his team is probing with agents.</p>
+      <h3><a href="../articles/2026-10-16-googles-gemini-4-argon-goes-ga-2-10-intro-pricing-milli.html">Google’s Gemini 4 Argon goes GA: $2/$10 intro pricing, million-token context</a></h3>
+      <p class="byline">Blockchain.News · Oct 13</p>
+      <p class="body">Google’s newest multimodal reasoning model is generally available via the Gemini API, AI Studio, and Search AI Mode. Introductory pricing of $2/$10 per million tokens holds through November 30; the model carries a unified 1M-token context window. Google says it tops the Vals Index for coding, finance, legal, and tax work.</p>
+      <p class="body"><em>Why it matters:</em> $2/$10 intro pricing through November with a million-token window — Google is buying developer mindshare with the price sheet. It tops Google&#x27;s own Vals Index for coding; worth a benchmark run against your current stack.</p>
     </div>
   <section class="suggestbox" data-buddy-id="news-buddy">
     <h2>Suggestions</h2>

@@ -150,7 +150,7 @@
   .story-vote.on-down{background:#b42318;border-color:#b42318;color:#fff}
   /* ---------- voice picker ---------- */
   .vp-overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:1000;display:flex;align-items:center;justify-content:center;padding:20px}
-  .vp-card{background:var(--paper);color:var(--ink);border:1px solid var(--rule);border-radius:14px;max-width:480px;width:100%;max-height:82vh;display:flex;flex-direction:column;box-shadow:0 12px 40px rgba(0,0,0,.35)}
+  .vp-card{background:var(--paper);color:var(--ink);border:1px solid var(--rule);border-radius:14px;max-width:560px;width:100%;max-height:82vh;display:flex;flex-direction:column;box-shadow:0 12px 40px rgba(0,0,0,.35)}
   .vp-head{padding:14px 16px;border-bottom:1px solid var(--rule);display:flex;align-items:center;justify-content:space-between;flex:none}
   .vp-head h3{margin:0;font-size:16px}
   .vp-close{background:none;border:none;font-size:18px;cursor:pointer;color:var(--muted);padding:4px 8px}
@@ -159,9 +159,10 @@
   .vp-row{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:10px;cursor:pointer;border:1px solid transparent}
   .vp-row:hover{background:rgba(127,127,127,.12)}
   .vp-row.current{border-color:var(--accent)}
-  .vp-row .nm{flex:1;min-width:0}
+  .vp-row .nm{flex:none;min-width:0;max-width:38%}
   .vp-row .nm b{display:block;font-size:14px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .vp-row .nm span{font-size:12px;color:var(--muted)}
+  .vp-row .vp-desc{flex:1;min-width:0;font-size:12px;line-height:1.4;color:var(--muted)}
   .vp-prev{background:transparent;border:1px solid var(--rule);color:var(--ink);border-radius:50%;width:36px;height:36px;font-size:13px;cursor:pointer;flex:none}
   .vp-prev:hover{border-color:var(--accent)}
   .vp-check{flex:none;width:22px;text-align:center;color:var(--accent);font-weight:700}
@@ -298,33 +299,62 @@
   .secpage .storyitem h3 a:hover{color:var(--accent)}
   .secpage .lede{font-size:16px;line-height:1.65;color:var(--ink);max-width:70ch;margin:10px 0 6px}
 
+  
+  .sec-head h2 a{color:inherit;text-decoration:none;border-bottom:2px solid transparent}
+  .sec-head h2 a:hover{color:var(--accent);border-bottom-color:var(--accent)}
+  .mini-mast{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 20px;border-bottom:3px double var(--ink);margin-bottom:8px;flex-wrap:wrap}
+  .mini-mast a.brand{font-family:Georgia,'Times New Roman',serif;font-weight:700;font-size:20px;color:var(--ink);text-decoration:none}
+  .mini-mast .ed{font-size:12px;color:var(--muted)}
+  .kicker{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:18px 0 4px}
+  .kicker a{color:var(--accent);text-decoration:none}
+  .detail h1{font-family:Georgia,'Times New Roman',serif;font-size:clamp(26px,5vw,40px);line-height:1.15;margin:6px 0 10px;letter-spacing:-.01em}
+  .detail h4.sec{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--accent);margin:22px 0 6px}
+  .detail p.body{font-size:16px;line-height:1.65;margin:0 0 12px;max-width:68ch}
+  .sourcebox{border:1px solid var(--rule);border-left:4px solid var(--accent);border-radius:8px;padding:12px 16px;margin:18px 0;max-width:68ch}
+  .sourcebox p{font-size:14px;line-height:1.6;margin:6px 0}
+  .sourcebox .flag{display:inline-block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;background:#fde68a;color:#7c2d12;border-radius:4px;padding:2px 8px;margin-bottom:4px}
+  .read-original{display:inline-block;margin:10px 0;padding:10px 20px;background:var(--accent);color:#fff !important;border-radius:8px;font-weight:700;text-decoration:none;font-size:15px}
+  .related{margin-top:28px;border-top:1px solid var(--rule);padding-top:14px}
+  .related h4.sec{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:0 0 10px}
+  .related ul{list-style:none;margin:0;padding:0}
+  .related li{margin:0 0 10px;font-size:15px;line-height:1.45}
+  .related a{color:var(--ink);text-decoration:none;border-bottom:1px solid var(--rule)}
+  .related a:hover{color:var(--accent);border-bottom-color:var(--accent)}
+  .backfoot{margin:30px 0 40px;font-size:14px}
+  .backfoot a{color:var(--accent);text-decoration:none;font-weight:600}
+  .secpage .storyitem{border-bottom:1px solid var(--rule);padding:16px 0}
+  .secpage .storyitem h3{font-size:20px;margin:0 0 6px;line-height:1.3}
+  .secpage .storyitem h3 a{color:var(--ink);text-decoration:none}
+  .secpage .storyitem h3 a:hover{color:var(--accent)}
+  .secpage .lede{font-size:16px;line-height:1.65;color:var(--ink);max-width:70ch;margin:10px 0 6px}
+
   </style>
 </head>
 <body>
 <header class="mini-mast">
   <a class="brand" href="../index.html">📰 The Morning Edition</a>
-  <span class="ed">Thursday, October 15, 2026</span>
+  <span class="ed">Friday, October 16, 2026</span>
   <button id="themeBtn" class="voice-change" style="margin-left:0">Theme: Auto</button>
 </header>
 <main class="detail secpage" style="max-width:860px;margin:0 auto;padding:0 20px">
   <p class="kicker">Section</p>
   <h1>Top Stories</h1>
-  <p class="lede">The three threads running the day: wholesale inflation detonated (+1.3% PPI, biggest in four years) a day after hot CPI, Korea&#x27;s Kospi crashed 7.6% with a full trading halt, and the Supreme Court sided with Trump again on campaign-ad rates weeks before the midterms. Macro, markets, and the Court — Thursday on one page.</p>
+  <p class="lede">The three threads running Friday: Tesla&#x27;s flying Roadster, eight states taking OpenAI to court, and the iPhone Duo&#x27;s 5 AM pre-order — hardware theater, AI regulation, and your employer&#x27;s biggest launch of the season.</p>
   <div class="storyitem">
-      <h3><a href="../articles/2026-10-15-ppi-detonates-wholesale-prices-jump-1-3-biggest-in-four.html">PPI detonates: wholesale prices jump 1.3%, biggest in four years</a></h3>
-      <p class="byline">Barron’s · Oct 15</p>
-      <p class="body">September PPI rose 1.3% month-over-month — the largest monthly advance since March 2022 and far above the 0.5% FactSet consensus — lifting the annual rate to 6.3%, per the BLS; August’s annual figure was revised to 5.6%. The 8:30 a.m. ET reading lands one day after hot September CPI (3.7% headline, core 2.6%) and strengthens the case for a Fed hike at the Oct. 27–28 meeting.</p>
-      <p class="body"><em>Why it matters:</em> The biggest macro data point of the week for his portfolio: wholesale inflation at 6.3% a day after hot CPI, and the number that could decide whether the Fed hikes on Oct. 27–28.</p>
+      <h3><a href="../articles/2026-10-16-teslas-new-roadster-flies-sub-one-second-0-60-reservati.html">Tesla’s new Roadster flies: sub-one-second 0-60, reservations open, production 2028</a></h3>
+      <p class="byline">USA Today · Oct 16</p>
+      <p class="body">At a SpaceX test site in McGregor, Texas, Tesla unveiled the redesigned Roadster with SpaceX-developed thrusters and a suction system: it drove upside down on a ramp, turned in the air, and leapt over parked cars. Claimed 0-60 under one second, top speed past 230 mph, production targeted for 2028. Reservations list a $50,000-deposit Performance model, a $250,000 Thrust variant, and an invitation-only single-seat Rocket with a full flight system. Musk himself called it ’not necessarily a safety optimized car.’</p>
+      <p class="body"><em>Why it matters:</em> A car that flies is the kind of absurd engineering flex you respect — and Musk calling it &#x27;not necessarily a safety optimized car&#x27; is the quote of the week. Also your morning markets reading: the $50K/$250K reservation tiers are halo-car economics made visible.</p>
     </div><div class="storyitem">
-      <h3><a href="../articles/2026-10-15-kospi-crashes-7-6-triggers-trading-halt-as-ai-chip-rout.html">Kospi crashes 7.6%, triggers trading halt as AI chip rout deepens</a></h3>
-      <p class="byline">Aju Press · Oct 15</p>
-      <p class="body">South Korea’s Kospi tumbled 7.57% to close at 5,554.22 on Thursday — its steepest drop since July 28, its seventh straight decline (−21% over the streak), and its lowest close since April 7. Sell-side circuit breakers fired on both Kospi and Kosdaq, followed by a 20-minute full trading halt as the index fell more than 8% intraday; Samsung fell 9.5% and SK Hynix 11.4%, with SK Hynix now down 57% from its June peak. Japan’s Nikkei sank 4.8% and Taiwan’s Taiex −3%, driven by hot U.S. CPI reviving Fed-hike fears plus AI-return doubts.</p>
-      <p class="body"><em>Why it matters:</em> The AI trade&#x27;s sharpest stress test yet — the index fell 7.6% with a full trading halt, and SK Hynix is down 57% from its June peak, which ripples into every AI-infrastructure position he watches.</p>
+      <h3><a href="../articles/2026-10-16-eight-states-sue-openai-over-chatgpt-safety-failures.html">Eight states sue OpenAI over ChatGPT safety failures</a></h3>
+      <p class="byline">NewsNation, via AP · Oct 16</p>
+      <p class="body">State attorneys general allege ChatGPT violated consumer-protection laws — unsafe medical advice, harmful responses, misleading representations about what the technology does — exposing some users, including children, to serious risks. These are the states’ claims, not court findings; OpenAI points to its safety and age-appropriate-experience work. The litigation will test whether consumer-protection rules fit conversational AI used for education, emotional support, and sensitive personal decisions.</p>
+      <p class="body"><em>Why it matters:</em> The AI safety debate just got a courtroom. Eight attorneys general testing consumer-protection law against chatbots is the story that will shape how any AI product can talk to its users — including the prototypes on your own team.</p>
     </div><div class="storyitem">
-      <h3><a href="../articles/2026-10-15-supreme-court-again-sides-with-trump-in-campaign-ad-dis.html">Supreme Court again sides with Trump in campaign-ad dispute</a></h3>
-      <p class="byline">USA Today · Oct 14</p>
-      <p class="body">In an unsigned opinion, the Supreme Court blocked a lower court from ordering the FCC to respond to Democrats’ objections over a new policy letting political parties use the same low ad rates stations must offer candidates — extending a previous pause. Justices Sotomayor and Jackson dissented. The ruling, weeks before the November midterms, benefits Republicans, whose committees have raised far more than Democrats’; a lower court had called the FCC’s stall ’gamesmanship.’</p>
-      <p class="body"><em>Why it matters:</em> The Court keeps tilting the midterm playing field: an unsigned order weeks before the November 3 elections benefits the better-funded side — worth knowing regardless of where he sits.</p>
+      <h3><a href="../articles/2026-10-16-iphone-duo-pre-orders-open-this-morning-1-999-tight-sup.html">iPhone Duo pre-orders open this morning: $1,999, tight supply, repair bills up to $1,499</a></h3>
+      <p class="byline">MacRumors · Oct 16</p>
+      <p class="body">Apple’s first foldable — 7.6-inch inner display, 5.4-inch outer, Touch ID in the side button, A20 Pro, titanium frame — goes on sale in more than 70 countries at 5 AM PT today. $1,999 for 256GB, or $57.99 a month on a 24-month Klarna-run lease; trade-ins worth $175 to $885. Repair fees hit $1,499 without AppleCare+, and supply is rumored tight — launch-day stock may go fast.</p>
+      <p class="body"><em>Why it matters:</em> Your employer&#x27;s first foldable goes on sale at 5 AM today, and it&#x27;s the gadget story of the autumn. The $1,499 unprotected repair fee is the number that will come up at every dinner table this weekend.</p>
     </div>
   <section class="suggestbox" data-buddy-id="news-buddy">
     <h2>Suggestions</h2>

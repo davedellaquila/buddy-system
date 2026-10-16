@@ -150,7 +150,7 @@
   .story-vote.on-down{background:#b42318;border-color:#b42318;color:#fff}
   /* ---------- voice picker ---------- */
   .vp-overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:1000;display:flex;align-items:center;justify-content:center;padding:20px}
-  .vp-card{background:var(--paper);color:var(--ink);border:1px solid var(--rule);border-radius:14px;max-width:480px;width:100%;max-height:82vh;display:flex;flex-direction:column;box-shadow:0 12px 40px rgba(0,0,0,.35)}
+  .vp-card{background:var(--paper);color:var(--ink);border:1px solid var(--rule);border-radius:14px;max-width:560px;width:100%;max-height:82vh;display:flex;flex-direction:column;box-shadow:0 12px 40px rgba(0,0,0,.35)}
   .vp-head{padding:14px 16px;border-bottom:1px solid var(--rule);display:flex;align-items:center;justify-content:space-between;flex:none}
   .vp-head h3{margin:0;font-size:16px}
   .vp-close{background:none;border:none;font-size:18px;cursor:pointer;color:var(--muted);padding:4px 8px}
@@ -159,9 +159,10 @@
   .vp-row{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:10px;cursor:pointer;border:1px solid transparent}
   .vp-row:hover{background:rgba(127,127,127,.12)}
   .vp-row.current{border-color:var(--accent)}
-  .vp-row .nm{flex:1;min-width:0}
+  .vp-row .nm{flex:none;min-width:0;max-width:38%}
   .vp-row .nm b{display:block;font-size:14px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .vp-row .nm span{font-size:12px;color:var(--muted)}
+  .vp-row .vp-desc{flex:1;min-width:0;font-size:12px;line-height:1.4;color:var(--muted)}
   .vp-prev{background:transparent;border:1px solid var(--rule);color:var(--ink);border-radius:50%;width:36px;height:36px;font-size:13px;cursor:pointer;flex:none}
   .vp-prev:hover{border-color:var(--accent)}
   .vp-check{flex:none;width:22px;text-align:center;color:var(--accent);font-weight:700}
@@ -298,38 +299,62 @@
   .secpage .storyitem h3 a:hover{color:var(--accent)}
   .secpage .lede{font-size:16px;line-height:1.65;color:var(--ink);max-width:70ch;margin:10px 0 6px}
 
+  
+  .sec-head h2 a{color:inherit;text-decoration:none;border-bottom:2px solid transparent}
+  .sec-head h2 a:hover{color:var(--accent);border-bottom-color:var(--accent)}
+  .mini-mast{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 20px;border-bottom:3px double var(--ink);margin-bottom:8px;flex-wrap:wrap}
+  .mini-mast a.brand{font-family:Georgia,'Times New Roman',serif;font-weight:700;font-size:20px;color:var(--ink);text-decoration:none}
+  .mini-mast .ed{font-size:12px;color:var(--muted)}
+  .kicker{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:18px 0 4px}
+  .kicker a{color:var(--accent);text-decoration:none}
+  .detail h1{font-family:Georgia,'Times New Roman',serif;font-size:clamp(26px,5vw,40px);line-height:1.15;margin:6px 0 10px;letter-spacing:-.01em}
+  .detail h4.sec{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--accent);margin:22px 0 6px}
+  .detail p.body{font-size:16px;line-height:1.65;margin:0 0 12px;max-width:68ch}
+  .sourcebox{border:1px solid var(--rule);border-left:4px solid var(--accent);border-radius:8px;padding:12px 16px;margin:18px 0;max-width:68ch}
+  .sourcebox p{font-size:14px;line-height:1.6;margin:6px 0}
+  .sourcebox .flag{display:inline-block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;background:#fde68a;color:#7c2d12;border-radius:4px;padding:2px 8px;margin-bottom:4px}
+  .read-original{display:inline-block;margin:10px 0;padding:10px 20px;background:var(--accent);color:#fff !important;border-radius:8px;font-weight:700;text-decoration:none;font-size:15px}
+  .related{margin-top:28px;border-top:1px solid var(--rule);padding-top:14px}
+  .related h4.sec{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:0 0 10px}
+  .related ul{list-style:none;margin:0;padding:0}
+  .related li{margin:0 0 10px;font-size:15px;line-height:1.45}
+  .related a{color:var(--ink);text-decoration:none;border-bottom:1px solid var(--rule)}
+  .related a:hover{color:var(--accent);border-bottom-color:var(--accent)}
+  .backfoot{margin:30px 0 40px;font-size:14px}
+  .backfoot a{color:var(--accent);text-decoration:none;font-weight:600}
+  .secpage .storyitem{border-bottom:1px solid var(--rule);padding:16px 0}
+  .secpage .storyitem h3{font-size:20px;margin:0 0 6px;line-height:1.3}
+  .secpage .storyitem h3 a{color:var(--ink);text-decoration:none}
+  .secpage .storyitem h3 a:hover{color:var(--accent)}
+  .secpage .lede{font-size:16px;line-height:1.65;color:var(--ink);max-width:70ch;margin:10px 0 6px}
+
   </style>
 </head>
 <body>
 <header class="mini-mast">
   <a class="brand" href="../index.html">📰 The Morning Edition</a>
-  <span class="ed">Thursday, October 15, 2026</span>
+  <span class="ed">Friday, October 16, 2026</span>
   <button id="themeBtn" class="voice-change" style="margin-left:0">Theme: Auto</button>
 </header>
 <main class="detail secpage" style="max-width:860px;margin:0 auto;padding:0 20px">
   <p class="kicker">Section</p>
   <h1>Amador County</h1>
-  <p class="lede">Fire weather owns the county this morning: the Red Flag Warning runs through Friday 10 AM with gusts to 45 mph, PG&amp;E says ~4,557 Amador customers could be shut off, and Jackson still tops out at 88°F Saturday before Monday&#x27;s cool-down. Weekend relief: Chris Cain plays Sutter Creek Theatre Saturday night — and California gas just set an October record at $6.34.</p>
+  <p class="lede">The PSPS dominates: ~4,600 county customers dark with the event possibly running through Saturday. Plus the 2025 crop report — wine grapes down, some growers skipping harvest — and the desk&#x27;s Friday PSPS checklist for Fiddletown.</p>
   <div class="storyitem">
-      <h3><a href="../articles/2026-10-15-pg-e-warns-of-possible-public-safety-power-shutoff-4-55.html">PG&amp;E warns of possible Public Safety Power Shutoff: ~4,557 Amador customers in scope</a></h3>
-      <p class="byline">PG&amp;E, via PR Newswire · Oct 14</p>
-      <p class="body">PG&amp;E now says ~88,000 customers across 29 counties may be shut off as the fire-weather forecast hardened, including roughly 4,557 customers in Amador County (401 medical baseline) and 10,793 in Calaveras (554 medical baseline). The shutoff is tied to the same wind event driving today’s Red Flag Warning. Customers can check status at pge.com/pspsupdates.</p>
-      <p class="body"><em>Why it matters:</em> Directly personal: ~4,557 Amador customers (401 medical baseline) could lose power on top of the Red Flag winds — this is the morning to check pge.com/pspsupdates and the fridge.</p>
+      <h3><a href="../articles/2026-10-16-pg-e-shutoff-darkens-87-000-customers-amador-near-4-600.html">PG&amp;E shutoff darkens ~87,000 customers; Amador near 4,600, event could run through Saturday</a></h3>
+      <p class="byline">KION Central Coast · Oct 16</p>
+      <p class="body">The Public Safety Power Shutoff grew from 30,000 customers Monday to an estimated 87,475 by Thursday morning across 29 counties — roughly 4,600 in Amador, 10,790 in Calaveras, 8,757 in El Dorado — and PG&amp;E says more shutoffs are possible Friday morning. The event could continue through Saturday afternoon; 40-plus Community Resource Centers are open across 25 counties with charging, Wi-Fi, water, and supplies.</p>
+      <p class="body"><em>Why it matters:</em> The number that matters to your house: ~4,600 Amador customers dark, event possibly through Saturday. Check pge.com/pspsupdates, not your memory of yesterday&#x27;s map — the scope keeps shifting.</p>
     </div><div class="storyitem">
-      <h3><a href="../articles/2026-10-15-red-flag-warning-through-friday-10-am-jackson-hits-88f.html">Red Flag Warning through Friday 10 AM; Jackson hits 88°F Saturday</a></h3>
-      <p class="byline">InEDC · Oct 14</p>
-      <p class="body">NWS Sacramento’s Red Flag Warning remains in effect until 10 AM Friday for the Sierra and adjacent foothills including Amador: northeast-to-east winds 15–25 mph gusting 25–45 mph, daytime humidity 10–20% with possible single digits and poor overnight recovery — ’any fires that develop will spread rapidly.’ Jackson forecast: Thu 82°F, Fri 86°F, Sat 88°F (heat wave holds), cool-down Monday (high 69°F, showers possible Tuesday).</p>
-      <p class="body"><em>Why it matters:</em> He lives at Fiddletown elevation — winds gusting 25–45 mph with single-digit humidity and poor overnight recovery means no burning, defensible-space thinking, and a 88°F Saturday before Monday&#x27;s cool-down.</p>
+      <h3><a href="../articles/2026-10-16-2025-crop-report-wine-grapes-down-some-growers-skipped.html">2025 crop report: wine grapes down, some growers skipped harvest entirely</a></h3>
+      <p class="byline">Citizen Portal · Oct 7</p>
+      <p class="body">Agricultural Commissioner Eric Mayberry’s annual report put the county’s 10-year agricultural total at $40.9M: wine-grape production and prices fell hard enough that some growers elected not to harvest, timber products dropped, and high cattle prices buoyed livestock totals. A May glassy-winged sharpshooter shipment incident drew a delimitation-trap response.</p>
+      <p class="body"><em>Why it matters:</em> Wine grapes down hard enough that growers left fruit unharvested, timber down, cattle up — your county&#x27;s agricultural economy in one report. The sharpshooter incident is the footnote that could become next year&#x27;s headline.</p>
     </div><div class="storyitem">
-      <h3><a href="../articles/2026-10-15-chris-cain-sutter-creek-theatre-sat-oct-17.html">Chris Cain — Sutter Creek Theatre — Sat Oct 17</a></h3>
-      <p class="byline">Best of Amador · Oct 15</p>
-      <p class="body">Alligator Records blues guitarist/vocalist Chris Cain brings his road-tested band (Steve Evans, Greg Rahn, drummers sharing the skins) to the intimate 215-seat Sutter Creek Theatre on Saturday, Oct 17 at 7 pm; venue listing shows $24 advance / $28 day-of. Last Gold Country stop before he heads to Argentina and then the Legendary Rhythm &amp; Blues Cruise Oct 31 — he’s touring his album Raisin’ Cain.</p>
-      <p class="body"><em>Why it matters:</em> Chris Cain is exactly the caliber of touring bluesman worth the 20-minute drive to Sutter Creek — and his last Gold Country stop before Argentina.</p>
-    </div><div class="storyitem">
-      <h3><a href="../articles/2026-10-15-gas-prices-hit-an-october-record-california-tops-6-34-a.html">Gas prices hit an October record: California tops $6.34 a gallon</a></h3>
-      <p class="byline">Motoring Chronicle · Oct 15</p>
-      <p class="body">AAA’s daily survey puts the national average at $4.36 — the highest ever recorded for this point in October — with California leading at $6.34 a gallon, up ~$1.25 from a year ago. Analysts cite refinery maintenance plus Iran-conflict disruptions; the national average has now topped $4 for 158 consecutive days, a record. No fresh Jackson-specific price surfaced today — the last Jackson Chevron reading (Oct 14) was about $6.35 regular.</p>
-      <p class="body"><em>Why it matters:</em> He drives the Fiddletown–San Jose run regularly — California at a record $6.34 average for this point in October means the mountain-road fill-ups hurt this week.</p>
+      <h3><a href="../articles/2026-10-16-from-the-desk-fridays-psps-watch-for-fiddletown.html">From the desk: Friday’s PSPS watch for Fiddletown</a></h3>
+      <p class="byline">News Buddy desk · Oct 16</p>
+      <p class="body">Wind plus dry conditions keep the PSPS scope shifting — check your address at pge.com/pspsupdates before assuming today’s status, and treat estimated restoration times as optimistic. Upcountry charging fallback: the Community Resource Centers with Wi-Fi and water. And a reminder carried over from this week’s desk notes: burn permits remain suspended; today’s burn status is phone-only.</p>
+      <p class="body"><em>Why it matters:</em> The desk&#x27;s Friday checklist: verify your address on the PSPS map, know your nearest resource center, and remember burn permits are still suspended. Compiled, not reported — the official lines are the source of truth.</p>
     </div>
   <section class="suggestbox" data-buddy-id="news-buddy">
     <h2>Suggestions</h2>

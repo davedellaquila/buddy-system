@@ -150,7 +150,7 @@
   .story-vote.on-down{background:#b42318;border-color:#b42318;color:#fff}
   /* ---------- voice picker ---------- */
   .vp-overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:1000;display:flex;align-items:center;justify-content:center;padding:20px}
-  .vp-card{background:var(--paper);color:var(--ink);border:1px solid var(--rule);border-radius:14px;max-width:480px;width:100%;max-height:82vh;display:flex;flex-direction:column;box-shadow:0 12px 40px rgba(0,0,0,.35)}
+  .vp-card{background:var(--paper);color:var(--ink);border:1px solid var(--rule);border-radius:14px;max-width:560px;width:100%;max-height:82vh;display:flex;flex-direction:column;box-shadow:0 12px 40px rgba(0,0,0,.35)}
   .vp-head{padding:14px 16px;border-bottom:1px solid var(--rule);display:flex;align-items:center;justify-content:space-between;flex:none}
   .vp-head h3{margin:0;font-size:16px}
   .vp-close{background:none;border:none;font-size:18px;cursor:pointer;color:var(--muted);padding:4px 8px}
@@ -159,9 +159,10 @@
   .vp-row{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:10px;cursor:pointer;border:1px solid transparent}
   .vp-row:hover{background:rgba(127,127,127,.12)}
   .vp-row.current{border-color:var(--accent)}
-  .vp-row .nm{flex:1;min-width:0}
+  .vp-row .nm{flex:none;min-width:0;max-width:38%}
   .vp-row .nm b{display:block;font-size:14px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .vp-row .nm span{font-size:12px;color:var(--muted)}
+  .vp-row .vp-desc{flex:1;min-width:0;font-size:12px;line-height:1.4;color:var(--muted)}
   .vp-prev{background:transparent;border:1px solid var(--rule);color:var(--ink);border-radius:50%;width:36px;height:36px;font-size:13px;cursor:pointer;flex:none}
   .vp-prev:hover{border-color:var(--accent)}
   .vp-check{flex:none;width:22px;text-align:center;color:var(--accent);font-weight:700}
@@ -298,33 +299,62 @@
   .secpage .storyitem h3 a:hover{color:var(--accent)}
   .secpage .lede{font-size:16px;line-height:1.65;color:var(--ink);max-width:70ch;margin:10px 0 6px}
 
+  
+  .sec-head h2 a{color:inherit;text-decoration:none;border-bottom:2px solid transparent}
+  .sec-head h2 a:hover{color:var(--accent);border-bottom-color:var(--accent)}
+  .mini-mast{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 20px;border-bottom:3px double var(--ink);margin-bottom:8px;flex-wrap:wrap}
+  .mini-mast a.brand{font-family:Georgia,'Times New Roman',serif;font-weight:700;font-size:20px;color:var(--ink);text-decoration:none}
+  .mini-mast .ed{font-size:12px;color:var(--muted)}
+  .kicker{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:18px 0 4px}
+  .kicker a{color:var(--accent);text-decoration:none}
+  .detail h1{font-family:Georgia,'Times New Roman',serif;font-size:clamp(26px,5vw,40px);line-height:1.15;margin:6px 0 10px;letter-spacing:-.01em}
+  .detail h4.sec{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--accent);margin:22px 0 6px}
+  .detail p.body{font-size:16px;line-height:1.65;margin:0 0 12px;max-width:68ch}
+  .sourcebox{border:1px solid var(--rule);border-left:4px solid var(--accent);border-radius:8px;padding:12px 16px;margin:18px 0;max-width:68ch}
+  .sourcebox p{font-size:14px;line-height:1.6;margin:6px 0}
+  .sourcebox .flag{display:inline-block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;background:#fde68a;color:#7c2d12;border-radius:4px;padding:2px 8px;margin-bottom:4px}
+  .read-original{display:inline-block;margin:10px 0;padding:10px 20px;background:var(--accent);color:#fff !important;border-radius:8px;font-weight:700;text-decoration:none;font-size:15px}
+  .related{margin-top:28px;border-top:1px solid var(--rule);padding-top:14px}
+  .related h4.sec{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:0 0 10px}
+  .related ul{list-style:none;margin:0;padding:0}
+  .related li{margin:0 0 10px;font-size:15px;line-height:1.45}
+  .related a{color:var(--ink);text-decoration:none;border-bottom:1px solid var(--rule)}
+  .related a:hover{color:var(--accent);border-bottom-color:var(--accent)}
+  .backfoot{margin:30px 0 40px;font-size:14px}
+  .backfoot a{color:var(--accent);text-decoration:none;font-weight:600}
+  .secpage .storyitem{border-bottom:1px solid var(--rule);padding:16px 0}
+  .secpage .storyitem h3{font-size:20px;margin:0 0 6px;line-height:1.3}
+  .secpage .storyitem h3 a{color:var(--ink);text-decoration:none}
+  .secpage .storyitem h3 a:hover{color:var(--accent)}
+  .secpage .lede{font-size:16px;line-height:1.65;color:var(--ink);max-width:70ch;margin:10px 0 6px}
+
   </style>
 </head>
 <body>
 <header class="mini-mast">
   <a class="brand" href="../index.html">📰 The Morning Edition</a>
-  <span class="ed">Thursday, October 15, 2026</span>
+  <span class="ed">Friday, October 16, 2026</span>
   <button id="themeBtn" class="voice-change" style="margin-left:0">Theme: Auto</button>
 </header>
 <main class="detail secpage" style="max-width:860px;margin:0 auto;padding:0 20px">
   <p class="kicker">Section</p>
   <h1>Motorsport</h1>
-  <p class="lede">Elimination Sunday is here — Larson&#x27;s 49-point Chase lead goes to Phoenix with eight drivers mathematically on the brink — while MotoGP&#x27;s two-point title fight lands at Phillip Island&#x27;s final-ever round. And IndyCar&#x27;s new-for-2028 IR28 chassis gets its first real validation at Sebring.</p>
+  <p class="lede">Phoenix hosts the whole circus: Trucks tonight, the O&#x27;Reilly 300 Saturday, the Freeway Insurance 500 Sunday. Corey Heim&#x27;s Cup apprenticeship winds down before his full-time 23XI seat, and Larson&#x27;s &#x27;participation awards&#x27; barb hangs over the playoff format.</p>
   <div class="storyitem">
-      <h3><a href="../articles/2026-10-15-nascar-cup-preview-larson-arrives-at-phoenix-with-chase.html">NASCAR Cup preview: Larson arrives at Phoenix with Chase lead under pressure</a></h3>
-      <p class="byline">Speedway Digest · Oct 14</p>
-      <p class="body">Kyle Larson takes a 49-point lead over Denny Hamlin into Sunday’s Freeway Insurance 500 at Phoenix Raceway (12:00 p.m. PT, USA Network) — the first fall Phoenix race since 2019 that isn’t the season finale. Ryan Blaney seeks a third straight Phoenix win after taking both the fall 2025 and spring 2026 races, Christopher Bell led 176 laps in March before finishing second, and Chase Briscoe arrives on back-to-back wins at Las Vegas and Charlotte. Hamlin, the 2025 heartbreak loser at this track, nearly needs a win before the Talladega chaos race on Oct 25.</p>
-      <p class="body"><em>Why it matters:</em> Elimination Sunday is here: eight drivers can be mathematically cut before Talladega, and the points arithmetic (49 points separating Larson and Hamlin) is the kind of systems problem he enjoys.</p>
+      <h3><a href="../articles/2026-10-16-phoenix-triple-header-trucks-tonight-oreilly-saturday-c.html">Phoenix triple-header: Trucks tonight, O’Reilly Saturday, Cup 500 Sunday</a></h3>
+      <p class="byline">The Tennessean · Oct 16</p>
+      <p class="body">All three NASCAR series are at Phoenix Raceway this weekend. Tonight: the Zero Carbon Bioethanol 150 truck race, 7:30 PM ET on FS1 — back on FS1 after the Brewers swept the Dodgers and freed the slot. Saturday: O’Reilly Series and Cup practice/qualifying, then the Blue Cross NC 300. Sunday: the Freeway Insurance 500, 3 PM ET on USA — Phoenix’s first non-season-finale playoff race since 2019. No F1, no MotoGP this weekend.</p>
+      <p class="body"><em>Why it matters:</em> Your weekend TV sorted: Trucks tonight at 7:30 ET on FS1, the Cup 500 Sunday at 3 PM ET on USA. Phoenix&#x27;s first non-finale playoff race in seven years — the elimination math gets real.</p>
     </div><div class="storyitem">
-      <h3><a href="../articles/2026-10-15-form-guide-2026-australian-motogp-the-title-fight-lands.html">Form guide: 2026 Australian MotoGP — the title fight lands at Phillip Island</a></h3>
-      <p class="byline">Australian Motorcycle News · Oct 14</p>
-      <p class="body">Jorge Martín (355) leads Marc Márquez (353) by two points heading into MotoGP’s final-ever Phillip Island round, Oct 23–25, before the series moves to Adelaide in 2027. AMCN’s form guide picks over a compelling three-rider fight — Martín’s momentum, Márquez’s recovery from a 102-point deficit after a crash in France left his right arm numb, and Marco Bezzecchi’s commanding Mandalika win — and argues up to eight riders could realistically contest the Island podium. Ducati’s Davide Tardozzi says Phillip Island’s long, high-lean-angle corners could favor the Aprilia RS-GP.</p>
-      <p class="body"><em>Why it matters:</em> A two-point title fight at Phillip Island&#x27;s final-ever round — mid-corner grip vs. bravery is pure bike-dynamics storytelling, and the factory bosses openly disagree on who the track favors.</p>
+      <h3><a href="../articles/2026-10-16-corey-heim-gets-two-more-cup-starts-before-his-full-tim.html">Corey Heim gets two more Cup starts before his full-time 23XI move</a></h3>
+      <p class="byline">Beyond the Flag · Oct 16</p>
+      <p class="body">The Truck Series standout gets two more Cup starts — the open No. 67 at Phoenix plus the Homestead finale — before replacing Riley Herbst in the No. 35 Toyota full-time next year. His Cup points-per-race average would have placed him solidly in the playoffs over a full schedule.</p>
+      <p class="body"><em>Why it matters:</em> Two more Cup starts, then the No. 35 full-time — and his points-per-race average says he belonged in the playoffs all along. The 23XI pipeline keeps producing.</p>
     </div><div class="storyitem">
-      <h3><a href="../articles/2026-10-15-rossi-logs-134-laps-in-indycars-new-ir28-chassis-at-seb.html">Rossi logs 134 laps in IndyCar’s new IR28 chassis at Sebring</a></h3>
-      <p class="byline">Indianapolis Star · Oct 13</p>
-      <p class="body">Alexander Rossi logged 134 laps in IndyCar’s new-for-2028 Dallara IR28 chassis at Sebring on Oct 13, a day after Alex Palou’s session ended at 43 laps with a fuel system issue. Unlike the summer IMS shakedowns, drivers were told to run the car ’as if it’s your race car’ — Sebring’s rough, street-course-like surface is the first non-IMS validation of the wider-cockpit, better-cooled chassis. Palou also drives an Indy NXT car for the first time at Friday’s Chris Griffis Memorial Test at IMS, filling in for the injured Carson Etter.</p>
-      <p class="body"><em>Why it matters:</em> Engineering on four wheels: the new-for-2028 IR28 chassis gets its first real validation on Sebring&#x27;s brutal surface, and Rossi&#x27;s 134 laps vs. Palou&#x27;s fuel-issue stoppage is genuine development telemetry.</p>
+      <h3><a href="../articles/2026-10-16-larson-stage-points-are-participation-awards-and-now-th.html">Larson: stage points are ’participation awards’ — and now they decide titles</a></h3>
+      <p class="byline">Beyond the Flag · Oct 14</p>
+      <p class="body">Kyle Larson called stage points what he says they are — participation awards — and the playoff format now runs on them: 10th versus 11th, a third of the way into a race two months before the finale, can effectively decide who gets crowned champion. NASCAR itself skipped stage points for the title contenders once, tacitly admitting his point.</p>
+      <p class="body"><em>Why it matters:</em> &#x27;Participation awards&#x27; — Larson said what plenty of fans think, and the format&#x27;s defenders had no answer when NASCAR itself skipped stage points for the title race once. The playoff legitimacy debate in one quote.</p>
     </div>
   <section class="suggestbox" data-buddy-id="news-buddy">
     <h2>Suggestions</h2>

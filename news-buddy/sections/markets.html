@@ -150,7 +150,7 @@
   .story-vote.on-down{background:#b42318;border-color:#b42318;color:#fff}
   /* ---------- voice picker ---------- */
   .vp-overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:1000;display:flex;align-items:center;justify-content:center;padding:20px}
-  .vp-card{background:var(--paper);color:var(--ink);border:1px solid var(--rule);border-radius:14px;max-width:480px;width:100%;max-height:82vh;display:flex;flex-direction:column;box-shadow:0 12px 40px rgba(0,0,0,.35)}
+  .vp-card{background:var(--paper);color:var(--ink);border:1px solid var(--rule);border-radius:14px;max-width:560px;width:100%;max-height:82vh;display:flex;flex-direction:column;box-shadow:0 12px 40px rgba(0,0,0,.35)}
   .vp-head{padding:14px 16px;border-bottom:1px solid var(--rule);display:flex;align-items:center;justify-content:space-between;flex:none}
   .vp-head h3{margin:0;font-size:16px}
   .vp-close{background:none;border:none;font-size:18px;cursor:pointer;color:var(--muted);padding:4px 8px}
@@ -159,9 +159,10 @@
   .vp-row{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:10px;cursor:pointer;border:1px solid transparent}
   .vp-row:hover{background:rgba(127,127,127,.12)}
   .vp-row.current{border-color:var(--accent)}
-  .vp-row .nm{flex:1;min-width:0}
+  .vp-row .nm{flex:none;min-width:0;max-width:38%}
   .vp-row .nm b{display:block;font-size:14px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .vp-row .nm span{font-size:12px;color:var(--muted)}
+  .vp-row .vp-desc{flex:1;min-width:0;font-size:12px;line-height:1.4;color:var(--muted)}
   .vp-prev{background:transparent;border:1px solid var(--rule);color:var(--ink);border-radius:50%;width:36px;height:36px;font-size:13px;cursor:pointer;flex:none}
   .vp-prev:hover{border-color:var(--accent)}
   .vp-check{flex:none;width:22px;text-align:center;color:var(--accent);font-weight:700}
@@ -298,33 +299,62 @@
   .secpage .storyitem h3 a:hover{color:var(--accent)}
   .secpage .lede{font-size:16px;line-height:1.65;color:var(--ink);max-width:70ch;margin:10px 0 6px}
 
+  
+  .sec-head h2 a{color:inherit;text-decoration:none;border-bottom:2px solid transparent}
+  .sec-head h2 a:hover{color:var(--accent);border-bottom-color:var(--accent)}
+  .mini-mast{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 20px;border-bottom:3px double var(--ink);margin-bottom:8px;flex-wrap:wrap}
+  .mini-mast a.brand{font-family:Georgia,'Times New Roman',serif;font-weight:700;font-size:20px;color:var(--ink);text-decoration:none}
+  .mini-mast .ed{font-size:12px;color:var(--muted)}
+  .kicker{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:18px 0 4px}
+  .kicker a{color:var(--accent);text-decoration:none}
+  .detail h1{font-family:Georgia,'Times New Roman',serif;font-size:clamp(26px,5vw,40px);line-height:1.15;margin:6px 0 10px;letter-spacing:-.01em}
+  .detail h4.sec{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--accent);margin:22px 0 6px}
+  .detail p.body{font-size:16px;line-height:1.65;margin:0 0 12px;max-width:68ch}
+  .sourcebox{border:1px solid var(--rule);border-left:4px solid var(--accent);border-radius:8px;padding:12px 16px;margin:18px 0;max-width:68ch}
+  .sourcebox p{font-size:14px;line-height:1.6;margin:6px 0}
+  .sourcebox .flag{display:inline-block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;background:#fde68a;color:#7c2d12;border-radius:4px;padding:2px 8px;margin-bottom:4px}
+  .read-original{display:inline-block;margin:10px 0;padding:10px 20px;background:var(--accent);color:#fff !important;border-radius:8px;font-weight:700;text-decoration:none;font-size:15px}
+  .related{margin-top:28px;border-top:1px solid var(--rule);padding-top:14px}
+  .related h4.sec{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:0 0 10px}
+  .related ul{list-style:none;margin:0;padding:0}
+  .related li{margin:0 0 10px;font-size:15px;line-height:1.45}
+  .related a{color:var(--ink);text-decoration:none;border-bottom:1px solid var(--rule)}
+  .related a:hover{color:var(--accent);border-bottom-color:var(--accent)}
+  .backfoot{margin:30px 0 40px;font-size:14px}
+  .backfoot a{color:var(--accent);text-decoration:none;font-weight:600}
+  .secpage .storyitem{border-bottom:1px solid var(--rule);padding:16px 0}
+  .secpage .storyitem h3{font-size:20px;margin:0 0 6px;line-height:1.3}
+  .secpage .storyitem h3 a{color:var(--ink);text-decoration:none}
+  .secpage .storyitem h3 a:hover{color:var(--accent)}
+  .secpage .lede{font-size:16px;line-height:1.65;color:var(--ink);max-width:70ch;margin:10px 0 6px}
+
   </style>
 </head>
 <body>
 <header class="mini-mast">
   <a class="brand" href="../index.html">📰 The Morning Edition</a>
-  <span class="ed">Thursday, October 15, 2026</span>
+  <span class="ed">Friday, October 16, 2026</span>
   <button id="themeBtn" class="voice-change" style="margin-left:0">Theme: Auto</button>
 </header>
 <main class="detail secpage" style="max-width:860px;margin:0 auto;padding:0 20px">
   <p class="kicker">Section</p>
   <h1>Markets</h1>
-  <p class="lede">The tape is a staring contest: a coin-toss October hike, Warsh facing open pushback ahead of his last word tonight in Bangkok, futures red and the 10-year back to ~5.09% after the Kospi crashed 7.6%. Bank earnings day three: U.S. Bancorp beat and raised guidance.</p>
+  <p class="lede">Rotation Friday: the Dow jumped 556 as money fled the AI trade, TSMC&#x27;s Q4 guide beat by 9%, and Warsh said nothing in Bangkok — which the market took as good news. Futures steady into the close of a bruising week.</p>
   <div class="storyitem">
-      <h3><a href="../articles/2026-10-15-warshs-quiet-fed-draws-vocal-pushback-october-hike-now.html">Warsh’s ’quiet Fed’ draws vocal pushback; October hike now a coin toss</a></h3>
-      <p class="byline">Reuters · Oct 15</p>
-      <p class="body">Reuters reports Fed Chair Kevin Warsh’s push for a ’quieter’ central bank is facing open pushback from colleagues: 40+ appearances by Fed officials have convinced traders to scale back hike bets mounted after September’s rate increase. After hot CPI (3.7% y/y; core 0.3% m/m vs 0.2% expected), CME FedWatch has an October hike as roughly a coin toss — spiking to ~44–50% right after the CPI print, then easing under 40% later Wednesday. Warsh gets the last word before the blackout period (which starts Saturday): he speaks tonight at 11:30 p.m. ET (8:30 p.m. PT) with IMF chief Kristalina Georgieva at the IMF meetings in Bangkok.</p>
-      <p class="body"><em>Why it matters:</em> The single biggest swing factor for everything he holds: a coin-toss October hike, a Fed chair facing open pushback, and Warsh&#x27;s own last word tonight in Bangkok before the blackout — the tape is a staring contest.</p>
+      <h3><a href="../articles/2026-10-16-dow-jumps-556-as-investors-rotate-out-of-the-ai-trade.html">Dow jumps 556 as investors rotate out of the AI trade</a></h3>
+      <p class="byline">Investopedia · Oct 16</p>
+      <p class="body">The Dow rose 1.1% while the Nasdaq erased a 1.4% intraday fall to close up 0.1% — the rotation trade: money out of AI names, into consumer and healthcare. The equal-weight S&amp;P gained 1.4%, and over half of S&amp;P stocks now trade above their 200-day average. The 10-year fell 10bp to 5.09%. Still fragile: CoreWeave slipped premarket, chips slid, and Rocket Lab fell 6.6% on a Neutron delay to 2027.</p>
+      <p class="body"><em>Why it matters:</em> Your 401(k)&#x27;s week in one chart: out of AI, into everything else. The equal-weight S&amp;P outperforming the cap-weighted one is the tell that this is rotation, not panic.</p>
     </div><div class="storyitem">
-      <h3><a href="../articles/2026-10-15-the-morning-brief-futures-red-yields-pull-back-gold-reb.html">The morning brief: futures red, yields pull back, gold rebounds</a></h3>
-      <p class="byline">Investopedia · Oct 15</p>
-      <p class="body">Nasdaq and S&amp;P 500 futures pointed lower (−1.2% and −0.3% respectively; Dow futures flat) as the tech sell-off continued after Wednesday’s CPI; the 10-year Treasury yield pulled back to ~5.09%, a three-week low after spiking to 5.33% post-CPI; today’s data calendar (PPI, retail sales, jobless claims); and TSMC shares slipping despite a solid Q3 earnings beat. Also: WTI at ~$94.17, gold futures up 1.4% to $4,165, bitcoin at $80,800 after falling from above $84,000. Wednesday’s close: S&amp;P 500 7,718.94 (−1.1%, worst day since July 29), Nasdaq 26,692.87 (−1.9%), Dow 51,621.48 (−0.1%).</p>
-      <p class="body"><em>Why it matters:</em> The market-morning-brief format he upvoted, fresh: futures red, the 10-year back to ~5.09%, gold bouncing, and the full data calendar (PPI already detonated; retail sales and jobless claims still to come) on one page.</p>
+      <h3><a href="../articles/2026-10-16-tsmc-beats-q3-guides-q4-revenue-9-above-estimates-on-2n.html">TSMC beats Q3, guides Q4 revenue 9% above estimates on 2nm ramp</a></h3>
+      <p class="byline">Market Index live blog · Oct 16</p>
+      <p class="body">September-quarter revenue up 41% to $46.72B with high-performance computing at 68% of revenue; Q4 guidance of $52.3-54.3B sits 9% above consensus, implying 14% quarter-on-quarter growth. Gross margin guidance of 66% beats estimates even with initial dilution from the 2nm ramp.</p>
+      <p class="body"><em>Why it matters:</em> The single most important supplier in your professional universe just guided Q4 9% above consensus on the 2nm ramp. When TSMC guides like this, the whole hardware stack breathes easier.</p>
     </div><div class="storyitem">
-      <h3><a href="../articles/2026-10-15-u-s-bancorp-tops-q3-estimates-raises-full-year-guidance.html">U.S. Bancorp tops Q3 estimates, raises full-year guidance</a></h3>
-      <p class="byline">Seeking Alpha · Oct 15</p>
-      <p class="body">The fifth-largest U.S. commercial bank reported Thursday morning: adjusted EPS of $1.41 vs. $1.32 consensus, GAAP EPS $1.34 (+10% from $1.22 a year ago), net income up 10% to $2.21B. Record net revenue of $7.97B (+8.7%), with capital-markets revenue up 69.3%, payments transformation driving 6.5% combined revenue growth, and efficiency ratio improving to 55.9%. Management raised FY26 guidance: net revenue growth of 8–9% with ~300bp of positive operating leverage.</p>
-      <p class="body"><em>Why it matters:</em> Day 3 of bank earnings is the regional-bank read on the economy&#x27;s pulse: a 69.3% jump in capital-markets revenue and raised FY26 guidance is the strongest signal yet that the deal/IB engine is still running.</p>
+      <h3><a href="../articles/2026-10-16-futures-steady-to-end-a-volatile-week-warsh-stays-mum-i.html">Futures steady to end a volatile week; Warsh stays mum in Bangkok</a></h3>
+      <p class="byline">Reuters · Oct 16</p>
+      <p class="body">Futures are muted into the final session of a volatile week — the Nasdaq is on pace to snap a four-week winning streak. Fed Chair Warsh, speaking in Bangkok, declined to ’prejudge meetings’ and offered no signal on October; CME odds sit near 15% for an October hike and ~89% for December. Asia steadied: the Kospi bounced 2% after Thursday’s 7.6% crash.</p>
+      <p class="body"><em>Why it matters:</em> Warsh said nothing in Bangkok and the market heard good news — 15% October-hike odds heading into the blackout is the number to watch. A calm Friday close after this week would be a small mercy.</p>
     </div>
   <section class="suggestbox" data-buddy-id="news-buddy">
     <h2>Suggestions</h2>

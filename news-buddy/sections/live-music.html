@@ -150,7 +150,7 @@
   .story-vote.on-down{background:#b42318;border-color:#b42318;color:#fff}
   /* ---------- voice picker ---------- */
   .vp-overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:1000;display:flex;align-items:center;justify-content:center;padding:20px}
-  .vp-card{background:var(--paper);color:var(--ink);border:1px solid var(--rule);border-radius:14px;max-width:480px;width:100%;max-height:82vh;display:flex;flex-direction:column;box-shadow:0 12px 40px rgba(0,0,0,.35)}
+  .vp-card{background:var(--paper);color:var(--ink);border:1px solid var(--rule);border-radius:14px;max-width:560px;width:100%;max-height:82vh;display:flex;flex-direction:column;box-shadow:0 12px 40px rgba(0,0,0,.35)}
   .vp-head{padding:14px 16px;border-bottom:1px solid var(--rule);display:flex;align-items:center;justify-content:space-between;flex:none}
   .vp-head h3{margin:0;font-size:16px}
   .vp-close{background:none;border:none;font-size:18px;cursor:pointer;color:var(--muted);padding:4px 8px}
@@ -159,9 +159,10 @@
   .vp-row{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:10px;cursor:pointer;border:1px solid transparent}
   .vp-row:hover{background:rgba(127,127,127,.12)}
   .vp-row.current{border-color:var(--accent)}
-  .vp-row .nm{flex:1;min-width:0}
+  .vp-row .nm{flex:none;min-width:0;max-width:38%}
   .vp-row .nm b{display:block;font-size:14px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .vp-row .nm span{font-size:12px;color:var(--muted)}
+  .vp-row .vp-desc{flex:1;min-width:0;font-size:12px;line-height:1.4;color:var(--muted)}
   .vp-prev{background:transparent;border:1px solid var(--rule);color:var(--ink);border-radius:50%;width:36px;height:36px;font-size:13px;cursor:pointer;flex:none}
   .vp-prev:hover{border-color:var(--accent)}
   .vp-check{flex:none;width:22px;text-align:center;color:var(--accent);font-weight:700}
@@ -298,38 +299,67 @@
   .secpage .storyitem h3 a:hover{color:var(--accent)}
   .secpage .lede{font-size:16px;line-height:1.65;color:var(--ink);max-width:70ch;margin:10px 0 6px}
 
+  
+  .sec-head h2 a{color:inherit;text-decoration:none;border-bottom:2px solid transparent}
+  .sec-head h2 a:hover{color:var(--accent);border-bottom-color:var(--accent)}
+  .mini-mast{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 20px;border-bottom:3px double var(--ink);margin-bottom:8px;flex-wrap:wrap}
+  .mini-mast a.brand{font-family:Georgia,'Times New Roman',serif;font-weight:700;font-size:20px;color:var(--ink);text-decoration:none}
+  .mini-mast .ed{font-size:12px;color:var(--muted)}
+  .kicker{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:18px 0 4px}
+  .kicker a{color:var(--accent);text-decoration:none}
+  .detail h1{font-family:Georgia,'Times New Roman',serif;font-size:clamp(26px,5vw,40px);line-height:1.15;margin:6px 0 10px;letter-spacing:-.01em}
+  .detail h4.sec{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--accent);margin:22px 0 6px}
+  .detail p.body{font-size:16px;line-height:1.65;margin:0 0 12px;max-width:68ch}
+  .sourcebox{border:1px solid var(--rule);border-left:4px solid var(--accent);border-radius:8px;padding:12px 16px;margin:18px 0;max-width:68ch}
+  .sourcebox p{font-size:14px;line-height:1.6;margin:6px 0}
+  .sourcebox .flag{display:inline-block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;background:#fde68a;color:#7c2d12;border-radius:4px;padding:2px 8px;margin-bottom:4px}
+  .read-original{display:inline-block;margin:10px 0;padding:10px 20px;background:var(--accent);color:#fff !important;border-radius:8px;font-weight:700;text-decoration:none;font-size:15px}
+  .related{margin-top:28px;border-top:1px solid var(--rule);padding-top:14px}
+  .related h4.sec{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:0 0 10px}
+  .related ul{list-style:none;margin:0;padding:0}
+  .related li{margin:0 0 10px;font-size:15px;line-height:1.45}
+  .related a{color:var(--ink);text-decoration:none;border-bottom:1px solid var(--rule)}
+  .related a:hover{color:var(--accent);border-bottom-color:var(--accent)}
+  .backfoot{margin:30px 0 40px;font-size:14px}
+  .backfoot a{color:var(--accent);text-decoration:none;font-weight:600}
+  .secpage .storyitem{border-bottom:1px solid var(--rule);padding:16px 0}
+  .secpage .storyitem h3{font-size:20px;margin:0 0 6px;line-height:1.3}
+  .secpage .storyitem h3 a{color:var(--ink);text-decoration:none}
+  .secpage .storyitem h3 a:hover{color:var(--accent)}
+  .secpage .lede{font-size:16px;line-height:1.65;color:var(--ink);max-width:70ch;margin:10px 0 6px}
+
   </style>
 </head>
 <body>
 <header class="mini-mast">
   <a class="brand" href="../index.html">📰 The Morning Edition</a>
-  <span class="ed">Thursday, October 15, 2026</span>
+  <span class="ed">Friday, October 16, 2026</span>
   <button id="themeBtn" class="voice-change" style="margin-left:0">Theme: Auto</button>
 </header>
 <main class="detail secpage" style="max-width:860px;margin:0 auto;padding:0 20px">
   <p class="kicker">Section</p>
   <h1>Live Music</h1>
-  <p class="lede">A proper Thursday: the Aquabats&#x27; costumed ska chaos at Ace of Spades and Juanes at Hard Rock Live Wheatland both play tonight, then She Wants Revenge and Demon Hunter round out Saturday. Four rooms, two nights, no wrong answers.</p>
+  <p class="lede">A genuinely stacked Sacramento weekend: Breakaway Festival at Cal Expo tonight and Saturday, Brit Floyd in Wheatland tonight, the Wallflowers in Rocklin Saturday, Steel Pulse Sunday — and Doja Cat at Golden 1 on Tuesday.</p>
   <div class="storyitem">
-      <h3><a href="../articles/2026-10-15-the-aquabats-ace-of-spades-sacramento-tonight.html">The Aquabats — Ace of Spades, Sacramento — tonight</a></h3>
-      <p class="byline">Ace of Spades listings · Oct 15</p>
-      <p class="body">The Aquabats bring their ’Trick-or-Treat to the Beat’ tour to Ace of Spades (1417 R St, Sacramento) tonight, Thursday Oct 15, doors 6 pm, with Manic Hispanic and Sullvn; tickets from about $39 on the venue listing. Costumed ska-comedy chaos is a Sacramento-October tradition.</p>
-      <p class="body"><em>Why it matters:</em> Tonight&#x27;s easy option: costumed ska-comedy chaos at Ace of Spades, doors 6 pm — the kind of unpretentious midweek show his live-music habits are built on.</p>
+      <h3><a href="../articles/2026-10-16-breakaway-music-festival-hits-cal-expo-tonight-and-satu.html">Breakaway Music Festival hits Cal Expo tonight and Saturday</a></h3>
+      <p class="byline">SeatGeek listings · Oct 16</p>
+      <p class="body">The NorCal EDM festival takes over the California Exposition and State Fair tonight and Saturday — two-day passes from $252. Separately tonight, Diplo plays Ramona Ave Landing with Dustin Lynch and Wuki, from $24.</p>
+      <p class="body"><em>Why it matters:</em> The weekend&#x27;s biggest Sacramento music event is at Cal Expo tonight and tomorrow — and if EDM isn&#x27;t your speed, Diplo&#x27;s separate Ramona Ave set with Dustin Lynch is the odd-couple billing of the season.</p>
     </div><div class="storyitem">
-      <h3><a href="../articles/2026-10-15-juanes-hard-rock-live-wheatland-tonight.html">Juanes — Hard Rock Live, Wheatland — tonight</a></h3>
-      <p class="byline">Songkick listings · Oct 15</p>
-      <p class="body">Colombian rock superstar Juanes plays Hard Rock Live (3317 Forty Mile Rd, Wheatland) tonight, Thursday Oct 15 at 8 pm, with Andrea Bejar. Wheatland is the easy north-of-Sacramento casino venue on the Fiddletown-to-Sacramento corridor.</p>
-      <p class="body"><em>Why it matters:</em> A 25-time Latin Grammy winner in a 2,500-seat room an hour away is a genuinely notable get — tonight at Hard Rock Live, on the Fiddletown-to-Sacramento corridor.</p>
+      <h3><a href="../articles/2026-10-16-brit-floyd-brings-the-pink-floyd-catalog-to-hard-rock-l.html">Brit Floyd brings the Pink Floyd catalog to Hard Rock Live tonight</a></h3>
+      <p class="byline">Sacramento Theater listings · Oct 16</p>
+      <p class="body">The Pink Floyd tribute brings the full catalog to Hard Rock Live Sacramento in Wheatland tonight; tickets from $61.</p>
+      <p class="body"><em>Why it matters:</em> Tonight in Wheatland: the full Pink Floyd catalog, tribute-band division. An easy Friday-night option an hour up the road.</p>
     </div><div class="storyitem">
-      <h3><a href="../articles/2026-10-15-she-wants-revenge-ace-of-spades-sacramento-sat-oct-17.html">She Wants Revenge — Ace of Spades, Sacramento — Sat Oct 17</a></h3>
-      <p class="byline">Ace of Spades listings · Oct 15</p>
-      <p class="body">She Wants Revenge plays Ace of Spades (1417 R St, Sacramento) Saturday, Oct 17 at 8 pm, with Rosegarden Funeral Party; tickets from about $37 on the venue listing. Dark-wave nostalgia on the R Street corridor.</p>
-      <p class="body"><em>Why it matters:</em> Saturday&#x27;s dark-wave option at Ace of Spades with Rosegarden Funeral Party — nostalgia-adjacent but with teeth.</p>
+      <h3><a href="../articles/2026-10-16-doja-cat-at-golden-1-center-tuesday-oct-20.html">Doja Cat at Golden 1 Center, Tuesday Oct 20</a></h3>
+      <p class="byline">Sacramento Theater listings · Oct 16</p>
+      <p class="body">The rescheduled arena date — moved to clear Golden 1 for the Valkyries’ first WNBA Finals game — lands Tuesday, Oct 20. Tickets from $68.</p>
+      <p class="body"><em>Why it matters:</em> Tuesday at Golden 1 — the rescheduled date from the Valkyries Finals shuffle. If you were holding out for this one, it&#x27;s three days away.</p>
     </div><div class="storyitem">
-      <h3><a href="../articles/2026-10-15-demon-hunter-goldfield-trading-post-roseville-sat-oct-1.html">Demon Hunter — Goldfield Trading Post, Roseville — Sat Oct 17</a></h3>
-      <p class="byline">Songkick listings · Oct 15</p>
-      <p class="body">Demon Hunter brings its metalcore tour to the Goldfield Trading Post’s Roseville room (238 Vernon St) Saturday, Oct 17 at 6:30 pm, with Bloodlines and Wolves at the Gate; tickets from about $47. Note the room: this is the Roseville Goldfield, not Sacramento.</p>
-      <p class="body"><em>Why it matters:</em> Saturday metalcore at the Roseville Goldfield — and the venue is the Roseville room, not Sacramento, so nobody drives to the wrong Goldfield again.</p>
+      <h3><a href="../articles/2026-10-16-saturday-the-wallflowers-at-quarry-park-sunday-steel-pu.html">Saturday: The Wallflowers at Quarry Park; Sunday: Steel Pulse</a></h3>
+      <p class="byline">SeatGeek listings · Oct 16</p>
+      <p class="body">Saturday: The Wallflowers at the Amphitheater at Quarry Park in Rocklin, from $71. Sunday: Steel Pulse, from $65. A full weekend within an hour’s drive.</p>
+      <p class="body"><em>Why it matters:</em> Saturday&#x27;s Wallflowers at Quarry Park and Sunday&#x27;s Steel Pulse close out a genuinely stacked weekend within an hour&#x27;s drive. Pick your night.</p>
     </div>
   <section class="suggestbox" data-buddy-id="news-buddy">
     <h2>Suggestions</h2>
