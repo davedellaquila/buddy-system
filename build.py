@@ -524,10 +524,12 @@ body.sb-closed #pane-toggles .ptoggle{padding:6px 4px}
 #treepane-orph.mini .standalones h2{margin:0;font-size:15px}
 #treepane-orph.mini .standalones .sub,#treepane-orph.mini .standalones .grid{display:none}
 #treepane-orph.mini .zoombar{display:none}
-/* Slim horizontal zoom — tucked into the top-right corner of each pane (Dave 2026-10-16:
-   rotated from vertical; aligns with the top edge of both the chart and orphan panes).
-   No panel chrome; small▪ · slider · large◼ · fit · center. */
-.zoombar{position:absolute;top:76px;left:50%;transform:translateX(-50%);right:auto;z-index:5;
+/* Slim horizontal zoom — pinned top-left of each pane (Dave 2026-10-16: rotated
+   from vertical; aligns with the top edge of both the chart and orphan panes).
+   FIXED horizontal position (Dave 2026-10-16): no centering, no transition, no
+   panel-shift — it never slides around. Top-left keeps it clear of the info
+   panel, which slides in from the right. No panel chrome; small▪ · slider · large◼ · fit · center. */
+.zoombar{position:absolute;top:76px;left:12px;right:auto;transform:none;z-index:5;
   display:flex;flex-direction:row;align-items:center;gap:8px;width:auto;height:auto;
   padding:0;margin:0;background:none;border:none;border-radius:0;box-shadow:none;
   -webkit-tap-highlight-color:transparent}
@@ -555,16 +557,10 @@ input[type=range].zrange::-moz-range-thumb{width:16px;height:16px;border-radius:
   font-size:13px;width:22px;height:22px;padding:0;cursor:pointer;line-height:1;
   text-shadow:0 0 4px var(--bg),0 0 8px var(--bg)}
 .zcenter:hover{color:var(--text);background:transparent}
-/* Dave 2026-10-15: keep zoom controls visible when the info panel is open.
-   The panel slides in from the right (z-index above the zoombar), so shift
-   the zoombar left by the panel width. Smooth transition matches the panel's
-   slide timing. Only applies to the side-panel layout (desktop/tablet) —
-   on mobile the panel is a full-screen sheet (correct modal behavior). */
-.zoombar{transition:left .5s cubic-bezier(.32,.72,.35,1)}
-body:has(#view-buddy.panel.active):not(.bp-collapsed) #zoombar-main,
-body:has(#view-buddy.panel.active):not(.bp-collapsed) #zoombar-orph{
-  left:calc((100% - var(--bpw, 440px))/2);}
-}
+/* Dave 2026-10-16: the zoombar is pinned top-left (above) — fixed horizontal
+   position, never slides. The Oct 15 panel-shift rule and the left transition
+   are removed; top-left keeps the control clear of the info panel, which
+   slides in from the right. */
 /* Fixed to viewport at sidebar edge so vertical #sidebar scroll doesn't move it.
    MUST be a DOM sibling of #sidebar (not a child): overflow on #sidebar clips
    hit-testing/paint for fixed descendants, which made the gripper invisible. */
@@ -1091,7 +1087,7 @@ body.standalone .sa-bar{display:flex}
   /* Tree keeps the org chart on phones — pan with a finger, zoom with the floating slider */
   .standalones .grid{display:block}
   /* Vertical zoom on the right — fat hit areas (≈44px), no filled panel */
-  .zoombar{right:4px;z-index:30;padding:8px 4px;gap:4px}
+  .zoombar{left:auto;right:4px;z-index:30;padding:8px 4px;gap:4px}
   input[type=range].zrange{width:140px;height:44px}
   .zfit,.zcenter{width:44px;height:44px;font-size:14px;display:flex;align-items:center;justify-content:center}
   .zoombar .z-out,.zoombar .z-in{padding:4px 0}

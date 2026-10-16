@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-10-16 (Zoom control pinned)
+
+### Fixed
+- **Zoom control no longer slides around** (Dave 2026-10-16): the Atlas zoombar was centered (`left:50%`) with a `left` transition plus a panel-open re-centering rule, so it visibly slid whenever the pane resized or the info panel opened/closed. It is now pinned top-left of its pane (`left:12px`, no transform, no transition, no panel-shift) — one fixed horizontal position, always. Top-left keeps it clear of the info panel sliding in from the right (this supersedes the "Zoombar: centered" change from earlier today — centering and a fixed position are mutually exclusive). Mobile keeps its right-anchored placement (now with explicit `left:auto`).
+
 ## 2026-10-16 (Zoombar: centered)
 
 ### Changed
