@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-10-16 (Tip jar victory lap)
+
+### Changed
+- **Tip jar races across the screen** (Dave 2026-10-16): a jar clone now zips left-to-right across the viewport trailing smoke puffs (💨/☁️), with a slight tilt. Fires on click (alongside the poof explosion) and once ~2.5s after page load as a hello. Respects prefers-reduced-motion.
+
 ## 2026-10-16 (Tip jar delight)
 
 ### Changed

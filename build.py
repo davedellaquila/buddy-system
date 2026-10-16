@@ -130,6 +130,14 @@ body.sb-anchored #sidebar .brand, body.sb-anchored #sidebar .sb-tipjar{backgroun
 @keyframes tip-poof{40%{transform:scale(1.4) rotate(8deg);opacity:1}100%{transform:scale(.1) rotate(-20deg);opacity:0}}
 .poof-particle{position:absolute;left:50%;top:50%;font-size:14px;pointer-events:none;animation:poof-fly .6s ease-out forwards}
 @keyframes poof-fly{to{transform:translate(var(--px),var(--py)) scale(.3);opacity:0}}
+/* Dave 2026-10-16: the tip jar races across the screen left-to-right with a smoke trail. */
+.racing-jar{position:fixed;left:0;z-index:9999;pointer-events:none;font-size:22px;
+  filter:drop-shadow(0 2px 6px rgba(0,0,0,.3));
+  animation:jar-race 1.8s cubic-bezier(.25,.6,.35,1) forwards}
+@keyframes jar-race{from{transform:translateX(-80px) rotate(-12deg)}to{transform:translateX(calc(100vw + 80px)) rotate(12deg)}}
+.jar-smoke{position:fixed;z-index:9998;pointer-events:none;opacity:.75;
+  animation:smoke-fade 1.1s ease-out forwards}
+@keyframes smoke-fade{to{transform:translateY(-24px) scale(2.2);opacity:0}}
 .sb-tipjar a:hover{text-decoration:underline}
 /* Tip jar party: slide → wiggle → flip → bounce → explode → shake → glow, then rest (Dave 2026-10-14) */
 @keyframes tipjar-party{
@@ -158,7 +166,7 @@ body.sb-anchored #sidebar .brand, body.sb-anchored #sidebar .sb-tipjar{backgroun
 @keyframes tipjar-glow{0%,100%{text-shadow:0 0 0 rgba(0,0,0,0)}50%{text-shadow:0 0 12px var(--accent)}}
 .sb-tipjar a{animation:tipjar-party 9s ease-in-out infinite}
 .sb-tipjar a:hover{animation:tipjar-party 9s ease-in-out infinite,tipjar-glow 1.2s ease-in-out infinite}
-@media (prefers-reduced-motion:reduce){.sb-tipjar .tiptext{animation:none;-webkit-text-fill-color:initial;color:var(--muted);background:none}.sb-tipjar a:hover .jar{animation:none}}
+@media (prefers-reduced-motion:reduce){.sb-tipjar .tiptext{animation:none;-webkit-text-fill-color:initial;color:var(--muted);background:none}.sb-tipjar a:hover .jar{animation:none}.racing-jar,.jar-smoke{display:none}}
 .sb-brand-sticky{
   position:sticky;top:0;z-index:7;background:var(--panel);
   margin:0 -14px;padding:0 14px;
@@ -7138,6 +7146,10 @@ async function createBuddyFromDialog(name, icon, kind, parentId, errEl, createBt
     if (mode === 'parent' && forId && byId[forId]) {
       const oldP = effParent(byId[forId]) || '__root';
       byId[forId].parent = nid;
+      /* Dave 2026-10-16: a stale S.parents override (from a previous picker
+         change) would shadow the new parent via effParents — route through
+         applyParentOverride so it clears, exactly like the picker's Save. */
+      applyParentOverride(forId, nid);
       const sibs = kidsOf[oldP] || [];
       const ix = sibs.indexOf(byId[forId]);
       if (ix >= 0) sibs.splice(ix, 1);
@@ -7512,12 +7524,40 @@ function tipPoof(){
       link.appendChild(p);
       setTimeout((function(el){ return function(){ el.remove(); }; })(p), 700);
     }
+    tipJarRace();
     setTimeout(function(){
       window.open(href, '_blank', 'noopener');
       link.classList.remove('poofing');
     }, 550);
   });
   a.dataset.poofed = '1';
+}
+/* Dave 2026-10-16: tip jar victory lap — a jar clone races left-to-right across the
+   viewport trailing smoke puffs. Fires on click (with the poof) and once shortly
+   after load as a hello. */
+function tipJarRace(){
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  var src = document.querySelector('.sb-tipjar .jar'); if (!src) return;
+  var r = src.getBoundingClientRect();
+  var j = document.createElement('div');
+  j.className = 'racing-jar';
+  j.textContent = '🫙';
+  j.style.top = (r.top + r.height / 2 - 14) + 'px';
+  document.body.appendChild(j);
+  var smokes = ['💨','☁️'];
+  var iv = setInterval(function(){
+    var jr = j.getBoundingClientRect();
+    if (jr.left > window.innerWidth){ clearInterval(iv); return; }
+    var s = document.createElement('div');
+    s.className = 'jar-smoke';
+    s.textContent = smokes[Math.floor(Math.random() * smokes.length)];
+    s.style.fontSize = (8 + Math.random() * 10) + 'px';
+    s.style.left = (jr.left + 4) + 'px';
+    s.style.top = (jr.top + jr.height / 2 - 6) + 'px';
+    document.body.appendChild(s);
+    setTimeout(function(){ s.remove(); }, 1200);
+  }, 70);
+  j.addEventListener('animationend', function(){ clearInterval(iv); j.remove(); });
 }
 function renderTokenRow(id){
   const st = document.getElementById('pstat'); if (!st || document.getElementById('ghtok')) return;
@@ -9344,6 +9384,7 @@ flushPendingDumps();
 // Flush any global renames queued while offline or token-less (Dave 2026-10-16)
 flushPendingRenames();
 tipPoof();
+setTimeout(tipJarRace, 2500);
 initGear();
 initSbToTop();
 initBpToTop();
