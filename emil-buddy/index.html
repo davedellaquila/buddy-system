@@ -151,7 +151,7 @@ h2 { font-size: 22px; margin: 32px 0 16px; }
 
 <section class="dumpbox" data-buddy-id="emil-buddy">
 <h2>🧠 Brain dump</h2>
-<p class="dumpbox-sub">Dump what's on your mind about Emil Dell&#x27;Aquila — raw and unfiltered. Each dump lands in the buddy's repo (docs/ingest.md) as a timestamped entry — or saves on this device until a GitHub token is connected.</p>
+<p class="dumpbox-sub">Dump what's on your mind about Emil Dell&#x27;Aquila — raw and unfiltered. Each dump lands in the buddy's repo (docs/ingest.md) as a timestamped entry — or saves on this device until a repo is linked and a token is connected.</p>
 <div class="dumpbox-token" hidden>
 <p>🔒 Connect GitHub to unlock dumping. Paste a token once — it stays on this device only.</p>
 <div class="dumpbox-tokenrow">
@@ -230,10 +230,11 @@ Generated 2026-10-16 · Part of the Buddy System
       }
     } catch(e){}
   }
-  /* Local fallback (Dave 2026-10-15): dumping works with no GitHub token —
-     entries are saved in this device's localStorage as a temporary workaround
-     until the GitHub write path is working properly. The backlog flushes into
-     the repo on the next successful GitHub dump. */
+  /* Local fallback (Dave 2026-10-15, widened 2026-10-16): dumping always works,
+     even with no GitHub token AND no repo linked — entries are saved in this
+     device's localStorage until the GitHub write path can take them. The backlog
+     flushes into the repo on the next successful GitHub dump (once a repo is
+     linked and a token is present). */
   function localKey(){ return 'buddyTree.ingest.' + bid; }
   function localBacklog(){
     try { var a = JSON.parse(localStorage.getItem(localKey()) || '[]'); return Array.isArray(a) ? a : []; }
@@ -247,11 +248,16 @@ Generated 2026-10-16 · Part of the Buddy System
   function refreshUI(){
     var has = !!token();
     tokWrap.hidden = has;
-    var ok = !!repo; /* local fallback needs no token */
-    ta.disabled = !ok;
-    btn.disabled = !ok;
-    if (!repo) { st.textContent = 'No repo linked for this buddy yet.'; return; }
+    /* The box always works: no token and/or no repo just means local saves. */
+    ta.disabled = false;
+    btn.disabled = false;
     var n = localBacklog().length;
+    if (!repo) {
+      st.textContent = n
+        ? n + ' local ' + (n === 1 ? 'dump' : 'dumps') + ' saved on this device — will sync when a repo is linked.'
+        : 'No repo linked yet — dumps save on this device and will sync when one is linked.';
+      return;
+    }
     st.textContent = has
       ? (n ? n + ' local ' + (n === 1 ? 'dump' : 'dumps') + ' will sync on next dump.' : '')
       : 'No GitHub token — dumps save on this device for now.';
@@ -269,9 +275,16 @@ Generated 2026-10-16 · Part of the Buddy System
   async function dump(){
     var text = ta.value.trim();
     if (!text) return;
-    if (!repo) { st.textContent = 'No repo linked for this buddy yet.'; return; }
     var stamp = new Date().toLocaleString();
     var NL = String.fromCharCode(10);
+    if (!repo) {
+      /* No repo linked yet — save on this device; syncs once one is linked. */
+      localSave({t: stamp, text: text});
+      ta.value = '';
+      st.textContent = '✓ Saved on this device — will sync to the repo once one is linked.';
+      refreshUI();
+      return;
+    }
     if (!token()) {
       /* Temporary workaround: no token → save on this device. */
       localSave({t: stamp, text: text});

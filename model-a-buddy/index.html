@@ -1,62 +1,100 @@
-<!-- DEFAULT-HOMEPAGE v3 — "The Dossier" -->
+<!-- BUDDY-BASIC-TEMPLATE v2 -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="color-scheme" content="dark light">
-<title>Model A Buddy — Buddy Dossier</title>
+<title>Model A Buddy</title>
 <style>
-:root{color-scheme:dark light;--bg:#0d1117;--card:#161b22;--border:#30363d;--text:#e6edf3;--muted:#8b949e;--accent:#58a6ff;--amber:#f0b429;--amber-bd:#7d5e00}
-@media (prefers-color-scheme:light){:root{--bg:#ffffff;--card:#f6f8fa;--border:#d0d7de;--text:#1f2328;--muted:#57606a;--accent:#0969da}}
-body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;margin:0;line-height:1.6}
-.wrap{max-width:860px;margin:0 auto;padding:40px 22px 60px}
-header.hero{display:flex;gap:18px;align-items:center;margin-bottom:8px}
-.heroicon{width:72px;height:72px;flex:none;border-radius:20px;background:var(--card);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:38px}
-h1{margin:0;font-size:30px;letter-spacing:-.02em}
-.tagline{color:var(--muted);margin:6px 0 0;font-size:15px}
-.stats{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0 28px}
-.stat{font-size:12.5px;color:var(--muted);background:var(--card);border:1px solid var(--border);border-radius:999px;padding:4px 12px}
-.stat b{color:var(--text)}
-.status{font-size:12.5px;font-weight:700;border-radius:999px;padding:4px 12px;background:var(--card);border:1px solid var(--border)}
-.card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px 22px;margin-bottom:20px}
-.kicker{margin:0 0 10px;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:var(--muted)}
-.mission{font-size:16px;margin:0 0 10px}
-.brief{color:var(--muted);font-size:14px}
-.persona{font-size:14px;margin:8px 0 0}
-.facts{margin:0;display:grid;gap:2px}
-.fact{display:grid;grid-template-columns:150px 1fr;gap:12px;padding:7px 0;border-top:1px solid var(--border);font-size:14px}
-.fact:first-child{border-top:0}
-.fact dt{color:var(--muted);font-weight:600}
-.fact dd{margin:0;overflow-wrap:break-word}
-code{background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:1px 6px;font-size:13px}
-a{color:var(--accent);text-decoration:none}
-a:hover{text-decoration:underline}
-.aitem{display:flex;gap:10px;padding:10px 0;font-size:14px}
-.aitem+.aitem{border-top:1px solid var(--border)}
-.adot{color:var(--amber);font-size:11px;line-height:2;flex:none}
-.adate{color:var(--muted);font-size:12px;margin-top:2px}
-.plan{display:flex;gap:12px;padding:12px 0}
-.plan+.plan{border-top:1px solid var(--border)}
-.picon{font-size:24px;flex:none}
-.pname{font-weight:650;font-size:15px}
-.pill{display:inline-block;font-size:11px;font-weight:700;background:var(--bg);border:1px solid var(--border);color:var(--accent);border-radius:999px;padding:2px 10px;margin-left:8px}
-.pdesc{margin:6px 0 0;color:var(--muted);font-size:13.5px}
-.pdoc{display:inline-block;margin-top:6px;font-size:13px}
-.docrow{padding:8px 0;font-size:14.5px}
-.docrow+.docrow{border-top:1px solid var(--border)}
-.kids{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px}
-.kid{display:flex;align-items:center;gap:10px;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:10px 12px;color:var(--text)}
-.kid:hover{text-decoration:none;border-color:var(--accent)}
-.kidicon{font-size:22px}
-.kidname{font-size:14px;font-weight:600}
-.connrow{display:flex;gap:12px;padding:8px 0;font-size:14px;align-items:baseline}
-.connrow+.connrow{border-top:1px solid var(--border)}
-.connlabel{flex:none;width:110px;color:var(--muted);font-weight:600;font-size:13px}
-.pinrow{padding:6px 0;font-size:14px}
-.muted{color:var(--muted);font-size:13px}
-.empty{color:var(--muted);font-style:italic;margin:4px 0}
-footer{margin-top:36px;padding-top:18px;border-top:1px solid var(--border);color:var(--muted);font-size:12.5px;text-align:center}
+:root {
+  --bg: #ffffff;
+  --text: #1a1a1a;
+  --muted: #666;
+  --card: #f5f5f5;
+  --border: #e0e0e0;
+  --accent: #0066cc;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #1a1a1a;
+    --text: #e0e0e0;
+    --muted: #999;
+    --card: #2a2a2a;
+    --border: #3a3a3a;
+    --accent: #4da6ff;
+  }
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  padding: 40px 20px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+.header { text-align: center; margin-bottom: 40px; }
+.topbar {
+  position: sticky; top: 0; z-index: 50;
+  display: flex; align-items: center; gap: 10px;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+  padding: 10px 2px; margin-bottom: 24px;
+  font-size: 17px; font-weight: 700;
+}
+.topbar-icon { font-size: 22px; line-height: 1; }
+.icon { font-size: 64px; margin-bottom: 16px; }
+h1 { font-size: 32px; margin-bottom: 8px; }
+.tagline { color: var(--muted); font-size: 18px; }
+.mission {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 32px;
+  font-size: 17px;
+}
+h2 { font-size: 22px; margin: 32px 0 16px; }
+.attn {
+  background: var(--card);
+  border-left: 4px solid var(--accent);
+  border-radius: 0 8px 8px 0;
+  padding: 16px 20px;
+  margin-bottom: 12px;
+}
+.attn-date { color: var(--muted); font-size: 14px; margin-top: 8px; }
+.attn-actions { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
+.attn-btn {
+  border: 1px solid var(--border); background: var(--bg); color: var(--text);
+  border-radius: 8px; padding: 7px 14px; font-size: 13px; font-weight: 600; cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.attn-btn:hover { border-color: var(--accent); }
+.attn-btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+.attn-btn:disabled { opacity: .45; cursor: default; }
+.attn-status { font-size: 13px; color: var(--muted); margin-top: 8px; min-height: 18px; }
+.attn.resolved { opacity: .6; }
+.attn.resolved .attn-actions { display: none; }
+.children { display: flex; flex-wrap: wrap; gap: 12px; }
+.child {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px 20px;
+  text-decoration: none;
+  color: var(--text);
+}
+.child:hover { border-color: var(--accent); }
+.footer {
+  margin-top: 48px;
+  padding-top: 24px;
+  border-top: 1px solid var(--border);
+  color: var(--muted);
+  font-size: 14px;
+  text-align: center;
+}
+.empty { color: var(--muted); font-style: italic; }
 
 .dumpbox {
   background: var(--card);
@@ -97,29 +135,23 @@ footer{margin-top:36px;padding-top:18px;border-top:1px solid var(--border);color
 }
 .dumpbox-tokenrow a { color: var(--accent); font-size: 13px; }
 
-@media (max-width:640px){.fact{grid-template-columns:1fr;gap:2px}.connlabel{width:88px}.wrap{padding:28px 16px 48px}h1{font-size:24px}}
 </style>
 </head>
 <body>
-<div class="wrap">
-<header class="hero">
-<div class="heroicon">🚗</div>
-<div><h1>Model A Buddy</h1><p class="tagline">1931 Ford Model A — Emil&#x27;s concours estate car, going to market</p></div>
-</header>
-<nav data-buddy-crumb style="margin-bottom:14px;font-size:14px;"><a href="https://davedellaquila.github.io/buddy-system/car-buddy/" style="color:var(--muted);text-decoration:none;">← Car Buddy</a></nav>
-<div class="stats"><span class="status st-new">New</span><span class="stat"><b>1</b> need attention</span><span class="stat"><b>2</b> documents</span></div>
-<section class="card"><h2 class="kicker">About</h2><p class="mission">Keeper of Dave&#x27;s dad Emil&#x27;s 1931 Ford Model A — a concours-condition estate car. Holds the spec sheet, history, and paperwork (title, registration, insurance); tracks where the car is and where it&#x27;s going. Now building the sale listing: the info page that earns a buyer&#x27;s trust and the best price.</p><p class="brief">https://docs.google.com/document/d/1fhOZirzWaGF-1xshCy-pjI1NiIbYuWBsY_wGidaRXaA/edit</p><p class="persona">🎭 Persona: Classic-car caretaker</p></section>
-<section class="card"><h2 class="kicker">Fact sheet — the data chain</h2><dl class="facts"><div class="fact"><dt>Buddy ID</dt><dd><code>model-a-buddy</code></dd></div><div class="fact"><dt>Kind</dt><dd>standalone</dd></div><div class="fact"><dt>Parent chain</dt><dd><a href="../astro/">🚀 Astro</a> › <a href="../car-buddy/">🚗 Car Buddy</a></dd></div><div class="fact"><dt>Repository</dt><dd><a href="https://github.com/davedellaquila/model-a-buddy" target="_blank" rel="noopener">davedellaquila/model-a-buddy</a></dd></div><div class="fact"><dt>Homepage URL</dt><dd><code>model-a-buddy/</code></dd></div></dl></section>
-<section class="card"><h2 class="kicker">Needs attention (1)</h2><div class="attn"><div class="aitem"><span class="adot">●</span><div><div><a href="https://docs.google.com/document/d/1fhOZirzWaGF-1xshCy-pjI1NiIbYuWBsY_wGidaRXaA/edit" target="_blank" rel="noopener">Spec sheet ready for Dave&#x27;s review — body style, color, VIN, mileage, restoration history still TBD. ↗</a></div><div class="adate">2026-10-16</div></div></div></div></section>
+<nav data-buddy-crumb style="padding:14px 20px 0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:14px;line-height:1.4;"><a href="https://davedellaquila.github.io/buddy-system/car-buddy/" style="color:inherit;opacity:.65;text-decoration:none;">← Car Buddy</a></nav>
+<div class="topbar"><span class="topbar-icon">🚗</span><span class="topbar-name">Model A Buddy</span></div>
+<div class="header">
+<div class="icon">🚗</div>
+<h1>Model A Buddy</h1>
+<div class="tagline">1931 Ford Model A — Emil&#x27;s concours estate car, going to market</div>
+</div>
 
-<section class="card"><h2 class="kicker">Documents (2)</h2><div class="docrow"><a href="https://docs.google.com/document/d/1fhOZirzWaGF-1xshCy-pjI1NiIbYuWBsY_wGidaRXaA/edit" target="_blank" rel="noopener">1931 Ford Model A — Spec Sheet</a></div><div class="docrow"><a href="https://github.com/davedellaquila/model-a-buddy/blob/master/docs/sale-page-brief.md" target="_blank" rel="noopener">For-Sale Page Brief — Johnny&#x27;s council</a></div></section>
-<section class="card"><h2 class="kicker">Sub-buddies (0)</h2><p class="empty">No sub-buddies.</p></section>
-<section class="card"><h2 class="kicker">Connections</h2><div class="connrow"><span class="connlabel">Parent</span><a href="../car-buddy/">🚗 Car Buddy</a></div><div class="connrow"><span class="connlabel">Siblings</span><a href="../bmw-buddy/">🚗 BMW</a>, <a href="../hans-buddy/">👨‍🔧 Hans</a>, <a href="../mga-buddy/">🏎️ MGA Buddy</a>, <a href="../ml500-buddy/">🚙 ML500 Buddy</a>, <a href="../rachel-buddy/">🔧 Rachel</a></div></section>
-<section class="card"><h2 class="kicker">Repository &amp; memory</h2><div class="connrow"><span class="connlabel">Repo</span><a href="https://github.com/davedellaquila/model-a-buddy" target="_blank" rel="noopener">davedellaquila/model-a-buddy</a> <span class="muted">— brain dumps land in docs/ingest.md</span></div></section>
+<div class="mission">Keeper of Dave&#x27;s dad Emil&#x27;s 1931 Ford Model A — a concours-condition estate car. Holds the spec sheet, history, and paperwork (title, registration, insurance); tracks where the car is and where it&#x27;s going. Now building the sale listing: the info page that earns a buyer&#x27;s trust and the best price.</div>
+
 
 <section class="dumpbox" data-buddy-id="model-a-buddy">
 <h2>🧠 Brain dump</h2>
-<p class="dumpbox-sub">Dump what's on your mind about Model A Buddy — raw and unfiltered. Each dump lands in the buddy's repo (docs/ingest.md) as a timestamped entry — or saves on this device until a GitHub token is connected.</p>
+<p class="dumpbox-sub">Dump what's on your mind about Model A Buddy — raw and unfiltered. Each dump lands in the buddy's repo (docs/ingest.md) as a timestamped entry — or saves on this device until a repo is linked and a token is connected.</p>
 <div class="dumpbox-token" hidden>
 <p>🔒 Connect GitHub to unlock dumping. Paste a token once — it stays on this device only.</p>
 <div class="dumpbox-tokenrow">
@@ -135,8 +167,15 @@ footer{margin-top:36px;padding-top:18px;border-top:1px solid var(--border);color
 </div>
 </section>
 
-<footer>Default Homepage v3 — "The Dossier" · Generated 2026-10-16 · Part of the Buddy System<br>
-<span class="muted">Archived PDF snapshots live in the buddy-system archive folder.</span></footer>
+
+<h2>Needs Attention</h2>
+<div class="attn" data-attn-id="model-a-spec-review"><div class="attn-text">Spec sheet ready for Dave&#x27;s review — body style, color, VIN, mileage, restoration history still TBD.</div><div class="attn-date">2026-10-16</div><div class="attn-actions"><button type="button" class="attn-btn primary" data-act="done">✓ Done</button><button type="button" class="attn-btn" data-act="info">Need more info</button></div><div class="attn-status" role="status"></div></div>
+
+
+
+
+<div class="footer">
+Generated 2026-10-16 · Part of the Buddy System
 </div>
 
 <script>
@@ -145,7 +184,7 @@ footer{margin-top:36px;padding-top:18px;border-top:1px solid var(--border);color
   if (!box || box.dataset.dumpInit) return;
   box.dataset.dumpInit = '1';
   var bid = box.getAttribute('data-buddy-id') || (function(){
-    var p = location.pathname.replace(/\\/+$/, '');
+    var p = location.pathname.replace(/\/+$/, '');
     return p.substring(p.lastIndexOf('/') + 1);
   })();
   var ta = box.querySelector('textarea'),
@@ -175,7 +214,7 @@ footer{margin-top:36px;padding-top:18px;border-top:1px solid var(--border);color
     try {
       var j = await ghApi('/repos/davedellaquila/' + repo + '/contents/' + path);
       if (j && j.content) return {
-        text: new TextDecoder().decode(Uint8Array.from(atob(j.content.replace(/\\n/g, '')), function(c){ return c.charCodeAt(0); })),
+        text: new TextDecoder().decode(Uint8Array.from(atob(j.content.replace(/\n/g, '')), function(c){ return c.charCodeAt(0); })),
         sha: j.sha
       };
     } catch(e){}
@@ -192,10 +231,11 @@ footer{margin-top:36px;padding-top:18px;border-top:1px solid var(--border);color
       }
     } catch(e){}
   }
-  /* Local fallback (Dave 2026-10-15): dumping works with no GitHub token —
-     entries are saved in this device's localStorage as a temporary workaround
-     until the GitHub write path is working properly. The backlog flushes into
-     the repo on the next successful GitHub dump. */
+  /* Local fallback (Dave 2026-10-15, widened 2026-10-16): dumping always works,
+     even with no GitHub token AND no repo linked — entries are saved in this
+     device's localStorage until the GitHub write path can take them. The backlog
+     flushes into the repo on the next successful GitHub dump (once a repo is
+     linked and a token is present). */
   function localKey(){ return 'buddyTree.ingest.' + bid; }
   function localBacklog(){
     try { var a = JSON.parse(localStorage.getItem(localKey()) || '[]'); return Array.isArray(a) ? a : []; }
@@ -209,11 +249,16 @@ footer{margin-top:36px;padding-top:18px;border-top:1px solid var(--border);color
   function refreshUI(){
     var has = !!token();
     tokWrap.hidden = has;
-    var ok = !!repo; /* local fallback needs no token */
-    ta.disabled = !ok;
-    btn.disabled = !ok;
-    if (!repo) { st.textContent = 'No repo linked for this buddy yet.'; return; }
+    /* The box always works: no token and/or no repo just means local saves. */
+    ta.disabled = false;
+    btn.disabled = false;
     var n = localBacklog().length;
+    if (!repo) {
+      st.textContent = n
+        ? n + ' local ' + (n === 1 ? 'dump' : 'dumps') + ' saved on this device — will sync when a repo is linked.'
+        : 'No repo linked yet — dumps save on this device and will sync when one is linked.';
+      return;
+    }
     st.textContent = has
       ? (n ? n + ' local ' + (n === 1 ? 'dump' : 'dumps') + ' will sync on next dump.' : '')
       : 'No GitHub token — dumps save on this device for now.';
@@ -231,9 +276,16 @@ footer{margin-top:36px;padding-top:18px;border-top:1px solid var(--border);color
   async function dump(){
     var text = ta.value.trim();
     if (!text) return;
-    if (!repo) { st.textContent = 'No repo linked for this buddy yet.'; return; }
     var stamp = new Date().toLocaleString();
     var NL = String.fromCharCode(10);
+    if (!repo) {
+      /* No repo linked yet — save on this device; syncs once one is linked. */
+      localSave({t: stamp, text: text});
+      ta.value = '';
+      st.textContent = '✓ Saved on this device — will sync to the repo once one is linked.';
+      refreshUI();
+      return;
+    }
     if (!token()) {
       /* Temporary workaround: no token → save on this device. */
       localSave({t: stamp, text: text});
@@ -274,7 +326,7 @@ footer{margin-top:36px;padding-top:18px;border-top:1px solid var(--border);color
   if (!tiles.length) return;
   var dumpbox = document.querySelector('.dumpbox');
   var bid = (dumpbox && dumpbox.getAttribute('data-buddy-id')) || (function(){
-    var p = location.pathname.replace(/\\/+$/, '');
+    var p = location.pathname.replace(/\/+$/, '');
     return p.substring(p.lastIndexOf('/') + 1);
   })();
   function lsGet(){ try { return JSON.parse(localStorage.getItem('buddyTree.v3') || '{}'); } catch(e){ return {}; } }
@@ -300,7 +352,7 @@ footer{margin-top:36px;padding-top:18px;border-top:1px solid var(--border);color
     try {
       var j = await ghApi('/repos/davedellaquila/' + repo + '/contents/' + path);
       if (j && j.content) return {
-        text: new TextDecoder().decode(Uint8Array.from(atob(j.content.replace(/\\n/g, '')), function(c){ return c.charCodeAt(0); })),
+        text: new TextDecoder().decode(Uint8Array.from(atob(j.content.replace(/\n/g, '')), function(c){ return c.charCodeAt(0); })),
         sha: j.sha
       };
     } catch(e){}
