@@ -72,12 +72,9 @@ body{padding:0}
   -webkit-backdrop-filter:blur(20px) saturate(1.4);backdrop-filter:blur(20px) saturate(1.4);
   transition:transform .5s cubic-bezier(.32,.72,.35,1), visibility 0s}
 body.sb-closed #sidebar{width:64px;padding:12px 8px;overflow:visible;height:auto;max-height:calc(100dvh - 24px);top:12px;bottom:auto;border-radius:18px;
-  left:auto;right:12px;background:color-mix(in srgb, var(--panel) 82%, transparent);
+  left:12px;right:auto;background:color-mix(in srgb, var(--panel) 82%, transparent);
   -webkit-backdrop-filter:blur(20px) saturate(1.8);backdrop-filter:blur(20px) saturate(1.8);
   border:1px solid var(--border);box-shadow:0 8px 32px var(--shadow)}
-/* Dave 2026-10-16: the collapsed rail lives on the right now — keep the buddy-panel
-   section rail from colliding with it by docking it to the bottom-right instead. */
-body.sb-closed #bp-rail{top:auto;bottom:12px}
 body.sb-closed #sidebar .brand, body.sb-closed #sidebar .sb-search-sticky,
 body.sb-closed #sidebar #buddies-sec, body.sb-closed #sidebar #plans-sec,
 body.sb-closed #sidebar .sb-tipjar, body.sb-closed #sidebar #sb-tools #sb-gear,

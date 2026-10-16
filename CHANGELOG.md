@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-10-16 (Collapsed rail: back to left)
+
+### Changed
+- **Collapsed sidebar rail back on the left** (Dave 2026-10-16): this morning's batch had moved it right to avoid covering the main view's menu pills — Dave wants it left. Reverted, along with the buddy-panel rail dodge that went with it.
+
 ## 2026-10-16 (Gallery thumbnails + lightbox)
 
 ### Changed
