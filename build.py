@@ -6891,7 +6891,7 @@ const ADD_KINDS = [['assistant','Assistant'],['family','Person'],['place','Place
 function slugifyBuddy(name){
   return name.toLowerCase().trim().replace(/['']/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'').slice(0,40) || 'buddy';
 }
-function openAddBuddyDialog(mode, forId){
+function openAddBuddyDialog(mode, forId, onCreated){
   const ref = byId[forId]; if (!ref) return;
   const parentId = mode === 'child' ? forId : mode === 'parent' ? effParent(ref) : effParent(ref);
   const parentName = parentId && byId[parentId] ? dispName(byId[parentId]) : 'top level';
@@ -6929,7 +6929,7 @@ function openAddBuddyDialog(mode, forId){
   }));
   nameInput.addEventListener('input', () => { createBtn.disabled = !nameInput.value.trim(); errEl.textContent = ''; });
   nameInput.addEventListener('keydown', e => { if (e.key === 'Enter' && !createBtn.disabled) createBtn.click(); if (e.key === 'Escape') closeAddBuddyDialog(); });
-  createBtn.addEventListener('click', () => createBuddyFromDialog(nameInput.value.trim(), icon, kind, parentId, errEl, createBtn, mode, forId));
+  createBtn.addEventListener('click', () => createBuddyFromDialog(nameInput.value.trim(), icon, kind, parentId, errEl, createBtn, mode, forId, onCreated));
   setTimeout(() => nameInput.focus(), 50);
 }
 function closeAddBuddyDialog(){
@@ -7075,7 +7075,7 @@ function initNewBuddyFab(){
   fab.dataset.init = '1';
   fab.addEventListener('click', e => { e.stopPropagation(); openNewBuddyRequest(); });
 }
-async function createBuddyFromDialog(name, icon, kind, parentId, errEl, createBtn, mode, forId){
+async function createBuddyFromDialog(name, icon, kind, parentId, errEl, createBtn, mode, forId, onCreated){
   errEl.textContent = '';
   createBtn.disabled = true;
   createBtn.textContent = 'Creating…';
@@ -7124,6 +7124,7 @@ async function createBuddyFromDialog(name, icon, kind, parentId, errEl, createBt
     save(); renderNav(); refreshViews();
     if (S.projectId) renderBuddy(S.projectId);
     toast('Buddy created — Astro will run the full onboarding.');
+    if (typeof onCreated === 'function') onCreated(nid);
   } catch (e) {
     errEl.textContent = e.message || String(e);
     createBtn.disabled = false;
@@ -7277,10 +7278,12 @@ function openChangeParentDialog(bid, mode){
     + opts.map(optHtml).join('')
     + '</select>'
     + (hiddenCount > 0 ? '<p class="fineprint" style="margin-top:6px">' + hiddenCount + ' hidden \u2014 a buddy can\u2019t be its own ancestor.</p>' : '')
-    + '<div style="display:flex;gap:10px;justify-content:flex-end;margin-top:18px">'
+    + '<div style="display:flex;gap:10px;justify-content:space-between;align-items:center;margin-top:18px">'
+    + '<button class="linkbtn" id="cp-newparent" type="button" style="font-weight:600">+ New parent\u2026</button>'
+    + '<div style="display:flex;gap:10px">'
     + '<button class="linkbtn" id="cp-cancel" type="button">Cancel</button>'
     + '<button class="linkbtn" id="cp-save" type="button" style="font-weight:600">Save</button>'
-    + '</div></div>';
+    + '</div></div></div>';
   document.body.appendChild(m);
   const close = () => m.remove();
   const sel = m.querySelector('#cp-select'), filt = m.querySelector('#cp-filter');
@@ -7322,6 +7325,22 @@ function openChangeParentDialog(bid, mode){
   m.querySelector('.ab-backdrop').addEventListener('click', close);
   m.querySelector('#cp-cancel').addEventListener('click', close);
   m.querySelector('#cp-save').addEventListener('click', doSave);
+  /* Dave 2026-10-16: create a brand-new parent from the picker — for when the
+     filter doesn't show the parent you're looking for. Change mode: the new
+     buddy is created above this one (the existing 'parent' add flow). Add
+     mode: created as a peer, then added as an additional parent. */
+  m.querySelector('#cp-newparent').addEventListener('click', () => {
+    close();
+    if (addMode) {
+      openAddBuddyDialog('peer', bid, (nid) => {
+        addParentOverride(bid, nid); save(); buildKids(); renderNav(); refreshViews();
+        if (S.sel === 'buddy:' + bid) renderBuddy(bid);
+        toast(dispName(byId[nid]) + ' added as a parent of ' + dispName(b) + '.');
+      });
+    } else {
+      openAddBuddyDialog('parent', bid);
+    }
+  });
 }
 async function ghDeleteFile(repo, path, msg){
   const t = ghToken(); if (!t) throw new Error('Add a GitHub token first.');

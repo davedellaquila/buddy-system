@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-10-16 (New-parent button in the parent picker)
+
+### Added
+- **➕ "+ New parent…" in the change-parent picker** (Dave 2026-10-16 — the filterable parent list had no way to create a parent that isn't there yet): the Change/Add parent dialog now has a "+ New parent…" button next to Cancel/Save. Change mode opens the existing "Add a parent" dialog (new buddy created above, current buddy reparented under it); Add mode creates the new buddy as a peer and adds it as an additional parent via the parent override. `openAddBuddyDialog`/`createBuddyFromDialog` take an optional `onCreated` callback; existing callers unaffected. Dashboard rebuilt; main script node-checked.
+
 ## 2026-10-16 (Atlas: rail right, horizontal zoom, pane toggles, Tab cycling)
 
 ### Changed
