@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-10-16 (Tip jar delight)
+
+### Changed
+- **Tip jar goes full delight** (Dave 2026-10-16 — "get creative"): "Tip the jar" text now flows through animated rainbow colors; hovering spins the jar emoji 360° with a springy bounce and makes the text flicker with a warm fire-glow; clicking triggers a poof explosion (sparkle particles burst outward, the jar shrinks and vanishes) before opening ko-fi. Respects prefers-reduced-motion.
+
 ## 2026-10-16 (Tip jar: pinned flush, frosted)
 
 ### Changed

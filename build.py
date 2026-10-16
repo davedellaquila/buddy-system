@@ -113,8 +113,24 @@ body.sb-anchored #sidebar .brand, body.sb-anchored #sidebar .sb-tipjar{backgroun
   -webkit-backdrop-filter:blur(20px) saturate(1.8);backdrop-filter:blur(20px) saturate(1.8);
   margin:0;padding:10px 14px 12px;border-top:1px solid var(--border);text-align:center;overflow:hidden}
 #sidebar{padding-bottom:52px}
-.sb-tipjar a{font-size:12px;color:var(--muted);text-decoration:none;display:inline-block;transform-origin:center}
-.sb-tipjar a:hover{color:var(--accent);text-decoration:underline}
+.sb-tipjar a{font-size:12px;text-decoration:none;display:inline-block;transform-origin:center;position:relative}
+.sb-tipjar .tiptext{font-weight:600;
+  background:linear-gradient(90deg,#ff6b6b,#feca57,#48dbfb,#ff9ff3,#54a0ff,#ff6b6b);
+  background-size:300% auto;-webkit-background-clip:text;background-clip:text;
+  -webkit-text-fill-color:transparent;color:transparent;
+  animation:tip-rainbow 4s linear infinite}
+@keyframes tip-rainbow{to{background-position:300% center}}
+.sb-tipjar .jar{display:inline-block;-webkit-text-fill-color:initial}
+.sb-tipjar a:hover .jar{animation:jar-spin .7s cubic-bezier(.34,1.56,.64,1)}
+@keyframes jar-spin{to{transform:rotate(360deg) scale(1.25)}}
+.sb-tipjar a:hover .tiptext{animation:tip-rainbow 4s linear infinite,tip-flicker .25s ease-in-out infinite alternate}
+@keyframes tip-flicker{from{filter:brightness(1)}to{filter:brightness(1.35) drop-shadow(0 0 8px rgba(255,150,50,.9))}}
+.sb-tipjar a.poofing{pointer-events:none}
+.sb-tipjar a.poofing .jar,.sb-tipjar a.poofing .tiptext{animation:tip-poof .5s ease-in forwards}
+@keyframes tip-poof{40%{transform:scale(1.4) rotate(8deg);opacity:1}100%{transform:scale(.1) rotate(-20deg);opacity:0}}
+.poof-particle{position:absolute;left:50%;top:50%;font-size:14px;pointer-events:none;animation:poof-fly .6s ease-out forwards}
+@keyframes poof-fly{to{transform:translate(var(--px),var(--py)) scale(.3);opacity:0}}
+.sb-tipjar a:hover{text-decoration:underline}
 /* Tip jar party: slide → wiggle → flip → bounce → explode → shake → glow, then rest (Dave 2026-10-14) */
 @keyframes tipjar-party{
   0%{transform:translateX(-46px) rotate(0deg) scale(1);opacity:0}
@@ -142,7 +158,7 @@ body.sb-anchored #sidebar .brand, body.sb-anchored #sidebar .sb-tipjar{backgroun
 @keyframes tipjar-glow{0%,100%{text-shadow:0 0 0 rgba(0,0,0,0)}50%{text-shadow:0 0 12px var(--accent)}}
 .sb-tipjar a{animation:tipjar-party 9s ease-in-out infinite}
 .sb-tipjar a:hover{animation:tipjar-party 9s ease-in-out infinite,tipjar-glow 1.2s ease-in-out infinite}
-@media (prefers-reduced-motion:reduce){.sb-tipjar a{animation:none}}
+@media (prefers-reduced-motion:reduce){.sb-tipjar .tiptext{animation:none;-webkit-text-fill-color:initial;color:var(--muted);background:none}.sb-tipjar a:hover .jar{animation:none}}
 .sb-brand-sticky{
   position:sticky;top:0;z-index:7;background:var(--panel);
   margin:0 -14px;padding:0 14px;
@@ -7476,6 +7492,33 @@ async function handlePhotoFiles(id, files){
   if (st) st.textContent = 'Uploaded ' + n + ' photo' + (n === 1 ? '' : 's') + '. Refreshing\u2026';
   setTimeout(() => loadPhotos(id), 2000);
 }
+/* Dave 2026-10-16: tip jar poof — on click, the jar explodes into sparkles, poofs away,
+   then opens ko-fi. Pure delight. */
+function tipPoof(){
+  var a = document.querySelector('.sb-tipjar a'); if (!a || a.dataset.poofed) return;
+  a.addEventListener('click', function(e){
+    e.preventDefault();
+    var link = a, href = link.href;
+    link.classList.add('poofing');
+    var bits = ['✨','⭐','❄','🌟','💨'];
+    for (var i = 0; i < 10; i++){
+      var p = document.createElement('span');
+      p.className = 'poof-particle';
+      p.textContent = bits[i % bits.length];
+      var ang = (i / 10) * Math.PI * 2 + Math.random() * .5;
+      var dist = 40 + Math.random() * 50;
+      p.style.setProperty('--px', Math.cos(ang) * dist + 'px');
+      p.style.setProperty('--py', Math.sin(ang) * dist + 'px');
+      link.appendChild(p);
+      setTimeout((function(el){ return function(){ el.remove(); }; })(p), 700);
+    }
+    setTimeout(function(){
+      window.open(href, '_blank', 'noopener');
+      link.classList.remove('poofing');
+    }, 550);
+  });
+  a.dataset.poofed = '1';
+}
 function renderTokenRow(id){
   const st = document.getElementById('pstat'); if (!st || document.getElementById('ghtok')) return;
   const d = document.createElement('div'); d.className = 'ghtoken';
@@ -9300,6 +9343,7 @@ initSearch();
 flushPendingDumps();
 // Flush any global renames queued while offline or token-less (Dave 2026-10-16)
 flushPendingRenames();
+tipPoof();
 initGear();
 initSbToTop();
 initBpToTop();
@@ -9360,7 +9404,7 @@ initSbBrandSticky();
   <div class="nav-sec" id="plans-sec"><h3 style="cursor:pointer" id="plans-toggle"><span id="plans-arrow">\u203a</span> Business Plans</h3><div id="plan-nav"></div></div>
   <div class="nav-sec" id="views-sec">
   <h3 style="cursor:pointer" id="views-toggle"><span class="nav-arrow" id="views-arrow">\u203a</span> Views</h3><div id="view-nav"></div></div>
-  <div class="sb-tipjar"><a href="https://ko-fi.com/davedellaquila" target="_blank" rel="noopener" title="Support the buddy system">\U0001FAD9 Tip the jar</a></div>
+  <div class="sb-tipjar"><a href="https://ko-fi.com/davedellaquila" target="_blank" rel="noopener" title="Support the buddy system"><span class="jar">\U0001FAD9</span> <span class="tiptext">Tip the jar</span></a></div>
 </aside>
 <div id="sb-resize" title="Drag left or right to resize the sidebar. Double-click to close."></div>
 <button type="button" id="sb-tab" title="Open sidebar" aria-label="Open sidebar"></button>
