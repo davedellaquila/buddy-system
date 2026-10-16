@@ -3,6 +3,11 @@
 All notable changes to the Buddies dashboard and buddy system. Newest first.
 `FEATURES.md` describes the current state; this file describes how it got there.
 
+## 2026-10-15 (Shreya Dhingra buddy)
+
+### Added
+- **💼 Shreya Dhingra buddy** (Dave 2026-10-15): person buddy for Dave's Apple manager (STIX team lead — Dave, Connie Ko, Sparsh; her manager is Stephen). Child of Work Buddy. Merged the two duplicate dashboard FAB requests ("Shreya" game-show-host + "Shreya Dhingra" mad-scientist) into one sensible buddy per Dave's standing rule — generic professional persona, sensible icon, no blocking on choices. Dossier captures the Oct 15 priority reset: partner config + partner info as top items (~1-2 weeks), Jira as source of truth (Connie created the epic), Sparsh covers while Shreya and Connie are on vacation ~2 weeks from Oct 16. Private repo, Buddy Docs dossier, dashboard entry; side thread + review ask still to be posted.
+
 ## 2026-10-15 (Larry Osana custom homepage)
 
 ### Added
