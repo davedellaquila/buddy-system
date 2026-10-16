@@ -72,9 +72,12 @@ body{padding:0}
   -webkit-backdrop-filter:blur(20px) saturate(1.4);backdrop-filter:blur(20px) saturate(1.4);
   transition:transform .5s cubic-bezier(.32,.72,.35,1), visibility 0s}
 body.sb-closed #sidebar{width:64px;padding:12px 8px;overflow:visible;height:auto;max-height:calc(100dvh - 24px);top:12px;bottom:auto;border-radius:18px;
-  left:12px;background:color-mix(in srgb, var(--panel) 82%, transparent);
+  left:auto;right:12px;background:color-mix(in srgb, var(--panel) 82%, transparent);
   -webkit-backdrop-filter:blur(20px) saturate(1.8);backdrop-filter:blur(20px) saturate(1.8);
   border:1px solid var(--border);box-shadow:0 8px 32px var(--shadow)}
+/* Dave 2026-10-16: the collapsed rail lives on the right now — keep the buddy-panel
+   section rail from colliding with it by docking it to the bottom-right instead. */
+body.sb-closed #bp-rail{top:auto;bottom:12px}
 body.sb-closed #sidebar .brand, body.sb-closed #sidebar .sb-search-sticky,
 body.sb-closed #sidebar #buddies-sec, body.sb-closed #sidebar #plans-sec,
 body.sb-closed #sidebar .sb-tipjar, body.sb-closed #sidebar #sb-tools #sb-gear,
@@ -180,6 +183,24 @@ body.sb-anchored #sidebar .brand, body.sb-anchored #sidebar .sb-tipjar{backgroun
 /* Views always stack vertically (desktop + iPad); phone keeps the same */
 #view-nav{display:flex;flex-direction:column;gap:2px}
 #view-nav .navbtn{flex:none;width:100%}
+/* Pane toggles (Dave 2026-10-16): show/hide the Atlas chart and orphan subviews.
+   Lives in the view nav (icon strip); only visible when the Atlas view is active. */
+#pane-toggles{display:flex;flex-direction:column;gap:6px;padding:8px 4px 4px;margin-top:4px;
+  border-top:1px solid var(--border)}
+#pane-toggles .ptoggle{display:flex;align-items:center;gap:8px;cursor:pointer;
+  padding:6px 8px;border-radius:8px;font-size:12.5px;color:var(--muted)}
+#pane-toggles .ptoggle:hover{background:var(--hover);color:var(--text)}
+#pane-toggles .ptoggle input{appearance:none;-webkit-appearance:none;flex:0 0 auto;
+  width:34px;height:20px;border-radius:10px;background:var(--faint);position:relative;
+  cursor:pointer;transition:background .2s;margin:0}
+#pane-toggles .ptoggle input:checked{background:var(--accent)}
+#pane-toggles .ptoggle input::after{content:'';position:absolute;top:2px;left:2px;
+  width:16px;height:16px;border-radius:50%;background:#fff;transition:left .2s;
+  box-shadow:0 1px 3px rgba(0,0,0,.3)}
+#pane-toggles .ptoggle input:checked::after{left:16px}
+body.sb-closed #pane-toggles{align-items:center;padding:8px 0 4px}
+body.sb-closed #pane-toggles .ptoggle span.plab{display:none}
+body.sb-closed #pane-toggles .ptoggle{padding:6px 4px}
 .brow{display:flex;align-items:center;gap:8px;width:100%;text-align:left;background:none;border:0;
   color:var(--text);font:inherit;font-size:13.5px;padding:6px 10px 6px 8px;border-radius:8px;cursor:pointer}
 .brow:hover{background:var(--hover)}
@@ -466,28 +487,28 @@ body.sb-anchored #sidebar .brand, body.sb-anchored #sidebar .sb-tipjar{backgroun
 #treepane-orph.mini .standalones h2{margin:0;font-size:15px}
 #treepane-orph.mini .standalones .sub,#treepane-orph.mini .standalones .grid{display:none}
 #treepane-orph.mini .zoombar{display:none}
-/* Slim vertical zoom — upper-right corner of each pane (Dave 2026-10-15: moved from
-   vertically-centered right edge); no panel chrome; large◼ · slider · small▪ · fit */
-.zoombar{position:absolute;top:12px;right:28px;z-index:5;
-  display:flex;flex-direction:column;align-items:center;gap:6px;width:auto;height:auto;
+/* Slim horizontal zoom — tucked into the top-right corner of each pane (Dave 2026-10-16:
+   rotated from vertical; aligns with the top edge of both the chart and orphan panes).
+   No panel chrome; small▪ · slider · large◼ · fit · center. */
+.zoombar{position:absolute;top:12px;right:12px;z-index:5;
+  display:flex;flex-direction:row;align-items:center;gap:8px;width:auto;height:auto;
   padding:0;margin:0;background:none;border:none;border-radius:0;box-shadow:none;
   -webkit-tap-highlight-color:transparent}
 .zoombar .z-out,.zoombar .z-in{flex:0 0 auto;line-height:1;color:var(--faint);user-select:none;pointer-events:none;
   text-shadow:0 0 4px var(--bg),0 0 8px var(--bg)}
 .zoombar .z-out{font-size:8px}   /* zoom out (bottom) */
 .zoombar .z-in{font-size:13px}   /* zoom in (top) */
-input[type=range].zrange{flex:0 0 auto;width:22px;height:112px;margin:0;padding:0;
-  writing-mode:vertical-lr;direction:rtl;/* high value at top, next to large mark */
+input[type=range].zrange{flex:0 0 auto;width:112px;height:22px;margin:0;padding:0;
   -webkit-appearance:none;appearance:none;
-  background:transparent;cursor:ns-resize;touch-action:none;opacity:1}
+  background:transparent;cursor:ew-resize;touch-action:none;opacity:1}
 /* High-contrast thumb: solid accent puck with a background-colored ring + halo so it pops on any tile */
-input[type=range].zrange::-webkit-slider-runnable-track{width:5px;background:var(--faint);border-radius:3px}
-input[type=range].zrange::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:20px;height:20px;margin-left:-8px;
+input[type=range].zrange::-webkit-slider-runnable-track{height:5px;background:var(--faint);border-radius:3px}
+input[type=range].zrange::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:20px;height:20px;margin-top:-8px;
   border-radius:50%;background:var(--accent);border:2px solid var(--bg);
-  box-shadow:0 0 0 1.5px var(--accent-hi),0 1px 5px rgba(0,0,0,.5);cursor:ns-resize}
-input[type=range].zrange::-moz-range-track{width:5px;background:var(--faint);border-radius:3px}
+  box-shadow:0 0 0 1.5px var(--accent-hi),0 1px 5px rgba(0,0,0,.5);cursor:ew-resize}
+input[type=range].zrange::-moz-range-track{height:5px;background:var(--faint);border-radius:3px}
 input[type=range].zrange::-moz-range-thumb{width:16px;height:16px;border-radius:50%;background:var(--accent);
-  border:2px solid var(--bg);box-shadow:0 0 0 1.5px var(--accent-hi),0 1px 5px rgba(0,0,0,.5);cursor:ns-resize}
+  border:2px solid var(--bg);box-shadow:0 0 0 1.5px var(--accent-hi),0 1px 5px rgba(0,0,0,.5);cursor:ew-resize}
 .zfit{flex:0 0 auto;background:none;border:none;border-radius:6px;color:var(--faint);
   font-size:12px;width:22px;height:22px;padding:0;cursor:pointer;line-height:1;
   text-shadow:0 0 4px var(--bg),0 0 8px var(--bg)}
@@ -1034,7 +1055,7 @@ body.standalone .sa-bar{display:flex}
   .standalones .grid{display:block}
   /* Vertical zoom on the right — fat hit areas (≈44px), no filled panel */
   .zoombar{right:4px;z-index:30;padding:8px 4px;gap:4px}
-  input[type=range].zrange{width:44px;height:140px}
+  input[type=range].zrange{width:140px;height:44px}
   .zfit,.zcenter{width:44px;height:44px;font-size:14px;display:flex;align-items:center;justify-content:center}
   .zoombar .z-out,.zoombar .z-in{padding:4px 0}
   /* Chunkier tree nodes for touch */
@@ -2029,6 +2050,19 @@ function renderNav(){
     '<button class="navbtn" id="sb-expand-btn" title="Expand sidebar" aria-label="Expand sidebar"><span class="nic"><svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M9.5 5.5L16 12l-6.5 6.5" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span></button>'
     + views.map(([v,l,ic]) =>
     '<button class="navbtn'+(S.view===v?' sel':'')+'" data-view="'+v+'" draggable="true" title="'+(VIEW_TIPS[v]||l)+'"><span class="nic">'+ic+'</span><span class="nlab">'+l+'</span><span class="navgrip" title="Drag to reorder views">\u22ee\u22ee</span></button>').join('');
+  /* Dave 2026-10-16: pane toggles for the Atlas view — show/hide the chart (top)
+     and orphaned (bottom) subviews. Only rendered when Atlas is the active view. */
+  if (S.view === 'tree') {
+    if (!S.treePanes || typeof S.treePanes !== 'object') S.treePanes = {main: true, orph: true};
+    document.getElementById('view-nav').insertAdjacentHTML('beforeend',
+      '<div id="pane-toggles">'
+      + '<label class="ptoggle" title="Show/hide the chart pane"><input type="checkbox" data-pane="main"'+(S.treePanes.main!==false?' checked':'')+'><span class="plab">Chart</span></label>'
+      + '<label class="ptoggle" title="Show/hide the orphaned pane"><input type="checkbox" data-pane="orph"'+(S.treePanes.orph!==false?' checked':'')+'><span class="plab">Orphaned</span></label>'
+      + '</div>');
+    document.querySelectorAll('#pane-toggles input[data-pane]').forEach(function(inp){
+      inp.addEventListener('change', function(){ setTreePane(inp.getAttribute('data-pane'), inp.checked); });
+    });
+  }
   applyViewGripDrag();
   const q = (document.getElementById('buddy-search').value || '').toLowerCase().trim();
   const words = q.split(/\s+/).filter(Boolean);
@@ -5425,13 +5459,32 @@ function zoomToFit(paneId, zoomKey){
   save(); applyZoom();
   toast('Zoomed to fit (' + S[zoomKey] + '%).');
 }
+/* Pane visibility (Dave 2026-10-16): show/hide the Atlas chart (top) and orphaned
+   (bottom) subviews via toggles in the view nav. State persists in S.treePanes. */
+function applyTreePanes(){
+  if (!S.treePanes || typeof S.treePanes !== 'object') S.treePanes = {main: true, orph: true};
+  var main = document.getElementById('treepane-main');
+  var orph = document.getElementById('treepane-orph');
+  var split = document.getElementById('tree-split');
+  var showMain = S.treePanes.main !== false;
+  var showOrph = S.treePanes.orph !== false;
+  if (main) main.style.display = showMain ? '' : 'none';
+  if (orph) orph.style.display = showOrph ? '' : 'none';
+  if (split) split.style.display = (showMain && showOrph) ? '' : 'none';
+}
+function setTreePane(which, show){
+  if (!S.treePanes || typeof S.treePanes !== 'object') S.treePanes = {main: true, orph: true};
+  S.treePanes[which] = !!show;
+  try { save(); } catch(e) {}
+  applyTreePanes();
+}
 (function initZoom(){
   const vt = document.getElementById('view-tree');
   function zoombarHTML(sfx, label){
     return '<div class="zoombar" id="zoombar-' + sfx + '" title="Zoom — pinch with two fingers, or Shift+scroll">'
-      + '<span class="z-in" aria-hidden="true">\u25fc</span>'
-      + '<input type="range" class="zrange" id="zoomrange-' + sfx + '" min="5" max="160" step="1" value="100" aria-label="' + label + '" orient="vertical">'
       + '<span class="z-out" aria-hidden="true">\u25aa</span>'
+      + '<input type="range" class="zrange" id="zoomrange-' + sfx + '" min="5" max="160" step="1" value="100" aria-label="' + label + '">'
+      + '<span class="z-in" aria-hidden="true">\u25fc</span>'
       + '<button type="button" class="zfit" id="zoomfit-' + sfx + '" title="Zoom to fit" aria-label="Zoom to fit">\u26f6</button>'
       + (sfx === 'main' ? '<button type="button" class="zcenter" id="zoomcenter-' + sfx + '" title="Center on current buddy" aria-label="Center on current buddy">\u2316</button>' : '')
       + '</div>';
@@ -6226,6 +6279,7 @@ function show(sel, push){
         // Init renders the tree while display:none (scrollWidth reads 0), so
         // re-measure once visible. Coming from a buddy: center on it
         // (Dave 2026-10-15). Otherwise restore the persisted scroll position.
+        applyTreePanes();
         updateZoomMin();
         if (!(prevBuddy && byId[prevBuddy] && centerOnBuddy(prevBuddy)))
           restoreScrollPos('tree:main', document.getElementById('treezoom-main'));
@@ -6253,7 +6307,7 @@ function show(sel, push){
 }
 /* ---------- keyboard nav ---------- */
 document.addEventListener('keydown', e => {
-  if (e.target && e.target.id === 'buddy-search' && (e.key === 'ArrowDown' || e.key === 'Tab')) {
+  if (e.target && e.target.id === 'buddy-search' && e.key === 'ArrowDown') {
     const first = document.querySelector('#buddy-nav [data-buddy]');
     if (first) {
       e.preventDefault(); e.target.blur();
@@ -6262,6 +6316,26 @@ document.addEventListener('keydown', e => {
       if (wantPanel) openBuddy(bid);
       else selectBuddy(bid);
     }
+    return;
+  }
+  if (e.target && e.target.id === 'buddy-search' && e.key === 'Tab') {
+    /* Dave 2026-10-16: Tab cycles through the filtered buddy list — first Tab jumps
+       to the first match, each subsequent Tab moves to the next (Shift+Tab goes
+       backwards), wrapping around at the ends. Focus stays in the search field. */
+    e.preventDefault();
+    const rows = Array.from(document.querySelectorAll('#buddy-nav [data-buddy]'));
+    if (!rows.length) return;
+    let idx = rows.findIndex(r => r.classList.contains('sel'));
+    if (e.shiftKey) {
+      idx = idx === -1 ? rows.length - 1 : (idx - 1 + rows.length) % rows.length;
+    } else {
+      idx = idx === -1 ? 0 : (idx + 1) % rows.length;
+    }
+    const bid = rows[idx].dataset.buddy;
+    const wantPanel = S.autoOpenPanel || S.view !== 'project';
+    if (wantPanel) openBuddy(bid);
+    else selectBuddy(bid);
+    try { rows[idx].scrollIntoView({block: 'nearest'}); } catch(e2) {}
     return;
   }
   if (e.target && e.target.matches && e.target.matches('input, textarea, [contenteditable="true"]')) return;

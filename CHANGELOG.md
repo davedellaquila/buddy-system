@@ -1,5 +1,15 @@
 # Changelog
 
+## 2026-10-16 (Atlas: rail right, horizontal zoom, pane toggles, Tab cycling)
+
+### Changed
+- **Mini rail moved to the right** (Dave 2026-10-16 — the collapsed sidebar rail was obscuring the main view's menu pills): the collapsed rail now docks to the right edge (`right:12px`) instead of the left. The buddy-panel section rail (`#bp-rail`) docks to the bottom-right when the sidebar is collapsed to avoid collision.
+- **Horizontal zoom bar** (Dave 2026-10-16 — "rotate it again so that it's horizontally oriented and just tuck it in the right corner"): the Atlas zoom controls are now horizontal, tucked into the top-right corner of each pane (chart and orphaned), aligned with the top edge. Slider runs ▪ (left) to ◼ (right); fit and center buttons follow.
+
+### Added
+- **Pane toggles** (Dave 2026-10-16 — show/hide the Atlas chart and orphaned subviews): two toggle switches in the view nav (visible only when Atlas is active) — "Chart" and "Orphaned". Each pane (and the splitter) shows/hides independently; state persists. Either, both, or neither can be on.
+- **Tab cycles the filtered buddy list** (Dave 2026-10-16): with the `/` search focused, Tab jumps to the first match, each subsequent Tab moves to the next (Shift+Tab goes backwards), wrapping around at the ends. Focus stays in the search field. ArrowDown still jumps to the first match.
+
 ## 2026-10-16 (Tip jar readability)
 
 ### Fixed
