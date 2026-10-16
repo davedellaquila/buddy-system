@@ -100,6 +100,11 @@ h2 { font-size: 22px; margin: 32px 0 16px; }
   text-align: center;
 }
 .empty { color: var(--muted); font-style: italic; }
+/* Dave 2026-10-16: photo gallery — baked in at generation time from the buddy's repo photos/ */
+.gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; margin-bottom: 8px; }
+.gallery a { display: block; border-radius: 12px; overflow: hidden; border: 1px solid var(--border); background: var(--card); }
+.gallery img { width: 100%; height: 160px; object-fit: cover; display: block; transition: transform .25s ease; }
+.gallery a:hover img { transform: scale(1.04); }
 
 .dumpbox {
   background: var(--card);
@@ -152,6 +157,8 @@ h2 { font-size: 22px; margin: 32px 0 16px; }
 </div>
 
 <div class="mission">Andy plays in Ire Tide, the reggae band Dave heard live at Gibson’s Roadhouse Cafe on October 14, 2026 — and loved. He’s from Gustine, CA (near Los Banos), and the band is spreading out to gigs across the Central Valley. Super nice guy, open to special requests. Dave wants to keep Ire Tide in mind as a possible band for Quentin and Amanda’s wedding — contact on file.</div>
+
+
 
 
 <section class="dumpbox" data-buddy-id="andy-ire-tide">

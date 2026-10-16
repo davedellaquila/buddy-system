@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-10-16 (Template gallery)
+
+### Added
+- **Photo gallery on the default homepage template** (Dave 2026-10-16): template pages now include a Photos section (grid, tap to enlarge) when the buddy has photos — pulled from the registry `photos[]` seeds plus the buddy repo's `photos/` folder, baked in at generation time. 3 buddies have photos today: Model A, ML500, Charts. (This is template-generator territory — if Kea spins up, it owns this.)
+
 ## 2026-10-16 (1931 Ford Model A rename)
 
 ### Changed

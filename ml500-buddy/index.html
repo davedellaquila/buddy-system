@@ -100,6 +100,11 @@ h2 { font-size: 22px; margin: 32px 0 16px; }
   text-align: center;
 }
 .empty { color: var(--muted); font-style: italic; }
+/* Dave 2026-10-16: photo gallery — baked in at generation time from the buddy's repo photos/ */
+.gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; margin-bottom: 8px; }
+.gallery a { display: block; border-radius: 12px; overflow: hidden; border: 1px solid var(--border); background: var(--card); }
+.gallery img { width: 100%; height: 160px; object-fit: cover; display: block; transition: transform .25s ease; }
+.gallery a:hover img { transform: scale(1.04); }
 
 .dumpbox {
   background: var(--card);
@@ -152,6 +157,13 @@ h2 { font-size: 22px; margin: 32px 0 16px; }
 </div>
 
 <div class="mission">Living dossier for the 2002 Mercedes-Benz ML500: service history, parts, mileage log. Notable: the dipstick question is settled — the 722.6 transmission has no factory dipstick; the ordered dipstick is for engine oil.</div>
+
+<h2>Photos</h2>
+<div class="gallery">
+<a href="https://raw.githubusercontent.com/davedellaquila/ml500-buddy/master/photos/1792043971948-DSC_0004_33_.jpg?token=AAEGS5S4OFFTOTPJ6PVOPHTK2KUHTAA" target="_blank" rel="noopener"><img src="https://raw.githubusercontent.com/davedellaquila/ml500-buddy/master/photos/1792043971948-DSC_0004_33_.jpg?token=AAEGS5S4OFFTOTPJ6PVOPHTK2KUHTAA" alt="ML500 Buddy photo" loading="lazy"></a>
+<a href="https://raw.githubusercontent.com/davedellaquila/ml500-buddy/master/photos/1792043988773-IMG_1775.jpeg?token=AAEGS5UCKDBTO23U2YJRFSDK2KUHTAA" target="_blank" rel="noopener"><img src="https://raw.githubusercontent.com/davedellaquila/ml500-buddy/master/photos/1792043988773-IMG_1775.jpeg?token=AAEGS5UCKDBTO23U2YJRFSDK2KUHTAA" alt="ML500 Buddy photo" loading="lazy"></a>
+<a href="https://raw.githubusercontent.com/davedellaquila/ml500-buddy/master/photos/1792044015308-IMG_0053.jpeg?token=AAEGS5SIYHYH26HDXTK76M3K2KUHTAA" target="_blank" rel="noopener"><img src="https://raw.githubusercontent.com/davedellaquila/ml500-buddy/master/photos/1792044015308-IMG_0053.jpeg?token=AAEGS5SIYHYH26HDXTK76M3K2KUHTAA" alt="ML500 Buddy photo" loading="lazy"></a>
+</div>
 
 
 <section class="dumpbox" data-buddy-id="ml500-buddy">

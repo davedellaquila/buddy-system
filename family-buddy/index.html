@@ -100,6 +100,11 @@ h2 { font-size: 22px; margin: 32px 0 16px; }
   text-align: center;
 }
 .empty { color: var(--muted); font-style: italic; }
+/* Dave 2026-10-16: photo gallery — baked in at generation time from the buddy's repo photos/ */
+.gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; margin-bottom: 8px; }
+.gallery a { display: block; border-radius: 12px; overflow: hidden; border: 1px solid var(--border); background: var(--card); }
+.gallery img { width: 100%; height: 160px; object-fit: cover; display: block; transition: transform .25s ease; }
+.gallery a:hover img { transform: scale(1.04); }
 
 .dumpbox {
   background: var(--card);
@@ -153,6 +158,8 @@ h2 { font-size: 22px; margin: 32px 0 16px; }
 </div>
 
 <div class="mission">Family Buddy is for family projects — shared with the household (Quentin, Sawyer, Amanda), not just Dave. Pet Buddy is its first child.</div>
+
+
 
 
 <section class="dumpbox" data-buddy-id="family-buddy">

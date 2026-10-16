@@ -551,6 +551,11 @@ h2 {{ font-size: 22px; margin: 32px 0 16px; }}
   text-align: center;
 }}
 .empty {{ color: var(--muted); font-style: italic; }}
+/* Dave 2026-10-16: photo gallery — baked in at generation time from the buddy's repo photos/ */
+.gallery {{ display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; margin-bottom: 8px; }}
+.gallery a {{ display: block; border-radius: 12px; overflow: hidden; border: 1px solid var(--border); background: var(--card); }}
+.gallery img {{ width: 100%; height: 160px; object-fit: cover; display: block; transition: transform .25s ease; }}
+.gallery a:hover img {{ transform: scale(1.04); }}
 {dumpbox_css}
 </style>
 </head>
@@ -564,6 +569,8 @@ h2 {{ font-size: 22px; margin: 32px 0 16px; }}
 </div>
 
 <div class="mission">{mission}</div>
+
+{gallery_section}
 
 {dumpbox_html}
 
@@ -600,6 +607,47 @@ def is_template_page(idxpath):
         return False
     return ('BUDDY-BASIC-TEMPLATE' in content) or ('Part of the Buddy System' in content)
 
+
+
+# Photo cache so we don't hammer the GitHub API
+_photo_cache = {}
+def get_buddy_photos(b):
+    """Return list of photo URLs for a buddy: registry seeds + repo photos/ folder."""
+    bid = b['id']
+    if bid in _photo_cache:
+        return _photo_cache[bid]
+    urls = list(b.get('photos') or [])
+    seen = set(urls)
+    # Check the buddy's repo photos/ folder via gh CLI
+    repo = b.get('repo')
+    if repo:
+        try:
+            import subprocess, json as _json
+            out = subprocess.run(['gh', 'api', f'repos/davedellaquila/{repo}/contents/photos'],
+                                 capture_output=True, text=True, timeout=15)
+            if out.returncode == 0:
+                files = _json.loads(out.stdout)
+                for fl in files if isinstance(files, list) else []:
+                    if fl.get('type') == 'file':
+                        u = fl.get('download_url')
+                        if u and u not in seen:
+                            urls.append(u); seen.add(u)
+        except Exception:
+            pass
+    _photo_cache[bid] = urls
+    return urls
+
+def build_gallery(b):
+    """Build the gallery HTML section, or '' if no photos."""
+    urls = get_buddy_photos(b)
+    if not urls:
+        return ''
+    import html as _html
+    name = _html.escape(b.get('name', b['id']))
+    items = '\n'.join(
+        f'<a href="{_html.escape(u)}" target="_blank" rel="noopener"><img src="{_html.escape(u)}" alt="{name} photo" loading="lazy"></a>'
+        for u in urls)
+    return f'<h2>Photos</h2>\n<div class="gallery">\n{items}\n</div>'
 
 generated = []
 for b in d['buddies']:
@@ -655,6 +703,8 @@ for b in d['buddies']:
 
     dumpbox_html = DUMPBOX_HTML.replace('__BID__', bid).replace('__BNAME__', name)
 
+    gallery_section = build_gallery(b)
+
     page = TEMPLATE.format(
         name=name,
         icon=icon,
@@ -664,6 +714,7 @@ for b in d['buddies']:
         attention_section=attention_section,
         children_section=children_section,
         date=today,
+        gallery_section=gallery_section,
         dumpbox_css=DUMPBOX_CSS,
         dumpbox_html=dumpbox_html,
         dumpbox_js=DUMPBOX_JS,
