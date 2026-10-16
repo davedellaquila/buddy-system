@@ -4,6 +4,7 @@
 
 ### Fixed
 - **🧠 Brain-dump local fallback widened** (Dave 2026-10-16 — the box on Andy (Ire Tide)'s page was fully disabled with "No repo linked for this buddy yet", so nothing could be entered): the homepage dump box now always accepts input. With no repo linked and/or no GitHub token, dumps save to the device's localStorage and the status says so plainly ("No repo linked yet — dumps save on this device and will sync when one is linked"); the backlog flushes into `docs/ingest.md` on the next successful GitHub dump once a repo is linked and a token is present. Regenerated all 56 template-driven homepages (`gen_basic_homepages.py`); inline scripts node-checked. Custom homepages with their own dump-box copy (cabin-buddy, reminder-buddy, housing-buddy) still need the same fix in their owning threads.
+- **Housing Buddy custom homepage adopts the local fallback** (owning thread, `housing-buddy/index.html`): the page's own dump-box copy now always accepts input — no repo linked and/or no GitHub token → entries save to the device's localStorage with a plain-English status, and the backlog flushes into `docs/ingest.md` on the next successful GitHub dump. The old gating logic (disabled textarea/button, "No repo linked for this buddy yet") is gone; the orphaned "Connect GitHub" markup stays hidden with its JS unwired, matching the cabin-buddy adoption. Token flow, GitHub flush, and backlog sync unchanged. Inline scripts node-checked.
 
 ## 2026-10-16 (Legal Buddy custom homepage)
 
