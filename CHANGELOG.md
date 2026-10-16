@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-10-16 (1931 Ford Model A rename)
+
+### Changed
+- **Buddy renamed** (Dave 2026-10-16 — drop "Buddy"): `model-a-buddy` is now **1931 Ford Model A** on the dashboard, in its side-chat title, and across its pages. ID (`model-a-buddy`), repo, and dashboard path are unchanged — display rename only. Dashboard rebuilt; embedded registry verified at 112 buddies.
+
 ## 2026-10-16 (Homepage iframe: white flash fix)
 
 ### Fixed
