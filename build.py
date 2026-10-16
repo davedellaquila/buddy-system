@@ -8897,14 +8897,14 @@ function initSearch(){
     });
     bs.addEventListener('keydown', (e) => {
       if (!ac || ac.hidden) return;
-      if (e.key === 'ArrowDown'){ e.preventDefault(); acMove(1); }
-      else if (e.key === 'ArrowUp'){ e.preventDefault(); acMove(-1); }
+      if (e.key === 'ArrowDown'){ e.preventDefault(); e.stopPropagation(); acMove(1); }
+      else if (e.key === 'ArrowUp'){ e.preventDefault(); e.stopPropagation(); acMove(-1); }
       else if (e.key === 'Enter' && acHot >= 0){
-        e.preventDefault();
+        e.preventDefault(); e.stopPropagation();
         const rows = ac.querySelectorAll('.bac-row');
         if (rows[acHot]) rows[acHot].click();
       }
-      else if (e.key === 'Escape'){ acClose(); }
+      else if (e.key === 'Escape'){ e.stopPropagation(); acClose(); }
     });
     document.addEventListener('click', (e) => {
       if (ac && !ac.hidden && !ac.contains(e.target) && e.target !== bs) acClose();
