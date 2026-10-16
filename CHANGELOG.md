@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-10-16 (Homepage iframe: white flash fix)
+
+### Fixed
+- **White flash between buddies** (Dave 2026-10-16 — still seeing it intermittently after the Oct 14 frame-background fix): the browser paints the iframe white during navigation before the new page's CSS loads; slower/uncached pages flashed longer. The iframe now starts at opacity 0 and fades in on load (src is set after the load listener attaches), plus `color-scheme:dark light` so the blank navigation page matches the theme. You see the dashboard background briefly instead of white.
+
 ## 2026-10-16 (Search: single clear button)
 
 ### Fixed

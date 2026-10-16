@@ -1292,7 +1292,7 @@ a.plan-card-name:hover{text-decoration:underline}
 #homepage-wrap{flex:1;display:flex;flex-direction:column;min-height:0;margin:0;position:relative}
 #homepage-open{display:none}
 #homepage-open:hover{border-color:var(--accent);color:var(--accent)}
-#homepage-frame{flex:1;width:100%;min-height:0;border:0;border-radius:0;background:var(--bg);display:block}
+#homepage-frame{flex:1;width:100%;min-height:0;border:0;border-radius:0;background:var(--bg);display:block;color-scheme:dark light}
 @media (max-width:760px){#main #view-project.active{min-height:calc(100vh - 88px)}
 #main.homepage-mode{padding:0}
 #main.homepage-mode #view-project.active{min-height:100vh}}
@@ -3228,9 +3228,13 @@ function renderProjectView(){
     // Custom homepage URL: load in iframe (the "open in a new tab" link lives below the frame)
     const frame = document.createElement('iframe');
     frame.id = 'homepage-frame';
-    frame.src = hp;
     frame.title = b.name + ' homepage';
+    /* Dave 2026-10-16: start invisible, fade in on load — the browser paints the
+       iframe white during navigation; this keeps the white flash from ever showing. */
+    frame.style.opacity = '0';
+    frame.style.transition = 'opacity 180ms ease-in';
     frame.addEventListener('load', () => {
+      frame.style.opacity = '1';
       try {
         frame.contentWindow.addEventListener('keydown', e => {
           if (['ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(e.key)) {
@@ -3245,6 +3249,7 @@ function renderProjectView(){
         if (window.__bindEdgeSwipes && frame.contentDocument){ try { window.__bindEdgeSwipes(frame.contentDocument, frame, b.id); } catch (err2) {} }
       } catch (err) {}
     });
+    frame.src = hp;
     wrap.appendChild(frame);
     const open = document.createElement('a');
     open.id = 'homepage-open';
