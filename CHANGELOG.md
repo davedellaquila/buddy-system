@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-10-16 (Health Buddy custom homepage)
+
+### Added
+- **🏥 Health Buddy custom homepage** (Dave 2026-10-16 — "include all my data from my health trackers, blood work, visits to doctors, all that stuff"): thread-owned custom page at `health-buddy/` (CUSTOM HOMEPAGE marker, never overwritten by the generator). Real data only, snapshot as of Oct 16: 5 stat tiles (last night's sleep, 7-day step average, resting HR, HRV, weight); sleep section with 14-night bar chart (avg ~4.1 h, 1:30–3:30 AM bedtimes); activity section with 26-day steps chart + 11 recent workouts (7 cycling, 4 walking); vitals with resting-HR and HRV sparklines (14 days); body section (3 weight readings, ~76.1 kg); doctor visits (Dr. Travis Lyman eye exam Oct 14 with full findings, two Sutter portal visits Jul 2026); blood-work section honestly marked "not yet connected" (no lab values found in Gmail/Drive/workspace/memory — Sutter emails are portal notifications only); medications section as planned stub (Dave's Oct 9 manual-entry idea); the plan (sleep first, routine, morning nudge). Sticky header, dark + light, responsive, brain-dump box with the no-repo local fallback. Inline scripts node-checked.
+
 ## 2026-10-16 (Brain-dump box works with no repo linked)
 
 ### Fixed

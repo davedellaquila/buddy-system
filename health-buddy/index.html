@@ -1,100 +1,77 @@
-<!-- BUDDY-BASIC-TEMPLATE v2 -->
 <!DOCTYPE html>
+<!-- CUSTOM HOMEPAGE — thread-owned custom design; never overwritten by gen_basic_homepages.py -->
 <html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Health Buddy</title>
+<title>🏥 Health Buddy</title>
 <style>
-:root {
-  --bg: #ffffff;
-  --text: #1a1a1a;
-  --muted: #666;
-  --card: #f5f5f5;
-  --border: #e0e0e0;
-  --accent: #0066cc;
+:root{
+  --bg:#f7f7f7; --card:#ffffff; --text:#1c1c1e; --muted:#6b6f76;
+  --border:#e2e4e8; --accent:#0e7c66; --accent-soft:rgba(14,124,102,.12);
+  --warn:#b3541e; --shadow:0 1px 2px rgba(31,35,40,.08);
 }
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg: #1a1a1a;
-    --text: #e0e0e0;
-    --muted: #999;
-    --card: #2a2a2a;
-    --border: #3a3a3a;
-    --accent: #4da6ff;
-  }
+@media (prefers-color-scheme: dark){
+  :root{ --bg:#0d1117; --card:#161b22; --text:#e8eaed; --muted:#9aa0a8;
+    --border:#2a3139; --accent:#3fb68b; --accent-soft:rgba(63,182,139,.14);
+    --warn:#e09a5a; --shadow:none; }
 }
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  background: var(--bg);
-  color: var(--text);
-  line-height: 1.6;
-  padding: 40px 20px;
-  max-width: 800px;
-  margin: 0 auto;
-}
-.header { text-align: center; margin-bottom: 40px; }
-.topbar {
-  position: sticky; top: 0; z-index: 50;
-  display: flex; align-items: center; gap: 10px;
-  background: var(--bg);
-  border-bottom: 1px solid var(--border);
-  padding: 10px 2px; margin-bottom: 24px;
-  font-size: 17px; font-weight: 700;
-}
-.topbar-icon { font-size: 22px; line-height: 1; }
-.icon { font-size: 64px; margin-bottom: 16px; }
-h1 { font-size: 32px; margin-bottom: 8px; }
-.tagline { color: var(--muted); font-size: 18px; }
-.mission {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 24px;
-  margin-bottom: 32px;
-  font-size: 17px;
-}
-h2 { font-size: 22px; margin: 32px 0 16px; }
-.attn {
-  background: var(--card);
-  border-left: 4px solid var(--accent);
-  border-radius: 0 8px 8px 0;
-  padding: 16px 20px;
-  margin-bottom: 12px;
-}
-.attn-date { color: var(--muted); font-size: 14px; margin-top: 8px; }
-.attn-actions { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
-.attn-btn {
-  border: 1px solid var(--border); background: var(--bg); color: var(--text);
-  border-radius: 8px; padding: 7px 14px; font-size: 13px; font-weight: 600; cursor: pointer;
-  -webkit-tap-highlight-color: transparent;
-}
-.attn-btn:hover { border-color: var(--accent); }
-.attn-btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
-.attn-btn:disabled { opacity: .45; cursor: default; }
-.attn-status { font-size: 13px; color: var(--muted); margin-top: 8px; min-height: 18px; }
-.attn.resolved { opacity: .6; }
-.attn.resolved .attn-actions { display: none; }
-.children { display: flex; flex-wrap: wrap; gap: 12px; }
-.child {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 12px 20px;
-  text-decoration: none;
-  color: var(--text);
-}
-.child:hover { border-color: var(--accent); }
-.footer {
-  margin-top: 48px;
-  padding-top: 24px;
-  border-top: 1px solid var(--border);
-  color: var(--muted);
-  font-size: 14px;
-  text-align: center;
-}
-.empty { color: var(--muted); font-style: italic; }
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;line-height:1.5}
+.sticky{position:sticky;top:0;z-index:10;background:var(--card);border-bottom:1px solid var(--border);
+  padding:10px 20px;font-weight:700;font-size:16px;box-shadow:var(--shadow)}
+main{max-width:860px;margin:0 auto;padding:20px 16px 60px}
+.hero{background:var(--card);border:1px solid var(--border);border-radius:14px;
+  padding:26px 24px;margin-bottom:20px;box-shadow:var(--shadow)}
+.hero h1{margin:0 0 4px;font-size:26px}
+.hero .tag{color:var(--muted);margin:0 0 4px}
+.asof{font-size:12px;color:var(--muted);margin:0 0 16px}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px}
+.tile{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:12px;text-align:center}
+.ticon{font-size:20px}.tval{font-size:22px;font-weight:700;margin:2px 0}
+.tlabel{font-size:12px;color:var(--muted)}.tsub{font-size:11px;color:var(--muted)}
+section.card{background:var(--card);border:1px solid var(--border);border-radius:14px;
+  padding:22px;margin-bottom:20px;box-shadow:var(--shadow)}
+section.card h2{margin:0 0 4px;font-size:19px}
+section.card .lede{color:var(--muted);font-size:14px;margin:0 0 14px}
+section.card h3{font-size:15px;margin:18px 0 8px}
+.schart{display:flex;flex-direction:column;gap:6px}
+.srow{display:flex;align-items:center;gap:8px;font-size:13px}
+.sdate{width:44px;color:var(--muted);flex:none}
+.sbarwrap{position:relative;flex:1;height:16px;background:var(--bg);border-radius:4px}
+.sbar{position:absolute;left:0;top:0;bottom:0;background:var(--accent);border-radius:4px}
+.sbar.low{background:var(--warn)}
+.starget{position:absolute;top:-2px;bottom:-2px;width:2px;background:var(--muted);opacity:.6}
+.sval{width:52px;text-align:right;flex:none;font-variant-numeric:tabular-nums}
+.chartnote{font-size:12px;color:var(--muted);margin-top:8px}
+.swatch{display:inline-block;width:10px;height:10px;border-radius:2px;vertical-align:baseline}
+.swatch.target{background:var(--muted)}.swatch.low{background:var(--warn)}
+.stepschart{display:flex;align-items:flex-end;gap:3px;height:150px;margin-top:6px}
+.stbar{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;min-width:0}
+.stfill{width:100%;background:var(--accent);border-radius:3px 3px 0 0;opacity:.85}
+.stlab{font-size:9px;color:var(--muted);margin-top:2px}
+.spark{width:100%;height:60px;display:block}
+.sparkvals{display:flex;justify-content:space-between;font-size:11px;color:var(--muted)}
+.vgrid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:560px){.vgrid{grid-template-columns:1fr}}
+.vbox{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:12px}
+.vbox h3{margin:0 0 6px;font-size:14px}
+.vbox .big{font-size:20px;font-weight:700}
+table.wtable{width:100%;border-collapse:collapse;font-size:13px}
+.wtable th{text-align:left;color:var(--muted);font-weight:600;padding:6px 8px;border-bottom:1px solid var(--border)}
+.wtable td{padding:6px 8px;border-bottom:1px solid var(--border);font-variant-numeric:tabular-nums}
+.visit{border-left:3px solid var(--accent);padding:8px 12px;margin:0 0 12px;background:var(--bg);border-radius:0 8px 8px 0}
+.visit h3{margin:0 0 2px;font-size:15px}
+.visit .when{font-size:12px;color:var(--muted)}
+.visit p{margin:6px 0 0;font-size:14px}
+.notice{background:var(--accent-soft);border:1px solid var(--border);border-radius:10px;
+  padding:14px;font-size:14px}
+.notice h3{margin:0 0 6px;font-size:15px}
+.notice p{margin:0}
+ul.tight{margin:6px 0;padding-left:20px;font-size:14px}
+ul.tight li{margin-bottom:4px}
+footer{color:var(--muted);font-size:12px;text-align:center;margin-top:30px}
 
 .dumpbox {
   background: var(--card);
@@ -138,15 +115,85 @@ h2 { font-size: 22px; margin: 32px 0 16px; }
 </style>
 </head>
 <body>
-<nav data-buddy-crumb style="padding:14px 20px 0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:14px;line-height:1.4;"><a href="https://davedellaquila.github.io/buddy-system/astro/" style="color:inherit;opacity:.65;text-decoration:none;">← Astro</a></nav>
-<div class="topbar"><span class="topbar-icon">🏥</span><span class="topbar-name">Health Buddy</span></div>
-<div class="header">
-<div class="icon">🏥</div>
-<h1>Health Buddy</h1>
-<div class="tagline">Your health, tracked and coached</div>
+<header class="sticky">🏥 Health Buddy</header>
+<main>
+<div class="hero">
+<h1>🏥 Health Buddy</h1>
+<p class="tag">Your health, tracked and coached.</p>
+<p class="asof">Snapshot of real data as of October 16, 2026 · Apple Health sync Sep 20 – Oct 16</p>
+<div class="tiles"><div class="tile"><div class="ticon">😴</div><div class="tval">3.7 h</div><div class="tlabel">Last night</div><div class="tsub">in bed 03:26 → 07:09</div></div><div class="tile"><div class="ticon">👟</div><div class="tval">4,750</div><div class="tlabel">Steps · 7-day avg</div><div class="tsub">26 days tracked</div></div><div class="tile"><div class="ticon">❤️</div><div class="tval">61 bpm</div><div class="tlabel">Resting HR</div><div class="tsub">10-15</div></div><div class="tile"><div class="ticon">📈</div><div class="tval">41 ms</div><div class="tlabel">HRV</div><div class="tsub">10-15</div></div><div class="tile"><div class="ticon">⚖️</div><div class="tval">76.0 kg</div><div class="tlabel">Weight</div><div class="tsub">≈ 168 lb · 3 readings</div></div></div>
 </div>
 
-<div class="mission">Dave&#x27;s health companion — tracks workouts, sleep, recovery, and health metrics from Apple Health and other sources. Keeps him on track with his fitness goals.</div>
+<section class="card">
+<h2>😴 Sleep — priority #1</h2>
+<p class="lede">Short nights, very late bedtimes, early waking. Efficiency is high — the issue is duration, not quality.</p>
+<div class="schart"><div class="srow"><span class="sdate">10-03</span><span class="sbarwrap"><span class="sbar" style="width:285px"></span><span class="starget" style="left:393px"></span></span><span class="sval">5.1 h</span></div><div class="srow"><span class="sdate">10-05</span><span class="sbarwrap"><span class="sbar" style="width:288px"></span><span class="starget" style="left:393px"></span></span><span class="sval">5.1 h</span></div><div class="srow"><span class="sdate">10-06</span><span class="sbarwrap"><span class="sbar low" style="width:182px"></span><span class="starget" style="left:393px"></span></span><span class="sval">3.2 h</span></div><div class="srow"><span class="sdate">10-07</span><span class="sbarwrap"><span class="sbar low" style="width:219px"></span><span class="starget" style="left:393px"></span></span><span class="sval">3.9 h</span></div><div class="srow"><span class="sdate">10-08</span><span class="sbarwrap"><span class="sbar low" style="width:245px"></span><span class="starget" style="left:393px"></span></span><span class="sval">4.4 h</span></div><div class="srow"><span class="sdate">10-09</span><span class="sbarwrap"><span class="sbar" style="width:290px"></span><span class="starget" style="left:393px"></span></span><span class="sval">5.2 h</span></div><div class="srow"><span class="sdate">10-10</span><span class="sbarwrap"><span class="sbar low" style="width:137px"></span><span class="starget" style="left:393px"></span></span><span class="sval">2.5 h</span></div><div class="srow"><span class="sdate">10-11</span><span class="sbarwrap"><span class="sbar" style="width:282px"></span><span class="starget" style="left:393px"></span></span><span class="sval">5.0 h</span></div><div class="srow"><span class="sdate">10-12</span><span class="sbarwrap"><span class="sbar low" style="width:192px"></span><span class="starget" style="left:393px"></span></span><span class="sval">3.4 h</span></div><div class="srow"><span class="sdate">10-14</span><span class="sbarwrap"><span class="sbar low" style="width:201px"></span><span class="starget" style="left:393px"></span></span><span class="sval">3.6 h</span></div><div class="srow"><span class="sdate">10-15</span><span class="sbarwrap"><span class="sbar low" style="width:187px"></span><span class="starget" style="left:393px"></span></span><span class="sval">3.3 h</span></div><div class="srow"><span class="sdate">10-16</span><span class="sbarwrap"><span class="sbar low" style="width:207px"></span><span class="starget" style="left:393px"></span></span><span class="sval">3.7 h</span></div></div><div class="chartnote"><span class="swatch target"></span> 7 h target &nbsp;·&nbsp; <span class="swatch low"></span> under 5 h</div>
+<ul class="tight">
+<li>Average <b>4.0 h</b> asleep per night over the last two weeks (target 7–8 h).</li>
+<li>Typical bedtime <b>1:30–3:30 AM</b>, typical wake <b>5:30–7:00 AM</b>.</li>
+<li>Sleep efficiency <b>92–99%</b> — falls asleep fine once in bed.</li>
+<li>Deep + REM total roughly 1–2 h on most nights.</li>
+</ul>
+</section>
+
+<section class="card">
+<h2>👟 Activity</h2>
+<p class="lede">Daily steps over the last 26 days · 7-day average <b>4,750</b> steps.</p>
+<div class="stepschart"><div class="stbar" title="2026-09-20: 1,944 steps"><div class="stfill" style="height:20px"></div><div class="stlab">20</div></div><div class="stbar" title="2026-09-21: 4,220 steps"><div class="stfill" style="height:43px"></div><div class="stlab">21</div></div><div class="stbar" title="2026-09-22: 3,893 steps"><div class="stfill" style="height:40px"></div><div class="stlab">22</div></div><div class="stbar" title="2026-09-23: 1,241 steps"><div class="stfill" style="height:12px"></div><div class="stlab">23</div></div><div class="stbar" title="2026-09-24: 5,279 steps"><div class="stfill" style="height:54px"></div><div class="stlab">24</div></div><div class="stbar" title="2026-09-25: 760 steps"><div class="stfill" style="height:7px"></div><div class="stlab">25</div></div><div class="stbar" title="2026-09-26: 6,445 steps"><div class="stfill" style="height:66px"></div><div class="stlab">26</div></div><div class="stbar" title="2026-09-27: 75 steps"><div class="stfill" style="height:0px"></div><div class="stlab">27</div></div><div class="stbar" title="2026-09-28: 1,699 steps"><div class="stfill" style="height:17px"></div><div class="stlab">28</div></div><div class="stbar" title="2026-09-29: 211 steps"><div class="stfill" style="height:2px"></div><div class="stlab">29</div></div><div class="stbar" title="2026-09-30: 230 steps"><div class="stfill" style="height:2px"></div><div class="stlab">30</div></div><div class="stbar" title="2026-10-01: 260 steps"><div class="stfill" style="height:2px"></div><div class="stlab">01</div></div><div class="stbar" title="2026-10-02: 2,385 steps"><div class="stfill" style="height:24px"></div><div class="stlab">02</div></div><div class="stbar" title="2026-10-03: 2,632 steps"><div class="stfill" style="height:27px"></div><div class="stlab">03</div></div><div class="stbar" title="2026-10-04: 4,521 steps"><div class="stfill" style="height:46px"></div><div class="stlab">04</div></div><div class="stbar" title="2026-10-05: 1,077 steps"><div class="stfill" style="height:11px"></div><div class="stlab">05</div></div><div class="stbar" title="2026-10-06: 3,639 steps"><div class="stfill" style="height:37px"></div><div class="stlab">06</div></div><div class="stbar" title="2026-10-07: 6,799 steps"><div class="stfill" style="height:70px"></div><div class="stlab">07</div></div><div class="stbar" title="2026-10-08: 5,796 steps"><div class="stfill" style="height:59px"></div><div class="stlab">08</div></div><div class="stbar" title="2026-10-09: 371 steps"><div class="stfill" style="height:3px"></div><div class="stlab">09</div></div><div class="stbar" title="2026-10-10: 11,648 steps"><div class="stfill" style="height:120px"></div><div class="stlab">10</div></div><div class="stbar" title="2026-10-11: 4,173 steps"><div class="stfill" style="height:42px"></div><div class="stlab">11</div></div><div class="stbar" title="2026-10-12: 4,198 steps"><div class="stfill" style="height:43px"></div><div class="stlab">12</div></div><div class="stbar" title="2026-10-13: 3,873 steps"><div class="stfill" style="height:39px"></div><div class="stlab">13</div></div><div class="stbar" title="2026-10-14: 3,612 steps"><div class="stfill" style="height:37px"></div><div class="stlab">14</div></div><div class="stbar" title="2026-10-15: 5,380 steps"><div class="stfill" style="height:55px"></div><div class="stlab">15</div></div></div>
+<h3>Recent workouts (11)</h3>
+<table class="wtable"><tr><th>Date</th><th>Type</th><th>Duration</th><th>Distance</th><th>kcal</th><th>Avg HR</th></tr><tr><td>2026-10-02</td><td>cycling</td><td>19 min</td><td>3.1 km</td><td>113</td><td>148 bpm</td></tr><tr><td>2026-10-04</td><td>cycling</td><td>24 min</td><td>4.1 km</td><td>148</td><td>145 bpm</td></tr><tr><td>2026-10-06</td><td>cycling</td><td>28 min</td><td>4.6 km</td><td>158</td><td>147 bpm</td></tr><tr><td>2026-10-08</td><td>walking</td><td>15 min</td><td>0.6 km</td><td>39</td><td>105 bpm</td></tr><tr><td>2026-10-08</td><td>walking</td><td>8 min</td><td>0.6 km</td><td>30</td><td>102 bpm</td></tr><tr><td>2026-10-08</td><td>walking</td><td>11 min</td><td>0.7 km</td><td>39</td><td>98 bpm</td></tr><tr><td>2026-10-10</td><td>walking</td><td>35 min</td><td>2.0 km</td><td>142</td><td>131 bpm</td></tr><tr><td>2026-10-12</td><td>cycling</td><td>27 min</td><td>4.5 km</td><td>153</td><td>142 bpm</td></tr><tr><td>2026-10-13</td><td>cycling</td><td>32 min</td><td>4.7 km</td><td>151</td><td>138 bpm</td></tr><tr><td>2026-10-14</td><td>cycling</td><td>20 min</td><td>2.7 km</td><td>90</td><td>145 bpm</td></tr><tr><td>2026-10-14</td><td>cycling</td><td>12 min</td><td>1.6 km</td><td>59</td><td>141 bpm</td></tr></table>
+<p class="lede" style="margin-top:10px">Routine: Mon/Thu bodyweight strength · Tue/Fri circuit rides · Wed/Sun recovery · Sat longer rides. Circuit rides average ~143 bpm — solid zone 3–4 work.</p>
+</section>
+
+<section class="card">
+<h2>❤️ Vitals</h2>
+<p class="lede">From Apple Health daily rollups (14 days of heart data).</p>
+<div class="vgrid">
+<div class="vbox"><h3>Resting heart rate</h3><div class="big">65 bpm avg</div><svg class="spark" viewBox="0 0 300 60" preserveAspectRatio="none"><polyline points="0.0,16.3 23.1,12.9 46.2,6.0 69.2,16.3 92.3,40.3 115.4,43.7 138.5,40.3 161.5,54.0 184.6,54.0 207.7,50.6 230.8,33.4 253.8,33.4 276.9,30.0 300.0,47.1" fill="none" stroke="var(--accent)" stroke-width="2"/></svg><div class="sparkvals"><span>59</span><span>bpm</span><span>73</span></div></div>
+<div class="vbox"><h3>Heart rate variability</h3><div class="big">30 ms avg</div><svg class="spark" viewBox="0 0 300 60" preserveAspectRatio="none"><polyline points="0.0,47.3 23.1,51.4 46.2,27.8 69.2,26.6 92.3,50.5 115.4,49.6 138.5,40.1 161.5,6.0 184.6,44.1 207.7,49.0 230.8,39.6 253.8,54.0 276.9,34.9 300.0,13.5" fill="none" stroke="var(--accent)" stroke-width="2"/></svg><div class="sparkvals"><span>23</span><span>ms</span><span>43</span></div></div>
+</div>
+</section>
+
+<section class="card">
+<h2>⚖️ Body</h2>
+<p class="lede">3 weight readings since Sep 20 · latest <b>76.0 kg (≈ 168 lb)</b> · 10-11.</p>
+</section>
+
+<section class="card">
+<h2>🩺 Doctor visits</h2>
+<div class="visit"><h3>👁️ Dr. Travis Lyman — comprehensive eye exam</h3>
+<div class="when">October 14, 2026 · Amador Eye Care, 10 Bryson Dr, Sutter Creek</div>
+<p>Healthy eyes overall — mild astigmatism, presbyopia, eye pressure 13 (normal 10–20). No cataracts, no glaucoma, no macular degeneration; healthy retina and vessels. Glasses recommended for sharper distance vision; still fine to drive without them.</p></div>
+<div class="visit"><h3>🏥 Sutter Health visit</h3>
+<div class="when">~July 14, 2026 · After Visit Summary in My Health Online (portal)</div>
+<p>Details live in the Sutter portal — email was a notification only.</p></div>
+<div class="visit"><h3>🏥 Sutter Health visit</h3>
+<div class="when">~July 20, 2026 · patient-experience survey received</div>
+<p>Details live in the Sutter portal.</p></div>
+<div class="notice"><h3>📅 Open</h3>
+<p>Sutter reminders from September: annual physical (not yet scheduled) and flu shot. Say the word and I'll help get the physical booked.</p></div>
+</section>
+
+<section class="card">
+<h2>🧪 Blood work &amp; labs</h2>
+<div class="notice"><h3>Not yet connected</h3>
+<p>No lab values were found in Gmail, Google Drive, the workspace, or memory. Sutter only emails portal notifications — actual results live in <b>My Health Online</b>. To fill this in: share a lab PDF, a portal export, or your latest numbers and I'll add them with dates and trends.</p></div>
+</section>
+
+<section class="card">
+<h2>💊 Medications</h2>
+<div class="notice"><h3>Planned — not yet set up</h3>
+<p>Your Oct 9 idea: manual medication entry with doses and times, modeled on bill entry in the expense tracker, with smart reminders and refill nudges (Apple Health's Medications section is bare by comparison). Tell me your current meds and I'll start the list.</p></div>
+</section>
+
+<section class="card">
+<h2>🎯 The plan</h2>
+<ul class="tight">
+<li><b>Sleep first:</b> earlier wind-down beats everything else. Scheduled Sleep Focus at actual bedtime (not hours early) is the standing fix.</li>
+<li><b>Keep moving:</b> the ride/walk/strength rotation is working — 11 workouts in two weeks.</li>
+<li><b>Morning nudge:</b> the daily workout nudge checks last night's sleep and recent vitals, and adapts (easy rounds after short nights).</li>
+</ul>
+</section>
 
 
 <section class="dumpbox" data-buddy-id="health-buddy">
@@ -168,15 +215,8 @@ h2 { font-size: 22px; margin: 32px 0 16px; }
 </section>
 
 
-<h2>Needs Attention</h2>
-<div class="attn" data-attn-id="setup-health-buddy"><div class="attn-text">New buddy added from the dashboard — run the full onboarding (mission doc, repo, side chat, homepage).</div><div class="attn-date">2026-10-14</div><div class="attn-actions"><button type="button" class="attn-btn primary" data-act="done">✓ Done</button><button type="button" class="attn-btn" data-act="info">Need more info</button></div><div class="attn-status" role="status"></div></div>
-
-
-
-
-<div class="footer">
-Generated 2026-10-16 · Part of the Buddy System
-</div>
+<footer>A buddy in the Buddy System · private to Dave</footer>
+</main>
 
 <script>
 (function(){
@@ -316,116 +356,6 @@ Generated 2026-10-16 · Part of the Buddy System
     if ((ev.metaKey || ev.ctrlKey) && ev.key === 'Enter') { ev.preventDefault(); dump(); }
   });
   resolveRepo().then(refreshUI);
-})();
-</script>
-
-
-<script>
-(function(){
-  var tiles = document.querySelectorAll('.attn[data-attn-id]');
-  if (!tiles.length) return;
-  var dumpbox = document.querySelector('.dumpbox');
-  var bid = (dumpbox && dumpbox.getAttribute('data-buddy-id')) || (function(){
-    var p = location.pathname.replace(/\/+$/, '');
-    return p.substring(p.lastIndexOf('/') + 1);
-  })();
-  function lsGet(){ try { return JSON.parse(localStorage.getItem('buddyTree.v3') || '{}'); } catch(e){ return {}; } }
-  function lsSet(patch){ try { var s = lsGet(); for (var k in patch) s[k] = patch[k]; localStorage.setItem('buddyTree.v3', JSON.stringify(s)); } catch(e){} }
-  function token(){ return lsGet().ghToken || ''; }
-  function b64encode(str){
-    var bytes = new TextEncoder().encode(str), bin = '';
-    bytes.forEach(function(b){ bin += String.fromCharCode(b); });
-    return btoa(bin);
-  }
-  async function ghApi(path, method, body){
-    var t = token();
-    if (!t) throw new Error('Add a GitHub token first.');
-    var r = await fetch('https://api.github.com' + path, {
-      method: method || 'GET',
-      headers: {'Authorization': 'Bearer ' + t, 'Accept': 'application/vnd.github+json', 'Content-Type': 'application/json'},
-      body: body ? JSON.stringify(body) : undefined
-    });
-    if (!r.ok) throw new Error('GitHub ' + r.status);
-    return r.status === 204 ? null : await r.json();
-  }
-  async function ghGetFile(repo, path){
-    try {
-      var j = await ghApi('/repos/davedellaquila/' + repo + '/contents/' + path);
-      if (j && j.content) return {
-        text: new TextDecoder().decode(Uint8Array.from(atob(j.content.replace(/\n/g, '')), function(c){ return c.charCodeAt(0); })),
-        sha: j.sha
-      };
-    } catch(e){}
-    return null;
-  }
-  var repo = null, buddyName = bid;
-  async function resolveBuddy(){
-    try {
-      var r = await fetch('../buddies.json', {cache: 'no-store'});
-      var d = await r.json();
-      var buds = d.buddies || [];
-      for (var i = 0; i < buds.length; i++) {
-        if (buds[i].id === bid) {
-          if (buds[i].repo) repo = buds[i].repo;
-          if (buds[i].name) buddyName = buds[i].name;
-          break;
-        }
-      }
-    } catch(e){}
-  }
-  function rkey(aid, text){ return bid + '|' + (aid || ('text:' + text.slice(0, 60))); }
-  function isResolved(aid, text){ var m = lsGet().attnDone || {}; return !!m[rkey(aid, text)]; }
-  function setResolved(aid, text){ var s = lsGet(); var m = s.attnDone || {}; m[rkey(aid, text)] = 1; s.attnDone = m; lsSet(s); }
-  function paintResolved(tile, msg){
-    tile.classList.add('resolved');
-    var st = tile.querySelector('.attn-status');
-    if (st) st.textContent = msg;
-  }
-  async function sendAction(tile, entry, okMsg){
-    var st = tile.querySelector('.attn-status');
-    var btns = tile.querySelectorAll('.attn-btn');
-    if (!token()) { st.textContent = 'Add a GitHub token in the Brain dump section above to enable actions.'; return false; }
-    if (!repo) { st.textContent = 'No repo linked for this buddy yet.'; return false; }
-    btns.forEach(function(b){ b.disabled = true; });
-    st.textContent = 'Working…';
-    try {
-      var NL = String.fromCharCode(10);
-      var stamp = new Date().toLocaleString();
-      var cur = await ghGetFile(repo, 'docs/ingest.md');
-      var base = cur ? cur.text : '# Ingest log — ' + buddyName + NL + NL;
-      var body = {message: 'Attention action for ' + bid, content: b64encode(base + '## ' + stamp + NL + NL + entry + NL + NL)};
-      if (cur && cur.sha) body.sha = cur.sha;
-      await ghApi('/repos/davedellaquila/' + repo + '/contents/docs/ingest.md', 'PUT', body);
-      st.textContent = okMsg;
-      return true;
-    } catch(err){
-      st.textContent = 'Save failed: ' + (err.message || err);
-      btns.forEach(function(b){ b.disabled = false; });
-      return false;
-    }
-  }
-  tiles.forEach(function(tile){
-    var aid = tile.getAttribute('data-attn-id') || '';
-    var textEl = tile.querySelector('.attn-text');
-    var text = textEl ? textEl.textContent.trim() : '';
-    if (isResolved(aid, text)) { paintResolved(tile, 'Marked done'); return; }
-    tile.addEventListener('click', function(ev){
-      var btn = ev.target.closest ? ev.target.closest('.attn-btn') : null;
-      if (!btn || btn.disabled) return;
-      var act = btn.getAttribute('data-act');
-      var idBit = aid ? ' (attention id: ' + aid + ')' : '';
-      if (act === 'done') {
-        sendAction(tile,
-          'DONE — Dave marked this done on the homepage: "' + text + '"' + idBit + '. Please remove it from the attention list in buddies.json.',
-          'Marked done — the buddy will clear it.').then(function(ok){ if (ok) { setResolved(aid, text); paintResolved(tile, 'Marked done — the buddy will clear it.'); } });
-      } else if (act === 'info') {
-        sendAction(tile,
-          'FOLLOW-UP — Dave needs more info on: "' + text + '"' + idBit + '. Please follow up with him.',
-          'Sent — ' + buddyName + ' will follow up.');
-      }
-    });
-  });
-  resolveBuddy();
 })();
 </script>
 
