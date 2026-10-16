@@ -1546,6 +1546,14 @@ body.proj-dragging,body.proj-dragging *{cursor:grabbing !important}
 .linkbtn{background:none;border:0;color:var(--accent);font:inherit;font-size:12.5px;cursor:pointer;padding:0}
 .linkbtn:hover{text-decoration:underline}
 .node{position:relative;width:max-content;min-width:180px;max-width:320px;flex-shrink:0}
+#treezoom .node{background:var(--node-bg,var(--panel));border:1px solid var(--border);border-radius:12px}
+/* Dave 2026-10-16: node background color chiclet */
+.nodebg-chiclet{display:inline-flex;align-items:center;gap:6px;margin:0 0 12px 8px;vertical-align:top;
+  font-size:12px;color:var(--muted)}
+.nodebg-chiclet input[type=color]{width:28px;height:28px;border:1px solid var(--border);border-radius:50%;
+  padding:0;background:none;cursor:pointer}
+.nodebg-chiclet input[type=color]::-webkit-color-swatch-wrapper{padding:2px}
+.nodebg-chiclet input[type=color]::-webkit-color-swatch{border:none;border-radius:50%}
 #treezoom .node .name{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 #treezoom .node .desc{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
 /* Fix: flex-centered org tree overflows to negative x-coords on narrow screens, which widens the
@@ -4687,6 +4695,19 @@ function chartThumbSvg(id){
     default: return '';
   }
 }
+/* Dave 2026-10-16: node tile background color */
+function applyNodeBg(){
+  const c = S.nodeBg;
+  document.documentElement.style.setProperty('--node-bg', c || '');
+}
+function initNodeBg(){
+  applyNodeBg();
+  document.addEventListener('input', e => {
+    if (e.target && e.target.id === 'nodebg-pick') {
+      S.nodeBg = e.target.value; save(); applyNodeBg();
+    }
+  });
+}
 function chartSwitcherHtml(){
   const cur = getChartType();
   const curDef = CHART_TYPES.find(c => c.id === cur) || CHART_TYPES[0];
@@ -4697,6 +4718,7 @@ function chartSwitcherHtml(){
       + '<button type="button" role="tab" data-orient="vertical" class="' + ((S.orgOrientation || 'vertical') === 'vertical' ? 'sel' : '') + '" aria-selected="' + ((S.orgOrientation || 'vertical') === 'vertical') + '">Vertical</button>'
       + '<button type="button" role="tab" data-orient="horizontal" class="' + ((S.orgOrientation || 'vertical') === 'horizontal' ? 'sel' : '') + '" aria-selected="' + ((S.orgOrientation || 'vertical') === 'horizontal') + '">Horizontal</button>'
       + '</div>'
+      + '<label class="nodebg-chiclet" title="Tile background color"><input type="color" id="nodebg-pick" value="' + (S.nodeBg || '#e8eef5') + '" aria-label="Tile background color"></label>'
     : '';
   return '<div class="lens-picker-wrap">'
     + '<button class="lens-pill" id="lens-pill" aria-haspopup="true" aria-expanded="false">'
@@ -5560,6 +5582,7 @@ function setTreePane(which, show){
   try { save(); } catch(e) {}
   applyTreePanes();
 }
+(function(){ try{ initNodeBg(); }catch(e){} })();
 (function initZoom(){
   const vt = document.getElementById('view-tree');
   function zoombarHTML(sfx, label){
