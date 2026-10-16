@@ -3,6 +3,11 @@
 All notable changes to the Buddies dashboard and buddy system. Newest first.
 `FEATURES.md` describes the current state; this file describes how it got there.
 
+## 2026-10-16 (Plumber Buddy joins the dashboard)
+
+### Added
+- **Plumber Buddy registry entry** (Dave 2026-10-16 — active pressure-tank leak at the cabin; asked for an on-call master plumber fluent in well systems): `plumber-buddy` added as a top-level staff function (status New), with tagline, mission, repo/docs links, the mission-statement review attention item, and a custom v1 homepage at `plumber-buddy/` (what it knows: cabin well system + Lenwood city water; problems it solves; vendor rolodex with Mike McGee / R&M Drilling; open questions). Dashboard rebuilt; embedded registry verified with the entry present; inline scripts node-checked.
+
 ## 2026-10-16 (Documentarian joins the dashboard)
 
 ### Added
