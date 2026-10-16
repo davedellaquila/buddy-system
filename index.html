@@ -7471,42 +7471,51 @@ async function createBuddyFromDialog(name, icon, kind, parentId, errEl, createBt
       setup_pending: true,
       attention: [{id: 'setup-' + nid, date: today, text: 'New buddy added from the dashboard — run the full onboarding (mission doc, repo, side chat, homepage).'}]
     };
-    // Fetch latest buddies.json from GitHub, append, write back
-    const raw = await ghGetFile('buddy-system', 'buddies.json');
-    if (!raw) throw new Error('Could not read buddies.json from GitHub.');
-    const data = JSON.parse(raw);
-    const arr = data.buddies || data;
-    if (arr.some(x => x.id === nid)) throw new Error('A buddy with that id already exists — try a different name.');
-    arr.push(entry);
-    // Parent mode: reparent the reference buddy under the new parent
-    let reparented = null;
-    if (mode === 'parent' && forId) {
-      reparented = arr.find(x => x.id === forId);
-      if (reparented) reparented.parent = nid;
-    }
-    await ghPutFile('buddy-system', 'buddies.json', b64encode(JSON.stringify(data, null, 1)), 'Add buddy ' + nid + ' (from dashboard info panel)');
-    // Optimistic local update
-    (BUDDIES).push(entry);
+    /* Dave 2026-10-16: stub first — the new buddy lands in the tree, search and
+       link targets immediately; the GitHub write catches up right after. On a
+       write failure the stub rolls back with a plain-English toast. */
+    const ref = (mode === 'parent' && forId) ? byId[forId] : null;
+    const prevParent = ref ? (ref.parent || null) : null;
+    const prevParentsSnap = S.parents ? JSON.parse(JSON.stringify(S.parents)) : S.parents;
+    BUDDIES.push(entry);
     byId[nid] = entry;
-    const p = parentId || '__root';
-    (kidsOf[p] = kidsOf[p] || []).push(entry);
-    if (mode === 'parent' && forId && byId[forId]) {
-      const oldP = effParent(byId[forId]) || '__root';
-      byId[forId].parent = nid;
-      /* Dave 2026-10-16: a stale S.parents override (from a previous picker
-         change) would shadow the new parent via effParents — route through
-         applyParentOverride so it clears, exactly like the picker's Save. */
-      applyParentOverride(forId, nid);
-      const sibs = kidsOf[oldP] || [];
-      const ix = sibs.indexOf(byId[forId]);
-      if (ix >= 0) sibs.splice(ix, 1);
-      (kidsOf[nid] = kidsOf[nid] || []).push(byId[forId]);
+    if (ref) {
+      ref.parent = nid;
+      /* A stale S.parents override (from a previous picker change) would shadow
+         the new parent via effParents — route through applyParentOverride so it
+         clears, exactly like the picker's Save. */
+      applyParentOverride(ref.id, nid);
     }
     closeAddBuddyDialog();
-    save(); renderNav(); refreshViews();
+    save(); buildKids(); renderNav(); refreshViews();
     if (S.projectId) renderBuddy(S.projectId);
-    toast('Buddy created — Astro will run the full onboarding.');
     if (typeof onCreated === 'function') onCreated(nid);
+    toast('Creating ' + name + '…');
+    try {
+      // Fetch latest buddies.json from GitHub, append, write back
+      const raw = await ghGetFile('buddy-system', 'buddies.json');
+      if (!raw) throw new Error('Could not read buddies.json from GitHub.');
+      const data = JSON.parse(raw);
+      const arr = data.buddies || data;
+      if (arr.some(x => x.id === nid)) throw new Error('A buddy with that id already exists — try a different name.');
+      arr.push(entry);
+      // Parent mode: reparent the reference buddy under the new parent
+      if (ref) {
+        const reparented = arr.find(x => x.id === ref.id);
+        if (reparented) reparented.parent = nid;
+      }
+      await ghPutFile('buddy-system', 'buddies.json', b64encode(JSON.stringify(data, null, 1)), 'Add buddy ' + nid + ' (from dashboard info panel)');
+      toast('Buddy created — Astro will run the full onboarding.');
+    } catch (we) {
+      // Roll back the local stub
+      const ix = BUDDIES.indexOf(entry); if (ix >= 0) BUDDIES.splice(ix, 1);
+      delete byId[nid];
+      if (ref) ref.parent = prevParent;
+      S.parents = prevParentsSnap;
+      save(); buildKids(); renderNav(); refreshViews();
+      if (S.projectId) renderBuddy(S.projectId);
+      toast('Couldn’t save ' + name + ' to GitHub: ' + (we.message || we));
+    }
   } catch (e) {
     errEl.textContent = e.message || String(e);
     createBtn.disabled = false;

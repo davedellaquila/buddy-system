@@ -20,6 +20,9 @@
 ### Added
 - **➕ "+ New parent…" in the change-parent picker** (Dave 2026-10-16 — the filterable parent list had no way to create a parent that isn't there yet): the Change/Add parent dialog now has a "+ New parent…" button next to Cancel/Save. Change mode opens the existing "Add a parent" dialog (new buddy created above, current buddy reparented under it); Add mode creates the new buddy as a peer and adds it as an additional parent via the parent override. `openAddBuddyDialog`/`createBuddyFromDialog` take an optional `onCreated` callback; existing callers unaffected. Dashboard rebuilt; main script node-checked.
 
+### Fixed
+- **New parent now visible immediately** (Dave 2026-10-16 — two symptoms after creating a parent from the picker: the info panel still showed the old parent, and the new parent didn't appear in left-panel search): (1) the creation wrote `byId[].parent` directly, but a stale `S.parents` override from a previous picker change shadowed it via `effParents` — the reparent now routes through `applyParentOverride`, exactly like the picker's Save; (2) the local stub was only added after the GitHub round-trip finished, so nothing appeared for several seconds — the stub (BUDDIES/byId/override) is now created first and the panel/tree/search re-render immediately, with the GitHub write following; on a write failure the stub rolls back and a plain-English toast explains why. Dashboard rebuilt; main script node-checked.
+
 ## 2026-10-16 (Atlas: rail right, horizontal zoom, pane toggles, Tab cycling)
 
 ### Changed
