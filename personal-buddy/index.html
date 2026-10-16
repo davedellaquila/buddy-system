@@ -6,7 +6,7 @@
   <meta name="color-scheme" content="light dark" />
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🙋</text></svg>"
   <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🙋</text></svg>" /> />
-  <title>Personal Buddy</title>
+  <title data-buddy-name>Personal Buddy</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -232,7 +232,7 @@
 
   <div class="wrap">
     <div class="eyebrow"><span class="dot"></span>Project Buddy family · Personal-ops</div>
-    <h1><span class="hand">🙋</span> Personal Buddy</h1>
+    <h1><span class="hand">🙋</span> <span data-buddy-name>Personal Buddy</span></h1>
     <p class="tagline">The &ldquo;figure it out later&rdquo; list — with teeth.</p>
     <span class="status-pill"><span class="pulse"></span>Brief review — awaiting Dave</span>
 
@@ -536,6 +536,27 @@
     });
   });
   resolveBuddy();
+})();
+</script>
+<script>
+(function(){
+  var parts = location.pathname.split('/'), bid = '';
+  for (var i = parts.length - 1; i >= 0; i--) { if (parts[i]) { bid = parts[i]; break; } }
+  function applyName(name){ if (!name) return;
+    var els = document.querySelectorAll('[data-buddy-name]');
+    for (var k = 0; k < els.length; k++) els[k].textContent = name; }
+  try { fetch('../buddies.json', {cache: 'no-store'}).then(function(r){ return r.json(); })
+    .then(function(d){ var buds = (d && d.buddies) || [];
+      for (var j = 0; j < buds.length; j++) {
+        if (buds[j].id === bid && buds[j].name) { applyName(buds[j].name); break; } } })
+    .catch(function(){}); } catch(e){}
+  window.addEventListener('storage', function(e){
+    if (e.key !== 'buddyTree.rename' || !e.newValue) return;
+    try {
+      var d = JSON.parse(e.newValue);
+      if (d && d.id === bid && d.name) applyName(d.name);
+    } catch(err){}
+  });
 })();
 </script>
 </body>
