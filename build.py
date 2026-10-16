@@ -521,7 +521,7 @@ body.sb-closed #pane-toggles .ptoggle{padding:6px 4px}
 /* Slim horizontal zoom — tucked into the top-right corner of each pane (Dave 2026-10-16:
    rotated from vertical; aligns with the top edge of both the chart and orphan panes).
    No panel chrome; small▪ · slider · large◼ · fit · center. */
-.zoombar{position:absolute;top:12px;left:50%;transform:translateX(-50%);right:auto;z-index:5;
+.zoombar{position:absolute;top:76px;left:50%;transform:translateX(-50%);right:auto;z-index:5;
   display:flex;flex-direction:row;align-items:center;gap:8px;width:auto;height:auto;
   padding:0;margin:0;background:none;border:none;border-radius:0;box-shadow:none;
   -webkit-tap-highlight-color:transparent}
