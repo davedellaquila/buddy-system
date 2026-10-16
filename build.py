@@ -8671,7 +8671,14 @@ function updateTokenGating(id){
     }
   }
   const ig = document.getElementById('bp-ingest');
-  if (ig) { ig.disabled = !has; ig.placeholder = has ? ig.placeholder : 'Add a GitHub token above to unlock ingest.'; }
+  // Dave 2026-10-16: the dump box stays enabled without a token — dumpIngest
+  // already falls back to the on-device queue, so disabling the box only
+  // blocked typing for no benefit.
+  if (ig) {
+    ig.disabled = false;
+    if (!ig.dataset.ph) ig.dataset.ph = ig.placeholder;
+    ig.placeholder = has ? ig.dataset.ph : 'Dump away — saved on this device until a GitHub token is added.';
+  }
 
   const pz = document.getElementById('pdrop');
   if (pz) pz.classList.toggle('locked', !has);
@@ -9029,10 +9036,13 @@ document.addEventListener('click', e => {
   if (gt) { e.preventDefault(); show('buddy:' + gt.dataset.goto); return; }
   const bb = e.target.closest('[data-buddy]');
   // Don't re-open the buddy when clicking an editable field (e.g. the name)
+  // or any form control — textarea/input/button clicks must not re-render
+  // the panel (Dave 2026-10-16: clicking the dump box flashed the screen and
+  // destroyed the textarea before a keystroke could land).
   // Panel behavior is view-aware: in Homepage view, clicking selects only
   // (use the ⓘ icon for the panel). In other views, clicking opens the panel.
   // The autoOpenPanel setting overrides to always open.
-  if (bb && !e.target.closest('[contenteditable="true"]')) {
+  if (bb && !e.target.closest('[contenteditable="true"],input,textarea,select,button')) {
     const wantPanel = S.autoOpenPanel || S.view !== 'project';
     if (wantPanel) openBuddy(bb.dataset.buddy);
     else selectBuddy(bb.dataset.buddy);
