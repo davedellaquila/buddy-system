@@ -97,7 +97,10 @@ body.sb-anchored #sidebar{left:0;background:var(--panel);border-left:none;border
   box-shadow:8px 0 28px var(--shadow-soft);
   -webkit-backdrop-filter:none;backdrop-filter:none}
 body.sb-anchored #sidebar .brand, body.sb-anchored #sidebar .sb-tipjar{background:var(--panel)}
-#main{flex:1;min-width:0;padding:36px 32px 80px;position:relative;z-index:1}
+#main{flex:1;min-width:0;padding:36px 32px 80px;position:relative;z-index:1;
+  margin-left:360px}
+body.sb-closed #main{margin-left:88px}
+@media (max-width:639px){#main,body.sb-closed #main{margin-left:0}}
 .brand{padding:22px 8px 14px;background:transparent}
 /* Brand chrome (eyebrow/title/subtitle + gear/close) pins at top; Views scroll under */
 /* Tip jar — quiet footer link pinned to the bottom of the sidebar. Muted, small,
