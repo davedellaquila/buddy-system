@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-10-16 (Live rename propagation + homepage refresh controls)
+
+### Added
+- **Live rename propagation** (Dave 2026-10-16 — "can you force a web page to update without me having to refresh it?"): the dashboard now broadcasts every global rename via `localStorage` (`buddyTree.rename`). Open buddy homepages (separate tab or the dashboard's embedded Homepage view — same browser, same origin) listen for the storage event and update their displayed name instantly, no refresh needed. Other devices/browsers still pick the rename up on next load via the existing `buddies.json` fetch. Template pages regenerated with the listener baked in; custom-page threads are being sent the updated snippet.
+- **Homepage refresh controls** (Dave 2026-10-16 — "is there a control to refresh a buddy's web page?"): the dashboard's Homepage view now has a "↻ Refresh page" button next to "Open in a new tab" (the browser's own reload button refreshes the whole dashboard, not the embedded iframe). Template homepages also got a subtle ↻ button in the sticky header for standalone viewing.
+
 ## 2026-10-16 (Global rename: info-panel rename writes through to the registry)
 
 ### Added

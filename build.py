@@ -3185,6 +3185,20 @@ function renderProjectView(){
     open.rel = 'noopener';
     open.textContent = 'Open in a new tab';
     wrap.appendChild(open);
+    // Refresh control (Dave 2026-10-16): the browser's own reload button
+    // refreshes the whole dashboard, not the embedded page — this reloads
+    // just the homepage iframe so content changes (renames, new data) show up.
+    const refresh = document.createElement('button');
+    refresh.id = 'homepage-refresh';
+    refresh.type = 'button';
+    refresh.textContent = '↻ Refresh page';
+    refresh.title = 'Reload this homepage';
+    refresh.style.cssText = 'margin-left:12px;background:none;border:1px solid var(--border);border-radius:8px;color:var(--muted);font-size:13px;padding:5px 12px;cursor:pointer';
+    refresh.addEventListener('click', () => {
+      try { frame.contentWindow.location.reload(); }
+      catch (e) { frame.src = frame.src; }
+    });
+    wrap.appendChild(refresh);
   } else {
     // No custom URL: auto-generate homepage
     const open = document.createElement('span');
@@ -3833,6 +3847,10 @@ function renderBuddy(id){
     refreshBuddyLabels(id);
     // Update the panel itself to show the new name (in case hideBuddyWord applies)
     renderBuddy(id);
+    // Broadcast the rename so any open homepage (separate tab or the embedded
+    // Homepage view, same browser) updates its displayed name live via the
+    // storage event — no refresh needed. Other devices pick it up on next load.
+    try { localStorage.setItem('buddyTree.rename', JSON.stringify({id: id, name: v, at: Date.now()})); } catch(e) {}
     // Write through to the registry (token-gated; queued when offline)
     writeGlobalName(id, v);
   });

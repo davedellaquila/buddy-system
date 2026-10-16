@@ -315,6 +315,16 @@ NAMESYNC_JS = """
       }
     }).catch(function(){});
   } catch(e){}
+  /* Live rename (Dave 2026-10-16): the dashboard broadcasts renames via
+     localStorage, so an open page updates its name without a refresh.
+     Same browser only — other devices pick it up on their next load. */
+  window.addEventListener('storage', function(e){
+    if (e.key !== 'buddyTree.rename' || !e.newValue) return;
+    try {
+      var d = JSON.parse(e.newValue);
+      if (d && d.id === bid && d.name) applyName(d.name);
+    } catch(err){}
+  });
 })();
 </script>
 """
@@ -485,6 +495,11 @@ body {{
   font-size: 17px; font-weight: 700;
 }}
 .topbar-icon {{ font-size: 22px; line-height: 1; }}
+.topbar-refresh {{
+  margin-left: auto; background: none; border: 1px solid transparent; border-radius: 8px;
+  color: var(--muted); font-size: 16px; cursor: pointer; padding: 4px 10px; line-height: 1;
+}}
+.topbar-refresh:hover {{ color: var(--text); border-color: var(--border); }}
 .icon {{ font-size: 64px; margin-bottom: 16px; }}
 h1 {{ font-size: 32px; margin-bottom: 8px; }}
 .tagline {{ color: var(--muted); font-size: 18px; }}
@@ -541,7 +556,7 @@ h2 {{ font-size: 22px; margin: 32px 0 16px; }}
 </head>
 <body>
 {family_nav}
-<div class="topbar"><span class="topbar-icon">{icon}</span><span class="topbar-name" data-buddy-name>{name}</span></div>
+<div class="topbar"><span class="topbar-icon">{icon}</span><span class="topbar-name" data-buddy-name>{name}</span><button class="topbar-refresh" title="Reload this page" onclick="location.reload()">&#8635;</button></div>
 <div class="header">
 <div class="icon">{icon}</div>
 <h1 data-buddy-name>{name}</h1>
