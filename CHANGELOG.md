@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-10-16 (Social Media Buddy homepage: chart embedded + generator-trap fix)
+
+### Fixed
+- **Social Media Buddy homepage restored** (2026-10-16): commit e209ba2's gallery generator run wiped the custom homepage back to the template — the skip-check matches the literal phrase "Part of the Buddy System", which the custom footer contained. Restored the thread-owned design (marker removed) with a footer that avoids the phrase, and documented the trap in AGENTS.md.
+- **Post Pipeline chart embedded**: 📊 Charts Buddy's Kin-language funnel (pipeline-light/dark.png, dark/light swapped via `<picture>`) now sits in its dedicated section, built from real queue counts (14 drafted).
+
 ## 2026-10-16 (Gallery: public photo URLs)
 
 ### Fixed
