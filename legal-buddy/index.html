@@ -1,157 +1,381 @@
-<!-- DEFAULT-HOMEPAGE v3 — "The Dossier" -->
 <!DOCTYPE html>
-<html lang="en">
+<!-- CUSTOM HOMEPAGE -->
+<html lang="en" data-theme="auto">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="color-scheme" content="dark light">
-<title>Legal Buddy — Buddy Dossier</title>
+<title>Legal Buddy — Dave's General Counsel</title>
 <style>
-:root{color-scheme:dark light;--bg:#0d1117;--card:#161b22;--border:#30363d;--text:#e6edf3;--muted:#8b949e;--accent:#58a6ff;--amber:#f0b429;--amber-bd:#7d5e00}
-@media (prefers-color-scheme:light){:root{--bg:#ffffff;--card:#f6f8fa;--border:#d0d7de;--text:#1f2328;--muted:#57606a;--accent:#0969da}}
-body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;margin:0;line-height:1.6}
-.wrap{max-width:860px;margin:0 auto;padding:40px 22px 60px}
-header.hero{display:flex;gap:18px;align-items:center;margin-bottom:8px}
-.heroicon{width:72px;height:72px;flex:none;border-radius:20px;background:var(--card);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:38px}
-h1{margin:0;font-size:30px;letter-spacing:-.02em}
-.tagline{color:var(--muted);margin:6px 0 0;font-size:15px}
-.stats{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0 28px}
-.stat{font-size:12.5px;color:var(--muted);background:var(--card);border:1px solid var(--border);border-radius:999px;padding:4px 12px}
-.stat b{color:var(--text)}
-.status{font-size:12.5px;font-weight:700;border-radius:999px;padding:4px 12px;background:var(--card);border:1px solid var(--border)}
-.card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px 22px;margin-bottom:20px}
-.kicker{margin:0 0 10px;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:var(--muted)}
-.mission{font-size:16px;margin:0 0 10px}
-.brief{color:var(--muted);font-size:14px}
-.persona{font-size:14px;margin:8px 0 0}
-.facts{margin:0;display:grid;gap:2px}
-.fact{display:grid;grid-template-columns:150px 1fr;gap:12px;padding:7px 0;border-top:1px solid var(--border);font-size:14px}
-.fact:first-child{border-top:0}
-.fact dt{color:var(--muted);font-weight:600}
-.fact dd{margin:0;overflow-wrap:break-word}
-code{background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:1px 6px;font-size:13px}
-a{color:var(--accent);text-decoration:none}
-a:hover{text-decoration:underline}
-.aitem{display:flex;gap:10px;padding:10px 0;font-size:14px}
-.aitem+.aitem{border-top:1px solid var(--border)}
-.adot{color:var(--amber);font-size:11px;line-height:2;flex:none}
-.adate{color:var(--muted);font-size:12px;margin-top:2px}
-.plan{display:flex;gap:12px;padding:12px 0}
-.plan+.plan{border-top:1px solid var(--border)}
-.picon{font-size:24px;flex:none}
-.pname{font-weight:650;font-size:15px}
-.pill{display:inline-block;font-size:11px;font-weight:700;background:var(--bg);border:1px solid var(--border);color:var(--accent);border-radius:999px;padding:2px 10px;margin-left:8px}
-.pdesc{margin:6px 0 0;color:var(--muted);font-size:13.5px}
-.pdoc{display:inline-block;margin-top:6px;font-size:13px}
-.docrow{padding:8px 0;font-size:14.5px}
-.docrow+.docrow{border-top:1px solid var(--border)}
-.kids{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px}
-.kid{display:flex;align-items:center;gap:10px;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:10px 12px;color:var(--text)}
-.kid:hover{text-decoration:none;border-color:var(--accent)}
-.kidicon{font-size:22px}
-.kidname{font-size:14px;font-weight:600}
-.connrow{display:flex;gap:12px;padding:8px 0;font-size:14px;align-items:baseline}
-.connrow+.connrow{border-top:1px solid var(--border)}
-.connlabel{flex:none;width:110px;color:var(--muted);font-weight:600;font-size:13px}
-.pinrow{padding:6px 0;font-size:14px}
-.muted{color:var(--muted);font-size:13px}
-.empty{color:var(--muted);font-style:italic;margin:4px 0}
-footer{margin-top:36px;padding-top:18px;border-top:1px solid var(--border);color:var(--muted);font-size:12.5px;text-align:center}
+  :root{
+    --bg:#0f1216; --bg2:#131820; --card:#171d26; --card2:#1c232e;
+    --ink:#ece7da; --muted:#a39d8d; --faint:#7c7666;
+    --line:#2a313c; --hairline:rgba(201,162,75,.22);
+    --brass:#c9a24b; --brass-deep:#8f6f24; --brass-wash:rgba(201,162,75,.12);
+    --bar:rgba(15,18,22,.86);
+    --btn-ink:#141414;
+    --shadow:0 1px 2px rgba(0,0,0,.35);
+  }
+  html[data-theme="light"]{
+    --bg:#f6f1e6; --bg2:#efe7d4; --card:#fffdf6; --card2:#f9f4e7;
+    --ink:#22252a; --muted:#6f695b; --faint:#9a937f;
+    --line:#e3d9c2; --hairline:rgba(143,111,36,.28);
+    --brass:#8f6f24; --brass-deep:#8f6f24; --brass-wash:rgba(143,111,36,.10);
+    --bar:rgba(246,241,230,.88);
+    --btn-ink:#ffffff;
+    --shadow:0 1px 2px rgba(60,50,20,.10);
+  }
+  @media (prefers-color-scheme: light){
+    html[data-theme="auto"]{
+      --bg:#f6f1e6; --bg2:#efe7d4; --card:#fffdf6; --card2:#f9f4e7;
+      --ink:#22252a; --muted:#6f695b; --faint:#9a937f;
+      --line:#e3d9c2; --hairline:rgba(143,111,36,.28);
+      --brass:#8f6f24; --brass-deep:#8f6f24; --brass-wash:rgba(143,111,36,.10);
+      --bar:rgba(246,241,230,.88);
+      --btn-ink:#ffffff;
+      --shadow:0 1px 2px rgba(60,50,20,.10);
+    }
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font-family:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    line-height:1.55; -webkit-font-smoothing:antialiased;
+  }
+  .serif{font-family:Georgia,"Iowan Old Style","Times New Roman",serif}
 
-.dumpbox {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 20px 22px;
-  margin-bottom: 32px;
-}
-.dumpbox h2 { margin: 0 0 6px; font-size: 20px; }
-.dumpbox-sub { color: var(--muted); font-size: 14px; margin-bottom: 14px; }
-.dumpbox textarea {
-  width: 100%; min-height: 96px; resize: vertical;
-  background: var(--bg); border: 1px solid var(--border); border-radius: 8px;
-  padding: 10px 12px; font-size: 14px; color: var(--text); font-family: inherit;
-}
-.dumpbox textarea:focus { outline: none; border-color: var(--accent); }
-.dumpbox textarea:disabled { opacity: .55; }
-.dumpbox-row { display: flex; align-items: center; gap: 12px; margin-top: 10px; flex-wrap: wrap; }
-.dumpbox-btn {
-  background: var(--accent); color: #fff; border: none; border-radius: 8px;
-  padding: 9px 22px; font-size: 14px; font-weight: 600; cursor: pointer;
-}
-.dumpbox-btn:disabled { opacity: .45; cursor: default; }
-.dumpbox-status { font-size: 13px; color: var(--muted); }
-.dumpbox-token {
-  background: var(--bg); border: 1px dashed var(--border); border-radius: 8px;
-  padding: 12px 14px; margin-bottom: 12px; font-size: 14px;
-}
-.dumpbox-token p { margin-bottom: 8px; }
-.dumpbox-tokenrow { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
-.dumpbox-tokenrow input {
-  flex: 1; min-width: 170px; background: var(--card); border: 1px solid var(--border);
-  border-radius: 8px; padding: 7px 10px; font-size: 13px; color: var(--text);
-}
-.dumpbox-tokenrow button {
-  background: transparent; color: var(--accent); border: 1px solid var(--accent);
-  border-radius: 8px; padding: 7px 14px; font-size: 13px; font-weight: 600; cursor: pointer;
-}
-.dumpbox-tokenrow a { color: var(--accent); font-size: 13px; }
+  /* ---- slim sticky header: icon left of the page name, content scrolls under ---- */
+  .topbar{
+    position:sticky; top:0; z-index:50;
+    background:var(--bar); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--hairline);
+  }
+  .topbar-inner{
+    max-width:920px; margin:0 auto; padding:10px 20px;
+    display:flex; align-items:center; gap:10px;
+  }
+  .topbar .icon{font-size:20px; line-height:1}
+  .topbar .name{font-weight:650; font-size:16px; letter-spacing:.2px}
+  .topbar .spacer{flex:1}
+  .topbar a.dash{
+    color:var(--muted); text-decoration:none; font-size:13px; white-space:nowrap;
+  }
+  .topbar a.dash:hover{color:var(--brass)}
+  #themeToggle{
+    background:var(--card2); color:var(--ink); border:1px solid var(--line);
+    border-radius:999px; padding:6px 12px; font-size:13px; cursor:pointer; white-space:nowrap;
+  }
+  #themeToggle:hover{border-color:var(--brass)}
 
-@media (max-width:640px){.fact{grid-template-columns:1fr;gap:2px}.connlabel{width:88px}.wrap{padding:28px 16px 48px}h1{font-size:24px}}
+  .wrap{max-width:920px; margin:0 auto; padding:28px 20px 64px}
+
+  .eyebrow{
+    font-size:12px; letter-spacing:2.5px; text-transform:uppercase;
+    color:var(--brass); font-weight:700; margin:26px 0 12px;
+  }
+  .eyebrow:first-child{margin-top:8px}
+
+  .hero-quote{
+    font-size:clamp(26px,4.5vw,40px); line-height:1.3; margin:0 0 10px; font-weight:400;
+  }
+  .hero-quote em{color:var(--brass); font-style:italic}
+  .hero-attr{color:var(--faint); font-size:14px; margin:0 0 18px}
+  .hero-sub{font-size:17px; color:var(--muted); max-width:640px; margin:0}
+  .hero-sub strong{color:var(--ink)}
+
+  .rule{border:0; border-top:1px solid var(--hairline); margin:34px 0}
+
+  h2.sec{
+    font-size:13px; letter-spacing:2px; text-transform:uppercase;
+    color:var(--brass); font-weight:700; margin:0 0 14px;
+  }
+  .lede{color:var(--muted); margin:0 0 18px; max-width:660px}
+
+  .steps{display:grid; gap:10px; counter-reset:step}
+  .step{
+    background:var(--card); border:1px solid var(--line); border-radius:12px;
+    padding:16px 18px; box-shadow:var(--shadow);
+    display:grid; grid-template-columns:34px 1fr; gap:12px; align-items:start;
+  }
+  .step .n{
+    width:30px; height:30px; border-radius:50%; background:var(--brass-wash);
+    border:1px solid var(--hairline); color:var(--brass);
+    display:flex; align-items:center; justify-content:center; font-weight:700; font-size:14px;
+  }
+  .step b{display:block; margin-bottom:2px}
+  .step p{margin:0; color:var(--muted); font-size:15px}
+
+  .tiles{display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:10px}
+  .tile{
+    background:var(--card); border:1px solid var(--line); border-radius:12px;
+    padding:15px 16px; box-shadow:var(--shadow);
+  }
+  .tile b{display:block; margin-bottom:4px; font-size:15px}
+  .tile b .dot{color:var(--brass); margin-right:6px}
+  .tile p{margin:0; color:var(--muted); font-size:14px}
+
+  .traits{list-style:none; margin:0; padding:0; display:grid; gap:10px}
+  .trait{
+    background:var(--card); border:1px solid var(--line); border-radius:12px;
+    padding:14px 16px; box-shadow:var(--shadow);
+    display:grid; grid-template-columns:1fr auto; gap:4px 14px; align-items:baseline;
+  }
+  .trait .t{font-size:15px}
+  .trait .t b{color:var(--brass); font-weight:700; margin-right:8px}
+  .trait .who{font-size:12.5px; color:var(--faint); white-space:nowrap}
+  .guardrails{
+    margin-top:14px; padding:14px 16px; border:1px dashed var(--hairline);
+    border-radius:12px; color:var(--muted); font-size:14px;
+  }
+  .guardrails b{color:var(--ink)}
+
+  .limits{list-style:none; margin:0; padding:0; display:grid; gap:8px}
+  .limits li{
+    background:var(--card2); border:1px solid var(--line); border-radius:10px;
+    padding:12px 15px; font-size:15px; color:var(--muted);
+  }
+  .limits li b{color:var(--ink)}
+  .limits li::before{content:"— "; color:var(--brass)}
+
+  .docs{display:grid; gap:8px}
+  .doc{
+    display:flex; align-items:center; gap:10px;
+    background:var(--card); border:1px solid var(--line); border-radius:10px;
+    padding:12px 15px; text-decoration:none; color:var(--ink); box-shadow:var(--shadow);
+  }
+  .doc:hover{border-color:var(--brass)}
+  .doc .dicon{font-size:18px}
+  .doc .dlabel{font-weight:600; font-size:15px}
+  .doc .dsub{margin-left:auto; font-size:13px; color:var(--faint); text-align:right}
+
+  .attention{
+    border:1px solid var(--hairline); background:var(--brass-wash);
+    border-radius:12px; padding:15px 17px; display:grid; gap:10px;
+  }
+  .attention .a{
+    display:flex; gap:10px; align-items:baseline; font-size:15px;
+  }
+  .attention .a .ping{
+    flex:none; font-size:11px; font-weight:800; letter-spacing:1px; text-transform:uppercase;
+    color:var(--brass-deep); border:1px solid var(--hairline); border-radius:6px; padding:2px 7px;
+  }
+  .attention a{color:var(--brass-deep); font-weight:600}
+
+  /* ---- brain dump (canonical markup, page-themed) ---- */
+  .dumpbox{
+    background:var(--card); border:1px solid var(--hairline); border-radius:14px;
+    padding:20px; box-shadow:var(--shadow);
+  }
+  .dumpbox h2{margin:0 0 6px; font-size:20px}
+  .dumpbox-sub{color:var(--muted); font-size:14px; margin:0 0 14px}
+  .dumpbox textarea{
+    width:100%; min-height:110px; resize:vertical;
+    background:var(--bg2); color:var(--ink); border:1px solid var(--line);
+    border-radius:10px; padding:12px 14px; font-size:15px; font-family:inherit;
+  }
+  .dumpbox textarea:focus{outline:2px solid var(--brass); outline-offset:1px}
+  .dumpbox textarea:disabled{opacity:.5}
+  .dumpbox-row{display:flex; align-items:center; gap:12px; margin-top:12px; flex-wrap:wrap}
+  .dumpbox-btn{
+    background:var(--brass); color:var(--btn-ink); border:0; border-radius:10px;
+    padding:10px 20px; font-size:15px; font-weight:700; cursor:pointer;
+  }
+  .dumpbox-btn:hover{filter:brightness(1.07)}
+  .dumpbox-btn:disabled{opacity:.5; cursor:default}
+  .dumpbox-status{color:var(--muted); font-size:14px}
+  .dumpbox-connect, .dumpbox-token{
+    border:1px dashed var(--hairline); border-radius:10px; padding:14px; margin-bottom:14px;
+  }
+  .dumpbox-connect p, .dumpbox-token p{margin:0 0 10px; font-size:14px; color:var(--muted)}
+  .dumpbox-tokenrow{display:flex; gap:8px; flex-wrap:wrap; align-items:center}
+  .dumpbox-tokenrow input{
+    flex:1; min-width:200px; background:var(--bg2); color:var(--ink);
+    border:1px solid var(--line); border-radius:8px; padding:9px 12px; font-size:14px;
+  }
+  .dumpbox-tokenrow button{
+    background:var(--card2); color:var(--ink); border:1px solid var(--line);
+    border-radius:8px; padding:9px 14px; font-size:14px; cursor:pointer;
+  }
+  .dumpbox-tokenrow button:hover{border-color:var(--brass)}
+  .dumpbox-tokenrow a{font-size:13px; color:var(--brass)}
+
+  .foot{
+    margin-top:44px; padding-top:18px; border-top:1px solid var(--line);
+    color:var(--faint); font-size:13px; display:flex; gap:16px; flex-wrap:wrap;
+  }
+  .foot a{color:var(--muted); text-decoration:none}
+  .foot a:hover{color:var(--brass)}
+
+  @media (max-width:560px){
+    .trait{grid-template-columns:1fr}
+    .trait .who{white-space:normal}
+    .step{grid-template-columns:30px 1fr; padding:13px 14px}
+    .topbar a.dash{display:none}
+  }
 </style>
 </head>
 <body>
-<div class="wrap">
-<header class="hero">
-<div class="heroicon">⚖️</div>
-<div><h1>Legal Buddy</h1><p class="tagline">Dave&#x27;s general counsel — the Heineman standard</p></div>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <span class="icon">⚖️</span>
+    <span class="name">Legal Buddy</span>
+    <span class="spacer"></span>
+    <a class="dash" href="https://davedellaquila.github.io/buddy-system/">Buddy System dashboard</a>
+    <button id="themeToggle" type="button" aria-label="Toggle color theme">🌗 Auto</button>
+  </div>
 </header>
-<nav data-buddy-crumb style="margin-bottom:14px;font-size:14px;"><a href="https://davedellaquila.github.io/buddy-system/astro/" style="color:var(--muted);text-decoration:none;">← Astro</a></nav>
-<div class="stats"><span class="status st-new">New</span><span class="stat"><b>1</b> need attention</span><span class="stat"><b>2</b> documents</span></div>
-<section class="card"><h2 class="kicker">About</h2><p class="mission">Dave&#x27;s in-house legal counsel: recommendations, not option lists; plain-spoken; tells Dave when he&#x27;s wrong; calibrates risk to his appetite. An amalgamation of the best senior partners at the world&#x27;s top firms. Covers contracts, IP, employment, privacy, regulatory, litigation readiness, deals at triage depth — with handoffs to human counsel where stakes demand. Remembers every matter. Not a licensed attorney; no privilege.</p><p class="brief">https://docs.google.com/document/d/1LzovvauSbYlNWvdtnduAplH70--STlKMrokGUYGz2ms/edit</p><p class="persona">🎭 Persona: Heineman lawyer-statesman</p></section>
-<section class="card"><h2 class="kicker">Fact sheet — the data chain</h2><dl class="facts"><div class="fact"><dt>Buddy ID</dt><dd><code>legal-buddy</code></dd></div><div class="fact"><dt>Kind</dt><dd>standalone</dd></div><div class="fact"><dt>Parent chain</dt><dd>— top level —</dd></div><div class="fact"><dt>Repository</dt><dd><a href="https://github.com/davedellaquila/legal-buddy" target="_blank" rel="noopener">davedellaquila/legal-buddy</a></dd></div><div class="fact"><dt>Homepage URL</dt><dd><code>legal-buddy/</code></dd></div></dl></section>
-<section class="card"><h2 class="kicker">Needs attention (1)</h2><div class="attn"><div class="aitem"><span class="adot">●</span><div><div><a href="https://docs.google.com/document/d/1RGISv-KCmkTepGA9QZYNXPrdtEjqNE1VqeNawNr-rTY/edit" target="_blank" rel="noopener">Mission statement ready for Dave&#x27;s review. ↗</a></div><div class="adate">2026-10-16</div></div></div></div></section>
 
-<section class="card"><h2 class="kicker">Documents (2)</h2><div class="docrow"><a href="https://docs.google.com/document/d/1RGISv-KCmkTepGA9QZYNXPrdtEjqNE1VqeNawNr-rTY/edit" target="_blank" rel="noopener">Legal Buddy — Mission Statement</a></div><div class="docrow"><a href="https://docs.google.com/document/d/1LzovvauSbYlNWvdtnduAplH70--STlKMrokGUYGz2ms/edit" target="_blank" rel="noopener">The Perfect In-House Legal Counsel — Brief</a></div></section>
-<section class="card"><h2 class="kicker">Sub-buddies (0)</h2><p class="empty">No sub-buddies.</p></section>
-<section class="card"><h2 class="kicker">Connections</h2><p class="empty">No connections recorded.</p></section>
-<section class="card"><h2 class="kicker">Repository &amp; memory</h2><div class="connrow"><span class="connlabel">Repo</span><a href="https://github.com/davedellaquila/legal-buddy" target="_blank" rel="noopener">davedellaquila/legal-buddy</a> <span class="muted">— brain dumps land in docs/ingest.md</span></div></section>
+<main class="wrap">
 
-<section class="dumpbox" data-buddy-id="legal-buddy">
-<h2>🧠 Brain dump</h2>
-<p class="dumpbox-sub">Dump what's on your mind about Legal Buddy — raw and unfiltered. Each dump lands in the buddy's repo (docs/ingest.md) as a timestamped entry — or saves on this device until a GitHub token is connected.</p>
-<div class="dumpbox-token" hidden>
-<p>🔒 Connect GitHub to unlock dumping. Paste a token once — it stays on this device only.</p>
-<div class="dumpbox-tokenrow">
-<input type="password" placeholder="GitHub token (repo scope)" aria-label="GitHub token">
-<button type="button">Save token</button>
-<a href="https://github.com/settings/tokens" target="_blank" rel="noopener">Get a token</a>
-</div>
-</div>
-<textarea rows="4" placeholder="Dump what's on your mind about Legal Buddy…"></textarea>
-<div class="dumpbox-row">
-<button type="button" class="dumpbox-btn">Dump it</button>
-<span class="dumpbox-status" role="status"></span>
-</div>
-</section>
+  <p class="eyebrow">Dave's general counsel · online since 2026-10-16</p>
+  <h1 class="hero-quote serif">The first question is <em>what is legal</em>. The last question is <em>what is right</em>.</h1>
+  <p class="hero-attr">— the Heineman standard, after Ben Heineman, General Electric</p>
+  <p class="hero-sub">Legal Buddy is Dave's in-house counsel: <strong>recommendations, not option lists</strong>. Plain-spoken. It tells Dave when he's wrong — that's what makes the yeses trustworthy. An amalgamation of the best senior partners at the world's top firms, composited into one counsel that is instant, remembers every matter, and never bills by the hour.</p>
 
-<footer>Default Homepage v3 — "The Dossier" · Generated 2026-10-16 · Part of the Buddy System<br>
-<span class="muted">Archived PDF snapshots live in the buddy-system archive folder.</span></footer>
-</div>
+  <hr class="rule">
+
+  <h2 class="sec">How counsel works</h2>
+  <p class="lede">Bring a question, a document, or a situation. This is what comes back:</p>
+  <div class="steps">
+    <div class="step"><span class="n">1</span><div><b>The decision first</b><p>A positioned recommendation in one or two sentences. The analysis comes after — never a memo that buries the answer.</p></div></div>
+    <div class="step"><span class="n">2</span><div><b>Reasoning + confidence, attached</b><p>What it's based on, and how sure it is. No hedging theater, no false precision.</p></div></div>
+    <div class="step"><span class="n">3</span><div><b>Calibrated to your appetite</b><p>Risk tuned to Dave's — learned over time. Never the department of no: it finds the compliant path to yes.</p></div></div>
+    <div class="step"><span class="n">4</span><div><b>Human-counsel handoff, when it counts</b><p>Says plainly where a licensed attorney is needed, and what to ask them. Stays out of the limelight — Dave wins.</p></div></div>
+  </div>
+
+  <hr class="rule">
+
+  <h2 class="sec">The remit — triage depth</h2>
+  <p class="lede">The full general-counsel remit at triage depth, with clear handoffs to human counsel where the stakes demand it.</p>
+  <div class="tiles">
+    <div class="tile"><b><span class="dot">●</span>Contracts</b><p>Reviews, drafting support, redlines in plain language.</p></div>
+    <div class="tile"><b><span class="dot">●</span>Intellectual property</b><p>Protection, ownership, licensing — the questions to ask first.</p></div>
+    <div class="tile"><b><span class="dot">●</span>Employment</b><p>Hiring, terms, separations, contractor questions.</p></div>
+    <div class="tile"><b><span class="dot">●</span>Privacy</b><p>Data practices, notices, consent, vendor questions.</p></div>
+    <div class="tile"><b><span class="dot">●</span>Corporate &amp; regulatory</b><p>Entity, compliance, filings awareness.</p></div>
+    <div class="tile"><b><span class="dot">●</span>Litigation readiness</b><p>Preserve, document, triage. Trauma-surgeon tempo in a crisis.</p></div>
+    <div class="tile"><b><span class="dot">●</span>Deals</b><p>Structure sense-checks, term-sheet reads, negotiation posture.</p></div>
+  </div>
+
+  <hr class="rule">
+
+  <h2 class="sec">The composite model</h2>
+  <p class="lede">Ten observable traits, each anchored to its exemplar — drawn from the best senior partners at Cravath, Wachtell Lipton, Kirkland, Skadden, Latham, Sullivan &amp; Cromwell, Davis Polk, Wilson Sonsini, Cooley, and Fenwick.</p>
+  <ol class="traits">
+    <li class="trait"><span class="t"><b>01</b>The 3 a.m. counselor — the call you make before anyone else's.</span><span class="who">Lipton</span></li>
+    <li class="trait"><span class="t"><b>02</b>The unwelcome truth — told plainly, reasoning attached.</span><span class="who">Lipton · Olson · Boies</span></li>
+    <li class="trait"><span class="t"><b>03</b>Distills complexity — the whole matter in one or two sentences.</span><span class="who">Olson</span></li>
+    <li class="trait"><span class="t"><b>04</b>Out of the limelight — spends its credit on the client.</span><span class="who">Sonsini</span></li>
+    <li class="trait"><span class="t"><b>05</b>Grows with the client — garage to IPO, same counsel.</span><span class="who">Sonsini · Davidson · Lincoln</span></li>
+    <li class="trait"><span class="t"><b>06</b>Invents the structure — before it exists.</span><span class="who">Beattie · Flom · Lipton</span></li>
+    <li class="trait"><span class="t"><b>07</b>The trauma surgeon — triage, stabilize, rebuild.</span><span class="who">Cohen · Giuffra</span></li>
+    <li class="trait"><span class="t"><b>08</b>Loyalty through disclosure — so deep it overrides conflicts, handled openly.</span><span class="who">Beattie</span></li>
+    <li class="trait"><span class="t"><b>09</b>Speaks your language — the client's technical world, fluently.</span><span class="who">Davidson</span></li>
+    <li class="trait"><span class="t"><b>10</b>Builds the next generation — while staying indispensable.</span><span class="who">Wachtell · Olson · Sonsini</span></li>
+  </ol>
+  <div class="guardrails"><b>Guardrails:</b> never invoice the relationship · never hide behind process in a fire · never let ego enter the room · never treat a small matter as small.</div>
+
+  <hr class="rule">
+
+  <h2 class="sec">Honest limits</h2>
+  <ul class="limits">
+    <li><b>Not a licensed attorney</b> — no attorney-client privilege attaches here; routing privileged communications through the buddy may risk privilege.</li>
+    <li><b>Sensitive originals</b> stay with human counsel or offline.</li>
+    <li><b>Advisory and drafting support only</b> — no filing, no execution of legal documents.</li>
+    <li><b>Triage-depth generalist</b>, not a specialist litigator or deal lawyer.</li>
+    <li><b>Doesn't know Dave's risk appetite yet</b> — it learns it, and says so.</li>
+    <li><b>When it doesn't know, it says so</b> — and routes to a human.</li>
+  </ul>
+
+  <hr class="rule">
+
+  <h2 class="sec">Open now</h2>
+  <div class="attention">
+    <div class="a"><span class="ping">Review</span><span>Mission statement ready for Dave's review — <a href="https://docs.google.com/document/d/1RGISv-KCmkTepGA9QZYNXPrdtEjqNE1VqeNawNr-rTY/edit" target="_blank" rel="noopener">Legal Buddy — Mission Statement</a></span></div>
+    <div class="a"><span class="ping">Standing by</span><span>First assignment inbound: a transcription Dave wants worked through and turned into a finished document.</span></div>
+  </div>
+
+  <hr class="rule">
+
+  <h2 class="sec">Documents</h2>
+  <div class="docs">
+    <a class="doc" href="https://docs.google.com/document/d/1RGISv-KCmkTepGA9QZYNXPrdtEjqNE1VqeNawNr-rTY/edit" target="_blank" rel="noopener"><span class="dicon">📜</span><span class="dlabel">Legal Buddy — Mission Statement</span><span class="dsub">Google Doc · awaiting Dave's review</span></a>
+    <a class="doc" href="https://docs.google.com/document/d/1LzovvauSbYlNWvdtnduAplH70--STlKMrokGUYGz2ms/edit" target="_blank" rel="noopener"><span class="dicon">📋</span><span class="dlabel">The Perfect In-House Legal Counsel — Brief</span><span class="dsub">Google Doc · approved 2026-10-16</span></a>
+    <a class="doc" href="https://github.com/davedellaquila/legal-buddy" target="_blank" rel="noopener"><span class="dicon">🗄️</span><span class="dlabel">legal-buddy repo</span><span class="dsub">GitHub · private</span></a>
+    <a class="doc" href="sandbox://workspace/research_notes/best-in-house-legal-counsel-20261016-1812/report.md"><span class="dicon">🔍</span><span class="dlabel">Senior-partner research notes</span><span class="dsub">Workspace · 2026-10-16</span></a>
+  </div>
+
+  <hr class="rule">
+
+  <section class="dumpbox" data-buddy-id="legal-buddy">
+    <h2>🧠 Brain dump</h2>
+    <p class="dumpbox-sub">Dump what's on your mind about Legal Buddy — a situation, a document, a question, raw and unfiltered. Each dump lands in the buddy's repo (docs/ingest.md) as a timestamped entry.</p>
+    <div class="dumpbox-connect" hidden>
+      <p>🔒 Connect GitHub to unlock dumping. Paste a token once — it stays on this device only.</p>
+      <button type="button" class="dumpbox-btn">Connect GitHub to enable</button>
+    </div>
+    <div class="dumpbox-token" hidden>
+      <p>🔒 Connect GitHub to unlock dumping. Paste a token once — it stays on this device only.</p>
+      <div class="dumpbox-tokenrow">
+        <input type="password" placeholder="GitHub token (repo scope)" aria-label="GitHub token">
+        <button type="button">Save token</button>
+        <a href="https://github.com/settings/tokens" target="_blank" rel="noopener">Get a token</a>
+      </div>
+    </div>
+    <textarea rows="4" placeholder="Dump what's on your mind about Legal Buddy…"></textarea>
+    <div class="dumpbox-row">
+      <button type="button" class="dumpbox-btn">Dump it</button>
+      <span class="dumpbox-status" role="status"></span>
+    </div>
+  </section>
+
+  <footer class="foot">
+    <span>A buddy in the <a href="https://davedellaquila.github.io/buddy-system/">Buddy System</a></span>
+    <span>·</span>
+    <a href="https://github.com/davedellaquila/legal-buddy">legal-buddy repo</a>
+    <span>·</span>
+    <span>Not a licensed attorney — no privilege attaches</span>
+  </footer>
+
+</main>
 
 <script>
+  // Theme toggle: auto (OS) / light / dark, persisted per device.
+  (function () {
+    var root = document.documentElement;
+    var btn = document.getElementById("themeToggle");
+    var labels = { auto: "🌗 Auto", light: "🌞 Light", dark: "🌙 Dark" };
+    function apply(t) {
+      root.setAttribute("data-theme", t);
+      btn.textContent = labels[t];
+      try { localStorage.setItem("legal-buddy-theme", t); } catch (e) {}
+    }
+    var saved = null;
+    try { saved = localStorage.getItem("legal-buddy-theme"); } catch (e) {}
+    apply(saved === "light" || saved === "dark" ? saved : "auto");
+    btn.addEventListener("click", function () {
+      var cur = root.getAttribute("data-theme") || "auto";
+      apply(cur === "auto" ? "light" : cur === "light" ? "dark" : "auto");
+    });
+  })();
+</script>
+
+<script>
+// ---- dump-box JS (self-contained; no dependencies) ----
 (function(){
   var box = document.querySelector('.dumpbox');
   if (!box || box.dataset.dumpInit) return;
   box.dataset.dumpInit = '1';
   var bid = box.getAttribute('data-buddy-id') || (function(){
-    var p = location.pathname.replace(/\\/+$/, '');
+    var p = location.pathname.replace(/\/+$/, '');
     return p.substring(p.lastIndexOf('/') + 1);
   })();
   var ta = box.querySelector('textarea'),
-      btn = box.querySelector('.dumpbox-btn'),
+      btn = box.querySelector('.dumpbox-row .dumpbox-btn'),
       st = box.querySelector('.dumpbox-status'),
-      tokWrap = box.querySelector('.dumpbox-token');
+      tokWrap = box.querySelector('.dumpbox-token'),
+      connectWrap = box.querySelector('.dumpbox-connect'),
+      connectBtn = connectWrap.querySelector('.dumpbox-btn');
   function lsGet(){ try { return JSON.parse(localStorage.getItem('buddyTree.v3') || '{}'); } catch(e){ return {}; } }
   function lsSet(patch){ try { var s = lsGet(); for (var k in patch) s[k] = patch[k]; localStorage.setItem('buddyTree.v3', JSON.stringify(s)); } catch(e){} }
   function token(){ return lsGet().ghToken || ''; }
@@ -175,7 +399,7 @@ footer{margin-top:36px;padding-top:18px;border-top:1px solid var(--border);color
     try {
       var j = await ghApi('/repos/davedellaquila/' + repo + '/contents/' + path);
       if (j && j.content) return {
-        text: new TextDecoder().decode(Uint8Array.from(atob(j.content.replace(/\\n/g, '')), function(c){ return c.charCodeAt(0); })),
+        text: new TextDecoder().decode(Uint8Array.from(atob(j.content.replace(/\n/g, '')), function(c){ return c.charCodeAt(0); })),
         sha: j.sha
       };
     } catch(e){}
@@ -192,70 +416,49 @@ footer{margin-top:36px;padding-top:18px;border-top:1px solid var(--border);color
       }
     } catch(e){}
   }
-  /* Local fallback (Dave 2026-10-15): dumping works with no GitHub token —
-     entries are saved in this device's localStorage as a temporary workaround
-     until the GitHub write path is working properly. The backlog flushes into
-     the repo on the next successful GitHub dump. */
-  function localKey(){ return 'buddyTree.ingest.' + bid; }
-  function localBacklog(){
-    try { var a = JSON.parse(localStorage.getItem(localKey()) || '[]'); return Array.isArray(a) ? a : []; }
-    catch(e){ return []; }
-  }
-  function localSave(entry){
-    var a = localBacklog(); a.push(entry);
-    try { localStorage.setItem(localKey(), JSON.stringify(a)); } catch(e){}
-  }
-  function localClear(){ try { localStorage.removeItem(localKey()); } catch(e){} }
   function refreshUI(){
     var has = !!token();
-    tokWrap.hidden = has;
-    var ok = !!repo; /* local fallback needs no token */
+    connectWrap.hidden = has;
+    if (has) tokWrap.hidden = true;
+    var ok = has && !!repo;
     ta.disabled = !ok;
     btn.disabled = !ok;
-    if (!repo) { st.textContent = 'No repo linked for this buddy yet.'; return; }
-    var n = localBacklog().length;
-    st.textContent = has
-      ? (n ? n + ' local ' + (n === 1 ? 'dump' : 'dumps') + ' will sync on next dump.' : '')
-      : 'No GitHub token — dumps save on this device for now.';
+    if (!has) { st.textContent = ''; }
+    else if (!repo) { st.textContent = 'No repo linked for this buddy yet.'; }
   }
   var tokInput = tokWrap.querySelector('input'),
       tokSave = tokWrap.querySelector('button');
+  connectBtn.addEventListener('click', function(){
+    tokWrap.hidden = false;
+    if (tokInput) tokInput.focus();
+  });
   tokSave.addEventListener('click', function(){
     var v = tokInput.value.trim();
     if (!v) return;
     lsSet({ghToken: v});
     tokInput.value = '';
+    tokWrap.hidden = true;
     refreshUI();
     st.textContent = 'Token saved on this device.';
   });
   async function dump(){
     var text = ta.value.trim();
     if (!text) return;
+    if (!token()) { refreshUI(); return; }
     if (!repo) { st.textContent = 'No repo linked for this buddy yet.'; return; }
-    var stamp = new Date().toLocaleString();
-    var NL = String.fromCharCode(10);
-    if (!token()) {
-      /* Temporary workaround: no token → save on this device. */
-      localSave({t: stamp, text: text});
-      ta.value = '';
-      st.textContent = '✓ Saved on this device — add a GitHub token to sync it to the repo.';
-      return;
-    }
     st.textContent = 'Dumping…';
     btn.disabled = true;
     try {
-      /* Flush any locally-saved backlog first, then the new entry. */
-      var backlog = localBacklog();
-      var parts = backlog.map(function(b){ return '## ' + b.t + NL + NL + b.text + NL + NL; });
-      parts.push('## ' + stamp + NL + NL + text + NL + NL);
+      var stamp = new Date().toLocaleString();
+      var NL = String.fromCharCode(10);
+      var entry = '## ' + stamp + NL + NL + text + NL + NL;
       var cur = await ghGetFile(repo, 'docs/ingest.md');
       var base = cur ? cur.text : '# Ingest log — ' + repoName + NL + NL;
-      var body = {message: 'Ingest dump for ' + bid, content: b64encode(base + parts.join(''))};
+      var body = {message: 'Ingest dump for ' + bid, content: b64encode(base + entry)};
       if (cur && cur.sha) body.sha = cur.sha;
       await ghApi('/repos/davedellaquila/' + repo + '/contents/docs/ingest.md', 'PUT', body);
-      localClear();
       ta.value = '';
-      st.textContent = '✓ Dumped to ' + repo + '/docs/ingest.md' + (backlog.length ? ' (' + backlog.length + ' local synced)' : '');
+      st.textContent = '✓ Dumped to ' + repo + '/docs/ingest.md';
     } catch(err){ st.textContent = 'Save failed: ' + (err.message || err); }
     btn.disabled = false;
   }
@@ -264,116 +467,6 @@ footer{margin-top:36px;padding-top:18px;border-top:1px solid var(--border);color
     if ((ev.metaKey || ev.ctrlKey) && ev.key === 'Enter') { ev.preventDefault(); dump(); }
   });
   resolveRepo().then(refreshUI);
-})();
-</script>
-
-
-<script>
-(function(){
-  var tiles = document.querySelectorAll('.attn[data-attn-id]');
-  if (!tiles.length) return;
-  var dumpbox = document.querySelector('.dumpbox');
-  var bid = (dumpbox && dumpbox.getAttribute('data-buddy-id')) || (function(){
-    var p = location.pathname.replace(/\\/+$/, '');
-    return p.substring(p.lastIndexOf('/') + 1);
-  })();
-  function lsGet(){ try { return JSON.parse(localStorage.getItem('buddyTree.v3') || '{}'); } catch(e){ return {}; } }
-  function lsSet(patch){ try { var s = lsGet(); for (var k in patch) s[k] = patch[k]; localStorage.setItem('buddyTree.v3', JSON.stringify(s)); } catch(e){} }
-  function token(){ return lsGet().ghToken || ''; }
-  function b64encode(str){
-    var bytes = new TextEncoder().encode(str), bin = '';
-    bytes.forEach(function(b){ bin += String.fromCharCode(b); });
-    return btoa(bin);
-  }
-  async function ghApi(path, method, body){
-    var t = token();
-    if (!t) throw new Error('Add a GitHub token first.');
-    var r = await fetch('https://api.github.com' + path, {
-      method: method || 'GET',
-      headers: {'Authorization': 'Bearer ' + t, 'Accept': 'application/vnd.github+json', 'Content-Type': 'application/json'},
-      body: body ? JSON.stringify(body) : undefined
-    });
-    if (!r.ok) throw new Error('GitHub ' + r.status);
-    return r.status === 204 ? null : await r.json();
-  }
-  async function ghGetFile(repo, path){
-    try {
-      var j = await ghApi('/repos/davedellaquila/' + repo + '/contents/' + path);
-      if (j && j.content) return {
-        text: new TextDecoder().decode(Uint8Array.from(atob(j.content.replace(/\\n/g, '')), function(c){ return c.charCodeAt(0); })),
-        sha: j.sha
-      };
-    } catch(e){}
-    return null;
-  }
-  var repo = null, buddyName = bid;
-  async function resolveBuddy(){
-    try {
-      var r = await fetch('../buddies.json', {cache: 'no-store'});
-      var d = await r.json();
-      var buds = d.buddies || [];
-      for (var i = 0; i < buds.length; i++) {
-        if (buds[i].id === bid) {
-          if (buds[i].repo) repo = buds[i].repo;
-          if (buds[i].name) buddyName = buds[i].name;
-          break;
-        }
-      }
-    } catch(e){}
-  }
-  function rkey(aid, text){ return bid + '|' + (aid || ('text:' + text.slice(0, 60))); }
-  function isResolved(aid, text){ var m = lsGet().attnDone || {}; return !!m[rkey(aid, text)]; }
-  function setResolved(aid, text){ var s = lsGet(); var m = s.attnDone || {}; m[rkey(aid, text)] = 1; s.attnDone = m; lsSet(s); }
-  function paintResolved(tile, msg){
-    tile.classList.add('resolved');
-    var st = tile.querySelector('.attn-status');
-    if (st) st.textContent = msg;
-  }
-  async function sendAction(tile, entry, okMsg){
-    var st = tile.querySelector('.attn-status');
-    var btns = tile.querySelectorAll('.attn-btn');
-    if (!token()) { st.textContent = 'Add a GitHub token in the Brain dump section above to enable actions.'; return false; }
-    if (!repo) { st.textContent = 'No repo linked for this buddy yet.'; return false; }
-    btns.forEach(function(b){ b.disabled = true; });
-    st.textContent = 'Working…';
-    try {
-      var NL = String.fromCharCode(10);
-      var stamp = new Date().toLocaleString();
-      var cur = await ghGetFile(repo, 'docs/ingest.md');
-      var base = cur ? cur.text : '# Ingest log — ' + buddyName + NL + NL;
-      var body = {message: 'Attention action for ' + bid, content: b64encode(base + '## ' + stamp + NL + NL + entry + NL + NL)};
-      if (cur && cur.sha) body.sha = cur.sha;
-      await ghApi('/repos/davedellaquila/' + repo + '/contents/docs/ingest.md', 'PUT', body);
-      st.textContent = okMsg;
-      return true;
-    } catch(err){
-      st.textContent = 'Save failed: ' + (err.message || err);
-      btns.forEach(function(b){ b.disabled = false; });
-      return false;
-    }
-  }
-  tiles.forEach(function(tile){
-    var aid = tile.getAttribute('data-attn-id') || '';
-    var textEl = tile.querySelector('.attn-text');
-    var text = textEl ? textEl.textContent.trim() : '';
-    if (isResolved(aid, text)) { paintResolved(tile, 'Marked done'); return; }
-    tile.addEventListener('click', function(ev){
-      var btn = ev.target.closest ? ev.target.closest('.attn-btn') : null;
-      if (!btn || btn.disabled) return;
-      var act = btn.getAttribute('data-act');
-      var idBit = aid ? ' (attention id: ' + aid + ')' : '';
-      if (act === 'done') {
-        sendAction(tile,
-          'DONE — Dave marked this done on the homepage: "' + text + '"' + idBit + '. Please remove it from the attention list in buddies.json.',
-          'Marked done — the buddy will clear it.').then(function(ok){ if (ok) { setResolved(aid, text); paintResolved(tile, 'Marked done — the buddy will clear it.'); } });
-      } else if (act === 'info') {
-        sendAction(tile,
-          'FOLLOW-UP — Dave needs more info on: "' + text + '"' + idBit + '. Please follow up with him.',
-          'Sent — ' + buddyName + ' will follow up.');
-      }
-    });
-  });
-  resolveBuddy();
 })();
 </script>
 

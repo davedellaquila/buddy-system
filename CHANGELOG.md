@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-10-16 (Legal Buddy custom homepage)
+
+### Added
+- **⚖️ Legal Buddy custom homepage** (thread-owned, `legal-buddy/index.html`): "the counselor's chambers" — Heineman quote hero, how-counsel-works 4 steps, 7-tile triage remit, the 10-trait composite model with exemplars (Lipton, Sonsini, Olson, Boies, Flom, Beattie, Cohen, Giuffra, Saeed, Davidson, Lincoln), guardrails, honest limits (not a licensed attorney, no privilege), Open-now attention card (mission review + inbound transcription), documents & links, standard 🧠 brain-dump box (GitHub write path to `legal-buddy/docs/ingest.md`), slim sticky header, dark + light (auto/OS/light/dark toggle, persisted), phone/tablet/desktop layouts. Carries the CUSTOM HOMEPAGE marker so `gen_basic_homepages.py` never overwrites it.
+
 All notable changes to the Buddies dashboard and buddy system. Newest first.
 `FEATURES.md` describes the current state; this file describes how it got there.
 
