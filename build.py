@@ -1976,6 +1976,17 @@ function selectBuddy(id){
     if (inView) {
       // Update selection highlight without opening the panel
       renderNav();
+      // Dave 2026-10-16: if the Atlas/tree chart is showing, recenter it on
+      // the newly selected buddy and update the node highlight.
+      if ((S.sel === 'view:tree' || S.view === 'tree') && typeof centerOnBuddy === 'function') {
+        const tz = document.getElementById('treezoom');
+        if (tz) {
+          tz.querySelectorAll('.node.sel,.ledger-row.sel,.mcol-row.sel').forEach(n => n.classList.remove('sel'));
+          const node = tz.querySelector('[data-buddy="' + id + '"]');
+          if (node) node.classList.add('sel');
+        }
+        centerOnBuddy(id, true);
+      }
       pushNavState(); // Dave 2026-10-15: browser back/forward tracks buddy selection
     } else {
       show('buddy:' + id);
