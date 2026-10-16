@@ -521,7 +521,7 @@ body.sb-closed #pane-toggles .ptoggle{padding:6px 4px}
 /* Slim horizontal zoom — tucked into the top-right corner of each pane (Dave 2026-10-16:
    rotated from vertical; aligns with the top edge of both the chart and orphan panes).
    No panel chrome; small▪ · slider · large◼ · fit · center. */
-.zoombar{position:absolute;top:12px;right:12px;z-index:5;
+.zoombar{position:absolute;top:12px;left:50%;transform:translateX(-50%);right:auto;z-index:5;
   display:flex;flex-direction:row;align-items:center;gap:8px;width:auto;height:auto;
   padding:0;margin:0;background:none;border:none;border-radius:0;box-shadow:none;
   -webkit-tap-highlight-color:transparent}
@@ -554,10 +554,10 @@ input[type=range].zrange::-moz-range-thumb{width:16px;height:16px;border-radius:
    the zoombar left by the panel width. Smooth transition matches the panel's
    slide timing. Only applies to the side-panel layout (desktop/tablet) —
    on mobile the panel is a full-screen sheet (correct modal behavior). */
-.zoombar{transition:right .5s cubic-bezier(.32,.72,.35,1)}
+.zoombar{transition:left .5s cubic-bezier(.32,.72,.35,1)}
 body:has(#view-buddy.panel.active):not(.bp-collapsed) #zoombar-main,
 body:has(#view-buddy.panel.active):not(.bp-collapsed) #zoombar-orph{
-  right:calc(28px + var(--bpw, 440px));
+  left:calc((100% - var(--bpw, 440px))/2);}
 }
 /* Fixed to viewport at sidebar edge so vertical #sidebar scroll doesn't move it.
    MUST be a DOM sibling of #sidebar (not a child): overflow on #sidebar clips

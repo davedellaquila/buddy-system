@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-10-16 (Zoombar: centered)
+
+### Changed
+- **Zoom controls centered** (Dave 2026-10-16): the Atlas zoom bar now sits centered at the top of each pane instead of tucked right. When the info panel is open, it re-centers in the remaining visible width.
+
 ## 2026-10-16 (Collapsed rail: back to left)
 
 ### Changed
