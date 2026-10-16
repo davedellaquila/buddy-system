@@ -105,11 +105,10 @@ body.sb-anchored #sidebar .brand, body.sb-anchored #sidebar .sb-tipjar{backgroun
 /* Dave 2026-10-16: tip jar pinned flush to the sidebar's bottom edge (no gap below),
    frosted-glass fill so list rows scrolling underneath show through softly without
    hurting readability. */
-.sb-tipjar{position:absolute;bottom:0;left:0;right:0;z-index:7;
+.sb-tipjar{position:sticky;bottom:0;z-index:7;margin:0 -14px;
   background:color-mix(in srgb, var(--panel) 78%, transparent);
   -webkit-backdrop-filter:blur(20px) saturate(1.8);backdrop-filter:blur(20px) saturate(1.8);
-  margin:0;padding:10px 14px 12px;border-top:1px solid var(--border);text-align:center;overflow:hidden}
-#sidebar{padding-bottom:52px}
+  padding:10px 14px 12px;border-top:1px solid var(--border);text-align:center;overflow:hidden}
 .sb-tipjar a{font-size:12px;text-decoration:none;display:inline-block;transform-origin:center;position:relative}
 .sb-tipjar .tiptext{font-weight:600;
   background:linear-gradient(90deg,#ff6b6b,#feca57,#48dbfb,#ff9ff3,#54a0ff,#ff6b6b);
@@ -257,7 +256,11 @@ body.sb-closed #pane-toggles .ptoggle{padding:6px 4px}
    alone scrolls in both axes (fixes iOS axis-lock from nested X/Y scrollers). */
 #quick-answers{display:flex;align-items:center;gap:12px;padding:10px 16px;background:var(--panel);border:1px solid var(--border);border-radius:12px;margin:0 0 16px;overflow:hidden}
 .qa-label{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);flex:none}
-.qa-links{display:flex;gap:8px;overflow-x:auto;flex:1;padding-bottom:2px;scrollbar-width:thin}
+.qa-links{display:flex;gap:8px;overflow-x:auto;flex:1;padding:2px 0;scrollbar-width:thin;position:relative}
+.qa-links>.qa-chip:last-child{margin-right:20px}
+#quick-answers{position:relative}
+#quick-answers::after{content:'';position:absolute;top:0;right:0;bottom:0;width:36px;pointer-events:none;
+  background:linear-gradient(to right,transparent,var(--panel));opacity:.9}
 .qa-links::-webkit-scrollbar{height:6px}
 .qa-link{display:flex;align-items:center;gap:8px;background:var(--bg);border:1px solid var(--border);border-radius:14px;padding:5px 18px 5px 12px;font-size:13px;color:var(--text);cursor:pointer;max-width:280px}
 .qa-link:hover{border-color:var(--accent)}
