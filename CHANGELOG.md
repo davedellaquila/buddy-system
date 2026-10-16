@@ -3,6 +3,11 @@
 All notable changes to the Buddies dashboard and buddy system. Newest first.
 `FEATURES.md` describes the current state; this file describes how it got there.
 
+## 2026-10-16 (Model A Buddy joins the dashboard)
+
+### Added
+- **Model A Buddy registry entry** (Dave 2026-10-16 — it was missing from the dashboard; he expected it under Car Buddy): `model-a-buddy` added as a child of `car-buddy` (status New), with tagline, mission, repo/docs links, the spec-sheet review attention item, and the default "Dossier" homepage generated at `model-a-buddy/`. Dashboard rebuilt; embedded registry verified at 108 buddies with the entry present.
+
 ## 2026-10-15 (Breadcrumb links, dump fallback, generator skip-logic fix)
 
 ### Fixed
