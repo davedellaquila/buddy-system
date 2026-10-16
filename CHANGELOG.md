@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-10-16 (Social Media Buddy homepage refresh)
+
+### Changed
+- **Social Media Buddy homepage** (Dave 2026-10-16): replaced the BUDDY-BASIC-TEMPLATE v2 page with a custom thread-owned design (marker removed — the generator will no longer overwrite it). Centerpiece is the live post queue: pipeline strip (Ideas 0 → Drafted 14 → Awaiting review 0 → Scheduled 0 → Posted 0) plus the 14 LinkedIn Teaser Bank posts with dates and status chips (Post 5 hold/consent, Post 14 hold/Ko-fi flagged). A "Post Pipeline" chart section waits on 📊 Charts Buddy's Kin-language delivery (re-pinged 2026-10-16 with real counts). Standard brain-dump box, mission + docs links (mission statement, rollout plan, brief, teaser bank, repo), sticky header, dark+light via prefers-color-scheme, responsive.
+
 ## 2026-10-16 (1931 Ford Model A sale page — draft)
 
 ### Added
