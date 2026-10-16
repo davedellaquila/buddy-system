@@ -118,7 +118,7 @@ footer{color:var(--muted);font-size:12px;text-align:center;margin-top:30px}
 <header class="sticky">🏥 Health Buddy</header>
 <main>
 <div class="hero">
-<h1>🏥 Health Buddy</h1>
+<h1>🏥 <span data-buddy-name>Health Buddy</span></h1>
 <p class="tag">Your health, tracked and coached.</p>
 <p class="asof">Snapshot of real data as of October 16, 2026 · Apple Health sync Sep 20 – Oct 16</p>
 <div class="tiles"><div class="tile"><div class="ticon">😴</div><div class="tval">3.7 h</div><div class="tlabel">Last night</div><div class="tsub">in bed 03:26 → 07:09</div></div><div class="tile"><div class="ticon">👟</div><div class="tval">4,750</div><div class="tlabel">Steps · 7-day avg</div><div class="tsub">26 days tracked</div></div><div class="tile"><div class="ticon">❤️</div><div class="tval">61 bpm</div><div class="tlabel">Resting HR</div><div class="tsub">10-15</div></div><div class="tile"><div class="ticon">📈</div><div class="tval">41 ms</div><div class="tlabel">HRV</div><div class="tsub">10-15</div></div><div class="tile"><div class="ticon">⚖️</div><div class="tval">76.0 kg</div><div class="tlabel">Weight</div><div class="tsub">≈ 168 lb · 3 readings</div></div></div>
@@ -359,5 +359,27 @@ footer{color:var(--muted);font-size:12px;text-align:center;margin-top:30px}
 })();
 </script>
 
+
+<script>
+(function(){
+  var parts = location.pathname.split('/'), bid = '';
+  for (var i = parts.length - 1; i >= 0; i--) { if (parts[i]) { bid = parts[i]; break; } }
+  function applyName(name){ if (!name) return;
+    var els = document.querySelectorAll('[data-buddy-name]');
+    for (var k = 0; k < els.length; k++) els[k].textContent = name; }
+  try { fetch('../buddies.json', {cache: 'no-store'}).then(function(r){ return r.json(); })
+    .then(function(d){ var buds = (d && d.buddies) || [];
+      for (var j = 0; j < buds.length; j++) {
+        if (buds[j].id === bid && buds[j].name) { applyName(buds[j].name); break; } } })
+    .catch(function(){}); } catch(e){}
+  window.addEventListener('storage', function(e){
+    if (e.key !== 'buddyTree.rename' || !e.newValue) return;
+    try {
+      var d = JSON.parse(e.newValue);
+      if (d && d.id === bid && d.name) applyName(d.name);
+    } catch(err){}
+  });
+})();
+</script>
 </body>
 </html>

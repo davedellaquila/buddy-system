@@ -266,7 +266,7 @@ a.chip:hover { text-decoration: none; border-color: var(--accent); }
   <header class="hero">
     <div class="hero-icon" aria-hidden="true">💼</div>
     <div>
-      <h1>Shreya Dhingra</h1>
+      <h1 data-buddy-name>Shreya Dhingra</h1>
       <div class="role">Dave's manager at Apple — STIX team lead</div>
       <p class="desk">The living collaboration record: her priorities, the review rhythm, decisions made together, and everything owed to her. Pull this desk before a 1:1 or a status update.</p>
     </div>
@@ -509,5 +509,27 @@ a.chip:hover { text-decoration: none; border-color: var(--accent); }
 })();
 </script>
 
+
+<script>
+(function(){
+  var parts = location.pathname.split('/'), bid = '';
+  for (var i = parts.length - 1; i >= 0; i--) { if (parts[i]) { bid = parts[i]; break; } }
+  function applyName(name){ if (!name) return;
+    var els = document.querySelectorAll('[data-buddy-name]');
+    for (var k = 0; k < els.length; k++) els[k].textContent = name; }
+  try { fetch('../buddies.json', {cache: 'no-store'}).then(function(r){ return r.json(); })
+    .then(function(d){ var buds = (d && d.buddies) || [];
+      for (var j = 0; j < buds.length; j++) {
+        if (buds[j].id === bid && buds[j].name) { applyName(buds[j].name); break; } } })
+    .catch(function(){}); } catch(e){}
+  window.addEventListener('storage', function(e){
+    if (e.key !== 'buddyTree.rename' || !e.newValue) return;
+    try {
+      var d = JSON.parse(e.newValue);
+      if (d && d.id === bid && d.name) applyName(d.name);
+    } catch(err){}
+  });
+})();
+</script>
 </body>
 </html>

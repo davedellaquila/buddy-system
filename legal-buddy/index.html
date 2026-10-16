@@ -218,7 +218,7 @@
 <header class="topbar">
   <div class="topbar-inner">
     <span class="icon">⚖️</span>
-    <span class="name">Legal Buddy</span>
+    <span class="name" data-buddy-name>Legal Buddy</span>
     <span class="spacer"></span>
     <a class="dash" href="https://davedellaquila.github.io/buddy-system/">Buddy System dashboard</a>
     <button id="themeToggle" type="button" aria-label="Toggle color theme">🌗 Auto</button>
@@ -470,5 +470,27 @@
 })();
 </script>
 
+
+<script>
+(function(){
+  var parts = location.pathname.split('/'), bid = '';
+  for (var i = parts.length - 1; i >= 0; i--) { if (parts[i]) { bid = parts[i]; break; } }
+  function applyName(name){ if (!name) return;
+    var els = document.querySelectorAll('[data-buddy-name]');
+    for (var k = 0; k < els.length; k++) els[k].textContent = name; }
+  try { fetch('../buddies.json', {cache: 'no-store'}).then(function(r){ return r.json(); })
+    .then(function(d){ var buds = (d && d.buddies) || [];
+      for (var j = 0; j < buds.length; j++) {
+        if (buds[j].id === bid && buds[j].name) { applyName(buds[j].name); break; } } })
+    .catch(function(){}); } catch(e){}
+  window.addEventListener('storage', function(e){
+    if (e.key !== 'buddyTree.rename' || !e.newValue) return;
+    try {
+      var d = JSON.parse(e.newValue);
+      if (d && d.id === bid && d.name) applyName(d.name);
+    } catch(err){}
+  });
+})();
+</script>
 </body>
 </html>
