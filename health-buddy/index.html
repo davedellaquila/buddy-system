@@ -95,7 +95,10 @@ footer{color:var(--muted);font-size:12px;text-align:center;margin-top:30px}
   padding: 9px 22px; font-size: 14px; font-weight: 600; cursor: pointer;
 }
 .dumpbox-btn:disabled { opacity: .45; cursor: default; }
+.dumpbox-btn.saved { background: var(--ok); }
 .dumpbox-status { font-size: 13px; color: var(--muted); }
+.dumpbox-status.flash { color: var(--ok); font-weight: 700; }
+.dumpbox-hint { font-size: 12px; color: var(--muted); margin-top: 8px; }
 .dumpbox-token {
   background: var(--bg); border: 1px dashed var(--border); border-radius: 8px;
   padding: 12px 14px; margin-bottom: 12px; font-size: 14px;
@@ -212,6 +215,7 @@ footer{color:var(--muted);font-size:12px;text-align:center;margin-top:30px}
 <button type="button" class="dumpbox-btn">Dump it</button>
 <span class="dumpbox-status" role="status"></span>
 </div>
+<p class="dumpbox-hint">Enter dumps it &middot; Shift+Enter for a new line</p>
 </section>
 
 
@@ -305,6 +309,19 @@ footer{color:var(--muted);font-size:12px;text-align:center;margin-top:30px}
   }
   var tokInput = tokWrap.querySelector('input'),
       tokSave = tokWrap.querySelector('button');
+  /* Visual save confirmation (Dave 2026-10-16): the button flashes green
+     with a ✓ for ~2s on every successful save, so the save is unmissable. */
+  function flashSaved(){
+    var label = btn.textContent;
+    btn.classList.add('saved');
+    btn.textContent = '✓ Saved';
+    st.classList.add('flash');
+    setTimeout(function(){
+      btn.classList.remove('saved');
+      if (btn.textContent === '✓ Saved') btn.textContent = label;
+      st.classList.remove('flash');
+    }, 1800);
+  }
   tokSave.addEventListener('click', function(){
     var v = tokInput.value.trim();
     if (!v) return;
@@ -322,8 +339,9 @@ footer{color:var(--muted);font-size:12px;text-align:center;margin-top:30px}
       /* No repo linked yet — save on this device; syncs once one is linked. */
       localSave({t: stamp, text: text});
       ta.value = '';
-      st.textContent = '✓ Saved on this device — will sync to the repo once one is linked.';
       refreshUI();
+      st.textContent = '✓ Saved on this device — will sync to the repo once one is linked.';
+      flashSaved();
       return;
     }
     if (!token()) {
@@ -331,6 +349,7 @@ footer{color:var(--muted);font-size:12px;text-align:center;margin-top:30px}
       localSave({t: stamp, text: text});
       ta.value = '';
       st.textContent = '✓ Saved on this device — add a GitHub token to sync it to the repo.';
+      flashSaved();
       return;
     }
     st.textContent = 'Dumping…';
@@ -348,12 +367,14 @@ footer{color:var(--muted);font-size:12px;text-align:center;margin-top:30px}
       localClear();
       ta.value = '';
       st.textContent = '✓ Dumped to ' + repo + '/docs/ingest.md' + (backlog.length ? ' (' + backlog.length + ' local synced)' : '');
+      flashSaved();
     } catch(err){ st.textContent = 'Save failed: ' + (err.message || err); }
     btn.disabled = false;
   }
   btn.addEventListener('click', dump);
   ta.addEventListener('keydown', function(ev){
-    if ((ev.metaKey || ev.ctrlKey) && ev.key === 'Enter') { ev.preventDefault(); dump(); }
+    /* Dave 2026-10-16: plain Return dumps, like the button. Shift+Return for a newline. */
+    if (ev.key === 'Enter' && !ev.shiftKey && !ev.altKey) { ev.preventDefault(); dump(); }
   });
   resolveRepo().then(refreshUI);
 })();

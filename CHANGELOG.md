@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026-10-16 (Dump box: Enter submits + save flash)
+
+### Changed
+- **Brain-dump box: Return now dumps** (Dave 2026-10-16): pressing Enter in the dump textarea submits like the Dump button; Shift+Enter inserts a newline. A hint line under the button says so.
+- **Save confirmation** (Dave 2026-10-16): the Dump button flashes green with "✓ Saved" for ~2s on every successful save (local or repo), and the status line goes bold green — previously only a small muted status line changed, which Dave missed.
+- Rolled out to all 57 generator-managed buddy pages (including the v3 1931 Ford Model A dossier page and the legacy family page) via surgical constant replacement; the generator source carries the new behavior for future regens. Also fixed the generator's stale `indent=1` buddies.json write to match the file's actual `indent=2`.
+- Thread-owned custom pages (~46) keep their own dump-box copies per the Oct 15 convention — their threads can adopt the same snippet.
+
 ## 2026-10-16 (Template gallery)
 
 ### Added

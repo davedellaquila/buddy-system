@@ -13,6 +13,7 @@
   --card: #f5f5f5;
   --border: #e0e0e0;
   --accent: #0066cc;
+  --ok: #1b7a2e;
 }
 @media (prefers-color-scheme: dark) {
   :root {
@@ -22,6 +23,7 @@
     --card: #2a2a2a;
     --border: #3a3a3a;
     --accent: #4da6ff;
+    --ok: #5fd08a;
   }
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -128,7 +130,10 @@ h2 { font-size: 22px; margin: 32px 0 16px; }
   padding: 9px 22px; font-size: 14px; font-weight: 600; cursor: pointer;
 }
 .dumpbox-btn:disabled { opacity: .45; cursor: default; }
+.dumpbox-btn.saved { background: var(--ok); }
 .dumpbox-status { font-size: 13px; color: var(--muted); }
+.dumpbox-status.flash { color: var(--ok); font-weight: 700; }
+.dumpbox-hint { font-size: 12px; color: var(--muted); margin-top: 8px; }
 .dumpbox-token {
   background: var(--bg); border: 1px dashed var(--border); border-radius: 8px;
   padding: 12px 14px; margin-bottom: 12px; font-size: 14px;
@@ -182,6 +187,7 @@ h2 { font-size: 22px; margin: 32px 0 16px; }
 <button type="button" class="dumpbox-btn">Dump it</button>
 <span class="dumpbox-status" role="status"></span>
 </div>
+<p class="dumpbox-hint">Enter dumps it &middot; Shift+Enter for a new line</p>
 </section>
 
 
@@ -281,6 +287,19 @@ Generated 2026-10-16 · Part of the Buddy System
   }
   var tokInput = tokWrap.querySelector('input'),
       tokSave = tokWrap.querySelector('button');
+  /* Visual save confirmation (Dave 2026-10-16): the button flashes green
+     with a ✓ for ~2s on every successful save, so the save is unmissable. */
+  function flashSaved(){
+    var label = btn.textContent;
+    btn.classList.add('saved');
+    btn.textContent = '✓ Saved';
+    st.classList.add('flash');
+    setTimeout(function(){
+      btn.classList.remove('saved');
+      if (btn.textContent === '✓ Saved') btn.textContent = label;
+      st.classList.remove('flash');
+    }, 1800);
+  }
   tokSave.addEventListener('click', function(){
     var v = tokInput.value.trim();
     if (!v) return;
@@ -298,8 +317,9 @@ Generated 2026-10-16 · Part of the Buddy System
       /* No repo linked yet — save on this device; syncs once one is linked. */
       localSave({t: stamp, text: text});
       ta.value = '';
-      st.textContent = '✓ Saved on this device — will sync to the repo once one is linked.';
       refreshUI();
+      st.textContent = '✓ Saved on this device — will sync to the repo once one is linked.';
+      flashSaved();
       return;
     }
     if (!token()) {
@@ -307,6 +327,7 @@ Generated 2026-10-16 · Part of the Buddy System
       localSave({t: stamp, text: text});
       ta.value = '';
       st.textContent = '✓ Saved on this device — add a GitHub token to sync it to the repo.';
+      flashSaved();
       return;
     }
     st.textContent = 'Dumping…';
@@ -324,12 +345,14 @@ Generated 2026-10-16 · Part of the Buddy System
       localClear();
       ta.value = '';
       st.textContent = '✓ Dumped to ' + repo + '/docs/ingest.md' + (backlog.length ? ' (' + backlog.length + ' local synced)' : '');
+      flashSaved();
     } catch(err){ st.textContent = 'Save failed: ' + (err.message || err); }
     btn.disabled = false;
   }
   btn.addEventListener('click', dump);
   ta.addEventListener('keydown', function(ev){
-    if ((ev.metaKey || ev.ctrlKey) && ev.key === 'Enter') { ev.preventDefault(); dump(); }
+    /* Dave 2026-10-16: plain Return dumps, like the button. Shift+Return for a newline. */
+    if (ev.key === 'Enter' && !ev.shiftKey && !ev.altKey) { ev.preventDefault(); dump(); }
   });
   resolveRepo().then(refreshUI);
 })();
