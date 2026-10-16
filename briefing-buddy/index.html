@@ -229,8 +229,6 @@
 </style>
 </head>
 <body>
-<nav data-buddy-crumb style="padding:14px 20px 0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:14px;line-height:1.4;"><a href="https://davedellaquila.github.io/buddy-system/project-buddy/" style="color:inherit;opacity:.65;text-decoration:none;">← Project Buddy</a></nav>
-
 <div class="wrap">
 
   <header class="masthead">
@@ -269,7 +267,19 @@
         </div>
         <div class="card attention" data-attn-id="attn-briefing-rules">
           <h3><span class="flag">Open</span>Two briefing rules set Oct 11</h3>
-          <p><strong>Morning north star:</strong> Dave finishes it in about 10 minutes — digestibility is the design rule now. <strong>Evening sports:</strong> 49ers' next-opponent scouting is now a standing section — the evening cron definition hasn't been updated to include it yet, so tonight's lineup ships without it.</p>
+          <p><strong>Morning north star:</strong> Dave finishes it in about 10 minutes — digestibility is the design rule now. <strong>Evening sports:</strong> 49ers' next-opponent scouting is now a standing section — the evening cron definition still hasn't been updated to include it (re-checked Oct 15), so tonight's lineup ships without it.</p>
+          <div class="attn-actions"><button type="button" class="attn-btn primary" data-act="done">✓ Done</button><button type="button" class="attn-btn" data-act="info">Need more info</button></div>
+          <div class="attn-status" role="status"></div>
+        </div>
+        <div class="card attention" data-attn-id="attn-picks-split">
+          <h3><span class="flag">Open</span>New picks split needs cron updates</h3>
+          <p>Dave ruled Oct 15: <strong>podcasts go in the morning briefing</strong> (new since overnight), <strong>videos + Reddit/community picks go in the evening</strong> (things worth watching that night). The live cron definitions don't reflect it yet — the evening cron still lists both YouTube picks and Podcast picks, and the morning cron has neither. The edition cards below mirror the crons as they are.</p>
+          <div class="attn-actions"><button type="button" class="attn-btn primary" data-act="done">✓ Done</button><button type="button" class="attn-btn" data-act="info">Need more info</button></div>
+          <div class="attn-status" role="status"></div>
+        </div>
+        <div class="card attention" data-attn-id="attn-voice-rotation">
+          <h3><span class="flag">Open</span>Briefing voice rotation — approved</h3>
+          <p>Dave approved the rotation Oct 15: the briefing is read by an <strong>Alex + Jordan duo</strong> (Astro hosts the standups). Still to design: the voice roster, the rotation schedule, and how it plugs into briefing generation.</p>
           <div class="attn-actions"><button type="button" class="attn-btn primary" data-act="done">✓ Done</button><button type="button" class="attn-btn" data-act="info">Need more info</button></div>
           <div class="attn-status" role="status"></div>
         </div>
@@ -340,14 +350,15 @@
     <!-- LIVE DATA -->
     <section>
       <div class="sec-head"><span class="sec-num">No. 3</span><h2><a href="live-data.html">Live briefing data</a></h2><span class="line"></span></div>
-      <p class="lede">What the briefings actually carry right now — snapshot refreshed for the morning edition (Oct 15, ~5:41 AM) plus what's next. This is the data the settings below act on.</p>
+      <p class="lede">What the briefings actually carry right now — snapshot refreshed for the evening edition (Oct 15, ~5:41 PM), ahead of tonight's 6:00 PM assembly. This is the data the settings below act on.</p>
       <div class="lib-grid">
-        <div class="card lib-item"><h4><span class="dot"></span>Weather — Fiddletown</h4><p>50&deg;F and clear this morning; today sunny, high 83&deg; / low 66&deg;; Friday sunny, high 86&deg; / low 62&deg; — the warm-up continues.</p></div>
-        <div class="card lib-item"><h4><span class="dot"></span>Sky</h4><p>Sunrise today 7:12 AM; waxing crescent, ~23% lit — new moon was Oct 10.</p></div>
-        <div class="card lib-item"><h4><span class="dot"></span>Fire &amp; air</h4><p>Red Flag Warning in effect until Fri 10:00 AM PDT; air quality good (AQI 19).</p></div>
-        <div class="card lib-item"><h4><span class="dot"></span>AAPL</h4><p>Closed Wednesday at $342.96, up ~0.5% — first close above a $5T market cap.</p></div>
-        <div class="card lib-item"><h4><span class="dot"></span>Awaiting your reply</h4><p>38 open items &middot; 2 high-priority: the updated rent-notice copy and the trust paperwork.</p></div>
-        <div class="card lib-item"><h4><span class="dot"></span>Next: morning edition, 6:00 AM PT</h4><p>High-priority reminders &middot; Calendar &middot; Weather &middot; Sky &middot; Fire &amp; air &middot; Commute &middot; Inbox &middot; Markets &amp; tech &middot; Events radar &middot; Prep &middot; Bills &middot; Awaiting your reply &middot; Quick links.</p></div>
+        <div class="card lib-item"><h4><span class="dot"></span>Weather — Fiddletown</h4><p>Today: sunny, high 83&deg;F. Friday: sunny and warmer, high 86&deg; / low 62&deg; — the warm-up continues.</p></div>
+        <div class="card lib-item"><h4><span class="dot"></span>Sky</h4><p>Sunset today 6:24 PM; sunrise tomorrow &asymp;7:13 AM; waxing crescent, ~23% lit.</p></div>
+        <div class="card lib-item"><h4><span class="dot"></span>Night sky</h4><p>Orionids ramping toward their Oct 21&ndash;22 peak (Halley&rsquo;s debris); thin crescent moon means dark skies — look east after midnight.</p></div>
+        <div class="card lib-item"><h4><span class="dot"></span>Fire &amp; air</h4><p>Red Flag Warning through Fri 10:00 AM PDT — NE&ndash;E gusts to 45 mph, humidity 10&ndash;25%; PG&amp;E PSPS footprint includes Amador County. AQI 19 (Good), no smoke.</p></div>
+        <div class="card lib-item"><h4><span class="dot"></span>Markets — AAPL</h4><p>Closed Thursday at $342.00, off ~0.3% from yesterday&rsquo;s all-time closing high of $342.96 — market cap holding ~$5.65T.</p></div>
+        <div class="card lib-item"><h4><span class="dot"></span>Awaiting your reply</h4><p>40 open items &middot; 1 genuinely high-priority: the trust paperwork. The registry&rsquo;s rent-notice item is stale (the 90-day notice went out Oct 8) — cleanup pending.</p></div>
+        <div class="card lib-item"><h4><span class="dot"></span>Next: evening edition, 6:00 PM PT</h4><p>High-priority reminders &middot; Top stories &middot; Markets &middot; Tech &amp; AI &middot; YouTube picks &middot; Podcast picks &middot; Sky &middot; Night sky &middot; Awaiting your reply &middot; Quick links &middot; The dinner question.</p></div>
       </div>
     </section>
 
@@ -429,7 +440,7 @@
   </main>
 
   <footer>
-    <span>Briefing Buddy · a living page · last refreshed <strong>October 15, 2026 (morning)</strong></span>
+    <span>Briefing Buddy · a living page · last refreshed <strong>October 15, 2026 (evening)</strong></span>
     <span><a href="https://docs.google.com/document/d/1s9ghZ-kyp9dag2whTPnk24ULLUJP3JW_0UGtocAynbs/edit">Product brief</a> · editions live in the Briefings thread</span>
   </footer>
 </div>
