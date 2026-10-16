@@ -270,6 +270,15 @@ body.sb-anchored #sidebar{left:0;background:var(--panel);border-left:none;border
   -webkit-backdrop-filter:none;backdrop-filter:none}
 body.sb-anchored #sidebar .brand, body.sb-anchored #sidebar .sb-tipjar{background:var(--panel)}
 #main{flex:1;min-width:0;padding:36px 32px 80px;position:relative;z-index:1}
+/* Dave 2026-10-16: wiggle the selected node when the chart recenters on it */
+@keyframes node-wiggle{
+  0%,100%{transform:rotate(0deg)}
+  20%{transform:rotate(-4deg) scale(1.05)}
+  40%{transform:rotate(4deg) scale(1.05)}
+  60%{transform:rotate(-3deg)}
+  80%{transform:rotate(3deg)}
+}
+#treezoom .node.wiggle{animation:node-wiggle .55s ease-in-out;transform-origin:center}
 /* Dave 2026-10-16: view controls are centered horizontally in the visible
    area (clear of the sidebar) while the chart content runs full-bleed underneath. */
 #tree-chrome-main{display:flex;flex-direction:column;align-items:center;gap:8px;padding-left:348px}
@@ -2330,8 +2339,17 @@ function selectBuddy(id){
         const tz = document.getElementById('treezoom');
         if (tz) {
           tz.querySelectorAll('.node.sel,.ledger-row.sel,.mcol-row.sel').forEach(n => n.classList.remove('sel'));
+          tz.querySelectorAll('.node.wiggle').forEach(n => n.classList.remove('wiggle'));
           const node = tz.querySelector('[data-buddy="' + id + '"]');
-          if (node) node.classList.add('sel');
+          if (node) {
+            node.classList.add('sel');
+            // Dave 2026-10-16: wiggle the node so the eye lands on it
+            if (node.classList.contains('node')) {
+              void node.offsetWidth; // restart the animation
+              node.classList.add('wiggle');
+              setTimeout(() => node.classList.remove('wiggle'), 600);
+            }
+          }
         }
         centerOnBuddy(id, true);
       }
