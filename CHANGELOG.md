@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-10-16 (Documentarian custom homepage)
+
+### Added
+- **📚 Documentarian custom homepage** (thread-owned, `documentarian-buddy/index.html`, CUSTOM HOMEPAGE marker so the generator never overwrites it): archival ink-and-parchment design — "the buddy system's memory of itself" hero, live collection stats (buddies/homepages from `../buddies.json`, artifacts/public from the index data file), six "what I keep" tiles (buddies, pages, docs, repos, link graph, history), the visibility-watch section (standing rule: pages stay private unless Dave explicitly makes one public), "ask me" Q&A, sources tiles (mission doc, repo, dashboard), theme toggle (dark default + light + OS-auto, persisted), slim sticky header, responsive, standard 🧠 brain-dump box with the no-token/no-repo localStorage queue fallback. Inline scripts node-checked.
+
 ## 2026-10-16 (Health Buddy custom homepage)
 
 ### Added

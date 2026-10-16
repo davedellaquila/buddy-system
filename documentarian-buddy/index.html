@@ -1,184 +1,303 @@
-<!-- BUDDY-BASIC-TEMPLATE v2 -->
 <!DOCTYPE html>
-<html lang="en">
+<!-- CUSTOM HOMEPAGE — Documentarian (thread-owned, never overwrite) -->
+<html lang="en" data-theme="auto">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Documentarian</title>
+<title>Documentarian — The System's Memory of Itself</title>
 <style>
-:root {
-  --bg: #ffffff;
-  --text: #1a1a1a;
-  --muted: #666;
-  --card: #f5f5f5;
-  --border: #e0e0e0;
-  --accent: #0066cc;
-}
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg: #1a1a1a;
-    --text: #e0e0e0;
-    --muted: #999;
-    --card: #2a2a2a;
-    --border: #3a3a3a;
-    --accent: #4da6ff;
+  :root{
+    --bg:#101418; --bg2:#141a20; --card:#171e26; --card2:#1d2530;
+    --ink:#e9e4d8; --muted:#a8a294; --faint:#7d7869;
+    --line:#2b3440; --hairline:rgba(122,162,179,.22);
+    --accent:#7aa2b3; --accent-deep:#4e7688; --accent-wash:rgba(122,162,179,.12);
+    --bar:rgba(16,20,24,.88);
+    --btn-ink:#101418;
+    --shadow:0 1px 2px rgba(0,0,0,.35);
   }
-}
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  background: var(--bg);
-  color: var(--text);
-  line-height: 1.6;
-  padding: 40px 20px;
-  max-width: 800px;
-  margin: 0 auto;
-}
-.header { text-align: center; margin-bottom: 40px; }
-.topbar {
-  position: sticky; top: 0; z-index: 50;
-  display: flex; align-items: center; gap: 10px;
-  background: var(--bg);
-  border-bottom: 1px solid var(--border);
-  padding: 10px 2px; margin-bottom: 24px;
-  font-size: 17px; font-weight: 700;
-}
-.topbar-icon { font-size: 22px; line-height: 1; }
-.icon { font-size: 64px; margin-bottom: 16px; }
-h1 { font-size: 32px; margin-bottom: 8px; }
-.tagline { color: var(--muted); font-size: 18px; }
-.mission {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 24px;
-  margin-bottom: 32px;
-  font-size: 17px;
-}
-h2 { font-size: 22px; margin: 32px 0 16px; }
-.attn {
-  background: var(--card);
-  border-left: 4px solid var(--accent);
-  border-radius: 0 8px 8px 0;
-  padding: 16px 20px;
-  margin-bottom: 12px;
-}
-.attn-date { color: var(--muted); font-size: 14px; margin-top: 8px; }
-.attn-actions { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
-.attn-btn {
-  border: 1px solid var(--border); background: var(--bg); color: var(--text);
-  border-radius: 8px; padding: 7px 14px; font-size: 13px; font-weight: 600; cursor: pointer;
-  -webkit-tap-highlight-color: transparent;
-}
-.attn-btn:hover { border-color: var(--accent); }
-.attn-btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
-.attn-btn:disabled { opacity: .45; cursor: default; }
-.attn-status { font-size: 13px; color: var(--muted); margin-top: 8px; min-height: 18px; }
-.attn.resolved { opacity: .6; }
-.attn.resolved .attn-actions { display: none; }
-.children { display: flex; flex-wrap: wrap; gap: 12px; }
-.child {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 12px 20px;
-  text-decoration: none;
-  color: var(--text);
-}
-.child:hover { border-color: var(--accent); }
-.footer {
-  margin-top: 48px;
-  padding-top: 24px;
-  border-top: 1px solid var(--border);
-  color: var(--muted);
-  font-size: 14px;
-  text-align: center;
-}
-.empty { color: var(--muted); font-style: italic; }
+  html[data-theme="light"]{
+    --bg:#f4f1e8; --bg2:#ece7d6; --card:#fffdf6; --card2:#f8f4e8;
+    --ink:#23282e; --muted:#6b6558; --faint:#98917e;
+    --line:#e0d8c0; --hairline:rgba(78,118,136,.28);
+    --accent:#4e7688; --accent-deep:#4e7688; --accent-wash:rgba(78,118,136,.10);
+    --bar:rgba(244,241,232,.9);
+    --btn-ink:#ffffff;
+    --shadow:0 1px 2px rgba(60,55,30,.10);
+  }
+  @media (prefers-color-scheme: light){
+    html[data-theme="auto"]{
+      --bg:#f4f1e8; --bg2:#ece7d6; --card:#fffdf6; --card2:#f8f4e8;
+      --ink:#23282e; --muted:#6b6558; --faint:#98917e;
+      --line:#e0d8c0; --hairline:rgba(78,118,136,.28);
+      --accent:#4e7688; --accent-deep:#4e7688; --accent-wash:rgba(78,118,136,.10);
+      --bar:rgba(244,241,232,.9);
+      --btn-ink:#ffffff;
+      --shadow:0 1px 2px rgba(60,55,30,.10);
+    }
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font-family:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    line-height:1.55; -webkit-font-smoothing:antialiased;
+  }
+  .serif{font-family:Georgia,"Iowan Old Style","Times New Roman",serif}
 
-.dumpbox {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 20px 22px;
-  margin-bottom: 32px;
-}
-.dumpbox h2 { margin: 0 0 6px; font-size: 20px; }
-.dumpbox-sub { color: var(--muted); font-size: 14px; margin-bottom: 14px; }
-.dumpbox textarea {
-  width: 100%; min-height: 96px; resize: vertical;
-  background: var(--bg); border: 1px solid var(--border); border-radius: 8px;
-  padding: 10px 12px; font-size: 14px; color: var(--text); font-family: inherit;
-}
-.dumpbox textarea:focus { outline: none; border-color: var(--accent); }
-.dumpbox textarea:disabled { opacity: .55; }
-.dumpbox-row { display: flex; align-items: center; gap: 12px; margin-top: 10px; flex-wrap: wrap; }
-.dumpbox-btn {
-  background: var(--accent); color: #fff; border: none; border-radius: 8px;
-  padding: 9px 22px; font-size: 14px; font-weight: 600; cursor: pointer;
-}
-.dumpbox-btn:disabled { opacity: .45; cursor: default; }
-.dumpbox-status { font-size: 13px; color: var(--muted); }
-.dumpbox-token {
-  background: var(--bg); border: 1px dashed var(--border); border-radius: 8px;
-  padding: 12px 14px; margin-bottom: 12px; font-size: 14px;
-}
-.dumpbox-token p { margin-bottom: 8px; }
-.dumpbox-tokenrow { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
-.dumpbox-tokenrow input {
-  flex: 1; min-width: 170px; background: var(--card); border: 1px solid var(--border);
-  border-radius: 8px; padding: 7px 10px; font-size: 13px; color: var(--text);
-}
-.dumpbox-tokenrow button {
-  background: transparent; color: var(--accent); border: 1px solid var(--accent);
-  border-radius: 8px; padding: 7px 14px; font-size: 13px; font-weight: 600; cursor: pointer;
-}
-.dumpbox-tokenrow a { color: var(--accent); font-size: 13px; }
+  /* ---- slim sticky header: icon left of the page name, content scrolls under ---- */
+  .topbar{
+    position:sticky; top:0; z-index:50;
+    background:var(--bar); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--hairline);
+  }
+  .topbar-inner{
+    max-width:920px; margin:0 auto; padding:10px 20px;
+    display:flex; align-items:center; gap:10px;
+  }
+  .topbar .icon{font-size:20px; line-height:1}
+  .topbar .name{font-weight:650; font-size:16px; letter-spacing:.2px}
+  .topbar .spacer{flex:1}
+  .topbar a.dash{color:var(--muted); text-decoration:none; font-size:13px; white-space:nowrap}
+  .topbar a.dash:hover{color:var(--accent)}
+  #themeToggle{
+    background:var(--card2); color:var(--ink); border:1px solid var(--line);
+    border-radius:999px; padding:6px 12px; font-size:13px; cursor:pointer; white-space:nowrap;
+  }
+  #themeToggle:hover{border-color:var(--accent)}
 
+  .wrap{max-width:920px; margin:0 auto; padding:28px 20px 64px}
+
+  .eyebrow{
+    font-size:12px; letter-spacing:2.5px; text-transform:uppercase;
+    color:var(--accent); font-weight:700; margin:26px 0 12px;
+  }
+  .eyebrow:first-child{margin-top:8px}
+
+  .hero-title{font-size:clamp(30px,5vw,44px); line-height:1.2; margin:0 0 10px; font-weight:600}
+  .hero-title em{color:var(--accent); font-style:italic}
+  .hero-sub{font-size:17px; color:var(--muted); max-width:660px; margin:0}
+  .hero-sub strong{color:var(--ink)}
+
+  .rule{border:0; border-top:1px solid var(--hairline); margin:34px 0}
+
+  h2.sec{
+    font-size:13px; letter-spacing:2px; text-transform:uppercase;
+    color:var(--accent); font-weight:700; margin:0 0 14px;
+  }
+  .lede{color:var(--muted); margin:0 0 18px; max-width:660px}
+
+  .stats{display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:10px}
+  .stat{
+    background:var(--card); border:1px solid var(--line); border-radius:12px;
+    padding:16px; box-shadow:var(--shadow); text-align:center;
+  }
+  .stat .n{font-size:32px; font-weight:700; color:var(--accent); line-height:1.1}
+  .stat .l{font-size:13px; color:var(--muted); margin-top:4px}
+
+  .tiles{display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:10px}
+  .tile{
+    background:var(--card); border:1px solid var(--line); border-radius:12px;
+    padding:15px 16px; box-shadow:var(--shadow);
+  }
+  .tile b{display:block; margin-bottom:4px; font-size:15px}
+  .tile b .dot{color:var(--accent); margin-right:6px}
+  .tile p{margin:0; color:var(--muted); font-size:14px}
+  .tile a{color:var(--accent); text-decoration:none}
+  .tile a:hover{text-decoration:underline}
+
+  .watch{
+    background:var(--card); border:1px solid var(--hairline); border-radius:12px;
+    padding:18px 20px; box-shadow:var(--shadow);
+  }
+  .watch p{margin:0 0 10px; color:var(--muted); font-size:15px}
+  .watch p:last-child{margin-bottom:0}
+  .watch strong{color:var(--ink)}
+
+  .ask{list-style:none; margin:0; padding:0; display:grid; gap:10px}
+  .ask li{
+    background:var(--card); border:1px solid var(--line); border-radius:12px;
+    padding:14px 16px; box-shadow:var(--shadow);
+  }
+  .ask .q{font-weight:650; margin-bottom:2px}
+  .ask .a{color:var(--muted); font-size:14px; margin:0}
+
+  .asof{color:var(--faint); font-size:13px; margin-top:14px}
+
+  /* ---- brain dump (canonical markup, page-themed) ---- */
+  .dumpbox{
+    background:var(--card); border:1px solid var(--hairline); border-radius:12px;
+    padding:20px; box-shadow:var(--shadow); margin-top:8px;
+  }
+  .dumpbox h2{margin:0 0 6px; font-size:20px}
+  .dumpbox-sub{color:var(--muted); font-size:14px; margin:0 0 14px}
+  .dumpbox textarea{
+    width:100%; background:var(--bg2); color:var(--ink);
+    border:1px solid var(--line); border-radius:8px; padding:12px;
+    font:inherit; font-size:15px; resize:vertical; min-height:88px;
+  }
+  .dumpbox textarea:focus{outline:2px solid var(--accent); outline-offset:1px}
+  .dumpbox textarea:disabled{opacity:.5}
+  .dumpbox-row{display:flex; align-items:center; gap:12px; margin-top:12px; flex-wrap:wrap}
+  .dumpbox-btn{
+    background:var(--accent); color:var(--btn-ink); border:0; border-radius:8px;
+    padding:10px 18px; font:inherit; font-size:15px; font-weight:650; cursor:pointer;
+  }
+  .dumpbox-btn:hover{filter:brightness(1.07)}
+  .dumpbox-btn:disabled{opacity:.5; cursor:default}
+  .dumpbox-status{color:var(--muted); font-size:14px}
+  .dumpbox-connect, .dumpbox-token{margin-bottom:12px}
+  .dumpbox-connect p, .dumpbox-token p{margin:0 0 10px; font-size:14px; color:var(--muted)}
+  .dumpbox-tokenrow{display:flex; gap:8px; flex-wrap:wrap; align-items:center}
+  .dumpbox-tokenrow input{
+    background:var(--bg2); color:var(--ink); border:1px solid var(--line);
+    border-radius:8px; padding:9px 12px; font:inherit; font-size:14px; flex:1; min-width:200px;
+  }
+  .dumpbox-tokenrow button{
+    background:transparent; color:var(--accent); border:1px solid var(--accent);
+    border-radius:8px; padding:9px 14px; font:inherit; font-size:14px; cursor:pointer;
+  }
+  .dumpbox-tokenrow button:hover{background:var(--accent-wash)}
+  .dumpbox-tokenrow a{color:var(--muted); font-size:13px}
+
+  footer{margin-top:48px; color:var(--faint); font-size:13px; text-align:center}
+  footer a{color:var(--muted)}
 </style>
 </head>
 <body>
-<nav data-buddy-crumb style="padding:14px 20px 0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:14px;line-height:1.4;"><a href="https://davedellaquila.github.io/buddy-system/astro/" style="color:inherit;opacity:.65;text-decoration:none;">← Astro</a></nav>
-<div class="topbar"><span class="topbar-icon">📚</span><span class="topbar-name">Documentarian</span></div>
-<div class="header">
-<div class="icon">📚</div>
-<h1>Documentarian</h1>
-<div class="tagline">The system&#x27;s memory of itself — master index + history</div>
-</div>
 
-<div class="mission">Meticulous archivist of the buddy system: owns the master index of every buddy, web page, Google Doc, repo, artifact, and link — with private/public visibility and change history. Keeps the Buddy Directory page current. Answers ‘do we have X / where is Y / which are public’ from the index, never from guesswork. Upholds the rule: pages stay private unless Dave explicitly makes one public.</div>
+<header class="topbar">
+  <div class="topbar-inner">
+    <span class="icon">📚</span>
+    <span class="name">Documentarian</span>
+    <span class="spacer"></span>
+    <a class="dash" href="https://davedellaquila.github.io/buddy-system/">← Dashboard</a>
+    <button id="themeToggle" type="button" aria-label="Toggle theme">◐ Theme</button>
+  </div>
+</header>
 
+<div class="wrap">
 
-<section class="dumpbox" data-buddy-id="documentarian-buddy">
-<h2>🧠 Brain dump</h2>
-<p class="dumpbox-sub">Dump what's on your mind about Documentarian — raw and unfiltered. Each dump lands in the buddy's repo (docs/ingest.md) as a timestamped entry — or saves on this device until a repo is linked and a token is connected.</p>
-<div class="dumpbox-token" hidden>
-<p>🔒 Connect GitHub to unlock dumping. Paste a token once — it stays on this device only.</p>
-<div class="dumpbox-tokenrow">
-<input type="password" placeholder="GitHub token (repo scope)" aria-label="GitHub token">
-<button type="button">Save token</button>
-<a href="https://github.com/settings/tokens" target="_blank" rel="noopener">Get a token</a>
-</div>
-</div>
-<textarea rows="4" placeholder="Dump what's on your mind about Documentarian…"></textarea>
-<div class="dumpbox-row">
-<button type="button" class="dumpbox-btn">Dump it</button>
-<span class="dumpbox-status" role="status"></span>
-</div>
-</section>
+  <p class="eyebrow">Staff function · Records &amp; Archives</p>
+  <h1 class="hero-title serif">The buddy system's <em>memory of itself.</em></h1>
+  <p class="hero-sub">I keep the master index of everything the system has produced — <strong>every buddy, web page, Google Doc, repo, artifact, and link</strong> — with private/public visibility and the history of what changed when. When Dave asks <em>"do we have X?"</em>, <em>"where is Y?"</em>, or <em>"which of these are public?"</em>, I answer from the index. <strong>Never from guesswork.</strong></p>
 
+  <hr class="rule">
 
-<h2>Needs Attention</h2>
-<div class="attn" data-attn-id="documentarian-mission-review"><div class="attn-text">Mission statement ready for Dave&#x27;s review.</div><div class="attn-date">2026-10-16</div><div class="attn-actions"><button type="button" class="attn-btn primary" data-act="done">✓ Done</button><button type="button" class="attn-btn" data-act="info">Need more info</button></div><div class="attn-status" role="status"></div></div>
+  <h2 class="sec">The collection, live</h2>
+  <p class="lede">Counts read straight from the registry and the artifact catalog — always current, never stale.</p>
+  <div class="stats" id="stats">
+    <div class="stat"><div class="n" data-count="buddies">–</div><div class="l">buddies indexed</div></div>
+    <div class="stat"><div class="n" data-count="pages">–</div><div class="l">dashboard homepages</div></div>
+    <div class="stat"><div class="n" data-count="artifacts">–</div><div class="l">web artifacts</div></div>
+    <div class="stat"><div class="n" data-count="public">–</div><div class="l">public pages</div></div>
+  </div>
+  <p class="asof" id="asof"></p>
 
+  <hr class="rule">
 
+  <h2 class="sec">What I keep</h2>
+  <div class="tiles">
+    <div class="tile"><b><span class="dot">●</span>Buddies</b><p>Every buddy from the registry — id, name, icon, tagline, mission, parent, links, repo, docs, brief.</p></div>
+    <div class="tile"><b><span class="dot">●</span>Web pages</b><p>Every dashboard homepage and web artifact, each badged <strong>Private</strong> or <strong>Public</strong> from its actual share state.</p></div>
+    <div class="tile"><b><span class="dot">●</span>Google Docs</b><p>Briefs, mission statements, specs — indexed as entries with links and owning buddy. (Folders are Document Buddy's job; the map is mine.)</p></div>
+    <div class="tile"><b><span class="dot">●</span>Repos</b><p>Every <code>davedellaquila/&lt;buddy-id&gt;</code> repo, verified to exist — and verified private.</p></div>
+    <div class="tile"><b><span class="dot">●</span>Link graph</b><p>The many-to-many: which buddies link to which, built from the registry's <code>links[]</code>.</p></div>
+    <div class="tile"><b><span class="dot">●</span>History</b><p>What was built, changed, published, shared, or renamed — and when. Nothing built twice, nothing lost.</p></div>
+  </div>
 
+  <hr class="rule">
 
-<div class="footer">
-Generated 2026-10-16 · Part of the Buddy System
+  <h2 class="sec">The visibility watch</h2>
+  <div class="watch">
+    <p><strong>The standing rule:</strong> buddy-published pages stay <strong>private</strong> unless Dave explicitly makes one public — one page at a time.</p>
+    <p>I audit every web artifact's share state against the registry. Anything that looks externally visible without his explicit approval gets flagged — loudly, immediately, with the link.</p>
+    <p>Also in my charge: the <a href="https://muse.ai/s/buddy-directory-xmb5xv865hxexpc" style="color:var(--accent)">Buddy Directory</a> — the browsable face of the index, kept current as buddies and pages are added.</p>
+  </div>
+
+  <hr class="rule">
+
+  <h2 class="sec">Ask me</h2>
+  <ul class="ask">
+    <li><div class="q">"Do we have a buddy for X?"</div><p class="a">I check the registry — 111 buddies and counting — and tell you exactly which one, with its homepage link.</p></li>
+    <li><div class="q">"Where is Y?"</div><p class="a">I look it up in the index: page, doc, repo, or artifact — and hand you the link, right there.</p></li>
+    <li><div class="q">"Which of these are public?"</div><p class="a">I answer from verified share states, not from memory. Private is the default; public is always deliberate.</p></li>
+  </ul>
+
+  <hr class="rule">
+
+  <h2 class="sec">Sources</h2>
+  <div class="tiles">
+    <div class="tile"><b><span class="dot">●</span>Mission statement</b><p><a href="https://docs.google.com/document/d/12jcVPE7pmO1pGf-6OnH-PNEis9RyJ4-hwy38gyCrKJ8/edit">Documentarian — Mission Statement</a> (Google Doc)</p></div>
+    <div class="tile"><b><span class="dot">●</span>Repo</b><p><a href="https://github.com/davedellaquila/documentarian-buddy">davedellaquila/documentarian-buddy</a> — the index lives here, versioned.</p></div>
+    <div class="tile"><b><span class="dot">●</span>Dashboard</b><p><a href="https://davedellaquila.github.io/buddy-system/">Buddy System dashboard</a> — my entry sits with the staff functions.</p></div>
+  </div>
+
+  <hr class="rule">
+
+  <section class="dumpbox" data-buddy-id="documentarian-buddy">
+    <h2>🧠 Brain dump</h2>
+    <p class="dumpbox-sub">Dump what's on your mind about the Documentarian — something to index, a page to check, a correction, raw and unfiltered. With a GitHub token it lands in the repo's <code>docs/ingest.md</code>; without one it queues on this device until sync.</p>
+    <div class="dumpbox-connect" hidden>
+      <p>🔒 Connect GitHub to dump straight into the repo. Paste a token once — it stays on this device only. (Or just type below; it'll queue locally.)</p>
+      <button type="button" class="dumpbox-btn">Connect GitHub to enable</button>
+    </div>
+    <div class="dumpbox-token" hidden>
+      <p>🔒 Paste a token once — it stays on this device only.</p>
+      <div class="dumpbox-tokenrow">
+        <input type="password" placeholder="GitHub token (repo scope)" aria-label="GitHub token">
+        <button type="button">Save token</button>
+        <a href="https://github.com/settings/tokens" target="_blank" rel="noopener">Get a token</a>
+      </div>
+    </div>
+    <textarea rows="4" placeholder="Something to index, a page to verify, a correction…"></textarea>
+    <div class="dumpbox-row">
+      <button type="button" class="dumpbox-btn">Dump it</button>
+      <span class="dumpbox-status" role="status"></span>
+    </div>
+  </section>
+
+  <footer>
+    📚 The Documentarian · meticulous, complete, calm · <a href="https://davedellaquila.github.io/buddy-system/">dashboard</a>
+  </footer>
+
 </div>
 
 <script>
+// ---- theme toggle ----
+(function(){
+  var root = document.documentElement, btn = document.getElementById('themeToggle');
+  function apply(t){ root.setAttribute('data-theme', t); try{ localStorage.setItem('docu-theme', t); }catch(e){} }
+  try{
+    var saved = localStorage.getItem('docu-theme');
+    if (saved === 'light' || saved === 'dark') apply(saved);
+  }catch(e){}
+  btn.addEventListener('click', function(){
+    var cur = root.getAttribute('data-theme');
+    apply(cur === 'light' ? 'dark' : 'light');
+  });
+})();
+
+// ---- live collection counts from the registry ----
+(function(){
+  function setCount(key, val){
+    var el = document.querySelector('[data-count="' + key + '"]');
+    if (el) el.textContent = val;
+  }
+  fetch('../buddies.json', {cache:'no-store'}).then(function(r){ return r.json(); }).then(function(d){
+    var buds = d.buddies || [];
+    setCount('buddies', buds.length);
+    setCount('pages', buds.filter(function(b){ return b.homepage; }).length);
+    document.getElementById('asof').textContent = 'Registry read live · ' + new Date().toLocaleDateString();
+  }).catch(function(){});
+  // artifact + public counts come from the index data file once published
+  fetch('index-data.json', {cache:'no-store'}).then(function(r){ return r.json(); }).then(function(d){
+    if (d.artifacts) setCount('artifacts', d.artifacts.length);
+    if (d.artifacts) setCount('public', d.artifacts.filter(function(a){ return a.shared; }).length);
+  }).catch(function(){});
+})();
+</script>
+
+<script>
+// ---- dump-box JS (self-contained; local queue fallback when no token/repo) ----
 (function(){
   var box = document.querySelector('.dumpbox');
   if (!box || box.dataset.dumpInit) return;
@@ -188,9 +307,11 @@ Generated 2026-10-16 · Part of the Buddy System
     return p.substring(p.lastIndexOf('/') + 1);
   })();
   var ta = box.querySelector('textarea'),
-      btn = box.querySelector('.dumpbox-btn'),
+      btn = box.querySelector('.dumpbox-row .dumpbox-btn'),
       st = box.querySelector('.dumpbox-status'),
-      tokWrap = box.querySelector('.dumpbox-token');
+      tokWrap = box.querySelector('.dumpbox-token'),
+      connectWrap = box.querySelector('.dumpbox-connect'),
+      connectBtn = connectWrap.querySelector('.dumpbox-btn');
   function lsGet(){ try { return JSON.parse(localStorage.getItem('buddyTree.v3') || '{}'); } catch(e){ return {}; } }
   function lsSet(patch){ try { var s = lsGet(); for (var k in patch) s[k] = patch[k]; localStorage.setItem('buddyTree.v3', JSON.stringify(s)); } catch(e){} }
   function token(){ return lsGet().ghToken || ''; }
@@ -231,201 +352,68 @@ Generated 2026-10-16 · Part of the Buddy System
       }
     } catch(e){}
   }
-  /* Local fallback (Dave 2026-10-15, widened 2026-10-16): dumping always works,
-     even with no GitHub token AND no repo linked — entries are saved in this
-     device's localStorage until the GitHub write path can take them. The backlog
-     flushes into the repo on the next successful GitHub dump (once a repo is
-     linked and a token is present). */
-  function localKey(){ return 'buddyTree.ingest.' + bid; }
-  function localBacklog(){
-    try { var a = JSON.parse(localStorage.getItem(localKey()) || '[]'); return Array.isArray(a) ? a : []; }
-    catch(e){ return []; }
-  }
-  function localSave(entry){
-    var a = localBacklog(); a.push(entry);
-    try { localStorage.setItem(localKey(), JSON.stringify(a)); } catch(e){}
-  }
-  function localClear(){ try { localStorage.removeItem(localKey()); } catch(e){} }
   function refreshUI(){
     var has = !!token();
-    tokWrap.hidden = has;
-    /* The box always works: no token and/or no repo just means local saves. */
+    connectWrap.hidden = has;
+    if (has) tokWrap.hidden = true;
+    // Box always accepts input: with token+repo it dumps to GitHub, otherwise it queues locally.
     ta.disabled = false;
     btn.disabled = false;
-    var n = localBacklog().length;
-    if (!repo) {
-      st.textContent = n
-        ? n + ' local ' + (n === 1 ? 'dump' : 'dumps') + ' saved on this device — will sync when a repo is linked.'
-        : 'No repo linked yet — dumps save on this device and will sync when one is linked.';
-      return;
-    }
-    st.textContent = has
-      ? (n ? n + ' local ' + (n === 1 ? 'dump' : 'dumps') + ' will sync on next dump.' : '')
-      : 'No GitHub token — dumps save on this device for now.';
+    if (!has) { st.textContent = ''; }
+    else if (!repo) { st.textContent = 'No repo linked — dumps queue on this device.'; }
+  }
+  function queueLocal(text){
+    var key = 'dumpqueue.' + bid, q = [];
+    try { q = JSON.parse(localStorage.getItem(key) || '[]'); } catch(e){}
+    q.push({at: new Date().toISOString(), text: text});
+    try { localStorage.setItem(key, JSON.stringify(q)); } catch(e){}
+    return q.length;
   }
   var tokInput = tokWrap.querySelector('input'),
       tokSave = tokWrap.querySelector('button');
+  connectBtn.addEventListener('click', function(){
+    tokWrap.hidden = false;
+    if (tokInput) tokInput.focus();
+  });
   tokSave.addEventListener('click', function(){
     var v = tokInput.value.trim();
     if (!v) return;
     lsSet({ghToken: v});
     tokInput.value = '';
+    tokWrap.hidden = true;
     refreshUI();
     st.textContent = 'Token saved on this device.';
   });
   async function dump(){
     var text = ta.value.trim();
     if (!text) return;
-    var stamp = new Date().toLocaleString();
-    var NL = String.fromCharCode(10);
-    if (!repo) {
-      /* No repo linked yet — save on this device; syncs once one is linked. */
-      localSave({t: stamp, text: text});
+    if (token() && repo) {
+      st.textContent = 'Dumping…';
+      btn.disabled = true;
+      try {
+        var stamp = new Date().toLocaleString();
+        var NL = String.fromCharCode(10);
+        var entry = '## ' + stamp + NL + NL + text + NL + NL;
+        var cur = await ghGetFile(repo, 'docs/ingest.md');
+        var base = cur ? cur.text : '# Ingest log — ' + repoName + NL + NL;
+        var body = {message: 'Ingest dump for ' + bid, content: b64encode(base + entry)};
+        if (cur && cur.sha) body.sha = cur.sha;
+        await ghApi('/repos/davedellaquila/' + repo + '/contents/docs/ingest.md', 'PUT', body);
+        ta.value = '';
+        st.textContent = '✓ Dumped to ' + repo + '/docs/ingest.md';
+      } catch(err){ st.textContent = 'Save failed: ' + (err.message || err); }
+      btn.disabled = false;
+    } else {
+      var n = queueLocal(text);
       ta.value = '';
-      st.textContent = '✓ Saved on this device — will sync to the repo once one is linked.';
-      refreshUI();
-      return;
+      st.textContent = '✓ Queued on this device (' + n + ' pending) — syncs to docs/ingest.md later.';
     }
-    if (!token()) {
-      /* Temporary workaround: no token → save on this device. */
-      localSave({t: stamp, text: text});
-      ta.value = '';
-      st.textContent = '✓ Saved on this device — add a GitHub token to sync it to the repo.';
-      return;
-    }
-    st.textContent = 'Dumping…';
-    btn.disabled = true;
-    try {
-      /* Flush any locally-saved backlog first, then the new entry. */
-      var backlog = localBacklog();
-      var parts = backlog.map(function(b){ return '## ' + b.t + NL + NL + b.text + NL + NL; });
-      parts.push('## ' + stamp + NL + NL + text + NL + NL);
-      var cur = await ghGetFile(repo, 'docs/ingest.md');
-      var base = cur ? cur.text : '# Ingest log — ' + repoName + NL + NL;
-      var body = {message: 'Ingest dump for ' + bid, content: b64encode(base + parts.join(''))};
-      if (cur && cur.sha) body.sha = cur.sha;
-      await ghApi('/repos/davedellaquila/' + repo + '/contents/docs/ingest.md', 'PUT', body);
-      localClear();
-      ta.value = '';
-      st.textContent = '✓ Dumped to ' + repo + '/docs/ingest.md' + (backlog.length ? ' (' + backlog.length + ' local synced)' : '');
-    } catch(err){ st.textContent = 'Save failed: ' + (err.message || err); }
-    btn.disabled = false;
   }
   btn.addEventListener('click', dump);
   ta.addEventListener('keydown', function(ev){
     if ((ev.metaKey || ev.ctrlKey) && ev.key === 'Enter') { ev.preventDefault(); dump(); }
   });
   resolveRepo().then(refreshUI);
-})();
-</script>
-
-
-<script>
-(function(){
-  var tiles = document.querySelectorAll('.attn[data-attn-id]');
-  if (!tiles.length) return;
-  var dumpbox = document.querySelector('.dumpbox');
-  var bid = (dumpbox && dumpbox.getAttribute('data-buddy-id')) || (function(){
-    var p = location.pathname.replace(/\/+$/, '');
-    return p.substring(p.lastIndexOf('/') + 1);
-  })();
-  function lsGet(){ try { return JSON.parse(localStorage.getItem('buddyTree.v3') || '{}'); } catch(e){ return {}; } }
-  function lsSet(patch){ try { var s = lsGet(); for (var k in patch) s[k] = patch[k]; localStorage.setItem('buddyTree.v3', JSON.stringify(s)); } catch(e){} }
-  function token(){ return lsGet().ghToken || ''; }
-  function b64encode(str){
-    var bytes = new TextEncoder().encode(str), bin = '';
-    bytes.forEach(function(b){ bin += String.fromCharCode(b); });
-    return btoa(bin);
-  }
-  async function ghApi(path, method, body){
-    var t = token();
-    if (!t) throw new Error('Add a GitHub token first.');
-    var r = await fetch('https://api.github.com' + path, {
-      method: method || 'GET',
-      headers: {'Authorization': 'Bearer ' + t, 'Accept': 'application/vnd.github+json', 'Content-Type': 'application/json'},
-      body: body ? JSON.stringify(body) : undefined
-    });
-    if (!r.ok) throw new Error('GitHub ' + r.status);
-    return r.status === 204 ? null : await r.json();
-  }
-  async function ghGetFile(repo, path){
-    try {
-      var j = await ghApi('/repos/davedellaquila/' + repo + '/contents/' + path);
-      if (j && j.content) return {
-        text: new TextDecoder().decode(Uint8Array.from(atob(j.content.replace(/\n/g, '')), function(c){ return c.charCodeAt(0); })),
-        sha: j.sha
-      };
-    } catch(e){}
-    return null;
-  }
-  var repo = null, buddyName = bid;
-  async function resolveBuddy(){
-    try {
-      var r = await fetch('../buddies.json', {cache: 'no-store'});
-      var d = await r.json();
-      var buds = d.buddies || [];
-      for (var i = 0; i < buds.length; i++) {
-        if (buds[i].id === bid) {
-          if (buds[i].repo) repo = buds[i].repo;
-          if (buds[i].name) buddyName = buds[i].name;
-          break;
-        }
-      }
-    } catch(e){}
-  }
-  function rkey(aid, text){ return bid + '|' + (aid || ('text:' + text.slice(0, 60))); }
-  function isResolved(aid, text){ var m = lsGet().attnDone || {}; return !!m[rkey(aid, text)]; }
-  function setResolved(aid, text){ var s = lsGet(); var m = s.attnDone || {}; m[rkey(aid, text)] = 1; s.attnDone = m; lsSet(s); }
-  function paintResolved(tile, msg){
-    tile.classList.add('resolved');
-    var st = tile.querySelector('.attn-status');
-    if (st) st.textContent = msg;
-  }
-  async function sendAction(tile, entry, okMsg){
-    var st = tile.querySelector('.attn-status');
-    var btns = tile.querySelectorAll('.attn-btn');
-    if (!token()) { st.textContent = 'Add a GitHub token in the Brain dump section above to enable actions.'; return false; }
-    if (!repo) { st.textContent = 'No repo linked for this buddy yet.'; return false; }
-    btns.forEach(function(b){ b.disabled = true; });
-    st.textContent = 'Working…';
-    try {
-      var NL = String.fromCharCode(10);
-      var stamp = new Date().toLocaleString();
-      var cur = await ghGetFile(repo, 'docs/ingest.md');
-      var base = cur ? cur.text : '# Ingest log — ' + buddyName + NL + NL;
-      var body = {message: 'Attention action for ' + bid, content: b64encode(base + '## ' + stamp + NL + NL + entry + NL + NL)};
-      if (cur && cur.sha) body.sha = cur.sha;
-      await ghApi('/repos/davedellaquila/' + repo + '/contents/docs/ingest.md', 'PUT', body);
-      st.textContent = okMsg;
-      return true;
-    } catch(err){
-      st.textContent = 'Save failed: ' + (err.message || err);
-      btns.forEach(function(b){ b.disabled = false; });
-      return false;
-    }
-  }
-  tiles.forEach(function(tile){
-    var aid = tile.getAttribute('data-attn-id') || '';
-    var textEl = tile.querySelector('.attn-text');
-    var text = textEl ? textEl.textContent.trim() : '';
-    if (isResolved(aid, text)) { paintResolved(tile, 'Marked done'); return; }
-    tile.addEventListener('click', function(ev){
-      var btn = ev.target.closest ? ev.target.closest('.attn-btn') : null;
-      if (!btn || btn.disabled) return;
-      var act = btn.getAttribute('data-act');
-      var idBit = aid ? ' (attention id: ' + aid + ')' : '';
-      if (act === 'done') {
-        sendAction(tile,
-          'DONE — Dave marked this done on the homepage: "' + text + '"' + idBit + '. Please remove it from the attention list in buddies.json.',
-          'Marked done — the buddy will clear it.').then(function(ok){ if (ok) { setResolved(aid, text); paintResolved(tile, 'Marked done — the buddy will clear it.'); } });
-      } else if (act === 'info') {
-        sendAction(tile,
-          'FOLLOW-UP — Dave needs more info on: "' + text + '"' + idBit + '. Please follow up with him.',
-          'Sent — ' + buddyName + ' will follow up.');
-      }
-    });
-  });
-  resolveBuddy();
 })();
 </script>
 
