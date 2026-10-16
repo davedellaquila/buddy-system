@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-10-16 (Tip jar: pinned flush, frosted)
+
+### Changed
+- **Tip jar pinned + frosted** (Dave 2026-10-16 — the tip jar floated above a big empty gap; wanted it flush with the sidebar's bottom edge and frosted): `.sb-tipjar` is now `position:absolute;bottom:0` (always flush, no gap), with a frosted-glass fill (`color-mix(var(--panel) 78%, transparent)` + 20px backdrop blur) so scrolling list rows show through softly without hurting readability. Sidebar gets `padding-bottom:52px` so content never hides under it.
+
 ## 2026-10-16 (New-parent button in the parent picker)
 
 ### Added

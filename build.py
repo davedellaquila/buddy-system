@@ -105,7 +105,14 @@ body.sb-anchored #sidebar .brand, body.sb-anchored #sidebar .sb-tipjar{backgroun
 /* Brand chrome (eyebrow/title/subtitle + gear/close) pins at top; Views scroll under */
 /* Tip jar — quiet footer link pinned to the bottom of the sidebar. Muted, small,
    never in the way. Same ko-fi destination as the News Buddy voice picker. */
-.sb-tipjar{position:sticky;bottom:0;z-index:7;background:var(--panel);margin:12px -14px 0;padding:10px 14px 2px;border-top:1px solid var(--border);text-align:center;overflow:hidden}
+/* Dave 2026-10-16: tip jar pinned flush to the sidebar's bottom edge (no gap below),
+   frosted-glass fill so list rows scrolling underneath show through softly without
+   hurting readability. */
+.sb-tipjar{position:absolute;bottom:0;left:0;right:0;z-index:7;
+  background:color-mix(in srgb, var(--panel) 78%, transparent);
+  -webkit-backdrop-filter:blur(20px) saturate(1.8);backdrop-filter:blur(20px) saturate(1.8);
+  margin:0;padding:10px 14px 12px;border-top:1px solid var(--border);text-align:center;overflow:hidden}
+#sidebar{padding-bottom:52px}
 .sb-tipjar a{font-size:12px;color:var(--muted);text-decoration:none;display:inline-block;transform-origin:center}
 .sb-tipjar a:hover{color:var(--accent);text-decoration:underline}
 /* Tip jar party: slide → wiggle → flip → bounce → explode → shake → glow, then rest (Dave 2026-10-14) */
