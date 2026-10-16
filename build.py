@@ -183,6 +183,9 @@ body.sb-anchored #sidebar .brand, body.sb-anchored #sidebar .sb-tipjar{backgroun
   color:var(--text);border-radius:8px;padding:7px 30px 7px 10px;font-size:13px}
 .sb-search-wrap{position:relative;display:flex;align-items:center}
 #buddy-search-clear{position:absolute;right:6px;top:50%;transform:translateY(-50%);border:none;background:transparent;color:var(--muted);font-size:18px;line-height:1;cursor:pointer;padding:4px 8px;border-radius:6px}
+/* Dave 2026-10-16: kill the native search clear button — we have our own × (#buddy-search-clear) */
+#buddy-search::-webkit-search-cancel-button,#buddy-search::-webkit-search-decoration{display:none;-webkit-appearance:none}
+#buddy-search::-ms-clear{display:none}
 /* Autocomplete dropdown for buddy search (Dave 2026-10-12) */
 #buddy-ac{position:absolute;top:100%;left:0;right:0;z-index:5000;background:var(--panel);border:1px solid var(--border);border-radius:12px;margin-top:6px;box-shadow:0 12px 32px var(--shadow);overflow:hidden;max-height:320px;overflow-y:auto}
 #buddy-ac[hidden]{display:none}

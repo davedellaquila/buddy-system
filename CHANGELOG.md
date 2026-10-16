@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-10-16 (Search: single clear button)
+
+### Fixed
+- **Sidebar search had two clear buttons** (Dave 2026-10-16): the `type="search"` input drew the browser's native circled × alongside our custom ×. Native one is now hidden via CSS; only ours remains.
+
 ## 2026-10-16 (Tip jar victory lap)
 
 ### Changed
