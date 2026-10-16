@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-10-16 (Gallery thumbnails + lightbox)
+
+### Changed
+- **Gallery goes fast** (Dave 2026-10-16 — 3.5MB images were slow): the grid now loads 40KB thumbnails (auto-generated at build time into `photos/<id>/thumbs/`); tapping one opens the full image in a lightbox (backdrop/Esc/× to close) instead of a new tab.
+
 ## 2026-10-16 (Social Media Buddy homepage: chart embedded + generator-trap fix)
 
 ### Fixed

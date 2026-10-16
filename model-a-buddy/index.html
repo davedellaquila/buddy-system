@@ -107,6 +107,11 @@ h2 { font-size: 22px; margin: 32px 0 16px; }
 .gallery a { display: block; border-radius: 12px; overflow: hidden; border: 1px solid var(--border); background: var(--card); }
 .gallery img { width: 100%; height: 160px; object-fit: cover; display: block; transition: transform .25s ease; }
 .gallery a:hover img { transform: scale(1.04); }
+.lightbox { position: fixed; inset: 0; z-index: 1000; display: flex; align-items: center; justify-content: center; }
+.lightbox[hidden] { display: none; }
+.lightbox-bg { position: absolute; inset: 0; background: rgba(0,0,0,.88); }
+.lightbox-img { position: relative; max-width: 92vw; max-height: 88vh; border-radius: 12px; box-shadow: 0 24px 64px rgba(0,0,0,.5); }
+.lightbox-x { position: absolute; top: 16px; right: 20px; background: rgba(255,255,255,.12); color: #fff; border: none; border-radius: 50%; width: 44px; height: 44px; font-size: 26px; cursor: pointer; line-height: 1; }
 
 .dumpbox {
   background: var(--card);
@@ -165,13 +170,38 @@ h2 { font-size: 22px; margin: 32px 0 16px; }
 
 <h2>Photos</h2>
 <div class="gallery">
-<a href="https://raw.githubusercontent.com/davedellaquila/buddy-system/master/photos/model-a-buddy/1792183641473-DSCN1489.jpg" target="_blank" rel="noopener"><img src="https://raw.githubusercontent.com/davedellaquila/buddy-system/master/photos/model-a-buddy/1792183641473-DSCN1489.jpg" alt="1931 Ford Model A photo" loading="lazy"></a>
-<a href="https://raw.githubusercontent.com/davedellaquila/buddy-system/master/photos/model-a-buddy/1792183667508-DSCN1485.jpg" target="_blank" rel="noopener"><img src="https://raw.githubusercontent.com/davedellaquila/buddy-system/master/photos/model-a-buddy/1792183667508-DSCN1485.jpg" alt="1931 Ford Model A photo" loading="lazy"></a>
-<a href="https://raw.githubusercontent.com/davedellaquila/buddy-system/master/photos/model-a-buddy/1792183687341-DSCN1488.jpg" target="_blank" rel="noopener"><img src="https://raw.githubusercontent.com/davedellaquila/buddy-system/master/photos/model-a-buddy/1792183687341-DSCN1488.jpg" alt="1931 Ford Model A photo" loading="lazy"></a>
-<a href="https://raw.githubusercontent.com/davedellaquila/model-a-buddy/master/photos/1792183641473-DSCN1489.jpg" target="_blank" rel="noopener"><img src="https://raw.githubusercontent.com/davedellaquila/model-a-buddy/master/photos/1792183641473-DSCN1489.jpg" alt="1931 Ford Model A photo" loading="lazy"></a>
-<a href="https://raw.githubusercontent.com/davedellaquila/model-a-buddy/master/photos/1792183667508-DSCN1485.jpg" target="_blank" rel="noopener"><img src="https://raw.githubusercontent.com/davedellaquila/model-a-buddy/master/photos/1792183667508-DSCN1485.jpg" alt="1931 Ford Model A photo" loading="lazy"></a>
-<a href="https://raw.githubusercontent.com/davedellaquila/model-a-buddy/master/photos/1792183687341-DSCN1488.jpg" target="_blank" rel="noopener"><img src="https://raw.githubusercontent.com/davedellaquila/model-a-buddy/master/photos/1792183687341-DSCN1488.jpg" alt="1931 Ford Model A photo" loading="lazy"></a>
+<a href="https://raw.githubusercontent.com/davedellaquila/buddy-system/master/photos/model-a-buddy/1792183641473-DSCN1489.jpg" class="g-item" data-full="https://raw.githubusercontent.com/davedellaquila/buddy-system/master/photos/model-a-buddy/1792183641473-DSCN1489.jpg"><img src="https://raw.githubusercontent.com/davedellaquila/buddy-system/master/photos/model-a-buddy/thumbs/1792183641473-DSCN1489.jpg" alt="1931 Ford Model A photo" loading="lazy"></a>
+<a href="https://raw.githubusercontent.com/davedellaquila/buddy-system/master/photos/model-a-buddy/1792183667508-DSCN1485.jpg" class="g-item" data-full="https://raw.githubusercontent.com/davedellaquila/buddy-system/master/photos/model-a-buddy/1792183667508-DSCN1485.jpg"><img src="https://raw.githubusercontent.com/davedellaquila/buddy-system/master/photos/model-a-buddy/thumbs/1792183667508-DSCN1485.jpg" alt="1931 Ford Model A photo" loading="lazy"></a>
+<a href="https://raw.githubusercontent.com/davedellaquila/buddy-system/master/photos/model-a-buddy/1792183687341-DSCN1488.jpg" class="g-item" data-full="https://raw.githubusercontent.com/davedellaquila/buddy-system/master/photos/model-a-buddy/1792183687341-DSCN1488.jpg"><img src="https://raw.githubusercontent.com/davedellaquila/buddy-system/master/photos/model-a-buddy/thumbs/1792183687341-DSCN1488.jpg" alt="1931 Ford Model A photo" loading="lazy"></a>
+<a href="https://raw.githubusercontent.com/davedellaquila/model-a-buddy/master/photos/1792183641473-DSCN1489.jpg" class="g-item" data-full="https://raw.githubusercontent.com/davedellaquila/model-a-buddy/master/photos/1792183641473-DSCN1489.jpg"><img src="https://raw.githubusercontent.com/davedellaquila/model-a-buddy/master/photos/1792183641473-DSCN1489.jpg" alt="1931 Ford Model A photo" loading="lazy"></a>
+<a href="https://raw.githubusercontent.com/davedellaquila/model-a-buddy/master/photos/1792183667508-DSCN1485.jpg" class="g-item" data-full="https://raw.githubusercontent.com/davedellaquila/model-a-buddy/master/photos/1792183667508-DSCN1485.jpg"><img src="https://raw.githubusercontent.com/davedellaquila/model-a-buddy/master/photos/1792183667508-DSCN1485.jpg" alt="1931 Ford Model A photo" loading="lazy"></a>
+<a href="https://raw.githubusercontent.com/davedellaquila/model-a-buddy/master/photos/1792183687341-DSCN1488.jpg" class="g-item" data-full="https://raw.githubusercontent.com/davedellaquila/model-a-buddy/master/photos/1792183687341-DSCN1488.jpg"><img src="https://raw.githubusercontent.com/davedellaquila/model-a-buddy/master/photos/1792183687341-DSCN1488.jpg" alt="1931 Ford Model A photo" loading="lazy"></a>
 </div>
+<div class="lightbox" hidden>
+  <div class="lightbox-bg"></div>
+  <img class="lightbox-img" alt="">
+  <button class="lightbox-x" aria-label="Close">&times;</button>
+</div>
+<script>
+(function(){
+  var items = document.querySelectorAll('.g-item');
+  var lb = document.querySelector('.lightbox');
+  if (!lb) return;
+  var img = lb.querySelector('.lightbox-img');
+  items.forEach(function(a){
+    a.addEventListener("click", function(e){
+      e.preventDefault();
+      img.src = a.getAttribute("data-full");
+      lb.hidden = false;
+      document.body.style.overflow = 'hidden';
+    });
+  });
+  function close(){ lb.hidden = true; img.src=""; document.body.style.overflow=""; }
+  lb.querySelector(".lightbox-bg").addEventListener("click", close);
+  lb.querySelector(".lightbox-x").addEventListener("click", close);
+  document.addEventListener("keydown", function(e){ if(e.key==="Escape" && !lb.hidden) close(); });
+})();
+</script>
 
 
 <section class="dumpbox" data-buddy-id="model-a-buddy">

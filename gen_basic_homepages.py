@@ -579,6 +579,11 @@ h2 {{ font-size: 22px; margin: 32px 0 16px; }}
 .gallery a {{ display: block; border-radius: 12px; overflow: hidden; border: 1px solid var(--border); background: var(--card); }}
 .gallery img {{ width: 100%; height: 160px; object-fit: cover; display: block; transition: transform .25s ease; }}
 .gallery a:hover img {{ transform: scale(1.04); }}
+.lightbox {{ position: fixed; inset: 0; z-index: 1000; display: flex; align-items: center; justify-content: center; }}
+.lightbox[hidden] {{ display: none; }}
+.lightbox-bg {{ position: absolute; inset: 0; background: rgba(0,0,0,.88); }}
+.lightbox-img {{ position: relative; max-width: 92vw; max-height: 88vh; border-radius: 12px; box-shadow: 0 24px 64px rgba(0,0,0,.5); }}
+.lightbox-x {{ position: absolute; top: 16px; right: 20px; background: rgba(255,255,255,.12); color: #fff; border: none; border-radius: 50%; width: 44px; height: 44px; font-size: 26px; cursor: pointer; line-height: 1; }}
 {dumpbox_css}
 </style>
 </head>
@@ -677,17 +682,77 @@ def get_buddy_photos(b):
     _photo_cache[bid] = urls
     return urls
 
+def ensure_thumb(local_path):
+    """Create a 480px thumbnail for a local photo if missing. Returns thumb path or None."""
+    import os as _os
+    d, f = _os.path.split(local_path)
+    tdir = _os.path.join(d, 'thumbs')
+    tpath = _os.path.join(tdir, f)
+    if _os.path.exists(tpath):
+        return tpath
+    try:
+        from PIL import Image
+        _os.makedirs(tdir, exist_ok=True)
+        img = Image.open(local_path)
+        img.thumbnail((480, 480), Image.LANCZOS)
+        img.save(tpath, 'JPEG', quality=82, optimize=True)
+        return tpath
+    except Exception:
+        return None
+
 def build_gallery(b):
-    """Build the gallery HTML section, or '' if no photos."""
+    """Build the gallery HTML section, or '' if no photos.
+    Dave 2026-10-16: thumbnails in the grid (fast), full image in the lightbox on tap."""
     urls = get_buddy_photos(b)
     if not urls:
         return ''
-    import html as _html
+    import html as _html, os as _os
     name = _html.escape(b.get('name', b['id']))
-    items = '\n'.join(
-        f'<a href="{_html.escape(u)}" target="_blank" rel="noopener"><img src="{_html.escape(u)}" alt="{name} photo" loading="lazy"></a>'
-        for u in urls)
-    return f'<h2>Photos</h2>\n<div class="gallery">\n{items}\n</div>'
+    base_dir = _os.path.dirname(_os.path.abspath(__file__))
+    prefix = 'https://raw.githubusercontent.com/davedellaquila/buddy-system/master/'
+    items = []
+    for u in urls:
+        thumb_u = u
+        if u.startswith(prefix):
+            rel = u[len(prefix):]
+            local = _os.path.join(base_dir, rel)
+            tpath = ensure_thumb(local)
+            if tpath:
+                trel = _os.path.relpath(tpath, base_dir)
+                thumb_u = prefix + trel
+        items.append(
+            '<a href="' + _html.escape(u) + '" class="g-item" data-full="' + _html.escape(u) + '">'
+            '<img src="' + _html.escape(thumb_u) + '" alt="' + name + ' photo" loading="lazy"></a>')
+    items_html = chr(10).join(items)
+    return (
+        '<h2>Photos</h2>' + chr(10)
+        + '<div class="gallery">' + chr(10) + items_html + chr(10) + '</div>' + chr(10)
+        + '<div class="lightbox" hidden>' + chr(10)
+        + '  <div class="lightbox-bg"></div>' + chr(10)
+        + '  <img class="lightbox-img" alt="">' + chr(10)
+        + '  <button class="lightbox-x" aria-label="Close">&times;</button>' + chr(10)
+        + '</div>' + chr(10)
+        + '<script>' + chr(10)
+        + '(function(){' + chr(10)
+        + "  var items = document.querySelectorAll('.g-item');" + chr(10)
+        + "  var lb = document.querySelector('.lightbox');" + chr(10)
+        + '  if (!lb) return;' + chr(10)
+        + "  var img = lb.querySelector('.lightbox-img');" + chr(10)
+        + '  items.forEach(function(a){' + chr(10)
+        + '    a.addEventListener("click", function(e){' + chr(10)
+        + '      e.preventDefault();' + chr(10)
+        + '      img.src = a.getAttribute("data-full");' + chr(10)
+        + '      lb.hidden = false;' + chr(10)
+        + "      document.body.style.overflow = 'hidden';" + chr(10)
+        + '    });' + chr(10)
+        + '  });' + chr(10)
+        + '  function close(){ lb.hidden = true; img.src=""; document.body.style.overflow=""; }' + chr(10)
+        + '  lb.querySelector(".lightbox-bg").addEventListener("click", close);' + chr(10)
+        + '  lb.querySelector(".lightbox-x").addEventListener("click", close);' + chr(10)
+        + '  document.addEventListener("keydown", function(e){ if(e.key==="Escape" && !lb.hidden) close(); });' + chr(10)
+        + '})();' + chr(10)
+        + '</scr' + 'ipt>'
+    )
 
 generated = []
 for b in d['buddies']:
