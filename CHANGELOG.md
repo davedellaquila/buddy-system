@@ -3,6 +3,11 @@
 All notable changes to the Buddies dashboard and buddy system. Newest first.
 `FEATURES.md` describes the current state; this file describes how it got there.
 
+## 2026-10-16 (Legal Buddy joins the dashboard)
+
+### Added
+- **Legal Buddy registry entry** (Dave 2026-10-16 — brief approved, "This is AWESOME!", spin-up authorized): `legal-buddy` added as a top-level staff function (status New), with tagline, mission, repo/docs links, the mission-statement review attention item, and the default "Dossier" homepage generated at `legal-buddy/`. Dashboard rebuilt; embedded registry verified with the entry present.
+
 ## 2026-10-16 (Model A Buddy joins the dashboard)
 
 ### Added
