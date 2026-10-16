@@ -366,9 +366,7 @@
   var ta = box.querySelector('textarea'),
       btn = box.querySelector('.dumpbox-row .dumpbox-btn'),
       st = box.querySelector('.dumpbox-status'),
-      tokWrap = box.querySelector('.dumpbox-token'),
-      connectWrap = box.querySelector('.dumpbox-connect'),
-      connectBtn = connectWrap.querySelector('.dumpbox-btn');
+      tokWrap = box.querySelector('.dumpbox-token');
   function lsGet(){ try { return JSON.parse(localStorage.getItem('buddyTree.v3') || '{}'); } catch(e){ return {}; } }
   function lsSet(patch){ try { var s = lsGet(); for (var k in patch) s[k] = patch[k]; localStorage.setItem('buddyTree.v3', JSON.stringify(s)); } catch(e){} }
   function token(){ return lsGet().ghToken || ''; }
@@ -409,51 +407,85 @@
       }
     } catch(e){}
   }
+  /* Local fallback (Dave 2026-10-15, widened 2026-10-16): dumping always works,
+     even with no GitHub token AND no repo linked — entries are saved in this
+     device's localStorage until the GitHub write path can take them. The backlog
+     flushes into the repo on the next successful GitHub dump (once a repo is
+     linked and a token is present). */
+  function localKey(){ return 'buddyTree.ingest.' + bid; }
+  function localBacklog(){
+    try { var a = JSON.parse(localStorage.getItem(localKey()) || '[]'); return Array.isArray(a) ? a : []; }
+    catch(e){ return []; }
+  }
+  function localSave(entry){
+    var a = localBacklog(); a.push(entry);
+    try { localStorage.setItem(localKey(), JSON.stringify(a)); } catch(e){}
+  }
+  function localClear(){ try { localStorage.removeItem(localKey()); } catch(e){} }
   function refreshUI(){
-    var has = !!token();
-    connectWrap.hidden = has;
-    if (has) tokWrap.hidden = true;
-    var ok = has && !!repo;
-    ta.disabled = !ok;
-    btn.disabled = !ok;
-    if (!has) { st.textContent = ''; }
-    else if (!repo) { st.textContent = 'No repo linked for this buddy yet.'; }
+  var has = !!token();
+  tokWrap.hidden = has;
+  /* The box always works: no token and/or no repo just means local saves. */
+  ta.disabled = false;
+  btn.disabled = false;
+  var n = localBacklog().length;
+  if (!repo) {
+    st.textContent = n
+      ? n + ' local ' + (n === 1 ? 'dump' : 'dumps') + ' saved on this device — will sync when a repo is linked.'
+      : 'No repo linked yet — dumps save on this device and will sync when one is linked.';
+    return;
+  }
+  st.textContent = has
+    ? (n ? n + ' local ' + (n === 1 ? 'dump' : 'dumps') + ' will sync on next dump.' : '')
+    : 'No GitHub token — dumps save on this device for now.';
   }
   var tokInput = tokWrap.querySelector('input'),
       tokSave = tokWrap.querySelector('button');
-  connectBtn.addEventListener('click', function(){
-    tokWrap.hidden = false;
-    if (tokInput) tokInput.focus();
-  });
   tokSave.addEventListener('click', function(){
     var v = tokInput.value.trim();
     if (!v) return;
     lsSet({ghToken: v});
     tokInput.value = '';
-    tokWrap.hidden = true;
     refreshUI();
     st.textContent = 'Token saved on this device.';
   });
-  async function dump(){
-    var text = ta.value.trim();
-    if (!text) return;
-    if (!token()) { refreshUI(); return; }
-    if (!repo) { st.textContent = 'No repo linked for this buddy yet.'; return; }
-    st.textContent = 'Dumping…';
-    btn.disabled = true;
-    try {
-      var stamp = new Date().toLocaleString();
-      var NL = String.fromCharCode(10);
-      var entry = '## ' + stamp + NL + NL + text + NL + NL;
-      var cur = await ghGetFile(repo, 'docs/ingest.md');
-      var base = cur ? cur.text : '# Ingest log — ' + repoName + NL + NL;
-      var body = {message: 'Ingest dump for ' + bid, content: b64encode(base + entry)};
-      if (cur && cur.sha) body.sha = cur.sha;
-      await ghApi('/repos/davedellaquila/' + repo + '/contents/docs/ingest.md', 'PUT', body);
-      ta.value = '';
-      st.textContent = '✓ Dumped to ' + repo + '/docs/ingest.md';
-    } catch(err){ st.textContent = 'Save failed: ' + (err.message || err); }
-    btn.disabled = false;
+async function dump(){
+  var text = ta.value.trim();
+  if (!text) return;
+  var stamp = new Date().toLocaleString();
+  var NL = String.fromCharCode(10);
+  if (!repo) {
+    /* No repo linked yet — save on this device; syncs once one is linked. */
+    localSave({t: stamp, text: text});
+    ta.value = '';
+    st.textContent = '✓ Saved on this device — will sync to the repo once one is linked.';
+    refreshUI();
+    return;
+  }
+  if (!token()) {
+    /* Temporary workaround: no token → save on this device. */
+    localSave({t: stamp, text: text});
+    ta.value = '';
+    st.textContent = '✓ Saved on this device — add a GitHub token to sync it to the repo.';
+    return;
+  }
+  st.textContent = 'Dumping…';
+  btn.disabled = true;
+  try {
+    /* Flush any locally-saved backlog first, then the new entry. */
+    var backlog = localBacklog();
+    var parts = backlog.map(function(b){ return '## ' + b.t + NL + NL + b.text + NL + NL; });
+    parts.push('## ' + stamp + NL + NL + text + NL + NL);
+    var cur = await ghGetFile(repo, 'docs/ingest.md');
+    var base = cur ? cur.text : '# Ingest log — ' + repoName + NL + NL;
+    var body = {message: 'Ingest dump for ' + bid, content: b64encode(base + parts.join(''))};
+    if (cur && cur.sha) body.sha = cur.sha;
+    await ghApi('/repos/davedellaquila/' + repo + '/contents/docs/ingest.md', 'PUT', body);
+    localClear();
+    ta.value = '';
+    st.textContent = '✓ Dumped to ' + repo + '/docs/ingest.md' + (backlog.length ? ' (' + backlog.length + ' local synced)' : '');
+  } catch(err){ st.textContent = 'Save failed: ' + (err.message || err); }
+  btn.disabled = false;
   }
   btn.addEventListener('click', dump);
   ta.addEventListener('keydown', function(ev){
