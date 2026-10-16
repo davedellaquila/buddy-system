@@ -3,6 +3,11 @@
 All notable changes to the Buddies dashboard and buddy system. Newest first.
 `FEATURES.md` describes the current state; this file describes how it got there.
 
+## 2026-10-15 (Tree-view zoom control: geared down + moved to upper-right)
+
+### Changed
+- **Tree-view zoom geared down + relocated** (Dave 2026-10-15): the physical zoom control was too sensitive — slider step halved from 2 to 1 percentage point and Shift+scroll wheel step halved from ±2 to ±1 (keyboard +/- stays at ±5 per deliberate press). The `.zoombar` (slider + fit + center-on-buddy) moved from vertically-centered on the pane's right edge to the **upper-right corner** of each tree pane (`top:12px`, vertical-centering transform removed); the info-panel-open leftward shift and mobile `right:4px` behavior are unchanged.
+
 ## 2026-10-15 (Shreya Dhingra custom homepage)
 
 ### Added

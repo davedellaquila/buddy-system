@@ -466,8 +466,9 @@ body.sb-anchored #sidebar .brand, body.sb-anchored #sidebar .sb-tipjar{backgroun
 #treepane-orph.mini .standalones h2{margin:0;font-size:15px}
 #treepane-orph.mini .standalones .sub,#treepane-orph.mini .standalones .grid{display:none}
 #treepane-orph.mini .zoombar{display:none}
-/* Slim vertical zoom — right edge of each pane; no panel chrome; large◼ · slider · small▪ · fit */
-.zoombar{position:absolute;top:50%;right:28px;transform:translateY(-50%);z-index:5;
+/* Slim vertical zoom — upper-right corner of each pane (Dave 2026-10-15: moved from
+   vertically-centered right edge); no panel chrome; large◼ · slider · small▪ · fit */
+.zoombar{position:absolute;top:12px;right:28px;z-index:5;
   display:flex;flex-direction:column;align-items:center;gap:6px;width:auto;height:auto;
   padding:0;margin:0;background:none;border:none;border-radius:0;box-shadow:none;
   -webkit-tap-highlight-color:transparent}
@@ -5355,7 +5356,7 @@ function zoomToFit(paneId, zoomKey){
   function zoombarHTML(sfx, label){
     return '<div class="zoombar" id="zoombar-' + sfx + '" title="Zoom — pinch with two fingers, or Shift+scroll">'
       + '<span class="z-in" aria-hidden="true">\u25fc</span>'
-      + '<input type="range" class="zrange" id="zoomrange-' + sfx + '" min="5" max="160" step="2" value="100" aria-label="' + label + '" orient="vertical">'
+      + '<input type="range" class="zrange" id="zoomrange-' + sfx + '" min="5" max="160" step="1" value="100" aria-label="' + label + '" orient="vertical">'
       + '<span class="z-out" aria-hidden="true">\u25aa</span>'
       + '<button type="button" class="zfit" id="zoomfit-' + sfx + '" title="Zoom to fit" aria-label="Zoom to fit">\u26f6</button>'
       + (sfx === 'main' ? '<button type="button" class="zcenter" id="zoomcenter-' + sfx + '" title="Center on current buddy" aria-label="Center on current buddy">\u2316</button>' : '')
@@ -5909,7 +5910,7 @@ document.getElementById('view-tree').addEventListener('wheel', e => {
   e.preventDefault();
   const pane = e.target && e.target.closest ? e.target.closest('.treescroll') : null;
   const key = (pane && pane.dataset.zoomkey) || 'zoom';
-  S[key] = Math.min(160, Math.max(25, (S[key] || 100) + (e.deltaY > 0 ? -2 : 2)));
+  S[key] = Math.min(160, Math.max(25, (S[key] || 100) + (e.deltaY > 0 ? -1 : 1)));
   save(); applyZoom();
 }, { passive: false });
 let dragId = null;
