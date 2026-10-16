@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-10-16 (Tip jar readability)
+
+### Fixed
+- **Tip jar background** (Dave 2026-10-16 — the sticky "Tip the jar" footer was transparent, so buddy list rows scrolling underneath showed through and made it hard to read): `.sb-tipjar` now always uses the solid panel background (`var(--panel)`), not just in the anchored-sidebar state.
+
 ## 2026-10-16 (Live rename propagation + homepage refresh controls)
 
 ### Added
