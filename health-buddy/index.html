@@ -151,7 +151,7 @@ h2 { font-size: 22px; margin: 32px 0 16px; }
 
 <section class="dumpbox" data-buddy-id="health-buddy">
 <h2>🧠 Brain dump</h2>
-<p class="dumpbox-sub">Dump what's on your mind about Health Buddy — raw and unfiltered. Each dump lands in the buddy's repo (docs/ingest.md) as a timestamped entry.</p>
+<p class="dumpbox-sub">Dump what's on your mind about Health Buddy — raw and unfiltered. Each dump lands in the buddy's repo (docs/ingest.md) as a timestamped entry — or saves on this device until a GitHub token is connected.</p>
 <div class="dumpbox-token" hidden>
 <p>🔒 Connect GitHub to unlock dumping. Paste a token once — it stays on this device only.</p>
 <div class="dumpbox-tokenrow">
@@ -231,14 +231,31 @@ Generated 2026-10-15 · Part of the Buddy System
       }
     } catch(e){}
   }
+  /* Local fallback (Dave 2026-10-15): dumping works with no GitHub token —
+     entries are saved in this device's localStorage as a temporary workaround
+     until the GitHub write path is working properly. The backlog flushes into
+     the repo on the next successful GitHub dump. */
+  function localKey(){ return 'buddyTree.ingest.' + bid; }
+  function localBacklog(){
+    try { var a = JSON.parse(localStorage.getItem(localKey()) || '[]'); return Array.isArray(a) ? a : []; }
+    catch(e){ return []; }
+  }
+  function localSave(entry){
+    var a = localBacklog(); a.push(entry);
+    try { localStorage.setItem(localKey(), JSON.stringify(a)); } catch(e){}
+  }
+  function localClear(){ try { localStorage.removeItem(localKey()); } catch(e){} }
   function refreshUI(){
     var has = !!token();
     tokWrap.hidden = has;
-    var ok = has && !!repo;
+    var ok = !!repo; /* local fallback needs no token */
     ta.disabled = !ok;
     btn.disabled = !ok;
-    if (!has) { st.textContent = ''; }
-    else if (!repo) { st.textContent = 'No repo linked for this buddy yet.'; }
+    if (!repo) { st.textContent = 'No repo linked for this buddy yet.'; return; }
+    var n = localBacklog().length;
+    st.textContent = has
+      ? (n ? n + ' local ' + (n === 1 ? 'dump' : 'dumps') + ' will sync on next dump.' : '')
+      : 'No GitHub token — dumps save on this device for now.';
   }
   var tokInput = tokWrap.querySelector('input'),
       tokSave = tokWrap.querySelector('button');
@@ -253,21 +270,31 @@ Generated 2026-10-15 · Part of the Buddy System
   async function dump(){
     var text = ta.value.trim();
     if (!text) return;
-    if (!token()) { refreshUI(); return; }
     if (!repo) { st.textContent = 'No repo linked for this buddy yet.'; return; }
+    var stamp = new Date().toLocaleString();
+    var NL = String.fromCharCode(10);
+    if (!token()) {
+      /* Temporary workaround: no token → save on this device. */
+      localSave({t: stamp, text: text});
+      ta.value = '';
+      st.textContent = '✓ Saved on this device — add a GitHub token to sync it to the repo.';
+      return;
+    }
     st.textContent = 'Dumping…';
     btn.disabled = true;
     try {
-      var stamp = new Date().toLocaleString();
-      var NL = String.fromCharCode(10);
-      var entry = '## ' + stamp + NL + NL + text + NL + NL;
+      /* Flush any locally-saved backlog first, then the new entry. */
+      var backlog = localBacklog();
+      var parts = backlog.map(function(b){ return '## ' + b.t + NL + NL + b.text + NL + NL; });
+      parts.push('## ' + stamp + NL + NL + text + NL + NL);
       var cur = await ghGetFile(repo, 'docs/ingest.md');
       var base = cur ? cur.text : '# Ingest log — ' + repoName + NL + NL;
-      var body = {message: 'Ingest dump for ' + bid, content: b64encode(base + entry)};
+      var body = {message: 'Ingest dump for ' + bid, content: b64encode(base + parts.join(''))};
       if (cur && cur.sha) body.sha = cur.sha;
       await ghApi('/repos/davedellaquila/' + repo + '/contents/docs/ingest.md', 'PUT', body);
+      localClear();
       ta.value = '';
-      st.textContent = '✓ Dumped to ' + repo + '/docs/ingest.md';
+      st.textContent = '✓ Dumped to ' + repo + '/docs/ingest.md' + (backlog.length ? ' (' + backlog.length + ' local synced)' : '');
     } catch(err){ st.textContent = 'Save failed: ' + (err.message || err); }
     btn.disabled = false;
   }

@@ -9021,6 +9021,12 @@ document.addEventListener('click', e => {
     save(); renderNav();
     return;
   }
+  // Breadcrumb ancestor links (Dave 2026-10-15): the crumb lives inside #view-buddy,
+  // which itself carries data-buddy — so check data-goto BEFORE data-buddy,
+  // otherwise the panel's own data-buddy swallows the click and just re-opens
+  // the current buddy instead of navigating to the clicked ancestor.
+  const gt = e.target.closest('[data-goto]');
+  if (gt) { e.preventDefault(); show('buddy:' + gt.dataset.goto); return; }
   const bb = e.target.closest('[data-buddy]');
   // Don't re-open the buddy when clicking an editable field (e.g. the name)
   // Panel behavior is view-aware: in Homepage view, clicking selects only
@@ -9038,8 +9044,6 @@ document.addEventListener('click', e => {
   if (sb) { markAttentionDone(sb.dataset.done, sb); return; }
   const sa = e.target.closest('[data-done-all]');
   if (sa) { markAllAttentionDone(sa.dataset.doneAll); return; }
-  const gt = e.target.closest('[data-goto]');
-  if (gt) { e.preventDefault(); show('buddy:' + gt.dataset.goto); return; }
   const nb = e.target.closest('[data-navbtn]');
   if (nb) { const k = nb.dataset.navbtn; if (k === 'back') goBack(); else stepBuddy(k === 'next' ? 1 : -1); return; }
   const rp = e.target.closest('#reset-parents');

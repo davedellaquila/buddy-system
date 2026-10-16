@@ -3,6 +3,13 @@
 All notable changes to the Buddies dashboard and buddy system. Newest first.
 `FEATURES.md` describes the current state; this file describes how it got there.
 
+## 2026-10-15 (Breadcrumb links, dump fallback, generator skip-logic fix)
+
+### Fixed
+- **Breadcrumb ancestor links now navigate** (Dave 2026-10-15 — clicking Astro / Project Buddy / Work Buddy / Shreya Dhingra did nothing): the `.bp-crumb` `data-goto` links live inside `#view-buddy`, which itself carries `data-buddy` — the document click handler checked `data-buddy` first, so every crumb click just re-opened the current buddy. The `data-goto` check now runs before `data-buddy`.
+- **Brain-dump box saves locally with no GitHub token** (Dave 2026-10-15 — dumping failed when no token was present): temporary workaround until the GitHub write path works properly. No token → the timestamped entry is appended to `localStorage` (`buddyTree.ingest.<bid>`); the box stays usable and says so. The backlog flushes into the repo's `docs/ingest.md` on the next successful GitHub dump (one PUT, then the backlog clears). Rolled out to all 54 template homepages via `gen_basic_homepages.py` plus Shreya Dhingra's custom page. Custom pages owned by other threads (Work, Astro, Lenwood, Tech, Hot Tub, Travel, Feedback, Career, Cabin, Relationship buddies) keep their own copies — their threads can adopt the snippet.
+- **Generator skip-logic fix** (found during the rollout): `is_template_page()` treated any page containing "Part of the Buddy System" as template-generated, which misclassified Finance Buddy's custom homepage (it kept a similar footer) and the regen overwrote it — restored from git. The `<!-- CUSTOM HOMEPAGE -->` marker now always wins; custom designs are never overwritten.
+
 ## 2026-10-15 (Tree-view zoom control: geared down + moved to upper-right)
 
 ### Changed
