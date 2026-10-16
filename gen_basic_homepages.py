@@ -584,7 +584,7 @@ h2 {{ font-size: 22px; margin: 32px 0 16px; }}
 </head>
 <body>
 {family_nav}
-<div class="topbar"><span class="topbar-icon">{icon}</span><span class="topbar-name" data-buddy-name>{name}</span><button class="topbar-refresh" title="Reload this page" onclick="location.reload()">&#8635;</button></div>
+<div class="topbar"><span class="topbar-icon">{icon}</span><span class="topbar-name" data-buddy-name>{name}</span><button class="topbar-refresh" title="Reload this page (bypasses cache)" onclick="location.href=location.pathname+'?v='+Date.now()">&#8635;</button></div>
 <div class="header">
 <div class="icon">{icon}</div>
 <h1 data-buddy-name>{name}</h1>
