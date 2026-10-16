@@ -98,14 +98,15 @@ body.sb-anchored #sidebar{left:0;background:var(--panel);border-left:none;border
   -webkit-backdrop-filter:none;backdrop-filter:none}
 body.sb-anchored #sidebar .brand, body.sb-anchored #sidebar .sb-tipjar{background:var(--panel)}
 #main{flex:1;min-width:0;padding:36px 32px 80px;position:relative;z-index:1}
-/* Dave 2026-10-16: view controls stay visible past the sidebar edge while
-   the content itself runs full-bleed underneath the panel. */
-#main .lens-picker-wrap,#main .orient-tabs,#main #quick-answers{margin-left:348px}
-body.sb-closed #main .lens-picker-wrap,body.sb-closed #main .orient-tabs,
-body.sb-closed #main #quick-answers{margin-left:76px}
+/* Dave 2026-10-16: view controls are centered horizontally in the visible
+   area (clear of the sidebar) while the chart content runs full-bleed underneath. */
+#tree-chrome-main{display:flex;flex-direction:column;align-items:center;gap:8px;padding-left:348px}
+body.sb-closed #tree-chrome-main{padding-left:76px}
+#tree-chrome-main #quick-answers{width:100%;max-width:900px}
+#tree-chrome-main .lens-picker-wrap,#tree-chrome-main .orient-tabs{margin:0}
 #main .zoombar{left:calc(50% + 174px)}
 body.sb-closed #main .zoombar{left:calc(50% + 38px)}
-@media (max-width:639px){#main .lens-picker-wrap,#main .orient-tabs,#main #quick-answers{margin-left:0}
+@media (max-width:639px){#tree-chrome-main{padding-left:0}
 #main .zoombar,body.sb-closed #main .zoombar{left:50%}}
 .brand{padding:22px 8px 14px;background:transparent}
 /* Brand chrome (eyebrow/title/subtitle + gear/close) pins at top; Views scroll under */
