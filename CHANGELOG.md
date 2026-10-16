@@ -3,6 +3,11 @@
 All notable changes to the Buddies dashboard and buddy system. Newest first.
 `FEATURES.md` describes the current state; this file describes how it got there.
 
+## 2026-10-16 (Documentarian joins the dashboard)
+
+### Added
+- **Documentarian registry entry** (Dave 2026-10-16 — approved "Spin up the Documentarian" for the curator/historian role): `documentarian-buddy` added as a top-level staff function (status New), with tagline, mission, repo/docs links, the mission-statement review attention item, and the default "Dossier" homepage generated at `documentarian-buddy/`. Dashboard rebuilt; embedded registry verified at 110 buddies with the entry present.
+
 ## 2026-10-16 (Legal Buddy joins the dashboard)
 
 ### Added
