@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-10-17 (Sports Car Adventures + Dellaquila.com buddies)
+
+### Added
+- **Sports Car Adventures buddy** (🏎️, Dave 2026-10-17 — "we're going to need sports car adventures"): the sports-car driving experience brand. A brand, NOT a registered business (Dave's words — a fact, not an open question). Mission statement, private repo with seeded knowledge base (2026 business plan concept: Turo + DriveShare sourcing, owner/client relationships, matchmaking/routing/operating layer; events@sportscaradventures.com daily monitor; sportscaradventures.com domain). Public teaser homepage at sports-car-adventures/ — "going through a bit of a remodeling, stay tuned" — deliberately static so Dave can point domains at it.
+- **Dellaquila.com buddy** (💼, Dave 2026-10-17 — "my official business that i file my taxes with"): the business's desk. Homepage IS the desk: KNOWLEDGE.md + CONFIG.md rendered live from the private repo, editable in place via token-gated GitHub API (token stays on-device). Tracks both entities — the dellaquila.com tax/legal entity (FTB $800/yr deductible, Schedule C line 23; Money Buddy CPA reports are the books→preparer pipeline) and the Sports Car Adventures brand. Plus a 🧠 brain-dump box writing to docs/ingest.md.
+- Both buddies linked to each other (many-to-many links[]); registry now at 117 buddies.
+
 ## 2026-10-17 (Learning Buddy spark shuffle)
 
 ### Added
