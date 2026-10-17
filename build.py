@@ -4718,7 +4718,7 @@ function chartSwitcherHtml(){
       + '<button type="button" role="tab" data-orient="vertical" class="' + ((S.orgOrientation || 'vertical') === 'vertical' ? 'sel' : '') + '" aria-selected="' + ((S.orgOrientation || 'vertical') === 'vertical') + '">Vertical</button>'
       + '<button type="button" role="tab" data-orient="horizontal" class="' + ((S.orgOrientation || 'vertical') === 'horizontal' ? 'sel' : '') + '" aria-selected="' + ((S.orgOrientation || 'vertical') === 'horizontal') + '">Horizontal</button>'
       + '</div>'
-      + '<label class="nodebg-chiclet" title="Tile background color"><input type="color" id="nodebg-pick" value="' + (S.nodeBg || '#e8eef5') + '" aria-label="Tile background color"></label>'
+      + '<label class="nodebg-chiclet" title="Tile background color"><input type="color" id="nodebg-pick" value="' + (S.nodeBg || '#e8eef5') + '" aria-label="Tile background color"><span>Tile color</span></label>'
     : '';
   return '<div class="lens-picker-wrap">'
     + '<button class="lens-pill" id="lens-pill" aria-haspopup="true" aria-expanded="false">'

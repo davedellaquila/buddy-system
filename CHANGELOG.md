@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-10-17 (Tile color picker label)
+
+### Fixed
+- **Tile color picker now labeled** (Dave 2026-10-17 — tapped the color dot expecting the main-view background to change; nothing seemed to happen): the org-chart tile background picker had no visible label — just a color swatch, with its purpose only in a hover tooltip (invisible on iPhone). It now reads "Tile color" next to the swatch so its job (recoloring buddy tiles, not the main view) is obvious.
+
 ## 2026-10-16 (Hong Kong Palace buddy)
 
 ### Added
