@@ -1485,6 +1485,10 @@ body.proj-dragging,body.proj-dragging *{cursor:grabbing !important}
 .attn-text a:hover{text-decoration:underline}
 .attn-open{font-size:11px;color:var(--accent)}
 .attn-date{font-size:12px;color:var(--muted);margin-top:5px}
+.attn-actions{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.attn-act{display:inline-block;font-size:12.5px;font-weight:600;padding:6px 12px;border-radius:999px;
+  border:1px solid var(--accent);color:var(--accent);background:transparent;cursor:pointer;text-decoration:none}
+.attn-act:hover{background:var(--accent);color:var(--on-accent)}
 .seenbtn{flex:0 0 auto;background:var(--border2);border:1px solid var(--border);color:var(--text);
   width:44px;height:44px;border-radius:50%;font-size:18px;line-height:1;padding:0;cursor:pointer;touch-action:manipulation;
   display:flex;align-items:center;justify-content:center}
@@ -3835,8 +3839,16 @@ function renderBuddy(id){
       const body = a.url
         ? '<div class="attn-text"><a href="'+escHtml(a.url)+'" target="_blank" rel="noopener">'+txt+' <span class="attn-open">\u2197</span></a></div>'
         : '<div class="attn-text">'+txt+'</div>';
+      /* Dave 2026-10-17: logical quick-link actions on attention tiles */
+      const acts = (a.actions || []).map(ac => {
+        const label = escHtml(ac.label || 'Open');
+        if (ac.url) return '<a class="attn-act" href="'+escHtml(ac.url)+'" target="_blank" rel="noopener">'+label+'</a>';
+        if (ac.buddy) return '<button type="button" class="attn-act" data-act-buddy="'+escHtml(ac.buddy)+'">'+label+'</button>';
+        return '';
+      }).join('');
       return '<div class="attn unseen" data-attn="'+a.id+'"><span class="adot"></span>'
         + '<div class="attn-body">'+body
+        + (acts ? '<div class="attn-actions">'+acts+'</div>' : '')
         + (a.date ? '<div class="attn-date">Asked '+escHtml(a.date)+'</div>' : '')+'</div>'
         + '<button class="seenbtn" data-done="'+a.id+'" title="Mark done" aria-label="Mark done" role="checkbox" aria-checked="false">\u25cb</button></div>';
     }).join('');
@@ -9459,6 +9471,8 @@ document.addEventListener('click', e => {
   if (sb) { markAttentionDone(sb.dataset.done, sb); return; }
   const sa = e.target.closest('[data-done-all]');
   if (sa) { markAllAttentionDone(sa.dataset.doneAll); return; }
+  const ab = e.target.closest('[data-act-buddy]');
+  if (ab) { selectBuddy(ab.dataset.actBuddy); return; }
   const nb = e.target.closest('[data-navbtn]');
   if (nb) { const k = nb.dataset.navbtn; if (k === 'back') goBack(); else stepBuddy(k === 'next' ? 1 : -1); return; }
   const rp = e.target.closest('#reset-parents');

@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-10-17 (Attention tile quick-link actions)
+
+### Added
+- **Quick-link actions on "Needs your attention" tiles** (Dave 2026-10-17 — "include logical quick links in the tiles"): attention items now support an `actions[]` array — each action is a pill button rendered under the tile text. URL actions open externally; buddy actions navigate within the dashboard. First live example: Hot Tub Buddy's filter-replacement reminder carries "Buy filters" and "Buy UV bulb" buttons with the researched retailer links.
+
 ## 2026-10-17 (Main-view Background picker)
 
 ### Added
