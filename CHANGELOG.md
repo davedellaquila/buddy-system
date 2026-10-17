@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-10-17 (Main-view Background picker)
+
+### Added
+- **Background picker for the main view** (Dave 2026-10-17 ❤️): the tree toolbar now has a "Background" picker — a color swatch opening the system color picker, six presets (Ink, Slate, Forest, Wine, Sky, Paper), and a Reset button that appears once a custom color is set. Picking a color repaints the main view background immediately, no Apply step; the choice persists per device in localStorage alongside other settings. (The mirror previewed this first; this is the real build on the live dashboard.)
+
 ## 2026-10-17 (Tile color picker label)
 
 ### Fixed

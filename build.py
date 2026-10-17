@@ -1554,6 +1554,18 @@ body.proj-dragging,body.proj-dragging *{cursor:grabbing !important}
   padding:0;background:none;cursor:pointer}
 .nodebg-chiclet input[type=color]::-webkit-color-swatch-wrapper{padding:2px}
 .nodebg-chiclet input[type=color]::-webkit-color-swatch{border:none;border-radius:50%}
+/* Dave 2026-10-17: main-view background picker */
+#view-tree{background:var(--main-bg,var(--bg))}
+.mainbg-chiclet{display:inline-flex;align-items:center;gap:6px;margin:0 0 12px 8px;vertical-align:top;
+  font-size:12px;color:var(--muted)}
+.mainbg-chiclet input[type=color]{width:28px;height:28px;border:1px solid var(--border);border-radius:50%;
+  padding:0;background:none;cursor:pointer}
+.mainbg-chiclet input[type=color]::-webkit-color-swatch-wrapper{padding:2px}
+.mainbg-chiclet input[type=color]::-webkit-color-swatch{border:none;border-radius:50%}
+.mainbg-presets{display:inline-flex;gap:4px;align-items:center}
+.mainbg-preset{width:22px;height:22px;border-radius:50%;border:1px solid var(--border);cursor:pointer;padding:0}
+.mainbg-preset.sel{outline:2px solid var(--accent);outline-offset:1px}
+.mainbg-reset{font-size:12px;color:var(--muted);background:none;border:none;cursor:pointer;text-decoration:underline;padding:2px 4px}
 #treezoom .node .name{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 #treezoom .node .desc{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
 /* Fix: flex-centered org tree overflows to negative x-coords on narrow screens, which widens the
@@ -4708,6 +4720,48 @@ function initNodeBg(){
     }
   });
 }
+/* Dave 2026-10-17: main-view background picker */
+const MAINBG_PRESETS = [
+  {id:'ink', label:'Ink', c:'#0d1117'},
+  {id:'slate', label:'Slate', c:'#1c2128'},
+  {id:'forest', label:'Forest', c:'#14231a'},
+  {id:'wine', label:'Wine', c:'#2a151a'},
+  {id:'sky', label:'Sky', c:'#152030'},
+  {id:'paper', label:'Paper', c:'#ffffff'},
+];
+function applyMainBg(){
+  const c = S.mainBg;
+  document.documentElement.style.setProperty('--main-bg', c || '');
+  document.querySelectorAll('.mainbg-preset').forEach(b => {
+    b.classList.toggle('sel', !!c && b.dataset.color.toLowerCase() === String(c).toLowerCase());
+  });
+  document.querySelectorAll('.mainbg-reset').forEach(b => { b.hidden = !c; });
+}
+function setMainBg(c){ S.mainBg = c || ''; save(); applyMainBg(); }
+function mainBgHtml(){
+  const cur = (S.mainBg || '').toLowerCase();
+  return '<label class="mainbg-chiclet" title="Main view background"><input type="color" id="mainbg-pick" value="'
+    + (S.mainBg || '#0d1117') + '" aria-label="Main view background color"><span>Background</span>'
+    + '<span class="mainbg-presets">'
+    + MAINBG_PRESETS.map(p => '<button type="button" class="mainbg-preset' + (cur === p.c ? ' sel' : '')
+      + '" data-color="' + p.c + '" title="' + p.label + '" aria-label="' + p.label + ' background"'
+      + ' style="background:' + p.c + '"></button>').join('')
+    + '</span>'
+    + '<button type="button" class="mainbg-reset"' + (S.mainBg ? '' : ' hidden') + '>Reset</button>'
+    + '</label>';
+}
+function initMainBg(){
+  applyMainBg();
+  document.addEventListener('input', e => {
+    if (e.target && e.target.id === 'mainbg-pick') setMainBg(e.target.value);
+  });
+  document.addEventListener('click', e => {
+    const p = e.target && e.target.closest ? e.target.closest('.mainbg-preset') : null;
+    if (p) { setMainBg(p.dataset.color); return; }
+    const r = e.target && e.target.closest ? e.target.closest('.mainbg-reset') : null;
+    if (r) setMainBg('');
+  });
+}
 function chartSwitcherHtml(){
   const cur = getChartType();
   const curDef = CHART_TYPES.find(c => c.id === cur) || CHART_TYPES[0];
@@ -4733,6 +4787,7 @@ function chartSwitcherHtml(){
       + '</button>').join('')
     + '</div></div>'
     + orientTabs
+    + mainBgHtml()
     + '<div class="lens-scrim" id="lens-scrim" hidden></div>';
 }
 /* ============ Default View styles (Dave 2026-10-15) ============
@@ -5583,6 +5638,7 @@ function setTreePane(which, show){
   applyTreePanes();
 }
 (function(){ try{ initNodeBg(); }catch(e){} })();
+(function(){ try{ initMainBg(); }catch(e){} })();
 (function initZoom(){
   const vt = document.getElementById('view-tree');
   function zoombarHTML(sfx, label){
