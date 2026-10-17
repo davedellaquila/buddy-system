@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-10-16 (Legal Buddy: Open Matters list)
+
+### Added
+- **Open Matters section on the Legal Buddy homepage** (Dave 2026-10-16 — he expected a list of projects with their status): two matter cards at the top of `legal-buddy/` — "Buddy name clearance" and "Buddy OS full risk assessment" — each with a status pill ("Research complete · awaiting review"), opened date, and a link to its full detail page (the published artifact reports). Both artifact reports were shared to public links so the cards can reach them; unshare anytime. Chat replies stay the short version; the pages are the deep dive.
+
 ## 2026-10-16 (Zoom control pinned)
 
 ### Fixed

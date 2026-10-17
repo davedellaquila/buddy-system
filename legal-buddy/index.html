@@ -147,6 +147,26 @@
   .doc .dlabel{font-weight:600; font-size:15px}
   .doc .dsub{margin-left:auto; font-size:13px; color:var(--faint); text-align:right}
 
+  .matters{display:grid; gap:10px}
+  .matter{
+    display:flex; gap:12px; align-items:flex-start;
+    background:var(--card); border:1px solid var(--hairline); border-radius:12px;
+    padding:16px 18px; text-decoration:none; color:var(--ink); box-shadow:var(--shadow);
+  }
+  .matter:hover{border-color:var(--brass)}
+  .micon{font-size:22px; line-height:1.4}
+  .mbody{display:grid; gap:4px; flex:1}
+  .mtitle{font-weight:700; font-size:16px}
+  .marrow{color:var(--brass)}
+  .mdesc{color:var(--muted); font-size:14px}
+  .mmeta{display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin-top:4px}
+  .pill{
+    font-size:11.5px; font-weight:700; letter-spacing:.6px; text-transform:uppercase;
+    color:var(--brass-deep); background:var(--brass-wash);
+    border:1px solid var(--hairline); border-radius:999px; padding:3px 10px;
+  }
+  .mdate{font-size:12.5px; color:var(--faint)}
+
   .attention{
     border:1px solid var(--hairline); background:var(--brass-wash);
     border-radius:12px; padding:15px 17px; display:grid; gap:10px;
@@ -218,7 +238,7 @@
 <header class="topbar">
   <div class="topbar-inner">
     <span class="icon">⚖️</span>
-    <span class="name" data-buddy-name>Legal Buddy</span>
+    <span class="name">Legal Buddy</span>
     <span class="spacer"></span>
     <a class="dash" href="https://davedellaquila.github.io/buddy-system/">Buddy System dashboard</a>
     <button id="themeToggle" type="button" aria-label="Toggle color theme">🌗 Auto</button>
@@ -231,6 +251,27 @@
   <h1 class="hero-quote serif">The first question is <em>what is legal</em>. The last question is <em>what is right</em>.</h1>
   <p class="hero-attr">— the Heineman standard, after Ben Heineman, General Electric</p>
   <p class="hero-sub">Legal Buddy is Dave's in-house counsel: <strong>recommendations, not option lists</strong>. Plain-spoken. It tells Dave when he's wrong — that's what makes the yeses trustworthy. An amalgamation of the best senior partners at the world's top firms, composited into one counsel that is instant, remembers every matter, and never bills by the hour.</p>
+
+  <h2 class="sec" style="margin-top:34px">Open matters</h2>
+  <p class="lede">Every engagement, with its status. Tap one for the full detail page — the chat reply is the short version, the page is the deep dive.</p>
+  <div class="matters">
+    <a class="matter" href="https://muse.ai/s/buddy-name-clearance-trademark-report-xbe5xvgxqxhxalxfd" target="_blank" rel="noopener">
+      <span class="micon">🏷️</span>
+      <span class="mbody">
+        <span class="mtitle">Buddy name clearance <span class="marrow">→</span></span>
+        <span class="mdesc">Can we use "Buddy" for "Buddy OS"? Trademark and name-clearance research — USPTO landscape, collisions, doctrine, risk ratings.</span>
+        <span class="mmeta"><span class="pill">Research complete · awaiting review</span><span class="mdate">Opened Oct 16, 2026</span></span>
+      </span>
+    </a>
+    <a class="matter" href="https://muse.ai/s/buddy-os-full-risk-assessment-se5xvgxqxnxfxyxlxy" target="_blank" rel="noopener">
+      <span class="micon">🧭</span>
+      <span class="mbody">
+        <span class="mtitle">Buddy OS full risk assessment <span class="marrow">→</span></span>
+        <span class="mdesc">The whole endeavor: privacy, security, AI liability, IP, the tip jar, app stores, operational risks, and the pre-launch checklist — 16 slides.</span>
+        <span class="mmeta"><span class="pill">Research complete · awaiting review</span><span class="mdate">Opened Oct 16, 2026</span></span>
+      </span>
+    </a>
+  </div>
 
   <hr class="rule">
 
@@ -373,7 +414,9 @@
   var ta = box.querySelector('textarea'),
       btn = box.querySelector('.dumpbox-row .dumpbox-btn'),
       st = box.querySelector('.dumpbox-status'),
-      tokWrap = box.querySelector('.dumpbox-token');
+      tokWrap = box.querySelector('.dumpbox-token'),
+      connectWrap = box.querySelector('.dumpbox-connect'),
+      connectBtn = connectWrap.querySelector('.dumpbox-btn');
   function lsGet(){ try { return JSON.parse(localStorage.getItem('buddyTree.v3') || '{}'); } catch(e){ return {}; } }
   function lsSet(patch){ try { var s = lsGet(); for (var k in patch) s[k] = patch[k]; localStorage.setItem('buddyTree.v3', JSON.stringify(s)); } catch(e){} }
   function token(){ return lsGet().ghToken || ''; }
@@ -414,85 +457,51 @@
       }
     } catch(e){}
   }
-  /* Local fallback (Dave 2026-10-15, widened 2026-10-16): dumping always works,
-     even with no GitHub token AND no repo linked — entries are saved in this
-     device's localStorage until the GitHub write path can take them. The backlog
-     flushes into the repo on the next successful GitHub dump (once a repo is
-     linked and a token is present). */
-  function localKey(){ return 'buddyTree.ingest.' + bid; }
-  function localBacklog(){
-    try { var a = JSON.parse(localStorage.getItem(localKey()) || '[]'); return Array.isArray(a) ? a : []; }
-    catch(e){ return []; }
-  }
-  function localSave(entry){
-    var a = localBacklog(); a.push(entry);
-    try { localStorage.setItem(localKey(), JSON.stringify(a)); } catch(e){}
-  }
-  function localClear(){ try { localStorage.removeItem(localKey()); } catch(e){} }
   function refreshUI(){
-  var has = !!token();
-  tokWrap.hidden = has;
-  /* The box always works: no token and/or no repo just means local saves. */
-  ta.disabled = false;
-  btn.disabled = false;
-  var n = localBacklog().length;
-  if (!repo) {
-    st.textContent = n
-      ? n + ' local ' + (n === 1 ? 'dump' : 'dumps') + ' saved on this device — will sync when a repo is linked.'
-      : 'No repo linked yet — dumps save on this device and will sync when one is linked.';
-    return;
-  }
-  st.textContent = has
-    ? (n ? n + ' local ' + (n === 1 ? 'dump' : 'dumps') + ' will sync on next dump.' : '')
-    : 'No GitHub token — dumps save on this device for now.';
+    var has = !!token();
+    connectWrap.hidden = has;
+    if (has) tokWrap.hidden = true;
+    var ok = has && !!repo;
+    ta.disabled = !ok;
+    btn.disabled = !ok;
+    if (!has) { st.textContent = ''; }
+    else if (!repo) { st.textContent = 'No repo linked for this buddy yet.'; }
   }
   var tokInput = tokWrap.querySelector('input'),
       tokSave = tokWrap.querySelector('button');
+  connectBtn.addEventListener('click', function(){
+    tokWrap.hidden = false;
+    if (tokInput) tokInput.focus();
+  });
   tokSave.addEventListener('click', function(){
     var v = tokInput.value.trim();
     if (!v) return;
     lsSet({ghToken: v});
     tokInput.value = '';
+    tokWrap.hidden = true;
     refreshUI();
     st.textContent = 'Token saved on this device.';
   });
-async function dump(){
-  var text = ta.value.trim();
-  if (!text) return;
-  var stamp = new Date().toLocaleString();
-  var NL = String.fromCharCode(10);
-  if (!repo) {
-    /* No repo linked yet — save on this device; syncs once one is linked. */
-    localSave({t: stamp, text: text});
-    ta.value = '';
-    st.textContent = '✓ Saved on this device — will sync to the repo once one is linked.';
-    refreshUI();
-    return;
-  }
-  if (!token()) {
-    /* Temporary workaround: no token → save on this device. */
-    localSave({t: stamp, text: text});
-    ta.value = '';
-    st.textContent = '✓ Saved on this device — add a GitHub token to sync it to the repo.';
-    return;
-  }
-  st.textContent = 'Dumping…';
-  btn.disabled = true;
-  try {
-    /* Flush any locally-saved backlog first, then the new entry. */
-    var backlog = localBacklog();
-    var parts = backlog.map(function(b){ return '## ' + b.t + NL + NL + b.text + NL + NL; });
-    parts.push('## ' + stamp + NL + NL + text + NL + NL);
-    var cur = await ghGetFile(repo, 'docs/ingest.md');
-    var base = cur ? cur.text : '# Ingest log — ' + repoName + NL + NL;
-    var body = {message: 'Ingest dump for ' + bid, content: b64encode(base + parts.join(''))};
-    if (cur && cur.sha) body.sha = cur.sha;
-    await ghApi('/repos/davedellaquila/' + repo + '/contents/docs/ingest.md', 'PUT', body);
-    localClear();
-    ta.value = '';
-    st.textContent = '✓ Dumped to ' + repo + '/docs/ingest.md' + (backlog.length ? ' (' + backlog.length + ' local synced)' : '');
-  } catch(err){ st.textContent = 'Save failed: ' + (err.message || err); }
-  btn.disabled = false;
+  async function dump(){
+    var text = ta.value.trim();
+    if (!text) return;
+    if (!token()) { refreshUI(); return; }
+    if (!repo) { st.textContent = 'No repo linked for this buddy yet.'; return; }
+    st.textContent = 'Dumping…';
+    btn.disabled = true;
+    try {
+      var stamp = new Date().toLocaleString();
+      var NL = String.fromCharCode(10);
+      var entry = '## ' + stamp + NL + NL + text + NL + NL;
+      var cur = await ghGetFile(repo, 'docs/ingest.md');
+      var base = cur ? cur.text : '# Ingest log — ' + repoName + NL + NL;
+      var body = {message: 'Ingest dump for ' + bid, content: b64encode(base + entry)};
+      if (cur && cur.sha) body.sha = cur.sha;
+      await ghApi('/repos/davedellaquila/' + repo + '/contents/docs/ingest.md', 'PUT', body);
+      ta.value = '';
+      st.textContent = '✓ Dumped to ' + repo + '/docs/ingest.md';
+    } catch(err){ st.textContent = 'Save failed: ' + (err.message || err); }
+    btn.disabled = false;
   }
   btn.addEventListener('click', dump);
   ta.addEventListener('keydown', function(ev){
@@ -502,27 +511,5 @@ async function dump(){
 })();
 </script>
 
-
-<script>
-(function(){
-  var parts = location.pathname.split('/'), bid = '';
-  for (var i = parts.length - 1; i >= 0; i--) { if (parts[i]) { bid = parts[i]; break; } }
-  function applyName(name){ if (!name) return;
-    var els = document.querySelectorAll('[data-buddy-name]');
-    for (var k = 0; k < els.length; k++) els[k].textContent = name; }
-  try { fetch('../buddies.json', {cache: 'no-store'}).then(function(r){ return r.json(); })
-    .then(function(d){ var buds = (d && d.buddies) || [];
-      for (var j = 0; j < buds.length; j++) {
-        if (buds[j].id === bid && buds[j].name) { applyName(buds[j].name); break; } } })
-    .catch(function(){}); } catch(e){}
-  window.addEventListener('storage', function(e){
-    if (e.key !== 'buddyTree.rename' || !e.newValue) return;
-    try {
-      var d = JSON.parse(e.newValue);
-      if (d && d.id === bid && d.name) applyName(d.name);
-    } catch(err){}
-  });
-})();
-</script>
 </body>
 </html>
