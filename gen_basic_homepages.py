@@ -543,6 +543,9 @@ h2 {{ font-size: 22px; margin: 32px 0 16px; }}
   margin-bottom: 12px;
 }}
 .attn-date {{ color: var(--muted); font-size: 14px; margin-top: 8px; }}
+.attn-link {{ margin-top: 8px; }}
+.attn-link a {{ color: var(--accent); font-weight: 600; text-decoration: none; }}
+.attn-link a:hover {{ text-decoration: underline; }}
 .attn-actions {{ display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }}
 .attn-btn {{
   border: 1px solid var(--border); background: var(--bg); color: var(--text);
@@ -779,7 +782,10 @@ for b in d['buddies']:
             text = html.escape(a.get('text', str(a)) if isinstance(a, dict) else str(a))
             date = html.escape(a.get('date', '') if isinstance(a, dict) else '')
             aid = html.escape(a.get('id', '') if isinstance(a, dict) else '', quote=True)
+            url = html.escape(a.get('url', '') if isinstance(a, dict) else '', quote=True)
             attn_html += f'<div class="attn" data-attn-id="{aid}"><div class="attn-text">{text}</div>'
+            if url:
+                attn_html += f'<div class="attn-link"><a href="{url}" target="_blank" rel="noopener">Open →</a></div>'
             if date:
                 attn_html += f'<div class="attn-date">{date}</div>'
             attn_html += ('<div class="attn-actions">'
