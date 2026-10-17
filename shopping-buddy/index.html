@@ -261,6 +261,14 @@ Generated 2026-10-16 · Dave's buddy system
       <div class="desk-editorrow"><button type="button" class="desk-save" data-save="CONFIG.md">Save</button><button type="button" class="desk-cancel" data-cancel="CONFIG.md">Cancel</button><span class="desk-status" role="status"></span></div>
     </div>
   </article>
+  <article class="desk-file" data-file="STUDY.md">
+    <div class="desk-filehead"><h3>📖 Study Topics</h3><button type="button" class="desk-edit" data-edit="STUDY.md">Edit</button></div>
+    <div class="desk-body" data-body="STUDY.md"><p class="desk-loading">Loading…</p></div>
+    <div class="desk-editor" data-editor="STUDY.md" hidden>
+      <textarea rows="14" aria-label="Edit STUDY.md"></textarea>
+      <div class="desk-editorrow"><button type="button" class="desk-save" data-save="STUDY.md">Save</button><button type="button" class="desk-cancel" data-cancel="STUDY.md">Cancel</button><span class="desk-status" role="status"></span></div>
+    </div>
+  </article>
 </div>
 </section>
 
@@ -268,7 +276,7 @@ Generated 2026-10-16 · Dave's buddy system
 /* ============ THE DESK: token-gated read/edit of repo files ============ */
 (function(){
   var REPO = 'shopping-buddy';
-  var FILES = ['KNOWLEDGE.md', 'CONFIG.md'];
+  var FILES = ['KNOWLEDGE.md', 'CONFIG.md', 'STUDY.md'];
   var shas = {};
   function lsGet(){ try { return JSON.parse(localStorage.getItem('buddyTree.v3') || '{}'); } catch(e){ return {}; } }
   function lsSet(patch){ try { var s = lsGet(); for (var k in patch) s[k] = patch[k]; localStorage.setItem('buddyTree.v3', JSON.stringify(s)); } catch(e){} }
