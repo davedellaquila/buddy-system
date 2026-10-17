@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-10-17 (Property recurring chores)
+
+### Added
+- **Recurring chore lists on property homepages** (Dave 2026-10-17 — "every property is going to need its own schedule of routine maintenance"): Cabin Buddy and Lenwood Buddy homepages now have a "🔁 Recurring chores" section grouped by cadence (Weekly / Monthly / Quarterly / Seasonal). Cabin seeded from known rhythms: hot tub treatment + filter checks, Thursday trash, weekend street cleanup, monthly filter wash, quarterly water-filtration filters, fall leaf burns, spring weed clearance. Lenwood starts thin (rent collection, seasonal walkthrough) — Dave to fill in.
+
 ## 2026-10-17 (Attention tile quick-link actions)
 
 ### Added
