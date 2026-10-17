@@ -558,6 +558,11 @@ h2 {{ font-size: 22px; margin: 32px 0 16px; }}
 .attn-status {{ font-size: 13px; color: var(--muted); margin-top: 8px; min-height: 18px; }}
 .attn.resolved {{ opacity: .6; }}
 .attn.resolved .attn-actions {{ display: none; }}
+/* ---- skills (Dave 2026-10-16) ---- */
+.skills {{ display: flex; flex-direction: column; gap: 10px; margin-top: 4px; }}
+.skill {{ background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 12px 16px; }}
+.skill-name {{ font-weight: 700; font-size: 15px; }}
+.skill-evidence {{ color: var(--muted); font-size: 13px; margin-top: 4px; line-height: 1.45; }}
 .children {{ display: flex; flex-wrap: wrap; gap: 12px; }}
 .child {{
   background: var(--card);
@@ -606,6 +611,8 @@ h2 {{ font-size: 22px; margin: 32px 0 16px; }}
 {dumpbox_html}
 
 {attention_section}
+
+{skills_section}
 
 {children_section}
 
@@ -796,6 +803,22 @@ for b in d['buddies']:
     else:
         attention_section = '<h2>Needs Attention</h2>\n<p class="empty">Nothing needs attention right now.</p>'
 
+    # Skills — rendered when the buddy has a skills[] list (Dave 2026-10-16)
+    skills_items = b.get('skills', [])
+    if skills_items:
+        skills_html = '<h2>Skills</h2>\n<div class="skills">\n'
+        for s in skills_items:
+            sname = html.escape(s.get('name', '') if isinstance(s, dict) else str(s))
+            sev = html.escape(s.get('evidence', '') if isinstance(s, dict) else '')
+            skills_html += f'<div class="skill"><div class="skill-name">{sname}</div>'
+            if sev:
+                skills_html += f'<div class="skill-evidence">{sev}</div>'
+            skills_html += '</div>\n'
+        skills_html += '</div>\n'
+        skills_section = skills_html
+    else:
+        skills_section = ''
+
     # Children — multi-parent aware (Dave 2026-10-15)
     children = [by_id[cid] for cid in b.get('children', []) if cid in by_id]
     # Also find buddies with this as parent (parents[] or legacy parent)
@@ -823,6 +846,7 @@ for b in d['buddies']:
         mission=mission,
         family_nav=family_nav(b),
         attention_section=attention_section,
+        skills_section=skills_section,
         children_section=children_section,
         date=today,
         gallery_section=gallery_section,
