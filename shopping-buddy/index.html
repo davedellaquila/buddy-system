@@ -1,4 +1,4 @@
-<!-- BUDDY-BASIC-TEMPLATE v2 -->
+<!-- SHOPPING-BUDDY-CUSTOM v1 — thread-owned, generator skips this page -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -86,6 +86,34 @@ h2 { font-size: 22px; margin: 32px 0 16px; }
 .attn-status { font-size: 13px; color: var(--muted); margin-top: 8px; min-height: 18px; }
 .attn.resolved { opacity: .6; }
 .attn.resolved .attn-actions { display: none; }
+/* ---- the desk: knowledge + config, editable in place ---- */
+.desk { margin-top: 36px; }
+.desk-sub { color: var(--muted); font-size: 14px; margin: 4px 0 16px; }
+.desk-token { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; margin-bottom: 16px; font-size: 14px; }
+.desk-tokenrow { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; align-items: center; }
+.desk-tokenrow input { flex: 1; min-width: 180px; padding: 8px 12px; border: 1px solid var(--border); border-radius: 8px; background: var(--bg); color: var(--text); font-size: 14px; }
+.desk-tokenrow button { padding: 8px 14px; border-radius: 8px; border: none; background: var(--accent); color: #fff; font-weight: 600; font-size: 14px; cursor: pointer; }
+.desk-tokenrow a { color: var(--accent); font-size: 14px; }
+.desk-files { display: flex; flex-direction: column; gap: 16px; }
+.desk-file { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 16px 18px; }
+.desk-filehead { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+.desk-filehead h3 { font-size: 16px; font-weight: 700; }
+.desk-edit { background: none; border: 1px solid var(--border); border-radius: 8px; padding: 6px 12px; color: var(--accent); font-size: 13px; font-weight: 600; cursor: pointer; }
+.desk-edit:hover { border-color: var(--accent); }
+.desk-body { font-size: 14px; }
+.desk-body h1, .desk-body h2, .desk-body h3 { margin: 12px 0 6px; font-size: 15px; }
+.desk-body h1:first-child, .desk-body h2:first-child { margin-top: 0; }
+.desk-body p { margin: 6px 0; }
+.desk-body ul { margin: 6px 0 6px 20px; }
+.desk-body li { margin: 3px 0; }
+.desk-body strong { font-weight: 700; }
+.desk-body code { background: rgba(127,127,127,.15); padding: 1px 5px; border-radius: 4px; font-size: 13px; }
+.desk-loading { color: var(--muted); }
+.desk-editor textarea { width: 100%; box-sizing: border-box; padding: 10px 12px; border: 1px solid var(--border); border-radius: 8px; background: var(--bg); color: var(--text); font-family: ui-monospace, monospace; font-size: 13px; line-height: 1.5; margin-top: 8px; }
+.desk-editorrow { display: flex; gap: 8px; margin-top: 10px; align-items: center; }
+.desk-save { padding: 8px 16px; border-radius: 8px; border: none; background: var(--accent); color: #fff; font-weight: 600; font-size: 14px; cursor: pointer; }
+.desk-cancel { padding: 8px 14px; border-radius: 8px; border: 1px solid var(--border); background: none; color: var(--text); font-size: 14px; cursor: pointer; }
+.desk-status { font-size: 13px; color: var(--muted); }
 .children { display: flex; flex-wrap: wrap; gap: 12px; }
 .child {
   background: var(--card);
@@ -201,9 +229,170 @@ h2 { font-size: 22px; margin: 32px 0 16px; }
 
 
 <div class="footer">
-Generated 2026-10-16 · Part of the Buddy System
+Generated 2026-10-16 · Dave's buddy system
 </div>
 
+<!-- ============ THE DESK: knowledge + config, editable in place ============ -->
+<section class="desk" id="desk">
+<h2>🗂️ The Desk</h2>
+<p class="desk-sub">Everything Shopping Buddy knows and how it's configured to behave. Connect your GitHub token once to read and edit — it stays on this device only.</p>
+<div class="desk-token" id="desk-token" hidden>
+<p>🔒 Connect GitHub to unlock the desk.</p>
+<div class="desk-tokenrow">
+<input type="password" id="desk-token-input" placeholder="GitHub token (repo scope)" aria-label="GitHub token">
+<button type="button" id="desk-token-save">Save token</button>
+<a href="https://github.com/settings/tokens" target="_blank" rel="noopener">Get a token</a>
+</div>
+</div>
+<div class="desk-files">
+  <article class="desk-file" data-file="KNOWLEDGE.md">
+    <div class="desk-filehead"><h3>📚 Knowledge</h3><button type="button" class="desk-edit" data-edit="KNOWLEDGE.md">Edit</button></div>
+    <div class="desk-body" data-body="KNOWLEDGE.md"><p class="desk-loading">Loading…</p></div>
+    <div class="desk-editor" data-editor="KNOWLEDGE.md" hidden>
+      <textarea rows="14" aria-label="Edit KNOWLEDGE.md"></textarea>
+      <div class="desk-editorrow"><button type="button" class="desk-save" data-save="KNOWLEDGE.md">Save</button><button type="button" class="desk-cancel" data-cancel="KNOWLEDGE.md">Cancel</button><span class="desk-status" role="status"></span></div>
+    </div>
+  </article>
+  <article class="desk-file" data-file="CONFIG.md">
+    <div class="desk-filehead"><h3>⚙️ Configuration</h3><button type="button" class="desk-edit" data-edit="CONFIG.md">Edit</button></div>
+    <div class="desk-body" data-body="CONFIG.md"><p class="desk-loading">Loading…</p></div>
+    <div class="desk-editor" data-editor="CONFIG.md" hidden>
+      <textarea rows="14" aria-label="Edit CONFIG.md"></textarea>
+      <div class="desk-editorrow"><button type="button" class="desk-save" data-save="CONFIG.md">Save</button><button type="button" class="desk-cancel" data-cancel="CONFIG.md">Cancel</button><span class="desk-status" role="status"></span></div>
+    </div>
+  </article>
+</div>
+</section>
+
+<script>
+/* ============ THE DESK: token-gated read/edit of repo files ============ */
+(function(){
+  var REPO = 'shopping-buddy';
+  var FILES = ['KNOWLEDGE.md', 'CONFIG.md'];
+  var shas = {};
+  function lsGet(){ try { return JSON.parse(localStorage.getItem('buddyTree.v3') || '{}'); } catch(e){ return {}; } }
+  function lsSet(patch){ try { var s = lsGet(); for (var k in patch) s[k] = patch[k]; localStorage.setItem('buddyTree.v3', JSON.stringify(s)); } catch(e){} }
+  function token(){ return lsGet().ghToken || ''; }
+  function esc(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+  /* minimal markdown renderer: headings, bold, lists, paragraphs */
+  function md(src){
+    var lines = src.split('\n'), html = '', inList = false;
+    lines.forEach(function(line){
+      var t = line.trim();
+      if (/^#{1,3}\s/.test(t)) {
+        if (inList) { html += '</ul>'; inList = false; }
+        var lvl = t.match(/^#+/)[0].length;
+        html += '<h' + lvl + '>' + inline(t.replace(/^#+\s*/,'')) + '</h' + lvl + '>';
+      } else if (/^[-*]\s/.test(t)) {
+        if (!inList) { html += '<ul>'; inList = true; }
+        html += '<li>' + inline(t.replace(/^[-*]\s*/,'')) + '</li>';
+      } else if (t === '') {
+        if (inList) { html += '</ul>'; inList = false; }
+      } else {
+        if (inList) { html += '</ul>'; inList = false; }
+        html += '<p>' + inline(t) + '</p>';
+      }
+    });
+    if (inList) html += '</ul>';
+    return html;
+  }
+  function inline(s){
+    s = esc(s);
+    s = s.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+    s = s.replace(/`([^`]+)`/g, '<code>$1</code>');
+    return s;
+  }
+  function ghApi(path, method, body){
+    var t = token();
+    if (!t) throw new Error('no token');
+    return fetch('https://api.github.com' + path, {
+      method: method || 'GET',
+      headers: {'Authorization': 'Bearer ' + t, 'Accept': 'application/vnd.github+json', 'Content-Type': 'application/json'},
+      body: body ? JSON.stringify(body) : undefined
+    }).then(function(r){
+      if (!r.ok) throw new Error('GitHub ' + r.status);
+      return r.status === 204 ? null : r.json();
+    });
+  }
+  function b64decode(s){
+    var bin = atob(s.replace(/\n/g, ''));
+    var bytes = Uint8Array.from(bin, function(c){ return c.charCodeAt(0); });
+    return new TextDecoder().decode(bytes);
+  }
+  function b64encode(str){
+    var bytes = new TextEncoder().encode(str), bin = '';
+    bytes.forEach(function(b){ bin += String.fromCharCode(b); });
+    return btoa(bin);
+  }
+  function loadFile(name){
+    var body = document.querySelector('[data-body="' + name + '"]');
+    ghApi('/repos/davedellaquila/' + REPO + '/contents/' + name)
+      .then(function(j){
+        shas[name] = j.sha;
+        body.innerHTML = md(b64decode(j.content || ''));
+      })
+      .catch(function(e){
+        body.innerHTML = '<p class="desk-loading">Could not load ' + esc(name) + ' (' + esc(e.message) + ').</p>';
+      });
+  }
+  function refresh(){
+    var tok = token();
+    document.getElementById('desk-token').hidden = !!tok;
+    document.querySelectorAll('.desk-edit').forEach(function(b){ b.disabled = !tok; b.style.opacity = tok ? 1 : .45; });
+    if (tok) FILES.forEach(loadFile);
+    else document.querySelectorAll('.desk-body').forEach(function(b){ b.innerHTML = '<p class="desk-loading">Connect your GitHub token above to view.</p>'; });
+  }
+  document.getElementById('desk-token-save').addEventListener('click', function(){
+    var v = document.getElementById('desk-token-input').value.trim();
+    if (v) { lsSet({ghToken: v}); document.getElementById('desk-token-input').value = ''; refresh(); }
+  });
+  document.querySelectorAll('.desk-edit').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      if (!token()) return;
+      var name = btn.getAttribute('data-edit');
+      var editor = document.querySelector('[data-editor="' + name + '"]');
+      var ta = editor.querySelector('textarea');
+      editor.hidden = false; btn.hidden = true;
+      ghApi('/repos/davedellaquila/' + REPO + '/contents/' + name)
+        .then(function(j){ shas[name] = j.sha; ta.value = b64decode(j.content || ''); ta.focus(); })
+        .catch(function(e){ editor.querySelector('.desk-status').textContent = 'Load failed: ' + e.message; });
+    });
+  });
+  document.querySelectorAll('.desk-cancel').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var name = btn.getAttribute('data-cancel');
+      document.querySelector('[data-editor="' + name + '"]').hidden = true;
+      document.querySelector('[data-edit="' + name + '"]').hidden = false;
+    });
+  });
+  document.querySelectorAll('.desk-save').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var name = btn.getAttribute('data-save');
+      var editor = document.querySelector('[data-editor="' + name + '"]');
+      var ta = editor.querySelector('textarea');
+      var status = editor.querySelector('.desk-status');
+      status.textContent = 'Saving…'; btn.disabled = true;
+      ghApi('/repos/davedellaquila/' + REPO + '/contents/' + name, 'PUT', {
+        message: 'Update ' + name + ' from homepage desk',
+        content: b64encode(ta.value),
+        sha: shas[name]
+      }).then(function(j){
+        shas[name] = (j.content || {}).sha;
+        status.textContent = 'Saved ✓';
+        document.querySelector('[data-body="' + name + '"]').innerHTML = md(ta.value);
+        setTimeout(function(){
+          editor.hidden = true;
+          document.querySelector('[data-edit="' + name + '"]').hidden = false;
+          status.textContent = ''; btn.disabled = false;
+        }, 900);
+      }).catch(function(e){
+        status.textContent = 'Save failed: ' + e.message; btn.disabled = false;
+      });
+    });
+  });
+  refresh();
+})();
+</script>
 <script>
 (function(){
   var box = document.querySelector('.dumpbox');
