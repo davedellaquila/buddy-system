@@ -343,15 +343,8 @@
 
     <section class="block">
       <h2>⚡ Curiosity queue</h2>
-      <p class="note">Sparks I've noticed in your threads — tap one to try it in the question above. Yours to pick, reshape, or ignore.</p>
-      <div class="grid">
-        <button class="card spark" data-spark="Claude Code prototyping"><span class="tag">AI · craft</span><h3>Claude Code prototyping</h3><p>Your vibe-designing workflow — turn the late-night sessions into a repeatable method.</p><span class="go">Try it →</span></button>
-        <button class="card spark" data-spark="Investment research"><span class="tag">Money</span><h3>Investment research that sticks</h3><p>Timing AAPL, reading signals — a plan for sharper, calmer decisions.</p><span class="go">Try it →</span></button>
-        <button class="card spark" data-spark="Meditation practice"><span class="tag">Mind</span><h3>Meditation practice</h3><p>Breathwork and routine, not a content library — the Zen Buddy overlap.</p><span class="go">Try it →</span></button>
-        <button class="card spark" data-spark="Hot tub water chemistry"><span class="tag">Cabin</span><h3>Hot tub water chemistry</h3><p>Your Sundance Optima 880 — what the chemicals actually do, and when.</p><span class="go">Try it →</span></button>
-        <button class="card spark" data-spark="Amador County business landscape"><span class="tag">Venture</span><h3>Amador County business landscape</h3><p>Home care, defensible space — learn the market before you pick the venture.</p><span class="go">Try it →</span></button>
-        <button class="card spark" data-spark="F/A-18 systems"><span class="tag">Play</span><h3>F/A-18 systems</h3><p>The Hornet you're flying in the sim — avionics, procedures, the real thing behind it.</p><span class="go">Try it →</span></button>
-      </div>
+      <p class="note">Sparks I've noticed in your threads — tap one to try it in the question above. Yours to pick, reshape, or ignore. <button type="button" id="reshuffle" class="linkbtn">↻ shuffle</button></p>
+      <div class="grid" id="sparkgrid"></div>
     </section>
 
     <section class="block">
@@ -439,13 +432,44 @@
       }
       go.addEventListener('click', respond);
       input.addEventListener('keydown', function (e) { if (e.key === 'Enter') respond(); });
-      document.querySelectorAll('.spark').forEach(function (el) {
-        el.addEventListener('click', function () {
-          input.value = el.getAttribute('data-spark');
-          input.focus();
-          input.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      var SPARKS = [
+        { tag: 'AI · craft', title: 'Claude Code prototyping', desc: 'Your vibe-designing workflow — turn the late-night sessions into a repeatable method.' },
+        { tag: 'Money', title: 'Investment research', desc: 'Timing AAPL, reading signals — a plan for sharper, calmer decisions.' },
+        { tag: 'Mind', title: 'Meditation practice', desc: 'Breathwork and routine, not a content library — the Zen Buddy overlap.' },
+        { tag: 'Cabin', title: 'Hot tub water chemistry', desc: 'Your Sundance Optima 880 — what the chemicals actually do, and when.' },
+        { tag: 'Venture', title: 'Amador County business landscape', desc: 'Home care, defensible space — learn the market before you pick the venture.' },
+        { tag: 'Play', title: 'F/A-18 systems', desc: "The Hornet you're flying in the sim — avionics, procedures, the real thing behind it." },
+        { tag: 'Language', title: 'Spanish', desc: "Conversational Spanish — for travel, neighbors, and keeping up with the grandkids' homework." },
+        { tag: 'Code', title: 'SwiftUI', desc: 'Build real iPhone apps in Swift — from your first view to the App Store.' },
+        { tag: 'Kitchen', title: 'Sourdough', desc: 'Starter, schedule, crust — bread worth the wait.' },
+        { tag: 'Craft', title: 'Storytelling craft', desc: 'Turn your stories into something worth keeping — memoir and narrative craft.' },
+        { tag: 'Film', title: 'Documentary filmmaking', desc: 'From story to screen — the documentary basics, for the family stories.' }
+      ];
+      var grid = document.getElementById('sparkgrid');
+      function renderSparks() {
+        var pool = SPARKS.slice();
+        for (var i = pool.length - 1; i > 0; i--) {
+          var j = Math.floor(Math.random() * (i + 1));
+          var t = pool[i]; pool[i] = pool[j]; pool[j] = t;
+        }
+        grid.innerHTML = '';
+        pool.slice(0, 6).forEach(function (s) {
+          var b = document.createElement('button');
+          b.className = 'card spark';
+          b.setAttribute('type', 'button');
+          b.setAttribute('data-spark', s.title);
+          b.innerHTML = '<span class="tag">' + s.tag + '</span><h3>' + s.title + '</h3><p>' + s.desc + '</p><span class="go">Try it →</span>';
+          b.addEventListener('click', function () {
+            input.value = s.title;
+            input.focus();
+            input.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          });
+          grid.appendChild(b);
         });
-      });
+      }
+      renderSparks();
+      var reshuffle = document.getElementById('reshuffle');
+      if (reshuffle) reshuffle.addEventListener('click', renderSparks);
     })();
   </script>
   <script>

@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-10-17 (Learning Buddy spark shuffle)
+
+### Added
+- **Curiosity-queue spark shuffle** (Dave 2026-10-17 — "mix them up every time"): the "What do you want to learn?" hero's suggestion sparks now draw 6 at random from an 11-spark pool (original 6 + Spanish, SwiftUI, Sourdough, Storytelling craft, Documentary filmmaking — teased from his threads), reshuffled on every visit, plus a ↻ shuffle link; tapping a spark still fills the ask box.
+
 ## 2026-10-17 (Property recurring chores)
 
 ### Added
