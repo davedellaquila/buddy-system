@@ -350,15 +350,15 @@
     <!-- LIVE DATA -->
     <section>
       <div class="sec-head"><span class="sec-num">No. 3</span><h2><a href="live-data.html">Live briefing data</a></h2><span class="line"></span></div>
-      <p class="lede">What the briefings actually carry right now — snapshot refreshed for the morning edition (Oct 16, ~5:41 AM), ahead of today's 6:00 AM assembly. This is the data the settings below act on.</p>
+      <p class="lede">What the briefings actually carry right now — snapshot refreshed for the evening edition (Oct 16, ~5:41 PM), ahead of tonight's 6:00 PM assembly. This is the data the settings below act on.</p>
       <div class="lib-grid">
         <div class="card lib-item"><h4><span class="dot"></span>Weather — Fiddletown</h4><p>Today: sunny, high 84&deg;F. Saturday: sunny and warmer, high 86&deg; / low 61&deg; — the warm-up continues.</p></div>
         <div class="card lib-item"><h4><span class="dot"></span>Sky</h4><p>Sunrise today 7:12 AM; sunset today 6:23 PM; sunrise tomorrow &asymp;7:13 AM; waxing crescent, ~30% lit.</p></div>
         <div class="card lib-item"><h4><span class="dot"></span>Night sky</h4><p>Orionids ramping toward their Oct 21&ndash;22 peak (Halley&rsquo;s debris); thin crescent moon means dark skies — look east after midnight.</p></div>
-        <div class="card lib-item"><h4><span class="dot"></span>Fire &amp; air</h4><p>Red Flag Warning through Fri 10:00 AM PDT — NE&ndash;E gusts to 45 mph, humidity 10&ndash;25%; PG&amp;E PSPS footprint includes Amador County. AQI 33 (Good), no smoke.</p></div>
-        <div class="card lib-item"><h4><span class="dot"></span>Markets — AAPL</h4><p>Closed Thursday at $342.00, off ~0.3% from yesterday&rsquo;s all-time closing high of $342.96 — market cap holding ~$5.65T.</p></div>
-        <div class="card lib-item"><h4><span class="dot"></span>Awaiting your reply</h4><p>40 open items &middot; 1 genuinely high-priority: the trust paperwork. The registry&rsquo;s rent-notice item is stale (the 90-day notice went out Oct 8) — cleanup pending.</p></div>
-        <div class="card lib-item"><h4><span class="dot"></span>Next: morning edition, 6:00 AM PT</h4><p>High-priority reminders &middot; Calendar &middot; Weather &middot; Sky &middot; Fire &amp; air &middot; Commute &middot; Inbox &middot; Markets &amp; tech &middot; Events radar &middot; Prep &middot; Bills &middot; Awaiting your reply &middot; Quick links.</p></div>
+        <div class="card lib-item"><h4><span class="dot"></span>Fire &amp; air</h4><p>Red Flag Warning expired at 10:00 AM today after NE&ndash;E gusts to 45 mph, humidity 10&ndash;25%; AQI 33 (Good), no smoke.</p></div>
+        <div class="card lib-item"><h4><span class="dot"></span>Markets — AAPL</h4><p>Closed Friday at $343.46, +0.4% on iPhone Duo pre-order sellout buzz — bucking a rough tape: S&amp;P &minus;1.1%, Nasdaq &minus;2.1%, Dow &minus;0.3% on AI-financing jitters.</p></div>
+        <div class="card lib-item"><h4><span class="dot"></span>Awaiting your reply</h4><p>40 open items &middot; none high-priority right now.</p></div>
+        <div class="card lib-item"><h4><span class="dot"></span>Next: evening edition, 6:00 PM PT</h4><p>High-priority reminders &middot; Top stories &middot; Markets &middot; Tech &amp; AI &middot; YouTube picks &middot; Podcast picks &middot; Sky &middot; Night sky &middot; Awaiting your reply &middot; Quick links &middot; The dinner question.</p></div>
       </div>
     </section>
 
@@ -440,7 +440,7 @@
   </main>
 
   <footer>
-    <span>Briefing Buddy · a living page · last refreshed <strong>October 16, 2026 (morning)</strong></span>
+    <span>Briefing Buddy · a living page · last refreshed <strong>October 16, 2026 (evening)</strong></span>
     <span><a href="https://docs.google.com/document/d/1s9ghZ-kyp9dag2whTPnk24ULLUJP3JW_0UGtocAynbs/edit">Product brief</a> · editions live in the Briefings thread</span>
   </footer>
 </div>
@@ -675,37 +675,14 @@
       }
     } catch(e){}
   }
-  /* Local fallback (Dave 2026-10-15, widened 2026-10-16): dumping always works,
-     even with no GitHub token AND no repo linked — entries are saved in this
-     device's localStorage until the GitHub write path can take them. The backlog
-     flushes into the repo on the next successful GitHub dump (once a repo is
-     linked and a token is present). */
-  function localKey(){ return 'buddyTree.ingest.' + bid; }
-  function localBacklog(){
-    try { var a = JSON.parse(localStorage.getItem(localKey()) || '[]'); return Array.isArray(a) ? a : []; }
-    catch(e){ return []; }
-  }
-  function localSave(entry){
-    var a = localBacklog(); a.push(entry);
-    try { localStorage.setItem(localKey(), JSON.stringify(a)); } catch(e){}
-  }
-  function localClear(){ try { localStorage.removeItem(localKey()); } catch(e){} }
   function refreshUI(){
-  var has = !!token();
-  tokWrap.hidden = has;
-  /* The box always works: no token and/or no repo just means local saves. */
-  ta.disabled = false;
-  btn.disabled = false;
-  var n = localBacklog().length;
-  if (!repo) {
-    st.textContent = n
-      ? n + ' local ' + (n === 1 ? 'dump' : 'dumps') + ' saved on this device — will sync when a repo is linked.'
-      : 'No repo linked yet — dumps save on this device and will sync when one is linked.';
-    return;
-  }
-  st.textContent = has
-    ? (n ? n + ' local ' + (n === 1 ? 'dump' : 'dumps') + ' will sync on next dump.' : '')
-    : 'No GitHub token — dumps save on this device for now.';
+    var has = !!token();
+    tokWrap.hidden = has;
+    var ok = has && !!repo;
+    ta.disabled = !ok;
+    btn.disabled = !ok;
+    if (!has) { st.textContent = ''; }
+    else if (!repo) { st.textContent = 'No repo linked for this buddy yet.'; }
   }
   var tokInput = tokWrap.querySelector('input'),
       tokSave = tokWrap.querySelector('button');
@@ -717,43 +694,26 @@
     refreshUI();
     st.textContent = 'Token saved on this device.';
   });
-async function dump(){
-  var text = ta.value.trim();
-  if (!text) return;
-  var stamp = new Date().toLocaleString();
-  var NL = String.fromCharCode(10);
-  if (!repo) {
-    /* No repo linked yet — save on this device; syncs once one is linked. */
-    localSave({t: stamp, text: text});
-    ta.value = '';
-    st.textContent = '✓ Saved on this device — will sync to the repo once one is linked.';
-    refreshUI();
-    return;
-  }
-  if (!token()) {
-    /* Temporary workaround: no token → save on this device. */
-    localSave({t: stamp, text: text});
-    ta.value = '';
-    st.textContent = '✓ Saved on this device — add a GitHub token to sync it to the repo.';
-    return;
-  }
-  st.textContent = 'Dumping…';
-  btn.disabled = true;
-  try {
-    /* Flush any locally-saved backlog first, then the new entry. */
-    var backlog = localBacklog();
-    var parts = backlog.map(function(b){ return '## ' + b.t + NL + NL + b.text + NL + NL; });
-    parts.push('## ' + stamp + NL + NL + text + NL + NL);
-    var cur = await ghGetFile(repo, 'docs/ingest.md');
-    var base = cur ? cur.text : '# Ingest log — ' + repoName + NL + NL;
-    var body = {message: 'Ingest dump for ' + bid, content: b64encode(base + parts.join(''))};
-    if (cur && cur.sha) body.sha = cur.sha;
-    await ghApi('/repos/davedellaquila/' + repo + '/contents/docs/ingest.md', 'PUT', body);
-    localClear();
-    ta.value = '';
-    st.textContent = '✓ Dumped to ' + repo + '/docs/ingest.md' + (backlog.length ? ' (' + backlog.length + ' local synced)' : '');
-  } catch(err){ st.textContent = 'Save failed: ' + (err.message || err); }
-  btn.disabled = false;
+  async function dump(){
+    var text = ta.value.trim();
+    if (!text) return;
+    if (!token()) { refreshUI(); return; }
+    if (!repo) { st.textContent = 'No repo linked for this buddy yet.'; return; }
+    st.textContent = 'Dumping…';
+    btn.disabled = true;
+    try {
+      var stamp = new Date().toLocaleString();
+      var NL = String.fromCharCode(10);
+      var entry = '## ' + stamp + NL + NL + text + NL + NL;
+      var cur = await ghGetFile(repo, 'docs/ingest.md');
+      var base = cur ? cur.text : '# Ingest log — ' + repoName + NL + NL;
+      var body = {message: 'Ingest dump for ' + bid, content: b64encode(base + entry)};
+      if (cur && cur.sha) body.sha = cur.sha;
+      await ghApi('/repos/davedellaquila/' + repo + '/contents/docs/ingest.md', 'PUT', body);
+      ta.value = '';
+      st.textContent = '✓ Dumped to ' + repo + '/docs/ingest.md';
+    } catch(err){ st.textContent = 'Save failed: ' + (err.message || err); }
+    btn.disabled = false;
   }
   btn.addEventListener('click', dump);
   ta.addEventListener('keydown', function(ev){
