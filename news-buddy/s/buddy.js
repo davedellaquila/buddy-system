@@ -246,8 +246,13 @@ window.NBVoice = (function(){
   }
   function pick(){
     var uri = savedURI();
-    if (!uri) return null;
-    for (var i = 0; i < voices.length; i++) if (voices[i].voiceURI === uri) return voices[i];
+    var i;
+    if (uri) for (i = 0; i < voices.length; i++) if (voices[i].voiceURI === uri) return voices[i];
+    /* No saved choice: default to Samantha (en-US) — the best of the device voices. */
+    for (i = 0; i < voices.length; i++)
+      if (/samantha/i.test(voices[i].name) && /^en([-_]US)?$/i.test(voices[i].lang || '')) return voices[i];
+    for (i = 0; i < voices.length; i++)
+      if (/^en([-_]US)?$/i.test(voices[i].lang || '')) return voices[i];
     return null;
   }
   function preview(v){
