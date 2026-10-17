@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-10-16 (Hong Kong Palace buddy)
+
+### Added
+- **New buddy: Hong Kong Palace** (Dave 2026-10-16 — "I assume that Hong Kong Palace is a new object. New buddy."): Chinese restaurant in San Andreas, CA, under Amador County (local-places parent, Crush Pizzeria precedent). Homepage carries the first-visit notes (Oct 16, 2026 — egg drop soup + BBQ pork combo plate, Dave's verdict: very good, giant plate) and a photo gallery with the three dinner photos.
+
 ## 2026-10-16 (Legal Buddy: Open Matters list)
 
 ### Added
