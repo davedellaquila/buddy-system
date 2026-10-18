@@ -857,6 +857,15 @@ body.standalone #sb-to-top{opacity:0!important;pointer-events:none!important}
 /* Changelog / Release Notes: never scroll horizontally — wrap long words */
 #view-changelog .changelog,#view-releases .changelog{overflow-x:hidden;overflow-wrap:break-word;word-break:break-word}
 #view-changelog .changelog a,#view-releases .changelog a{overflow-wrap:break-word;word-break:break-all}
+/* Release Notes summary filter tiles (Dave 2026-10-18) */
+.rel-tiles{display:flex;gap:12px;margin:16px 0 20px}
+.rel-tile{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;
+  padding:14px 8px;border-radius:16px;border:1px solid var(--border);
+  background:var(--panel);cursor:pointer;color:var(--text)}
+.rel-tile-n{font-size:24px;font-weight:800;font-variant-numeric:tabular-nums}
+.rel-tile-l{font-size:12px;color:var(--muted);font-weight:600}
+.rel-tile[aria-pressed="true"]{border-color:var(--accent);background:color-mix(in srgb, var(--accent) 10%, var(--panel))}
+.rel-tile[aria-pressed="true"] .rel-tile-l{color:var(--accent)}
 #journal-bar .jtime{color:var(--faint);font-size:11px;margin-left:6px}
 .pdrop{border:2px dashed var(--border);border-radius:12px;padding:20px;text-align:center;color:var(--muted);font-size:13px;margin-top:10px;cursor:pointer}
 .pdrop.over{border-color:var(--accent);background:var(--wash);color:var(--text)}
@@ -5602,22 +5611,47 @@ function renderReleases(){
     .then(r => { if (!r.ok) throw new Error('fetch failed'); return r.text(); })
     .then(md => {
       const sp = whatsnewSplit(md);
-      let html = '';
+      /* Dave 2026-10-18: summary filter tiles at the top — New / Today / All,
+         each with its item count. Tapping one filters the list below. */
+      const allGroups = parseReleaseGroups(md);
+      const newGroups = parseReleaseGroups(sp.newMd);
+      const todayStr = (function(){ const d = new Date(); return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0'); })();
+      const countItems = gs => gs.reduce((n, g) => n + g.items.length, 0);
+      const newCount = countItems(newGroups);
+      const todayCount = countItems(allGroups.filter(g => g.dateStr === todayStr));
+      const allCount = countItems(allGroups);
+      let html = '<div class="rel-tiles" role="group" aria-label="Filter release notes">'
+        + '<button type="button" class="rel-tile" data-relfilter="new" aria-pressed="true"><span class="rel-tile-n">' + newCount + '</span><span class="rel-tile-l">New</span></button>'
+        + '<button type="button" class="rel-tile" data-relfilter="today" aria-pressed="false"><span class="rel-tile-n">' + todayCount + '</span><span class="rel-tile-l">Today</span></button>'
+        + '<button type="button" class="rel-tile" data-relfilter="all" aria-pressed="false"><span class="rel-tile-n">' + allCount + '</span><span class="rel-tile-l">All</span></button>'
+        + '</div>';
+      html += '<div id="rel-list">';
       if (sp.hasNew) {
-        html += '<h4 style="margin-top:0">New since you last looked</h4>' + releaseNotesToHtml(sp.newMd);
+        html += '<div data-relsection="new"><h4 style="margin-top:0">New since you last looked</h4>' + releaseNotesToHtml(sp.newMd) + '</div>';
       } else {
-        html += '<p class="fineprint" style="margin-top:0">You’re up to date — nothing new since you last looked.</p>';
+        html += '<div data-relsection="new"><p class="fineprint" style="margin-top:0">You’re up to date — nothing new since you last looked.</p></div>';
       }
+      const todayGroups = allGroups.filter(g => g.dateStr === todayStr);
+      if (todayGroups.length) {
+        html += '<div data-relsection="today" hidden><h4 style="margin-top:0">Today</h4>' + releaseNotesGroupsToHtml(todayGroups) + '</div>';
+      }
+      html += '<div data-relsection="all" hidden><h4 style="margin-top:0">All changes</h4>' + releaseNotesGroupsToHtml(allGroups) + '</div>';
+      html += '</div>';
       if (sp.oldMd.trim()) {
         html += '<div style="display:flex;align-items:baseline;gap:16px;margin-top:12px;flex-wrap:wrap">'
-          + '<details style="flex:1;min-width:0"><summary class="fineprint" style="cursor:pointer">Earlier history</summary>'
-          + releaseNotesToHtml(sp.oldMd) + '</details>'
-          + '<p class="fineprint" style="margin:0;white-space:nowrap"><a href="https://github.com/davedellaquila/buddy-system/blob/master/CHANGELOG.md" target="_blank" rel="noopener">Earlier changes on GitHub</a></p>'
+          + '<p class="fineprint" style="margin:0"><a href="https://github.com/davedellaquila/buddy-system/blob/master/CHANGELOG.md" target="_blank" rel="noopener">Earlier changes on GitHub</a></p>'
           + '</div>';
       } else {
         html += '<p class="fineprint"><a href="https://github.com/davedellaquila/buddy-system/blob/master/CHANGELOG.md" target="_blank" rel="noopener">Earlier changes on GitHub</a></p>';
       }
       body.innerHTML = html;
+      body.querySelectorAll('.rel-tile').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const f = btn.dataset.relfilter;
+          body.querySelectorAll('.rel-tile').forEach(b => b.setAttribute('aria-pressed', b === btn ? 'true' : 'false'));
+          body.querySelectorAll('[data-relsection]').forEach(s => { s.hidden = s.dataset.relsection !== f; });
+        });
+      });
       whatsnewMarkSeen(md);
     })
     .catch(() => { body.innerHTML = '<p class="fineprint">Couldn’t load the release notes. <a href="https://github.com/davedellaquila/buddy-system/blob/master/CHANGELOG.md" target="_blank" rel="noopener">View on GitHub</a>.</p>'; });
@@ -8838,9 +8872,9 @@ function changelogMdToHtml(md, bare){
   if (!bare) html += '<p class="fineprint"><a href="https://github.com/davedellaquila/buddy-system/blob/master/CHANGELOG.md" target="_blank" rel="noopener">Full changelog on GitHub</a></p>';
   return html;
 }
-/* Release Notes: render each change as a Change Log row, grouped by date
-   with day headers — matching the Change Log view format exactly. */
-function releaseNotesToHtml(md){
+/* Release Notes: parse the changelog markdown into date groups. Shared by
+   the HTML renderer and the summary filter tiles (Dave 2026-10-18). */
+function parseReleaseGroups(md){
   const NL = String.fromCharCode(10);
   const lines = String(md || '').split(NL);
   const TYPE_ICON = { added: '+', changed: '~', fixed: '✓' };
@@ -8871,7 +8905,15 @@ function releaseNotesToHtml(md){
       });
     }
   }
-  if (!groups.length) return '<p class="fineprint">No release notes found.</p>';
+  return groups;
+}
+/* Release Notes: render markdown straight to HTML (convenience wrapper). */
+function releaseNotesToHtml(md){
+  return releaseNotesGroupsToHtml(parseReleaseGroups(md));
+}
+/* Release Notes: render pre-parsed groups (used by the filter tiles). */
+function releaseNotesGroupsToHtml(groups){
+  if (!groups.length) return '<p class="fineprint">Nothing here.</p>';
   return groups.map(g => {
     let dLabel = g.dateStr;
     try {
