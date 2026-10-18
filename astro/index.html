@@ -214,6 +214,28 @@
     <div class="about-strip"><strong>What is Astro?</strong> Dave's chief of staff and builder-in-residence &mdash; the direct interface to the buddy system. <a href="about.html">About Astro &rarr;</a></div>
   </header>
 
+  <h2>🧠 Brain dump</h2>
+  <section class="dumpbox" data-buddy-id="astro" style="--tint:var(--purple)">
+    <p class="dumpbox-sub">Something on your mind for me? Dump it raw — every entry lands timestamped in <b>buddy-system/docs/ingest.md</b>, where my ingest pass picks it up. ⌘/Ctrl+Enter sends.</p>
+    <div class="dumpbox-connect" hidden>
+      <p>🔒 Connect GitHub to unlock dumping. Paste a token once — it stays on this device only.</p>
+      <button type="button" class="dumpbox-btn">Connect GitHub to enable</button>
+    </div>
+    <div class="dumpbox-token" hidden>
+      <p>🔒 Connect GitHub to unlock dumping. Paste a token once — it stays on this device only.</p>
+      <div class="dumpbox-tokenrow">
+        <input type="password" placeholder="GitHub token (repo scope)" aria-label="GitHub token">
+        <button type="button">Save token</button>
+        <a href="https://github.com/settings/tokens" target="_blank" rel="noopener">Get a token</a>
+      </div>
+    </div>
+    <textarea rows="4" placeholder="Dump what's on your mind…"></textarea>
+    <div class="dumpbox-row">
+      <button type="button" class="dumpbox-btn">Dump it</button>
+      <span class="dumpbox-status" role="status"></span>
+    </div>
+  </section>
+
 <!-- buddy-wall -->
 <h2>🧑‍🤝‍🧑 The crew — who's here</h2>
 <div class="wall-hint">Every buddy in the system. Tap one to visit their homepage.</div>
@@ -376,27 +398,6 @@
     <div id="activity"><div class="feed-empty">Loading the activity log…</div></div>
   </div>
 
-  <h2>🧠 Brain dump</h2>
-  <section class="dumpbox" data-buddy-id="astro" style="--tint:var(--purple)">
-    <p class="dumpbox-sub">Something on your mind for me? Dump it raw — every entry lands timestamped in <b>buddy-system/docs/ingest.md</b>, where my ingest pass picks it up. ⌘/Ctrl+Enter sends.</p>
-    <div class="dumpbox-connect" hidden>
-      <p>🔒 Connect GitHub to unlock dumping. Paste a token once — it stays on this device only.</p>
-      <button type="button" class="dumpbox-btn">Connect GitHub to enable</button>
-    </div>
-    <div class="dumpbox-token" hidden>
-      <p>🔒 Connect GitHub to unlock dumping. Paste a token once — it stays on this device only.</p>
-      <div class="dumpbox-tokenrow">
-        <input type="password" placeholder="GitHub token (repo scope)" aria-label="GitHub token">
-        <button type="button">Save token</button>
-        <a href="https://github.com/settings/tokens" target="_blank" rel="noopener">Get a token</a>
-      </div>
-    </div>
-    <textarea rows="4" placeholder="Dump what's on your mind…"></textarea>
-    <div class="dumpbox-row">
-      <button type="button" class="dumpbox-btn">Dump it</button>
-      <span class="dumpbox-status" role="status"></span>
-    </div>
-  </section>
 
   <h2>🧭 What I track</h2>
   <div class="grid">
@@ -587,7 +588,7 @@
         async function sendAction(tile, entry, okMsg){
           var st = tile.querySelector('.attn-status');
           var btns = tile.querySelectorAll('.attn-btn');
-          if (!token()) { st.textContent = 'Add a GitHub token in the 🧠 Brain dump section below to enable actions.'; return false; }
+          if (!token()) { st.textContent = 'Add a GitHub token in the 🧠 Brain dump section above to enable actions.'; return false; }
           btns.forEach(function(b){ b.disabled = true; });
           st.textContent = 'Working…';
           try {
