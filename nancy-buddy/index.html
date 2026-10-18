@@ -790,14 +790,21 @@ renderNotes(); renderReminders(); renderDates(); renderGifts(); renderPhotos();
   }
   var tokInput = tokWrap.querySelector('input'),
       tokSave = tokWrap.querySelector('button');
-  tokSave.addEventListener('click', function(){
-    var v = tokInput.value.trim();
-    if (!v) return;
-    lsSet({ghToken: v});
-    tokInput.value = '';
+  tokSave.addEventListener('click', async function(){
+  var v = tokInput.value.trim();
+  if (!v) return;
+  lsSet({ghToken: v});
+  tokInput.value = '';
+  st.textContent = 'Checking token…';
+  try {
+    await ghApi('/user');
     refreshUI();
-    st.textContent = 'Token saved on this device.';
-  });
+    st.textContent = '✓ Token verified — dumps will sync to GitHub.';
+  } catch(e) {
+    refreshUI();
+    st.textContent = '⚠ GitHub rejected that token (' + ((e && e.message) || e) + ') — dumps stay on this device until a working token is added.';
+  }
+});
 async function dump(){
   var text = ta.value.trim();
   if (!text) return;
@@ -833,7 +840,20 @@ async function dump(){
     localClear();
     ta.value = '';
     st.textContent = '✓ Dumped to ' + repo + '/docs/ingest.md' + (backlog.length ? ' (' + backlog.length + ' local synced)' : '');
-  } catch(err){ st.textContent = 'Save failed: ' + (err.message || err); }
+    } catch(err){
+    /* Dave 2026-10-18: a failed GitHub write must never drop the dump.
+       Keep it on this device and say so plainly, with the backlog count -
+       it syncs on the next successful dump. */
+    try { localSave({t: stamp, text: text}); } catch(e2){}
+    ta.value = '';
+    refreshUI();
+    var why = (err && err.message) || String(err);
+    var nq = 0; try { nq = localBacklog().length; } catch(e2){}
+    var tail = nq > 1 ? ' (' + nq + ' on this device waiting to sync)' : '';
+    st.textContent = (/404/.test(why)
+      ? '⚠ Saved on this device — GitHub said 404 (usually a wrong/expired token, or no access to this private repo). Fix the token, then dump again to sync.'
+      : '⚠ Saved on this device — GitHub said: ' + why + '. It will sync on your next successful dump.') + tail;
+  }
   btn.disabled = false;
   }
   btn.addEventListener('click', dump);

@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-10-18 (dump box: failed GitHub writes queue locally + token verified on paste)
+
+### Fixed
+- **Failed GitHub dumps no longer vanish into an error message** (Dave 2026-10-18 — "Save failed: GitHub 404" on a buddy homepage, and no notice that anything was stored locally): the dump box's write-failure path never queued the entry — the "dumping always works" guarantee only covered the no-token/no-repo cases. Now a failed GitHub write saves the dump to the device's localStorage backlog, clears the box, and says so in plain words with the backlog count ("Saved on this device — … (N on this device waiting to sync)"); the backlog flushes into `docs/ingest.md` on the next successful dump. A 404 gets a specific hint (usually a wrong/expired token or no access to the private repo).
+- **Token is verified the moment it's pasted** (same report — the 404 was a rejected token): pasting a GitHub token into the dump box now calls `GET /user` immediately. A good token shows "Token verified — dumps will sync to GitHub"; a rejected one warns in place and dumps stay local until a working token is added. Catches bad tokens at paste time instead of on the next dump.
+- Rolled out to all 110 pages carrying the dump box (58 template pages regenerated from the fixed `gen_basic_homepages.py`, 52 custom pages patched surgically, `docs/dumpbox-snippet.html` refreshed as the canonical reference). All 110 dump-box scripts pass `node --check`. Also fixed a `lsjSet` typo that broke token saving on the news-buddy page.
+
 ## 2026-10-18 (homepage name-sync reads pending renames)
 
 ### Fixed

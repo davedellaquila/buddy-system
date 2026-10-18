@@ -226,7 +226,7 @@ h2 { font-size: 22px; margin: 32px 0 16px; }
 </div>
 
 <div class="footer">
-Generated 2026-10-17 · Part of the Buddy System
+Generated 2026-10-18 · Part of the Buddy System
 </div>
 
 <script>
@@ -329,13 +329,24 @@ Generated 2026-10-17 · Part of the Buddy System
       st.classList.remove('flash');
     }, 1800);
   }
-  tokSave.addEventListener('click', function(){
+  /* Dave 2026-10-18: verify the token against GitHub when pasted, so a
+     bad token is caught here instead of surfacing as a mysterious 404 on
+     the next dump. The token is kept either way; dumps queue locally until
+     a working token is in place. */
+  tokSave.addEventListener('click', async function(){
     var v = tokInput.value.trim();
     if (!v) return;
     lsSet({ghToken: v});
     tokInput.value = '';
-    refreshUI();
-    st.textContent = 'Token saved on this device.';
+    st.textContent = 'Checking token…';
+    try {
+      await ghApi('/user');
+      refreshUI();
+      st.textContent = '✓ Token verified — dumps will sync to GitHub.';
+    } catch(e) {
+      refreshUI();
+      st.textContent = '⚠ GitHub rejected that token (' + ((e && e.message) || e) + ') — dumps stay on this device until a working token is added.';
+    }
   });
   async function dump(){
     var text = ta.value.trim();
@@ -375,7 +386,20 @@ Generated 2026-10-17 · Part of the Buddy System
       ta.value = '';
       st.textContent = '✓ Dumped to ' + repo + '/docs/ingest.md' + (backlog.length ? ' (' + backlog.length + ' local synced)' : '');
       flashSaved();
-    } catch(err){ st.textContent = 'Save failed: ' + (err.message || err); }
+    } catch(err){
+      /* Dave 2026-10-18: a failed GitHub write must never drop the dump.
+         Keep it on this device and say so plainly, with the backlog count —
+         it syncs on the next successful dump. */
+      try { localSave({t: stamp, text: text}); } catch(e2){}
+      ta.value = '';
+      refreshUI();
+      var why = (err && err.message) || String(err);
+      var nq = 0; try { nq = localBacklog().length; } catch(e2){}
+      var tail = nq > 1 ? ' (' + nq + ' on this device waiting to sync)' : '';
+      st.textContent = (/404/.test(why)
+        ? '⚠ Saved on this device — GitHub said 404 (usually a wrong/expired token, or no access to this private repo). Fix the token, then dump again to sync.'
+        : '⚠ Saved on this device — GitHub said: ' + why + '. It will sync on your next successful dump.') + tail;
+    }
     btn.disabled = false;
   }
   btn.addEventListener('click', dump);
@@ -513,7 +537,8 @@ Generated 2026-10-17 · Part of the Buddy System
   /* Pending renames (Dave 2026-10-18): when the dashboard has no GitHub token,
      a rename queues in localStorage instead of reaching the registry. The
      dashboard and homepages share an origin, so the homepage reads that queue
-     here — a pending rename supersedes the registry name. */
+     here — a pending rename supersedes the registry name, which is why a freshly
+     renamed buddy kept showing its old name after refresh. */
   function pendingName(){
     try {
       var s = JSON.parse(localStorage.getItem('buddyTree.v3') || '{}');
