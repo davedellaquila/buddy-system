@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-10-18 (DPG Shop Software buddy)
+
+### Added
+- **DPG Shop Software buddy** (🔧, Dave 2026-10-18 — "create a desk for it", from his DPG Shop Management Software PRD v1): the shop management platform for the Porsche/BMW performance shop — customers, vehicles, estimates, repair orders, scheduling, technicians, parts, invoicing, payments, plus performance-shop workflows (build profiles, mod history, track prep, alignment specs, dyno results, tuning references, reusable Porsche/BMW service packages). Direct child of Project Buddy. Private repo davedellaquila/dpg-shop-software (KNOWLEDGE.md seeded from PRD + memory: Quentin's Performance Technic floor experience, Sacramento-area target, MVP-first strategy; CONFIG.md in the standard Identity/Behavior/Scope/Preferences/Privacy shape; STUDY.md with 3 queued topics). Custom homepage at dpg-shop-software/ with the full desk treatment — 🗂️ The Desk renders KNOWLEDGE.md + CONFIG.md + STUDY.md live from the repo, editable in place via token-gated GitHub API (token stays on-device) — plus a shop board (core ops / performance workflows / V1–V5 roadmap), two attention items (mission-statement review, the open Dell'Aquila Performance Group vs Dell'Aquila Garage entity question), and a 🧠 brain-dump box. Sticky slim header, working dark mode via prefers-color-scheme, generator-skip marker (no BUDDY-BASIC-TEMPLATE, no "Part of the Buddy System"). All 4 inline scripts pass `node --check`. Registry now at 119 buddies.
+
 ## 2026-10-18 (dump box: failed GitHub writes queue locally + token verified on paste)
 
 ### Fixed
