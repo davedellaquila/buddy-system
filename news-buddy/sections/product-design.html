@@ -90,6 +90,9 @@
     padding:2px 9px;border-radius:999px;margin-left:8px;vertical-align:1px;
   }
   .sourcenote{font-size:13px;color:var(--muted);font-style:italic;margin-top:8px}
+
+  .outlet-sub{font-family:Georgia,serif;font-size:15px;font-style:italic;color:var(--accent);margin:22px 0 -4px;letter-spacing:.5px}
+  .outlet-sub:first-child{margin-top:6px}
   /* ---------- top stories ---------- */
   .lead h3{font-size:24px}
   .lead .dek{font-size:16px}
@@ -150,13 +153,15 @@
   .story-vote.on-down{background:#b42318;border-color:#b42318;color:#fff}
   /* ---------- voice picker ---------- */
   .vp-overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:1000;display:flex;align-items:center;justify-content:center;padding:20px}
-  .vp-card{background:var(--paper);color:var(--ink);border:1px solid var(--rule);border-radius:14px;max-width:560px;width:100%;max-height:82vh;display:flex;flex-direction:column;box-shadow:0 12px 40px rgba(0,0,0,.35)}
+  .vp-card{background:var(--paper);color:var(--ink);border:1px solid var(--rule);border-radius:14px;max-width:560px;width:100%;max-height:82vh;display:flex;flex-direction:column;box-shadow:0 12px 40px rgba(0,0,0,.35);overflow:hidden}
   .vp-head{padding:14px 16px;border-bottom:1px solid var(--rule);display:flex;align-items:center;justify-content:space-between;flex:none}
   .vp-head h3{margin:0;font-size:16px}
   .vp-close{background:none;border:none;font-size:18px;cursor:pointer;color:var(--muted);padding:4px 8px}
   .vp-sub{padding:10px 16px 2px;font-size:12px;color:var(--muted);flex:none}
-  .vp-list{overflow-y:auto;padding:6px 8px;-webkit-overflow-scrolling:touch}
+  .vp-list{overflow-y:auto;overflow-x:hidden;padding:6px 8px;-webkit-overflow-scrolling:touch}
   .vp-row{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:10px;cursor:pointer;border:1px solid transparent}
+  .vp-row>*{min-width:0}
+  .vp-row .vp-desc{overflow-wrap:break-word}
   .vp-row:hover{background:rgba(127,127,127,.12)}
   .vp-row.current{border-color:var(--accent)}
   .vp-row .nm{flex:none;min-width:0;max-width:38%}
@@ -357,38 +362,67 @@
   .secpage .storyitem h3 a:hover{color:var(--accent)}
   .secpage .lede{font-size:16px;line-height:1.65;color:var(--ink);max-width:70ch;margin:10px 0 6px}
 
+  
+  .sec-head h2 a{color:inherit;text-decoration:none;border-bottom:2px solid transparent}
+  .sec-head h2 a:hover{color:var(--accent);border-bottom-color:var(--accent)}
+  .mini-mast{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 20px;border-bottom:3px double var(--ink);margin-bottom:8px;flex-wrap:wrap}
+  .mini-mast a.brand{font-family:Georgia,'Times New Roman',serif;font-weight:700;font-size:20px;color:var(--ink);text-decoration:none}
+  .mini-mast .ed{font-size:12px;color:var(--muted)}
+  .kicker{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:18px 0 4px}
+  .kicker a{color:var(--accent);text-decoration:none}
+  .detail h1{font-family:Georgia,'Times New Roman',serif;font-size:clamp(26px,5vw,40px);line-height:1.15;margin:6px 0 10px;letter-spacing:-.01em}
+  .detail h4.sec{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--accent);margin:22px 0 6px}
+  .detail p.body{font-size:16px;line-height:1.65;margin:0 0 12px;max-width:68ch}
+  .sourcebox{border:1px solid var(--rule);border-left:4px solid var(--accent);border-radius:8px;padding:12px 16px;margin:18px 0;max-width:68ch}
+  .sourcebox p{font-size:14px;line-height:1.6;margin:6px 0}
+  .sourcebox .flag{display:inline-block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;background:#fde68a;color:#7c2d12;border-radius:4px;padding:2px 8px;margin-bottom:4px}
+  .read-original{display:inline-block;margin:10px 0;padding:10px 20px;background:var(--accent);color:#fff !important;border-radius:8px;font-weight:700;text-decoration:none;font-size:15px}
+  .related{margin-top:28px;border-top:1px solid var(--rule);padding-top:14px}
+  .related h4.sec{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:0 0 10px}
+  .related ul{list-style:none;margin:0;padding:0}
+  .related li{margin:0 0 10px;font-size:15px;line-height:1.45}
+  .related a{color:var(--ink);text-decoration:none;border-bottom:1px solid var(--rule)}
+  .related a:hover{color:var(--accent);border-bottom-color:var(--accent)}
+  .backfoot{margin:30px 0 40px;font-size:14px}
+  .backfoot a{color:var(--accent);text-decoration:none;font-weight:600}
+  .secpage .storyitem{border-bottom:1px solid var(--rule);padding:16px 0}
+  .secpage .storyitem h3{font-size:20px;margin:0 0 6px;line-height:1.3}
+  .secpage .storyitem h3 a{color:var(--ink);text-decoration:none}
+  .secpage .storyitem h3 a:hover{color:var(--accent)}
+  .secpage .lede{font-size:16px;line-height:1.65;color:var(--ink);max-width:70ch;margin:10px 0 6px}
+
   </style>
 </head>
 <body>
 <header class="mini-mast">
   <a class="brand" href="../index.html">📰 The Morning Edition</a>
-  <span class="ed">Saturday, October 17, 2026</span>
+  <span class="ed">Sunday, October 18, 2026</span>
   <button id="themeBtn" class="voice-change" style="margin-left:0">Theme: Auto</button>
 </header>
 <main class="detail secpage" style="max-width:860px;margin:0 auto;padding:0 20px">
   <p class="kicker">Section</p>
   <h1>Product Design</h1>
-  <p class="lede">A furniture debut, a prize winner, a festival, and an about-face: Baird Architects launched its first furniture line with designer profit-sharing, a Croydon council-housing scheme took the 2026 RIBA Stirling Prize, Dutch Design Week opened today in Eindhoven — and Apple invited press to an Oct. 28 launch for its first touchscreen MacBook Pros, reversing a decade of doctrine.</p>
+  <p class="lede">The RIBA Stirling Prize went to 157 social-housing homes in south London — only the fourth housing scheme to win in 30 years. A French designer is selling deliberately pixelated, low-resolution furniture as craft-as-commentary on AI polish. Apple&#x27;s HomeView smart-home dashboard nods to the 2002 iMac G4. And Mistral bought a design studio — the first AI lab to do so.</p>
   <div class="storyitem">
-      <h3><a href="../articles/2026-10-17-baird-architects-debuts-first-furniture-collection-made.html">Baird Architects debuts first furniture collection, made in Portugal</a></h3>
+      <h3><a href="../articles/2026-10-18-welcoming-and-inclusive-london-housing-wins-riba-stirli.html">“Welcoming and inclusive” London housing wins RIBA Stirling Prize 2026</a></h3>
       <p class="byline">Dezeen</p>
-      <p class="body">The U.S. architecture studio launched BA Objeto, a twelve-piece line of seating, tables, and shelving designed by founder Matthew Baird alongside studio employees and collaborators, produced primarily in Lisbon where the firm opened a new studio. Each piece is credited to its designer — from a solid walnut ’surf’ table to Ines Gulbenkian’s swooping aluminium coffee table and Gina Jiang’s dark-brown cork bench — and the designers share in the profits.</p>
-      <p class="body"><em>Why it matters:</em> An architecture studio&#x27;s first furniture line — twelve pieces, each credited to its designer, profit-sharing included. Design-operations done right, and the model is worth noting.</p>
+      <p class="body">Mary Duggan Architects with Ruff Architects won the UK’s top architecture prize for Lion Green Road — 157 high-density homes in south London stitched together with shared green spaces on a steep former car-park site. Only the fourth housing scheme to win in 30 years: faceted star-shaped plans give every home dual aspect and unique views, making the case that density and delight aren’t trade-offs.</p>
+      <p class="body"><em>Why it matters:</em> 157 homes in south London just won the UK&#x27;s top architecture prize — only the fourth housing scheme to do so in 30 years. The shared-green-space planning and star-shaped dual-aspect plans are the part the designer in you will want to study.</p>
     </div><div class="storyitem">
-      <h3><a href="../articles/2026-10-17-croydon-housing-scheme-wins-2026-riba-stirling-prize.html">Croydon housing scheme wins 2026 RIBA Stirling Prize</a></h3>
+      <h3><a href="../articles/2026-10-18-jonas-hejduks-blurry-furnishings-are-deliberately-low-r.html">Jonas Hejduk’s blurry furnishings are deliberately low resolution</a></h3>
       <p class="byline">Dezeen</p>
-      <p class="body">Lion Green Road in south London, a 157-home development across five blocks linked by shared green spaces and designed by local studios Mary Duggan Architects with Ruff Architects for Croydon Council, was named the U.K.’s best new building at a ceremony in London. Dezeen’s weekly roundup also flagged Tesla’s flying Roadster demo in Texas and Apple’s new HomeView device among the week’s top stories.</p>
-      <p class="body"><em>Why it matters:</em> 157 homes in Croydon named the UK&#x27;s best new building — social housing winning architecture&#x27;s biggest prize. The shared-green-space planning across five blocks is the part the Jony in you will want to look at.</p>
+      <p class="body">French designer Jonas Hejduk is selling rugs, benches, ceramics and wallpapers rendered as deliberately pixelated “poor images” — Persian rugs reduced to their own blurry thumbnails, log-texture benches like unloaded 1990s video-game graphics, each piece named with filename formats and file-size metadata woven into the surface. Craft-as-commentary on digital clarity and AI polish, and deliberately hard for social-media algorithms to photograph.</p>
+      <p class="body"><em>Why it matters:</em> Persian rugs as their own blurry thumbnails, benches like unloaded &#x27;90s video-game graphics — craft-as-commentary on AI polish, deliberately unphotographable by social algorithms. The anti-AI design wave&#x27;s most playful entry yet.</p>
     </div><div class="storyitem">
-      <h3><a href="../articles/2026-10-17-dutch-design-week-2026-opens-today-in-eindhoven.html">Dutch Design Week 2026 opens today in Eindhoven</a></h3>
+      <h3><a href="../articles/2026-10-18-apple-consolidates-smart-home-capabilities-in-homeview.html">Apple consolidates smart-home capabilities in HomeView dashboard</a></h3>
       <p class="byline">Dezeen</p>
-      <p class="body">The annual festival runs Oct. 17–25 across Eindhoven, and Dezeen’s preview picks ten highlights: rising star Teun Zwets unveils 50 new chairs made with materials and methods he’s never used, Liv Vaisberg curates the returning Forward Furniture exhibition of nearly 100 collectible-design talents, and Christien Meindertsma’s ’Local Linoleum’ digs into the hidden origins of everyday materials.</p>
-      <p class="body"><em>Why it matters:</em> Opens today in Eindhoven through Oct. 25 — 50 new chairs from Teun Zwets and a Forward Furniture exhibition of nearly 100 collectible-design talents. If you were nearby it&#x27;d be a pilgrimage.</p>
+      <p class="body">Apple’s new HomeView is a 7-inch smart-home dashboard — a tabletop version with integrated speaker and recycled-aluminium base that deliberately evokes the 2002 iMac G4’s rounded base and movable screen, plus a wall-mount variant. It centralizes Home controls with face recognition for six household members, FaceTime, an intercom and a new conversational “Siri AI.” The hardware callback to the iMac G4 alone is catnip for Apple design-history nerds.</p>
+      <p class="body"><em>Why it matters:</em> Apple&#x27;s 7-inch HomeView smart-home dashboard deliberately evokes the 2002 iMac G4&#x27;s rounded base and floating screen — the smart home as furniture, with a hardware callback only Apple-design-history nerds (you) will fully appreciate.</p>
     </div><div class="storyitem">
-      <h3><a href="../articles/2026-10-17-apple-invites-press-to-oct-28-launch-for-first-touchscr.html">Apple invites press to Oct. 28 launch for first touchscreen MacBook Pros</a></h3>
-      <p class="byline">The Mac Observer</p>
-      <p class="body">Apple is inviting journalists to an all-day launch experience in Los Angeles on Oct. 28, following an expected Oct. 27 online presentation, for its first touchscreen MacBook Pros: redesigned 14- and 16-inch models with OLED displays, Dynamic Island, and thinner, lighter chassis, plus an M6 MacBook Pro, an M6 iMac, and an OLED iPad mini with a landscape front camera — a notable reversal of more than a decade of Apple steering touch users to iPad.</p>
-      <p class="body"><em>Why it matters:</em> Apple&#x27;s inviting press Oct. 28 for touchscreen OLED MacBook Pros — after a decade of steering touch users to iPad, the reversal is official. M6, Dynamic Island, thinner chassis, plus an M6 iMac and OLED iPad mini.</p>
+      <h3><a href="../articles/2026-10-18-mistral-acquires-new-material-launches-solutions-design.html">Mistral Acquires New Material, Launches Solutions Design Team</a></h3>
+      <p class="byline">Automater News</p>
+      <p class="body">Europe’s frontier AI lab Mistral acquired six-year-old product/design studio New Material (announced October 14) and folded it in as a permanent “Solutions Design” function spanning design, engineering and AI — the first time an AI lab has bought a design practice to sit alongside product, applied and research orgs. The signal: even the most research-heavy AI companies now treat design as the missing layer between models and shipped enterprise products.</p>
+      <p class="body"><em>Why it matters:</em> The first AI lab to buy a design practice: Mistral folded a six-year-old studio in as a permanent &#x27;Solutions Design&#x27; function. The signal for design leadership everywhere — even the most research-heavy labs now treat design as the missing layer between models and shipped products.</p>
     </div>
   <section class="suggestbox" data-buddy-id="news-buddy">
     <h2>Suggestions</h2>

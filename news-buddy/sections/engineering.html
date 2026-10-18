@@ -90,6 +90,9 @@
     padding:2px 9px;border-radius:999px;margin-left:8px;vertical-align:1px;
   }
   .sourcenote{font-size:13px;color:var(--muted);font-style:italic;margin-top:8px}
+
+  .outlet-sub{font-family:Georgia,serif;font-size:15px;font-style:italic;color:var(--accent);margin:22px 0 -4px;letter-spacing:.5px}
+  .outlet-sub:first-child{margin-top:6px}
   /* ---------- top stories ---------- */
   .lead h3{font-size:24px}
   .lead .dek{font-size:16px}
@@ -150,13 +153,15 @@
   .story-vote.on-down{background:#b42318;border-color:#b42318;color:#fff}
   /* ---------- voice picker ---------- */
   .vp-overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:1000;display:flex;align-items:center;justify-content:center;padding:20px}
-  .vp-card{background:var(--paper);color:var(--ink);border:1px solid var(--rule);border-radius:14px;max-width:560px;width:100%;max-height:82vh;display:flex;flex-direction:column;box-shadow:0 12px 40px rgba(0,0,0,.35)}
+  .vp-card{background:var(--paper);color:var(--ink);border:1px solid var(--rule);border-radius:14px;max-width:560px;width:100%;max-height:82vh;display:flex;flex-direction:column;box-shadow:0 12px 40px rgba(0,0,0,.35);overflow:hidden}
   .vp-head{padding:14px 16px;border-bottom:1px solid var(--rule);display:flex;align-items:center;justify-content:space-between;flex:none}
   .vp-head h3{margin:0;font-size:16px}
   .vp-close{background:none;border:none;font-size:18px;cursor:pointer;color:var(--muted);padding:4px 8px}
   .vp-sub{padding:10px 16px 2px;font-size:12px;color:var(--muted);flex:none}
-  .vp-list{overflow-y:auto;padding:6px 8px;-webkit-overflow-scrolling:touch}
+  .vp-list{overflow-y:auto;overflow-x:hidden;padding:6px 8px;-webkit-overflow-scrolling:touch}
   .vp-row{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:10px;cursor:pointer;border:1px solid transparent}
+  .vp-row>*{min-width:0}
+  .vp-row .vp-desc{overflow-wrap:break-word}
   .vp-row:hover{background:rgba(127,127,127,.12)}
   .vp-row.current{border-color:var(--accent)}
   .vp-row .nm{flex:none;min-width:0;max-width:38%}
@@ -357,38 +362,62 @@
   .secpage .storyitem h3 a:hover{color:var(--accent)}
   .secpage .lede{font-size:16px;line-height:1.65;color:var(--ink);max-width:70ch;margin:10px 0 6px}
 
+  
+  .sec-head h2 a{color:inherit;text-decoration:none;border-bottom:2px solid transparent}
+  .sec-head h2 a:hover{color:var(--accent);border-bottom-color:var(--accent)}
+  .mini-mast{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 20px;border-bottom:3px double var(--ink);margin-bottom:8px;flex-wrap:wrap}
+  .mini-mast a.brand{font-family:Georgia,'Times New Roman',serif;font-weight:700;font-size:20px;color:var(--ink);text-decoration:none}
+  .mini-mast .ed{font-size:12px;color:var(--muted)}
+  .kicker{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:18px 0 4px}
+  .kicker a{color:var(--accent);text-decoration:none}
+  .detail h1{font-family:Georgia,'Times New Roman',serif;font-size:clamp(26px,5vw,40px);line-height:1.15;margin:6px 0 10px;letter-spacing:-.01em}
+  .detail h4.sec{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--accent);margin:22px 0 6px}
+  .detail p.body{font-size:16px;line-height:1.65;margin:0 0 12px;max-width:68ch}
+  .sourcebox{border:1px solid var(--rule);border-left:4px solid var(--accent);border-radius:8px;padding:12px 16px;margin:18px 0;max-width:68ch}
+  .sourcebox p{font-size:14px;line-height:1.6;margin:6px 0}
+  .sourcebox .flag{display:inline-block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;background:#fde68a;color:#7c2d12;border-radius:4px;padding:2px 8px;margin-bottom:4px}
+  .read-original{display:inline-block;margin:10px 0;padding:10px 20px;background:var(--accent);color:#fff !important;border-radius:8px;font-weight:700;text-decoration:none;font-size:15px}
+  .related{margin-top:28px;border-top:1px solid var(--rule);padding-top:14px}
+  .related h4.sec{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:0 0 10px}
+  .related ul{list-style:none;margin:0;padding:0}
+  .related li{margin:0 0 10px;font-size:15px;line-height:1.45}
+  .related a{color:var(--ink);text-decoration:none;border-bottom:1px solid var(--rule)}
+  .related a:hover{color:var(--accent);border-bottom-color:var(--accent)}
+  .backfoot{margin:30px 0 40px;font-size:14px}
+  .backfoot a{color:var(--accent);text-decoration:none;font-weight:600}
+  .secpage .storyitem{border-bottom:1px solid var(--rule);padding:16px 0}
+  .secpage .storyitem h3{font-size:20px;margin:0 0 6px;line-height:1.3}
+  .secpage .storyitem h3 a{color:var(--ink);text-decoration:none}
+  .secpage .storyitem h3 a:hover{color:var(--accent)}
+  .secpage .lede{font-size:16px;line-height:1.65;color:var(--ink);max-width:70ch;margin:10px 0 6px}
+
   </style>
 </head>
 <body>
 <header class="mini-mast">
   <a class="brand" href="../index.html">📰 The Morning Edition</a>
-  <span class="ed">Saturday, October 17, 2026</span>
+  <span class="ed">Sunday, October 18, 2026</span>
   <button id="themeBtn" class="voice-change" style="margin-left:0">Theme: Auto</button>
 </header>
 <main class="detail secpage" style="max-width:860px;margin:0 auto;padding:0 20px">
   <p class="kicker">Section</p>
   <h1>Engineering</h1>
-  <p class="lede">A crypto cold case, a land-grab clause, and shadow-IT tooling: Claude cracked the 30-year NIST curve-seed mystery, Meta wrote itself the right to scrape business customers&#x27; sites for model training (effective Oct. 30), and Cloudflare open-sourced Void so IT teams can govern &#x27;vibe-coded&#x27; apps. Plus Wine&#x27;s steady march toward 12.0.</p>
+  <p class="lede">An 1887 Michigan paper mill is now 255,000 square feet of classic-car restoration — industrial heritage meets car culture. IEEE Spectrum surveys the inference-hardware revolution now defining the chip industry, and neuromorphic NSRAM circuits promise to close a million-fold efficiency gap with the human brain.</p>
   <div class="storyitem">
-      <h3><a href="../articles/2026-10-17-claude-cracks-the-30-year-mystery-of-the-nist-curve-see.html">Claude cracks the 30-year mystery of the NIST curve seeds</a></h3>
-      <p class="byline">Anthropic Research</p>
-      <p class="body">Anthropic’s Claude research model traced the unexplained seeds behind five NIST elliptic curves to the POSIX `lrand48` generator seeded with Unix timestamps in 1997–98 — ending decades of backdoor speculation. The team claimed cryptographer Filippo Valsorda’s $36,864 bounty and donated it to ISRG.</p>
-      <p class="body"><em>Why it matters:</em> Claude traced the 30-year mystery of the NIST curve seeds to lrand48 and Unix timestamps — ending the backdoor speculation. The team claimed a $36,864 bounty and donated it to ISRG. Crypto lore, solved by an AI.</p>
+      <h3><a href="../articles/2026-10-18-retired-michigan-paper-mill-becomes-home-to-horsepower.html">Retired Michigan Paper Mill Becomes Home to Horsepower</a></h3>
+      <p class="byline">Hagerty Media</p>
+      <p class="body">The 1887 Plainwell paper mill — dormant for 25+ years, bought by the city for $1 — just opened as the Classic Auto Mill: 255,000 square feet of exposed brick and tall ceilings devoted to classic-car storage, restoration and sales, the second such operation by the Grigaliunas family. Industrial-heritage preservation meeting car culture at genuine scale.</p>
+      <p class="body"><em>Why it matters:</em> An 1887 Michigan paper mill, bought by its city for $1, is now 255,000 square feet of classic-car storage, restoration and sales. Old buildings plus old engines — the exact collision of your two tinkerer instincts.</p>
     </div><div class="storyitem">
-      <h3><a href="../articles/2026-10-17-meta-writes-itself-the-right-to-scrape-your-business-we.html">Meta writes itself the right to scrape your business website</a></h3>
-      <p class="byline">The Register</p>
-      <p class="body">Effective October 30, Meta’s revised commercial terms let it crawl sites ’associated with’ business accounts to train AI models. Three legal experts told Nieman Lab the language could sweep up virtually every news publisher with a Facebook or Instagram presence.</p>
-      <p class="body"><em>Why it matters:</em> Effective Oct. 30, Meta can crawl &#x27;associated&#x27; business sites to train models — legal experts say it could sweep up virtually every news publisher on Facebook or Instagram. Your own team&#x27;s content posture, take note.</p>
+      <h3><a href="../articles/2026-10-18-inside-the-inference-hardware-revolution-of-2026.html">Inside the Inference Hardware Revolution Of 2026</a></h3>
+      <p class="byline">IEEE Spectrum</p>
+      <p class="body">With training receding to the background, inference has become the defining hardware problem of 2026 — reasoning models running chain-of-thought up to 20x over, plus agents running inference around the clock, are forcing chipmakers to pivot hard. Jensen Huang called it the “inflection point of inference.” A solid IEEE Spectrum survey of the shift every hardware engineer is living through.</p>
+      <p class="body"><em>Why it matters:</em> Inference is now the defining hardware problem of 2026 — reasoning models running chain-of-thought up to 20x over, agents inferring around the clock. Huang calls it the inflection point; Spectrum surveys the pivot every hardware engineer is living through.</p>
     </div><div class="storyitem">
-      <h3><a href="../articles/2026-10-17-cloudflare-open-sources-void-its-vite-to-production-pla.html">Cloudflare open-sources Void, its Vite-to-production platform</a></h3>
-      <p class="byline">Cloudflare Blog</p>
-      <p class="body">The former VoidZero team open-sourced Void SDK, Void CLI, and the self-hosted Void Platform so IT teams can govern employee ’vibe-coded’ apps without handing out cloud credentials. The `void deploy` command provisions databases, storage, and auth on Cloudflare automatically.</p>
-      <p class="body"><em>Why it matters:</em> Open-sourced Vite-to-production so IT teams can govern employee &#x27;vibe-coded&#x27; apps without handing out cloud credentials — `void deploy` provisions everything. Shadow IT, meet your leash.</p>
-    </div><div class="storyitem">
-      <h3><a href="../articles/2026-10-17-wine-11-20-adds-arm64ec-relay-debugging-en-route-to-win.html">Wine 11.20 adds ARM64EC relay debugging en route to Wine 12.0</a></h3>
-      <p class="byline">Linux Compatible</p>
-      <p class="body">The bi-weekly development release lets developers trace calls across the ARM/x64 boundary on Windows 11 on ARM, moves CD-ROM handling into the Mount Manager, and fixes a stack buffer overflow in cmd — 24 bugs fixed in all.</p>
-      <p class="body"><em>Why it matters:</em> ARM64EC relay debugging en route to Wine 12.0 — niche, but the Windows-on-ARM story keeps getting more serious, and this is the tooling catching up.</p>
+      <h3><a href="../articles/2026-10-18-nsram-the-artificial-neuron-on-a-silicon-chip.html">NSRAM: The Artificial Neuron on a Silicon Chip</a></h3>
+      <p class="byline">IEEE Spectrum</p>
+      <p class="body">Neuromorphic engineering’s bid to close the gap between GPU simulation — data-center GPUs burning up to 1,000 watts each just moving data — and the human brain, roughly a million times more energy-efficient at comparable tasks. By building circuits that act like biological neurons and synapses instead of simulating them, NSRAM-style approaches could radically change where AI runs.</p>
+      <p class="body"><em>Why it matters:</em> Neuromorphic engineering&#x27;s pitch: stop simulating neurons with billions of transistors and build circuits that act like them — closing a million-fold efficiency gap with the human brain. Pure hardware candy, and the natural companion to the inference piece.</p>
     </div>
   <section class="suggestbox" data-buddy-id="news-buddy">
     <h2>Suggestions</h2>

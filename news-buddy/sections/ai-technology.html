@@ -90,6 +90,9 @@
     padding:2px 9px;border-radius:999px;margin-left:8px;vertical-align:1px;
   }
   .sourcenote{font-size:13px;color:var(--muted);font-style:italic;margin-top:8px}
+
+  .outlet-sub{font-family:Georgia,serif;font-size:15px;font-style:italic;color:var(--accent);margin:22px 0 -4px;letter-spacing:.5px}
+  .outlet-sub:first-child{margin-top:6px}
   /* ---------- top stories ---------- */
   .lead h3{font-size:24px}
   .lead .dek{font-size:16px}
@@ -150,13 +153,15 @@
   .story-vote.on-down{background:#b42318;border-color:#b42318;color:#fff}
   /* ---------- voice picker ---------- */
   .vp-overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:1000;display:flex;align-items:center;justify-content:center;padding:20px}
-  .vp-card{background:var(--paper);color:var(--ink);border:1px solid var(--rule);border-radius:14px;max-width:560px;width:100%;max-height:82vh;display:flex;flex-direction:column;box-shadow:0 12px 40px rgba(0,0,0,.35)}
+  .vp-card{background:var(--paper);color:var(--ink);border:1px solid var(--rule);border-radius:14px;max-width:560px;width:100%;max-height:82vh;display:flex;flex-direction:column;box-shadow:0 12px 40px rgba(0,0,0,.35);overflow:hidden}
   .vp-head{padding:14px 16px;border-bottom:1px solid var(--rule);display:flex;align-items:center;justify-content:space-between;flex:none}
   .vp-head h3{margin:0;font-size:16px}
   .vp-close{background:none;border:none;font-size:18px;cursor:pointer;color:var(--muted);padding:4px 8px}
   .vp-sub{padding:10px 16px 2px;font-size:12px;color:var(--muted);flex:none}
-  .vp-list{overflow-y:auto;padding:6px 8px;-webkit-overflow-scrolling:touch}
+  .vp-list{overflow-y:auto;overflow-x:hidden;padding:6px 8px;-webkit-overflow-scrolling:touch}
   .vp-row{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:10px;cursor:pointer;border:1px solid transparent}
+  .vp-row>*{min-width:0}
+  .vp-row .vp-desc{overflow-wrap:break-word}
   .vp-row:hover{background:rgba(127,127,127,.12)}
   .vp-row.current{border-color:var(--accent)}
   .vp-row .nm{flex:none;min-width:0;max-width:38%}
@@ -357,38 +362,67 @@
   .secpage .storyitem h3 a:hover{color:var(--accent)}
   .secpage .lede{font-size:16px;line-height:1.65;color:var(--ink);max-width:70ch;margin:10px 0 6px}
 
+  
+  .sec-head h2 a{color:inherit;text-decoration:none;border-bottom:2px solid transparent}
+  .sec-head h2 a:hover{color:var(--accent);border-bottom-color:var(--accent)}
+  .mini-mast{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 20px;border-bottom:3px double var(--ink);margin-bottom:8px;flex-wrap:wrap}
+  .mini-mast a.brand{font-family:Georgia,'Times New Roman',serif;font-weight:700;font-size:20px;color:var(--ink);text-decoration:none}
+  .mini-mast .ed{font-size:12px;color:var(--muted)}
+  .kicker{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:18px 0 4px}
+  .kicker a{color:var(--accent);text-decoration:none}
+  .detail h1{font-family:Georgia,'Times New Roman',serif;font-size:clamp(26px,5vw,40px);line-height:1.15;margin:6px 0 10px;letter-spacing:-.01em}
+  .detail h4.sec{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--accent);margin:22px 0 6px}
+  .detail p.body{font-size:16px;line-height:1.65;margin:0 0 12px;max-width:68ch}
+  .sourcebox{border:1px solid var(--rule);border-left:4px solid var(--accent);border-radius:8px;padding:12px 16px;margin:18px 0;max-width:68ch}
+  .sourcebox p{font-size:14px;line-height:1.6;margin:6px 0}
+  .sourcebox .flag{display:inline-block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;background:#fde68a;color:#7c2d12;border-radius:4px;padding:2px 8px;margin-bottom:4px}
+  .read-original{display:inline-block;margin:10px 0;padding:10px 20px;background:var(--accent);color:#fff !important;border-radius:8px;font-weight:700;text-decoration:none;font-size:15px}
+  .related{margin-top:28px;border-top:1px solid var(--rule);padding-top:14px}
+  .related h4.sec{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:0 0 10px}
+  .related ul{list-style:none;margin:0;padding:0}
+  .related li{margin:0 0 10px;font-size:15px;line-height:1.45}
+  .related a{color:var(--ink);text-decoration:none;border-bottom:1px solid var(--rule)}
+  .related a:hover{color:var(--accent);border-bottom-color:var(--accent)}
+  .backfoot{margin:30px 0 40px;font-size:14px}
+  .backfoot a{color:var(--accent);text-decoration:none;font-weight:600}
+  .secpage .storyitem{border-bottom:1px solid var(--rule);padding:16px 0}
+  .secpage .storyitem h3{font-size:20px;margin:0 0 6px;line-height:1.3}
+  .secpage .storyitem h3 a{color:var(--ink);text-decoration:none}
+  .secpage .storyitem h3 a:hover{color:var(--accent)}
+  .secpage .lede{font-size:16px;line-height:1.65;color:var(--ink);max-width:70ch;margin:10px 0 6px}
+
   </style>
 </head>
 <body>
 <header class="mini-mast">
   <a class="brand" href="../index.html">📰 The Morning Edition</a>
-  <span class="ed">Saturday, October 17, 2026</span>
+  <span class="ed">Sunday, October 18, 2026</span>
   <button id="themeBtn" class="voice-change" style="margin-left:0">Theme: Auto</button>
 </header>
 <main class="detail secpage" style="max-width:860px;margin:0 auto;padding:0 20px">
   <p class="kicker">Section</p>
   <h1>AI &amp; Technology</h1>
-  <p class="lede">A Washington-heavy day: Anthropic quietly pitched Congress its own safety bill, the White House&#x27;s &#x27;Super Intelligence Force&#x27; met and ordered a PCAST report on AI risks, and the FBI/CISA warned election officials about AI-powered phishing ahead of the midterms. Meanwhile Meta open-sourced an 816B-parameter model tuned to run on Macs — the open-weight frontier&#x27;s biggest swing yet.</p>
+  <p class="lede">Nvidia started selling AI PCs — agents as a consumer purchase decision, not a demo. Beijing reportedly told its tech giants to stop buying Nvidia&#x27;s China-market chips. In Westminster, OpenAI and Anthropic said voluntary AI rules are finished while DeepMind broke ranks. And Microsoft&#x27;s Maia 300 is the flagship of the inference co-design pivot — vendor numbers unverified.</p>
   <div class="storyitem">
-      <h3><a href="../articles/2026-10-17-anthropic-quietly-pitches-its-own-ai-safety-bill-to-law.html">Anthropic quietly pitches its own AI safety bill to lawmakers</a></h3>
-      <p class="byline">The Hindu BusinessLine (first reported by Politico)</p>
-      <p class="body">Anthropic representatives have privately pitched Capitol Hill on a draft bill that would let the government block a frontier AI model only if it poses a foreseeable, imminent risk of more than $1 billion in damages or of killing or seriously injuring 50+ people — via judicial approval. The draft also requires frontier labs to test models, publish findings, and submit to independent Commerce-registered evaluators.</p>
-      <p class="body"><em>Why it matters:</em> Anthropic is now writing its own regulation — a $1B-damage/50-casualty bar for blocking a model, via court order. The upvote thread from Tuesday keeps going, and this is the shape of the rules every AI product you&#x27;ll ever ship will live under.</p>
+      <h3><a href="../articles/2026-10-18-nvidia-begins-selling-ai-optimized-personal-computers.html">Nvidia Begins Selling AI-Optimized Personal Computers</a></h3>
+      <p class="byline">Elias Schisgall, Dow Jones Newswires (via Morningstar)</p>
+      <p class="body">Nvidia has started selling its first line of personal computers built for on-device AI, from $2,599, made on its RTX Spark chip by ASUS, Dell, HP, Lenovo, Microsoft and MSI. The pitch is running AI agents — “the next era of AI usage,” per Jensen Huang — with GitHub Copilot, Perplexity and OpenClaw integrations; around 30 laptop and 10 desktop models are planned.</p>
+      <p class="body"><em>Why it matters:</em> AI PCs just became a consumer purchase decision, not a concept demo — RTX Spark machines from $2,599 across six OEMs, pitched around running agents. The device/UX thread to watch: what does an &#x27;AI-optimized PC&#x27; actually feel like to use?</p>
     </div><div class="storyitem">
-      <h3><a href="../articles/2026-10-17-meta-launches-muse-spark-open-an-816b-parameter-model-t.html">Meta launches Muse Spark Open, an 816B-parameter model that runs on Macs</a></h3>
-      <p class="byline">TechCrunch</p>
-      <p class="body">Meta released the open weights for Muse Spark on Thursday: an 816-billion-parameter mixture-of-experts model (42B active per token) with a 1-million-token context window, tuned with Apple to run on two M5 Ultra Mac Studios linked by MLX. Meta calls it the most capable U.S. open-weight model to date.</p>
-      <p class="body"><em>Why it matters:</em> 816B parameters, open weights, tuned with Apple to run on two Mac Studios — the open-weight frontier just got serious, and it runs on your team&#x27;s hardware. Local inference vs cloud bills is the infrastructure argument worth watching.</p>
+      <h3><a href="../articles/2026-10-18-chinas-internet-regulator-tells-chinese-tech-companies.html">China’s Internet regulator tells Chinese tech companies to stop buying Nvidia AI chips – report</a></h3>
+      <p class="byline">DataCenterDynamics, citing the Financial Times</p>
+      <p class="body">China’s Cyberspace Administration told ByteDance, Alibaba and others to cancel orders and stop testing Nvidia’s RTX Pro 6000D — the inferencing chip designed for the Chinese market — per an FT report, following August’s push for state data-center firms to go 50% domestic. Huang insists the H20 has no backdoors; Q3 guidance already assumes zero H20 shipments to China.</p>
+      <p class="body"><em>Why it matters:</em> Beijing reportedly told ByteDance, Alibaba and others to cancel Nvidia RTX Pro 6000D orders — the China-market inferencing chip. It hardens the decoupling story exactly as the debt-fueled buildout gets repriced. Thin sourcing chain (one FT report), big implications.</p>
     </div><div class="storyitem">
-      <h3><a href="../articles/2026-10-17-trumps-super-intelligence-force-holds-first-meeting-ord.html">Trump’s ’Super Intelligence Force’ holds first meeting, orders report on AI dangers</a></h3>
-      <p class="byline">PYMNTS (Bloomberg reporting)</p>
-      <p class="body">The task force will commission a PCAST report on AI risks, develop early-warning protocols for AI companies to report breaches, hacks and jailbreaks, and stand up a law-enforcement and consumer-protection committee with the DOJ and FTC. AI czar Jay Clayton told CNBC the U.S. must ’stay ahead’ of China, Russia, Iran and North Korea.</p>
-      <p class="body"><em>Why it matters:</em> A PCAST report on AI risks plus early-warning protocols for jailbreaks and breaches — Washington&#x27;s AI posture is hardening fast, and Clayton&#x27;s &#x27;stay ahead of China&#x27; line is the framing to watch.</p>
+      <h3><a href="../articles/2026-10-18-openai-and-anthropic-call-for-mandatory-ai-laws.html">OpenAI and Anthropic call for mandatory AI laws</a></h3>
+      <p class="byline">iaenunminuto.com</p>
+      <p class="body">Before a House of Commons committee on October 13, OpenAI and Anthropic told MPs voluntary commitments are no longer enough — Anthropic’s Liam Booth-Smith said “the rules should be binding,” while OpenAI’s Tom Duff Gordon backed a legal framework and an international convention starting with mandatory incident reporting. Google DeepMind and Meta broke ranks toward standards instead.</p>
+      <p class="body"><em>Why it matters:</em> The counterweight to Anthropic&#x27;s Capitol Hill pitch: in Westminster, OpenAI and Anthropic told MPs voluntary AI commitments are finished — &#x27;the rules should be binding&#x27; — while DeepMind and Meta broke ranks toward standards. Lab-vs-lab split, on the record.</p>
     </div><div class="storyitem">
-      <h3><a href="../articles/2026-10-17-fbi-and-cisa-warn-election-officials-to-guard-against-a.html">FBI and CISA warn election officials to guard against AI-powered tricks ahead of midterms</a></h3>
-      <p class="byline">Reuters</p>
-      <p class="body">In a Friday alert, the FBI and CISA warned that hackers may try to disrupt next month’s midterms with bogus AI-generated texts and emails aimed at stealing passwords and other sensitive data — calling election officials, candidates and their organizations ’attractive targets.’</p>
-      <p class="body"><em>Why it matters:</em> AI-generated phishing aimed at election offices a month out from the midterms — the practical, unglamorous side of the safety debate, and exactly the consumer-protection angle those eight AGs are testing.</p>
+      <h3><a href="../articles/2026-10-18-microsoft-maia-300-accelerator-chip-co-designing-ai-inf.html">Microsoft Maia 300 Accelerator Chip: Co-Designing AI Inference for Improved Performance per Watt</a></h3>
+      <p class="byline">IEEE ComSoc Technology Blog</p>
+      <p class="body">Microsoft’s third-generation custom AI silicon (TSMC-made) uses a multi-process-node chiplet architecture with high-bandwidth memory, claiming roughly 40% more tokens per megawatt than GPU systems, with multi-gigawatt deployments planned from 2027. It’s the flagship example of the industry-wide move from accelerator-maxing to full-system co-design for inference.</p>
+      <p class="body"><em>Why it matters:</em> Microsoft&#x27;s third-gen custom AI silicon claims ~40% more tokens per megawatt than GPU systems — the flagship of the industry&#x27;s pivot from accelerator-maxing to full-system co-design for inference. Take the headline numbers as marketing until independently measured.</p>
     </div>
   <section class="suggestbox" data-buddy-id="news-buddy">
     <h2>Suggestions</h2>

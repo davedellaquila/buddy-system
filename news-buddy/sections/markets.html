@@ -90,6 +90,9 @@
     padding:2px 9px;border-radius:999px;margin-left:8px;vertical-align:1px;
   }
   .sourcenote{font-size:13px;color:var(--muted);font-style:italic;margin-top:8px}
+
+  .outlet-sub{font-family:Georgia,serif;font-size:15px;font-style:italic;color:var(--accent);margin:22px 0 -4px;letter-spacing:.5px}
+  .outlet-sub:first-child{margin-top:6px}
   /* ---------- top stories ---------- */
   .lead h3{font-size:24px}
   .lead .dek{font-size:16px}
@@ -150,13 +153,15 @@
   .story-vote.on-down{background:#b42318;border-color:#b42318;color:#fff}
   /* ---------- voice picker ---------- */
   .vp-overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:1000;display:flex;align-items:center;justify-content:center;padding:20px}
-  .vp-card{background:var(--paper);color:var(--ink);border:1px solid var(--rule);border-radius:14px;max-width:560px;width:100%;max-height:82vh;display:flex;flex-direction:column;box-shadow:0 12px 40px rgba(0,0,0,.35)}
+  .vp-card{background:var(--paper);color:var(--ink);border:1px solid var(--rule);border-radius:14px;max-width:560px;width:100%;max-height:82vh;display:flex;flex-direction:column;box-shadow:0 12px 40px rgba(0,0,0,.35);overflow:hidden}
   .vp-head{padding:14px 16px;border-bottom:1px solid var(--rule);display:flex;align-items:center;justify-content:space-between;flex:none}
   .vp-head h3{margin:0;font-size:16px}
   .vp-close{background:none;border:none;font-size:18px;cursor:pointer;color:var(--muted);padding:4px 8px}
   .vp-sub{padding:10px 16px 2px;font-size:12px;color:var(--muted);flex:none}
-  .vp-list{overflow-y:auto;padding:6px 8px;-webkit-overflow-scrolling:touch}
+  .vp-list{overflow-y:auto;overflow-x:hidden;padding:6px 8px;-webkit-overflow-scrolling:touch}
   .vp-row{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:10px;cursor:pointer;border:1px solid transparent}
+  .vp-row>*{min-width:0}
+  .vp-row .vp-desc{overflow-wrap:break-word}
   .vp-row:hover{background:rgba(127,127,127,.12)}
   .vp-row.current{border-color:var(--accent)}
   .vp-row .nm{flex:none;min-width:0;max-width:38%}
@@ -357,33 +362,62 @@
   .secpage .storyitem h3 a:hover{color:var(--accent)}
   .secpage .lede{font-size:16px;line-height:1.65;color:var(--ink);max-width:70ch;margin:10px 0 6px}
 
+  
+  .sec-head h2 a{color:inherit;text-decoration:none;border-bottom:2px solid transparent}
+  .sec-head h2 a:hover{color:var(--accent);border-bottom-color:var(--accent)}
+  .mini-mast{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 20px;border-bottom:3px double var(--ink);margin-bottom:8px;flex-wrap:wrap}
+  .mini-mast a.brand{font-family:Georgia,'Times New Roman',serif;font-weight:700;font-size:20px;color:var(--ink);text-decoration:none}
+  .mini-mast .ed{font-size:12px;color:var(--muted)}
+  .kicker{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:18px 0 4px}
+  .kicker a{color:var(--accent);text-decoration:none}
+  .detail h1{font-family:Georgia,'Times New Roman',serif;font-size:clamp(26px,5vw,40px);line-height:1.15;margin:6px 0 10px;letter-spacing:-.01em}
+  .detail h4.sec{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--accent);margin:22px 0 6px}
+  .detail p.body{font-size:16px;line-height:1.65;margin:0 0 12px;max-width:68ch}
+  .sourcebox{border:1px solid var(--rule);border-left:4px solid var(--accent);border-radius:8px;padding:12px 16px;margin:18px 0;max-width:68ch}
+  .sourcebox p{font-size:14px;line-height:1.6;margin:6px 0}
+  .sourcebox .flag{display:inline-block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;background:#fde68a;color:#7c2d12;border-radius:4px;padding:2px 8px;margin-bottom:4px}
+  .read-original{display:inline-block;margin:10px 0;padding:10px 20px;background:var(--accent);color:#fff !important;border-radius:8px;font-weight:700;text-decoration:none;font-size:15px}
+  .related{margin-top:28px;border-top:1px solid var(--rule);padding-top:14px}
+  .related h4.sec{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:0 0 10px}
+  .related ul{list-style:none;margin:0;padding:0}
+  .related li{margin:0 0 10px;font-size:15px;line-height:1.45}
+  .related a{color:var(--ink);text-decoration:none;border-bottom:1px solid var(--rule)}
+  .related a:hover{color:var(--accent);border-bottom-color:var(--accent)}
+  .backfoot{margin:30px 0 40px;font-size:14px}
+  .backfoot a{color:var(--accent);text-decoration:none;font-weight:600}
+  .secpage .storyitem{border-bottom:1px solid var(--rule);padding:16px 0}
+  .secpage .storyitem h3{font-size:20px;margin:0 0 6px;line-height:1.3}
+  .secpage .storyitem h3 a{color:var(--ink);text-decoration:none}
+  .secpage .storyitem h3 a:hover{color:var(--accent)}
+  .secpage .lede{font-size:16px;line-height:1.65;color:var(--ink);max-width:70ch;margin:10px 0 6px}
+
   </style>
 </head>
 <body>
 <header class="mini-mast">
   <a class="brand" href="../index.html">📰 The Morning Edition</a>
-  <span class="ed">Saturday, October 17, 2026</span>
+  <span class="ed">Sunday, October 18, 2026</span>
   <button id="themeBtn" class="voice-change" style="margin-left:0">Theme: Auto</button>
 </header>
 <main class="detail secpage" style="max-width:860px;margin:0 auto;padding:0 20px">
   <p class="kicker">Section</p>
   <h1>Markets</h1>
-  <p class="lede">A brutal Friday closed out a losing week: the Nasdaq sank 2.1% and the S&amp;P 500 1.1% as investors dumped AI names on data-center debt fears, the 10-year closed above 5.09%, and Warsh offered nothing in Bangkok ahead of the late-October Fed meeting. The Dow slipped 0.3% but logged its second straight weekly gain.</p>
+  <p class="lede">A brutal week in review — Nasdaq&#x27;s worst since June, the 10-year near 5.1%, Brent around $110 — and a heavy week ahead: roughly 70 S&amp;P 500 companies report (Meta, Tesla, SpaceX, Netflix) with the Fed in blackout before October 27–28. Crypto closed the week red on the same macro repricing.</p>
   <div class="storyitem">
-      <h3><a href="../articles/2026-10-17-nasdaq-s-p-500-sink-friday-to-close-losing-week-as-ai-s.html">Nasdaq, S&amp;P 500 sink Friday to close losing week as AI stocks crater</a></h3>
-      <p class="byline">Investopedia</p>
-      <p class="body">The Nasdaq shed 2.1% and the S&amp;P 500 1.1% on Friday, ending the week down 4.5% and 2% as investors dumped AI-linked names on fears data-center borrowers can’t repay debt with borrowing costs rising; the Dow slipped 0.3% on the day but logged its second straight weekly gain. The 10-year Treasury yield closed above 5.09%, and Fed Chair Warsh, speaking in Bangkok, offered no hint on whether the Fed hikes at its late-October meeting.</p>
-      <p class="body"><em>Why it matters:</em> Nasdaq -2.1%, S&amp;P -1.1%, the week down 4.5% and 2% — the Friday close on a bruising week, with the 10-year above 5.09% and Warsh silent in Bangkok ahead of the late-October Fed meeting.</p>
+      <h3><a href="../articles/2026-10-18-the-week-that-was-the-week-ahead-macro-and-markets-octo.html">The Week That Was, The Week Ahead: Macro and Markets, October 18</a></h3>
+      <p class="byline">TipRanks</p>
+      <p class="body">The Nasdaq’s worst week since June (–4.5%) capped a brutal stretch: the 10-year yield near 5.1%, Brent around $110, and investors demanding higher returns on AI-infrastructure debt. The week ahead pivots to earnings — Meta, Tesla, SpaceX and Netflix all report — with the Fed in blackout ahead of its October 27–28 meeting.</p>
+      <p class="body"><em>Why it matters:</em> The week in one frame: Nasdaq&#x27;s worst since June, the 10-year near 5.1%, Brent ~$110 — and the week ahead pivots to earnings (Meta, Tesla, SpaceX, Netflix) with the Fed dark before Oct 27–28. Your Sunday-evening prep read.</p>
     </div><div class="storyitem">
-      <h3><a href="../articles/2026-10-17-tesla-slips-2-as-flying-roadster-hype-fades-before-earn.html">Tesla slips 2% as flying-Roadster hype fades before earnings</a></h3>
-      <p class="byline">The Motley Fool</p>
-      <p class="body">Shares of Tesla fell 2.1% to $354.72 on Friday despite Thursday night’s stunt debut of a redesigned, SpaceX-thruster-assisted Roadster that hovered on compressed air near Waco, Texas; analysts called it an ’engineering flex’ rather than a stock catalyst. Production isn’t targeted until 2028, third-quarter results are due Oct. 21, and prediction-market odds of a Tesla–SpaceX deal nearly doubled to 56% overnight.</p>
-      <p class="body"><em>Why it matters:</em> Roadster hype faded fast: down 2.1% with Q3 earnings Oct. 21 and production not until 2028. An engineering flex, not a stock catalyst, in the analysts&#x27; words — and the Tesla–SpaceX deal odds nearly doubled overnight to 56%.</p>
+      <h3><a href="../articles/2026-10-18-wall-street-week-ahead-meta-tesla-spacex-earnings.html">Wall Street Week Ahead: Meta, Tesla, SpaceX earnings</a></h3>
+      <p class="byline">Seeking Alpha</p>
+      <p class="body">Wall Street heads into a heavy earnings week, with Meta and Tesla reporting Wednesday alongside Lam Research and Texas Instruments — fresh reads on AI spending, ad demand and consumer resilience. Tuesday brings SpaceX, Netflix, GE Aerospace and GM; the Fed enters its blackout period; and Monday marks the 39th anniversary of the 1987 Black Monday crash.</p>
+      <p class="body"><em>Why it matters:</em> The earnings calendar that matters this week: Meta and Tesla Wednesday (fresh reads on AI spending), SpaceX and Netflix Tuesday, ~70 S&amp;P 500 names total. Plus the 39th anniversary of Black Monday on Monday — because of course.</p>
     </div><div class="storyitem">
-      <h3><a href="../articles/2026-10-17-wall-street-futures-mixed-as-tech-wobbles-again-corewea.html">Wall Street futures mixed as tech wobbles again; CoreWeave drops</a></h3>
-      <p class="byline">Reuters</p>
-      <p class="body">U.S. stock index futures were mixed Friday morning as fresh cracks appeared in the AI trade: Nvidia-backed CoreWeave slipped 4.1% on lingering debt-load concerns while Tesla gained 4.4% premarket on the Roadster reveal and falling oil prices offered some relief. The report also noted investor resistance to Anthropic’s hoped-for $2 trillion IPO valuation, with some eyeing closer to $1.5 trillion.</p>
-      <p class="body"><em>Why it matters:</em> CoreWeave -4.1% on debt-load fears, and some investors are balking at a $2T Anthropic IPO valuation — the cracks in the AI trade, Friday-morning edition.</p>
+      <h3><a href="../articles/2026-10-18-bitcoin-slides-2-4-ethereum-drops-4-5-as-crypto-market.html">Bitcoin Slides 2.4%, Ethereum Drops 4.5% As Crypto Market Ends Week Lower</a></h3>
+      <p class="byline">BusinessToday Malaysia</p>
+      <p class="body">Crypto ended the October 12–16 week red — Bitcoin closed Friday near $81,725 (briefly dipping under $80,000 Thursday) and Ethereum near $2,423 — as hot CPI data and rising Fed-hike expectations crushed risk appetite. Spot Bitcoin ETFs bled about $228.6M for the week. A pure macro-driven move, not crypto-specific.</p>
+      <p class="body"><em>Why it matters:</em> Bitcoin closed Friday near $81,725, Ethereum near $2,423 — a pure macro-driven red week, not crypto-specific. Digital assets repricing in lockstep with the risk-off regime.</p>
     </div>
   <section class="suggestbox" data-buddy-id="news-buddy">
     <h2>Suggestions</h2>

@@ -90,6 +90,9 @@
     padding:2px 9px;border-radius:999px;margin-left:8px;vertical-align:1px;
   }
   .sourcenote{font-size:13px;color:var(--muted);font-style:italic;margin-top:8px}
+
+  .outlet-sub{font-family:Georgia,serif;font-size:15px;font-style:italic;color:var(--accent);margin:22px 0 -4px;letter-spacing:.5px}
+  .outlet-sub:first-child{margin-top:6px}
   /* ---------- top stories ---------- */
   .lead h3{font-size:24px}
   .lead .dek{font-size:16px}
@@ -150,13 +153,15 @@
   .story-vote.on-down{background:#b42318;border-color:#b42318;color:#fff}
   /* ---------- voice picker ---------- */
   .vp-overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:1000;display:flex;align-items:center;justify-content:center;padding:20px}
-  .vp-card{background:var(--paper);color:var(--ink);border:1px solid var(--rule);border-radius:14px;max-width:560px;width:100%;max-height:82vh;display:flex;flex-direction:column;box-shadow:0 12px 40px rgba(0,0,0,.35)}
+  .vp-card{background:var(--paper);color:var(--ink);border:1px solid var(--rule);border-radius:14px;max-width:560px;width:100%;max-height:82vh;display:flex;flex-direction:column;box-shadow:0 12px 40px rgba(0,0,0,.35);overflow:hidden}
   .vp-head{padding:14px 16px;border-bottom:1px solid var(--rule);display:flex;align-items:center;justify-content:space-between;flex:none}
   .vp-head h3{margin:0;font-size:16px}
   .vp-close{background:none;border:none;font-size:18px;cursor:pointer;color:var(--muted);padding:4px 8px}
   .vp-sub{padding:10px 16px 2px;font-size:12px;color:var(--muted);flex:none}
-  .vp-list{overflow-y:auto;padding:6px 8px;-webkit-overflow-scrolling:touch}
+  .vp-list{overflow-y:auto;overflow-x:hidden;padding:6px 8px;-webkit-overflow-scrolling:touch}
   .vp-row{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:10px;cursor:pointer;border:1px solid transparent}
+  .vp-row>*{min-width:0}
+  .vp-row .vp-desc{overflow-wrap:break-word}
   .vp-row:hover{background:rgba(127,127,127,.12)}
   .vp-row.current{border-color:var(--accent)}
   .vp-row .nm{flex:none;min-width:0;max-width:38%}
@@ -357,33 +362,62 @@
   .secpage .storyitem h3 a:hover{color:var(--accent)}
   .secpage .lede{font-size:16px;line-height:1.65;color:var(--ink);max-width:70ch;margin:10px 0 6px}
 
+  
+  .sec-head h2 a{color:inherit;text-decoration:none;border-bottom:2px solid transparent}
+  .sec-head h2 a:hover{color:var(--accent);border-bottom-color:var(--accent)}
+  .mini-mast{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 20px;border-bottom:3px double var(--ink);margin-bottom:8px;flex-wrap:wrap}
+  .mini-mast a.brand{font-family:Georgia,'Times New Roman',serif;font-weight:700;font-size:20px;color:var(--ink);text-decoration:none}
+  .mini-mast .ed{font-size:12px;color:var(--muted)}
+  .kicker{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:18px 0 4px}
+  .kicker a{color:var(--accent);text-decoration:none}
+  .detail h1{font-family:Georgia,'Times New Roman',serif;font-size:clamp(26px,5vw,40px);line-height:1.15;margin:6px 0 10px;letter-spacing:-.01em}
+  .detail h4.sec{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--accent);margin:22px 0 6px}
+  .detail p.body{font-size:16px;line-height:1.65;margin:0 0 12px;max-width:68ch}
+  .sourcebox{border:1px solid var(--rule);border-left:4px solid var(--accent);border-radius:8px;padding:12px 16px;margin:18px 0;max-width:68ch}
+  .sourcebox p{font-size:14px;line-height:1.6;margin:6px 0}
+  .sourcebox .flag{display:inline-block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;background:#fde68a;color:#7c2d12;border-radius:4px;padding:2px 8px;margin-bottom:4px}
+  .read-original{display:inline-block;margin:10px 0;padding:10px 20px;background:var(--accent);color:#fff !important;border-radius:8px;font-weight:700;text-decoration:none;font-size:15px}
+  .related{margin-top:28px;border-top:1px solid var(--rule);padding-top:14px}
+  .related h4.sec{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:0 0 10px}
+  .related ul{list-style:none;margin:0;padding:0}
+  .related li{margin:0 0 10px;font-size:15px;line-height:1.45}
+  .related a{color:var(--ink);text-decoration:none;border-bottom:1px solid var(--rule)}
+  .related a:hover{color:var(--accent);border-bottom-color:var(--accent)}
+  .backfoot{margin:30px 0 40px;font-size:14px}
+  .backfoot a{color:var(--accent);text-decoration:none;font-weight:600}
+  .secpage .storyitem{border-bottom:1px solid var(--rule);padding:16px 0}
+  .secpage .storyitem h3{font-size:20px;margin:0 0 6px;line-height:1.3}
+  .secpage .storyitem h3 a{color:var(--ink);text-decoration:none}
+  .secpage .storyitem h3 a:hover{color:var(--accent)}
+  .secpage .lede{font-size:16px;line-height:1.65;color:var(--ink);max-width:70ch;margin:10px 0 6px}
+
   </style>
 </head>
 <body>
 <header class="mini-mast">
   <a class="brand" href="../index.html">📰 The Morning Edition</a>
-  <span class="ed">Saturday, October 17, 2026</span>
+  <span class="ed">Sunday, October 18, 2026</span>
   <button id="themeBtn" class="voice-change" style="margin-left:0">Theme: Auto</button>
 </header>
 <main class="detail secpage" style="max-width:860px;margin:0 auto;padding:0 20px">
   <p class="kicker">Section</p>
   <h1>Motorsport</h1>
-  <p class="lede">Phoenix hosts the whole circus: Honeycutt dominated the Friday truck race, stretching his Chase lead to 39, while Sunday&#x27;s Freeway Insurance 500 (3 PM ET, USA) is the Cup&#x27;s pivotal Chase stop — Larson leads Hamlin by 49. Elsewhere, Haas signed F2 leader Rafael Camara for its 2027 seat, and Martin vs. Marquez is a two-point MotoGP title fight heading to Phillip Island.</p>
+  <p class="lede">Verstappen&#x27;s GT World Challenge debut at Portimão: from 24th to 9th in 45 minutes, then a statement defending his teammate from online abuse. NASCAR&#x27;s Cup Chase goes green at Phoenix at 12:05 PT — Blaney on pole, Larson starting 22nd — after Jesse Love dominated Saturday night&#x27;s O&#x27;Reilly race.</p>
   <div class="storyitem">
-      <h3><a href="../articles/2026-10-17-honeycutt-dominates-at-phoenix-stretches-truck-chase-le.html">Honeycutt dominates at Phoenix, stretches Truck Chase lead to 39</a></h3>
-      <p class="byline">Jayski</p>
-      <p class="body">Kaden Honeycutt led a race-high 53 laps in the Zero Carbon Bioethanol 150, beating Christian Eckes by 1.556 seconds for his fourth win of 2026. With three Chase races left, title rival Layne Riggs — third on Friday — is now 39 points back.</p>
-      <p class="body"><em>Why it matters:</em> Led 53 laps for his fourth 2026 win, Chase lead up to 39 with three races left. Friday night&#x27;s truck race, decided — and the elimination math gets real from here.</p>
+      <h3><a href="../articles/2026-10-18-max-verstappen-issues-statement-after-team-mate-hit-wit.html">Max Verstappen issues statement after team-mate hit with online abuse</a></h3>
+      <p class="byline">RacingNews365</p>
+      <p class="body">Verstappen made his GT World Challenge Europe Endurance Cup debut at Portimão on Saturday, sharing the #3 Mercedes-AMG GT3 with Ben Barnicoat and Chris Lulham. After Lulham’s drive-through penalty for contact dropped the car to 24th, Verstappen charged back to 9th in the final 45 minutes — then took to Instagram to defend Lulham against the wave of online abuse: “There’s no place for this kind of abuse in our sport or anywhere else.”</p>
+      <p class="body"><em>Why it matters:</em> Verstappen&#x27;s GT debut at Portimão: a drive-through dropped the car to 24th, he charged back to 9th in 45 minutes — then used his platform to defend his teammate from online abuse. The racer and the statement both worth your time; next F1 race is Austin, Oct 25.</p>
     </div><div class="storyitem">
-      <h3><a href="../articles/2026-10-17-haas-signs-f2-leader-rafael-camara-for-2027-formula-1-s.html">Haas signs F2 leader Rafael Camara for 2027 Formula 1 seat</a></h3>
-      <p class="byline">Grandprix.com</p>
-      <p class="body">Haas confirmed Ferrari junior Rafael Camara on a multi-year deal to replace Esteban Ocon. The 21-year-old Brazilian won Formula Regional in 2024, Formula 3 in 2025, and leads the 2026 F2 standings by seven points with three feature-race wins.</p>
-      <p class="body"><em>Why it matters:</em> Ferrari junior Rafael Camara gets the 2027 Haas seat on a multi-year deal — F2 points leader at 21. The silly season&#x27;s done silly things; this one&#x27;s straightforward.</p>
+      <h3><a href="../articles/2026-10-18-nascar-cup-series-phoenix-lineup-tv-schedule-for-sunday.html">NASCAR Cup Series Phoenix lineup, TV schedule for Sunday’s race</a></h3>
+      <p class="byline">Nick Gray, Nashville Tennessean</p>
+      <p class="body">Ryan Blaney is on the pole for today’s Freeway Insurance 500 at Phoenix Raceway after a 26.250-second qualifying lap, just 0.032s ahead of Penske teammate Joey Logano for a Penske front-row lockout. Points leader Kyle Larson starts 22nd after sliding through turn one on his qualifying lap. Green flag approximately 2:05 p.m. CT (12:05 p.m. PT) on USA Network.</p>
+      <p class="body"><em>Why it matters:</em> Race-day essentials: Blaney on pole (26.250s, Penske front-row lockout), Larson starting 22nd after a qualifying slide, green flag 12:05 PT on USA Network. Set the reminder.</p>
     </div><div class="storyitem">
-      <h3><a href="../articles/2026-10-17-martin-vows-he-wont-struggle-as-two-point-title-fight-h.html">Martin vows he won’t ’struggle’ as two-point title fight hits Phillip Island</a></h3>
-      <p class="byline">MotoGP News</p>
-      <p class="body">Jorge Martin insists he’ll be competitive at all five remaining MotoGP rounds after Indonesia’s Aprilia 1-2-3-4 left him just two points ahead of Marc Marquez. Next stop: Phillip Island’s farewell GP on Oct. 23–25 before the race moves to Adelaide in 2027.</p>
-      <p class="body"><em>Why it matters:</em> Two points separate Martin and Marquez heading into Phillip Island&#x27;s farewell GP Oct. 23–25 before the move to Adelaide. The interview is single-sourced, but the math isn&#x27;t — the thin flag is honest here.</p>
+      <h3><a href="../articles/2026-10-18-jesse-love-dominates-holds-off-mayer-late-to-win-oreill.html">Jesse Love dominates, holds off Mayer late to win O’Reilly Chase race at Phoenix</a></h3>
+      <p class="byline">NASCAR.com</p>
+      <p class="body">Jesse Love swept both stages and led 156 of 200 laps in Saturday’s Timberland PRO 200 at Phoenix, holding off a charging Sam Mayer — who started from the rear after an engine change — by just 0.128 seconds. The win opened a 36-point O’Reilly Series Chase lead over Justin Allgaier. Next up: Talladega on October 24.</p>
+      <p class="body"><em>Why it matters:</em> Saturday night&#x27;s undercard: Jesse Love led 156 of 200 laps and held off Mayer by 0.128 seconds to open a 36-point Chase lead. The form guide for today&#x27;s main event.</p>
     </div>
   <section class="suggestbox" data-buddy-id="news-buddy">
     <h2>Suggestions</h2>

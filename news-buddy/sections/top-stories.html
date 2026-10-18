@@ -90,6 +90,9 @@
     padding:2px 9px;border-radius:999px;margin-left:8px;vertical-align:1px;
   }
   .sourcenote{font-size:13px;color:var(--muted);font-style:italic;margin-top:8px}
+
+  .outlet-sub{font-family:Georgia,serif;font-size:15px;font-style:italic;color:var(--accent);margin:22px 0 -4px;letter-spacing:.5px}
+  .outlet-sub:first-child{margin-top:6px}
   /* ---------- top stories ---------- */
   .lead h3{font-size:24px}
   .lead .dek{font-size:16px}
@@ -150,13 +153,15 @@
   .story-vote.on-down{background:#b42318;border-color:#b42318;color:#fff}
   /* ---------- voice picker ---------- */
   .vp-overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:1000;display:flex;align-items:center;justify-content:center;padding:20px}
-  .vp-card{background:var(--paper);color:var(--ink);border:1px solid var(--rule);border-radius:14px;max-width:560px;width:100%;max-height:82vh;display:flex;flex-direction:column;box-shadow:0 12px 40px rgba(0,0,0,.35)}
+  .vp-card{background:var(--paper);color:var(--ink);border:1px solid var(--rule);border-radius:14px;max-width:560px;width:100%;max-height:82vh;display:flex;flex-direction:column;box-shadow:0 12px 40px rgba(0,0,0,.35);overflow:hidden}
   .vp-head{padding:14px 16px;border-bottom:1px solid var(--rule);display:flex;align-items:center;justify-content:space-between;flex:none}
   .vp-head h3{margin:0;font-size:16px}
   .vp-close{background:none;border:none;font-size:18px;cursor:pointer;color:var(--muted);padding:4px 8px}
   .vp-sub{padding:10px 16px 2px;font-size:12px;color:var(--muted);flex:none}
-  .vp-list{overflow-y:auto;padding:6px 8px;-webkit-overflow-scrolling:touch}
+  .vp-list{overflow-y:auto;overflow-x:hidden;padding:6px 8px;-webkit-overflow-scrolling:touch}
   .vp-row{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:10px;cursor:pointer;border:1px solid transparent}
+  .vp-row>*{min-width:0}
+  .vp-row .vp-desc{overflow-wrap:break-word}
   .vp-row:hover{background:rgba(127,127,127,.12)}
   .vp-row.current{border-color:var(--accent)}
   .vp-row .nm{flex:none;min-width:0;max-width:38%}
@@ -357,33 +362,62 @@
   .secpage .storyitem h3 a:hover{color:var(--accent)}
   .secpage .lede{font-size:16px;line-height:1.65;color:var(--ink);max-width:70ch;margin:10px 0 6px}
 
+  
+  .sec-head h2 a{color:inherit;text-decoration:none;border-bottom:2px solid transparent}
+  .sec-head h2 a:hover{color:var(--accent);border-bottom-color:var(--accent)}
+  .mini-mast{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 20px;border-bottom:3px double var(--ink);margin-bottom:8px;flex-wrap:wrap}
+  .mini-mast a.brand{font-family:Georgia,'Times New Roman',serif;font-weight:700;font-size:20px;color:var(--ink);text-decoration:none}
+  .mini-mast .ed{font-size:12px;color:var(--muted)}
+  .kicker{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:18px 0 4px}
+  .kicker a{color:var(--accent);text-decoration:none}
+  .detail h1{font-family:Georgia,'Times New Roman',serif;font-size:clamp(26px,5vw,40px);line-height:1.15;margin:6px 0 10px;letter-spacing:-.01em}
+  .detail h4.sec{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--accent);margin:22px 0 6px}
+  .detail p.body{font-size:16px;line-height:1.65;margin:0 0 12px;max-width:68ch}
+  .sourcebox{border:1px solid var(--rule);border-left:4px solid var(--accent);border-radius:8px;padding:12px 16px;margin:18px 0;max-width:68ch}
+  .sourcebox p{font-size:14px;line-height:1.6;margin:6px 0}
+  .sourcebox .flag{display:inline-block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;background:#fde68a;color:#7c2d12;border-radius:4px;padding:2px 8px;margin-bottom:4px}
+  .read-original{display:inline-block;margin:10px 0;padding:10px 20px;background:var(--accent);color:#fff !important;border-radius:8px;font-weight:700;text-decoration:none;font-size:15px}
+  .related{margin-top:28px;border-top:1px solid var(--rule);padding-top:14px}
+  .related h4.sec{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:0 0 10px}
+  .related ul{list-style:none;margin:0;padding:0}
+  .related li{margin:0 0 10px;font-size:15px;line-height:1.45}
+  .related a{color:var(--ink);text-decoration:none;border-bottom:1px solid var(--rule)}
+  .related a:hover{color:var(--accent);border-bottom-color:var(--accent)}
+  .backfoot{margin:30px 0 40px;font-size:14px}
+  .backfoot a{color:var(--accent);text-decoration:none;font-weight:600}
+  .secpage .storyitem{border-bottom:1px solid var(--rule);padding:16px 0}
+  .secpage .storyitem h3{font-size:20px;margin:0 0 6px;line-height:1.3}
+  .secpage .storyitem h3 a{color:var(--ink);text-decoration:none}
+  .secpage .storyitem h3 a:hover{color:var(--accent)}
+  .secpage .lede{font-size:16px;line-height:1.65;color:var(--ink);max-width:70ch;margin:10px 0 6px}
+
   </style>
 </head>
 <body>
 <header class="mini-mast">
   <a class="brand" href="../index.html">📰 The Morning Edition</a>
-  <span class="ed">Saturday, October 17, 2026</span>
+  <span class="ed">Sunday, October 18, 2026</span>
   <button id="themeBtn" class="voice-change" style="margin-left:0">Theme: Auto</button>
 </header>
 <main class="detail secpage" style="max-width:860px;margin:0 auto;padding:0 20px">
   <p class="kicker">Section</p>
   <h1>Top Stories</h1>
-  <p class="lede">The three threads running Saturday morning: Apple&#x27;s first foldable sold out into 2027 delivery windows overnight, Wall Street dumped AI stocks on data-center debt fears, and NASCAR&#x27;s Cup Chase rolls into Phoenix for Sunday&#x27;s Freeway Insurance 500.</p>
+  <p class="lede">The three stories that matter most this morning: Apple&#x27;s four-week product blitz maps your employer&#x27;s fall, the AI selloff has moved from share prices into the deal market, and hot inflation is repricing the Fed&#x27;s entire rate path.</p>
   <div class="storyitem">
-      <h3><a href="../articles/2026-10-17-apple-calls-iphone-duo-demand-extraordinary-as-orders-s.html">Apple calls iPhone Duo demand ’extraordinary’ as orders slip into 2027</a></h3>
-      <p class="byline">MacRumors, Juli Clover</p>
-      <p class="body">Pre-orders for Apple’s first foldable opened at 5 a.m. PT on Friday, and within minutes delivery dates slid from October 23 to November — then to January 2027. Apple says it’s working to get the $1,999-and-up device into customers’ hands as quickly as possible.</p>
-      <p class="body"><em>Why it matters:</em> Apple&#x27;s first foldable sold into 2027 delivery windows overnight — the gadget story of the season, and it&#x27;s your employer&#x27;s. The $1,999-and-up price and the $1,499 unprotected repair fee are the numbers every dinner table will argue about this weekend.</p>
+      <h3><a href="../articles/2026-10-18-apple-is-about-to-kick-off-four-weeks-straight-of-new-p.html">Apple is about to kick off four weeks straight of new product launches</a></h3>
+      <p class="byline">9to5Mac</p>
+      <p class="body">iPhone Duo ships October 23, HomePod mini 2 lands October 30, HomeView and Apple TV 4K follow November 13 — and Mark Gurman says the touchscreen MacBook Pro, M6 iMac, M6 MacBook Pro and OLED iPad mini hit Apple retail on Friday, November 6 after a big floor reset, filling the only gap in a four-week launch streak. Gurman confirmed on his Power On podcast that the Mac and iPad unveilings happen October 28.</p>
+      <p class="body"><em>Why it matters:</em> Your employer&#x27;s fall runway in one place: iPhone Duo ships Friday, HomePod mini 2 on the 30th, then the October 28 Mac/iPad event tees up touchscreen MacBook Pros and M6 machines landing November 6. The Duo&#x27;s 2027 delivery windows make this launch cadence the story of your holiday quarter.</p>
     </div><div class="storyitem">
-      <h3><a href="../articles/2026-10-17-nasdaq-drops-2-1-as-ai-debt-fears-rattle-wall-street.html">Nasdaq drops 2.1% as AI-debt fears rattle Wall Street</a></h3>
-      <p class="byline">FINCHANNEL (AP/Reuters data)</p>
-      <p class="body">The Nasdaq Composite fell 2.1% to 26,140.03 on Friday while the S&amp;P 500 lost 1.1% to 7,659.44, as investors questioned whether the billions pouring into AI data centers will ever pay off. Chip stocks led the rout: AMD down 6%, Intel 5.8%, Micron 5.6%, Broadcom 4.5%.</p>
-      <p class="body"><em>Why it matters:</em> The AI trade just took its worst Friday in months on data-center debt fears — this is your 401(k)&#x27;s mood. The &#x27;will the billions ever pay off&#x27; question now shadows every AI bet, including the prototypes on your own team.</p>
+      <h3><a href="../articles/2026-10-18-market-selloff-rising-rates-test-ai-data-centre-deal-bo.html">Market selloff, rising rates test AI data centre deal boom</a></h3>
+      <p class="byline">Reuters</p>
+      <p class="body">Friday’s selloff is now hitting the financing channel, not just share prices: a Blackstone-backed AirTrunk REIT, Nvidia-backed Firmus — a would-be $5B Australian IPO carrying roughly $30B in debt — and SoftBank-backed SB Energy have all pulled or paused listings as investors demand proof AI infrastructure can absorb rising rates. Asian data-center M&amp;A is still tracking a record $21.3B year, but the verdict is that “growth at any cost” is over.</p>
+      <p class="body"><em>Why it matters:</em> The AI trade&#x27;s bad Friday just moved from share prices to the capital markets that fund the buildout — AirTrunk, Firmus and SB Energy all pulled or paused listings. This is the &#x27;will the billions ever pay off&#x27; question your 401(k) is asking, now with receipts.</p>
     </div><div class="storyitem">
-      <h3><a href="../articles/2026-10-17-nascar-heads-to-phoenix-for-pivotal-freeway-insurance-5.html">NASCAR heads to Phoenix for pivotal Freeway Insurance 500</a></h3>
-      <p class="byline">Heavy</p>
-      <p class="body">The Cup Series rolls into Phoenix Raceway for Sunday’s Freeway Insurance 500 (3 p.m. ET, USA Network) with four races left in the Chase — Kyle Larson holds a 49-point lead over Denny Hamlin, and Ryan Blaney, the last Phoenix winner, is back to defend.</p>
-      <p class="body"><em>Why it matters:</em> Sunday 3 PM ET on USA, Larson up 49 on Hamlin with four Chase races left — your weekend TV is set, and Phoenix is the pivotal one.</p>
+      <h3><a href="../articles/2026-10-18-stocks-bonds-fall-as-cpi-data-fuel-fed-hike-bets-market.html">Stocks, Bonds Fall as CPI Data Fuel Fed-Hike Bets: Markets Wrap</a></h3>
+      <p class="byline">Bloomberg, via EuropeSays</p>
+      <p class="body">September CPI rose 0.6% month-on-month and 3.7% year-on-year — the fastest inflation increase since April, led by a 9.1% monthly gasoline surge — and it’s the last inflation read before the October 27–28 FOMC meeting. Two-year Treasury yields jumped 12 basis points to 4.91%, money markets lifted October hike odds toward 37%, and the S&amp;P 500 fell a third straight day while Brent hovered near $106.</p>
+      <p class="body"><em>Why it matters:</em> Hot CPI (3.7% YoY, fastest since April) plus a 9.1% gasoline surge is repricing the whole rate path — October hike odds near 37% — right before the Fed&#x27;s blackout and the Oct 27–28 meeting. Your favorite genre: macro explainers with teeth.</p>
     </div>
   <section class="suggestbox" data-buddy-id="news-buddy">
     <h2>Suggestions</h2>
