@@ -104,5 +104,5 @@ When looking at the left panel and we should maybe consider having Astro always 
 
 Add Velcro to the bottom of the Bose speaker and the top on the other side and it should be the fuzzy kind of use it to mount on the tripod
 
-And also plain Velcro to the base of the
+And also plain Velcro to the base of the iPad mount that wouldn’t fit my iPad
 
