@@ -375,16 +375,27 @@ body.sb-closed #pane-toggles .ptoggle{padding:6px 4px}
 /* ============ Atlas control row (Jonny's verdict, Dave 2026-10-18) ============
    ONE compact row: pill -> orientation -> color dots -> zoom -> utilities.
    44px tall, radius 22px, blurred material, hairline, whisper shadow.
-   Anchored top-left of the Atlas pane at 12px/12px. Never moves.
+   Pinned to the sidebar's right edge (Dave 2026-10-18): 360px when the panel is
+   open, 348px anchored, 88px when collapsed to the rail, 12px on phone.
+   Never slides under the floating sidebar.
    Rhythm: 8px within groups, 24px between. No dividers. */
-.atlas-controls{position:absolute;top:12px;left:12px;z-index:20;
+.atlas-controls{position:absolute;top:12px;left:360px;z-index:20;
   display:flex;align-items:center;gap:24px;
   height:44px;padding:4px 12px;border-radius:22px;box-sizing:border-box;
   background:color-mix(in srgb, var(--panel) 82%, transparent);
   -webkit-backdrop-filter:blur(20px) saturate(1.8);backdrop-filter:blur(20px) saturate(1.8);
   border:1px solid var(--border);box-shadow:0 2px 12px rgba(0,0,0,.08);
-  max-width:calc(100% - 24px);overflow-x:auto;overflow-y:hidden;
+  max-width:calc(100% - 372px);overflow-x:auto;overflow-y:hidden;
   scrollbar-width:none;-webkit-tap-highlight-color:transparent}
+/* Dave 2026-10-18: the sidebar is a fixed overlay — pin the row to its right
+   edge so it never slides underneath. Open floating: 12px offset + 336px panel
+   + 12px gap = 360px. Anchored: flush left, so 348px. Collapsed rail:
+   12px + 64px rail + 12px gap = 88px. */
+body.sb-anchored .atlas-controls{left:348px;max-width:calc(100% - 360px)}
+body.sb-closed .atlas-controls{left:88px;max-width:calc(100% - 100px)}
+@media (max-width:639px){
+  .atlas-controls,body.sb-anchored .atlas-controls,body.sb-closed .atlas-controls{left:12px;max-width:calc(100% - 24px)}
+}
 .atlas-controls::-webkit-scrollbar{display:none}
 .atlas-controls .lens-picker-wrap{margin:0;flex:none}
 /* Pill: 36px, radius 18px, current lens name + chevron. The unexplained blue
@@ -2124,6 +2135,13 @@ function selectBuddy(id){
   }
   // If the detail panel is open, update it to the new buddy
   if (panelOpen) renderBuddy(id);
+  // Dave 2026-10-18: optional auto-close — collapse the sidebar to the rail on
+  // every buddy selection so the homepage/view gets the full screen.
+  try {
+    if (typeof getSetting === 'function' && getSetting('autoCloseSidebar') && !isDrawerNav() && isSidebarOpen()) {
+      setSidebarOpen(false);
+    }
+  } catch (e) {}
 }
 function openBuddy(id){
   if (!byId[id]) return;
@@ -2359,10 +2377,31 @@ function getFieldOrder(){
   S.fieldOrder = S.fieldOrder.filter(id => ids.includes(id));
   return S.fieldOrder;
 }
+/* Dave 2026-10-18: the attr-toggle expanded state (e.g. About/mission) is a
+   separate mechanism from the h3 section collapse — persist it too, so an
+   expanded field stays expanded when navigating between records. */
+function saveAttrExpanded(sec, willExpand){
+  try {
+    const fid = sec && sec.dataset ? sec.dataset.field : null;
+    if (!fid) return;
+    if (!S.attrExpanded || typeof S.attrExpanded !== 'object') S.attrExpanded = {};
+    S.attrExpanded[fid] = !!willExpand;
+    if (S.secCollapsed && typeof S.secCollapsed === 'object' && willExpand) S.secCollapsed[fid] = false;
+    save();
+  } catch (e) {}
+}
 function applySectionCollapse(bid){
   const home = document.getElementById('buddy-home');
   if (!home) return;
   if (!S.secCollapsed || typeof S.secCollapsed !== 'object') S.secCollapsed = {};
+  if (!S.attrExpanded || typeof S.attrExpanded !== 'object') S.attrExpanded = {};
+  // Restore attr-toggle expanded state (e.g. About) across renders.
+  home.querySelectorAll('.bp-sec[data-field]').forEach(sec => {
+    if (S.attrExpanded[sec.dataset.field]) {
+      sec.classList.add('expanded');
+      sec.classList.remove('collapsed');
+    }
+  });
   // Collapse state is global per section (not per buddy): collapsing Artifacts
   // on one buddy keeps it collapsed everywhere.
   home.querySelectorAll('.bp-sec[data-field] > h3').forEach(h3 => {
@@ -2655,6 +2694,7 @@ function isViewVisible(vid){
 const SETTING_DEFS = [
   {id:'hideBuddyWord', label:'Hide the word “Buddy” in names', type:'bool', def:false},
   {id:'autoOpenPanel', label:'Always open detail panel on buddy click', type:'bool', def:false, tip:'When off (default), the panel auto-opens in every view EXCEPT Homepage — there, use the \u24d8 icon. When on, the panel opens on every click in every view.'},
+  {id:'autoCloseSidebar', label:'Auto-close sidebar on buddy select', type:'bool', def:false, tip:'When on, the sidebar collapses to the icon rail every time you select a buddy — so the buddy\u2019s homepage or current view gets the full screen.'},
   {id:'attnEffect', label:'Attention header effect', type:'choice', options:['pulse','glow','shake','blink','wiggle','bounce','swing','none'], def:'pulse', advanced:true, tip:'How the \u201cNeeds your attention\u201d section header grabs your eye when items are waiting.'},
   {id:'nbSheetWidth', label:'New buddy sheet width', type:'number', def:560, min:320, max:900, advanced:true, tip:'Fixed width of the New Buddy bottom sheet, in pixels. Height follows the content; drag the grab handle to resize vertically.', unit:'px'},
   {id:'shiftLeftAction', label:'Shift+← action', type:'choice', options:['promote','go to parent','nothing'], def:'promote', advanced:true, tip:'What Shift+Left arrow does for the selected buddy. Promote moves it up one level; Go to parent just navigates there.'},
@@ -3075,6 +3115,12 @@ function openFieldSettings(){
     S.fieldOrder = reorderBefore(getFieldOrder(), fromId, beforeId);
     save();
     openFieldSettings();
+    // Dave 2026-10-18: the panel re-render resets scroll — bring the dropped
+    // field back into view so he can see where it landed.
+    try {
+      const moved = document.querySelector('#fset-list .fset-row[data-fid="' + fromId + '"]');
+      if (moved && moved.scrollIntoView) moved.scrollIntoView({block:'nearest'});
+    } catch (e) {}
     const vb2 = document.getElementById('view-buddy');
     if (vb2 && vb2.classList.contains('active') && S.projectId && byId[S.projectId]) {
       renderBuddy(S.projectId);
@@ -3107,6 +3153,11 @@ function openFieldSettings(){
       save();
       renderNav();
       openFieldSettings();
+      // Dave 2026-10-18: keep the dropped view in view after the re-render.
+      try {
+        const movedV = document.querySelector('#vset-list .fset-row[data-vid="' + fromId + '"]');
+        if (movedV && movedV.scrollIntoView) movedV.scrollIntoView({block:'nearest'});
+      } catch (e) {}
     });
     vlist.querySelectorAll('[data-vvis]').forEach(cb => {
       cb.addEventListener('change', () => {
@@ -3956,7 +4007,7 @@ function renderBuddy(id){
     + '<span class="sep">\u00b7</span><button class="linkbtn" id="bp-desktop">\U0001f4be Save to desktop</button></div>'
     + '<div class="bp-top">'
     + '<span class="bp-icon" id="bp-icon" title="Click to change avatar" style="cursor:pointer">'+'<img class="bp-avatarimg" src="'+escHtml(buddyImageUrl(b))+'" alt="" onerror="this.remove()">'+'<span class="bp-avaemoji">'+escHtml(buddyDisplayIcon(b))+'</span></span>'
-    + '<input class="bp-name" id="bp-name" type="text" spellcheck="false" autocomplete="off" data-buddy="'+id+'" value="'+escHtml(dispName(b))+'" aria-label="Buddy name">'
+    + '<input class="bp-name" id="bp-name" type="text" spellcheck="false" autocomplete="off" value="'+escHtml(dispName(b))+'" aria-label="Buddy name">'
     + '<span class="status '+b.statusClass+'">'+escHtml(b.status)+'</span>'
     + (function(){ const ak = effAka(b); return ak.length ? '<span class="bp-aka" title="Also known as">aka '+escHtml(ak.join(', '))+'</span>' : ''; })()
     + '<button class="bp-collapse-btn" id="bp-collapse-btn" type="button" title="Collapse to section icons" aria-label="Collapse to section icons">\u2039</button>'
@@ -4529,6 +4580,7 @@ function moveBuddy(src, target){
 /* FAMKINDS retired 2026-10-11: the org chart now shows every direct report of the
    root side by side; only truly parentless buddies go to the orphan section. */
 function nodeTag(b, depth){
+  if (depth === 0) return 'root'; // Dave 2026-10-18: Astro's tile labels him as the root
   if (depth === 1) {
     if (b.kind === 'work') return 'direct report';
     if (b.kind === 'meta') return 'meta';
@@ -4741,12 +4793,11 @@ function renderOrgTree(){
   const kids = visibleKids(ROOT_ID);
   let chartHtml;
   if (chartType === 'org') {
-    // No root tile — the top level is the staff itself, side by side.
-    // (Astro is still the data-model parent; use Change-parent to go top-level.)
+    // Dave 2026-10-18: Astro renders as the root tile — the staff hangs under him.
     // Horizontal orientation (Dave, 2026-10-13): generations flow left to right.
     const horiz = (S.orgOrientation || 'vertical') === 'horizontal';
-    chartHtml = '<div class="chart"><div class="tree tree-no-root' + (horiz ? ' tree-horizontal' : '') + '"><ul>'
-      + kids.map(b => orgNode(b, 1)).join('') + '</ul></div></div>';
+    chartHtml = '<div class="chart"><div class="tree' + (horiz ? ' tree-horizontal' : '') + '"><ul>'
+      + orgNode(root, 0) + '</ul></div></div>';
   } else {
     chartHtml = '<div class="chart chart-' + chartType + '">' + renderChartMain(chartType, root, kids) + '</div>';
   }
@@ -7583,6 +7634,7 @@ document.addEventListener('click', e => {
       const willExpand = !sec.classList.contains('expanded');
       sec.classList.toggle('expanded', willExpand);
       sec.classList.remove('collapsed'); // ensure collapsed never blocks expanded
+      saveAttrExpanded(sec, willExpand); // Dave 2026-10-18: survive record navigation
     }
     requestAnimationFrame(() => {
       if (!scroller) return;
@@ -7608,6 +7660,7 @@ document.addEventListener('click', e => {
       const willExpand = !sec.classList.contains('expanded');
       sec.classList.toggle('expanded', willExpand);
       sec.classList.remove('collapsed'); // ensure collapsed never blocks expanded
+      saveAttrExpanded(sec, willExpand); // Dave 2026-10-18: survive record navigation
     }
     requestAnimationFrame(() => {
       if (!scroller) return;
@@ -9155,7 +9208,7 @@ function initSearch(){
       const words = q.toLowerCase().trim().split(/\s+/).filter(Boolean);
       if (!words.length) return [];
       return BUDDIES.filter(b => {
-        if (b.id === ROOT_ID) return false;
+        // Dave 2026-10-18: Astro (the root) is searchable too — no exclusion.
         const hay = (dispName(b) + ' ' + (b.name || '') + ' ' + (b.tagline || '') + ' ' + effAka(b).join(' ')).toLowerCase();
         return words.every(w => hay.includes(w));
       }).slice(0, 8);
@@ -9662,7 +9715,11 @@ document.addEventListener('click', e => {
   // Dave 2026-10-16: sidebar rows are <button>s — allow the click when the
   // control IS the buddy row, only skip inner form controls.
   const fc = e.target.closest('[contenteditable="true"],input,textarea,select,button');
-  if (bb && (!fc || fc === bb)) {
+  // Dave 2026-10-18: a form control never re-opens the buddy — even if it
+  // carries data-buddy itself (the name input did; every tap re-rendered the
+  // panel and stole focus). Only a BUTTON row may pass through.
+  const fcIsButtonRow = !!(fc && fc === bb && fc.tagName === 'BUTTON');
+  if (bb && (!fc || fcIsButtonRow)) {
     const wantPanel = S.autoOpenPanel || S.view !== 'project';
     if (wantPanel) openBuddy(bb.dataset.buddy);
     else selectBuddy(bb.dataset.buddy);

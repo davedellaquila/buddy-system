@@ -1,4 +1,13 @@
 ## 2026-10-18
+### Seven dashboard fixes (Dave 2026-10-18)
+- **Auto-close sidebar setting**: new "Auto-close sidebar on buddy select" toggle (default off). When on, selecting a buddy collapses the sidebar to the icon rail so the homepage/view gets the full screen. Skipped for the phone drawer (which already closes on selection).
+- **Settings field-order scroll**: rearranging fields in Settings re-rendered the whole panel and lost the scroll position. The dropped row is now scrolled back into view (`scrollIntoView({block:'nearest'})`) so you can see where it landed. Same for the Main views list.
+- **Section state survives record navigation**: the About/mission field (and other attr-toggle sections) used a DOM-only `expanded` class that was wiped on every re-render. Expanded state is now persisted per field (`S.attrExpanded`) and restored in `applySectionCollapse`, alongside the existing h3 collapse state.
+- **Atlas controls pinned to the sidebar's right edge**: the control row was absolutely positioned at the pane's top-left, sliding under the floating sidebar. Now pinned to the sidebar's right edge — 360px open (floating), 348px anchored, 88px collapsed rail, 12px on phone — with max-width adjusted so it never overflows the pane.
+- **Info panel rename focus**: the name input carried a vestigial `data-buddy` attribute, and the document click handler's `fc === bb` guard let it through — every tap re-opened the buddy, destroying the input before a keystroke could land. Removed the attribute and hardened the guard so form controls never re-trigger the panel.
+- **Astro searchable**: the sidebar autocomplete explicitly excluded the root (`if (b.id === ROOT_ID) return false`). Astro now appears in search results like everyone else.
+- **Astro as the root tile**: the org chart rendered the staff side by side with no root. Astro now renders as the root node at the top (tagged "root"), with the staff hanging under him.
+
 ### Fixed — hiding a tree pane now gives the other the full screen (Dave 2026-10-18)
 - Hiding the lower (orphan) pane via the pane toggles gives the Atlas chart the full pane height — and hiding the chart gives the orphan pane the full height. The surviving pane gets `flex: 1 1 0` and the splitter hides with the second pane.
 - Fixed the resurrection bug: `applyTreeSplit()` ran on every tree re-render and unconditionally re-showed a hidden pane (plus the checkbox disagreed with reality). Visibility now lives in one place — `applyTreeSplit()` reads `S.treePanes` itself, so toggles and re-renders always agree, and a hidden pane survives reloads.
