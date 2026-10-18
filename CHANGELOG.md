@@ -1,3 +1,9 @@
+## 2026-10-18
+### Briefing Buddy — per-page type size control
+- New "Ag" segmented control in the masthead (next to Theme): smaller / small / medium / large, applied via CSS zoom on <html>.
+- Each page keeps its own size (localStorage `buddyTree.typeSize`, keyed per page from URL path); optional global default, per-page always wins.
+- Ships as a reusable snippet (snippets/type-size-snippet.html) for rollout to other buddy pages.
+
 # Changelog
 
 ## 2026-10-18 (DPG entity question resolved)

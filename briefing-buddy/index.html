@@ -60,6 +60,16 @@
     border-radius:999px;padding:5px 14px;font-size:12px;cursor:pointer;letter-spacing:.5px;
   }
   .theme-btn:hover{border-color:var(--accent)}
+  /* ---------- per-page type size (reusable snippet — see snippets/type-size-snippet.html) ---------- */
+  .tsize{display:inline-flex;align-items:stretch;border:1px solid var(--rule);border-radius:999px;overflow:hidden;background:var(--card)}
+  .tsize button{border:0;background:transparent;color:var(--muted);font-family:Georgia,serif;line-height:1;padding:6px 9px;cursor:pointer;-webkit-tap-highlight-color:transparent}
+  .tsize button + button{border-left:1px solid var(--rule)}
+  .tsize button:hover{color:var(--accent)}
+  .tsize button[aria-pressed="true"]{background:var(--accent-soft);color:var(--accent-ink);font-weight:700}
+  .tsize button[data-tsize="smaller"]{font-size:11px}
+  .tsize button[data-tsize="small"]{font-size:12.5px}
+  .tsize button[data-tsize="medium"]{font-size:14px}
+  .tsize button[data-tsize="large"]{font-size:16px}
   /* ---------- sections ---------- */
   section{margin-top:44px}
   .sec-head{display:flex;align-items:baseline;gap:14px;margin-bottom:16px}
@@ -233,6 +243,57 @@
   .audio audio{width:100%;display:block}
   .audio figcaption{font-size:12.5px;color:var(--muted);font-style:italic;margin-top:8px;font-family:Georgia,serif}
 </style>
+<script>
+/* Per-page type size — reusable snippet (Dave, 2026-10-18). See snippets/type-size-snippet.html */
+(function(){
+  "use strict";
+  var ZOOM = {smaller: 0.875, small: 0.9375, medium: 1, large: 1.125};
+  var KEY = "buddyTree.typeSize";
+  function pageId(){
+    var p = (location.pathname || "").replace(/^\/+|\/+$/g, "");
+    if(!p) p = "home";
+    return p.replace(/\.html?$/i, "").replace(/[^a-z0-9]+/gi, "-").replace(/^-+|-+$/g, "").toLowerCase() || "page";
+  }
+  var PID = pageId();
+  function load(){ try{ return JSON.parse(localStorage.getItem(KEY)) || {}; }catch(e){ return {}; } }
+  function save(s){ try{ localStorage.setItem(KEY, JSON.stringify(s)); }catch(e){} }
+  function valid(v){ return !!ZOOM[v]; }
+  function current(){
+    var s = load();
+    if(s.pages && valid(s.pages[PID])) return s.pages[PID];
+    if(valid(s.default)) return s.default;
+    return "medium";
+  }
+  function paint(size){
+    var z = ZOOM[size] || 1;
+    document.documentElement.style.zoom = (z === 1) ? "" : String(z);
+    var btns = document.querySelectorAll('[data-tsize]');
+    for(var i = 0; i < btns.length; i++){
+      btns[i].setAttribute("aria-pressed", btns[i].getAttribute("data-tsize") === size ? "true" : "false");
+    }
+  }
+  function set(size){
+    if(!valid(size)) return;
+    var s = load(); s.pages = s.pages || {}; s.pages[PID] = size; save(s); paint(size);
+  }
+  paint(current());
+  if(document.readyState === "loading"){
+    document.addEventListener("DOMContentLoaded", function(){ paint(current()); });
+  }
+  document.addEventListener("click", function(ev){
+    var b = ev.target && ev.target.closest ? ev.target.closest("[data-tsize]") : null;
+    if(!b) return;
+    set(b.getAttribute("data-tsize"));
+  });
+  window.BuddyTypeSize = {
+    set: set,
+    get: current,
+    pageId: function(){ return PID; },
+    setDefault: function(size){ if(!valid(size)) return; var s = load(); s.default = size; save(s); paint(current()); },
+    getDefault: function(){ var s = load(); return valid(s.default) ? s.default : "medium"; }
+  };
+})();
+</script>
 </head>
 <body>
 <div class="wrap">
@@ -245,6 +306,12 @@
       <span id="dateline">Sunday, October 18, 2026</span>
       <span>2 editions daily &middot; thread + HTML email</span>
       <button class="theme-btn" id="themeBtn" title="Toggle light / dark">◐ Theme</button>
+      <div class="tsize" role="group" aria-label="Type size" title="Type size">
+        <button type="button" data-tsize="smaller" title="Smaller" aria-pressed="false">Ag</button>
+        <button type="button" data-tsize="small" title="Small" aria-pressed="false">Ag</button>
+        <button type="button" data-tsize="medium" title="Medium" aria-pressed="false">Ag</button>
+        <button type="button" data-tsize="large" title="Large" aria-pressed="false">Ag</button>
+      </div>
     </div>
   </header>
 
