@@ -164,6 +164,12 @@
   .lib-item h4{margin:0 0 4px;font-size:14px}
   .lib-item h4 .dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--accent);margin-right:8px}
   .lib-item p{margin:0;font-size:13px;color:var(--muted)}
+  .tile-links{margin-top:10px;display:flex;gap:8px;flex-wrap:wrap}
+  .tile-links a{
+    font-size:12.5px;font-weight:600;color:var(--accent);text-decoration:none;
+    border:1px solid var(--rule);border-radius:999px;padding:4px 12px;background:var(--paper);
+  }
+  .tile-links a:hover{border-color:var(--accent);background:var(--accent-soft)}
   /* ---------- topics ---------- */
   .chips{display:flex;flex-wrap:wrap;gap:10px}
   .chip{
@@ -249,7 +255,7 @@
       <div class="stack">
         <div class="card attention" data-attn-id="attn-prd">
           <h3><span class="flag">Open</span>Full PRD — not started yet</h3>
-          <p>You asked for a full PRD after the brief. The brief already queues the spec: user stories per feature, the sections library, per-briefing content mixing, scheduling &amp; send-time rules, the delivery contract with the assistant, and success criteria. Say the word and it's drafted.</p>
+          <p>You asked for a full PRD after the brief. The <a href="https://docs.google.com/document/d/1s9ghZ-kyp9dag2whTPnk24ULLUJP3JW_0UGtocAynbs/edit" target="_blank" rel="noopener">brief</a> already queues the spec: user stories per feature, the sections library, per-briefing content mixing, scheduling &amp; send-time rules, the delivery contract with the assistant, and success criteria. Say the word and it's drafted.</p>
           <div class="attn-actions"><button type="button" class="attn-btn primary" data-act="done">✓ Done</button><button type="button" class="attn-btn" data-act="info">Need more info</button></div>
           <div class="attn-status" role="status"></div>
         </div>
@@ -352,13 +358,13 @@
       <div class="sec-head"><span class="sec-num">No. 3</span><h2><a href="live-data.html">Live briefing data</a></h2><span class="line"></span></div>
       <p class="lede">What the briefings actually carry right now — snapshot refreshed for the evening edition (Oct 17, ~5:41 PM), ahead of tonight's 6:00 PM assembly. This is the data the settings below act on.</p>
       <div class="lib-grid">
-        <div class="card lib-item"><h4><span class="dot"></span>Weather — Fiddletown</h4><p>Today: sunny, high 87&deg;F. Sunday: sunny, high 82&deg; / low 49&deg; — a cooler night ahead.</p></div>
-        <div class="card lib-item"><h4><span class="dot"></span>Sky</h4><p>Sunrise tomorrow &asymp;7:14 AM; sunset tonight 6:21 PM; waxing crescent, ~39% lit.</p></div>
-        <div class="card lib-item"><h4><span class="dot"></span>Night sky</h4><p>Orionids ramping toward their Oct 21&ndash;22 peak; the crescent sets before midnight, so skies stay dark after. The Wild Duck Cluster (M11) rides high south after sunset — good in binoculars.</p></div>
-        <div class="card lib-item"><h4><span class="dot"></span>Fire &amp; air</h4><p>No Red Flag Warning in effect; AQI 17 (Good), no smoke.</p></div>
-        <div class="card lib-item"><h4><span class="dot"></span>Markets — AAPL</h4><p>Closed Friday at $343.46, +0.4% on iPhone Duo pre-order sellout buzz — the Mag 7's only gainer as AI-debt fears bit: S&amp;P &minus;1.1%, Nasdaq &minus;2.1%, Dow &minus;0.4%. After-hours: $342.62.</p></div>
-        <div class="card lib-item"><h4><span class="dot"></span>Awaiting your reply</h4><p>107 open items &middot; 2 high-priority.</p></div>
-        <div class="card lib-item"><h4><span class="dot"></span>Next: evening edition, 6:00 PM PT</h4><p>Top stories &middot; Markets &middot; Tech &amp; AI &middot; YouTube picks &middot; Podcast picks &middot; Sky &middot; Night sky &middot; Awaiting your reply &middot; Quick links &middot; The dinner question.</p></div>
+        <div class="card lib-item"><h4><span class="dot"></span>Weather — Fiddletown</h4><p>Today: sunny, high 87&deg;F. Sunday: sunny, high 82&deg; / low 49&deg; — a cooler night ahead.</p><div class="tile-links"><a href="https://www.timeanddate.com/weather/@z-us-95666" target="_blank" rel="noopener">Full forecast</a></div></div>
+        <div class="card lib-item"><h4><span class="dot"></span>Sky</h4><p>Sunrise tomorrow &asymp;7:14 AM; sunset tonight 6:21 PM; waxing crescent, ~39% lit.</p><div class="tile-links"><a href="https://www.timeanddate.com/sun/@z-us-95666" target="_blank" rel="noopener">Sunrise &amp; sunset</a><a href="https://www.timeanddate.com/moon/phases/@z-us-95666" target="_blank" rel="noopener">Moon phase</a></div></div>
+        <div class="card lib-item"><h4><span class="dot"></span>Night sky</h4><p>Orionids ramping toward their Oct 21&ndash;22 peak; the crescent sets before midnight, so skies stay dark after. The Wild Duck Cluster (M11) rides high south after sunset — good in binoculars.</p><div class="tile-links"><a href="https://www.timeanddate.com/astronomy/night/@z-us-95666" target="_blank" rel="noopener">Tonight's sky</a></div></div>
+        <div class="card lib-item"><h4><span class="dot"></span>Fire &amp; air</h4><p>No Red Flag Warning in effect; AQI 17 (Good), no smoke.</p><div class="tile-links"><a href="https://alerts.weather.gov" target="_blank" rel="noopener">NWS alerts</a><a href="https://www.airnow.gov" target="_blank" rel="noopener">Air quality</a></div></div>
+        <div class="card lib-item"><h4><span class="dot"></span>Markets — AAPL</h4><p>Closed Friday at $343.46, +0.4% on iPhone Duo pre-order sellout buzz — the Mag 7's only gainer as AI-debt fears bit: S&amp;P &minus;1.1%, Nasdaq &minus;2.1%, Dow &minus;0.4%. After-hours: $342.62.</p><div class="tile-links"><a href="https://finance.yahoo.com/quote/AAPL" target="_blank" rel="noopener">AAPL on Yahoo Finance</a></div></div>
+        <div class="card lib-item"><h4><span class="dot"></span>Awaiting your reply</h4><p>107 open items &middot; 2 high-priority.</p><div class="tile-links"><a href="https://muse.ai/chat/78c651d7-2427-4212-b279-f4957f3ae0dc" target="_blank" rel="noopener">Open Briefings thread</a></div></div>
+        <div class="card lib-item"><h4><span class="dot"></span>Next: evening edition, 6:00 PM PT</h4><p>Top stories &middot; Markets &middot; Tech &amp; AI &middot; YouTube picks &middot; Podcast picks &middot; Sky &middot; Night sky &middot; Awaiting your reply &middot; Quick links &middot; The dinner question.</p><div class="tile-links"><a href="editions.html">Edition details</a></div></div>
       </div>
     </section>
 
@@ -409,7 +415,7 @@
     <!-- MIND -->
     <section>
       <div class="sec-head"><span class="sec-num">No. 7</span><h2><a href="on-my-mind.html">On my mind</a></h2><span class="line"></span></div>
-      <p class="lede">Open questions from the brief — the ones the PRD will have to settle.</p>
+      <p class="lede">Open questions from the <a href="https://docs.google.com/document/d/1s9ghZ-kyp9dag2whTPnk24ULLUJP3JW_0UGtocAynbs/edit" target="_blank" rel="noopener">brief</a> — the ones the PRD will have to settle.</p>
       <ul class="mind-list">
         <li>Exact final section lists: <span>what's confirmed vs still fluid? Today's two rulings feed this — the morning's 10-minute rule and the evening's new standing sports section.</span></li>
         <li>Are 6:00 AM / 6:00 PM still the right times? <span>— the current daily cadence.</span></li>
@@ -420,7 +426,7 @@
     <!-- BRAIN DUMP -->
     <section>
       <div class="sec-head"><span class="sec-num">No. 8</span><h2><a href="brain-dump.html">Brain dump</a></h2><span class="line"></span></div>
-      <p class="lede">Dump what&rsquo;s on your mind about Briefing Buddy &mdash; raw and unfiltered. Each dump lands in the buddy&rsquo;s repo (<code>docs/ingest.md</code>) as a timestamped entry.</p>
+      <p class="lede">Dump what&rsquo;s on your mind about Briefing Buddy &mdash; raw and unfiltered. Each dump lands in the buddy&rsquo;s repo (<a href="https://github.com/davedellaquila/briefing-buddy/blob/master/docs/ingest.md" target="_blank" rel="noopener"><code>docs/ingest.md</code></a>) as a timestamped entry.</p>
       <div class="card dumpbox" data-buddy-id="briefing-buddy">
         <div class="dumpbox-token" hidden>
           <p>&#x1F512; Connect GitHub to unlock dumping. Paste a token once &mdash; it stays on this device only.</p>
