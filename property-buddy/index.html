@@ -500,11 +500,24 @@ Generated 2026-10-17 · Part of the Buddy System
     var ta = document.querySelector('.dumpbox textarea');
     if (ta) ta.setAttribute('placeholder', "Dump what's on your mind about " + name + "…");
   }
+  /* Pending renames (Dave 2026-10-18): when the dashboard has no GitHub token,
+     a rename queues in localStorage instead of reaching the registry. The
+     dashboard and homepages share an origin, so the homepage reads that queue
+     here — a pending rename supersedes the registry name. */
+  function pendingName(){
+    try {
+      var s = JSON.parse(localStorage.getItem('buddyTree.v3') || '{}');
+      if (s && s.pendingRenames && s.pendingRenames[bid]) return s.pendingRenames[bid];
+    } catch(e){}
+    return null;
+  }
+  var pn = pendingName();
+  if (pn) applyName(pn);
   try {
     fetch('../buddies.json', {cache: 'no-store'}).then(function(r){ return r.json(); }).then(function(d){
       var buds = (d && d.buddies) || [];
       for (var j = 0; j < buds.length; j++) {
-        if (buds[j].id === bid && buds[j].name) { applyName(buds[j].name); break; }
+        if (buds[j].id === bid && buds[j].name) { applyName(pendingName() || buds[j].name); break; }
       }
     }).catch(function(){});
   } catch(e){}

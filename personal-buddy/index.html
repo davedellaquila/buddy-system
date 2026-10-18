@@ -585,10 +585,19 @@ async function dump(){
   function applyName(name){ if (!name) return;
     var els = document.querySelectorAll('[data-buddy-name]');
     for (var k = 0; k < els.length; k++) els[k].textContent = name; }
+  function pendingName(){
+    try {
+      var s = JSON.parse(localStorage.getItem('buddyTree.v3') || '{}');
+      if (s && s.pendingRenames && s.pendingRenames[bid]) return s.pendingRenames[bid];
+    } catch(e){}
+    return null;
+  }
+  var pn = pendingName();
+  if (pn) applyName(pn);
   try { fetch('../buddies.json', {cache: 'no-store'}).then(function(r){ return r.json(); })
     .then(function(d){ var buds = (d && d.buddies) || [];
       for (var j = 0; j < buds.length; j++) {
-        if (buds[j].id === bid && buds[j].name) { applyName(buds[j].name); break; } } })
+        if (buds[j].id === bid && buds[j].name) { applyName(pendingName() || buds[j].name); break; } } })
     .catch(function(){}); } catch(e){}
   window.addEventListener('storage', function(e){
     if (e.key !== 'buddyTree.rename' || !e.newValue) return;
