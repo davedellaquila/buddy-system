@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-10-17 (Briefing Buddy link-everything)
+
+### Added
+- **Link every named thing on every tile** (Dave's directive 2026-10-17, verbatim): all named entities on the Briefing Buddy homepage now link inline — Fiddletown→Google Maps, Orionids + Wild Duck Cluster→Wikipedia, S&P/Nasdaq/Dow→Yahoo Finance quote pages, News Buddy→its homepage, the briefing-buddy repo→GitHub, 49ers→49ers.com, Reddit→reddit.com, the Briefings thread→its chat. Entities with no natural destination (Dave, Alex + Jordan, Astro, iPhone Duo, PRD) left plain — no invented destinations.
+
 ## 2026-10-17 (Briefing Buddy per-tile quick links)
 
 ### Added
