@@ -100,3 +100,7 @@ DONE — Dave marked this done on the homepage: "New buddy added from the dashbo
 
 When looking at the left panel and we should maybe consider having Astro always be visible in the event that you’re filtering on something and you can’t do you want to get back to the home Pat very quickly also, where are we with the back button?
 
+## 10/18/2026, 10:58:47 AM
+
+Add Velcro to the bottom of the Bose speaker and the top on the other side and it should be the fuzzy kind of use it to mount on the tripod
+
