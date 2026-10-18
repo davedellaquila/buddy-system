@@ -96,3 +96,7 @@ FOLLOW-UP — Dave needs more info on: "New buddy added from the dashboard — r
 
 DONE — Dave marked this done on the homepage: "New buddy added from the dashboard — run the full onboarding (mission doc, repo, side chat, homepage)." (attention id: setup-kyle-dell-aquila). Please remove it from the attention list in buddies.json.
 
+## 10/18/2026, 9:03:31 AM
+
+When looking at the left panel and we should maybe consider having Astro always be visible in the event that you’re filtering on something and you can’t do you want to get back to the home Pat very quickly also, where are we with the back button?
+
