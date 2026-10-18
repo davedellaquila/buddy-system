@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-10-18 (info panel: editable name fix + floating sheet)
+
+### Fixed
+- **Info-panel buddy name now editable on iPhone** (Dave 2026-10-18 — tapping the name field did nothing): the name was a `contenteditable` h2, which iOS Safari refused to focus. Replaced with a native text `<input>` styled identically (same `.bp-name` bottom-border affordance); rename logic unchanged (Enter or blur commits, still writes through to the registry via `writeGlobalName`).
+- **Info panel floats on phone** (Dave 2026-10-18 — the full-bleed sheet read as a separate screen): `#view-buddy.sheet` now uses 12px insets on all sides with 16px radius and an all-around shadow, mirroring the left sidebar drawer's floating pattern — the panel clearly sits on top of the main view instead of replacing it.
+
 ## 2026-10-18 (Dave Swiger buddy)
 
 ### Added

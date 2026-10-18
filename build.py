@@ -1109,10 +1109,13 @@ body.standalone .sa-bar{display:flex}
   .zoombar .z-out,.zoombar .z-in{padding:4px 0}
   /* Chunkier tree nodes for touch */
   #treezoom .node{padding:15px 14px;min-height:60px}
-  /* Buddy panel — full screen on phone */
-  #view-buddy.sheet{position:fixed;left:0;right:0;bottom:0;top:0;z-index:96;
-    background:var(--bg);border-top:1px solid var(--border);border-radius:0;
-    overflow-y:auto;overflow-x:hidden;padding:8px 18px calc(60px + env(safe-area-inset-bottom));box-shadow:0 -12px 40px rgba(0,0,0,.35);
+  /* Buddy panel — floating card on phone (Dave 2026-10-18): the sheet used to go
+     full-bleed and read as a separate screen. 12px insets on all sides mirror the
+     left sidebar drawer's floating pattern, so the panel clearly sits ON TOP OF the
+     main view instead of replacing it. */
+  #view-buddy.sheet{position:fixed;left:12px;right:12px;bottom:12px;top:12px;z-index:96;
+    background:var(--bg);border:1px solid var(--border);border-radius:16px;
+    overflow-y:auto;overflow-x:hidden;padding:8px 18px calc(60px + env(safe-area-inset-bottom));box-shadow:0 12px 40px rgba(0,0,0,.45);
     -webkit-overflow-scrolling:touch}
   #view-buddy.sheet::before{display:none}
   /* Plans: single column cards */
@@ -1375,6 +1378,12 @@ body.proj-dragging,body.proj-dragging *{cursor:grabbing !important}
   padding-bottom:2px;min-width:120px}
 .bp-name:hover{border-bottom-color:var(--border)}
 .bp-name:focus{border-bottom-color:var(--accent);background:var(--wash2)}
+/* Dave 2026-10-18: the info-panel name is a native text input (was contenteditable h2 —
+   iOS Safari refused to focus the contenteditable, so the name could never be edited
+   on iPhone). Strip UA input chrome; keep the .bp-name bottom-border affordance. */
+input.bp-name{background:transparent;border-top:none;border-right:none;border-left:none;
+  border-radius:0;box-shadow:none;-webkit-appearance:none;appearance:none;
+  padding-left:0;padding-right:0;font:inherit;color:inherit;width:100%;min-width:0}
 .bp-tagline{color:var(--muted);font-size:15px;margin:4px 0 8px}
 .bp-aka{color:var(--muted);font-size:13px;font-style:italic;margin-left:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:60%}
 .aka-pill{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;font-size:13px;background:var(--wash2);border:1px solid var(--border);border-radius:999px;color:var(--text)}
@@ -3869,7 +3878,7 @@ function renderBuddy(id){
     + '<span class="sep">\u00b7</span><button class="linkbtn" id="bp-desktop">\U0001f4be Save to desktop</button></div>'
     + '<div class="bp-top">'
     + '<span class="bp-icon" id="bp-icon" title="Click to change avatar" style="cursor:pointer">'+'<img class="bp-avatarimg" src="'+escHtml(buddyImageUrl(b))+'" alt="" onerror="this.remove()">'+'<span class="bp-avaemoji">'+escHtml(buddyDisplayIcon(b))+'</span></span>'
-    + '<h2 class="bp-name" id="bp-name" contenteditable="true" spellcheck="false" data-buddy="'+id+'">'+escHtml(dispName(b))+'</h2>'
+    + '<input class="bp-name" id="bp-name" type="text" spellcheck="false" autocomplete="off" data-buddy="'+id+'" value="'+escHtml(dispName(b))+'" aria-label="Buddy name">'
     + '<span class="status '+b.statusClass+'">'+escHtml(b.status)+'</span>'
     + (function(){ const ak = effAka(b); return ak.length ? '<span class="bp-aka" title="Also known as">aka '+escHtml(ak.join(', '))+'</span>' : ''; })()
     + '<button class="bp-collapse-btn" id="bp-collapse-btn" type="button" title="Collapse to section icons" aria-label="Collapse to section icons">\u2039</button>'
@@ -3966,7 +3975,7 @@ function renderBuddy(id){
     // GLOBAL rename (Dave 2026-10-16): the info-panel name is the registry name.
     // It writes through to buddies.json so every surface picks it up; buddy
     // homepages re-read the registry on load, no rebuild needed.
-    const v = nm.textContent.trim();
+    const v = nm.value.trim();
     const beforeGlobal = b.name;
     if (!v || v === beforeGlobal) {
       // Cleared, or typed back to the registry name: drop any local nickname.
