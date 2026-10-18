@@ -1467,9 +1467,13 @@ body.proj-dragging,body.proj-dragging *{cursor:grabbing !important}
 .bp-crumb b{color:var(--text);font-weight:600}
 .bp-top{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
 /* Compact sticky identity bar — one row; nav / crumb / tagline scroll away */
-.bp-sticky-head{position:sticky;top:0;z-index:6;background:var(--panel);
+.bp-sticky-head{position:sticky;top:0;z-index:6;
+  /* Dave 2026-10-18: the header card got lost against the panel — give it a
+     step more contrast (a whisper of the text tone mixed into the panel fill),
+     a firmer bottom edge, and a deeper shadow so it reads as a card. */
+  background:color-mix(in srgb, var(--panel) 88%, var(--text));
   margin:-6px -4px 10px;padding:10px 12px;border-bottom:1px solid var(--border);
-  box-shadow:0 3px 10px rgba(0,0,0,.10)}
+  box-shadow:0 4px 16px rgba(0,0,0,.16)}
 .bp-sticky-head .bp-top{gap:8px;flex-wrap:nowrap;min-width:0;align-items:center}
 .bp-sticky-head .bp-icon{font-size:20px;line-height:1;flex:0 0 auto}
 .bp-sticky-head .bp-name{font-size:16px;font-weight:700;margin:0;padding:0;min-width:0;
