@@ -106,3 +106,7 @@ Add Velcro to the bottom of the Bose speaker and the top on the other side and i
 
 And also playing Velcro to the base of the iPad mount that wouldn’t fit my iPad that came on the tripod
 
+## 10/18/2026, 11:30:55 AM
+
+I think it changed your voice unintentionally sorry about that, buddy. How do we get it back to default?
+
