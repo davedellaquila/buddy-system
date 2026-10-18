@@ -89,6 +89,11 @@ body.sb-closed #sidebar #view-nav{gap:4px;align-items:center}
 body.sb-closed #sidebar #view-nav .navbtn{width:44px;height:44px;justify-content:center;padding:0;border-radius:12px}
 body.sb-closed #sidebar #view-nav .navbtn .nic{width:auto;font-size:18px}
 body.sb-closed #menu-btn{display:none}
+/* Dave 2026-10-18: the collapsed rail is a floating overlay — the homepage
+   iframe (and main content) must clear it instead of sliding underneath.
+   88px = 12px rail offset + 64px rail width + 12px breathing room. */
+body.sb-closed #main{padding-left:88px}
+body.sb-closed #main.homepage-mode{padding-left:88px}
 /* Floating-panel illusion (Dave, 2026-10-14 — Apple Messages style): fully floating
    inset panel — 12px from all viewport edges, rounded on all four corners,
    translucent with backdrop blur. Fixed overlay — the main view stays full-width

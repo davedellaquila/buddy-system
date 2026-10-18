@@ -1,4 +1,8 @@
 ## 2026-10-18
+### Fixed — collapsed rail no longer obscures content
+- The collapsed left-panel rail (64px floating icon strip) was overlapping page content — reported by Dave on the Car Buddy homepage view at iPad width. Homepage mode strips `#main` padding to zero, so the rail covered the first ~76px of the iframe.
+- Now `body.sb-closed #main` (and `#main.homepage-mode`) gets `padding-left:88px` (12px rail offset + 64px rail + 12px breathing room), so content clears the rail in every view.
+
 ### Briefing Buddy — per-page type size control
 - New "Ag" segmented control in the masthead (next to Theme): smaller / small / medium / large, applied via CSS zoom on <html>.
 - Each page keeps its own size (localStorage `buddyTree.typeSize`, keyed per page from URL path); optional global default, per-page always wins.
