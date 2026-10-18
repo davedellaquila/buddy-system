@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-10-18 (homepage name-sync reads pending renames)
+
+### Fixed
+- **Renamed buddies now show the new name on their homepages** (Dave 2026-10-18 — renamed a buddy, refreshed its homepage, old name persisted): when the dashboard has no GitHub token, renames queue in localStorage (`S.pendingRenames`) and never reach `buddies.json`, which is the only place homepages looked. The name-sync snippet (all 64 pages carrying it, template + custom) now reads the dashboard's localStorage queue first — same origin — and a pending rename supersedes the registry name. Generator's `NAMESYNC_JS` updated so future pages ship it.
+
 ## 2026-10-18 (info panel: editable name fix + floating sheet)
 
 ### Fixed
