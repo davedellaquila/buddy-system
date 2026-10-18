@@ -110,3 +110,7 @@ And also playing Velcro to the base of the iPad mount that wouldn’t fit my iPa
 
 I think it changed your voice unintentionally sorry about that, buddy. How do we get it back to default?
 
+## 10/18/2026, 4:09:20 PM
+
+Delivery guy's name is Johnny. Hispanic-looking dude, not heavy-set but stocky, with a tattoo of kind of a crisscross on his left neck
+
