@@ -1,0 +1,594 @@
+<!-- DAVE-SWIGER-BUDDY-CUSTOM v1 — thread-owned, generator skips this page -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title data-buddy-name>Dave Swiger</title>
+<style>
+:root {
+  --bg: #ffffff;
+  --text: #1a1a1a;
+  --muted: #666;
+  --card: #f5f5f5;
+  --border: #e0e0e0;
+  --accent: #0066cc;
+  --ok: #1b7a2e;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #1a1a1a;
+    --text: #e0e0e0;
+    --muted: #999;
+    --card: #2a2a2a;
+    --border: #3a3a3a;
+    --accent: #4da6ff;
+    --ok: #5fd08a;
+  }
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  padding: 40px 20px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+.header { text-align: center; margin-bottom: 40px; }
+.topbar {
+  position: sticky; top: 0; z-index: 50;
+  display: flex; align-items: center; gap: 10px;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+  padding: 10px 2px; margin-bottom: 24px;
+  font-size: 17px; font-weight: 700;
+}
+.topbar-icon { font-size: 22px; line-height: 1; }
+.topbar-refresh {
+  margin-left: auto; background: none; border: 1px solid transparent; border-radius: 8px;
+  color: var(--muted); font-size: 16px; cursor: pointer; padding: 4px 10px; line-height: 1;
+}
+.topbar-refresh:hover { color: var(--text); border-color: var(--border); }
+.icon { font-size: 64px; margin-bottom: 16px; }
+h1 { font-size: 32px; margin-bottom: 8px; }
+.tagline { color: var(--muted); font-size: 18px; }
+.mission {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 32px;
+  font-size: 17px;
+}
+h2 { font-size: 22px; margin: 32px 0 16px; }
+.facts {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px 24px;
+  margin-bottom: 8px;
+  display: grid;
+  grid-template-columns: 150px 1fr;
+  gap: 10px 14px;
+  font-size: 15px;
+}
+.facts dt { color: var(--muted); font-size: 13px; text-transform: uppercase; letter-spacing: .05em; padding-top: 2px; }
+.facts dd { margin: 0; }
+.dates { list-style: none; margin-bottom: 8px; }
+.dates li {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 14px 20px;
+  margin-bottom: 10px;
+  font-size: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+.dates .when { color: var(--muted); font-size: 14px; white-space: nowrap; }
+/* ---- the desk: knowledge + config, editable in place ---- */
+.desk { margin-top: 36px; }
+.desk-sub { color: var(--muted); font-size: 14px; margin: 4px 0 16px; }
+.desk-token { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; margin-bottom: 16px; font-size: 14px; }
+.desk-tokenrow { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; align-items: center; }
+.desk-tokenrow input { flex: 1; min-width: 180px; padding: 8px 12px; border: 1px solid var(--border); border-radius: 8px; background: var(--bg); color: var(--text); font-size: 14px; }
+.desk-tokenrow button { padding: 8px 14px; border-radius: 8px; border: none; background: var(--accent); color: #fff; font-weight: 600; font-size: 14px; cursor: pointer; }
+.desk-tokenrow a { color: var(--accent); font-size: 14px; }
+.desk-files { display: flex; flex-direction: column; gap: 16px; }
+.desk-file { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 16px 18px; }
+.desk-filehead { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+.desk-filehead h3 { font-size: 16px; font-weight: 700; }
+.desk-edit { background: none; border: 1px solid var(--border); border-radius: 8px; padding: 6px 12px; color: var(--accent); font-size: 13px; font-weight: 600; cursor: pointer; }
+.desk-edit:hover { border-color: var(--accent); }
+.desk-body { font-size: 14px; }
+.desk-body h1, .desk-body h2, .desk-body h3 { margin: 12px 0 6px; font-size: 15px; }
+.desk-body h1:first-child, .desk-body h2:first-child { margin-top: 0; }
+.desk-body p { margin: 6px 0; }
+.desk-body ul { margin: 6px 0 6px 20px; }
+.desk-body li { margin: 3px 0; }
+.desk-body strong { font-weight: 700; }
+.desk-body code { background: rgba(127,127,127,.15); padding: 1px 5px; border-radius: 4px; font-size: 13px; }
+.desk-loading { color: var(--muted); }
+.desk-editor textarea { width: 100%; box-sizing: border-box; padding: 10px 12px; border: 1px solid var(--border); border-radius: 8px; background: var(--bg); color: var(--text); font-family: ui-monospace, monospace; font-size: 13px; line-height: 1.5; margin-top: 8px; }
+.desk-editorrow { display: flex; gap: 8px; margin-top: 10px; align-items: center; }
+.desk-save { padding: 8px 16px; border-radius: 8px; border: none; background: var(--accent); color: #fff; font-weight: 600; font-size: 14px; cursor: pointer; }
+.desk-cancel { padding: 8px 14px; border-radius: 8px; border: 1px solid var(--border); background: none; color: var(--text); font-size: 14px; cursor: pointer; }
+.desk-status { font-size: 13px; color: var(--muted); }
+.footer {
+  margin-top: 48px;
+  padding-top: 24px;
+  border-top: 1px solid var(--border);
+  color: var(--muted);
+  font-size: 14px;
+  text-align: center;
+}
+.dumpbox {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px 22px;
+  margin-bottom: 32px;
+}
+.dumpbox h2 { margin: 0 0 6px; font-size: 20px; }
+.dumpbox-sub { color: var(--muted); font-size: 14px; margin-bottom: 14px; }
+.dumpbox textarea {
+  width: 100%; min-height: 96px; resize: vertical;
+  background: var(--bg); border: 1px solid var(--border); border-radius: 8px;
+  padding: 10px 12px; font-size: 14px; color: var(--text); font-family: inherit;
+}
+.dumpbox textarea:focus { outline: none; border-color: var(--accent); }
+.dumpbox textarea:disabled { opacity: .55; }
+.dumpbox-row { display: flex; align-items: center; gap: 12px; margin-top: 10px; flex-wrap: wrap; }
+.dumpbox-btn {
+  background: var(--accent); color: #fff; border: none; border-radius: 8px;
+  padding: 9px 22px; font-size: 14px; font-weight: 600; cursor: pointer;
+}
+.dumpbox-btn:disabled { opacity: .45; cursor: default; }
+.dumpbox-btn.saved { background: var(--ok); }
+.dumpbox-status { font-size: 13px; color: var(--muted); }
+.dumpbox-status.flash { color: var(--ok); font-weight: 700; }
+.dumpbox-hint { font-size: 12px; color: var(--muted); margin-top: 8px; }
+.dumpbox-token {
+  background: var(--bg); border: 1px dashed var(--border); border-radius: 8px;
+  padding: 12px 14px; margin-bottom: 12px; font-size: 14px;
+}
+.dumpbox-token p { margin-bottom: 8px; }
+.dumpbox-tokenrow { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.dumpbox-tokenrow input {
+  flex: 1; min-width: 170px; background: var(--card); border: 1px solid var(--border);
+  border-radius: 8px; padding: 7px 10px; font-size: 13px; color: var(--text);
+}
+.dumpbox-tokenrow button {
+  background: transparent; color: var(--accent); border: 1px solid var(--accent);
+  border-radius: 8px; padding: 7px 14px; font-size: 13px; font-weight: 600; cursor: pointer;
+}
+.dumpbox-tokenrow a { color: var(--accent); font-size: 13px; }
+@media (max-width: 560px) {
+  .facts { grid-template-columns: 1fr; gap: 2px 0; }
+  .facts dd { margin-bottom: 8px; }
+}
+</style>
+</head>
+<body>
+<nav data-buddy-crumb style="padding:14px 20px 0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:14px;line-height:1.4;"><a href="https://davedellaquila.github.io/buddy-system/acquaintances/" style="color:inherit;opacity:.65;text-decoration:none;">← Acquaintances</a></nav>
+<div class="topbar"><span class="topbar-icon">🎱</span><span class="topbar-name" data-buddy-name>Dave Swiger</span><button class="topbar-refresh" title="Reload this page (bypasses cache)" onclick="location.href=location.pathname+'?v='+Date.now()">&#8635;</button></div>
+<div class="header">
+<div class="icon">🎱</div>
+<h1 data-buddy-name>Dave Swiger</h1>
+<div class="tagline">Wildlife Trail neighbor · pool nights · homebrew · Miata ND</div>
+</div>
+
+<div class="mission">Dave Swiger is Dave's neighbor on Wildlife Trail in Fiddletown — and a great guy. He brews his own beer, drives a Mazda Miata (ND), is into astronomy, and hosts pool night every once in a while on Friday nights. This is the living dossier: key facts, important dates, notes, reminders, and gift ideas.</div>
+
+<h2>Key facts</h2>
+<dl class="facts">
+<dt>Neighborhood</dt><dd>Wildlife Trail, Fiddletown</dd>
+<dt>Birthday</dt><dd>October 14</dd>
+<dt>Car</dt><dd>Mazda Miata (ND)</dd>
+<dt>Beer</dt><dd>Homebrews his own</dd>
+<dt>Pool night</dt><dd>Hosts every once in a while on Friday nights</dd>
+<dt>Astronomy</dt><dd>Into it — a real interest</dd>
+<dt>Work</dt><dd>Formerly at Google (laid off)</dd>
+</dl>
+
+<h2>Important dates</h2>
+<ul class="dates">
+<li><span>🎂 Birthday</span><span class="when">October 14</span></li>
+</ul>
+
+<section class="dumpbox" data-buddy-id="dave-swiger-buddy">
+<h2>🧠 Brain dump</h2>
+<p class="dumpbox-sub">Dump what's on your mind about <span data-buddy-name>Dave Swiger</span> — raw and unfiltered. Each dump lands in the buddy's repo (docs/ingest.md) as a timestamped entry — or saves on this device until a repo is linked and a token is connected.</p>
+<div class="dumpbox-token" hidden>
+<p>🔒 Connect GitHub to unlock dumping. Paste a token once — it stays on this device only.</p>
+<div class="dumpbox-tokenrow">
+<input type="password" placeholder="GitHub token (repo scope)" aria-label="GitHub token">
+<button type="button">Save token</button>
+<a href="https://github.com/settings/tokens" target="_blank" rel="noopener">Get a token</a>
+</div>
+</div>
+<textarea rows="4" placeholder="Dump what's on your mind about Dave Swiger…"></textarea>
+<div class="dumpbox-row">
+<button type="button" class="dumpbox-btn">Dump it</button>
+<span class="dumpbox-status" role="status"></span>
+</div>
+<p class="dumpbox-hint">Enter dumps it &middot; Shift+Enter for a new line</p>
+</section>
+
+<!-- ============ THE DESK: knowledge + config, editable in place ============ -->
+<section class="desk" id="desk">
+<h2>🗂️ The Desk</h2>
+<p class="desk-sub">Everything Dave Swiger's buddy knows and how it's configured to behave. Connect your GitHub token once to read and edit — it stays on this device only.</p>
+<div class="desk-token" id="desk-token" hidden>
+<p>🔒 Connect GitHub to unlock the desk.</p>
+<div class="desk-tokenrow">
+<input type="password" id="desk-token-input" placeholder="GitHub token (repo scope)" aria-label="GitHub token">
+<button type="button" id="desk-token-save">Save token</button>
+<a href="https://github.com/settings/tokens" target="_blank" rel="noopener">Get a token</a>
+</div>
+</div>
+<div class="desk-files">
+  <article class="desk-file" data-file="KNOWLEDGE.md">
+    <div class="desk-filehead"><h3>📚 Knowledge</h3><button type="button" class="desk-edit" data-edit="KNOWLEDGE.md">Edit</button></div>
+    <div class="desk-body" data-body="KNOWLEDGE.md"><p class="desk-loading">Loading…</p></div>
+    <div class="desk-editor" data-editor="KNOWLEDGE.md" hidden>
+      <textarea rows="14" aria-label="Edit KNOWLEDGE.md"></textarea>
+      <div class="desk-editorrow"><button type="button" class="desk-save" data-save="KNOWLEDGE.md">Save</button><button type="button" class="desk-cancel" data-cancel="KNOWLEDGE.md">Cancel</button><span class="desk-status" role="status"></span></div>
+    </div>
+  </article>
+  <article class="desk-file" data-file="CONFIG.md">
+    <div class="desk-filehead"><h3>⚙️ Configuration</h3><button type="button" class="desk-edit" data-edit="CONFIG.md">Edit</button></div>
+    <div class="desk-body" data-body="CONFIG.md"><p class="desk-loading">Loading…</p></div>
+    <div class="desk-editor" data-editor="CONFIG.md" hidden>
+      <textarea rows="14" aria-label="Edit CONFIG.md"></textarea>
+      <div class="desk-editorrow"><button type="button" class="desk-save" data-save="CONFIG.md">Save</button><button type="button" class="desk-cancel" data-cancel="CONFIG.md">Cancel</button><span class="desk-status" role="status"></span></div>
+    </div>
+  </article>
+  <article class="desk-file" data-file="STUDY.md">
+    <div class="desk-filehead"><h3>📖 Study Topics</h3><button type="button" class="desk-edit" data-edit="STUDY.md">Edit</button></div>
+    <div class="desk-body" data-body="STUDY.md"><p class="desk-loading">Loading…</p></div>
+    <div class="desk-editor" data-editor="STUDY.md" hidden>
+      <textarea rows="14" aria-label="Edit STUDY.md"></textarea>
+      <div class="desk-editorrow"><button type="button" class="desk-save" data-save="STUDY.md">Save</button><button type="button" class="desk-cancel" data-cancel="STUDY.md">Cancel</button><span class="desk-status" role="status"></span></div>
+    </div>
+  </article>
+</div>
+</section>
+
+<div class="footer">
+Generated 2026-10-18 · Dave's buddy system
+</div>
+
+<script>
+
+/* ============ THE DESK: token-gated read/edit of repo files ============ */
+(function(){
+  var REPO = 'dave-swiger-buddy';
+  var FILES = ['KNOWLEDGE.md', 'CONFIG.md', 'STUDY.md'];
+  var shas = {};
+  function lsGet(){ try { return JSON.parse(localStorage.getItem('buddyTree.v3') || '{}'); } catch(e){ return {}; } }
+  function lsSet(patch){ try { var s = lsGet(); for (var k in patch) s[k] = patch[k]; localStorage.setItem('buddyTree.v3', JSON.stringify(s)); } catch(e){} }
+  function token(){ return lsGet().ghToken || ''; }
+  function esc(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+  /* minimal markdown renderer: headings, bold, lists, paragraphs */
+  function md(src){
+    var lines = src.split('\n'), html = '', inList = false;
+    lines.forEach(function(line){
+      var t = line.trim();
+      if (/^#{1,3}\s/.test(t)) {
+        if (inList) { html += '</ul>'; inList = false; }
+        var lvl = t.match(/^#+/)[0].length;
+        html += '<h' + lvl + '>' + inline(t.replace(/^#+\s*/,'')) + '</h' + lvl + '>';
+      } else if (/^[-*]\s/.test(t)) {
+        if (!inList) { html += '<ul>'; inList = true; }
+        html += '<li>' + inline(t.replace(/^[-*]\s*/,'')) + '</li>';
+      } else if (t === '') {
+        if (inList) { html += '</ul>'; inList = false; }
+      } else {
+        if (inList) { html += '</ul>'; inList = false; }
+        html += '<p>' + inline(t) + '</p>';
+      }
+    });
+    if (inList) html += '</ul>';
+    return html;
+  }
+  function inline(s){
+    s = esc(s);
+    s = s.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+    s = s.replace(/`([^`]+)`/g, '<code>$1</code>');
+    return s;
+  }
+  function ghApi(path, method, body){
+    var t = token();
+    if (!t) throw new Error('no token');
+    return fetch('https://api.github.com' + path, {
+      method: method || 'GET',
+      headers: {'Authorization': 'Bearer ' + t, 'Accept': 'application/vnd.github+json', 'Content-Type': 'application/json'},
+      body: body ? JSON.stringify(body) : undefined
+    }).then(function(r){
+      if (!r.ok) throw new Error('GitHub ' + r.status);
+      return r.status === 204 ? null : r.json();
+    });
+  }
+  function b64decode(s){
+    var bin = atob(s.replace(/\n/g, ''));
+    var bytes = Uint8Array.from(bin, function(c){ return c.charCodeAt(0); });
+    return new TextDecoder().decode(bytes);
+  }
+  function b64encode(str){
+    var bytes = new TextEncoder().encode(str), bin = '';
+    bytes.forEach(function(b){ bin += String.fromCharCode(b); });
+    return btoa(bin);
+  }
+  function loadFile(name){
+    var body = document.querySelector('[data-body="' + name + '"]');
+    ghApi('/repos/davedellaquila/' + REPO + '/contents/' + name)
+      .then(function(j){
+        shas[name] = j.sha;
+        body.innerHTML = md(b64decode(j.content || ''));
+      })
+      .catch(function(e){
+        body.innerHTML = '<p class="desk-loading">Could not load ' + esc(name) + ' (' + esc(e.message) + ').</p>';
+      });
+  }
+  function refresh(){
+    var tok = token();
+    document.getElementById('desk-token').hidden = !!tok;
+    document.querySelectorAll('.desk-edit').forEach(function(b){ b.disabled = !tok; b.style.opacity = tok ? 1 : .45; });
+    if (tok) FILES.forEach(loadFile);
+    else document.querySelectorAll('.desk-body').forEach(function(b){ b.innerHTML = '<p class="desk-loading">Connect your GitHub token above to view.</p>'; });
+  }
+  document.getElementById('desk-token-save').addEventListener('click', function(){
+    var v = document.getElementById('desk-token-input').value.trim();
+    if (v) { lsSet({ghToken: v}); document.getElementById('desk-token-input').value = ''; refresh(); }
+  });
+  document.querySelectorAll('.desk-edit').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      if (!token()) return;
+      var name = btn.getAttribute('data-edit');
+      var editor = document.querySelector('[data-editor="' + name + '"]');
+      var ta = editor.querySelector('textarea');
+      editor.hidden = false; btn.hidden = true;
+      ghApi('/repos/davedellaquila/' + REPO + '/contents/' + name)
+        .then(function(j){ shas[name] = j.sha; ta.value = b64decode(j.content || ''); ta.focus(); })
+        .catch(function(e){ editor.querySelector('.desk-status').textContent = 'Load failed: ' + e.message; });
+    });
+  });
+  document.querySelectorAll('.desk-cancel').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var name = btn.getAttribute('data-cancel');
+      document.querySelector('[data-editor="' + name + '"]').hidden = true;
+      document.querySelector('[data-edit="' + name + '"]').hidden = false;
+    });
+  });
+  document.querySelectorAll('.desk-save').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var name = btn.getAttribute('data-save');
+      var editor = document.querySelector('[data-editor="' + name + '"]');
+      var ta = editor.querySelector('textarea');
+      var status = editor.querySelector('.desk-status');
+      status.textContent = 'Saving…'; btn.disabled = true;
+      ghApi('/repos/davedellaquila/' + REPO + '/contents/' + name, 'PUT', {
+        message: 'Update ' + name + ' from homepage desk',
+        content: b64encode(ta.value),
+        sha: shas[name]
+      }).then(function(j){
+        shas[name] = (j.content || {}).sha;
+        status.textContent = 'Saved ✓';
+        document.querySelector('[data-body="' + name + '"]').innerHTML = md(ta.value);
+        setTimeout(function(){
+          editor.hidden = true;
+          document.querySelector('[data-edit="' + name + '"]').hidden = false;
+          status.textContent = ''; btn.disabled = false;
+        }, 900);
+      }).catch(function(e){
+        status.textContent = 'Save failed: ' + e.message; btn.disabled = false;
+      });
+    });
+  });
+  refresh();
+})();
+
+</script>
+
+<script>
+
+(function(){
+  var box = document.querySelector('.dumpbox');
+  if (!box || box.dataset.dumpInit) return;
+  box.dataset.dumpInit = '1';
+  var bid = box.getAttribute('data-buddy-id') || (function(){
+    var p = location.pathname.replace(/\/+$/, '');
+    return p.substring(p.lastIndexOf('/') + 1);
+  })();
+  var ta = box.querySelector('textarea'),
+      btn = box.querySelector('.dumpbox-btn'),
+      st = box.querySelector('.dumpbox-status'),
+      tokWrap = box.querySelector('.dumpbox-token');
+  function lsGet(){ try { return JSON.parse(localStorage.getItem('buddyTree.v3') || '{}'); } catch(e){ return {}; } }
+  function lsSet(patch){ try { var s = lsGet(); for (var k in patch) s[k] = patch[k]; localStorage.setItem('buddyTree.v3', JSON.stringify(s)); } catch(e){} }
+  function token(){ return lsGet().ghToken || ''; }
+  function b64encode(str){
+    var bytes = new TextEncoder().encode(str), bin = '';
+    bytes.forEach(function(b){ bin += String.fromCharCode(b); });
+    return btoa(bin);
+  }
+  async function ghApi(path, method, body){
+    var t = token();
+    if (!t) throw new Error('Add a GitHub token first.');
+    var r = await fetch('https://api.github.com' + path, {
+      method: method || 'GET',
+      headers: {'Authorization': 'Bearer ' + t, 'Accept': 'application/vnd.github+json', 'Content-Type': 'application/json'},
+      body: body ? JSON.stringify(body) : undefined
+    });
+    if (!r.ok) throw new Error('GitHub ' + r.status);
+    return r.status === 204 ? null : await r.json();
+  }
+  async function ghGetFile(repo, path){
+    try {
+      var j = await ghApi('/repos/davedellaquila/' + repo + '/contents/' + path);
+      if (j && j.content) return {
+        text: new TextDecoder().decode(Uint8Array.from(atob(j.content.replace(/\n/g, '')), function(c){ return c.charCodeAt(0); })),
+        sha: j.sha
+      };
+    } catch(e){}
+    return null;
+  }
+  var repo = null, repoName = bid;
+  async function resolveRepo(){
+    try {
+      var r = await fetch('../buddies.json', {cache: 'no-store'});
+      var d = await r.json();
+      var buds = d.buddies || [];
+      for (var i = 0; i < buds.length; i++) {
+        if (buds[i].id === bid && buds[i].repo) { repo = buds[i].repo; repoName = buds[i].name || bid; break; }
+      }
+    } catch(e){}
+  }
+  /* Local fallback (Dave 2026-10-15, widened 2026-10-16): dumping always works,
+     even with no GitHub token AND no repo linked — entries are saved in this
+     device's localStorage until the GitHub write path can take them. The backlog
+     flushes into the repo on the next successful GitHub dump (once a repo is
+     linked and a token is present). */
+  function localKey(){ return 'buddyTree.ingest.' + bid; }
+  function localBacklog(){
+    try { var a = JSON.parse(localStorage.getItem(localKey()) || '[]'); return Array.isArray(a) ? a : []; }
+    catch(e){ return []; }
+  }
+  function localSave(entry){
+    var a = localBacklog(); a.push(entry);
+    try { localStorage.setItem(localKey(), JSON.stringify(a)); } catch(e){}
+  }
+  function localClear(){ try { localStorage.removeItem(localKey()); } catch(e){} }
+  function refreshUI(){
+    var has = !!token();
+    tokWrap.hidden = has;
+    /* The box always works: no token and/or no repo just means local saves. */
+    ta.disabled = false;
+    btn.disabled = false;
+    var n = localBacklog().length;
+    if (!repo) {
+      st.textContent = n
+        ? n + ' local ' + (n === 1 ? 'dump' : 'dumps') + ' saved on this device — will sync when a repo is linked.'
+        : 'No repo linked yet — dumps save on this device and will sync when one is linked.';
+      return;
+    }
+    st.textContent = has
+      ? (n ? n + ' local ' + (n === 1 ? 'dump' : 'dumps') + ' will sync on next dump.' : '')
+      : 'No GitHub token — dumps save on this device for now.';
+  }
+  var tokInput = tokWrap.querySelector('input'),
+      tokSave = tokWrap.querySelector('button');
+  /* Visual save confirmation (Dave 2026-10-16): the button flashes green
+     with a ✓ for ~2s on every successful save, so the save is unmissable. */
+  function flashSaved(){
+    var label = btn.textContent;
+    btn.classList.add('saved');
+    btn.textContent = '✓ Saved';
+    st.classList.add('flash');
+    setTimeout(function(){
+      btn.classList.remove('saved');
+      if (btn.textContent === '✓ Saved') btn.textContent = label;
+      st.classList.remove('flash');
+    }, 1800);
+  }
+  tokSave.addEventListener('click', function(){
+    var v = tokInput.value.trim();
+    if (!v) return;
+    lsSet({ghToken: v});
+    tokInput.value = '';
+    refreshUI();
+    st.textContent = 'Token saved on this device.';
+  });
+  async function dump(){
+    var text = ta.value.trim();
+    if (!text) return;
+    var stamp = new Date().toLocaleString();
+    var NL = String.fromCharCode(10);
+    if (!repo) {
+      /* No repo linked yet — save on this device; syncs once one is linked. */
+      localSave({t: stamp, text: text});
+      ta.value = '';
+      refreshUI();
+      st.textContent = '✓ Saved on this device — will sync to the repo once one is linked.';
+      flashSaved();
+      return;
+    }
+    if (!token()) {
+      /* Temporary workaround: no token → save on this device. */
+      localSave({t: stamp, text: text});
+      ta.value = '';
+      st.textContent = '✓ Saved on this device — add a GitHub token to sync it to the repo.';
+      flashSaved();
+      return;
+    }
+    st.textContent = 'Dumping…';
+    btn.disabled = true;
+    try {
+      /* Flush any locally-saved backlog first, then the new entry. */
+      var backlog = localBacklog();
+      var parts = backlog.map(function(b){ return '## ' + b.t + NL + NL + b.text + NL + NL; });
+      parts.push('## ' + stamp + NL + NL + text + NL + NL);
+      var cur = await ghGetFile(repo, 'docs/ingest.md');
+      var base = cur ? cur.text : '# Ingest log — ' + repoName + NL + NL;
+      var body = {message: 'Ingest dump for ' + bid, content: b64encode(base + parts.join(''))};
+      if (cur && cur.sha) body.sha = cur.sha;
+      await ghApi('/repos/davedellaquila/' + repo + '/contents/docs/ingest.md', 'PUT', body);
+      localClear();
+      ta.value = '';
+      st.textContent = '✓ Dumped to ' + repo + '/docs/ingest.md' + (backlog.length ? ' (' + backlog.length + ' local synced)' : '');
+      flashSaved();
+    } catch(err){ st.textContent = 'Save failed: ' + (err.message || err); }
+    btn.disabled = false;
+  }
+  btn.addEventListener('click', dump);
+  ta.addEventListener('keydown', function(ev){
+    /* Dave 2026-10-16: plain Return dumps, like the button. Shift+Return for a newline. */
+    if (ev.key === 'Enter' && !ev.shiftKey && !ev.altKey) { ev.preventDefault(); dump(); }
+  });
+  resolveRepo().then(refreshUI);
+})();
+
+</script>
+
+<script>
+
+(function(){
+  var parts = location.pathname.split('/');
+  var bid = '';
+  for (var i = parts.length - 1; i >= 0; i--) { if (parts[i]) { bid = parts[i]; break; } }
+  function applyName(name){
+    if (!name) return;
+    var els = document.querySelectorAll('[data-buddy-name]');
+    for (var k = 0; k < els.length; k++) els[k].textContent = name;
+    var ta = document.querySelector('.dumpbox textarea');
+    if (ta) ta.setAttribute('placeholder', "Dump what's on your mind about " + name + "…");
+  }
+  try {
+    fetch('../buddies.json', {cache: 'no-store'}).then(function(r){ return r.json(); }).then(function(d){
+      var buds = (d && d.buddies) || [];
+      for (var j = 0; j < buds.length; j++) {
+        if (buds[j].id === bid && buds[j].name) { applyName(buds[j].name); break; }
+      }
+    }).catch(function(){});
+  } catch(e){}
+  /* Live rename (Dave 2026-10-16): the dashboard broadcasts renames via
+     localStorage, so an open page updates its name without a refresh.
+     Same browser only — other devices pick it up on their next load. */
+  window.addEventListener('storage', function(e){
+    if (e.key !== 'buddyTree.rename' || !e.newValue) return;
+    try {
+      var d = JSON.parse(e.newValue);
+      if (d && d.id === bid && d.name) applyName(d.name);
+    } catch(err){}
+  });
+})();
+
+</script>
+
+</body>
+</html>

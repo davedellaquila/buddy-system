@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-10-18 (Dave Swiger buddy)
+
+### Added
+- **Dave Swiger buddy** (🎱, Dave 2026-10-18 ~1 AM — "create a desk for him"): Wildlife Trail neighbor in Fiddletown, "a great guy." Living dossier under Acquaintances (kind: personal). Key facts: birthday October 14; drives a Mazda Miata (ND); homebrews his own beer; hosts pool night every once in a while on Friday nights; into astronomy; formerly at Google (laid off). Private repo davedellaquila/dave-swiger-buddy (KNOWLEDGE.md, CONFIG.md, STUDY.md). Custom homepage at dave-swiger-buddy/ with the full desk treatment — 🗂️ The Desk renders KNOWLEDGE.md + CONFIG.md + STUDY.md live from the repo, editable in place via token-gated GitHub API (token stays on-device) — plus key-facts grid, important dates, and a 🧠 brain-dump box. Sticky slim header, working dark mode via prefers-color-scheme, generator-skip marker (no BUDDY-BASIC-TEMPLATE, no "Part of the Buddy System"). Registry now at 118 buddies.
+
 ## 2026-10-17 (Briefing Buddy link-everything)
 
 ### Added
