@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-10-18 (DPG entity question resolved)
+
+### Fixed
+- **Dell'Aquila Performance Group = Dell'Aquila Garage** (Dave 2026-10-18): the two names are the same venture — Quentin and Sawyer's shop; they use both, more aliases possible. Recorded as interchangeable in the DPG repo's KNOWLEDGE.md; the entity-question Needs Attention tile removed from the [DPG homepage](https://davedellaquila.github.io/buddy-system/dpg-shop-software/) and from the registry attention list.
+
 ## 2026-10-18 (DPG Shop Software buddy)
 
 ### Added
