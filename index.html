@@ -289,7 +289,7 @@ body.sb-anchored #sidebar .brand, body.sb-anchored #sidebar .sb-tipjar{backgroun
 #tree-chrome-main{display:flex;flex-direction:column;align-items:center;gap:8px;padding-left:348px}
 body.sb-closed #tree-chrome-main{padding-left:76px}
 #tree-chrome-main #quick-answers{width:100%;max-width:900px}
-#tree-chrome-main .lens-picker-wrap,#tree-chrome-main .orient-tabs{margin:0}
+#tree-chrome-main .lens-picker-wrap{margin:0}
 #main .zoombar{left:calc(50% + 174px)}
 body.sb-closed #main .zoombar{left:calc(50% + 38px)}
 @media (max-width:639px){#tree-chrome-main{padding-left:0}
@@ -504,13 +504,7 @@ body.sb-closed #pane-toggles .ptoggle{padding:6px 4px}
 .lens-picker-wrap{position:relative;display:inline-block;margin:0 0 12px 12px;z-index:60}
 /* Orientation tabs (Dave, 2026-10-13): segmented Vertical/Horizontal control
    sitting just right of the Atlas lens picker. */
-.orient-tabs{display:inline-flex;margin:0 0 12px 8px;vertical-align:top;
-  background:var(--panel);border:1px solid var(--border);border-radius:999px;padding:3px;gap:2px}
-.orient-tabs button{border:none;background:transparent;color:var(--muted);
-  font-size:13px;font-weight:600;padding:8px 14px;border-radius:999px;cursor:pointer;
-  -webkit-tap-highlight-color:transparent}
-.orient-tabs button.sel{background:var(--accent);color:#fff}
-.orient-tabs button:not(.sel):hover{color:var(--text)}
+/* .orient-tabs retired 2026-10-18: replaced by .orient-seg glyph segments in the Atlas row. */
 .lens-pill{display:flex;align-items:center;gap:8px;min-height:44px;padding:10px 16px;
   background:var(--panel);border:1px solid var(--border);border-radius:999px;
   color:var(--text);font-size:14px;font-weight:600;cursor:pointer;
@@ -550,6 +544,99 @@ body.sb-closed #pane-toggles .ptoggle{padding:6px 4px}
   @keyframes lensSheetIn{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:none}}
   .lens-scrim{background:rgba(0,0,0,.35)}
 }
+/* ============ Atlas control row (Jonny's verdict, Dave 2026-10-18) ============
+   ONE compact row: pill -> orientation -> color dots -> zoom -> utilities.
+   44px tall, radius 22px, blurred material, hairline, whisper shadow.
+   Anchored top-left of the Atlas pane at 12px/12px. Never moves.
+   Rhythm: 8px within groups, 24px between. No dividers. */
+.atlas-controls{position:absolute;top:12px;left:12px;z-index:20;
+  display:flex;align-items:center;gap:24px;
+  height:44px;padding:4px 12px;border-radius:22px;box-sizing:border-box;
+  background:color-mix(in srgb, var(--panel) 82%, transparent);
+  -webkit-backdrop-filter:blur(20px) saturate(1.8);backdrop-filter:blur(20px) saturate(1.8);
+  border:1px solid var(--border);box-shadow:0 2px 12px rgba(0,0,0,.08);
+  max-width:calc(100% - 24px);overflow-x:auto;overflow-y:hidden;
+  scrollbar-width:none;-webkit-tap-highlight-color:transparent}
+.atlas-controls::-webkit-scrollbar{display:none}
+.atlas-controls .lens-picker-wrap{margin:0;flex:none}
+/* Pill: 36px, radius 18px, current lens name + chevron. The unexplained blue
+   dot (punch #4) is gone — the name is the label. */
+.atlas-controls .lens-pill{min-height:36px;height:36px;padding:6px 14px;font-size:13px;gap:6px;
+  box-shadow:none}
+.atlas-controls .lens-pill-icon{display:none}
+/* Orientation: 2x44px segments, 20px node glyphs. Accent-tinted active fill.
+   Absent (not disabled) for lenses where orientation is meaningless. */
+.orient-seg{display:flex;flex:none;gap:8px;align-items:center}
+.orient-seg button{width:44px;height:44px;border-radius:12px;border:1px solid transparent;
+  background:transparent;color:var(--muted);cursor:pointer;display:flex;
+  align-items:center;justify-content:center;padding:0;
+  -webkit-tap-highlight-color:transparent}
+.orient-seg button svg{width:20px;height:20px}
+.orient-seg button.sel{background:color-mix(in srgb, var(--accent) 18%, transparent);
+  border-color:color-mix(in srgb, var(--accent) 45%, transparent);color:var(--accent)}
+.orient-seg button:not(.sel):hover{color:var(--text)}
+/* Color dots: 28px dots in 44px targets, filled with live color. No labels —
+   the dot IS the swatch. Names live in the popover. */
+.color-dots{display:flex;flex:none;gap:8px;align-items:center}
+.color-dot{width:44px;height:44px;border:none;background:none;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;padding:0;position:relative;
+  -webkit-tap-highlight-color:transparent}
+.color-dot .dot{width:28px;height:28px;border-radius:50%;border:1px solid var(--border);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.08);pointer-events:none}
+/* Open state: 2px accent ring + 2px gap */
+.color-dot.open .dot{box-shadow:0 0 0 2px var(--bg),0 0 0 4px var(--accent)}
+/* Dot popovers: anchored popover on desktop/iPad, bottom sheet on phone.
+   Same presentation logic as the lens picker. Fixed position escapes the row's
+   horizontal scroll; JS centers it on the dot. */
+.dot-pop{position:fixed;z-index:61;background:var(--panel);border:1px solid var(--border);
+  border-radius:16px;padding:14px;box-shadow:0 12px 40px var(--shadow);min-width:220px;
+  animation:lensIn .18s ease-out}
+.dot-pop[hidden]{display:none}
+.dot-pop h4{margin:0 0 10px;font-size:13px;font-weight:700;color:var(--text)}
+.dot-pop .dot-swatches{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+.dot-pop .dot-swatches button{width:32px;height:32px;border-radius:50%;border:1px solid var(--border);
+  cursor:pointer;padding:0;position:relative}
+.dot-pop .dot-swatches button.sel{box-shadow:0 0 0 2px var(--bg),0 0 0 4px var(--accent)}
+.dot-pop .dot-custom{display:flex;gap:8px;align-items:center}
+.dot-pop .dot-custom input[type=color]{width:44px;height:32px;border:1px solid var(--border);
+  border-radius:8px;background:none;padding:2px;cursor:pointer}
+.dot-pop .dot-reset{background:none;border:1px solid var(--border);border-radius:8px;
+  color:var(--muted);font-size:13px;padding:6px 12px;cursor:pointer}
+.dot-pop .dot-reset:hover{color:var(--text);border-color:var(--accent)}
+@media (max-width:639px){
+  .dot-pop{position:fixed;left:12px;right:12px;bottom:12px;top:auto;transform:none;
+    border-radius:20px;padding:16px 14px calc(16px + env(safe-area-inset-bottom))}
+}
+/* Zoom: plain track (mismatched caps deleted, punch #6), 140px desktop / 96px min.
+   Then 3x44px utility buttons: fit, fullscreen, recenter. */
+.atlas-controls .zrange{flex:none;width:140px;min-width:96px}
+.atlas-utils{display:flex;flex:none;gap:8px;align-items:center}
+.util-btn{width:44px;height:44px;border-radius:12px;border:1px solid transparent;
+  background:transparent;color:var(--muted);cursor:pointer;display:flex;
+  align-items:center;justify-content:center;padding:0;font-size:18px;line-height:1;
+  -webkit-tap-highlight-color:transparent}
+.util-btn:hover{color:var(--text);border-color:var(--border)}
+.util-btn svg{width:20px;height:20px}
+/* Below ~720px pane width: horizontal scroll, never wraps. Scroll starts left. */
+@media (max-width:719px){
+  .atlas-controls{gap:16px;padding:4px 16px}
+  .atlas-controls .zrange{width:96px}
+}
+/* The lens dropdown escapes the row's horizontal scroll: fixed position below
+   the row (the row is 44px at top:12px). Phone keeps the bottom sheet. */
+.atlas-controls .lens-picker-wrap{position:static}
+.atlas-controls .lens-dropdown{position:fixed;top:68px;left:12px;z-index:61}
+@media (max-width:639px){
+  .atlas-controls .lens-dropdown{top:auto}
+}
+/* Punch #1: the chrome needs top clearance so the Quick Answers strip never
+   clips at the viewport edge. The Atlas row floats at top:12px (44px tall),
+   so the chrome starts below it. */
+#tree-chrome-main{padding-top:64px}
+/* Punch #2: Quick Answers chips must never squeeze to 2-char labels. They keep
+   natural width and the strip scrolls. */
+#quick-answers .qa-chip{flex:none}
+#quick-answers .qa-link{flex:none}
 /* ============ Default View styles (Dave 2026-10-15) ============
    Four visual languages for the auto-generated buddy homepage ("show
    everything"), hierarchy-aware: root = system rollups, parents = children
@@ -1738,24 +1825,10 @@ input.bp-name{background:transparent;border-top:none;border-right:none;border-le
 .node{position:relative;width:max-content;min-width:180px;max-width:320px;flex-shrink:0}
 #treezoom .node{background:var(--node-bg,var(--panel));border:1px solid var(--border);border-radius:12px}
 /* Dave 2026-10-16: node background color chiclet */
-.nodebg-chiclet{display:inline-flex;align-items:center;gap:6px;margin:0 0 12px 8px;vertical-align:top;
-  font-size:12px;color:var(--muted)}
-.nodebg-chiclet input[type=color]{width:28px;height:28px;border:1px solid var(--border);border-radius:50%;
-  padding:0;background:none;cursor:pointer}
-.nodebg-chiclet input[type=color]::-webkit-color-swatch-wrapper{padding:2px}
-.nodebg-chiclet input[type=color]::-webkit-color-swatch{border:none;border-radius:50%}
+/* .nodebg-chiclet retired 2026-10-18: replaced by the tile color dot in the Atlas row. */
 /* Dave 2026-10-17: main-view background picker */
 #view-tree{background:var(--main-bg,var(--bg))}
-.mainbg-chiclet{display:inline-flex;align-items:center;gap:6px;margin:0 0 12px 8px;vertical-align:top;
-  font-size:12px;color:var(--muted)}
-.mainbg-chiclet input[type=color]{width:28px;height:28px;border:1px solid var(--border);border-radius:50%;
-  padding:0;background:none;cursor:pointer}
-.mainbg-chiclet input[type=color]::-webkit-color-swatch-wrapper{padding:2px}
-.mainbg-chiclet input[type=color]::-webkit-color-swatch{border:none;border-radius:50%}
-.mainbg-presets{display:inline-flex;gap:4px;align-items:center}
-.mainbg-preset{width:22px;height:22px;border-radius:50%;border:1px solid var(--border);cursor:pointer;padding:0}
-.mainbg-preset.sel{outline:2px solid var(--accent);outline-offset:1px}
-.mainbg-reset{font-size:12px;color:var(--muted);background:none;border:none;cursor:pointer;text-decoration:underline;padding:2px 4px}
+/* .mainbg-chiclet retired 2026-10-18: replaced by the bg color dot in the Atlas row. */
 #treezoom .node .name{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 #treezoom .node .desc{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
 /* Fix: flex-centered org tree overflows to negative x-coords on narrow screens, which widens the
@@ -3055,7 +3128,7 @@ function renderDevelopSection(){
   const dev = document.getElementById('fset-develop');
   if (!dev) return;
   const simulating = !!devBackup;
-  const buildNum = '20261018.1006';
+  const buildNum = '20261018.1136';
   dev.innerHTML = ''
     + '<label class="fset-check"><input type="checkbox" id="dev-empty-toggle"' + (simulating ? ' checked' : '') + '> <span><strong>Simulate new user</strong> — empty data file, as if opening the shared link fresh</span></label>'
     + '<div class="fineprint" style="margin:8px 0 12px">Build <span style="font-family:monospace">' + escHtml(String(buildNum)) + '</span> · ' + BUDDIES.length + ' buddies in this file</div>'
@@ -4284,7 +4357,7 @@ function renderBuddy(id){
       'Anybody with repo access can see this note. Saved to the buddy’s repo (docs/notes.md).')
     + '<div class="attr-body"><textarea class="notes" id="bp-shared-notes" placeholder="Anybody with repo access can see this note."></textarea>'
     + '<p class="fineprint" id="shared-status"></p></div></div>'
-    + '<div class="bp-build">Build 20261018.1006</div>'
+    + '<div class="bp-build">Build 20261018.1136</div>'
     + '</div>';
   // Update every visible label for a buddy after a rename/re-icon, across all
   // Atlas lenses. A rename changes no structure, so labels are patched in place
@@ -5025,6 +5098,7 @@ function renderOrgTree(){
   // UI chrome (Quick answers + lens picker) lives outside the zoomed scroll pane
   // so the zoom control only scales the chart itself.
   document.getElementById('tree-chrome-main').innerHTML = quickAnswersHtml() + chartSwitcherHtml();
+  wireAtlasRow();
   setPaneContent('treezoom-main', chartHtml);
   setPaneContent('treezoom-orph', orphHtml);
   applyTreeSplit();
@@ -5080,6 +5154,43 @@ function chartThumbSvg(id){
     default: return '';
   }
 }
+/* Atlas control row: wire the per-render controls. The row is re-rendered with
+   the chrome, so zoom + utilities attach here (not once at load). */
+function wireAtlasRow(){
+  const zr = document.getElementById('zoomrange-main');
+  if (zr && !zr.dataset.wired) {
+    zr.dataset.wired = '1';
+    zr.addEventListener('input', e => {
+      S.zoom = parseInt(e.target.value, 10) || 100; save(); applyZoom();
+    });
+  }
+  const zf = document.getElementById('zoomfit-main');
+  if (zf && !zf.dataset.wired) {
+    zf.dataset.wired = '1';
+    zf.addEventListener('click', () => zoomToFit('treezoom-main', 'zoom'));
+  }
+  const zfull = document.getElementById('zoomfull-main');
+  if (zfull && !zfull.dataset.wired) {
+    zfull.dataset.wired = '1';
+    zfull.addEventListener('click', () => {
+      const pane = document.getElementById('treepane-main');
+      if (!pane) return;
+      if (document.fullscreenElement) document.exitFullscreen();
+      else if (pane.requestFullscreen) pane.requestFullscreen();
+    });
+  }
+  const zc = document.getElementById('zoomcenter-main');
+  if (zc && !zc.dataset.wired) {
+    zc.dataset.wired = '1';
+    /* Center-on-buddy (Dave 2026-10-15): smooth-scrolls the Atlas pane so
+       the current buddy's node lands centered. */
+    zc.addEventListener('click', () => {
+      const id = atlasFocusBuddyId();
+      if (!id) { toast('No buddy selected.'); return; }
+      if (!centerOnBuddy(id)) toast('Buddy not visible in this view.');
+    });
+  }
+}
 /* Dave 2026-10-16: node tile background color */
 function applyNodeBg(){
   const c = S.nodeBg;
@@ -5088,9 +5199,13 @@ function applyNodeBg(){
 function initNodeBg(){
   applyNodeBg();
   document.addEventListener('input', e => {
-    if (e.target && e.target.id === 'nodebg-pick') {
-      S.nodeBg = e.target.value; save(); applyNodeBg();
+    if (e.target && e.target.id === 'tile-pick') {
+      S.nodeBg = e.target.value; save(); applyNodeBg(); updateAtlasDots();
     }
+  });
+  document.addEventListener('click', e => {
+    const r = e.target && e.target.closest ? e.target.closest('#tile-reset') : null;
+    if (r) { S.nodeBg = ''; save(); applyNodeBg(); renderOrgTree(); }
   });
 }
 /* Dave 2026-10-17: main-view background picker */
@@ -5105,51 +5220,90 @@ const MAINBG_PRESETS = [
 function applyMainBg(){
   const c = S.mainBg;
   document.documentElement.style.setProperty('--main-bg', c || '');
-  document.querySelectorAll('.mainbg-preset').forEach(b => {
-    b.classList.toggle('sel', !!c && b.dataset.color.toLowerCase() === String(c).toLowerCase());
-  });
-  document.querySelectorAll('.mainbg-reset').forEach(b => { b.hidden = !c; });
 }
 function setMainBg(c){ S.mainBg = c || ''; save(); applyMainBg(); }
-function mainBgHtml(){
-  const cur = (S.mainBg || '').toLowerCase();
-  return '<label class="mainbg-chiclet" title="Main view background"><input type="color" id="mainbg-pick" value="'
-    + (S.mainBg || '#0d1117') + '" aria-label="Main view background color"><span>Background</span>'
-    + '<span class="mainbg-presets">'
-    + MAINBG_PRESETS.map(p => '<button type="button" class="mainbg-preset' + (cur === p.c ? ' sel' : '')
-      + '" data-color="' + p.c + '" title="' + p.label + '" aria-label="' + p.label + ' background"'
-      + ' style="background:' + p.c + '"></button>').join('')
-    + '</span>'
-    + '<button type="button" class="mainbg-reset"' + (S.mainBg ? '' : ' hidden') + '>Reset</button>'
-    + '</label>';
-}
+/* mainBgHtml retired 2026-10-18: replaced by the bg color dot + popover in the Atlas control row. */
 function initMainBg(){
   applyMainBg();
   document.addEventListener('input', e => {
-    if (e.target && e.target.id === 'mainbg-pick') setMainBg(e.target.value);
+    if (e.target && e.target.id === 'bg-pick') { setMainBg(e.target.value); updateAtlasDots(); }
   });
   document.addEventListener('click', e => {
-    const p = e.target && e.target.closest ? e.target.closest('.mainbg-preset') : null;
-    if (p) { setMainBg(p.dataset.color); return; }
-    const r = e.target && e.target.closest ? e.target.closest('.mainbg-reset') : null;
-    if (r) setMainBg('');
+    const p = e.target && e.target.closest ? e.target.closest('[data-bg]') : null;
+    if (p) { setMainBg(p.dataset.bg); renderOrgTree(); return; }
+    const r = e.target && e.target.closest ? e.target.closest('#bg-reset') : null;
+    if (r) { setMainBg(''); renderOrgTree(); return; }
   });
+}
+/* Atlas row: dot popovers. Tap a dot to open its popover; tap the dot again,
+   tap outside, or press Escape to close. While open the dot wears the ring. */
+function closeDotPops(){
+  ['bg', 'tile'].forEach(k => {
+    const pop = document.getElementById(k + '-pop');
+    const dot = document.getElementById(k + '-dot');
+    if (pop) pop.hidden = true;
+    if (dot) dot.classList.remove('open');
+  });
+}
+function positionDotPop(dot, pop){
+  if (window.innerWidth <= 639) return; /* phone uses the bottom sheet */
+  const r = dot.getBoundingClientRect();
+  pop.style.top = (r.bottom + 10) + 'px';
+  pop.style.left = Math.max(12, Math.min(r.left + r.width/2 - 110, window.innerWidth - 232)) + 'px';
+}
+function updateAtlasDots(){
+  const bgDot = document.querySelector('#bg-dot .dot');
+  const tileDot = document.querySelector('#tile-dot .dot');
+  if (bgDot) bgDot.style.background = S.mainBg || '#0d1117';
+  if (tileDot) tileDot.style.background = S.nodeBg || '#e8eef5';
 }
 function chartSwitcherHtml(){
   const cur = getChartType();
   const curDef = CHART_TYPES.find(c => c.id === cur) || CHART_TYPES[0];
-  /* Orientation tabs (Dave, 2026-10-13): Vertical/Horizontal for the org chart,
-     sitting just right of the Atlas lens picker. */
-  const orientTabs = cur === 'org'
-    ? '<div class="orient-tabs" id="orient-tabs" role="tablist" aria-label="Org chart orientation">'
-      + '<button type="button" role="tab" data-orient="vertical" class="' + ((S.orgOrientation || 'vertical') === 'vertical' ? 'sel' : '') + '" aria-selected="' + ((S.orgOrientation || 'vertical') === 'vertical') + '">Vertical</button>'
-      + '<button type="button" role="tab" data-orient="horizontal" class="' + ((S.orgOrientation || 'vertical') === 'horizontal' ? 'sel' : '') + '" aria-selected="' + ((S.orgOrientation || 'vertical') === 'horizontal') + '">Horizontal</button>'
+  /* Orientation segments (Jonny 2026-10-18): drawn node glyphs, 44px targets.
+     Visible ONLY for orientation-meaningful lenses (org). Absent elsewhere. */
+  const orientSeg = cur === 'org'
+    ? '<div class="orient-seg" id="orient-seg" role="tablist" aria-label="Org chart orientation">'
+      + '<button type="button" role="tab" data-orient="vertical" class="' + ((S.orgOrientation || 'vertical') === 'vertical' ? 'sel' : '') + '" aria-selected="' + ((S.orgOrientation || 'vertical') === 'vertical') + '" title="Vertical layout" aria-label="Vertical layout">'
+      + '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="10" cy="4" r="2.4"/><circle cx="4.5" cy="15" r="2.4"/><circle cx="15.5" cy="15" r="2.4"/><path d="M10 6.5v4m0 0l-4.5 3m4.5-3l4.5 3"/></svg></button>'
+      + '<button type="button" role="tab" data-orient="horizontal" class="' + ((S.orgOrientation || 'vertical') === 'horizontal' ? 'sel' : '') + '" aria-selected="' + ((S.orgOrientation || 'vertical') === 'horizontal') + '" title="Horizontal layout" aria-label="Horizontal layout">'
+      + '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="4" cy="10" r="2.4"/><circle cx="15" cy="4.5" r="2.4"/><circle cx="15" cy="15.5" r="2.4"/><path d="M6.5 10h4m0 0l3-4.5m-3 4.5l3 4.5"/></svg></button>'
       + '</div>'
-      + '<label class="nodebg-chiclet" title="Tile background color"><input type="color" id="nodebg-pick" value="' + (S.nodeBg || '#e8eef5') + '" aria-label="Tile background color"><span>Tile color</span></label>'
     : '';
-  return '<div class="lens-picker-wrap">'
+  /* Color dots: 28px dots in 44px targets, filled with live color. Tap opens
+     the popover (desktop/iPad) or bottom sheet (phone) carrying the names. */
+  const bgC = S.mainBg || '#0d1117';
+  const tileC = S.nodeBg || '#e8eef5';
+  const dots = '<div class="color-dots">'
+    + '<button type="button" class="color-dot" id="bg-dot" title="Background color" aria-label="Background color" aria-haspopup="true">'
+    + '<span class="dot" style="background:' + bgC + '"></span></button>'
+    + '<div class="dot-pop" id="bg-pop" hidden><h4>Background</h4>'
+    + '<div class="dot-swatches">' + MAINBG_PRESETS.map(pr => '<button type="button" data-bg="' + pr.c + '" title="' + pr.label + '" aria-label="' + pr.label + ' background" style="background:' + pr.c + '"' + (bgC.toLowerCase() === pr.c.toLowerCase() ? ' class="sel"' : '') + '></button>').join('') + '</div>'
+    + '<div class="dot-custom"><input type="color" id="bg-pick" value="' + bgC + '" aria-label="Custom background color">'
+    + (S.mainBg ? '<button type="button" class="dot-reset" id="bg-reset">Reset</button>' : '')
+    + '</div></div>'
+    + '<button type="button" class="color-dot" id="tile-dot" title="Tile color" aria-label="Tile color" aria-haspopup="true">'
+    + '<span class="dot" style="background:' + tileC + '"></span></button>'
+    + '<div class="dot-pop" id="tile-pop" hidden><h4>Tile color</h4>'
+    + '<div class="dot-custom"><input type="color" id="tile-pick" value="' + tileC + '" aria-label="Custom tile color">'
+    + (S.nodeBg ? '<button type="button" class="dot-reset" id="tile-reset">Reset</button>' : '')
+    + '</div></div>'
+    + '</div>';
+  /* Zoom: plain track (caps deleted), 140px desktop / 96px min. Then three
+     44px utility buttons: fit, fullscreen, recenter — line icons + tooltips. */
+  const zoom = '<input type="range" class="zrange" id="zoomrange-main" min="5" max="125" step="1" value="' + (S.zoom || 100) + '" aria-label="Buddy tree zoom">'
+    + '<div class="atlas-utils">'
+    + '<button type="button" class="util-btn" id="zoomfit-main" title="Zoom to fit" aria-label="Zoom to fit">'
+    + '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 7V3h4M13 3h4v4M17 13v4h-4M7 17H3v-4"/></svg></button>'
+    + '<button type="button" class="util-btn" id="zoomfull-main" title="Fullscreen" aria-label="Fullscreen">'
+    + '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M7 3H3v4M13 3h4v4M7 17H3v-4M13 17h4v-4"/></svg></button>'
+    + '<button type="button" class="util-btn" id="zoomcenter-main" title="Center on current buddy" aria-label="Center on current buddy">'
+    + '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="10" cy="10" r="3"/><path d="M10 2v4M10 14v4M2 10h4M14 10h4"/></svg></button>'
+    + '</div>';
+  return '<div class="atlas-controls" id="atlas-controls">'
+    + '<div class="lens-picker-wrap">'
     + '<button class="lens-pill" id="lens-pill" aria-haspopup="true" aria-expanded="false">'
-    + '<span class="lens-pill-icon">◉</span><span>' + curDef.label + '</span><span class="lens-pill-chev">▾</span>'
+    + '<span>' + curDef.label + '</span><span class="lens-pill-chev">▾</span>'
     + '</button>'
     + '<div class="lens-dropdown" id="lens-dropdown" hidden>'
     + '<button class="lens-close" id="lens-close" aria-label="Close chart picker">&times;</button>'
@@ -5159,9 +5313,11 @@ function chartSwitcherHtml(){
       + '<span class="lens-blurb">' + CHART_BLURBS[c.id] + '</span>'
       + '</button>').join('')
     + '</div></div>'
-    + orientTabs
-    + mainBgHtml()
-    + '<div class="lens-scrim" id="lens-scrim" hidden></div>';
+    + orientSeg
+    + dots
+    + zoom
+    + '<div class="lens-scrim" id="lens-scrim" hidden></div>'
+    + '</div>';
 }
 /* ============ Default View styles (Dave 2026-10-15) ============
    The auto-generated buddy homepage ("show everything") rendered in four
@@ -6025,7 +6181,7 @@ function setTreePane(which, show){
   }
   vt.insertAdjacentHTML('afterbegin',
     '<div class="treewrap" id="zoomwrap"><div id="treezoom">'
-    + '<div class="treepane" id="treepane-main">' + zoombarHTML('main', 'Buddy tree zoom')
+    + '<div class="treepane" id="treepane-main">'
     + '<div class="tree-chrome" id="tree-chrome-main"></div>'
     + '<div class="treescroll" id="treezoom-main" data-zoomkey="zoom" data-treepane="1"></div></div>'
     + '<div id="tree-split" title="Drag to resize the tree and orphan panes"><div class="split-grip"></div></div>'
@@ -6037,18 +6193,8 @@ function setTreePane(which, show){
   Array.from(vt.childNodes).forEach(n => { if (n !== tw) main.appendChild(n); });
   watchScrollPos('tree:main', document.getElementById('treezoom-main'));
   watchScrollPos('tree:orph', document.getElementById('treezoom-orph'));
-  document.getElementById('zoomrange-main').addEventListener('input', e => {
-    S.zoom = parseInt(e.target.value, 10) || 100; save(); applyZoom();
-  });
-  document.getElementById('zoomfit-main').addEventListener('click', () => zoomToFit('treezoom-main', 'zoom'));
-  /* Center-on-buddy button (Dave 2026-10-15): smooth-scrolls the Atlas pane so
-     the current buddy's node lands centered. */
-  const zcMain = document.getElementById('zoomcenter-main');
-  if (zcMain) zcMain.addEventListener('click', () => {
-    const id = atlasFocusBuddyId();
-    if (!id) { toast('No buddy selected.'); return; }
-    if (!centerOnBuddy(id)) toast('Buddy not visible in this view.');
-  });
+  /* Main-pane zoom lives in the Atlas control row (re-rendered with the chrome),
+     so it's wired per-render by wireAtlasRow(). Orphan pane keeps its zoombar. */
   document.getElementById('zoomrange-orph').addEventListener('input', e => {
     S.zoomOrph = parseInt(e.target.value, 10) || 100; save(); applyZoom();
   });
@@ -6632,7 +6778,7 @@ function renderPlan(id){
     + '<p class="fineprint">Saved on this device. (For your eyes only)</p></div>'
     + '<div class="bp-sec"><h3>Shared notes<span class="info-tip" data-tip="Visible to everyone with access to this project.">\u24d8</span></h3><textarea class="notes" id="bp-shared" placeholder="Shared notes\u2026 (visible to everyone with access)">'+escHtml((S.planShared||{})[id]||'')+'</textarea>'
     + '<p class="fineprint">Shared — visible to everyone with access.</p></div>'
-    + '<div class="bp-build">Build 20261018.1006</div>'
+    + '<div class="bp-build">Build 20261018.1136</div>'
     + '</div>';
   const nt = document.getElementById('bp-notes');
   let t = null;
@@ -6707,6 +6853,11 @@ document.addEventListener('keydown', e => {
   }
   // Escape closes settings or detail panel
   if (e.key === 'Escape') {
+    const bgPop = document.getElementById('bg-pop');
+    const tilePop = document.getElementById('tile-pop');
+    if ((bgPop && !bgPop.hidden) || (tilePop && !tilePop.hidden)) {
+      closeDotPops(); e.preventDefault(); return;
+    }
     const dvdd = document.getElementById('dv-dropdown');
     if (dvdd && !dvdd.hidden) { closeDvPicker(); e.preventDefault(); return; }
     const m = document.getElementById('field-settings');
@@ -9116,14 +9267,14 @@ function openWhatsNew(){
     .then(r => r.ok ? r.text() : '')
     .then(t => {
       const serverBuild = t.trim();
-      if (serverBuild && serverBuild !== '20261018.1006') {
+      if (serverBuild && serverBuild !== '20261018.1136') {
         updBtn.style.display = '';
         updBtn.title = 'Update to build ' + serverBuild;
       }
       // Show build numbers at the top of the sheet (Dave's request 2026-10-12)
-      const myBuild = '20261018.1006';
+      const myBuild = '20261018.1136';
       let buildLine = '<p class="fineprint" style="margin-top:0">You’re on build ' + escHtml(myBuild) + '.';
-      if (serverBuild && serverBuild !== '20261018.1006' && isNewerBuild(serverBuild, myBuild)) {
+      if (serverBuild && serverBuild !== '20261018.1136' && isNewerBuild(serverBuild, myBuild)) {
         buildLine += ' Build ' + escHtml(serverBuild) + ' is available.';
       }
       buildLine += '</p>';
@@ -9162,7 +9313,7 @@ function isNewerBuild(server, mine){
   } catch (e) { return false; }
 }
 function initVersionCheck(){
-  const myBuild = '20261018.1006';
+  const myBuild = '20261018.1136';
   function showUpdateBanner(serverBuild){
     if (document.getElementById('update-banner')) return;
     const b = document.createElement('div');
@@ -9636,7 +9787,7 @@ document.addEventListener('click', e => {
     return;
   }
   /* Orientation tabs (Dave, 2026-10-13): Vertical/Horizontal for the org chart. */
-  const otab = e.target.closest('#orient-tabs [data-orient]');
+  const otab = e.target.closest('#orient-seg [data-orient]');
   if (otab) {
     S.orgOrientation = otab.dataset.orient; save();
     const chart = document.querySelector('#treezoom-main .chart');
@@ -9644,6 +9795,25 @@ document.addEventListener('click', e => {
     setTimeout(() => renderOrgTree(), 140);
     return;
   }
+  /* Atlas row color dots: tap toggles the popover; the open dot wears the ring. */
+  const bgDot = e.target.closest('#bg-dot');
+  if (bgDot) {
+    const pop = document.getElementById('bg-pop');
+    const wasOpen = pop && !pop.hidden;
+    closeDotPops();
+    if (pop && !wasOpen) { positionDotPop(bgDot, pop); pop.hidden = false; bgDot.classList.add('open'); }
+    return;
+  }
+  const tileDot = e.target.closest('#tile-dot');
+  if (tileDot) {
+    const pop = document.getElementById('tile-pop');
+    const wasOpen = pop && !pop.hidden;
+    closeDotPops();
+    if (pop && !wasOpen) { positionDotPop(tileDot, pop); pop.hidden = false; tileDot.classList.add('open'); }
+    return;
+  }
+  /* Clicking anywhere outside an open dot popover closes it. */
+  if (!e.target.closest('.dot-pop')) closeDotPops();
   const lscrim = e.target.closest('#lens-scrim');
   if (lscrim) { closeLensPicker(); return; }
   // Default View style picker (Dave 2026-10-15): pill toggles, cards switch style, scrim/close/Escape dismisses

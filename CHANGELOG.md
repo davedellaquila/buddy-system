@@ -1,4 +1,13 @@
 ## 2026-10-18
+### Atlas control row — six rows collapsed to one (Jonny's verdict, Dave's greenlight)
+- New `.atlas-controls` toolbar, anchored top-left of the Atlas pane (12px/12px): lens pill → orientation glyphs → bg/tile color dots → zoom slider → fit/fullscreen/recenter utilities. 44px tall, 22px radius, blurred material, hairline, whisper shadow. 8px within groups / 24px between, no dividers. Horizontal scroll under ~720px pane width.
+- Pill keeps the current lens name + ▾ (the unexplained blue dot is gone — punch #4); "Atlas" goes in the view chrome as the view title.
+- Orientation is now drawn node glyphs (vertical/horizontal), visible ONLY for the org lens — absent elsewhere, not disabled (punch #7).
+- Color dots: 28px dots in 44px targets filled with live color, no labels; tap opens an anchored popover (desktop/iPad) or bottom sheet (phone) with presets + custom picker + reset (punches #8, #9).
+- Zoom: mismatched end caps deleted (punch #6); 140px slider (96px min); three 44px line-icon utility buttons with tooltips — fit, fullscreen (new), recenter (punch #5).
+- Ride-along fixes: Quick Answers chips get `flex:none` so they never squeeze to 2-char labels (punch #2); chrome top clearance so the strip never clips (punch #1).
+
+## 2026-10-18
 ### Fixed — collapsed rail no longer obscures content
 - The collapsed left-panel rail (64px floating icon strip) was overlapping page content — reported by Dave on the Car Buddy homepage view at iPad width. Homepage mode strips `#main` padding to zero, so the rail covered the first ~76px of the iframe.
 - Now `body.sb-closed #main` (and `#main.homepage-mode`) gets `padding-left:88px` (12px rail offset + 64px rail + 12px breathing room), so content clears the rail in every view.
