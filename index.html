@@ -242,7 +242,10 @@ body{padding:0}
   z-index:40;border:1px solid var(--border);border-radius:18px;
   box-shadow:0 8px 32px var(--shadow-soft);
   -webkit-backdrop-filter:blur(20px) saturate(1.4);backdrop-filter:blur(20px) saturate(1.4);
-  transition:transform .5s cubic-bezier(.32,.72,.35,1), visibility 0s}
+  transition:transform .5s cubic-bezier(.32,.72,.35,1), visibility 0s, width .45s cubic-bezier(.32,.72,.35,1)}
+/* Dave 2026-10-18: kill the width transition while resize-dragging so the
+   panel tracks the pointer instead of chasing it. */
+body.sb-resizing #sidebar{transition:transform .5s cubic-bezier(.32,.72,.35,1), visibility 0s}
 body.sb-closed #sidebar{width:64px;padding:12px 8px;overflow:visible;height:auto;max-height:calc(100dvh - 24px);top:12px;bottom:auto;border-radius:18px;
   left:12px;right:auto;background:color-mix(in srgb, var(--panel) 82%, transparent);
   -webkit-backdrop-filter:blur(20px) saturate(1.8);backdrop-filter:blur(20px) saturate(1.8);
@@ -553,7 +556,7 @@ body.sb-closed #pane-toggles .ptoggle{padding:6px 4px}
    Rhythm: 8px within groups, 24px between. No dividers. */
 .atlas-controls{position:absolute;top:12px;left:360px;z-index:20;
   display:flex;align-items:center;gap:24px;
-  height:44px;padding:4px 12px;border-radius:22px;box-sizing:border-box;
+  height:44px;padding:4px 12px 4px 4px;border-radius:22px;box-sizing:border-box;
   background:color-mix(in srgb, var(--panel) 82%, transparent);
   -webkit-backdrop-filter:blur(20px) saturate(1.8);backdrop-filter:blur(20px) saturate(1.8);
   border:1px solid var(--border);box-shadow:0 2px 12px rgba(0,0,0,.08);
@@ -578,13 +581,13 @@ body.sb-closed .atlas-controls{left:88px;max-width:calc(100% - 100px)}
 /* Orientation: 2x44px segments, 20px node glyphs. Accent-tinted active fill.
    Absent (not disabled) for lenses where orientation is meaningless. */
 .orient-seg{display:flex;flex:none;gap:8px;align-items:center}
-.orient-seg button{width:44px;height:44px;border-radius:12px;border:1px solid transparent;
+.orient-seg button{width:44px;height:44px;border-radius:12px;border:none;
   background:transparent;color:var(--muted);cursor:pointer;display:flex;
   align-items:center;justify-content:center;padding:0;
   -webkit-tap-highlight-color:transparent}
 .orient-seg button svg{width:20px;height:20px}
 .orient-seg button.sel{background:color-mix(in srgb, var(--accent) 18%, transparent);
-  border-color:color-mix(in srgb, var(--accent) 45%, transparent);color:var(--accent)}
+  color:var(--accent)}
 .orient-seg button:not(.sel):hover{color:var(--text)}
 /* Color dots: 28px dots in 44px targets, filled with live color. No labels —
    the dot IS the swatch. Names live in the popover. */
@@ -3172,7 +3175,7 @@ function renderDevelopSection(){
   const dev = document.getElementById('fset-develop');
   if (!dev) return;
   const simulating = !!devBackup;
-  const buildNum = '20261018.1441';
+  const buildNum = '20261018.2159';
   dev.innerHTML = ''
     + '<label class="fset-check"><input type="checkbox" id="dev-empty-toggle"' + (simulating ? ' checked' : '') + '> <span><strong>Simulate new user</strong> — empty data file, as if opening the shared link fresh</span></label>'
     + '<div class="fineprint" style="margin:8px 0 12px">Build <span style="font-family:monospace">' + escHtml(String(buildNum)) + '</span> · ' + BUDDIES.length + ' buddies in this file</div>'
@@ -4412,7 +4415,7 @@ function renderBuddy(id){
       'Anybody with repo access can see this note. Saved to the buddy’s repo (docs/notes.md).')
     + '<div class="attr-body"><textarea class="notes" id="bp-shared-notes" placeholder="Anybody with repo access can see this note."></textarea>'
     + '<p class="fineprint" id="shared-status"></p></div></div>'
-    + '<div class="bp-build">Build 20261018.1441</div>'
+    + '<div class="bp-build">Build 20261018.2159</div>'
     + '</div>';
   // Update every visible label for a buddy after a rename/re-icon, across all
   // Atlas lenses. A rename changes no structure, so labels are patched in place
@@ -5229,6 +5232,14 @@ function chartThumbSvg(id){
 /* Atlas control row: wire the per-render controls. The row is re-rendered with
    the chrome, so zoom + utilities attach here (not once at load). */
 function wireAtlasRow(){
+  // Dave 2026-10-18: the dot popovers must live on document.body, NOT inside
+  // .atlas-controls — the row's backdrop-filter makes position:fixed children
+  // position relative to the row (not the viewport), and overflow-y:hidden
+  // clips them. On body they're true viewport-fixed and the taps work.
+  ['bg-pop', 'tile-pop'].forEach(pid => {
+    const pop = document.getElementById(pid);
+    if (pop && pop.parentElement !== document.body) document.body.appendChild(pop);
+  });
   const zr = document.getElementById('zoomrange-main');
   if (zr && !zr.dataset.wired) {
     zr.dataset.wired = '1';
@@ -6852,7 +6863,7 @@ function renderPlan(id){
     + '<p class="fineprint">Saved on this device. (For your eyes only)</p></div>'
     + '<div class="bp-sec"><h3>Shared notes<span class="info-tip" data-tip="Visible to everyone with access to this project.">\u24d8</span></h3><textarea class="notes" id="bp-shared" placeholder="Shared notes\u2026 (visible to everyone with access)">'+escHtml((S.planShared||{})[id]||'')+'</textarea>'
     + '<p class="fineprint">Shared — visible to everyone with access.</p></div>'
-    + '<div class="bp-build">Build 20261018.1441</div>'
+    + '<div class="bp-build">Build 20261018.2159</div>'
     + '</div>';
   const nt = document.getElementById('bp-notes');
   let t = null;
@@ -6903,9 +6914,12 @@ document.addEventListener('keydown', e => {
   if (!typing && !e.metaKey && !e.ctrlKey && !e.altKey) {
     if (e.key === '/') {
       e.preventDefault();
+      // Dave 2026-10-18: / opens the collapsed panel AND lands focus in search.
+      // Focus waits a frame so the input is laid out and focusable (focusing
+      // synchronously after un-hiding can silently fail).
       if (!isSidebarOpen()) setSidebarOpen(true);
       const bs = document.getElementById('buddy-search');
-      if (bs) { bs.focus(); bs.select(); }
+      if (bs) requestAnimationFrame(() => { bs.focus(); bs.select(); });
       return;
     }
     if (e.key === 'n' || e.key === 'N') {
@@ -7144,6 +7158,7 @@ document.addEventListener('keydown', e => {
     if (!sdrag) {
       if (Math.abs(e.clientX - sx) < 6) return; /* tap slop: don't resize on a plain tap */
       sdrag = true;
+      document.body.classList.add('sb-resizing'); // Dave 2026-10-18: no width transition mid-drag
       try { h.setPointerCapture(e.pointerId); } catch (err) {}
       e.preventDefault();
     }
@@ -7161,6 +7176,7 @@ document.addEventListener('keydown', e => {
   });
   const done = () => {
     if (sx === null) return; sx = null;
+    document.body.classList.remove('sb-resizing');
     if (!sdrag || snapped) return;
     S.sbWidth = Math.round(sb.getBoundingClientRect().width); save();
     applySbWidth();
@@ -9343,14 +9359,14 @@ function openWhatsNew(){
     .then(r => r.ok ? r.text() : '')
     .then(t => {
       const serverBuild = t.trim();
-      if (serverBuild && serverBuild !== '20261018.1441') {
+      if (serverBuild && serverBuild !== '20261018.2159') {
         updBtn.style.display = '';
         updBtn.title = 'Update to build ' + serverBuild;
       }
       // Show build numbers at the top of the sheet (Dave's request 2026-10-12)
-      const myBuild = '20261018.1441';
+      const myBuild = '20261018.2159';
       let buildLine = '<p class="fineprint" style="margin-top:0">You’re on build ' + escHtml(myBuild) + '.';
-      if (serverBuild && serverBuild !== '20261018.1441' && isNewerBuild(serverBuild, myBuild)) {
+      if (serverBuild && serverBuild !== '20261018.2159' && isNewerBuild(serverBuild, myBuild)) {
         buildLine += ' Build ' + escHtml(serverBuild) + ' is available.';
       }
       buildLine += '</p>';
@@ -9389,7 +9405,7 @@ function isNewerBuild(server, mine){
   } catch (e) { return false; }
 }
 function initVersionCheck(){
-  const myBuild = '20261018.1441';
+  const myBuild = '20261018.2159';
   function showUpdateBanner(serverBuild){
     if (document.getElementById('update-banner')) return;
     const b = document.createElement('div');
@@ -9868,7 +9884,11 @@ document.addEventListener('click', e => {
     S.orgOrientation = otab.dataset.orient; save();
     const chart = document.querySelector('#treezoom-main .chart');
     if (chart) chart.classList.add('chart-switching');
-    setTimeout(() => renderOrgTree(), 140);
+    // Dave 2026-10-18: keep the selected buddy centered across the orientation
+    // flip — the old scroll position is meaningless once the layout changes.
+    const keepId = (S.projectId && byId[S.projectId]) ? S.projectId
+      : (S.sel && S.sel.indexOf('buddy:') === 0 && byId[S.sel.slice(6)] ? S.sel.slice(6) : null);
+    setTimeout(() => { renderOrgTree(); if (keepId) centerOnBuddy(keepId, true); }, 140);
     return;
   }
   /* Atlas row color dots: tap toggles the popover; the open dot wears the ring. */

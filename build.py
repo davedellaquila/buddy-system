@@ -70,7 +70,10 @@ body{padding:0}
   z-index:40;border:1px solid var(--border);border-radius:18px;
   box-shadow:0 8px 32px var(--shadow-soft);
   -webkit-backdrop-filter:blur(20px) saturate(1.4);backdrop-filter:blur(20px) saturate(1.4);
-  transition:transform .5s cubic-bezier(.32,.72,.35,1), visibility 0s}
+  transition:transform .5s cubic-bezier(.32,.72,.35,1), visibility 0s, width .45s cubic-bezier(.32,.72,.35,1)}
+/* Dave 2026-10-18: kill the width transition while resize-dragging so the
+   panel tracks the pointer instead of chasing it. */
+body.sb-resizing #sidebar{transition:transform .5s cubic-bezier(.32,.72,.35,1), visibility 0s}
 body.sb-closed #sidebar{width:64px;padding:12px 8px;overflow:visible;height:auto;max-height:calc(100dvh - 24px);top:12px;bottom:auto;border-radius:18px;
   left:12px;right:auto;background:color-mix(in srgb, var(--panel) 82%, transparent);
   -webkit-backdrop-filter:blur(20px) saturate(1.8);backdrop-filter:blur(20px) saturate(1.8);
@@ -381,7 +384,7 @@ body.sb-closed #pane-toggles .ptoggle{padding:6px 4px}
    Rhythm: 8px within groups, 24px between. No dividers. */
 .atlas-controls{position:absolute;top:12px;left:360px;z-index:20;
   display:flex;align-items:center;gap:24px;
-  height:44px;padding:4px 12px;border-radius:22px;box-sizing:border-box;
+  height:44px;padding:4px 12px 4px 4px;border-radius:22px;box-sizing:border-box;
   background:color-mix(in srgb, var(--panel) 82%, transparent);
   -webkit-backdrop-filter:blur(20px) saturate(1.8);backdrop-filter:blur(20px) saturate(1.8);
   border:1px solid var(--border);box-shadow:0 2px 12px rgba(0,0,0,.08);
@@ -406,13 +409,13 @@ body.sb-closed .atlas-controls{left:88px;max-width:calc(100% - 100px)}
 /* Orientation: 2x44px segments, 20px node glyphs. Accent-tinted active fill.
    Absent (not disabled) for lenses where orientation is meaningless. */
 .orient-seg{display:flex;flex:none;gap:8px;align-items:center}
-.orient-seg button{width:44px;height:44px;border-radius:12px;border:1px solid transparent;
+.orient-seg button{width:44px;height:44px;border-radius:12px;border:none;
   background:transparent;color:var(--muted);cursor:pointer;display:flex;
   align-items:center;justify-content:center;padding:0;
   -webkit-tap-highlight-color:transparent}
 .orient-seg button svg{width:20px;height:20px}
 .orient-seg button.sel{background:color-mix(in srgb, var(--accent) 18%, transparent);
-  border-color:color-mix(in srgb, var(--accent) 45%, transparent);color:var(--accent)}
+  color:var(--accent)}
 .orient-seg button:not(.sel):hover{color:var(--text)}
 /* Color dots: 28px dots in 44px targets, filled with live color. No labels —
    the dot IS the swatch. Names live in the popover. */
@@ -4882,6 +4885,14 @@ function chartThumbSvg(id){
 /* Atlas control row: wire the per-render controls. The row is re-rendered with
    the chrome, so zoom + utilities attach here (not once at load). */
 function wireAtlasRow(){
+  // Dave 2026-10-18: the dot popovers must live on document.body, NOT inside
+  // .atlas-controls — the row's backdrop-filter makes position:fixed children
+  // position relative to the row (not the viewport), and overflow-y:hidden
+  // clips them. On body they're true viewport-fixed and the taps work.
+  ['bg-pop', 'tile-pop'].forEach(pid => {
+    const pop = document.getElementById(pid);
+    if (pop && pop.parentElement !== document.body) document.body.appendChild(pop);
+  });
   const zr = document.getElementById('zoomrange-main');
   if (zr && !zr.dataset.wired) {
     zr.dataset.wired = '1';
@@ -6556,9 +6567,12 @@ document.addEventListener('keydown', e => {
   if (!typing && !e.metaKey && !e.ctrlKey && !e.altKey) {
     if (e.key === '/') {
       e.preventDefault();
+      // Dave 2026-10-18: / opens the collapsed panel AND lands focus in search.
+      // Focus waits a frame so the input is laid out and focusable (focusing
+      // synchronously after un-hiding can silently fail).
       if (!isSidebarOpen()) setSidebarOpen(true);
       const bs = document.getElementById('buddy-search');
-      if (bs) { bs.focus(); bs.select(); }
+      if (bs) requestAnimationFrame(() => { bs.focus(); bs.select(); });
       return;
     }
     if (e.key === 'n' || e.key === 'N') {
@@ -6797,6 +6811,7 @@ document.addEventListener('keydown', e => {
     if (!sdrag) {
       if (Math.abs(e.clientX - sx) < 6) return; /* tap slop: don't resize on a plain tap */
       sdrag = true;
+      document.body.classList.add('sb-resizing'); // Dave 2026-10-18: no width transition mid-drag
       try { h.setPointerCapture(e.pointerId); } catch (err) {}
       e.preventDefault();
     }
@@ -6814,6 +6829,7 @@ document.addEventListener('keydown', e => {
   });
   const done = () => {
     if (sx === null) return; sx = null;
+    document.body.classList.remove('sb-resizing');
     if (!sdrag || snapped) return;
     S.sbWidth = Math.round(sb.getBoundingClientRect().width); save();
     applySbWidth();
@@ -9521,7 +9537,11 @@ document.addEventListener('click', e => {
     S.orgOrientation = otab.dataset.orient; save();
     const chart = document.querySelector('#treezoom-main .chart');
     if (chart) chart.classList.add('chart-switching');
-    setTimeout(() => renderOrgTree(), 140);
+    // Dave 2026-10-18: keep the selected buddy centered across the orientation
+    // flip — the old scroll position is meaningless once the layout changes.
+    const keepId = (S.projectId && byId[S.projectId]) ? S.projectId
+      : (S.sel && S.sel.indexOf('buddy:') === 0 && byId[S.sel.slice(6)] ? S.sel.slice(6) : null);
+    setTimeout(() => { renderOrgTree(); if (keepId) centerOnBuddy(keepId, true); }, 140);
     return;
   }
   /* Atlas row color dots: tap toggles the popover; the open dot wears the ring. */
