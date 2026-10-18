@@ -1,4 +1,9 @@
 ## 2026-10-18
+### Fixed — hiding a tree pane now gives the other the full screen (Dave 2026-10-18)
+- Hiding the lower (orphan) pane via the pane toggles gives the Atlas chart the full pane height — and hiding the chart gives the orphan pane the full height. The surviving pane gets `flex: 1 1 0` and the splitter hides with the second pane.
+- Fixed the resurrection bug: `applyTreeSplit()` ran on every tree re-render and unconditionally re-showed a hidden pane (plus the checkbox disagreed with reality). Visibility now lives in one place — `applyTreeSplit()` reads `S.treePanes` itself, so toggles and re-renders always agree, and a hidden pane survives reloads.
+- Guard: the toggles refuse to hide the last visible pane ("Keep at least one pane visible.") so the view can never strand itself empty.
+
 ### Atlas control row — six rows collapsed to one (Jonny's verdict, Dave's greenlight)
 - New `.atlas-controls` toolbar, anchored top-left of the Atlas pane (12px/12px): lens pill → orientation glyphs → bg/tile color dots → zoom slider → fit/fullscreen/recenter utilities. 44px tall, 22px radius, blurred material, hairline, whisper shadow. 8px within groups / 24px between, no dividers. Horizontal scroll under ~720px pane width.
 - Pill keeps the current lens name + ▾ (the unexplained blue dot is gone — punch #4); "Atlas" goes in the view chrome as the view title.

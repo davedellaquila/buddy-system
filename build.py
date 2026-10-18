@@ -4589,14 +4589,31 @@ function applyTreeSplit(){
   const orphScroll = document.getElementById('treezoom-orph');
   if (!orphPane || !mainPane || !split || !orphScroll) return;
   const hasOrph = orphScroll.innerHTML.trim().length > 0;
-  split.style.display = ''; orphPane.style.display = '';
+  /* Pane visibility (Dave, 2026-10-16/18): a pane hidden via the pane toggles
+     stays hidden through every re-render — the surviving pane owns the full
+     screen (flex 1 1 0) and the splitter hides with the second pane. */
+  if (!S.treePanes || typeof S.treePanes !== 'object') S.treePanes = {main: true, orph: true};
+  let showMain = S.treePanes.main !== false;
+  let showOrph = S.treePanes.orph !== false;
+  if (!showMain && !showOrph) showMain = true; /* never strand the view empty */
+  const orphVisible = showOrph && hasOrph;
   if (!hasOrph) {
     /* No orphans (Dave, 2026-10-14): hide the bottom pane and splitter entirely */
+    mainPane.style.display = '';
     mainPane.style.flex = '1 1 0'; orphPane.style.display = 'none'; split.style.display = 'none'; return;
   }
-  const s = clampTreeSplit(S.treeSplit);
-  mainPane.style.flex = s + ' ' + s + ' 0';
-  orphPane.style.flex = (1 - s) + ' ' + (1 - s) + ' 0';
+  mainPane.style.display = showMain ? '' : 'none';
+  orphPane.style.display = orphVisible ? '' : 'none';
+  split.style.display = (showMain && orphVisible) ? '' : 'none';
+  if (showMain && orphVisible) {
+    const s = clampTreeSplit(S.treeSplit);
+    mainPane.style.flex = s + ' ' + s + ' 0';
+    orphPane.style.flex = (1 - s) + ' ' + (1 - s) + ' 0';
+  } else {
+    /* One pane visible: it takes the whole screen. */
+    mainPane.style.flex = showMain ? '1 1 0' : '';
+    orphPane.style.flex = orphVisible ? '1 1 0' : '';
+  }
   /* Mini mode (Dave, 2026-10-13): when the orphan pane is near its minimum height,
      center the heading instead of clipping it at the bottom. */
   requestAnimationFrame(() => {
@@ -5803,18 +5820,20 @@ function zoomToFit(paneId, zoomKey){
 /* Pane visibility (Dave 2026-10-16): show/hide the Atlas chart (top) and orphaned
    (bottom) subviews via toggles in the view nav. State persists in S.treePanes. */
 function applyTreePanes(){
-  if (!S.treePanes || typeof S.treePanes !== 'object') S.treePanes = {main: true, orph: true};
-  var main = document.getElementById('treepane-main');
-  var orph = document.getElementById('treepane-orph');
-  var split = document.getElementById('tree-split');
-  var showMain = S.treePanes.main !== false;
-  var showOrph = S.treePanes.orph !== false;
-  if (main) main.style.display = showMain ? '' : 'none';
-  if (orph) orph.style.display = showOrph ? '' : 'none';
-  if (split) split.style.display = (showMain && showOrph) ? '' : 'none';
+  /* The split layout owns pane visibility (Dave, 2026-10-18): hiding a pane
+     gives the surviving pane the full screen. One entry point keeps toggles
+     and re-renders in agreement. */
+  if (typeof applyTreeSplit === 'function') applyTreeSplit();
 }
 function setTreePane(which, show){
   if (!S.treePanes || typeof S.treePanes !== 'object') S.treePanes = {main: true, orph: true};
+  var other = which === 'main' ? 'orph' : 'main';
+  if (!show && S.treePanes[other] === false) {
+    /* Keep at least one pane on screen — re-check the box the user just cleared. */
+    try { toast('Keep at least one pane visible.'); } catch(e) {}
+    document.querySelectorAll('#pane-toggles input[data-pane="' + which + '"]').forEach(function(i){ i.checked = true; });
+    return;
+  }
   S.treePanes[which] = !!show;
   try { save(); } catch(e) {}
   applyTreePanes();
