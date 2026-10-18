@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-10-17 (Briefing Buddy per-tile quick links)
+
+### Added
+- **Per-tile quick links on the Briefing Buddy homepage** (Dave's feedback 2026-10-17 — "i don't see any links on the individual tiles"): each live-data tile now carries its natural next steps inline as pill links — full forecast (weather), sunrise/sunset + moon phase (sky), tonight's sky (night sky), NWS alerts + air quality (fire & air), Yahoo Finance (AAPL), the Briefings thread (awaiting-reply), edition details (next edition). Referenced documents are now linked in place: `docs/ingest.md` in the brain-dump lede, the product brief in the PRD card and on-my-mind lede. All external links verified returning 200 before wiring.
+
 ## 2026-10-17 (Sports Car Adventures + Dellaquila.com buddies)
 
 ### Added
