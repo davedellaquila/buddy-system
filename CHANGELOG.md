@@ -1,4 +1,7 @@
 ## 2026-10-19
+### New buddy — Research Buddy 🔍 (hired 2026-10-19)
+- The standing research desk: sourced investigations, background checks, product/market research, confidence-tagged reports (web page + HTML email). Direct child of Project Buddy; registry at 120 buddies. Founding case: the John Windsor background check.
+
 ### Info panel — Voice/Persona headers show the selected value when closed (Dave 2026-10-19)
 - Single-value pattern: a closed section header reads "VOICE: Neighborly Syrup" — the Change pill no longer sits in the header crowding out the value. Change moved into the open body (next to Preview / Surprise me), where the pickers already offer the reset path ("Default voice" / "No persona").
 
