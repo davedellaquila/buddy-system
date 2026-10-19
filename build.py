@@ -880,6 +880,17 @@ body.standalone #sb-to-top{opacity:0!important;pointer-events:none!important}
 .pdrop{border:2px dashed var(--border);border-radius:12px;padding:20px;text-align:center;color:var(--muted);font-size:13px;margin-top:10px;cursor:pointer}
 .pdrop.over{border-color:var(--accent);background:var(--wash);color:var(--text)}
 .pstrip:empty{display:none}
+/* Dave 2026-10-18: Documents section — PDF cards alongside the photo strip. */
+.dstrip{display:flex;gap:10px;overflow-x:auto;padding:2px 2px 6px;flex-wrap:wrap}
+.dstrip:empty{display:none}
+.doc-card{display:flex;align-items:center;gap:10px;padding:10px 12px;border:1px solid var(--border);
+  border-radius:10px;background:var(--wash2);min-width:200px;max-width:280px;position:relative}
+.doc-card:hover{border-color:var(--accent)}
+.doc-card .doc-icon{font-size:28px;line-height:1;flex:0 0 auto}
+.doc-card .doc-meta{min-width:0;flex:1}
+.doc-card .doc-name{font-size:13px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.doc-card .doc-sub{font-size:11px;color:var(--muted)}
+.doc-card .pdel{position:absolute;top:4px;right:4px}
 .ghtoken{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;align-items:center}
 #token-banner{display:none;border:2px solid var(--amber-bd);background:var(--amber-bg);border-radius:12px;padding:14px 16px;margin-bottom:18px}
 #token-banner.show{display:block}
@@ -2374,6 +2385,7 @@ const FIELD_DEFS = [
   {id:'parent', label:'Parents'},
   {id:'links', label:'Linked buddies'},
   {id:'photos', label:'Photos'},
+  {id:'docs', label:'Documents'},
   {id:'tree', label:'The Buddy Tree'},
   {id:'artifacts', label:'Artifacts'},
   {id:'plans', label:'Business plans'},
@@ -2391,9 +2403,9 @@ function getFieldOrder(){
   // parent/siblings/links added to the orderable fields.
   // Reset stored order if it matches a previous default so the new layout applies.
   const oldDefaults = [
-    ['ingest','attention','mission','aka','reports','homepage','photos','tree','artifacts','plans','notes','shared'],
-    ['ingest','attention','aka','reports','homepage','photos','tree','artifacts','plans','notes','shared','mission'],
-    ['ingest','attention','aka','reports','siblings','parent','links','homepage','photos','tree','artifacts','plans','notes','shared','mission'],
+    ['ingest','attention','mission','aka','reports','homepage','photos','docs','tree','artifacts','plans','notes','shared'],
+    ['ingest','attention','aka','reports','homepage','photos','docs','tree','artifacts','plans','notes','shared','mission'],
+    ['ingest','attention','aka','reports','siblings','parent','links','homepage','photos','docs','tree','artifacts','plans','notes','shared','mission'],
   ];
   if (oldDefaults.some(d => JSON.stringify(S.fieldOrder) === JSON.stringify(d))) S.fieldOrder = FIELD_DEFS.map(f => f.id);
   // Add any new fields that weren't in the saved order
@@ -3899,6 +3911,11 @@ function renderBuddy(id){
   photos = '<div class="bp-sec" data-field="photos"><h3 id="photos-h3">Photos <span class="attn-count">('+photoCount+')</span></h3><div class="prow"><div class="pstrip" id="pstrip">' + seedStrip + '</div>'
     + '<div class="pdrop" id="pdrop">Drop photos here or click to choose<br><span style="font-size:12px">JPEG, PNG, GIF, WebP, HEIC \\u2014 all supported</span></div></div>'
     + '<p class="fineprint" id="pstat"></p></div>';
+  // Dave 2026-10-18: PDF documents upload alongside photos — same pattern,
+  // stored under docs/<id>/ in the buddy-system repo (or docs/ in the buddy's own repo).
+  const docs = '<div class="bp-sec" data-field="docs"><h3 id="docs-h3">Documents <span class="attn-count">(0)</span></h3><div class="prow"><div class="dstrip" id="dstrip"></div>'
+    + '<div class="pdrop" id="ddrop">Drop PDF documents here or click to choose<br><span style="font-size:12px">PDF \\u2014 stored alongside this buddy</span></div></div>'
+    + '<p class="fineprint" id="dstat"></p></div>';
   const linkedPlans = PLANS.filter(p => (p.buddies || []).includes(id));
   let planSec = '';
   if (linkedPlans.length) {
@@ -4076,6 +4093,7 @@ function renderBuddy(id){
     + '</div></div>'
     + (unseenCount > 0 ? (function(){ const fx = getSetting('attnEffect') || 'none'; const high = items.some(a => !S.seen[a.id] && a.priority === 'high'); return '<div class="bp-sec fx-'+fx+(high?' attn-high':'')+'" data-field="attention"><h3>Needs your attention <span class="attn-count">('+unseenCount+')</span></h3>'+attn+'</div>'; })() : '')
     + photos
+    + docs
     + (id === ROOT_ID
         ? '<div class="bp-sec" data-field="tree"><h3>The Buddy Tree</h3><div class="bp-tree-wrap"></div>'
           + '<p class="fineprint"><button class="linkbtn" data-view="tree">Open the tree as its own view \\u2192</button></p></div>'
@@ -4363,6 +4381,8 @@ function renderBuddy(id){
   })(id);
   loadPhotos(id);
   initPhotoDrop(id);
+  loadDocs(id);
+  initDocDrop(id);
   initPanelResize(); applyPanelWidth();
   refreshTokenUI(id);
   applyFieldOrder();
@@ -8066,6 +8086,85 @@ function initPhotoDrop(id){
     inp.click();
   });
   if (!ghToken()) { const tp = document.getElementById('token-pop'); if (tp) tp.classList.add('show'); }
+}
+/* ---------- documents (PDFs) — Dave 2026-10-18 ---------- */
+async function loadDocs(id){
+  const strip = document.getElementById('dstrip'); if (!strip) return;
+  const b = byId[id];
+  const headers = {};
+  if (ghToken()) headers['Authorization'] = 'token ' + ghToken();
+  const reposToCheck = [];
+  if (b.repo) reposToCheck.push({repo: b.repo, path: 'docs'});
+  reposToCheck.push({repo: 'buddy-system', path: 'docs/' + id});
+  let files = [];
+  for (const rc of reposToCheck) {
+    try {
+      const r = await fetch('https://api.github.com/repos/davedellaquila/' + rc.repo + '/contents/' + rc.path, {headers});
+      if (r.ok) {
+        const j = await r.json();
+        const pdfs = (Array.isArray(j) ? j : []).filter(f => f.type === 'file' && /\.pdf$/i.test(f.name))
+          .map(f => ({name: f.name, src: f.download_url, href: f.download_url, path: f.path, repo: rc.repo, size: f.size}));
+        for (const f of pdfs) { if (!files.some(x => x.src === f.src)) files.push(f); }
+      }
+    } catch (e) {}
+  }
+  const dh3 = document.getElementById('docs-h3');
+  if (dh3) {
+    let label = dh3.querySelector('.ph-label');
+    if (!label) {
+      label = document.createElement('span');
+      label.className = 'ph-label';
+      Array.from(dh3.childNodes).forEach(n => { if (n.nodeType === 3) n.remove(); });
+      const arrow = dh3.querySelector('.secarrow');
+      if (arrow && arrow.after) arrow.after(label); else dh3.prepend(label);
+    }
+    label.textContent = 'Documents (' + files.length + ')';
+  }
+  strip.innerHTML = files.map(p => {
+    const del = p.path ? '<button class="pdel" data-del="' + escHtml(p.path) + '" data-repo="' + escHtml(p.repo || 'buddy-system') + '" title="Delete document">' + ICON_TRASH + '</button>' : '';
+    const kb = p.size ? (p.size > 1048576 ? (p.size/1048576).toFixed(1) + ' MB' : Math.max(1, Math.round(p.size/1024)) + ' KB') : '';
+    return '<div class="doc-card"><span class="doc-icon">\U0001f4c4</span>'
+      + '<div class="doc-meta"><div class="doc-name" title="' + escHtml(p.name) + '">' + escHtml(p.name) + '</div>'
+      + '<div class="doc-sub">' + escHtml(kb) + ' · <a href="' + escHtml(p.href) + '" target="_blank" rel="noopener">Open</a></div></div>'
+      + del + '</div>';
+  }).join('');
+  const st = document.getElementById('dstat');
+  if (st) st.textContent = files.length
+    ? files.length + ' document' + (files.length === 1 ? '' : 's') + ' \u2014 stored in the buddy-system repo under docs/' + id + '/'
+    : 'No documents yet \u2014 drop some below. They land in the buddy-system repo under docs/' + id + '/';
+}
+async function handleDocFiles(id, files){
+  const st = document.getElementById('dstat');
+  const strip = document.getElementById('dstrip');
+  const dropz = document.getElementById('ddrop');
+  const list = Array.from(files || []).filter(f => f.type === 'application/pdf' || /\.pdf$/i.test(f.name));
+  if (!list.length) { toast('No PDF files in that drop.'); return; }
+  if (!ghToken()) { toast('Add your GitHub token first — click the token pill (top right).'); document.getElementById('token-pop').classList.add('show'); return; }
+  let n = 0;
+  for (const f of list) {
+    try {
+      if (st) st.textContent = 'Uploading ' + (n+1) + '/' + list.length + '\u2026';
+      const b64 = await blobToB64(f);
+      const safe = (f.name.replace(/\.pdf$/i, '').replace(/[^\w\-]+/g, '_').slice(0, 40) || 'document');
+      const upRepo = (byId[id] && byId[id].repo) ? byId[id].repo : 'buddy-system';
+      const upPath = (byId[id] && byId[id].repo) ? 'docs/' + Date.now() + '-' + safe + '.pdf' : 'docs/' + id + '/' + Date.now() + '-' + safe + '.pdf';
+      await ghPutFile(upRepo, upPath, b64, 'Add document for ' + id);
+      n++;
+    } catch (err) { toast('Document failed: ' + (err.message || err)); }
+  }
+  if (st) st.textContent = 'Uploaded ' + n + ' document' + (n === 1 ? '' : 's') + '. Refreshing\u2026';
+  setTimeout(() => loadDocs(id), 2000);
+}
+function initDocDrop(id){
+  const z = document.getElementById('ddrop'); if (!z) return;
+  ['dragenter', 'dragover'].forEach(ev => z.addEventListener(ev, e => { e.preventDefault(); z.classList.add('over'); }));
+  ['dragleave', 'drop'].forEach(ev => z.addEventListener(ev, e => { e.preventDefault(); z.classList.remove('over'); }));
+  z.addEventListener('drop', e => handleDocFiles(id, e.dataTransfer.files));
+  z.addEventListener('click', () => {
+    const inp = document.createElement('input'); inp.type = 'file'; inp.accept = 'application/pdf,.pdf'; inp.multiple = true;
+    inp.addEventListener('change', () => handleDocFiles(id, inp.files));
+    inp.click();
+  });
 }
 /* ---------- shared notes ---------- */
 function updateTokenPill(){
