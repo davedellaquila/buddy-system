@@ -792,6 +792,28 @@ body.sb-closed #pane-toggles .ptoggle{padding:6px 4px}
   font-weight:700;font-size:15px;pointer-events:none;text-align:center;max-width:140px;color:#fff}
 .chart-constellation .constellation-wrap{position:relative;min-height:60vh}
 .chart-constellation #constellation-canvas{display:block;cursor:pointer}
+/* Dave 2026-10-19: Constellation spacing control panel — a quiet Kin card
+   floating over the chart's top-right corner; collapses to a Spacing pill.
+   Theme vars only, so it reads correctly in dark and light. */
+.constel-pill{position:absolute;top:12px;right:12px;z-index:6;min-height:44px;padding:0 18px;
+  border-radius:999px;border:1px solid var(--border);background:var(--panel);color:var(--text);
+  font:600 13px -apple-system,sans-serif;cursor:pointer;box-shadow:0 10px 24px rgba(10,20,15,.14);
+  -webkit-tap-highlight-color:transparent}
+.constel-pill:hover{border-color:var(--accent)}
+.constel-panel{position:absolute;top:12px;right:12px;z-index:6;width:236px;max-width:calc(100% - 24px);
+  background:var(--panel);border:1px solid var(--border);border-radius:14px;
+  box-shadow:0 10px 24px rgba(10,20,15,.14);padding:10px 14px 12px;color:var(--text);
+  font-family:-apple-system,sans-serif}
+.constel-panel .cp-head{display:flex;align-items:center;gap:6px}
+.constel-panel .cp-title{font-weight:700;font-size:13px;flex:1}
+.constel-panel .cp-btn{border:1px solid var(--border);background:none;color:var(--muted);
+  border-radius:8px;padding:6px 10px;font-size:12px;cursor:pointer;min-height:44px;min-width:44px;
+  display:inline-flex;align-items:center;justify-content:center;-webkit-tap-highlight-color:transparent}
+.constel-panel .cp-btn:hover{color:var(--text);border-color:var(--accent)}
+.constel-panel .cp-row{display:flex;align-items:center;gap:8px;padding:4px 0}
+.constel-panel .cp-row label{flex:0 0 68px;font-size:12px;color:var(--muted)}
+.constel-panel .cp-row input[type=range]{flex:1;min-width:0;accent-color:var(--accent);height:32px;margin:0;padding:0;cursor:pointer}
+.constel-panel .cp-val{flex:0 0 34px;text-align:right;font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
 /* Chart transition — Kin's curve */
 .chart{transition:opacity .28s cubic-bezier(.32,.72,.35,1)}
 .chart.chart-switching{opacity:0}
@@ -3413,7 +3435,7 @@ function renderDevelopSection(){
   const dev = document.getElementById('fset-develop');
   if (!dev) return;
   const simulating = !!devBackup;
-  const buildNum = '20261019.1801';
+  const buildNum = '20261019.1922';
   dev.innerHTML = ''
     + '<label class="fset-check"><input type="checkbox" id="dev-empty-toggle"' + (simulating ? ' checked' : '') + '> <span><strong>Simulate new user</strong> — empty data file, as if opening the shared link fresh</span></label>'
     + '<div class="fineprint" style="margin:8px 0 12px">Build <span style="font-family:monospace">' + escHtml(String(buildNum)) + '</span> · ' + BUDDIES.length + ' buddies in this file</div>'
@@ -4667,7 +4689,7 @@ function renderBuddy(id){
       'Anybody with repo access can see this note. Saved to the buddy’s repo (docs/notes.md).')
     + '<div class="attr-body"><textarea class="notes" id="bp-shared-notes" placeholder="Anybody with repo access can see this note."></textarea>'
     + '<p class="fineprint" id="shared-status"></p></div></div>'
-    + '<div class="bp-build">Build 20261019.1801</div>'
+    + '<div class="bp-build">Build 20261019.1922</div>'
     + '</div>';
   // Update every visible label for a buddy after a rename/re-icon, across all
   // Atlas lenses. A rename changes no structure, so labels are patched in place
@@ -6098,8 +6120,80 @@ function initHalo(){
   ring(center, 78, 148, 0, Math.PI * 2, 0);
 }
 /* Constellation — force-directed star map. Relationships as gravity. */
+/* Dave 2026-10-19: Constellation spacing settings. Defaults reproduce the
+   original hardcoded physics exactly, so nothing moves until Dave tweaks a
+   slider. Persisted in S (buddyTree.v3) via save(), like every other setting. */
+const CONSTEL_DEFAULTS = {spread: 90, repel: 3200, labelSize: 11, labelGap: 13, open: true};
+function constelSettings(){
+  if (!S.constellation || typeof S.constellation !== 'object') S.constellation = {};
+  const c = S.constellation;
+  ['spread', 'repel', 'labelSize', 'labelGap'].forEach(k => {
+    if (typeof c[k] !== 'number' || !isFinite(c[k])) c[k] = CONSTEL_DEFAULTS[k];
+  });
+  if (typeof c.open !== 'boolean') c.open = true;
+  return c;
+}
+function constelRow(key, label, min, max, step, val){
+  return '<div class="cp-row"><label for="constel-' + key + '">' + label + '</label>'
+    + '<input type="range" id="constel-' + key + '" data-constel="' + key + '" min="' + min + '" max="' + max + '" step="' + step + '" value="' + val + '" aria-label="' + label + '">'
+    + '<span class="cp-val" data-constel-val="' + key + '">' + val + '</span></div>';
+}
 function constellationHtml(root){
-  return '<div class="constellation-wrap"><canvas id="constellation-canvas"></canvas></div>';
+  const c = constelSettings();
+  const pill = '<button type="button" class="constel-pill" id="constel-pill"' + (c.open ? ' hidden' : '') + ' aria-label="Show spacing controls">Spacing</button>';
+  const panel = '<div class="constel-panel" id="constel-panel"' + (c.open ? '' : ' hidden') + ' role="group" aria-label="Constellation spacing controls">'
+    + '<div class="cp-head"><span class="cp-title">Spacing</span>'
+    + '<button type="button" class="cp-btn" id="constel-reset">Reset</button>'
+    + '<button type="button" class="cp-btn" id="constel-collapse" aria-label="Hide spacing controls">×</button></div>'
+    + constelRow('spread', 'Spread', 50, 180, 1, c.spread)
+    + constelRow('repel', 'Push apart', 1000, 8000, 100, c.repel)
+    + constelRow('labelSize', 'Label size', 9, 16, 0.5, c.labelSize)
+    + constelRow('labelGap', 'Label gap', 8, 30, 1, c.labelGap)
+    + '</div>';
+  return '<div class="constellation-wrap"><canvas id="constellation-canvas"></canvas>' + pill + panel + '</div>';
+}
+function wireConstelPanel(){
+  const wrapEl = document.querySelector('.chart-constellation .constellation-wrap');
+  if (!wrapEl || wrapEl._constelWired) return;
+  const panel = wrapEl.querySelector('#constel-panel');
+  const pill = wrapEl.querySelector('#constel-pill');
+  if (!panel || !pill) return;
+  wrapEl._constelWired = true;
+  const c = constelSettings();
+  let reinitTimer = null;
+  const queueReinit = () => { clearTimeout(reinitTimer); reinitTimer = setTimeout(initConstellation, 120); };
+  panel.querySelectorAll('input[type=range][data-constel]').forEach(inp => {
+    inp.addEventListener('input', () => {
+      const key = inp.getAttribute('data-constel');
+      const v = parseFloat(inp.value);
+      if (!isFinite(v)) return;
+      c[key] = v;
+      const valEl = panel.querySelector('[data-constel-val="' + key + '"]');
+      if (valEl) valEl.textContent = v;
+      save();
+      queueReinit();
+    });
+  });
+  const setOpen = open => {
+    c.open = open; save();
+    panel.hidden = !open;
+    pill.hidden = open;
+  };
+  pill.addEventListener('click', () => setOpen(true));
+  const collapseBtn = panel.querySelector('#constel-collapse');
+  if (collapseBtn) collapseBtn.addEventListener('click', () => setOpen(false));
+  const resetBtn = panel.querySelector('#constel-reset');
+  if (resetBtn) resetBtn.addEventListener('click', () => {
+    ['spread', 'repel', 'labelSize', 'labelGap'].forEach(k => { c[k] = CONSTEL_DEFAULTS[k]; });
+    panel.querySelectorAll('input[type=range][data-constel]').forEach(inp => {
+      const key = inp.getAttribute('data-constel');
+      inp.value = c[key];
+      const valEl = panel.querySelector('[data-constel-val="' + key + '"]');
+      if (valEl) valEl.textContent = c[key];
+    });
+    save();
+    initConstellation();
+  });
 }
 function initConstellation(){
   const canvas = document.getElementById('constellation-canvas');
@@ -6110,12 +6204,18 @@ function initConstellation(){
   canvas.style.width = W + 'px'; canvas.style.height = H + 'px';
   const ctx = canvas.getContext('2d');
   ctx.scale(2, 2);
+  const CS = constelSettings();
   // Build node list (cap at 120 for perf)
   const nodes = [], edges = [], seen = {};
   function walk(b, depth){
     if (seen[b.id] || nodes.length >= 120) return;
     seen[b.id] = true;
-    nodes.push({id: b.id, b: b, x: W/2 + (Math.random()-0.5)*W*0.6, y: H/2 + (Math.random()-0.5)*H*0.6,
+    /* Re-seed from the previous run's positions when a settings tweak restarts
+       the sim, so the layout breathes instead of re-scattering (Dave 2026-10-19). */
+    const prev = (canvas._prevPos || {})[b.id];
+    nodes.push({id: b.id, b: b,
+      x: prev ? prev.x : W/2 + (Math.random()-0.5)*W*0.6,
+      y: prev ? prev.y : H/2 + (Math.random()-0.5)*H*0.6,
       vx: 0, vy: 0, r: depth === 0 ? 14 : Math.max(6, 10 - depth)});
     if (depth < 4) visibleKids(b.id).forEach(k => {
       if (!seen[k.id] && nodes.length < 120) edges.push([b.id, k.id]);
@@ -6126,9 +6226,12 @@ function initConstellation(){
   const byNodeId = {};
   nodes.forEach(n => { byNodeId[n.id] = n; });
   canvas._buddyNodes = byNodeId; /* live node map for centerOnBuddy (Dave 2026-10-15) */
-  // Physics loop
+  // Physics loop. Generation guard: a settings tweak re-runs init on the same
+  // canvas — only the newest loop may keep drawing (Dave 2026-10-19).
+  const gen = (canvas._simGen = (canvas._simGen || 0) + 1);
   let ticks = 0;
   function tick(){
+    if (gen !== canvas._simGen) return;
     if (ticks++ > 300) return;
     // Repulsion
     for (let i = 0; i < nodes.length; i++) {
@@ -6138,7 +6241,7 @@ function initConstellation(){
         let d2 = dx*dx + dy*dy;
         if (d2 < 1) d2 = 1;
         if (d2 > 40000) continue;
-        const f = 3200 / d2;
+        const f = CS.repel / d2;
         const d = Math.sqrt(d2);
         dx /= d; dy /= d;
         a.vx += dx * f; a.vy += dy * f;
@@ -6151,7 +6254,7 @@ function initConstellation(){
       if (!a || !b) return;
       const dx = b.x - a.x, dy = b.y - a.y;
       const d = Math.sqrt(dx*dx + dy*dy) || 1;
-      const f = (d - 90) * 0.02;
+      const f = (d - CS.spread) * 0.02;
       a.vx += dx / d * f; a.vy += dy / d * f;
       b.vx -= dx / d * f; b.vy -= dy / d * f;
     });
@@ -6168,6 +6271,10 @@ function initConstellation(){
   }
   function draw(){
     ctx.clearRect(0, 0, W, H);
+    // Remember positions so a settings-driven restart keeps the layout.
+    const pos = {};
+    nodes.forEach(n => { pos[n.id] = {x: n.x, y: n.y}; });
+    canvas._prevPos = pos;
     const isLight = document.documentElement.classList.contains('light');
     // Edges
     ctx.strokeStyle = isLight ? 'rgba(31,35,40,.14)' : 'rgba(255,255,255,.12)';
@@ -6184,23 +6291,33 @@ function initConstellation(){
       ctx.fill();
       ctx.strokeStyle = isLight ? '#d0d7de' : '#30363d';
       ctx.stroke();
-      // Label
+      // Label. labelGap is the baseline offset below the node (13 at the old
+      // fixed 11px); growing the font pushes the baseline down by the same
+      // delta so the visible gap holds steady.
       ctx.fillStyle = isLight ? '#1f2328' : '#e6edf3';
-      ctx.font = '11px -apple-system, sans-serif';
+      ctx.font = CS.labelSize + 'px -apple-system, sans-serif';
       ctx.textAlign = 'center';
       const label = (n.b.icon ? n.b.icon + ' ' : '') + dispName(n.b);
-      ctx.fillText(label.length > 18 ? label.slice(0, 17) + '…' : label, n.x, n.y + n.r + 13);
+      ctx.fillText(label.length > 18 ? label.slice(0, 17) + '…' : label, n.x, n.y + n.r + CS.labelGap + (CS.labelSize - 11));
     });
   }
-  // Click to open buddy
-  canvas.addEventListener('click', e => {
-    const r = canvas.getBoundingClientRect();
-    const mx = e.clientX - r.left, my = e.clientY - r.top;
-    for (const n of nodes) {
-      const d = Math.hypot(n.x - mx, n.y - my);
-      if (d < n.r + 8) { show('buddy:' + n.id); break; }
-    }
-  });
+  // Click to open buddy. Wired once per canvas: a settings restart replaces
+  // the sim, and this handler hit-tests the live node map (canvas._buddyNodes,
+  // refreshed by every init) rather than a stale closure (Dave 2026-10-19).
+  if (!canvas._clickWired) {
+    canvas._clickWired = true;
+    canvas.addEventListener('click', e => {
+      const r = canvas.getBoundingClientRect();
+      const mx = e.clientX - r.left, my = e.clientY - r.top;
+      const live = canvas._buddyNodes || {};
+      for (const id in live) {
+        const n = live[id];
+        const d = Math.hypot(n.x - mx, n.y - my);
+        if (d < n.r + 8) { show('buddy:' + n.id); break; }
+      }
+    });
+  }
+  wireConstelPanel();
   tick();
 }
 /* Release Notes view — same format as the What's New update modal:
@@ -7188,7 +7305,7 @@ function renderPlan(id){
     + '<p class="fineprint">Saved on this device. (For your eyes only)</p></div>'
     + '<div class="bp-sec"><h3>Shared notes<span class="info-tip" data-tip="Visible to everyone with access to this project.">\u24d8</span></h3><textarea class="notes" id="bp-shared" placeholder="Shared notes\u2026 (visible to everyone with access)">'+escHtml((S.planShared||{})[id]||'')+'</textarea>'
     + '<p class="fineprint">Shared — visible to everyone with access.</p></div>'
-    + '<div class="bp-build">Build 20261019.1801</div>'
+    + '<div class="bp-build">Build 20261019.1922</div>'
     + '</div>';
   const nt = document.getElementById('bp-notes');
   let t = null;
@@ -9838,14 +9955,14 @@ function openWhatsNew(){
     .then(r => r.ok ? r.text() : '')
     .then(t => {
       const serverBuild = t.trim();
-      if (serverBuild && serverBuild !== '20261019.1801') {
+      if (serverBuild && serverBuild !== '20261019.1922') {
         updBtn.style.display = '';
         updBtn.title = 'Update to build ' + serverBuild;
       }
       // Show build numbers at the top of the sheet (Dave's request 2026-10-12)
-      const myBuild = '20261019.1801';
+      const myBuild = '20261019.1922';
       let buildLine = '<p class="fineprint" style="margin-top:0">You’re on build ' + escHtml(myBuild) + '.';
-      if (serverBuild && serverBuild !== '20261019.1801' && isNewerBuild(serverBuild, myBuild)) {
+      if (serverBuild && serverBuild !== '20261019.1922' && isNewerBuild(serverBuild, myBuild)) {
         buildLine += ' Build ' + escHtml(serverBuild) + ' is available.';
       }
       buildLine += '</p>';
@@ -9884,7 +10001,7 @@ function isNewerBuild(server, mine){
   } catch (e) { return false; }
 }
 function initVersionCheck(){
-  const myBuild = '20261019.1801';
+  const myBuild = '20261019.1922';
   function showUpdateBanner(serverBuild){
     if (document.getElementById('update-banner')) return;
     const b = document.createElement('div');
