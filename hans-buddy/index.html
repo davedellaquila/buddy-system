@@ -1,29 +1,42 @@
-<!-- BUDDY-BASIC-TEMPLATE v2 -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title data-buddy-name>Hans</title>
+<title>Hans — Master Technician</title>
 <style>
 :root {
-  --bg: #ffffff;
-  --text: #1a1a1a;
-  --muted: #666;
-  --card: #f5f5f5;
-  --border: #e0e0e0;
-  --accent: #0066cc;
+  --bg: #faf8f4;
+  --text: #1c1a17;
+  --muted: #6f6a5e;
+  --card: #ffffff;
+  --card2: #f1ede3;
+  --border: #ddd5c2;
+  --accent: #b45f06;
+  --accent-soft: #fdf0dc;
   --ok: #1b7a2e;
+  --warn: #9a6a00;
+  --warn-bg: #fdf3d7;
+  --danger: #b3261e;
+  --danger-bg: #fbe9e7;
+  --chart-grid: #ddd5c2;
 }
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg: #1a1a1a;
-    --text: #e0e0e0;
-    --muted: #999;
-    --card: #2a2a2a;
-    --border: #3a3a3a;
-    --accent: #4da6ff;
+    --bg: #141311;
+    --text: #ece7db;
+    --muted: #a39a86;
+    --card: #1e1c19;
+    --card2: #262320;
+    --border: #3a362e;
+    --accent: #f0a13c;
+    --accent-soft: #33270f;
     --ok: #5fd08a;
+    --warn: #e4bd66;
+    --warn-bg: #33290f;
+    --danger: #ef8b80;
+    --danger-bg: #3a1d1a;
+    --chart-grid: #3a362e;
   }
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -32,11 +45,10 @@ body {
   background: var(--bg);
   color: var(--text);
   line-height: 1.6;
-  padding: 40px 20px;
-  max-width: 800px;
+  padding: 0 20px 40px;
+  max-width: 860px;
   margin: 0 auto;
 }
-.header { text-align: center; margin-bottom: 40px; }
 .topbar {
   position: sticky; top: 0; z-index: 50;
   display: flex; align-items: center; gap: 10px;
@@ -51,82 +63,94 @@ body {
   color: var(--muted); font-size: 16px; cursor: pointer; padding: 4px 10px; line-height: 1;
 }
 .topbar-refresh:hover { color: var(--text); border-color: var(--border); }
-.icon { font-size: 64px; margin-bottom: 16px; }
-h1 { font-size: 32px; margin-bottom: 8px; }
+.crumb { padding: 14px 0 0; font-size: 14px; }
+.crumb a { color: inherit; opacity: .65; text-decoration: none; }
+.header { text-align: center; margin: 18px 0 28px; }
+.icon { font-size: 64px; margin-bottom: 12px; }
+h1 { font-size: 34px; margin-bottom: 6px; letter-spacing: -.01em; }
 .tagline { color: var(--muted); font-size: 18px; }
 .mission {
   background: var(--card);
   border: 1px solid var(--border);
   border-radius: 12px;
-  padding: 24px;
-  margin-bottom: 32px;
-  font-size: 17px;
+  padding: 22px 24px;
+  margin-bottom: 30px;
+  font-size: 16.5px;
 }
-h2 { font-size: 22px; margin: 32px 0 16px; }
-.attn {
-  background: var(--card);
-  border-left: 4px solid var(--accent);
-  border-radius: 0 8px 8px 0;
-  padding: 16px 20px;
-  margin-bottom: 12px;
-}
-.attn-date { color: var(--muted); font-size: 14px; margin-top: 8px; }
-.attn-link { margin-top: 8px; }
-.attn-link a { color: var(--accent); font-weight: 600; text-decoration: none; }
-.attn-link a:hover { text-decoration: underline; }
-.attn-actions { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
-.attn-btn {
-  border: 1px solid var(--border); background: var(--bg); color: var(--text);
-  border-radius: 8px; padding: 7px 14px; font-size: 13px; font-weight: 600; cursor: pointer;
-  -webkit-tap-highlight-color: transparent;
-}
-.attn-btn:hover { border-color: var(--accent); }
-.attn-btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
-.attn-btn:disabled { opacity: .45; cursor: default; }
-.attn-status { font-size: 13px; color: var(--muted); margin-top: 8px; min-height: 18px; }
-.attn.resolved { opacity: .6; }
-.attn.resolved .attn-actions { display: none; }
-/* ---- skills (Dave 2026-10-16) ---- */
-.skills { display: flex; flex-direction: column; gap: 10px; margin-top: 4px; }
-.skill { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 12px 16px; }
-.skill-name { font-weight: 700; font-size: 15px; }
-.skill-evidence { color: var(--muted); font-size: 13px; margin-top: 4px; line-height: 1.45; }
-.children { display: flex; flex-wrap: wrap; gap: 12px; }
-.child {
+h2 { font-size: 22px; margin: 34px 0 14px; }
+h2 .sub { display: block; font-size: 14px; font-weight: 400; color: var(--muted); margin-top: 2px; }
+.card {
   background: var(--card);
   border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 12px 20px;
-  text-decoration: none;
-  color: var(--text);
+  border-radius: 12px;
+  padding: 20px 22px;
+  margin-bottom: 16px;
 }
-.child:hover { border-color: var(--accent); }
+.card h3 { font-size: 17px; margin-bottom: 6px; }
+.muted { color: var(--muted); }
+.small { font-size: 14px; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+.chip {
+  font-size: 13px; font-weight: 600;
+  border: 1px solid var(--border); border-radius: 999px;
+  padding: 4px 12px; background: var(--card2);
+}
+.chip.warn { background: var(--warn-bg); color: var(--warn); border-color: var(--warn); }
+.chip.danger { background: var(--danger-bg); color: var(--danger); border-color: var(--danger); }
+.chip.ok { color: var(--ok); border-color: var(--ok); }
+.spec { width: 100%; border-collapse: collapse; font-size: 15px; }
+.spec td { padding: 7px 8px; border-bottom: 1px solid var(--border); vertical-align: top; }
+.spec tr:last-child td { border-bottom: none; }
+.spec td.k { color: var(--muted); width: 34%; }
+.spec td.v { font-weight: 600; }
+.spec .tbd { color: var(--warn); font-weight: 600; }
+.wanted {
+  background: var(--warn-bg);
+  border: 1px solid var(--warn);
+  border-radius: 12px;
+  padding: 20px 22px;
+  margin-bottom: 16px;
+}
+.wanted h3 { color: var(--warn); margin-bottom: 8px; }
+.wanted ul { margin: 8px 0 0 20px; }
+.timeline { list-style: none; }
+.timeline li { padding: 8px 0 8px 18px; border-left: 3px solid var(--border); position: relative; }
+.timeline li::before {
+  content: ""; position: absolute; left: -7px; top: 15px;
+  width: 11px; height: 11px; border-radius: 50%;
+  background: var(--accent); border: 2px solid var(--bg);
+}
+.timeline .when { font-weight: 700; font-size: 14px; color: var(--accent); }
+.chart-wrap { overflow-x: auto; }
+.chart-wrap svg { min-width: 640px; width: 100%; height: auto; display: block; }
+.svg-ink { fill: var(--text); }
+.svg-mut { fill: var(--muted); }
+.svg-acc { fill: var(--accent); }
+.bar-aaf { fill: var(--accent); }
+.bar-line { stroke: var(--chart-grid); stroke-width: 1; }
+.today-line { stroke: var(--danger); stroke-width: 1.5; stroke-dasharray: 4 3; }
+.orders { list-style: none; }
+.orders li { padding: 7px 0; border-bottom: 1px solid var(--border); }
+.orders li:last-child { border-bottom: none; }
+.orders .n { font-weight: 800; color: var(--accent); margin-right: 8px; }
+.links { display: flex; flex-wrap: wrap; gap: 10px; }
+.links a {
+  background: var(--card); border: 1px solid var(--border); border-radius: 8px;
+  padding: 10px 16px; text-decoration: none; color: var(--text); font-weight: 600; font-size: 14.5px;
+}
+.links a:hover { border-color: var(--accent); }
+a { color: var(--accent); }
 .footer {
-  margin-top: 48px;
-  padding-top: 24px;
+  margin-top: 44px; padding-top: 22px;
   border-top: 1px solid var(--border);
-  color: var(--muted);
-  font-size: 14px;
-  text-align: center;
+  color: var(--muted); font-size: 14px; text-align: center;
 }
-.empty { color: var(--muted); font-style: italic; }
-/* Dave 2026-10-16: photo gallery — baked in at generation time from the buddy's repo photos/ */
-.gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; margin-bottom: 8px; }
-.gallery a { display: block; border-radius: 12px; overflow: hidden; border: 1px solid var(--border); background: var(--card); }
-.gallery img { width: 100%; height: 160px; object-fit: cover; display: block; transition: transform .25s ease; }
-.gallery a:hover img { transform: scale(1.04); }
-.lightbox { position: fixed; inset: 0; z-index: 1000; display: flex; align-items: center; justify-content: center; }
-.lightbox[hidden] { display: none; }
-.lightbox-bg { position: absolute; inset: 0; background: rgba(0,0,0,.88); }
-.lightbox-img { position: relative; max-width: 92vw; max-height: 88vh; border-radius: 12px; box-shadow: 0 24px 64px rgba(0,0,0,.5); }
-.lightbox-x { position: absolute; top: 16px; right: 20px; background: rgba(255,255,255,.12); color: #fff; border: none; border-radius: 50%; width: 44px; height: 44px; font-size: 26px; cursor: pointer; line-height: 1; }
-
 .dumpbox {
   background: var(--card);
   border: 1px solid var(--border);
   border-radius: 12px;
   padding: 20px 22px;
-  margin-bottom: 32px;
+  margin-bottom: 30px;
 }
 .dumpbox h2 { margin: 0 0 6px; font-size: 20px; }
 .dumpbox-sub { color: var(--muted); font-size: 14px; margin-bottom: 14px; }
@@ -162,26 +186,26 @@ h2 { font-size: 22px; margin: 32px 0 16px; }
   border-radius: 8px; padding: 7px 14px; font-size: 13px; font-weight: 600; cursor: pointer;
 }
 .dumpbox-tokenrow a { color: var(--accent); font-size: 13px; }
-
+@media (max-width: 560px) {
+  h1 { font-size: 28px; }
+  .spec td.k { width: 42%; }
+}
 </style>
 </head>
 <body>
-<nav data-buddy-crumb style="padding:14px 20px 0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:14px;line-height:1.4;"><a href="https://davedellaquila.github.io/buddy-system/car-buddy/" style="color:inherit;opacity:.65;text-decoration:none;">← Car Buddy</a></nav>
-<div class="topbar"><span class="topbar-icon">👨‍🔧</span><span class="topbar-name" data-buddy-name>Hans</span><button class="topbar-refresh" title="Reload this page (bypasses cache)" onclick="location.href=location.pathname+'?v='+Date.now()">&#8635;</button></div>
+<nav class="crumb"><a href="https://davedellaquila.github.io/buddy-system/car-buddy/">← Car Buddy</a></nav>
+<div class="topbar"><span class="topbar-icon">🧑‍🔧</span><span class="topbar-name">Hans</span><button class="topbar-refresh" title="Reload this page (bypasses cache)" onclick="location.href=location.pathname+'?v='+Date.now()">&#8635;</button></div>
 <div class="header">
-<div class="icon">👨‍🔧</div>
-<h1 data-buddy-name>Hans</h1>
-<div class="tagline">Master technician — diagnosis &amp; parts</div>
+<div class="icon">🧑‍🔧</div>
+<h1>Hans</h1>
+<div class="tagline">German master technician — diagnosis, parts, and the occasional lecture.</div>
 </div>
 
-<div class="mission">Automotive technician buddy — German master tech. Diagnoses issues, recommends parts.</div>
-
-
-
+<div class="mission">I keep Dave's cars honest. I read the scan data, name the fault, spec the part, and say plainly what can be done in the driveway and what belongs in a shop. A car maintained on schedule does not surprise you. A car that is not — surprises you at an intersection, in the cold, at 191,000 miles.</div>
 
 <section class="dumpbox" data-buddy-id="hans-buddy">
 <h2>🧠 Brain dump</h2>
-<p class="dumpbox-sub">Dump what's on your mind about <span data-buddy-name>Hans</span> — raw and unfiltered. Each dump lands in the buddy's repo (docs/ingest.md) as a timestamped entry — or saves on this device until a repo is linked and a token is connected.</p>
+<p class="dumpbox-sub">Dump what's on your mind about <span>Hans</span> — raw and unfiltered. Each dump lands in the buddy's repo (docs/ingest.md) as a timestamped entry — or saves on this device until a repo is linked and a token is connected.</p>
 <div class="dumpbox-token" hidden>
 <p>🔒 Connect GitHub to unlock dumping. Paste a token once — it stays on this device only.</p>
 <div class="dumpbox-tokenrow">
@@ -198,16 +222,103 @@ h2 { font-size: 22px; margin: 32px 0 16px; }
 <p class="dumpbox-hint">Enter dumps it &middot; Shift+Enter for a new line</p>
 </section>
 
+<h2>🔧 On the lift now<span class="sub">The current job — everything else waits its turn.</span></h2>
+<div class="card">
+<h3>2008 BMW 535xi — fuel system job</h3>
+<p>The low-pressure fuel pump is <strong>in hand</strong> (Bosch 0580202027, arrived Oct 19) and the install is planned: rear-seat access panel, new hat seal, and a full leak inspection while the tank is open. The car sits at Lenwood, parked outside until the fuel smell is explained. <a href="https://github.com/davedellaquila/hans-buddy/blob/main/docs/bmw-e61-fuel-pump-install.md">Install guide</a> · <a href="https://github.com/davedellaquila/hans-buddy/blob/main/docs/bmw-e61-diagnosis.md">Diagnosis</a></p>
+<div class="chips">
+<span class="chip warn">2AAF — pump in hand · install pending</span>
+<span class="chip danger">Fuel smell — leak hunt is job #1</span>
+<span class="chip warn">2A17 — smoke test before any DMTL parts</span>
+</div>
+</div>
 
-<h2>Needs Attention</h2>
-<p class="empty">Nothing needs attention right now.</p>
+<h2>🚗 The car<span class="sub">What Hans knows — the rest is in Dave's records (see below).</span></h2>
+<div class="card">
+<table class="spec">
+<tr><td class="k">Car</td><td class="v">2008 BMW 535xi Touring (E61)</td></tr>
+<tr><td class="k">Engine</td><td class="v">N54 3.0L twin-turbo inline-six, direct injection</td></tr>
+<tr><td class="k">Drive</td><td class="v">xDrive all-wheel drive · 6-speed Steptronic automatic</td></tr>
+<tr><td class="k">Mileage</td><td class="v">191,412 mi at last scan (Oct 11, 2026)</td></tr>
+<tr><td class="k">Presenting complaint</td><td class="v">Rough idle — cold start and at intersections</td></tr>
+<tr><td class="k">Also reported</td><td class="v">Fuel smell after driving (Oct 13) — leak unfound, car parked outside</td></tr>
+<tr><td class="k">Keeper of the car</td><td class="v"><a href="https://davedellaquila.github.io/buddy-system/bmw-buddy/">BMW Buddy</a> — Hans just turns the wrenches</td></tr>
+<tr><td class="k">VIN</td><td class="v tbd">Not yet provided — Dave, this is on the list ↓</td></tr>
+<tr><td class="k">Colors / trim</td><td class="v tbd">In Dave's records — awaiting delivery ↓</td></tr>
+</table>
+</div>
 
+<h2>📊 The patient's chart<span class="sub">Fault codes against mileage. One glance tells you which code is the disease and which is a symptom.</span></h2>
+<div class="card chart-wrap">
+<svg viewBox="0 0 720 190" role="img" aria-label="Fault code timeline by mileage: 2AAF fuel pump plausibility spans 165,052 to 191,412 miles with 255 occurrences; 2A17 DMTL fault appears twice near 191,119 miles.">
+  <line class="bar-line" x1="70" y1="30" x2="70" y2="150"/>
+  <line class="bar-line" x1="250" y1="30" x2="250" y2="150"/>
+  <line class="bar-line" x1="430" y1="30" x2="430" y2="150"/>
+  <line class="bar-line" x1="610" y1="30" x2="610" y2="150"/>
+  <text class="svg-acc" x="161" y="48" font-size="13" font-weight="700">2AAF — Fuel pump, plausibility · 255 occurrences</text>
+  <rect class="bar-aaf" x="161" y="58" width="474" height="16" rx="3"/>
+  <text class="svg-mut" x="161" y="90" font-size="11.5">first at 165,052 mi</text>
+  <text class="svg-mut" x="635" y="90" font-size="11.5" text-anchor="end">last at 191,412 mi</text>
+  <text class="svg-ink" x="700" y="104" font-size="13" font-weight="700" text-anchor="end">2A17 — DMTL system fault · 2×</text>
+  <circle class="bar-aaf" cx="626" cy="118" r="5"/>
+  <circle class="bar-aaf" cx="638" cy="118" r="5"/>
+  <text class="svg-mut" x="700" y="136" font-size="11.5" text-anchor="end">last at 191,119 mi</text>
+  <line class="today-line" x1="636" y1="24" x2="636" y2="150"/>
+  <text class="svg-mut" x="630" y="18" font-size="11" text-anchor="end">today ≈191,412 mi</text>
+  <line class="bar-line" x1="70" y1="150" x2="700" y2="150"/>
+  <text class="svg-mut" x="70" y="170" font-size="11" text-anchor="middle">160k</text>
+  <text class="svg-mut" x="250" y="170" font-size="11" text-anchor="middle">170k</text>
+  <text class="svg-mut" x="430" y="170" font-size="11" text-anchor="middle">180k</text>
+  <text class="svg-mut" x="610" y="170" font-size="11" text-anchor="middle">190k</text>
+  <text class="svg-mut" x="700" y="170" font-size="11" text-anchor="middle">195k mi</text>
+</svg>
+<p class="small muted" style="margin-top:10px">The 2AAF bar stretches 26,000 miles — the computer has been compensating for a fading fuel pump for a very long time. The 2A17 is two blips. We fix the bar first; the blips get a smoke test before anyone buys a part.</p>
+</div>
 
+<h2>📋 Service history<span class="sub">A workshop runs on its records. These are incomplete — and whose fault that is, we shall see.</span></h2>
+<div class="wanted">
+<h3>⚠️ Records wanted — Hans is nagging Dave daily until these arrive</h3>
+<p>Dave keeps good records. They are simply not here yet. Needed to complete this car's file:</p>
+<ul>
+<li><strong>Airtable service records</strong> — the car's maintenance history (export or share link)</li>
+<li><strong>The Google Sheet</strong> — every part fitted during the major service, almost two years ago</li>
+<li><strong>VIN</strong> — plus colors/trim, for the spec table above</li>
+</ul>
+<p class="small" style="margin-top:8px">The day they land, this section becomes the full service history — every job, every part, every mile.</p>
+</div>
+<div class="card">
+<ul class="timeline">
+<li><span class="when">Oct 19, 2026</span> — Bosch low-pressure fuel pump arrived (FCP Euro R785502208), right on the estimate. Install pending.</li>
+<li><span class="when">Oct 13, 2026</span> — Fuel smell after driving reported. Leak hunt promoted to safety priority #1; parts selected (pump, LP sensor on standby, DMTL gated on a smoke test).</li>
+<li><span class="when">Oct 13, 2026</span> — Fuel pump ordered from FCP Euro, $313.11.</li>
+<li><span class="when">Oct 11, 2026</span> — Hans's first job: rough-idle diagnosis. Quentin's AutoLogic scan — 2A17 + 2AAF (255×). Full report filed.</li>
+<li><span class="when">~2024</span> — Major service performed; full parts list exists in Dave's Google Sheet. <em>Awaiting the sheet.</em></li>
+<li><span class="when">Before that</span> — <em>In Dave's Airtable. Awaiting the records.</em></li>
+</ul>
+</div>
 
+<h2>📌 Standing orders<span class="sub">The top of the preventive-maintenance list. The full 18-point list lives in Hans's records.</span></h2>
+<div class="card">
+<ol class="orders">
+<li><span class="n">1</span><strong>Find the fuel leak.</strong> Safety before everything — the pump job includes the inspection; the EVAP smoke test follows if the smell survives.</li>
+<li><span class="n">2</span><strong>Oil every 5,000 miles or 4–6 months.</strong> Religious. The N54 dilutes its oil with fuel and cooks it with two turbos.</li>
+<li><span class="n">3</span><strong>Verify the cooling system's age.</strong> The electric water pump fails with no warning; at 191k miles, paperwork beats hope.</li>
+<li><span class="n">4</span><strong>Brakes, tires, belt — eyes on them.</strong> Age cracks and date codes, not guesses.</li>
+</ol>
+</div>
 
+<h2>📚 Workshop library</h2>
+<div class="links">
+<a href="https://docs.google.com/document/d/1Qdc83ZrpO73qciqnAtwEE5g6pF7fHpnpduGO0arhhuw/edit">Mission statement</a>
+<a href="https://github.com/davedellaquila/hans-buddy">Repo</a>
+<a href="https://github.com/davedellaquila/hans-buddy/blob/main/docs/bmw-e61-diagnosis.md">Diagnosis</a>
+<a href="https://github.com/davedellaquila/hans-buddy/blob/main/docs/bmw-e61-fuel-pump-install.md">Install guide</a>
+<a href="https://davedellaquila.github.io/buddy-system/bmw-buddy/">BMW Buddy</a>
+<a href="https://davedellaquila.github.io/buddy-system/">Buddy System dashboard</a>
+</div>
 
 <div class="footer">
-Generated 2026-10-19 · Part of the Buddy System
+🧑‍🔧 Hans · German master technician · Page built 2026-10-19 — records section pending Dave's homework.
 </div>
 
 <script>
@@ -263,11 +374,6 @@ Generated 2026-10-19 · Part of the Buddy System
       }
     } catch(e){}
   }
-  /* Local fallback (Dave 2026-10-15, widened 2026-10-16): dumping always works,
-     even with no GitHub token AND no repo linked — entries are saved in this
-     device's localStorage until the GitHub write path can take them. The backlog
-     flushes into the repo on the next successful GitHub dump (once a repo is
-     linked and a token is present). */
   function localKey(){ return 'buddyTree.ingest.' + bid; }
   function localBacklog(){
     try { var a = JSON.parse(localStorage.getItem(localKey()) || '[]'); return Array.isArray(a) ? a : []; }
@@ -281,7 +387,6 @@ Generated 2026-10-19 · Part of the Buddy System
   function refreshUI(){
     var has = !!token();
     tokWrap.hidden = has;
-    /* The box always works: no token and/or no repo just means local saves. */
     ta.disabled = false;
     btn.disabled = false;
     var n = localBacklog().length;
@@ -297,8 +402,6 @@ Generated 2026-10-19 · Part of the Buddy System
   }
   var tokInput = tokWrap.querySelector('input'),
       tokSave = tokWrap.querySelector('button');
-  /* Visual save confirmation (Dave 2026-10-16): the button flashes green
-     with a ✓ for ~2s on every successful save, so the save is unmissable. */
   function flashSaved(){
     var label = btn.textContent;
     btn.classList.add('saved');
@@ -310,10 +413,6 @@ Generated 2026-10-19 · Part of the Buddy System
       st.classList.remove('flash');
     }, 1800);
   }
-  /* Dave 2026-10-18: verify the token against GitHub when pasted, so a
-     bad token is caught here instead of surfacing as a mysterious 404 on
-     the next dump. The token is kept either way; dumps queue locally until
-     a working token is in place. */
   tokSave.addEventListener('click', async function(){
     var v = tokInput.value.trim();
     if (!v) return;
@@ -335,7 +434,6 @@ Generated 2026-10-19 · Part of the Buddy System
     var stamp = new Date().toLocaleString();
     var NL = String.fromCharCode(10);
     if (!repo) {
-      /* No repo linked yet — save on this device; syncs once one is linked. */
       localSave({t: stamp, text: text});
       ta.value = '';
       refreshUI();
@@ -344,7 +442,6 @@ Generated 2026-10-19 · Part of the Buddy System
       return;
     }
     if (!token()) {
-      /* Temporary workaround: no token → save on this device. */
       localSave({t: stamp, text: text});
       ta.value = '';
       st.textContent = '✓ Saved on this device — add a GitHub token to sync it to the repo.';
@@ -354,7 +451,6 @@ Generated 2026-10-19 · Part of the Buddy System
     st.textContent = 'Dumping…';
     btn.disabled = true;
     try {
-      /* Flush any locally-saved backlog first, then the new entry. */
       var backlog = localBacklog();
       var parts = backlog.map(function(b){ return '## ' + b.t + NL + NL + b.text + NL + NL; });
       parts.push('## ' + stamp + NL + NL + text + NL + NL);
@@ -368,9 +464,6 @@ Generated 2026-10-19 · Part of the Buddy System
       st.textContent = '✓ Dumped to ' + repo + '/docs/ingest.md' + (backlog.length ? ' (' + backlog.length + ' local synced)' : '');
       flashSaved();
     } catch(err){
-      /* Dave 2026-10-18: a failed GitHub write must never drop the dump.
-         Keep it on this device and say so plainly, with the backlog count —
-         it syncs on the next successful dump. */
       try { localSave({t: stamp, text: text}); } catch(e2){}
       ta.value = '';
       refreshUI();
@@ -385,170 +478,10 @@ Generated 2026-10-19 · Part of the Buddy System
   }
   btn.addEventListener('click', dump);
   ta.addEventListener('keydown', function(ev){
-    /* Dave 2026-10-16: plain Return dumps, like the button. Shift+Return for a newline. */
     if (ev.key === 'Enter' && !ev.shiftKey && !ev.altKey) { ev.preventDefault(); dump(); }
   });
   resolveRepo().then(refreshUI);
 })();
 </script>
-
-
-<script>
-(function(){
-  var tiles = document.querySelectorAll('.attn[data-attn-id]');
-  if (!tiles.length) return;
-  var dumpbox = document.querySelector('.dumpbox');
-  var bid = (dumpbox && dumpbox.getAttribute('data-buddy-id')) || (function(){
-    var p = location.pathname.replace(/\/+$/, '');
-    return p.substring(p.lastIndexOf('/') + 1);
-  })();
-  function lsGet(){ try { return JSON.parse(localStorage.getItem('buddyTree.v3') || '{}'); } catch(e){ return {}; } }
-  function lsSet(patch){ try { var s = lsGet(); for (var k in patch) s[k] = patch[k]; localStorage.setItem('buddyTree.v3', JSON.stringify(s)); } catch(e){} }
-  function token(){ return lsGet().ghToken || ''; }
-  function b64encode(str){
-    var bytes = new TextEncoder().encode(str), bin = '';
-    bytes.forEach(function(b){ bin += String.fromCharCode(b); });
-    return btoa(bin);
-  }
-  async function ghApi(path, method, body){
-    var t = token();
-    if (!t) throw new Error('Add a GitHub token first.');
-    var r = await fetch('https://api.github.com' + path, {
-      method: method || 'GET',
-      headers: {'Authorization': 'Bearer ' + t, 'Accept': 'application/vnd.github+json', 'Content-Type': 'application/json'},
-      body: body ? JSON.stringify(body) : undefined
-    });
-    if (!r.ok) throw new Error('GitHub ' + r.status);
-    return r.status === 204 ? null : await r.json();
-  }
-  async function ghGetFile(repo, path){
-    try {
-      var j = await ghApi('/repos/davedellaquila/' + repo + '/contents/' + path);
-      if (j && j.content) return {
-        text: new TextDecoder().decode(Uint8Array.from(atob(j.content.replace(/\n/g, '')), function(c){ return c.charCodeAt(0); })),
-        sha: j.sha
-      };
-    } catch(e){}
-    return null;
-  }
-  var repo = null, buddyName = bid;
-  async function resolveBuddy(){
-    try {
-      var r = await fetch('../buddies.json', {cache: 'no-store'});
-      var d = await r.json();
-      var buds = d.buddies || [];
-      for (var i = 0; i < buds.length; i++) {
-        if (buds[i].id === bid) {
-          if (buds[i].repo) repo = buds[i].repo;
-          if (buds[i].name) buddyName = buds[i].name;
-          break;
-        }
-      }
-    } catch(e){}
-  }
-  function rkey(aid, text){ return bid + '|' + (aid || ('text:' + text.slice(0, 60))); }
-  function isResolved(aid, text){ var m = lsGet().attnDone || {}; return !!m[rkey(aid, text)]; }
-  function setResolved(aid, text){ var s = lsGet(); var m = s.attnDone || {}; m[rkey(aid, text)] = 1; s.attnDone = m; lsSet(s); }
-  function paintResolved(tile, msg){
-    tile.classList.add('resolved');
-    var st = tile.querySelector('.attn-status');
-    if (st) st.textContent = msg;
-  }
-  async function sendAction(tile, entry, okMsg){
-    var st = tile.querySelector('.attn-status');
-    var btns = tile.querySelectorAll('.attn-btn');
-    if (!token()) { st.textContent = 'Add a GitHub token in the Brain dump section above to enable actions.'; return false; }
-    if (!repo) { st.textContent = 'No repo linked for this buddy yet.'; return false; }
-    btns.forEach(function(b){ b.disabled = true; });
-    st.textContent = 'Working…';
-    try {
-      var NL = String.fromCharCode(10);
-      var stamp = new Date().toLocaleString();
-      var cur = await ghGetFile(repo, 'docs/ingest.md');
-      var base = cur ? cur.text : '# Ingest log — ' + buddyName + NL + NL;
-      var body = {message: 'Attention action for ' + bid, content: b64encode(base + '## ' + stamp + NL + NL + entry + NL + NL)};
-      if (cur && cur.sha) body.sha = cur.sha;
-      await ghApi('/repos/davedellaquila/' + repo + '/contents/docs/ingest.md', 'PUT', body);
-      st.textContent = okMsg;
-      return true;
-    } catch(err){
-      st.textContent = 'Save failed: ' + (err.message || err);
-      btns.forEach(function(b){ b.disabled = false; });
-      return false;
-    }
-  }
-  tiles.forEach(function(tile){
-    var aid = tile.getAttribute('data-attn-id') || '';
-    var textEl = tile.querySelector('.attn-text');
-    var text = textEl ? textEl.textContent.trim() : '';
-    if (isResolved(aid, text)) { paintResolved(tile, 'Marked done'); return; }
-    tile.addEventListener('click', function(ev){
-      var btn = ev.target.closest ? ev.target.closest('.attn-btn') : null;
-      if (!btn || btn.disabled) return;
-      var act = btn.getAttribute('data-act');
-      var idBit = aid ? ' (attention id: ' + aid + ')' : '';
-      if (act === 'done') {
-        sendAction(tile,
-          'DONE — Dave marked this done on the homepage: "' + text + '"' + idBit + '. Please remove it from the attention list in buddies.json.',
-          'Marked done — the buddy will clear it.').then(function(ok){ if (ok) { setResolved(aid, text); paintResolved(tile, 'Marked done — the buddy will clear it.'); } });
-      } else if (act === 'info') {
-        sendAction(tile,
-          'FOLLOW-UP — Dave needs more info on: "' + text + '"' + idBit + '. Please follow up with him.',
-          'Sent — ' + buddyName + ' will follow up.');
-      }
-    });
-  });
-  resolveBuddy();
-})();
-</script>
-
-
-<script>
-(function(){
-  var parts = location.pathname.split('/');
-  var bid = '';
-  for (var i = parts.length - 1; i >= 0; i--) { if (parts[i]) { bid = parts[i]; break; } }
-  function applyName(name){
-    if (!name) return;
-    var els = document.querySelectorAll('[data-buddy-name]');
-    for (var k = 0; k < els.length; k++) els[k].textContent = name;
-    var ta = document.querySelector('.dumpbox textarea');
-    if (ta) ta.setAttribute('placeholder', "Dump what's on your mind about " + name + "…");
-  }
-  /* Pending renames (Dave 2026-10-18): when the dashboard has no GitHub token,
-     a rename queues in localStorage instead of reaching the registry. The
-     dashboard and homepages share an origin, so the homepage reads that queue
-     here — a pending rename supersedes the registry name, which is why a freshly
-     renamed buddy kept showing its old name after refresh. */
-  function pendingName(){
-    try {
-      var s = JSON.parse(localStorage.getItem('buddyTree.v3') || '{}');
-      if (s && s.pendingRenames && s.pendingRenames[bid]) return s.pendingRenames[bid];
-    } catch(e){}
-    return null;
-  }
-  var pn = pendingName();
-  if (pn) applyName(pn);
-  try {
-    fetch('../buddies.json', {cache: 'no-store'}).then(function(r){ return r.json(); }).then(function(d){
-      var buds = (d && d.buddies) || [];
-      for (var j = 0; j < buds.length; j++) {
-        if (buds[j].id === bid && buds[j].name) { applyName(pendingName() || buds[j].name); break; }
-      }
-    }).catch(function(){});
-  } catch(e){}
-  /* Live rename (Dave 2026-10-16): the dashboard broadcasts renames via
-     localStorage, so an open page updates its name without a refresh.
-     Same browser only — other devices pick it up on their next load. */
-  window.addEventListener('storage', function(e){
-    if (e.key !== 'buddyTree.rename' || !e.newValue) return;
-    try {
-      var d = JSON.parse(e.newValue);
-      if (d && d.id === bid && d.name) applyName(d.name);
-    } catch(err){}
-  });
-})();
-</script>
-
 </body>
 </html>

@@ -1,4 +1,10 @@
 ## 2026-10-19
+### Hans homepage — custom workshop page replaces the template (Dave 2026-10-19)
+- Hans (🧑‍🔧, hans-buddy/) gets a thread-owned custom homepage in place of the basic template: sticky header, dark + light, standard brain-dump box (dumps land in hans-buddy/docs/ingest.md).
+- Mostly the BMW, as Dave asked: an "On the lift now" card for the E61 fuel-system job (Bosch LPFP in hand, install pending, fuel-smell leak hunt as job #1), a car spec table (2008 535xi E61, N54, 191,412 mi at last scan; VIN/colors marked awaiting Dave's records), standing PM orders, and workshop-library links (mission, repo, diagnosis, install guide).
+- **The Patient's Chart** (Dave's charts directive): inline-SVG fault-code timeline vs. mileage — the 2AAF bar spanning 165,052→191,412 mi with 255 occurrences against 2A17's two blips near 191,119 mi. The chart makes the diagnosis: fix the bar, smoke-test the blips.
+- Service-history section ships honest: a known-events timeline (diagnosis → parts → pump arrival) plus a Records Wanted panel — Airtable service records, the Google Sheet parts list from the major service ~2 years ago, and the VIN. Hans has a daily nag armed until Dave hands them over.
+
 ### Release Notes — filter tiles stick like Money Buddy's filter cards (Dave 2026-10-19)
 - The New / Today / All filter tiles now stay pinned at the top of the Release Notes view while the list scrolls underneath, patterned on Money Buddy's sticky filter cards: the tiles ride on the page background so the notes slide cleanly beneath (no see-through gaps), and Money Buddy's soft float shadow (0 10px 24px rgba(10,20,15,.14)) fades in only while the card is actually stuck.
 - A 1px IntersectionObserver sentinel above the tiles toggles the .stuck shadow — Money Buddy's scroll-handoff idea, adapted to a position:sticky element; at rest the tiles sit exactly where they did (padding + margins sum to the old 16px/20px spacing).
