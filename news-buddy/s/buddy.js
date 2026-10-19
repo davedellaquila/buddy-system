@@ -197,13 +197,59 @@ window.NBVoice = (function(){
     return m[p] || 'another language';
   }
   function baseName(v){ return String(v.name).split('(')[0].trim(); }
+  /* Dave 2026-10-19: every voice gets a one-sentence description that leads with
+     its accent, so he can tell what it will sound like before previewing. */
+  function accentName(lang){
+    var p = String(lang || '').toLowerCase().replace('_', '-');
+    var m = {
+      'en-us':'American English', 'en-gb':'British English', 'en-au':'Australian English',
+      'en-ie':'Irish English', 'en-za':'South African English', 'en-in':'Indian English',
+      'en-ca':'Canadian English', 'en-nz':'New Zealand English', 'en-scotland':'Scottish English',
+      'es-es':'Spanish (Spain)', 'es-mx':'Spanish (Mexican)', 'es-us':'Spanish (US)',
+      'fr-fr':'French', 'fr-ca':'Canadian French', 'de-de':'German', 'it-it':'Italian',
+      'pt-br':'Brazilian Portuguese', 'pt-pt':'Portuguese', 'nl-nl':'Dutch', 'sv-se':'Swedish',
+      'da-dk':'Danish', 'nb-no':'Norwegian', 'no-no':'Norwegian', 'fi-fi':'Finnish',
+      'ko-kr':'Korean', 'ja-jp':'Japanese', 'zh-cn':'Mandarin Chinese',
+      'zh-tw':'Taiwanese Mandarin', 'zh-hk':'Cantonese', 'ru-ru':'Russian', 'ar-sa':'Arabic',
+      'hi-in':'Hindi', 'pl-pl':'Polish', 'tr-tr':'Turkish', 'cs-cz':'Czech', 'el-gr':'Greek',
+      'he-il':'Hebrew', 'hu-hu':'Hungarian', 'ro-ro':'Romanian', 'sk-sk':'Slovak',
+      'th-th':'Thai', 'uk-ua':'Ukrainian', 'vi-vn':'Vietnamese', 'id-id':'Indonesian',
+      'ms-my':'Malay', 'hr-hr':'Croatian'
+    };
+    if (m[p]) return m[p];
+    var base = languageName(p);
+    return base === 'another language' ? '' : base;
+  }
+  var VOICE_NOTES = {
+    'samantha': 'a warm, natural female voice — the classic iPhone default',
+    'alex': 'a crisp male voice with a polished broadcast tone',
+    'daniel': 'a measured male voice, calm and authoritative',
+    'karen': 'a friendly female voice, bright and clear',
+    'moira': 'a female voice with a soft lilt',
+    'tessa': 'a female voice, warm and unhurried',
+    'fiona': 'a female voice with a gentle burr',
+    'fred': 'a flat, robotic male voice — charmingly old-school',
+    'victoria': 'a bright female voice, slightly formal',
+    'allison': 'a clear female voice, even and professional',
+    'ava': 'a smooth female voice with a relaxed, modern tone',
+    'susan': 'a steady female voice, calm and clear',
+    'tom': 'a male voice, casual and plain-spoken',
+    'aaron': 'a younger-sounding male voice',
+    'nicky': 'a female voice, upbeat and conversational',
+    'google us english': 'Google\u2019s clean, neutral American voice',
+    'google uk english female': 'Google\u2019s crisp, even British female voice',
+    'google uk english male': 'Google\u2019s crisp, even British male voice'
+  };
   function voicePersona(v){
     var hit = VOICE_PERSONAS[baseName(v).toLowerCase()];
     if (hit) return hit;
-    return {
-      desc: 'Reads your morning briefing in ' + languageName(v.lang) + ' with a steady broadcast cadence. A reliable voice for the daily edition.',
-      sample: 'Good morning. Here are today\u2019s headlines.'
-    };
+    var accent = accentName(v.lang);
+    var note = VOICE_NOTES[baseName(v).toLowerCase()];
+    var d;
+    if (note) d = (accent ? accent + ' — ' : '') + note + '.';
+    else if (accent) d = 'Reads the edition in ' + accent + ' with a steady broadcast cadence.';
+    else d = 'Reads your morning briefing with a steady broadcast cadence.';
+    return { desc: d, sample: 'Good morning. Here are today\u2019s headlines.' };
   }
   var voices = [], loaded = false, waiters = [];
   var freeVoices = [], lockedVoices = [];
