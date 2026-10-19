@@ -1765,6 +1765,8 @@ input.bp-name{background:transparent;border-top:none;border-right:none;border-le
 .wn-head h3{margin:0;font-size:16px}
 .wn-x{background:none;border:none;color:var(--text);font-size:22px;cursor:pointer;line-height:1;padding:4px}
 .wn-body{padding:6px 18px 18px;overflow-y:auto;overflow-x:hidden;overflow-wrap:break-word;word-break:break-word}
+.wn-sticky{position:sticky;top:-6px;z-index:3;margin:-6px -18px 0;padding:6px 18px 2px;background:var(--panel)}
+.wn-sticky .cl-type-stats{margin-bottom:6px}
 .wn-body a{overflow-wrap:break-word;word-break:break-all}
 .wn-body h4{margin:16px 0 6px;font-size:14.5px}
 .wn-body h5{margin:12px 0 4px;font-size:13px;color:var(--muted)}
@@ -9732,6 +9734,17 @@ function openWhatsNew(){
       html += '<p class="fineprint"><a href="https://github.com/davedellaquila/buddy-system/blob/master/CHANGELOG.md" target="_blank" rel="noopener">Full changelog on GitHub</a></p>';
       body.innerHTML = html;
       wireChangelogTypeFilter(body);
+      // Dave 2026-10-19: pin the summary heading + type filter pills to the
+      // top of the sheet while the entries scroll beneath them (.wn-sticky).
+      const wnH = body.querySelector(':scope > h4');
+      const wnStats = wnH ? wnH.nextElementSibling : null;
+      if (wnH && wnStats && wnStats.classList.contains('cl-type-stats') && /^New since/.test(wnH.textContent)) {
+        const wnWrap = document.createElement('div');
+        wnWrap.className = 'wn-sticky';
+        body.insertBefore(wnWrap, wnH);
+        wnWrap.appendChild(wnH);
+        wnWrap.appendChild(wnStats);
+      }
       // Mark seen only AFTER the split + render, so the "new" section is
       // computed against the previous visit — not the one that just happened.
       whatsnewMarkSeen(md);

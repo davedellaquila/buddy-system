@@ -1937,6 +1937,8 @@ input.bp-name{background:transparent;border-top:none;border-right:none;border-le
 .wn-head h3{margin:0;font-size:16px}
 .wn-x{background:none;border:none;color:var(--text);font-size:22px;cursor:pointer;line-height:1;padding:4px}
 .wn-body{padding:6px 18px 18px;overflow-y:auto;overflow-x:hidden;overflow-wrap:break-word;word-break:break-word}
+.wn-sticky{position:sticky;top:-6px;z-index:3;margin:-6px -18px 0;padding:6px 18px 2px;background:var(--panel)}
+.wn-sticky .cl-type-stats{margin-bottom:6px}
 .wn-body a{overflow-wrap:break-word;word-break:break-all}
 .wn-body h4{margin:16px 0 6px;font-size:14.5px}
 .wn-body h5{margin:12px 0 4px;font-size:13px;color:var(--muted)}
@@ -3474,7 +3476,7 @@ function renderDevelopSection(){
   const dev = document.getElementById('fset-develop');
   if (!dev) return;
   const simulating = !!devBackup;
-  const buildNum = '20261019.2144';
+  const buildNum = '20261019.2147';
   dev.innerHTML = ''
     + '<label class="fset-check"><input type="checkbox" id="dev-empty-toggle"' + (simulating ? ' checked' : '') + '> <span><strong>Simulate new user</strong> — empty data file, as if opening the shared link fresh</span></label>'
     + '<div class="fineprint" style="margin:8px 0 12px">Build <span style="font-family:monospace">' + escHtml(String(buildNum)) + '</span> · ' + BUDDIES.length + ' buddies in this file</div>'
@@ -4729,7 +4731,7 @@ function renderBuddy(id){
       'Anybody with repo access can see this note. Saved to the buddy’s repo (docs/notes.md).')
     + '<div class="attr-body"><textarea class="notes" id="bp-shared-notes" placeholder="Anybody with repo access can see this note."></textarea>'
     + '<p class="fineprint" id="shared-status"></p></div></div>'
-    + '<div class="bp-build">Build 20261019.2144</div>'
+    + '<div class="bp-build">Build 20261019.2147</div>'
     + '</div>';
   // Update every visible label for a buddy after a rename/re-icon, across all
   // Atlas lenses. A rename changes no structure, so labels are patched in place
@@ -7345,7 +7347,7 @@ function renderPlan(id){
     + '<p class="fineprint">Saved on this device. (For your eyes only)</p></div>'
     + '<div class="bp-sec"><h3>Shared notes<span class="info-tip" data-tip="Visible to everyone with access to this project.">\u24d8</span></h3><textarea class="notes" id="bp-shared" placeholder="Shared notes\u2026 (visible to everyone with access)">'+escHtml((S.planShared||{})[id]||'')+'</textarea>'
     + '<p class="fineprint">Shared — visible to everyone with access.</p></div>'
-    + '<div class="bp-build">Build 20261019.2144</div>'
+    + '<div class="bp-build">Build 20261019.2147</div>'
     + '</div>';
   const nt = document.getElementById('bp-notes');
   let t = null;
@@ -10057,14 +10059,14 @@ function openWhatsNew(){
     .then(r => r.ok ? r.text() : '')
     .then(t => {
       const serverBuild = t.trim();
-      if (serverBuild && serverBuild !== '20261019.2144') {
+      if (serverBuild && serverBuild !== '20261019.2147') {
         updBtn.style.display = '';
         updBtn.title = 'Update to build ' + serverBuild;
       }
       // Show build numbers at the top of the sheet (Dave's request 2026-10-12)
-      const myBuild = '20261019.2144';
+      const myBuild = '20261019.2147';
       let buildLine = '<p class="fineprint" style="margin-top:0">You’re on build ' + escHtml(myBuild) + '.';
-      if (serverBuild && serverBuild !== '20261019.2144' && isNewerBuild(serverBuild, myBuild)) {
+      if (serverBuild && serverBuild !== '20261019.2147' && isNewerBuild(serverBuild, myBuild)) {
         buildLine += ' Build ' + escHtml(serverBuild) + ' is available.';
       }
       buildLine += '</p>';
@@ -10088,6 +10090,17 @@ function openWhatsNew(){
       html += '<p class="fineprint"><a href="https://github.com/davedellaquila/buddy-system/blob/master/CHANGELOG.md" target="_blank" rel="noopener">Full changelog on GitHub</a></p>';
       body.innerHTML = html;
       wireChangelogTypeFilter(body);
+      // Dave 2026-10-19: pin the summary heading + type filter pills to the
+      // top of the sheet while the entries scroll beneath them (.wn-sticky).
+      const wnH = body.querySelector(':scope > h4');
+      const wnStats = wnH ? wnH.nextElementSibling : null;
+      if (wnH && wnStats && wnStats.classList.contains('cl-type-stats') && /^New since/.test(wnH.textContent)) {
+        const wnWrap = document.createElement('div');
+        wnWrap.className = 'wn-sticky';
+        body.insertBefore(wnWrap, wnH);
+        wnWrap.appendChild(wnH);
+        wnWrap.appendChild(wnStats);
+      }
       // Mark seen only AFTER the split + render, so the "new" section is
       // computed against the previous visit — not the one that just happened.
       whatsnewMarkSeen(md);
@@ -10103,7 +10116,7 @@ function isNewerBuild(server, mine){
   } catch (e) { return false; }
 }
 function initVersionCheck(){
-  const myBuild = '20261019.2144';
+  const myBuild = '20261019.2147';
   function showUpdateBanner(serverBuild){
     if (document.getElementById('update-banner')) return;
     const b = document.createElement('div');
