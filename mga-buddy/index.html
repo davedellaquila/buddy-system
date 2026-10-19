@@ -4,7 +4,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title data-buddy-name>MGA Buddy</title>
+<title data-buddy-name>1959 MGA roadster</title>
 <style>
 :root {
   --bg: #ffffff;
@@ -168,21 +168,49 @@ h2 { font-size: 22px; margin: 32px 0 16px; }
 <body>
 <nav data-buddy-crumb style="padding:14px 20px 0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:14px;line-height:1.4;"><a href="https://davedellaquila.github.io/buddy-system/car-buddy/" style="color:inherit;opacity:.65;text-decoration:none;">← Car Buddy</a></nav>
 <nav data-buddy-kids style="padding:6px 20px 0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:14px;line-height:1.9;"><span style="opacity:.65;">Children:</span> <a href="https://davedellaquila.github.io/buddy-system/accident/" style="color:inherit;text-decoration:none;margin-right:14px;white-space:nowrap;">🔧 Accident</a></nav>
-<div class="topbar"><span class="topbar-icon">🏎️</span><span class="topbar-name" data-buddy-name>MGA Buddy</span><button class="topbar-refresh" title="Reload this page (bypasses cache)" onclick="location.href=location.pathname+'?v='+Date.now()">&#8635;</button></div>
+<div class="topbar"><span class="topbar-icon">🏎️</span><span class="topbar-name" data-buddy-name>1959 MGA roadster</span><button class="topbar-refresh" title="Reload this page (bypasses cache)" onclick="location.href=location.pathname+'?v='+Date.now()">&#8635;</button></div>
 <div class="header">
 <div class="icon">🏎️</div>
-<h1 data-buddy-name>MGA Buddy</h1>
+<h1 data-buddy-name>1959 MGA roadster</h1>
 <div class="tagline">1959 MGA coupe — the British roadster</div>
 </div>
 
 <div class="mission">Living dossier for the 1959 MGA coupe: 1800cc MGB engine with close-ratio 5-speed (modified, non-original drivetrain) — a good driver that presents well, not perfect. Tracks service, parts, and the paused sale discussion (working auction estimate $20–25k; Bring a Trailer the likely venue when Dave returns to it).</div>
 
-
+<h2>Photos</h2>
+<div class="gallery">
+<a href="https://raw.githubusercontent.com/davedellaquila/mga-buddy/master/photos/1792388991691-IMG_4348.jpeg" class="g-item" data-full="https://raw.githubusercontent.com/davedellaquila/mga-buddy/master/photos/1792388991691-IMG_4348.jpeg"><img src="https://raw.githubusercontent.com/davedellaquila/mga-buddy/master/photos/1792388991691-IMG_4348.jpeg" alt="1959 MGA roadster photo" loading="lazy"></a>
+</div>
+<div class="lightbox" hidden>
+  <div class="lightbox-bg"></div>
+  <img class="lightbox-img" alt="">
+  <button class="lightbox-x" aria-label="Close">&times;</button>
+</div>
+<script>
+(function(){
+  var items = document.querySelectorAll('.g-item');
+  var lb = document.querySelector('.lightbox');
+  if (!lb) return;
+  var img = lb.querySelector('.lightbox-img');
+  items.forEach(function(a){
+    a.addEventListener("click", function(e){
+      e.preventDefault();
+      img.src = a.getAttribute("data-full");
+      lb.hidden = false;
+      document.body.style.overflow = 'hidden';
+    });
+  });
+  function close(){ lb.hidden = true; img.src=""; document.body.style.overflow=""; }
+  lb.querySelector(".lightbox-bg").addEventListener("click", close);
+  lb.querySelector(".lightbox-x").addEventListener("click", close);
+  document.addEventListener("keydown", function(e){ if(e.key==="Escape" && !lb.hidden) close(); });
+})();
+</script>
 
 
 <section class="dumpbox" data-buddy-id="mga-buddy">
 <h2>🧠 Brain dump</h2>
-<p class="dumpbox-sub">Dump what's on your mind about <span data-buddy-name>MGA Buddy</span> — raw and unfiltered. Each dump lands in the buddy's repo (docs/ingest.md) as a timestamped entry — or saves on this device until a repo is linked and a token is connected.</p>
+<p class="dumpbox-sub">Dump what's on your mind about <span data-buddy-name>1959 MGA roadster</span> — raw and unfiltered. Each dump lands in the buddy's repo (docs/ingest.md) as a timestamped entry — or saves on this device until a repo is linked and a token is connected.</p>
 <div class="dumpbox-token" hidden>
 <p>🔒 Connect GitHub to unlock dumping. Paste a token once — it stays on this device only.</p>
 <div class="dumpbox-tokenrow">
@@ -191,7 +219,7 @@ h2 { font-size: 22px; margin: 32px 0 16px; }
 <a href="https://github.com/settings/tokens" target="_blank" rel="noopener">Get a token</a>
 </div>
 </div>
-<textarea rows="4" placeholder="Dump what's on your mind about MGA Buddy…"></textarea>
+<textarea rows="4" placeholder="Dump what's on your mind about 1959 MGA roadster…"></textarea>
 <div class="dumpbox-row">
 <button type="button" class="dumpbox-btn">Dump it</button>
 <span class="dumpbox-status" role="status"></span>
@@ -211,7 +239,7 @@ h2 { font-size: 22px; margin: 32px 0 16px; }
 </div>
 
 <div class="footer">
-Generated 2026-10-18 · Part of the Buddy System
+Generated 2026-10-19 · Part of the Buddy System
 </div>
 
 <script>
