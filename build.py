@@ -460,9 +460,13 @@ body.sb-closed #pane-toggles .ptoggle{padding:6px 4px}
 /* The lens dropdown escapes the row's horizontal scroll: fixed position below
    the row (the row is 44px at top:12px). Phone keeps the bottom sheet. */
 .atlas-controls .lens-picker-wrap{position:static}
-.atlas-controls .lens-dropdown{position:fixed;top:68px;left:12px;z-index:61}
+/* The dropdown itself lives on document.body (wireAtlasRow moves it, same as
+   the dot popovers): inside the row, the backdrop-filter makes the row its
+   containing block and overflow-y:hidden clips it to nothing — that trap is
+   why tapping the pill on iPad appeared to do nothing. */
+#lens-dropdown{position:fixed;top:68px;left:12px;z-index:61}
 @media (max-width:639px){
-  .atlas-controls .lens-dropdown{top:auto}
+  #lens-dropdown{top:auto}
 }
 /* Punch #1: the chrome needs top clearance so the Quick Answers strip never
    clips at the viewport edge. The Atlas row floats at top:12px (44px tall),
@@ -5003,7 +5007,10 @@ function wireAtlasRow(){
   // .atlas-controls — the row's backdrop-filter makes position:fixed children
   // position relative to the row (not the viewport), and overflow-y:hidden
   // clips them. On body they're true viewport-fixed and the taps work.
-  ['bg-pop', 'tile-pop'].forEach(pid => {
+  // Dave 2026-10-19: the lens dropdown + scrim get the same move — left inside
+  // the row, the picker unhid but was clipped invisible, so tapping the Atlas
+  // pill on iPad appeared to do nothing.
+  ['bg-pop', 'tile-pop', 'lens-dropdown', 'lens-scrim'].forEach(pid => {
     const pop = document.getElementById(pid);
     if (pop && pop.parentElement !== document.body) document.body.appendChild(pop);
   });

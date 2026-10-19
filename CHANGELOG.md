@@ -1,4 +1,8 @@
 ## 2026-10-19
+### Atlas lens picker — tapping the pill on iPad appeared to do nothing (Dave 2026-10-19)
+- Root cause: the lens dropdown lived inside .atlas-controls, whose backdrop-filter makes the row the containing block for fixed-position children and whose overflow-y:hidden then clips them — the picker unhid but was clipped invisible inside the 44px row. Same trap the dot popovers escaped on Oct 18.
+- Fix: wireAtlasRow now moves #lens-dropdown and #lens-scrim to document.body alongside the dot popovers, and the fixed-position rules target #lens-dropdown directly (top:68px under the row; phone keeps the bottom sheet via top:auto).
+
 ### Info panel — a shown/added field arrives open (Dave 2026-10-19)
 - Restoring a field from the Hidden fields tray now lands it in an open state — no second click to expand it. The show-field handler sets both state maps for that field (secCollapsed=false for h3 sections, attrExpanded=true for attr-head sections) before saving and re-rendering; every other section keeps its remembered state.
 
