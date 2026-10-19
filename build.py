@@ -976,11 +976,11 @@ body:has(#token-pill) #panel-open{right:148px}
   #field-settings .fset-choice{flex-wrap:wrap}
   #field-settings .fset-choice>span:first-child{flex:1 1 100%}
 }
-/* Wide settings sheet: Main views + Buddy fields side by side, each scrolling on its own */
+/* Wide settings sheet: the Main views list scrolls on its own */
 @container (min-width:640px){
   #field-settings .fset-cols{display:flex;gap:16px;align-items:stretch}
   #field-settings .fset-cols>.fset-sec{flex:1 1 0;min-width:0}
-  #field-settings .fset-cols #vset-list,#field-settings .fset-cols #fset-list{max-height:340px;overflow-y:auto}
+  #field-settings #vset-list{max-height:340px;overflow-y:auto}
 }
 /* Narrow sidebar: drop the kind column so buddy names get full room */
 @container (max-width:290px){
@@ -1073,6 +1073,12 @@ body:has(#token-pill) #view-buddy.sheet .bp-close-x{right:148px}
   margin-left:auto;touch-action:none}
 .bp-sec > h3 .secgrip:hover{color:var(--muted);background:var(--ghost)}
 .bp-sec > h3 .secgrip:active{cursor:grabbing}
+/* Dave 2026-10-18: the compact attr-head sections get the same drag grip,
+   so every field is reorderable right from the panel. */
+.attr-head .secgrip{cursor:grab;color:var(--faint);font-size:14px;line-height:1;padding:2px 4px;border-radius:4px;
+  flex:none;touch-action:none}
+.attr-head .secgrip:hover{color:var(--muted);background:var(--ghost)}
+.attr-head .secgrip:active{cursor:grabbing}
 .bp-sec.sec-dragging{opacity:0.4}
 #sec-drag-divider{position:absolute;height:0;border-top:3px solid var(--accent);z-index:50;pointer-events:none;box-shadow:0 0 8px var(--accent)}
 #view-drag-divider{position:absolute;height:0;border-top:3px solid var(--accent);z-index:50;pointer-events:none;box-shadow:0 0 8px var(--accent)}
@@ -2548,7 +2554,7 @@ function secDragHideDivider(){
 function applySectionDrag(){
   const home = document.getElementById('buddy-home');
   if (!home) return;
-  home.querySelectorAll('.bp-sec[data-field] > h3 .secgrip').forEach(grip => {
+  home.querySelectorAll('.bp-sec[data-field] > h3 .secgrip, .bp-sec[data-field] > .attr-head .secgrip').forEach(grip => {
     if (grip.dataset.sdrag) return;
     grip.dataset.sdrag = '1';
     grip.addEventListener('pointerdown', e => {
@@ -2760,20 +2766,27 @@ function applyFieldOrder(){
     if (!order.includes(fid) && !el.parentNode) place(el);
   });
 }
-function isFieldVisible(fid){
-  if (!S.fieldHidden) S.fieldHidden = {};
-  return !S.fieldHidden[fid];
-}
-/* Dave 2026-10-18: hide/show fields right from the info panel — no Settings detour.
-   decorateBpHideButtons puts a quiet "hide" link on every section header;
+/* Dave 2026-10-18: hide/show + reorder fields right from the info panel — no Settings detour.
+   decorateBpHeaders puts a quiet "hide" link on every section header, and adds the
+   ⋮⋮ drag grip to the compact attr-head headers (About, A.K.A., Parents, Persona,
+   Voice, notes) so every field is reorderable from the panel too.
    renderBpHiddenBar adds the "Hidden fields (n)" tray at the bottom of the field list. */
-function decorateBpHideButtons(){
+function decorateBpHeaders(){
   const home = document.getElementById('buddy-home');
   if (!home) return;
   home.querySelectorAll('.bp-sec[data-field]').forEach(sec => {
     const fid = sec.dataset.field;
     const head = sec.querySelector(':scope > h3, :scope > .attr-head');
-    if (!head || head.querySelector('.bp-hide-btn')) return;
+    if (!head) return;
+    // Drag grip for attr-head headers (h3 headers get theirs in applySectionCollapse).
+    if (head.classList.contains('attr-head') && !head.querySelector('.secgrip')) {
+      const grip = document.createElement('span');
+      grip.className = 'secgrip';
+      grip.textContent = '\u22ee\u22ee';
+      grip.title = 'Drag to reorder sections';
+      head.appendChild(grip);
+    }
+    if (head.querySelector('.bp-hide-btn')) return;
     const btn = document.createElement('button');
     btn.type = 'button';
     btn.className = 'bp-hide-btn';
@@ -3058,10 +3071,7 @@ function openFieldSettings(){
       + '<div class="fset-head" id="fset-drag"><h3>Settings</h3></div>'
       + '<div class="fset-body">'
       + '<section class="fset-sec"><h3 class="fset-sec-h">Preferences</h3><div id="fset-settings"></div></section>'
-      + '<div class="fset-cols">'
       + '<section class="fset-sec"><h3 class="fset-sec-h">Main views</h3><p class="fineprint">Drag to reorder. Number keys 1–9 follow this order.</p><div id="vset-list"></div></section>'
-      + '<section class="fset-sec"><h3 class="fset-sec-h">Buddy fields</h3><p class="fineprint">Drag to reorder. Uncheck to hide.</p><div id="fset-list"></div></section>'
-      + '</div>'
       + '<section class="fset-sec"><h3 class="fset-sec-h">Advanced</h3><div id="fset-advanced"></div></section>'
       + '<section class="fset-sec"><h3 class="fset-sec-h">Support</h3><p class="fineprint">Enjoying the buddy system? <a href="https://ko-fi.com/davedellaquila" target="_blank" rel="noopener" style="color:var(--accent)">\U0001FAD9 Tip the jar</a> \u2014 every tip keeps the lights on.</p></section>'
       + '<section class="fset-sec"><h3 class="fset-sec-h">Develop</h3><p class="fineprint">Tools for preparing the app for new users. Nothing here affects your real data.</p><div id="fset-develop"></div></section>'
@@ -3088,16 +3098,6 @@ function openFieldSettings(){
       updateFactory(); toast('Factory defaults updated.');
     });
   }
-  const list = document.getElementById('fset-list');
-  list.innerHTML = getFieldOrder().map(fid => {
-    const def = FIELD_DEFS.find(f => f.id === fid);
-    if (!def) return '';
-    const vis = isFieldVisible(fid);
-    return '<div class="fset-row" draggable="true" data-fid="' + fid + '">'
-      + '<input type="checkbox" ' + (vis ? 'checked' : '') + ' data-vis="' + fid + '" title="Show/hide">'
-      + '<span class="fl">' + def.label + '</span>'
-      + '<span class="fh" style="margin-left:auto">\u22ee\u22ee</span></div>';
-  }).join('');
   function clearFsetDnD(listEl){
     if (listEl) {
       listEl.querySelectorAll('.fset-row').forEach(r => r.classList.remove('dragging'));
@@ -3238,32 +3238,6 @@ function openFieldSettings(){
     });
     listEl.addEventListener('drop', e => { e.preventDefault(); finish(); });
   }
-  bindFsetListDnD(list, r => r.dataset.fid, (fromId, beforeId) => {
-    S.fieldOrder = reorderBefore(getFieldOrder(), fromId, beforeId);
-    save();
-    openFieldSettings();
-    // Dave 2026-10-18: the panel re-render resets scroll — bring the dropped
-    // field back into view so he can see where it landed.
-    try {
-      const moved = document.querySelector('#fset-list .fset-row[data-fid="' + fromId + '"]');
-      if (moved && moved.scrollIntoView) moved.scrollIntoView({block:'nearest'});
-    } catch (e) {}
-    const vb2 = document.getElementById('view-buddy');
-    if (vb2 && vb2.classList.contains('active') && S.projectId && byId[S.projectId]) {
-      renderBuddy(S.projectId);
-    }
-  });
-  list.querySelectorAll('[data-vis]').forEach(cb => {
-    cb.addEventListener('change', () => {
-      if (!S.fieldHidden) S.fieldHidden = {};
-      S.fieldHidden[cb.dataset.vis] = !cb.checked;
-      save();
-      const vb = document.getElementById('view-buddy');
-      if (vb && vb.classList.contains('active') && S.projectId && byId[S.projectId]) {
-        renderBuddy(S.projectId);
-      }
-    });
-  });
   const vlist = document.getElementById('vset-list');
   if (vlist) {
     vlist.innerHTML = getViewOrder().map(vid => {
@@ -4476,7 +4450,7 @@ function renderBuddy(id){
   refreshTokenUI(id);
   applyFieldOrder();
   applySectionCollapse(id);
-  decorateBpHideButtons();
+  decorateBpHeaders();
   renderBpHiddenBar();
   applySectionDrag();
   renderJournal();
@@ -7854,6 +7828,7 @@ document.addEventListener('click', e => {
   const ahead = e.target.closest('.attr-head');
   if (ahead) {
     if (e.target.closest('.info-tip')) return;
+    if (e.target.closest('.secgrip')) return; // grip drags; never toggles expand (Dave 2026-10-18)
     if (e.target.closest('button')) return; // Change button etc. handles its own clicks
     if (e.target.closest('a')) return;
     if (e.target.closest('input')) return;

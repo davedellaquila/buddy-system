@@ -1,4 +1,8 @@
 ## 2026-10-18
+### Info panel — every field now reorderable from the panel; Buddy fields removed from Settings (Dave 2026-10-18)
+- The compact attr-head headers (About, A.K.A., Parents, Persona, Voice, Private notes, Shared notes) now carry the ⋮⋮ drag grip, so every field can be reordered right from the info panel — previously Settings was the only reorder path for these.
+- The "Buddy fields" section is gone from the Settings sheet (hide/show already lives in the panel via the hide links + Hidden fields tray). "Main views" stays.
+
 ### Info panel — hide/show fields right from the panel (Dave 2026-10-18)
 - Every section header now carries a quiet "hide" link (appears on hover; always visible on touch). Clicking it hides that field immediately — no Settings detour.
 - A "Hidden fields (n)" tray appears at the bottom of the field list whenever fields are hidden; expanding it lists each hidden field with a "show" button to bring it back.
