@@ -1473,6 +1473,7 @@ a.plan-card-name:hover{text-decoration:underline}
 .pdel{position:absolute;top:6px;right:6px;width:24px;height:24px;border-radius:50%;background:var(--scrim);
   color:#e0533d;border:none;cursor:pointer;display:none;align-items:center;justify-content:center;line-height:1}
 .pwrap:hover .pdel{display:flex}
+.doc-card .pdel{display:flex}
 .pdel:hover{background:var(--danger);color:#fff}
 .pdel svg{width:13px;height:13px;display:block}
 .node.drop-target{outline:2px solid var(--accent);outline-offset:3px}

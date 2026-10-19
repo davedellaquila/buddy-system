@@ -1,4 +1,8 @@
 ## 2026-10-18
+### Document cards — delete button now visible
+- Bug fix (via Event Buddy from Dave): uploaded documents had no visible way to delete. The trash button was hover-reveal only on photo tiles (.pwrap:hover) and document cards (.doc-card) never matched, so it was permanently invisible — also unreachable on touch.
+- Fix: the trash icon now always shows on document cards.
+
 ### Upload progress — clearer feedback for photos & documents
 - Photo uploads: the progress tile now shows a live percentage, the current filename, and a pulsing accent ring while the upload is in flight (was: bar + count only).
 - Document (PDF) uploads: new animated progress card in the Documents strip — filename, progress bar, percentage + count — instead of status-text-only.
