@@ -1091,6 +1091,23 @@ body:has(#token-pill) #view-buddy.sheet .bp-close-x{right:148px}
 .bp-sec[data-icon-behavior="spin"] .secarrow{transition:transform .5s cubic-bezier(.34,1.3,.64,1)}
 .bp-sec[data-icon-behavior="spin"]:not(.collapsed) .secarrow{transform:rotate(360deg)}
 .bp-sec[data-icon-behavior="spin"].collapsed .secarrow{transform:rotate(0deg)}
+/* Dave 2026-10-18: per-field hide affordance + hidden-fields tray, right in the panel. */
+.bp-hide-btn{margin-left:auto;font-size:11px;font-weight:600;color:var(--faint);background:none;border:0;
+  cursor:pointer;padding:4px 8px;border-radius:6px;opacity:0;transition:opacity .15s;flex:none}
+.bp-sec > h3:hover .bp-hide-btn,.attr-head:hover .bp-hide-btn{opacity:1}
+.bp-hide-btn:hover{color:var(--danger);background:var(--danger-soft);opacity:1}
+@media (hover:none){.bp-hide-btn{opacity:.65}}
+.bp-hiddenbar{margin:18px 0 6px;border:1px dashed var(--border);border-radius:12px;padding:4px 6px}
+.bp-hiddenbar-toggle{width:100%;display:flex;align-items:center;justify-content:space-between;
+  background:none;border:0;cursor:pointer;font-size:12.5px;font-weight:600;color:var(--muted);padding:8px 10px;border-radius:8px}
+.bp-hiddenbar-toggle:hover{color:var(--text);background:var(--ghost)}
+.bp-hiddenbar-toggle .secarrow{transition:transform .15s}
+.bp-hiddenbar.open .bp-hiddenbar-toggle .secarrow{transform:rotate(90deg)}
+.bp-hiddenbar-list{padding:2px 4px 6px}
+.bp-hiddenbar-row{display:flex;align-items:center;justify-content:space-between;gap:8px;
+  font-size:13px;color:var(--text);padding:6px 8px;border-radius:8px}
+.bp-hiddenbar-row:hover{background:var(--ghost)}
+.bp-hiddenbar-row .linkbtn{font-size:13px;padding:4px 8px}
 .bp-sec[data-icon-behavior="bounce"]:not(.collapsed) .secarrow{animation:secarrow-bounce .4s}
 @keyframes secarrow-bounce{0%{transform:scale(1)}40%{transform:scale(1.3) rotate(15deg)}70%{transform:scale(.95)}100%{transform:scale(1) rotate(90deg)}}
 .bp-sec[data-icon-behavior="flip"]:not(.collapsed) .secarrow{transform:scaleX(-1) rotate(90deg)}
@@ -2482,6 +2499,7 @@ function applySectionCollapse(bid){
     h3.addEventListener('click', e => {
       if (e.target.closest('.info-tip')) return;
       if (e.target.closest('.secgrip')) return; // grip drags; never toggles collapse
+      if (e.target.closest('.bp-hide-btn')) return; // hide button has its own handler (document level)
       e.stopPropagation(); // block the document-level [data-buddy] handler (Dave 2026-10-15: it re-rendered the panel on every section click)
       // Preserve the header's viewport position so content above doesn't jump (Dave 2026-10-15)
       const scroller = h3.closest('#view-buddy.panel, #view-buddy.sheet');
@@ -2745,6 +2763,56 @@ function applyFieldOrder(){
 function isFieldVisible(fid){
   if (!S.fieldHidden) S.fieldHidden = {};
   return !S.fieldHidden[fid];
+}
+/* Dave 2026-10-18: hide/show fields right from the info panel — no Settings detour.
+   decorateBpHideButtons puts a quiet "hide" link on every section header;
+   renderBpHiddenBar adds the "Hidden fields (n)" tray at the bottom of the field list. */
+function decorateBpHideButtons(){
+  const home = document.getElementById('buddy-home');
+  if (!home) return;
+  home.querySelectorAll('.bp-sec[data-field]').forEach(sec => {
+    const fid = sec.dataset.field;
+    const head = sec.querySelector(':scope > h3, :scope > .attr-head');
+    if (!head || head.querySelector('.bp-hide-btn')) return;
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'bp-hide-btn';
+    btn.dataset.hideField = fid;
+    btn.title = 'Hide this field — bring it back from Hidden fields below';
+    btn.textContent = 'hide';
+    head.appendChild(btn);
+  });
+}
+function renderBpHiddenBar(){
+  const home = document.getElementById('buddy-home');
+  if (!home) return;
+  const wrap = home.querySelector('.bp-wrap') || home;
+  const build = wrap.querySelector('.bp-build');
+  const old = wrap.querySelector(':scope > .bp-hiddenbar');
+  if (old) old.remove();
+  const hidden = getFieldOrder().filter(fid => S.fieldHidden && S.fieldHidden[fid]);
+  if (!hidden.length) return;
+  const bar = document.createElement('div');
+  bar.className = 'bp-hiddenbar';
+  bar.innerHTML = '<button class="bp-hiddenbar-toggle" type="button" aria-expanded="false">'
+    + '<span>Hidden fields (' + hidden.length + ')</span><span class="secarrow">\u203a</span></button>'
+    + '<div class="bp-hiddenbar-list" hidden>'
+    + hidden.map(fid => {
+        const def = FIELD_DEFS.find(f => f.id === fid);
+        const label = def ? def.label : fid;
+        return '<div class="bp-hiddenbar-row"><span>' + escHtml(label) + '</span>'
+          + '<button class="linkbtn" type="button" data-show-field="' + fid + '">show</button></div>';
+      }).join('')
+    + '</div>';
+  const toggle = bar.querySelector('.bp-hiddenbar-toggle');
+  toggle.addEventListener('click', () => {
+    const list = bar.querySelector('.bp-hiddenbar-list');
+    const open = list.hidden;
+    list.hidden = !open;
+    toggle.setAttribute('aria-expanded', String(open));
+    bar.classList.toggle('open', open);
+  });
+  if (build) wrap.insertBefore(bar, build); else wrap.appendChild(bar);
 }
 function isViewVisible(vid){
   if (!S.viewHidden) S.viewHidden = {};
@@ -4408,6 +4476,8 @@ function renderBuddy(id){
   refreshTokenUI(id);
   applyFieldOrder();
   applySectionCollapse(id);
+  decorateBpHideButtons();
+  renderBpHiddenBar();
   applySectionDrag();
   renderJournal();
   if (id === ROOT_ID) {
@@ -9703,6 +9773,22 @@ document.addEventListener('click', e => {
   }
   if (e.target.closest && (e.target.closest('#bp-close-x') || e.target.closest('#bp-takeover-back'))) { closeDetail(); return; }
   if (e.target.closest && e.target.closest('#bp-collapse-btn')) { setPanelCollapsed(!document.body.classList.contains('bp-collapsed')); return; }
+  // Dave 2026-10-18: hide/show fields right from the info panel.
+  if (e.target.closest && e.target.closest('.bp-hide-btn')) {
+    const fid = e.target.closest('.bp-hide-btn').dataset.hideField;
+    if (!S.fieldHidden) S.fieldHidden = {};
+    S.fieldHidden[fid] = true;
+    save();
+    if (S.projectId && byId[S.projectId]) renderBuddy(S.projectId);
+    return;
+  }
+  if (e.target.closest && e.target.closest('[data-show-field]')) {
+    const fid = e.target.closest('[data-show-field]').dataset.showField;
+    if (S.fieldHidden) delete S.fieldHidden[fid];
+    save();
+    if (S.projectId && byId[S.projectId]) renderBuddy(S.projectId);
+    return;
+  }
   if (e.target.closest && e.target.closest('#bp-rail button')) {
     const sec = e.target.closest('#bp-rail button').dataset.sec;
     setPanelCollapsed(false);

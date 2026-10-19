@@ -1,4 +1,9 @@
 ## 2026-10-18
+### Info panel — hide/show fields right from the panel (Dave 2026-10-18)
+- Every section header now carries a quiet "hide" link (appears on hover; always visible on touch). Clicking it hides that field immediately — no Settings detour.
+- A "Hidden fields (n)" tray appears at the bottom of the field list whenever fields are hidden; expanding it lists each hidden field with a "show" button to bring it back.
+- Uses the existing S.fieldHidden mechanism (same store Settings uses), so panel and Settings stay in sync.
+
 ### Atlas control strip — centered in the main view
 - The control strip (Lineage picker, color dots, zoom, utilities) is now centered horizontally in the main view (was: pinned to the sidebar's right edge).
 - Dave accepts panels may obscure it when open — no dodging.
