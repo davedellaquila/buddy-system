@@ -1056,6 +1056,22 @@ body:has(#token-pill) #view-buddy.sheet .bp-close-x{right:148px}
 .pupload .pbar{width:80px;height:6px;background:var(--border2);border-radius:3px;overflow:hidden}
 .pupload .pbar > div{height:100%;background:var(--accent);border-radius:3px;transition:width .2s}
 .pupload .plabel{font-size:11px;color:var(--muted)}
+/* Dave 2026-10-18 (via Event Buddy): clearer upload progress — percentage,
+   current filename, and a pulse while the upload is in flight. */
+.pupload .ppct{font-size:16px;font-weight:700;color:var(--accent)}
+.pupload .pfile{font-size:10px;color:var(--muted);max-width:110px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pupload.uploading{animation:pupload-pulse 1.6s ease-in-out infinite;border-color:var(--accent)}
+@keyframes pupload-pulse{0%,100%{box-shadow:0 0 0 0 rgba(31,111,235,.0)}50%{box-shadow:0 0 0 4px rgba(31,111,235,.15)}}
+/* Document upload progress card — mirrors .doc-card with a progress bar. */
+.dupload{display:flex;align-items:center;gap:10px;padding:10px 12px;border:1px dashed var(--accent);
+  border-radius:10px;background:var(--wash2);min-width:200px;max-width:280px;
+  animation:pupload-pulse 1.6s ease-in-out infinite}
+.dupload .doc-icon{font-size:28px;line-height:1;flex:0 0 auto}
+.dupload .doc-meta{min-width:0;flex:1}
+.dupload .doc-name{font-size:13px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.dupload .dbar{height:6px;background:var(--border2);border-radius:3px;overflow:hidden;margin-top:6px}
+.dupload .dbar > div{height:100%;background:var(--accent);border-radius:3px;transition:width .2s}
+.dupload .dpct{font-size:11px;color:var(--accent);font-weight:700;margin-top:4px}
 .dumps-head{cursor:pointer;user-select:none;display:flex;align-items:center;gap:6px;margin:12px 0 0}
 .dumps-head h4{margin:0;font-size:12px;letter-spacing:1px;text-transform:uppercase;color:var(--muted)}
 .dumps-head .darrow{font-size:25px;color:var(--muted);transition:transform .15s;display:inline-block;line-height:1;position:relative;top:-2px}
@@ -7966,18 +7982,22 @@ async function handlePhotoFiles(id, files){
   const list = Array.from(files || []).filter(f => /^image\//.test(f.type) || /\.hei[cf]$/i.test(f.name));
   if (!list.length) { toast('No image files in that drop.'); return; }
   if (!ghToken()) { toast('Add your GitHub token first — click the token pill (top right).'); document.getElementById('token-pop').classList.add('show'); return; }
-  let progTile = null, progBar = null, progLabel = null;
+  let progTile = null, progBar = null, progLabel = null, progPct = null, progFile = null;
   if (strip) {
     progTile = document.createElement('div');
-    progTile.className = 'pupload';
-    progTile.innerHTML = '<div class="pbar"><div style="width:0%"></div></div><div class="plabel">Uploading</div>';
+    progTile.className = 'pupload uploading';
+    progTile.innerHTML = '<div class="ppct">0%</div><div class="pbar"><div style="width:0%"></div></div><div class="pfile"></div><div class="plabel">Uploading</div>';
     strip.appendChild(progTile);
     progBar = progTile.querySelector('.pbar > div');
     progLabel = progTile.querySelector('.plabel');
+    progPct = progTile.querySelector('.ppct');
+    progFile = progTile.querySelector('.pfile');
   }
-  const updateProg = function(done, total) {
+  const updateProg = function(done, total, fname) {
     const pct = total ? Math.round(done / total * 100) : 0;
     if (progBar) progBar.style.width = pct + '%';
+    if (progPct) progPct.textContent = pct + '%';
+    if (progFile && fname) { progFile.textContent = fname; progFile.title = fname; }
     if (progLabel) progLabel.textContent = done + '/' + total;
     if (st) st.textContent = 'Uploaded ' + done + '/' + total + '...';
     if (dropz) dropz.style.background = 'linear-gradient(to right, rgba(26,127,55,.45) ' + pct + '%, transparent ' + pct + '%)';
@@ -7986,6 +8006,7 @@ async function handlePhotoFiles(id, files){
   let n = 0;
   for (const f of list) {
     try {
+      updateProg(n, list.length, f.name);
       let blob = f, ext = (f.name.split('.').pop() || 'jpg').toLowerCase();
       if (/\.hei[cf]$/i.test(f.name) || f.type === 'image/heic' || f.type === 'image/heif') {
         if (st) st.textContent = 'Converting HEIC\u2026';
@@ -8140,18 +8161,39 @@ async function handleDocFiles(id, files){
   const list = Array.from(files || []).filter(f => f.type === 'application/pdf' || /\.pdf$/i.test(f.name));
   if (!list.length) { toast('No PDF files in that drop.'); return; }
   if (!ghToken()) { toast('Add your GitHub token first — click the token pill (top right).'); document.getElementById('token-pop').classList.add('show'); return; }
+  // Dave 2026-10-18 (via Event Buddy): visible progress card while uploading.
+  let progCard = null, progBar = null, progPct = null, progName = null;
+  if (strip) {
+    progCard = document.createElement('div');
+    progCard.className = 'dupload';
+    progCard.innerHTML = '<span class="doc-icon">\U0001f4c4</span><div class="doc-meta"><div class="doc-name"></div><div class="dbar"><div style="width:0%"></div></div><div class="dpct">0%</div></div>';
+    strip.appendChild(progCard);
+    progBar = progCard.querySelector('.dbar > div');
+    progPct = progCard.querySelector('.dpct');
+    progName = progCard.querySelector('.doc-name');
+  }
+  const updateDProg = function(done, total, fname) {
+    const pct = total ? Math.round(done / total * 100) : 0;
+    if (progBar) progBar.style.width = pct + '%';
+    if (progPct) progPct.textContent = pct + '% \u00b7 ' + done + '/' + total;
+    if (progName && fname) { progName.textContent = fname; progName.title = fname; }
+    if (st) st.textContent = 'Uploading ' + (done+1) + '/' + total + '\u2026';
+  };
+  updateDProg(0, list.length);
   let n = 0;
   for (const f of list) {
     try {
-      if (st) st.textContent = 'Uploading ' + (n+1) + '/' + list.length + '\u2026';
+      updateDProg(n, list.length, f.name);
       const b64 = await blobToB64(f);
       const safe = (f.name.replace(/\.pdf$/i, '').replace(/[^\w\-]+/g, '_').slice(0, 40) || 'document');
       const upRepo = (byId[id] && byId[id].repo) ? byId[id].repo : 'buddy-system';
       const upPath = (byId[id] && byId[id].repo) ? 'docs/' + Date.now() + '-' + safe + '.pdf' : 'docs/' + id + '/' + Date.now() + '-' + safe + '.pdf';
       await ghPutFile(upRepo, upPath, b64, 'Add document for ' + id);
       n++;
+      updateDProg(n, list.length, f.name);
     } catch (err) { toast('Document failed: ' + (err.message || err)); }
   }
+  if (progCard) progCard.remove();
   if (st) st.textContent = 'Uploaded ' + n + ' document' + (n === 1 ? '' : 's') + '. Refreshing\u2026';
   setTimeout(() => loadDocs(id), 2000);
 }

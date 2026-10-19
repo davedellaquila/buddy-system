@@ -1,4 +1,9 @@
 ## 2026-10-18
+### Upload progress — clearer feedback for photos & documents
+- Photo uploads: the progress tile now shows a live percentage, the current filename, and a pulsing accent ring while the upload is in flight (was: bar + count only).
+- Document (PDF) uploads: new animated progress card in the Documents strip — filename, progress bar, percentage + count — instead of status-text-only.
+- Via Event Buddy from Dave's feedback: upload progress should clearly indicate something is happening and how far along it is.
+
 ### Collapsed icon rail floats vertically centered (Dave 2026-10-18)
 - The collapsed sidebar's icon rail was top-anchored (12px from the top), leaving a long empty tail below the icons. It now floats vertically centered (`top:50%; transform:translateY(-50%)`) — per Dave's annotated screenshot feedback on the Scaffold Buddy homepage.
 
