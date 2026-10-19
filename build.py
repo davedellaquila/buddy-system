@@ -1262,6 +1262,52 @@ body.standalone #main{max-width:880px;margin:0 auto;padding:28px 24px 80px}
 body.standalone .sa-bar{display:flex}
 .sa-bar .linkbtn{font-size:13px}
 
+/* ---- Projects list: one row grammar (Jonny verdict, Dave 2026-10-19) ----
+   [grip 22px] [disclosure slot 32px] [icon + name] — [tagline] — [status column
+   152px, pill right-aligned] [ⓘ column 40px]. The pill column is the one clean
+   vertical edge; the tagline is the ONLY element that flexes/ellipsizes, so the
+   Oct 13 "8px of air" promise (the head gap) is now true at every width.
+   Rows align on a centreline, not a baseline. */
+#view-projects .proj-row{display:block}
+#view-projects .proj-row-head{display:flex;align-items:center;gap:8px;width:100%;min-width:0}
+#view-projects .proj-row .parrow{margin-left:0;flex:0 0 32px}
+#view-projects .proj-row-head .pname{flex:0 0 auto;min-width:0}
+#view-projects .proj-row-head .pdesc{flex:1 1 auto;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#view-projects .pstatus{flex:0 0 152px;display:flex;align-items:center;justify-content:flex-end}
+#view-projects .pstatus .status{max-width:100%;overflow:hidden;text-overflow:ellipsis}
+#view-projects .proj-info{flex:0 0 40px;width:40px;height:44px;margin:-7px 0;padding:0;background:none;border:none;cursor:pointer;font-size:16px;color:var(--text);opacity:.6;display:flex;align-items:center;justify-content:center}
+#view-projects .proj-info:hover{opacity:1}
+/* Root row: no more filled .d0 card — hierarchy by indent alone */
+#view-projects .proj-row.d0{background:transparent;border-radius:0;margin-top:0}
+#view-projects .proj-row.d0 .pname{font-size:14px}
+html.light #view-projects .proj-row.d0{border:none;border-bottom:1px solid var(--border2)}
+/* Indent: true 24px steps (d0 keeps the row's own 14px padding) */
+#view-projects .proj-row.d1{padding-left:38px}
+#view-projects .proj-row.d2{padding-left:62px}
+#view-projects .proj-row.d3{padding-left:86px}
+/* Tagline colour comes from the theme token, everywhere */
+.proj-row .pdesc{color:var(--muted)}
+/* ---- One status language (Jonny verdict, Dave 2026-10-19) ----
+   Every status renders as the same pill. The registry's drifted dialects are
+   normalised to st-* classes; the aliases below are the safety net, so a future
+   registration in the wrong dialect still renders as a pill — and the
+   zero-specificity default catches anything else. */
+.status.st-amber{background:#331f04;color:#ffa657}
+.status.active{background:#122b18;color:#7ee787}
+.status.new{background:#33182a;color:#ff9bce}
+.status.amber{background:#331f04;color:#ffa657}
+:where(.status){background:#21262d;color:#8b949e}
+/* Light twins — the dark pill palette lifted into daylight */
+html.light .status.st-live,html.light .status.st-active,html.light .status.st-auto,html.light .status.active{background:var(--grn-bg);color:var(--grn-tx)}
+html.light .status.st-pilot{background:#dff5f6;color:#0e7c86}
+html.light .status.st-prd{background:var(--active);color:var(--accent)}
+html.light .status.st-brief{background:#f1e8ff;color:#7c3aed}
+html.light .status.st-idea{background:var(--hover);color:var(--muted)}
+html.light .status.st-new,html.light .status.new{background:#ffe9f2;color:#c2337f}
+html.light .status.st-spec,html.light .status.st-planned,html.light .status.st-amber,html.light .status.amber{background:#fff8e6;color:#7a5c1e}
+html.light .status.st-dormant{background:rgba(139,148,158,.18);color:var(--muted);border-color:var(--border)}
+:where(html.light .status){background:var(--hover);color:var(--muted)}
+
 /* ============ RESPONSIVE ============ */
 #menu-btn{display:none}
 /* ---- Small: <640px (iPhone) ---- */
@@ -1317,13 +1363,16 @@ body.standalone .sa-bar{display:flex}
   .proj-row .pname{font-size:16px}
   .proj-row .pdesc{font-size:15.5px;line-height:1.45}
   .proj-row .dot{display:none}
-  .proj-row-head{display:flex;align-items:center;gap:8px;width:100%;min-width:0}
+  .proj-row-head{display:flex;align-items:center;gap:8px;width:100%;min-width:0;flex-wrap:wrap}
   .proj-row-head .parrow{flex:0 0 auto;margin-top:0}
-  .proj-row-head .pname{flex:1 1 auto;min-width:0;white-space:normal;line-height:1.3}
-  .proj-row-head .status{flex:0 0 auto;margin-left:auto}
+  #view-projects .proj-row-head .pname{flex:1 1 auto;min-width:0;white-space:normal;line-height:1.3}
+  #view-projects .proj-row-head .pstatus{flex:0 0 auto}
   .proj-row-head .proj-info{flex:0 0 auto;padding:4px !important;opacity:.75}
   .proj-row > .pdesc,.proj-row .pdesc{
-    display:block;order:unset;flex:none !important;width:100% !important;max-width:none !important}
+    display:block;flex:none !important;width:100% !important;max-width:none !important}
+  /* Phone cards keep the same anatomy (Jonny verdict, Dave 2026-10-19): the
+     title line carries name + pill + ⓘ; the tagline drops beneath, full width */
+  #view-projects .proj-row-head .pdesc{order:10;white-space:normal;overflow:visible;text-overflow:clip}
   /* Static rows without .proj-row-head (Manifest): CSS grid stack */
   .proj-row:not(:has(.proj-row-head)){
     display:grid !important;grid-template-columns:1fr auto;grid-template-areas:"title status" "desc desc";
@@ -1332,7 +1381,12 @@ body.standalone .sa-bar{display:flex}
   .proj-row:not(:has(.proj-row-head)) .status{grid-area:status;justify-self:end}
   .proj-row:not(:has(.proj-row-head)) .pdesc{grid-area:desc}
   .proj-row:not(:has(.proj-row-head)) .parrow{display:none}
-  .proj-row.d0,.proj-row.d1,.proj-row.d2,.proj-row.d3{padding-left:14px}
+  /* Phone cards keep their indent steps (Jonny verdict, Dave 2026-10-19) —
+     24px steps like desktop, not the old flat 14px */
+  .proj-row.d0{padding-left:14px}
+  .proj-row.d1{padding-left:38px}
+  .proj-row.d2{padding-left:62px}
+  .proj-row.d3{padding-left:86px}
   /* Changelog entries */
   .cl-entry{padding:14px 12px}
   /* View nav: vertical list with larger touch targets */
@@ -1428,7 +1482,7 @@ body.bp-collapsed #bp-rail{display:flex}
 section.changelog{padding:0 16px;box-sizing:border-box}
 /* ---------- Project view: stat tiles + buddy homepage embed ---------- */
 #project-tiles{display:flex;gap:14px;margin:2px auto 20px;max-width:860px;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:thin;padding:0 16px;box-sizing:border-box}
-#project-status-tiles{display:flex;gap:12px;margin:2px auto 20px;max-width:860px;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:thin;padding:0 16px;box-sizing:border-box}
+#project-status-tiles{display:flex;gap:12px;margin:2px auto 20px;max-width:860px;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:thin;padding:0 28px 0 16px;box-sizing:border-box;scroll-snap-type:x mandatory;-webkit-mask-image:linear-gradient(to right,#000 calc(100% - 24px),transparent);mask-image:linear-gradient(to right,#000 calc(100% - 24px),transparent)}
 .ptile{flex:none;width:auto;background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:12px 14px;position:relative;overflow:hidden;cursor:pointer;transition:transform .15s ease,box-shadow .15s ease}
 /* Dave 2026-10-14: top row — four EQUAL tiles distributed across the full
    content width, edges aligned with the content area. */
@@ -1436,9 +1490,10 @@ section.changelog{padding:0 16px;box-sizing:border-box}
 /* Dave 2026-10-14 (overriding Jonny's auto-width verdict): status tiles are
    EQUAL width at ~70% size, horizontal scroll, ordered by click rank — 5th
    most selected on down, since the locked top row holds the four most selected. */
-#project-status-tiles .ptile{width:105px;padding:8px 10px;border-radius:10px}
+#project-status-tiles .ptile{width:105px;padding:8px 10px;border-radius:10px;scroll-snap-align:start}
 #project-status-tiles .ptile::before{width:4px}
-#project-status-tiles .ptile-label{font-size:8px;letter-spacing:.1em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+/* Labels wrap to two lines — a word is never cut in half (Jonny verdict, Dave 2026-10-19) */
+#project-status-tiles .ptile-label{font-size:8px;letter-spacing:.1em;line-height:1.3;min-height:21px;white-space:normal;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 #project-status-tiles .ptile-num{font-size:30px;line-height:1.1}
 #project-status-tiles .ptile-sub{font-size:9px}
 .ptile:hover{transform:translateY(-2px);box-shadow:0 4px 16px rgba(0,0,0,.12)}
@@ -5915,11 +5970,12 @@ function renderProjects(){
   }
   const projRowHtml = b => '<div class="proj-row" data-buddy="' + b.id + '">'
       + '<div class="proj-row-head">'
+      + '<span class="parrow leaf" aria-hidden="true"></span>'
       + '<span class="pname">' + iconName(b) + '</span>'
-      + '<span class="status ' + b.statusClass + '">' + escHtml(b.status) + '</span>'
-      + '<button class="proj-info" data-proj-info="' + b.id + '" title="Open ' + escHtml(dispName(b)) + ' details (right panel)" style="background:none;border:none;cursor:pointer;font-size:16px;padding:4px 8px;opacity:0.6" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.6">\u24d8</button>'
-      + '</div>'
-      + '<span class="pdesc">' + escHtml(b.tagline || '') + '</span></div>';
+      + '<span class="pdesc">' + escHtml(b.tagline || '') + '</span>'
+      + '<span class="pstatus"><span class="status ' + (b.statusClass || 'st-idea') + '">' + escHtml(b.status || 'Unknown') + '</span></span>'
+      + '<button class="proj-info" data-proj-info="' + b.id + '" title="Open ' + escHtml(dispName(b)) + ' details (right panel)">\u24d8</button>'
+      + '</div></div>';
   if (projViewMode === 'alpha') {
     // Flat A-Z listing; search/tile filters narrow the set
     Object.values(byId)
@@ -5936,12 +5992,12 @@ function renderProjects(){
       s += '<div class="proj-row d' + Math.min(depth, 3) + '" data-buddy="' + b.id + '">'
         + '<div class="proj-row-head">'
         + '<span class="proj-grip" data-proj-grip="' + b.id + '" title="Drag to move ' + escHtml(dispName(b)) + '"></span>'
-        + (hasKids ? '<span class="parrow ' + (collapsed ? '' : 'expanded') + '" data-proj-toggle="' + b.id + '">\u203a</span>' : '')
+        + (hasKids ? '<span class="parrow ' + (collapsed ? '' : 'expanded') + '" data-proj-toggle="' + b.id + '">\u203a</span>' : '<span class="parrow leaf" aria-hidden="true"></span>')
         + '<span class="pname">' + iconName(b) + '</span>'
-        + '<span class="status ' + b.statusClass + '">' + escHtml(b.status) + '</span>'
-        + '<button class="proj-info" data-proj-info="' + b.id + '" title="Open ' + escHtml(dispName(b)) + ' details (right panel)" style="background:none;border:none;cursor:pointer;font-size:16px;padding:4px 8px;opacity:0.6" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.6">\u24d8</button>'
-        + '</div>'
-        + '<span class="pdesc">' + escHtml(b.tagline || '') + '</span></div>';
+        + '<span class="pdesc">' + escHtml(b.tagline || '') + '</span>'
+        + '<span class="pstatus"><span class="status ' + (b.statusClass || 'st-idea') + '">' + escHtml(b.status || 'Unknown') + '</span></span>'
+        + '<button class="proj-info" data-proj-info="' + b.id + '" title="Open ' + escHtml(dispName(b)) + ' details (right panel)">\u24d8</button>'
+        + '</div></div>';
       if (!collapsed) kids.forEach(c => walk(c.id, depth + 1));
     })(ROOT_ID, 0);
   }
@@ -7717,7 +7773,7 @@ async function createBuddyFromDialog(name, icon, kind, parentId, errEl, createBt
       id: nid, name: name, icon: icon, kind: kind,
       parent: parentId || null,
       mission: '', tagline: 'New buddy — setup pending',
-      status: 'new', statusClass: 'new',
+      status: 'new', statusClass: 'st-new',
       brief: '', docs: [], repo: '', homepage: '', photos: [],
       setup_pending: true,
       attention: [{id: 'setup-' + nid, date: today, text: 'New buddy added from the dashboard — run the full onboarding (mission doc, repo, side chat, homepage).'}]
