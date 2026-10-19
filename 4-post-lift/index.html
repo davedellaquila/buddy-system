@@ -176,7 +176,35 @@ h2 { font-size: 22px; margin: 32px 0 16px; }
 
 <div class="mission">Living dossier for Emil&#x27;s Eagle four-post automotive lift: specs and history as known, its years at 18231 Llagas Creek Dr (Morgan Hill), and its October 2026 removal by AIM (who/where/terms unconfirmed). Holds the lift-move playbook — the Oct 2026 vendor research for disassembly, flatbed transport, and reassembly (top pick: Edwards &amp; Sons, Livermore). Unknown specs stay open questions, never guessed.</div>
 
-
+<h2>Photos</h2>
+<div class="gallery">
+<a href="https://raw.githubusercontent.com/davedellaquila/4-post-lift/master/photos/1792443663423-IMG_8376.jpg" class="g-item" data-full="https://raw.githubusercontent.com/davedellaquila/4-post-lift/master/photos/1792443663423-IMG_8376.jpg"><img src="https://raw.githubusercontent.com/davedellaquila/4-post-lift/master/photos/1792443663423-IMG_8376.jpg" alt="4 post lift photo" loading="lazy"></a>
+</div>
+<div class="lightbox" hidden>
+  <div class="lightbox-bg"></div>
+  <img class="lightbox-img" alt="">
+  <button class="lightbox-x" aria-label="Close">&times;</button>
+</div>
+<script>
+(function(){
+  var items = document.querySelectorAll('.g-item');
+  var lb = document.querySelector('.lightbox');
+  if (!lb) return;
+  var img = lb.querySelector('.lightbox-img');
+  items.forEach(function(a){
+    a.addEventListener("click", function(e){
+      e.preventDefault();
+      img.src = a.getAttribute("data-full");
+      lb.hidden = false;
+      document.body.style.overflow = 'hidden';
+    });
+  });
+  function close(){ lb.hidden = true; img.src=""; document.body.style.overflow=""; }
+  lb.querySelector(".lightbox-bg").addEventListener("click", close);
+  lb.querySelector(".lightbox-x").addEventListener("click", close);
+  document.addEventListener("keydown", function(e){ if(e.key==="Escape" && !lb.hidden) close(); });
+})();
+</script>
 
 
 <section class="dumpbox" data-buddy-id="4-post-lift">
