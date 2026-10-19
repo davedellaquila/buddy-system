@@ -750,6 +750,22 @@ html.light #new-buddy-fab{background:rgba(255,255,255,.55);color:#1c1c1e;border-
 /* Hide the FAB while Settings is open — it overlapped the Done button */
 body:has(#field-settings.show) #new-buddy-fab{display:none}
 #new-buddy-fab:active{transform:scale(.94)}
+/* Homepage Prev/Next (Dave 2026-10-19): with BOTH panels closed on a buddy
+   homepage, a FAB-sized Prev/Next pair sits alongside the + button in the
+   lower-right (thumb reach on iPad) and walks the current collection.
+   Visible in exactly that state; hidden everywhere else. */
+#hp-nav{position:fixed;right:88px;bottom:20px;z-index:9000;display:none;gap:12px}
+body.sb-closed.bp-collapsed:has(#main.homepage-mode):has(#view-project.active) #hp-nav{display:flex}
+body:has(#field-settings.show) #hp-nav{display:none !important}
+#hp-nav button{width:56px;height:56px;border-radius:50%;padding:0;
+  background:rgba(50,50,52,.55);color:#fff;border:.5px solid rgba(255,255,255,.25);cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  -webkit-backdrop-filter:blur(20px) saturate(180%);backdrop-filter:blur(20px) saturate(180%);
+  box-shadow:0 4px 16px rgba(0,0,0,.25);-webkit-tap-highlight-color:transparent}
+html.light #hp-nav button{background:rgba(255,255,255,.55);color:#1c1c1e;border-color:rgba(0,0,0,.08)}
+#hp-nav button:active{transform:scale(.94)}
+#hp-nav button:disabled{opacity:.35;cursor:default}
+#hp-nav button:disabled:active{transform:none}
 /* New-buddy request bottom sheet */
 #newbuddy-sheet{position:fixed;inset:0;z-index:10000;display:flex;align-items:flex-end;justify-content:center}
 #newbuddy-sheet .nb-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.5);opacity:0;transition:opacity .25s}
@@ -1166,12 +1182,12 @@ body.no-write .pdel,body.no-write [data-dump-del],body.no-write [data-dump-edit]
 #sb-gear:hover{color:red;background:var(--hover)}
 #sb-close{color:var(--faint)}
 #sb-close:hover{color:var(--muted)}
-#sb-close .xmark-x{stroke:var(--bg)}
-/* Dave 2026-10-14: the rail-top control flips — ‹ collapses when open,
-   › expands when collapsed. Round fills on the rail controls.
-   The collapsed rail's expand affordance is the first icon in #view-nav
-   (#sb-expand-btn); #sb-tools stays hidden while collapsed. */
-body.sb-closed #sb-close svg{transform:rotate(180deg)}
+/* Dave 2026-10-14: round fills on the rail controls. The collapsed rail's
+   expand affordance is the first icon in #view-nav (#sb-expand-btn);
+   #sb-tools stays hidden while collapsed.
+   Dave 2026-10-19: the open panel's close control (#sb-close, upper-right
+   corner of the sidebar) is a circled ✕ mark — it no longer flips to a
+   chevron, so the old rotate-on-collapse rule is gone. */
 #sb-tools button{border-radius:50% !important}
 #sb-expand-btn{display:none}
 body.sb-closed #sb-expand-btn{display:flex}
@@ -2463,6 +2479,7 @@ function renderNav(){
     + '<span class="bicon">'+escHtml(p.icon||'')+'</span><span class="bname pname">'+escHtml(p.name)+'</span></button>').join('');
   watchScrollPos('sidebar', document.getElementById('sidebar'));
   restoreScrollPos('sidebar', document.getElementById('sidebar'));
+  updateHpNav();
 }
 function artRow(icon, label, sub, url){
   return '<a class="art-row" href="'+url+'" target="_blank" rel="noopener">'
@@ -3664,6 +3681,48 @@ function renderProjectView(){
     wrap.appendChild(content);
   }
   pv.appendChild(wrap);
+  updateHpNav();
+}
+/* ---- Homepage Prev/Next (Dave 2026-10-19) ----
+   With both panels closed on a buddy homepage, the #hp-nav pair (visibility
+   is CSS-gated on body.sb-closed.bp-collapsed + the homepage view) walks the
+   current collection: the sidebar buddy list's displayed order, deduped
+   (multi-parent buddies render once per parent there). No wrap at the ends —
+   the button for the missing direction dims instead. */
+function hpCollection(){
+  const seen = {}, out = [];
+  document.querySelectorAll('#buddy-nav [data-buddy]').forEach(r => {
+    const id = r.getAttribute('data-buddy');
+    if (id && byId[id] && !seen[id]) { seen[id] = 1; out.push(id); }
+  });
+  return out;
+}
+function hpNavActive(){
+  const main = document.getElementById('main');
+  const pv = document.getElementById('view-project');
+  return document.body.classList.contains('sb-closed')
+    && document.body.classList.contains('bp-collapsed')
+    && !!(main && main.classList.contains('homepage-mode'))
+    && !!(pv && pv.classList.contains('active'));
+}
+function updateHpNav(){
+  const prev = document.getElementById('hp-prev'), next = document.getElementById('hp-next');
+  if (!prev || !next) return;
+  const ids = hpCollection();
+  const i = ids.indexOf(projectId());
+  prev.disabled = !(i > 0);
+  next.disabled = !(i >= 0 && i < ids.length - 1);
+  prev.title = i > 0 ? 'Previous: ' + dispName(byId[ids[i - 1]]) : 'Previous homepage';
+  next.title = (i >= 0 && i < ids.length - 1) ? 'Next: ' + dispName(byId[ids[i + 1]]) : 'Next homepage';
+}
+function hpStep(dir){
+  const ids = hpCollection();
+  const i = ids.indexOf(projectId());
+  if (i < 0) return;
+  const j = i + dir;
+  if (j < 0 || j >= ids.length) return;
+  selectBuddy(ids[j]);
+  updateHpNav();
 }
 /* ---- Attr-row pattern (Dave 2026-10-14): › LABEL: value  or  › LABEL (N) ---- */
 /* 0 items → (0), 1 item → : name, N items → (N). Tap row to expand or edit. */
@@ -7033,6 +7092,14 @@ document.addEventListener('keydown', e => {
     if (vi < vbtns.length) { e.preventDefault(); show('view:' + vbtns[vi].dataset.view); }
     return;
   }
+  // Homepage Prev/Next (Dave 2026-10-19): in the both-panels-closed homepage
+  // state, Left/Right step the collection (no wrap) instead of jumping to
+  // the first/last sidebar row.
+  if ((e.key === 'ArrowLeft' || e.key === 'ArrowRight') && hpNavActive()) {
+    e.preventDefault();
+    hpStep(e.key === 'ArrowLeft' ? -1 : 1);
+    return;
+  }
   if (!['ArrowDown','ArrowUp','ArrowLeft','ArrowRight'].includes(e.key)) return;
   const rows = Array.from(document.querySelectorAll('#buddy-nav [data-buddy]'));
   const total = rows.length;
@@ -9887,6 +9954,8 @@ document.addEventListener('click', e => {
   }
   if (e.target.closest && e.target.closest('#sb-close')) { setSidebarOpen(document.body.classList.contains('sb-closed')); return; }
   if (e.target.closest && e.target.closest('#sb-expand-btn')) { setSidebarOpen(true); return; }
+  if (e.target.closest && e.target.closest('#hp-prev')) { hpStep(-1); return; }
+  if (e.target.closest && e.target.closest('#hp-next')) { hpStep(1); return; }
   if (e.target.closest && e.target.closest('#menu-btn')) {
     // State-dependent per Dave's rule: with the right (detail) panel open, the
     // floating › closes it (same screen position as the drawer's open chevron).
@@ -10314,7 +10383,7 @@ initSbBrandSticky();
 <div id="sb-scrim"></div>
 <aside id="sidebar">
   <div class="sb-brand-sticky">
-    <div id="sb-tools"><button id="sb-gear" title="Settings (⌘,)" aria-label="Settings"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button><button id="sb-close" title="Collapse sidebar" aria-label="Collapse sidebar"><svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path d="M14.5 5.5L8 12l6.5 6.5" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>
+    <div id="sb-tools"><button id="sb-gear" title="Settings (⌘,)" aria-label="Settings"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button><button id="sb-close" title="Collapse sidebar" aria-label="Collapse sidebar"><svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M9.2 9.2l5.6 5.6M14.8 9.2l-5.6 5.6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button></div>
     <div class="brand"><div class="eyebrow">Project Buddy</div><h1 id="brand-name" title="Click to rename">Buddies</h1><div class="bcount">NBUD buddies &middot; one family</div></div>
   </div>
   <div class="sb-search-sticky">
@@ -10342,6 +10411,14 @@ initSbBrandSticky();
 <button type="button" id="new-buddy-fab" title="New buddy" aria-label="New buddy">
   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
 </button>
+<div id="hp-nav" role="group" aria-label="Previous and next buddy homepage">
+<button type="button" id="hp-prev" title="Previous homepage" aria-label="Previous buddy homepage">
+  <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><path d="M14.5 5.5L8 12l6.5 6.5" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+</button>
+<button type="button" id="hp-next" title="Next homepage" aria-label="Next buddy homepage">
+  <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><path d="M9.5 5.5L16 12l-6.5 6.5" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+</button>
+</div>
 <main id="main">
 <div id="journal-bar"></div>
 """ + vt + vp + vpl + vm + """
