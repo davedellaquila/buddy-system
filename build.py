@@ -1467,6 +1467,17 @@ a.plan-card-name:hover{text-decoration:underline}
   color:#e0533d;border:none;cursor:pointer;display:none;align-items:center;justify-content:center;line-height:1}
 .pwrap:hover .pdel{display:flex}
 .doc-card .pdel{display:flex}
+/* Dave 2026-10-18: in-dashboard PDF viewer — overlay modal with native PDF iframe. */
+#pdf-viewer{position:fixed;inset:0;z-index:200;display:none;background:rgba(0,0,0,.72);backdrop-filter:blur(4px)}
+#pdf-viewer.show{display:flex;flex-direction:column}
+#pdf-viewer .pv-head{display:flex;align-items:center;gap:10px;padding:10px 14px;color:#fff;background:rgba(20,20,24,.92)}
+#pdf-viewer .pv-name{font-size:14px;font-weight:600;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#pdf-viewer .pv-head a{color:#9ecbff;font-size:12px;text-decoration:none;white-space:nowrap}
+#pdf-viewer .pv-head a:hover{text-decoration:underline}
+#pdf-viewer .pv-close{background:none;border:0;color:#fff;font-size:22px;line-height:1;cursor:pointer;padding:4px 8px;border-radius:8px}
+#pdf-viewer .pv-close:hover{background:rgba(255,255,255,.15)}
+#pdf-viewer iframe{flex:1;border:0;background:#fff}
+.doc-card{cursor:pointer}
 .pdel:hover{background:var(--danger);color:#fff}
 .pdel svg{width:13px;height:13px;display:block}
 .node.drop-target{outline:2px solid var(--accent);outline-offset:3px}
@@ -8142,9 +8153,9 @@ async function loadDocs(id){
   strip.innerHTML = files.map(p => {
     const del = p.path ? '<button class="pdel" data-del="' + escHtml(p.path) + '" data-repo="' + escHtml(p.repo || 'buddy-system') + '" title="Delete document">' + ICON_TRASH + '</button>' : '';
     const kb = p.size ? (p.size > 1048576 ? (p.size/1048576).toFixed(1) + ' MB' : Math.max(1, Math.round(p.size/1024)) + ' KB') : '';
-    return '<div class="doc-card"><span class="doc-icon">\U0001f4c4</span>'
+    return '<div class="doc-card" data-pdf="' + escHtml(p.href) + '" data-pdfname="' + escHtml(p.name) + '"><span class="doc-icon">\U0001f4c4</span>'
       + '<div class="doc-meta"><div class="doc-name" title="' + escHtml(p.name) + '">' + escHtml(p.name) + '</div>'
-      + '<div class="doc-sub">' + escHtml(kb) + ' · <a href="' + escHtml(p.href) + '" target="_blank" rel="noopener">Open</a></div></div>'
+      + '<div class="doc-sub">' + escHtml(kb) + ' · View</div></div>'
       + del + '</div>';
   }).join('');
   const st = document.getElementById('dstat');
@@ -8205,6 +8216,30 @@ function initDocDrop(id){
     inp.addEventListener('change', () => handleDocFiles(id, inp.files));
     inp.click();
   });
+}
+/* Dave 2026-10-18: in-dashboard PDF viewer (modal overlay, native PDF iframe). */
+function openPdfViewer(href, name){
+  let v = document.getElementById('pdf-viewer');
+  if (!v) {
+    v = document.createElement('div');
+    v.id = 'pdf-viewer';
+    v.innerHTML = '<div class="pv-head"><span class="pv-name"></span>'
+      + '<a href="#" class="pv-newtab" target="_blank" rel="noopener">Open in new tab</a>'
+      + '<button class="pv-close" type="button" aria-label="Close viewer">&times;</button></div>'
+      + '<iframe title="PDF viewer"></iframe>';
+    document.body.appendChild(v);
+    v.querySelector('.pv-close').addEventListener('click', closePdfViewer);
+    v.addEventListener('click', e => { if (e.target === v) closePdfViewer(); });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closePdfViewer(); });
+  }
+  v.querySelector('.pv-name').textContent = name || 'Document';
+  v.querySelector('.pv-newtab').href = href;
+  v.querySelector('iframe').src = href;
+  v.classList.add('show');
+}
+function closePdfViewer(){
+  const v = document.getElementById('pdf-viewer');
+  if (v) { v.classList.remove('show'); v.querySelector('iframe').src = 'about:blank'; }
 }
 /* ---------- shared notes ---------- */
 function updateTokenPill(){
@@ -9732,6 +9767,9 @@ document.addEventListener('click', e => {
       });
     return;
   }
+  // Dave 2026-10-18: tap a document card to view the PDF inside the dashboard.
+  const dc = e.target.closest('.doc-card');
+  if (dc && dc.dataset.pdf) { openPdfViewer(dc.dataset.pdf, dc.dataset.pdfname); return; }
   if (e.target.closest('.navgrip')) return; // view-list grip: drags/reorders; never switches views
   const vb = e.target.closest('[data-view]');
   if (vb) {
