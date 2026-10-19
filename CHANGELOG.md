@@ -1,4 +1,9 @@
 ## 2026-10-19
+### Side panels — open/closed state now survives a refresh (Dave 2026-10-19)
+- Dave: if the left panel is closed when he refreshes, it should still be closed after the page loads — and open should stay open. Root cause: the state lived only as body classes (`sb-closed` / `bp-collapsed`) toggled in the DOM; the sidebar *width* was persisted (`S.sbWidth`) but open/collapsed never was, and nothing re-applied the classes at boot.
+- Fix: `setSidebarOpen()` (non-drawer branch) now persists `S.sbClosed`, and `setPanelCollapsed()` persists `S.bpCollapsed` — every toggle path flows through those two setters, so all of them save automatically. A pre-paint inline script right after `<body>` (mirroring the head theme script) re-applies both classes from `buddyTree.v3` before first paint at ≥640px, so there's no flash of the wrong layout; a boot-time `setSidebarOpen(false)` syncs width/tab/rail label through the normal code path, and `renderBuddy()` refreshes the collapsed panel's section rail for the restored buddy.
+- Phone drawer (<640px) untouched — it stays session-transient by design.
+
 ### Hans homepage — custom workshop page replaces the template (Dave 2026-10-19)
 - Hans (🧑‍🔧, hans-buddy/) gets a thread-owned custom homepage in place of the basic template: sticky header, dark + light, standard brain-dump box (dumps land in hans-buddy/docs/ingest.md).
 - Mostly the BMW, as Dave asked: an "On the lift now" card for the E61 fuel-system job (Bosch LPFP in hand, install pending, fuel-smell leak hunt as job #1), a car spec table (2008 535xi E61, N54, 191,412 mi at last scan; VIN/colors marked awaiting Dave's records), standing PM orders, and workshop-library links (mission, repo, diagnosis, install guide).

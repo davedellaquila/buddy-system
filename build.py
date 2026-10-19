@@ -4513,6 +4513,8 @@ function renderBuddy(id){
     const vb = document.getElementById('view-buddy');
     if (vb) vb.scrollTop = 0;
   })();
+  // If the panel was restored collapsed at boot, populate its section rail for this buddy.
+  if (document.body.classList.contains('bp-collapsed')) renderBpRail();
 }
 function toast(msg){
   document.querySelectorAll('.toast').forEach(t => t.remove());
@@ -8853,6 +8855,8 @@ function setSidebarOpen(open){
     if (sc) sc.classList.toggle('show', !!open);
   } else {
     document.body.classList.toggle('sb-closed', !open);
+    // Persist panel state across refresh (Dave, 2026-10-19): closed stays closed, open stays open.
+    S.sbClosed = !open; save();
     sb.classList.remove('open');
     if (sc) sc.classList.remove('show');
     if (typeof applySbWidth === 'function') applySbWidth();
@@ -8902,6 +8906,8 @@ function getSectionToggleContent(fid){
 }
 function setPanelCollapsed(collapsed) {
   document.body.classList.toggle('bp-collapsed', !!collapsed);
+  // Persist panel state across refresh (Dave, 2026-10-19).
+  S.bpCollapsed = !!collapsed; save();
   if (collapsed) renderBpRail();
 }
 function renderBpRail() {
@@ -10143,6 +10149,8 @@ document.addEventListener('click', e => {
     if (S.sel.startsWith('buddy:')) renderBuddy(S.sel.slice(6));
     toast('Hierarchy reset to the registry.'); return; }
 });
+// Restore the persisted sidebar state through the normal setter so width/tab/label sync (Dave, 2026-10-19).
+if (S.sbClosed && !isDrawerNav()) setSidebarOpen(false);
 refreshViews();
 (function initRoute(){
   // Dave 2026-10-15: seed the initial history.state so the first back/forward
@@ -10241,6 +10249,7 @@ initSbBrandSticky();
 </style>
 </head>
 <body>
+<script>try{var _s=JSON.parse(localStorage.getItem('buddyTree.v3')||'{}');if(window.matchMedia&&window.matchMedia('(min-width:640px)').matches){if(_s.sbClosed)document.body.classList.add('sb-closed');if(_s.bpCollapsed)document.body.classList.add('bp-collapsed');}}catch(e){}</script>
 <div class="app">
 <button id="menu-btn" aria-label="Open sidebar">\u203a</button>
 <button type="button" id="panel-open" title="Open buddy details" aria-label="Open buddy details">

@@ -1970,6 +1970,7 @@ body.node-dragging,body.node-dragging *{cursor:grabbing !important}
 </style>
 </head>
 <body>
+<script>try{var _s=JSON.parse(localStorage.getItem('buddyTree.v3')||'{}');if(window.matchMedia&&window.matchMedia('(min-width:640px)').matches){if(_s.sbClosed)document.body.classList.add('sb-closed');if(_s.bpCollapsed)document.body.classList.add('bp-collapsed');}}catch(e){}</script>
 <div class="app">
 <button id="menu-btn" aria-label="Open sidebar">›</button>
 <button type="button" id="panel-open" title="Open buddy details" aria-label="Open buddy details">
@@ -3332,7 +3333,7 @@ function renderDevelopSection(){
   const dev = document.getElementById('fset-develop');
   if (!dev) return;
   const simulating = !!devBackup;
-  const buildNum = '20261019.1710';
+  const buildNum = '20261019.1732';
   dev.innerHTML = ''
     + '<label class="fset-check"><input type="checkbox" id="dev-empty-toggle"' + (simulating ? ' checked' : '') + '> <span><strong>Simulate new user</strong> — empty data file, as if opening the shared link fresh</span></label>'
     + '<div class="fineprint" style="margin:8px 0 12px">Build <span style="font-family:monospace">' + escHtml(String(buildNum)) + '</span> · ' + BUDDIES.length + ' buddies in this file</div>'
@@ -4544,7 +4545,7 @@ function renderBuddy(id){
       'Anybody with repo access can see this note. Saved to the buddy’s repo (docs/notes.md).')
     + '<div class="attr-body"><textarea class="notes" id="bp-shared-notes" placeholder="Anybody with repo access can see this note."></textarea>'
     + '<p class="fineprint" id="shared-status"></p></div></div>'
-    + '<div class="bp-build">Build 20261019.1710</div>'
+    + '<div class="bp-build">Build 20261019.1732</div>'
     + '</div>';
   // Update every visible label for a buddy after a rename/re-icon, across all
   // Atlas lenses. A rename changes no structure, so labels are patched in place
@@ -4860,6 +4861,8 @@ function renderBuddy(id){
     const vb = document.getElementById('view-buddy');
     if (vb) vb.scrollTop = 0;
   })();
+  // If the panel was restored collapsed at boot, populate its section rail for this buddy.
+  if (document.body.classList.contains('bp-collapsed')) renderBpRail();
 }
 function toast(msg){
   document.querySelectorAll('.toast').forEach(t => t.remove());
@@ -7062,7 +7065,7 @@ function renderPlan(id){
     + '<p class="fineprint">Saved on this device. (For your eyes only)</p></div>'
     + '<div class="bp-sec"><h3>Shared notes<span class="info-tip" data-tip="Visible to everyone with access to this project.">\u24d8</span></h3><textarea class="notes" id="bp-shared" placeholder="Shared notes\u2026 (visible to everyone with access)">'+escHtml((S.planShared||{})[id]||'')+'</textarea>'
     + '<p class="fineprint">Shared — visible to everyone with access.</p></div>'
-    + '<div class="bp-build">Build 20261019.1710</div>'
+    + '<div class="bp-build">Build 20261019.1732</div>'
     + '</div>';
   const nt = document.getElementById('bp-notes');
   let t = null;
@@ -9200,6 +9203,8 @@ function setSidebarOpen(open){
     if (sc) sc.classList.toggle('show', !!open);
   } else {
     document.body.classList.toggle('sb-closed', !open);
+    // Persist panel state across refresh (Dave, 2026-10-19): closed stays closed, open stays open.
+    S.sbClosed = !open; save();
     sb.classList.remove('open');
     if (sc) sc.classList.remove('show');
     if (typeof applySbWidth === 'function') applySbWidth();
@@ -9249,6 +9254,8 @@ function getSectionToggleContent(fid){
 }
 function setPanelCollapsed(collapsed) {
   document.body.classList.toggle('bp-collapsed', !!collapsed);
+  // Persist panel state across refresh (Dave, 2026-10-19).
+  S.bpCollapsed = !!collapsed; save();
   if (collapsed) renderBpRail();
 }
 function renderBpRail() {
@@ -9700,14 +9707,14 @@ function openWhatsNew(){
     .then(r => r.ok ? r.text() : '')
     .then(t => {
       const serverBuild = t.trim();
-      if (serverBuild && serverBuild !== '20261019.1710') {
+      if (serverBuild && serverBuild !== '20261019.1732') {
         updBtn.style.display = '';
         updBtn.title = 'Update to build ' + serverBuild;
       }
       // Show build numbers at the top of the sheet (Dave's request 2026-10-12)
-      const myBuild = '20261019.1710';
+      const myBuild = '20261019.1732';
       let buildLine = '<p class="fineprint" style="margin-top:0">You’re on build ' + escHtml(myBuild) + '.';
-      if (serverBuild && serverBuild !== '20261019.1710' && isNewerBuild(serverBuild, myBuild)) {
+      if (serverBuild && serverBuild !== '20261019.1732' && isNewerBuild(serverBuild, myBuild)) {
         buildLine += ' Build ' + escHtml(serverBuild) + ' is available.';
       }
       buildLine += '</p>';
@@ -9746,7 +9753,7 @@ function isNewerBuild(server, mine){
   } catch (e) { return false; }
 }
 function initVersionCheck(){
-  const myBuild = '20261019.1710';
+  const myBuild = '20261019.1732';
   function showUpdateBanner(serverBuild){
     if (document.getElementById('update-banner')) return;
     const b = document.createElement('div');
@@ -10490,6 +10497,8 @@ document.addEventListener('click', e => {
     if (S.sel.startsWith('buddy:')) renderBuddy(S.sel.slice(6));
     toast('Hierarchy reset to the registry.'); return; }
 });
+// Restore the persisted sidebar state through the normal setter so width/tab/label sync (Dave, 2026-10-19).
+if (S.sbClosed && !isDrawerNav()) setSidebarOpen(false);
 refreshViews();
 (function initRoute(){
   // Dave 2026-10-15: seed the initial history.state so the first back/forward
