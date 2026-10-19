@@ -856,13 +856,21 @@ body.standalone #sb-to-top{opacity:0!important;pointer-events:none!important}
   #sb-to-top{opacity:0;pointer-events:none}
   #sidebar.open ~ #sb-to-top.show{opacity:1;pointer-events:auto}
 }
-.bp-topnav{display:flex;gap:4px;align-items:center;margin-bottom:6px;flex-wrap:wrap}
+.bp-topnav{display:flex;gap:4px;align-items:center;margin-bottom:6px;flex-wrap:wrap;position:relative}
 .bp-topnav .sep{color:var(--faint);margin:0 2px}
 /* Jonny 2026-10-18: the utility strip goes quiet — smaller, muted, fine print
    under the headline. The identity row is the header. */
 .bp-topnav .linkbtn{font-size:13px;color:var(--muted)}
 .bp-topnav .linkbtn:hover{color:var(--text)}
-.bp-more-menu{position:absolute;z-index:70;background:var(--panel);border:1px solid var(--border);
+/* Dave 2026-10-19: the menu must declare its anchor. With no top/left it took
+   its static position — and as an abspos child of the flex .bp-topnav
+   (align-items:center) that static position is CENTRED on the 18px strip, so
+   the 4-item menu started ~55px above the sticky head and the panel
+   scrollport (#view-buddy, overflow-y:auto) clipped its first row (Settings)
+   clean off. .bp-topnav is now position:relative (the containing block) and
+   the menu drops straight below the strip, left-aligned as before. It lives
+   inside the sticky head, so it stays glued under the ··· button on scroll. */
+.bp-more-menu{position:absolute;top:calc(100% + 4px);left:0;z-index:70;background:var(--panel);border:1px solid var(--border);
   border-radius:12px;box-shadow:0 8px 24px rgba(0,0,0,.18);padding:6px;min-width:180px;
   display:flex;flex-direction:column;gap:2px}
 .bp-more-menu[hidden]{display:none}

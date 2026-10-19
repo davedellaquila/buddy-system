@@ -1028,13 +1028,21 @@ body.standalone #sb-to-top{opacity:0!important;pointer-events:none!important}
   #sb-to-top{opacity:0;pointer-events:none}
   #sidebar.open ~ #sb-to-top.show{opacity:1;pointer-events:auto}
 }
-.bp-topnav{display:flex;gap:4px;align-items:center;margin-bottom:6px;flex-wrap:wrap}
+.bp-topnav{display:flex;gap:4px;align-items:center;margin-bottom:6px;flex-wrap:wrap;position:relative}
 .bp-topnav .sep{color:var(--faint);margin:0 2px}
 /* Jonny 2026-10-18: the utility strip goes quiet — smaller, muted, fine print
    under the headline. The identity row is the header. */
 .bp-topnav .linkbtn{font-size:13px;color:var(--muted)}
 .bp-topnav .linkbtn:hover{color:var(--text)}
-.bp-more-menu{position:absolute;z-index:70;background:var(--panel);border:1px solid var(--border);
+/* Dave 2026-10-19: the menu must declare its anchor. With no top/left it took
+   its static position — and as an abspos child of the flex .bp-topnav
+   (align-items:center) that static position is CENTRED on the 18px strip, so
+   the 4-item menu started ~55px above the sticky head and the panel
+   scrollport (#view-buddy, overflow-y:auto) clipped its first row (Settings)
+   clean off. .bp-topnav is now position:relative (the containing block) and
+   the menu drops straight below the strip, left-aligned as before. It lives
+   inside the sticky head, so it stays glued under the ··· button on scroll. */
+.bp-more-menu{position:absolute;top:calc(100% + 4px);left:0;z-index:70;background:var(--panel);border:1px solid var(--border);
   border-radius:12px;box-shadow:0 8px 24px rgba(0,0,0,.18);padding:6px;min-width:180px;
   display:flex;flex-direction:column;gap:2px}
 .bp-more-menu[hidden]{display:none}
@@ -3466,7 +3474,7 @@ function renderDevelopSection(){
   const dev = document.getElementById('fset-develop');
   if (!dev) return;
   const simulating = !!devBackup;
-  const buildNum = '20261019.2113';
+  const buildNum = '20261019.2130';
   dev.innerHTML = ''
     + '<label class="fset-check"><input type="checkbox" id="dev-empty-toggle"' + (simulating ? ' checked' : '') + '> <span><strong>Simulate new user</strong> — empty data file, as if opening the shared link fresh</span></label>'
     + '<div class="fineprint" style="margin:8px 0 12px">Build <span style="font-family:monospace">' + escHtml(String(buildNum)) + '</span> · ' + BUDDIES.length + ' buddies in this file</div>'
@@ -4721,7 +4729,7 @@ function renderBuddy(id){
       'Anybody with repo access can see this note. Saved to the buddy’s repo (docs/notes.md).')
     + '<div class="attr-body"><textarea class="notes" id="bp-shared-notes" placeholder="Anybody with repo access can see this note."></textarea>'
     + '<p class="fineprint" id="shared-status"></p></div></div>'
-    + '<div class="bp-build">Build 20261019.2113</div>'
+    + '<div class="bp-build">Build 20261019.2130</div>'
     + '</div>';
   // Update every visible label for a buddy after a rename/re-icon, across all
   // Atlas lenses. A rename changes no structure, so labels are patched in place
@@ -7337,7 +7345,7 @@ function renderPlan(id){
     + '<p class="fineprint">Saved on this device. (For your eyes only)</p></div>'
     + '<div class="bp-sec"><h3>Shared notes<span class="info-tip" data-tip="Visible to everyone with access to this project.">\u24d8</span></h3><textarea class="notes" id="bp-shared" placeholder="Shared notes\u2026 (visible to everyone with access)">'+escHtml((S.planShared||{})[id]||'')+'</textarea>'
     + '<p class="fineprint">Shared — visible to everyone with access.</p></div>'
-    + '<div class="bp-build">Build 20261019.2113</div>'
+    + '<div class="bp-build">Build 20261019.2130</div>'
     + '</div>';
   const nt = document.getElementById('bp-notes');
   let t = null;
@@ -10049,14 +10057,14 @@ function openWhatsNew(){
     .then(r => r.ok ? r.text() : '')
     .then(t => {
       const serverBuild = t.trim();
-      if (serverBuild && serverBuild !== '20261019.2113') {
+      if (serverBuild && serverBuild !== '20261019.2130') {
         updBtn.style.display = '';
         updBtn.title = 'Update to build ' + serverBuild;
       }
       // Show build numbers at the top of the sheet (Dave's request 2026-10-12)
-      const myBuild = '20261019.2113';
+      const myBuild = '20261019.2130';
       let buildLine = '<p class="fineprint" style="margin-top:0">You’re on build ' + escHtml(myBuild) + '.';
-      if (serverBuild && serverBuild !== '20261019.2113' && isNewerBuild(serverBuild, myBuild)) {
+      if (serverBuild && serverBuild !== '20261019.2130' && isNewerBuild(serverBuild, myBuild)) {
         buildLine += ' Build ' + escHtml(serverBuild) + ' is available.';
       }
       buildLine += '</p>';
@@ -10095,7 +10103,7 @@ function isNewerBuild(server, mine){
   } catch (e) { return false; }
 }
 function initVersionCheck(){
-  const myBuild = '20261019.2113';
+  const myBuild = '20261019.2130';
   function showUpdateBanner(serverBuild){
     if (document.getElementById('update-banner')) return;
     const b = document.createElement('div');
