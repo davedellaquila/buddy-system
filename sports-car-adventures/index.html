@@ -3,15 +3,15 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>🏎️ Sports Car Adventures — Stay Tuned</title>
+<title>🏎️ Sports Car Adventures — Slow Down</title>
 <style>
   :root{
-    --bg:#0c0e12; --ink:#f4f1ea; --muted:#9aa0a8; --accent:#e8a33d;
-    --line:rgba(232,163,61,.35); --card:#14171d;
+    --bg:#0d0f0c; --ink:#f2efe6; --muted:#a8a496; --accent:#d9a441;
+    --line:rgba(217,164,65,.32); --card:#15170f;
   }
   @media (prefers-color-scheme: light){
-    :root{ --bg:#faf7f1; --ink:#1c1a17; --muted:#6f6a5e; --accent:#b3541e;
-           --line:rgba(179,84,30,.35); --card:#ffffff; }
+    :root{ --bg:#faf7ef; --ink:#23211b; --muted:#74705f; --accent:#a96f14;
+           --line:rgba(169,111,20,.32); --card:#ffffff; }
   }
   *{ box-sizing:border-box; margin:0; padding:0; }
   html,body{ height:100%; }
@@ -33,37 +33,34 @@
   }
   .topbar .ico{ font-size:20px; }
   main{
-    flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center;
-    text-align:center; padding:48px 24px 32px; position:relative; overflow:hidden;
+    flex:1; display:flex; flex-direction:column; align-items:center;
+    text-align:center; padding:34px 24px 40px;
   }
-  /* the road: a line that draws itself across the screen */
-  .road{ position:absolute; left:0; right:0; top:50%; height:2px; pointer-events:none; }
-  .road::before{
-    content:""; position:absolute; inset:0;
-    background:repeating-linear-gradient(90deg, var(--accent) 0 34px, transparent 34px 60px);
-    opacity:.5; transform:translateY(-50%);
+  /* the hills: one still image, arriving gently */
+  .hills{
+    width:min(1020px, 100%); border-radius:20px; overflow:hidden;
+    border:1px solid var(--line);
+    box-shadow:0 18px 50px rgba(0,0,0,.28);
+    animation:settle 2.4s ease both;
   }
-  .road .car{
-    position:absolute; top:0; font-size:30px; transform:translateY(-72%);
-    animation:drive 9s linear infinite;
-  }
-  @keyframes drive{ from{ left:-8%; } to{ left:104%; } }
-  @media (prefers-reduced-motion: reduce){ .road .car{ animation:none; left:46%; } }
-  .hero{ position:relative; z-index:1; max-width:640px; }
+  .hills img{ display:block; width:100%; height:auto; }
+  @keyframes settle{ from{ opacity:0; transform:translateY(10px); } to{ opacity:1; transform:none; } }
+  @media (prefers-reduced-motion: reduce){ .hills{ animation:none; } }
+  .hero{ max-width:640px; margin-top:38px; animation:settle 2.4s .3s ease both; }
+  @media (prefers-reduced-motion: reduce){ .hero{ animation:none; } }
   .badge{
-    display:inline-block; font-size:13px; letter-spacing:.28em; text-transform:uppercase;
+    display:inline-block; font-size:12.5px; letter-spacing:.28em; text-transform:uppercase;
     color:var(--accent); border:1px solid var(--line); border-radius:999px;
-    padding:8px 18px; margin-bottom:26px; font-weight:700;
+    padding:8px 18px; margin-bottom:24px; font-weight:700;
     background:color-mix(in srgb, var(--accent) 8%, transparent);
   }
-  .mark{ font-size:76px; line-height:1; margin-bottom:18px; filter:drop-shadow(0 6px 18px rgba(0,0,0,.35)); }
   h1{
-    font-size:clamp(34px, 7vw, 58px); font-weight:800; letter-spacing:-.01em; line-height:1.05;
+    font-size:clamp(38px, 7.5vw, 62px); font-weight:800; letter-spacing:-.01em; line-height:1.04;
     margin-bottom:18px;
   }
   h1 .amber{ color:var(--accent); }
-  p.lede{ font-size:clamp(16px, 2.6vw, 20px); color:var(--muted); line-height:1.6; max-width:46ch; margin:0 auto 8px; }
-  p.tuned{ font-size:clamp(16px, 2.6vw, 20px); font-weight:600; margin-top:14px; }
+  p.lede{ font-size:clamp(16px, 2.6vw, 20px); color:var(--muted); line-height:1.65; max-width:48ch; margin:0 auto 8px; }
+  p.tuned{ font-size:clamp(16px, 2.6vw, 20px); font-weight:600; margin-top:16px; }
   .footer{
     padding:22px; text-align:center; font-size:13px; color:var(--muted);
     border-top:1px solid var(--line);
@@ -75,13 +72,14 @@
 <body>
 <header class="topbar"><span class="ico">🏎️</span><span>Sports Car Adventures</span></header>
 <main>
-  <div class="road" aria-hidden="true"><span class="car">🏎️</span></div>
+  <figure class="hills">
+    <img src="amador-hills.jpg" alt="Golden rolling hills and oak trees in Amador County, with a quiet country road winding through the valley at evening light">
+  </figure>
   <div class="hero">
-    <span class="badge">Under construction</span>
-    <div class="mark">🏎️</div>
-    <h1>Sports Car <span class="amber">Adventures</span></h1>
-    <p class="lede">We're going through a bit of a remodeling — new paint, new roads, same love of the drive.</p>
-    <p class="tuned">Stay tuned. Something fun is coming.</p>
+    <span class="badge">Sports Car Adventures</span>
+    <h1>Slow <span class="amber">down.</span></h1>
+    <p class="lede">Unhurried drives through the golden hills of Amador County. Good cars, quiet roads, and nowhere to be but here.</p>
+    <p class="tuned">We're remodeling — taking our time with it. Stay tuned.</p>
   </div>
 </main>
 <footer class="footer">
