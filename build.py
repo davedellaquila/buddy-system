@@ -864,8 +864,23 @@ body.standalone #sb-to-top{opacity:0!important;pointer-events:none!important}
 /* Changelog / Release Notes: never scroll horizontally — wrap long words */
 #view-changelog .changelog,#view-releases .changelog{overflow-x:hidden;overflow-wrap:break-word;word-break:break-word}
 #view-changelog .changelog a,#view-releases .changelog a{overflow-wrap:break-word;word-break:break-all}
+/* Release Notes: overflow-x:clip (not hidden) on this section — a hidden
+   overflow makes the section a scroll container, which would silently
+   disable the sticky filter tiles below. Falls back to hidden where
+   clip is unsupported. */
+#view-releases .changelog{overflow-x:clip}
 /* Release Notes summary filter tiles (Dave 2026-10-18) */
-.rel-tiles{display:flex;gap:12px;margin:16px 0 20px}
+/* Dave 2026-10-19: the filter tiles stick as a card while the notes scroll,
+   patterned on Money Buddy's sticky filter cards (.searchstick): the card
+   pins just below the top of the view riding on the page background, and
+   gains Money Buddy's soft float shadow once it is actually stuck (the
+   .stuck class is toggled by an IntersectionObserver sentinel in
+   renderReleases — same scroll handoff idea). Padding + margins sum to
+   the old 16px/20px spacing, so the tiles sit identically at rest. */
+.rel-tiles{display:flex;gap:12px;margin:6px 0 10px;padding:10px 0;
+  position:sticky;top:10px;z-index:40;background:var(--bg);
+  transition:box-shadow .38s ease-out}
+.rel-tiles.stuck{box-shadow:0 10px 24px rgba(10,20,15,.14)}
 .rel-tile{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;
   padding:14px 8px;border-radius:16px;border:1px solid var(--border);
   background:var(--panel);cursor:pointer;color:var(--text)}
@@ -5771,6 +5786,17 @@ function renderReleases(){
           body.querySelectorAll('[data-relsection]').forEach(s => { s.hidden = s.dataset.relsection !== f; });
         });
       });
+      /* Dave 2026-10-19: Money Buddy sticky-filter handoff — the tiles are
+         position:sticky (see .rel-tiles CSS); this 1px sentinel flips the
+         .stuck float shadow on once they pin, off again back at the top. */
+      const relTiles = body.querySelector('.rel-tiles');
+      if (relTiles && 'IntersectionObserver' in window) {
+        const sent = document.createElement('div');
+        sent.setAttribute('aria-hidden', 'true');
+        sent.style.cssText = 'height:1px;margin:0 0 -1px';
+        relTiles.parentNode.insertBefore(sent, relTiles);
+        new IntersectionObserver(es => { relTiles.classList.toggle('stuck', !es[0].isIntersecting); }).observe(sent);
+      }
       whatsnewMarkSeen(md);
     })
     .catch(() => { body.innerHTML = '<p class="fineprint">Couldn’t load the release notes. <a href="https://github.com/davedellaquila/buddy-system/blob/master/CHANGELOG.md" target="_blank" rel="noopener">View on GitHub</a>.</p>'; });
