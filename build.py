@@ -7950,6 +7950,8 @@ async function loadPhotos(id){
   const ph3 = document.getElementById('photos-h3');
   if (ph3) {
     // Update the label without disturbing the collapse arrow / drag grip
+    // Dave 2026-10-18: drop the static attn-count — the live label replaces it.
+    const stale = ph3.querySelector('.attn-count'); if (stale) stale.remove();
     let label = ph3.querySelector('.ph-label');
     if (!label) {
       label = document.createElement('span');
@@ -8125,6 +8127,8 @@ async function loadDocs(id){
   }
   const dh3 = document.getElementById('docs-h3');
   if (dh3) {
+    // Dave 2026-10-18: drop the static attn-count — the live label replaces it.
+    const stale = dh3.querySelector('.attn-count'); if (stale) stale.remove();
     let label = dh3.querySelector('.ph-label');
     if (!label) {
       label = document.createElement('span');
