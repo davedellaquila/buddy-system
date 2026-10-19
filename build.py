@@ -9667,7 +9667,7 @@ document.addEventListener('click', e => {
     return;
   }
   if (e.target.closest && (e.target.closest('#bp-close-x') || e.target.closest('#bp-takeover-back'))) { closeDetail(); return; }
-  if (e.target.closest && e.target.closest('#bp-collapse-btn')) { setPanelCollapsed(true); return; }
+  if (e.target.closest && e.target.closest('#bp-collapse-btn')) { setPanelCollapsed(!document.body.classList.contains('bp-collapsed')); return; }
   if (e.target.closest && e.target.closest('#bp-rail button')) {
     const sec = e.target.closest('#bp-rail button').dataset.sec;
     setPanelCollapsed(false);
