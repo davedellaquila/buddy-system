@@ -1204,6 +1204,9 @@ body.no-write .pdel,body.no-write [data-dump-del],body.no-write [data-dump-edit]
 #sb-gear:hover{color:red;background:var(--hover)}
 #sb-close{color:var(--faint)}
 #sb-close:hover{color:var(--muted)}
+/* Dave 2026-10-19: THE circled-✕ (see circleX()) — one shared close mark in
+   every panel; the inline SVG renders block so it centers identically. */
+.cx-svg{display:block;flex:none}
 /* Dave 2026-10-14: round fills on the rail controls. The collapsed rail's
    expand affordance is the first icon in #view-nav (#sb-expand-btn);
    #sb-tools stays hidden while collapsed.
@@ -1609,7 +1612,7 @@ a.plan-card-name:hover{text-decoration:underline}
 #pdf-viewer .pv-name{font-size:14px;font-weight:600;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 #pdf-viewer .pv-head a{color:#9ecbff;font-size:12px;text-decoration:none;white-space:nowrap}
 #pdf-viewer .pv-head a:hover{text-decoration:underline}
-#pdf-viewer .pv-close{background:none;border:0;color:#fff;font-size:22px;line-height:1;cursor:pointer;padding:4px 8px;border-radius:8px}
+#pdf-viewer .pv-close{background:none;border:0;color:#fff;line-height:1;cursor:pointer;padding:4px 8px;border-radius:8px;display:inline-flex;align-items:center;justify-content:center}
 #pdf-viewer .pv-close:hover{background:rgba(255,255,255,.15)}
 #pdf-viewer iframe{flex:1;border:0;background:#fff}
 .doc-card{cursor:pointer}
@@ -2052,7 +2055,7 @@ function standingOrdersHtml(){
   const dismissed = S.dismissedOrders || [];
   return STANDING_ORDERS.filter(o => dismissed.indexOf(o.id) < 0).map(o => {
     const link = o.href ? ' <a href="'+o.href+'" target="_blank" rel="noopener">Standing orders</a> · <a href="AGENTS.md" target="_blank" rel="noopener">AGENTS.md</a>' : '';
-    return '<div class="standing-order'+(o.critical?' critical':'')+'" data-order="'+o.id+'"><button type="button" class="so-close" data-close-order="'+o.id+'" aria-label="Dismiss memo" title="Dismiss memo">\u00d7</button><b>'+(o.critical?'Critical memo':'Memo')+'</b> — '+escHtml(o.text)+link+'<span class="so-date">'+escHtml(o.date||'')+'</span></div>';
+    return '<div class="standing-order'+(o.critical?' critical':'')+'" data-order="'+o.id+'"><button type="button" class="so-close" data-close-order="'+o.id+'" aria-label="Dismiss memo" title="Dismiss memo">' + circleX(16) + '</button><b>'+(o.critical?'Critical memo':'Memo')+'</b> — '+escHtml(o.text)+link+'<span class="so-date">'+escHtml(o.date||'')+'</span></div>';
   }).join('');
 }
 const kidsOf = {};
@@ -2182,6 +2185,12 @@ function crumb(id){
     : '<b title="'+escHtml(c.repo ? 'GitHub repo: davedellaquila/'+c.repo : 'No repo linked')+'">'+escHtml(dispName(c))+'</b>').join(' <span style="color:var(--faint)">/</span> ');
 }
 function escHtml(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+/* THE close mark (Dave 2026-10-19): the sidebar #sb-close circled ✕, shared by
+   every close/dismiss control — identical geometry, scaled whole via size. */
+function circleX(size){
+  size = size || 22;
+  return '<svg class="cx-svg" width="' + size + '" height="' + size + '" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M9.2 9.2l5.6 5.6M14.8 9.2l-5.6 5.6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>';
+}
 // Converts URLs in already-escaped HTML text into clickable links
 function linkify(escaped){
   return escaped.replace(/(https?:\/\/[^\s<>"']+)/g, '<a href="$1" target="_blank" rel="noopener">$1</a>');
@@ -3185,7 +3194,7 @@ function openFieldSettings(){
   let m = document.getElementById('field-settings');
   if (!m) {
     m = document.createElement('div'); m.id = 'field-settings';
-    m.innerHTML = '<button class="fset-close-x" id="fset-x" title="Close">\u2715</button>'
+    m.innerHTML = '<button class="fset-close-x" id="fset-x" title="Close">' + circleX(20) + '</button>'
       + '<div class="fset-head" id="fset-drag"><h3>Settings</h3></div>'
       + '<div class="fset-body">'
       + '<section class="fset-sec"><h3 class="fset-sec-h">Preferences</h3><div id="fset-settings"></div></section>'
@@ -4282,7 +4291,7 @@ function renderBuddy(id){
     + ((b.status && b.status !== 'Active') ? '<span class="status '+b.statusClass+'">'+escHtml(b.status)+'</span>' : '')
     + (function(){ const ak = effAka(b); return ak.length ? '<span class="bp-aka" title="Also known as">aka '+escHtml(ak.join(', '))+'</span>' : ''; })()
     + '<button class="bp-collapse-btn" id="bp-collapse-btn" type="button" title="Section index" aria-label="Section index">\u2630</button>'
-    + '<button class="bp-close-x" id="bp-close-x" type="button" title="Close detail \u2014 back to main view" aria-label="Close detail \u2014 back to main view">\u00d7</button></div>'
+    + '<button class="bp-close-x" id="bp-close-x" type="button" title="Close detail \u2014 back to main view" aria-label="Close detail \u2014 back to main view">' + circleX(22) + '</button></div>'
     + '</div>'
     + '<div class="bp-crumb">'+crumb(id)+'</div>'
     + '<p class="bp-tagline">'+escHtml(b.tagline||'')+'</p>'
@@ -5323,7 +5332,7 @@ function chartSwitcherHtml(){
     + '<span>' + curDef.label + '</span><span class="lens-pill-chev">\u25be</span>'
     + '</button>'
     + '<div class="lens-dropdown" id="lens-dropdown" hidden>'
-    + '<button class="lens-close" id="lens-close" aria-label="Close chart picker">&times;</button>'
+    + '<button class="lens-close" id="lens-close" aria-label="Close chart picker">' + circleX(20) + '</button>'
     + CHART_TYPES.map(c => '<button class="lens-card' + (c.id === cur ? ' sel' : '') + '" data-chart="' + c.id + '">'
       + '<span class="lens-thumb">' + chartThumbSvg(c.id) + '</span>'
       + '<span class="lens-name">' + c.label + (c.id === cur ? ' \u2713' : '') + '</span>'
@@ -5382,7 +5391,7 @@ function dvPickerHtml(){
     + '<span class="lens-pill-icon">◨</span><span>' + curDef.label + '</span><span class="lens-pill-chev">▾</span>'
     + '</button>'
     + '<div class="lens-dropdown" id="dv-dropdown" hidden>'
-    + '<button class="lens-close" id="dv-close" aria-label="Close style picker">&times;</button>'
+    + '<button class="lens-close" id="dv-close" aria-label="Close style picker">' + circleX(20) + '</button>'
     + DV_STYLES.map(s => '<button class="lens-card dv-card' + (s.id === cur ? ' sel' : '') + '" data-dvstyle="' + s.id + '">'
       + '<span class="lens-thumb">' + dvThumbSvg(s.id) + '</span>'
       + '<span class="lens-name">' + s.label + (s.id === cur ? ' ✓' : '') + '</span>'
@@ -5788,7 +5797,7 @@ function constellationHtml(root){
   const panel = '<div class="constel-panel" id="constel-panel"' + (c.open ? '' : ' hidden') + ' role="group" aria-label="Constellation spacing controls">'
     + '<div class="cp-head"><span class="cp-title">Spacing</span>'
     + '<button type="button" class="cp-btn" id="constel-reset">Reset</button>'
-    + '<button type="button" class="cp-btn" id="constel-collapse" aria-label="Hide spacing controls">×</button></div>'
+    + '<button type="button" class="cp-btn" id="constel-collapse" aria-label="Hide spacing controls">' + circleX(16) + '</button></div>'
     + constelRow('spread', 'Spread', 50, 180, 1, c.spread)
     + constelRow('repel', 'Push apart', 1000, 8000, 100, c.repel)
     + constelRow('labelSize', 'Label size', 9, 16, 0.5, c.labelSize)
@@ -8550,7 +8559,7 @@ function openPdfViewer(href, name){
     v.id = 'pdf-viewer';
     v.innerHTML = '<div class="pv-head"><span class="pv-name"></span>'
       + '<a href="#" class="pv-newtab" target="_blank" rel="noopener">Open in new tab</a>'
-      + '<button class="pv-close" type="button" aria-label="Close viewer">&times;</button></div>'
+      + '<button class="pv-close" type="button" aria-label="Close viewer">' + circleX(22) + '</button></div>'
       + '<iframe title="PDF viewer"></iframe>';
     document.body.appendChild(v);
     v.querySelector('.pv-close').addEventListener('click', closePdfViewer);
@@ -9577,7 +9586,7 @@ function openWhatsNew(){
   m = document.createElement('div');
   m.id = 'whatsnew-modal';
   m.innerHTML = '<div class="wn-backdrop"></div><div class="wn-box" role="dialog" aria-label="What\u2019s new">'
-    + '<div class="wn-head"><h3>What\u2019s new</h3><button class="wn-x" aria-label="Close">\u00d7</button></div>'
+    + '<div class="wn-head"><h3>What\u2019s new</h3><button class="wn-x" aria-label="Close">' + circleX(22) + '</button></div>'
     + '<div class="wn-body"><p class="fineprint">Loading\u2026</p></div></div>';
   document.body.appendChild(m);
   const close = () => m.remove();
@@ -9653,7 +9662,7 @@ function initVersionCheck(){
     b.innerHTML = '<span>You\u2019re on build ' + escHtml(myBuild) + '. Build ' + escHtml(serverBuild) + ' is available.</span> '
       + '<button id="update-whatsnew" style="margin-left:12px;background:none;border:none;color:var(--accent);font-size:14px;cursor:pointer;text-decoration:underline;padding:6px 4px">What\u2019s new</button>'
       + '<button id="update-now" style="margin-left:12px;padding:6px 14px;border-radius:8px;border:1px solid var(--accent);background:var(--accent);color:#fff;font-weight:600;cursor:pointer">Update now</button>'
-      + '<button id="update-dismiss" aria-label="Dismiss" style="margin-left:8px;padding:6px 10px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--text);font-size:16px;cursor:pointer;line-height:1">×</button>';
+      + '<button id="update-dismiss" aria-label="Dismiss" style="margin-left:8px;padding:6px 10px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--text);cursor:pointer;line-height:1;display:inline-flex;align-items:center;justify-content:center">' + circleX(20) + '</button>';
     b.style.cssText = 'position:fixed;top:16px;left:50%;transform:translateX(-50%);z-index:9999;background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:12px 18px;box-shadow:0 8px 32px rgba(0,0,0,.3);display:flex;align-items:center;font-size:14px';
     document.body.appendChild(b);
     document.getElementById('update-whatsnew').addEventListener('click', () => { openWhatsNew(); });
@@ -9971,7 +9980,7 @@ function tipPopShow(icon, pinned){
   if (typeof escHtml !== 'function') return;
   const pop = document.createElement('div');
   pop.className = 'tip-pop' + (pinned ? ' pinned' : '');
-  pop.innerHTML = (pinned ? '<button type="button" class="tip-x" aria-label="Close tooltip">\u00d7</button>' : '')
+  pop.innerHTML = (pinned ? '<button type="button" class="tip-x" aria-label="Close tooltip">' + circleX(14) + '</button>' : '')
     + '<div class="tip-text">' + escHtml(icon.getAttribute('data-tip') || '') + '</div>';
   pop._icon = icon;
   document.body.appendChild(pop);
