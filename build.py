@@ -868,6 +868,9 @@ body.standalone #sb-to-top{opacity:0!important;pointer-events:none!important}
 .bp-more-menu[hidden]{display:none}
 .bp-more-menu .linkbtn{text-align:left;padding:8px 12px;border-radius:8px;font-size:14px;color:var(--text)}
 .bp-more-menu .linkbtn:hover{background:var(--ghost)}
+.bp-more-menu .linkbtn svg{vertical-align:-3px}
+.bp-more-menu .linkbtn:disabled{opacity:.45;cursor:default}
+.bp-more-menu .linkbtn:disabled:hover{background:transparent}
 /* Takeover back bar: hidden everywhere except the portrait-phone takeover (see below) */
 .bp-takeover-back{display:none;align-items:center;gap:4px;position:sticky;top:0;z-index:20;
   width:calc(100% + 36px);margin:0 -18px 4px;padding:14px 18px;min-height:52px;
@@ -2196,6 +2199,19 @@ function escHtml(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;')
 function circleX(size){
   size = size || 22;
   return '<svg class="cx-svg" width="' + size + '" height="' + size + '" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M9.2 9.2l5.6 5.6M14.8 9.2l-5.6 5.6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>';
+}
+/* Dave 2026-10-19: the ··· menu's Settings item wears the SAME gear as the
+   sidebar #sb-gear button (and both open the one openFieldSettings sheet) —
+   this helper carries that gear artwork verbatim for JS-rendered spots. */
+function gearSvg(size){
+  size = size || 19;
+  return '<svg width="' + size + '" height="' + size + '" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>';
+}
+/* GitHub mark (octocat), monochrome currentColor — leading glyph for the
+   ··· menu's "Open git repo" item (Dave 2026-10-19). */
+function ghMarkSvg(size){
+  size = size || 16;
+  return '<svg width="' + size + '" height="' + size + '" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>';
 }
 // Converts URLs in already-escaped HTML text into clickable links
 function linkify(escaped){
@@ -4285,7 +4301,8 @@ function renderBuddy(id){
     + '<span class="sep">\u00b7</span><button class="linkbtn" data-view="projects" id="bp-allbuddies">All buddies</button>'
     + '<span class="sep">\u00b7</span><button class="linkbtn" id="bp-more" aria-haspopup="true" aria-expanded="false" title="More actions">\u00b7\u00b7\u00b7</button>'
     + '<div class="bp-more-menu" id="bp-more-menu" hidden>'
-    + '<button class="linkbtn" id="bp-settings">Settings</button>'
+    + '<button class="linkbtn" id="bp-settings">' + gearSvg(16) + ' Settings</button>'
+    + '<button class="linkbtn" id="bp-repo"' + (b.repo ? '' : ' disabled title="No GitHub repo for this buddy"') + '>' + ghMarkSvg(16) + ' Open git repo</button>'
     + '<button class="linkbtn" id="bp-dormant" title="Mark dormant / wake up"></button>'
     + '<button class="linkbtn" id="bp-desktop">\U0001f4be Save to desktop</button>'
     + '</div></div>'
@@ -10160,6 +10177,7 @@ document.addEventListener('click', e => {
   if (e.target.closest && e.target.closest('#sb-tab')) { setSidebarOpen(true); return; }
   if (e.target.closest && e.target.closest('#sb-scrim')) { setSidebarOpen(false); return; }
   if (e.target.closest && e.target.closest('#bp-desktop')) { const m = S.sel.match(/^buddy:(.+)$/); if (m) saveToDesktop(m[1]); closeBpMoreMenu(); return; }
+  if (e.target.closest && e.target.closest('#bp-repo')) { const m = S.sel.match(/^buddy:(.+)$/); const bb = m && byId[m[1]]; if (bb && bb.repo) window.open('https://github.com/davedellaquila/' + bb.repo, '_blank', 'noopener'); closeBpMoreMenu(); return; }
   if (e.target.closest && e.target.closest('#bp-settings')) { openFieldSettings(); closeBpMoreMenu(); return; }
   // Jonny 2026-10-18: the "···" menu in the utility strip.
   if (e.target.closest && e.target.closest('#bp-more')) {
