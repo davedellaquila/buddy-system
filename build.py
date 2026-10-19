@@ -823,6 +823,16 @@ body.standalone #sb-to-top{opacity:0!important;pointer-events:none!important}
 }
 .bp-topnav{display:flex;gap:4px;align-items:center;margin-bottom:6px;flex-wrap:wrap}
 .bp-topnav .sep{color:var(--faint);margin:0 2px}
+/* Jonny 2026-10-18: the utility strip goes quiet — smaller, muted, fine print
+   under the headline. The identity row is the header. */
+.bp-topnav .linkbtn{font-size:13px;color:var(--muted)}
+.bp-topnav .linkbtn:hover{color:var(--text)}
+.bp-more-menu{position:absolute;z-index:70;background:var(--panel);border:1px solid var(--border);
+  border-radius:12px;box-shadow:0 8px 24px rgba(0,0,0,.18);padding:6px;min-width:180px;
+  display:flex;flex-direction:column;gap:2px}
+.bp-more-menu[hidden]{display:none}
+.bp-more-menu .linkbtn{text-align:left;padding:8px 12px;border-radius:8px;font-size:14px;color:var(--text)}
+.bp-more-menu .linkbtn:hover{background:var(--ghost)}
 /* Takeover back bar: hidden everywhere except the portrait-phone takeover (see below) */
 .bp-takeover-back{display:none;align-items:center;gap:4px;position:sticky;top:0;z-index:20;
   width:calc(100% + 36px);margin:0 -18px 4px;padding:14px 18px;min-height:52px;
@@ -4018,16 +4028,21 @@ function renderBuddy(id){
     + '<div class="bp-topnav"><button class="linkbtn" data-navbtn="back">\u2190 Back</button>'
     + '<button class="linkbtn" data-navbtn="prev">\u2039 Prev</button><button class="linkbtn" data-navbtn="next">Next \u203a</button>'
     + '<span class="sep">\u00b7</span><button class="linkbtn" data-view="projects" id="bp-allbuddies">All buddies</button>'
-    + '<span class="sep">\u00b7</span><button class="linkbtn" id="bp-settings">Settings</button>'
-    + '<span class=\"sep\">\\u00b7</span><button class=\"linkbtn\" id=\"bp-dormant\" title=\"Mark dormant / wake up\"></button>'
-    + '<span class="sep">\u00b7</span><button class="linkbtn" id="bp-desktop">\U0001f4be Save to desktop</button></div>'
+    + '<span class="sep">\u00b7</span><button class="linkbtn" id="bp-more" aria-haspopup="true" aria-expanded="false" title="More actions">\u00b7\u00b7\u00b7</button>'
+    + '<div class="bp-more-menu" id="bp-more-menu" hidden>'
+    + '<button class="linkbtn" id="bp-settings">Settings</button>'
+    + '<button class="linkbtn" id="bp-dormant" title="Mark dormant / wake up"></button>'
+    + '<button class="linkbtn" id="bp-desktop">\U0001f4be Save to desktop</button>'
+    + '</div></div>'
     + '<div class="bp-top">'
     + '<span class="bp-icon" id="bp-icon" title="Click to change avatar" style="cursor:pointer">'+'<img class="bp-avatarimg" src="'+escHtml(buddyImageUrl(b))+'" alt="" onerror="this.remove()">'+'<span class="bp-avaemoji">'+escHtml(buddyDisplayIcon(b))+'</span></span>'
     + '<input class="bp-name" id="bp-name" type="text" spellcheck="false" autocomplete="off" value="'+escHtml(dispName(b))+'" aria-label="Buddy name">'
-    + '<span class="status '+b.statusClass+'">'+escHtml(b.status)+'</span>'
+    // Jonny 2026-10-18: the status pill appears ONLY when status is not Active.
+    // Badges are for exceptions; absence of the pill IS the Active signal.
+    + ((b.status && b.status !== 'Active') ? '<span class="status '+b.statusClass+'">'+escHtml(b.status)+'</span>' : '')
     + (function(){ const ak = effAka(b); return ak.length ? '<span class="bp-aka" title="Also known as">aka '+escHtml(ak.join(', '))+'</span>' : ''; })()
-    + '<button class="bp-collapse-btn" id="bp-collapse-btn" type="button" title="Collapse to section icons" aria-label="Collapse to section icons">\u2039</button>'
-    + '<button class="bp-close-x" id="bp-close-x" type="button" title="Close detail \u2014 back to main view" aria-label="Close detail \u2014 back to main view">\u203a</button></div>'
+    + '<button class="bp-collapse-btn" id="bp-collapse-btn" type="button" title="Section index" aria-label="Section index">\u2630</button>'
+    + '<button class="bp-close-x" id="bp-close-x" type="button" title="Close detail \u2014 back to main view" aria-label="Close detail \u2014 back to main view">\u00d7</button></div>'
     + '</div>'
     + '<div class="bp-crumb">'+crumb(id)+'</div>'
     + '<p class="bp-tagline">'+escHtml(b.tagline||'')+'</p>'
@@ -4989,6 +5004,13 @@ function closeDotPops(){
     if (pop) pop.hidden = true;
     if (dot) dot.classList.remove('open');
   });
+}
+// Jonny 2026-10-18: close the "···" utility menu.
+function closeBpMoreMenu(){
+  const menu = document.getElementById('bp-more-menu');
+  const btn = document.getElementById('bp-more');
+  if (menu) menu.hidden = true;
+  if (btn) btn.setAttribute('aria-expanded', 'false');
 }
 function positionDotPop(dot, pop){
   if (window.innerWidth <= 639) return; /* phone uses the bottom sheet */
@@ -9532,8 +9554,20 @@ document.addEventListener('click', e => {
   }
   if (e.target.closest && e.target.closest('#sb-tab')) { setSidebarOpen(true); return; }
   if (e.target.closest && e.target.closest('#sb-scrim')) { setSidebarOpen(false); return; }
-  if (e.target.closest && e.target.closest('#bp-desktop')) { const m = S.sel.match(/^buddy:(.+)$/); if (m) saveToDesktop(m[1]); return; }
-  if (e.target.closest && e.target.closest('#bp-settings')) { openFieldSettings(); return; }
+  if (e.target.closest && e.target.closest('#bp-desktop')) { const m = S.sel.match(/^buddy:(.+)$/); if (m) saveToDesktop(m[1]); closeBpMoreMenu(); return; }
+  if (e.target.closest && e.target.closest('#bp-settings')) { openFieldSettings(); closeBpMoreMenu(); return; }
+  // Jonny 2026-10-18: the "···" menu in the utility strip.
+  if (e.target.closest && e.target.closest('#bp-more')) {
+    const menu = document.getElementById('bp-more-menu');
+    const btn = document.getElementById('bp-more');
+    if (menu) {
+      const open = menu.hidden;
+      menu.hidden = !open;
+      if (btn) btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    }
+    return;
+  }
+  if (!e.target.closest('#bp-more-menu')) closeBpMoreMenu();
   if (e.target.closest && e.target.closest('#sa-full')) { try { location.hash = '#/' + S.sel; } catch (e) {} document.body.classList.remove('standalone'); return; }
   const pd = e.target.closest('[data-del]');
   if (pd) {
