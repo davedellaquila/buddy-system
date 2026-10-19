@@ -1491,7 +1491,7 @@ body.proj-dragging,body.proj-dragging *{cursor:grabbing !important}
 .bp-sticky-head .bp-name{font-size:16px;font-weight:700;margin:0;padding:0;min-width:0;
   flex:1 1 auto;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
   border-bottom-width:1px}
-.bp-sticky-head .status{flex:0 1 auto;max-width:36%;overflow:hidden;text-overflow:ellipsis;
+.bp-sticky-head .status{flex:0 0 auto;max-width:none;overflow:visible;text-overflow:clip;
   white-space:nowrap;font-size:11px;padding:2px 8px;line-height:1.25}
 .bp-name{font-size:32px;font-weight:700;margin:0;outline:none;border-bottom:2px dashed transparent;
   padding-bottom:2px;min-width:120px}
@@ -5868,8 +5868,10 @@ function applyZoom(){
   if (r1) r1.value = S.zoom || 100;
   if (r2) r2.value = S.zoomOrph || 100;
   // Dave 2026-10-16: anchor the zoom on the selected buddy — it stays
-  // centered in view at any magnification.
-  if (S.projectId && typeof centerOnBuddy === 'function') {
+  // centered in view at any magnification. Skipped mid-pinch (Dave 2026-10-18):
+  // the gesture owns the anchor then (focal point), not the selection.
+  const pinching = document.querySelector('[data-pinching="1"]');
+  if (S.projectId && typeof centerOnBuddy === 'function' && !pinching) {
     try { centerOnBuddy(S.projectId, true); } catch(e) {}
   }
   requestAnimationFrame(centerIfFits);
@@ -6059,7 +6061,25 @@ function attachPan(el){
     if (!pinch || pts.size < 2) return;
     const d = pinchDist();
     const next = Math.min(160, Math.max(25, Math.round((pinch.z0 * (d / pinch.d0)) / 2) * 2));
-    if (next !== (S[zoomKey] || 100)) { S[zoomKey] = next; applyZoom(); }
+    const cur = S[zoomKey] || 100;
+    if (next !== cur) {
+      // Dave 2026-10-18: anchor the pinch zoom on the focal point (midpoint
+      // between the fingers) so the content under the fingers stays put.
+      // Without this the view jumps — applyZoom() re-centers the selected
+      // buddy on every move, fighting the gesture.
+      const sc = scroller();
+      const v = [...pts.values()];
+      const r = sc.getBoundingClientRect();
+      const cx = (v[0].x + v[1].x) / 2 - r.left;
+      const cy = (v[0].y + v[1].y) / 2 - r.top;
+      const zOld = cur / 100, zNew = next / 100;
+      const contentX = (sc.scrollLeft + cx) / zOld;
+      const contentY = (sc.scrollTop + cy) / zOld;
+      S[zoomKey] = next;
+      applyZoom();
+      sc.scrollLeft = contentX * zNew - cx;
+      sc.scrollTop = contentY * zNew - cy;
+    }
   }
   function endPinchFinger(pid){
     pts.delete(pid);
