@@ -114,3 +114,7 @@ I think it changed your voice unintentionally sorry about that, buddy. How do we
 
 Delivery guy's name is Johnny. Hispanic-looking dude, not heavy-set but stocky, with a tattoo of kind of a crisscross on his left neck
 
+## 10/19/2026, 12:39:13 PM
+
+remind me to send the git repo link to ashish including the scripts for alert. put together a package form that can be mailed
+
