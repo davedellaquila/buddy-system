@@ -2119,6 +2119,7 @@ S.tileClicks = S.tileClicks || {};
 S.zoom = S.zoom || 100;
 S.zoomOrph = S.zoomOrph || 100;
 initTheme();
+mergePendingBuddies();
 buildKids();
 function save(){ localStorage.setItem(LS_KEY, JSON.stringify(S)); }
 function applyTheme(){
@@ -7769,6 +7770,61 @@ const ADD_KINDS = [['assistant','Assistant'],['family','Person'],['place','Place
 function slugifyBuddy(name){
   return name.toLowerCase().trim().replace(/['']/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'').slice(0,40) || 'buddy';
 }
+/* Instant add (Dave 2026-10-19): two of Dave's FAB adds vanished into the
+   inbox queue because the request sheet only filed a request and the buddy
+   appeared nowhere until a chat approval + drill days later. Now the sheet
+   drops a local placeholder into BUDDIES the moment its inbox request is
+   safely on GitHub, so the buddy shows in the sidebar list and the Projects
+   panel right away. The placeholder lives only on this device, in
+   S.pendingBuddies (buddyTree.v3); it is never written back to GitHub. The
+   inbox request carries the same client-minted id, the watcher drill runs
+   automatically with that exact id, and when the real registry entry lands
+   the placeholder retires at boot — real data always wins. */
+function isPendingBuddy(id){
+  return Array.isArray(S.pendingBuddies) && S.pendingBuddies.some(p => p && p.id === id);
+}
+function mergePendingBuddies(){
+  if (!Array.isArray(S.pendingBuddies) || !S.pendingBuddies.length) return;
+  const keep = [];
+  S.pendingBuddies.forEach(p => {
+    if (!p || !p.id) return;
+    if (byId[p.id]) return; // real registry entry landed — placeholder retires, real data wins silently
+    BUDDIES.push(p); byId[p.id] = p; keep.push(p);
+  });
+  if (keep.length !== S.pendingBuddies.length) { S.pendingBuddies = keep; save(); }
+}
+function addPendingBuddy(req, icon){
+  const id = req.id || slugifyBuddy(req.name);
+  if (byId[id] && !isPendingBuddy(id)) return id; // already a real buddy on this device — no placeholder; the drill reconciles from the request
+  const ref = req.ref_buddy ? byId[req.ref_buddy] : null;
+  let parentId = null;
+  if (ref) parentId = req.place_mode === 'child' ? ref.id : effParent(ref);
+  let entry = (S.pendingBuddies || []).find(p => p && p.id === id);
+  if (!entry) {
+    entry = {id: id, docs: [], attention: [], photos: [], setup_pending: true, local_placeholder: true};
+    S.pendingBuddies = S.pendingBuddies || [];
+    S.pendingBuddies.push(entry);
+  }
+  entry.name = req.name;
+  if (icon) entry.icon = icon;
+  if (!entry.icon) entry.icon = '✨'; // persona pick always carries an emoji; this is only a last-resort glyph (never 🤖)
+  entry.persona = req.persona || '';
+  entry.kind = 'standalone';
+  entry.parent = parentId;
+  entry.mission = req.purpose || '';
+  entry.tagline = req.purpose || 'New buddy — setup in progress';
+  entry.status = 'Setting up';
+  entry.statusClass = 'st-new';
+  entry.brief = ''; entry.repo = ''; entry.homepage = '';
+  if (!byId[id]) { BUDDIES.push(entry); byId[id] = entry; }
+  /* Parent mode: the ref buddy becomes the new buddy's direct report on this
+     device. Routed through the S.parents override (device-local, like every
+     other per-device parent change) — the drill writes the real reparent
+     into the registry, at which point the override reads identically. */
+  if (ref && req.place_mode === 'parent') applyParentOverride(ref.id, id);
+  save(); buildKids(); renderNav(); refreshViews();
+  return id;
+}
 function openAddBuddyDialog(mode, forId, onCreated){
   const ref = byId[forId]; if (!ref) return;
   const parentId = mode === 'child' ? forId : mode === 'parent' ? effParent(ref) : effParent(ref);
@@ -7833,7 +7889,7 @@ function openNewBuddyRequest(prefillName){
     + '<div class="nb-grab"></div>'
     + '<h2>New buddy</h2>'
     + '<div class="nb-body">'
-    + '<p class="ab-sub">Tell Astro what you want — they\u2019ll run the full onboarding (repo, mission doc, side chat, homepage).</p>'
+    + '<p class="ab-sub">Tell Astro what you want — the buddy lands in your list right away, and Astro runs the full onboarding (repo, mission doc, side chat, homepage) behind it.</p>'
     + '<label>Name</label><input type="text" id="nb-name" placeholder="e.g. Car Buddy" autocomplete="off">'
     + '<label>Place in tree</label><div class="nb-place" role="tablist" aria-label="Where in the tree">'
     + '<button type="button" data-place="child" class="sel" role="tab" aria-selected="true">Direct report</button>'
@@ -7862,7 +7918,7 @@ function openNewBuddyRequest(prefillName){
   const purposeInput = m.querySelector('#nb-purpose');
   const createBtn = m.querySelector('#nb-create');
   const errEl = m.querySelector('#nb-err');
-  let persona = null, placeMode = 'child';
+  let persona = null, personaEmoji = '', placeMode = 'child';
   const refSel = m.querySelector('#nb-ref'), placeHint = m.querySelector('#nb-place-hint');
   const updateHint = () => {
     const ref = refSel.value ? byId[refSel.value] : null;
@@ -7885,6 +7941,7 @@ function openNewBuddyRequest(prefillName){
   m.querySelectorAll('.nb-personas button').forEach(b => b.addEventListener('click', () => {
     m.querySelectorAll('.nb-personas button').forEach(x => x.classList.remove('sel'));
     b.classList.add('sel'); persona = b.dataset.persona;
+    const pe = b.querySelector('.nb-p-emoji'); personaEmoji = pe ? pe.textContent : '';
     validate();
   }));
   const validate = () => { createBtn.disabled = !(nameInput.value.trim() && persona); errEl.textContent = ''; };
@@ -7904,8 +7961,10 @@ function openNewBuddyRequest(prefillName){
     try {
       if (!ghToken()) throw new Error('Add a GitHub token first (gear menu → GitHub token) so the dashboard can save.');
       const stamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19);
+      const newName = nameInput.value.trim();
       const req = {
-        name: nameInput.value.trim(),
+        name: newName,
+        id: slugifyBuddy(newName),
         persona: persona,
         purpose: purposeInput.value.trim(),
         place_mode: placeMode,
@@ -7916,7 +7975,11 @@ function openNewBuddyRequest(prefillName){
       const path = 'docs/inbox/new-buddy-' + stamp + '.json';
       await ghPutFile('buddy-system', path, b64encode(JSON.stringify(req, null, 2)), 'New buddy request: ' + req.name);
       close();
-      toast('Request sent — Astro will pick it up shortly.');
+      /* Instant add (Dave 2026-10-19): only AFTER the request file is safely
+         on GitHub — a failed write adds nothing, so there is never a phantom
+         buddy. The placeholder carries the same id the drill will use. */
+      addPendingBuddy(req, personaEmoji);
+      toast('Buddy added — setting it up now.');
     } catch (e) {
       errEl.textContent = e.message || String(e);
       createBtn.disabled = false;
