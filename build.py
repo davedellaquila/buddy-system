@@ -3654,12 +3654,12 @@ function personaSecHtml(b){
       + '</div>'
     : '<p class="bp-empty">No persona set — this buddy speaks in its default voice.</p>';
   return '<div class="bp-sec" data-field="persona">'
-    + attrHead('persona', 'PERSONA', valueHtml,
-      '<button class="pill-btn" id="bp-persona-change" type="button">Change</button>',
+    + attrHead('persona', 'PERSONA', valueHtml, '',
       'The voice this buddy speaks in. Pick the one that makes you grin \u2014 it shapes how its messages and notifications sound.')
     + '<div class="attr-body">'
     + cur
     + '<div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap">'
+    + '<button class="linkbtn" id="bp-persona-change" type="button">Change</button>'
     + '<button class="linkbtn" id="bp-persona-surprise" type="button" title="Pick a random persona from the roster">\U0001F3B2 Surprise me</button>'
     + '</div><p class="fineprint" id="bp-persona-status"></p>'
     + '</div></div>';
@@ -3685,12 +3685,12 @@ function voiceSecHtml(b){
     : '<p class="bp-empty">Default voice — this buddy has no specific voice assigned.</p>';
   const notesOn = !!b.voiceNotes;
   return '<div class="bp-sec" data-field="voice">'
-    + attrHead('voice', 'VOICE', valueHtml,
-      '<button class="pill-btn" id="bp-voice-change" type="button">Change</button>',
+    + attrHead('voice', 'VOICE', valueHtml, '',
       'The spoken voice for this buddy\u2019s voice notes. Pick one, then enable voice notes below to hear it in threads.')
     + '<div class="attr-body">'
     + cur
     + '<div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;align-items:center">'
+    + '<button class="linkbtn" id="bp-voice-change" type="button">Change</button>'
     + (v ? '<button class="linkbtn" id="bp-voice-preview" type="button" title="Hear a sample of this voice">\u25b6\ufe0e Preview</button>' : '')
     + '<label style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text);cursor:pointer">'
     + '<input type="checkbox" id="bp-voice-notes" ' + (notesOn ? 'checked' : '') + ' style="width:18px;height:18px;accent-color:var(--accent)">'

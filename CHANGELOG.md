@@ -1,4 +1,7 @@
 ## 2026-10-19
+### Info panel — Voice/Persona headers show the selected value when closed (Dave 2026-10-19)
+- Single-value pattern: a closed section header reads "VOICE: Neighborly Syrup" — the Change pill no longer sits in the header crowding out the value. Change moved into the open body (next to Preview / Surprise me), where the pickers already offer the reset path ("Default voice" / "No persona").
+
 ### Info panel — Hidden fields tray: alphabetical + whole-row restore (Dave 2026-10-19)
 - Hidden fields now list alphabetically by label.
 - Clicking anywhere on a hidden-field row restores the field (data-show-field moved from the "show" button to the whole row; the button stays as the visible affordance); rows show a pointer cursor.
