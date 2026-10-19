@@ -1111,7 +1111,7 @@ body:has(#token-pill) #view-buddy.sheet .bp-close-x{right:148px}
 .bp-hiddenbar.open .bp-hiddenbar-toggle .secarrow{transform:rotate(90deg)}
 .bp-hiddenbar-list{padding:2px 4px 6px}
 .bp-hiddenbar-row{display:flex;align-items:center;justify-content:space-between;gap:8px;
-  font-size:13px;color:var(--text);padding:6px 8px;border-radius:8px}
+  font-size:13px;color:var(--text);padding:6px 8px;border-radius:8px;cursor:pointer}
 .bp-hiddenbar-row:hover{background:var(--ghost)}
 .bp-hiddenbar-row .linkbtn{font-size:13px;padding:4px 8px}
 .bp-sec[data-icon-behavior="bounce"]:not(.collapsed) .secarrow{animation:secarrow-bounce .4s}
@@ -2803,19 +2803,24 @@ function renderBpHiddenBar(){
   const build = wrap.querySelector('.bp-build');
   const old = wrap.querySelector(':scope > .bp-hiddenbar');
   if (old) old.remove();
-  const hidden = getFieldOrder().filter(fid => S.fieldHidden && S.fieldHidden[fid]);
+  const hidden = getFieldOrder().filter(fid => S.fieldHidden && S.fieldHidden[fid])
+    .map(fid => {
+      const def = FIELD_DEFS.find(f => f.id === fid);
+      return {fid, label: def ? def.label : fid};
+    })
+    .sort((a, b) => a.label.toLowerCase().localeCompare(b.label.toLowerCase()));
   if (!hidden.length) return;
   const bar = document.createElement('div');
   bar.className = 'bp-hiddenbar';
   bar.innerHTML = '<button class="bp-hiddenbar-toggle" type="button" aria-expanded="false">'
     + '<span>Hidden fields (' + hidden.length + ')</span><span class="secarrow">\u203a</span></button>'
     + '<div class="bp-hiddenbar-list" hidden>'
-    + hidden.map(fid => {
-        const def = FIELD_DEFS.find(f => f.id === fid);
-        const label = def ? def.label : fid;
-        return '<div class="bp-hiddenbar-row"><span>' + escHtml(label) + '</span>'
-          + '<button class="linkbtn" type="button" data-show-field="' + fid + '">show</button></div>';
-      }).join('')
+    + hidden.map(({fid, label}) =>
+        // Dave 2026-10-19: data-show-field lives on the whole row, so clicking
+        // anywhere on it restores the field (the doc-level handler uses closest()).
+        '<div class="bp-hiddenbar-row" data-show-field="' + fid + '" role="button" tabindex="0"><span>'
+        + escHtml(label) + '</span>'
+        + '<button class="linkbtn" type="button" tabindex="-1">show</button></div>').join('')
     + '</div>';
   const toggle = bar.querySelector('.bp-hiddenbar-toggle');
   toggle.addEventListener('click', () => {

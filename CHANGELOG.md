@@ -1,3 +1,8 @@
+## 2026-10-19
+### Info panel — Hidden fields tray: alphabetical + whole-row restore (Dave 2026-10-19)
+- Hidden fields now list alphabetically by label.
+- Clicking anywhere on a hidden-field row restores the field (data-show-field moved from the "show" button to the whole row; the button stays as the visible affordance); rows show a pointer cursor.
+
 ## 2026-10-18
 ### Info panel — every field now reorderable from the panel; Buddy fields removed from Settings (Dave 2026-10-18)
 - The compact attr-head headers (About, A.K.A., Parents, Persona, Voice, Private notes, Shared notes) now carry the ⋮⋮ drag grip, so every field can be reordered right from the info panel — previously Settings was the only reorder path for these.
