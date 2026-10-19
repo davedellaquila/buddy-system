@@ -1,297 +1,159 @@
+<!-- DEFAULT-HOMEPAGE v3 — "The Dossier" -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Tech Buddy</title>
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🤖</text></svg>"
-  <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🤖</text></svg>" />>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark light">
+<title>Tech Buddy — Buddy Dossier</title>
 <style>
-  :root {
-    --bg: #0b0f14;
-    --panel: #11161d;
-    --panel2: #161d26;
-    --line: #232d3a;
-    --txt: #dbe4ee;
-    --dim: #8b98a9;
-    --accent: #4cc2ff;
-    --green: #5ee07a;
-    --amber: #ffcf5c;
-    --red: #ff7a7a;
-    --mono: ui-monospace, "SF Mono", "Cascadia Code", Menlo, Consolas, monospace;
-  }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body {
-    background: var(--bg); color: var(--txt);
-    font-family: -apple-system, "Segoe UI", Inter, Helvetica, Arial, sans-serif;
-    line-height: 1.55; padding: 28px 20px 60px;
-  }
-  .wrap { max-width: 1080px; margin: 0 auto; }
-  header.hero {
-    background: linear-gradient(135deg, #0e2436 0%, #101a2a 60%, #121418 100%);
-    border: 1px solid var(--line); border-radius: 14px;
-    padding: 28px 28px 24px; margin-bottom: 22px;
-  }
-  .hero .kicker { color: var(--accent); font-family: var(--mono); font-size: 12px; letter-spacing: 2px; text-transform: uppercase; }
-  h1 { font-size: 34px; margin: 6px 0 8px; }
-  h1 .ico { margin-right: 8px; }
-  .mission { color: var(--dim); max-width: 72ch; font-size: 15px; }
-  .mission b { color: var(--txt); }
-  .stats { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 18px; }
-  .stat { background: rgba(76,194,255,.07); border: 1px solid var(--line); border-radius: 10px; padding: 10px 16px; min-width: 130px; }
-  .stat .n { font-size: 26px; font-weight: 700; color: var(--accent); font-family: var(--mono); }
-  .stat .l { font-size: 12px; color: var(--dim); text-transform: uppercase; letter-spacing: 1px; }
-  h2 { font-size: 18px; margin: 30px 0 12px; font-family: var(--mono); letter-spacing: .5px; }
-  h2 .tag { color: var(--dim); font-size: 12px; font-weight: 400; margin-left: 8px; }
-  .alert { border: 1px solid var(--line); border-left: 4px solid var(--amber); background: var(--panel);
-           border-radius: 8px; padding: 12px 16px; margin-bottom: 10px; display: flex; gap: 12px; align-items: flex-start; }
-  .alert.red { border-left-color: var(--red); }
-  .alert.green { border-left-color: var(--green); }
-  .alert .dot { font-size: 18px; line-height: 1.4; }
-  .alert .t { font-weight: 600; }
-  .alert .d { color: var(--dim); font-size: 13px; }
-  .alert a { color: var(--accent); }
-  .attn-actions { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
-  .attn-btn {
-    border: 1px solid var(--line); background: var(--panel2); color: var(--txt);
-    border-radius: 8px; padding: 9px 16px; font-size: 13px; font-weight: 600;
-    font-family: inherit; cursor: pointer; min-height: 40px;
-    -webkit-tap-highlight-color: transparent;
-  }
-  .attn-btn:hover { border-color: var(--accent); }
-  .attn-btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
-  .attn-btn:disabled { opacity: .45; cursor: default; }
-  .attn-status { font-size: 13px; color: var(--dim); margin-top: 8px; min-height: 18px; font-family: var(--mono); }
-  .alert.resolved { opacity: .55; }
-  .alert.resolved .attn-actions { display: none; }
-  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-  @media (max-width: 760px) { .grid2 { grid-template-columns: 1fr; } }
-  .card { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 18px; }
-  .card h3 { font-size: 15px; margin-bottom: 10px; }
-  .card h3 .loc { color: var(--dim); font-weight: 400; font-size: 12px; margin-left: 6px; }
-  .item { display: flex; justify-content: space-between; align-items: center; gap: 10px;
-          padding: 8px 0; border-top: 1px solid var(--line); font-size: 14px; }
-  .item:first-of-type { border-top: none; }
-  .item .nm { font-family: var(--mono); font-size: 13px; }
-  .item .note { color: var(--dim); font-size: 12px; display: block; }
-  .chip { font-size: 11px; font-weight: 600; padding: 3px 9px; border-radius: 20px; white-space: nowrap; font-family: var(--mono); }
-  .ok { background: rgba(94,224,122,.12); color: var(--green); border: 1px solid rgba(94,224,122,.35); }
-  .wip { background: rgba(255,207,92,.12); color: var(--amber); border: 1px solid rgba(255,207,92,.35); }
-  .todo { background: rgba(139,152,169,.12); color: var(--dim); border: 1px solid var(--line); }
-  .tutor { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; }
-  .tutor .card { background: var(--panel2); }
-  .tutor .step { color: var(--dim); font-size: 13px; margin-top: 6px; }
-  .tutor code { font-family: var(--mono); font-size: 12px; color: var(--accent); }
-  footer { margin-top: 36px; color: var(--dim); font-size: 13px; border-top: 1px solid var(--line); padding-top: 16px; }
-  footer a { color: var(--accent); text-decoration: none; }
-  footer a:hover { text-decoration: underline; }
-  .links { display: flex; gap: 16px; flex-wrap: wrap; margin-top: 8px; }
+:root{color-scheme:dark light;--bg:#0d1117;--card:#161b22;--border:#30363d;--text:#e6edf3;--muted:#8b949e;--accent:#58a6ff;--amber:#f0b429;--amber-bd:#7d5e00}
+@media (prefers-color-scheme:light){:root{--bg:#ffffff;--card:#f6f8fa;--border:#d0d7de;--text:#1f2328;--muted:#57606a;--accent:#0969da}}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;margin:0;line-height:1.6}
+.wrap{max-width:860px;margin:0 auto;padding:40px 22px 60px}
+header.hero{display:flex;gap:18px;align-items:center;margin-bottom:8px}
+.heroicon{width:72px;height:72px;flex:none;border-radius:20px;background:var(--card);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:38px}
+h1{margin:0;font-size:30px;letter-spacing:-.02em}
+.tagline{color:var(--muted);margin:6px 0 0;font-size:15px}
+.stats{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0 28px}
+.stat{font-size:12.5px;color:var(--muted);background:var(--card);border:1px solid var(--border);border-radius:999px;padding:4px 12px}
+.stat b{color:var(--text)}
+.status{font-size:12.5px;font-weight:700;border-radius:999px;padding:4px 12px;background:var(--card);border:1px solid var(--border)}
+.card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px 22px;margin-bottom:20px}
+.kicker{margin:0 0 10px;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:var(--muted)}
+.mission{font-size:16px;margin:0 0 10px}
+.brief{color:var(--muted);font-size:14px}
+.persona{font-size:14px;margin:8px 0 0}
+.facts{margin:0;display:grid;gap:2px}
+.fact{display:grid;grid-template-columns:150px 1fr;gap:12px;padding:7px 0;border-top:1px solid var(--border);font-size:14px}
+.fact:first-child{border-top:0}
+.fact dt{color:var(--muted);font-weight:600}
+.fact dd{margin:0;overflow-wrap:break-word}
+code{background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:1px 6px;font-size:13px}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
+.aitem{display:flex;gap:10px;padding:10px 0;font-size:14px}
+.aitem+.aitem{border-top:1px solid var(--border)}
+.adot{color:var(--amber);font-size:11px;line-height:2;flex:none}
+.adate{color:var(--muted);font-size:12px;margin-top:2px}
+.plan{display:flex;gap:12px;padding:12px 0}
+.plan+.plan{border-top:1px solid var(--border)}
+.picon{font-size:24px;flex:none}
+.pname{font-weight:650;font-size:15px}
+.pill{display:inline-block;font-size:11px;font-weight:700;background:var(--bg);border:1px solid var(--border);color:var(--accent);border-radius:999px;padding:2px 10px;margin-left:8px}
+.pdesc{margin:6px 0 0;color:var(--muted);font-size:13.5px}
+.pdoc{display:inline-block;margin-top:6px;font-size:13px}
+.docrow{padding:8px 0;font-size:14.5px}
+.docrow+.docrow{border-top:1px solid var(--border)}
+.kids{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px}
+.kid{display:flex;align-items:center;gap:10px;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:10px 12px;color:var(--text)}
+.kid:hover{text-decoration:none;border-color:var(--accent)}
+.kidicon{font-size:22px}
+.kidname{font-size:14px;font-weight:600}
+.connrow{display:flex;gap:12px;padding:8px 0;font-size:14px;align-items:baseline}
+.connrow+.connrow{border-top:1px solid var(--border)}
+.connlabel{flex:none;width:110px;color:var(--muted);font-weight:600;font-size:13px}
+.pinrow{padding:6px 0;font-size:14px}
+.muted{color:var(--muted);font-size:13px}
+.empty{color:var(--muted);font-style:italic;margin:4px 0}
+footer{margin-top:36px;padding-top:18px;border-top:1px solid var(--border);color:var(--muted);font-size:12.5px;text-align:center}
 
-  /* ---- brain-dump box (restyled to Tech Buddy's visual language) ---- */
-  .dumpbox {
-    background: var(--panel); border: 1px solid var(--line); border-radius: 12px;
-    padding: 20px 22px; margin: 30px 0 8px;
-  }
-  .dumpbox h2 { margin: 0 0 6px; font-size: 18px; font-family: var(--mono); letter-spacing: .5px; }
-  .dumpbox-sub { color: var(--dim); font-size: 14px; margin-bottom: 14px; }
-  .dumpbox textarea {
-    width: 100%; min-height: 96px; resize: vertical;
-    background: var(--bg); border: 1px solid var(--line); border-radius: 8px;
-    padding: 10px 12px; font-size: 14px; color: var(--txt); font-family: inherit;
-  }
-  .dumpbox textarea:focus { outline: none; border-color: var(--accent); }
-  .dumpbox textarea:disabled { opacity: .55; }
-  .dumpbox-row { display: flex; align-items: center; gap: 12px; margin-top: 10px; flex-wrap: wrap; }
-  .dumpbox-btn {
-    background: var(--accent); color: #fff; border: none; border-radius: 8px;
-    padding: 9px 22px; font-size: 14px; font-weight: 600; cursor: pointer;
-  }
-  .dumpbox-btn:disabled { opacity: .45; cursor: default; }
-  .dumpbox-status { font-size: 13px; color: var(--dim); font-family: var(--mono); }
-  .dumpbox-token {
-    background: var(--bg); border: 1px dashed var(--line); border-radius: 8px;
-    padding: 12px 14px; margin-bottom: 12px; font-size: 14px;
-  }
-  .dumpbox-token p { margin-bottom: 8px; }
-.dumpbox-connect {
-    background: var(--bg); border: 1px dashed var(--line); border-radius: 8px;
-    padding: 12px 14px; margin-bottom: 12px; font-size: 14px;
-  }
-.dumpbox-connect p { margin: 0 0 10px;  }
-  .dumpbox-tokenrow { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
-  .dumpbox-tokenrow input {
-    flex: 1; min-width: 170px; background: var(--panel); border: 1px solid var(--line);
-    border-radius: 8px; padding: 7px 10px; font-size: 13px; color: var(--txt);
-  }
-  .dumpbox-tokenrow button {
-    background: transparent; color: var(--accent); border: 1px solid var(--accent);
-    border-radius: 8px; padding: 7px 14px; font-size: 13px; font-weight: 600; cursor: pointer;
-  }
-  .dumpbox-tokenrow a { color: var(--accent); font-size: 13px; }
+.dumpbox {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px 22px;
+  margin-bottom: 32px;
+}
+.dumpbox h2 { margin: 0 0 6px; font-size: 20px; }
+.dumpbox-sub { color: var(--muted); font-size: 14px; margin-bottom: 14px; }
+.dumpbox textarea {
+  width: 100%; min-height: 96px; resize: vertical;
+  background: var(--bg); border: 1px solid var(--border); border-radius: 8px;
+  padding: 10px 12px; font-size: 14px; color: var(--text); font-family: inherit;
+}
+.dumpbox textarea:focus { outline: none; border-color: var(--accent); }
+.dumpbox textarea:disabled { opacity: .55; }
+.dumpbox-row { display: flex; align-items: center; gap: 12px; margin-top: 10px; flex-wrap: wrap; }
+.dumpbox-btn {
+  background: var(--accent); color: #fff; border: none; border-radius: 8px;
+  padding: 9px 22px; font-size: 14px; font-weight: 600; cursor: pointer;
+}
+.dumpbox-btn:disabled { opacity: .45; cursor: default; }
+.dumpbox-btn.saved { background: var(--ok); }
+.dumpbox-status { font-size: 13px; color: var(--muted); }
+.dumpbox-status.flash { color: var(--ok); font-weight: 700; }
+.dumpbox-hint { font-size: 12px; color: var(--muted); margin-top: 8px; }
+.dumpbox-token {
+  background: var(--bg); border: 1px dashed var(--border); border-radius: 8px;
+  padding: 12px 14px; margin-bottom: 12px; font-size: 14px;
+}
+.dumpbox-token p { margin-bottom: 8px; }
+.dumpbox-tokenrow { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.dumpbox-tokenrow input {
+  flex: 1; min-width: 170px; background: var(--card); border: 1px solid var(--border);
+  border-radius: 8px; padding: 7px 10px; font-size: 13px; color: var(--text);
+}
+.dumpbox-tokenrow button {
+  background: transparent; color: var(--accent); border: 1px solid var(--accent);
+  border-radius: 8px; padding: 7px 14px; font-size: 13px; font-weight: 600; cursor: pointer;
+}
+.dumpbox-tokenrow a { color: var(--accent); font-size: 13px; }
 
-  /* ---- light mode (house rule: every buddy page ships dark AND light) ---- */
-  @media (prefers-color-scheme: light) {
-    :root {
-      --bg: #f3f5f9;
-      --panel: #ffffff;
-      --panel2: #edf1f7;
-      --line: #dbe2ec;
-      --txt: #1b2430;
-      --dim: #5c6a7d;
-      --accent: #0a74b8;
-    }
-    header.hero {
-      background: linear-gradient(135deg, #dbeafa 0%, #edf3fa 60%, #f7fafc 100%);
-    }
-    .stat { background: rgba(10,116,184,.06); }
-    .dumpbox-btn { color: #fff; }
-  }
+@media (max-width:640px){.fact{grid-template-columns:1fr;gap:2px}.connlabel{width:88px}.wrap{padding:28px 16px 48px}h1{font-size:24px}}
 </style>
 </head>
 <body>
-<nav data-buddy-crumb style="padding:14px 20px 0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:14px;line-height:1.4;"><a href="https://davedellaquila.github.io/buddy-system/project-buddy/" style="color:inherit;opacity:.65;text-decoration:none;">← Project Buddy</a></nav>
-
 <div class="wrap">
+<header class="hero">
+<div class="heroicon">📱</div>
+<div><h1>Tech Buddy</h1><p class="tagline">Tech inventory + gadget tutor</p></div>
+</header>
+<nav data-buddy-crumb style="margin-bottom:14px;font-size:14px;"><a href="https://davedellaquila.github.io/buddy-system/project-buddy/" style="color:var(--muted);text-decoration:none;">← Project Buddy</a></nav><nav data-buddy-kids style="margin-bottom:18px;font-size:14px;line-height:1.9;"><span style="color:var(--muted);">Children:</span> <a href="https://davedellaquila.github.io/buddy-system/daves-apple-watch/" style="margin-right:14px;white-space:nowrap;">⌚ Dave&#x27;s Apple Watch</a> <a href="https://davedellaquila.github.io/buddy-system/daves-ipad-pro/" style="margin-right:14px;white-space:nowrap;">🖥️ Dave&#x27;s iPad Pro</a> <a href="https://davedellaquila.github.io/buddy-system/macbook-air-m2/" style="margin-right:14px;white-space:nowrap;">💻 MacBook Air M2</a> <a href="https://davedellaquila.github.io/buddy-system/nans-apple-watch/" style="margin-right:14px;white-space:nowrap;">⌚ Nan&#x27;s Apple Watch</a> <a href="https://davedellaquila.github.io/buddy-system/nans-ipad-air/" style="margin-right:14px;white-space:nowrap;">🖥️ Nan&#x27;s iPad Air</a> <a href="https://davedellaquila.github.io/buddy-system/nans-iphone-17-pro-max/" style="margin-right:14px;white-space:nowrap;">📱 Nan&#x27;s iPhone 17 Pro Max</a> <a href="https://davedellaquila.github.io/buddy-system/iphone-16e/" style="margin-right:14px;white-space:nowrap;">📱 iPhone 16e</a> <a href="https://davedellaquila.github.io/buddy-system/iphone-18-pro/" style="margin-right:14px;white-space:nowrap;">📱 iPhone 18 Pro</a></nav>
+<div class="stats"><span class="status st-brief">Mission review</span><span class="stat"><b>3</b> need attention</span><span class="stat"><b>8</b> sub-buddies</span><span class="stat"><b>1</b> documents</span></div>
+<section class="card"><h2 class="kicker">About</h2><p class="mission">Tech Buddy is your personal tech inventory plus gadget tutor — it tracks everything you own across both homes (what it is, where you bought it, warranty info), watches for relevant news, deals, and firmware updates, and walks you through using your tools step by step. Seed mission: programming the new Fiddletown Radio handhelds.</p><p class="brief">https://docs.google.com/document/d/19YGpL1uHzU94CV1Yp_qyibZtlqVd8cejjvufn1SEM3g/edit</p><p class="persona">🎭 Persona: Robot</p></section>
+<section class="card"><h2 class="kicker">Fact sheet — the data chain</h2><dl class="facts"><div class="fact"><dt>Buddy ID</dt><dd><code>tech-buddy</code></dd></div><div class="fact"><dt>Kind</dt><dd>standalone</dd></div><div class="fact"><dt>Parent chain</dt><dd><a href="../astro/">🚀 Astro</a> › <a href="../project-buddy/">🧭 Project Buddy</a></dd></div><div class="fact"><dt>Repository</dt><dd><a href="https://github.com/davedellaquila/tech-buddy" target="_blank" rel="noopener">davedellaquila/tech-buddy</a></dd></div><div class="fact"><dt>Homepage URL</dt><dd><code>tech-buddy/</code></dd></div></dl></section>
+<section class="card"><h2 class="kicker">Needs attention (3)</h2><div class="attn"><div class="aitem"><span class="adot">●</span><div><div><a href="https://docs.google.com/document/d/19YGpL1uHzU94CV1Yp_qyibZtlqVd8cejjvufn1SEM3g/edit" target="_blank" rel="noopener">Product brief ready for review — looks good, edits, or defer? ↗</a></div><div class="adate">2026-10-09</div></div></div><div class="aitem"><span class="adot">●</span><div><div>Program the new handheld radios — the seed mission (Fiddletown Radio check-in net).</div><div class="adate">2026-10-09</div></div></div><div class="aitem"><span class="adot">●</span><div><div>Lost iPhone 15 Pro Max — AppleCare+ Theft &amp; Loss claim still unfiled ($149 deductible).</div><div class="adate">2026-10-09</div></div></div></div></section>
 
-  <header class="hero">
-    <div class="kicker">buddy homepage · custom build</div>
-    <h1><span class="ico">🤖</span>Tech Buddy</h1>
-    <p class="mission">
-      Your personal <b>tech inventory plus gadget tutor</b>. I track everything you own across
-      both homes — what it is, where you bought it, warranty info — watch for relevant news,
-      deals, and firmware updates, and walk you through using your tools step by step.
-      Seed mission: <b>programming the new Fiddletown Radio handhelds</b>.
-    </p>
-    <div class="stats">
-      <div class="stat"><div class="n">2</div><div class="l">homes covered</div></div>
-      <div class="stat"><div class="n">17</div><div class="l">items inventoried</div></div>
-      <div class="stat"><div class="n">3</div><div class="l">need attention</div></div>
-      <div class="stat"><div class="n">4</div><div class="l">how-to guides</div></div>
-    </div>
-  </header>
+<section class="card"><h2 class="kicker">Documents (1)</h2><div class="docrow"><a href="https://docs.google.com/document/d/13oSD5AnVvtPR5Ie-Z1hgY95Y1Jjo3HPF5x6FTBaIMIM/edit" target="_blank" rel="noopener">Device Buddies — setup</a></div></section>
+<section class="card"><h2 class="kicker">Sub-buddies (8)</h2><div class="kids"><a class="kid" href="../daves-apple-watch/"><span class="kidicon">⌚</span><span class="kidname">Dave&#x27;s Apple Watch</span></a><a class="kid" href="../daves-ipad-pro/"><span class="kidicon">🖥️</span><span class="kidname">Dave&#x27;s iPad Pro</span></a><a class="kid" href="../macbook-air-m2/"><span class="kidicon">💻</span><span class="kidname">MacBook Air M2</span></a><a class="kid" href="../nans-apple-watch/"><span class="kidicon">⌚</span><span class="kidname">Nan&#x27;s Apple Watch</span></a><a class="kid" href="../nans-ipad-air/"><span class="kidicon">🖥️</span><span class="kidname">Nan&#x27;s iPad Air</span></a><a class="kid" href="../nans-iphone-17-pro-max/"><span class="kidicon">📱</span><span class="kidname">Nan&#x27;s iPhone 17 Pro Max</span></a><a class="kid" href="../iphone-16e/"><span class="kidicon">📱</span><span class="kidname">iPhone 16e</span></a><a class="kid" href="../iphone-18-pro/"><span class="kidicon">📱</span><span class="kidname">iPhone 18 Pro</span></a></div></section>
+<section class="card"><h2 class="kicker">Connections</h2><div class="connrow"><span class="connlabel">Parent</span><a href="../project-buddy/">🧭 Project Buddy</a></div><div class="connrow"><span class="connlabel">Siblings</span><a href="../architect-buddy/">📐 Architect Buddy</a>, <a href="../birthday-buddy/">🎂 Birthday Buddy</a>, <a href="../briefing-buddy/">📋 Briefing Buddy</a>, <a href="../buddy-types/">🧬 Buddy Buddy</a>, <a href="../buddy-suite/">🧩 Buddy Suite</a>, <a href="../charts-buddy/">📊 Charts Buddy</a>, <a href="../dpg-shop-software/">🔧 DPG Shop Software</a>, <a href="../dellaquila-com/">💼 Dellaquila.com</a>, <a href="../design-buddy/">🎨 Designer</a>, <a href="../document-buddy/">📄 Document Buddy</a>, <a href="../dream-buddy/">💭 Dream Buddy</a>, <a href="../feedback-buddy/">📣 Feedback Buddy</a>, <a href="../finance-buddy/">💰 Finance Buddy</a>, <a href="../guardian-buddy/">🛡️ Guardian Buddy</a>, <a href="../idea-buddy/">💡 Idea Buddy</a>, <a href="../job-buddy/">🔎 Job Buddy</a>, <a href="../school-buddy/">🎓 Learning Buddy</a>, <a href="../marketing-buddy/">🥃 Marketing Buddy</a>, <a href="../music-buddy/">🎵 Music Buddy</a>, <a href="../news-buddy/">📰 News Buddy</a>, <a href="../onboarding-buddy/">👋 Onboarding Buddy</a>, <a href="../persona-buddy/">🎭 Persona Buddy</a>, <a href="../portfolio-buddy/">📸 Portfolio Buddy</a>, <a href="../reminder-buddy/">⏰ Reminder Buddy</a>, <a href="../research-buddy/">🔍 Research Buddy</a>, <a href="../scaffold-buddy/">🏗️ Scaffold Buddy</a>, <a href="../sharing-buddy/">🔗 Sharing Buddy</a>, <a href="../sports-car-adventures/">🏎️ Sports Car Adventures</a>, <a href="../tv-buddy/">📺 TV Buddy</a>, <a href="../wisdom-buddy/">🦉 Wisdom Buddy</a>, <a href="../work-buddy/">💻 Work Buddy</a>, <a href="../zen-buddy/">🧘 Zen Buddy</a></div></section>
+<section class="card"><h2 class="kicker">Repository &amp; memory</h2><div class="connrow"><span class="connlabel">Repo</span><a href="https://github.com/davedellaquila/tech-buddy" target="_blank" rel="noopener">davedellaquila/tech-buddy</a> <span class="muted">— brain dumps land in docs/ingest.md</span></div></section>
 
-  <h2>⚠️ Needs your attention <span class="tag">synced from the dashboard</span></h2>
-  <div class="alert attn" data-attn-id="tech-buddy-brief">
-    <div class="dot">📋</div>
-    <div><div class="t attn-text"><a href="https://docs.google.com/document/d/19YGpL1uHzU94CV1Yp_qyibZtlqVd8cejjvufn1SEM3g/edit" target="_blank" rel="noopener">Product brief ready for review</a></div>
-    <div class="d">Looks good, edits, or defer? Next step after review: decide whether to go to a PRD.</div>
-    <div class="attn-actions"><button class="attn-btn primary" data-act="done">✓ Done</button><button class="attn-btn" data-act="info">Need more info</button></div>
-    <div class="attn-status" role="status"></div></div>
-  </div>
-  <div class="alert red attn" data-attn-id="tech-buddy-radios">
-    <div class="dot">📻</div>
-    <div><div class="t attn-text">Program the new handheld radios — the seed mission</div>
-    <div class="d">The Fiddletown Radio check-in net needs these programmed. This is the first real job Tech Buddy was built for — once the brief is approved, this becomes guide #1.</div>
-    <div class="attn-actions"><button class="attn-btn primary" data-act="done">✓ Done</button><button class="attn-btn" data-act="info">Need more info</button></div>
-    <div class="attn-status" role="status"></div></div>
-  </div>
-  <div class="alert red attn" data-attn-id="tech-buddy-iphone-claim">
-    <div class="dot">📱</div>
-    <div><div class="t attn-text">Lost iPhone 15 Pro Max — AppleCare+ claim still unfiled</div>
-    <div class="d">AppleCare+ with Theft and Loss (LAS2140621) covers it, $149 deductible. File via <a href="https://www.icloud.com/find" target="_blank" rel="noopener">icloud.com/find</a> (mark as lost first) or aigtheftandloss.com. You're on the iPhone 16e for now.</div>
-    <div class="attn-actions"><button class="attn-btn primary" data-act="done">✓ Done</button><button class="attn-btn" data-act="info">Need more info</button></div>
-    <div class="attn-status" role="status"></div></div>
-  </div>
-
-  <h2>🏠 The inventory <span class="tag">seed inventory — verified items only, growing</span></h2>
-  <div class="grid2">
-    <div class="card">
-      <h3>🌲 Fiddletown <span class="loc">Cedar Pines Dr</span></h3>
-      <div class="item"><div><span class="nm">Handheld radios (new)</span><span class="note">Fiddletown Radio check-in net</span></div><span class="chip todo">TO DO</span></div>
-      <div class="item"><div><span class="nm">2025 Sundance Optima hot tub</span><span class="note">880 series · filter 6540-488S</span></div><span class="chip ok">TRACKED</span></div>
-      <div class="item"><div><span class="nm">Siri hot tub voice control</span><span class="note">tub.py CLI + Shortcuts bridge, localhost</span></div><span class="chip ok">BUILT</span></div>
-      <div class="item"><div><span class="nm">Leviton Decora Smart Wi-Fi 2nd gen</span><span class="note">D215S × most switches · one paddle still unidentified</span></div><span class="chip wip">IN PROGRESS</span></div>
-      <div class="item"><div><span class="nm">Leviton D2MSD-1RW</span><span class="note">motion-sensor dimmer, white-only</span></div><span class="chip ok">TRACKED</span></div>
-      <div class="item"><div><span class="nm">Polaris Ranger 700</span><span class="note">broken CV boot — replacement to order + install</span></div><span class="chip wip">IN PROGRESS</span></div>
-      <div class="item"><div><span class="nm">2-post car lift + home shop</span><span class="note">enclosed trailer, decent tools, cabin gym</span></div><span class="chip ok">TRACKED</span></div>
-    </div>
-    <div class="card">
-      <h3>🏙️ San Jose <span class="loc">Lenwood Way</span></h3>
-      <div class="item"><div><span class="nm">iPhone 16e (256GB)</span><span class="note">current daily driver · Apple Watch re-paired</span></div><span class="chip ok">TRACKED</span></div>
-      <div class="item"><div><span class="nm">PS4 + PSVR1</span><span class="note">ARC audio route to HomePods via Apple TV 4K</span></div><span class="chip wip">IN PROGRESS</span></div>
-      <div class="item"><div><span class="nm">Apple TV 4K + HomePods</span><span class="note">PS4 audio bridge — needs HDMI ARC/eARC</span></div><span class="chip wip">IN PROGRESS</span></div>
-      <div class="item"><div><span class="nm">Thrustmaster T.Flight Hotas 4</span><span class="note">PS4 stick · Logitech joystick stays on the Mac</span></div><span class="chip todo">TO SOURCE</span></div>
-      <div class="item"><div><span class="nm">DeWalt 20V platform</span><span class="note">DCST925B trimmer — Home Depot pickup $129</span></div><span class="chip wip">IN PROGRESS</span></div>
-    </div>
-  </div>
-  <div class="grid2" style="margin-top:16px">
-    <div class="card">
-      <h3>💻 Digital &amp; licenses</h3>
-      <div class="item"><div><span class="nm">CrossOver license</span><span class="note">account-based · codeweavers.com · CrossOver+ Mac</span></div><span class="chip ok">TRACKED</span></div>
-      <div class="item"><div><span class="nm">AppleCare+ Theft &amp; Loss</span><span class="note">iPhone 15 Pro Max · expires Apr 2, 2027 · claim OPEN</span></div><span class="chip wip">ACTION</span></div>
-      <div class="item"><div><span class="nm">Pocket Casts</span><span class="note">podcast app of choice · no listening sync yet</span></div><span class="chip todo">TO DO</span></div>
-    </div>
-    <div class="card">
-      <h3>🔭 On my radar</h3>
-      <div class="item"><div><span class="nm">F/A-18 flight-sim shortlist</span><span class="note">PSVR1 experiences + DCS F/A-18C (Mac won't run it)</span></div><span class="chip todo">RESEARCH</span></div>
-      <div class="item"><div><span class="nm">Firmware &amp; deal watch</span><span class="note">Leviton, Sundance, DeWalt, Apple — alerts land here</span></div><span class="chip todo">ARMED</span></div>
-    </div>
-  </div>
-
-  <h2>🎓 Gadget tutor <span class="tag">walk-throughs, step by step</span></h2>
-  <div class="tutor">
-    <div class="card">
-      <h3>📻 Program the handheld radios</h3>
-      <div class="step">Seed mission. Frequencies, channels, and the check-in net routine — the first full Tech Buddy walkthrough. <b>Starts when the brief is approved.</b></div>
-    </div>
-    <div class="card">
-      <h3>🛁 Voice-control the hot tub</h3>
-      <div class="step">Already built: <code>tub.py status | lights | jets | temp</code>, Siri Shortcuts bridge on localhost. Guide covers the Shortcut recipes + launchd setup.</div>
-    </div>
-    <div class="card">
-      <h3>🔊 PS4 audio → HomePods</h3>
-      <div class="step">In progress: PS4 → TV (HDMI ARC/eARC) → Apple TV 4K → HomePods. Walkthrough tracks the ARC setup as it lands.</div>
-    </div>
-    <div class="card">
-      <h3>✈️ Fly the F/A-18 (someday)</h3>
-      <div class="step">PSVR1 flight-sim options researched; the stick question is settled (Thrustmaster for PS4). Guide when a sim is picked.</div>
-    </div>
-  </div>
-
-  <section class="dumpbox" data-buddy-id="tech-buddy">
-    <h2>🧠 Brain dump</h2>
-    <p class="dumpbox-sub">Dump what's on your mind about Tech Buddy — raw and unfiltered. Each dump lands in the buddy's repo (docs/ingest.md) as a timestamped entry.</p>
-    <div class="dumpbox-connect" hidden>
-    <p>🔒 Connect GitHub to unlock dumping. Paste a token once — it stays on this device only.</p>
-    <button type="button" class="dumpbox-btn">Connect GitHub to enable</button>
-    </div>
-    <div class="dumpbox-token" hidden>
-      <p>🔒 Connect GitHub to unlock dumping. Paste a token once — it stays on this device only.</p>
-      <div class="dumpbox-tokenrow">
-        <input type="password" placeholder="GitHub token (repo scope)" aria-label="GitHub token">
-        <button type="button">Save token</button>
-        <a href="https://github.com/settings/tokens" target="_blank" rel="noopener">Get a token</a>
-      </div>
-    </div>
-    <textarea rows="4" placeholder="Dump what's on your mind about Tech Buddy…"></textarea>
-    <div class="dumpbox-row">
-      <button type="button" class="dumpbox-btn">Dump it</button>
-      <span class="dumpbox-status" role="status"></span>
-    </div>
-  </section>
-
-  <footer>
-    Tech Buddy keeps your gear list so you don't have to. Spotted something missing or wrong? Tell me in the thread and I'll update it.
-    <div class="links">
-      <a href="https://docs.google.com/document/d/19YGpL1uHzU94CV1Yp_qyibZtlqVd8cejjvufn1SEM3g/edit">📄 Product Brief</a>
-      <a href="https://github.com/davedellaquila/tech-buddy">💻 tech-buddy repo</a>
-      <a href="https://davedellaquila.github.io/buddy-tree/">🌳 Buddies dashboard</a>
-    </div>
-  </footer>
-
+<section class="dumpbox" data-buddy-id="tech-buddy">
+<h2>🧠 Brain dump</h2>
+<p class="dumpbox-sub">Dump what's on your mind about <span data-buddy-name>Tech Buddy</span> — raw and unfiltered. Each dump lands in the buddy's repo (docs/ingest.md) as a timestamped entry — or saves on this device until a repo is linked and a token is connected.</p>
+<div class="dumpbox-token" hidden>
+<p>🔒 Connect GitHub to unlock dumping. Paste a token once — it stays on this device only.</p>
+<div class="dumpbox-tokenrow">
+<input type="password" placeholder="GitHub token (repo scope)" aria-label="GitHub token">
+<button type="button">Save token</button>
+<a href="https://github.com/settings/tokens" target="_blank" rel="noopener">Get a token</a>
 </div>
+</div>
+<textarea rows="4" placeholder="Dump what's on your mind about Tech Buddy…"></textarea>
+<div class="dumpbox-row">
+<button type="button" class="dumpbox-btn">Dump it</button>
+<span class="dumpbox-status" role="status"></span>
+</div>
+<p class="dumpbox-hint">Enter dumps it &middot; Shift+Enter for a new line</p>
+</section>
+
+<footer>Default Homepage v3 — "The Dossier" · Generated 2026-10-19 · Part of the Buddy System<br>
+<span class="muted">Archived PDF snapshots live in the buddy-system archive folder.</span></footer>
+</div>
+
 <script>
-// ---- dump-box JS (self-contained; no dependencies) ----
 (function(){
   var box = document.querySelector('.dumpbox');
   if (!box || box.dataset.dumpInit) return;
   box.dataset.dumpInit = '1';
   var bid = box.getAttribute('data-buddy-id') || (function(){
-    var p = location.pathname.replace(/\/+$/, '');
+    var p = location.pathname.replace(/\\/+$/, '');
     return p.substring(p.lastIndexOf('/') + 1);
   })();
   var ta = box.querySelector('textarea'),
-      btn = box.querySelector('.dumpbox-row .dumpbox-btn'),
+      btn = box.querySelector('.dumpbox-btn'),
       st = box.querySelector('.dumpbox-status'),
       tokWrap = box.querySelector('.dumpbox-token');
   function lsGet(){ try { return JSON.parse(localStorage.getItem('buddyTree.v3') || '{}'); } catch(e){ return {}; } }
@@ -317,7 +179,7 @@
     try {
       var j = await ghApi('/repos/davedellaquila/' + repo + '/contents/' + path);
       if (j && j.content) return {
-        text: new TextDecoder().decode(Uint8Array.from(atob(j.content.replace(/\n/g, '')), function(c){ return c.charCodeAt(0); })),
+        text: new TextDecoder().decode(Uint8Array.from(atob(j.content.replace(/\\n/g, '')), function(c){ return c.charCodeAt(0); })),
         sha: j.sha
       };
     } catch(e){}
@@ -350,106 +212,127 @@
   }
   function localClear(){ try { localStorage.removeItem(localKey()); } catch(e){} }
   function refreshUI(){
-  var has = !!token();
-  tokWrap.hidden = has;
-  /* The box always works: no token and/or no repo just means local saves. */
-  ta.disabled = false;
-  btn.disabled = false;
-  var n = localBacklog().length;
-  if (!repo) {
-    st.textContent = n
-      ? n + ' local ' + (n === 1 ? 'dump' : 'dumps') + ' saved on this device — will sync when a repo is linked.'
-      : 'No repo linked yet — dumps save on this device and will sync when one is linked.';
-    return;
-  }
-  st.textContent = has
-    ? (n ? n + ' local ' + (n === 1 ? 'dump' : 'dumps') + ' will sync on next dump.' : '')
-    : 'No GitHub token — dumps save on this device for now.';
+    var has = !!token();
+    tokWrap.hidden = has;
+    /* The box always works: no token and/or no repo just means local saves. */
+    ta.disabled = false;
+    btn.disabled = false;
+    var n = localBacklog().length;
+    if (!repo) {
+      st.textContent = n
+        ? n + ' local ' + (n === 1 ? 'dump' : 'dumps') + ' saved on this device — will sync when a repo is linked.'
+        : 'No repo linked yet — dumps save on this device and will sync when one is linked.';
+      return;
+    }
+    st.textContent = has
+      ? (n ? n + ' local ' + (n === 1 ? 'dump' : 'dumps') + ' will sync on next dump.' : '')
+      : 'No GitHub token — dumps save on this device for now.';
   }
   var tokInput = tokWrap.querySelector('input'),
       tokSave = tokWrap.querySelector('button');
+  /* Visual save confirmation (Dave 2026-10-16): the button flashes green
+     with a ✓ for ~2s on every successful save, so the save is unmissable. */
+  function flashSaved(){
+    var label = btn.textContent;
+    btn.classList.add('saved');
+    btn.textContent = '✓ Saved';
+    st.classList.add('flash');
+    setTimeout(function(){
+      btn.classList.remove('saved');
+      if (btn.textContent === '✓ Saved') btn.textContent = label;
+      st.classList.remove('flash');
+    }, 1800);
+  }
+  /* Dave 2026-10-18: verify the token against GitHub when pasted, so a
+     bad token is caught here instead of surfacing as a mysterious 404 on
+     the next dump. The token is kept either way; dumps queue locally until
+     a working token is in place. */
   tokSave.addEventListener('click', async function(){
-  var v = tokInput.value.trim();
-  if (!v) return;
-  lsSet({ghToken: v});
-  tokInput.value = '';
-  st.textContent = 'Checking token…';
-  try {
-    await ghApi('/user');
-    refreshUI();
-    st.textContent = '✓ Token verified — dumps will sync to GitHub.';
-  } catch(e) {
-    refreshUI();
-    st.textContent = '⚠ GitHub rejected that token (' + ((e && e.message) || e) + ') — dumps stay on this device until a working token is added.';
-  }
-});
-async function dump(){
-  var text = ta.value.trim();
-  if (!text) return;
-  var stamp = new Date().toLocaleString();
-  var NL = String.fromCharCode(10);
-  if (!repo) {
-    /* No repo linked yet — save on this device; syncs once one is linked. */
-    localSave({t: stamp, text: text});
-    ta.value = '';
-    st.textContent = '✓ Saved on this device — will sync to the repo once one is linked.';
-    refreshUI();
-    return;
-  }
-  if (!token()) {
-    /* Temporary workaround: no token → save on this device. */
-    localSave({t: stamp, text: text});
-    ta.value = '';
-    st.textContent = '✓ Saved on this device — add a GitHub token to sync it to the repo.';
-    return;
-  }
-  st.textContent = 'Dumping…';
-  btn.disabled = true;
-  try {
-    /* Flush any locally-saved backlog first, then the new entry. */
-    var backlog = localBacklog();
-    var parts = backlog.map(function(b){ return '## ' + b.t + NL + NL + b.text + NL + NL; });
-    parts.push('## ' + stamp + NL + NL + text + NL + NL);
-    var cur = await ghGetFile(repo, 'docs/ingest.md');
-    var base = cur ? cur.text : '# Ingest log — ' + repoName + NL + NL;
-    var body = {message: 'Ingest dump for ' + bid, content: b64encode(base + parts.join(''))};
-    if (cur && cur.sha) body.sha = cur.sha;
-    await ghApi('/repos/davedellaquila/' + repo + '/contents/docs/ingest.md', 'PUT', body);
-    localClear();
-    ta.value = '';
-    st.textContent = '✓ Dumped to ' + repo + '/docs/ingest.md' + (backlog.length ? ' (' + backlog.length + ' local synced)' : '');
+    var v = tokInput.value.trim();
+    if (!v) return;
+    lsSet({ghToken: v});
+    tokInput.value = '';
+    st.textContent = 'Checking token…';
+    try {
+      await ghApi('/user');
+      refreshUI();
+      st.textContent = '✓ Token verified — dumps will sync to GitHub.';
+    } catch(e) {
+      refreshUI();
+      st.textContent = '⚠ GitHub rejected that token (' + ((e && e.message) || e) + ') — dumps stay on this device until a working token is added.';
+    }
+  });
+  async function dump(){
+    var text = ta.value.trim();
+    if (!text) return;
+    var stamp = new Date().toLocaleString();
+    var NL = String.fromCharCode(10);
+    if (!repo) {
+      /* No repo linked yet — save on this device; syncs once one is linked. */
+      localSave({t: stamp, text: text});
+      ta.value = '';
+      refreshUI();
+      st.textContent = '✓ Saved on this device — will sync to the repo once one is linked.';
+      flashSaved();
+      return;
+    }
+    if (!token()) {
+      /* Temporary workaround: no token → save on this device. */
+      localSave({t: stamp, text: text});
+      ta.value = '';
+      st.textContent = '✓ Saved on this device — add a GitHub token to sync it to the repo.';
+      flashSaved();
+      return;
+    }
+    st.textContent = 'Dumping…';
+    btn.disabled = true;
+    try {
+      /* Flush any locally-saved backlog first, then the new entry. */
+      var backlog = localBacklog();
+      var parts = backlog.map(function(b){ return '## ' + b.t + NL + NL + b.text + NL + NL; });
+      parts.push('## ' + stamp + NL + NL + text + NL + NL);
+      var cur = await ghGetFile(repo, 'docs/ingest.md');
+      var base = cur ? cur.text : '# Ingest log — ' + repoName + NL + NL;
+      var body = {message: 'Ingest dump for ' + bid, content: b64encode(base + parts.join(''))};
+      if (cur && cur.sha) body.sha = cur.sha;
+      await ghApi('/repos/davedellaquila/' + repo + '/contents/docs/ingest.md', 'PUT', body);
+      localClear();
+      ta.value = '';
+      st.textContent = '✓ Dumped to ' + repo + '/docs/ingest.md' + (backlog.length ? ' (' + backlog.length + ' local synced)' : '');
+      flashSaved();
     } catch(err){
-    /* Dave 2026-10-18: a failed GitHub write must never drop the dump.
-       Keep it on this device and say so plainly, with the backlog count -
-       it syncs on the next successful dump. */
-    try { localSave({t: stamp, text: text}); } catch(e2){}
-    ta.value = '';
-    refreshUI();
-    var why = (err && err.message) || String(err);
-    var nq = 0; try { nq = localBacklog().length; } catch(e2){}
-    var tail = nq > 1 ? ' (' + nq + ' on this device waiting to sync)' : '';
-    st.textContent = (/404/.test(why)
-      ? '⚠ Saved on this device — GitHub said 404 (usually a wrong/expired token, or no access to this private repo). Fix the token, then dump again to sync.'
-      : '⚠ Saved on this device — GitHub said: ' + why + '. It will sync on your next successful dump.') + tail;
-  }
-  btn.disabled = false;
+      /* Dave 2026-10-18: a failed GitHub write must never drop the dump.
+         Keep it on this device and say so plainly, with the backlog count —
+         it syncs on the next successful dump. */
+      try { localSave({t: stamp, text: text}); } catch(e2){}
+      ta.value = '';
+      refreshUI();
+      var why = (err && err.message) || String(err);
+      var nq = 0; try { nq = localBacklog().length; } catch(e2){}
+      var tail = nq > 1 ? ' (' + nq + ' on this device waiting to sync)' : '';
+      st.textContent = (/404/.test(why)
+        ? '⚠ Saved on this device — GitHub said 404 (usually a wrong/expired token, or no access to this private repo). Fix the token, then dump again to sync.'
+        : '⚠ Saved on this device — GitHub said: ' + why + '. It will sync on your next successful dump.') + tail;
+    }
+    btn.disabled = false;
   }
   btn.addEventListener('click', dump);
   ta.addEventListener('keydown', function(ev){
-    if ((ev.metaKey || ev.ctrlKey) && ev.key === 'Enter') { ev.preventDefault(); dump(); }
+    /* Dave 2026-10-16: plain Return dumps, like the button. Shift+Return for a newline. */
+    if (ev.key === 'Enter' && !ev.shiftKey && !ev.altKey) { ev.preventDefault(); dump(); }
   });
   resolveRepo().then(refreshUI);
 })();
-
 </script>
+
+
 <script>
-// ---- attention actions: per-tile Done / Need more info (Dave-approved rollout) ----
 (function(){
   var tiles = document.querySelectorAll('.attn[data-attn-id]');
   if (!tiles.length) return;
   var dumpbox = document.querySelector('.dumpbox');
   var bid = (dumpbox && dumpbox.getAttribute('data-buddy-id')) || (function(){
-    var p = location.pathname.replace(/\/+$/, '');
+    var p = location.pathname.replace(/\\/+$/, '');
     return p.substring(p.lastIndexOf('/') + 1);
   })();
   function lsGet(){ try { return JSON.parse(localStorage.getItem('buddyTree.v3') || '{}'); } catch(e){ return {}; } }
@@ -475,7 +358,7 @@ async function dump(){
     try {
       var j = await ghApi('/repos/davedellaquila/' + repo + '/contents/' + path);
       if (j && j.content) return {
-        text: new TextDecoder().decode(Uint8Array.from(atob(j.content.replace(/\n/g, '')), function(c){ return c.charCodeAt(0); })),
+        text: new TextDecoder().decode(Uint8Array.from(atob(j.content.replace(/\\n/g, '')), function(c){ return c.charCodeAt(0); })),
         sha: j.sha
       };
     } catch(e){}
@@ -507,7 +390,7 @@ async function dump(){
   async function sendAction(tile, entry, okMsg){
     var st = tile.querySelector('.attn-status');
     var btns = tile.querySelectorAll('.attn-btn');
-    if (!token()) { st.textContent = 'Add a GitHub token in the Brain dump section below to enable actions.'; return false; }
+    if (!token()) { st.textContent = 'Add a GitHub token in the Brain dump section above to enable actions.'; return false; }
     if (!repo) { st.textContent = 'No repo linked for this buddy yet.'; return false; }
     btns.forEach(function(b){ b.disabled = true; });
     st.textContent = 'Working…';
@@ -551,5 +434,6 @@ async function dump(){
   resolveBuddy();
 })();
 </script>
+
 </body>
 </html>
