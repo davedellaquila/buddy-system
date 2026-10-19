@@ -2096,6 +2096,161 @@ function effParents(b){
 }
 function normParents(p){ if (p === null || p === undefined) return []; return Array.isArray(p) ? p.slice() : [p]; }
 function parentsEqual(a, b){ const na = normParents(a), nb = normParents(b); return na.length === nb.length && na.every((x, i) => x === nb[i]); }
+/* ---- Type-aware relationship vocabulary (Dave 2026-10-19) ----
+   Spec: ~/workspace/buddy-vocabulary/type-vocabulary.md. Relationship words
+   key off the EDGE (parent type -> child type), never either buddy alone.
+   One set per section, unanimously; any mix falls back to generic.
+   'Linked buddies' is deliberately never vocabularised (links cross types). */
+const VOCAB = {
+  generic:    { upS:'parent', upP:'Parents', upHead:'PARENTS', upCount:true, tipWord:'parents',
+                downS:'child', downP:'Children', acrossS:'peer', acrossP:'Peers', belongs:null },
+  org:        { upS:'manager', upP:'Managers', upHead:'MANAGER', upCount:false, tipWord:'manager',
+                downS:'direct report', downP:'Direct reports', acrossS:'peer', acrossP:'Peers',
+                belongs:function(n){ return 'Reports to ' + n; } },
+  membership: { upS:'group', upP:'Groups', upHead:'GROUP', upCount:false, tipWord:'group',
+                downS:'member', downP:'Members', acrossS:'fellow member', acrossP:'Fellow members',
+                belongs:function(n){ return 'Member of ' + n; } },
+  family:     { upS:'parent', upP:'Parents', upHead:'PARENTS', upCount:true, tipWord:'parents',
+                downS:'child', downP:'Children', acrossS:'sibling', acrossP:'Siblings', belongs:null },
+  collection: { upS:'collection', upP:'Collections', upHead:'COLLECTION', upCount:false, tipWord:'collection',
+                downS:'vehicle', downP:'Vehicles', acrossS:'peer', acrossP:'Peers',
+                belongs:function(){ return 'In the collection'; } },
+};
+/* People-groups whose members are kin: family words (incl. 'Siblings') apply
+   on their person edges. Other rosters (Acquaintances, Testers) take
+   membership words and keep 'Peers' across. */
+const KIN_GROUPS = { 'ron-mei':1, 'dellaquilas-buddy':1, 'dave-nancy':1, 'em-sarah':1 };
+function buddyType(b){ return (b && b.type) || null; }
+function vocabCap(s){ return s ? s.charAt(0).toUpperCase() + s.slice(1) : s; }
+/* The set governing ONE edge: parent p -> child c (buddy objects; c may be
+   null when only the parent's side matters, e.g. collection detection). */
+function edgeVocab(p, c){
+  if (!p) return VOCAB.generic;
+  if (p.vocab && VOCAB[p.vocab]) return VOCAB[p.vocab];
+  const pt = buddyType(p), ct = c ? buddyType(c) : null;
+  if (pt === 'collection') return VOCAB.collection;
+  if (pt === 'assistant') return ct === 'assistant' ? VOCAB.org : VOCAB.generic;
+  if (pt === 'people-group') {
+    if (ct === 'person' && KIN_GROUPS[p.id]) return VOCAB.family;
+    return VOCAB.membership;
+  }
+  if (pt === 'person') return ct === 'person' ? VOCAB.family : VOCAB.generic;
+  return VOCAB.generic;
+}
+function unanimousVocab(sets){
+  if (!sets.length) return null;
+  return sets.every(s => s === sets[0]) ? sets[0] : VOCAB.generic;
+}
+/* Words for b's up-section: every parent's edge must agree. */
+function upVocab(b){
+  const ps = effParents(b).map(pid => byId[pid]).filter(Boolean);
+  if (!ps.length) return VOCAB.generic;
+  return unanimousVocab(ps.map(p => edgeVocab(p, b))) || VOCAB.generic;
+}
+/* Words for b's down-section: b's type frames the set; children must agree. */
+function downVocab(b){
+  if (b.vocab && VOCAB[b.vocab]) return VOCAB[b.vocab];
+  const t = buddyType(b);
+  if (t === 'collection') return VOCAB.collection;
+  const kids = (kidsOf[b.id] || []).filter(k => k && k.id !== b.id);
+  if (!kids.length) {
+    if (t === 'assistant') return VOCAB.org;
+    if (t === 'person') return VOCAB.family;
+    if (t === 'people-group') return KIN_GROUPS[b.id] ? VOCAB.family : VOCAB.membership;
+    return VOCAB.generic;
+  }
+  return unanimousVocab(kids.map(k => edgeVocab(b, k))) || VOCAB.generic;
+}
+function peersOf(b){
+  const parIds = {}; effParents(b).forEach(p => { parIds[p] = 1; });
+  const seen = {}; const sibs = [];
+  Object.keys(parIds).forEach(par => {
+    (kidsOf[par] || []).forEach(k => {
+      if (k && k.id !== b.id && !parIds[k.id] && !seen[k.id]) { seen[k.id] = 1; sibs.push(k); }
+    });
+  });
+  return sibs;
+}
+/* Across set for one shared parent pid of buddies x and y. 'Siblings' only
+   when the shared parent is a person or a kin group AND both are people. */
+function acrossSetFor(pid, x, y){
+  const p = byId[pid]; if (!p) return VOCAB.generic;
+  const pt = buddyType(p);
+  if ((pt === 'person' || (pt === 'people-group' && KIN_GROUPS[pid])) && buddyType(x) === 'person' && buddyType(y) === 'person') return VOCAB.family;
+  if (pt === 'people-group') return VOCAB.membership;
+  return VOCAB.generic;
+}
+function acrossVocab(b, sibs){
+  const myPs = effParents(b);
+  let found = null, conflict = false;
+  (sibs || []).forEach(s => {
+    effParents(s).filter(p => myPs.indexOf(p) >= 0).forEach(pid => {
+      const set = acrossSetFor(pid, b, s);
+      if (!found) found = set; else if (found !== set) conflict = true;
+    });
+  });
+  return conflict ? VOCAB.generic : (found || VOCAB.generic);
+}
+/* Across words keyed to ref alone (add-a-peer dialog, where the peer set may
+   be empty): derive from ref's parents. */
+function acrossVocabForRef(ref){
+  const sibs = peersOf(ref);
+  if (sibs.length) return acrossVocab(ref, sibs);
+  let found = null, conflict = false;
+  effParents(ref).forEach(pid => {
+    const set = acrossSetFor(pid, ref, ref);
+    if (!found) found = set; else if (found !== set) conflict = true;
+  });
+  return conflict ? VOCAB.generic : (found || VOCAB.generic);
+}
+/* Words for a not-yet-existing parent of ref: ref's current up-set when
+   unanimous, else the set ref's own type implies. Collection gets no
+   picker/dialog language (membership + generic verbs cover its adds). */
+function newParentVocab(ref){
+  const ps = effParents(ref).map(pid => byId[pid]).filter(Boolean);
+  if (ps.length) {
+    const u = unanimousVocab(ps.map(p => edgeVocab(p, ref)));
+    if (u && u !== VOCAB.collection) return u;
+  }
+  const t = buddyType(ref);
+  if (t === 'person') return VOCAB.family;
+  if (t === 'assistant') return VOCAB.org;
+  return VOCAB.generic;
+}
+function pickerVocab(b){
+  const v = upVocab(b);
+  return v === VOCAB.collection ? VOCAB.generic : v;
+}
+/* New-buddy sheet: tabs key off the REFERENCE buddy's type alone. */
+function sheetVocabFor(ref){
+  if (!ref) return VOCAB.generic;
+  let v = null;
+  if (ref.vocab && VOCAB[ref.vocab]) v = VOCAB[ref.vocab];
+  else {
+    const t = buddyType(ref);
+    if (t === 'assistant') v = VOCAB.org;
+    else if (t === 'person') v = VOCAB.family;
+    else if (t === 'people-group') v = KIN_GROUPS[ref.id] ? VOCAB.family : VOCAB.membership;
+    else if (t === 'collection') v = VOCAB.collection;
+  }
+  return (v && v !== VOCAB.collection) ? v : VOCAB.generic;
+}
+function addedParentToast(parentB, subjectB){
+  const set = edgeVocab(parentB, subjectB);
+  const pn = dispName(parentB), sn = dispName(subjectB);
+  if (set === VOCAB.collection) return sn + ' added to the collection.';
+  if (set === VOCAB.org) return pn + ' added as manager of ' + sn + '.';
+  if (set === VOCAB.membership) return sn + ' is now a member of ' + pn + '.';
+  return pn + ' added as a parent of ' + sn + '.';
+}
+function fieldLabelFor(fid, b){
+  const def = FIELD_DEFS.find(f => f.id === fid);
+  if (!b) return def ? def.label : fid;
+  if (fid === 'reports') return downVocab(b).downP;
+  if (fid === 'siblings') return acrossVocab(b, peersOf(b)).acrossP;
+  if (fid === 'parent') { const v = upVocab(b); return v.upCount ? v.upP : vocabCap(v.upS); }
+  return def ? def.label : fid;
+}
 function isDormant(bid){ return !!(S.dormant && S.dormant[bid]); }
 function setDormant(bid, val){
   if (!S.dormant || typeof S.dormant !== 'object') S.dormant = {};
@@ -2957,11 +3112,10 @@ function renderBpHiddenBar(){
   const build = wrap.querySelector('.bp-build');
   const old = wrap.querySelector(':scope > .bp-hiddenbar');
   if (old) old.remove();
+  const curVb = document.getElementById('view-buddy');
+  const curB = curVb && curVb.dataset.buddy ? byId[curVb.dataset.buddy] : null;
   const hidden = getFieldOrder().filter(fid => S.fieldHidden && S.fieldHidden[fid])
-    .map(fid => {
-      const def = FIELD_DEFS.find(f => f.id === fid);
-      return {fid, label: def ? def.label : fid};
-    })
+    .map(fid => ({fid, label: fieldLabelFor(fid, curB)}))
     .sort((a, b) => a.label.toLowerCase().localeCompare(b.label.toLowerCase()));
   if (!hidden.length) return;
   const bar = document.createElement('div');
@@ -4192,35 +4346,38 @@ function renderBuddy(id){
   let reportsSec = '';
   (function(){
     const kids = (kidsOf[id] || []).filter(k => k && k.id !== id);
-    const addBtn = '<button class="bp-circle-add" data-addbuddy="child" data-for="'+escHtml(id)+'" title="Add a child buddy below this one" aria-label="Add a child buddy">⊕</button>';
+    const dv = downVocab(b);
+    const addBtn = '<button class="bp-circle-add" data-addbuddy="child" data-for="'+escHtml(id)+'" title="Add a '+dv.downS+' buddy below this one" aria-label="Add a '+dv.downS+' buddy">⊕</button>';
     const rows = kids.map(k =>
       '<a class="art-row" data-buddy="'+escHtml(k.id)+'">'
       + '<span class="art-ic">'+escHtml(k.icon || '')+'</span>'
       + '<span><span class="art-label">'+escHtml(dispName(k))+'</span><div class="art-sub">'+escHtml((k.tagline || k.mission || '').slice(0, 90))+'</div></span>'
       + '<span class="art-go" data-homepage="'+escHtml(k.id)+'" title="Open homepage">\\u2192</span></a>').join('');
-    reportsSec = '<div class="bp-sec" data-field="reports"><h3>Children <span class="attn-count">('+kids.length+')</span>' + addBtn + '</h3>' + (rows || '<p class="bp-empty">No children yet.</p>') + '</div>';
+    reportsSec = '<div class="bp-sec" data-field="reports"><h3>'+dv.downP+' <span class="attn-count">('+kids.length+')</span>' + addBtn + '</h3>' + (rows || '<p class="bp-empty">No '+dv.downP.toLowerCase()+' yet.</p>') + '</div>';
   })();
   let parSec = '';
   /* Dave 2026-10-15: multi-parent — list every parent with its own remove
      button; "+ Add parent" opens the picker in add mode. */
   (function(){
     const pars = effParents(b).filter(pid => pid && byId[pid]);
-    const tip = 'This buddy\u2019s parents in the hierarchy.';
-    const addBtn = '<button class="pill-btn" data-addparent="'+escHtml(id)+'" title="Add another parent">+ Add parent</button>';
+    const uv = upVocab(b);
+    const uvBtn = uv === VOCAB.collection ? VOCAB.generic : uv;
+    const tip = 'This buddy\u2019s ' + uv.tipWord + ' in the hierarchy.';
+    const addBtn = '<button class="pill-btn" data-addparent="'+escHtml(id)+'" title="Add another '+uvBtn.upS+'">+ Add '+uvBtn.upS+'</button>';
     if (!pars.length) {
       parSec = '<div class="bp-sec" data-field="parent">'
-        + attrHead('parent', 'PARENTS', '<span class="attr-value attr-none">Top level</span>', addBtn, tip)
+        + attrHead('parent', uv.upHead, '<span class="attr-value attr-none">Top level</span>', addBtn, tip)
         + '</div>';
       return;
     }
     const rows = pars.map(pid => {
       const pb = byId[pid];
       return '<div class="attr-body"><a class="bp-parent-link" data-buddy="'+escHtml(pid)+'" title="Open '+escHtml(dispName(pb))+'">'
-        + escHtml(dispName(pb)) + '<span class="bp-parent-kind"> (' + escHtml(pb.kind || 'buddy') + ')</span></a>'
-        + ' <button class="pill-btn pill-btn-danger" data-removeparent="'+escHtml(id)+':'+escHtml(pid)+'" title="Remove this parent">\u00d7</button></div>';
+        + escHtml(dispName(pb)) + '</a>'
+        + ' <button class="pill-btn pill-btn-danger" data-removeparent="'+escHtml(id)+':'+escHtml(pid)+'" title="Remove this '+uvBtn.upS+'">\u00d7</button></div>';
     }).join('');
     parSec = '<div class="bp-sec" data-field="parent">'
-      + attrHead('parent', 'PARENTS <span class="attn-count">('+pars.length+')</span>',
+      + attrHead('parent', uv.upHead + (uv.upCount ? ' <span class="attn-count">('+pars.length+')</span>' : ''),
         '<span class="attr-value">'+pars.map(pid => escHtml(dispName(byId[pid]))).join(', ')+'</span>', addBtn, tip)
       + rows
       + '</div>';
@@ -4228,25 +4385,20 @@ function renderBuddy(id){
   let sibSec = '';
   /* Dave 2026-10-15: peers = union of children of ALL parents, deduped. */
   (function(){
-    const parIds = {}; effParents(b).forEach(p => { parIds[p] = 1; });
-    const seen = {}; const sibs = [];
-    Object.keys(parIds).forEach(par => {
-      (kidsOf[par] || []).forEach(k => {
-        if (k && k.id !== id && !parIds[k.id] && !seen[k.id]) { seen[k.id] = 1; sibs.push(k); }
-      });
-    });
+    const sibs = peersOf(b);
     if (!sibs.length) return;
+    const av = acrossVocab(b, sibs);
     const SHOW_SIBS = 5;
     const sibRows = sibs.slice(0, SHOW_SIBS).map(k =>
       '<a class="art-row sib-compact" data-buddy="'+escHtml(k.id)+'">'
       + '<span class="art-ic">'+escHtml(k.icon || '')+'</span>'
       + '<span class="art-label">'+escHtml(dispName(k))+'</span></a>').join('');
     const sibMore = sibs.length > SHOW_SIBS
-      ? '<button class="linkbtn" id="sib-showall" style="margin-top:6px">Show all '+sibs.length+' peers</button><div id="sib-rest" hidden>' + sibs.slice(SHOW_SIBS).map(k =>
+      ? '<button class="linkbtn" id="sib-showall" style="margin-top:6px">Show all '+sibs.length+' '+av.acrossP.toLowerCase()+'</button><div id="sib-rest" hidden>' + sibs.slice(SHOW_SIBS).map(k =>
         '<a class="art-row sib-compact" data-buddy="'+escHtml(k.id)+'">'
         + '<span class="art-ic">'+escHtml(k.icon || '')+'</span>'
         + '<span class="art-label">'+escHtml(dispName(k))+'</span></a>').join('') + '</div>' : '';
-    sibSec = '<div class="bp-sec" data-field="siblings"><h3>Peers <span class="attn-count">('+sibs.length+')</span></h3>' + sibRows + sibMore + '</div>';
+    sibSec = '<div class="bp-sec" data-field="siblings"><h3>'+av.acrossP+' <span class="attn-count">('+sibs.length+')</span></h3>' + sibRows + sibMore + '</div>';
   })();
   let linkSec = '';
   (function(){
@@ -7799,6 +7951,10 @@ async function ghPutFile(repo, path, b64, msg){
 /* ---------- Add child / sibling buddy from the info panel ---------- */
 const ADD_ICONS = ['🤖','👤','👥','🏠','📍','🚗','🐾','💼','🎯','📚','🎨','🎵','⚽','🌲','☕','💡','🔧','📷','✈️','🎬','🏥','💰','🛒','📱'];
 const ADD_KINDS = [['assistant','Assistant'],['family','Person'],['place','Place'],['project','Project'],['standalone','Other']];
+/* The Type picker writes kind (a display tag) AND the semantic type used by
+   the relationship vocabulary (Dave 2026-10-19 — the two were conflated:
+   picking 'Person' used to write only kind 'family'). */
+const KIND_TO_TYPE = { assistant:'assistant', family:'person', place:'place', project:'venture' };
 function slugifyBuddy(name){
   return name.toLowerCase().trim().replace(/['']/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'').slice(0,40) || 'buddy';
 }
@@ -7861,11 +8017,15 @@ function openAddBuddyDialog(mode, forId, onCreated){
   const ref = byId[forId]; if (!ref) return;
   const parentId = mode === 'child' ? forId : mode === 'parent' ? effParent(ref) : effParent(ref);
   const parentName = parentId && byId[parentId] ? dispName(byId[parentId]) : 'top level';
-  const title = mode === 'child' ? 'Add a direct report' : mode === 'parent' ? 'Add a parent' : 'Add a peer';
+  const dv = downVocab(ref), puv = newParentVocab(ref), av = acrossVocabForRef(ref);
+  const title = mode === 'child' ? 'Add a ' + dv.downS : mode === 'parent' ? 'Add a ' + puv.upS : 'Add a ' + av.acrossS;
   const sub = mode === 'child'
-    ? 'New buddy under <b>' + escHtml(dispName(ref)) + '</b> — a direct report, subordinate, device, or activity.'
+    ? 'New buddy under <b>' + escHtml(dispName(ref)) + '</b> — ' + (dv === VOCAB.org
+      ? 'a direct report, subordinate, device, or activity.'
+      : dv === VOCAB.collection ? 'a vehicle in the collection.'
+      : 'a ' + dv.downS + ' of ' + escHtml(dispName(ref)) + '.')
     : mode === 'parent'
-    ? 'New buddy above <b>' + escHtml(dispName(ref)) + '</b> — a manager or parent. ' + escHtml(dispName(ref)) + ' becomes its direct report' + (parentId ? ' (under ' + escHtml(parentName) + ')' : ' at top level') + '.'
+    ? 'New buddy above <b>' + escHtml(dispName(ref)) + '</b> — a ' + puv.upS + '. ' + escHtml(dispName(ref)) + ' becomes its ' + puv.downS + (parentId ? ' (under ' + escHtml(parentName) + ')' : ' at top level') + '.'
     : 'New buddy alongside <b>' + escHtml(dispName(ref)) + '</b> (under ' + escHtml(parentName) + ')';
   closeAddBuddyDialog();
   const m = document.createElement('div');
@@ -7924,7 +8084,7 @@ function openNewBuddyRequest(prefillName){
     + '<p class="ab-sub">Tell Astro what you want — the buddy lands in your list right away, and Astro runs the full onboarding (repo, mission doc, side chat, homepage) behind it.</p>'
     + '<label>Name</label><input type="text" id="nb-name" placeholder="e.g. Car Buddy" autocomplete="off">'
     + '<label>Place in tree</label><div class="nb-place" role="tablist" aria-label="Where in the tree">'
-    + '<button type="button" data-place="child" class="sel" role="tab" aria-selected="true">Direct report</button>'
+    + '<button type="button" data-place="child" class="sel" role="tab" aria-selected="true">Child</button>'
     + '<button type="button" data-place="sibling" role="tab" aria-selected="false">Peer</button>'
     + '<button type="button" data-place="parent" role="tab" aria-selected="false">Parent</button></div>'
     + '<div id="nb-place-pick" style="margin-top:8px"><select id="nb-ref" style="width:100%;box-sizing:border-box;font-size:15px;padding:10px 12px;border-radius:10px;border:1px solid var(--border);background:var(--bg);color:var(--text)">'
@@ -7955,11 +8115,17 @@ function openNewBuddyRequest(prefillName){
   const updateHint = () => {
     const ref = refSel.value ? byId[refSel.value] : null;
     const rn = ref ? dispName(ref) : 'top level';
+    const sv = sheetVocabFor(ref);
+    m.querySelectorAll('.nb-place button').forEach(btn => {
+      if (btn.dataset.place === 'child') btn.textContent = vocabCap(sv.downS);
+      else if (btn.dataset.place === 'sibling') btn.textContent = vocabCap(sv.acrossS);
+      else if (btn.dataset.place === 'parent') btn.textContent = vocabCap(sv.upS);
+    });
     placeHint.textContent = placeMode === 'child'
-      ? (ref ? 'As a direct report of ' + rn + '.' : 'At top level (no parent).')
+      ? (ref ? (edgeVocab(ref, null) === VOCAB.collection ? 'In ' + rn + '\u2019s collection.' : 'As a ' + sv.downS + ' of ' + rn + '.') : 'At top level (no parent).')
       : placeMode === 'sibling'
-      ? (ref ? 'Alongside ' + rn + ' (same parent).' : 'Pick a buddy to sit alongside.')
-      : (ref ? 'As the parent of ' + rn + ' — ' + rn + ' becomes its direct report.' : 'Pick a buddy to become a direct report of the new buddy.');
+      ? (ref ? 'Alongside ' + rn + ' (same ' + sv.upS + ').' : 'Pick a buddy to sit alongside.')
+      : (ref ? 'As the ' + sv.upS + ' of ' + rn + ' — ' + rn + ' becomes its ' + sv.downS + '.' : 'Pick a buddy to become a ' + sv.downS + ' of the new buddy.');
   };
   m.querySelectorAll('.nb-place button').forEach(b => b.addEventListener('click', () => {
     m.querySelectorAll('.nb-place button').forEach(x => { x.classList.remove('sel'); x.setAttribute('aria-selected', 'false'); });
@@ -8059,6 +8225,7 @@ async function createBuddyFromDialog(name, icon, kind, parentId, errEl, createBt
     const today = new Date().toISOString().slice(0,10);
     const entry = {
       id: nid, name: name, icon: icon, kind: kind,
+      ...(KIND_TO_TYPE[kind] ? { type: KIND_TO_TYPE[kind] } : {}),
       parent: parentId || null,
       mission: '', tagline: 'New buddy — setup pending',
       status: 'new', statusClass: 'st-new',
@@ -8253,22 +8420,23 @@ function openChangeParentDialog(bid, mode){
   const opts = BUDDIES.filter(x => x && x.id && !bad.has(x.id) && !(addMode && curParents.indexOf(x.id) >= 0))
     .sort((a,c) => dispName(a).localeCompare(dispName(c)));
   const cur = addMode ? null : effParent(b);
-  const title = addMode ? 'Add parent' : 'Change parent';
+  const pv = pickerVocab(b);
+  const title = (addMode ? 'Add ' : 'Change ') + vocabCap(pv.upS);
   const m = document.createElement('div'); m.id = 'addbuddy-modal';
   const optHtml = x => '<option value="' + escHtml(x.id) + '"' + (x.id === cur ? ' selected' : '') + '>' + escHtml((x.icon || '') + ' ' + dispName(x)) + '</option>';
   const hiddenCount = BUDDIES.length - opts.length;
   m.innerHTML = '<div class="ab-backdrop"></div><div class="ab-box" role="dialog" aria-modal="true" aria-label="' + title + '">'
-    + '<h2>' + title + '</h2><p class="ab-sub">' + (addMode ? 'Pick a parent to add for ' : 'Pick a new parent for ') + escHtml(dispName(b)) + '.</p>'
+    + '<h2>' + title + '</h2><p class="ab-sub">' + (addMode ? 'Pick a ' + pv.upS + ' to add for ' : 'Pick a new ' + pv.upS + ' for ') + escHtml(dispName(b)) + '.</p>'
     + '<label for="cp-filter">Filter</label>'
     + '<input type="text" id="cp-filter" placeholder="Type to filter\u2026" autocomplete="off" style="margin-bottom:10px">'
-    + '<label for="cp-select">Parent</label>'
+    + '<label for="cp-select">' + vocabCap(pv.upS) + '</label>'
     + '<select id="cp-select" size="8" style="width:100%;box-sizing:border-box;font-size:15px;padding:10px 12px;border-radius:10px;border:1px solid var(--border);background:var(--bg);color:var(--text)">'
-    + (addMode ? '' : '<option value="">No parent (top level)</option><option value="" disabled>\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500</option>')
+    + (addMode ? '' : '<option value="">No ' + pv.upS + ' (top level)</option><option value="" disabled>\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500</option>')
     + opts.map(optHtml).join('')
     + '</select>'
     + (hiddenCount > 0 ? '<p class="fineprint" style="margin-top:6px">' + hiddenCount + ' hidden \u2014 a buddy can\u2019t be its own ancestor.</p>' : '')
     + '<div style="display:flex;gap:10px;justify-content:space-between;align-items:center;margin-top:18px">'
-    + '<button class="linkbtn" id="cp-newparent" type="button" style="font-weight:600">+ New parent\u2026</button>'
+    + '<button class="linkbtn" id="cp-newparent" type="button" style="font-weight:600">+ New ' + pv.upS + '\u2026</button>'
     + '<div style="display:flex;gap:10px">'
     + '<button class="linkbtn" id="cp-cancel" type="button">Cancel</button>'
     + '<button class="linkbtn" id="cp-save" type="button" style="font-weight:600">Save</button>'
@@ -8302,14 +8470,14 @@ function openChangeParentDialog(bid, mode){
       addParentOverride(bid, v); save(); buildKids(); renderNav(); refreshViews();
       if (S.sel === 'buddy:' + bid) renderBuddy(bid);
       close();
-      toast(dispName(byId[v]) + ' added as a parent of ' + dispName(b) + '.');
+      toast(addedParentToast(byId[v], b));
       return;
     }
     const beforeParents = effParents(b);
     applyParentOverride(bid, v); save(); buildKids(); renderNav(); refreshViews();
     if (S.sel === 'buddy:' + bid) renderBuddy(bid);
     close();
-    offerMoveUndo(bid, beforeParents, 'Parent updated.');
+    offerMoveUndo(bid, beforeParents, vocabCap(pv.upS) + ' updated.');
   };
   m.querySelector('.ab-backdrop').addEventListener('click', close);
   m.querySelector('#cp-cancel').addEventListener('click', close);
@@ -8324,7 +8492,7 @@ function openChangeParentDialog(bid, mode){
       openAddBuddyDialog('peer', bid, (nid) => {
         addParentOverride(bid, nid); save(); buildKids(); renderNav(); refreshViews();
         if (S.sel === 'buddy:' + bid) renderBuddy(bid);
-        toast(dispName(byId[nid]) + ' added as a parent of ' + dispName(b) + '.');
+        toast(addedParentToast(byId[nid], b));
       });
     } else {
       openAddBuddyDialog('parent', bid);
@@ -9264,10 +9432,16 @@ function renderBpRail() {
   const vb = document.getElementById('view-buddy');
   if (!vb) return;
   const secs = Array.from(vb.querySelectorAll('.bp-sec[data-field]')).filter(s => s.offsetParent !== null);
+  const curB = vb.dataset.buddy ? byId[vb.dataset.buddy] : null;
   rail.innerHTML = secs.map(s => {
     const f = s.dataset.field;
     const ic = BP_SECTION_ICONS[f] || '\u25CF';
-    const lb = BP_SECTION_LABELS[f] || f;
+    let lb = BP_SECTION_LABELS[f] || f;
+    if (curB) {
+      if (f === 'reports') lb = downVocab(curB).downP;
+      else if (f === 'siblings') lb = acrossVocab(curB, peersOf(curB)).acrossP;
+      else if (f === 'parent') lb = vocabCap(upVocab(curB).upS);
+    }
     return '<button type="button" data-sec="' + f + '" title="' + lb + '" aria-label="' + lb + '">' + ic + '</button>';
   }).join('');
 }
