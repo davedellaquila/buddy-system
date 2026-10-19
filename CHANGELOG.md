@@ -1,4 +1,7 @@
 ## 2026-10-18
+### Collapsed icon rail floats vertically centered (Dave 2026-10-18)
+- The collapsed sidebar's icon rail was top-anchored (12px from the top), leaving a long empty tail below the icons. It now floats vertically centered (`top:50%; transform:translateY(-50%)`) — per Dave's annotated screenshot feedback on the Scaffold Buddy homepage.
+
 ### Documents section — PDF uploads for buddies
 - New 'Documents' section below Photos on the buddy info panel: drop PDFs or click to choose.
 - Uploads to docs/<id>/ in the buddy-system repo (or docs/ in the buddy's own repo) via the GitHub token flow.

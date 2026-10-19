@@ -74,10 +74,10 @@ body{padding:0}
 /* Dave 2026-10-18: kill the width transition while resize-dragging so the
    panel tracks the pointer instead of chasing it. */
 body.sb-resizing #sidebar{transition:transform .5s cubic-bezier(.32,.72,.35,1), visibility 0s}
-body.sb-closed #sidebar{width:64px;padding:12px 8px;overflow:visible;height:auto;max-height:calc(100dvh - 24px);top:12px;bottom:auto;border-radius:18px;
+body.sb-closed #sidebar{width:64px;padding:12px 8px;overflow:visible;height:auto;max-height:calc(100dvh - 24px);top:50%;transform:translateY(-50%);bottom:auto;border-radius:18px;
   left:12px;right:auto;background:color-mix(in srgb, var(--panel) 82%, transparent);
   -webkit-backdrop-filter:blur(20px) saturate(1.8);backdrop-filter:blur(20px) saturate(1.8);
-  border:1px solid var(--border);box-shadow:0 8px 32px var(--shadow)}
+  border:1px solid var(--border);box-shadow:0 8px 32px var(--shadow)} /* Dave 2026-10-18: collapsed rail floats vertically centered, not top-anchored */
 body.sb-closed #sidebar .brand, body.sb-closed #sidebar .sb-search-sticky,
 body.sb-closed #sidebar #buddies-sec, body.sb-closed #sidebar #plans-sec,
 body.sb-closed #sidebar .sb-tipjar, body.sb-closed #sidebar #sb-tools #sb-gear,
