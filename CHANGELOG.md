@@ -1,4 +1,8 @@
 ## 2026-10-18
+### Briefing Buddy — evening refresh
+- Evening snapshot: "Next" tile now the 6 PM lineup; morning card retitled "Coming up today".
+- Audio synced to the Oct 18 morning standup (3:28); evening charts regenerated.
+
 ### Seven dashboard fixes (Dave 2026-10-18)
 - **Auto-close sidebar setting**: new "Auto-close sidebar on buddy select" toggle (default off). When on, selecting a buddy collapses the sidebar to the icon rail so the homepage/view gets the full screen. Skipped for the phone drawer (which already closes on selection).
 - **Settings field-order scroll**: rearranging fields in Settings re-rendered the whole panel and lost the scroll position. The dropped row is now scrolled back into view (`scrollIntoView({block:'nearest'})`) so you can see where it landed. Same for the Main views list.
