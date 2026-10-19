@@ -382,23 +382,16 @@ body.sb-closed #pane-toggles .ptoggle{padding:6px 4px}
    open, 348px anchored, 88px when collapsed to the rail, 12px on phone.
    Never slides under the floating sidebar.
    Rhythm: 8px within groups, 24px between. No dividers. */
-.atlas-controls{position:absolute;top:12px;left:360px;z-index:20;
+.atlas-controls{position:absolute;top:12px;left:50%;transform:translateX(-50%);z-index:20;
   display:flex;align-items:center;gap:24px;
   height:44px;padding:4px 12px 4px 4px;border-radius:22px;box-sizing:border-box;
   background:color-mix(in srgb, var(--panel) 82%, transparent);
   -webkit-backdrop-filter:blur(20px) saturate(1.8);backdrop-filter:blur(20px) saturate(1.8);
   border:1px solid var(--border);box-shadow:0 2px 12px rgba(0,0,0,.08);
-  max-width:calc(100% - 372px);overflow-x:auto;overflow-y:hidden;
+  max-width:calc(100% - 24px);overflow-x:auto;overflow-y:hidden;
   scrollbar-width:none;-webkit-tap-highlight-color:transparent}
-/* Dave 2026-10-18: the sidebar is a fixed overlay — pin the row to its right
-   edge so it never slides underneath. Open floating: 12px offset + 336px panel
-   + 12px gap = 360px. Anchored: flush left, so 348px. Collapsed rail:
-   12px + 64px rail + 12px gap = 88px. */
-body.sb-anchored .atlas-controls{left:348px;max-width:calc(100% - 360px)}
-body.sb-closed .atlas-controls{left:88px;max-width:calc(100% - 100px)}
-@media (max-width:639px){
-  .atlas-controls,body.sb-anchored .atlas-controls,body.sb-closed .atlas-controls{left:12px;max-width:calc(100% - 24px)}
-}
+/* Dave 2026-10-18 (via Event Buddy): center the control strip horizontally in
+   the main view. Panels may obscure it when open — accepted, don't dodge. */
 .atlas-controls::-webkit-scrollbar{display:none}
 .atlas-controls .lens-picker-wrap{margin:0;flex:none}
 /* Pill: 36px, radius 18px, current lens name + chevron. The unexplained blue

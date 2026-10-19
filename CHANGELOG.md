@@ -1,4 +1,8 @@
 ## 2026-10-18
+### Atlas control strip — centered in the main view
+- The control strip (Lineage picker, color dots, zoom, utilities) is now centered horizontally in the main view (was: pinned to the sidebar's right edge).
+- Dave accepts panels may obscure it when open — no dodging.
+
 ### Document cards — delete button now visible
 - Bug fix (via Event Buddy from Dave): uploaded documents had no visible way to delete. The trash button was hover-reveal only on photo tiles (.pwrap:hover) and document cards (.doc-card) never matched, so it was permanently invisible — also unreachable on touch.
 - Fix: the trash icon now always shows on document cards.

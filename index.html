@@ -554,23 +554,16 @@ body.sb-closed #pane-toggles .ptoggle{padding:6px 4px}
    open, 348px anchored, 88px when collapsed to the rail, 12px on phone.
    Never slides under the floating sidebar.
    Rhythm: 8px within groups, 24px between. No dividers. */
-.atlas-controls{position:absolute;top:12px;left:360px;z-index:20;
+.atlas-controls{position:absolute;top:12px;left:50%;transform:translateX(-50%);z-index:20;
   display:flex;align-items:center;gap:24px;
   height:44px;padding:4px 12px 4px 4px;border-radius:22px;box-sizing:border-box;
   background:color-mix(in srgb, var(--panel) 82%, transparent);
   -webkit-backdrop-filter:blur(20px) saturate(1.8);backdrop-filter:blur(20px) saturate(1.8);
   border:1px solid var(--border);box-shadow:0 2px 12px rgba(0,0,0,.08);
-  max-width:calc(100% - 372px);overflow-x:auto;overflow-y:hidden;
+  max-width:calc(100% - 24px);overflow-x:auto;overflow-y:hidden;
   scrollbar-width:none;-webkit-tap-highlight-color:transparent}
-/* Dave 2026-10-18: the sidebar is a fixed overlay — pin the row to its right
-   edge so it never slides underneath. Open floating: 12px offset + 336px panel
-   + 12px gap = 360px. Anchored: flush left, so 348px. Collapsed rail:
-   12px + 64px rail + 12px gap = 88px. */
-body.sb-anchored .atlas-controls{left:348px;max-width:calc(100% - 360px)}
-body.sb-closed .atlas-controls{left:88px;max-width:calc(100% - 100px)}
-@media (max-width:639px){
-  .atlas-controls,body.sb-anchored .atlas-controls,body.sb-closed .atlas-controls{left:12px;max-width:calc(100% - 24px)}
-}
+/* Dave 2026-10-18 (via Event Buddy): center the control strip horizontally in
+   the main view. Panels may obscure it when open — accepted, don't dodge. */
 .atlas-controls::-webkit-scrollbar{display:none}
 .atlas-controls .lens-picker-wrap{margin:0;flex:none}
 /* Pill: 36px, radius 18px, current lens name + chevron. The unexplained blue
@@ -3223,7 +3216,7 @@ function renderDevelopSection(){
   const dev = document.getElementById('fset-develop');
   if (!dev) return;
   const simulating = !!devBackup;
-  const buildNum = '20261019.0415';
+  const buildNum = '20261019.0419';
   dev.innerHTML = ''
     + '<label class="fset-check"><input type="checkbox" id="dev-empty-toggle"' + (simulating ? ' checked' : '') + '> <span><strong>Simulate new user</strong> — empty data file, as if opening the shared link fresh</span></label>'
     + '<div class="fineprint" style="margin:8px 0 12px">Build <span style="font-family:monospace">' + escHtml(String(buildNum)) + '</span> · ' + BUDDIES.length + ' buddies in this file</div>'
@@ -4474,7 +4467,7 @@ function renderBuddy(id){
       'Anybody with repo access can see this note. Saved to the buddy’s repo (docs/notes.md).')
     + '<div class="attr-body"><textarea class="notes" id="bp-shared-notes" placeholder="Anybody with repo access can see this note."></textarea>'
     + '<p class="fineprint" id="shared-status"></p></div></div>'
-    + '<div class="bp-build">Build 20261019.0415</div>'
+    + '<div class="bp-build">Build 20261019.0419</div>'
     + '</div>';
   // Update every visible label for a buddy after a rename/re-icon, across all
   // Atlas lenses. A rename changes no structure, so labels are patched in place
@@ -6976,7 +6969,7 @@ function renderPlan(id){
     + '<p class="fineprint">Saved on this device. (For your eyes only)</p></div>'
     + '<div class="bp-sec"><h3>Shared notes<span class="info-tip" data-tip="Visible to everyone with access to this project.">\u24d8</span></h3><textarea class="notes" id="bp-shared" placeholder="Shared notes\u2026 (visible to everyone with access)">'+escHtml((S.planShared||{})[id]||'')+'</textarea>'
     + '<p class="fineprint">Shared — visible to everyone with access.</p></div>'
-    + '<div class="bp-build">Build 20261019.0415</div>'
+    + '<div class="bp-build">Build 20261019.0419</div>'
     + '</div>';
   const nt = document.getElementById('bp-notes');
   let t = null;
@@ -9585,14 +9578,14 @@ function openWhatsNew(){
     .then(r => r.ok ? r.text() : '')
     .then(t => {
       const serverBuild = t.trim();
-      if (serverBuild && serverBuild !== '20261019.0415') {
+      if (serverBuild && serverBuild !== '20261019.0419') {
         updBtn.style.display = '';
         updBtn.title = 'Update to build ' + serverBuild;
       }
       // Show build numbers at the top of the sheet (Dave's request 2026-10-12)
-      const myBuild = '20261019.0415';
+      const myBuild = '20261019.0419';
       let buildLine = '<p class="fineprint" style="margin-top:0">You’re on build ' + escHtml(myBuild) + '.';
-      if (serverBuild && serverBuild !== '20261019.0415' && isNewerBuild(serverBuild, myBuild)) {
+      if (serverBuild && serverBuild !== '20261019.0419' && isNewerBuild(serverBuild, myBuild)) {
         buildLine += ' Build ' + escHtml(serverBuild) + ' is available.';
       }
       buildLine += '</p>';
@@ -9631,7 +9624,7 @@ function isNewerBuild(server, mine){
   } catch (e) { return false; }
 }
 function initVersionCheck(){
-  const myBuild = '20261019.0415';
+  const myBuild = '20261019.0419';
   function showUpdateBanner(serverBuild){
     if (document.getElementById('update-banner')) return;
     const b = document.createElement('div');
