@@ -1,4 +1,9 @@
 ## 2026-10-18
+### Documents section — PDF uploads for buddies
+- New 'Documents' section below Photos on the buddy info panel: drop PDFs or click to choose.
+- Uploads to docs/<id>/ in the buddy-system repo (or docs/ in the buddy's own repo) via the GitHub token flow.
+- Renders as document cards with filename, size, Open link, and delete. Sits in Settings field ordering right after Photos.
+
 ### Briefing Buddy — evening refresh
 - Evening snapshot: "Next" tile now the 6 PM lineup; morning card retitled "Coming up today".
 - Audio synced to the Oct 18 morning standup (3:28); evening charts regenerated.
