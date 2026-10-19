@@ -9765,6 +9765,13 @@ document.addEventListener('click', e => {
   if (e.target.closest && e.target.closest('[data-show-field]')) {
     const fid = e.target.closest('[data-show-field]').dataset.showField;
     if (S.fieldHidden) delete S.fieldHidden[fid];
+    // Dave 2026-10-19: a field that is shown/added arrives OPEN — set both
+    // state maps (h3 sections read secCollapsed, attr-head sections read
+    // attrExpanded) so he never has to click it again just to open it.
+    if (!S.secCollapsed || typeof S.secCollapsed !== 'object') S.secCollapsed = {};
+    if (!S.attrExpanded || typeof S.attrExpanded !== 'object') S.attrExpanded = {};
+    S.secCollapsed[fid] = false;
+    S.attrExpanded[fid] = true;
     save();
     if (S.projectId && byId[S.projectId]) renderBuddy(S.projectId);
     return;

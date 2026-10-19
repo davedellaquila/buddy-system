@@ -1,4 +1,7 @@
 ## 2026-10-19
+### Info panel — a shown/added field arrives open (Dave 2026-10-19)
+- Restoring a field from the Hidden fields tray now lands it in an open state — no second click to expand it. The show-field handler sets both state maps for that field (secCollapsed=false for h3 sections, attrExpanded=true for attr-head sections) before saving and re-rendering; every other section keeps its remembered state.
+
 ### New buddy — Research Buddy 🔍 (hired 2026-10-19)
 - The standing research desk: sourced investigations, background checks, product/market research, confidence-tagged reports (web page + HTML email). Direct child of Project Buddy; registry at 120 buddies. Founding case: the John Windsor background check.
 
