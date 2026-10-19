@@ -1256,9 +1256,14 @@ body.sb-closed #sidebar #sb-tools{display:none}
 .attr-row .info-tip{margin-left:0;font-size:17px}
 .attr-body{display:none;padding:4px 2px 8px 46px}
 .bp-sec.expanded .attr-body{display:block !important}
-.bp-sec[data-field="parent"] .attr-head .pill-btn{display:inline-block}
+.bp-sec[data-field="parent"] .attr-head .pill-btn{display:none}
+.bp-sec[data-field="parent"].expanded .attr-head .pill-btn{display:inline-block}
 .bp-sec[data-field="persona"] .attr-head .pill-btn{display:none}
 .bp-sec[data-field="persona"].expanded .attr-head .pill-btn{display:inline-block}
+/* Dave 2026-10-19: a section's add button shows only while the section is open.
+   The Children ⊕ lives inside the h3, which stays visible under .collapsed
+   (the rule above hides everything except the h3) — hide it there too. */
+.bp-sec[data-field="reports"].collapsed > h3 .bp-circle-add{display:none}
 /* Parent info icon: hover-only so it doesn't collide with the reorder gripper */
 .bp-sec[data-field="parent"] .attr-head .info-tip{opacity:0;transition:opacity .15s ease}
 .bp-sec[data-field="parent"] .attr-head:hover .info-tip{opacity:1}
