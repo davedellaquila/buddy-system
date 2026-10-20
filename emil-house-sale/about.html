@@ -1,0 +1,721 @@
+<!-- DEFAULT-HOMEPAGE v3 — "The Dossier" -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark light">
+<title>About Emil&#x27;s House Sale — Buddy Dossier</title>
+<style>
+:root{color-scheme:dark light;--bg:#0d1117;--card:#161b22;--border:#30363d;--text:#e6edf3;--muted:#8b949e;--accent:#58a6ff;--amber:#f0b429;--amber-bd:#7d5e00}
+@media (prefers-color-scheme:light){:root{--bg:#ffffff;--card:#f6f8fa;--border:#d0d7de;--text:#1f2328;--muted:#57606a;--accent:#0969da}}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;margin:0;line-height:1.6}
+.wrap{max-width:860px;margin:0 auto;padding:40px 22px 60px}
+header.hero{display:flex;gap:18px;align-items:center;margin-bottom:8px}
+.heroicon{width:72px;height:72px;flex:none;border-radius:20px;background:var(--card);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:38px}
+h1{margin:0;font-size:30px;letter-spacing:-.02em}
+.tagline{color:var(--muted);margin:6px 0 0;font-size:15px}
+.stats{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0 28px}
+.stat{font-size:12.5px;color:var(--muted);background:var(--card);border:1px solid var(--border);border-radius:999px;padding:4px 12px}
+.stat b{color:var(--text)}
+.status{font-size:12.5px;font-weight:700;border-radius:999px;padding:4px 12px;background:var(--card);border:1px solid var(--border)}
+.card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px 22px;margin-bottom:20px}
+.kicker{margin:0 0 10px;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:var(--muted)}
+.mission{font-size:16px;margin:0 0 10px}
+.brief{color:var(--muted);font-size:14px}
+.persona{font-size:14px;margin:8px 0 0}
+.facts{margin:0;display:grid;gap:2px}
+.fact{display:grid;grid-template-columns:150px 1fr;gap:12px;padding:7px 0;border-top:1px solid var(--border);font-size:14px}
+.fact:first-child{border-top:0}
+.fact dt{color:var(--muted);font-weight:600}
+.fact dd{margin:0;overflow-wrap:break-word}
+code{background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:1px 6px;font-size:13px}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
+.aitem{display:flex;gap:10px;padding:10px 0;font-size:14px}
+.aitem+.aitem{border-top:1px solid var(--border)}
+.adot{color:var(--amber);font-size:11px;line-height:2;flex:none}
+.adate{color:var(--muted);font-size:12px;margin-top:2px}
+.plan{display:flex;gap:12px;padding:12px 0}
+.plan+.plan{border-top:1px solid var(--border)}
+.picon{font-size:24px;flex:none}
+.pname{font-weight:650;font-size:15px}
+.pill{display:inline-block;font-size:11px;font-weight:700;background:var(--bg);border:1px solid var(--border);color:var(--accent);border-radius:999px;padding:2px 10px;margin-left:8px}
+.pdesc{margin:6px 0 0;color:var(--muted);font-size:13.5px}
+.pdoc{display:inline-block;margin-top:6px;font-size:13px}
+.docrow{padding:8px 0;font-size:14.5px}
+.docrow+.docrow{border-top:1px solid var(--border)}
+.kids{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px}
+.kid{display:flex;align-items:center;gap:10px;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:10px 12px;color:var(--text)}
+.kid:hover{text-decoration:none;border-color:var(--accent)}
+.kidicon{font-size:22px}
+.kidname{font-size:14px;font-weight:600}
+.connrow{display:flex;gap:12px;padding:8px 0;font-size:14px;align-items:baseline}
+.connrow+.connrow{border-top:1px solid var(--border)}
+.connlabel{flex:none;width:110px;color:var(--muted);font-weight:600;font-size:13px}
+.pinrow{padding:6px 0;font-size:14px}
+.muted{color:var(--muted);font-size:13px}
+.empty{color:var(--muted);font-style:italic;margin:4px 0}
+footer{margin-top:36px;padding-top:18px;border-top:1px solid var(--border);color:var(--muted);font-size:12.5px;text-align:center}
+.aboutnav{display:flex;gap:14px;flex-wrap:wrap;align-items:baseline;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px 16px;margin-bottom:22px;font-size:14px}.unset{color:var(--muted);font-style:italic}.recjson{margin:0;font-size:12px;white-space:pre-wrap;overflow-wrap:break-word}.mdfile{border-top:1px solid var(--border);padding:14px 0}.mdfile-head{display:flex;gap:12px;align-items:baseline;margin-bottom:8px}details.mdfile summary{cursor:pointer;font-size:14px}.md-body{font-size:14.5px}.md-body h1{font-size:21px;margin:14px 0 8px}.md-body h2{font-size:18px;margin:14px 0 6px}.md-body h3{font-size:15.5px;margin:12px 0 4px}.md-body p{margin:8px 0}.md-body ul,.md-body ol{margin:8px 0 8px 22px}.md-body li{margin:3px 0}.md-body pre{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:10px 12px;overflow-x:auto;font-size:12.5px}.md-body table{border-collapse:collapse;margin:10px 0;font-size:13.5px}.md-body th,.md-body td{border:1px solid var(--border);padding:5px 9px;text-align:left}.md-body blockquote{border-left:3px solid var(--border);margin:10px 0;padding:2px 14px;color:var(--muted)}.mdfallback{white-space:pre-wrap;font-size:12.5px}.mdinv{margin:6px 0 12px 20px;font-size:14px}.mdinv li{margin:3px 0}.repo-files h2{font-size:17px;margin:0 0 4px;color:var(--text)}.attn-btn{background:var(--bg);color:var(--text);border:1px solid var(--border);border-radius:8px;padding:6px 14px;font-size:13px;font-weight:600;cursor:pointer}.attn-btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}.attn-actions{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}.attn-status{font-size:13px;color:var(--muted);margin-top:8px}
+
+.dumpbox {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px 22px;
+  margin-bottom: 32px;
+}
+.dumpbox h2 { margin: 0 0 6px; font-size: 20px; }
+.dumpbox-sub { color: var(--muted); font-size: 14px; margin-bottom: 14px; }
+.dumpbox textarea {
+  width: 100%; min-height: 96px; resize: vertical;
+  background: var(--bg); border: 1px solid var(--border); border-radius: 8px;
+  padding: 10px 12px; font-size: 14px; color: var(--text); font-family: inherit;
+}
+.dumpbox textarea:focus { outline: none; border-color: var(--accent); }
+.dumpbox textarea:disabled { opacity: .55; }
+.dumpbox-row { display: flex; align-items: center; gap: 12px; margin-top: 10px; flex-wrap: wrap; }
+.dumpbox-btn {
+  background: var(--accent); color: #fff; border: none; border-radius: 8px;
+  padding: 9px 22px; font-size: 14px; font-weight: 600; cursor: pointer;
+}
+.dumpbox-btn:disabled { opacity: .45; cursor: default; }
+.dumpbox-btn.saved { background: var(--ok); }
+.dumpbox-status { font-size: 13px; color: var(--muted); }
+.dumpbox-status.flash { color: var(--ok); font-weight: 700; }
+.dumpbox-hint { font-size: 12px; color: var(--muted); margin-top: 8px; }
+.dumpbox-token {
+  /* Jonny, 2026-10-19 (Dave's ask): amber, not zebra. A solid amber frame +
+     a soft amber wash says "one small step needs you" — zebra striping is
+     hazard tape, it signals danger and fights every calm surface around it.
+     Dashed grey read as placeholder; solid amber reads as deliberate. */
+  background: rgba(245, 158, 11, .09);
+  background: color-mix(in srgb, #f59e0b 9%, var(--bg));
+  border: 2px solid #f59e0b;
+  box-shadow: 0 0 0 3px rgba(245, 158, 11, .16);
+  box-shadow: 0 0 0 3px color-mix(in srgb, #f59e0b 16%, transparent);
+  border-radius: 8px;
+  padding: 12px 14px; margin-bottom: 12px; font-size: 14px;
+}
+.dumpbox-token p { margin-bottom: 8px; font-weight: 600; }
+.dumpbox-tokenrow { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.dumpbox-tokenrow input {
+  flex: 1; min-width: 170px; background: var(--card); border: 1px solid var(--border);
+  border-radius: 8px; padding: 7px 10px; font-size: 13px; color: var(--text);
+}
+.dumpbox-tokenrow button {
+  background: transparent; color: var(--accent); border: 1px solid var(--accent);
+  border-radius: 8px; padding: 7px 14px; font-size: 13px; font-weight: 600; cursor: pointer;
+}
+.dumpbox-tokenrow a { color: var(--accent); font-size: 13px; }
+
+
+/* ---- Repo files (Dave 2026-10-20): view + edit the buddy's repo markdown ---- */
+.repo-files { margin-top: 8px; }
+.rf-sub { color: var(--muted); font-size: 14px; margin-bottom: 12px; }
+.rf-locked { background: var(--card); border: 1px dashed var(--border); border-radius: 8px; padding: 14px 16px; color: var(--muted); font-size: 14px; }
+.rf-list { display: flex; flex-direction: column; gap: 8px; }
+.rf-file { display: flex; align-items: center; gap: 10px; background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 10px 14px; cursor: pointer; text-align: left; width: 100%; color: var(--text); font: inherit; -webkit-tap-highlight-color: transparent; }
+.rf-file:hover { border-color: var(--accent); }
+.rf-file .rf-name { font-weight: 600; font-size: 15px; }
+.rf-file .rf-dir { color: var(--muted); font-size: 13px; margin-left: auto; word-break: break-all; text-align: right; }
+.rf-view, .rf-editor { margin-top: 14px; background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 16px; }
+.rf-viewhead { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 10px; }
+.rf-path { font-weight: 700; font-size: 14px; margin-right: auto; word-break: break-all; }
+.rf-body { font-size: 15px; }
+.rf-body h2 { font-size: 21px; margin: 16px 0 8px; }
+.rf-body h3 { font-size: 18px; margin: 14px 0 6px; }
+.rf-body h4 { font-size: 16px; margin: 12px 0 6px; }
+.rf-body p { margin: 6px 0; }
+.rf-body ul { margin: 6px 0 6px 20px; }
+.rf-body blockquote { border-left: 3px solid var(--border); padding-left: 12px; color: var(--muted); margin: 8px 0; }
+.rf-body code { background: var(--bg); border: 1px solid var(--border); border-radius: 4px; padding: 0 4px; font-size: 13px; }
+.rf-body pre { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 12px; overflow-x: auto; margin: 8px 0; }
+.rf-body pre code { border: none; padding: 0; background: none; }
+.rf-body a { color: var(--accent); }
+.rf-body hr { border: none; border-top: 1px solid var(--border); margin: 14px 0; }
+.rf-ta { width: 100%; box-sizing: border-box; background: var(--bg); color: var(--text); border: 1px solid var(--border); border-radius: 8px; padding: 12px; font-family: ui-monospace, Menlo, monospace; font-size: 13px; line-height: 1.55; }
+
+@media (max-width:640px){.fact{grid-template-columns:1fr;gap:2px}.connlabel{width:88px}.wrap{padding:28px 16px 48px}h1{font-size:24px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="aboutnav"><a href="./">← 🏷️ Emil&#x27;s House Sale — homepage</a><span class="muted">This About page is the full record: every registry field and every markdown file in the buddy's repo.</span></div>
+<header class="hero">
+<div class="heroicon">🏷️</div>
+<div><h1>Emil&#x27;s House Sale</h1><p class="tagline">The active sale of Dad Emil&#x27;s house</p></div>
+</header>
+<nav data-buddy-crumb style="margin-bottom:14px;font-size:14px;"><a href="https://davedellaquila.github.io/buddy-system/emil-estate/" style="color:var(--muted);text-decoration:none;">← Emil&#x27;s Estate</a></nav>
+<div class="stats"><span class="status st-brief">Mission review</span><span class="stat"><b>1</b> need attention</span></div>
+<section class="card"><h2 class="kicker">About</h2><p class="mission">The deal desk for the ACTIVE SALE of Dave&#x27;s dad Emil&#x27;s house (died July 1, 2026). Dave hired a realtor who is on the ball and actively selling — she sends lots of documents by text and by email. This buddy tracks the sale end to end: listing → offers → closing, with every document filed by stage and date. Email is auto-watched by Astro; the realtor&#x27;s texts need Dave to forward. Estate-level topics stay with the parent, Emil&#x27;s Estate. A different house — and a different deal — from the Morgan Hill house Dave is co-selling with Emile and Ron. Emil (dad, deceased) ≠ Emile (brother).</p><p class="brief">https://docs.google.com/document/d/1pdSY9EV_Z0x0chAQnaEsTehcPYZrE98LNR1bYvTxliY/edit</p></section>
+<section class="card"><h2 class="kicker">Fact sheet — the data chain</h2><dl class="facts"><div class="fact"><dt>Buddy ID</dt><dd><code>emil-house-sale</code></dd></div><div class="fact"><dt>Kind</dt><dd>property</dd></div><div class="fact"><dt>Parent chain</dt><dd><a href="../family-buddy/">👨‍👩‍👧‍👦 Family Buddy</a> › <a href="../emil-estate/">🏛️ Emil&#x27;s Estate</a></dd></div><div class="fact"><dt>Repository</dt><dd><a href="https://github.com/davedellaquila/emil-house-sale" target="_blank" rel="noopener">davedellaquila/emil-house-sale</a></dd></div><div class="fact"><dt>Homepage URL</dt><dd><code>emil-house-sale/</code></dd></div></dl></section>
+<section class="card"><h2 class="kicker">Complete registry record (15 fields)</h2><dl class="facts"><div class="fact"><dt>id</dt><dd>emil-house-sale</dd></div><div class="fact"><dt>name</dt><dd>Emil&#x27;s House Sale</dd></div><div class="fact"><dt>icon</dt><dd>🏷️</dd></div><div class="fact"><dt>tagline</dt><dd>The active sale of Dad Emil&#x27;s house</dd></div><div class="fact"><dt>type</dt><dd>venture</dd></div><div class="fact"><dt>kind</dt><dd>property</dd></div><div class="fact"><dt>status</dt><dd>Mission review</dd></div><div class="fact"><dt>statusClass</dt><dd>st-brief</dd></div><div class="fact"><dt>parent</dt><dd>emil-estate</dd></div><div class="fact"><dt>mission</dt><dd>The deal desk for the ACTIVE SALE of Dave&#x27;s dad Emil&#x27;s house (died July 1, 2026). Dave hired a realtor who is on the ball and actively selling — she sends lots of documents by text and by email. This buddy tracks the sale end to end: listing → offers → closing, with every document filed by stage and date. Email is auto-watched by Astro; the realtor&#x27;s texts need Dave to forward. Estate-level topics stay with the parent, Emil&#x27;s Estate. A different house — and a different deal — from the Morgan Hill house Dave is co-selling with Emile and Ron. Emil (dad, deceased) ≠ Emile (brother).</dd></div><div class="fact"><dt>brief</dt><dd><a href="https://docs.google.com/document/d/1pdSY9EV_Z0x0chAQnaEsTehcPYZrE98LNR1bYvTxliY/edit" target="_blank" rel="noopener">https://docs.google.com/document/d/1pdSY9EV_Z0x0chAQnaEsTehcPYZrE98LNR1bYvTxliY/edit</a></dd></div><div class="fact"><dt>repo</dt><dd>emil-house-sale</dd></div><div class="fact"><dt>homepage</dt><dd>emil-house-sale/</dd></div><div class="fact"><dt>docs</dt><dd><span class="unset">— not set —</span></dd></div><div class="fact"><dt>attention</dt><dd><a href="https://docs.google.com/document/d/1pdSY9EV_Z0x0chAQnaEsTehcPYZrE98LNR1bYvTxliY/edit" target="_blank" rel="noopener">Mission statement ready for review — the deal desk for Dad Emil&#x27;s house sale: listing → offers → closing, plus the realtor&#x27;s text+email document flow.</a></dd></div></dl></section>
+<section class="card"><h2 class="kicker">Needs attention (1)</h2><div class="attn"><div class="aitem"><span class="adot">●</span><div><div><a href="https://docs.google.com/document/d/1pdSY9EV_Z0x0chAQnaEsTehcPYZrE98LNR1bYvTxliY/edit" target="_blank" rel="noopener">Mission statement ready for review — the deal desk for Dad Emil&#x27;s house sale: listing → offers → closing, plus the realtor&#x27;s text+email document flow. ↗</a></div><div class="adate">2026-10-15</div></div></div></div></section>
+
+
+<section class="card"><h2 class="kicker">Sub-buddies (0)</h2><p class="empty">No sub-buddies.</p></section>
+<section class="card"><h2 class="kicker">Connections</h2><div class="connrow"><span class="connlabel">Parent</span><a href="../emil-estate/">🏛️ Emil&#x27;s Estate</a></div><div class="connrow"><span class="connlabel">Siblings</span><a href="../melody-lane/">🏠 Melody Lane</a></div></section>
+<section class="card"><h2 class="kicker">Repository &amp; memory</h2><div class="connrow"><span class="connlabel">Repo</span><a href="https://github.com/davedellaquila/emil-house-sale" target="_blank" rel="noopener">davedellaquila/emil-house-sale</a> <span class="muted">— brain dumps land in docs/ingest.md</span></div></section>
+<section class="card"><h2 class="kicker">From the repo — markdown files (8)</h2><p class="muted">In the local clone of davedellaquila/emil-house-sale — the reader below loads the live files from the repo itself:</p><ul class="mdinv"><li><code>KNOWLEDGE.md</code> <span class="muted">1,660 chars</span></li><li><code>SOUL.md</code> <span class="muted">136 chars</span></li><li><code>DECISIONS.md</code> <span class="muted">536 chars</span></li><li><code>ACCOMPLISHMENTS.md</code> <span class="muted">354 chars</span></li><li><code>README.md</code> <span class="muted">669 chars</span></li><li><code>docs/brief.md</code> <span class="muted">4,447 chars</span></li><li><code>docs/ingest.md</code> <span class="muted">130 chars</span></li><li><code>docs/mission-statement.md</code> <span class="muted">4,447 chars</span></li></ul>
+<section class="repo-files" data-buddy-id="emil-house-sale">
+<h2>📄 Repo files</h2>
+<p class="rf-sub">The markdown files in <span data-buddy-name>Emil&#x27;s House Sale</span>'s repo. Tap one to read it; edit in place and the save goes straight back to GitHub.</p>
+<div class="rf-locked" hidden>🔒 Connect GitHub in the 🧠 Brain dump box above to view and edit files — the repos are private, so a token is needed to read them. Then reload this page.</div>
+<div class="rf-main" hidden>
+<div class="rf-list"></div>
+<div class="rf-view" hidden>
+<div class="rf-viewhead"><span class="rf-path"></span><button type="button" class="attn-btn rf-edit">Edit</button><button type="button" class="attn-btn rf-close">Close</button></div>
+<div class="rf-body"></div>
+</div>
+<div class="rf-editor" hidden>
+<div class="rf-viewhead"><span class="rf-path"></span></div>
+<textarea class="rf-ta" rows="18" spellcheck="false" aria-label="Markdown source"></textarea>
+<div class="attn-actions"><button type="button" class="attn-btn primary rf-save">Save to GitHub</button><button type="button" class="attn-btn rf-cancel">Cancel</button></div>
+</div>
+<div class="rf-status attn-status" role="status"></div>
+</div>
+</section>
+</section>
+
+<section class="dumpbox" data-buddy-id="emil-house-sale">
+<h2>🧠 Brain dump</h2>
+<p class="dumpbox-sub">Dump what's on your mind about <span data-buddy-name>Emil&#x27;s House Sale</span> — raw and unfiltered. Each dump lands in the buddy's repo (docs/ingest.md) as a timestamped entry — or saves on this device until a repo is linked and a token is connected.</p>
+<div class="dumpbox-token" hidden>
+<p>🔒 Connect GitHub to unlock dumping. Paste a token once — it stays on this device only.</p>
+<div class="dumpbox-tokenrow">
+<input type="password" placeholder="GitHub token (repo scope)" aria-label="GitHub token">
+<button type="button">Save token</button>
+<a href="https://github.com/settings/tokens" target="_blank" rel="noopener">Get a token</a>
+</div>
+</div>
+<textarea rows="4" placeholder="Dump what's on your mind about Emil&#x27;s House Sale…"></textarea>
+<div class="dumpbox-row">
+<button type="button" class="dumpbox-btn">Dump it</button>
+<span class="dumpbox-status" role="status"></span>
+</div>
+<p class="dumpbox-hint">Enter dumps it &middot; Shift+Enter for a new line</p>
+</section>
+
+<footer>Default Homepage v3 — "The Dossier" · Generated 2026-10-20 · Part of the Buddy System<br>
+<span class="muted">Archived PDF snapshots live in the buddy-system archive folder.</span></footer>
+</div>
+
+<script>
+(function(){
+  var box = document.querySelector('.dumpbox');
+  if (!box || box.dataset.dumpInit) return;
+  box.dataset.dumpInit = '1';
+  var bid = box.getAttribute('data-buddy-id') || (function(){
+    var p = location.pathname.replace(/\\/+$/, '');
+    return p.substring(p.lastIndexOf('/') + 1);
+  })();
+  var ta = box.querySelector('textarea'),
+      btn = box.querySelector('.dumpbox-btn'),
+      st = box.querySelector('.dumpbox-status'),
+      tokWrap = box.querySelector('.dumpbox-token');
+  function lsGet(){ try { return JSON.parse(localStorage.getItem('buddyTree.v3') || '{}'); } catch(e){ return {}; } }
+  function lsSet(patch){ try { var s = lsGet(); for (var k in patch) s[k] = patch[k]; localStorage.setItem('buddyTree.v3', JSON.stringify(s)); } catch(e){} }
+  function token(){ return lsGet().ghToken || ''; }
+  function b64encode(str){
+    var bytes = new TextEncoder().encode(str), bin = '';
+    bytes.forEach(function(b){ bin += String.fromCharCode(b); });
+    return btoa(bin);
+  }
+  async function ghApi(path, method, body){
+    var t = token();
+    if (!t) throw new Error('Add a GitHub token first.');
+    var r = await fetch('https://api.github.com' + path, {
+      method: method || 'GET',
+      headers: {'Authorization': 'Bearer ' + t, 'Accept': 'application/vnd.github+json', 'Content-Type': 'application/json'},
+      body: body ? JSON.stringify(body) : undefined
+    });
+    if (!r.ok) throw new Error('GitHub ' + r.status);
+    return r.status === 204 ? null : await r.json();
+  }
+  async function ghGetFile(repo, path){
+    try {
+      var j = await ghApi('/repos/davedellaquila/' + repo + '/contents/' + path);
+      if (j && j.content) return {
+        text: new TextDecoder().decode(Uint8Array.from(atob(j.content.replace(/\\n/g, '')), function(c){ return c.charCodeAt(0); })),
+        sha: j.sha
+      };
+    } catch(e){}
+    return null;
+  }
+  var repo = null, repoName = bid;
+  async function resolveRepo(){
+    try {
+      var r = await fetch('../buddies.json', {cache: 'no-store'});
+      var d = await r.json();
+      var buds = d.buddies || [];
+      for (var i = 0; i < buds.length; i++) {
+        if (buds[i].id === bid && buds[i].repo) { repo = buds[i].repo; repoName = buds[i].name || bid; break; }
+      }
+    } catch(e){}
+  }
+  /* Local fallback (Dave 2026-10-15, widened 2026-10-16): dumping always works,
+     even with no GitHub token AND no repo linked — entries are saved in this
+     device's localStorage until the GitHub write path can take them. The backlog
+     flushes into the repo on the next successful GitHub dump (once a repo is
+     linked and a token is present). */
+  function localKey(){ return 'buddyTree.ingest.' + bid; }
+  function localBacklog(){
+    try { var a = JSON.parse(localStorage.getItem(localKey()) || '[]'); return Array.isArray(a) ? a : []; }
+    catch(e){ return []; }
+  }
+  function localSave(entry){
+    var a = localBacklog(); a.push(entry);
+    try { localStorage.setItem(localKey(), JSON.stringify(a)); } catch(e){}
+  }
+  function localClear(){ try { localStorage.removeItem(localKey()); } catch(e){} }
+  function refreshUI(){
+    var has = !!token();
+    tokWrap.hidden = has;
+    /* The box always works: no token and/or no repo just means local saves. */
+    ta.disabled = false;
+    btn.disabled = false;
+    var n = localBacklog().length;
+    if (!repo) {
+      st.textContent = n
+        ? n + ' local ' + (n === 1 ? 'dump' : 'dumps') + ' saved on this device — will sync when a repo is linked.'
+        : 'No repo linked yet — dumps save on this device and will sync when one is linked.';
+      return;
+    }
+    st.textContent = has
+      ? (n ? n + ' local ' + (n === 1 ? 'dump' : 'dumps') + ' will sync on next dump.' : '')
+      : 'No GitHub token — dumps save on this device for now.';
+  }
+  var tokInput = tokWrap.querySelector('input'),
+      tokSave = tokWrap.querySelector('button');
+  /* Visual save confirmation (Dave 2026-10-16): the button flashes green
+     with a ✓ for ~2s on every successful save, so the save is unmissable. */
+  function flashSaved(){
+    var label = btn.textContent;
+    btn.classList.add('saved');
+    btn.textContent = '✓ Saved';
+    st.classList.add('flash');
+    setTimeout(function(){
+      btn.classList.remove('saved');
+      if (btn.textContent === '✓ Saved') btn.textContent = label;
+      st.classList.remove('flash');
+    }, 1800);
+  }
+  /* Dave 2026-10-18: verify the token against GitHub when pasted, so a
+     bad token is caught here instead of surfacing as a mysterious 404 on
+     the next dump. The token is kept either way; dumps queue locally until
+     a working token is in place. */
+  tokSave.addEventListener('click', async function(){
+    var v = tokInput.value.trim();
+    if (!v) return;
+    lsSet({ghToken: v});
+    tokInput.value = '';
+    st.textContent = 'Checking token…';
+    try {
+      await ghApi('/user');
+      refreshUI();
+      st.textContent = '✓ Token verified — dumps will sync to GitHub.';
+    } catch(e) {
+      refreshUI();
+      st.textContent = '⚠ GitHub rejected that token (' + ((e && e.message) || e) + ') — dumps stay on this device until a working token is added.';
+    }
+  });
+  async function dump(){
+    var text = ta.value.trim();
+    if (!text) return;
+    var stamp = new Date().toLocaleString();
+    var NL = String.fromCharCode(10);
+    if (!repo) {
+      /* No repo linked yet — save on this device; syncs once one is linked. */
+      localSave({t: stamp, text: text});
+      ta.value = '';
+      refreshUI();
+      st.textContent = '✓ Saved on this device — will sync to the repo once one is linked.';
+      flashSaved();
+      return;
+    }
+    if (!token()) {
+      /* Temporary workaround: no token → save on this device. */
+      localSave({t: stamp, text: text});
+      ta.value = '';
+      st.textContent = '✓ Saved on this device — add a GitHub token to sync it to the repo.';
+      flashSaved();
+      return;
+    }
+    st.textContent = 'Dumping…';
+    btn.disabled = true;
+    try {
+      /* Flush any locally-saved backlog first, then the new entry. */
+      var backlog = localBacklog();
+      var parts = backlog.map(function(b){ return '## ' + b.t + NL + NL + b.text + NL + NL; });
+      parts.push('## ' + stamp + NL + NL + text + NL + NL);
+      var cur = await ghGetFile(repo, 'docs/ingest.md');
+      var base = cur ? cur.text : '# Ingest log — ' + repoName + NL + NL;
+      var body = {message: 'Ingest dump for ' + bid, content: b64encode(base + parts.join(''))};
+      if (cur && cur.sha) body.sha = cur.sha;
+      await ghApi('/repos/davedellaquila/' + repo + '/contents/docs/ingest.md', 'PUT', body);
+      localClear();
+      ta.value = '';
+      st.textContent = '✓ Dumped to ' + repo + '/docs/ingest.md' + (backlog.length ? ' (' + backlog.length + ' local synced)' : '');
+      flashSaved();
+    } catch(err){
+      /* Dave 2026-10-18: a failed GitHub write must never drop the dump.
+         Keep it on this device and say so plainly, with the backlog count —
+         it syncs on the next successful dump. */
+      try { localSave({t: stamp, text: text}); } catch(e2){}
+      ta.value = '';
+      refreshUI();
+      var why = (err && err.message) || String(err);
+      var nq = 0; try { nq = localBacklog().length; } catch(e2){}
+      var tail = nq > 1 ? ' (' + nq + ' on this device waiting to sync)' : '';
+      st.textContent = (/404/.test(why)
+        ? '⚠ Saved on this device — GitHub said 404 (usually a wrong/expired token, or no access to this private repo). Fix the token, then dump again to sync.'
+        : '⚠ Saved on this device — GitHub said: ' + why + '. It will sync on your next successful dump.') + tail;
+    }
+    btn.disabled = false;
+  }
+  btn.addEventListener('click', dump);
+  ta.addEventListener('keydown', function(ev){
+    /* Dave 2026-10-16: plain Return dumps, like the button. Shift+Return for a newline. */
+    if (ev.key === 'Enter' && !ev.shiftKey && !ev.altKey) { ev.preventDefault(); dump(); }
+  });
+  resolveRepo().then(refreshUI);
+})();
+</script>
+
+
+<script>
+(function(){
+  var sec = document.querySelector('.repo-files');
+  if (!sec || sec.dataset.rfInit) return;
+  sec.dataset.rfInit = '1';
+  var bid = sec.getAttribute('data-buddy-id') || (function(){
+    var p = location.pathname.replace(/\\/+$/, '');
+    return p.substring(p.lastIndexOf('/') + 1);
+  })();
+  function lsGet(){ try { return JSON.parse(localStorage.getItem('buddyTree.v3') || '{}'); } catch(e){ return {}; } }
+  function token(){ return lsGet().ghToken || ''; }
+  function b64encode(str){
+    var bytes = new TextEncoder().encode(str), bin = '';
+    bytes.forEach(function(b){ bin += String.fromCharCode(b); });
+    return btoa(bin);
+  }
+  async function ghApi(path, method, body){
+    var t = token();
+    if (!t) throw new Error('Add a GitHub token first.');
+    var r = await fetch('https://api.github.com' + path, {
+      method: method || 'GET',
+      headers: {'Authorization': 'Bearer ' + t, 'Accept': 'application/vnd.github+json', 'Content-Type': 'application/json'},
+      body: body ? JSON.stringify(body) : undefined
+    });
+    if (!r.ok) throw new Error('GitHub ' + r.status);
+    return r.status === 204 ? null : await r.json();
+  }
+  async function ghGetFile(repo, path){
+    try {
+      var j = await ghApi('/repos/davedellaquila/' + repo + '/contents/' + path);
+      if (j && j.content) return {
+        text: new TextDecoder().decode(Uint8Array.from(atob(j.content.replace(/\\n/g, '')), function(c){ return c.charCodeAt(0); })),
+        sha: j.sha
+      };
+    } catch(e){}
+    return null;
+  }
+  var repo = null;
+  async function resolveRepo(){
+    try {
+      var r = await fetch('../buddies.json', {cache: 'no-store'});
+      var d = await r.json();
+      var buds = d.buddies || [];
+      for (var i = 0; i < buds.length; i++) {
+        if (buds[i].id === bid && buds[i].repo) { repo = buds[i].repo; break; }
+      }
+    } catch(e){}
+  }
+  function esc(s){ return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+  function inline(s){
+    s = esc(s);
+    s = s.replace(/`([^`]+)`/g, '<code>$1</code>');
+    s = s.replace(/\\*\\*([^*]+)\\*\\*/g, '<strong>$1</strong>');
+    s = s.replace(/(^|[^*])\\*([^*\\n]+)\\*/g, '$1<em>$2</em>');
+    s = s.replace(/\\[([^\\]]+)\\]\\((https?:[^)\\s]+)\\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>');
+    return s;
+  }
+  function mdRender(src){
+    var lines = src.split('\\n'), out = [], inList = false, inCode = false, codeBuf = [];
+    function closeList(){ if (inList) { out.push('</ul>'); inList = false; } }
+    for (var i = 0; i < lines.length; i++){
+      var ln = lines[i], m;
+      if (/^```/.test(ln)) {
+        if (inCode) { out.push('<pre><code>' + esc(codeBuf.join('\\n')) + '</code></pre>'); codeBuf = []; inCode = false; }
+        else { closeList(); inCode = true; }
+        continue;
+      }
+      if (inCode) { codeBuf.push(ln); continue; }
+      if ((m = ln.match(/^(#{1,4})\\s+(.*)/))) {
+        closeList();
+        var lv = Math.min(m[1].length + 1, 4);
+        out.push('<h' + lv + '>' + inline(m[2]) + '</h' + lv + '>');
+        continue;
+      }
+      if (/^\\s*(-{3,}|\\*{3,})\\s*$/.test(ln)) { closeList(); out.push('<hr>'); continue; }
+      if ((m = ln.match(/^\\s*[-*]\\s+(.*)/)) || (m = ln.match(/^\\s*\\d+[.)]\\s+(.*)/))) {
+        if (!inList) { out.push('<ul>'); inList = true; }
+        out.push('<li>' + inline(m[1]) + '</li>');
+        continue;
+      }
+      if ((m = ln.match(/^>\\s?(.*)/))) { closeList(); out.push('<blockquote>' + inline(m[1]) + '</blockquote>'); continue; }
+      if (!ln.trim()) { closeList(); continue; }
+      closeList();
+      out.push('<p>' + inline(ln) + '</p>');
+    }
+    closeList();
+    if (inCode) out.push('<pre><code>' + esc(codeBuf.join('\\n')) + '</code></pre>');
+    return out.join('\\n');
+  }
+  var locked = sec.querySelector('.rf-locked'), main = sec.querySelector('.rf-main'),
+      list = sec.querySelector('.rf-list'), view = sec.querySelector('.rf-view'),
+      body = sec.querySelector('.rf-body'), editor = sec.querySelector('.rf-editor'),
+      ta = sec.querySelector('.rf-ta'), st = sec.querySelector('.rf-status');
+  var cur = null;
+  function openFile(f){
+    st.textContent = 'Loading ' + f.path + '…';
+    ghGetFile(repo, f.path).then(function(got){
+      if (!got) { st.textContent = '⚠ Could not load ' + f.path + '.'; return; }
+      cur = {path: f.path, sha: got.sha, text: got.text};
+      st.textContent = '';
+      editor.hidden = true;
+      view.hidden = false;
+      view.querySelector('.rf-path').textContent = f.path;
+      body.innerHTML = mdRender(got.text);
+    });
+  }
+  view.querySelector('.rf-close').addEventListener('click', function(){ view.hidden = true; });
+  view.querySelector('.rf-edit').addEventListener('click', function(){
+    if (!cur) return;
+    editor.querySelector('.rf-path').textContent = cur.path;
+    ta.value = cur.text;
+    view.hidden = true;
+    editor.hidden = false;
+    ta.focus();
+  });
+  editor.querySelector('.rf-cancel').addEventListener('click', function(){
+    editor.hidden = true;
+    view.hidden = false;
+  });
+  editor.querySelector('.rf-save').addEventListener('click', async function(){
+    if (!cur) return;
+    var btn = this;
+    btn.disabled = true;
+    st.textContent = 'Saving…';
+    try {
+      var body = {message: 'Edit ' + cur.path + ' from the homepage', content: b64encode(ta.value), sha: cur.sha};
+      var j = await ghApi('/repos/davedellaquila/' + repo + '/contents/' + cur.path, 'PUT', body);
+      if (j && j.content && j.content.sha) cur.sha = j.content.sha;
+      cur.text = ta.value;
+      editor.hidden = true;
+      view.hidden = false;
+      view.querySelector('.rf-body').innerHTML = mdRender(cur.text);
+      st.textContent = '✓ Saved to GitHub (' + repo + '/' + cur.path + ').';
+    } catch(err){
+      var why = (err && err.message) || String(err);
+      st.textContent = /409|422/.test(why)
+        ? '⚠ GitHub said the file changed since you opened it (' + why + ') — close it, reopen it, and try again.'
+        : '⚠ Save failed (' + why + ') — your edit is still in the editor.';
+    }
+    btn.disabled = false;
+  });
+  async function init(){
+    await resolveRepo();
+    if (!repo) {
+      locked.hidden = false;
+      locked.textContent = 'No repo is linked for this buddy yet, so there are no repo files to show.';
+      return;
+    }
+    if (!token()) { locked.hidden = false; return; }
+    main.hidden = false;
+    st.textContent = 'Loading files…';
+    var files = [];
+    async function grab(dir){
+      try {
+        var j = await ghApi('/repos/davedellaquila/' + repo + (dir ? '/contents/' + dir : '/contents'));
+        if (Array.isArray(j)) j.forEach(function(e){
+          if (e.type === 'file' && /\\.md$/i.test(e.name)) files.push({name: e.name, path: e.path});
+        });
+      } catch(e){}
+    }
+    await grab('');
+    await grab('docs');
+    files.sort(function(a, b){ return a.path < b.path ? -1 : 1; });
+    if (!files.length) { st.textContent = 'No markdown files found in the repo yet.'; return; }
+    st.textContent = '';
+    files.forEach(function(f){
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'rf-file';
+      var n = document.createElement('span');
+      n.className = 'rf-name';
+      n.textContent = '📄 ' + f.name;
+      var dd = document.createElement('span');
+      dd.className = 'rf-dir';
+      dd.textContent = f.path;
+      b.appendChild(n);
+      b.appendChild(dd);
+      b.addEventListener('click', function(){ openFile(f); });
+      list.appendChild(b);
+    });
+  }
+  init();
+})();
+</script>
+
+
+<script>
+(function(){
+  var tiles = document.querySelectorAll('.attn[data-attn-id]');
+  if (!tiles.length) return;
+  var dumpbox = document.querySelector('.dumpbox');
+  var bid = (dumpbox && dumpbox.getAttribute('data-buddy-id')) || (function(){
+    var p = location.pathname.replace(/\\/+$/, '');
+    return p.substring(p.lastIndexOf('/') + 1);
+  })();
+  function lsGet(){ try { return JSON.parse(localStorage.getItem('buddyTree.v3') || '{}'); } catch(e){ return {}; } }
+  function lsSet(patch){ try { var s = lsGet(); for (var k in patch) s[k] = patch[k]; localStorage.setItem('buddyTree.v3', JSON.stringify(s)); } catch(e){} }
+  function token(){ return lsGet().ghToken || ''; }
+  function b64encode(str){
+    var bytes = new TextEncoder().encode(str), bin = '';
+    bytes.forEach(function(b){ bin += String.fromCharCode(b); });
+    return btoa(bin);
+  }
+  async function ghApi(path, method, body){
+    var t = token();
+    if (!t) throw new Error('Add a GitHub token first.');
+    var r = await fetch('https://api.github.com' + path, {
+      method: method || 'GET',
+      headers: {'Authorization': 'Bearer ' + t, 'Accept': 'application/vnd.github+json', 'Content-Type': 'application/json'},
+      body: body ? JSON.stringify(body) : undefined
+    });
+    if (!r.ok) throw new Error('GitHub ' + r.status);
+    return r.status === 204 ? null : await r.json();
+  }
+  async function ghGetFile(repo, path){
+    try {
+      var j = await ghApi('/repos/davedellaquila/' + repo + '/contents/' + path);
+      if (j && j.content) return {
+        text: new TextDecoder().decode(Uint8Array.from(atob(j.content.replace(/\\n/g, '')), function(c){ return c.charCodeAt(0); })),
+        sha: j.sha
+      };
+    } catch(e){}
+    return null;
+  }
+  var repo = null, buddyName = bid;
+  async function resolveBuddy(){
+    try {
+      var r = await fetch('../buddies.json', {cache: 'no-store'});
+      var d = await r.json();
+      var buds = d.buddies || [];
+      for (var i = 0; i < buds.length; i++) {
+        if (buds[i].id === bid) {
+          if (buds[i].repo) repo = buds[i].repo;
+          if (buds[i].name) buddyName = buds[i].name;
+          break;
+        }
+      }
+    } catch(e){}
+  }
+  function rkey(aid, text){ return bid + '|' + (aid || ('text:' + text.slice(0, 60))); }
+  function isResolved(aid, text){
+    var s = lsGet();
+    var m = s.attnDone || {};
+    if (m[rkey(aid, text)]) return true;
+    /* Also honor the dashboard's own done map (the same store's 'seen',
+       keyed by bare attention id) so an item cleared in the dashboard
+       stays cleared here — one done state across surfaces. */
+    if (aid && s.seen && s.seen[aid]) return true;
+    return false;
+  }
+  function setResolved(aid, text){ var s = lsGet(); var m = s.attnDone || {}; m[rkey(aid, text)] = 1; s.attnDone = m; lsSet(s); }
+  /* Las Vegas mode (Dave 2026-10-20): marking done feels like a win — the
+     button spins once and confetti bursts from it. DOM + WAAPI only;
+     skipped under prefers-reduced-motion; only ever called on a real tap. */
+  function celebrate(el){
+    if (!el || !el.getBoundingClientRect) return;
+    if (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    try { el.animate([{transform:'rotate(0deg)'},{transform:'rotate(360deg)'}], {duration:450, easing:'cubic-bezier(.2,.7,.3,1.2)'}); } catch(e){}
+    var r = el.getBoundingClientRect(), cx = r.left + r.width/2, cy = r.top + r.height/2;
+    var colors = ['#f0b429','#3fb950','#f778ba','#58a6ff','#ff7b72','#d2a8ff'];
+    for (var i = 0; i < 26; i++){
+      var s = document.createElement('span');
+      var sz = 5 + Math.random()*6;
+      s.style.cssText = 'position:fixed;left:'+cx+'px;top:'+cy+'px;width:'+sz+'px;height:'+(sz*0.6)+'px;background:'+colors[i%colors.length]+';z-index:99999;pointer-events:none;border-radius:2px;';
+      document.body.appendChild(s);
+      var ang = Math.random()*Math.PI*2, v = 60 + Math.random()*130;
+      var dx = Math.cos(ang)*v, dy = Math.sin(ang)*v - 90;
+      var anim = s.animate([
+        {transform:'translate(-50%,-50%) rotate(0deg)', opacity:1},
+        {transform:'translate(calc(-50% + '+dx+'px), calc(-50% + '+(dy+170)+'px)) rotate('+(Math.random()*540-270)+'deg)', opacity:0}
+      ], {duration: 750 + Math.random()*450, easing:'cubic-bezier(.15,.6,.4,1)'});
+      (function(node, a){ if (a) a.onfinish = function(){ node.remove(); }; else setTimeout(function(){ node.remove(); }, 1300); })(s, anim);
+    }
+  }
+  function paintResolved(tile, msg){
+    tile.classList.add('resolved');
+    var st = tile.querySelector('.attn-status');
+    if (st) st.textContent = msg;
+    /* Dave 2026-10-20: the check belongs to the RESULT of the tap, never the
+       label beforehand — an upfront check reads as "already done." The Done
+       button renders plain "Done"; the check appears only once clicked. */
+    var db = tile.querySelector('[data-act="done"]');
+    if (db) db.textContent = '✓ Done';
+  }
+  async function sendAction(tile, entry, okMsg){
+    var st = tile.querySelector('.attn-status');
+    var btns = tile.querySelectorAll('.attn-btn');
+    if (!token()) { st.textContent = 'Add a GitHub token in the Brain dump section above to enable actions.'; return false; }
+    if (!repo) { st.textContent = 'No repo linked for this buddy yet.'; return false; }
+    btns.forEach(function(b){ b.disabled = true; });
+    st.textContent = 'Working…';
+    try {
+      var NL = String.fromCharCode(10);
+      var stamp = new Date().toLocaleString();
+      var cur = await ghGetFile(repo, 'docs/ingest.md');
+      var base = cur ? cur.text : '# Ingest log — ' + buddyName + NL + NL;
+      var body = {message: 'Attention action for ' + bid, content: b64encode(base + '## ' + stamp + NL + NL + entry + NL + NL)};
+      if (cur && cur.sha) body.sha = cur.sha;
+      await ghApi('/repos/davedellaquila/' + repo + '/contents/docs/ingest.md', 'PUT', body);
+      st.textContent = okMsg;
+      return true;
+    } catch(err){
+      st.textContent = 'Save failed: ' + (err.message || err);
+      btns.forEach(function(b){ b.disabled = false; });
+      return false;
+    }
+  }
+  tiles.forEach(function(tile){
+    var aid = tile.getAttribute('data-attn-id') || '';
+    var textEl = tile.querySelector('.attn-text');
+    var text = textEl ? textEl.textContent.trim() : '';
+    if (isResolved(aid, text)) { paintResolved(tile, 'Marked done'); return; }
+    tile.addEventListener('click', function(ev){
+      var btn = ev.target.closest ? ev.target.closest('.attn-btn') : null;
+      if (!btn || btn.disabled) return;
+      var act = btn.getAttribute('data-act');
+      var idBit = aid ? ' (attention id: ' + aid + ')' : '';
+      if (act === 'done') {
+        sendAction(tile,
+          'DONE — Dave marked this done on the homepage: "' + text + '"' + idBit + '. Please remove it from the attention list in buddies.json.',
+          'Marked done — the buddy will clear it.').then(function(ok){ if (ok) { setResolved(aid, text); paintResolved(tile, 'Marked done — the buddy will clear it.'); celebrate(btn); } });
+      } else if (act === 'info') {
+        sendAction(tile,
+          'FOLLOW-UP — Dave needs more info on: "' + text + '"' + idBit + '. Please follow up with him.',
+          'Sent — ' + buddyName + ' will follow up.');
+      }
+    });
+  });
+  resolveBuddy();
+})();
+</script>
+
+</body>
+</html>

@@ -1,222 +1,268 @@
-<!-- BUDDY-BASIC-TEMPLATE v2 -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title data-buddy-name>Zen Buddy</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Zen Buddy — a meditation companion</title>
 <style>
-:root {
-  --bg: #ffffff;
-  --text: #1a1a1a;
-  --muted: #666;
-  --card: #f5f5f5;
-  --border: #e0e0e0;
-  --accent: #0066cc;
-  --ok: #1b7a2e;
-}
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg: #1a1a1a;
-    --text: #e0e0e0;
-    --muted: #999;
-    --card: #2a2a2a;
-    --border: #3a3a3a;
-    --accent: #4da6ff;
-    --ok: #5fd08a;
+  /* ---------- light (default) ---------- */
+  :root{
+    --bg:#FAF6EE; --panel:#FFFDF8; --panel2:#F3EDDF;
+    --ink:#2B2620; --muted:#6E665A; --faint:#9A917F;
+    --line:#E7DDC9;
+    --teal:#2E6E68; --teal-soft:#DCEBE7; --teal-glow:rgba(46,110,104,.16);
+    --amber:#B97F2E; --amber-soft:#F4E8D2;
+    --serif:Georgia,'Iowan Old Style','Palatino Linotype','Times New Roman',serif;
+    --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
+    --radius:18px;
   }
-}
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  background: var(--bg);
-  color: var(--text);
-  line-height: 1.6;
-  padding: 40px 20px;
-  max-width: 800px;
-  margin: 0 auto;
-}
-.header { text-align: center; margin-bottom: 40px; }
-.topbar {
-  position: sticky; top: 0; z-index: 50;
-  display: flex; align-items: center; gap: 10px;
-  background: var(--bg);
-  border-bottom: 1px solid var(--border);
-  padding: 10px 2px; margin-bottom: 24px;
-  font-size: 17px; font-weight: 700;
-}
-.topbar-icon { font-size: 22px; line-height: 1; }
-.topbar-refresh {
-  margin-left: auto; background: none; border: 1px solid transparent; border-radius: 8px;
-  color: var(--muted); font-size: 16px; cursor: pointer; padding: 4px 10px; line-height: 1;
-}
-.topbar-refresh:hover { color: var(--text); border-color: var(--border); }
-.icon { font-size: 64px; margin-bottom: 16px; }
-h1 { font-size: 32px; margin-bottom: 8px; }
-.tagline { color: var(--muted); font-size: 18px; }
-.mission {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 24px;
-  margin-bottom: 32px;
-  font-size: 17px;
-}
-h2 { font-size: 22px; margin: 32px 0 16px; }
-.attn {
-  background: var(--card);
-  border-left: 4px solid var(--accent);
-  border-radius: 0 8px 8px 0;
-  padding: 16px 20px;
-  margin-bottom: 12px;
-}
-.attn-date { color: var(--muted); font-size: 14px; margin-top: 8px; }
-.attn-link { margin-top: 8px; }
-.attn-link a { color: var(--accent); font-weight: 600; text-decoration: none; }
-.attn-link a:hover { text-decoration: underline; }
-.attn-actions { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
-.attn-btn {
-  border: 1px solid var(--border); background: var(--bg); color: var(--text);
-  border-radius: 8px; padding: 7px 14px; font-size: 13px; font-weight: 600; cursor: pointer;
-  -webkit-tap-highlight-color: transparent;
-}
-.attn-btn:hover { border-color: var(--accent); }
-.attn-btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
-.attn-btn:disabled { opacity: .45; cursor: default; }
-.attn-status { font-size: 13px; color: var(--muted); margin-top: 8px; min-height: 18px; }
-.attn.resolved { opacity: .6; }
-.attn.resolved .attn-actions { display: none; }
-/* ---- skills (Dave 2026-10-16) ---- */
-.skills { display: flex; flex-direction: column; gap: 10px; margin-top: 4px; }
-.skill { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 12px 16px; }
-.skill-name { font-weight: 700; font-size: 15px; }
-.skill-evidence { color: var(--muted); font-size: 13px; margin-top: 4px; line-height: 1.45; }
-.children { display: flex; flex-wrap: wrap; gap: 12px; }
-.child {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 12px 20px;
-  text-decoration: none;
-  color: var(--text);
-}
-.child:hover { border-color: var(--accent); }
-.footer {
-  margin-top: 48px;
-  padding-top: 24px;
-  border-top: 1px solid var(--border);
-  color: var(--muted);
-  font-size: 14px;
-  text-align: center;
-}
-.empty { color: var(--muted); font-style: italic; }
-/* Dave 2026-10-16: photo gallery — baked in at generation time from the buddy's repo photos/ */
-.gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; margin-bottom: 8px; }
-.gallery a { display: block; border-radius: 12px; overflow: hidden; border: 1px solid var(--border); background: var(--card); }
-.gallery img { width: 100%; height: 160px; object-fit: cover; display: block; transition: transform .25s ease; }
-.gallery a:hover img { transform: scale(1.04); }
-.lightbox { position: fixed; inset: 0; z-index: 1000; display: flex; align-items: center; justify-content: center; }
-.lightbox[hidden] { display: none; }
-.lightbox-bg { position: absolute; inset: 0; background: rgba(0,0,0,.88); }
-.lightbox-img { position: relative; max-width: 92vw; max-height: 88vh; border-radius: 12px; box-shadow: 0 24px 64px rgba(0,0,0,.5); }
-.lightbox-x { position: absolute; top: 16px; right: 20px; background: rgba(255,255,255,.12); color: #fff; border: none; border-radius: 50%; width: 44px; height: 44px; font-size: 26px; cursor: pointer; line-height: 1; }
+  /* ---------- dark via system ---------- */
+  @media (prefers-color-scheme: dark){
+    :root{
+      --bg:#12141B; --panel:#1B1E27; --panel2:#232733;
+      --ink:#E9E4D6; --muted:#A09A8C; --faint:#6E6A5E;
+      --line:#2A2E3A;
+      --teal:#82B8B2; --teal-soft:#22383A; --teal-glow:rgba(130,184,178,.14);
+      --amber:#D9A45B; --amber-soft:#3A2F1E;
+    }
+  }
+  /* ---------- dark / light manual override wins ---------- */
+  html[data-theme="dark"]{
+    --bg:#12141B; --panel:#1B1E27; --panel2:#232733;
+    --ink:#E9E4D6; --muted:#A09A8C; --faint:#6E6A5E;
+    --line:#2A2E3A;
+    --teal:#82B8B2; --teal-soft:#22383A; --teal-glow:rgba(130,184,178,.14);
+    --amber:#D9A45B; --amber-soft:#3A2F1E;
+  }
+  html[data-theme="light"]{
+    --bg:#FAF6EE; --panel:#FFFDF8; --panel2:#F3EDDF;
+    --ink:#2B2620; --muted:#6E665A; --faint:#9A917F;
+    --line:#E7DDC9;
+    --teal:#2E6E68; --teal-soft:#DCEBE7; --teal-glow:rgba(46,110,104,.16);
+    --amber:#B97F2E; --amber-soft:#F4E8D2;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    background:var(--bg); color:var(--ink);
+    font-family:var(--sans); line-height:1.65;
+    min-height:100vh; transition:background .4s ease,color .4s ease;
+  }
+  .wrap{max-width:880px;margin:0 auto;padding:40px 24px 72px}
+  .eyebrow{font-size:12px;letter-spacing:.22em;text-transform:uppercase;color:var(--faint);margin-bottom:10px}
+  /* ---------- header ---------- */
+  header{text-align:center;padding:28px 0 8px;position:relative}
+  #themeBtn{
+    position:absolute;top:0;right:0;border:1px solid var(--line);background:var(--panel);
+    color:var(--muted);border-radius:999px;padding:7px 14px;font-size:13px;cursor:pointer;font-family:var(--sans);
+  }
+  #themeBtn:hover{color:var(--ink);border-color:var(--faint)}
+  h1{font-family:var(--serif);font-weight:400;font-size:clamp(38px,6vw,58px);line-height:1.12;letter-spacing:-.01em}
+  h1 em{font-style:italic;color:var(--teal)}
+  .greet{margin-top:12px;font-size:17px;color:var(--muted)}
+  .greet b{color:var(--ink);font-weight:600}
+  /* ---------- breath orb ---------- */
+  .breath{margin:34px auto 0;max-width:420px;text-align:center;background:var(--panel);
+    border:1px solid var(--line);border-radius:calc(var(--radius) + 8px);padding:30px 24px 26px;
+    box-shadow:0 12px 40px var(--teal-glow)}
+  .orb-zone{position:relative;width:190px;height:190px;margin:6px auto 4px}
+  .orb-halo{position:absolute;inset:0;border-radius:50%;
+    background:radial-gradient(circle,var(--teal-glow) 0%,transparent 68%);
+    animation:halo 8s ease-in-out infinite}
+  @keyframes halo{0%,100%{transform:scale(1);opacity:.7}50%{transform:scale(1.12);opacity:1}}
+  .orb{position:absolute;inset:34px;border-radius:50%;
+    background:radial-gradient(circle at 35% 30%,var(--teal-soft),var(--teal) 130%);
+    box-shadow:0 0 44px var(--teal-glow), inset 0 -8px 22px rgba(0,0,0,.08);
+    transition:transform 4s ease-in-out}
+  .breath-idle{font-size:14px;color:var(--faint);margin-top:2px}
+  .phase{font-family:var(--serif);font-size:26px;font-style:italic;color:var(--teal);min-height:40px;margin-top:6px}
+  .phase-count{font-size:13px;color:var(--faint);min-height:20px;font-variant-numeric:tabular-nums}
+  .round{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);margin-top:4px;min-height:18px}
+  .btn{
+    display:inline-block;margin-top:14px;border:none;cursor:pointer;font-family:var(--sans);font-size:15px;font-weight:600;
+    background:var(--teal);color:#fff;border-radius:999px;padding:12px 28px;
+    transition:transform .15s ease,opacity .15s ease;
+  }
+  /* dark-mode button/dot text: deep ink on the lighter teal */
+  html[data-theme="dark"] .btn{color:#0F1E1C}
+  html[data-theme="dark"] .dot.hit{color:#0F1E1C}
+  @media (prefers-color-scheme:dark){
+    html:not([data-theme="light"]) .btn{color:#0F1E1C}
+    html:not([data-theme="light"]) .dot.hit{color:#0F1E1C}
+  }
+  .btn:hover{transform:translateY(-1px)}
+  .btn:active{transform:translateY(0)}
+  .btn.ghost{background:transparent;color:var(--muted);border:1px solid var(--line);font-weight:500}
+  .btn.ghost:hover{color:var(--ink);border-color:var(--faint)}
+  .btn-row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+  /* ---------- sections ---------- */
+  h2{font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--faint);
+     margin:52px 0 16px;display:flex;align-items:center;gap:12px}
+  h2::after{content:"";flex:1;height:1px;background:var(--line)}
+  /* ---------- today / streak ---------- */
+  .today{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  @media(max-width:620px){.today{grid-template-columns:1fr}}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:22px}
+  .streak-num{font-family:var(--serif);font-size:56px;line-height:1;color:var(--teal)}
+  .streak-label{font-size:14px;color:var(--muted);margin-top:6px}
+  .streak-note{font-size:13px;color:var(--faint);font-style:italic;margin-top:10px;font-family:var(--serif)}
+  .week{display:flex;gap:10px;margin:14px 0 4px;align-items:center}
+  .dot{width:34px;height:34px;border-radius:50%;border:1.5px solid var(--line);display:flex;align-items:center;justify-content:center;
+       font-size:11px;color:var(--faint);background:transparent}
+  .dot.hit{background:var(--teal);border-color:var(--teal);color:#fff}
+  .dot.today{border-style:dashed}
+  .confirm{font-size:14px;color:var(--teal);font-style:italic;font-family:var(--serif);min-height:22px;margin-top:8px}
+  .fine{font-size:12px;color:var(--faint);margin-top:10px}
+  /* ---------- track tiles ---------- */
+  .tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
+  .tile{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:20px;transition:transform .15s ease}
+  .tile:hover{transform:translateY(-2px)}
+  .tile .ic{font-size:26px}
+  .tile h3{font-size:15px;margin:8px 0 4px;font-weight:600}
+  .tile p{font-size:13.5px;color:var(--muted)}
+  /* ---------- open questions ---------- */
+  .q{background:var(--panel);border:1px solid var(--line);border-left:4px solid var(--amber);
+     border-radius:12px;padding:16px 20px;margin:10px 0}
+  .q h3{font-size:15.5px;font-weight:600}
+  .q p{font-size:14px;color:var(--muted);margin-top:4px}
+  .pill{display:inline-block;font-size:11px;letter-spacing:.1em;text-transform:uppercase;font-weight:700;
+        background:var(--amber-soft);color:var(--amber);border-radius:999px;padding:4px 12px;margin-bottom:8px}
+  /* ---------- documents ---------- */
+  .docs{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
+  .doc{display:block;text-decoration:none;background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);
+       padding:20px;transition:transform .15s ease,border-color .15s ease}
+  .doc:hover{transform:translateY(-2px);border-color:var(--teal)}
+  .doc h3{font-size:15px;color:var(--ink);font-weight:600}
+  .doc p{font-size:13.5px;color:var(--muted);margin-top:4px}
+  .doc .go{font-size:13px;color:var(--teal);font-weight:600;margin-top:10px}
+  .doc.static{cursor:default}
+  .doc.static:hover{transform:none;border-color:var(--line)}
+  footer{text-align:center;margin-top:64px;padding-top:24px;border-top:1px solid var(--line);color:var(--faint);font-size:13px}
+  footer .leaf{font-size:20px;display:block;margin-bottom:8px}
 
-.dumpbox {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 20px 22px;
-  margin-bottom: 32px;
-}
-.dumpbox h2 { margin: 0 0 6px; font-size: 20px; }
-.dumpbox-sub { color: var(--muted); font-size: 14px; margin-bottom: 14px; }
-.dumpbox textarea {
-  width: 100%; min-height: 96px; resize: vertical;
-  background: var(--bg); border: 1px solid var(--border); border-radius: 8px;
-  padding: 10px 12px; font-size: 14px; color: var(--text); font-family: inherit;
-}
-.dumpbox textarea:focus { outline: none; border-color: var(--accent); }
-.dumpbox textarea:disabled { opacity: .55; }
-.dumpbox-row { display: flex; align-items: center; gap: 12px; margin-top: 10px; flex-wrap: wrap; }
-.dumpbox-btn {
-  background: var(--accent); color: #fff; border: none; border-radius: 8px;
-  padding: 9px 22px; font-size: 14px; font-weight: 600; cursor: pointer;
-}
-.dumpbox-btn:disabled { opacity: .45; cursor: default; }
-.dumpbox-btn.saved { background: var(--ok); }
-.dumpbox-status { font-size: 13px; color: var(--muted); }
-.dumpbox-status.flash { color: var(--ok); font-weight: 700; }
-.dumpbox-hint { font-size: 12px; color: var(--muted); margin-top: 8px; }
-.dumpbox-token {
-  /* Jonny, 2026-10-19 (Dave's ask): amber, not zebra. A solid amber frame +
-     a soft amber wash says "one small step needs you" — zebra striping is
-     hazard tape, it signals danger and fights every calm surface around it.
-     Dashed grey read as placeholder; solid amber reads as deliberate. */
-  background: rgba(245, 158, 11, .09);
-  background: color-mix(in srgb, #f59e0b 9%, var(--bg));
-  border: 2px solid #f59e0b;
-  box-shadow: 0 0 0 3px rgba(245, 158, 11, .16);
-  box-shadow: 0 0 0 3px color-mix(in srgb, #f59e0b 16%, transparent);
-  border-radius: 8px;
-  padding: 12px 14px; margin-bottom: 12px; font-size: 14px;
-}
-.dumpbox-token p { margin-bottom: 8px; font-weight: 600; }
-.dumpbox-tokenrow { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
-.dumpbox-tokenrow input {
-  flex: 1; min-width: 170px; background: var(--card); border: 1px solid var(--border);
-  border-radius: 8px; padding: 7px 10px; font-size: 13px; color: var(--text);
-}
-.dumpbox-tokenrow button {
-  background: transparent; color: var(--accent); border: 1px solid var(--accent);
-  border-radius: 8px; padding: 7px 14px; font-size: 13px; font-weight: 600; cursor: pointer;
-}
-.dumpbox-tokenrow a { color: var(--accent); font-size: 13px; }
-
-
-/* ---- Repo files (Dave 2026-10-20): view + edit the buddy's repo markdown ---- */
-.repo-files { margin-top: 8px; }
-.rf-sub { color: var(--muted); font-size: 14px; margin-bottom: 12px; }
-.rf-locked { background: var(--card); border: 1px dashed var(--border); border-radius: 8px; padding: 14px 16px; color: var(--muted); font-size: 14px; }
-.rf-list { display: flex; flex-direction: column; gap: 8px; }
-.rf-file { display: flex; align-items: center; gap: 10px; background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 10px 14px; cursor: pointer; text-align: left; width: 100%; color: var(--text); font: inherit; -webkit-tap-highlight-color: transparent; }
-.rf-file:hover { border-color: var(--accent); }
-.rf-file .rf-name { font-weight: 600; font-size: 15px; }
-.rf-file .rf-dir { color: var(--muted); font-size: 13px; margin-left: auto; word-break: break-all; text-align: right; }
-.rf-view, .rf-editor { margin-top: 14px; background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 16px; }
-.rf-viewhead { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 10px; }
-.rf-path { font-weight: 700; font-size: 14px; margin-right: auto; word-break: break-all; }
-.rf-body { font-size: 15px; }
-.rf-body h2 { font-size: 21px; margin: 16px 0 8px; }
-.rf-body h3 { font-size: 18px; margin: 14px 0 6px; }
-.rf-body h4 { font-size: 16px; margin: 12px 0 6px; }
-.rf-body p { margin: 6px 0; }
-.rf-body ul { margin: 6px 0 6px 20px; }
-.rf-body blockquote { border-left: 3px solid var(--border); padding-left: 12px; color: var(--muted); margin: 8px 0; }
-.rf-body code { background: var(--bg); border: 1px solid var(--border); border-radius: 4px; padding: 0 4px; font-size: 13px; }
-.rf-body pre { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 12px; overflow-x: auto; margin: 8px 0; }
-.rf-body pre code { border: none; padding: 0; background: none; }
-.rf-body a { color: var(--accent); }
-.rf-body hr { border: none; border-top: 1px solid var(--border); margin: 14px 0; }
-.rf-ta { width: 100%; box-sizing: border-box; background: var(--bg); color: var(--text); border: 1px solid var(--border); border-radius: 8px; padding: 12px; font-family: ui-monospace, Menlo, monospace; font-size: 13px; line-height: 1.55; }
-
+  /* ---------- sticky header (house rule) ---------- */
+  .stickybar{position:sticky;top:0;z-index:60;display:flex;align-items:center;justify-content:space-between;gap:12px;
+    background:var(--bg);background:color-mix(in srgb,var(--bg) 84%,transparent);
+    backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line);padding:9px 20px;font-size:14px}
+  .stickybar .who{font-weight:600}
+  .stickybar nav{display:flex;gap:16px}
+  .stickybar a{color:var(--muted);text-decoration:none;font-size:13.5px}
+  .stickybar a:hover{color:var(--ink)}
+  .seccap{font-size:14.5px;color:var(--muted);margin:-6px 0 16px;font-family:var(--serif);font-style:italic}
+  /* ---------- brain-dump box (canonical snippet, Zen styling) ---------- */
+  .dumpbox{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:22px}
+  .dumpbox-sub{color:var(--muted);font-size:14px;margin-bottom:14px}
+  .dumpbox textarea{width:100%;min-height:96px;resize:vertical;background:var(--bg);border:1px solid var(--line);
+    border-radius:10px;padding:10px 12px;font-size:14px;color:var(--ink);font-family:inherit}
+  .dumpbox textarea:focus{outline:none;border-color:var(--teal)}
+  .dumpbox textarea:disabled{opacity:.55}
+  .dumpbox-row{display:flex;align-items:center;gap:12px;margin-top:10px;flex-wrap:wrap}
+  .dumpbox-btn{background:var(--teal);color:#fff;border:none;border-radius:999px;padding:10px 24px;
+    font-size:14px;font-weight:600;cursor:pointer;font-family:inherit}
+  html[data-theme="dark"] .dumpbox-btn{color:#0F1E1C}
+  @media (prefers-color-scheme:dark){html:not([data-theme="light"]) .dumpbox-btn{color:#0F1E1C}}
+  .dumpbox-btn:disabled{opacity:.45;cursor:default}
+  .dumpbox-btn.saved{background:#3f9e58;color:#fff}
+  .dumpbox-status{font-size:13px;color:var(--muted)}
+  .dumpbox-status.flash{color:#3f9e58;font-weight:700}
+  .dumpbox-hint{font-size:12px;color:var(--faint);margin-top:8px}
+  .dumpbox-token{background:rgba(245,158,11,.09);border:2px solid #f59e0b;border-radius:10px;
+    padding:12px 14px;margin-bottom:12px;font-size:14px}
+  .dumpbox-token p{margin-bottom:8px;font-weight:600}
+  .dumpbox-tokenrow{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+  .dumpbox-tokenrow input{flex:1;min-width:170px;background:var(--panel);border:1px solid var(--line);
+    border-radius:8px;padding:7px 10px;font-size:13px;color:var(--ink)}
+  .dumpbox-tokenrow button{background:transparent;color:var(--teal);border:1px solid var(--teal);
+    border-radius:8px;padding:7px 14px;font-size:13px;font-weight:600;cursor:pointer}
+  .dumpbox-tokenrow a{color:var(--teal);font-size:13px}
+  @media(prefers-reduced-motion:reduce){
+    .orb-halo{animation:none}
+    .orb{transition:none}
+    *{transition-duration:.01ms !important}
+  }
 </style>
 </head>
 <body>
-<nav data-buddy-crumb style="padding:14px 20px 0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:14px;line-height:1.4;"><a href="https://davedellaquila.github.io/buddy-system/project-buddy/" style="color:inherit;opacity:.65;text-decoration:none;">← Project Buddy</a></nav>
-<div class="topbar"><span class="topbar-icon">🧘</span><span class="topbar-name" data-buddy-name>Zen Buddy</span><button class="topbar-refresh" title="Reload this page (bypasses cache)" onclick="location.href=location.pathname+'?v='+Date.now()">&#8635;</button></div>
-<div class="header">
-<div class="icon">🧘</div>
-<h1 data-buddy-name>Zen Buddy</h1>
-<div class="tagline">Meditation, breathwork, practice</div>
-</div>
+<div class="stickybar"><span class="who">🧘 Zen Buddy</span><nav><a href="../">Dashboard</a><a href="about.html">About · full record</a></nav></div>
+<div class="wrap">
 
-<div class="mission">Zen Buddy is your companion for meditation, spirituality, and becoming more zen — practice-oriented (sessions, breathwork, reminders tied to routine), not a content library. Possible tie-ins: sleep quality and Wisdom Buddy&#x27;s spiritual readings.</div>
+  <header>
+    <button id="themeBtn" aria-label="Toggle color theme">☾ Dark</button>
+    <div class="eyebrow">Zen Buddy · a meditation companion</div>
+    <h1>A quieter mind, <em>daily.</em></h1>
+    <p class="greet" id="greet">Good evening, <b>Dave</b>.</p>
+  </header>
 
+  <!-- breath pacer : the signature interaction -->
+  <section class="breath" aria-label="Breathing exercise">
+    <div class="eyebrow" style="margin-bottom:6px">A minute of breath</div>
+    <div class="orb-zone">
+      <div class="orb-halo"></div>
+      <div class="orb" id="orb"></div>
+    </div>
+    <div class="phase" id="phaseLabel">Follow the orb.</div>
+    <div class="phase-count" id="phaseCount"></div>
+    <div class="round" id="roundLabel"></div>
+    <div class="btn-row">
+      <button class="btn" id="breathBtn">Begin breathing</button>
+      <button class="btn ghost" id="breathEnd" style="display:none">End</button>
+    </div>
+    <p class="breath-idle">Inhale 4 · Hold 4 · Exhale 6 — for as long as you like.</p>
+  </section>
 
+  <!-- today -->
+  <h2>Today</h2>
+  <div class="today">
+    <div class="card">
+      <div class="streak-num" id="streakNum">0</div>
+      <div class="streak-label">day practice streak</div>
+      <p class="streak-note">Guilt-free, always: miss a day and every day is day one again.</p>
+    </div>
+    <div class="card">
+      <div class="eyebrow" style="margin-bottom:2px">This week</div>
+      <div class="week" id="weekDots"></div>
+      <button class="btn" id="logBtn">Log today's sit 🧘</button>
+      <div class="confirm" id="confirmMsg"></div>
+      <p class="fine">Kept in this browser for now — the real app will carry it everywhere.</p>
+    </div>
+  </div>
 
+  <!-- what i track -->
+  <h2>What I'll track</h2>
+  <p class="seccap">The daily check-in set, as shaped by the brief.</p>
+  <div class="tiles">
+    <div class="tile"><div class="ic">🧘</div><h3>Meditation sessions</h3><p>Sits, long or short — every one counts.</p></div>
+    <div class="tile"><div class="ic">🌬️</div><h3>Breathwork</h3><p>A minute of breath, anytime you need it.</p></div>
+    <div class="tile"><div class="ic">🙏</div><h3>Gratitude</h3><p>Three good things, daily.</p></div>
+    <div class="tile"><div class="ic">🙂</div><h3>Mood</h3><p>A gentle check-in, no judgment.</p></div>
+    <div class="tile"><div class="ic">⚡</div><h3>Energy</h3><p>How the tank feels today.</p></div>
+    <div class="tile"><div class="ic">😴</div><h3>Sleep</h3><p>The quiet tie-in — rest is practice too.</p></div>
+  </div>
 
-<section class="dumpbox" data-buddy-id="zen-buddy">
-<h2>🧠 Brain dump</h2>
+  <!-- on my mind -->
+  <h2>On my mind · open questions</h2>
+  <div class="q"><span class="pill">Needs Dave's call</span><h3>Guided sessions or a simple timer?</h3><p>The core interaction model — a voice to follow, or silence and a bell.</p></div>
+  <div class="q"><span class="pill">Needs Dave's call</span><h3>Which style or tradition?</h3><p>Mindfulness, Zen, secular… the voice and lineage matter.</p></div>
+  <div class="q"><span class="pill">Needs Dave's call</span><h3>Solo practice, or family?</h3><p>Just Dave — or Nancy and the family too.</p></div>
+  <div class="q"><span class="pill">Needs Dave's call</span><h3>How close to Wisdom Buddy?</h3><p>Cousins or strangers — where the boundary sits.</p></div>
+  <div class="q"><span class="pill">Needs Dave's call</span><h3>What do we build on?</h3><p>Platform TBD — the next big decision once the questions above settle.</p></div>
+
+  <!-- documents -->
+  <h2>The documents</h2>
+  <div class="docs">
+    <a class="doc" href="https://docs.google.com/document/d/1KGQfzCvsN3ERTsahhIqxZPRrexjgKOREGKD_P_bRLH8/edit">
+      <h3>📄 Product Brief — in review</h3><p>The idea, how it could work, revenue, room for growth.</p><div class="go">Open the brief →</div>
+    </a>
+    <div class="doc static">
+      <h3>📝 PRD — up next</h3><p>Written once the brief lands. It will shape the daily check-ins: sessions, breathwork, gratitude, mood, energy, sleep.</p><div class="go" style="color:var(--faint)">Follows the brief →</div>
+    </div>
+    <a class="doc" href="https://github.com/davedellaquila/zen-buddy">
+      <h3>💻 GitHub repo</h3><p>davedellaquila/zen-buddy — private. The desk lives here: KNOWLEDGE, CONFIG, STUDY.</p><div class="go">Open the repo →</div>
+    </a>
+  </div>
+
+  <h2>Brain dump</h2>
+  <section class="dumpbox" data-buddy-id="zen-buddy">
 <p class="dumpbox-sub">Dump what's on your mind about <span data-buddy-name>Zen Buddy</span> — raw and unfiltered. Each dump lands in the buddy's repo (docs/ingest.md) as a timestamped entry — or saves on this device until a repo is linked and a token is connected.</p>
 <div class="dumpbox-token" hidden>
 <p>🔒 Connect GitHub to unlock dumping. Paste a token once — it stays on this device only.</p>
@@ -234,40 +280,128 @@ h2 { font-size: 22px; margin: 32px 0 16px; }
 <p class="dumpbox-hint">Enter dumps it &middot; Shift+Enter for a new line</p>
 </section>
 
-
-<h2>Needs Attention</h2>
-<div class="attn" data-attn-id="zen-buddy-brief"><div class="attn-text">Product brief ready for review — looks good, edits, or defer? Open: guided vs. timer, what style, solo or family, how close it sits to Wisdom Buddy.</div><div class="attn-link"><a href="https://docs.google.com/document/d/1KGQfzCvsN3ERTsahhIqxZPRrexjgKOREGKD_P_bRLH8/edit" target="_blank" rel="noopener">Open →</a></div><div class="attn-date">2026-10-09</div><div class="attn-actions"><button type="button" class="attn-btn primary" data-act="done">Done</button><button type="button" class="attn-btn" data-act="info">Need more info</button></div><div class="attn-status" role="status"></div></div>
-
-
-
-
-
-
-
-<section class="repo-files" data-buddy-id="zen-buddy">
-<h2>📄 Repo files</h2>
-<p class="rf-sub">The markdown files in <span data-buddy-name>Zen Buddy</span>'s repo. Tap one to read it; edit in place and the save goes straight back to GitHub.</p>
-<div class="rf-locked" hidden>🔒 Connect GitHub in the 🧠 Brain dump box above to view and edit files — the repos are private, so a token is needed to read them. Then reload this page.</div>
-<div class="rf-main" hidden>
-<div class="rf-list"></div>
-<div class="rf-view" hidden>
-<div class="rf-viewhead"><span class="rf-path"></span><button type="button" class="attn-btn rf-edit">Edit</button><button type="button" class="attn-btn rf-close">Close</button></div>
-<div class="rf-body"></div>
-</div>
-<div class="rf-editor" hidden>
-<div class="rf-viewhead"><span class="rf-path"></span></div>
-<textarea class="rf-ta" rows="18" spellcheck="false" aria-label="Markdown source"></textarea>
-<div class="attn-actions"><button type="button" class="attn-btn primary rf-save">Save to GitHub</button><button type="button" class="attn-btn rf-cancel">Cancel</button></div>
-</div>
-<div class="rf-status attn-status" role="status"></div>
-</div>
-</section>
-
-
-<div class="footer">
-Generated 2026-10-20 · Part of the Buddy System
+  <footer>
+    <span class="leaf">🍃</span>
+    <p>A living page — I'll keep it fresh as the project evolves.<br><a href="about.html" style="color:var(--teal);text-decoration:none">About · the full record</a> · Built with care by Astro, for Dave.</p>
+  </footer>
 </div>
 
+<script>
+(function(){
+  "use strict";
+  var RM = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ---------- theme: system default + manual override ---------- */
+  var root = document.documentElement, btn = document.getElementById('themeBtn');
+  function sysDark(){ return window.matchMedia('(prefers-color-scheme: dark)').matches; }
+  function current(){ return root.getAttribute('data-theme') || (sysDark() ? 'dark' : 'light'); }
+  function paint(){
+    var c = current();
+    btn.textContent = c === 'dark' ? '☀ Light' : '☾ Dark';
+    btn.setAttribute('aria-label', 'Switch to ' + (c === 'dark' ? 'light' : 'dark') + ' mode');
+  }
+  try {
+    var saved = localStorage.getItem('zenbuddy.theme');
+    if (saved === 'dark' || saved === 'light') root.setAttribute('data-theme', saved);
+  } catch(e){}
+  paint();
+  btn.addEventListener('click', function(){
+    var next = current() === 'dark' ? 'light' : 'dark';
+    try { localStorage.setItem('zenbuddy.theme', next); } catch(e){}
+    root.setAttribute('data-theme', next); paint();
+  });
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function(){
+    try { if (!localStorage.getItem('zenbuddy.theme')) paint(); } catch(e){ paint(); }
+  });
+
+  /* ---------- gentle time-aware greeting ---------- */
+  var h = new Date().getHours(), g = document.getElementById('greet'), msg;
+  if (h >= 5 && h < 12)      msg = 'Good morning, <b>Dave</b>. Begin gently.';
+  else if (h >= 12 && h < 17) msg = 'Good afternoon, <b>Dave</b>. A breath between things.';
+  else if (h >= 17 && h < 22) msg = 'Good evening, <b>Dave</b>. Time to land.';
+  else                        msg = 'The night is quiet, <b>Dave</b>. Breathe easy.';
+  g.innerHTML = msg;
+
+  /* ---------- breath pacer ---------- */
+  var orb = document.getElementById('orb'),
+      phaseLabel = document.getElementById('phaseLabel'),
+      phaseCount = document.getElementById('phaseCount'),
+      roundLabel = document.getElementById('roundLabel'),
+      breathBtn = document.getElementById('breathBtn'),
+      breathEnd = document.getElementById('breathEnd');
+  var PHASES = [
+    { label:'Inhale', secs:4, scale:1.32 },
+    { label:'Hold',   secs:4, scale:1.32 },
+    { label:'Exhale', secs:6, scale:1.0  }
+  ];
+  var breathing = false, timers = [], tickId = null, phaseIdx = 0, round = 0;
+  function clearBreath(){ timers.forEach(clearTimeout); timers = []; if (tickId){ clearInterval(tickId); tickId = null; } }
+  function later(fn, ms){ timers.push(setTimeout(fn, ms)); }
+  function runPhase(){
+    if (!breathing) return;
+    var ph = PHASES[phaseIdx];
+    phaseLabel.textContent = ph.label;
+    if (!RM){ orb.style.transitionDuration = ph.secs + 's'; orb.style.transform = 'scale(' + ph.scale + ')'; }
+    var remain = ph.secs;
+    phaseCount.textContent = remain + '…';
+    tickId = setInterval(function(){
+      remain--;
+      if (remain > 0) phaseCount.textContent = remain + '…';
+      else { clearInterval(tickId); tickId = null; }
+    }, 1000);
+    later(function(){
+      if (tickId){ clearInterval(tickId); tickId = null; }
+      phaseIdx = (phaseIdx + 1) % PHASES.length;
+      if (phaseIdx === 0){ round++; roundLabel.textContent = 'round ' + round; }
+      runPhase();
+    }, ph.secs * 1000);
+  }
+  breathBtn.addEventListener('click', function(){
+    breathing = true; phaseIdx = 0; round = 1;
+    roundLabel.textContent = 'round 1';
+    breathBtn.style.display = 'none'; breathEnd.style.display = 'inline-block';
+    runPhase();
+  });
+  breathEnd.addEventListener('click', function(){
+    breathing = false; clearBreath();
+    if (!RM){ orb.style.transitionDuration = '1.2s'; orb.style.transform = 'scale(1)'; }
+    phaseLabel.textContent = 'Well done.'; phaseCount.textContent = ''; roundLabel.textContent = '';
+    breathBtn.style.display = 'inline-block'; breathEnd.style.display = 'none';
+    breathBtn.textContent = 'Breathe again';
+  });
+
+  /* ---------- practice streak (this browser) ---------- */
+  var KEY = 'zenbuddy.sits.v1';
+  function dayStr(d){ return d.toLocaleDateString('en-CA'); } /* YYYY-MM-DD, local */
+  function getSits(){ try { return JSON.parse(localStorage.getItem(KEY) || '[]'); } catch(e){ return []; } }
+  function setSits(a){ try { localStorage.setItem(KEY, JSON.stringify(a)); } catch(e){} }
+  function calcStreak(){
+    var sits = getSits(), n = 0, d = new Date();
+    if (sits.indexOf(dayStr(d)) < 0) d.setDate(d.getDate() - 1);
+    while (sits.indexOf(dayStr(d)) >= 0){ n++; d.setDate(d.getDate() - 1); }
+    return n;
+  }
+  function renderStreak(){
+    document.getElementById('streakNum').textContent = calcStreak();
+    var sits = getSits(), dots = document.getElementById('weekDots');
+    var names = ['S','M','T','W','T','F','S'], html = '';
+    for (var i = 6; i >= 0; i--){
+      var d = new Date(); d.setDate(d.getDate() - i);
+      var hit = sits.indexOf(dayStr(d)) >= 0, isToday = (i === 0);
+      html += '<div class="dot' + (hit ? ' hit' : '') + (isToday ? ' today' : '') + '"' +
+              ' title="' + dayStr(d) + (hit ? ' · sat' : '') + '">' + names[d.getDay()] + '</div>';
+    }
+    dots.innerHTML = html;
+  }
+  document.getElementById('logBtn').addEventListener('click', function(){
+    var sits = getSits(), t = dayStr(new Date()), msgEl = document.getElementById('confirmMsg');
+    if (sits.indexOf(t) < 0){ sits.push(t); setSits(sits); msgEl.textContent = "Logged — that's the whole practice. 🌿"; }
+    else { msgEl.textContent = "Already logged today. Rest easy. 🌿"; }
+    renderStreak();
+  });
+  renderStreak();
+})();
+</script>
 <script>
 (function(){
   var box = document.querySelector('.dumpbox');
@@ -449,387 +583,5 @@ Generated 2026-10-20 · Part of the Buddy System
   resolveRepo().then(refreshUI);
 })();
 </script>
-
-
-<script>
-(function(){
-  var tiles = document.querySelectorAll('.attn[data-attn-id]');
-  if (!tiles.length) return;
-  var dumpbox = document.querySelector('.dumpbox');
-  var bid = (dumpbox && dumpbox.getAttribute('data-buddy-id')) || (function(){
-    var p = location.pathname.replace(/\/+$/, '');
-    return p.substring(p.lastIndexOf('/') + 1);
-  })();
-  function lsGet(){ try { return JSON.parse(localStorage.getItem('buddyTree.v3') || '{}'); } catch(e){ return {}; } }
-  function lsSet(patch){ try { var s = lsGet(); for (var k in patch) s[k] = patch[k]; localStorage.setItem('buddyTree.v3', JSON.stringify(s)); } catch(e){} }
-  function token(){ return lsGet().ghToken || ''; }
-  function b64encode(str){
-    var bytes = new TextEncoder().encode(str), bin = '';
-    bytes.forEach(function(b){ bin += String.fromCharCode(b); });
-    return btoa(bin);
-  }
-  async function ghApi(path, method, body){
-    var t = token();
-    if (!t) throw new Error('Add a GitHub token first.');
-    var r = await fetch('https://api.github.com' + path, {
-      method: method || 'GET',
-      headers: {'Authorization': 'Bearer ' + t, 'Accept': 'application/vnd.github+json', 'Content-Type': 'application/json'},
-      body: body ? JSON.stringify(body) : undefined
-    });
-    if (!r.ok) throw new Error('GitHub ' + r.status);
-    return r.status === 204 ? null : await r.json();
-  }
-  async function ghGetFile(repo, path){
-    try {
-      var j = await ghApi('/repos/davedellaquila/' + repo + '/contents/' + path);
-      if (j && j.content) return {
-        text: new TextDecoder().decode(Uint8Array.from(atob(j.content.replace(/\n/g, '')), function(c){ return c.charCodeAt(0); })),
-        sha: j.sha
-      };
-    } catch(e){}
-    return null;
-  }
-  var repo = null, buddyName = bid;
-  async function resolveBuddy(){
-    try {
-      var r = await fetch('../buddies.json', {cache: 'no-store'});
-      var d = await r.json();
-      var buds = d.buddies || [];
-      for (var i = 0; i < buds.length; i++) {
-        if (buds[i].id === bid) {
-          if (buds[i].repo) repo = buds[i].repo;
-          if (buds[i].name) buddyName = buds[i].name;
-          break;
-        }
-      }
-    } catch(e){}
-  }
-  function rkey(aid, text){ return bid + '|' + (aid || ('text:' + text.slice(0, 60))); }
-  function isResolved(aid, text){
-    var s = lsGet();
-    var m = s.attnDone || {};
-    if (m[rkey(aid, text)]) return true;
-    /* Also honor the dashboard's own done map (the same store's 'seen',
-       keyed by bare attention id) so an item cleared in the dashboard
-       stays cleared here — one done state across surfaces. */
-    if (aid && s.seen && s.seen[aid]) return true;
-    return false;
-  }
-  function setResolved(aid, text){ var s = lsGet(); var m = s.attnDone || {}; m[rkey(aid, text)] = 1; s.attnDone = m; lsSet(s); }
-  /* Las Vegas mode (Dave 2026-10-20): marking done feels like a win — the
-     button spins once and confetti bursts from it. DOM + WAAPI only;
-     skipped under prefers-reduced-motion; only ever called on a real tap. */
-  function celebrate(el){
-    if (!el || !el.getBoundingClientRect) return;
-    if (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    try { el.animate([{transform:'rotate(0deg)'},{transform:'rotate(360deg)'}], {duration:450, easing:'cubic-bezier(.2,.7,.3,1.2)'}); } catch(e){}
-    var r = el.getBoundingClientRect(), cx = r.left + r.width/2, cy = r.top + r.height/2;
-    var colors = ['#f0b429','#3fb950','#f778ba','#58a6ff','#ff7b72','#d2a8ff'];
-    for (var i = 0; i < 26; i++){
-      var s = document.createElement('span');
-      var sz = 5 + Math.random()*6;
-      s.style.cssText = 'position:fixed;left:'+cx+'px;top:'+cy+'px;width:'+sz+'px;height:'+(sz*0.6)+'px;background:'+colors[i%colors.length]+';z-index:99999;pointer-events:none;border-radius:2px;';
-      document.body.appendChild(s);
-      var ang = Math.random()*Math.PI*2, v = 60 + Math.random()*130;
-      var dx = Math.cos(ang)*v, dy = Math.sin(ang)*v - 90;
-      var anim = s.animate([
-        {transform:'translate(-50%,-50%) rotate(0deg)', opacity:1},
-        {transform:'translate(calc(-50% + '+dx+'px), calc(-50% + '+(dy+170)+'px)) rotate('+(Math.random()*540-270)+'deg)', opacity:0}
-      ], {duration: 750 + Math.random()*450, easing:'cubic-bezier(.15,.6,.4,1)'});
-      (function(node, a){ if (a) a.onfinish = function(){ node.remove(); }; else setTimeout(function(){ node.remove(); }, 1300); })(s, anim);
-    }
-  }
-  function paintResolved(tile, msg){
-    tile.classList.add('resolved');
-    var st = tile.querySelector('.attn-status');
-    if (st) st.textContent = msg;
-    /* Dave 2026-10-20: the check belongs to the RESULT of the tap, never the
-       label beforehand — an upfront check reads as "already done." The Done
-       button renders plain "Done"; the check appears only once clicked. */
-    var db = tile.querySelector('[data-act="done"]');
-    if (db) db.textContent = '✓ Done';
-  }
-  async function sendAction(tile, entry, okMsg){
-    var st = tile.querySelector('.attn-status');
-    var btns = tile.querySelectorAll('.attn-btn');
-    if (!token()) { st.textContent = 'Add a GitHub token in the Brain dump section above to enable actions.'; return false; }
-    if (!repo) { st.textContent = 'No repo linked for this buddy yet.'; return false; }
-    btns.forEach(function(b){ b.disabled = true; });
-    st.textContent = 'Working…';
-    try {
-      var NL = String.fromCharCode(10);
-      var stamp = new Date().toLocaleString();
-      var cur = await ghGetFile(repo, 'docs/ingest.md');
-      var base = cur ? cur.text : '# Ingest log — ' + buddyName + NL + NL;
-      var body = {message: 'Attention action for ' + bid, content: b64encode(base + '## ' + stamp + NL + NL + entry + NL + NL)};
-      if (cur && cur.sha) body.sha = cur.sha;
-      await ghApi('/repos/davedellaquila/' + repo + '/contents/docs/ingest.md', 'PUT', body);
-      st.textContent = okMsg;
-      return true;
-    } catch(err){
-      st.textContent = 'Save failed: ' + (err.message || err);
-      btns.forEach(function(b){ b.disabled = false; });
-      return false;
-    }
-  }
-  tiles.forEach(function(tile){
-    var aid = tile.getAttribute('data-attn-id') || '';
-    var textEl = tile.querySelector('.attn-text');
-    var text = textEl ? textEl.textContent.trim() : '';
-    if (isResolved(aid, text)) { paintResolved(tile, 'Marked done'); return; }
-    tile.addEventListener('click', function(ev){
-      var btn = ev.target.closest ? ev.target.closest('.attn-btn') : null;
-      if (!btn || btn.disabled) return;
-      var act = btn.getAttribute('data-act');
-      var idBit = aid ? ' (attention id: ' + aid + ')' : '';
-      if (act === 'done') {
-        sendAction(tile,
-          'DONE — Dave marked this done on the homepage: "' + text + '"' + idBit + '. Please remove it from the attention list in buddies.json.',
-          'Marked done — the buddy will clear it.').then(function(ok){ if (ok) { setResolved(aid, text); paintResolved(tile, 'Marked done — the buddy will clear it.'); celebrate(btn); } });
-      } else if (act === 'info') {
-        sendAction(tile,
-          'FOLLOW-UP — Dave needs more info on: "' + text + '"' + idBit + '. Please follow up with him.',
-          'Sent — ' + buddyName + ' will follow up.');
-      }
-    });
-  });
-  resolveBuddy();
-})();
-</script>
-
-
-<script>
-(function(){
-  var sec = document.querySelector('.repo-files');
-  if (!sec || sec.dataset.rfInit) return;
-  sec.dataset.rfInit = '1';
-  var bid = sec.getAttribute('data-buddy-id') || (function(){
-    var p = location.pathname.replace(/\/+$/, '');
-    return p.substring(p.lastIndexOf('/') + 1);
-  })();
-  function lsGet(){ try { return JSON.parse(localStorage.getItem('buddyTree.v3') || '{}'); } catch(e){ return {}; } }
-  function token(){ return lsGet().ghToken || ''; }
-  function b64encode(str){
-    var bytes = new TextEncoder().encode(str), bin = '';
-    bytes.forEach(function(b){ bin += String.fromCharCode(b); });
-    return btoa(bin);
-  }
-  async function ghApi(path, method, body){
-    var t = token();
-    if (!t) throw new Error('Add a GitHub token first.');
-    var r = await fetch('https://api.github.com' + path, {
-      method: method || 'GET',
-      headers: {'Authorization': 'Bearer ' + t, 'Accept': 'application/vnd.github+json', 'Content-Type': 'application/json'},
-      body: body ? JSON.stringify(body) : undefined
-    });
-    if (!r.ok) throw new Error('GitHub ' + r.status);
-    return r.status === 204 ? null : await r.json();
-  }
-  async function ghGetFile(repo, path){
-    try {
-      var j = await ghApi('/repos/davedellaquila/' + repo + '/contents/' + path);
-      if (j && j.content) return {
-        text: new TextDecoder().decode(Uint8Array.from(atob(j.content.replace(/\n/g, '')), function(c){ return c.charCodeAt(0); })),
-        sha: j.sha
-      };
-    } catch(e){}
-    return null;
-  }
-  var repo = null;
-  async function resolveRepo(){
-    try {
-      var r = await fetch('../buddies.json', {cache: 'no-store'});
-      var d = await r.json();
-      var buds = d.buddies || [];
-      for (var i = 0; i < buds.length; i++) {
-        if (buds[i].id === bid && buds[i].repo) { repo = buds[i].repo; break; }
-      }
-    } catch(e){}
-  }
-  function esc(s){ return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
-  function inline(s){
-    s = esc(s);
-    s = s.replace(/`([^`]+)`/g, '<code>$1</code>');
-    s = s.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
-    s = s.replace(/(^|[^*])\*([^*\n]+)\*/g, '$1<em>$2</em>');
-    s = s.replace(/\[([^\]]+)\]\((https?:[^)\s]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>');
-    return s;
-  }
-  function mdRender(src){
-    var lines = src.split('\n'), out = [], inList = false, inCode = false, codeBuf = [];
-    function closeList(){ if (inList) { out.push('</ul>'); inList = false; } }
-    for (var i = 0; i < lines.length; i++){
-      var ln = lines[i], m;
-      if (/^```/.test(ln)) {
-        if (inCode) { out.push('<pre><code>' + esc(codeBuf.join('\n')) + '</code></pre>'); codeBuf = []; inCode = false; }
-        else { closeList(); inCode = true; }
-        continue;
-      }
-      if (inCode) { codeBuf.push(ln); continue; }
-      if ((m = ln.match(/^(#{1,4})\s+(.*)/))) {
-        closeList();
-        var lv = Math.min(m[1].length + 1, 4);
-        out.push('<h' + lv + '>' + inline(m[2]) + '</h' + lv + '>');
-        continue;
-      }
-      if (/^\s*(-{3,}|\*{3,})\s*$/.test(ln)) { closeList(); out.push('<hr>'); continue; }
-      if ((m = ln.match(/^\s*[-*]\s+(.*)/)) || (m = ln.match(/^\s*\d+[.)]\s+(.*)/))) {
-        if (!inList) { out.push('<ul>'); inList = true; }
-        out.push('<li>' + inline(m[1]) + '</li>');
-        continue;
-      }
-      if ((m = ln.match(/^>\s?(.*)/))) { closeList(); out.push('<blockquote>' + inline(m[1]) + '</blockquote>'); continue; }
-      if (!ln.trim()) { closeList(); continue; }
-      closeList();
-      out.push('<p>' + inline(ln) + '</p>');
-    }
-    closeList();
-    if (inCode) out.push('<pre><code>' + esc(codeBuf.join('\n')) + '</code></pre>');
-    return out.join('\n');
-  }
-  var locked = sec.querySelector('.rf-locked'), main = sec.querySelector('.rf-main'),
-      list = sec.querySelector('.rf-list'), view = sec.querySelector('.rf-view'),
-      body = sec.querySelector('.rf-body'), editor = sec.querySelector('.rf-editor'),
-      ta = sec.querySelector('.rf-ta'), st = sec.querySelector('.rf-status');
-  var cur = null;
-  function openFile(f){
-    st.textContent = 'Loading ' + f.path + '…';
-    ghGetFile(repo, f.path).then(function(got){
-      if (!got) { st.textContent = '⚠ Could not load ' + f.path + '.'; return; }
-      cur = {path: f.path, sha: got.sha, text: got.text};
-      st.textContent = '';
-      editor.hidden = true;
-      view.hidden = false;
-      view.querySelector('.rf-path').textContent = f.path;
-      body.innerHTML = mdRender(got.text);
-    });
-  }
-  view.querySelector('.rf-close').addEventListener('click', function(){ view.hidden = true; });
-  view.querySelector('.rf-edit').addEventListener('click', function(){
-    if (!cur) return;
-    editor.querySelector('.rf-path').textContent = cur.path;
-    ta.value = cur.text;
-    view.hidden = true;
-    editor.hidden = false;
-    ta.focus();
-  });
-  editor.querySelector('.rf-cancel').addEventListener('click', function(){
-    editor.hidden = true;
-    view.hidden = false;
-  });
-  editor.querySelector('.rf-save').addEventListener('click', async function(){
-    if (!cur) return;
-    var btn = this;
-    btn.disabled = true;
-    st.textContent = 'Saving…';
-    try {
-      var body = {message: 'Edit ' + cur.path + ' from the homepage', content: b64encode(ta.value), sha: cur.sha};
-      var j = await ghApi('/repos/davedellaquila/' + repo + '/contents/' + cur.path, 'PUT', body);
-      if (j && j.content && j.content.sha) cur.sha = j.content.sha;
-      cur.text = ta.value;
-      editor.hidden = true;
-      view.hidden = false;
-      view.querySelector('.rf-body').innerHTML = mdRender(cur.text);
-      st.textContent = '✓ Saved to GitHub (' + repo + '/' + cur.path + ').';
-    } catch(err){
-      var why = (err && err.message) || String(err);
-      st.textContent = /409|422/.test(why)
-        ? '⚠ GitHub said the file changed since you opened it (' + why + ') — close it, reopen it, and try again.'
-        : '⚠ Save failed (' + why + ') — your edit is still in the editor.';
-    }
-    btn.disabled = false;
-  });
-  async function init(){
-    await resolveRepo();
-    if (!repo) {
-      locked.hidden = false;
-      locked.textContent = 'No repo is linked for this buddy yet, so there are no repo files to show.';
-      return;
-    }
-    if (!token()) { locked.hidden = false; return; }
-    main.hidden = false;
-    st.textContent = 'Loading files…';
-    var files = [];
-    async function grab(dir){
-      try {
-        var j = await ghApi('/repos/davedellaquila/' + repo + (dir ? '/contents/' + dir : '/contents'));
-        if (Array.isArray(j)) j.forEach(function(e){
-          if (e.type === 'file' && /\.md$/i.test(e.name)) files.push({name: e.name, path: e.path});
-        });
-      } catch(e){}
-    }
-    await grab('');
-    await grab('docs');
-    files.sort(function(a, b){ return a.path < b.path ? -1 : 1; });
-    if (!files.length) { st.textContent = 'No markdown files found in the repo yet.'; return; }
-    st.textContent = '';
-    files.forEach(function(f){
-      var b = document.createElement('button');
-      b.type = 'button';
-      b.className = 'rf-file';
-      var n = document.createElement('span');
-      n.className = 'rf-name';
-      n.textContent = '📄 ' + f.name;
-      var dd = document.createElement('span');
-      dd.className = 'rf-dir';
-      dd.textContent = f.path;
-      b.appendChild(n);
-      b.appendChild(dd);
-      b.addEventListener('click', function(){ openFile(f); });
-      list.appendChild(b);
-    });
-  }
-  init();
-})();
-</script>
-
-
-<script>
-(function(){
-  var parts = location.pathname.split('/');
-  var bid = '';
-  for (var i = parts.length - 1; i >= 0; i--) { if (parts[i]) { bid = parts[i]; break; } }
-  function applyName(name){
-    if (!name) return;
-    var els = document.querySelectorAll('[data-buddy-name]');
-    for (var k = 0; k < els.length; k++) els[k].textContent = name;
-    var ta = document.querySelector('.dumpbox textarea');
-    if (ta) ta.setAttribute('placeholder', "Dump what's on your mind about " + name + "…");
-  }
-  /* Pending renames (Dave 2026-10-18): when the dashboard has no GitHub token,
-     a rename queues in localStorage instead of reaching the registry. The
-     dashboard and homepages share an origin, so the homepage reads that queue
-     here — a pending rename supersedes the registry name, which is why a freshly
-     renamed buddy kept showing its old name after refresh. */
-  function pendingName(){
-    try {
-      var s = JSON.parse(localStorage.getItem('buddyTree.v3') || '{}');
-      if (s && s.pendingRenames && s.pendingRenames[bid]) return s.pendingRenames[bid];
-    } catch(e){}
-    return null;
-  }
-  var pn = pendingName();
-  if (pn) applyName(pn);
-  try {
-    fetch('../buddies.json', {cache: 'no-store'}).then(function(r){ return r.json(); }).then(function(d){
-      var buds = (d && d.buddies) || [];
-      for (var j = 0; j < buds.length; j++) {
-        if (buds[j].id === bid && buds[j].name) { applyName(pendingName() || buds[j].name); break; }
-      }
-    }).catch(function(){});
-  } catch(e){}
-  /* Live rename (Dave 2026-10-16): the dashboard broadcasts renames via
-     localStorage, so an open page updates its name without a refresh.
-     Same browser only — other devices pick it up on their next load. */
-  window.addEventListener('storage', function(e){
-    if (e.key !== 'buddyTree.rename' || !e.newValue) return;
-    try {
-      var d = JSON.parse(e.newValue);
-      if (d && d.id === bid && d.name) applyName(d.name);
-    } catch(err){}
-  });
-})();
-</script>
-
 </body>
 </html>

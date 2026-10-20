@@ -12,6 +12,18 @@ Data chain per buddy:
   registry (buddies.json) -> computed tree (parent chain, siblings, children,
     reverse links) -> plans.json -> docs[] -> repo (ingest.md, pinned.json) ->
     memory/people|groups -> side thread (chat) -> brain-dump box
+
+v3.1 (2026-10-20, Dave): --about writes <bid>/about.html — the default page
+served as the buddy's About page, linked from its custom homepage. Every
+default/About page also carries the COMPLETE registry record and EVERY
+buddy-specific markdown file from the buddy's own git repo (local clone
+under ~/workspace/projects/<repo>), rendered in full.
+
+v3.2 (2026-10-20): repo contents are NOT baked into the public page after
+all — the section lists the files and embeds the live, token-gated Repo
+files reader (gen_basic's FILES_* widget, shipped on template homepages
+the same day), so private repo markdown is read from GitHub on Dave's
+devices and never published raw.
 """
 import json, os, re, sys, html, datetime, glob
 
@@ -22,7 +34,7 @@ TODAY = datetime.date.today().isoformat()
 def _extract_consts():
     src = open(os.path.join(HERE, 'gen_basic_homepages.py')).read()
     out = {}
-    for name in ['DUMPBOX_CSS', 'DUMPBOX_HTML', 'DUMPBOX_JS', 'ATTN_JS']:
+    for name in ['DUMPBOX_CSS', 'DUMPBOX_HTML', 'DUMPBOX_JS', 'ATTN_JS', 'FILES_CSS', 'FILES_HTML', 'FILES_JS']:
         m = re.search(r'^' + name + r' = """(.*?)"""\s*$', src, re.S | re.M)
         if not m:
             raise RuntimeError('could not extract ' + name)
@@ -32,6 +44,106 @@ _C = _extract_consts()
 
 def esc(s):
     return html.escape(str(s), quote=True)
+
+# --- Markdown from the buddy's own repo (v3.1; live reader since v3.2) -------
+_REPO_ORDER = ['KNOWLEDGE.md', 'CONFIG.md', 'STUDY.md', 'SOUL.md', 'DECISIONS.md',
+               'ACCOMPLISHMENTS.md', 'README.md']
+
+def repo_clone_dir(b):
+    """Local clone of the buddy's own git repo, if one exists here."""
+    cands = []
+    if b.get('repo'):
+        cands.append(os.path.expanduser('~/workspace/projects/' + b['repo']))
+    cands.append(os.path.expanduser('~/workspace/projects/' + b['id']))
+    for c in cands:
+        if os.path.isdir(c) and glob.glob(os.path.join(c, '*.md')):
+            return c
+    return None
+
+def _md_files_in(root, sub=''):
+    d = os.path.join(root, sub) if sub else root
+    out = []
+    for f in sorted(glob.glob(os.path.join(d, '*.md'))):
+        rel = os.path.join(sub, os.path.basename(f)) if sub else os.path.basename(f)
+        out.append((rel, f))
+    return out
+
+def repo_markdown_section(b):
+    """The buddy's repo markdown, on the page (Dave 2026-10-20): a baked
+    inventory of what the local clone holds, plus the live Repo files reader
+    (the same widget the template homepages use) which loads the actual
+    files from GitHub with Dave's token — always current, never published
+    raw to this public page."""
+    files = []
+    clone = repo_clone_dir(b)
+    if clone:
+        root_files = _md_files_in(clone)
+        root_files.sort(key=lambda rf: (_REPO_ORDER.index(rf[0]) if rf[0] in _REPO_ORDER else 99, rf[0]))
+        files = root_files + _md_files_in(clone, 'docs')
+    tree_files = _md_files_in(os.path.join(HERE, b['id'])) + _md_files_in(os.path.join(HERE, b['id']), 'docs')
+    parts = []
+    if files:
+        items = []
+        for rel, path in files:
+            try:
+                n = len(open(path, encoding='utf-8', errors='replace').read())
+            except Exception:
+                n = 0
+            items.append('<li><code>%s</code> <span class="muted">%s chars</span></li>' % (esc(rel), format(n, ',')))
+        parts.append('<p class="muted">In the local clone of davedellaquila/%s — the reader below '
+                     'loads the live files from the repo itself:</p><ul class="mdinv">%s</ul>'
+                     % (esc(b.get('repo') or b['id']), ''.join(items)))
+    if tree_files:
+        items = ''.join('<li><code>%s</code></li>' % esc(rel) for rel, _ in tree_files)
+        parts.append('<p class="muted">Also kept in the dashboard folder %s/:</p>'
+                     '<ul class="mdinv">%s</ul>' % (esc(b['id']), items))
+    if not files and not tree_files:
+        parts.append('<p class="empty">No local clone of this buddy\'s repo is kept here yet — '
+                     'the reader below still loads the live files from GitHub once a token '
+                     'is connected.</p>')
+    parts.append(_C['FILES_HTML'].replace('__BID__', esc(b['id'])).replace('__BNAME__', esc(b.get('name', b['id']))))
+    return section('From the repo — markdown files (%d)' % len(files), ''.join(parts))
+
+# --- Complete registry record (v3.1) -----------------------------------------
+_RECORD_ORDER = ['id', 'name', 'icon', 'tagline', 'type', 'kind', 'status', 'statusClass',
+                 'parent', 'parents', 'mission', 'brief', 'persona', 'voice', 'repo',
+                 'homepage', 'homepageSource', 'chat', 'docs', 'attention', 'links',
+                 'aka', 'tags', 'photos', 'alt_personas', 'setup_pending']
+
+def _rec_val(v):
+    if v is None or v == '' or v == [] or v == {}:
+        return '<span class="unset">— not set —</span>'
+    if isinstance(v, bool):
+        return 'yes' if v else 'no'
+    if isinstance(v, (int, float)):
+        return esc(v)
+    if isinstance(v, str):
+        if v.startswith('http://') or v.startswith('https://'):
+            return '<a href="%s" target="_blank" rel="noopener">%s</a>' % (esc(v), esc(v))
+        return esc(v)
+    if isinstance(v, list):
+        items = []
+        for it in v:
+            if isinstance(it, dict):
+                label = it.get('label') or it.get('text') or it.get('title') or it.get('name') or ''
+                url = it.get('url') or ''
+                if url:
+                    items.append('<a href="%s" target="_blank" rel="noopener">%s</a>' % (esc(url), esc(label or url)))
+                elif label:
+                    items.append(esc(label))
+                else:
+                    items.append('<code>%s</code>' % esc(json.dumps(it, ensure_ascii=False)))
+            else:
+                items.append(esc(it))
+        return '<br>'.join(items) if items else '<span class="unset">— not set —</span>'
+    return '<pre class="recjson">%s</pre>' % esc(json.dumps(v, indent=1, ensure_ascii=False))
+
+def record_section(b):
+    keys = [k for k in _RECORD_ORDER if k in b] + sorted(k for k in b if k not in _RECORD_ORDER)
+    rows = ''.join('<div class="fact"><dt>%s</dt><dd>%s</dd></div>' % (esc(k), _rec_val(b.get(k))) for k in keys)
+    return section('Complete registry record (%d fields)' % len(keys),
+                   '<dl class="facts">' + rows + '</dl>')
+
 
 def load():
     d = json.load(open(os.path.join(HERE, 'buddies.json')))
@@ -112,7 +224,7 @@ def section(kicker, inner):
         return ''
     return '<section class="card"><h2 class="kicker">%s</h2>%s</section>' % (esc(kicker), inner)
 
-def build_page(buddies, plans, b):
+def build_page(buddies, plans, b, about=False):
     bid = b['id']
     name = b.get('name', bid)
     icon = b.get('icon', '🤖')
@@ -127,8 +239,8 @@ def build_page(buddies, plans, b):
     rev_links = sorted([x['id'] for x in buddies.values()
                         if bid in (x.get('links') or [])])
     bplans = [p for p in plans if bid in (p.get('buddies') or [])]
-    attn = [a for a in (b.get('attention') or [])]
-    docs = [d for d in (b.get('docs') or [])]
+    attn = [a if isinstance(a, dict) else {'text': str(a)} for a in (b.get('attention') or [])]
+    docs = [d if isinstance(d, dict) else {'url': str(d), 'label': str(d)} for d in (b.get('docs') or [])]
     photos = [p for p in (b.get('photos') or [])]
     mem = memory_files(b)
     pinned = []
@@ -260,17 +372,27 @@ def build_page(buddies, plans, b):
             '<code>%s</code>' % esc(os.path.basename(f)) for f in mem)
     rm_sec = section('Repository & memory', rm if rm else '<p class="empty">Nothing recorded.</p>')
 
+    record_sec = record_section(b)
+    repo_sec = repo_markdown_section(b)
+    aboutnav = ''
+    if about:
+        aboutnav = ('<div class="aboutnav"><a href="./">\u2190 %s %s — homepage</a>'
+                    '<span class="muted">This About page is the full record: every registry '
+                    'field and every markdown file in the buddy\'s repo.</span></div>') % (esc(icon), esc(name))
+
     dumpbox = _C['DUMPBOX_HTML'].replace('__BID__', esc(bid)).replace('__BNAME__', esc(name))
 
     page = PAGE
     for k, v in {
-        'title': esc(name), 'icon': esc(icon), 'name': esc(name),
+        'title': esc(('About ' + name) if about else name), 'icon': esc(icon), 'name': esc(name),
         'family_nav': family_nav(buddies, b),
         'tagline': '<p class="tagline">%s</p>' % esc(b['tagline']) if b.get('tagline') else '',
         'stats': '<div class="stats">' + ''.join(stats) + '</div>' if stats else '',
         'about_sec': about_sec, 'fact_sec': fact_sec, 'attn_sec': attn_sec,
         'plans_sec': plans_sec, 'docs_sec': docs_sec, 'kids_sec': kids_sec,
-        'conn_sec': conn_sec, 'rm_sec': rm_sec,
+        'conn_sec': conn_sec, 'rm_sec': rm_sec, 'record_sec': record_sec,
+        'repo_sec': repo_sec, 'aboutnav': aboutnav,
+        'files_css': _C['FILES_CSS'], 'files_js': _C['FILES_JS'],
         'dumpbox_css': _C['DUMPBOX_CSS'], 'dumpbox_html': dumpbox,
         'dumpbox_js': _C['DUMPBOX_JS'], 'attn_js': _C['ATTN_JS'],
         'date': TODAY, 'bid': esc(bid),
@@ -278,13 +400,14 @@ def build_page(buddies, plans, b):
         page = page.replace('{' + k + '}', v)
     return page
 
-PAGE = '<!-- DEFAULT-HOMEPAGE v3 — "The Dossier" -->\n<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<meta name="viewport" content="width=device-width, initial-scale=1">\n<meta name="color-scheme" content="dark light">\n<title>{title} — Buddy Dossier</title>\n<style>\n:root{color-scheme:dark light;--bg:#0d1117;--card:#161b22;--border:#30363d;--text:#e6edf3;--muted:#8b949e;--accent:#58a6ff;--amber:#f0b429;--amber-bd:#7d5e00}\n@media (prefers-color-scheme:light){:root{--bg:#ffffff;--card:#f6f8fa;--border:#d0d7de;--text:#1f2328;--muted:#57606a;--accent:#0969da}}\nbody{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;margin:0;line-height:1.6}\n.wrap{max-width:860px;margin:0 auto;padding:40px 22px 60px}\nheader.hero{display:flex;gap:18px;align-items:center;margin-bottom:8px}\n.heroicon{width:72px;height:72px;flex:none;border-radius:20px;background:var(--card);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:38px}\nh1{margin:0;font-size:30px;letter-spacing:-.02em}\n.tagline{color:var(--muted);margin:6px 0 0;font-size:15px}\n.stats{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0 28px}\n.stat{font-size:12.5px;color:var(--muted);background:var(--card);border:1px solid var(--border);border-radius:999px;padding:4px 12px}\n.stat b{color:var(--text)}\n.status{font-size:12.5px;font-weight:700;border-radius:999px;padding:4px 12px;background:var(--card);border:1px solid var(--border)}\n.card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px 22px;margin-bottom:20px}\n.kicker{margin:0 0 10px;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:var(--muted)}\n.mission{font-size:16px;margin:0 0 10px}\n.brief{color:var(--muted);font-size:14px}\n.persona{font-size:14px;margin:8px 0 0}\n.facts{margin:0;display:grid;gap:2px}\n.fact{display:grid;grid-template-columns:150px 1fr;gap:12px;padding:7px 0;border-top:1px solid var(--border);font-size:14px}\n.fact:first-child{border-top:0}\n.fact dt{color:var(--muted);font-weight:600}\n.fact dd{margin:0;overflow-wrap:break-word}\ncode{background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:1px 6px;font-size:13px}\na{color:var(--accent);text-decoration:none}\na:hover{text-decoration:underline}\n.aitem{display:flex;gap:10px;padding:10px 0;font-size:14px}\n.aitem+.aitem{border-top:1px solid var(--border)}\n.adot{color:var(--amber);font-size:11px;line-height:2;flex:none}\n.adate{color:var(--muted);font-size:12px;margin-top:2px}\n.plan{display:flex;gap:12px;padding:12px 0}\n.plan+.plan{border-top:1px solid var(--border)}\n.picon{font-size:24px;flex:none}\n.pname{font-weight:650;font-size:15px}\n.pill{display:inline-block;font-size:11px;font-weight:700;background:var(--bg);border:1px solid var(--border);color:var(--accent);border-radius:999px;padding:2px 10px;margin-left:8px}\n.pdesc{margin:6px 0 0;color:var(--muted);font-size:13.5px}\n.pdoc{display:inline-block;margin-top:6px;font-size:13px}\n.docrow{padding:8px 0;font-size:14.5px}\n.docrow+.docrow{border-top:1px solid var(--border)}\n.kids{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px}\n.kid{display:flex;align-items:center;gap:10px;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:10px 12px;color:var(--text)}\n.kid:hover{text-decoration:none;border-color:var(--accent)}\n.kidicon{font-size:22px}\n.kidname{font-size:14px;font-weight:600}\n.connrow{display:flex;gap:12px;padding:8px 0;font-size:14px;align-items:baseline}\n.connrow+.connrow{border-top:1px solid var(--border)}\n.connlabel{flex:none;width:110px;color:var(--muted);font-weight:600;font-size:13px}\n.pinrow{padding:6px 0;font-size:14px}\n.muted{color:var(--muted);font-size:13px}\n.empty{color:var(--muted);font-style:italic;margin:4px 0}\nfooter{margin-top:36px;padding-top:18px;border-top:1px solid var(--border);color:var(--muted);font-size:12.5px;text-align:center}\n{dumpbox_css}\n@media (max-width:640px){.fact{grid-template-columns:1fr;gap:2px}.connlabel{width:88px}.wrap{padding:28px 16px 48px}h1{font-size:24px}}\n</style>\n</head>\n<body>\n<div class="wrap">\n<header class="hero">\n<div class="heroicon">{icon}</div>\n<div><h1>{name}</h1>{tagline}</div>\n</header>\n{family_nav}\n{stats}\n{about_sec}\n{fact_sec}\n{attn_sec}\n{plans_sec}\n{docs_sec}\n{kids_sec}\n{conn_sec}\n{rm_sec}\n{dumpbox_html}\n<footer>Default Homepage v3 — "The Dossier" · Generated {date} · Part of the Buddy System<br>\n<span class="muted">Archived PDF snapshots live in the buddy-system archive folder.</span></footer>\n</div>\n{dumpbox_js}\n{attn_js}\n</body>\n</html>\n'
+PAGE = '<!-- DEFAULT-HOMEPAGE v3 — "The Dossier" -->\n<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<meta name="viewport" content="width=device-width, initial-scale=1">\n<meta name="color-scheme" content="dark light">\n<title>{title} — Buddy Dossier</title>\n<style>\n:root{color-scheme:dark light;--bg:#0d1117;--card:#161b22;--border:#30363d;--text:#e6edf3;--muted:#8b949e;--accent:#58a6ff;--amber:#f0b429;--amber-bd:#7d5e00}\n@media (prefers-color-scheme:light){:root{--bg:#ffffff;--card:#f6f8fa;--border:#d0d7de;--text:#1f2328;--muted:#57606a;--accent:#0969da}}\nbody{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;margin:0;line-height:1.6}\n.wrap{max-width:860px;margin:0 auto;padding:40px 22px 60px}\nheader.hero{display:flex;gap:18px;align-items:center;margin-bottom:8px}\n.heroicon{width:72px;height:72px;flex:none;border-radius:20px;background:var(--card);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:38px}\nh1{margin:0;font-size:30px;letter-spacing:-.02em}\n.tagline{color:var(--muted);margin:6px 0 0;font-size:15px}\n.stats{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0 28px}\n.stat{font-size:12.5px;color:var(--muted);background:var(--card);border:1px solid var(--border);border-radius:999px;padding:4px 12px}\n.stat b{color:var(--text)}\n.status{font-size:12.5px;font-weight:700;border-radius:999px;padding:4px 12px;background:var(--card);border:1px solid var(--border)}\n.card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px 22px;margin-bottom:20px}\n.kicker{margin:0 0 10px;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:var(--muted)}\n.mission{font-size:16px;margin:0 0 10px}\n.brief{color:var(--muted);font-size:14px}\n.persona{font-size:14px;margin:8px 0 0}\n.facts{margin:0;display:grid;gap:2px}\n.fact{display:grid;grid-template-columns:150px 1fr;gap:12px;padding:7px 0;border-top:1px solid var(--border);font-size:14px}\n.fact:first-child{border-top:0}\n.fact dt{color:var(--muted);font-weight:600}\n.fact dd{margin:0;overflow-wrap:break-word}\ncode{background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:1px 6px;font-size:13px}\na{color:var(--accent);text-decoration:none}\na:hover{text-decoration:underline}\n.aitem{display:flex;gap:10px;padding:10px 0;font-size:14px}\n.aitem+.aitem{border-top:1px solid var(--border)}\n.adot{color:var(--amber);font-size:11px;line-height:2;flex:none}\n.adate{color:var(--muted);font-size:12px;margin-top:2px}\n.plan{display:flex;gap:12px;padding:12px 0}\n.plan+.plan{border-top:1px solid var(--border)}\n.picon{font-size:24px;flex:none}\n.pname{font-weight:650;font-size:15px}\n.pill{display:inline-block;font-size:11px;font-weight:700;background:var(--bg);border:1px solid var(--border);color:var(--accent);border-radius:999px;padding:2px 10px;margin-left:8px}\n.pdesc{margin:6px 0 0;color:var(--muted);font-size:13.5px}\n.pdoc{display:inline-block;margin-top:6px;font-size:13px}\n.docrow{padding:8px 0;font-size:14.5px}\n.docrow+.docrow{border-top:1px solid var(--border)}\n.kids{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px}\n.kid{display:flex;align-items:center;gap:10px;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:10px 12px;color:var(--text)}\n.kid:hover{text-decoration:none;border-color:var(--accent)}\n.kidicon{font-size:22px}\n.kidname{font-size:14px;font-weight:600}\n.connrow{display:flex;gap:12px;padding:8px 0;font-size:14px;align-items:baseline}\n.connrow+.connrow{border-top:1px solid var(--border)}\n.connlabel{flex:none;width:110px;color:var(--muted);font-weight:600;font-size:13px}\n.pinrow{padding:6px 0;font-size:14px}\n.muted{color:var(--muted);font-size:13px}\n.empty{color:var(--muted);font-style:italic;margin:4px 0}\nfooter{margin-top:36px;padding-top:18px;border-top:1px solid var(--border);color:var(--muted);font-size:12.5px;text-align:center}\n.aboutnav{display:flex;gap:14px;flex-wrap:wrap;align-items:baseline;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px 16px;margin-bottom:22px;font-size:14px}.unset{color:var(--muted);font-style:italic}.recjson{margin:0;font-size:12px;white-space:pre-wrap;overflow-wrap:break-word}.mdfile{border-top:1px solid var(--border);padding:14px 0}.mdfile-head{display:flex;gap:12px;align-items:baseline;margin-bottom:8px}details.mdfile summary{cursor:pointer;font-size:14px}.md-body{font-size:14.5px}.md-body h1{font-size:21px;margin:14px 0 8px}.md-body h2{font-size:18px;margin:14px 0 6px}.md-body h3{font-size:15.5px;margin:12px 0 4px}.md-body p{margin:8px 0}.md-body ul,.md-body ol{margin:8px 0 8px 22px}.md-body li{margin:3px 0}.md-body pre{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:10px 12px;overflow-x:auto;font-size:12.5px}.md-body table{border-collapse:collapse;margin:10px 0;font-size:13.5px}.md-body th,.md-body td{border:1px solid var(--border);padding:5px 9px;text-align:left}.md-body blockquote{border-left:3px solid var(--border);margin:10px 0;padding:2px 14px;color:var(--muted)}.mdfallback{white-space:pre-wrap;font-size:12.5px}.mdinv{margin:6px 0 12px 20px;font-size:14px}.mdinv li{margin:3px 0}.repo-files h2{font-size:17px;margin:0 0 4px;color:var(--text)}.attn-btn{background:var(--bg);color:var(--text);border:1px solid var(--border);border-radius:8px;padding:6px 14px;font-size:13px;font-weight:600;cursor:pointer}.attn-btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}.attn-actions{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}.attn-status{font-size:13px;color:var(--muted);margin-top:8px}\n{dumpbox_css}\n{files_css}\n@media (max-width:640px){.fact{grid-template-columns:1fr;gap:2px}.connlabel{width:88px}.wrap{padding:28px 16px 48px}h1{font-size:24px}}\n</style>\n</head>\n<body>\n<div class="wrap">\n{aboutnav}\n<header class="hero">\n<div class="heroicon">{icon}</div>\n<div><h1>{name}</h1>{tagline}</div>\n</header>\n{family_nav}\n{stats}\n{about_sec}\n{fact_sec}\n{record_sec}\n{attn_sec}\n{plans_sec}\n{docs_sec}\n{kids_sec}\n{conn_sec}\n{rm_sec}\n{repo_sec}\n{dumpbox_html}\n<footer>Default Homepage v3 — "The Dossier" · Generated {date} · Part of the Buddy System<br>\n<span class="muted">Archived PDF snapshots live in the buddy-system archive folder.</span></footer>\n</div>\n{dumpbox_js}\n{files_js}\n{attn_js}\n</body>\n</html>\n'
 
 
 def main():
-    targets = sys.argv[1:]
+    about = '--about' in sys.argv[1:]
+    targets = [a for a in sys.argv[1:] if a != '--about']
     if not targets:
-        print("usage: gen_default_homepages.py <buddy-id> [...]")
+        print("usage: gen_default_homepages.py [--about] <buddy-id> [...]")
         sys.exit(1)
     buddies, plans = load()
     for bid in targets:
@@ -292,9 +415,14 @@ def main():
         if not b:
             print("unknown buddy:", bid)
             continue
-        page = build_page(buddies, plans, b)
+        page = build_page(buddies, plans, b, about=about)
         outdir = os.path.join(HERE, bid)
         os.makedirs(outdir, exist_ok=True)
+        if about:
+            out = os.path.join(outdir, 'about.html')
+            open(out, 'w').write(page)
+            print("wrote", out, len(page), "bytes")
+            continue
         idx = os.path.join(outdir, 'index.html')
         if os.path.exists(idx):
             bak = os.path.join(outdir, 'index.html.v2-bak')

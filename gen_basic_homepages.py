@@ -942,7 +942,8 @@ h2 {{ font-size: 22px; margin: 32px 0 16px; }}
 {repo_files_section}
 
 <div class="footer">
-Generated {date} · Part of the Buddy System
+Generated {date} · Part of the Buddy System<br>
+<a href="about.html">About · the full record →</a>
 </div>
 {dumpbox_js}
 {attn_js}
