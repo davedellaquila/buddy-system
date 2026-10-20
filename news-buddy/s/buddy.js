@@ -157,11 +157,25 @@
 /* NBVoice: the read-aloud voice picker. First Listen click opens the picker.
    The free set is 10 voices re-dealt at random on every page load (so non-tippers
    get variety); the rest unlock with a tip. Choice saved in localStorage.
-   embedList() renders the same picker UI inline (used by the settings dialog). */
+   embedList() renders the same picker UI inline (used by the settings dialog).
+   Owner bypass (Dave 2026-10-20): opening any page once with ?owner=1 sets a
+   per-device localStorage flag that unlocks every voice on that device, so the
+   owner can audition the whole set. Public visitors keep the tip-jar gate. */
 window.NBVoice = (function(){
   var KEY = 'newsBuddyVoiceURI';
   var TIP_URL = 'https://ko-fi.com/davedellaquila';
   var FREE_N = 10;
+  var OWNER_KEY = 'newsBuddyOwner';
+  /* Owner bypass: ?owner=1 on any page persists the unlock flag on this device. */
+  function ownerMode(){
+    try {
+      if (/[?&]owner=1(?:&|#|$)/.test(window.location.search || '')) {
+        localStorage.setItem(OWNER_KEY, '1');
+        return true;
+      }
+      return localStorage.getItem(OWNER_KEY) === '1';
+    } catch(e){ return false; }
+  }
   /* Hand-written persona for each newsreader voice: a 1-2 sentence description
      (shown in the picker) and a signature sample line (spoken on preview). */
   var VOICE_PERSONAS = {
@@ -267,9 +281,9 @@ window.NBVoice = (function(){
     var all = shuffled();
     var cur = savedURI(), sv = null, i;
     for (i = 0; i < all.length; i++) if (all[i].voiceURI === cur) { sv = all.splice(i, 1)[0]; break; }
-    freeVoices = all.slice(0, FREE_N);
+    if (ownerMode()) { freeVoices = all; lockedVoices = []; }
+    else { freeVoices = all.slice(0, FREE_N); lockedVoices = all.slice(FREE_N); }
     if (sv) freeVoices.unshift(sv);
-    lockedVoices = all.slice(FREE_N);
   }
   function grab(){
     if (!supported) return;
@@ -376,7 +390,11 @@ window.NBVoice = (function(){
       }
       container.appendChild(list);
       var tip = document.createElement('div'); tip.className = 'vp-tip';
-      tip.innerHTML = 'Enjoying the paper? <a href="' + TIP_URL + '" target="_blank" rel="noopener">Tip the jar</a> to unlock every voice.';
+      if (ownerMode()) {
+        tip.textContent = 'Owner mode is on for this device — every voice is unlocked here. Visitors still see the tip-jar set.';
+      } else {
+        tip.innerHTML = 'Enjoying the paper? <a href="' + TIP_URL + '" target="_blank" rel="noopener">Tip the jar</a> to unlock every voice.';
+      }
       container.appendChild(tip);
     });
   }
