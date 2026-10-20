@@ -148,10 +148,19 @@ h2 { font-size: 22px; margin: 32px 0 16px; }
 .dumpbox-status.flash { color: var(--ok); font-weight: 700; }
 .dumpbox-hint { font-size: 12px; color: var(--muted); margin-top: 8px; }
 .dumpbox-token {
-  background: var(--bg); border: 1px dashed var(--border); border-radius: 8px;
+  /* Jonny, 2026-10-19 (Dave's ask): amber, not zebra. A solid amber frame +
+     a soft amber wash says "one small step needs you" — zebra striping is
+     hazard tape, it signals danger and fights every calm surface around it.
+     Dashed grey read as placeholder; solid amber reads as deliberate. */
+  background: rgba(245, 158, 11, .09);
+  background: color-mix(in srgb, #f59e0b 9%, var(--bg));
+  border: 2px solid #f59e0b;
+  box-shadow: 0 0 0 3px rgba(245, 158, 11, .16);
+  box-shadow: 0 0 0 3px color-mix(in srgb, #f59e0b 16%, transparent);
+  border-radius: 8px;
   padding: 12px 14px; margin-bottom: 12px; font-size: 14px;
 }
-.dumpbox-token p { margin-bottom: 8px; }
+.dumpbox-token p { margin-bottom: 8px; font-weight: 600; }
 .dumpbox-tokenrow { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
 .dumpbox-tokenrow input {
   flex: 1; min-width: 170px; background: var(--card); border: 1px solid var(--border);
@@ -214,7 +223,7 @@ h2 { font-size: 22px; margin: 32px 0 16px; }
 </div>
 
 <div class="footer">
-Generated 2026-10-19 · Part of the Buddy System
+Generated 2026-10-20 · Part of the Buddy System
 </div>
 
 <script>
