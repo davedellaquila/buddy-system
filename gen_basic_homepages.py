@@ -8,7 +8,9 @@ docs/standing-orders.md.
 Template-driven pages carry the <!-- BUDDY-BASIC-TEMPLATE --> marker (v1 pages
 are detected by their "Part of the Buddy System" footer signature). Pages
 WITHOUT the marker are thread-owned custom designs and are NEVER overwritten
-here — the daily rebuild relies on this distinction.
+here — the daily rebuild relies on this distinction. DEFAULT-HOMEPAGE v3
+"Dossier" pages are also never regenerated here: they are a newer default
+treatment, not basic-template pages, despite the shared footer signature.
 """
 import json
 import os
@@ -689,6 +691,13 @@ def is_template_page(idxpath):
     # "Part of the Buddy System" footer (this misclassified Finance Buddy's
     # custom page and it got clobbered on regen — restored from git).
     if 'CUSTOM HOMEPAGE' in content:
+        return False
+    # DEFAULT-HOMEPAGE v3 "Dossier" pages are a newer default treatment, not
+    # basic-template pages — never regenerate them with the basic template
+    # even though their footer carries the "Part of the Buddy System"
+    # signature (misclassification caught in the 2026-10-20 daily rebuild;
+    # the 9 affected pages were restored before commit).
+    if 'DEFAULT-HOMEPAGE' in content:
         return False
     return ('BUDDY-BASIC-TEMPLATE' in content) or ('Part of the Buddy System' in content)
 
