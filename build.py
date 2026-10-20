@@ -10283,6 +10283,23 @@ function initSearch(){
       if (!ac || ac.hidden) return;
       if (e.key === 'ArrowDown'){ e.preventDefault(); e.stopPropagation(); acMove(1); }
       else if (e.key === 'ArrowUp'){ e.preventDefault(); e.stopPropagation(); acMove(-1); }
+      else if (e.key === 'Tab'){
+        /* Dave 2026-10-20: with the autosuggest open, Tab selects the next
+           match — the dropdown's hot row must move WITH the selection. The
+           global Tab handler only cycles the sidebar rows, so the dropdown
+           kept highlighting the first match while Tab opened later ones. */
+        const brows = ac.querySelectorAll('.bac-row[data-buddy]');
+        if (brows.length){
+          e.preventDefault(); e.stopPropagation();
+          acMove(e.shiftKey ? -1 : 1);
+          const rows = ac.querySelectorAll('.bac-row');
+          const bid = rows[acHot] && rows[acHot].dataset.buddy;
+          if (bid){
+            const wantPanel = S.autoOpenPanel || S.view !== 'project';
+            if (wantPanel) openBuddy(bid); else selectBuddy(bid);
+          }
+        }
+      }
       else if (e.key === 'Enter' && acHot >= 0){
         e.preventDefault(); e.stopPropagation();
         const rows = ac.querySelectorAll('.bac-row');
