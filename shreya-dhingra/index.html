@@ -113,6 +113,14 @@ a:hover { text-decoration: underline; }
   box-shadow: var(--tile-shadow);
 }
 .attn-banner .dot { font-size: 18px; line-height: 1.4; flex: none; }
+/* Dave 2026-10-20: the banner's circle IS the done control — a solid amber
+   circle means something needs to happen; tapping it turns it green with a
+   white check. 44px hit target around a 26px circle. */
+.attn-dot { flex: none; width: 44px; height: 44px; margin: -9px 0 -9px -10px; padding: 0; border: none; background: transparent; cursor: pointer; display: flex; align-items: center; justify-content: center; -webkit-tap-highlight-color: transparent; }
+.attn-dot .ring { width: 26px; height: 26px; border-radius: 50%; background: var(--amber); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 700; line-height: 1; transition: background .2s; }
+.attn-banner.resolved .attn-dot .ring { background: var(--green); }
+.attn-status { font-size: 13px; color: var(--muted); margin-top: 4px; }
+.attn-status:empty { display: none; }
 .attn-banner .lbl {
   font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em;
   color: var(--amber); margin-bottom: 2px;
@@ -273,10 +281,11 @@ a.chip:hover { text-decoration: none; border-color: var(--accent); }
   </header>
 
   <div class="attn-banner" role="note">
-    <span class="dot">🟡</span>
+    <button type="button" class="attn-dot" id="attn-dot" role="checkbox" aria-checked="false" aria-label="Mark done" title="Mark done"><span class="ring"></span></button>
     <div>
       <div class="lbl">Needs Dave's attention</div>
       <div class="txt"><a href="https://docs.google.com/document/d/1BWA9AqukAsH7J2Dn0Hpl1PYVi_ytrGRTZtlMKTpyA_M/edit">Shreya Dhingra — Dossier</a> is ready for review: looks good, edits, or defer?</div>
+      <div class="attn-status" role="status"></div>
     </div>
   </div>
 
@@ -570,6 +579,114 @@ function refreshUI(){
       var d = JSON.parse(e.newValue);
       if (d && d.id === bid && d.name) applyName(d.name);
     } catch(err){}
+  });
+})();
+</script>
+<script>
+/* Attention banner done control (Dave 2026-10-20): the amber circle is a
+   checkbox. Tap -> green circle + white check, recorded on this device
+   (buddyTree.v3 attnDone, same scheme as the template pages) and written to
+   the buddy's docs/ingest.md through the page token when one is connected;
+   with no token it queues in the same local ingest backlog the dump box
+   flushes on its next successful write. */
+(function(){
+  var banner = document.querySelector('.attn-banner');
+  var btn = document.getElementById('attn-dot');
+  if (!banner || !btn) return;
+  var parts = location.pathname.split('/'), bid = '';
+  for (var i = parts.length - 1; i >= 0; i--) { if (parts[i]) { bid = parts[i]; break; } }
+  var txtEl = banner.querySelector('.txt');
+  var text = txtEl ? txtEl.textContent.trim() : '';
+  var st = banner.querySelector('.attn-status');
+  var ring = btn.querySelector('.ring');
+  function lsGet(){ try { return JSON.parse(localStorage.getItem('buddyTree.v3') || '{}'); } catch(e){ return {}; } }
+  function lsSet(patch){ try { var s = lsGet(); for (var k in patch) s[k] = patch[k]; localStorage.setItem('buddyTree.v3', JSON.stringify(s)); } catch(e){} }
+  function rkey(){ return bid + '|text:' + text.slice(0, 60); }
+  function isResolved(){ var m = lsGet().attnDone || {}; return !!m[rkey()]; }
+  function setResolved(){ var s = lsGet(); var m = s.attnDone || {}; m[rkey()] = 1; lsSet({attnDone: m}); }
+  function token(){ return lsGet().ghToken || ''; }
+  function b64encode(str){
+    var bytes = new TextEncoder().encode(str), bin = '';
+    bytes.forEach(function(b){ bin += String.fromCharCode(b); });
+    return btoa(bin);
+  }
+  async function ghApi(path, method, body){
+    var r = await fetch('https://api.github.com' + path, {
+      method: method || 'GET',
+      headers: {'Authorization': 'Bearer ' + token(), 'Accept': 'application/vnd.github+json', 'Content-Type': 'application/json'},
+      body: body ? JSON.stringify(body) : undefined
+    });
+    if (!r.ok) throw new Error('GitHub ' + r.status);
+    return r.status === 204 ? null : await r.json();
+  }
+  async function ghGetFile(repo, path){
+    try {
+      var j = await ghApi('/repos/davedellaquila/' + repo + '/contents/' + path);
+      if (j && j.content) return {
+        text: new TextDecoder().decode(Uint8Array.from(atob(j.content.replace(/\n/g, '')), function(c){ return c.charCodeAt(0); })),
+        sha: j.sha
+      };
+    } catch(e){}
+    return null;
+  }
+  function queueLocal(entry){
+    var key = 'buddyTree.ingest.' + bid, a = [];
+    try { a = JSON.parse(localStorage.getItem(key) || '[]'); if (!Array.isArray(a)) a = []; } catch(e){ a = []; }
+    a.push(entry);
+    try { localStorage.setItem(key, JSON.stringify(a)); } catch(e){}
+  }
+  /* Las Vegas mode (Dave 2026-10-20): the tap spins the button and bursts
+     confetti from it. Skipped under prefers-reduced-motion. */
+  function celebrate(el){
+    if (!el || !el.getBoundingClientRect) return;
+    if (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    try { el.animate([{transform:'rotate(0deg)'},{transform:'rotate(360deg)'}], {duration:450, easing:'cubic-bezier(.2,.7,.3,1.2)'}); } catch(e){}
+    var r = el.getBoundingClientRect(), cx = r.left + r.width/2, cy = r.top + r.height/2;
+    var colors = ['#f0b429','#3fb950','#f778ba','#58a6ff','#ff7b72','#d2a8ff'];
+    for (var i = 0; i < 26; i++){
+      var s = document.createElement('span');
+      var sz = 5 + Math.random()*6;
+      s.style.cssText = 'position:fixed;left:'+cx+'px;top:'+cy+'px;width:'+sz+'px;height:'+(sz*0.6)+'px;background:'+colors[i%colors.length]+';z-index:99999;pointer-events:none;border-radius:2px;';
+      document.body.appendChild(s);
+      var ang = Math.random()*Math.PI*2, v = 60 + Math.random()*130;
+      var dx = Math.cos(ang)*v, dy = Math.sin(ang)*v - 90;
+      var anim = s.animate([
+        {transform:'translate(-50%,-50%) rotate(0deg)', opacity:1},
+        {transform:'translate(calc(-50% + '+dx+'px), calc(-50% + '+(dy+170)+'px)) rotate('+(Math.random()*540-270)+'deg)', opacity:0}
+      ], {duration: 750 + Math.random()*450, easing:'cubic-bezier(.15,.6,.4,1)'});
+      (function(node, a){ if (a) a.onfinish = function(){ node.remove(); }; else setTimeout(function(){ node.remove(); }, 1300); })(s, anim);
+    }
+  }
+  function paint(msg){
+    banner.classList.add('resolved');
+    ring.textContent = '✓';
+    btn.setAttribute('aria-checked', 'true');
+    if (st && msg) st.textContent = msg;
+  }
+  if (isResolved()) { paint('Marked done'); return; }
+  btn.addEventListener('click', async function(){
+    if (isResolved()) return;
+    setResolved();
+    paint('Marked done — the buddy will clear it.');
+    celebrate(btn);
+    var stamp = new Date().toLocaleString();
+    var entryText = 'DONE — Dave marked this done on the homepage: "' + text + '". Please remove it from the attention list.';
+    var repo = null;
+    try {
+      var r = await fetch('../buddies.json', {cache: 'no-store'});
+      var d = await r.json();
+      var buds = (d && d.buddies) || [];
+      for (var j = 0; j < buds.length; j++) { if (buds[j].id === bid && buds[j].repo) { repo = buds[j].repo; break; } }
+    } catch(e){}
+    if (!repo || !token()) { queueLocal({t: stamp, text: entryText}); return; }
+    try {
+      var NL = String.fromCharCode(10);
+      var cur = await ghGetFile(repo, 'docs/ingest.md');
+      var base = cur ? cur.text : '# Ingest log' + NL + NL;
+      var body = {message: 'Attention action for ' + bid, content: b64encode(base + '## ' + stamp + NL + NL + entryText + NL + NL)};
+      if (cur && cur.sha) body.sha = cur.sha;
+      await ghApi('/repos/davedellaquila/' + repo + '/contents/docs/ingest.md', 'PUT', body);
+    } catch(err){ queueLocal({t: stamp, text: entryText}); }
   });
 })();
 </script>

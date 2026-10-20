@@ -4908,6 +4908,29 @@ function toast(msg){
   document.body.appendChild(t);
   setTimeout(() => { if (t.parentNode) t.remove(); }, 3400);
 }
+// Las Vegas mode (Dave 2026-10-20): marking done should feel like a win —
+// the button spins once and confetti bursts from it. Pure DOM + WAAPI, no
+// library; pieces self-clean; skipped under prefers-reduced-motion.
+function celebrate(el){
+  if (!el || !el.getBoundingClientRect) return;
+  if (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  try { el.animate([{transform:'rotate(0deg)'},{transform:'rotate(360deg)'}], {duration:450, easing:'cubic-bezier(.2,.7,.3,1.2)'}); } catch(e){}
+  var r = el.getBoundingClientRect(), cx = r.left + r.width/2, cy = r.top + r.height/2;
+  var colors = ['#f0b429','#3fb950','#f778ba','#58a6ff','#ff7b72','#d2a8ff'];
+  for (var i = 0; i < 26; i++){
+    var s = document.createElement('span');
+    var sz = 5 + Math.random()*6;
+    s.style.cssText = 'position:fixed;left:'+cx+'px;top:'+cy+'px;width:'+sz+'px;height:'+(sz*0.6)+'px;background:'+colors[i%colors.length]+';z-index:99999;pointer-events:none;border-radius:2px;';
+    document.body.appendChild(s);
+    var ang = Math.random()*Math.PI*2, v = 60 + Math.random()*130;
+    var dx = Math.cos(ang)*v, dy = Math.sin(ang)*v - 90;
+    var anim = s.animate([
+      {transform:'translate(-50%,-50%) rotate(0deg)', opacity:1},
+      {transform:'translate(calc(-50% + '+dx+'px), calc(-50% + '+(dy+170)+'px)) rotate('+(Math.random()*540-270)+'deg)', opacity:0}
+    ], {duration: 750 + Math.random()*450, easing:'cubic-bezier(.15,.6,.4,1)'});
+    (function(node, a){ if (a) a.onfinish = function(){ node.remove(); }; else setTimeout(function(){ node.remove(); }, 1300); })(s, anim);
+  }
+}
 // Jonny's done interaction (2026-10-12): tap circle -> accent fill + white check
 // (200ms) -> tile glides out -> "Marked done. Undo." 6s toast. Undo restores.
 function toastWithUndo(msg, onUndo){
@@ -4936,6 +4959,7 @@ function poofSection(field, callback){
   }, 320);
 }
 function markAttentionDone(attnId, btnEl){
+  celebrate(btnEl);
   // Step 1: fill the circle with accent + white check (~200ms)
   if (btnEl) {
     btnEl.style.transition = 'background .2s, color .2s, border-color .2s';
@@ -10565,6 +10589,7 @@ document.addEventListener('click', e => {
   const dvTick = e.target.closest('[data-dv-done]');
   if (dvTick) {
     const key = dvTick.getAttribute('data-dv-done');
+    celebrate(dvTick);
     S.seen[key] = Date.now();
     save();
     renderProjectView();

@@ -476,6 +476,29 @@ Generated 2026-10-20 · Part of the Buddy System
   function rkey(aid, text){ return bid + '|' + (aid || ('text:' + text.slice(0, 60))); }
   function isResolved(aid, text){ var m = lsGet().attnDone || {}; return !!m[rkey(aid, text)]; }
   function setResolved(aid, text){ var s = lsGet(); var m = s.attnDone || {}; m[rkey(aid, text)] = 1; s.attnDone = m; lsSet(s); }
+  /* Las Vegas mode (Dave 2026-10-20): marking done feels like a win — the
+     button spins once and confetti bursts from it. DOM + WAAPI only;
+     skipped under prefers-reduced-motion; only ever called on a real tap. */
+  function celebrate(el){
+    if (!el || !el.getBoundingClientRect) return;
+    if (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    try { el.animate([{transform:'rotate(0deg)'},{transform:'rotate(360deg)'}], {duration:450, easing:'cubic-bezier(.2,.7,.3,1.2)'}); } catch(e){}
+    var r = el.getBoundingClientRect(), cx = r.left + r.width/2, cy = r.top + r.height/2;
+    var colors = ['#f0b429','#3fb950','#f778ba','#58a6ff','#ff7b72','#d2a8ff'];
+    for (var i = 0; i < 26; i++){
+      var s = document.createElement('span');
+      var sz = 5 + Math.random()*6;
+      s.style.cssText = 'position:fixed;left:'+cx+'px;top:'+cy+'px;width:'+sz+'px;height:'+(sz*0.6)+'px;background:'+colors[i%colors.length]+';z-index:99999;pointer-events:none;border-radius:2px;';
+      document.body.appendChild(s);
+      var ang = Math.random()*Math.PI*2, v = 60 + Math.random()*130;
+      var dx = Math.cos(ang)*v, dy = Math.sin(ang)*v - 90;
+      var anim = s.animate([
+        {transform:'translate(-50%,-50%) rotate(0deg)', opacity:1},
+        {transform:'translate(calc(-50% + '+dx+'px), calc(-50% + '+(dy+170)+'px)) rotate('+(Math.random()*540-270)+'deg)', opacity:0}
+      ], {duration: 750 + Math.random()*450, easing:'cubic-bezier(.15,.6,.4,1)'});
+      (function(node, a){ if (a) a.onfinish = function(){ node.remove(); }; else setTimeout(function(){ node.remove(); }, 1300); })(s, anim);
+    }
+  }
   function paintResolved(tile, msg){
     tile.classList.add('resolved');
     var st = tile.querySelector('.attn-status');
@@ -522,7 +545,7 @@ Generated 2026-10-20 · Part of the Buddy System
       if (act === 'done') {
         sendAction(tile,
           'DONE — Dave marked this done on the homepage: "' + text + '"' + idBit + '. Please remove it from the attention list in buddies.json.',
-          'Marked done — the buddy will clear it.').then(function(ok){ if (ok) { setResolved(aid, text); paintResolved(tile, 'Marked done — the buddy will clear it.'); } });
+          'Marked done — the buddy will clear it.').then(function(ok){ if (ok) { setResolved(aid, text); paintResolved(tile, 'Marked done — the buddy will clear it.'); celebrate(btn); } });
       } else if (act === 'info') {
         sendAction(tile,
           'FOLLOW-UP — Dave needs more info on: "' + text + '"' + idBit + '. Please follow up with him.',
