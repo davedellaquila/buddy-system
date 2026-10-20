@@ -172,6 +172,33 @@ h2 { font-size: 22px; margin: 32px 0 16px; }
 }
 .dumpbox-tokenrow a { color: var(--accent); font-size: 13px; }
 
+
+/* ---- Repo files (Dave 2026-10-20): view + edit the buddy's repo markdown ---- */
+.repo-files { margin-top: 8px; }
+.rf-sub { color: var(--muted); font-size: 14px; margin-bottom: 12px; }
+.rf-locked { background: var(--card); border: 1px dashed var(--border); border-radius: 8px; padding: 14px 16px; color: var(--muted); font-size: 14px; }
+.rf-list { display: flex; flex-direction: column; gap: 8px; }
+.rf-file { display: flex; align-items: center; gap: 10px; background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 10px 14px; cursor: pointer; text-align: left; width: 100%; color: var(--text); font: inherit; -webkit-tap-highlight-color: transparent; }
+.rf-file:hover { border-color: var(--accent); }
+.rf-file .rf-name { font-weight: 600; font-size: 15px; }
+.rf-file .rf-dir { color: var(--muted); font-size: 13px; margin-left: auto; word-break: break-all; text-align: right; }
+.rf-view, .rf-editor { margin-top: 14px; background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 16px; }
+.rf-viewhead { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 10px; }
+.rf-path { font-weight: 700; font-size: 14px; margin-right: auto; word-break: break-all; }
+.rf-body { font-size: 15px; }
+.rf-body h2 { font-size: 21px; margin: 16px 0 8px; }
+.rf-body h3 { font-size: 18px; margin: 14px 0 6px; }
+.rf-body h4 { font-size: 16px; margin: 12px 0 6px; }
+.rf-body p { margin: 6px 0; }
+.rf-body ul { margin: 6px 0 6px 20px; }
+.rf-body blockquote { border-left: 3px solid var(--border); padding-left: 12px; color: var(--muted); margin: 8px 0; }
+.rf-body code { background: var(--bg); border: 1px solid var(--border); border-radius: 4px; padding: 0 4px; font-size: 13px; }
+.rf-body pre { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 12px; overflow-x: auto; margin: 8px 0; }
+.rf-body pre code { border: none; padding: 0; background: none; }
+.rf-body a { color: var(--accent); }
+.rf-body hr { border: none; border-top: 1px solid var(--border); margin: 14px 0; }
+.rf-ta { width: 100%; box-sizing: border-box; background: var(--bg); color: var(--text); border: 1px solid var(--border); border-radius: 8px; padding: 12px; font-family: ui-monospace, Menlo, monospace; font-size: 13px; line-height: 1.55; }
+
 </style>
 </head>
 <body>
@@ -214,6 +241,27 @@ h2 { font-size: 22px; margin: 32px 0 16px; }
 
 
 
+
+
+
+<section class="repo-files" data-buddy-id="bmw-buddy">
+<h2>📄 Repo files</h2>
+<p class="rf-sub">The markdown files in <span data-buddy-name>BMW</span>'s repo. Tap one to read it; edit in place and the save goes straight back to GitHub.</p>
+<div class="rf-locked" hidden>🔒 Connect GitHub in the 🧠 Brain dump box above to view and edit files — the repos are private, so a token is needed to read them. Then reload this page.</div>
+<div class="rf-main" hidden>
+<div class="rf-list"></div>
+<div class="rf-view" hidden>
+<div class="rf-viewhead"><span class="rf-path"></span><button type="button" class="attn-btn rf-edit">Edit</button><button type="button" class="attn-btn rf-close">Close</button></div>
+<div class="rf-body"></div>
+</div>
+<div class="rf-editor" hidden>
+<div class="rf-viewhead"><span class="rf-path"></span></div>
+<textarea class="rf-ta" rows="18" spellcheck="false" aria-label="Markdown source"></textarea>
+<div class="attn-actions"><button type="button" class="attn-btn primary rf-save">Save to GitHub</button><button type="button" class="attn-btn rf-cancel">Cancel</button></div>
+</div>
+<div class="rf-status attn-status" role="status"></div>
+</div>
+</section>
 
 
 <div class="footer">
@@ -457,7 +505,16 @@ Generated 2026-10-20 · Part of the Buddy System
     } catch(e){}
   }
   function rkey(aid, text){ return bid + '|' + (aid || ('text:' + text.slice(0, 60))); }
-  function isResolved(aid, text){ var m = lsGet().attnDone || {}; return !!m[rkey(aid, text)]; }
+  function isResolved(aid, text){
+    var s = lsGet();
+    var m = s.attnDone || {};
+    if (m[rkey(aid, text)]) return true;
+    /* Also honor the dashboard's own done map (the same store's 'seen',
+       keyed by bare attention id) so an item cleared in the dashboard
+       stays cleared here — one done state across surfaces. */
+    if (aid && s.seen && s.seen[aid]) return true;
+    return false;
+  }
   function setResolved(aid, text){ var s = lsGet(); var m = s.attnDone || {}; m[rkey(aid, text)] = 1; s.attnDone = m; lsSet(s); }
   /* Las Vegas mode (Dave 2026-10-20): marking done feels like a win — the
      button spins once and confetti bursts from it. DOM + WAAPI only;
@@ -537,6 +594,192 @@ Generated 2026-10-20 · Part of the Buddy System
     });
   });
   resolveBuddy();
+})();
+</script>
+
+
+<script>
+(function(){
+  var sec = document.querySelector('.repo-files');
+  if (!sec || sec.dataset.rfInit) return;
+  sec.dataset.rfInit = '1';
+  var bid = sec.getAttribute('data-buddy-id') || (function(){
+    var p = location.pathname.replace(/\/+$/, '');
+    return p.substring(p.lastIndexOf('/') + 1);
+  })();
+  function lsGet(){ try { return JSON.parse(localStorage.getItem('buddyTree.v3') || '{}'); } catch(e){ return {}; } }
+  function token(){ return lsGet().ghToken || ''; }
+  function b64encode(str){
+    var bytes = new TextEncoder().encode(str), bin = '';
+    bytes.forEach(function(b){ bin += String.fromCharCode(b); });
+    return btoa(bin);
+  }
+  async function ghApi(path, method, body){
+    var t = token();
+    if (!t) throw new Error('Add a GitHub token first.');
+    var r = await fetch('https://api.github.com' + path, {
+      method: method || 'GET',
+      headers: {'Authorization': 'Bearer ' + t, 'Accept': 'application/vnd.github+json', 'Content-Type': 'application/json'},
+      body: body ? JSON.stringify(body) : undefined
+    });
+    if (!r.ok) throw new Error('GitHub ' + r.status);
+    return r.status === 204 ? null : await r.json();
+  }
+  async function ghGetFile(repo, path){
+    try {
+      var j = await ghApi('/repos/davedellaquila/' + repo + '/contents/' + path);
+      if (j && j.content) return {
+        text: new TextDecoder().decode(Uint8Array.from(atob(j.content.replace(/\n/g, '')), function(c){ return c.charCodeAt(0); })),
+        sha: j.sha
+      };
+    } catch(e){}
+    return null;
+  }
+  var repo = null;
+  async function resolveRepo(){
+    try {
+      var r = await fetch('../buddies.json', {cache: 'no-store'});
+      var d = await r.json();
+      var buds = d.buddies || [];
+      for (var i = 0; i < buds.length; i++) {
+        if (buds[i].id === bid && buds[i].repo) { repo = buds[i].repo; break; }
+      }
+    } catch(e){}
+  }
+  function esc(s){ return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+  function inline(s){
+    s = esc(s);
+    s = s.replace(/`([^`]+)`/g, '<code>$1</code>');
+    s = s.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+    s = s.replace(/(^|[^*])\*([^*\n]+)\*/g, '$1<em>$2</em>');
+    s = s.replace(/\[([^\]]+)\]\((https?:[^)\s]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>');
+    return s;
+  }
+  function mdRender(src){
+    var lines = src.split('\n'), out = [], inList = false, inCode = false, codeBuf = [];
+    function closeList(){ if (inList) { out.push('</ul>'); inList = false; } }
+    for (var i = 0; i < lines.length; i++){
+      var ln = lines[i], m;
+      if (/^```/.test(ln)) {
+        if (inCode) { out.push('<pre><code>' + esc(codeBuf.join('\n')) + '</code></pre>'); codeBuf = []; inCode = false; }
+        else { closeList(); inCode = true; }
+        continue;
+      }
+      if (inCode) { codeBuf.push(ln); continue; }
+      if ((m = ln.match(/^(#{1,4})\s+(.*)/))) {
+        closeList();
+        var lv = Math.min(m[1].length + 1, 4);
+        out.push('<h' + lv + '>' + inline(m[2]) + '</h' + lv + '>');
+        continue;
+      }
+      if (/^\s*(-{3,}|\*{3,})\s*$/.test(ln)) { closeList(); out.push('<hr>'); continue; }
+      if ((m = ln.match(/^\s*[-*]\s+(.*)/)) || (m = ln.match(/^\s*\d+[.)]\s+(.*)/))) {
+        if (!inList) { out.push('<ul>'); inList = true; }
+        out.push('<li>' + inline(m[1]) + '</li>');
+        continue;
+      }
+      if ((m = ln.match(/^>\s?(.*)/))) { closeList(); out.push('<blockquote>' + inline(m[1]) + '</blockquote>'); continue; }
+      if (!ln.trim()) { closeList(); continue; }
+      closeList();
+      out.push('<p>' + inline(ln) + '</p>');
+    }
+    closeList();
+    if (inCode) out.push('<pre><code>' + esc(codeBuf.join('\n')) + '</code></pre>');
+    return out.join('\n');
+  }
+  var locked = sec.querySelector('.rf-locked'), main = sec.querySelector('.rf-main'),
+      list = sec.querySelector('.rf-list'), view = sec.querySelector('.rf-view'),
+      body = sec.querySelector('.rf-body'), editor = sec.querySelector('.rf-editor'),
+      ta = sec.querySelector('.rf-ta'), st = sec.querySelector('.rf-status');
+  var cur = null;
+  function openFile(f){
+    st.textContent = 'Loading ' + f.path + '…';
+    ghGetFile(repo, f.path).then(function(got){
+      if (!got) { st.textContent = '⚠ Could not load ' + f.path + '.'; return; }
+      cur = {path: f.path, sha: got.sha, text: got.text};
+      st.textContent = '';
+      editor.hidden = true;
+      view.hidden = false;
+      view.querySelector('.rf-path').textContent = f.path;
+      body.innerHTML = mdRender(got.text);
+    });
+  }
+  view.querySelector('.rf-close').addEventListener('click', function(){ view.hidden = true; });
+  view.querySelector('.rf-edit').addEventListener('click', function(){
+    if (!cur) return;
+    editor.querySelector('.rf-path').textContent = cur.path;
+    ta.value = cur.text;
+    view.hidden = true;
+    editor.hidden = false;
+    ta.focus();
+  });
+  editor.querySelector('.rf-cancel').addEventListener('click', function(){
+    editor.hidden = true;
+    view.hidden = false;
+  });
+  editor.querySelector('.rf-save').addEventListener('click', async function(){
+    if (!cur) return;
+    var btn = this;
+    btn.disabled = true;
+    st.textContent = 'Saving…';
+    try {
+      var body = {message: 'Edit ' + cur.path + ' from the homepage', content: b64encode(ta.value), sha: cur.sha};
+      var j = await ghApi('/repos/davedellaquila/' + repo + '/contents/' + cur.path, 'PUT', body);
+      if (j && j.content && j.content.sha) cur.sha = j.content.sha;
+      cur.text = ta.value;
+      editor.hidden = true;
+      view.hidden = false;
+      view.querySelector('.rf-body').innerHTML = mdRender(cur.text);
+      st.textContent = '✓ Saved to GitHub (' + repo + '/' + cur.path + ').';
+    } catch(err){
+      var why = (err && err.message) || String(err);
+      st.textContent = /409|422/.test(why)
+        ? '⚠ GitHub said the file changed since you opened it (' + why + ') — close it, reopen it, and try again.'
+        : '⚠ Save failed (' + why + ') — your edit is still in the editor.';
+    }
+    btn.disabled = false;
+  });
+  async function init(){
+    await resolveRepo();
+    if (!repo) {
+      locked.hidden = false;
+      locked.textContent = 'No repo is linked for this buddy yet, so there are no repo files to show.';
+      return;
+    }
+    if (!token()) { locked.hidden = false; return; }
+    main.hidden = false;
+    st.textContent = 'Loading files…';
+    var files = [];
+    async function grab(dir){
+      try {
+        var j = await ghApi('/repos/davedellaquila/' + repo + (dir ? '/contents/' + dir : '/contents'));
+        if (Array.isArray(j)) j.forEach(function(e){
+          if (e.type === 'file' && /\.md$/i.test(e.name)) files.push({name: e.name, path: e.path});
+        });
+      } catch(e){}
+    }
+    await grab('');
+    await grab('docs');
+    files.sort(function(a, b){ return a.path < b.path ? -1 : 1; });
+    if (!files.length) { st.textContent = 'No markdown files found in the repo yet.'; return; }
+    st.textContent = '';
+    files.forEach(function(f){
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'rf-file';
+      var n = document.createElement('span');
+      n.className = 'rf-name';
+      n.textContent = '📄 ' + f.name;
+      var dd = document.createElement('span');
+      dd.className = 'rf-dir';
+      dd.textContent = f.path;
+      b.appendChild(n);
+      b.appendChild(dd);
+      b.addEventListener('click', function(){ openFile(f); });
+      list.appendChild(b);
+    });
+  }
+  init();
 })();
 </script>
 

@@ -2297,7 +2297,7 @@ function fieldCountFor(fid, b){
   if (!b || !COLLECTION_FIELDS.includes(fid)) return null;
   if (fid === 'aka') return effAka(b).length;
   if (fid === 'artifacts') return (b.brief ? 1 : 0) + (b.homepageSource ? 1 : 0) + (b.repo ? 1 : 0) + (b.docs || []).length;
-  if (fid === 'attention') return (b.attention || []).filter(a => !(S.seen && S.seen[a.id])).length;
+  if (fid === 'attention') return (b.attention || []).filter(a => !attnSeen(b.id, a)).length;
   if (fid === 'siblings') return peersOf(b).length;
   if (fid === 'notes') return wordCount(S.notes[b.id] || '');
   /* Documents: uploaded PDFs are counted by the async docs loader, which
@@ -2398,7 +2398,18 @@ function homepageUrl(b){
   const base = window.location.origin + window.location.pathname.replace(/\/[^/]*$/, '/');
   return base + hp.replace(/^\//, '');
 }
-function unseenItems(b){ if (isDormant(b.id)) return []; return (b.attention || []).filter(a => !S.seen[a.id]); }
+/* Done state lives in two maps in the same on-device store: S.seen (marked
+   in the dashboard) and S.attnDone (marked on a buddy's homepage, keyed
+   bid|attnId). An item counts as done if EITHER surface recorded it —
+   otherwise the panel section keeps pulsing after Dave cleared the items
+   on the homepage. (Dave 2026-10-20) */
+function attnSeen(bid, a){
+  if (!a) return false;
+  if (S.seen && S.seen[a.id]) return true;
+  const m = S.attnDone || {};
+  return !!m[bid + '|' + a.id];
+}
+function unseenItems(b){ if (isDormant(b.id)) return []; return (b.attention || []).filter(a => !attnSeen(b.id, a)); }
 function descUnseen(id){
   let n = 0; const seen = new Set();
   (function walk(x){ if (seen.has(x)) return; seen.add(x); const b = byId[x]; if(!b) return; n += unseenItems(b).length;
@@ -4382,7 +4393,7 @@ function renderBuddy(id){
     }
   }, 50);
   try{ setBuddyFavicon(buddyDisplayIcon(b), buddyImageUrl(b)); }catch(e){}
-  const items = (b.attention || []).filter(a => !S.seen[a.id]);
+  const items = (b.attention || []).filter(a => !attnSeen(b.id, a));
   let arts = '';
   let artCount = 0;
   if (b.brief) { arts += artRow(ICON_DOC, 'Mission statement', 'The canonical mission & intent — Google Doc', b.brief); artCount++; }
@@ -4577,7 +4588,7 @@ function renderBuddy(id){
     + '<button class="linkbtn" id="bp-homepage-copy" title="Copy homepage URL to clipboard" style="flex-shrink:0">Copy</button>'
     + '<button class="linkbtn" id="bp-homepage-open" title="Open homepage in a new tab" style="flex-shrink:0">Open</button>'
     + '</div></div>'
-    + (unseenCount > 0 ? (function(){ const fx = getSetting('attnEffect') || 'none'; const high = items.some(a => !S.seen[a.id] && a.priority === 'high'); return '<div class="bp-sec fx-'+fx+(high?' attn-high':'')+'" data-field="attention"><h3>Needs your attention <span class="attn-count">('+unseenCount+')</span></h3>'+attn+'</div>'; })() : '')
+    + (unseenCount > 0 ? (function(){ const fx = getSetting('attnEffect') || 'none'; const high = items.some(a => !attnSeen(b.id, a) && a.priority === 'high'); return '<div class="bp-sec fx-'+fx+(high?' attn-high':'')+'" data-field="attention"><h3>Needs your attention <span class="attn-count">('+unseenCount+')</span></h3>'+attn+'</div>'; })() : '')
     + photos
     + docs
     + (id === ROOT_ID
@@ -4990,7 +5001,7 @@ function markAttentionDone(attnId, btnEl){
     save();
     // Step 3: glide the tile out, then rerender — poof the whole section if it was the last item
     const buddyId = S.sel.slice(6);
-    const remaining = (byId[buddyId].attention || []).filter(a => !S.seen[a.id]);
+    const remaining = (byId[buddyId].attention || []).filter(a => !attnSeen(buddyId, a));
     const tile = btnEl ? btnEl.closest('.attn') : null;
     const rerender = () => { renderBuddy(buddyId); renderNav(); updateAppBadge(); };
     if (tile) {
