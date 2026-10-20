@@ -2028,7 +2028,7 @@ def build():
     js = """const BUDDIES = BUDDIES_JSON;
 const ROOT_ORDER = ORDER_JSON;
 const PERSONA_ROSTER = PERSONA_ROSTER_JSON;
-const VOICE_CATALOG = [{"id": "avocado_v2:MAI_01", "name": "Aria", "desc": "Feminine, American, Friendly, Warm"}, {"id": "avocado_v2:MAI_03", "name": "Helio", "desc": "Masculine, American, Gentle, Reassuring"}, {"id": "avocado_v2:Karen", "name": "Regal Icicle", "desc": "Feminine, American, Sharp, Menacing"}, {"id": "avocado_v2:nova", "name": "Deadpan Gumball", "desc": "Feminine, American, Friendly, Sarcastic"}, {"id": "avocado_v2:vincent", "name": "Gruff Brick", "desc": "Masculine, American, Direct, Blunt"}, {"id": "avocado_v2:bud", "name": "Neighborly Syrup", "desc": "Masculine, Southern American, Deep, Slow"}, {"id": "avocado_v2:isabella", "name": "Soothing Ribbon", "desc": "Feminine, British, Soothing, Polished"}, {"id": "avocado_v2:magnus", "name": "Boomy Mountain", "desc": "Masculine, British, Deep, Regal"}, {"id": "avocado_v2:paloma", "name": "Lilting Swing", "desc": "Feminine, British, Friendly, Light"}, {"id": "avocado_v2:ronan", "name": "Fluid Hammock", "desc": "Masculine, American, Friendly, Casual"}, {"id": "avocado_v2:lumi", "name": "Bubbly Pompom", "desc": "Feminine, Finnish, Bubbly, Energetic"}, {"id": "avocado_v2:rumi", "name": "Cheeky Bubble", "desc": "Feminine, American, Bubbly, Sarcastic"}, {"id": "avocado_v2:mudiwa", "name": "Dramatic Canyon", "desc": "Masculine, Zimbabwean, Deep, Dramatic"}, {"id": "avocado_v2:myrtle", "name": "Homespun Basket", "desc": "Feminine, American, Reedy, Kindly"}, {"id": "avocado_v2:hubert", "name": "Loud Gravel", "desc": "Masculine, New York, Loud, Raspy"}, {"id": "avocado_v2:conor", "name": "Polished Coin", "desc": "Masculine, Irish, Relaxed, Professional"}, {"id": "avocado_v2:miles", "name": "Satiny Moon", "desc": "Masculine, American, Deep, Soothing"}, {"id": "avocado_v2:briggs", "name": "Husky Campfire", "desc": "Masculine, Southern American, Husky, Warm"}, {"id": "avocado_v2:chip", "name": "Warm Pebble", "desc": "Masculine, American, Warm, Professional"}, {"id": "avocado_v2:lady_macbeth", "name": "Coppery Crown", "desc": "Feminine, Scottish, Commanding, Regal"}, {"id": "avocado_v2:melody", "name": "Dynamic Sparkler", "desc": "Feminine, American, Confident, Dynamic"}, {"id": "avocado_v2:marisol", "name": "Zippy Cork", "desc": "Feminine, American, Zippy, Warm"}, {"id": "avocado_v2:atlas", "name": "Burnished Trophy", "desc": "Masculine, Australian, Deep, Dramatic"}, {"id": "avocado_v2:casper", "name": "Confident Trumpet", "desc": "Masculine, American, Confident, Storyteller"}, {"id": "avocado_v2:ElvenWizard", "name": "Ethereal Star", "desc": "Neutral, American, Otherworldly, Mysterious"}, {"id": "avocado_v2:TruthTeller", "name": "Wise Lighthouse", "desc": "Masculine, American, Calm, Wise"}, {"id": "avocado_v2:Vanessa", "name": "Cheerful Sunflower", "desc": "Feminine, American, Bright, Friendly"}, {"id": "avocado_v2:Lily", "name": "Mellow Saxophone", "desc": "Feminine, American, Smooth, Smoky"}, {"id": "avocado_v2:Twenty", "name": "Bold Flag", "desc": "Masculine, American, Heroic, Bold"}, {"id": "avocado_v2:Caitlin", "name": "Heroic Bugle", "desc": "Feminine, American, Heroic, Confident"}]; // 116-entry persona list, baked at build time
+const VOICE_CATALOG = VOICES_JSON; // full voice catalog from voice-catalog.json, baked at build time
 const byId = Object.fromEntries(BUDDIES.map(b => [b.id, b]));
 const ROOT_ID = 'astro'; // chief of staff sits at the root of the tree
 BUDDIES.forEach(b => { (b.links || []).forEach(lid => { const t = byId[lid]; if (t && lid !== b.id) { (t.linkedBy = t.linkedBy || []).push(b.id); } }); });
@@ -4183,12 +4183,15 @@ function openVoicePicker(id){
     // Voices with audio samples (Dave 2026-10-12) — baked list of the 30 sampled voices
     const sampledVoices = {'avocado_v2:MAI_01':1,'avocado_v2:MAI_03':1,'avocado_v2:Karen':1,'avocado_v2:nova':1,'avocado_v2:bud':1,'avocado_v2:isabella':1,'avocado_v2:rumi':1,'avocado_v2:mudiwa':1,'avocado_v2:myrtle':1,'avocado_v2:hubert':1,'avocado_v2:conor':1,'avocado_v2:miles':1,'avocado_v2:briggs':1,'avocado_v2:chip':1,'avocado_v2:lady_macbeth':1,'avocado_v2:melody':1,'avocado_v2:marisol':1,'avocado_v2:atlas':1,'avocado_v2:casper':1,'avocado_v2:ElvenWizard':1,'avocado_v2:TruthTeller':1,'avocado_v2:Vanessa':1,'avocado_v2:Lily':1,'avocado_v2:Twenty':1,'avocado_v2:Caitlin':1,'avocado_v2:paloma':1,'avocado_v2:ronan':1,'avocado_v2:lumi':1,'avocado_v2:magnus':1,'avocado_v2:vincent':1};
     let curAudio = null;
-    grid.innerHTML = list.map(v =>
+    const MAXR = 400; // render cap (Dave 2026-10-20): all 1,066 voices are in the catalog and searchable; only the first matches render so the sheet stays responsive
+    const shown = list.slice(0, MAXR);
+    grid.innerHTML = shown.map(v =>
       '<button type="button" class="pp-card' + (v.id === cur ? ' sel' : '') + '" data-voice="' + escHtml(v.id) + '">'
       + '<span class="pp-name">' + escHtml(v.name)
       + (sampledVoices[v.id] ? ' <span class="pp-play" data-play="' + escHtml(v.id) + '" title="Hear this voice" role="button" tabindex="0">\u25b6\ufe0e</span>' : '')
       + '</span>'
       + '<span class="pp-blurb">' + escHtml(v.desc) + (v.accent ? ' · ' + escHtml(v.accent) : '') + '</span></button>').join('')
+      + (list.length > shown.length ? '<p class="bp-empty">Showing the first ' + shown.length + ' of ' + list.length + ' matches — keep typing to narrow it down.</p>' : '')
       || '<p class="bp-empty">No voices match that filter.</p>';
     // Play buttons: stop propagation so tapping play doesn't select the voice
     grid.querySelectorAll('[data-play]').forEach(pb => {
@@ -10796,7 +10799,7 @@ initNavItemDnD();
 applyNavSecOrder();
 initSbBrandSticky();
 """
-    js = js.replace("BUDDIES_JSON", buddies_js).replace("ORDER_JSON", order_js).replace("PLANS_JSON", plans_js).replace("PERSONA_ROSTER_JSON", roster_js)
+    js = js.replace("BUDDIES_JSON", buddies_js).replace("ORDER_JSON", order_js).replace("PLANS_JSON", plans_js).replace("PERSONA_ROSTER_JSON", roster_js).replace("VOICES_JSON", voices_js)
     js = js.replace("ICON_DOC", "'" + ICON_DOC.replace("'", "\\'") + "'")
     js = js.replace("ICON_REPO", "'" + ICON_REPO.replace("'", "\\'") + "'")
     js = js.replace("ICON_LINK", "'" + ICON_LINK.replace("'", "\\'") + "'")

@@ -1,3 +1,7 @@
+## 2026-10-20
+### All voices unlocked for testing (Dave 2026-10-20)
+- Dave: "Unlock all the voices so that I can test them out." Two locks, two fixes. (1) Dashboard voice picker: `build.py` has loaded all 1,066 voices from voice-catalog.json since Oct 12 but the emitted `VOICE_CATALOG` was still a separate hard-coded 30-voice array — the picker now receives the full catalog (searchable as before; the grid renders the first 400 matches with a "keep typing" hint so the sheet stays responsive, and every entry now carries accent/tone, which the filter already expected). (2) News Buddy read-aloud picker (`news-buddy/s/buddy.js`): the tip-jar gate stays for the public, but an owner bypass unlocks every device voice on Dave's own devices — open any news page once with `?owner=1` and a per-device localStorage flag (`newsBuddyOwner`) keeps them unlocked there; the picker footer says so when owner mode is on. Public visitors still get the 10-voice re-deal + tip pitch, unchanged.
+
 ## 2026-10-19
 ### Neighborhood Buddy — charter doc updated (Dave 2026-10-19)
 - Registry brief link for Neighborhood Buddy now points at the San Jose/Nextdoor job req Dave adopted tonight as the buddy's refreshed charter (reconciled: Property Buddy stays the parent; the Fiddletown patch continues under the original brief, which remains linked from the buddy's repo).
