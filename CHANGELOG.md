@@ -3,6 +3,10 @@
 - Dave: "Unlock all the voices so that I can test them out." Two locks, two fixes. (1) Dashboard voice picker: `build.py` has loaded all 1,066 voices from voice-catalog.json since Oct 12 but the emitted `VOICE_CATALOG` was still a separate hard-coded 30-voice array — the picker now receives the full catalog (searchable as before; the grid renders the first 400 matches with a "keep typing" hint so the sheet stays responsive, and every entry now carries accent/tone, which the filter already expected). (2) News Buddy read-aloud picker (`news-buddy/s/buddy.js`): the tip-jar gate stays for the public, but an owner bypass unlocks every device voice on Dave's own devices — open any news page once with `?owner=1` and a per-device localStorage flag (`newsBuddyOwner`) keeps them unlocked there; the picker footer says so when owner mode is on. Public visitors still get the 10-voice re-deal + tip pitch, unchanged.
 
 ## 2026-10-20
+### Text size setting — scales text only, never the layout (Dave 2026-10-20)
+- The Settings "Text size" slider drove `body{zoom}`, which scales geometry along with text: on iOS the page rendered wider than the phone (sideways scrolling), dialogs grew too wide, and fixed buttons (the +) drifted while scrolling.
+- Rebuilt on the root-font-size mechanism: all 300 font-size declarations in the dashboard converted from px to rem against a 16px root (no layout property uses rem, verified), and the slider now sets the root size. Text scales 80–130%; widths, dialogs, panels and anchored buttons keep their exact geometry.
+
 ### Attention "Done" buttons — no check mark until clicked (Dave 2026-10-20)
 - Buddy homepage attention tiles (template): the Done button rendered "✓ Done" upfront, which reads as "already done" while the item is still sitting there. It now renders plain "Done"; the check appears on the button only after the tap (paintResolved swaps the label), alongside the "Marked done" status.
 - Pulse view tick aligned to the same rule: empty circle ○ instead of an always-on ✓ (the dashboard info-panel button already behaved this way).
