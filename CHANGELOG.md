@@ -5,6 +5,7 @@
 ## 2026-10-20
 ### Constellation spacing panel — docked to the pane, out of the zoom layer (Dave 2026-10-20)
 - The Spacing panel (and its collapsed pill) were built inside the chart's zoomed layer, so they scaled with the zoom factor and floated wherever the chart content put them. They now mount on the tree pane itself and dock to its bottom-right corner: constant size, always in reach, and removed cleanly when switching to another lens.
+- Dock raised (Dave, on-device check): at the pane's very bottom the panel sat underneath the fixed footer nav cluster; it now docks 92px up, clear of the buttons at any split position.
 
 ### Section headers, chart background, sheet focus ring (Dave 2026-10-20)
 - Info-panel section headers now follow the pattern agreed 2026-10-19 end to end: the add control sits on the eyebrow row in both states — a small ⊕ circle while the section is collapsed, the spelled-out "+ Add …" pill while it's open (Parent/Manager and Children sections). A single-value section shows its value in the header while collapsed ("MANAGER: Project Buddy"); while open the header keeps just the label, since the body shows the value — the add pill used to squeeze the header text down to "M.".

@@ -626,12 +626,12 @@ body.sb-closed #pane-toggles .ptoggle{padding:6px 4px}
    PANE (outside the zoomed chart layer — see wireConstelPanel) and docked
    to the pane's bottom-right corner, so they never scale or drift with
    the chart's zoom and pan. */
-.constel-pill{position:absolute;bottom:14px;right:14px;z-index:6;min-height:44px;padding:0 18px;
+.constel-pill{position:absolute;bottom:92px;right:14px;z-index:6;min-height:44px;padding:0 18px;
   border-radius:999px;border:1px solid var(--border);background:var(--panel);color:var(--text);
   font:600 .8125rem -apple-system,sans-serif;cursor:pointer;box-shadow:0 10px 24px rgba(10,20,15,.14);
   -webkit-tap-highlight-color:transparent}
 .constel-pill:hover{border-color:var(--accent)}
-.constel-panel{position:absolute;bottom:14px;right:14px;z-index:6;width:236px;max-width:calc(100% - 24px);
+.constel-panel{position:absolute;bottom:92px;right:14px;z-index:6;width:236px;max-width:calc(100% - 24px);
   background:var(--panel);border:1px solid var(--border);border-radius:14px;
   box-shadow:0 10px 24px rgba(10,20,15,.14);padding:10px 14px 12px;color:var(--text);
   font-family:-apple-system,sans-serif}
