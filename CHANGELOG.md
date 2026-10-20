@@ -3,6 +3,12 @@
 - Dave: "Unlock all the voices so that I can test them out." Two locks, two fixes. (1) Dashboard voice picker: `build.py` has loaded all 1,066 voices from voice-catalog.json since Oct 12 but the emitted `VOICE_CATALOG` was still a separate hard-coded 30-voice array — the picker now receives the full catalog (searchable as before; the grid renders the first 400 matches with a "keep typing" hint so the sheet stays responsive, and every entry now carries accent/tone, which the filter already expected). (2) News Buddy read-aloud picker (`news-buddy/s/buddy.js`): the tip-jar gate stays for the public, but an owner bypass unlocks every device voice on Dave's own devices — open any news page once with `?owner=1` and a per-device localStorage flag (`newsBuddyOwner`) keeps them unlocked there; the picker footer says so when owner mode is on. Public visitors still get the 10-voice re-deal + tip pitch, unchanged.
 
 ## 2026-10-20
+### Back / Prev / Next buttons now show over the phone sheet too (Dave 2026-10-20)
+- Dave: "they should be there all the time." The one carve-out from this morning's visibility spec — hidden while the buddy panel is open as a phone sheet — is gone: the buttons now float above the sheet as well (they already painted above everything else). The field-settings modal is the only surface that still covers them, so its Done button stays clear.
+
+### Sticky section eyebrows in the sidebar (Dave 2026-10-20)
+- As the sidebar list scrolls, each section's eyebrow (Buddies, Business Plans, Views…) now pins beneath the sticky brand + search stack and stays there until the next section's eyebrow pushes it away — iOS Contacts behavior. The pinned bar is full-bleed with the same opaque background as the other sidebar stickies, and it joins the glass treatment when Panel translucency is set to Glass. Its offset is measured live from the brand and search bars, so it stays correct at any text size.
+
 ### Panel translucency setting — Apple Weather glass for the side panels (Dave 2026-10-20)
 - New Settings choice, "Panel translucency" (Standard / Glass), inspired by the Apple Weather iPad side panel Dave filed into the Kin design archive. Glass mode drops the sidebar, buddy detail panel, section rail, and the sidebar's sticky bars to roughly half fill with a stronger blur and saturation, so the Atlas canvas or a homepage behind them tints the glass. Standard (the default) keeps the usual soft frost. Applies live from Settings and rides the factory-defaults snapshot like the sidebar style it sits beside.
 

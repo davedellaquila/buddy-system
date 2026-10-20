@@ -286,7 +286,7 @@ body.sb-anchored #sidebar .brand, body.sb-anchored #sidebar .sb-tipjar{backgroun
 body.glass-panels #sidebar, body.glass-panels #bp-rail{
   background:color-mix(in srgb, var(--panel) 52%, transparent);
   -webkit-backdrop-filter:blur(28px) saturate(1.9);backdrop-filter:blur(28px) saturate(1.9)}
-body.glass-panels .sb-brand-sticky, body.glass-panels .sb-search-sticky{
+body.glass-panels .sb-brand-sticky, body.glass-panels .sb-search-sticky, body.glass-panels #sidebar .nav-sec>h3{
   background:color-mix(in srgb, var(--panel) 52%, transparent);
   -webkit-backdrop-filter:blur(28px) saturate(1.9);backdrop-filter:blur(28px) saturate(1.9)}
 body.glass-panels .sb-tipjar{background:color-mix(in srgb, var(--panel) 45%, transparent)}
@@ -416,6 +416,13 @@ body.sb-closed #main .zoombar{left:calc(50% + 38px)}
 .nav-sec{margin-top:18px}
 .nav-sec>h3{font-size:.6875rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);
   margin:0 8px 8px;display:flex;align-items:center;gap:8px}
+/* Section eyebrows stick under the search box (Dave 2026-10-20): as a section
+   scrolls, its eyebrow pins beneath the sticky brand+search stack and the
+   next section's eyebrow pushes it away — iOS Contacts behavior. The bar goes
+   full-bleed (negative margins like the other sidebar stickies) with an
+   opaque background so rows pass underneath it, not through it. */
+#sidebar .nav-sec>h3{position:sticky;top:calc(var(--sb-brand-h,96px) + var(--sb-search-h,56px));z-index:5;
+  background:var(--panel);margin:0 -14px 8px;padding:6px 14px 6px 22px}
 #attn-pill{background:var(--accent);color:var(--on-accent);font-size:.6875rem;font-weight:700;border-radius:999px;
   padding:1px 8px;letter-spacing:0;text-transform:none}
 #attn-pill.zero{background:var(--border2);color:var(--muted)}
@@ -972,7 +979,9 @@ body:has(#field-settings.show) #new-buddy-fab{display:none}
    the buttons appear whenever a collection is on screen, regardless of the
    panel — a buddy homepage, the info panel (right panel) open, the sidebar's
    hierarchical buddy list open (desktop/iPad widths), or the tree view.
-   Still hidden under the phone sheet (modal) and the field settings.
+   Still hidden under the field settings. (Was also hidden under the phone
+   sheet until Dave corrected it later on 2026-10-20: "they should be there
+   all the time" — the sheet now shows them too, floating above it.)
    History: on 2026-10-19 the cluster lived next to the + button in the
    lower-right; Dave redistributed it the next morning. */
 #hp-nav{position:fixed;left:50%;transform:translateX(-50%);bottom:20px;z-index:9000;display:none;gap:12px}
@@ -988,7 +997,7 @@ body:not(.sb-closed):not(.standalone) #hp-nav,
 body:not(.sb-closed):not(.standalone) #hp-back{display:flex}
 }
 body:has(#view-buddy.sheet.active) #hp-nav,
-body:has(#view-buddy.sheet.active) #hp-back{display:none}
+body:has(#view-buddy.sheet.active) #hp-back{display:flex}
 body:has(#field-settings.show) #hp-nav,
 body:has(#field-settings.show) #hp-back{display:none !important}
 #hp-nav button, #hp-back{width:56px;height:56px;border-radius:50%;padding:0;
@@ -3728,7 +3737,7 @@ function renderDevelopSection(){
   const dev = document.getElementById('fset-develop');
   if (!dev) return;
   const simulating = !!devBackup;
-  const buildNum = '20261020.1149';
+  const buildNum = '20261020.1200';
   dev.innerHTML = ''
     + '<label class="fset-check"><input type="checkbox" id="dev-empty-toggle"' + (simulating ? ' checked' : '') + '> <span><strong>Simulate new user</strong> — empty data file, as if opening the shared link fresh</span></label>'
     + '<div class="fineprint" style="margin:8px 0 12px">Build <span style="font-family:monospace">' + escHtml(String(buildNum)) + '</span> · ' + BUDDIES.length + ' buddies in this file</div>'
@@ -4986,7 +4995,7 @@ function renderBuddy(id){
       'Anybody with repo access can see this note. Saved to the buddy’s repo (docs/notes.md).')
     + '<div class="attr-body"><textarea class="notes" id="bp-shared-notes" placeholder="Anybody with repo access can see this note."></textarea>'
     + '<p class="fineprint" id="shared-status"></p></div></div>'
-    + '<div class="bp-build">Build 20261020.1149</div>'
+    + '<div class="bp-build">Build 20261020.1200</div>'
     + '</div>';
   // Update every visible label for a buddy after a rename/re-icon, across all
   // Atlas lenses. A rename changes no structure, so labels are patched in place
@@ -7635,7 +7644,7 @@ function renderPlan(id){
     + '<p class="fineprint">Saved on this device. (For your eyes only)</p></div>'
     + '<div class="bp-sec"><h3>Shared notes<span class="info-tip" data-tip="Visible to everyone with access to this project.">\u24d8</span></h3><textarea class="notes" id="bp-shared" placeholder="Shared notes\u2026 (visible to everyone with access)">'+escHtml((S.planShared||{})[id]||'')+'</textarea>'
     + '<p class="fineprint">Shared — visible to everyone with access.</p></div>'
-    + '<div class="bp-build">Build 20261020.1149</div>'
+    + '<div class="bp-build">Build 20261020.1200</div>'
     + '</div>';
   const nt = document.getElementById('bp-notes');
   let t = null;
@@ -9723,12 +9732,21 @@ function syncSbBrandStickyHeight(){
   if (!sb || !brand) return;
   const h = Math.ceil(brand.getBoundingClientRect().height);
   if (h > 0) sb.style.setProperty('--sb-brand-h', h + 'px');
+  const search = document.querySelector('.sb-search-sticky');
+  if (search) {
+    const sh = Math.ceil(search.getBoundingClientRect().height);
+    if (sh > 0) sb.style.setProperty('--sb-search-h', sh + 'px');
+  }
 }
 function initSbBrandSticky(){
   syncSbBrandStickyHeight();
   const brand = document.querySelector('.sb-brand-sticky');
   if (brand && typeof ResizeObserver !== 'undefined') {
     new ResizeObserver(() => syncSbBrandStickyHeight()).observe(brand);
+  }
+  const search = document.querySelector('.sb-search-sticky');
+  if (search && typeof ResizeObserver !== 'undefined') {
+    new ResizeObserver(() => syncSbBrandStickyHeight()).observe(search);
   }
   window.addEventListener('resize', syncSbBrandStickyHeight);
 }
@@ -10372,14 +10390,14 @@ function openWhatsNew(){
     .then(r => r.ok ? r.text() : '')
     .then(t => {
       const serverBuild = t.trim();
-      if (serverBuild && serverBuild !== '20261020.1149') {
+      if (serverBuild && serverBuild !== '20261020.1200') {
         updBtn.style.display = '';
         updBtn.title = 'Update to build ' + serverBuild;
       }
       // Show build numbers at the top of the sheet (Dave's request 2026-10-12)
-      const myBuild = '20261020.1149';
+      const myBuild = '20261020.1200';
       let buildLine = '<p class="fineprint" style="margin-top:0">You’re on build ' + escHtml(myBuild) + '.';
-      if (serverBuild && serverBuild !== '20261020.1149' && isNewerBuild(serverBuild, myBuild)) {
+      if (serverBuild && serverBuild !== '20261020.1200' && isNewerBuild(serverBuild, myBuild)) {
         buildLine += ' Build ' + escHtml(serverBuild) + ' is available.';
       }
       buildLine += '</p>';
@@ -10429,7 +10447,7 @@ function isNewerBuild(server, mine){
   } catch (e) { return false; }
 }
 function initVersionCheck(){
-  const myBuild = '20261020.1149';
+  const myBuild = '20261020.1200';
   function showUpdateBanner(serverBuild){
     if (document.getElementById('update-banner')) return;
     const b = document.createElement('div');

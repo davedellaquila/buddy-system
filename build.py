@@ -114,7 +114,7 @@ body.sb-anchored #sidebar .brand, body.sb-anchored #sidebar .sb-tipjar{backgroun
 body.glass-panels #sidebar, body.glass-panels #bp-rail{
   background:color-mix(in srgb, var(--panel) 52%, transparent);
   -webkit-backdrop-filter:blur(28px) saturate(1.9);backdrop-filter:blur(28px) saturate(1.9)}
-body.glass-panels .sb-brand-sticky, body.glass-panels .sb-search-sticky{
+body.glass-panels .sb-brand-sticky, body.glass-panels .sb-search-sticky, body.glass-panels #sidebar .nav-sec>h3{
   background:color-mix(in srgb, var(--panel) 52%, transparent);
   -webkit-backdrop-filter:blur(28px) saturate(1.9);backdrop-filter:blur(28px) saturate(1.9)}
 body.glass-panels .sb-tipjar{background:color-mix(in srgb, var(--panel) 45%, transparent)}
@@ -244,6 +244,13 @@ body.sb-closed #main .zoombar{left:calc(50% + 38px)}
 .nav-sec{margin-top:18px}
 .nav-sec>h3{font-size:.6875rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);
   margin:0 8px 8px;display:flex;align-items:center;gap:8px}
+/* Section eyebrows stick under the search box (Dave 2026-10-20): as a section
+   scrolls, its eyebrow pins beneath the sticky brand+search stack and the
+   next section's eyebrow pushes it away — iOS Contacts behavior. The bar goes
+   full-bleed (negative margins like the other sidebar stickies) with an
+   opaque background so rows pass underneath it, not through it. */
+#sidebar .nav-sec>h3{position:sticky;top:calc(var(--sb-brand-h,96px) + var(--sb-search-h,56px));z-index:5;
+  background:var(--panel);margin:0 -14px 8px;padding:6px 14px 6px 22px}
 #attn-pill{background:var(--accent);color:var(--on-accent);font-size:.6875rem;font-weight:700;border-radius:999px;
   padding:1px 8px;letter-spacing:0;text-transform:none}
 #attn-pill.zero{background:var(--border2);color:var(--muted)}
@@ -800,7 +807,9 @@ body:has(#field-settings.show) #new-buddy-fab{display:none}
    the buttons appear whenever a collection is on screen, regardless of the
    panel — a buddy homepage, the info panel (right panel) open, the sidebar's
    hierarchical buddy list open (desktop/iPad widths), or the tree view.
-   Still hidden under the phone sheet (modal) and the field settings.
+   Still hidden under the field settings. (Was also hidden under the phone
+   sheet until Dave corrected it later on 2026-10-20: "they should be there
+   all the time" — the sheet now shows them too, floating above it.)
    History: on 2026-10-19 the cluster lived next to the + button in the
    lower-right; Dave redistributed it the next morning. */
 #hp-nav{position:fixed;left:50%;transform:translateX(-50%);bottom:20px;z-index:9000;display:none;gap:12px}
@@ -816,7 +825,7 @@ body:not(.sb-closed):not(.standalone) #hp-nav,
 body:not(.sb-closed):not(.standalone) #hp-back{display:flex}
 }
 body:has(#view-buddy.sheet.active) #hp-nav,
-body:has(#view-buddy.sheet.active) #hp-back{display:none}
+body:has(#view-buddy.sheet.active) #hp-back{display:flex}
 body:has(#field-settings.show) #hp-nav,
 body:has(#field-settings.show) #hp-back{display:none !important}
 #hp-nav button, #hp-back{width:56px;height:56px;border-radius:50%;padding:0;
@@ -9364,12 +9373,21 @@ function syncSbBrandStickyHeight(){
   if (!sb || !brand) return;
   const h = Math.ceil(brand.getBoundingClientRect().height);
   if (h > 0) sb.style.setProperty('--sb-brand-h', h + 'px');
+  const search = document.querySelector('.sb-search-sticky');
+  if (search) {
+    const sh = Math.ceil(search.getBoundingClientRect().height);
+    if (sh > 0) sb.style.setProperty('--sb-search-h', sh + 'px');
+  }
 }
 function initSbBrandSticky(){
   syncSbBrandStickyHeight();
   const brand = document.querySelector('.sb-brand-sticky');
   if (brand && typeof ResizeObserver !== 'undefined') {
     new ResizeObserver(() => syncSbBrandStickyHeight()).observe(brand);
+  }
+  const search = document.querySelector('.sb-search-sticky');
+  if (search && typeof ResizeObserver !== 'undefined') {
+    new ResizeObserver(() => syncSbBrandStickyHeight()).observe(search);
   }
   window.addEventListener('resize', syncSbBrandStickyHeight);
 }
