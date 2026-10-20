@@ -235,6 +235,9 @@ body.sb-closed #main .zoombar{left:calc(50% + 38px)}
 .bac-row .bctx{font-size:.6875rem;color:var(--muted);margin-left:auto;flex-shrink:0}
 .bac-empty{padding:14px;font-size:.8125rem;color:var(--muted);text-align:center}
 #buddy-ac .bac-create{border-top:1px solid var(--border)}
+#buddy-ac .bac-head{padding:8px 12px 2px;font-size:.625rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted)}
+#buddy-ac .bac-clear{display:block;width:100%;text-align:left;background:none;border:0;border-top:1px solid var(--border);padding:8px 12px;font:inherit;font-size:.75rem;color:var(--muted);cursor:pointer}
+#buddy-ac .bac-clear:hover{color:var(--text)}
 #buddy-search-clear:hover{color:var(--text);background:rgba(127,127,127,.18)}
 .brand .eyebrow{font-size:.625rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);white-space:nowrap;padding-right:96px;overflow:hidden;text-overflow:ellipsis}
 .brand h1{font-size:1.375rem;margin:4px 0 0}
@@ -1176,13 +1179,21 @@ body:has(#token-pill) #view-buddy.sheet .bp-close-x{right:148px}
 @keyframes pupload-pulse{0%,100%{box-shadow:0 0 0 0 rgba(31,111,235,.0)}50%{box-shadow:0 0 0 4px rgba(31,111,235,.15)}}
 /* Document upload progress card — mirrors .doc-card with a progress bar. */
 .dupload{display:flex;align-items:center;gap:10px;padding:10px 12px;border:1px dashed var(--accent);
-  border-radius:10px;background:var(--wash2);min-width:200px;max-width:280px;
+  border-radius:10px;background:var(--wash2);flex:1 1 100%;width:100%;min-width:0;
   animation:pupload-pulse 1.6s ease-in-out infinite}
 .dupload .doc-icon{font-size:1.75rem;line-height:1;flex:0 0 auto}
 .dupload .doc-meta{min-width:0;flex:1}
 .dupload .doc-name{font-size:.8125rem;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.dupload .dbar{height:6px;background:var(--border2);border-radius:3px;overflow:hidden;margin-top:6px}
-.dupload .dbar > div{height:100%;background:var(--accent);border-radius:3px;transition:width .2s}
+/* Dave 2026-10-20: thermometer — a taller tube whose fill carries a
+   drifting diagonal pattern, so progress reads at a glance. */
+.dupload .dbar{height:12px;background:var(--border2);border-radius:6px;overflow:hidden;margin-top:6px;
+  box-shadow:inset 0 1px 3px rgba(0,0,0,.35)}
+.dupload .dbar > div{height:100%;border-radius:6px;transition:width .25s ease;
+  background-image:repeating-linear-gradient(45deg, rgba(255,255,255,.20) 0 8px, rgba(255,255,255,0) 8px 16px),
+  linear-gradient(180deg, color-mix(in srgb, var(--accent) 62%, #fff) 0%, var(--accent) 55%, color-mix(in srgb, var(--accent) 76%, #000) 100%);
+  background-size:24px 24px, 100% 100%;
+  animation:dbar-drift 0.7s linear infinite}
+@keyframes dbar-drift{to{background-position:24px 0, 0 0}}
 .dupload .dpct{font-size:.6875rem;color:var(--accent);font-weight:700;margin-top:4px}
 .dumps-head{cursor:pointer;user-select:none;display:flex;align-items:center;gap:6px;margin:12px 0 0}
 .dumps-head h4{margin:0;font-size:.75rem;letter-spacing:1px;text-transform:uppercase;color:var(--muted)}
@@ -8321,8 +8332,11 @@ function openNewBuddyRequest(prefillName){
       /* Instant add (Dave 2026-10-19): only AFTER the request file is safely
          on GitHub — a failed write adds nothing, so there is never a phantom
          buddy. The placeholder carries the same id the drill will use. */
-      addPendingBuddy(req, personaEmoji);
+      const newId = addPendingBuddy(req, personaEmoji);
       toast('Buddy added — setting it up now.');
+      /* Dave 2026-10-20: after creating a buddy, it is selected and
+         displayed in the main view — you land on what you just made. */
+      if (newId) openBuddy(newId);
     } catch (e) {
       errEl.textContent = e.message || String(e);
       createBtn.disabled = false;
@@ -8397,6 +8411,11 @@ async function createBuddyFromDialog(name, icon, kind, parentId, errEl, createBt
     save(); buildKids(); renderNav(); refreshViews();
     if (S.projectId) renderBuddy(S.projectId);
     if (typeof onCreated === 'function') onCreated(nid);
+    /* Dave 2026-10-20: after creating a buddy, it is selected and displayed
+       in the main view. A caller that passes onCreated choreographs its own
+       landing instead (e.g. the parent picker stays on the buddy being
+       edited), so the default applies only when no callback was given. */
+    else openBuddy(nid);
     toast('Creating ' + name + '\u2026');
     try {
       // Fetch latest buddies.json from GitHub, append, write back
@@ -8933,20 +8952,45 @@ async function handleDocFiles(id, files){
     if (progName && fname) { progName.textContent = fname; progName.title = fname; }
     if (st) st.textContent = 'Uploading ' + (done+1) + '/' + total + '\u2026';
   };
+  /* Dave 2026-10-20: the thermometer ESTIMATES within a file. The old bar
+     sat at 0% for the whole encode + PUT of a big PDF because it only moved
+     at file boundaries, and fetch exposes no upload progress. The estimate
+     creeps toward 92% of the current file with a size-scaled time constant,
+     then snaps to the real boundary the moment the PUT resolves. */
+  let estTimer = null, estBase = 0, estFrac = 0;
+  const stopEst = () => { if (estTimer) { clearInterval(estTimer); estTimer = null; } };
+  const startEst = (doneCount, sizeBytes) => {
+    stopEst(); estBase = doneCount; estFrac = 0;
+    const mb = (sizeBytes || 0) / 1048576;
+    const tau = Math.min(24, Math.max(1.6, mb * 1.1));
+    let last = performance.now();
+    estTimer = setInterval(() => {
+      const now = performance.now(); const dt = (now - last) / 1000; last = now;
+      estFrac = Math.min(0.92, estFrac + (1 - estFrac) * (dt / tau));
+      const pct = list.length ? Math.round((estBase + estFrac) / list.length * 100) : 0;
+      if (progBar) progBar.style.width = pct + '%';
+      if (progPct) progPct.textContent = pct + '% \u00b7 ' + estBase + '/' + list.length;
+    }, 120);
+  };
   updateDProg(0, list.length);
   let n = 0;
   for (const f of list) {
     try {
       updateDProg(n, list.length, f.name);
+      startEst(n, f.size);
       const b64 = await blobToB64(f);
       const safe = (f.name.replace(/\.pdf$/i, '').replace(/[^\w\-]+/g, '_').slice(0, 40) || 'document');
       const upRepo = (byId[id] && byId[id].repo) ? byId[id].repo : 'buddy-system';
       const upPath = (byId[id] && byId[id].repo) ? 'docs/' + Date.now() + '-' + safe + '.pdf' : 'docs/' + id + '/' + Date.now() + '-' + safe + '.pdf';
       await ghPutFile(upRepo, upPath, b64, 'Add document for ' + id);
+      stopEst();
       n++;
       updateDProg(n, list.length, f.name);
-    } catch (err) { toast('Document failed: ' + (err.message || err)); }
+    } catch (err) { stopEst(); toast('Document failed: ' + (err.message || err)); }
   }
+  stopEst();
+  /* Hold the finished thermometer a beat so 100% registers before it goes. */
+  if (progCard) await new Promise(r => setTimeout(r, 450));
   if (progCard) progCard.remove();
   if (st) st.textContent = 'Uploaded ' + n + ' document' + (n === 1 ? '' : 's') + '. Refreshing\u2026';
   setTimeout(() => loadDocs(id), 2000);
@@ -10288,6 +10332,18 @@ function initSearch(){
     }
     let acHot = -1;
     const acClose = () => { if (ac){ ac.hidden = true; } acHot = -1; };
+    /* Dave 2026-10-20: recent searches — persisted per device, newest
+       first, deduplicated case-insensitively, capped at 8. A term is
+       recorded when a search actually lands somewhere: picking a buddy
+       from the autosuggest, picking the Create row, or picking a recent
+       term itself (which re-floats it to the top). */
+    const recentTerms = () => (Array.isArray(S.recentSearches) ? S.recentSearches : []);
+    const recordRecent = (term) => {
+      const t = (term || '').trim(); if (!t) return;
+      const key = t.toLowerCase();
+      S.recentSearches = [t].concat(recentTerms().filter(x => typeof x === 'string' && x.toLowerCase() !== key)).slice(0, 8);
+      save();
+    };
     const acMatches = (q) => {
       const words = q.toLowerCase().trim().split(/\s+/).filter(Boolean);
       if (!words.length) return [];
@@ -10302,10 +10358,37 @@ function initSearch(){
       const ps = effParents(b).map(p => byId[p]).filter(Boolean);
       return ps.map(p => dispName(p)).join(' + ');
     };
+    /* Dave 2026-10-20: with the box empty and focused, the same dropdown
+       shows recent searches instead of buddy matches; typing switches it
+       back to the autosuggest (acRender below). */
+    const acRenderRecent = () => {
+      if (!ac) return;
+      const terms = recentTerms();
+      if (!terms.length || bs.value.trim()){ acClose(); return; }
+      acHot = 0;
+      ac.innerHTML = '<div class="bac-head">Recent searches</div>' + terms.map((t, i) =>
+        '<button type="button" class="bac-row' + (i === acHot ? ' hot' : '') + '" role="option" data-recent="' + escHtml(t) + '">'
+        + '<span class="bicon">\U0001f558</span>'
+        + '<span class="bname">' + escHtml(t) + '</span>'
+        + '</button>').join('')
+        + '<button type="button" class="bac-clear">Clear recent searches</button>';
+      ac.hidden = false;
+      ac.querySelectorAll('.bac-row').forEach(row => {
+        row.addEventListener('click', () => {
+          const t = row.dataset.recent || '';
+          recordRecent(t);
+          bs.value = t;
+          bs.dispatchEvent(new Event('input', {bubbles: true}));
+          bs.focus();
+        });
+      });
+      const clr = ac.querySelector('.bac-clear');
+      if (clr) clr.addEventListener('click', () => { S.recentSearches = []; save(); acClose(); bs.focus(); });
+    };
     const acRender = () => {
       if (!ac) return;
       const q = bs.value.trim();
-      if (!q){ acClose(); return; }
+      if (!q){ acRenderRecent(); return; }
       const ms = acMatches(q);
       acHot = 0;
       /* Dave 2026-10-20: "Create new buddy" is ALWAYS the last row of the
@@ -10329,12 +10412,17 @@ function initSearch(){
         row.addEventListener('click', () => {
           if (row.dataset.create) {
             const name = bs.value.trim();
-            acClose(); bs.value = ''; bs.dispatchEvent(new Event('input', {bubbles: true}));
+            recordRecent(name);
+            /* Second acClose: the programmatic clear re-renders the now
+               empty box, which would pop the recents list — close again
+               after it settles (synchronous, no visible flicker). */
+            acClose(); bs.value = ''; bs.dispatchEvent(new Event('input', {bubbles: true})); acClose();
             openNewBuddyRequest(name);
             return;
           }
           const bid = row.dataset.buddy;
-          acClose(); bs.value = ''; bs.dispatchEvent(new Event('input', {bubbles: true}));
+          recordRecent(bs.value);
+          acClose(); bs.value = ''; bs.dispatchEvent(new Event('input', {bubbles: true})); acClose();
           selectBuddy(bid);
         });
       });
@@ -10382,6 +10470,11 @@ function initSearch(){
         if (rows[acHot]) rows[acHot].click();
       }
       else if (e.key === 'Escape'){ e.stopPropagation(); acClose(); }
+    });
+    /* Dave 2026-10-20: focusing the empty box immediately shows recent
+       searches; focusing with text in it shows the matches for that text. */
+    bs.addEventListener('focus', () => {
+      if (bs.value.trim()) acRender(); else acRenderRecent();
     });
     document.addEventListener('click', (e) => {
       if (ac && !ac.hidden && !ac.contains(e.target) && e.target !== bs) acClose();
@@ -10996,7 +11089,7 @@ initSbBrandSticky();
 <div class="app">
 <button id="menu-btn" aria-label="Open sidebar">\u203a</button>
 <button type="button" id="panel-open" title="Open buddy details" aria-label="Open buddy details">
-  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
 </button>
 <div id="sb-scrim"></div>
 <aside id="sidebar">

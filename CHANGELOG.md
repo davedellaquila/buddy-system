@@ -1,4 +1,10 @@
 ## 2026-10-20
+### "Uploads, recents, and landing where you made things" (Dave, 2026-10-20)
+- Creating a buddy now lands on it: after the new-buddy request sheet files its request (or the add-buddy dialog creates a buddy), the new buddy is selected and displayed in the main view (the detail panel opens) instead of the view staying on whatever was open before. A caller that passes its own onCreated callback keeps its own landing (the parent picker stays on the buddy being edited).
+- The info (ⓘ) "Open buddy details" button's icon now matches the footer button family (Back / Prev / Next): 24px glyph with a 2.5 stroke, up from 22px / 2.0.
+- Document uploads: the progress tile spans the full width of the panel (was capped at 280px), and the bar is a thermometer — a 12px tube with a gradient fill and a drifting diagonal pattern. Progress within a file is estimated (the old bar sat at 0% until the file finished): the fill creeps toward 92% of the current file on a size-scaled curve while the encode + GitHub PUT runs, snaps to the real count when the PUT lands, and holds at 100% for a beat before the card clears.
+- Search buddies: focusing the empty search box now opens the dropdown with your recent searches (newest first, up to 8, stored per device) — tap one (or arrow + Enter) and it fills the box and switches to the matching-buddies autosuggest. Terms are recorded when a search lands (picking a buddy or the Create row); a "Clear recent searches" row sits at the bottom of the list.
+
 ### Social Media Buddy homepage: LinkedIn Makeover report + Post 1 live
 - New "🔗 LinkedIn Makeover — the report" card on Social Media Buddy's homepage: Post 1 live on LinkedIn (37 impressions at first check, engagement watch every 3h), the 2026-10-20 profile audit (5,309 followers; Featured absent; Rae Technology missing), and the makeover plan with links to the brief, project thread, repo, and Dave's profile.
 - Post queue brought current: Post 1 chip → "Posted ✓", pipeline counts Drafted 14→13 / Posted 0→1, stale "scheduling on hold" note replaced (the drip is live; Dave posts each day's staged copy).
