@@ -772,12 +772,16 @@ html.light #new-buddy-fab{background:rgba(255,255,255,.55);color:#1c1c1e;border-
 /* Hide the FAB while Settings is open — it overlapped the Done button */
 body:has(#field-settings.show) #new-buddy-fab{display:none}
 #new-buddy-fab:active{transform:scale(.94)}
-/* Homepage Prev/Next (Dave 2026-10-19): with BOTH panels closed on a buddy
-   homepage, a FAB-sized Prev/Next pair sits alongside the + button in the
-   lower-right (thumb reach on iPad) and walks the current collection.
-   Visible in exactly that state; hidden everywhere else. */
+/* Homepage Prev/Next (Dave 2026-10-19): on a buddy homepage, a FAB-sized
+   Prev/Next pair sits alongside the + button in the lower-right (thumb reach
+   on iPad) and walks the current collection. Originally shown only with both
+   panels closed; Dave relaxed the gate the same evening — visible whenever a
+   homepage is showing (the phone sheet is modal and still covers it), and
+   shifted left of the right panel when that panel is open on desktop. */
 #hp-nav{position:fixed;right:88px;bottom:20px;z-index:9000;display:none;gap:12px}
-body.sb-closed.bp-collapsed:has(#main.homepage-mode):has(#view-project.active) #hp-nav{display:flex}
+body:has(#main.homepage-mode):has(#view-project.active) #hp-nav{display:flex}
+body:has(#view-buddy.sheet.active) #hp-nav{display:none}
+@media (min-width:1101px){ body:not(.bp-collapsed):has(#view-buddy.panel.active) #hp-nav{right:468px} }
 body:has(#field-settings.show) #hp-nav{display:none !important}
 #hp-nav button{width:56px;height:56px;border-radius:50%;padding:0;
   background:rgba(50,50,52,.55);color:#fff;border:.5px solid rgba(255,255,255,.25);cursor:pointer;
@@ -3901,9 +3905,9 @@ function renderProjectView(){
   updateHpNav();
 }
 /* ---- Homepage Prev/Next (Dave 2026-10-19) ----
-   With both panels closed on a buddy homepage, the #hp-nav pair (visibility
-   is CSS-gated on body.sb-closed.bp-collapsed + the homepage view) walks the
-   current collection: the sidebar buddy list's displayed order, deduped
+   On a buddy homepage, the #hp-nav pair (visibility is CSS-gated on the
+   homepage view alone since Dave relaxed the both-panels-closed rule) walks
+   the current collection: the sidebar buddy list's displayed order, deduped
    (multi-parent buddies render once per parent there). No wrap at the ends —
    the button for the missing direction dims instead. */
 function hpCollection(){
@@ -3917,10 +3921,9 @@ function hpCollection(){
 function hpNavActive(){
   const main = document.getElementById('main');
   const pv = document.getElementById('view-project');
-  return document.body.classList.contains('sb-closed')
-    && document.body.classList.contains('bp-collapsed')
-    && !!(main && main.classList.contains('homepage-mode'))
-    && !!(pv && pv.classList.contains('active'));
+  return !!(main && main.classList.contains('homepage-mode'))
+    && !!(pv && pv.classList.contains('active'))
+    && !document.querySelector('#view-buddy.sheet.active');
 }
 function updateHpNav(){
   const prev = document.getElementById('hp-prev'), next = document.getElementById('hp-next');
@@ -7403,9 +7406,9 @@ document.addEventListener('keydown', e => {
     if (vi < vbtns.length) { e.preventDefault(); show('view:' + vbtns[vi].dataset.view); }
     return;
   }
-  // Homepage Prev/Next (Dave 2026-10-19): in the both-panels-closed homepage
-  // state, Left/Right step the collection (no wrap) instead of jumping to
-  // the first/last sidebar row.
+  // Homepage Prev/Next (Dave 2026-10-19): on a buddy homepage, Left/Right
+  // step the collection (no wrap) instead of jumping to the first/last
+  // sidebar row.
   if ((e.key === 'ArrowLeft' || e.key === 'ArrowRight') && hpNavActive()) {
     e.preventDefault();
     hpStep(e.key === 'ArrowLeft' ? -1 : 1);
