@@ -2615,6 +2615,27 @@ function fieldLabelFor(fid, b){
   if (fid === 'parent') { const v = upVocab(b); return v.upCount ? v.upP : vocabCap(v.upS); }
   return def ? def.label : fid;
 }
+/* Dave 2026-10-19 (Designer thread, Jonny spec): collection fields carry their
+   item count everywhere the label appears — the Hidden fields list and the
+   visible section headers alike — INCLUDING (0): zero means the relationship
+   exists and is empty, which is information ("that's a sign"). Circled set:
+   A.K.A., Artifacts, Documents, Needs your attention, Peers, Private notes.
+   Counts reuse each section header's own semantics, so the number never
+   changes meaning when a field moves between hidden and shown. */
+const COLLECTION_FIELDS = ['aka', 'artifacts', 'docs', 'attention', 'siblings', 'notes'];
+function fieldCountFor(fid, b){
+  if (!b || !COLLECTION_FIELDS.includes(fid)) return null;
+  if (fid === 'aka') return effAka(b).length;
+  if (fid === 'artifacts') return (b.brief ? 1 : 0) + (b.homepageSource ? 1 : 0) + (b.repo ? 1 : 0) + (b.docs || []).length;
+  if (fid === 'attention') return (b.attention || []).filter(a => !(S.seen && S.seen[a.id])).length;
+  if (fid === 'siblings') return peersOf(b).length;
+  if (fid === 'notes') return wordCount(S.notes[b.id] || '');
+  /* Documents: uploaded PDFs are counted by the async docs loader, which
+     patches [data-count-for="docs"] when it lands — the same lifecycle as the
+     section header's own (0) placeholder. */
+  if (fid === 'docs') return 0;
+  return null;
+}
 function isDormant(bid){ return !!(S.dormant && S.dormant[bid]); }
 function setDormant(bid, val){
   if (!S.dormant || typeof S.dormant !== 'object') S.dormant = {};
@@ -3487,12 +3508,15 @@ function renderBpHiddenBar(){
   bar.innerHTML = '<button class="bp-hiddenbar-toggle" type="button" aria-expanded="false">'
     + '<span>Hidden fields (' + hidden.length + ')</span><span class="secarrow">›</span></button>'
     + '<div class="bp-hiddenbar-list" hidden>'
-    + hidden.map(({fid, label}) =>
+    + hidden.map(({fid, label}) => {
         // Dave 2026-10-19: data-show-field lives on the whole row, so clicking
         // anywhere on it restores the field (the doc-level handler uses closest()).
-        '<div class="bp-hiddenbar-row" data-show-field="' + fid + '" role="button" tabindex="0"><span>'
-        + escHtml(label) + '</span>'
-        + '<button class="linkbtn" type="button" tabindex="-1">show</button></div>').join('')
+        // Collection fields also carry their item count here (fieldCountFor),
+        // matching their section headers — (0) included.
+        const n = fieldCountFor(fid, curB);
+        return '<div class="bp-hiddenbar-row" data-show-field="' + fid + '" role="button" tabindex="0"><span>'
+        + escHtml(label) + (n === null ? '' : ' <span class="attn-count" data-count-for="' + fid + '">(' + n + ')</span>') + '</span>'
+        + '<button class="linkbtn" type="button" tabindex="-1">show</button></div>'; }).join('')
     + '</div>';
   const toggle = bar.querySelector('.bp-hiddenbar-toggle');
   toggle.addEventListener('click', () => {
@@ -3638,7 +3662,7 @@ function renderDevelopSection(){
   const dev = document.getElementById('fset-develop');
   if (!dev) return;
   const simulating = !!devBackup;
-  const buildNum = '20261019.2129';
+  const buildNum = '20261020.0443';
   dev.innerHTML = ''
     + '<label class="fset-check"><input type="checkbox" id="dev-empty-toggle"' + (simulating ? ' checked' : '') + '> <span><strong>Simulate new user</strong> — empty data file, as if opening the shared link fresh</span></label>'
     + '<div class="fineprint" style="margin:8px 0 12px">Build <span style="font-family:monospace">' + escHtml(String(buildNum)) + '</span> · ' + BUDDIES.length + ' buddies in this file</div>'
@@ -4890,7 +4914,7 @@ function renderBuddy(id){
       'Anybody with repo access can see this note. Saved to the buddy’s repo (docs/notes.md).')
     + '<div class="attr-body"><textarea class="notes" id="bp-shared-notes" placeholder="Anybody with repo access can see this note."></textarea>'
     + '<p class="fineprint" id="shared-status"></p></div></div>'
-    + '<div class="bp-build">Build 20261019.2129</div>'
+    + '<div class="bp-build">Build 20261020.0443</div>'
     + '</div>';
   // Update every visible label for a buddy after a rename/re-icon, across all
   // Atlas lenses. A rename changes no structure, so labels are patched in place
@@ -7506,7 +7530,7 @@ function renderPlan(id){
     + '<p class="fineprint">Saved on this device. (For your eyes only)</p></div>'
     + '<div class="bp-sec"><h3>Shared notes<span class="info-tip" data-tip="Visible to everyone with access to this project.">\u24d8</span></h3><textarea class="notes" id="bp-shared" placeholder="Shared notes\u2026 (visible to everyone with access)">'+escHtml((S.planShared||{})[id]||'')+'</textarea>'
     + '<p class="fineprint">Shared — visible to everyone with access.</p></div>'
-    + '<div class="bp-build">Build 20261019.2129</div>'
+    + '<div class="bp-build">Build 20261020.0443</div>'
     + '</div>';
   const nt = document.getElementById('bp-notes');
   let t = null;
@@ -9109,6 +9133,9 @@ async function loadDocs(id){
       if (arrow && arrow.after) arrow.after(label); else dh3.prepend(label);
     }
     label.textContent = 'Documents (' + files.length + ')';
+    // Dave 2026-10-19: keep the Hidden fields row's Documents count in step.
+    const hbc = document.querySelector('.bp-hiddenbar-row [data-count-for="docs"]');
+    if (hbc) hbc.textContent = '(' + files.length + ')';
   }
   strip.innerHTML = files.map(p => {
     const del = p.path ? '<button class="pdel" data-del="' + escHtml(p.path) + '" data-repo="' + escHtml(p.repo || 'buddy-system') + '" title="Delete document">' + '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>' + '</button>' : '';
@@ -10240,14 +10267,14 @@ function openWhatsNew(){
     .then(r => r.ok ? r.text() : '')
     .then(t => {
       const serverBuild = t.trim();
-      if (serverBuild && serverBuild !== '20261019.2129') {
+      if (serverBuild && serverBuild !== '20261020.0443') {
         updBtn.style.display = '';
         updBtn.title = 'Update to build ' + serverBuild;
       }
       // Show build numbers at the top of the sheet (Dave's request 2026-10-12)
-      const myBuild = '20261019.2129';
+      const myBuild = '20261020.0443';
       let buildLine = '<p class="fineprint" style="margin-top:0">You’re on build ' + escHtml(myBuild) + '.';
-      if (serverBuild && serverBuild !== '20261019.2129' && isNewerBuild(serverBuild, myBuild)) {
+      if (serverBuild && serverBuild !== '20261020.0443' && isNewerBuild(serverBuild, myBuild)) {
         buildLine += ' Build ' + escHtml(serverBuild) + ' is available.';
       }
       buildLine += '</p>';
@@ -10297,7 +10324,7 @@ function isNewerBuild(server, mine){
   } catch (e) { return false; }
 }
 function initVersionCheck(){
-  const myBuild = '20261019.2129';
+  const myBuild = '20261020.0443';
   function showUpdateBanner(serverBuild){
     if (document.getElementById('update-banner')) return;
     const b = document.createElement('div');

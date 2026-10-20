@@ -2256,6 +2256,27 @@ function fieldLabelFor(fid, b){
   if (fid === 'parent') { const v = upVocab(b); return v.upCount ? v.upP : vocabCap(v.upS); }
   return def ? def.label : fid;
 }
+/* Dave 2026-10-19 (Designer thread, Jonny spec): collection fields carry their
+   item count everywhere the label appears — the Hidden fields list and the
+   visible section headers alike — INCLUDING (0): zero means the relationship
+   exists and is empty, which is information ("that's a sign"). Circled set:
+   A.K.A., Artifacts, Documents, Needs your attention, Peers, Private notes.
+   Counts reuse each section header's own semantics, so the number never
+   changes meaning when a field moves between hidden and shown. */
+const COLLECTION_FIELDS = ['aka', 'artifacts', 'docs', 'attention', 'siblings', 'notes'];
+function fieldCountFor(fid, b){
+  if (!b || !COLLECTION_FIELDS.includes(fid)) return null;
+  if (fid === 'aka') return effAka(b).length;
+  if (fid === 'artifacts') return (b.brief ? 1 : 0) + (b.homepageSource ? 1 : 0) + (b.repo ? 1 : 0) + (b.docs || []).length;
+  if (fid === 'attention') return (b.attention || []).filter(a => !(S.seen && S.seen[a.id])).length;
+  if (fid === 'siblings') return peersOf(b).length;
+  if (fid === 'notes') return wordCount(S.notes[b.id] || '');
+  /* Documents: uploaded PDFs are counted by the async docs loader, which
+     patches [data-count-for="docs"] when it lands — the same lifecycle as the
+     section header's own (0) placeholder. */
+  if (fid === 'docs') return 0;
+  return null;
+}
 function isDormant(bid){ return !!(S.dormant && S.dormant[bid]); }
 function setDormant(bid, val){
   if (!S.dormant || typeof S.dormant !== 'object') S.dormant = {};
@@ -3128,12 +3149,15 @@ function renderBpHiddenBar(){
   bar.innerHTML = '<button class="bp-hiddenbar-toggle" type="button" aria-expanded="false">'
     + '<span>Hidden fields (' + hidden.length + ')</span><span class="secarrow">\u203a</span></button>'
     + '<div class="bp-hiddenbar-list" hidden>'
-    + hidden.map(({fid, label}) =>
+    + hidden.map(({fid, label}) => {
         // Dave 2026-10-19: data-show-field lives on the whole row, so clicking
         // anywhere on it restores the field (the doc-level handler uses closest()).
-        '<div class="bp-hiddenbar-row" data-show-field="' + fid + '" role="button" tabindex="0"><span>'
-        + escHtml(label) + '</span>'
-        + '<button class="linkbtn" type="button" tabindex="-1">show</button></div>').join('')
+        // Collection fields also carry their item count here (fieldCountFor),
+        // matching their section headers — (0) included.
+        const n = fieldCountFor(fid, curB);
+        return '<div class="bp-hiddenbar-row" data-show-field="' + fid + '" role="button" tabindex="0"><span>'
+        + escHtml(label) + (n === null ? '' : ' <span class="attn-count" data-count-for="' + fid + '">(' + n + ')</span>') + '</span>'
+        + '<button class="linkbtn" type="button" tabindex="-1">show</button></div>'; }).join('')
     + '</div>';
   const toggle = bar.querySelector('.bp-hiddenbar-toggle');
   toggle.addEventListener('click', () => {
@@ -8750,6 +8774,9 @@ async function loadDocs(id){
       if (arrow && arrow.after) arrow.after(label); else dh3.prepend(label);
     }
     label.textContent = 'Documents (' + files.length + ')';
+    // Dave 2026-10-19: keep the Hidden fields row's Documents count in step.
+    const hbc = document.querySelector('.bp-hiddenbar-row [data-count-for="docs"]');
+    if (hbc) hbc.textContent = '(' + files.length + ')';
   }
   strip.innerHTML = files.map(p => {
     const del = p.path ? '<button class="pdel" data-del="' + escHtml(p.path) + '" data-repo="' + escHtml(p.repo || 'buddy-system') + '" title="Delete document">' + ICON_TRASH + '</button>' : '';
