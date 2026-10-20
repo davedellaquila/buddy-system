@@ -105,6 +105,22 @@ body.sb-anchored #sidebar{left:0;background:var(--panel);border-left:none;border
   box-shadow:8px 0 28px var(--shadow-soft);
   -webkit-backdrop-filter:none;backdrop-filter:none}
 body.sb-anchored #sidebar .brand, body.sb-anchored #sidebar .sb-tipjar{background:var(--panel)}
+/* Weather glass (Dave 2026-10-20 — Apple Weather side-panel reference, Kin
+   design archive): panels go deeply translucent. Fill drops to about half,
+   blur and saturation rise, and whatever sits behind the panel — the Atlas
+   canvas, a homepage — tints the glass. The sidebar's sticky bars join the
+   glass instead of sitting on it as opaque bands. Setting: Panel
+   translucency → Glass (default Standard keeps the usual soft frost). */
+body.glass-panels #sidebar, body.glass-panels #bp-rail{
+  background:color-mix(in srgb, var(--panel) 52%, transparent);
+  -webkit-backdrop-filter:blur(28px) saturate(1.9);backdrop-filter:blur(28px) saturate(1.9)}
+body.glass-panels .sb-brand-sticky, body.glass-panels .sb-search-sticky{
+  background:color-mix(in srgb, var(--panel) 52%, transparent);
+  -webkit-backdrop-filter:blur(28px) saturate(1.9);backdrop-filter:blur(28px) saturate(1.9)}
+body.glass-panels .sb-tipjar{background:color-mix(in srgb, var(--panel) 45%, transparent)}
+body.glass-panels #view-buddy.panel, body.glass-panels #view-buddy.sheet{
+  background:color-mix(in srgb, var(--panel) 55%, transparent);
+  -webkit-backdrop-filter:blur(28px) saturate(1.9);backdrop-filter:blur(28px) saturate(1.9)}
 #main{flex:1;min-width:0;padding:36px 32px 80px;position:relative;z-index:1}
 /* Dave 2026-10-16: wiggle the selected node when the chart recenters on it */
 @keyframes node-wiggle{
@@ -3222,6 +3238,7 @@ const SETTING_DEFS = [
   {id:'shiftLeftAction', label:'Shift+← action', type:'choice', options:['promote','go to parent','nothing'], def:'promote', advanced:true, tip:'What Shift+Left arrow does for the selected buddy. Promote moves it up one level; Go to parent just navigates there.'},
   {id:'fontScale', label:'Text size', type:'slider', def:100, min:80, max:130, step:5, advanced:true, tip:'Scales text throughout the app — layout, dialogs and buttons keep their size.', unit:'%'},
   {id:'sidebarStyle', label:'Sidebar panel style', type:'choice', options:['floating','anchored'], def:'floating', tip:'Floating: inset translucent panel with rounded corners (Apple Messages style). Anchored: flush to the left edge with rounded right corners.'},
+  {id:'panelTranslucency', label:'Panel translucency', type:'choice', options:['standard','glass'], def:'standard', tip:'Glass: the sidebar and buddy panel go deeply translucent — the page behind them tints the glass (Apple Weather style). Standard: the usual soft frost.'},
   {id:'sectionToggleStyle', label:'Section toggle style', type:'choice', options:['chevron','section-icon','plus-minus','caret','arrow','dot','triangle','double-chevron','none'], def:'section-icon', tip:'How section headers show their expand/collapse control: classic chevron, the section\u2019s own icon, plus/minus, and more.'},
   {id:'sectionIconBehavior', label:'Section icon behavior', type:'choice', options:['rotate','spin','bounce','flip','pulse','none'], def:'rotate', tip:'What the section icon does when you expand/collapse: tips on its side, spins around, bounces, flips, pulses, or stays still.'},
 ];
@@ -3243,6 +3260,7 @@ function applyFontScale(){
 }
 function applySidebarStyle(){
   document.body.classList.toggle('sb-anchored', getSetting('sidebarStyle') === 'anchored');
+  document.body.classList.toggle('glass-panels', getSetting('panelTranslucency') === 'glass');
 }
 function snapshotSettable(){
   return {
@@ -3254,6 +3272,7 @@ function snapshotSettable(){
     sbWidth: S.sbWidth || SB_DEFAULT_W,
     panelWidth: S.panelWidth || BP_DEFAULT_W,
     sidebarStyle: S.sidebarStyle || 'floating',
+    panelTranslucency: S.panelTranslucency || 'standard',
   };
 }
 function resetToFactory(){
@@ -3261,6 +3280,7 @@ function resetToFactory(){
   S.hideBuddyWord = !!f.hideBuddyWord;
   S.autoOpenPanel = !!f.autoOpenPanel;
   S.sidebarStyle = f.sidebarStyle || 'floating';
+  S.panelTranslucency = f.panelTranslucency || 'standard';
   if (Array.isArray(f.fieldOrder) && f.fieldOrder.length) S.fieldOrder = f.fieldOrder.slice();
   if (f.fieldHidden && typeof f.fieldHidden === 'object') S.fieldHidden = Object.assign({}, f.fieldHidden);
   if (Array.isArray(f.viewOrder) && f.viewOrder.length) S.viewOrder = f.viewOrder.slice();
