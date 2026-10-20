@@ -149,6 +149,9 @@ Build: `build.py` generates `index.html` from `buddies.json` + `plans.json`.
   GitHub Contents API (needs a token; falls back to device-local).
 - **Ingest box** — brain-dump raw thoughts about the buddy; each dump is
   appended as a timestamped entry to the buddy's repo `docs/ingest.md`.
+  On template homepages, the "Connect GitHub" token card inside the brain
+  dump wears a solid amber border + amber wash (Jonny, 2026-10-19) so the
+  one step that unlocks repo sync can't be skimmed past.
   Raw material for later dossier work. Dumps live in a collapsible
   "Dumps (n)" section (collapsed by default, state remembered per buddy);
   each dump tile has edit (✏️) and delete (🗑️) buttons in its upper-right

@@ -1,4 +1,9 @@
 ## 2026-10-19
+### Brain-dump token card — amber, not zebra (Dave + Jonny 2026-10-19)
+- Dave, circling the "🔒 Connect GitHub to unlock dumping" card on the 4 post lift homepage: make it more prominent — a yellow/amber border, or maybe a zebra stripe. Jonny's call: amber. Zebra striping is hazard tape — it signals danger and fights every calm surface around it; a credential step is not roadworks. The old dashed grey border read as placeholder/unfinished, which is why it was so easy to skim past.
+- Treatment, in `gen_basic_homepages.py` (DUMPBOX_CSS) and the canonical `docs/dumpbox-snippet.html`: solid 2px amber (#f59e0b) border, a soft amber wash over the page background (rgba + color-mix, both modes), a faint 3px amber halo, and the lock line set semibold. No pattern anywhere on the card.
+- Piloted on the 4 post lift homepage only (`--only 4-post-lift`); the fleet follows on the normal template rebuild. Custom (non-template) homepages keep their own copies until their owning threads adopt it. Inline scripts on the regenerated page pass `node --check` (4/4).
+
 ### Homepage nav cluster — Back joins Prev/Next (Dave 2026-10-19)
 - A Back button now sits with the floating ‹ › pair on buddy homepages, same size, same glass style, return-arrow glyph. It runs the dashboard's existing history Back (same behavior as the panel's Back, tree view as fallback). Shows under the same rule as the pair: whenever a homepage is showing.
 ### Homepage Prev/Next — visible whenever a homepage is showing (Dave 2026-10-19)
