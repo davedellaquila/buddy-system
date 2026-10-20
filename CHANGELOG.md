@@ -1,4 +1,9 @@
 ## 2026-10-20
+### Social Media Buddy homepage: LinkedIn Makeover report + Post 1 live
+- New "🔗 LinkedIn Makeover — the report" card on Social Media Buddy's homepage: Post 1 live on LinkedIn (37 impressions at first check, engagement watch every 3h), the 2026-10-20 profile audit (5,309 followers; Featured absent; Rae Technology missing), and the makeover plan with links to the brief, project thread, repo, and Dave's profile.
+- Post queue brought current: Post 1 chip → "Posted ✓", pipeline counts Drafted 14→13 / Posted 0→1, stale "scheduling on hold" note replaced (the drip is live; Dave posts each day's staged copy).
+- Post Pipeline chart regenerated (Charts Buddy's social_pipeline.py, counts verified 2026-10-20) in both themes.
+
 ### Custom homepage is the homepage; the default page is now the About page (Dave 2026-10-20)
 - Dave's model, first applied to Zen Buddy: the designed custom homepage serves as the buddy's actual homepage (index.html), and the Default Homepage (the Dossier) moves to `<id>/about.html` as the buddy's About page — linked from the custom homepage (sticky header + footer) and from every template homepage's footer ("About · the full record").
 - `gen_default_homepages.py` v3.2: new `--about` mode writes about.html without touching index.html. Every default/About page now also carries the COMPLETE registry record (every field; unset fields shown as "not set") and a "From the repo — markdown files (N)" section: a baked inventory from the buddy's local repo clone plus the live, token-gated 📄 Repo files reader (gen_basic's FILES_* widget) — repo markdown is read from GitHub on Dave's devices, never baked raw into the public page. Also hardened: string attention/docs entries no longer crash the build (one buddy stores them as plain strings).
