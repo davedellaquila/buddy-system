@@ -469,6 +469,11 @@ ATTN_JS = """
     tile.classList.add('resolved');
     var st = tile.querySelector('.attn-status');
     if (st) st.textContent = msg;
+    /* Dave 2026-10-20: the check belongs to the RESULT of the tap, never the
+       label beforehand — an upfront check reads as "already done." The Done
+       button renders plain "Done"; the check appears only once clicked. */
+    var db = tile.querySelector('[data-act="done"]');
+    if (db) db.textContent = '✓ Done';
   }
   async function sendAction(tile, entry, okMsg){
     var st = tile.querySelector('.attn-status');
@@ -852,7 +857,7 @@ for b in d['buddies']:
             if date:
                 attn_html += f'<div class="attn-date">{date}</div>'
             attn_html += ('<div class="attn-actions">'
-                          '<button type="button" class="attn-btn primary" data-act="done">✓ Done</button>'
+                          '<button type="button" class="attn-btn primary" data-act="done">Done</button>'
                           '<button type="button" class="attn-btn" data-act="info">Need more info</button>'
                           '</div><div class="attn-status" role="status"></div></div>\n')
         attention_section = attn_html

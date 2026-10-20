@@ -5833,7 +5833,7 @@ function dvPulseHtml(b){
       h += '<div class="dv-pbeat"><span class="dv-pic">' + escHtml(f.b.icon || '📌') + '</span>'
         + '<div class="dv-ptx"><div class="dv-pt"><b>' + escHtml(dispName(f.b)) + '</b> — ' + escHtml(txt.slice(0,90)) + (txt.length > 90 ? '…' : '') + '</div>'
         + (f.a.date ? '<div class="dv-pwhen">' + escHtml(f.a.date) + '</div>' : '') + '</div>'
-        + '<button class="dv-ptick" data-dv-done="' + escHtml(f.key) + '" title="Mark done" aria-label="Mark done">✓</button></div>';
+        + '<button class="dv-ptick" data-dv-done="' + escHtml(f.key) + '" title="Mark done" aria-label="Mark done">○</button></div>';
     });
     if (flags.length > 5) h += '<div class="dv-pbeat"><div class="dv-ptx"><div class="dv-pwhen">+' + (flags.length - 5) + ' more in the attention feed</div></div></div>';
   } else {
