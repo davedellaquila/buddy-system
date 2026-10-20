@@ -946,7 +946,8 @@ body:has(#field-settings.show) #new-buddy-fab{display:none}
 #new-buddy-fab:active{transform:scale(.94)}
 /* Homepage Prev/Next (Dave 2026-10-19): on a buddy homepage, a FAB-sized
    Prev/Next pair sits alongside the + button in the lower-right (thumb reach
-   on iPad) and walks the current collection. Originally shown only with both
+   on iPad) and walks the current collection; a Back button (history, via
+   goBack) joins the cluster at Dave's request. Originally shown only with both
    panels closed; Dave relaxed the gate the same evening — visible whenever a
    homepage is showing (the phone sheet is modal and still covers it), and
    shifted left of the right panel when that panel is open on desktop. */
@@ -2125,7 +2126,10 @@ body.node-dragging,body.node-dragging *{cursor:grabbing !important}
 <button type="button" id="new-buddy-fab" title="New buddy" aria-label="New buddy">
   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
 </button>
-<div id="hp-nav" role="group" aria-label="Previous and next buddy homepage">
+<div id="hp-nav" role="group" aria-label="Back, previous and next buddy homepage">
+<button type="button" id="hp-back" title="Back" aria-label="Back">
+  <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><polyline points="9 14 4 9 9 4" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M20 20v-7a4 4 0 0 0-4-4H4" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+</button>
 <button type="button" id="hp-prev" title="Previous homepage" aria-label="Previous buddy homepage">
   <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><path d="M14.5 5.5L8 12l6.5 6.5" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
 </button>
@@ -3634,7 +3638,7 @@ function renderDevelopSection(){
   const dev = document.getElementById('fset-develop');
   if (!dev) return;
   const simulating = !!devBackup;
-  const buildNum = '20261019.2121';
+  const buildNum = '20261019.2129';
   dev.innerHTML = ''
     + '<label class="fset-check"><input type="checkbox" id="dev-empty-toggle"' + (simulating ? ' checked' : '') + '> <span><strong>Simulate new user</strong> — empty data file, as if opening the shared link fresh</span></label>'
     + '<div class="fineprint" style="margin:8px 0 12px">Build <span style="font-family:monospace">' + escHtml(String(buildNum)) + '</span> · ' + BUDDIES.length + ' buddies in this file</div>'
@@ -4886,7 +4890,7 @@ function renderBuddy(id){
       'Anybody with repo access can see this note. Saved to the buddy’s repo (docs/notes.md).')
     + '<div class="attr-body"><textarea class="notes" id="bp-shared-notes" placeholder="Anybody with repo access can see this note."></textarea>'
     + '<p class="fineprint" id="shared-status"></p></div></div>'
-    + '<div class="bp-build">Build 20261019.2121</div>'
+    + '<div class="bp-build">Build 20261019.2129</div>'
     + '</div>';
   // Update every visible label for a buddy after a rename/re-icon, across all
   // Atlas lenses. A rename changes no structure, so labels are patched in place
@@ -7502,7 +7506,7 @@ function renderPlan(id){
     + '<p class="fineprint">Saved on this device. (For your eyes only)</p></div>'
     + '<div class="bp-sec"><h3>Shared notes<span class="info-tip" data-tip="Visible to everyone with access to this project.">\u24d8</span></h3><textarea class="notes" id="bp-shared" placeholder="Shared notes\u2026 (visible to everyone with access)">'+escHtml((S.planShared||{})[id]||'')+'</textarea>'
     + '<p class="fineprint">Shared — visible to everyone with access.</p></div>'
-    + '<div class="bp-build">Build 20261019.2121</div>'
+    + '<div class="bp-build">Build 20261019.2129</div>'
     + '</div>';
   const nt = document.getElementById('bp-notes');
   let t = null;
@@ -10236,14 +10240,14 @@ function openWhatsNew(){
     .then(r => r.ok ? r.text() : '')
     .then(t => {
       const serverBuild = t.trim();
-      if (serverBuild && serverBuild !== '20261019.2121') {
+      if (serverBuild && serverBuild !== '20261019.2129') {
         updBtn.style.display = '';
         updBtn.title = 'Update to build ' + serverBuild;
       }
       // Show build numbers at the top of the sheet (Dave's request 2026-10-12)
-      const myBuild = '20261019.2121';
+      const myBuild = '20261019.2129';
       let buildLine = '<p class="fineprint" style="margin-top:0">You’re on build ' + escHtml(myBuild) + '.';
-      if (serverBuild && serverBuild !== '20261019.2121' && isNewerBuild(serverBuild, myBuild)) {
+      if (serverBuild && serverBuild !== '20261019.2129' && isNewerBuild(serverBuild, myBuild)) {
         buildLine += ' Build ' + escHtml(serverBuild) + ' is available.';
       }
       buildLine += '</p>';
@@ -10293,7 +10297,7 @@ function isNewerBuild(server, mine){
   } catch (e) { return false; }
 }
 function initVersionCheck(){
-  const myBuild = '20261019.2121';
+  const myBuild = '20261019.2129';
   function showUpdateBanner(serverBuild){
     if (document.getElementById('update-banner')) return;
     const b = document.createElement('div');
@@ -10719,6 +10723,7 @@ document.addEventListener('click', e => {
   }
   if (e.target.closest && e.target.closest('#sb-close')) { setSidebarOpen(document.body.classList.contains('sb-closed')); return; }
   if (e.target.closest && e.target.closest('#sb-expand-btn')) { setSidebarOpen(true); return; }
+  if (e.target.closest && e.target.closest('#hp-back')) { goBack(); return; }
   if (e.target.closest && e.target.closest('#hp-prev')) { hpStep(-1); return; }
   if (e.target.closest && e.target.closest('#hp-next')) { hpStep(1); return; }
   if (e.target.closest && e.target.closest('#menu-btn')) {

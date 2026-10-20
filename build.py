@@ -774,7 +774,8 @@ body:has(#field-settings.show) #new-buddy-fab{display:none}
 #new-buddy-fab:active{transform:scale(.94)}
 /* Homepage Prev/Next (Dave 2026-10-19): on a buddy homepage, a FAB-sized
    Prev/Next pair sits alongside the + button in the lower-right (thumb reach
-   on iPad) and walks the current collection. Originally shown only with both
+   on iPad) and walks the current collection; a Back button (history, via
+   goBack) joins the cluster at Dave's request. Originally shown only with both
    panels closed; Dave relaxed the gate the same evening — visible whenever a
    homepage is showing (the phone sheet is modal and still covers it), and
    shifted left of the right panel when that panel is open on desktop. */
@@ -10363,6 +10364,7 @@ document.addEventListener('click', e => {
   }
   if (e.target.closest && e.target.closest('#sb-close')) { setSidebarOpen(document.body.classList.contains('sb-closed')); return; }
   if (e.target.closest && e.target.closest('#sb-expand-btn')) { setSidebarOpen(true); return; }
+  if (e.target.closest && e.target.closest('#hp-back')) { goBack(); return; }
   if (e.target.closest && e.target.closest('#hp-prev')) { hpStep(-1); return; }
   if (e.target.closest && e.target.closest('#hp-next')) { hpStep(1); return; }
   if (e.target.closest && e.target.closest('#menu-btn')) {
@@ -10821,7 +10823,10 @@ initSbBrandSticky();
 <button type="button" id="new-buddy-fab" title="New buddy" aria-label="New buddy">
   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
 </button>
-<div id="hp-nav" role="group" aria-label="Previous and next buddy homepage">
+<div id="hp-nav" role="group" aria-label="Back, previous and next buddy homepage">
+<button type="button" id="hp-back" title="Back" aria-label="Back">
+  <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><polyline points="9 14 4 9 9 4" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M20 20v-7a4 4 0 0 0-4-4H4" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+</button>
 <button type="button" id="hp-prev" title="Previous homepage" aria-label="Previous buddy homepage">
   <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><path d="M14.5 5.5L8 12l6.5 6.5" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
 </button>

@@ -1,4 +1,6 @@
 ## 2026-10-19
+### Homepage nav cluster — Back joins Prev/Next (Dave 2026-10-19)
+- A Back button now sits with the floating ‹ › pair on buddy homepages, same size, same glass style, return-arrow glyph. It runs the dashboard's existing history Back (same behavior as the panel's Back, tree view as fallback). Shows under the same rule as the pair: whenever a homepage is showing.
 ### Homepage Prev/Next — visible whenever a homepage is showing (Dave 2026-10-19)
 - The ‹ › pair shipped earlier today gated to "both panels closed + homepage view," which hid it in the state Dave actually browses in. Per his evening call, the gate is relaxed: the pair now shows on any buddy homepage regardless of panel state (arrow keys follow the same rule). With the right panel open on desktop it shifts left of the panel (right:468px) instead of floating over it; the phone sheet is modal and still covers it; the field-settings hide is unchanged.
 ### New buddies: eight device buddies under Tech Buddy 📱 (Dave 2026-10-19)
