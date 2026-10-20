@@ -1690,6 +1690,8 @@ a.plan-card-name:hover{text-decoration:underline}
 #pdf-viewer .pv-close{background:none;border:0;color:#fff;line-height:1;cursor:pointer;padding:4px 8px;border-radius:8px;display:inline-flex;align-items:center;justify-content:center}
 #pdf-viewer .pv-close:hover{background:rgba(255,255,255,.15)}
 #pdf-viewer iframe{flex:1;border:0;background:#fff}
+#pdf-viewer .pv-status{flex:1;display:flex;align-items:center;justify-content:center;color:#fff;font-size:.9375rem;padding:24px;text-align:center}
+#pdf-viewer .pv-status.pv-error{color:#ffb3b3}
 .doc-card{cursor:pointer}
 .pdel:hover{background:var(--danger);color:#fff}
 .pdel svg{width:13px;height:13px;display:block}
@@ -8870,7 +8872,7 @@ async function loadDocs(id){
       if (r.ok) {
         const j = await r.json();
         const pdfs = (Array.isArray(j) ? j : []).filter(f => f.type === 'file' && /\.pdf$/i.test(f.name))
-          .map(f => ({name: f.name, src: f.download_url, href: f.download_url, path: f.path, repo: rc.repo, size: f.size}));
+          .map(f => ({name: f.name, src: f.download_url, href: f.download_url, api: f.url, path: f.path, repo: rc.repo, size: f.size}));
         for (const f of pdfs) { if (!files.some(x => x.src === f.src)) files.push(f); }
       }
     } catch (e) {}
@@ -8895,7 +8897,7 @@ async function loadDocs(id){
   strip.innerHTML = files.map(p => {
     const del = p.path ? '<button class="pdel" data-del="' + escHtml(p.path) + '" data-repo="' + escHtml(p.repo || 'buddy-system') + '" title="Delete document">' + ICON_TRASH + '</button>' : '';
     const kb = p.size ? (p.size > 1048576 ? (p.size/1048576).toFixed(1) + ' MB' : Math.max(1, Math.round(p.size/1024)) + ' KB') : '';
-    return '<div class="doc-card" data-pdf="' + escHtml(p.href) + '" data-pdfname="' + escHtml(p.name) + '"><span class="doc-icon">\U0001f4c4</span>'
+    return '<div class="doc-card" data-pdf="' + escHtml(p.href) + '" data-api="' + escHtml(p.api || '') + '" data-pdfname="' + escHtml(p.name) + '"><span class="doc-icon">\U0001f4c4</span>'
       + '<div class="doc-meta"><div class="doc-name" title="' + escHtml(p.name) + '">' + escHtml(p.name) + '</div>'
       + '<div class="doc-sub">' + escHtml(kb) + ' · View</div></div>'
       + del + '</div>';
@@ -8959,8 +8961,16 @@ function initDocDrop(id){
     inp.click();
   });
 }
-/* Dave 2026-10-18: in-dashboard PDF viewer (modal overlay, native PDF iframe). */
-function openPdfViewer(href, name){
+/* Dave 2026-10-18: in-dashboard PDF viewer (modal overlay, native PDF iframe).
+   Dave 2026-10-20 fix: the iframe used to point straight at the file's raw
+   download URL, but every buddy repo is private and an iframe cannot carry
+   the GitHub token \u2014 GitHub answered 404 and the viewer opened blank.
+   The bytes now come through the contents API (the file's API URL + raw
+   Accept header + token, the same route the rest of the app uses) and the
+   iframe shows a same-page blob URL. A failed load says so in the viewer
+   instead of opening an empty box. */
+let pvBlobUrl = null;
+async function openPdfViewer(href, name, api){
   let v = document.getElementById('pdf-viewer');
   if (!v) {
     v = document.createElement('div');
@@ -8968,20 +8978,43 @@ function openPdfViewer(href, name){
     v.innerHTML = '<div class="pv-head"><span class="pv-name"></span>'
       + '<a href="#" class="pv-newtab" target="_blank" rel="noopener">Open in new tab</a>'
       + '<button class="pv-close" type="button" aria-label="Close viewer">' + circleX(22) + '</button></div>'
+      + '<div class="pv-status">Loading\u2026</div>'
       + '<iframe title="PDF viewer"></iframe>';
     document.body.appendChild(v);
     v.querySelector('.pv-close').addEventListener('click', closePdfViewer);
     v.addEventListener('click', e => { if (e.target === v) closePdfViewer(); });
     document.addEventListener('keydown', e => { if (e.key === 'Escape') closePdfViewer(); });
   }
+  const status = v.querySelector('.pv-status');
+  const frame = v.querySelector('iframe');
   v.querySelector('.pv-name').textContent = name || 'Document';
-  v.querySelector('.pv-newtab').href = href;
-  v.querySelector('iframe').src = href;
+  if (pvBlobUrl) { URL.revokeObjectURL(pvBlobUrl); pvBlobUrl = null; }
+  frame.removeAttribute('src');
+  v.querySelector('.pv-newtab').removeAttribute('href');
+  status.style.display = 'flex'; status.textContent = 'Loading\u2026';
+  status.classList.remove('pv-error');
   v.classList.add('show');
+  const url = api || href;
+  if (!url) { status.textContent = 'This document has no readable address.'; status.classList.add('pv-error'); return; }
+  try {
+    const headers = { 'Accept': 'application/vnd.github.raw' };
+    if (ghToken()) headers['Authorization'] = 'token ' + ghToken();
+    const r = await fetch(url, { headers });
+    if (!r.ok) throw new Error('GitHub said ' + r.status);
+    const blob = await r.blob();
+    pvBlobUrl = URL.createObjectURL(new Blob([blob], { type: 'application/pdf' }));
+    frame.src = pvBlobUrl;
+    v.querySelector('.pv-newtab').href = pvBlobUrl;
+    status.style.display = 'none';
+  } catch (err) {
+    status.textContent = 'Could not load this document (' + (err.message || err) + '). If the token pill (top right) says a token is needed, add it and try again.';
+    status.classList.add('pv-error');
+  }
 }
 function closePdfViewer(){
   const v = document.getElementById('pdf-viewer');
   if (v) { v.classList.remove('show'); v.querySelector('iframe').src = 'about:blank'; }
+  if (pvBlobUrl) { URL.revokeObjectURL(pvBlobUrl); pvBlobUrl = null; }
 }
 /* ---------- shared notes ---------- */
 function updateTokenPill(){
@@ -10585,7 +10618,7 @@ document.addEventListener('click', e => {
   }
   // Dave 2026-10-18: tap a document card to view the PDF inside the dashboard.
   const dc = e.target.closest('.doc-card');
-  if (dc && dc.dataset.pdf) { openPdfViewer(dc.dataset.pdf, dc.dataset.pdfname); return; }
+  if (dc && dc.dataset.pdf) { openPdfViewer(dc.dataset.pdf, dc.dataset.pdfname, dc.dataset.api); return; }
   if (e.target.closest('.navgrip')) return; // view-list grip: drags/reorders; never switches views
   const vb = e.target.closest('[data-view]');
   if (vb) {
