@@ -620,15 +620,18 @@ body.sb-closed #pane-toggles .ptoggle{padding:6px 4px}
   font-weight:700;font-size:.9375rem;pointer-events:none;text-align:center;max-width:140px;color:#fff}
 .chart-constellation .constellation-wrap{position:relative;min-height:60vh}
 .chart-constellation #constellation-canvas{display:block;cursor:pointer}
-/* Dave 2026-10-19: Constellation spacing control panel — a quiet Kin card
-   floating over the chart's top-right corner; collapses to a Spacing pill.
-   Theme vars only, so it reads correctly in dark and light. */
-.constel-pill{position:absolute;top:12px;right:12px;z-index:6;min-height:44px;padding:0 18px;
+/* Dave 2026-10-19: Constellation spacing control panel — a quiet Kin card;
+   collapses to a Spacing pill. Theme vars only, so it reads correctly in
+   dark and light. Dave 2026-10-20: the controls are mounted on the tree
+   PANE (outside the zoomed chart layer — see wireConstelPanel) and docked
+   to the pane's bottom-right corner, so they never scale or drift with
+   the chart's zoom and pan. */
+.constel-pill{position:absolute;bottom:14px;right:14px;z-index:6;min-height:44px;padding:0 18px;
   border-radius:999px;border:1px solid var(--border);background:var(--panel);color:var(--text);
   font:600 .8125rem -apple-system,sans-serif;cursor:pointer;box-shadow:0 10px 24px rgba(10,20,15,.14);
   -webkit-tap-highlight-color:transparent}
 .constel-pill:hover{border-color:var(--accent)}
-.constel-panel{position:absolute;top:12px;right:12px;z-index:6;width:236px;max-width:calc(100% - 24px);
+.constel-panel{position:absolute;bottom:14px;right:14px;z-index:6;width:236px;max-width:calc(100% - 24px);
   background:var(--panel);border:1px solid var(--border);border-radius:14px;
   box-shadow:0 10px 24px rgba(10,20,15,.14);padding:10px 14px 12px;color:var(--text);
   font-family:-apple-system,sans-serif}
@@ -5382,6 +5385,9 @@ function renderOrgTree(){
   // so the zoom control only scales the chart itself.
   document.getElementById('tree-chrome-main').innerHTML = quickAnswersHtml() + chartSwitcherHtml();
   wireAtlasRow();
+  // Constellation controls are pane-mounted (see wireConstelPanel) — clear
+  // any from the previous render so they never linger over another lens.
+  document.querySelectorAll('#treepane-main > .constel-panel, #treepane-main > .constel-pill').forEach(n => n.remove());
   setPaneContent('treezoom-main', chartHtml);
   setPaneContent('treezoom-orph', orphHtml);
   applyTreeSplit();
@@ -6087,6 +6093,12 @@ function wireConstelPanel(){
   const pill = wrapEl.querySelector('#constel-pill');
   if (!panel || !pill) return;
   wrapEl._constelWired = true;
+  /* Dave 2026-10-20: lift the controls out of the zoomed chart layer and
+     mount them on the tree pane itself — docked to its bottom edge, at a
+     constant size, whatever the chart zoom does. renderTree removes them
+     before the next chart render so they never linger over other lenses. */
+  const pane = wrapEl.closest('.treepane');
+  if (pane) { pane.appendChild(pill); pane.appendChild(panel); }
   const c = constelSettings();
   let reinitTimer = null;
   const queueReinit = () => { clearTimeout(reinitTimer); reinitTimer = setTimeout(initConstellation, 120); };

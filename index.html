@@ -792,15 +792,18 @@ body.sb-closed #pane-toggles .ptoggle{padding:6px 4px}
   font-weight:700;font-size:.9375rem;pointer-events:none;text-align:center;max-width:140px;color:#fff}
 .chart-constellation .constellation-wrap{position:relative;min-height:60vh}
 .chart-constellation #constellation-canvas{display:block;cursor:pointer}
-/* Dave 2026-10-19: Constellation spacing control panel — a quiet Kin card
-   floating over the chart's top-right corner; collapses to a Spacing pill.
-   Theme vars only, so it reads correctly in dark and light. */
-.constel-pill{position:absolute;top:12px;right:12px;z-index:6;min-height:44px;padding:0 18px;
+/* Dave 2026-10-19: Constellation spacing control panel — a quiet Kin card;
+   collapses to a Spacing pill. Theme vars only, so it reads correctly in
+   dark and light. Dave 2026-10-20: the controls are mounted on the tree
+   PANE (outside the zoomed chart layer — see wireConstelPanel) and docked
+   to the pane's bottom-right corner, so they never scale or drift with
+   the chart's zoom and pan. */
+.constel-pill{position:absolute;bottom:14px;right:14px;z-index:6;min-height:44px;padding:0 18px;
   border-radius:999px;border:1px solid var(--border);background:var(--panel);color:var(--text);
   font:600 .8125rem -apple-system,sans-serif;cursor:pointer;box-shadow:0 10px 24px rgba(10,20,15,.14);
   -webkit-tap-highlight-color:transparent}
 .constel-pill:hover{border-color:var(--accent)}
-.constel-panel{position:absolute;top:12px;right:12px;z-index:6;width:236px;max-width:calc(100% - 24px);
+.constel-panel{position:absolute;bottom:14px;right:14px;z-index:6;width:236px;max-width:calc(100% - 24px);
   background:var(--panel);border:1px solid var(--border);border-radius:14px;
   box-shadow:0 10px 24px rgba(10,20,15,.14);padding:10px 14px 12px;color:var(--text);
   font-family:-apple-system,sans-serif}
@@ -3694,7 +3697,7 @@ function renderDevelopSection(){
   const dev = document.getElementById('fset-develop');
   if (!dev) return;
   const simulating = !!devBackup;
-  const buildNum = '20261020.0658';
+  const buildNum = '20261020.0700';
   dev.innerHTML = ''
     + '<label class="fset-check"><input type="checkbox" id="dev-empty-toggle"' + (simulating ? ' checked' : '') + '> <span><strong>Simulate new user</strong> — empty data file, as if opening the shared link fresh</span></label>'
     + '<div class="fineprint" style="margin:8px 0 12px">Build <span style="font-family:monospace">' + escHtml(String(buildNum)) + '</span> · ' + BUDDIES.length + ' buddies in this file</div>'
@@ -4952,7 +4955,7 @@ function renderBuddy(id){
       'Anybody with repo access can see this note. Saved to the buddy’s repo (docs/notes.md).')
     + '<div class="attr-body"><textarea class="notes" id="bp-shared-notes" placeholder="Anybody with repo access can see this note."></textarea>'
     + '<p class="fineprint" id="shared-status"></p></div></div>'
-    + '<div class="bp-build">Build 20261020.0658</div>'
+    + '<div class="bp-build">Build 20261020.0700</div>'
     + '</div>';
   // Update every visible label for a buddy after a rename/re-icon, across all
   // Atlas lenses. A rename changes no structure, so labels are patched in place
@@ -5741,6 +5744,9 @@ function renderOrgTree(){
   // so the zoom control only scales the chart itself.
   document.getElementById('tree-chrome-main').innerHTML = quickAnswersHtml() + chartSwitcherHtml();
   wireAtlasRow();
+  // Constellation controls are pane-mounted (see wireConstelPanel) — clear
+  // any from the previous render so they never linger over another lens.
+  document.querySelectorAll('#treepane-main > .constel-panel, #treepane-main > .constel-pill').forEach(n => n.remove());
   setPaneContent('treezoom-main', chartHtml);
   setPaneContent('treezoom-orph', orphHtml);
   applyTreeSplit();
@@ -6446,6 +6452,12 @@ function wireConstelPanel(){
   const pill = wrapEl.querySelector('#constel-pill');
   if (!panel || !pill) return;
   wrapEl._constelWired = true;
+  /* Dave 2026-10-20: lift the controls out of the zoomed chart layer and
+     mount them on the tree pane itself — docked to its bottom edge, at a
+     constant size, whatever the chart zoom does. renderTree removes them
+     before the next chart render so they never linger over other lenses. */
+  const pane = wrapEl.closest('.treepane');
+  if (pane) { pane.appendChild(pill); pane.appendChild(panel); }
   const c = constelSettings();
   let reinitTimer = null;
   const queueReinit = () => { clearTimeout(reinitTimer); reinitTimer = setTimeout(initConstellation, 120); };
@@ -7592,7 +7604,7 @@ function renderPlan(id){
     + '<p class="fineprint">Saved on this device. (For your eyes only)</p></div>'
     + '<div class="bp-sec"><h3>Shared notes<span class="info-tip" data-tip="Visible to everyone with access to this project.">\u24d8</span></h3><textarea class="notes" id="bp-shared" placeholder="Shared notes\u2026 (visible to everyone with access)">'+escHtml((S.planShared||{})[id]||'')+'</textarea>'
     + '<p class="fineprint">Shared — visible to everyone with access.</p></div>'
-    + '<div class="bp-build">Build 20261020.0658</div>'
+    + '<div class="bp-build">Build 20261020.0700</div>'
     + '</div>';
   const nt = document.getElementById('bp-notes');
   let t = null;
@@ -10329,14 +10341,14 @@ function openWhatsNew(){
     .then(r => r.ok ? r.text() : '')
     .then(t => {
       const serverBuild = t.trim();
-      if (serverBuild && serverBuild !== '20261020.0658') {
+      if (serverBuild && serverBuild !== '20261020.0700') {
         updBtn.style.display = '';
         updBtn.title = 'Update to build ' + serverBuild;
       }
       // Show build numbers at the top of the sheet (Dave's request 2026-10-12)
-      const myBuild = '20261020.0658';
+      const myBuild = '20261020.0700';
       let buildLine = '<p class="fineprint" style="margin-top:0">You’re on build ' + escHtml(myBuild) + '.';
-      if (serverBuild && serverBuild !== '20261020.0658' && isNewerBuild(serverBuild, myBuild)) {
+      if (serverBuild && serverBuild !== '20261020.0700' && isNewerBuild(serverBuild, myBuild)) {
         buildLine += ' Build ' + escHtml(serverBuild) + ' is available.';
       }
       buildLine += '</p>';
@@ -10386,7 +10398,7 @@ function isNewerBuild(server, mine){
   } catch (e) { return false; }
 }
 function initVersionCheck(){
-  const myBuild = '20261020.0658';
+  const myBuild = '20261020.0700';
   function showUpdateBanner(serverBuild){
     if (document.getElementById('update-banner')) return;
     const b = document.createElement('div');
