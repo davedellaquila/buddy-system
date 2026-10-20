@@ -234,6 +234,7 @@ body.sb-closed #main .zoombar{left:calc(50% + 38px)}
 .bac-row .bname{font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .bac-row .bctx{font-size:.6875rem;color:var(--muted);margin-left:auto;flex-shrink:0}
 .bac-empty{padding:14px;font-size:.8125rem;color:var(--muted);text-align:center}
+#buddy-ac .bac-create{border-top:1px solid var(--border)}
 #buddy-search-clear:hover{color:var(--text);background:rgba(127,127,127,.18)}
 .brand .eyebrow{font-size:.625rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);white-space:nowrap;padding-right:96px;overflow:hidden;text-overflow:ellipsis}
 .brand h1{font-size:1.375rem;margin:4px 0 0}
@@ -10306,19 +10307,23 @@ function initSearch(){
       const q = bs.value.trim();
       if (!q){ acClose(); return; }
       const ms = acMatches(q);
-      acHot = ms.length ? 0 : -1;
-      ac.innerHTML = ms.length
+      acHot = 0;
+      /* Dave 2026-10-20: "Create new buddy" is ALWAYS the last row of the
+         autosuggest list, not only when nothing matches — when the matches
+         aren't the buddy you wanted, the way to create it is right there. */
+      const createRow = '<button type="button" class="bac-row bac-create" data-create="1" role="option">'
+        + '<span class="bicon">\u2295</span>'
+        + '<span class="bname">Create new buddy</span>'
+        + '<span class="bctx">"' + escHtml(q) + '"</span>'
+        + '</button>';
+      ac.innerHTML = (ms.length
         ? ms.map((b, i) => '<button type="button" class="bac-row' + (i === acHot ? ' hot' : '') + '" role="option" data-buddy="' + b.id + '">'
           + '<span class="bicon">' + escHtml(b.icon || '') + '</span>'
           + '<span class="bname">' + escHtml(dispName(b)) + '</span>'
           + (acParentName(b) ? '<span class="bctx">' + escHtml(acParentName(b)) + '</span>' : '')
           + '</button>').join('')
-        : '<div class="bac-empty">No buddies match.</div>'
-          + '<button type="button" class="bac-row bac-create" data-create="1">'
-          + '<span class="bicon">\u2295</span>'
-          + '<span class="bname">Create new buddy</span>'
-          + '<span class="bctx">"' + escHtml(q) + '"</span>'
-          + '</button>';
+        : '<div class="bac-empty">No buddies match.</div>')
+        + createRow;
       ac.hidden = false;
       ac.querySelectorAll('.bac-row').forEach(row => {
         row.addEventListener('click', () => {
