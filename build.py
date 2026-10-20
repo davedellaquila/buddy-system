@@ -308,7 +308,7 @@ body.sb-closed #pane-toggles .ptoggle{padding:6px 4px}
 /* Two stacked panes (buddy tree on top, orphaned buddies below) with a draggable
    splitter; each pane is its own 2D scrollport with its own zoom control. */
 #treezoom{flex:1;min-width:0;min-height:0;display:flex;flex-direction:column;overflow:hidden;
-  border:1px solid var(--border);border-left:none;border-right:none;border-radius:0;background:var(--canvas)}
+  border:1px solid var(--border);border-left:none;border-right:none;border-radius:0;background:var(--main-bg,var(--canvas))}
 .treepane{position:relative;min-height:60px;min-width:0;display:flex;flex-direction:column;flex:1 1 0}
 /* UI chrome above the chart scroll pane (Quick answers + Atlas lens picker).
    Sits outside #treezoom-main so the zoom control never scales it. */
@@ -815,7 +815,7 @@ html.light #hp-nav button, html.light #hp-back{background:rgba(255,255,255,.55);
 #newbuddy-sheet .nb-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.5);opacity:0;transition:opacity .25s}
 #newbuddy-sheet .nb-sheet{position:relative;background:var(--panel);border-radius:20px 20px 0 0;padding:12px 22px 0;margin:0 16px;width:100%;max-width:560px;box-sizing:border-box;height:auto;max-height:88vh;display:flex;flex-direction:column;min-width:0;
   box-shadow:0 -8px 40px rgba(0,0,0,.4);transform:translateY(100%);transition:transform .3s cubic-bezier(.32,.72,.35,1)}
-#newbuddy-sheet .nb-body{overflow-y:auto;padding-bottom:16px;min-width:0}
+#newbuddy-sheet .nb-body{overflow-y:auto;padding:4px 4px 16px;margin:0 -4px;min-width:0}
 #newbuddy-sheet .nb-body > *{min-width:0;max-width:100%}
 #newbuddy-sheet .nb-actions{position:sticky;bottom:0;background:var(--panel);padding:14px 0 26px;border-top:1px solid var(--border2);display:flex;gap:10px;justify-content:flex-end;margin:0 -22px;padding-left:22px;padding-right:22px}
 #newbuddy-sheet .nb-actions button{font-size:.875rem;font-weight:600;padding:10px 22px;border-radius:20px;cursor:pointer;border:1px solid var(--border)}
@@ -1293,10 +1293,19 @@ body.sb-closed #sidebar #sb-tools{display:none}
 .bp-sec[data-field="parent"].expanded .attr-head .pill-btn{display:inline-block}
 .bp-sec[data-field="persona"] .attr-head .pill-btn{display:none}
 .bp-sec[data-field="persona"].expanded .attr-head .pill-btn{display:inline-block}
-/* Dave 2026-10-19: a section's add button shows only while the section is open.
-   The Children ⊕ lives inside the h3, which stays visible under .collapsed
-   (the rule above hides everything except the h3) — hide it there too. */
-.bp-sec[data-field="reports"].collapsed > h3 .bp-circle-add{display:none}
+/* Dave 2026-10-20 (pattern agreed 2026-10-19): a section's add control lives
+   on the eyebrow row in both states — a small ⊕ circle while collapsed,
+   the spelled-out pill while open. And a single-value section shows its
+   value in the header while collapsed; while open the body shows the value,
+   so the header keeps just the label (the pill used to squeeze "MANAGER:
+   Project Buddy" down to "M."). */
+.attr-head .bp-circle-add{flex:none;font-size:1.25rem;line-height:1;color:var(--accent);background:none;border:none;cursor:pointer;min-width:40px;min-height:40px;align-items:center;justify-content:center}
+.bp-sec[data-field="parent"] .attr-head .head-add{display:none}
+.bp-sec[data-field="parent"]:not(.expanded) .attr-head .head-add{display:inline-flex}
+.bp-sec[data-field="parent"].expanded .attr-head .attr-headval{display:none}
+.bp-sec>h3 .pill-btn{float:right;margin-left:8px}
+.bp-sec[data-field="reports"]:not(.collapsed) > h3 .bp-circle-add{display:none}
+.bp-sec[data-field="reports"].collapsed > h3 .pill-btn{display:none}
 /* Parent info icon: hover-only so it doesn't collide with the reorder gripper */
 .bp-sec[data-field="parent"] .attr-head .info-tip{opacity:0;transition:opacity .15s ease}
 .bp-sec[data-field="parent"] .attr-head:hover .info-tip{opacity:1}
@@ -4022,7 +4031,7 @@ function attrCountRow(label, items, nameFn, opts){
 /* Attribute header pattern (Dave 2026-10-14): ›/﹀ LABEL: value  [buttons] ⓘ + expandable body */
 function attrHead(field, label, valueHtml, buttons, tip){
   return '<div class="attr-head"><button class="attr-toggle" data-expand="'+field+'" aria-label="Expand">\u203a</button>'
-    + '<span class="attr-text"><span class="attr-label">'+label+':</span> '+valueHtml+'</span>'
+    + '<span class="attr-text"><span class="attr-label">'+label+'</span><span class="attr-headval">: '+valueHtml+'</span></span>'
     + (buttons || '')
     + (tip ? '<span class="info-tip" data-tip="'+tip+'">\u24d8</span>' : '') + '</div>';
 }
@@ -4402,7 +4411,8 @@ function renderBuddy(id){
   (function(){
     const kids = (kidsOf[id] || []).filter(k => k && k.id !== id);
     const dv = downVocab(b);
-    const addBtn = '<button class="bp-circle-add" data-addbuddy="child" data-for="'+escHtml(id)+'" title="Add a '+dv.downS+' buddy below this one" aria-label="Add a '+dv.downS+' buddy">⊕</button>';
+    const addBtn = '<button class="bp-circle-add" data-addbuddy="child" data-for="'+escHtml(id)+'" title="Add a '+dv.downS+' buddy below this one" aria-label="Add a '+dv.downS+' buddy">⊕</button>'
+      + '<button class="pill-btn head-add-labeled" data-addbuddy="child" data-for="'+escHtml(id)+'" title="Add a '+dv.downS+' buddy below this one">+ Add '+dv.downS+'</button>';
     const rows = kids.map(k =>
       '<a class="art-row" data-buddy="'+escHtml(k.id)+'">'
       + '<span class="art-ic">'+escHtml(k.icon || '')+'</span>'
@@ -4418,7 +4428,8 @@ function renderBuddy(id){
     const uv = upVocab(b);
     const uvBtn = uv === VOCAB.collection ? VOCAB.generic : uv;
     const tip = 'This buddy\u2019s ' + uv.tipWord + ' in the hierarchy.';
-    const addBtn = '<button class="pill-btn" data-addparent="'+escHtml(id)+'" title="Add another '+uvBtn.upS+'">+ Add '+uvBtn.upS+'</button>';
+    const addBtn = '<button class="pill-btn" data-addparent="'+escHtml(id)+'" title="Add another '+uvBtn.upS+'">+ Add '+uvBtn.upS+'</button>'
+      + '<button class="bp-circle-add head-add" data-addparent="'+escHtml(id)+'" title="Add another '+uvBtn.upS+'" aria-label="Add another '+uvBtn.upS+'">\u2295</button>';
     if (!pars.length) {
       parSec = '<div class="bp-sec" data-field="parent">'
         + attrHead('parent', uv.upHead, '<span class="attr-value attr-none">Top level</span>', addBtn, tip)
