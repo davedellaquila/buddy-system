@@ -1,4 +1,6 @@
 ## 2026-10-19
+### Homepage nav cluster — stays next to the + button, panel open or not (Dave 2026-10-19)
+- Dave's screenshot (Sports Car Adventures, panel open) showed the Back/Prev/Next cluster parked mid-page over the homepage's headline — the ≥1101px rule that slid it left of the open panel (right:468px) put it there. Removed: the cluster now stays at right:88px, glued to the + button in every state, floating over the panel's bottom corner at the FAB's own z-index, exactly as Dave originally asked ("next to the Add button").
 ### Collection-field counts in the info panel (Dave 2026-10-19, Designer thread)
 - Every collection field's label now carries its item count — muted "(N)" — in the Hidden fields list, matching the visible section headers, and (0) shows too: zero means the relationship exists and is empty. Circled set: A.K.A., Artifacts, Documents, Needs your attention, Peers, Private notes. Counts reuse each header's own semantics (attention = unseen items, Private notes = word count, Documents patched in by the async docs loader just like its header). One shared counter (fieldCountFor) feeds both places so the number never changes meaning when a field is hidden or shown.
 ### Brain-dump token card — amber, not zebra (Dave + Jonny 2026-10-19)

@@ -782,7 +782,11 @@ body:has(#field-settings.show) #new-buddy-fab{display:none}
 #hp-nav{position:fixed;right:88px;bottom:20px;z-index:9000;display:none;gap:12px}
 body:has(#main.homepage-mode):has(#view-project.active) #hp-nav{display:flex}
 body:has(#view-buddy.sheet.active) #hp-nav{display:none}
-@media (min-width:1101px){ body:not(.bp-collapsed):has(#view-buddy.panel.active) #hp-nav{right:468px} }
+/* Dave 2026-10-19 (screenshot, Sports Car Adventures): NO panel-open shift.
+   An earlier rule slid the cluster left of the open panel, which parked it in
+   the middle of the homepage over its own headline. The cluster stays next to
+   the + button (right:88px) in every state — it shares the FAB's z-index, so
+   it floats over the panel's bottom corner just like the + does. */
 body:has(#field-settings.show) #hp-nav{display:none !important}
 #hp-nav button{width:56px;height:56px;border-radius:50%;padding:0;
   background:rgba(50,50,52,.55);color:#fff;border:.5px solid rgba(255,255,255,.25);cursor:pointer;
