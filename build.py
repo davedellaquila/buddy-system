@@ -772,29 +772,42 @@ html.light #new-buddy-fab{background:rgba(255,255,255,.55);color:#1c1c1e;border-
 /* Hide the FAB while Settings is open — it overlapped the Done button */
 body:has(#field-settings.show) #new-buddy-fab{display:none}
 #new-buddy-fab:active{transform:scale(.94)}
-/* Homepage Prev/Next (Dave 2026-10-19): on a buddy homepage, a FAB-sized
-   Prev/Next pair sits alongside the + button in the lower-right (thumb reach
-   on iPad) and walks the current collection; a Back button (history, via
-   goBack) joins the cluster at Dave's request. Originally shown only with both
-   panels closed; Dave relaxed the gate the same evening — visible whenever a
-   homepage is showing (the phone sheet is modal and still covers it), and
-   shifted left of the right panel when that panel is open on desktop. */
-#hp-nav{position:fixed;right:88px;bottom:20px;z-index:9000;display:none;gap:12px}
-body:has(#main.homepage-mode):has(#view-project.active) #hp-nav{display:flex}
-body:has(#view-buddy.sheet.active) #hp-nav{display:none}
-/* Dave 2026-10-19 (screenshot, Sports Car Adventures): NO panel-open shift.
-   An earlier rule slid the cluster left of the open panel, which parked it in
-   the middle of the homepage over its own headline. The cluster stays next to
-   the + button (right:88px) in every state — it shares the FAB's z-index, so
-   it floats over the panel's bottom corner just like the + does. */
-body:has(#field-settings.show) #hp-nav{display:none !important}
-#hp-nav button{width:56px;height:56px;border-radius:50%;padding:0;
+/* Homepage navigation (Dave 2026-10-20): the three buttons are distributed
+   along the bottom. Back sits in the lower-left corner, the mirror image of
+   the + button (left:20px to the FAB's right:20px, same 20px bottom, same
+   56px circle). Prev/Next stay paired (12px gap) and, as a group, are
+   centered horizontally between Back and + — Back and + are symmetric, so
+   that midpoint is the viewport center. Visibility (also Dave 2026-10-20):
+   the buttons appear whenever a collection is on screen, regardless of the
+   panel — a buddy homepage, the info panel (right panel) open, the sidebar's
+   hierarchical buddy list open (desktop/iPad widths), or the tree view.
+   Still hidden under the phone sheet (modal) and the field settings.
+   History: on 2026-10-19 the cluster lived next to the + button in the
+   lower-right; Dave redistributed it the next morning. */
+#hp-nav{position:fixed;left:50%;transform:translateX(-50%);bottom:20px;z-index:9000;display:none;gap:12px}
+#hp-back{position:fixed;left:20px;bottom:20px;z-index:9000;display:none}
+body:has(#main.homepage-mode):has(#view-project.active) #hp-nav,
+body:has(#main.homepage-mode):has(#view-project.active) #hp-back,
+body:not(.bp-collapsed):has(#view-buddy.panel.active) #hp-nav,
+body:not(.bp-collapsed):has(#view-buddy.panel.active) #hp-back,
+body:has(#view-tree.active) #hp-nav,
+body:has(#view-tree.active) #hp-back{display:flex}
+@media (min-width:640px){
+body:not(.sb-closed):not(.standalone) #hp-nav,
+body:not(.sb-closed):not(.standalone) #hp-back{display:flex}
+}
+body:has(#view-buddy.sheet.active) #hp-nav,
+body:has(#view-buddy.sheet.active) #hp-back{display:none}
+body:has(#field-settings.show) #hp-nav,
+body:has(#field-settings.show) #hp-back{display:none !important}
+#hp-nav button, #hp-back{width:56px;height:56px;border-radius:50%;padding:0;
   background:rgba(50,50,52,.55);color:#fff;border:.5px solid rgba(255,255,255,.25);cursor:pointer;
-  display:flex;align-items:center;justify-content:center;
+  align-items:center;justify-content:center;
   -webkit-backdrop-filter:blur(20px) saturate(180%);backdrop-filter:blur(20px) saturate(180%);
   box-shadow:0 4px 16px rgba(0,0,0,.25);-webkit-tap-highlight-color:transparent}
-html.light #hp-nav button{background:rgba(255,255,255,.55);color:#1c1c1e;border-color:rgba(0,0,0,.08)}
-#hp-nav button:active{transform:scale(.94)}
+#hp-nav button{display:flex}
+html.light #hp-nav button, html.light #hp-back{background:rgba(255,255,255,.55);color:#1c1c1e;border-color:rgba(0,0,0,.08)}
+#hp-nav button:active, #hp-back:active{transform:scale(.94)}
 #hp-nav button:disabled{opacity:.35;cursor:default}
 #hp-nav button:disabled:active{transform:none}
 /* New-buddy request bottom sheet */
@@ -3934,8 +3947,9 @@ function renderProjectView(){
   updateHpNav();
 }
 /* ---- Homepage Prev/Next (Dave 2026-10-19) ----
-   On a buddy homepage, the #hp-nav pair (visibility is CSS-gated on the
-   homepage view alone since Dave relaxed the both-panels-closed rule) walks
+   On a buddy homepage, the #hp-nav pair (visibility is CSS-gated — shown
+   on the homepage view and, since 2026-10-20, whenever the info panel is
+   open) walks
    the current collection: the sidebar buddy list's displayed order, deduped
    (multi-parent buddies render once per parent there). No wrap at the ends —
    the button for the missing direction dims instead. */
@@ -10857,10 +10871,10 @@ initSbBrandSticky();
 <button type="button" id="new-buddy-fab" title="New buddy" aria-label="New buddy">
   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
 </button>
-<div id="hp-nav" role="group" aria-label="Back, previous and next buddy homepage">
 <button type="button" id="hp-back" title="Back" aria-label="Back">
   <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><polyline points="9 14 4 9 9 4" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M20 20v-7a4 4 0 0 0-4-4H4" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
 </button>
+<div id="hp-nav" role="group" aria-label="Previous and next buddy homepage">
 <button type="button" id="hp-prev" title="Previous homepage" aria-label="Previous buddy homepage">
   <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><path d="M14.5 5.5L8 12l6.5 6.5" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
 </button>
