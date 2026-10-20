@@ -1,4 +1,6 @@
 ## 2026-10-19
+### Neighborhood Buddy — charter doc updated (Dave 2026-10-19)
+- Registry brief link for Neighborhood Buddy now points at the San Jose/Nextdoor job req Dave adopted tonight as the buddy's refreshed charter (reconciled: Property Buddy stays the parent; the Fiddletown patch continues under the original brief, which remains linked from the buddy's repo).
 ### Homepage nav cluster — stays next to the + button, panel open or not (Dave 2026-10-19)
 - Dave's screenshot (Sports Car Adventures, panel open) showed the Back/Prev/Next cluster parked mid-page over the homepage's headline — the ≥1101px rule that slid it left of the open panel (right:468px) put it there. Removed: the cluster now stays at right:88px, glued to the + button in every state, floating over the panel's bottom corner at the FAB's own z-index, exactly as Dave originally asked ("next to the Add button").
 ### Collection-field counts in the info panel (Dave 2026-10-19, Designer thread)
