@@ -1,4 +1,8 @@
 ## 2026-10-20
+### Section borders removed; icons take the medallion (Dave, 2026-10-20)
+- Dave circled the Photos section on the Model A's panel: a rounded outline hugged the whole section. It was the sections' hover treatment from the free-floating build (19:07) — a tint plus an inset 1px outline — latching after taps on touch. Both are gone; sections sit flat on the panel again. (The Photos drop zone and the Dump Box keep their own borders — those outline the fields, not the sections.)
+- The attrHead sections (About, A.K.A., Persona, Voice, Parent, both notes) now fill their medallion from the same Section toggle style setting as the h3 sections: on the default "section icon" style the medallion is the section's own icon (📝 on both notes sections, 🎭 Persona, 🎯 About) instead of the plain ›, and icon medallions don't rotate sideways when the section expands. The 📝 prefix leaves the two notes labels — the medallion carries it now.
+
 ### Tighter gutter beside the docked info panel (Dave, 2026-10-20)
 - Dave circled the seam on the Reminder Buddy shot: with the panel docked, the breathing room between the main view and the panel read too wide. The anchored yield's gutter drops from 32px (desktop) / 22px (iPad band) to 16px in both bands — in the regular yield rules and the homepage-mode overrides alike, so every view sits the same distance from the panel. The panel's shadow still has room to read; the content just sits closer. (The sidebar side still yields at 24px — say the word if they should match.)
 

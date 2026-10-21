@@ -1419,6 +1419,7 @@ body.sb-closed #sidebar #sb-tools{display:none}
 .attr-toggle{flex:none;width:34px;height:34px;border-radius:50%;border:0;background:var(--ghost);display:flex;align-items:center;justify-content:center;font-size:1.1875rem;line-height:1;color:var(--muted);cursor:pointer;transition:transform .18s ease}
 .attr-toggle:hover{color:var(--text)}
 .bp-sec.expanded .attr-toggle{transform:rotate(90deg)}
+.bp-sec.expanded .attr-toggle.attr-toggle-ic{transform:none}
 .attr-head .attr-text{flex:1;min-width:0;font-size:.8125rem;letter-spacing:.05em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .attr-head .info-tip{margin-left:0;font-size:1.0625rem;flex:none}
 .pill-btn{flex:none;font-size:.8125rem;font-weight:600;color:var(--accent);background:none;border:1.5px solid var(--accent);border-radius:20px;padding:5px 14px;cursor:pointer;white-space:nowrap}
@@ -1776,8 +1777,9 @@ body:has(#sidebar.sb-floating) #sb-resize{display:none}
 .ptile-num{transition:transform .18s ease;transform-origin:left bottom}
 .ptile:hover .ptile-num{transform:scale(1.045)}
 .ptile:hover .ptile-label{color:var(--text)}
-.bp-sec{transition:background .18s ease, box-shadow .18s ease;border-radius:12px}
-.bp-sec:hover{background:color-mix(in srgb, var(--hover) 45%, transparent);box-shadow:inset 0 0 0 1px var(--border)}
+/* Dave 2026-10-20 (late): sections sit flat — the hover tint + inset outline
+   from the free-floating build latched after taps on touch and read as a
+   border around the whole section. Removed at his request. */
 @media (prefers-reduced-motion: reduce){
   .bp-close-x.bpx-spin svg{animation:none}
   #main #view-buddy.sheet{transition:none}
@@ -4622,7 +4624,13 @@ function attrCountRow(label, items, nameFn, opts){
 }
 /* Attribute header pattern (Dave 2026-10-14): ›/﹀ LABEL: value  [buttons] ⓘ + expandable body */
 function attrHead(field, label, valueHtml, buttons, tip){
-  return '<div class="attr-head"><button class="attr-toggle" data-expand="'+field+'" aria-label="Expand">\u203a</button>'
+  /* Dave 2026-10-20 (late): the medallion carries the Section toggle style's
+     content (the section's own icon by default), same as the h3 sections —
+     not a hardcoded chevron. In icon mode the medallion doesn't rotate. */
+  const tgl = getSectionToggleContent(field);
+  const tstyle = (typeof getSetting === 'function' && getSetting('sectionToggleStyle')) || 'section-icon';
+  const icCls = (tstyle === 'section-icon' && tgl && tgl !== '›') ? ' attr-toggle-ic' : '';
+  return '<div class="attr-head"><button class="attr-toggle' + icCls + '" data-expand="'+field+'" aria-label="Expand">' + tgl + '</button>'
     + '<span class="attr-text"><span class="attr-label">'+label+'</span><span class="attr-headval">: '+valueHtml+'</span></span>'
     + (buttons || '')
     + (tip ? '<span class="info-tip" data-tip="'+tip+'">\u24d8</span>' : '') + '</div>';
@@ -5191,12 +5199,12 @@ function renderBuddy(id){
     + '<div class="bp-sec" data-field="artifacts"><h3>Artifacts <span class="attn-count">('+artCount+')</span></h3>'+arts+'</div>'
     + planSec
     + '<div class="bp-sec" data-field="notes">'
-    + attrHead('notes', '📝 PRIVATE NOTES', '<span class="attr-value" id="bp-notes-count">(0)</span>', '',
+    + attrHead('notes', 'PRIVATE NOTES', '<span class="attr-value" id="bp-notes-count">(0)</span>', '',
       'Saved on this device. (For your eyes only)')
     + '<div class="attr-body"><textarea class="notes" id="bp-notes" placeholder="Scratch pad for this buddy\u2026 (For your eyes only)">'+escHtml(S.notes[id]||'')+'</textarea></div>'
     + '</div>'
     + '<div class="bp-sec" data-field="shared">'
-    + attrHead('shared', '📝 SHARED NOTES', '<span class="attr-value" id="bp-shared-count">(0)</span>', '',
+    + attrHead('shared', 'SHARED NOTES', '<span class="attr-value" id="bp-shared-count">(0)</span>', '',
       'Anybody with repo access can see this note. Saved to the buddy\u2019s repo (docs/notes.md).')
     + '<div class="attr-body"><textarea class="notes" id="bp-shared-notes" placeholder="Anybody with repo access can see this note."></textarea>'
     + '<p class="fineprint" id="shared-status"></p></div></div>'
