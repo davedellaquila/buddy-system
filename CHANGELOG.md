@@ -1,4 +1,7 @@
 ## 2026-10-20
+### Picker sheets: Cancel moves to the bottom-right (Dave, 2026-10-20)
+- In the Voice picker (and the Persona picker, which shares the footer), **Cancel** now sits at the sheet's bottom-right — Dave circled it at bottom-left and arrowed it across. "Default voice" keeps the left. One rule: `.pp-actions #pp-cancel{margin-left:auto}`.
+
 ### The info panel floats — drag, resize, serif i, spinning x, animated closings (Dave, 2026-10-20)
 - **Free-floating panel:** the buddy detail panel now drags by a dotted **gripper at top-center** and resizes from **any corner or side** (8-handle frame overlay that tracks the panel's box). The rect persists across opens; **double-click the gripper to dock** again. Dragging a resize below 220px wide still snaps the panel shut, like the old left-edge strip it replaces. The close x rides with the panel when floated.
 - **Serif i:** the Open buddy details button's glyph is now a serif **i** (Georgia), replacing the plain dot-and-stem.

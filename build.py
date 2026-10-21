@@ -899,6 +899,8 @@ html.light #hp-nav button, html.light #hp-back{background:rgba(255,255,255,.55);
 #persona-picker .pp-name{font-size:.8125rem;font-weight:700}
 #persona-picker .pp-quote{font-size:.78125rem;color:var(--muted);font-style:italic;line-height:1.35;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;text-overflow:ellipsis}#persona-picker .pp-blurb{font-size:.78125rem;color:var(--muted);line-height:1.35;opacity:.85;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;text-overflow:ellipsis}
 #persona-picker .pp-actions{display:flex;gap:8px;flex-wrap:wrap;padding:12px 16px 16px;border-top:1px solid var(--border)}
+/* Dave 2026-10-20: Cancel belongs at the sheet's bottom-right (he circled it at bottom-left and arrowed it across) — Default voice keeps the left, Cancel takes the right. Applies to both picker sheets that share this footer (Voice + Persona). */
+.pp-actions #pp-cancel{margin-left:auto}
 @media (max-width:639px){
   #persona-picker{align-items:flex-end;padding:0}
   #persona-picker .pp-sheet{max-width:none;border-radius:16px 16px 0 0;max-height:88vh}
