@@ -1264,12 +1264,29 @@ body.standalone #sb-expand-corner{display:none}
 #panel-open:hover{color:var(--accent);border-color:var(--accent);transform:scale(1.05);background:color-mix(in srgb, var(--panel) 58%, rgba(255,255,255,.16))}
 #panel-open:active{transform:scale(.96)}
 #panel-open svg{display:block}
-/* Dave 2026-10-21 (regression fix): the corner i hides only while the
-   panel is OPEN. While collapsed, #view-buddy keeps .active (the panel
-   is display:none, not deactivated) — keying the hide on .active alone
-   left no visible way to reopen the panel after collapsing it. */
+/* Dave 2026-10-21 (Jobs 4+6): the info icon (#panel-open) and the panel's
+   close x (.bp-close-x) are a pixel-for-pixel swap — same 44px circle at
+   top:12px; right:12px (both shift together past the token pill). The icon
+   hides only while the panel is OPEN. While collapsed, #view-buddy keeps
+   .active (the panel is display:none, not deactivated) — keying the hide
+   on .active alone left no visible way to reopen the panel after collapsing
+   it; clicking the icon un-collapses first (see the click branch). Job 6
+   removed the rail's old i: the rail-top slot now holds the expand chevron
+   (#rail-expand), and Recents (#recents-btn) anchors top-left. */
 body:not(.bp-collapsed):has(#view-buddy.active) #panel-open,
 body.standalone #panel-open{display:none}
+#recents-btn{position:fixed;top:12px;left:calc(var(--sbw, 336px) + 24px);z-index:10001;width:44px;height:44px;border-radius:50%;border:1px solid var(--border);background:color-mix(in srgb, var(--panel) 72%, transparent);-webkit-backdrop-filter:blur(14px) saturate(1.6);backdrop-filter:blur(14px) saturate(1.6);color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0;box-shadow:0 4px 18px rgba(15,23,42,.10)}
+#recents-btn:hover{color:var(--accent);border-color:var(--accent);background:color-mix(in srgb, var(--panel) 58%, rgba(255,255,255,.16))}
+#recents-btn:active{transform:scale(.96)}
+body.sb-closed #recents-btn{left:88px}
+body.standalone #recents-btn{left:12px}
+@media (max-width:639px){#recents-btn,body.sb-closed #recents-btn{left:12px}}
+#recents-pop{position:fixed;z-index:10002;min-width:220px;max-width:300px;max-height:60vh;overflow-y:auto;background:var(--panel);border:1px solid var(--border);border-radius:12px;box-shadow:0 14px 40px rgba(0,0,0,.28);padding:6px}
+#recents-pop .rec-head{font-size:.6875rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text2);padding:6px 10px 4px}
+#recents-pop button{display:flex;align-items:center;gap:10px;width:100%;padding:8px 10px;border:none;background:none;color:var(--text);font:inherit;font-size:.875rem;border-radius:8px;cursor:pointer;text-align:left}
+#recents-pop button:hover{background:var(--ghost)}
+#recents-pop .rv-ic{width:22px;text-align:center;flex:0 0 auto}
+#recents-pop .rec-empty{padding:8px 10px;color:var(--text2);font-size:.875rem}
 body:has(#token-pill) #panel-open{right:148px}
 /* Update banner — Jonny verdict 2026-10-20, "The Banner Steps Aside".
    The banner is a threshold, not a task: when the buddy panel opens it
@@ -1418,7 +1435,7 @@ body.ub-nomotion #update-banner{transition:none}
 .bp-close-x:active{opacity:.7}
 /* Open panel: the close button floats at the exact screen position of the
    #panel-open expand button, styled as the same control */
-#view-buddy.panel .bp-close-x,#view-buddy.sheet .bp-close-x{display:flex;position:fixed;top:18px;right:12px;z-index:65;margin:0;background:color-mix(in srgb, var(--panel) 72%, transparent);-webkit-backdrop-filter:blur(14px) saturate(1.6);backdrop-filter:blur(14px) saturate(1.6);
+#view-buddy.panel .bp-close-x,#view-buddy.sheet .bp-close-x{display:flex;position:fixed;top:12px;right:12px;z-index:65;margin:0;background:color-mix(in srgb, var(--panel) 72%, transparent);-webkit-backdrop-filter:blur(14px) saturate(1.6);backdrop-filter:blur(14px) saturate(1.6);
   background:var(--panel);border:1px solid var(--border);border-radius:50%;box-shadow:0 2px 14px var(--shadow)}
 #view-buddy.panel .bp-close-x:hover,#view-buddy.sheet .bp-close-x:hover{color:var(--accent);border-color:var(--accent);background:color-mix(in srgb, var(--panel) 58%, rgba(255,255,255,.16))}
 #view-buddy.panel .bp-close-x:active,#view-buddy.sheet .bp-close-x:active{transform:scale(.96)}
@@ -2018,18 +2035,19 @@ body:has(#sidebar.sb-floating) #sb-resize{display:none}
 .bp-rsz:active{--gripdot:var(--accent)}
 
     /* ==== Icon strip, Views dock, panel header v2 (Dave + Jonny, 2026-10-21) ==== */
-    /* Rail: the panel-open control returns to the top of the icon strip over a
-       divider; the current view sits at the strip's foot under another divider,
-       with a popover picker. Strip only - phones keep their Door A corner button. */
+    /* Rail: the strip's top slot holds the expand chevron (#rail-expand,
+       Job 6) over a divider; the current view sits at the strip's foot under
+       another divider, with a popover picker. The info icon is NOT here any
+       more - it lives at the page's fixed top-right, swapping pixel-for-pixel
+       with the panel's close x, so the corner button must stay visible while
+       the rail shows too. Strip only - phones keep their Door A corner button. */
     #rail-top,#rail-bottom{display:none}
     body.sb-closed #rail-top{display:flex;justify-content:center;padding-bottom:8px;margin-bottom:4px;border-bottom:1px solid var(--border)}
     body.sb-closed #rail-bottom{display:flex;justify-content:center;padding-top:8px;margin-top:4px;border-top:1px solid var(--border)}
     @media (max-width:639px){#rail-top,#rail-bottom{display:none!important}}
-    #panel-open-rail{width:44px;height:44px;border-radius:50%;border:1px solid var(--border);background:color-mix(in srgb, var(--panel) 72%, transparent);color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0}
-    #panel-open-rail:hover{color:var(--accent);border-color:var(--accent)}
-    #panel-open-rail .pi-serif{font-family:Georgia,'Times New Roman',Times,serif;font-size:26px;font-style:italic;font-weight:600;line-height:1;display:block;transform:translateY(-2px)}
-    body:not(.bp-collapsed):has(#view-buddy.active) #panel-open-rail{visibility:hidden}
-    body.sb-closed #panel-open{display:none}
+    #rail-expand{width:44px;height:44px;border-radius:50%;border:1px solid var(--border);background:color-mix(in srgb, var(--panel) 72%, transparent);color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0}
+    #rail-expand:hover{color:var(--accent);border-color:var(--accent)}
+    #rail-expand:active{transform:scale(.96)}
     #rail-curview{width:44px;height:44px;border-radius:12px;border:1px solid transparent;background:none;color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1.25rem;padding:0}
     #rail-curview:hover{color:var(--accent);border-color:var(--border);background:var(--ghost)}
     #rail-viewpop{position:fixed;z-index:120;min-width:196px;background:var(--panel);border:1px solid var(--border);border-radius:12px;box-shadow:0 14px 40px rgba(0,0,0,.28);padding:6px}
@@ -2514,12 +2532,15 @@ body.node-dragging,body.node-dragging *{cursor:grabbing !important}
 <button type="button" id="panel-open" title="Open buddy details" aria-label="Open buddy details">
   <span class="pi-serif" aria-hidden="true">i</span>
 </button>
+<button type="button" id="recents-btn" title="Recent buddies" aria-label="Recent buddies">
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 8.5A9 9 0 1 1 3.2 13.6"/><path d="M3.2 3.8v4.8h4.8"/><path d="M12 7.5V12l3 2"/></svg>
+</button>
 <button type="button" id="sb-expand-corner" title="Expand sidebar" aria-label="Expand sidebar">
   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9.5 5.5L16 12l-6.5 6.5"/></svg>
 </button>
 <div id="sb-scrim"></div>
 <aside id="sidebar">
-  <div id="rail-top"><button type="button" id="panel-open-rail" title="Open buddy details" aria-label="Open buddy details"><span class="pi-serif" aria-hidden="true">i</span></button></div>
+  <div id="rail-top"><button type="button" id="rail-expand" title="Expand sidebar" aria-label="Expand sidebar"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9.5 5.5L16 12l-6.5 6.5"/></svg></button></div>
   <div class="sb-brand-sticky">
     <div id="sb-tools"><button id="sb-gear" title="Settings (⌘,)" aria-label="Settings"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button><button id="sb-close" title="Collapse sidebar" aria-label="Collapse sidebar"><svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path d="M7.2 7.2l9.6 9.6M16.8 7.2l-9.6 9.6" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></button></div>
     <div class="brand"><div class="eyebrow">Project Buddy</div><h1 id="brand-name" title="Click to rename">Buddies</h1><div class="bcount">133 buddies &middot; one family</div></div>
@@ -3309,6 +3330,9 @@ function selectProject(id){
 function selectBuddy(id){
   if (!byId[id]) return;
   const b = byId[id];
+  // Dave 2026-10-21 (Job 6): record the visit for the Recents menu.
+  if (!Array.isArray(S.recentBuddies)) S.recentBuddies = [];
+  if (S.recentBuddies[0] !== id) S.recentBuddies = [id].concat(S.recentBuddies.filter(x => x !== id)).slice(0, 50);
   // Select the buddy and update the main view, WITHOUT opening the right-side panel.
   // But if the panel is already open, refresh it to show the newly selected buddy.
   const vb = document.getElementById('view-buddy');
@@ -4070,6 +4094,7 @@ const SETTING_DEFS = [
   {id:'autoOpenPanel', label:'Always open detail panel on buddy click', type:'bool', def:false, tip:'When off (default), the panel auto-opens in every view EXCEPT Homepage — there, use the ⓘ icon. When on, the panel opens on every click in every view.'},
   {id:'autoCloseSidebar', label:'Auto-close sidebar on buddy select', type:'bool', def:false, tip:'When on, the sidebar collapses to the icon rail every time you select a buddy — so the buddy’s homepage or current view gets the full screen.'},
   {id:'attnEffect', label:'Attention header effect', type:'choice', options:['pulse','glow','shake','blink','wiggle','bounce','swing','none'], def:'pulse', advanced:true, tip:'How the “Needs your attention” section header grabs your eye when items are waiting.'},
+  {id:'recentsCount', label:'Recent items to remember', type:'number', def:10, min:1, max:50, unit:'items', tip:'How many recently visited buddies the Recent menu (clock icon, top left of the page) lists.'},
   {id:'nbSheetWidth', label:'New buddy sheet width', type:'number', def:560, min:320, max:900, advanced:true, tip:'Fixed width of the New Buddy bottom sheet, in pixels. Height follows the content; drag the grab handle to resize vertically.', unit:'px'},
   {id:'shiftLeftAction', label:'Shift+← action', type:'choice', options:['promote','go to parent','nothing'], def:'promote', advanced:true, tip:'What Shift+Left arrow does for the selected buddy. Promote moves it up one level; Go to parent just navigates there.'},
   {id:'fontScale', label:'Text size', type:'slider', def:100, min:80, max:130, step:5, advanced:true, tip:'Scales text throughout the app — layout, dialogs and buttons keep their size.', unit:'%'},
@@ -4217,7 +4242,7 @@ function renderDevelopSection(){
   const dev = document.getElementById('fset-develop');
   if (!dev) return;
   const simulating = !!devBackup;
-  const buildNum = '20261021.1837';
+  const buildNum = '20261021.1859';
   dev.innerHTML = ''
     + '<label class="fset-check"><input type="checkbox" id="dev-empty-toggle"' + (simulating ? ' checked' : '') + '> <span><strong>Simulate new user</strong> — empty data file, as if opening the shared link fresh</span></label>'
     + '<div class="fineprint" style="margin:8px 0 12px">Build <span style="font-family:monospace">' + escHtml(String(buildNum)) + '</span> · ' + BUDDIES.length + ' buddies in this file</div>'
@@ -4739,6 +4764,31 @@ function toggleRailViewPop(){
   p.addEventListener('click', e => { if (e.target.closest('[data-view]')) closeRailViewPop(); });
   document.addEventListener('pointerdown', railPopOutside, true);
   document.addEventListener('keydown', railPopEsc, true);
+}
+/* Recents menu (Dave, 2026-10-21, Job 6): clock-history button anchored
+   top-left; the popover lists the most recently visited buddies from
+   S.recentBuddies (recorded in selectBuddy), capped by the recentsCount
+   setting (default 10). Picking a row opens that buddy's panel. */
+function recentsPopEsc(e){ if (e.key === 'Escape') closeRecentsPop(); }
+function recentsPopOutside(e){ const p = document.getElementById('recents-pop'); if (p && !p.contains(e.target) && !e.target.closest('#recents-btn')) closeRecentsPop(); }
+function closeRecentsPop(){
+  const p = document.getElementById('recents-pop'); if (p) p.remove();
+  document.removeEventListener('pointerdown', recentsPopOutside, true);
+  document.removeEventListener('keydown', recentsPopEsc, true);
+}
+function toggleRecentsPop(){
+  if (document.getElementById('recents-pop')) { closeRecentsPop(); return; }
+  const btn = document.getElementById('recents-btn'); if (!btn) return;
+  let n = parseInt(getSetting('recentsCount'), 10); if (!(n > 0)) n = 10;
+  const ids = (Array.isArray(S.recentBuddies) ? S.recentBuddies : []).filter(id => byId[id]).slice(0, n);
+  const p = document.createElement('div'); p.id = 'recents-pop'; p.setAttribute('role', 'menu');
+  p.innerHTML = '<div class="rec-head">Recent</div>' + (ids.length ? ids.map(id => { const b = byId[id]; return '<button type="button" data-recent-buddy="' + id + '"><span class="rv-ic" aria-hidden="true">' + escHtml(buddyDisplayIcon(b) || '•') + '</span>' + escHtml(dispName(b)) + '</button>'; }).join('') : '<div class="rec-empty">No buddies visited yet.</div>');
+  document.body.appendChild(p);
+  const r = btn.getBoundingClientRect();
+  p.style.left = Math.max(8, r.left) + 'px'; p.style.top = (r.bottom + 8) + 'px';
+  p.addEventListener('click', e => { const row = e.target.closest('[data-recent-buddy]'); if (row) { closeRecentsPop(); openBuddy(row.getAttribute('data-recent-buddy')); } });
+  document.addEventListener('pointerdown', recentsPopOutside, true);
+  document.addEventListener('keydown', recentsPopEsc, true);
 }
 function syncPanelNarrow(){
   const vb = document.getElementById('view-buddy'); if (!vb) return;
@@ -5921,7 +5971,7 @@ function renderBuddy(id){
     + attrHead('shared', 'SHARED NOTES', '<span class="attr-value" id="bp-shared-count">(0)</span>', '')
     + '<div class="attr-body">' + attrTipLine('Anybody with repo access can see this note. Saved to the buddy’s repo (docs/notes.md).') + '<textarea class="notes" id="bp-shared-notes" placeholder="Anybody with repo access can see this note."></textarea>'
     + '<p class="fineprint" id="shared-status"></p></div></div>'
-    + '<div class="bp-build">Build 20261021.1837</div>'
+    + '<div class="bp-build">Build 20261021.1859</div>'
     + '</div>';
   // Update every visible label for a buddy after a rename/re-icon, across all
   // Atlas lenses. A rename changes no structure, so labels are patched in place
@@ -8583,7 +8633,7 @@ function renderPlan(id){
     + '<p class="fineprint">Saved on this device. (For your eyes only)</p></div>'
     + '<div class="bp-sec"><h3>📝 Shared notes<span class="info-tip" data-tip="Visible to everyone with access to this project.">\u24d8</span></h3><textarea class="notes" id="bp-shared" placeholder="Shared notes\u2026 (visible to everyone with access)">'+escHtml((S.planShared||{})[id]||'')+'</textarea>'
     + '<p class="fineprint">Shared — visible to everyone with access.</p></div>'
-    + '<div class="bp-build">Build 20261021.1837</div>'
+    + '<div class="bp-build">Build 20261021.1859</div>'
     + '</div>';
   const nt = document.getElementById('bp-notes');
   let t = null;
@@ -11451,14 +11501,14 @@ function openWhatsNew(){
     .then(r => r.ok ? r.text() : '')
     .then(t => {
       const serverBuild = t.trim();
-      if (serverBuild && serverBuild !== '20261021.1837') {
+      if (serverBuild && serverBuild !== '20261021.1859') {
         updBtn.style.display = '';
         updBtn.title = 'Update to build ' + serverBuild;
       }
       // Show build numbers at the top of the sheet (Dave's request 2026-10-12)
-      const myBuild = '20261021.1837';
+      const myBuild = '20261021.1859';
       let buildLine = '<p class="fineprint" style="margin-top:0">You’re on build ' + escHtml(myBuild) + '.';
-      if (serverBuild && serverBuild !== '20261021.1837' && isNewerBuild(serverBuild, myBuild)) {
+      if (serverBuild && serverBuild !== '20261021.1859' && isNewerBuild(serverBuild, myBuild)) {
         buildLine += ' Build ' + escHtml(serverBuild) + ' is available.';
       }
       buildLine += '</p>';
@@ -11528,7 +11578,7 @@ function syncUpdateBanner(){
   if (b.dataset.state !== state) b.dataset.state = state;
 }
 function initVersionCheck(){
-  const myBuild = '20261021.1837';
+  const myBuild = '20261021.1859';
   function showUpdateBanner(serverBuild){
     if (document.getElementById('update-banner')) return;
     const b = document.createElement('div');
@@ -12050,7 +12100,9 @@ document.addEventListener('click', e => {
     }, 100);
     return;
   }
-  if (e.target.closest && e.target.closest('#panel-open, #panel-open-rail')) {
+  if (e.target.closest && e.target.closest('#recents-btn')) { toggleRecentsPop(); return; }
+  if (e.target.closest && e.target.closest('#rail-expand')) { setSidebarOpen(true); return; }
+  if (e.target.closest && e.target.closest('#panel-open')) {
     /* Dave 2026-10-21 (regression fix): reopening from the collapsed
        state must un-collapse first — openBuddy alone left bp-collapsed
        set and the panel stayed hidden behind its own reopen button. */
