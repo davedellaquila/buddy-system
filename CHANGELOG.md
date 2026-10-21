@@ -1,4 +1,9 @@
 ## 2026-10-21
+### Miata NC Parts Specialist 📦 joins Miata Tech's staff (Dave, 2026-10-21)
+- **New hire under Miata Tech** (id `miata-nc-parts-specialist`, parent `miata-tech`, build 20261021.2147): NC-generation (2006–2015) Miata parts desk — Mazda part numbers & supersessions verified by year/trim, discontinued/NLA tracking with proven alternatives, trusted sourcing (Mazda, Mazda Motorsports, Flyin' Miata, Moss, Good-Win Racing), consumables and garage stock for Dave's own NC, and a sourced parts list before any NC garage day. Never orders without Dave's approval. **First job:** document Dave's NC and build its baseline parts file (year/trim/mileage come from Dave at review — nothing invented; the NC previously had zero parts coverage).
+- A **separate desk** from Miata Parts Specialist 🔩 (NA/NB) — different platform, almost no parts commonality, never merged; the two entries now cross-link as siblings. Private repo (full standard file set + CONFIG.md/STUDY.md desk), [job req in Buddy Docs](https://docs.google.com/document/d/1V6erWyIr_a_zFJklqmOv0zCvbOx2FtpMtlZYU-qDjHw/edit), generated homepage + About page (v3 dossier treatment, 📄 Repo files desk, 🧠 brain-dump box, dark + light mode, noindex). Registry at 139 buddies.
+
+## 2026-10-21
 ### Miata team thread wiring + Kay log dashboard copy (Astro, 2026-10-21)
 - **Thread ids wired for Miata Tech's new reports:** `miata-parts-specialist` chat `f60c639e-e812-4810-a344-8dd6a7482b8d` and `miata-apprentice` chat `70fe32ae-ec0a-4837-9973-4a50a45e8993` now carry their side-thread ids in the registry (INIT + job-req review asks posted in both threads; Service Advisor charter-update posted in his thread).
 - **Kay Korbel activity log dashboard copy refreshed** at llagas-creek-sale/reports/kay-korbel-activity-log.html with the filed Kay↔Julio text thread (Oct 20–21) — the repo copy had also landed on the wrong branch (main) and was re-landed on master (llagas-creek-sale df515ad).
