@@ -277,6 +277,17 @@ body.sb-anchored #sidebar{left:0;background:var(--panel);border-left:none;border
   box-shadow:8px 0 28px var(--shadow-soft);
   -webkit-backdrop-filter:none;backdrop-filter:none}
 body.sb-anchored #sidebar .brand, body.sb-anchored #sidebar .sb-tipjar{background:var(--panel)}
+/* Anchored sidebar yield (Dave, 2026-10-20): in Anchored the sidebar is a
+   dock, not an overlay; the main view resizes to make room for it,
+   mirroring the info panel's right-side yield. The width follows --sbw (set
+   by applySbWidth) so sidebar drag-resizes track live. The tree chrome's own
+   sidebar clearance drops out here (the yield replaces it). Floating keeps
+   the overlay illusion; the collapsed rail keeps its 88px rule; phone
+   widths keep the sheet behavior. */
+@media (min-width:640px){
+  body.sb-anchored:not(.sb-closed) #main{padding-left:calc(var(--sbw, 336px) + 24px)}
+  body.sb-anchored:not(.sb-closed) #tree-chrome-main{padding-left:0}
+}
 /* Weather glass (Dave 2026-10-20 — Apple Weather side-panel reference, Kin
    design archive): panels go deeply translucent. Fill drops to about half,
    blur and saturation rise, and whatever sits behind the panel — the Atlas
@@ -293,7 +304,7 @@ body.glass-panels .sb-tipjar{background:color-mix(in srgb, var(--panel) 45%, tra
 body.glass-panels #view-buddy.panel, body.glass-panels #view-buddy.sheet{
   background:color-mix(in srgb, var(--panel) 55%, transparent);
   -webkit-backdrop-filter:blur(28px) saturate(1.9);backdrop-filter:blur(28px) saturate(1.9)}
-#main{flex:1;min-width:0;padding:36px 32px 80px;position:relative;z-index:1;transition:padding-right .5s cubic-bezier(.32,.72,.35,1)}
+#main{flex:1;min-width:0;padding:36px 32px 80px;position:relative;z-index:1;transition:padding-left .5s cubic-bezier(.32,.72,.35,1), padding-right .5s cubic-bezier(.32,.72,.35,1)}
 /* Dave 2026-10-16: wiggle the selected node when the chart recenters on it */
 @keyframes node-wiggle{
   0%,100%{transform:rotate(0deg)}
@@ -2381,10 +2392,10 @@ body.node-dragging,body.node-dragging *{cursor:grabbing !important}
 </button>
 <div id="hp-nav" role="group" aria-label="Previous and next buddy homepage">
 <button type="button" id="hp-prev" title="Previous homepage" aria-label="Previous buddy homepage">
-  <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><path d="M14.5 5.5L8 12l6.5 6.5" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><path d="M5.5 14.5L12 8l6.5 6.5" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
 </button>
 <button type="button" id="hp-next" title="Next homepage" aria-label="Next buddy homepage">
-  <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><path d="M9.5 5.5L16 12l-6.5 6.5" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><path d="M5.5 9.5L12 16l6.5-6.5" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
 </button>
 </div>
 <main id="main">
@@ -3966,7 +3977,7 @@ function renderDevelopSection(){
   const dev = document.getElementById('fset-develop');
   if (!dev) return;
   const simulating = !!devBackup;
-  const buildNum = '20261020.2126';
+  const buildNum = '20261020.2158';
   dev.innerHTML = ''
     + '<label class="fset-check"><input type="checkbox" id="dev-empty-toggle"' + (simulating ? ' checked' : '') + '> <span><strong>Simulate new user</strong> — empty data file, as if opening the shared link fresh</span></label>'
     + '<div class="fineprint" style="margin:8px 0 12px">Build <span style="font-family:monospace">' + escHtml(String(buildNum)) + '</span> · ' + BUDDIES.length + ' buddies in this file</div>'
@@ -5451,7 +5462,7 @@ function renderBuddy(id){
     + '<div class="sa-bar"><span>🔖 Standalone view</span><button class="linkbtn" id="sa-full">Open full dashboard →</button></div>'
     + '<div class="bp-sticky-head">'
     + '<div class="bp-topnav"><button class="linkbtn" data-navbtn="back">← Back</button>'
-    + '<button class="linkbtn" data-navbtn="prev">‹ Prev</button><button class="linkbtn" data-navbtn="next">Next ›</button>'
+    + '<button class="linkbtn" data-navbtn="prev">⌃ Prev</button><button class="linkbtn" data-navbtn="next">Next ⌄</button>'
     + '<span class="sep">·</span><button class="linkbtn" data-view="projects" id="bp-allbuddies">All buddies</button>'
     + '<span class="sep">·</span><button class="linkbtn" id="bp-more" aria-haspopup="true" aria-expanded="false" title="More actions">···</button>'
     + '<div class="bp-more-menu" id="bp-more-menu" hidden>'
@@ -5519,7 +5530,7 @@ function renderBuddy(id){
       'Anybody with repo access can see this note. Saved to the buddy’s repo (docs/notes.md).')
     + '<div class="attr-body"><textarea class="notes" id="bp-shared-notes" placeholder="Anybody with repo access can see this note."></textarea>'
     + '<p class="fineprint" id="shared-status"></p></div></div>'
-    + '<div class="bp-build">Build 20261020.2126</div>'
+    + '<div class="bp-build">Build 20261020.2158</div>'
     + '</div>';
   // Update every visible label for a buddy after a rename/re-icon, across all
   // Atlas lenses. A rename changes no structure, so labels are patched in place
@@ -8170,7 +8181,7 @@ function renderPlan(id){
     + '<p class="fineprint">Saved on this device. (For your eyes only)</p></div>'
     + '<div class="bp-sec"><h3>📝 Shared notes<span class="info-tip" data-tip="Visible to everyone with access to this project.">\u24d8</span></h3><textarea class="notes" id="bp-shared" placeholder="Shared notes\u2026 (visible to everyone with access)">'+escHtml((S.planShared||{})[id]||'')+'</textarea>'
     + '<p class="fineprint">Shared — visible to everyone with access.</p></div>'
-    + '<div class="bp-build">Build 20261020.2126</div>'
+    + '<div class="bp-build">Build 20261020.2158</div>'
     + '</div>';
   const nt = document.getElementById('bp-notes');
   let t = null;
@@ -11034,14 +11045,14 @@ function openWhatsNew(){
     .then(r => r.ok ? r.text() : '')
     .then(t => {
       const serverBuild = t.trim();
-      if (serverBuild && serverBuild !== '20261020.2126') {
+      if (serverBuild && serverBuild !== '20261020.2158') {
         updBtn.style.display = '';
         updBtn.title = 'Update to build ' + serverBuild;
       }
       // Show build numbers at the top of the sheet (Dave's request 2026-10-12)
-      const myBuild = '20261020.2126';
+      const myBuild = '20261020.2158';
       let buildLine = '<p class="fineprint" style="margin-top:0">You’re on build ' + escHtml(myBuild) + '.';
-      if (serverBuild && serverBuild !== '20261020.2126' && isNewerBuild(serverBuild, myBuild)) {
+      if (serverBuild && serverBuild !== '20261020.2158' && isNewerBuild(serverBuild, myBuild)) {
         buildLine += ' Build ' + escHtml(serverBuild) + ' is available.';
       }
       buildLine += '</p>';
@@ -11091,7 +11102,7 @@ function isNewerBuild(server, mine){
   } catch (e) { return false; }
 }
 function initVersionCheck(){
-  const myBuild = '20261020.2126';
+  const myBuild = '20261020.2158';
   function showUpdateBanner(serverBuild){
     if (document.getElementById('update-banner')) return;
     const b = document.createElement('div');

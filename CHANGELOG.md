@@ -1,4 +1,8 @@
 ## 2026-10-20
+### Anchored sidebar yields the main view; Prev/Next point up and down (Dave, 2026-10-20)
+- **Anchored sidebar yield:** Panel style = Anchored made the info panel dock (the main view resizes for it) but the sidebar stayed a fixed overlay and opened over the content. Now the main view yields on the left too: at widths >= 640px, #main's left padding becomes the sidebar's live width (--sbw) + 24px, the tree chrome's own 348px sidebar clearance drops out (the yield replaces it), and #main eases padding-left on the same .5s curve as padding-right. Floating keeps the overlay illusion, the collapsed rail keeps its 88px, and phone widths keep the sheet behavior. CSS-only, following the info panel's anchored yield pattern.
+- **Prev/Next point up/down:** the bottom-center homepage Prev/Next circles swap their left/right chevrons for up (Prev) and down (Next); the buddy panel's topnav text buttons match (caret-up Prev, caret-down Next). The sidebar expand corner keeps its right-pointing chevron.
+
 ### Sidebar tools get the big-button treatment; 📝 on the notes eyebrows (Dave, 2026-10-20)
 - The sidebar's top-right tools now wear the same glass-disc treatment as the big corner buttons (#panel-open / the info panel's close): 44px glass circles with blur, hairline border and soft shadow, lightening with an accent ring on hover. The sidebar close mark is now the same plain × the info panel uses (its smaller drawn circle-✕ is retired), and the gear grows 19px → 24px (still red).
 - 📝 now leads the Private notes and Shared notes eyebrows — in the buddy panel and in the plan detail view.

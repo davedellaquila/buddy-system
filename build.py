@@ -105,6 +105,17 @@ body.sb-anchored #sidebar{left:0;background:var(--panel);border-left:none;border
   box-shadow:8px 0 28px var(--shadow-soft);
   -webkit-backdrop-filter:none;backdrop-filter:none}
 body.sb-anchored #sidebar .brand, body.sb-anchored #sidebar .sb-tipjar{background:var(--panel)}
+/* Anchored sidebar yield (Dave, 2026-10-20): in Anchored the sidebar is a
+   dock, not an overlay; the main view resizes to make room for it,
+   mirroring the info panel's right-side yield. The width follows --sbw (set
+   by applySbWidth) so sidebar drag-resizes track live. The tree chrome's own
+   sidebar clearance drops out here (the yield replaces it). Floating keeps
+   the overlay illusion; the collapsed rail keeps its 88px rule; phone
+   widths keep the sheet behavior. */
+@media (min-width:640px){
+  body.sb-anchored:not(.sb-closed) #main{padding-left:calc(var(--sbw, 336px) + 24px)}
+  body.sb-anchored:not(.sb-closed) #tree-chrome-main{padding-left:0}
+}
 /* Weather glass (Dave 2026-10-20 — Apple Weather side-panel reference, Kin
    design archive): panels go deeply translucent. Fill drops to about half,
    blur and saturation rise, and whatever sits behind the panel — the Atlas
@@ -121,7 +132,7 @@ body.glass-panels .sb-tipjar{background:color-mix(in srgb, var(--panel) 45%, tra
 body.glass-panels #view-buddy.panel, body.glass-panels #view-buddy.sheet{
   background:color-mix(in srgb, var(--panel) 55%, transparent);
   -webkit-backdrop-filter:blur(28px) saturate(1.9);backdrop-filter:blur(28px) saturate(1.9)}
-#main{flex:1;min-width:0;padding:36px 32px 80px;position:relative;z-index:1;transition:padding-right .5s cubic-bezier(.32,.72,.35,1)}
+#main{flex:1;min-width:0;padding:36px 32px 80px;position:relative;z-index:1;transition:padding-left .5s cubic-bezier(.32,.72,.35,1), padding-right .5s cubic-bezier(.32,.72,.35,1)}
 /* Dave 2026-10-16: wiggle the selected node when the chart recenters on it */
 @keyframes node-wiggle{
   0%,100%{transform:rotate(0deg)}
@@ -5089,7 +5100,7 @@ function renderBuddy(id){
     + '<div class="sa-bar"><span>\U0001f516 Standalone view</span><button class="linkbtn" id="sa-full">Open full dashboard \u2192</button></div>'
     + '<div class="bp-sticky-head">'
     + '<div class="bp-topnav"><button class="linkbtn" data-navbtn="back">\u2190 Back</button>'
-    + '<button class="linkbtn" data-navbtn="prev">\u2039 Prev</button><button class="linkbtn" data-navbtn="next">Next \u203a</button>'
+    + '<button class="linkbtn" data-navbtn="prev">\u2303 Prev</button><button class="linkbtn" data-navbtn="next">Next \u2304</button>'
     + '<span class="sep">\u00b7</span><button class="linkbtn" data-view="projects" id="bp-allbuddies">All buddies</button>'
     + '<span class="sep">\u00b7</span><button class="linkbtn" id="bp-more" aria-haspopup="true" aria-expanded="false" title="More actions">\u00b7\u00b7\u00b7</button>'
     + '<div class="bp-more-menu" id="bp-more-menu" hidden>'
@@ -11720,10 +11731,10 @@ initSbBrandSticky();
 </button>
 <div id="hp-nav" role="group" aria-label="Previous and next buddy homepage">
 <button type="button" id="hp-prev" title="Previous homepage" aria-label="Previous buddy homepage">
-  <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><path d="M14.5 5.5L8 12l6.5 6.5" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><path d="M5.5 14.5L12 8l6.5 6.5" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
 </button>
 <button type="button" id="hp-next" title="Next homepage" aria-label="Next buddy homepage">
-  <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><path d="M9.5 5.5L16 12l-6.5 6.5" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><path d="M5.5 9.5L12 16l6.5-6.5" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
 </button>
 </div>
 <main id="main">
