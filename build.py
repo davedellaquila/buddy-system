@@ -2991,27 +2991,19 @@ function selectBuddy(id){
       renderNav();
       // Dave 2026-10-16: if the Atlas/tree chart is showing, recenter it on
       // the newly selected buddy and update the node highlight.
-      if ((S.sel === 'view:tree' || S.view === 'tree') && typeof centerOnBuddy === 'function') {
-        const tz = document.getElementById('treezoom');
-        if (tz) {
-          tz.querySelectorAll('.node.sel,.ledger-row.sel,.mcol-row.sel').forEach(n => n.classList.remove('sel'));
-          tz.querySelectorAll('.node.wiggle').forEach(n => n.classList.remove('wiggle'));
-          const node = tz.querySelector('[data-buddy="' + id + '"]');
-          if (node) {
-            node.classList.add('sel');
-            // Dave 2026-10-16: wiggle the node so the eye lands on it
-            if (node.classList.contains('node')) {
-              void node.offsetWidth; // restart the animation
-              node.classList.add('wiggle');
-              setTimeout(() => node.classList.remove('wiggle'), 600);
-            }
-          }
-        }
-        centerOnBuddy(id, true);
+      // Dave 2026-10-21: the paint + center + reveal + toast logic lives in
+      // centerTreeOnSelection so panel-originated selections get it too.
+      if ((S.sel === 'view:tree' || S.view === 'tree') && typeof centerTreeOnSelection === 'function') {
+        centerTreeOnSelection(id);
       }
       pushNavState(); // Dave 2026-10-15: browser back/forward tracks buddy selection
     } else {
+      // Dave 2026-10-21: panel-originated selection (in-panel links, Recents,
+      // panel navigation). S.view still names the view under the panel —
+      // if that's the Atlas, the chart centers on the new selection too.
+      const treeUnder = S.view === 'tree';
       show('buddy:' + id);
+      if (treeUnder && typeof centerTreeOnSelection === 'function') centerTreeOnSelection(id);
     }
   }
   // If the detail panel is open, update it to the new buddy
@@ -5589,10 +5581,10 @@ function renderBuddy(id){
     + sibSec
     + linkSec
     + '<div class="bp-sec" data-field="homepage"><h3>Homepage URL</h3>'
-    + '<div style="display:flex;align-items:center;gap:8px">'
-    + '<input type="url" id="bp-homepage-url" value="'+escHtml(homepageUrl(b))+'" placeholder="Paste homepage URL here…" style="flex:1;min-width:0;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:8px 12px;font-size:.8125rem;color:var(--text)" title="The full URL for this buddy\u2019s homepage. Paste a URL and click away to save.">'
-    + '<button class="linkbtn" id="bp-homepage-copy" title="Copy homepage URL to clipboard" style="flex-shrink:0">Copy</button>'
-    + '<button class="linkbtn" id="bp-homepage-open" title="Open homepage in a new tab" style="flex-shrink:0">Open</button>'
+    + '<input type="url" id="bp-homepage-url" value="'+escHtml(homepageUrl(b))+'" placeholder="Paste homepage URL here…" style="display:block;width:100%;box-sizing:border-box;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:8px 12px;font-size:.8125rem;color:var(--text)" title="The full URL for this buddy\u2019s homepage. Paste a URL and click away to save.">'
+    + '<div class="hp-actions" style="display:flex;gap:8px;margin-top:8px">'
+    + '<button class="linkbtn" id="bp-homepage-copy" title="Copy homepage URL to clipboard">Copy</button>'
+    + '<button class="linkbtn" id="bp-homepage-open" title="Open homepage in a new tab">Open</button>'
     + '</div></div>'
     + (unseenCount > 0 ? (function(){ const fx = getSetting('attnEffect') || 'none'; const high = items.some(a => !attnSeen(b.id, a) && a.priority === 'high'); return '<div class="bp-sec fx-'+fx+(high?' attn-high':'')+'" data-field="attention"><h3>Needs your attention <span class="attn-count">('+unseenCount+')</span></h3>'+attn+'</div>'; })() : '')
     + photos
@@ -8619,6 +8611,8 @@ function stepBuddy(d){
   let i = S.sel.startsWith('buddy:') ? ids.indexOf(S.sel.slice(6)) : (d > 0 ? -1 : 0);
   i = (i + d + ids.length) % ids.length;
   show('buddy:' + ids[i]);
+  // Dave 2026-10-21: Prev/Next is a panel surface — center the Atlas too.
+  if (S.view === 'tree' && typeof centerTreeOnSelection === 'function') centerTreeOnSelection(ids[i]);
 }
 /* ---------- change journal ---------- */
 if (!Array.isArray(S.journal)) S.journal = [];
@@ -10091,6 +10085,71 @@ function centerNewBuddyInAtlas(id){
   if (!id || !byId[id]) return;
   if (!(S.sel === 'view:tree' || S.view === 'tree')) return;
   if (typeof centerOnBuddy === 'function') centerOnBuddy(id, false);
+}
+/* Reveal + center for a fresh selection (Dave 2026-10-21): paint the
+   selection highlight (with the wiggle), center the chart on the node, and
+   if the node isn't rendered — a collapsed ancestor is the usual cause —
+   expand the ancestor chain, re-render, and center again. If it still can't
+   be shown in the current chart configuration, say so instead of failing
+   silently. Returns true when the buddy ended up centered. */
+function revealInTree(id){
+  if (!S.collapsedNodes || typeof S.collapsedNodes !== 'object') return false;
+  let changed = false;
+  const seen = new Set();
+  const stack = [id];
+  while (stack.length) {
+    const cur = byId[stack.pop()];
+    if (!cur) continue;
+    for (const p of effParents(cur)) {
+      if (seen.has(p)) continue;
+      seen.add(p);
+      if (S.collapsedNodes[p]) { delete S.collapsedNodes[p]; changed = true; }
+      stack.push(p);
+    }
+  }
+  return changed;
+}
+function centerTreeOnSelection(id){
+  if (!id || !byId[id]) return false;
+  const tv = document.getElementById('view-tree');
+  if (!tv || !tv.classList.contains('active')) return false;
+  const tz = document.getElementById('treezoom');
+  if (!tz) return false;
+  const paint = () => {
+    tz.querySelectorAll('.node.sel,.ledger-row.sel,.mcol-row.sel').forEach(n => n.classList.remove('sel'));
+    tz.querySelectorAll('.node.wiggle').forEach(n => n.classList.remove('wiggle'));
+    const node = tz.querySelector('[data-buddy="' + id + '"]');
+    if (node) {
+      node.classList.add('sel');
+      // Dave 2026-10-16: wiggle the node so the eye lands on it
+      if (node.classList.contains('node')) {
+        void node.offsetWidth; // restart the animation
+        node.classList.add('wiggle');
+        setTimeout(() => node.classList.remove('wiggle'), 600);
+      }
+    }
+  };
+  paint();
+  let ok = centerOnBuddy(id, true);
+  const chartType = (typeof getChartType === 'function') ? getChartType() : 'org';
+  if (!ok && chartType !== 'constellation' && revealInTree(id)) {
+    save();
+    renderOrgTree();
+    paint();
+    ok = centerOnBuddy(id, true);
+  }
+  if (!ok) { toast('Buddy not visible in this view.'); return false; }
+  // #main's padding animates for .5s when the panel opens over the chart, so
+  // a center measured mid-transition lands off by the padding delta.
+  // Re-center once it settles — silently, and only if this buddy is still
+  // the selection and the Atlas is still the view.
+  setTimeout(() => {
+    if (S.projectId !== id) return;
+    const tv2 = document.getElementById('view-tree');
+    if (!tv2 || !tv2.classList.contains('active')) return;
+    centerOnBuddy(id, true);
+  }, 560);
+  return true;
 }
 function centerOnBuddy(id, instant){
   if (!id || !byId[id]) return false;
@@ -12043,7 +12102,7 @@ document.addEventListener('click', e => {
   // otherwise the panel's own data-buddy swallows the click and just re-opens
   // the current buddy instead of navigating to the clicked ancestor.
   const gt = e.target.closest('[data-goto]');
-  if (gt) { e.preventDefault(); show('buddy:' + gt.dataset.goto); return; }
+  if (gt) { e.preventDefault(); show('buddy:' + gt.dataset.goto); if (S.view === 'tree' && typeof centerTreeOnSelection === 'function') centerTreeOnSelection(gt.dataset.goto); return; }
   const bb = e.target.closest('[data-buddy]');
   // Don't re-open the buddy when clicking an editable field (e.g. the name)
   // or any form control — textarea/input/button clicks must not re-render
