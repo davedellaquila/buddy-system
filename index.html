@@ -1504,6 +1504,12 @@ body.sb-closed #sidebar #sb-tools{display:none}
   padding:16px;width:320px;max-height:70vh;overflow-y:auto;display:none;box-shadow:0 12px 40px var(--scrim)}
 #avatar-picker.show{display:block}
 #avatar-picker h4{margin:0 0 10px;font-size:.8125rem}
+/* Dave 2026-10-20: the avatar sheet gets the shared circled-✕ close,
+   top-right of its header, at the 22px in-panel icon size. */
+#avatar-picker .av-head{display:flex;align-items:flex-start;justify-content:space-between;gap:8px}
+#avatar-picker .av-head h4{margin-top:3px}
+#avatar-picker .av-close{background:none;border:none;color:var(--muted);cursor:pointer;padding:2px;display:flex;flex:0 0 auto}
+#avatar-picker .av-close:hover{color:var(--text)}
 .av-cat{font-size:.6875rem;color:var(--muted);margin:10px 0 4px;text-transform:uppercase;letter-spacing:.06em}
 .av-cat:first-of-type{margin-top:0}
 #avatar-grid{margin-bottom:10px}
@@ -3802,7 +3808,7 @@ function renderDevelopSection(){
   const dev = document.getElementById('fset-develop');
   if (!dev) return;
   const simulating = !!devBackup;
-  const buildNum = '20261020.1716';
+  const buildNum = '20261020.1718';
   dev.innerHTML = ''
     + '<label class="fset-check"><input type="checkbox" id="dev-empty-toggle"' + (simulating ? ' checked' : '') + '> <span><strong>Simulate new user</strong> — empty data file, as if opening the shared link fresh</span></label>'
     + '<div class="fineprint" style="margin:8px 0 12px">Build <span style="font-family:monospace">' + escHtml(String(buildNum)) + '</span> · ' + BUDDIES.length + ' buddies in this file</div>'
@@ -5060,7 +5066,7 @@ function renderBuddy(id){
       'Anybody with repo access can see this note. Saved to the buddy’s repo (docs/notes.md).')
     + '<div class="attr-body"><textarea class="notes" id="bp-shared-notes" placeholder="Anybody with repo access can see this note."></textarea>'
     + '<p class="fineprint" id="shared-status"></p></div></div>'
-    + '<div class="bp-build">Build 20261020.1716</div>'
+    + '<div class="bp-build">Build 20261020.1718</div>'
     + '</div>';
   // Update every visible label for a buddy after a rename/re-icon, across all
   // Atlas lenses. A rename changes no structure, so labels are patched in place
@@ -7711,7 +7717,7 @@ function renderPlan(id){
     + '<p class="fineprint">Saved on this device. (For your eyes only)</p></div>'
     + '<div class="bp-sec"><h3>Shared notes<span class="info-tip" data-tip="Visible to everyone with access to this project.">\u24d8</span></h3><textarea class="notes" id="bp-shared" placeholder="Shared notes\u2026 (visible to everyone with access)">'+escHtml((S.planShared||{})[id]||'')+'</textarea>'
     + '<p class="fineprint">Shared — visible to everyone with access.</p></div>'
-    + '<div class="bp-build">Build 20261020.1716</div>'
+    + '<div class="bp-build">Build 20261020.1718</div>'
     + '</div>';
   const nt = document.getElementById('bp-notes');
   let t = null;
@@ -9577,13 +9583,14 @@ function openAvatarPicker(bid, anchorEl){
   let pk = document.getElementById('avatar-picker');
   if(!pk){
     pk = document.createElement('div'); pk.id = 'avatar-picker';
-    pk.innerHTML = '<h4>Choose avatar</h4><div id="avatar-grid"></div>'
+    pk.innerHTML = '<div class="av-head"><h4>Choose avatar</h4><button class="av-close" id="avatar-close" type="button" title="Close" aria-label="Close avatar picker">' + circleX(22) + '</button></div><div id="avatar-grid"></div>'
       + '<input id="avatar-custom" placeholder="Or paste any emoji" maxlength="8">'
       + '<div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap">'
       + '<button class="linkbtn" id="avatar-upload">Upload image</button>'
       + '<button class="linkbtn" id="avatar-remove">Remove image</button></div>'
       + '<p class="fineprint" style="margin:8px 0 0">Uploaded images live in the dashboard repo (avatars/) and appear on the card, homepage, and favicon.</p>';
     document.body.appendChild(pk);
+    document.getElementById('avatar-close').addEventListener('click', () => closeAvatarPicker());
     document.getElementById('avatar-upload').addEventListener('click', () => {
       const cur = document.getElementById('avatar-picker').dataset.bid;
       uploadBuddyImage(cur);
@@ -10533,14 +10540,14 @@ function openWhatsNew(){
     .then(r => r.ok ? r.text() : '')
     .then(t => {
       const serverBuild = t.trim();
-      if (serverBuild && serverBuild !== '20261020.1716') {
+      if (serverBuild && serverBuild !== '20261020.1718') {
         updBtn.style.display = '';
         updBtn.title = 'Update to build ' + serverBuild;
       }
       // Show build numbers at the top of the sheet (Dave's request 2026-10-12)
-      const myBuild = '20261020.1716';
+      const myBuild = '20261020.1718';
       let buildLine = '<p class="fineprint" style="margin-top:0">You’re on build ' + escHtml(myBuild) + '.';
-      if (serverBuild && serverBuild !== '20261020.1716' && isNewerBuild(serverBuild, myBuild)) {
+      if (serverBuild && serverBuild !== '20261020.1718' && isNewerBuild(serverBuild, myBuild)) {
         buildLine += ' Build ' + escHtml(serverBuild) + ' is available.';
       }
       buildLine += '</p>';
@@ -10590,7 +10597,7 @@ function isNewerBuild(server, mine){
   } catch (e) { return false; }
 }
 function initVersionCheck(){
-  const myBuild = '20261020.1716';
+  const myBuild = '20261020.1718';
   function showUpdateBanner(serverBuild){
     if (document.getElementById('update-banner')) return;
     const b = document.createElement('div');

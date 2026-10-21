@@ -1,4 +1,7 @@
 ## 2026-10-20
+### Avatar sheet gets its close ✕ (Dave, 2026-10-20)
+- The Choose avatar sheet (opened from a buddy's avatar in the panel header) had no close button — only an outside tap dismissed it. It now carries the shared circled-✕ at the top-right of its header, at the 22px in-panel icon size, wired to the same close path as everything else.
+
 ### Icons sized between, Hidden fields bulk actions, What's New type pills (Dave, 2026-10-20)
 - Buddy panel icons: the gear (in the panel's ··· menu) and the circled-✕ that closes the field-settings dialog grow to 22px — bigger than before (16px / 20px), a step below the 24px glyphs on the main view's chrome. The panel's own close ✕ was already 22px and now matches them.
 - Hidden fields menu: the last item is now a bulk row with two side-by-side choices — **Add all** restores every hidden field (arriving open, like a single show) and **Remove all** hides every field. Both act on the whole field set at once.

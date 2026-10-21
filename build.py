@@ -1332,6 +1332,12 @@ body.sb-closed #sidebar #sb-tools{display:none}
   padding:16px;width:320px;max-height:70vh;overflow-y:auto;display:none;box-shadow:0 12px 40px var(--scrim)}
 #avatar-picker.show{display:block}
 #avatar-picker h4{margin:0 0 10px;font-size:.8125rem}
+/* Dave 2026-10-20: the avatar sheet gets the shared circled-✕ close,
+   top-right of its header, at the 22px in-panel icon size. */
+#avatar-picker .av-head{display:flex;align-items:flex-start;justify-content:space-between;gap:8px}
+#avatar-picker .av-head h4{margin-top:3px}
+#avatar-picker .av-close{background:none;border:none;color:var(--muted);cursor:pointer;padding:2px;display:flex;flex:0 0 auto}
+#avatar-picker .av-close:hover{color:var(--text)}
 .av-cat{font-size:.6875rem;color:var(--muted);margin:10px 0 4px;text-transform:uppercase;letter-spacing:.06em}
 .av-cat:first-of-type{margin-top:0}
 #avatar-grid{margin-bottom:10px}
@@ -9215,13 +9221,14 @@ function openAvatarPicker(bid, anchorEl){
   let pk = document.getElementById('avatar-picker');
   if(!pk){
     pk = document.createElement('div'); pk.id = 'avatar-picker';
-    pk.innerHTML = '<h4>Choose avatar</h4><div id="avatar-grid"></div>'
+    pk.innerHTML = '<div class="av-head"><h4>Choose avatar</h4><button class="av-close" id="avatar-close" type="button" title="Close" aria-label="Close avatar picker">' + circleX(22) + '</button></div><div id="avatar-grid"></div>'
       + '<input id="avatar-custom" placeholder="Or paste any emoji" maxlength="8">'
       + '<div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap">'
       + '<button class="linkbtn" id="avatar-upload">Upload image</button>'
       + '<button class="linkbtn" id="avatar-remove">Remove image</button></div>'
       + '<p class="fineprint" style="margin:8px 0 0">Uploaded images live in the dashboard repo (avatars/) and appear on the card, homepage, and favicon.</p>';
     document.body.appendChild(pk);
+    document.getElementById('avatar-close').addEventListener('click', () => closeAvatarPicker());
     document.getElementById('avatar-upload').addEventListener('click', () => {
       const cur = document.getElementById('avatar-picker').dataset.bid;
       uploadBuddyImage(cur);
