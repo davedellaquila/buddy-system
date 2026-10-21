@@ -269,6 +269,37 @@ window.NBVoice = (function(){
   var freeVoices = [], lockedVoices = [];
   var supported = ('speechSynthesis' in window);
   function savedURI(){ try { return localStorage.getItem(KEY) || ''; } catch(e){ return ''; } }
+  /* Dave 2026-10-20: quality first. Raw getVoices() order buries the good
+     voices among foreign-language and novelty ones (Cellos was the shipped
+     mascot persona), and the old random deal could leave Samantha out of
+     the free set entirely. rankVoices puts the high-quality natural
+     English voices first (Enhanced/Premium builds, Samantha, then the
+     named natural set, then other English), other languages next, and the
+     novelty set last. Quality is tagged for the picker rows. */
+  var HQ_NAMES = {samantha:1, alex:1, allison:1, ava:1, susan:1, nicky:1, aaron:1, tom:1,
+    daniel:1, karen:1, moira:1, tessa:1, fiona:1, serena:1, kate:1, oliver:1, lee:1,
+    'google us english':1, 'google uk english female':1, 'google uk english male':1,
+    'microsoft zira':1, 'microsoft david':1, 'microsoft aria':1, 'microsoft jenny':1,
+    'microsoft guy':1, 'microsoft christopher':1};
+  var NOVELTY = {albert:1, 'bad news':1, bahh:1, bells:1, boing:1, bubbles:1, cellos:1,
+    'deranged':1, fred:1, 'good news':1, hysterical:1, 'pipe organ':1, trinoids:1,
+    whisper:1, zarvox:1, 'junior':1, kathy:1, 'princess':1, ralph:1, vicki:1, victoria:1,
+    agon:1, 'organ':1};
+  function voiceQuality(v){
+    var n = baseName(v).toLowerCase();
+    if (/enhanced|premium/.test(n)) return {t:0, label:'Enhanced'};
+    if (/natural|neural/.test(n)) return {t:0, label:'High quality'};
+    if (n === 'samantha') return {t:1, label:'High quality'};
+    if (HQ_NAMES[n]) return {t:2, label:'High quality'};
+    if (/^en([-_]|$)/i.test(v.lang || '')) return {t:3, label:''};
+    if (NOVELTY[n]) return {t:5, label:'Novelty'};
+    return {t:4, label:''};
+  }
+  function rankVoices(list){
+    return list.map(function(v, i){ return {v: v, i: i, q: voiceQuality(v)}; })
+      .sort(function(a, b){ return (a.q.t - b.q.t) || (a.i - b.i); })
+      .map(function(x){ return x.v; });
+  }
   function shuffled(){
     var a = voices.slice();
     for (var i = a.length - 1; i > 0; i--) {
@@ -278,20 +309,31 @@ window.NBVoice = (function(){
     return a;
   }
   function deal(){
-    var all = shuffled();
+    var all = rankVoices(voices);
     var cur = savedURI(), sv = null, i;
     for (i = 0; i < all.length; i++) if (all[i].voiceURI === cur) { sv = all.splice(i, 1)[0]; break; }
     if (ownerMode()) { freeVoices = all; lockedVoices = []; }
     else { freeVoices = all.slice(0, FREE_N); lockedVoices = all.slice(FREE_N); }
     if (sv) freeVoices.unshift(sv);
   }
+  var grabRetries = 0;
   function grab(){
     if (!supported) return;
     try {
       var v = window.speechSynthesis.getVoices();
-      if (v && v.length && !loaded) {
+      if (!v || !v.length) return;
+      if (!loaded) {
         loaded = true; voices = v; deal();
         waiters.forEach(function(w){ try { w(); } catch(e){} }); waiters = [];
+        /* The first list can be a stub: Safari often answers with a single
+           voice and delivers the full inventory a moment later. Re-arm a
+           few times so the stub gets replaced by the real list. */
+        if (v.length <= 2 && grabRetries < 3) {
+          grabRetries++;
+          setTimeout(function(){ loaded = false; grab(); }, 900);
+        }
+      } else if (v.length > voices.length) {
+        voices = v; deal();
       }
     } catch(e){}
   }
@@ -308,11 +350,19 @@ window.NBVoice = (function(){
     var uri = savedURI();
     var i;
     if (uri) for (i = 0; i < voices.length; i++) if (voices[i].voiceURI === uri) return voices[i];
-    /* No saved choice: default to Samantha (en-US) — the best of the device voices. */
-    for (i = 0; i < voices.length; i++)
-      if (/samantha/i.test(voices[i].name) && /^en([-_]US)?$/i.test(voices[i].lang || '')) return voices[i];
-    for (i = 0; i < voices.length; i++)
-      if (/^en([-_]US)?$/i.test(voices[i].lang || '')) return voices[i];
+    /* No saved choice: default to the best voice the device has: an Enhanced
+       or Premium English build first, then Samantha, then any high-quality
+       named voice, then any en-US, then any English. (Dave 2026-10-20: the
+       old fallback could land on a compact en-US voice that sounded awful.) */
+    var tiers = [
+      function(v){ return /enhanced|premium|natural|neural/i.test(v.name) && /^en([-_]|$)/i.test(v.lang || ''); },
+      function(v){ return /samantha/i.test(v.name) && /^en([-_]US)?$/i.test(v.lang || ''); },
+      function(v){ return voiceQuality(v).t <= 2; },
+      function(v){ return /^en([-_]US)?$/i.test(v.lang || ''); },
+      function(v){ return /^en([-_]|$)/i.test(v.lang || ''); }
+    ];
+    for (var t = 0; t < tiers.length; t++)
+      for (i = 0; i < voices.length; i++) if (tiers[t](voices[i])) return voices[i];
     return null;
   }
   function preview(v){
@@ -337,7 +387,7 @@ window.NBVoice = (function(){
       var lk = document.createElement('div'); lk.className = 'vp-check'; lk.textContent = '🔒';
       var nm = document.createElement('div'); nm.className = 'nm';
       var b = document.createElement('b'); b.textContent = baseName(v);
-      var s = document.createElement('span'); s.textContent = (v.lang || '') + ' · unlock with a tip';
+      var s = document.createElement('span'); var qL = voiceQuality(v); var tagL = qL.label || (VOICE_NOTES[baseName(v).toLowerCase()] ? 'High quality' : ''); s.textContent = (v.lang || '') + (tagL ? ' · ' + tagL : '') + ' · unlock with a tip';
       nm.appendChild(b); nm.appendChild(s);
       var dl = document.createElement('div'); dl.className = 'vp-desc'; dl.textContent = voicePersona(v).desc;
       r.appendChild(lk); r.appendChild(nm); r.appendChild(dl);
@@ -347,7 +397,7 @@ window.NBVoice = (function(){
       pv.addEventListener('click', function(ev){ ev.stopPropagation(); preview(v); });
       var nm2 = document.createElement('div'); nm2.className = 'nm';
       var b2 = document.createElement('b'); b2.textContent = baseName(v);
-      var s2 = document.createElement('span'); s2.textContent = (v.lang || '') + (v.default ? ' · device default' : '');
+      var s2 = document.createElement('span'); var q2 = voiceQuality(v); var tag2 = q2.label || (VOICE_NOTES[baseName(v).toLowerCase()] ? 'High quality' : ''); s2.textContent = (v.lang || '') + (tag2 ? ' · ' + tag2 : '') + (v.default ? ' · device default' : '');
       nm2.appendChild(b2); nm2.appendChild(s2);
       var d2 = document.createElement('div'); d2.className = 'vp-desc'; d2.textContent = voicePersona(v).desc;
       var ck = document.createElement('div'); ck.className = 'vp-check'; ck.textContent = isCurrent ? '✓' : '';

@@ -1802,6 +1802,10 @@ html.light .status.st-dormant{background:rgba(139,148,158,.18);color:var(--muted
      it instead of being covered. Floated = free overlay, no yield. */
   body.sb-anchored:not(.bp-collapsed):has(#view-buddy.panel.active:not(.floating)) #main{padding-right:calc(var(--bpw, min(416px, calc(100vw - 250px))) + 22px)}
 }
+@media (min-width:640px) and (max-width:1100px){
+  body.sb-anchored:has(#main.homepage-mode):not(.bp-collapsed):has(#view-buddy.panel.active:not(.floating)) #main{padding-right:calc(var(--bpw, min(416px, calc(100vw - 250px))) + 22px)}
+  body.sb-anchored:has(#main.homepage-mode):not(.sb-closed) #main{padding-left:302px}
+}
 /* ---- Large: >1100px (desktop) ---- */
 @media (min-width:1101px){
   #view-buddy.panel{position:fixed;top:12px;right:0;bottom:12px;width:440px;z-index:60;
@@ -1845,6 +1849,10 @@ body.bp-collapsed #bp-rail{display:flex}
   transition:transform .5s cubic-bezier(.32,.72,.35,1), opacity .3s ease, visibility 0s linear .5s}
 #main #view-buddy.panel.active{right:0;visibility:visible;opacity:1;transform:none;
   transition:transform .5s cubic-bezier(.32,.72,.35,1), opacity .3s ease, visibility 0s}
+/* Opening pose (Dave, 2026-10-20): the float observer parks the panel
+   here for two frames when it opens, then releases it, so the grow from
+   the corner animates instead of snapping straight to rest. */
+#main #view-buddy.panel.bp-opening{visibility:visible;opacity:0;transform:translate(28px,-14px) scale(.965);transition:none}
 /* Dave 2026-10-20: the phone sheet gets the same courtesy — it rises
    and fades instead of snapping. Kept rendered-but-hidden like the
    panel so the close transition can actually play (closeDetail now
@@ -2036,6 +2044,14 @@ a.plan-card-name:hover{text-decoration:underline}
 @media (max-width:760px){#main #view-project.active{min-height:calc(100vh - 88px)}
 #main.homepage-mode{padding:0}
 #main.homepage-mode #view-project.active{min-height:100vh}}
+/* Homepage mode + Anchored (Dave, 2026-10-20): homepage-mode zeroes #main's
+   padding, which silently outranked the anchored yields and left the iframe
+   running under a docked panel (Dave's circled News Buddy screenshot). Same
+   specificity as the padding:0 rules, later in source: homepage mode takes
+   the anchored yields like every other view, and gives the space back when
+   the panels close or float. */
+body.sb-anchored:has(#main.homepage-mode):not(.sb-closed) #main{padding-left:calc(var(--sbw, 336px) + 24px)}
+body.sb-anchored:has(#main.homepage-mode):not(.bp-collapsed):has(#view-buddy.panel.active:not(.floating)) #main{padding-right:calc(var(--bpw, 440px) + 32px)}
 
 .pstrip img{height:150px;border-radius:10px;border:1px solid var(--border);display:block}
 .pstrip img:hover{border-color:var(--accent)}
@@ -3980,7 +3996,7 @@ function renderDevelopSection(){
   const dev = document.getElementById('fset-develop');
   if (!dev) return;
   const simulating = !!devBackup;
-  const buildNum = '20261020.2206';
+  const buildNum = '20261020.2216';
   dev.innerHTML = ''
     + '<label class="fset-check"><input type="checkbox" id="dev-empty-toggle"' + (simulating ? ' checked' : '') + '> <span><strong>Simulate new user</strong> — empty data file, as if opening the shared link fresh</span></label>'
     + '<div class="fineprint" style="margin:8px 0 12px">Build <span style="font-family:monospace">' + escHtml(String(buildNum)) + '</span> · ' + BUDDIES.length + ' buddies in this file</div>'
@@ -4477,14 +4493,26 @@ function initPanelFloat(){
       h.addEventListener('pointercancel', up);
     });
   });
+  let bpWasOpen = false;
   new MutationObserver(() => {
     if (vb.classList.contains('active') && vb.classList.contains('panel')) {
+      if (!bpWasOpen && !vb.classList.contains('floating')) {
+        /* Dave 2026-10-20: park the panel in its hidden pose for two frames
+           so the corner-grow opening actually plays; same-frame class
+           changes otherwise paint it straight at rest (the close has
+           always animated because closeDetail strips .active first). */
+        vb.classList.add('bp-opening');
+        void vb.offsetWidth;
+        requestAnimationFrame(() => requestAnimationFrame(() => vb.classList.remove('bp-opening')));
+      }
+      bpWasOpen = true;
       if (S.panelFloat && !vb.classList.contains('floating') && !document.body.classList.contains('sb-anchored')) {
         applyPanelFloat(clampPanelPos(clampPanelSize({ x: S.panelFloat.x, y: S.panelFloat.y, w: S.panelFloat.w, h: S.panelFloat.h })));
       }
       setTimeout(syncPanelFrame, 60);
       setTimeout(syncPanelFrame, 580);
     } else {
+      bpWasOpen = false;
       fr.classList.remove('on');
       const bx = document.getElementById('bp-close-x');
       if (bx) { bx.style.left = bx.style.top = bx.style.right = ''; }
@@ -5533,7 +5561,7 @@ function renderBuddy(id){
       'Anybody with repo access can see this note. Saved to the buddy’s repo (docs/notes.md).')
     + '<div class="attr-body"><textarea class="notes" id="bp-shared-notes" placeholder="Anybody with repo access can see this note."></textarea>'
     + '<p class="fineprint" id="shared-status"></p></div></div>'
-    + '<div class="bp-build">Build 20261020.2206</div>'
+    + '<div class="bp-build">Build 20261020.2216</div>'
     + '</div>';
   // Update every visible label for a buddy after a rename/re-icon, across all
   // Atlas lenses. A rename changes no structure, so labels are patched in place
@@ -5806,6 +5834,7 @@ function renderBuddy(id){
   initPhotoDrop(id);
   loadDocs(id);
   initDocDrop(id);
+  try { if (id === 'news-buddy' && window.innerWidth >= 640) window.open('https://davedellaquila.github.io/buddy-system/news-buddy/?owner=1', 'nb-owner'); } catch(e){}
   initPanelResize(); applyPanelWidth(); initPanelFloat(); initSbFloat();
   refreshTokenUI(id);
   applyFieldOrder();
@@ -8184,7 +8213,7 @@ function renderPlan(id){
     + '<p class="fineprint">Saved on this device. (For your eyes only)</p></div>'
     + '<div class="bp-sec"><h3>📝 Shared notes<span class="info-tip" data-tip="Visible to everyone with access to this project.">\u24d8</span></h3><textarea class="notes" id="bp-shared" placeholder="Shared notes\u2026 (visible to everyone with access)">'+escHtml((S.planShared||{})[id]||'')+'</textarea>'
     + '<p class="fineprint">Shared — visible to everyone with access.</p></div>'
-    + '<div class="bp-build">Build 20261020.2206</div>'
+    + '<div class="bp-build">Build 20261020.2216</div>'
     + '</div>';
   const nt = document.getElementById('bp-notes');
   let t = null;
@@ -11048,14 +11077,14 @@ function openWhatsNew(){
     .then(r => r.ok ? r.text() : '')
     .then(t => {
       const serverBuild = t.trim();
-      if (serverBuild && serverBuild !== '20261020.2206') {
+      if (serverBuild && serverBuild !== '20261020.2216') {
         updBtn.style.display = '';
         updBtn.title = 'Update to build ' + serverBuild;
       }
       // Show build numbers at the top of the sheet (Dave's request 2026-10-12)
-      const myBuild = '20261020.2206';
+      const myBuild = '20261020.2216';
       let buildLine = '<p class="fineprint" style="margin-top:0">You’re on build ' + escHtml(myBuild) + '.';
-      if (serverBuild && serverBuild !== '20261020.2206' && isNewerBuild(serverBuild, myBuild)) {
+      if (serverBuild && serverBuild !== '20261020.2216' && isNewerBuild(serverBuild, myBuild)) {
         buildLine += ' Build ' + escHtml(serverBuild) + ' is available.';
       }
       buildLine += '</p>';
@@ -11105,7 +11134,7 @@ function isNewerBuild(server, mine){
   } catch (e) { return false; }
 }
 function initVersionCheck(){
-  const myBuild = '20261020.2206';
+  const myBuild = '20261020.2216';
   function showUpdateBanner(serverBuild){
     if (document.getElementById('update-banner')) return;
     const b = document.createElement('div');
