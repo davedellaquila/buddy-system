@@ -1,4 +1,10 @@
 ## 2026-10-20
+### Plain × for the panel close (Dave, 2026-10-20)
+- The buddy panel's close mark drops its circle: it's now a regular × — two strokes, no ring (new plainX() glyph, 22px, same family weight as the plain i and the chevrons). circleX() remains in use where Dave hasn't asked to change it (avatar sheet, field settings, What's New).
+
+### New buddy: 🏎️ 1968 MGB-GT
+- Set up from Dave's dashboard request: a living dossier for the 1968 MGB-GT, child of Car Buddy, persona "Deadpan British butler." Job req, private repo, homepage, and About page are live; the request supplied no purpose or car facts, so color, engine, mileage, and condition stay open questions in the dossier, never guessed.
+
 ### The info button is a plain i now (Dave, 2026-10-20)
 - The Open buddy details button (top-right) drops the circle from its glyph: it's now just the regular **i** — dot and stem, same 24px / 2.5-stroke family as the other chrome glyphs — inside the same round glass button.
 

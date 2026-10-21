@@ -2529,6 +2529,12 @@ function circleX(size){
   size = size || 22;
   return '<svg class="cx-svg" width="' + size + '" height="' + size + '" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M9.2 9.2l5.6 5.6M14.8 9.2l-5.6 5.6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>';
 }
+/* Dave 2026-10-20: the plain × — same cx-svg shell as circleX, no ring.
+   Used where Dave wants the mark by itself (the buddy panel's close). */
+function plainX(size){
+  size = size || 22;
+  return '<svg class="cx-svg" width="' + size + '" height="' + size + '" viewBox="0 0 24 24" aria-hidden="true"><path d="M7.2 7.2l9.6 9.6M16.8 7.2l-9.6 9.6" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg>';
+}
 /* Dave 2026-10-19: the ··· menu's Settings item wears the SAME gear as the
    sidebar #sb-gear button (and both open the one openFieldSettings sheet) —
    this helper carries that gear artwork verbatim for JS-rendered spots. */
@@ -4662,7 +4668,7 @@ function renderBuddy(id){
     + ((b.status && b.status !== 'Active') ? '<span class="status '+b.statusClass+'">'+escHtml(b.status)+'</span>' : '')
     + (function(){ const ak = effAka(b); return ak.length ? '<span class="bp-aka" title="Also known as">aka '+escHtml(ak.join(', '))+'</span>' : ''; })()
     + '<button class="bp-collapse-btn" id="bp-collapse-btn" type="button" title="Section index" aria-label="Section index">\u2630</button>'
-    + '<button class="bp-close-x" id="bp-close-x" type="button" title="Close detail \u2014 back to main view" aria-label="Close detail \u2014 back to main view">' + circleX(22) + '</button></div>'
+    + '<button class="bp-close-x" id="bp-close-x" type="button" title="Close detail \u2014 back to main view" aria-label="Close detail \u2014 back to main view">' + plainX(22) + '</button></div>'
     + '</div>'
     + '<div class="bp-crumb">'+crumb(id)+'</div>'
     + '<p class="bp-tagline">'+escHtml(b.tagline||'')+'</p>'
