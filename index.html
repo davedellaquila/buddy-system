@@ -1264,9 +1264,48 @@ body.standalone #sb-expand-corner{display:none}
 #panel-open:hover{color:var(--accent);border-color:var(--accent);transform:scale(1.05);background:color-mix(in srgb, var(--panel) 58%, rgba(255,255,255,.16))}
 #panel-open:active{transform:scale(.96)}
 #panel-open svg{display:block}
-body:has(#view-buddy.active) #panel-open,
+/* Dave 2026-10-21 (regression fix): the corner i hides only while the
+   panel is OPEN. While collapsed, #view-buddy keeps .active (the panel
+   is display:none, not deactivated) — keying the hide on .active alone
+   left no visible way to reopen the panel after collapsing it. */
+body:not(.bp-collapsed):has(#view-buddy.active) #panel-open,
 body.standalone #panel-open{display:none}
 body:has(#token-pill) #panel-open{right:148px}
+/* Update banner — Jonny verdict 2026-10-20, "The Banner Steps Aside".
+   The banner is a threshold, not a task: when the buddy panel opens it
+   compresses into the free space beside the panel — it is never covered,
+   truncated, or hidden. Geometry lives here now (it was a centered card
+   styled inline); syncUpdateBanner() classifies full / companion / pill
+   and sets body.has-buddy-panel + the banner's data-state.
+   Adaptations to this app's chrome, same rule: the base right inset is
+   68px so the full banner clears the 44px #panel-open corner circle
+   (12px offset + 44px + 12px gap), and the left inset grows to 68px
+   while the sidebar is collapsed, clearing #sb-expand-corner. */
+#update-banner{position:fixed;top:12px;left:16px;right:68px;height:48px;z-index:9999;
+  background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:0 14px;
+  box-shadow:0 8px 32px rgba(0,0,0,.3);display:flex;align-items:center;font-size:.875rem;
+  transition:left .5s cubic-bezier(.32,.72,.35,1),right .5s cubic-bezier(.32,.72,.35,1),height .5s cubic-bezier(.32,.72,.35,1),border-radius .5s cubic-bezier(.32,.72,.35,1)}
+body.sb-closed #update-banner{left:68px}
+body.has-buddy-panel #update-banner{right:calc(var(--bpw, 440px) + 24px)}
+#update-banner .ub-msg-full,#update-banner .ub-msg-short{transition:opacity .12s ease}
+#update-banner .ub-msg-short,#update-banner .ub-dot,#update-banner .ub-wn-pill,#update-banner .ub-now-short{display:none}
+#update-banner[data-state="companion"] .ub-msg-full{display:none}
+#update-banner[data-state="companion"] .ub-msg-short{display:inline}
+#update-banner[data-state="companion"] button{margin-left:8px !important}
+body.has-buddy-panel #update-banner[data-state="pill"]{right:auto;width:216px;height:40px;border-radius:999px;padding:0 8px 0 12px}
+#update-banner[data-state="pill"] .ub-msg-full,#update-banner[data-state="pill"] .ub-msg-short,
+#update-banner[data-state="pill"] .ub-wn,#update-banner[data-state="pill"] .ub-now-full{display:none}
+#update-banner[data-state="pill"] .ub-dot{display:block;width:8px;height:8px;border-radius:50%;background:var(--accent);flex:0 0 auto}
+#update-banner[data-state="pill"] .ub-wn-pill{display:inline-flex}
+#update-banner[data-state="pill"] .ub-now-short{display:inline}
+#update-banner[data-state="pill"] button{margin-left:6px !important}
+body.ub-nomotion #update-banner{transition:none}
+@media (prefers-reduced-motion: reduce){#update-banner{transition:none}}
+@media (max-width:639px){
+  #update-banner{left:12px;right:12px;height:46px}
+  #update-banner[data-state="full"]{left:68px;right:68px}
+  body.has-buddy-panel #update-banner{right:12px}
+}
 .ctog{display:none;width:22px;height:22px;flex:0 0 22px;align-items:center;justify-content:center;
   background:none;border:none;color:var(--muted);cursor:pointer;font-size:.875rem;padding:0;margin-right:2px;border-radius:6px}
 .ctog.has-kids{display:inline-flex}
@@ -1279,6 +1318,18 @@ body:has(#token-pill) #panel-open{right:148px}
 #field-settings.show{display:flex;flex-direction:column}
 #field-settings .fset-head{padding:20px 20px 0;cursor:move;user-select:none;-webkit-user-select:none;flex:0 0 auto;touch-action:none}
 #field-settings .fset-head h3{margin:0 0 12px;font-size:.875rem}
+/* Settings sheet gripper (Dave, 2026-10-21): the sheet's drag handle gets a
+   visible face — the gripper dot signature (Jonny, The Edge Is the Handle:
+   ~3px dots on a 7px pitch, 55% rest / full secondary on hover / accent
+   while active), transposed to a horizontal 5 x 2 cluster at the top
+   center of the sheet. It rides inside the drag head, so dragging from
+   the dots moves the sheet exactly like dragging the head itself. */
+#field-settings .fset-grip{position:absolute;top:6px;left:50%;transform:translateX(-50%);width:35px;height:14px;cursor:move;touch-action:none}
+#field-settings .fset-grip::after{content:'';display:block;width:35px;height:14px;
+  background-image:radial-gradient(circle,var(--gripdot,color-mix(in srgb,var(--muted) 55%,var(--border))) 1.5px,transparent 1.6px);
+  background-size:7px 7px;background-position:center;background-repeat:repeat}
+#field-settings .fset-head:hover .fset-grip::after{--gripdot:var(--text2)}
+#field-settings .fset-head:active .fset-grip::after{--gripdot:var(--accent)}
 #field-settings .fset-body{padding:0 20px 16px;overflow-y:auto;flex:1 1 auto;min-height:0}
 #field-settings .fset-sec{margin:0}
 #field-settings .fset-sec-h{position:sticky;top:0;z-index:3;margin:0;padding:12px 0 8px;font-size:.8125rem;
@@ -1977,7 +2028,7 @@ body:has(#sidebar.sb-floating) #sb-resize{display:none}
     #panel-open-rail{width:44px;height:44px;border-radius:50%;border:1px solid var(--border);background:color-mix(in srgb, var(--panel) 72%, transparent);color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0}
     #panel-open-rail:hover{color:var(--accent);border-color:var(--accent)}
     #panel-open-rail .pi-serif{font-family:Georgia,'Times New Roman',Times,serif;font-size:26px;font-style:italic;font-weight:600;line-height:1;display:block;transform:translateY(-2px)}
-    body:has(#view-buddy.active) #panel-open-rail{visibility:hidden}
+    body:not(.bp-collapsed):has(#view-buddy.active) #panel-open-rail{visibility:hidden}
     body.sb-closed #panel-open{display:none}
     #rail-curview{width:44px;height:44px;border-radius:12px;border:1px solid transparent;background:none;color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1.25rem;padding:0}
     #rail-curview:hover{color:var(--accent);border-color:var(--border);background:var(--ghost)}
@@ -3323,6 +3374,7 @@ function openBuddy(id){
     renderBuddy(id);
     renderNav();
     syncPanelFrame(); syncPanelNarrow();
+    if (typeof syncUpdateBanner === 'function') syncUpdateBanner();
     pushNavState(); // Dave 2026-10-15: panel-open is its own back/forward step
   }
 }
@@ -3484,6 +3536,7 @@ function artRow(icon, label, sub, url){
 }
 function closeDetail(){
   const vb = document.getElementById('view-buddy');
+  setTimeout(() => { if (typeof syncUpdateBanner === 'function') syncUpdateBanner(); }, 60);
   if (vb && (vb.classList.contains('panel') || vb.classList.contains('sheet'))) {
     /* Dave 2026-10-20: animate the close — drop .active first so the
        glide-out plays, and only strip the mode classes once it has
@@ -4164,7 +4217,7 @@ function renderDevelopSection(){
   const dev = document.getElementById('fset-develop');
   if (!dev) return;
   const simulating = !!devBackup;
-  const buildNum = '20261021.1809';
+  const buildNum = '20261021.1837';
   dev.innerHTML = ''
     + '<label class="fset-check"><input type="checkbox" id="dev-empty-toggle"' + (simulating ? ' checked' : '') + '> <span><strong>Simulate new user</strong> — empty data file, as if opening the shared link fresh</span></label>'
     + '<div class="fineprint" style="margin:8px 0 12px">Build <span style="font-family:monospace">' + escHtml(String(buildNum)) + '</span> · ' + BUDDIES.length + ' buddies in this file</div>'
@@ -4278,7 +4331,7 @@ function openFieldSettings(){
   if (!m) {
     m = document.createElement('div'); m.id = 'field-settings';
     m.innerHTML = '<button class="fset-close-x" id="fset-x" title="Close">' + circleX(22) + '</button>'
-      + '<div class="fset-head" id="fset-drag"><h3>Settings</h3></div>'
+      + '<div class="fset-head" id="fset-drag"><div class="fset-grip" title="Drag to move"></div><h3>Settings</h3></div>'
       + '<div class="fset-body">'
       + '<section class="fset-sec"><h3 class="fset-sec-h">Preferences</h3><div id="fset-settings"></div></section>'
       + '<div class="fset-cols">'
@@ -4531,6 +4584,7 @@ function applyPanelWidth(){
     document.documentElement.style.setProperty('--bpw', w + 'px');
   }
   syncPanelNarrow();
+  if (typeof syncUpdateBanner === 'function') syncUpdateBanner();
 }
 function applySbWidth(){
   const sb = document.getElementById('sidebar');
@@ -4560,6 +4614,7 @@ function initPanelResize(){
       if (Math.abs(e.clientX - sx) < 6) return; /* tap slop: don't resize on a plain tap */
       sdrag = true;
       h.classList.add('rz-dragging');
+      document.body.classList.add('ub-nomotion'); /* banner tracks the drag with no lag (verdict) */
       try { h.setPointerCapture(e.pointerId); } catch (err) {}
       e.preventDefault();
     }
@@ -4580,12 +4635,22 @@ function initPanelResize(){
     if (sx === null) return;
     sx = null;
     h.classList.remove('rz-dragging');
+    document.body.classList.remove('ub-nomotion');
     if (!sdrag || snapped) return;
     S.panelWidth = Math.round(vb.getBoundingClientRect().width);
     save();
+    if (typeof syncUpdateBanner === 'function') syncUpdateBanner();
   });
-  h.addEventListener('pointercancel', () => { sx = null; h.classList.remove('rz-dragging'); });
-  h.addEventListener('dblclick', () => closeDetail());
+  h.addEventListener('pointercancel', () => { sx = null; h.classList.remove('rz-dragging'); document.body.classList.remove('ub-nomotion'); });
+  /* Dave 2026-10-21: double-click RESETS the panel width to the default
+     (the strip's tooltip always promised exactly this; the handler used
+     to close the panel instead). */
+  h.addEventListener('dblclick', () => {
+    S.panelWidth = BP_DEFAULT_W;
+    applyPanelWidth();
+    save();
+    if (typeof syncUpdateBanner === 'function') syncUpdateBanner();
+  });
 }
 /* Dave 2026-10-20: the info panel is free-floating — drag it by the
    gripper at top-center, resize it from any corner or side. The frame
@@ -5856,7 +5921,7 @@ function renderBuddy(id){
     + attrHead('shared', 'SHARED NOTES', '<span class="attr-value" id="bp-shared-count">(0)</span>', '')
     + '<div class="attr-body">' + attrTipLine('Anybody with repo access can see this note. Saved to the buddy’s repo (docs/notes.md).') + '<textarea class="notes" id="bp-shared-notes" placeholder="Anybody with repo access can see this note."></textarea>'
     + '<p class="fineprint" id="shared-status"></p></div></div>'
-    + '<div class="bp-build">Build 20261021.1809</div>'
+    + '<div class="bp-build">Build 20261021.1837</div>'
     + '</div>';
   // Update every visible label for a buddy after a rename/re-icon, across all
   // Atlas lenses. A rename changes no structure, so labels are patched in place
@@ -8518,7 +8583,7 @@ function renderPlan(id){
     + '<p class="fineprint">Saved on this device. (For your eyes only)</p></div>'
     + '<div class="bp-sec"><h3>📝 Shared notes<span class="info-tip" data-tip="Visible to everyone with access to this project.">\u24d8</span></h3><textarea class="notes" id="bp-shared" placeholder="Shared notes\u2026 (visible to everyone with access)">'+escHtml((S.planShared||{})[id]||'')+'</textarea>'
     + '<p class="fineprint">Shared — visible to everyone with access.</p></div>'
-    + '<div class="bp-build">Build 20261021.1809</div>'
+    + '<div class="bp-build">Build 20261021.1837</div>'
     + '</div>';
   const nt = document.getElementById('bp-notes');
   let t = null;
@@ -10894,6 +10959,7 @@ function getSectionToggleContent(fid){
 }
 function setPanelCollapsed(collapsed) {
   const vb = document.getElementById('view-buddy');
+  setTimeout(() => { if (typeof syncUpdateBanner === 'function') syncUpdateBanner(); }, 430);
   /* Dave 2026-10-20: the collapse folds the panel toward the rail and
      the expand unfolds it — no more display:none snap. Persist panel
      state across refresh (Dave, 2026-10-19). */
@@ -11385,14 +11451,14 @@ function openWhatsNew(){
     .then(r => r.ok ? r.text() : '')
     .then(t => {
       const serverBuild = t.trim();
-      if (serverBuild && serverBuild !== '20261021.1809') {
+      if (serverBuild && serverBuild !== '20261021.1837') {
         updBtn.style.display = '';
         updBtn.title = 'Update to build ' + serverBuild;
       }
       // Show build numbers at the top of the sheet (Dave's request 2026-10-12)
-      const myBuild = '20261021.1809';
+      const myBuild = '20261021.1837';
       let buildLine = '<p class="fineprint" style="margin-top:0">You’re on build ' + escHtml(myBuild) + '.';
-      if (serverBuild && serverBuild !== '20261021.1809' && isNewerBuild(serverBuild, myBuild)) {
+      if (serverBuild && serverBuild !== '20261021.1837' && isNewerBuild(serverBuild, myBuild)) {
         buildLine += ' Build ' + escHtml(serverBuild) + ' is available.';
       }
       buildLine += '</p>';
@@ -11441,19 +11507,47 @@ function isNewerBuild(server, mine){
     return String(server).trim() > String(mine).trim();
   } catch (e) { return false; }
 }
+/* Jonny verdict 2026-10-20 (The Banner Steps Aside): classify the update
+   banner against the buddy panel. Full when no docked panel is open;
+   companion when the free width beside the panel is >= 600px; pill
+   below that. Geometry is stylesheet work (body.has-buddy-panel and
+   the banner's data-state); this only keeps the classification fresh. */
+function syncUpdateBanner(){
+  const vb = document.getElementById('view-buddy');
+  const open = !!(vb && vb.classList.contains('active') && vb.classList.contains('panel')
+    && !vb.classList.contains('floating') && !document.body.classList.contains('bp-collapsed')
+    && window.innerWidth >= 640);
+  document.body.classList.toggle('has-buddy-panel', open);
+  const b = document.getElementById('update-banner');
+  if (!b) return;
+  let state = 'full';
+  if (open) {
+    const free = window.innerWidth - vb.getBoundingClientRect().width - 40;
+    state = free >= 600 ? 'companion' : 'pill';
+  }
+  if (b.dataset.state !== state) b.dataset.state = state;
+}
 function initVersionCheck(){
-  const myBuild = '20261021.1809';
+  const myBuild = '20261021.1837';
   function showUpdateBanner(serverBuild){
     if (document.getElementById('update-banner')) return;
     const b = document.createElement('div');
     b.id = 'update-banner';
-    b.innerHTML = '<span>You’re on build ' + escHtml(myBuild) + '. Build ' + escHtml(serverBuild) + ' is available.</span> '
-      + '<button id="update-whatsnew" style="margin-left:12px;background:none;border:none;color:var(--accent);font-size:.875rem;cursor:pointer;text-decoration:underline;padding:6px 4px">What’s new</button>'
-      + '<button id="update-now" style="margin-left:12px;padding:6px 14px;border-radius:8px;border:1px solid var(--accent);background:var(--accent);color:#fff;font-weight:600;cursor:pointer">Update now</button>'
+    b.innerHTML = '<span class="ub-dot" aria-hidden="true"></span>'
+      + '<span class="ub-msg-full">You’re on build ' + escHtml(myBuild) + '. Build ' + escHtml(serverBuild) + ' is available.</span>'
+      + '<span class="ub-msg-short">A new version is ready.</span>'
+      + '<button id="update-whatsnew" class="ub-wn" style="margin-left:12px;background:none;border:none;color:var(--accent);font-size:.875rem;cursor:pointer;text-decoration:underline;padding:6px 4px">What’s new</button>'
+      + '<button id="update-whatsnew-pill" class="ub-wn-pill" style="background:none;border:none;color:var(--accent);font-size:.875rem;cursor:pointer;padding:6px 4px">Update ready</button>'
+      + '<button id="update-now" style="margin-left:12px;padding:6px 14px;border-radius:8px;border:1px solid var(--accent);background:var(--accent);color:#fff;font-weight:600;cursor:pointer"><span class="ub-now-full">Update now</span><span class="ub-now-short">Update</span></button>'
       + '<button id="update-dismiss" aria-label="Dismiss" style="margin-left:8px;padding:6px 10px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--text);cursor:pointer;line-height:1;display:inline-flex;align-items:center;justify-content:center">' + circleX(20) + '</button>';
-    b.style.cssText = 'position:fixed;top:16px;left:50%;transform:translateX(-50%);z-index:9999;background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:12px 18px;box-shadow:0 8px 32px rgba(0,0,0,.3);display:flex;align-items:center;font-size:.875rem';
+    b.dataset.state = 'full';
+    /* Banner geometry lives in the stylesheet (Jonny verdict 2026-10-20,
+       The Banner Steps Aside) — no more centered card sitting over the
+       panel's corner. Classify against the panel right away. */
+    if (typeof syncUpdateBanner === 'function') syncUpdateBanner();
     document.body.appendChild(b);
     document.getElementById('update-whatsnew').addEventListener('click', () => { openWhatsNew(); });
+    document.getElementById('update-whatsnew-pill').addEventListener('click', () => { openWhatsNew(); });
     document.getElementById('update-now').addEventListener('click', () => {
       b.remove();
       try { sessionStorage.setItem('updateClicked', String(Date.now())); } catch (e) {}
@@ -11481,6 +11575,7 @@ function initVersionCheck(){
     } catch (e) { return 'error'; }
   }
   window.__buddyUpdateCheck = checkForUpdate;
+  window.addEventListener('resize', () => syncUpdateBanner());
   checkForUpdate();
   setInterval(checkForUpdate, 5 * 60 * 1000);
 }
@@ -11956,6 +12051,10 @@ document.addEventListener('click', e => {
     return;
   }
   if (e.target.closest && e.target.closest('#panel-open, #panel-open-rail')) {
+    /* Dave 2026-10-21 (regression fix): reopening from the collapsed
+       state must un-collapse first — openBuddy alone left bp-collapsed
+       set and the panel stayed hidden behind its own reopen button. */
+    if (document.body.classList.contains('bp-collapsed')) setPanelCollapsed(false);
     const id = (S.projectId && byId[S.projectId]) ? S.projectId : ROOT_ID;
     openBuddy(id);
     return;
