@@ -772,13 +772,21 @@ input[type=range].zrange::-moz-range-thumb{width:16px;height:16px;border-radius:
 #sb-tab:hover::after{--gripdot:var(--accent)}
 body.sb-closed #sb-tab{display:none !important}
 @media (max-width:640px){#sb-tab{display:none !important}}
-/* 2x5 dot-grid gripper (Jonny's pick, 2026-10-11): honest affordance, no hover required */
-#sb-resize::after{content:'';width:14px;height:35px;transform:translateX(-9px);
-  background-image:radial-gradient(circle,var(--gripdot,color-mix(in srgb,var(--muted) 34%,var(--border))) 1.6px,transparent 1.7px);
+/* The dot signature (Jonny verdict 2026-10-21, The Edge Is the Handle):
+   2 columns x 5 rows, dot ~3px on a 7px pitch, centered vertically and
+   centered on the edge line itself; rest strength 55% (the old 34% read
+   as dirt), hover full secondary, accent while dragging. Honest
+   affordance, no hover required (Jonny's pick, 2026-10-11). */
+#sb-resize::after{content:'';width:14px;height:35px;
+  background-image:radial-gradient(circle,var(--gripdot,color-mix(in srgb,var(--muted) 55%,var(--border))) 1.5px,transparent 1.6px);
   background-size:7px 7px;background-position:center;background-repeat:repeat}
 #sb-resize:hover::after{--gripdot:var(--text2)}
 #sb-resize:active::after{--gripdot:var(--accent)}
 #sb-resize:hover{background:transparent}
+/* While a strip drag is live: accent dots plus a 1px accent line running
+   the seam's full height, so the edge being moved stays visible. */
+#sb-resize.rz-dragging,#bp-resize.rz-dragging{--gripdot:var(--accent)}
+#sb-resize.rz-dragging::before,#bp-resize.rz-dragging::before{content:'';position:absolute;top:0;bottom:0;left:50%;width:1px;background:var(--accent);pointer-events:none}
 body.sb-closed #sb-resize{display:none}
 /* Phone drawer: stay fixed (sibling of #sidebar); show only while drawer is open */
 @media (max-width:639px){
@@ -1201,9 +1209,9 @@ body:has(#token-pill) #view-buddy.sheet .bp-close-x{right:148px}
 #buddy-home{position:relative}
 #bp-resize{position:fixed;top:0;bottom:0;right:calc(var(--bpw, 440px) - 14px);z-index:60;display:flex;align-items:center;justify-content:center;width:28px;cursor:ew-resize;
   background:transparent;-webkit-tap-highlight-color:transparent;touch-action:none;user-select:none}
-/* Same dot-grid gripper language as #sb-resize */
+/* Same dot signature as #sb-resize (Jonny verdict 2026-10-21) */
 #bp-resize::after{content:'';width:14px;height:35px;
-  background-image:radial-gradient(circle,var(--gripdot,color-mix(in srgb,var(--muted) 34%,var(--border))) 1.6px,transparent 1.7px);
+  background-image:radial-gradient(circle,var(--gripdot,color-mix(in srgb,var(--muted) 55%,var(--border))) 1.5px,transparent 1.6px);
   background-size:7px 7px;background-position:center;background-repeat:repeat}
 #bp-resize:hover::after{--gripdot:var(--text2)}
 #bp-resize:active::after{--gripdot:var(--accent)}
@@ -1725,17 +1733,21 @@ body.bp-collapsed #bp-rail{display:flex}
    The rect persists (S.panelFloat); double-click the gripper to dock. */
 #view-buddy.panel.floating{right:auto;bottom:auto;border-right:1px solid var(--border);
   border-radius:18px;box-shadow:0 24px 64px var(--shadow)}
-#view-buddy.panel #bp-resize{display:none}
+/* Jonny verdict 2026-10-21 (The Edge Is the Handle): anchored and floating
+   are addresses, not abilities — the docked panel's resize strip shows and
+   drags like the sidebar's; only once the panel floats does its frame
+   take over resizing. */
+#view-buddy.panel.floating #bp-resize{display:none}
 #bp-frame{position:fixed;z-index:66;display:none;pointer-events:none}
 #bp-frame.on{display:block}
-#bp-grip{--gripdot:var(--faint);position:absolute;top:5px;left:50%;transform:translateX(-50%);z-index:2;
+#bp-grip{--gripdot:color-mix(in srgb, var(--muted) 55%, var(--border));position:absolute;top:5px;left:50%;transform:translateX(-50%);z-index:2;
   width:76px;height:22px;border-radius:999px;pointer-events:auto;cursor:grab;touch-action:none;
   background-color:color-mix(in srgb, var(--panel) 88%, transparent);
   border:1px solid var(--border);box-shadow:0 2px 10px var(--shadow-soft);
-  background-image:radial-gradient(circle, var(--gripdot) 1.4px, transparent 1.6px);
-  background-size:9px 9px;background-position:center}
-#bp-grip:hover{--gripdot:var(--accent);border-color:var(--accent)}
-#bp-grip:active{cursor:grabbing}
+  background-image:radial-gradient(circle, var(--gripdot) 1.5px, transparent 1.6px);
+  background-size:7px 7px;background-position:center}
+#bp-grip:hover{--gripdot:var(--text2);border-color:var(--accent)}
+#bp-grip:active{--gripdot:var(--accent);cursor:grabbing}
 /* Unified panel style (Dave, 2026-10-20): the sidebar gets the same float
    machinery as the info panel — a frame overlay carrying the dotted gripper
    and the resize handles. While the sidebar is still docked only the gripper
@@ -1744,14 +1756,14 @@ body.bp-collapsed #bp-rail{display:flex}
 #sb-frame{position:fixed;z-index:66;display:none;pointer-events:none}
 #sb-frame.on{display:block}
 #sb-frame:not(.free) .bp-rsz{display:none}
-#sb-grip{--gripdot:var(--faint);position:absolute;top:5px;left:50%;transform:translateX(-50%);z-index:2;
+#sb-grip{--gripdot:color-mix(in srgb, var(--muted) 55%, var(--border));position:absolute;top:5px;left:50%;transform:translateX(-50%);z-index:2;
   width:76px;height:22px;border-radius:999px;pointer-events:auto;cursor:grab;touch-action:none;
   background-color:color-mix(in srgb, var(--panel) 88%, transparent);
   border:1px solid var(--border);box-shadow:0 2px 10px var(--shadow-soft);
-  background-image:radial-gradient(circle, var(--gripdot) 1.4px, transparent 1.6px);
-  background-size:9px 9px;background-position:center}
-#sb-grip:hover{--gripdot:var(--accent);border-color:var(--accent)}
-#sb-grip:active{cursor:grabbing}
+  background-image:radial-gradient(circle, var(--gripdot) 1.5px, transparent 1.6px);
+  background-size:7px 7px;background-position:center}
+#sb-grip:hover{--gripdot:var(--text2);border-color:var(--accent)}
+#sb-grip:active{--gripdot:var(--accent);cursor:grabbing}
 #sidebar.sb-floating{bottom:auto;border-radius:18px}
 body:has(#sidebar.sb-floating) #sb-resize{display:none}
 .bp-rsz{position:absolute;pointer-events:auto;touch-action:none;z-index:1}
@@ -1763,28 +1775,22 @@ body:has(#sidebar.sb-floating) #sb-resize{display:none}
 .bp-rsz[data-dir="sw"]{bottom:-8px;left:-8px;width:22px;height:22px;cursor:nesw-resize}
 .bp-rsz[data-dir="nw"]{top:-8px;left:-8px;width:22px;height:22px;cursor:nwse-resize}
 .bp-rsz[data-dir="se"]{bottom:-8px;right:-8px;width:22px;height:22px;cursor:nwse-resize}
-/* Visible grippers on every side of the floated panel (Dave, 2026-10-20): the resize
-   handles were invisible strips. Now the south/east/west edges wear a dotted pill in
-   the drag gripper's language, and every corner wears a bracket. The top edge's
-   gripper is #bp-grip itself, so the north strip draws nothing of its own. */
-.bp-rsz::after{content:"";position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
-  border-radius:999px;border:1px solid var(--border);
-  background-color:color-mix(in srgb, var(--panel) 88%, transparent);
-  box-shadow:0 2px 10px var(--shadow-soft);
-  background-image:radial-gradient(circle, var(--faint) 1.4px, transparent 1.6px);
-  background-size:9px 9px;background-position:center}
-.bp-rsz[data-dir="s"]::after{width:56px;height:12px}
-.bp-rsz[data-dir="e"]::after,.bp-rsz[data-dir="w"]::after{width:12px;height:56px}
-.bp-rsz[data-dir="n"]::after{display:none}
-.bp-rsz[data-dir="ne"]::after,.bp-rsz[data-dir="nw"]::after,.bp-rsz[data-dir="se"]::after,.bp-rsz[data-dir="sw"]::after{
-  width:13px;height:13px;background:none;box-shadow:none;border:none;border-radius:0}
-.bp-rsz[data-dir="ne"]::after{border-top:2px solid var(--faint);border-right:2px solid var(--faint);border-top-right-radius:5px}
-.bp-rsz[data-dir="nw"]::after{border-top:2px solid var(--faint);border-left:2px solid var(--faint);border-top-left-radius:5px}
-.bp-rsz[data-dir="se"]::after{border-bottom:2px solid var(--faint);border-right:2px solid var(--faint);border-bottom-right-radius:5px}
-.bp-rsz[data-dir="sw"]::after{border-bottom:2px solid var(--faint);border-left:2px solid var(--faint);border-bottom-left-radius:5px}
-.bp-rsz[data-dir="s"]:hover::after,.bp-rsz[data-dir="e"]:hover::after,.bp-rsz[data-dir="w"]:hover::after{
-  border-color:var(--accent);background-image:radial-gradient(circle, var(--accent) 1.4px, transparent 1.6px)}
-.bp-rsz[data-dir="ne"]:hover::after,.bp-rsz[data-dir="nw"]:hover::after,.bp-rsz[data-dir="se"]:hover::after,.bp-rsz[data-dir="sw"]:hover::after{border-color:var(--accent)}
+/* The dot signature on the floated panels' edges (Jonny verdict 2026-10-21,
+   The Edge Is the Handle): the brackets and pills are dead. Left/right
+   edges wear the vertical cluster (2 cols x 5 rows); top/bottom wear its
+   transpose (5 cols x 2 rows) — the north cluster sits behind the move
+   grip, which wears the same dots. Corners draw nothing: diagonal
+   cursors only. Strengths match the strips: 55% rest, text2 hover,
+   accent while dragging. */
+.bp-rsz{--gripdot:color-mix(in srgb, var(--muted) 55%, var(--border))}
+.bp-rsz::after{content:"";position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);pointer-events:none;
+  background-image:radial-gradient(circle, var(--gripdot) 1.5px, transparent 1.6px);
+  background-size:7px 7px;background-position:center}
+.bp-rsz[data-dir="e"]::after,.bp-rsz[data-dir="w"]::after{width:14px;height:35px}
+.bp-rsz[data-dir="n"]::after,.bp-rsz[data-dir="s"]::after{width:35px;height:14px}
+.bp-rsz[data-dir="ne"]::after,.bp-rsz[data-dir="nw"]::after,.bp-rsz[data-dir="se"]::after,.bp-rsz[data-dir="sw"]::after{display:none}
+.bp-rsz:hover{--gripdot:var(--text2)}
+.bp-rsz:active{--gripdot:var(--accent)}
 
     /* ==== Icon strip, Views dock, panel header v2 (Dave + Jonny, 2026-10-21) ==== */
     /* Rail: the panel-open control returns to the top of the icon strip over a
@@ -1824,24 +1830,18 @@ body:has(#sidebar.sb-floating) #sb-resize{display:none}
     .bp-statusline{font-size:.6875rem;letter-spacing:.09em;text-transform:uppercase;font-weight:600;margin:-4px 0 10px}
     /* The floating header card gets a real border and a deeper shadow (Dave, 2026-10-21). */
     .bp-sticky-head{background:var(--panel);border:1px solid var(--border);border-radius:14px;box-shadow:0 10px 28px rgba(0,0,0,.22),0 2px 6px rgba(0,0,0,.16)}
-    /* Floated-panel resize handles: tucked inside the panel, quiet until hovered. */
-    .bp-rsz[data-dir="n"]{top:0;height:10px}
-    .bp-rsz[data-dir="s"]{bottom:0;height:10px}
-    .bp-rsz[data-dir="e"]{right:0;width:10px}
-    .bp-rsz[data-dir="w"]{left:0;width:10px}
-    .bp-rsz[data-dir="ne"]{top:0;right:0;width:18px;height:18px}
-    .bp-rsz[data-dir="nw"]{top:0;left:0;width:18px;height:18px}
-    .bp-rsz[data-dir="se"]{bottom:0;right:0;width:18px;height:18px}
-    .bp-rsz[data-dir="sw"]{bottom:0;left:0;width:18px;height:18px}
-    .bp-rsz::after{display:none}
-    .bp-rsz[data-dir="s"]:hover{box-shadow:inset 0 -2px 0 color-mix(in srgb, var(--accent) 60%, transparent)}
-    .bp-rsz[data-dir="n"]:hover{box-shadow:inset 0 2px 0 color-mix(in srgb, var(--accent) 60%, transparent)}
-    .bp-rsz[data-dir="e"]:hover{box-shadow:inset -2px 0 0 color-mix(in srgb, var(--accent) 60%, transparent)}
-    .bp-rsz[data-dir="w"]:hover{box-shadow:inset 2px 0 0 color-mix(in srgb, var(--accent) 60%, transparent)}
-    .bp-rsz[data-dir="ne"]:hover{box-shadow:inset -2px 2px 0 0 color-mix(in srgb, var(--accent) 60%, transparent)}
-    .bp-rsz[data-dir="se"]:hover{box-shadow:inset -2px -2px 0 0 color-mix(in srgb, var(--accent) 60%, transparent)}
-    .bp-rsz[data-dir="nw"]:hover{box-shadow:inset 2px 2px 0 0 color-mix(in srgb, var(--accent) 60%, transparent)}
-    .bp-rsz[data-dir="sw"]:hover{box-shadow:inset 2px -2px 0 0 color-mix(in srgb, var(--accent) 60%, transparent)}
+    /* Floated-panel resize zones (Jonny verdict 2026-10-21, The Edge Is the
+       Handle): build 0909's inside-the-panel placement at the verdict's
+       28px zone. The hover edge-lines are gone — the dot signature
+       (see .bp-rsz::after) carries the affordance now. */
+    .bp-rsz[data-dir="n"]{top:0;height:28px}
+    .bp-rsz[data-dir="s"]{bottom:0;height:28px}
+    .bp-rsz[data-dir="e"]{right:0;width:28px}
+    .bp-rsz[data-dir="w"]{left:0;width:28px}
+    .bp-rsz[data-dir="ne"]{top:0;right:0;width:28px;height:28px}
+    .bp-rsz[data-dir="nw"]{top:0;left:0;width:28px;height:28px}
+    .bp-rsz[data-dir="se"]{bottom:0;right:0;width:28px;height:28px}
+    .bp-rsz[data-dir="sw"]{bottom:0;left:0;width:28px;height:28px}
 /* The rail collapse folds instead of snapping (Dave, 2026-10-20). */
 #main #view-buddy.panel.bp-folding{transform:translateX(34px) scale(.93);opacity:0;
   transition:transform .36s cubic-bezier(.32,.72,.35,1), opacity .28s ease}
@@ -4145,6 +4145,7 @@ function initPanelResize(){
     if (!sdrag) {
       if (Math.abs(e.clientX - sx) < 6) return; /* tap slop: don't resize on a plain tap */
       sdrag = true;
+      h.classList.add('rz-dragging');
       try { h.setPointerCapture(e.pointerId); } catch (err) {}
       e.preventDefault();
     }
@@ -4153,6 +4154,7 @@ function initPanelResize(){
       /* Pushed through the threshold — snap shut instead of stopping at min width */
       snapped = true;
       sx = null;
+      h.classList.remove('rz-dragging');
       closeDetail();
       return;
     }
@@ -4163,10 +4165,12 @@ function initPanelResize(){
   h.addEventListener('pointerup', e => {
     if (sx === null) return;
     sx = null;
+    h.classList.remove('rz-dragging');
     if (!sdrag || snapped) return;
     S.panelWidth = Math.round(vb.getBoundingClientRect().width);
     save();
   });
+  h.addEventListener('pointercancel', () => { sx = null; h.classList.remove('rz-dragging'); });
   h.addEventListener('dblclick', () => closeDetail());
 }
 /* Dave 2026-10-20: the info panel is free-floating — drag it by the
@@ -8388,6 +8392,7 @@ document.addEventListener('keydown', e => {
     if (!sdrag) {
       if (Math.abs(e.clientX - sx) < 6) return; /* tap slop: don't resize on a plain tap */
       sdrag = true;
+      h.classList.add('rz-dragging');
       document.body.classList.add('sb-resizing'); // Dave 2026-10-18: no width transition mid-drag
       try { h.setPointerCapture(e.pointerId); } catch (err) {}
       e.preventDefault();
@@ -8396,6 +8401,7 @@ document.addEventListener('keydown', e => {
     if (raw < SNAP_SHUT) {
       /* Pushed through the threshold — snap shut instead of stopping at min width */
       snapped = true;
+      h.classList.remove('rz-dragging');
       setSidebarOpen(false);
       sx = null;
       return;
@@ -8406,6 +8412,7 @@ document.addEventListener('keydown', e => {
   });
   const done = () => {
     if (sx === null) return; sx = null;
+    h.classList.remove('rz-dragging');
     document.body.classList.remove('sb-resizing');
     if (!sdrag || snapped) return;
     S.sbWidth = Math.round(sb.getBoundingClientRect().width); save();
