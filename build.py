@@ -1062,7 +1062,7 @@ textarea[disabled]{opacity:.5;cursor:not-allowed}
 #token-pop .saved-check{display:none;color:var(--grn-tx);font-size:.875rem;font-weight:600;margin-top:8px}
 #token-pop .saved-check.show{display:block}
 /* Reopen right detail panel when closed (Muse-ish fixed chrome) */
-#panel-open{position:fixed;top:18px;right:12px;z-index:85;width:44px;height:44px;border-radius:50%;
+#panel-open{position:fixed;top:12px;right:12px;z-index:85;width:44px;height:44px;border-radius:50%;
   background:color-mix(in srgb, var(--panel) 72%, transparent);-webkit-backdrop-filter:blur(14px) saturate(1.6);backdrop-filter:blur(14px) saturate(1.6);border:1px solid var(--border);color:var(--muted);cursor:pointer;
   display:flex;align-items:center;justify-content:center;padding:0;
   box-shadow:0 2px 14px var(--shadow);-webkit-tap-highlight-color:transparent;transition:border-color .15s,color .15s,transform .15s}
@@ -1071,7 +1071,7 @@ textarea[disabled]{opacity:.5;cursor:not-allowed}
    directly in line with #panel-open on the other side, same 44px circle
    and glyph pattern. Visible only while the sidebar is collapsed, and
    not on phone widths (the drawer has its own open affordance). */
-#sb-expand-corner{position:fixed;top:18px;left:12px;z-index:85;width:44px;height:44px;border-radius:50%;
+#sb-expand-corner{position:fixed;top:12px;left:12px;z-index:85;width:44px;height:44px;border-radius:50%;
   background:color-mix(in srgb, var(--panel) 72%, transparent);-webkit-backdrop-filter:blur(14px) saturate(1.6);backdrop-filter:blur(14px) saturate(1.6);border:1px solid var(--border);color:var(--muted);cursor:pointer;
   display:none;align-items:center;justify-content:center;padding:0;
   box-shadow:0 2px 14px var(--shadow);-webkit-tap-highlight-color:transparent;transition:border-color .15s,color .15s,transform .15s}
@@ -1599,6 +1599,36 @@ html.light .status.st-dormant{background:rgba(139,148,158,.18);color:var(--muted
   /* Ensure buttons are tappable */
   button{cursor:pointer;-webkit-tap-highlight-color:transparent}
   .icon-btn,button.icon{width:44px;height:44px;display:inline-flex;align-items:center;justify-content:center}
+}
+/* ---- Org-chart top band, phone (Jonny's verdict 2026-10-21, Door A) ----
+   The corners belong to the corners: the first 60px is reserved for the two
+   fixed buttons, a matched pair of 44px glass circles (#panel-open's base
+   rule moved to top:12 at every width; the menu button takes the same
+   material here). The Atlas rail may not scroll in secret, so it wraps into
+   honest rows in DOM order; Quick Answers wears the same inset-card clothes
+   and scrolls downward under a vertical fade. Placed after the Small
+   section so these values win the cascade over the Atlas row block, the
+   <=719px block, and the 64px reservation. Reservation arithmetic: rail
+   top 72 + rail height 180 + 12 of air = 264 — the numbers are negotiable,
+   the air is not. */
+@media (max-width:639px){
+  #menu-btn{top:12px;left:12px;width:44px;height:44px;border-radius:50%;
+    background:color-mix(in srgb, var(--panel) 72%, transparent);
+    -webkit-backdrop-filter:blur(14px) saturate(1.6);
+    backdrop-filter:blur(14px) saturate(1.6);
+    border:1px solid var(--border);color:var(--muted);
+    font-size:1.125rem;box-shadow:0 2px 14px var(--shadow)}
+  #panel-open{top:12px}
+  .atlas-controls{flex-wrap:wrap;overflow:visible;height:auto;
+    left:12px;right:12px;top:72px;transform:none;
+    padding:12px;gap:12px 24px;justify-content:space-between}
+  .atlas-controls input[type=range].zrange{width:180px;min-width:180px;height:44px}
+  #tree-chrome-main{padding:264px 12px 0;align-items:stretch;gap:12px}
+  #quick-answers{margin:0;max-height:188px;overflow-y:auto;overflow-x:hidden;
+    flex-wrap:wrap;row-gap:8px}
+  #quick-answers .qa-links{flex-wrap:wrap;overflow:visible;flex-basis:100%;
+    row-gap:8px}
+  #quick-answers::after{background:linear-gradient(to bottom,transparent,var(--panel))}
 }
 /* ---- Portrait phones: full-screen takeover instead of bottom sheet (Dave, 2026-10-10).
    iOS-style push navigation — one thing on screen at a time, no sidebar/panel crowding.
