@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>🏡 Llagas Creek Sale — Status</title>
+<style>
+  :root{
+    --bg:#f6f4ef; --card:#ffffff; --ink:#1d2733; --muted:#5d6b7a; --line:#ddd6c9;
+    --accent:#1f6f4a; --accent-ink:#ffffff; --warn-bg:#fdf3e0; --warn-line:#e5c87e; --warn-ink:#6d5310;
+    --chip:#eceae2;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --bg:#14181d; --card:#1d232b; --ink:#e9edf2; --muted:#9aa8b6; --line:#333d49;
+      --accent:#3fae74; --accent-ink:#0d1712; --warn-bg:#2c2513; --warn-line:#6e5a1e; --warn-ink:#f0d48a;
+      --chip:#262e38;
+    }
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+       font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+       line-height:1.5;-webkit-text-size-adjust:100%}
+  header{position:sticky;top:0;z-index:10;display:flex;align-items:center;gap:.55rem;
+         padding:.55rem 1rem;background:var(--card);border-bottom:1px solid var(--line)}
+  header .icon{font-size:1.25rem}
+  header .name{font-weight:700;font-size:1.02rem;letter-spacing:.01em}
+  header .sub{margin-left:auto;color:var(--muted);font-size:.8rem;text-align:right}
+  main{max-width:860px;margin:0 auto;padding:1.1rem 1rem 3rem}
+  h1{font-size:1.55rem;margin:.4rem 0 .2rem}
+  .addr{color:var(--muted);margin:0 0 1.1rem}
+  h2{font-size:1.05rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);
+     margin:1.7rem 0 .6rem}
+  .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:.7rem}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:.85rem .95rem}
+  .card .big{font-size:1.5rem;font-weight:700}
+  .card .lbl{color:var(--muted);font-size:.85rem}
+  .decision{background:var(--warn-bg);border:1px solid var(--warn-line);border-radius:12px;
+            padding:.8rem .95rem;margin:.55rem 0}
+  .decision b{color:var(--warn-ink)}
+  .decision p{margin:.25rem 0 0}
+  ul.activity{list-style:none;margin:0;padding:0}
+  ul.activity li{background:var(--card);border:1px solid var(--line);border-radius:12px;
+                 padding:.7rem .95rem;margin:.5rem 0}
+  ul.activity .when{font-weight:700;white-space:nowrap}
+  a{color:var(--accent);font-weight:600}
+  .cta{display:block;background:var(--accent);color:var(--accent-ink);text-decoration:none;
+       text-align:center;font-weight:700;border-radius:12px;padding:.9rem 1rem;margin:1.2rem 0 .4rem}
+  .fine{color:var(--muted);font-size:.83rem}
+  .who{display:flex;flex-wrap:wrap;gap:.45rem;margin-top:.4rem}
+  .who span{background:var(--chip);border-radius:999px;padding:.22rem .7rem;font-size:.85rem}
+.desk { margin-top: 36px; }
+.desk-sub { color: var(--muted); font-size: 14px; margin: 4px 0 16px; }
+.desk-token { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; margin-bottom: 16px; font-size: 14px; }
+.desk-tokenrow { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; align-items: center; }
+.desk-tokenrow input { flex: 1; min-width: 180px; padding: 8px 12px; border: 1px solid var(--line); border-radius: 8px; background: var(--bg); color: var(--ink); font-size: 14px; }
+.desk-tokenrow button { padding: 8px 14px; border-radius: 8px; border: none; background: var(--accent); color: #fff; font-weight: 600; font-size: 14px; cursor: pointer; }
+.desk-tokenrow a { color: var(--accent); font-size: 14px; }
+.desk-files { display: flex; flex-direction: column; gap: 16px; }
+.desk-file { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 16px 18px; }
+.desk-filehead { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+.desk-filehead h3 { font-size: 16px; font-weight: 700; }
+.desk-edit { background: none; border: 1px solid var(--line); border-radius: 8px; padding: 6px 12px; color: var(--accent); font-size: 13px; font-weight: 600; cursor: pointer; }
+.desk-edit:hover { border-color: var(--accent); }
+.desk-body { font-size: 14px; }
+.desk-body h1, .desk-body h2, .desk-body h3 { margin: 12px 0 6px; font-size: 15px; }
+.desk-body h1:first-child, .desk-body h2:first-child { margin-top: 0; }
+.desk-body p { margin: 6px 0; }
+.desk-body ul { margin: 6px 0 6px 20px; }
+.desk-body li { margin: 3px 0; }
+.desk-body strong { font-weight: 700; }
+.desk-body code { background: rgba(127,127,127,.15); padding: 1px 5px; border-radius: 4px; font-size: 13px; }
+.desk-loading { color: var(--muted); }
+.desk-editor textarea { width: 100%; box-sizing: border-box; padding: 10px 12px; border: 1px solid var(--line); border-radius: 8px; background: var(--bg); color: var(--ink); font-family: ui-monospace, monospace; font-size: 13px; line-height: 1.5; margin-top: 8px; }
+.desk-editorrow { display: flex; gap: 8px; margin-top: 10px; align-items: center; }
+.desk-save { padding: 8px 16px; border-radius: 8px; border: none; background: var(--accent); color: #fff; font-weight: 600; font-size: 14px; cursor: pointer; }
+.desk-cancel { padding: 8px 14px; border-radius: 8px; border: 1px solid var(--line); background: none; color: var(--ink); font-size: 14px; cursor: pointer; }
+.desk-status { font-size: 13px; color: var(--muted); }
+</style>
+</head>
+<body>
+<header>
+  <span class="icon">🏡</span>
+  <span class="name">Llagas Creek Sale</span>
+  <span class="sub">Status page · Updated Wed Oct 21, 2026</span>
+</header>
+<main>
+  <h1>The sale of 18231 Llagas Creek Dr</h1>
+  <p class="addr">Morgan Hill, California — co-sold by three brothers. Every spend needs all three to agree.</p>
+
+  <div class="who">
+    <span>🏠 Dave — co-seller</span>
+    <span>👨‍🦳 Ron — co-seller (oldest)</span>
+    <span>🧔 Emile — co-seller (middle)</span>
+    <span>🔑 Kay Korbel — listing agent, the hub</span>
+  </div>
+
+  <h2>At a glance</h2>
+  <div class="cards">
+    <div class="card"><div class="big">$10,050</div><div class="lbl">awaiting all-three sign-off — staging $4,250 + rodent proofing $5,800</div></div>
+    <div class="card"><div class="big">$583</div><div class="lbl">paid — spa heater, Nelson's Pool Service (Oct 3)</div></div>
+    <div class="card"><div class="big">Tonight 7:30 PM</div><div class="lbl">brothers call — the decision agenda is below</div></div>
+    <div class="card"><div class="big">1 blocker</div><div class="lbl">Emile's DocuSign envelope is bouncing — the sale can't proceed without his signature</div></div>
+  </div>
+
+  <h2>Awaiting decisions</h2>
+  <div class="decision"><b>🐀 Rodent proofing — $5,800</b>
+    <p>Estimate #787, Julio Arciga (Silicon Valley Rodent Proofers): screen roof vents, plumbing stacks, and eaves; re-screen the damaged attic vents. Needs all three sellers. Emile may never have seen it — it went to his bouncing inbox.</p></div>
+  <div class="decision"><b>✍️ Emile's DocuSign — bouncing</b>
+    <p>His signing envelope can't be delivered to emile@dellaquila.com. The alternate address (emile@emilesscperformance.com) is unverified. Tonight: confirm a working address and have Kay re-fire the envelope there.</p></div>
+  <div class="decision"><b>🛋️ Staging — $4,250 + extras</b>
+    <p>Mayra Vera's design/styling fee using the sellers' furniture. Painting, wallpaper removal, cleaning, repairs, and hauling are extra — never priced as one all-in number. Decide whether staging happens, and what Kay goes back with.</p></div>
+  <div class="decision"><b>🧹 Clean Crawl Space — invoices #14637 &amp; #14644</b>
+    <p>Forwarded to all three sellers Oct 16 with job photos and a quote. Confirm acceptance and how they're paid — and decide on the additional sub-area repairs Kay has been following up on.</p></div>
+  <div class="decision"><b>📦 The sheds</b>
+    <p>Kay sent the contents list and shelf measurements (Oct 20–21). What stays, what gets hauled, what gets sold.</p></div>
+
+  <h2>Latest from Kay</h2>
+  <ul class="activity">
+    <li><span class="when">Oct 21</span> — Shed contents list and shelf measurements arrived. Fumigation tenting (Oct 19–21) wraps today.</li>
+    <li><span class="when">Oct 19</span> — Kay requested the paid receipt from Clean Crawl Space and followed up on the additional sub-area repairs; she also followed up with Ron on both crawl-space invoices.</li>
+    <li><span class="when">Oct 16</span> — Crawl-space appointment day: Kay forwarded invoices #14637 and #14644 to all three sellers, with job photos.</li>
+    <li><span class="when">Oct 8</span> — Kay circulated a revised exterior paint bid to all three sellers.</li>
+    <li><span class="when">Oct 7</span> — Julio Arciga sent rodent-proofing Estimate #787 ($5,800).</li>
+    <li><span class="when">Oct 6</span> — Kay circulated the fireplace and HVAC inspection reports/invoice; HomeGuard confirmed the repair and fumigation schedule.</li>
+  </ul>
+
+  <a class="cta" href="reports/kay-korbel-activity-log.html">📋 Kay Korbel — full activity log →</a>
+  <p class="fine">The one complete record of everything Kay has sent — emails logged by thread, texts added as Dave passes them along. Sale archive, email index, and job req live in this buddy's repo; KNOWLEDGE.md holds the full state of the sale.</p>
+<!-- ============ THE DESK: knowledge + config, editable in place ============ -->
+<section class="desk" id="desk">
+<h2>🗂️ The Desk</h2>
+<p class="desk-sub">Everything Llagas Creek Sale knows and how it's configured to behave. Connect your GitHub token once to read and edit — it stays on this device only.</p>
+<div class="desk-token" id="desk-token" hidden>
+<p>🔒 Connect GitHub to unlock the desk.</p>
+<div class="desk-tokenrow">
+<input type="password" id="desk-token-input" placeholder="GitHub token (repo scope)" aria-label="GitHub token">
+<button type="button" id="desk-token-save">Save token</button>
+<a href="https://github.com/settings/tokens" target="_blank" rel="noopener">Get a token</a>
+</div>
+</div>
+<div class="desk-files">
+  <article class="desk-file" data-file="KNOWLEDGE.md">
+    <div class="desk-filehead"><h3>📚 Knowledge</h3><button type="button" class="desk-edit" data-edit="KNOWLEDGE.md">Edit</button></div>
+    <div class="desk-body" data-body="KNOWLEDGE.md"><p class="desk-loading">Loading…</p></div>
+    <div class="desk-editor" data-editor="KNOWLEDGE.md" hidden>
+      <textarea rows="14" aria-label="Edit KNOWLEDGE.md"></textarea>
+      <div class="desk-editorrow"><button type="button" class="desk-save" data-save="KNOWLEDGE.md">Save</button><button type="button" class="desk-cancel" data-cancel="KNOWLEDGE.md">Cancel</button><span class="desk-status" role="status"></span></div>
+    </div>
+  </article>
+  <article class="desk-file" data-file="CONFIG.md">
+    <div class="desk-filehead"><h3>⚙️ Configuration</h3><button type="button" class="desk-edit" data-edit="CONFIG.md">Edit</button></div>
+    <div class="desk-body" data-body="CONFIG.md"><p class="desk-loading">Loading…</p></div>
+    <div class="desk-editor" data-editor="CONFIG.md" hidden>
+      <textarea rows="14" aria-label="Edit CONFIG.md"></textarea>
+      <div class="desk-editorrow"><button type="button" class="desk-save" data-save="CONFIG.md">Save</button><button type="button" class="desk-cancel" data-cancel="CONFIG.md">Cancel</button><span class="desk-status" role="status"></span></div>
+    </div>
+  </article>
+  <article class="desk-file" data-file="STUDY.md">
+    <div class="desk-filehead"><h3>📖 Study Topics</h3><button type="button" class="desk-edit" data-edit="STUDY.md">Edit</button></div>
+    <div class="desk-body" data-body="STUDY.md"><p class="desk-loading">Loading…</p></div>
+    <div class="desk-editor" data-editor="STUDY.md" hidden>
+      <textarea rows="14" aria-label="Edit STUDY.md"></textarea>
+      <div class="desk-editorrow"><button type="button" class="desk-save" data-save="STUDY.md">Save</button><button type="button" class="desk-cancel" data-cancel="STUDY.md">Cancel</button><span class="desk-status" role="status"></span></div>
+    </div>
+  </article>
+</div>
+</section>
+
+<script>
+/* ============ THE DESK: token-gated read/edit of repo files ============ */
+(function(){
+  var REPO = 'llagas-creek-sale';
+  var FILES = ['KNOWLEDGE.md', 'CONFIG.md', 'STUDY.md'];
+  var shas = {};
+  function lsGet(){ try { return JSON.parse(localStorage.getItem('buddyTree.v3') || '{}'); } catch(e){ return {}; } }
+  function lsSet(patch){ try { var s = lsGet(); for (var k in patch) s[k] = patch[k]; localStorage.setItem('buddyTree.v3', JSON.stringify(s)); } catch(e){} }
+  function token(){ return lsGet().ghToken || ''; }
+  function esc(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+  /* minimal markdown renderer: headings, bold, lists, paragraphs */
+  function md(src){
+    var lines = src.split('\n'), html = '', inList = false;
+    lines.forEach(function(line){
+      var t = line.trim();
+      if (/^#{1,3}\s/.test(t)) {
+        if (inList) { html += '</ul>'; inList = false; }
+        var lvl = t.match(/^#+/)[0].length;
+        html += '<h' + lvl + '>' + inline(t.replace(/^#+\s*/,'')) + '</h' + lvl + '>';
+      } else if (/^[-*]\s/.test(t)) {
+        if (!inList) { html += '<ul>'; inList = true; }
+        html += '<li>' + inline(t.replace(/^[-*]\s*/,'')) + '</li>';
+      } else if (t === '') {
+        if (inList) { html += '</ul>'; inList = false; }
+      } else {
+        if (inList) { html += '</ul>'; inList = false; }
+        html += '<p>' + inline(t) + '</p>';
+      }
+    });
+    if (inList) html += '</ul>';
+    return html;
+  }
+  function inline(s){
+    s = esc(s);
+    s = s.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+    s = s.replace(/`([^`]+)`/g, '<code>$1</code>');
+    return s;
+  }
+  function ghApi(path, method, body){
+    var t = token();
+    if (!t) throw new Error('no token');
+    return fetch('https://api.github.com' + path, {
+      method: method || 'GET',
+      headers: {'Authorization': 'Bearer ' + t, 'Accept': 'application/vnd.github+json', 'Content-Type': 'application/json'},
+      body: body ? JSON.stringify(body) : undefined
+    }).then(function(r){
+      if (!r.ok) throw new Error('GitHub ' + r.status);
+      return r.status === 204 ? null : r.json();
+    });
+  }
+  function b64decode(s){
+    var bin = atob(s.replace(/\n/g, ''));
+    var bytes = Uint8Array.from(bin, function(c){ return c.charCodeAt(0); });
+    return new TextDecoder().decode(bytes);
+  }
+  function b64encode(str){
+    var bytes = new TextEncoder().encode(str), bin = '';
+    bytes.forEach(function(b){ bin += String.fromCharCode(b); });
+    return btoa(bin);
+  }
+  function loadFile(name){
+    var body = document.querySelector('[data-body="' + name + '"]');
+    ghApi('/repos/davedellaquila/' + REPO + '/contents/' + name)
+      .then(function(j){
+        shas[name] = j.sha;
+        body.innerHTML = md(b64decode(j.content || ''));
+      })
+      .catch(function(e){
+        body.innerHTML = '<p class="desk-loading">Could not load ' + esc(name) + ' (' + esc(e.message) + ').</p>';
+      });
+  }
+  function refresh(){
+    var tok = token();
+    document.getElementById('desk-token').hidden = !!tok;
+    document.querySelectorAll('.desk-edit').forEach(function(b){ b.disabled = !tok; b.style.opacity = tok ? 1 : .45; });
+    if (tok) FILES.forEach(loadFile);
+    else document.querySelectorAll('.desk-body').forEach(function(b){ b.innerHTML = '<p class="desk-loading">Connect your GitHub token above to view.</p>'; });
+  }
+  document.getElementById('desk-token-save').addEventListener('click', function(){
+    var v = document.getElementById('desk-token-input').value.trim();
+    if (v) { lsSet({ghToken: v}); document.getElementById('desk-token-input').value = ''; refresh(); }
+  });
+  document.querySelectorAll('.desk-edit').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      if (!token()) return;
+      var name = btn.getAttribute('data-edit');
+      var editor = document.querySelector('[data-editor="' + name + '"]');
+      var ta = editor.querySelector('textarea');
+      editor.hidden = false; btn.hidden = true;
+      ghApi('/repos/davedellaquila/' + REPO + '/contents/' + name)
+        .then(function(j){ shas[name] = j.sha; ta.value = b64decode(j.content || ''); ta.focus(); })
+        .catch(function(e){ editor.querySelector('.desk-status').textContent = 'Load failed: ' + e.message; });
+    });
+  });
+  document.querySelectorAll('.desk-cancel').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var name = btn.getAttribute('data-cancel');
+      document.querySelector('[data-editor="' + name + '"]').hidden = true;
+      document.querySelector('[data-edit="' + name + '"]').hidden = false;
+    });
+  });
+  document.querySelectorAll('.desk-save').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var name = btn.getAttribute('data-save');
+      var editor = document.querySelector('[data-editor="' + name + '"]');
+      var ta = editor.querySelector('textarea');
+      var status = editor.querySelector('.desk-status');
+      status.textContent = 'Saving…'; btn.disabled = true;
+      ghApi('/repos/davedellaquila/' + REPO + '/contents/' + name, 'PUT', {
+        message: 'Update ' + name + ' from homepage desk',
+        content: b64encode(ta.value),
+        sha: shas[name]
+      }).then(function(j){
+        shas[name] = (j.content || {}).sha;
+        status.textContent = 'Saved ✓';
+        document.querySelector('[data-body="' + name + '"]').innerHTML = md(ta.value);
+        setTimeout(function(){
+          editor.hidden = true;
+          document.querySelector('[data-edit="' + name + '"]').hidden = false;
+          status.textContent = ''; btn.disabled = false;
+        }, 900);
+      }).catch(function(e){
+        status.textContent = 'Save failed: ' + e.message; btn.disabled = false;
+      });
+    });
+  });
+  refresh();
+})();
+</script>
+</main>
+</body>
+</html>

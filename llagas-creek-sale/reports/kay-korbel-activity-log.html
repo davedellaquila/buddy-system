@@ -1,0 +1,333 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<link rel="icon" href="data:,">
+<title>Kay Korbel — Activity Log</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#f7f6f2; --surface:#ffffff; --surface-2:#fcfbf7; --ink:#1c2420; --muted:#6b746e; --faint:#8a928c;
+    --line:#e3e1d8; --line-strong:#d4d1c4;
+    --accent:#2f4a3e; --accent-soft:#e8efe9; --accent-ink:#243a30;
+    --amber-bg:#fdf6e3; --amber-line:#e8d9a8; --amber-ink:#7a5a12; --amber-dot:#b98a1a;
+    --card-shadow:0 1px 2px rgba(28,36,32,.04),0 8px 24px rgba(28,36,32,.04);
+    --radius:14px;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --bg:#121513; --surface:#1a1e1b; --surface-2:#171b18; --ink:#e9ebe7; --muted:#a3aca5; --faint:#7f8a81;
+      --line:#2a2f2b; --line-strong:#363d37;
+      --accent:#a8c3b2; --accent-soft:#223128; --accent-ink:#cfe3d6;
+      --amber-bg:#2a2412; --amber-line:#4a3f1e; --amber-ink:#e8c96a; --amber-dot:#d4a92c;
+      --card-shadow:0 1px 2px rgba(0,0,0,.2),0 8px 24px rgba(0,0,0,.18);
+    }
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:"IBM Plex Sans",system-ui,-apple-system,Segoe UI,Roboto,sans-serif;font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased}
+  a{color:var(--accent);text-underline-offset:3px}
+  .wrap{max-width:920px;margin:0 auto;padding:0 20px 64px}
+  /* Masthead */
+  .masthead{padding:36px 0 28px;border-bottom:1px solid var(--line-strong)}
+  .eyebrow{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;font-size:12px;letter-spacing:.13em;text-transform:uppercase;color:var(--muted);font-weight:600}
+  .eyebrow .dot{width:3px;height:3px;border-radius:50%;background:var(--faint);display:inline-block}
+  h1{font-family:"Newsreader",Georgia,serif;font-weight:500;font-size:clamp(36px,6vw,54px);line-height:1.02;letter-spacing:-.02em;margin:16px 0 10px}
+  h1 em{font-style:italic;font-weight:400}
+  .lede{font-family:"Newsreader",Georgia,serif;font-size:19px;line-height:1.5;color:var(--muted);max-width:640px;margin:0}
+  .meta-row{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}
+  .pill{display:inline-flex;align-items:center;gap:7px;background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:7px 12px;font-size:13px;line-height:1;color:var(--ink);box-shadow:var(--card-shadow)}
+  .pill span{color:var(--muted)}
+  .pill strong{font-weight:600}
+  .pill.live{border-color:var(--accent-soft);background:var(--accent-soft);color:var(--accent-ink)}
+  .live-dot{width:7px;height:7px;border-radius:50%;background:#3a7d55;box-shadow:0 0 0 3px rgba(58,125,85,.15)}
+  @media (prefers-color-scheme: dark){.live-dot{background:#6fbf8a}}
+  /* Nav */
+  .toc{display:flex;flex-wrap:wrap;gap:8px;margin:20px 0 0}
+  .toc a{font-size:13px;font-weight:500;text-decoration:none;color:var(--ink);background:var(--surface);border:1px solid var(--line);padding:8px 12px;border-radius:999px}
+  .toc a:hover{border-color:var(--line-strong)}
+  /* Sections */
+  section{margin-top:36px}
+  .section-head{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin-bottom:16px}
+  .section-head h2{font-family:"Newsreader",Georgia,serif;font-weight:500;font-size:28px;line-height:1.1;margin:0;letter-spacing:-.01em}
+  .section-head p{margin:4px 0 0;color:var(--muted);font-size:14px;line-height:1.5;max-width:560px}
+  .count{font-size:12px;letter-spacing:.08em;text-transform:uppercase;font-weight:600;color:var(--muted);white-space:nowrap;padding-bottom:4px}
+  /* Spend */
+  .spend{display:grid;grid-template-columns:1.35fr .85fr;gap:14px}
+  @media(max-width:640px){.spend{grid-template-columns:1fr}}
+  .spend-card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:20px 20px 18px;box-shadow:var(--card-shadow)}
+  .spend-card.highlight{background:var(--accent);color:#fff;border-color:var(--accent)}
+  @media (prefers-color-scheme: dark){.spend-card.highlight{background:#223128;color:var(--ink);border-color:var(--line)}}
+  .spend-label{font-size:12px;letter-spacing:.11em;text-transform:uppercase;font-weight:600;opacity:.75;margin:0 0 8px}
+  .spend-amount{font-family:"Newsreader",Georgia,serif;font-size:40px;line-height:1;font-weight:500;letter-spacing:-.02em;margin:0}
+  .spend-detail{font-size:14px;line-height:1.55;margin:10px 0 0;opacity:.88}
+  .spend-card:not(.highlight) .spend-detail{color:var(--muted)}
+  /* Decisions */
+  .decisions{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  @media(max-width:680px){.decisions{grid-template-columns:1fr}}
+  .decision{background:var(--surface);border:1px solid var(--amber-line);border-radius:var(--radius);padding:18px;box-shadow:var(--card-shadow);display:flex;flex-direction:column;gap:10px}
+  .decision.wide{grid-column:1 / -1}
+  @media(min-width:681px){.decision.wide{flex-direction:row;gap:20px}.decision.wide .d-body{flex:1}}
+  .d-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+  .d-num{font-family:"Newsreader",Georgia,serif;font-size:13px;font-weight:600;width:28px;height:28px;border-radius:50%;background:var(--amber-bg);border:1px solid var(--amber-line);color:var(--amber-ink);display:grid;place-items:center;flex-shrink:0}
+  .tag{font-size:11px;letter-spacing:.07em;text-transform:uppercase;font-weight:600;color:var(--amber-ink);background:var(--amber-bg);border:1px solid var(--amber-line);padding:5px 8px;border-radius:999px;white-space:nowrap;line-height:1}
+  .tag.neutral{color:var(--muted);background:var(--surface-2);border-color:var(--line)}
+  .decision h3{font-family:"Newsreader",Georgia,serif;font-weight:600;font-size:19px;line-height:1.25;margin:0;letter-spacing:-.01em}
+  .decision h3 .amt{white-space:nowrap}
+  .decision p{margin:0;font-size:14.5px;line-height:1.6;color:var(--muted)}
+  .decision p strong{color:var(--ink);font-weight:600}
+  .d-foot{margin-top:auto;padding-top:10px;border-top:1px dashed var(--line);font-size:13px;color:var(--muted);display:flex;gap:6px;align-items:center}
+  .d-foot::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--amber-dot);flex-shrink:0}
+  /* Timeline */
+  .threads{display:flex;flex-direction:column;gap:14px}
+  .thread{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--card-shadow);overflow:hidden}
+  .thread-head{padding:16px 18px 12px;display:flex;align-items:center;justify-content:space-between;gap:12px;border-bottom:1px solid var(--line);background:var(--surface-2)}
+  .thread-head h3{font-family:"Newsreader",Georgia,serif;font-size:18px;font-weight:600;margin:0;line-height:1.2}
+  .thread-head span{font-size:12px;color:var(--muted);font-weight:500;white-space:nowrap}
+  .entries{list-style:none;margin:0;padding:6px 18px 14px}
+  .entries li{display:grid;grid-template-columns:118px 14px 1fr;gap:0 10px;padding:10px 0;border-bottom:1px solid var(--line)}
+  .entries li:last-child{border-bottom:none;padding-bottom:2px}
+  @media(max-width:540px){.entries li{grid-template-columns:96px 12px 1fr}}
+  .date{font-size:12px;font-weight:600;letter-spacing:.01em;color:var(--accent-ink);background:var(--accent-soft);height:fit-content;padding:5px 7px;border-radius:999px;text-align:center;line-height:1.3;white-space:normal;overflow-wrap:break-word}
+  @media (prefers-color-scheme: dark){.date{color:var(--accent)}}
+  .rail{position:relative;display:flex;justify-content:center}
+  .rail::before{content:"";position:absolute;top:18px;bottom:-14px;width:1px;background:var(--line)}
+  .entries li:last-child .rail::before{display:none}
+  .rail i{width:7px;height:7px;border-radius:50%;background:var(--surface);border:2px solid var(--line-strong);margin-top:7px;position:relative;z-index:1;display:block}
+  .entry-text{font-size:14.5px;line-height:1.6;color:var(--ink)}
+  .entry-text .muted{color:var(--muted)}
+  /* Texts empty state */
+  .empty{background:var(--surface);border:1px dashed var(--line-strong);border-radius:var(--radius);padding:26px 22px;text-align:center;box-shadow:var(--card-shadow)}
+  .empty-icon{width:44px;height:44px;border-radius:50%;background:var(--accent-soft);display:grid;place-items:center;margin:0 auto 12px;font-size:20px}
+  .empty h3{font-family:"Newsreader",Georgia,serif;font-size:22px;font-weight:500;margin:0 0 6px}
+  .empty > p{color:var(--muted);font-size:14.5px;max-width:520px;margin:0 auto;line-height:1.6}
+  .how{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:20px;text-align:left}
+  @media(max-width:640px){.how{grid-template-columns:1fr}}
+  .how-card{background:var(--surface-2);border:1px solid var(--line);border-radius:10px;padding:14px}
+  .how-card strong{display:block;font-size:13px;margin-bottom:4px}
+  .how-card p{font-size:13.5px;line-height:1.55;color:var(--muted);margin:0}
+  .how-num{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600;display:block;margin-bottom:6px}
+  /* Footer */
+  footer{margin-top:40px;padding-top:20px;border-top:1px solid var(--line);display:flex;flex-wrap:wrap;gap:12px;justify-content:space-between;align-items:flex-start}
+  footer p{margin:0;font-size:13px;line-height:1.6;color:var(--muted);max-width:640px}
+  .source{font-size:12px;color:var(--faint);line-height:1.6;max-width:640px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="masthead">
+    <div class="eyebrow"><span>Morgan Hill · House sale</span><span class="dot"></span><span>Listing agent log</span></div>
+    <h1>Kay Korbel — <em>Activity Log</em></h1>
+    <p class="lede">Everything Kay has sent, coordinated, and put in front of the sellers — kept in one place so the latest is always here.</p>
+    <div class="meta-row">
+      <span class="pill"><span>Property</span> <strong>18231 Llagas Creek Dr, Morgan Hill</strong></span>
+      <span class="pill live"><span class="live-dot" aria-hidden="true"></span> Last updated <strong>&nbsp;Wed Oct 21, 2026</strong></span>
+      <span class="pill"><span>Co-sellers</span> <strong>Dave · Ron · Emile Dell'Aquila</strong></span>
+    </div>
+    <nav class="toc" aria-label="On this page">
+      <a href="#decisions">Awaiting decisions</a>
+      <a href="#activity">Activity by thread</a>
+      <a href="#texts">Text messages</a>
+    </nav>
+    <p style="margin:14px 0 0;font-size:13.5px;color:var(--muted);line-height:1.6;max-width:640px">Kay is the hub for the sale. Every spend needs all three sellers to agree — the cards below are the ones still waiting on that agreement.</p>
+  </header>
+
+  <!-- Spend snapshot -->
+  <section aria-label="Spend snapshot">
+    <div class="spend">
+      <div class="spend-card highlight">
+        <p class="spend-label">Awaiting all-three sign-off</p>
+        <p class="spend-amount">$10,050</p>
+        <p class="spend-detail">$4,250 staging + $5,800 rodent proofing — before the crawl-space items.</p>
+      </div>
+      <div class="spend-card">
+        <p class="spend-label">Paid / done</p>
+        <p class="spend-amount">$583</p>
+        <p class="spend-detail">Spa heater install — Nelson's Pool Service invoice #4645, Oct 3.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Awaiting decisions -->
+  <section id="decisions">
+    <div class="section-head">
+      <div>
+        <h2>Awaiting decisions</h2>
+        <p>Open items for Dave, Ron, and Emile. Nothing here is approved until all three say yes.</p>
+      </div>
+      <span class="count">5 open</span>
+    </div>
+
+    <div class="decisions">
+      <article class="decision">
+        <div class="d-top"><span class="d-num">1</span><span class="tag">Needs all three</span></div>
+        <div class="d-body">
+          <h3>Rodent proofing — <span class="amt">$5,800</span></h3>
+          <p>Estimate <strong>#787, Julio Arciga</strong> (Silicon Valley Rodent Proofers): screen roof vents, plumbing stacks, and eaves; re-screen damaged attic vents.</p>
+        </div>
+        <div class="d-foot">Emile may never have seen it — it went to his bouncing inbox. Riding on the Oct 21 brothers call.</div>
+      </article>
+
+      <article class="decision">
+        <div class="d-top"><span class="d-num">2</span><span class="tag">Needs all three</span></div>
+        <div class="d-body">
+          <h3>Staging — <span class="amt">$4,250 + extras</span></h3>
+          <p><strong>Mayra Vera's</strong> design / styling fee using the sellers' furniture. Painting, wallpaper removal, cleaning, repairs, and hauling are extra.</p>
+        </div>
+        <div class="d-foot">Extras have never been priced as one all-in number. Dave's draft reply asks Kay for that number and her timing; decision still open.</div>
+      </article>
+
+      <article class="decision">
+        <div class="d-top"><span class="d-num">3</span><span class="tag">Blocking</span></div>
+        <div class="d-body">
+          <h3>Emile's DocuSign is bouncing</h3>
+          <p>His signature envelope can't be delivered to <strong>emile@dellaquila.com</strong>. The sale cannot proceed without his signature.</p>
+        </div>
+        <div class="d-foot">An alternate address — emile@emilesscperformance.com — exists but is unverified.</div>
+      </article>
+
+      <article class="decision">
+        <div class="d-top"><span class="d-num">4</span><span class="tag">Confirm &amp; decide</span></div>
+        <div class="d-body">
+          <h3>Clean Crawl Space invoices #14637 &amp; #14644</h3>
+          <p>Forwarded to all three sellers <strong>Oct 16</strong> with job photos — a quote was attached to #14637.</p>
+        </div>
+        <div class="d-foot">Confirm acceptance / payment, and decide on the additional sub-area repairs Kay has been following up on.</div>
+      </article>
+
+      <article class="decision wide">
+        <div class="d-top"><span class="d-num">5</span><span class="tag neutral">Decide</span></div>
+        <div class="d-body">
+          <h3>The sheds</h3>
+          <p>Kay sent the contents list and shelf measurements <strong>Oct 21</strong>. Decide what stays, what gets hauled, and what gets sold.</p>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- Activity -->
+  <section id="activity">
+    <div class="section-head">
+      <div>
+        <h2>Activity — by thread</h2>
+        <p>What Kay sent and coordinated, grouped by thread as in the log — newest entries first within each thread.</p>
+      </div>
+      <span class="count">Sep – Oct 2026</span>
+    </div>
+
+    <div class="threads">
+
+      <article class="thread">
+        <div class="thread-head"><h3>The sheds</h3><span>1 update</span></div>
+        <ul class="entries">
+          <li><span class="date">Oct 21</span><span class="rail"><i></i></span><span class="entry-text">Kay sent the shed contents list and shelf measurements. <span class="muted">Ron replied with an Andrea Bocelli joke about saying goodbye to the sheds — no action in it.</span></span></li>
+        </ul>
+      </article>
+
+      <article class="thread">
+        <div class="thread-head"><h3>Clean Crawl Space</h3><span>3 updates</span></div>
+        <ul class="entries">
+          <li><span class="date">Oct 16 · 6:32 PM</span><span class="rail"><i></i></span><span class="entry-text">Kay forwarded <strong>Invoice #14637</strong> to all three sellers, with job photos and a Dell'Aquila quote attached.</span></li>
+          <li><span class="date">Oct 16 · 6:30 PM</span><span class="rail"><i></i></span><span class="entry-text">Kay forwarded <strong>Invoice #14644</strong> to all three sellers, with job photos.</span></li>
+          <li><span class="date">Mid-Oct</span><span class="rail"><i></i></span><span class="entry-text">Kay coordinated the crawl-space work: follow-ups around the Oct 16 appointment, a paid-receipt request, and a running thread about additional repairs in the sub-area.</span></li>
+        </ul>
+      </article>
+
+      <article class="thread">
+        <div class="thread-head"><h3>Termite work &amp; fumigation — HomeGuard</h3><span>3 updates</span></div>
+        <ul class="entries">
+          <li><span class="date">Oct 19–21</span><span class="rail"><i></i></span><span class="entry-text">Fumigation tenting up; wraps Oct 21.</span></li>
+          <li><span class="date">Oct 6</span><span class="rail"><i></i></span><span class="entry-text">Kay sent fumigation-postponement emails flagging the vermin-infestation condition in the attic.</span></li>
+          <li><span class="date">Early Oct</span><span class="rail"><i></i></span><span class="entry-text">Kay circulated HomeGuard's work-order confirmations and repair scheduling <span class="muted">(repairs Oct 9–22 on the original schedule)</span>.</span></li>
+        </ul>
+      </article>
+
+      <article class="thread">
+        <div class="thread-head"><h3>Rodent proofing</h3><span>1 update</span></div>
+        <ul class="entries">
+          <li><span class="date">Oct 7</span><span class="rail"><i></i></span><span class="entry-text">Julio Arciga sent <strong>Estimate #787 ($5,800)</strong> to Dave, Ron, Emile, and Kay. Scope: 21-gauge galvanized screen on roof breather vents, plumbing stacks, and eaves, plus re-screening damaged attic vents. <span class="muted">Addresses the vermin condition Kay flagged Oct 6.</span></span></li>
+        </ul>
+      </article>
+
+      <article class="thread">
+        <div class="thread-head"><h3>DocuSign / Emile's inbox</h3><span>1 update</span></div>
+        <ul class="entries">
+          <li><span class="date">Early Oct</span><span class="rail"><i></i></span><span class="entry-text">Kay forwarded Dave the <strong>“DocuSign: Document Delivery Failed”</strong> notice: Emile's signing envelope (as Successor Trustee) is bouncing at emile@dellaquila.com. <span class="muted">The address is spelled correctly — his mailbox is rejecting mail.</span></span></li>
+        </ul>
+      </article>
+
+      <article class="thread">
+        <div class="thread-head"><h3>Inspections &amp; reports</h3><span>3 updates</span></div>
+        <ul class="entries">
+          <li><span class="date">Mid-Oct</span><span class="rail"><i></i></span><span class="entry-text">Kay forwarded the fireplace inspection report and the HVAC inspection report / invoice.</span></li>
+          <li><span class="date">Sep 30</span><span class="rail"><i></i></span><span class="entry-text">Kay met structural engineer <strong>Sonny Vakul</strong> (MG Constructors) at the house to review the home, pest, roof, and sewer-lateral inspection reports.</span></li>
+          <li><span class="date">Sep 29</span><span class="rail"><i></i></span><span class="entry-text">Kay forwarded the pest inspection report for the house.</span></li>
+        </ul>
+      </article>
+
+      <article class="thread">
+        <div class="thread-head"><h3>Staging</h3><span>1 update</span></div>
+        <ul class="entries">
+          <li><span class="date">Sep 29</span><span class="rail"><i></i></span><span class="entry-text">Kay sent <strong>Mayra Vera's staging proposal</strong> to Dave, Ron, and Emile: $4,250 design / styling fee using the sellers' own furniture; painting, wallpaper removal, cleaning, repairs, and hauling extra.</span></li>
+        </ul>
+      </article>
+
+      <article class="thread">
+        <div class="thread-head"><h3>Spa</h3><span>2 updates</span></div>
+        <ul class="entries">
+          <li><span class="date">Oct 3</span><span class="rail"><i></i></span><span class="entry-text">Spa heater installed.</span></li>
+          <li><span class="date">Sep 29</span><span class="rail"><i></i></span><span class="entry-text">Kay forwarded Nelson's Pool Service invoice <strong>#4645 ($583)</strong>.</span></li>
+        </ul>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- Texts -->
+  <section id="texts">
+    <div class="section-head">
+      <div>
+        <h2>Text messages from Kay</h2>
+        <p>Kay also communicates by text. Those will be logged here, dated, as they come in.</p>
+      </div>
+      <span class="count">None yet</span>
+    </div>
+
+    <div class="empty">
+      <div class="empty-icon" aria-hidden="true">💬</div>
+      <h3>No texts logged yet</h3>
+      <p>This section is ready and waiting. When a text from Kay comes in, it will appear here in date order alongside her emails — so you have one complete record.</p>
+
+      <div class="how" aria-label="How to add Kay's texts">
+        <div class="how-card">
+          <span class="how-num">Easiest</span>
+          <strong>Screenshot &amp; drop it in chat</strong>
+          <p>Take a screenshot of Kay's text thread and share it here. I'll read the dates and wording and add it to this log.</p>
+        </div>
+        <div class="how-card">
+          <span class="how-num">Also works</span>
+          <strong>Copy &amp; paste the thread</strong>
+          <p>Long-press a message in Messages, copy the thread, and paste it into chat. Include the date if it's not in the paste.</p>
+        </div>
+        <div class="how-card">
+          <span class="how-num">For a run of texts</span>
+          <strong>Forward a batch</strong>
+          <p>Select several messages in Messages and forward them, or just tell me “new texts from Kay” and walk me through them — I'll log each one dated.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <p class="source">Sources: Kay's emails (info@kaykorbel.com) as captured in Dave's mailbox records through Oct 21, 2026, plus the brothers' sale file. Maintained by Astro — this page mirrors the Kay activity log file and is updated as new activity is added.</p>
+    <p>18231 Llagas Creek Dr · Morgan Hill</p>
+  </footer>
+
+</div>
+</body>
+</html>

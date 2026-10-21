@@ -1785,6 +1785,63 @@ body:has(#sidebar.sb-floating) #sb-resize{display:none}
 .bp-rsz[data-dir="s"]:hover::after,.bp-rsz[data-dir="e"]:hover::after,.bp-rsz[data-dir="w"]:hover::after{
   border-color:var(--accent);background-image:radial-gradient(circle, var(--accent) 1.4px, transparent 1.6px)}
 .bp-rsz[data-dir="ne"]:hover::after,.bp-rsz[data-dir="nw"]:hover::after,.bp-rsz[data-dir="se"]:hover::after,.bp-rsz[data-dir="sw"]:hover::after{border-color:var(--accent)}
+
+    /* ==== Icon strip, Views dock, panel header v2 (Dave + Jonny, 2026-10-21) ==== */
+    /* Rail: the panel-open control returns to the top of the icon strip over a
+       divider; the current view sits at the strip's foot under another divider,
+       with a popover picker. Strip only - phones keep their Door A corner button. */
+    #rail-top,#rail-bottom{display:none}
+    body.sb-closed #rail-top{display:flex;justify-content:center;padding-bottom:8px;margin-bottom:4px;border-bottom:1px solid var(--border)}
+    body.sb-closed #rail-bottom{display:flex;justify-content:center;padding-top:8px;margin-top:4px;border-top:1px solid var(--border)}
+    @media (max-width:639px){#rail-top,#rail-bottom{display:none!important}}
+    #panel-open-rail{width:44px;height:44px;border-radius:50%;border:1px solid var(--border);background:color-mix(in srgb, var(--panel) 72%, transparent);color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0}
+    #panel-open-rail:hover{color:var(--accent);border-color:var(--accent)}
+    #panel-open-rail .pi-serif{font-family:Georgia,'Times New Roman',Times,serif;font-size:26px;font-style:italic;font-weight:600;line-height:1;display:block;transform:translateY(-2px)}
+    body:has(#view-buddy.active) #panel-open-rail{visibility:hidden}
+    body.sb-closed #panel-open{display:none}
+    #rail-curview{width:44px;height:44px;border-radius:12px;border:1px solid transparent;background:none;color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1.25rem;padding:0}
+    #rail-curview:hover{color:var(--accent);border-color:var(--border);background:var(--ghost)}
+    #rail-viewpop{position:fixed;z-index:120;min-width:196px;background:var(--panel);border:1px solid var(--border);border-radius:12px;box-shadow:0 14px 40px rgba(0,0,0,.28);padding:6px}
+    #rail-viewpop button{display:flex;align-items:center;gap:10px;width:100%;padding:8px 10px;border:none;background:none;color:var(--text);font:inherit;font-size:.875rem;border-radius:8px;cursor:pointer;text-align:left}
+    #rail-viewpop button:hover{background:var(--ghost)}
+    #rail-viewpop button.sel{color:var(--accent);font-weight:600}
+    #rail-viewpop .rv-ic{width:22px;text-align:center;flex:0 0 auto}
+    /* Views section docked at the sidebar footer, above the Tip Jar, resizable. */
+    body:not(.sb-closed) #views-sec{position:sticky;bottom:42px;z-index:6;margin-left:-14px;margin-right:-14px;padding-left:14px;padding-right:14px;background:color-mix(in srgb, var(--panel) 78%, transparent);-webkit-backdrop-filter:blur(20px) saturate(1.8);backdrop-filter:blur(20px) saturate(1.8);border-top:1px solid var(--border)}
+    body.glass-panels #views-sec{background:color-mix(in srgb, var(--panel) 45%, transparent)}
+    #views-resize{height:12px;margin:0 -14px;cursor:ns-resize;touch-action:none;position:relative}
+    #views-resize::after{content:"";position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:40px;height:4px;border-radius:2px;background:var(--border)}
+    #views-resize:hover::after{background:var(--accent)}
+    body.sb-closed #views-resize{display:none}
+    /* Panel header v2: the name never yields; status is an annotation, not a pill. */
+    .bp-topnav{flex-wrap:nowrap}
+    .bp-topnav #bp-more{margin-left:auto}
+    .bp-topnav .bp-collapse-btn{width:32px;height:32px;border-radius:8px;flex:0 0 auto}
+    .bp-narrow-item{display:none!important}
+    #view-buddy.bp-narrow .bp-narrow-item{display:flex!important}
+    #view-buddy.bp-narrow .bp-topnav>[data-navbtn="prev"],#view-buddy.bp-narrow .bp-topnav>[data-navbtn="next"],#view-buddy.bp-narrow .bp-topnav>#bp-allbuddies,#view-buddy.bp-narrow .bp-topnav>.sep{display:none}
+    #view-buddy .bp-statusline.status{background:none;border:none;padding:0}
+    .bp-statusline{font-size:.6875rem;letter-spacing:.09em;text-transform:uppercase;font-weight:600;margin:-4px 0 10px}
+    /* The floating header card gets a real border and a deeper shadow (Dave, 2026-10-21). */
+    .bp-sticky-head{background:var(--panel);border:1px solid var(--border);border-radius:14px;box-shadow:0 10px 28px rgba(0,0,0,.22),0 2px 6px rgba(0,0,0,.16)}
+    /* Floated-panel resize handles: tucked inside the panel, quiet until hovered. */
+    .bp-rsz[data-dir="n"]{top:0;height:10px}
+    .bp-rsz[data-dir="s"]{bottom:0;height:10px}
+    .bp-rsz[data-dir="e"]{right:0;width:10px}
+    .bp-rsz[data-dir="w"]{left:0;width:10px}
+    .bp-rsz[data-dir="ne"]{top:0;right:0;width:18px;height:18px}
+    .bp-rsz[data-dir="nw"]{top:0;left:0;width:18px;height:18px}
+    .bp-rsz[data-dir="se"]{bottom:0;right:0;width:18px;height:18px}
+    .bp-rsz[data-dir="sw"]{bottom:0;left:0;width:18px;height:18px}
+    .bp-rsz::after{display:none}
+    .bp-rsz[data-dir="s"]:hover{box-shadow:inset 0 -2px 0 color-mix(in srgb, var(--accent) 60%, transparent)}
+    .bp-rsz[data-dir="n"]:hover{box-shadow:inset 0 2px 0 color-mix(in srgb, var(--accent) 60%, transparent)}
+    .bp-rsz[data-dir="e"]:hover{box-shadow:inset -2px 0 0 color-mix(in srgb, var(--accent) 60%, transparent)}
+    .bp-rsz[data-dir="w"]:hover{box-shadow:inset 2px 0 0 color-mix(in srgb, var(--accent) 60%, transparent)}
+    .bp-rsz[data-dir="ne"]:hover{box-shadow:inset -2px 2px 0 0 color-mix(in srgb, var(--accent) 60%, transparent)}
+    .bp-rsz[data-dir="se"]:hover{box-shadow:inset -2px -2px 0 0 color-mix(in srgb, var(--accent) 60%, transparent)}
+    .bp-rsz[data-dir="nw"]:hover{box-shadow:inset 2px 2px 0 0 color-mix(in srgb, var(--accent) 60%, transparent)}
+    .bp-rsz[data-dir="sw"]:hover{box-shadow:inset 2px -2px 0 0 color-mix(in srgb, var(--accent) 60%, transparent)}
 /* The rail collapse folds instead of snapping (Dave, 2026-10-20). */
 #main #view-buddy.panel.bp-folding{transform:translateX(34px) scale(.93);opacity:0;
   transition:transform .36s cubic-bezier(.32,.72,.35,1), opacity .28s ease}
@@ -2842,6 +2899,7 @@ function selectBuddy(id){
     S.projectId = id; save();
     renderProjectView();
     renderNav();
+    syncPanelFrame(); syncPanelNarrow();
     pushNavState(); // Dave 2026-10-15: browser back/forward tracks buddy selection
   } else {
     const inView = (S.sel || '').startsWith('view:');
@@ -2897,6 +2955,7 @@ function openBuddy(id){
     vb.classList.toggle('sheet', window.innerWidth < 640);
     renderBuddy(id);
     renderNav();
+    syncPanelFrame(); syncPanelNarrow();
     pushNavState(); // Dave 2026-10-15: panel-open is its own back/forward step
   }
 }
@@ -4057,6 +4116,7 @@ function applyPanelWidth(){
     vb.style.width = w + 'px';
     document.documentElement.style.setProperty('--bpw', w + 'px');
   }
+  syncPanelNarrow();
 }
 function applySbWidth(){
   const sb = document.getElementById('sidebar');
@@ -4141,7 +4201,7 @@ function clearPanelFloat(){
   vb.classList.remove('floating');
   vb.style.left = vb.style.top = vb.style.width = vb.style.height = '';
   const bx = document.getElementById('bp-close-x');
-  if (bx) { bx.style.left = bx.style.top = bx.style.right = ''; }
+  if (bx) { bx.style.left = bx.style.top = bx.style.right = ''; bx.style.position = ''; }
   if (typeof applyPanelWidth === 'function') applyPanelWidth();
   syncPanelFrame();
 }
@@ -4157,15 +4217,70 @@ function syncPanelFrame(){
   if (!fr || !vb) return;
   if (!panelFloatable()) { fr.classList.remove('on'); return; }
   const r = vb.getBoundingClientRect();
+  vb.classList.toggle('bp-narrow', r.width > 0 && r.width < 400);
   fr.style.left = r.left + 'px'; fr.style.top = r.top + 'px';
   fr.style.width = r.width + 'px'; fr.style.height = r.height + 'px';
   fr.classList.add('on');
   const bx = document.getElementById('bp-close-x');
   if (bx) {
     if (vb.classList.contains('floating')) {
-      bx.style.top = (r.top + 6) + 'px'; bx.style.left = (r.right - 56) + 'px'; bx.style.right = 'auto';
-    } else { bx.style.left = bx.style.top = bx.style.right = ''; }
+      bx.style.top = (r.top + 6) + 'px'; bx.style.left = (r.right - 56) + 'px'; bx.style.right = 'auto'; bx.style.position = 'fixed';
+    } else { bx.style.left = bx.style.top = bx.style.right = ''; bx.style.position = ''; }
   }
+}
+/* Icon strip: current view + popover picker; panel narrow state; Views-section
+   sizing (Dave, 2026-10-21). */
+function syncRailCurView(){
+  const btn = document.getElementById('rail-curview'); if (!btn) return;
+  const def = VIEW_DEFS.find(v => v[0] === S.view) || VIEW_DEFS[0];
+  btn.innerHTML = '<span aria-hidden="true">' + def[2] + '</span>';
+  btn.title = 'Current view: ' + def[1] + ' - tap to switch views';
+  btn.setAttribute('aria-label', 'Current view: ' + def[1] + '. Tap to switch views.');
+}
+function railPopEsc(e){ if (e.key === 'Escape') closeRailViewPop(); }
+function railPopOutside(e){ const p = document.getElementById('rail-viewpop'); if (p && !p.contains(e.target) && !e.target.closest('#rail-curview')) closeRailViewPop(); }
+function closeRailViewPop(){
+  const p = document.getElementById('rail-viewpop'); if (p) p.remove();
+  document.removeEventListener('pointerdown', railPopOutside, true);
+  document.removeEventListener('keydown', railPopEsc, true);
+}
+function toggleRailViewPop(){
+  if (document.getElementById('rail-viewpop')) { closeRailViewPop(); return; }
+  const btn = document.getElementById('rail-curview'); if (!btn) return;
+  const p = document.createElement('div'); p.id = 'rail-viewpop'; p.setAttribute('role', 'menu');
+  p.innerHTML = VIEW_DEFS.map(v => '<button type="button" data-view="' + v[0] + '"' + (S.view === v[0] ? ' class="sel"' : '') + '><span class="rv-ic" aria-hidden="true">' + v[2] + '</span>' + v[1] + '</button>').join('');
+  document.body.appendChild(p);
+  const r = btn.getBoundingClientRect();
+  p.style.left = (r.right + 10) + 'px';
+  p.style.bottom = Math.max(8, window.innerHeight - r.bottom) + 'px';
+  p.addEventListener('click', e => { if (e.target.closest('[data-view]')) closeRailViewPop(); });
+  document.addEventListener('pointerdown', railPopOutside, true);
+  document.addEventListener('keydown', railPopEsc, true);
+}
+function syncPanelNarrow(){
+  const vb = document.getElementById('view-buddy'); if (!vb) return;
+  vb.classList.toggle('bp-narrow', vb.classList.contains('active') && vb.offsetWidth > 0 && vb.offsetWidth < 400);
+}
+function applyViewsH(){
+  const nav = document.getElementById('view-nav'); if (!nav) return;
+  if (S.viewsH) { nav.style.maxHeight = S.viewsH + 'px'; nav.style.overflowY = 'auto'; }
+}
+function initViewsResize(){
+  const h = document.getElementById('views-resize'); if (!h || h.dataset.init) return;
+  h.dataset.init = '1';
+  if (!S.viewsH) S.viewsH = 176;
+  applyViewsH();
+  h.addEventListener('pointerdown', e => {
+    e.preventDefault();
+    const nav = document.getElementById('view-nav'); const sb = document.getElementById('sidebar');
+    if (!nav || !sb) return;
+    const startY = e.clientY; const startH = S.viewsH || nav.offsetHeight;
+    const maxH = Math.max(140, sb.clientHeight - 190);
+    try { h.setPointerCapture(e.pointerId); } catch (err) {}
+    const mv = ev => { S.viewsH = Math.round(Math.min(maxH, Math.max(56, startH + (startY - ev.clientY)))); applyViewsH(); };
+    const up = () => { h.removeEventListener('pointermove', mv); h.removeEventListener('pointerup', up); h.removeEventListener('pointercancel', up); save(); };
+    h.addEventListener('pointermove', mv); h.addEventListener('pointerup', up); h.addEventListener('pointercancel', up);
+  });
 }
 function initPanelFloat(){
   const vb = document.getElementById('view-buddy');
@@ -4257,7 +4372,7 @@ function initPanelFloat(){
       bpWasOpen = false;
       fr.classList.remove('on');
       const bx = document.getElementById('bp-close-x');
-      if (bx) { bx.style.left = bx.style.top = bx.style.right = ''; }
+      if (bx) { bx.style.left = bx.style.top = bx.style.right = ''; bx.style.position = ''; }
     }
   }).observe(vb, { attributes: true, attributeFilter: ['class'] });
   window.addEventListener('resize', () => {
@@ -5258,19 +5373,22 @@ function renderBuddy(id){
     + '<button class="linkbtn" id="bp-repo"' + (b.repo ? '' : ' disabled title="No GitHub repo for this buddy"') + '>' + ghMarkSvg(16) + ' Open git repo</button>'
     + '<button class="linkbtn" id="bp-dormant" title="Mark dormant / wake up"></button>'
     + '<button class="linkbtn" id="bp-desktop">\U0001f4be Save to desktop</button>'
-    + '</div></div>'
+    + '<button class="linkbtn bp-narrow-item" data-navbtn="prev">\u2303 Prev</button>'
+    + '<button class="linkbtn bp-narrow-item" data-navbtn="next">Next \u2304</button>'
+    + '<button class="linkbtn bp-narrow-item" data-view="projects">All buddies</button>' 
+    + '</div>'
+    + '<button class="bp-collapse-btn" id="bp-collapse-btn" type="button" title="Section index" aria-label="Section index">\u2630</button>'
+    + '</div>'
     + '<div class="bp-top">'
     + '<span class="bp-icon" id="bp-icon" title="Click to change avatar" style="cursor:pointer">'+'<img class="bp-avatarimg" src="'+escHtml(buddyImageUrl(b))+'" alt="" onerror="this.remove()">'+'<span class="bp-avaemoji">'+escHtml(buddyDisplayIcon(b))+'</span></span>'
     + '<input class="bp-name" id="bp-name" type="text" spellcheck="false" autocomplete="off" value="'+escHtml(dispName(b))+'" aria-label="Buddy name">'
-    // Jonny 2026-10-18: the status pill appears ONLY when status is not Active.
-    // Badges are for exceptions; absence of the pill IS the Active signal.
-    + ((b.status && b.status !== 'Active') ? '<span class="status '+b.statusClass+'">'+escHtml(b.status)+'</span>' : '')
-    + (function(){ const ak = effAka(b); return ak.length ? '<span class="bp-aka" title="Also known as">aka '+escHtml(ak.join(', '))+'</span>' : ''; })()
-    + '<button class="bp-collapse-btn" id="bp-collapse-btn" type="button" title="Section index" aria-label="Section index">\u2630</button>'
+    // Jonny v2 2026-10-21: no pill in the identity row - the name never yields.
+    // Status renders as a quiet annotation line under the tagline instead.
     + '<button class="bp-close-x" id="bp-close-x" type="button" title="Close detail \u2014 back to main view" aria-label="Close detail \u2014 back to main view">' + plainX(22) + '</button></div>'
     + '</div>'
     + '<div class="bp-crumb">'+crumb(id)+'</div>'
     + '<p class="bp-tagline">'+escHtml(b.tagline||'')+'</p>'
+    + ((b.status && b.status !== 'Active') ? '<div class="bp-statusline status '+b.statusClass+'">'+escHtml(b.status)+'</div>' : '')
     + '<div id="token-warn-slot"></div>'
     + standingOrdersHtml()
     + '<div class="bp-sec" data-field="ingest"><h3>Dump box<span class="info-tip" data-tip="Brain-dump anything about this buddy \u2014 raw and unfiltered. Each dump lands in the buddy\u2019s repo (docs/ingest.md) as a timestamped entry.">\u24d8</span></h3>'
@@ -8116,6 +8234,7 @@ function show(sel, push){
   const prevBuddy = (S.sel && typeof S.sel === 'string' && S.sel.indexOf('buddy:') === 0) ? S.sel.slice(6) : null;
   S.sel = sel;
   if (sel.indexOf('view:') === 0) S.view = sel.slice(5);
+  syncRailCurView();
   // Selecting a buddy (by any means) also makes it the homepage buddy, so the
   // homepage/project view follows the selection (Dave 2026-10-14).
   if (sel.indexOf('buddy:') === 0) {
@@ -11389,11 +11508,12 @@ document.addEventListener('click', e => {
     }, 100);
     return;
   }
-  if (e.target.closest && e.target.closest('#panel-open')) {
+  if (e.target.closest && e.target.closest('#panel-open, #panel-open-rail')) {
     const id = (S.projectId && byId[S.projectId]) ? S.projectId : ROOT_ID;
     openBuddy(id);
     return;
   }
+  if (e.target.closest && e.target.closest('#rail-curview')) { toggleRailViewPop(); return; }
   if (e.target.closest && e.target.closest('#sb-close')) { setSidebarOpen(document.body.classList.contains('sb-closed')); return; }
   if (e.target.closest && e.target.closest('#sb-expand-corner')) { setSidebarOpen(true); return; }
   if (e.target.closest && e.target.closest('#hp-back')) { goBack(); return; }
@@ -11716,7 +11836,7 @@ document.addEventListener('click', e => {
   const ab = e.target.closest('[data-act-buddy]');
   if (ab) { selectBuddy(ab.dataset.actBuddy); return; }
   const nb = e.target.closest('[data-navbtn]');
-  if (nb) { const k = nb.dataset.navbtn; if (k === 'back') goBack(); else stepBuddy(k === 'next' ? 1 : -1); return; }
+  if (nb) { const k = nb.dataset.navbtn; if (k === 'back') goBack(); else stepBuddy(k === 'next' ? 1 : -1); const mm = document.getElementById('bp-more-menu'); if (mm && nb.closest('#bp-more-menu')) { mm.hidden = true; const mb = document.getElementById('bp-more'); if (mb) mb.setAttribute('aria-expanded', 'false'); } return; }
   const rp = e.target.closest('#reset-parents');
   if (rp) { S.parents = {}; save(); buildKids(); renderNav(); refreshViews();
     if (S.sel.startsWith('buddy:')) renderBuddy(S.sel.slice(6));
@@ -11800,6 +11920,8 @@ initNavSecDnD();
 initNavItemDnD();
 applyNavSecOrder();
 initSbBrandSticky();
+initViewsResize();
+syncRailCurView();
 """
     js = js.replace("BUDDIES_JSON", buddies_js).replace("ORDER_JSON", order_js).replace("PLANS_JSON", plans_js).replace("PERSONA_ROSTER_JSON", roster_js).replace("VOICES_JSON", voices_js)
     js = js.replace("ICON_DOC", "'" + ICON_DOC.replace("'", "\\'") + "'")
@@ -11833,6 +11955,7 @@ initSbBrandSticky();
 </button>
 <div id="sb-scrim"></div>
 <aside id="sidebar">
+  <div id="rail-top"><button type="button" id="panel-open-rail" title="Open buddy details" aria-label="Open buddy details"><span class="pi-serif" aria-hidden="true">i</span></button></div>
   <div class="sb-brand-sticky">
     <div id="sb-tools"><button id="sb-gear" title="Settings (⌘,)" aria-label="Settings"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button><button id="sb-close" title="Collapse sidebar" aria-label="Collapse sidebar"><svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path d="M7.2 7.2l9.6 9.6M16.8 7.2l-9.6 9.6" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></button></div>
     <div class="brand"><div class="eyebrow">Project Buddy</div><h1 id="brand-name" title="Click to rename">Buddies</h1><div class="bcount">NBUD buddies &middot; one family</div></div>
@@ -11848,8 +11971,10 @@ initSbBrandSticky();
   <h3 style="cursor:pointer" id="buddies-toggle"><span class="nav-arrow" id="buddies-arrow">\u203a</span> Buddies <span id="attn-pill" class="zero">0</span></h3><div id="buddy-nav"></div></div>
   <div class="nav-sec" id="plans-sec"><h3 style="cursor:pointer" id="plans-toggle"><span id="plans-arrow">\u203a</span> Business Plans</h3><div id="plan-nav"></div></div>
   <div class="nav-sec" id="views-sec">
+  <div id="views-resize" title="Drag to resize the Views section" aria-hidden="true"></div>
   <h3 style="cursor:pointer" id="views-toggle"><span class="nav-arrow" id="views-arrow">\u203a</span> Views</h3><div id="view-nav"></div></div>
   <div class="sb-tipjar"><a href="https://ko-fi.com/davedellaquila" target="_blank" rel="noopener" title="Support the buddy system"><span class="jar">\U0001FAD9</span> <span class="tiptext">Tip the jar</span></a></div>
+  <div id="rail-bottom"><button type="button" id="rail-curview" title="Current view" aria-label="Current view - tap to switch views"></button></div>
 </aside>
 <div id="sb-resize" title="Drag left or right to resize the sidebar. Double-click to close."></div>
 <button type="button" id="sb-tab" title="Open sidebar" aria-label="Open sidebar"></button>
