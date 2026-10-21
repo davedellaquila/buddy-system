@@ -1628,10 +1628,10 @@ html.light .status.st-dormant{background:rgba(139,148,158,.18);color:var(--muted
   /* Anchored dock (Dave, 2026-10-20): when the info panel is docked (open, not
      floated, not collapsed to the rail), the main view resizes to make room for
      it instead of being covered. Floated = free overlay, no yield. */
-  body.sb-anchored:not(.bp-collapsed):has(#view-buddy.panel.active:not(.floating)) #main{padding-right:calc(var(--bpw, min(416px, calc(100vw - 250px))) + 22px)}
+  body.sb-anchored:not(.bp-collapsed):has(#view-buddy.panel.active:not(.floating)) #main{padding-right:calc(var(--bpw, min(416px, calc(100vw - 250px))) + 16px)}
 }
 @media (min-width:640px) and (max-width:1100px){
-  body.sb-anchored:has(#main.homepage-mode):not(.bp-collapsed):has(#view-buddy.panel.active:not(.floating)) #main{padding-right:calc(var(--bpw, min(416px, calc(100vw - 250px))) + 22px)}
+  body.sb-anchored:has(#main.homepage-mode):not(.bp-collapsed):has(#view-buddy.panel.active:not(.floating)) #main{padding-right:calc(var(--bpw, min(416px, calc(100vw - 250px))) + 16px)}
   body.sb-anchored:has(#main.homepage-mode):not(.sb-closed) #main{padding-left:302px}
 }
 /* ---- Large: >1100px (desktop) ---- */
@@ -1644,7 +1644,7 @@ html.light .status.st-dormant{background:rgba(139,148,158,.18);color:var(--muted
      The yield follows the panel's live width (--bpw, set by applyPanelWidth
      and the resize drag) instead of a fixed number, so a resized panel
      leaves no dead gap (Dave's circled screenshot, 2026-10-20). */
-  body.sb-anchored:not(.bp-collapsed):has(#view-buddy.panel.active:not(.floating)) #main{padding-right:calc(var(--bpw, 440px) + 32px)}
+  body.sb-anchored:not(.bp-collapsed):has(#view-buddy.panel.active:not(.floating)) #main{padding-right:calc(var(--bpw, 440px) + 16px)}
 }
 #view-buddy.panel.active,#view-buddy.sheet.active{display:block}
 /* Right panel collapsed to floating section pill (Dave, 2026-10-14) */
@@ -1877,9 +1877,10 @@ a.plan-card-name:hover{text-decoration:underline}
    running under a docked panel (Dave's circled News Buddy screenshot). Same
    specificity as the padding:0 rules, later in source: homepage mode takes
    the anchored yields like every other view, and gives the space back when
-   the panels close or float. */
+   the panels close or float. (Gutter tightened to 16px in both bands,
+   Dave 2026-10-20.) */
 body.sb-anchored:has(#main.homepage-mode):not(.sb-closed) #main{padding-left:calc(var(--sbw, 336px) + 24px)}
-body.sb-anchored:has(#main.homepage-mode):not(.bp-collapsed):has(#view-buddy.panel.active:not(.floating)) #main{padding-right:calc(var(--bpw, 440px) + 32px)}
+body.sb-anchored:has(#main.homepage-mode):not(.bp-collapsed):has(#view-buddy.panel.active:not(.floating)) #main{padding-right:calc(var(--bpw, 440px) + 16px)}
 
 .pstrip img{height:150px;border-radius:10px;border:1px solid var(--border);display:block}
 .pstrip img:hover{border-color:var(--accent)}
