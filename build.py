@@ -982,7 +982,10 @@ body.standalone #sb-to-top{opacity:0!important;pointer-events:none!important}
    in the OFF state and all but vanished in the dark panel header. They are now
    colourable text glyphs: OFF = full-strength secondary text in both themes
    (clearly "available but unset"), ON = amber flag / gold star, unmissable. */
-.bp-markbtn{font-size:1.05rem;line-height:1;padding:4px 7px;border-radius:8px;color:var(--text2);opacity:1}
+/* Job L (Dave 2026-10-21): mark glyphs x1.6 — 1.05rem -> 1.68rem — in a
+   fixed box at least as generous as the old one, so the header row and
+   its neighbours do not move. */
+button.bp-markbtn{font-size:1.68rem;line-height:1;padding:0;width:32px;height:27px;display:inline-flex;align-items:center;justify-content:center;border-radius:8px;color:var(--text2);opacity:1}
 .bp-markbtn:hover{color:var(--text);background:var(--hover)}
 .bp-markbtn.on{background:var(--active)}
 #bp-flag.on{color:var(--amber)}
@@ -991,7 +994,7 @@ body.standalone #sb-to-top{opacity:0!important;pointer-events:none!important}
    beside it (never nested, so untoggling can't also navigate). */
 .fv-row{display:flex;align-items:stretch;gap:8px;margin-bottom:8px}
 .fv-row .art-row{flex:1;margin-bottom:0}
-.fv-toggle{flex:0 0 auto;align-self:center;font-size:1.05rem;line-height:1;padding:8px 10px;border-radius:10px;border:1px solid var(--border2);background:var(--panel);cursor:pointer;color:var(--text2);opacity:1}
+.fv-toggle{flex:0 0 auto;align-self:center;font-size:1.68rem;line-height:1;padding:0;width:40px;height:36px;display:flex;align-items:center;justify-content:center;border-radius:10px;border:1px solid var(--border2);background:var(--panel);cursor:pointer;color:var(--text2);opacity:1}
 .fv-toggle.on{opacity:1}
 .fv-toggle[data-flag-toggle].on{color:var(--amber)}
 .fv-toggle[data-fav-toggle].on{color:var(--mark-gold)}
@@ -1309,6 +1312,10 @@ body.ub-nomotion #update-banner{transition:none}
   #field-settings .fset-cols{display:flex;gap:16px;align-items:stretch}
   #field-settings .fset-cols>.fset-sec{flex:1 1 0;min-width:0}
   #field-settings .fset-cols #vset-list,#field-settings .fset-cols #fset-list{max-height:340px;overflow-y:auto}
+  /* Job N (Dave 2026-10-21): the section-name tiles flow in two columns;
+     the drag math is column-aware (see fsetDropBefore). */
+  #field-settings .fset-cols #vset-list,#field-settings .fset-cols #fset-list{display:grid;grid-template-columns:1fr 1fr;gap:6px;align-items:start}
+  #field-settings .fset-cols .fset-row{margin-bottom:0}
 }
 /* Narrow sidebar: drop the kind column so buddy names get full room */
 @container (max-width:290px){
@@ -1407,18 +1414,28 @@ body:has(#token-pill) #view-buddy.sheet .bp-close-x{right:148px}
 .bp-sec > h3{cursor:pointer;user-select:none;display:flex;align-items:center;gap:6px}
 /* Jonny verdict 2026-10-21: the drag grip lives on the section's utility
    line (both header species) — one machinery pattern for the whole panel. */
-.sec-util .secgrip{cursor:grab;color:var(--muted);line-height:1;padding:2px 4px;border-radius:4px;touch-action:none;background:transparent}
-.sec-util .secgrip:hover{color:var(--text2);background:transparent}
+/* Job M (Dave 2026-10-21): the section grip was a faint text glyph
+   (muted on the faint utility line) and read as decoration, not a grip.
+   It is now the system's one dot language — dots only, no background,
+   small tier (2 wide x 3 deep, same as .ledger-grip), visible at rest. */
+.sec-util .secgrip{cursor:grab;color:var(--text2);line-height:1;padding:2px 4px;border-radius:4px;touch-action:none;background:transparent;display:inline-flex;align-items:center;gap:6px}
+.sec-util .secgrip::before{content:'';flex:0 0 auto;width:14px;height:21px;background-image:radial-gradient(circle,var(--gripdot,color-mix(in srgb,var(--text2) 78%,var(--border))) 1.5px,transparent 1.6px);background-size:7px 7px;background-position:center;background-repeat:repeat}
+.sec-util .secgrip:hover{color:var(--text);background:transparent}
+.sec-util .secgrip:hover::before{--gripdot:var(--text2)}
 .sec-util .secgrip:active{cursor:grabbing;color:var(--accent)}
+.sec-util .secgrip:active::before{--gripdot:var(--accent)}
 .bp-sec.sec-dragging{opacity:0.4}
 #sec-drag-divider{position:absolute;height:0;border-top:3px solid var(--accent);z-index:50;pointer-events:none;box-shadow:0 0 8px var(--accent)}
 #view-drag-divider{position:absolute;height:0;border-top:3px solid var(--accent);z-index:50;pointer-events:none;box-shadow:0 0 8px var(--accent)}
 /* Views-list ⋮⋮ grip: same language as the info-panel section grips.
    This is the touch path for reordering — HTML5 DnD can't start from touch. */
-#view-nav .navbtn .navgrip{cursor:grab;color:var(--muted);font-size:.875rem;line-height:1;padding:6px 4px;border-radius:4px;background:transparent;
+#view-nav .navbtn .navgrip{cursor:grab;line-height:1;border-radius:6px;background:transparent;width:22px;height:22px;position:relative;
   margin-left:auto;touch-action:none;flex:none}
-#view-nav .navbtn .navgrip:hover{color:var(--text2);background:transparent}
-#view-nav .navbtn .navgrip:active{cursor:grabbing;color:var(--accent)}
+#view-nav .navbtn .navgrip::after{content:'';position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:14px;height:21px;background-image:radial-gradient(circle,var(--gripdot,color-mix(in srgb,var(--text2) 78%,var(--border))) 1.5px,transparent 1.6px);background-size:7px 7px;background-position:center;background-repeat:repeat}
+#view-nav .navbtn .navgrip:hover{background:transparent}
+#view-nav .navbtn .navgrip:hover::after{--gripdot:var(--text2)}
+#view-nav .navbtn .navgrip:active{cursor:grabbing;background:transparent}
+#view-nav .navbtn .navgrip:active::after{--gripdot:var(--accent)}
 .bp-sec > h3 .secarrow{font-size:1.5625rem;color:var(--muted);transition:transform .15s;display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:50%;background:var(--ghost);line-height:1;flex:0 0 auto}
 .bp-sec.collapsed > *:not(h3):not(.sec-util){display:none !important} /* !important beats inline display styles (e.g. homepage URL row); the utility line stays — its controls stay reachable (Jonny 2026-10-21) */
 .bp-sec .secarrow{transform:rotate(90deg)}
@@ -2038,6 +2055,39 @@ body:has(#sidebar.sb-floating) #sb-resize{display:none}
   .bp-close-x.bpx-spin svg{animation:none}
   #main #view-buddy.sheet{transition:none}
 }
+/* ==== Fix build (Dave 2026-10-21, Jobs G/I/K/N/O) ==== */
+/* Job G: the sidebar is a flex column. Brand, search, Buddies and Business
+   Plans live in .sb-scroll (the only part that scrolls); the Views section
+   and the Tip Jar are the footer cluster, pinned to the panel's bottom in
+   every collapse state. Resizing Views is absorbed by .sb-scroll — the
+   Tip Jar's top edge never moves and the bottom section never resizes. */
+#sidebar{display:flex;flex-direction:column;overflow:hidden}
+#sidebar .sb-scroll{flex:1 1 auto;min-height:0;overflow-y:auto;overflow-x:hidden;overflow-wrap:break-word}
+#sidebar #views-sec{position:relative;bottom:auto;flex:0 0 auto}
+#sidebar .sb-tipjar{position:static;flex:0 0 auto}
+/* Job I: expanding the sidebar from its collapsed rail — a measuring pass
+   (transitions off) plus a two-frame parked pose that grows from the
+   click point (the inline transform-origin is set by setSidebarOpen). */
+body.sb-measuring #sidebar{transition:none!important}
+#sidebar.sb-opening{transition:none!important;opacity:0;transform:scale(.965)}
+/* Job K: the info panel's close x lives on <body> (out of the scrolling,
+   backdrop-filtered panel subtree); .bpx-on is its shown state, at the
+   exact #panel-open spot — top:12px right:12px, 44px circle. */
+#bp-close-x.bpx-on{display:flex;position:fixed;top:12px;right:12px;z-index:65;margin:0;background:var(--panel);border:1px solid var(--border);border-radius:50%;box-shadow:0 2px 14px var(--shadow);color:var(--muted);-webkit-backdrop-filter:blur(14px) saturate(1.6);backdrop-filter:blur(14px) saturate(1.6)}
+#bp-close-x.bpx-on:hover{color:var(--accent);border-color:var(--accent);background:color-mix(in srgb, var(--panel) 58%, rgba(255,255,255,.16))}
+#bp-close-x.bpx-on:active{transform:scale(.96)}
+body:has(#token-pill) #bp-close-x.bpx-on{right:148px}
+@media (max-width:639px) and (orientation:portrait){body.bp-sheet-open #bp-close-x.bpx-on{display:none}}
+/* Job N: settings lists — the insert marker is an absolute line over the
+   target tile (it must never take a grid cell of its own). */
+#field-settings #fset-list,#field-settings #vset-list{position:relative}
+#field-settings .fset-insert{position:absolute;height:0;margin:0;border:0;border-top:3px dashed var(--accent);pointer-events:none;z-index:5}
+/* Job O: Org Chart zoom cluster gripper — dots only, small tier. */
+.oc-zgrip{flex:0 0 auto;width:22px;height:40px;cursor:grab;touch-action:none;position:relative;border-radius:6px}
+.oc-zgrip::after{content:'';position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:14px;height:21px;background-image:radial-gradient(circle,var(--gripdot,color-mix(in srgb,var(--text2) 78%,var(--border))) 1.5px,transparent 1.6px);background-size:7px 7px;background-position:center;background-repeat:repeat}
+.oc-zgrip:hover::after{--gripdot:var(--text2)}
+.oc-zgrip:active{cursor:grabbing}
+.oc-zgrip:active::after{--gripdot:var(--accent)}
 #main .view{display:none}
 #main .view.active{display:block}
 #main #view-project.active{display:flex;flex-direction:column;min-height:calc(100vh - 116px)}
@@ -3375,6 +3425,7 @@ function renderOrgChart(){
   el.innerHTML = '<div class="oc-head"><h2>\U0001F3E2 Org Chart <span class="attn-count">(' + BUDDIES.length + ')</span></h2>'
     + '<p class="sub">The whole staff, top-down by who reports to whom \u2014 everyone ultimately reports to Dave, through Astro. Click a box to open that buddy; the +/\u2212 chip folds a team away. Zoom with the cluster, Shift+scroll, a pinch, or the + / \u2212 / 0 keys; drag the background to pan.</p></div>'
     + '<div class="oc-vp"><div class="oc-zoombar" role="group" aria-label="Org chart zoom controls">'
+    + '<span class="oc-zgrip" id="oc-zgrip" title="Drag to move the zoom controls — double-click to reset" aria-hidden="true"></span>'
     + '<button type="button" class="oc-zbtn" data-oczoom="out" title="Zoom out" aria-label="Zoom out">\u2212</button>'
     + '<span class="oc-zpct" id="oc-zpct">100%</span>'
     + '<button type="button" class="oc-zbtn" data-oczoom="in" title="Zoom in" aria-label="Zoom in">+</button>'
@@ -3383,6 +3434,7 @@ function renderOrgChart(){
     + '</div>'
     + '<div class="oc-wrap" id="oc-wrap"><div class="oc-zoomsizer"><div class="oc-zoomcontent"><ul class="oc-tree">' + dave + '</ul></div></div></div></div>';
   wireOcZoom();
+  wireOcZoombarGrip();
 }
 /* Org Chart zoom (Dave, 2026-10-21): the Atlas scheme end to end \u2014 zoom
    is a percentage in S.ocZoom, persisted by save(); null means \u201cnot yet
@@ -3445,6 +3497,65 @@ function ocZoomFit(){
   e.wrap.scrollLeft = 0; e.wrap.scrollTop = 0;
   save();
   try { toast('Zoomed to fit (' + S.ocZoom + '%).'); } catch (err) {}
+}
+/* Job O (Dave 2026-10-21): the Org Chart zoom cluster gets a gripper so
+   Dave can move it. The cluster never moves on its own (Dave 2026-10-16)
+   — only a drag on the grip moves it. The position persists in
+   S.ocZoomPos (the dashboard's localStorage state), is clamped fully
+   inside the viewport, and a double-click on the grip resets it to the
+   default corner. The Atlas zoombar is a separate component and is not
+   touched. */
+function ocClampBarPos(x, y, vpW, vpH, barW, barH){
+  return { x: Math.round(Math.min(Math.max(0, x), Math.max(0, vpW - barW))), y: Math.round(Math.min(Math.max(0, y), Math.max(0, vpH - barH))) };
+}
+function applyOcZoomPos(){
+  const bar = document.querySelector('#view-orgchart .oc-zoombar');
+  const vp = document.querySelector('#view-orgchart .oc-vp');
+  if (!bar || !vp) return;
+  if (!S.ocZoomPos) { bar.style.left = bar.style.top = bar.style.right = ''; return; }
+  const vr = vp.getBoundingClientRect(), br = bar.getBoundingClientRect();
+  if (!vr.width || !br.width) return;
+  const p = ocClampBarPos(S.ocZoomPos.x, S.ocZoomPos.y, vr.width, vr.height, br.width, br.height);
+  if (p.x !== S.ocZoomPos.x || p.y !== S.ocZoomPos.y) { S.ocZoomPos = p; save(); }
+  bar.style.left = p.x + 'px'; bar.style.top = p.y + 'px'; bar.style.right = 'auto';
+}
+function wireOcZoombarGrip(){
+  const bar = document.querySelector('#view-orgchart .oc-zoombar');
+  const grip = document.getElementById('oc-zgrip');
+  const vp = document.querySelector('#view-orgchart .oc-vp');
+  if (!bar || !grip || !vp || grip.dataset.init) return;
+  grip.dataset.init = '1';
+  applyOcZoomPos();
+  if (!window._ocZPosResize) { window._ocZPosResize = function(){ applyOcZoomPos(); }; window.addEventListener('resize', window._ocZPosResize); }
+  let drag = null;
+  grip.addEventListener('pointerdown', e => {
+    e.preventDefault();
+    const br = bar.getBoundingClientRect(), vr = vp.getBoundingClientRect();
+    drag = { id: e.pointerId, sx: e.clientX, sy: e.clientY, x: br.left - vr.left, y: br.top - vr.top, bw: br.width, bh: br.height, vw: vr.width, vh: vr.height, moved: false, cur: null };
+    try { grip.setPointerCapture(e.pointerId); } catch (err) {}
+  });
+  grip.addEventListener('pointermove', e => {
+    if (!drag || e.pointerId !== drag.id) return;
+    const dx = e.clientX - drag.sx, dy = e.clientY - drag.sy;
+    if (Math.abs(dx) + Math.abs(dy) > 3) drag.moved = true;
+    if (!drag.moved) return;
+    const p = ocClampBarPos(drag.x + dx, drag.y + dy, drag.vw, drag.vh, drag.bw, drag.bh);
+    bar.style.left = p.x + 'px'; bar.style.top = p.y + 'px'; bar.style.right = 'auto';
+    drag.cur = p;
+  });
+  const end = () => {
+    if (!drag) return;
+    if (drag.moved && drag.cur) { S.ocZoomPos = drag.cur; save(); }
+    drag = null;
+  };
+  grip.addEventListener('pointerup', end);
+  grip.addEventListener('pointercancel', end);
+  grip.addEventListener('click', e => { e.stopPropagation(); });
+  grip.addEventListener('dblclick', e => {
+    e.preventDefault(); e.stopPropagation();
+    S.ocZoomPos = null; save();
+    bar.style.left = bar.style.top = bar.style.right = '';
+  });
 }
 function wireOcZoom(){
   const wrap = document.getElementById('oc-wrap');
@@ -3597,7 +3708,7 @@ function renderNav(){
   document.getElementById('view-nav').innerHTML =
     views.map(([v,l,ic]) => {
     const cnt = v === 'flagged' ? flaggedIds().length : v === 'favorites' ? favoriteIds().length : null;
-    return '<button class="navbtn'+(S.view===v?' sel':'')+'" data-view="'+v+'" draggable="true" title="'+(VIEW_TIPS[v]||l)+'"><span class="nic">'+ic+'</span><span class="nlab">'+l+(cnt !== null ? ' <span class="attn-count">('+cnt+')</span>' : '')+'</span><span class="navgrip" title="Drag to reorder views">\u22ee\u22ee</span></button>'; }).join('');
+    return '<button class="navbtn'+(S.view===v?' sel':'')+'" data-view="'+v+'" draggable="true" title="'+(VIEW_TIPS[v]||l)+'"><span class="nic">'+ic+'</span><span class="nlab">'+l+(cnt !== null ? ' <span class="attn-count">('+cnt+')</span>' : '')+'</span><span class="navgrip" title="Drag to reorder views"></span></button>'; }).join('');
   /* Dave 2026-10-16: pane toggles for the Atlas view — show/hide the chart (top)
      and orphaned (bottom) subviews. Only rendered when Atlas is the active view. */
   if (S.view === 'tree') {
@@ -3843,7 +3954,7 @@ function applySectionCollapse(bid){
     h3.insertBefore(arrow, h3.firstChild);
     const grip = document.createElement('span');
     grip.className = 'secgrip';
-    grip.textContent = '\u22ee\u22ee Reorder';
+    grip.textContent = 'Reorder';
     grip.title = 'Drag to reorder sections';
     // Jonny verdict 2026-10-21: the grip lives on the section's utility line.
     let util = sec.querySelector(':scope > .sec-util');
@@ -4136,7 +4247,7 @@ function decorateBpHeaders(){
     if (head.classList.contains('attr-head') && !util.querySelector('.secgrip')) {
       const grip = document.createElement('span');
       grip.className = 'secgrip';
-      grip.textContent = '\u22ee\u22ee Reorder';
+      grip.textContent = 'Reorder';
       grip.title = 'Drag to reorder sections';
       util.appendChild(grip);
     }
@@ -4459,6 +4570,41 @@ function initFsetChrome(m){
     rz.addEventListener('pointermove', mv); rz.addEventListener('pointerup', up); rz.addEventListener('pointercancel', up);
   });
 }
+/* Job N (Dave 2026-10-21): the settings lists lay their tiles out in two
+   columns, so the drop target is computed column-aware — pointer X picks
+   the column, pointer Y the position within it — and the result is a
+   reading-order insertion point (the persisted order stays one list).
+   Past a column's last midpoint, the drop lands after that column's last
+   tile: before its row-mate in the next column, or at the very end. */
+function fsetDropBefore(rows, clientX, clientY){
+  if (!rows.length) return null;
+  const rects = rows.map(r => r.getBoundingClientRect());
+  const cols = [...new Set(rects.map(r => Math.round(r.left)))].sort((a, b) => a - b);
+  let colLeft = cols[0];
+  for (const cl of cols) { if (clientX >= cl - 4) colLeft = cl; }
+  const inCol = rows.filter((r, i) => Math.abs(Math.round(rects[i].left) - colLeft) < 4);
+  for (const r of inCol) { const rect = r.getBoundingClientRect(); if (clientY < rect.top + rect.height / 2) return r; }
+  const lastCol = inCol[inCol.length - 1];
+  if (lastCol) {
+    const lr = lastCol.getBoundingClientRect();
+    const mate = rows.find((r, i) => Math.round(rects[i].left) > colLeft + 4 && Math.abs(rects[i].top - lr.top) < 4);
+    if (mate) return mate;
+  }
+  return null;
+}
+function fsetReorderBefore(order, fromId, beforeId){
+  const from = order.indexOf(fromId);
+  if (from < 0) return order;
+  const next = order.slice();
+  const [moved] = next.splice(from, 1);
+  if (!beforeId) next.push(moved);
+  else {
+    const to = next.indexOf(beforeId);
+    if (to < 0) next.push(moved);
+    else next.splice(to, 0, moved);
+  }
+  return next;
+}
 function openFieldSettings(){
   let m = document.getElementById('field-settings');
   if (!m) {
@@ -4518,18 +4664,25 @@ function openFieldSettings(){
     g.style.left = Math.max(8, clientX - 28) + 'px';
     g.style.top = Math.max(8, clientY - 22) + 'px';
   }
-  function placeFsetInsert(listEl, clientY, dragEl){
+  function placeFsetInsert(listEl, clientX, clientY, dragEl){
     listEl.querySelectorAll('.fset-insert').forEach(n => n.remove());
     const rows = [...listEl.querySelectorAll('.fset-row')].filter(r => r !== dragEl);
-    let before = null;
-    for (const r of rows) {
-      const rect = r.getBoundingClientRect();
-      if (clientY < rect.top + rect.height / 2) { before = r; break; }
-    }
+    const before = fsetDropBefore(rows, clientX, clientY);
     const marker = document.createElement('div');
     marker.className = 'fset-insert';
     if (before) listEl.insertBefore(marker, before);
     else listEl.appendChild(marker);
+    /* Job N: the marker is an absolutely-positioned line over the target
+       tile's top edge (end of list: the last tile's bottom edge), so it
+       never takes a grid cell of its own in the two-column layout. */
+    const anchorRow = before || rows[rows.length - 1];
+    if (anchorRow) {
+      const lr = listEl.getBoundingClientRect();
+      const tr = anchorRow.getBoundingClientRect();
+      marker.style.left = (tr.left - lr.left + listEl.scrollLeft) + 'px';
+      marker.style.width = tr.width + 'px';
+      marker.style.top = ((before ? tr.top : tr.bottom) - lr.top + listEl.scrollTop - 2) + 'px';
+    }
     return before;
   }
   function insertBeforeFromMarker(listEl, dragEl){
@@ -4539,19 +4692,6 @@ function openFieldSettings(){
       before = before.nextElementSibling;
     }
     return before;
-  }
-  function reorderBefore(order, fromId, beforeId){
-    const from = order.indexOf(fromId);
-    if (from < 0) return order;
-    const next = order.slice();
-    const [moved] = next.splice(from, 1);
-    if (!beforeId) next.push(moved);
-    else {
-      const to = next.indexOf(beforeId);
-      if (to < 0) next.push(moved);
-      else next.splice(to, 0, moved);
-    }
-    return next;
   }
   // HTML5 + touch reorder with ghost preview and dashed insert line
   function bindFsetListDnD(listEl, getId, applyOrder){
@@ -4606,7 +4746,7 @@ function openFieldSettings(){
       row.addEventListener('dragend', () => { stopAutoScroll(); clearFsetDnD(listEl); dragEl = null; });
       row.addEventListener('dragover', e => {
         e.preventDefault(); e.dataTransfer.dropEffect = 'move';
-        if (dragEl) { placeFsetInsert(listEl, e.clientY, dragEl); autoScrollTick(e.clientY); }
+        if (dragEl) { placeFsetInsert(listEl, e.clientX, e.clientY, dragEl); autoScrollTick(e.clientY); }
       });
       row.addEventListener('drop', e => { e.preventDefault(); finish(); });
       const handle = row.querySelector('.fh');
@@ -4617,7 +4757,7 @@ function openFieldSettings(){
         dragEl = row;
         row.classList.add('dragging');
         moveFsetGhost(row, t.clientX, t.clientY);
-        placeFsetInsert(listEl, t.clientY, dragEl);
+        placeFsetInsert(listEl, t.clientX, t.clientY, dragEl);
         e.preventDefault();
       }, {passive: false});
       handle.addEventListener('touchmove', e => {
@@ -4625,7 +4765,7 @@ function openFieldSettings(){
         e.preventDefault();
         const t = e.touches[0];
         moveFsetGhost(dragEl, t.clientX, t.clientY);
-        placeFsetInsert(listEl, t.clientY, dragEl);
+        placeFsetInsert(listEl, t.clientX, t.clientY, dragEl);
         autoScrollTick(t.clientY);
       }, {passive: false});
       handle.addEventListener('touchend', () => finish());
@@ -4633,7 +4773,7 @@ function openFieldSettings(){
     });
     listEl.addEventListener('dragover', e => {
       e.preventDefault();
-      if (dragEl) { placeFsetInsert(listEl, e.clientY, dragEl); autoScrollTick(e.clientY); }
+      if (dragEl) { placeFsetInsert(listEl, e.clientX, e.clientY, dragEl); autoScrollTick(e.clientY); }
     });
     listEl.addEventListener('drop', e => { e.preventDefault(); finish(); });
   }
@@ -4649,7 +4789,7 @@ function openFieldSettings(){
         + '<span class="fh" style="margin-left:auto">\u22ee\u22ee</span></div>';
     }).join('');
     bindFsetListDnD(list, r => r.dataset.fid, (fromId, beforeId) => {
-      S.fieldOrder = reorderBefore(getFieldOrder(), fromId, beforeId);
+      S.fieldOrder = fsetReorderBefore(getFieldOrder(), fromId, beforeId);
       save();
       openFieldSettings();
       // Keep the dropped field in view after the re-render.
@@ -4686,7 +4826,7 @@ function openFieldSettings(){
         + '<span class="fh" style="margin-left:auto">\u22ee\u22ee</span></div>';
     }).join('');
     bindFsetListDnD(vlist, r => r.dataset.vid, (fromId, beforeId) => {
-      S.viewOrder = reorderBefore(getViewOrder(), fromId, beforeId);
+      S.viewOrder = fsetReorderBefore(getViewOrder(), fromId, beforeId);
       save();
       renderNav();
       openFieldSettings();
@@ -4844,6 +4984,24 @@ function syncPanelFrame(){
     } else { bx.style.left = bx.style.top = bx.style.right = ''; bx.style.position = ''; }
   }
 }
+/* Job K (Dave 2026-10-21): the close x scrolled with the panel content.
+   It lived inside #view-buddy, where the panel's own backdrop-filter
+   (Glass mode) or its open/close transform makes the panel the containing
+   block for fixed-position descendants — so 'fixed' resolved against the
+   scrolling panel, not the viewport. The x now lives on <body>, like
+   #panel-open (which never scrolls), and syncCloseX owns its visibility;
+   syncPanelFrame still positions it when the panel floats. Same spot:
+   the 44px circle at top:12px right:12px (see the .bpx-on rule). */
+function syncCloseX(){
+  const bx = document.getElementById('bp-close-x');
+  const vb = document.getElementById('view-buddy');
+  if (!bx || !vb) return;
+  if (bx.parentElement !== document.body) document.body.appendChild(bx);
+  const open = vb.classList.contains('active') && (vb.classList.contains('panel') || vb.classList.contains('sheet')) && !document.body.classList.contains('bp-collapsed');
+  document.body.classList.toggle('bp-sheet-open', !!(open && vb.classList.contains('sheet')));
+  bx.classList.toggle('bpx-on', !!open);
+  if (!open) { bx.style.left = bx.style.top = bx.style.right = ''; bx.style.position = ''; }
+}
 /* Icon strip: current view + popover picker; panel narrow state; Views-section
    sizing (Dave, 2026-10-21). */
 function syncRailCurView(){
@@ -4853,7 +5011,7 @@ function syncRailCurView(){
   btn.title = 'Current view: ' + def[1] + ' - tap to switch views';
   btn.setAttribute('aria-label', 'Current view: ' + def[1] + '. Tap to switch views.');
 }
-function railPopEsc(e){ if (e.key === 'Escape') closeRailViewPop(); }
+function railPopEsc(e){ if (e.key === 'Escape') { e.stopPropagation(); closeRailViewPop(); } }
 function railPopOutside(e){ const p = document.getElementById('rail-viewpop'); if (p && !p.contains(e.target) && !e.target.closest('#rail-curview')) closeRailViewPop(); }
 function closeRailViewPop(){
   const p = document.getElementById('rail-viewpop'); if (p) p.remove();
@@ -4877,7 +5035,7 @@ function toggleRailViewPop(){
    top-left; the popover lists the most recently visited buddies from
    S.recentBuddies (recorded in selectBuddy), capped by the recentsCount
    setting (default 10). Picking a row opens that buddy's panel. */
-function recentsPopEsc(e){ if (e.key === 'Escape') closeRecentsPop(); }
+function recentsPopEsc(e){ if (e.key === 'Escape') { e.stopPropagation(); closeRecentsPop(); } }
 function recentsPopOutside(e){ const p = document.getElementById('recents-pop'); if (p && !p.contains(e.target) && !e.target.closest('#recents-btn')) closeRecentsPop(); }
 function closeRecentsPop(){
   const p = document.getElementById('recents-pop'); if (p) p.remove();
@@ -5031,6 +5189,7 @@ function initPanelFloat(){
            changes otherwise paint it straight at rest (the close has
            always animated because closeDetail strips .active first). */
         try { applyPanelOpenOrigin(); } catch (e) {}
+        try { syncCloseX(); } catch (e) {}
         vb.classList.add('bp-opening');
         void vb.offsetWidth;
         requestAnimationFrame(() => requestAnimationFrame(() => vb.classList.remove('bp-opening')));
@@ -5044,8 +5203,7 @@ function initPanelFloat(){
     } else {
       bpWasOpen = false;
       fr.classList.remove('on');
-      const bx = document.getElementById('bp-close-x');
-      if (bx) { bx.style.left = bx.style.top = bx.style.right = ''; bx.style.position = ''; }
+      try { syncCloseX(); } catch (e) {}
     }
   }).observe(vb, { attributes: true, attributeFilter: ['class'] });
   window.addEventListener('resize', () => {
@@ -6432,6 +6590,7 @@ function renderBuddy(id){
   })();
   // If the panel was restored collapsed at boot, populate its section rail for this buddy.
   if (document.body.classList.contains('bp-collapsed')) renderBpRail();
+  if (typeof syncCloseX === 'function') syncCloseX();
 }
 function toast(msg){
   document.querySelectorAll('.toast').forEach(t => t.remove());
@@ -8867,21 +9026,18 @@ document.addEventListener('keydown', e => {
       return;
     }
     const vb = document.getElementById('view-buddy');
-    if (vb && vb.classList.contains('active')) {
-      // Don't close if user is editing text — check both event target and focused element
-      const ae = document.activeElement;
-      const inField = (e.target && e.target.closest && e.target.closest('input,textarea,select,[contenteditable="true"],[contenteditable=""]'))
-        || (ae && ae.closest && ae.closest('input,textarea,select,[contenteditable="true"],[contenteditable=""]'));
-      if (inField) {
-        // Blur the field instead of closing the panel
-        if (ae && ae.blur) ae.blur();
-        e.preventDefault();
-        return;
-      }
-      closeDetail();
-      e.preventDefault();
-      return;
-    }
+    /* Job H (Dave 2026-10-21): ESC closes the panels — full stop. The old
+       text-editing blur guard meant ESC from the search box or any panel
+       field (where focus actually lives) only blurred the field, and
+       element-level handlers swallowed other presses, so on Dave's device
+       ESC appeared to do nothing. Dave's spec (2026-10-20): an open buddy
+       panel closes; the info panel closes; if both are open, both close.
+       Transient UI above (dot pops, view picker, settings) still gets its
+       ESC first — those steps return before this point. */
+    let escClosed = false;
+    if (vb && vb.classList.contains('active')) { closeDetail(); escClosed = true; }
+    if (typeof isSidebarOpen === 'function' && isSidebarOpen()) { setSidebarOpen(false); escClosed = true; }
+    if (escClosed) { e.preventDefault(); return; }
   }
   if (e.metaKey || e.ctrlKey || e.altKey) return;
   if (e.target && e.target.closest && e.target.closest('input,textarea,[contenteditable]')) return;
@@ -9059,7 +9215,10 @@ document.addEventListener('keydown', e => {
     }
   }
   if (e.target && e.target.matches && e.target.matches('input, textarea, [contenteditable="true"]')) return;
-  if (e.key === 'Escape') { closeDetail(); return; }
+  /* Job H: if the main cascade already consumed this ESC (a transient
+     popover or the settings sheet), it preventDefaulted — do not also
+     close the panel on the same keypress. */
+  if (e.key === 'Escape') { if (!e.defaultPrevented) closeDetail(); return; }
   if (e.key === '/' && !e.target.matches('input, textarea, [contenteditable="true"]')) { e.preventDefault(); const bs = document.getElementById('buddy-search'); if (bs) bs.focus(); return; }
   if (S.view === 'orgchart' && !e.metaKey && !e.ctrlKey && !e.altKey) {
     /* Org Chart zoom keys (Dave, 2026-10-21): + / \u2212 step \u00d71.25,
@@ -9608,7 +9767,9 @@ function editDump(id, idx, btn){
     }, 900);
   });
   ta.addEventListener('keydown', function(ev){
-    if (ev.key === 'Escape') { ev.stopPropagation(); renderIngestFeed(id); }
+    /* Job H: no stopPropagation — after the edit view re-renders, the
+       document ESC cascade must still run so the panel closes. */
+    if (ev.key === 'Escape') { renderIngestFeed(id); }
   });
 }
 /* ---------- GitHub repo write-back (photos + shared notes) ---------- */
@@ -11148,11 +11309,28 @@ function initNavSecToggles(){
 /* Drag-to-reorder for the sidebar sections (Buddies / Business Plans / Views).
    Drag by the section header; order persists on this device (S.navSecOrder). */
 function applyNavSecOrder(){
-  const order = S.navSecOrder;
-  if (!order || !order.length) return;
+  if (!S.navSecOrder || !S.navSecOrder.length) return;
+  normalizeSbSections();
+}
+/* Job G (Dave 2026-10-21): the Views section and the Tip Jar are the
+   sidebar's footer cluster — direct children of #sidebar, after the
+   .sb-scroll region that holds brand, search, Buddies and Plans. Section
+   reordering (a saved order or drag-and-drop) must never pull Views into
+   the scroll region or push it below the Tip Jar. */
+function normalizeSbSections(){
   const sb = document.getElementById('sidebar');
   if (!sb) return;
-  order.forEach(id => { const s = document.getElementById(id); if (s) sb.appendChild(s); });
+  const scroller = sb.querySelector('.sb-scroll');
+  const views = document.getElementById('views-sec');
+  const jar = sb.querySelector('.sb-tipjar');
+  const order = (S.navSecOrder && S.navSecOrder.length) ? S.navSecOrder : ['buddies-sec', 'plans-sec', 'views-sec'];
+  order.forEach(id => {
+    const s = document.getElementById(id);
+    if (!s) return;
+    if (id === 'views-sec') { if (jar) sb.insertBefore(s, jar); else sb.appendChild(s); }
+    else if (scroller) scroller.appendChild(s);
+  });
+  if (views && jar && views.parentElement === sb) sb.insertBefore(views, jar);
 }
 function saveNavSecOrder(){
   S.navSecOrder = [...document.querySelectorAll('#sidebar .nav-sec')].map(s => s.id);
@@ -11199,6 +11377,7 @@ function initNavSecDnD(){
       if (dragged) {
         sec.parentElement.insertBefore(dragged, before ? sec : sec.nextSibling);
         saveNavSecOrder();
+        normalizeSbSections();
         toast('Sidebar order saved.');
       }
       clearHints();
@@ -11340,17 +11519,19 @@ function initSbToTop(){
   if (!sb || !btn || btn.dataset.init) return;
   btn.dataset.init = '1';
   const THRESH = 100;
+  const scroller = sb.querySelector('.sb-scroll') || sb;
   function sync(){
-    const useful = sb.scrollTop > THRESH && isSidebarOpen() && !document.body.classList.contains('standalone');
+    const useful = scroller.scrollTop > THRESH && isSidebarOpen() && !document.body.classList.contains('standalone');
     btn.classList.toggle('show', !!useful);
   }
+  scroller.addEventListener('scroll', sync, { passive: true });
   sb.addEventListener('scroll', sync, { passive: true });
   window.addEventListener('resize', sync);
   btn.addEventListener('click', e => {
     e.preventDefault();
     e.stopPropagation(); // keep document click from stripping #sidebar.open
-    try { sb.scrollTo({ top: 0, behavior: 'smooth' }); }
-    catch (err) { sb.scrollTop = 0; }
+    try { scroller.scrollTo({ top: 0, behavior: 'smooth' }); }
+    catch (err) { scroller.scrollTop = 0; }
   });
   // Re-sync when drawer opens/closes (class toggles don't fire scroll)
   const mo = typeof MutationObserver !== 'undefined'
@@ -11449,6 +11630,23 @@ function isSidebarOpen(){
   if (isDrawerNav()) return sb.classList.contains('open');
   return !document.body.classList.contains('sb-closed');
 }
+/* Job I (Dave 2026-10-21): last-pointer / last-key point capture for the
+   sidebar expand, mirroring Job D's panel-open capture (whose variables
+   are scoped inside initPanelFloat). Keyboard expands use the centre of
+   the control that had focus. */
+let sbLastPointer = null, sbLastKeyPoint = null;
+document.addEventListener('pointerdown', function(e){ sbLastPointer = { x: e.clientX, y: e.clientY, t: Date.now() }; }, true);
+document.addEventListener('keydown', function(e){
+  if (e.key !== 'Enter' && e.key !== ' ') return;
+  const el = (e.target && e.target.getBoundingClientRect) ? e.target : document.activeElement;
+  if (el && el.getBoundingClientRect) { const r = el.getBoundingClientRect(); if (r.width || r.height) sbLastKeyPoint = { x: r.left + r.width / 2, y: r.top + r.height / 2, t: Date.now() }; }
+}, true);
+function sbExpandPoint(){
+  const now = Date.now();
+  if (sbLastPointer && now - sbLastPointer.t < 2000) return sbLastPointer;
+  if (sbLastKeyPoint && now - sbLastKeyPoint.t < 2000) return sbLastKeyPoint;
+  return null;
+}
 function setSidebarOpen(open){
   const sb = document.getElementById('sidebar');
   const sc = document.getElementById('sb-scrim');
@@ -11458,6 +11656,29 @@ function setSidebarOpen(open){
     sb.classList.toggle('open', !!open);
     if (sc) sc.classList.toggle('show', !!open);
   } else {
+    if (open && document.body.classList.contains('sb-closed')) {
+      /* Job I (Dave 2026-10-21): expanding from the collapsed rail grew
+         out of the screen's vertical centre (the rail floats centred)
+         instead of from the click. Same treatment as Job D's panel open:
+         measure the expanded rect in a transitions-off pass, park the
+         sidebar in the sb-opening pose with the origin mapped from the
+         click point, then release. Duration/easing untouched. */
+      const pt = sbExpandPoint();
+      if (pt) {
+        document.body.classList.add('sb-measuring');
+        document.body.classList.remove('sb-closed');
+        const r = sb.getBoundingClientRect();
+        document.body.classList.add('sb-closed');
+        document.body.classList.remove('sb-measuring');
+        if (r.width && r.height) {
+          const ox = Math.max(0, Math.min(r.width, pt.x - r.left));
+          const oy = Math.max(0, Math.min(r.height, pt.y - r.top));
+          sb.style.transformOrigin = ox.toFixed(1) + 'px ' + oy.toFixed(1) + 'px';
+          sb.classList.add('sb-opening');
+          requestAnimationFrame(() => requestAnimationFrame(() => sb.classList.remove('sb-opening')));
+        }
+      }
+    }
     document.body.classList.toggle('sb-closed', !open);
     // Persist panel state across refresh (Dave, 2026-10-19): closed stays closed, open stays open.
     S.sbClosed = !open; save();
@@ -11520,6 +11741,7 @@ function setPanelCollapsed(collapsed) {
     setTimeout(() => {
       if (vb && vb._foldGen !== gen) return;
       document.body.classList.add('bp-collapsed');
+      if (typeof syncCloseX === 'function') syncCloseX();
       if (vb) vb.classList.remove('bp-folding');
       S.bpCollapsed = true; save();
       renderBpRail();
@@ -11528,6 +11750,7 @@ function setPanelCollapsed(collapsed) {
     return;
   }
   document.body.classList.remove('bp-collapsed');
+  if (typeof syncCloseX === 'function') syncCloseX();
   S.bpCollapsed = false; save();
   if (vb) {
     vb.classList.add('bp-unfolding');
@@ -13086,6 +13309,7 @@ syncRailCurView();
 <div id="sb-scrim"></div>
 <aside id="sidebar">
   <div id="rail-top"><button type="button" id="rail-expand" title="Expand sidebar" aria-label="Expand sidebar"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9.5 5.5L16 12l-6.5 6.5"/></svg></button></div>
+  <div class="sb-scroll">
   <div class="sb-brand-sticky">
     <div id="sb-tools"><button id="sb-gear" title="Settings (⌘,)" aria-label="Settings"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button><button id="sb-close" title="Collapse sidebar" aria-label="Collapse sidebar"><svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path d="M7.2 7.2l9.6 9.6M16.8 7.2l-9.6 9.6" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></button></div>
     <div class="brand"><div class="eyebrow">Project Buddy</div><h1 id="brand-name" title="Click to rename">Buddies</h1><div class="bcount">NBUD buddies &middot; one family</div></div>
@@ -13100,6 +13324,7 @@ syncRailCurView();
   <div class="nav-sec" id="buddies-sec">
   <h3 style="cursor:pointer" id="buddies-toggle"><span class="nav-arrow" id="buddies-arrow">\u203a</span> Buddies <span id="attn-pill" class="zero">0</span></h3><div id="buddy-nav"></div></div>
   <div class="nav-sec" id="plans-sec"><h3 style="cursor:pointer" id="plans-toggle"><span id="plans-arrow">\u203a</span> Business Plans</h3><div id="plan-nav"></div></div>
+  </div>
   <div class="nav-sec" id="views-sec">
   <div id="views-resize" title="Drag to resize the Views section" aria-hidden="true"></div>
   <h3 style="cursor:pointer" id="views-toggle"><span class="nav-arrow" id="views-arrow">\u203a</span> Views</h3><div id="view-nav"></div></div>
