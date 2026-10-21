@@ -1611,12 +1611,18 @@ body.bp-collapsed #bp-rail{display:flex}
   -webkit-tap-highlight-color:transparent}
 #view-buddy.panel .bp-collapse-btn,#view-buddy.sheet .bp-collapse-btn{display:flex}
 .bp-collapse-btn:hover{color:var(--text);border-color:var(--border);background:var(--ghost)}
-/* Buddy panel slide animation (Dave, 2026-10-13): slow, visible open/close movement.
-   Animates `right` (not transform) so the fixed close button keeps its viewport anchor. */
-#main #view-buddy.panel{display:block;right:-600px;visibility:hidden;
-  transition:right .5s cubic-bezier(.32,.72,.35,1), visibility 0s linear .5s}
-#main #view-buddy.panel.active{right:0;visibility:visible;
-  transition:right .5s cubic-bezier(.32,.72,.35,1), visibility 0s}
+/* Buddy panel open animation. Was (Dave, 2026-10-13): a `right` slide
+   from off-canvas. Dave 2026-10-20: the panel should come FROM the
+   button that opens it — the ⓘ sits in the top-right corner, so the
+   panel now grows out of that corner (translate + scale from a
+   top-right transform origin, fading in) on the same Kin curve, and
+   settles back into the corner on close. At rest the active panel has
+   transform:none, so nothing inside it is re-anchored. */
+#main #view-buddy.panel{display:block;right:0;visibility:hidden;opacity:0;
+  transform:translate(28px,-14px) scale(.965);transform-origin:top right;
+  transition:transform .5s cubic-bezier(.32,.72,.35,1), opacity .3s ease, visibility 0s linear .5s}
+#main #view-buddy.panel.active{right:0;visibility:visible;opacity:1;transform:none;
+  transition:transform .5s cubic-bezier(.32,.72,.35,1), opacity .3s ease, visibility 0s}
 #main .view{display:none}
 #main .view.active{display:block}
 #main #view-project.active{display:flex;flex-direction:column;min-height:calc(100vh - 116px)}
