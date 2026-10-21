@@ -1,4 +1,7 @@
 ## 2026-10-20
+### Profile image leads the avatar sheet (Dave, 2026-10-20)
+- The Choose avatar sheet is restructured the way standard profile pictures are managed. A **Profile image** block now sits at the top: a preview of what's current (the uploaded image, or the emoji it falls back to), a state line ("Image set — it replaces the emoji" / "No image — using the emoji"), **Upload image** (becomes **Replace image** when one is set), and **Remove image** when one exists. Clearing deletes the image file and the buddy goes back to its emoji everywhere — card, homepage, favicon. The upload/remove machinery already existed but was buried below all eight emoji categories at the bottom of the sheet; the emoji grid and paste-your-own field now live underneath an "or pick an emoji" divider.
+
 ### Avatar sheet gets its close ✕ (Dave, 2026-10-20)
 - The Choose avatar sheet (opened from a buddy's avatar in the panel header) had no close button — only an outside tap dismissed it. It now carries the shared circled-✕ at the top-right of its header, at the 22px in-panel icon size, wired to the same close path as everything else.
 

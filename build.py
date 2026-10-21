@@ -1338,6 +1338,15 @@ body.sb-closed #sidebar #sb-tools{display:none}
 #avatar-picker .av-head h4{margin-top:3px}
 #avatar-picker .av-close{background:none;border:none;color:var(--muted);cursor:pointer;padding:2px;display:flex;flex:0 0 auto}
 #avatar-picker .av-close:hover{color:var(--text)}
+/* Profile-image block at the top of the avatar sheet (Dave 2026-10-20). */
+#avatar-picker .av-imgblock{display:flex;gap:12px;align-items:center;padding:10px;border:1px solid var(--border);border-radius:12px;background:var(--ghost);margin-bottom:12px}
+#avatar-picker .av-previewwrap{position:relative;width:56px;height:56px;flex:0 0 auto;border-radius:12px;overflow:hidden;background:var(--panel);display:flex;align-items:center;justify-content:center}
+#avatar-picker .av-preview{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+#avatar-picker .av-previewemoji{font-size:1.875rem;line-height:1}
+#avatar-picker .av-imglabel{font-weight:700;font-size:.8125rem}
+#avatar-picker .av-imgstate{color:var(--muted);font-size:.75rem;margin:2px 0 6px}
+#avatar-picker .av-imgbtns{display:flex;gap:12px}
+#avatar-picker .av-or{font-size:.6875rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin:2px 0 6px}
 .av-cat{font-size:.6875rem;color:var(--muted);margin:10px 0 4px;text-transform:uppercase;letter-spacing:.06em}
 .av-cat:first-of-type{margin-top:0}
 #avatar-grid{margin-bottom:10px}
@@ -9221,11 +9230,14 @@ function openAvatarPicker(bid, anchorEl){
   let pk = document.getElementById('avatar-picker');
   if(!pk){
     pk = document.createElement('div'); pk.id = 'avatar-picker';
-    pk.innerHTML = '<div class="av-head"><h4>Choose avatar</h4><button class="av-close" id="avatar-close" type="button" title="Close" aria-label="Close avatar picker">' + circleX(22) + '</button></div><div id="avatar-grid"></div>'
+    pk.innerHTML = '<div class="av-head"><h4>Choose avatar</h4><button class="av-close" id="avatar-close" type="button" title="Close" aria-label="Close avatar picker">' + circleX(22) + '</button></div>'
+      + '<div class="av-imgblock"><span class="av-previewwrap"><span class="av-previewemoji" id="avatar-previewemoji"></span><img class="av-preview" id="avatar-preview" alt=""></span>'
+      + '<div class="av-imgmeta"><div class="av-imglabel">Profile image</div>'
+      + '<div class="av-imgstate" id="avatar-imgstate">Using the emoji</div>'
+      + '<div class="av-imgbtns"><button class="linkbtn" id="avatar-upload">Upload image</button>'
+      + '<button class="linkbtn" id="avatar-remove" hidden>Remove image</button></div></div></div>'
+      + '<div class="av-or">or pick an emoji</div><div id="avatar-grid"></div>'
       + '<input id="avatar-custom" placeholder="Or paste any emoji" maxlength="8">'
-      + '<div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap">'
-      + '<button class="linkbtn" id="avatar-upload">Upload image</button>'
-      + '<button class="linkbtn" id="avatar-remove">Remove image</button></div>'
       + '<p class="fineprint" style="margin:8px 0 0">Uploaded images live in the dashboard repo (avatars/) and appear on the card, homepage, and favicon.</p>';
     document.body.appendChild(pk);
     document.getElementById('avatar-close').addEventListener('click', () => closeAvatarPicker());
@@ -9242,6 +9254,24 @@ function openAvatarPicker(bid, anchorEl){
     });
   }
   pk.dataset.bid = bid;
+  // Dave 2026-10-20: the profile-image block leads the sheet (standard
+  // profile-picture management): preview of what's current, Upload /
+  // Replace, and Remove only when an image is actually set. The preview
+  // img overlays the emoji; if the image file isn't there it hides and
+  // the emoji shows through.
+  const pb = byId[bid];
+  const pimg = document.getElementById('avatar-preview');
+  const pemo = document.getElementById('avatar-previewemoji');
+  const pstate = document.getElementById('avatar-imgstate');
+  const prm = document.getElementById('avatar-remove');
+  const pup = document.getElementById('avatar-upload');
+  if (pb && pimg) {
+    if (pemo) pemo.textContent = buddyDisplayIcon(pb);
+    pimg.style.display = '';
+    pimg.onload = () => { pimg.style.display = ''; if (pstate) pstate.textContent = 'Image set — it replaces the emoji'; if (prm) prm.hidden = false; if (pup) pup.textContent = 'Replace image'; };
+    pimg.onerror = () => { pimg.style.display = 'none'; if (pstate) pstate.textContent = 'No image — using the emoji'; if (prm) prm.hidden = true; if (pup) pup.textContent = 'Upload image'; };
+    pimg.src = buddyImageUrl(pb) + '?v=' + Date.now();
+  }
   const grid = document.getElementById('avatar-grid');
   grid.innerHTML = AVATAR_CATS.map(cat =>
     '<div class="av-cat">' + cat.name + '</div><div class="av-grid">' +
