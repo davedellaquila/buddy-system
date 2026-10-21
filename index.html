@@ -1414,16 +1414,11 @@ body:has(#token-pill) #view-buddy.sheet .bp-close-x{right:148px}
 .dumps-head h4{margin:0;font-size:.75rem;letter-spacing:1px;text-transform:uppercase;color:var(--muted)}
 .dumps-head .darrow{font-size:1.5625rem;color:var(--muted);transition:transform .15s;display:inline-block;line-height:1;position:relative;top:-2px}
 .bp-sec > h3{cursor:pointer;user-select:none;display:flex;align-items:center;gap:6px}
-.bp-sec > h3 .secgrip{cursor:grab;color:var(--faint);font-size:.875rem;line-height:1;padding:2px 4px;border-radius:4px;
-  margin-left:auto;touch-action:none}
-.bp-sec > h3 .secgrip:hover{color:var(--muted);background:var(--ghost)}
-.bp-sec > h3 .secgrip:active{cursor:grabbing}
-/* Dave 2026-10-18: the compact attr-head sections get the same drag grip,
-   so every field is reorderable right from the panel. */
-.attr-head .secgrip{cursor:grab;color:var(--faint);font-size:.875rem;line-height:1;padding:2px 4px;border-radius:4px;
-  flex:none;touch-action:none}
-.attr-head .secgrip:hover{color:var(--muted);background:var(--ghost)}
-.attr-head .secgrip:active{cursor:grabbing}
+/* Jonny verdict 2026-10-21: the drag grip lives on the section's utility
+   line (both header species) — one machinery pattern for the whole panel. */
+.sec-util .secgrip{cursor:grab;color:var(--faint);line-height:1;padding:2px 4px;border-radius:4px;touch-action:none}
+.sec-util .secgrip:hover{color:var(--muted);background:var(--ghost)}
+.sec-util .secgrip:active{cursor:grabbing}
 .bp-sec.sec-dragging{opacity:0.4}
 #sec-drag-divider{position:absolute;height:0;border-top:3px solid var(--accent);z-index:50;pointer-events:none;box-shadow:0 0 8px var(--accent)}
 #view-drag-divider{position:absolute;height:0;border-top:3px solid var(--accent);z-index:50;pointer-events:none;box-shadow:0 0 8px var(--accent)}
@@ -1434,7 +1429,7 @@ body:has(#token-pill) #view-buddy.sheet .bp-close-x{right:148px}
 #view-nav .navbtn .navgrip:hover{color:var(--muted);background:var(--ghost)}
 #view-nav .navbtn .navgrip:active{cursor:grabbing}
 .bp-sec > h3 .secarrow{font-size:1.5625rem;color:var(--muted);transition:transform .15s;display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:50%;background:var(--ghost);line-height:1;flex:0 0 auto}
-.bp-sec.collapsed > *:not(h3){display:none !important} /* !important beats inline display styles (e.g. homepage URL row) */
+.bp-sec.collapsed > *:not(h3):not(.sec-util){display:none !important} /* !important beats inline display styles (e.g. homepage URL row); the utility line stays — its controls stay reachable (Jonny 2026-10-21) */
 .bp-sec .secarrow{transform:rotate(90deg)}
 .bp-sec.collapsed .secarrow{transform:rotate(0deg)}
 /* Section icon behaviors (Dave, 2026-10-14) */
@@ -1444,10 +1439,8 @@ body:has(#token-pill) #view-buddy.sheet .bp-close-x{right:148px}
 .bp-sec[data-icon-behavior="spin"].collapsed .secarrow{transform:rotate(0deg)}
 /* Dave 2026-10-18: per-field hide affordance + hidden-fields tray, right in the panel. */
 .bp-hide-btn{margin-left:auto;font-size:.6875rem;font-weight:600;color:var(--faint);background:none;border:0;
-  cursor:pointer;padding:4px 8px;border-radius:6px;opacity:0;transition:opacity .15s;flex:none}
-.bp-sec > h3:hover .bp-hide-btn,.attr-head:hover .bp-hide-btn{opacity:1}
-.bp-hide-btn:hover{color:var(--danger);background:var(--danger-soft);opacity:1}
-@media (hover:none){.bp-hide-btn{opacity:.65}}
+  cursor:pointer;padding:4px 8px;border-radius:6px;flex:none}
+.bp-hide-btn:hover{color:var(--danger);background:var(--danger-soft)}
 .bp-hiddenbar{margin:18px 0 6px;border:1px dashed var(--border);border-radius:12px;padding:4px 6px}
 .bp-hiddenbar-toggle{width:100%;display:flex;align-items:center;justify-content:space-between;
   background:none;border:0;cursor:pointer;font-size:.78125rem;font-weight:600;color:var(--muted);padding:8px 10px;border-radius:8px}
@@ -1558,7 +1551,7 @@ body.sb-closed #sidebar #sb-tools{display:none}
 .attr-disc{flex:none;width:34px;height:34px;border-radius:50%;background:var(--ghost);display:flex;align-items:center;justify-content:center;font-size:1.1875rem;line-height:1;color:var(--muted)}
 .attr-row:hover .attr-disc{color:var(--text)}
 .attr-text{flex:1;min-width:0;font-size:.8125rem;letter-spacing:.05em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.attr-label{color:var(--muted);font-weight:600}
+.attr-label{color:var(--muted);font-weight:600;white-space:nowrap}
 .attr-value{color:var(--text);font-weight:700}
 .attr-value.attr-none{color:var(--faint);font-weight:500}
 .attr-row .info-tip{margin-left:0;font-size:1.0625rem}
@@ -1592,8 +1585,14 @@ body.sb-closed #sidebar #sb-tools{display:none}
 .attr-toggle:hover{color:var(--text)}
 .bp-sec.expanded .attr-toggle{transform:rotate(90deg)}
 .bp-sec.expanded .attr-toggle.attr-toggle-ic{transform:none}
-.attr-head .attr-text{flex:1;min-width:0;font-size:.8125rem;letter-spacing:.05em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.attr-head .info-tip{margin-left:0;font-size:1.0625rem;flex:none}
+.attr-head .attr-text{flex:1;min-width:0;font-size:.8125rem;letter-spacing:.05em;white-space:normal;overflow:visible;text-overflow:clip}
+/* Jonny verdict 2026-10-21 (section headers): the dissolved explanation —
+   the header's old tip sentence as the body's first quiet line — and the
+   machinery's own utility line beneath every header. */
+.attr-tip{color:var(--muted);font-size:.8125rem;line-height:1.5;margin:0 0 8px}
+.sec-util{display:flex;justify-content:space-between;align-items:center;font-size:.6875rem;color:var(--faint);letter-spacing:.04em;padding:2px 2px 0}
+.attr-head + .sec-util{margin-left:44px}
+.bp-sec > h3 + .sec-util{margin-left:38px}
 .pill-btn{flex:none;font-size:.8125rem;font-weight:600;color:var(--accent);background:none;border:1.5px solid var(--accent);border-radius:20px;padding:5px 14px;cursor:pointer;white-space:nowrap}
 .pill-btn:hover{background:color-mix(in srgb,var(--accent) 12%,transparent)}
 .pill-btn:active{transform:scale(.96)}
@@ -3501,9 +3500,16 @@ function applySectionCollapse(bid){
     h3.insertBefore(arrow, h3.firstChild);
     const grip = document.createElement('span');
     grip.className = 'secgrip';
-    grip.textContent = '⋮⋮';
+    grip.textContent = '⋮⋮ Reorder';
     grip.title = 'Drag to reorder sections';
-    h3.appendChild(grip);
+    // Jonny verdict 2026-10-21: the grip lives on the section's utility line.
+    let util = sec.querySelector(':scope > .sec-util');
+    if (!util) {
+      util = document.createElement('div');
+      util.className = 'sec-util';
+      h3.after(util);
+    }
+    util.appendChild(grip);
     if (S.secCollapsed[fid]) sec.classList.add('collapsed');
     h3.title = 'Click to collapse/expand — Shift+click applies to all sections';
     h3.addEventListener('click', e => {
@@ -3558,7 +3564,7 @@ function secDragHideDivider(){
 function applySectionDrag(){
   const home = document.getElementById('buddy-home');
   if (!home) return;
-  home.querySelectorAll('.bp-sec[data-field] > h3 .secgrip, .bp-sec[data-field] > .attr-head .secgrip').forEach(grip => {
+  home.querySelectorAll('.bp-sec[data-field] > .sec-util .secgrip').forEach(grip => {
     if (grip.dataset.sdrag) return;
     grip.dataset.sdrag = '1';
     grip.addEventListener('pointerdown', e => {
@@ -3782,22 +3788,30 @@ function decorateBpHeaders(){
     const fid = sec.dataset.field;
     const head = sec.querySelector(':scope > h3, :scope > .attr-head');
     if (!head) return;
+    // Jonny verdict 2026-10-21: the machinery (grip + hide) lives on a quiet
+    // utility line of its own beneath the header — never on the name's line.
+    let util = sec.querySelector(':scope > .sec-util');
+    if (!util) {
+      util = document.createElement('div');
+      util.className = 'sec-util';
+      head.after(util);
+    }
     // Drag grip for attr-head headers (h3 headers get theirs in applySectionCollapse).
-    if (head.classList.contains('attr-head') && !head.querySelector('.secgrip')) {
+    if (head.classList.contains('attr-head') && !util.querySelector('.secgrip')) {
       const grip = document.createElement('span');
       grip.className = 'secgrip';
-      grip.textContent = '⋮⋮';
+      grip.textContent = '⋮⋮ Reorder';
       grip.title = 'Drag to reorder sections';
-      head.appendChild(grip);
+      util.appendChild(grip);
     }
-    if (head.querySelector('.bp-hide-btn')) return;
+    if (util.querySelector('.bp-hide-btn')) return;
     const btn = document.createElement('button');
     btn.type = 'button';
     btn.className = 'bp-hide-btn';
     btn.dataset.hideField = fid;
     btn.title = 'Hide this field — bring it back from Hidden fields below';
     btn.textContent = 'hide';
-    head.appendChild(btn);
+    util.appendChild(btn);
   });
 }
 function renderBpHiddenBar(){
@@ -3999,7 +4013,7 @@ function renderDevelopSection(){
   const dev = document.getElementById('fset-develop');
   if (!dev) return;
   const simulating = !!devBackup;
-  const buildNum = '20261021.0342';
+  const buildNum = '20261021.0622';
   dev.innerHTML = ''
     + '<label class="fset-check"><input type="checkbox" id="dev-empty-toggle"' + (simulating ? ' checked' : '') + '> <span><strong>Simulate new user</strong> — empty data file, as if opening the shared link fresh</span></label>'
     + '<div class="fineprint" style="margin:8px 0 12px">Build <span style="font-family:monospace">' + escHtml(String(buildNum)) + '</span> · ' + BUDDIES.length + ' buddies in this file</div>'
@@ -4985,7 +4999,9 @@ function attrCountRow(label, items, nameFn, opts){
   return attrRow(label, display, opts);
 }
 /* Attribute header pattern (Dave 2026-10-14): ›/﹀ LABEL: value  [buttons] ⓘ + expandable body */
-function attrHead(field, label, valueHtml, buttons, tip){
+function attrHead(field, label, valueHtml, buttons){
+  /* Jonny verdict 2026-10-21: no explanation icon in the header — the tip
+     sentence lives in the body now (attrTipLine, at the call sites). */
   /* Dave 2026-10-20 (late): the medallion carries the Section toggle style's
      content (the section's own icon by default), same as the h3 sections —
      not a hardcoded chevron. In icon mode the medallion doesn't rotate. */
@@ -4995,7 +5011,12 @@ function attrHead(field, label, valueHtml, buttons, tip){
   return '<div class="attr-head"><button class="attr-toggle' + icCls + '" data-expand="'+field+'" aria-label="Expand">' + tgl + '</button>'
     + '<span class="attr-text"><span class="attr-label">'+label+'</span><span class="attr-headval">: '+valueHtml+'</span></span>'
     + (buttons || '')
-    + (tip ? '<span class="info-tip" data-tip="'+tip+'">ⓘ</span>' : '') + '</div>';
+    + '</div>';
+}
+/* Jonny verdict 2026-10-21: the header's old explanation sentence, dissolved
+   into the section body as its first quiet line — visible when expanded. */
+function attrTipLine(tip){
+  return tip ? '<p class="attr-tip">' + tip + '</p>' : '';
 }
 function wordCount(s){ s = (s || '').trim(); return s ? s.split(/\s+/).length : 0; }
 function updateNotesCounts(){
@@ -5027,9 +5048,9 @@ function personaSecHtml(b){
       + '</div>'
     : '<p class="bp-empty">No persona set — this buddy speaks in its default voice.</p>';
   return '<div class="bp-sec" data-field="persona">'
-    + attrHead('persona', 'PERSONA', valueHtml, '',
-      'The voice this buddy speaks in. Pick the one that makes you grin — it shapes how its messages and notifications sound.')
+    + attrHead('persona', 'PERSONA', valueHtml, '')
     + '<div class="attr-body">'
+    + attrTipLine('The voice this buddy speaks in. Pick the one that makes you grin — it shapes how its messages and notifications sound.')
     + cur
     + '<div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap">'
     + '<button class="linkbtn" id="bp-persona-change" type="button">Change</button>'
@@ -5058,9 +5079,9 @@ function voiceSecHtml(b){
     : '<p class="bp-empty">Default voice — this buddy has no specific voice assigned.</p>';
   const notesOn = !!b.voiceNotes;
   return '<div class="bp-sec" data-field="voice">'
-    + attrHead('voice', 'VOICE', valueHtml, '',
-      'The spoken voice for this buddy’s voice notes. Pick one, then enable voice notes below to hear it in threads.')
+    + attrHead('voice', 'VOICE', valueHtml, '')
     + '<div class="attr-body">'
+    + attrTipLine('The spoken voice for this buddy’s voice notes. Pick one, then enable voice notes below to hear it in threads.')
     + cur
     + '<div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;align-items:center">'
     + '<button class="linkbtn" id="bp-voice-change" type="button">Change</button>'
@@ -5409,7 +5430,7 @@ function renderBuddy(id){
       + '<button class="bp-circle-add head-add" data-addparent="'+escHtml(id)+'" title="Add another '+uvBtn.upS+'" aria-label="Add another '+uvBtn.upS+'">⊕</button>';
     if (!pars.length) {
       parSec = '<div class="bp-sec" data-field="parent">'
-        + attrHead('parent', uv.upHead, '<span class="attr-value attr-none">Top level</span>', addBtn, tip)
+        + attrHead('parent', uv.upHead, '<span class="attr-value attr-none">Top level</span>', addBtn)
         + '</div>';
       return;
     }
@@ -5421,7 +5442,8 @@ function renderBuddy(id){
     }).join('');
     parSec = '<div class="bp-sec" data-field="parent">'
       + attrHead('parent', uv.upHead + (uv.upCount ? ' <span class="attn-count">('+pars.length+')</span>' : ''),
-        '<span class="attr-value">'+pars.map(pid => escHtml(dispName(byId[pid]))).join(', ')+'</span>', addBtn, tip)
+        '<span class="attr-value">'+pars.map(pid => escHtml(dispName(byId[pid]))).join(', ')+'</span>', addBtn)
+      + '<div class="attr-body attr-tip">' + tip + '</div>'
       + rows
       + '</div>';
   })();
@@ -5530,13 +5552,11 @@ function renderBuddy(id){
     + '<div style="margin-top:8px"><span class="fineprint" id="ingest-status"></span></div>'
     + '<div id="ingest-feed" style="margin-top:8px"></div></div>'
     + '<div class="bp-sec" data-field="mission">'
-    + attrHead('mission', 'ABOUT', '<span class="attr-value">(' + wordCount(b.mission) + ')</span>', '',
-      'The mission statement’s executive summary — tweak it through the buddy’s chat thread and it updates everywhere.')
-    + '<div class="attr-body"><p class="bp-mission">'+escHtml(b.mission)+'</p></div></div>'
+    + attrHead('mission', 'ABOUT', '<span class="attr-value">(' + wordCount(b.mission) + ')</span>', '')
+    + '<div class="attr-body">' + attrTipLine('The mission statement’s executive summary — tweak it through the buddy’s chat thread and it updates everywhere.') + '<p class="bp-mission">'+escHtml(b.mission)+'</p></div></div>'
     + '<div class="bp-sec" data-field="aka">'
-    + attrHead('aka', 'A.K.A.', '<span class="attr-value" id="bp-aka-count">(' + effAka(b).length + ')</span>', '',
-      'Other names for this buddy — nicknames, aliases, what people actually call them. Searchable.')
-    + '<div class="attr-body"><div id="bp-aka-list" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px"></div>'
+    + attrHead('aka', 'A.K.A.', '<span class="attr-value" id="bp-aka-count">(' + effAka(b).length + ')</span>', '')
+    + '<div class="attr-body">' + attrTipLine('Other names for this buddy — nicknames, aliases, what people actually call them. Searchable.') + '<div id="bp-aka-list" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px"></div>'
     + '<div style="display:flex;gap:8px"><input type="text" id="bp-aka-input" placeholder="Add a nickname…" aria-label="Add a nickname" style="flex:1;min-width:0;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:8px 12px;font-size:.8125rem;color:var(--text)">'
     + '<button class="linkbtn" id="bp-aka-add" type="button">Add</button></div></div></div>'
     + personaSecHtml(b)
@@ -5561,16 +5581,14 @@ function renderBuddy(id){
     + '<div class="bp-sec" data-field="artifacts"><h3>Artifacts <span class="attn-count">('+artCount+')</span></h3>'+arts+'</div>'
     + planSec
     + '<div class="bp-sec" data-field="notes">'
-    + attrHead('notes', 'PRIVATE NOTES', '<span class="attr-value" id="bp-notes-count">(0)</span>', '',
-      'Saved on this device. (For your eyes only)')
-    + '<div class="attr-body"><textarea class="notes" id="bp-notes" placeholder="Scratch pad for this buddy… (For your eyes only)">'+escHtml(S.notes[id]||'')+'</textarea></div>'
+    + attrHead('notes', 'PRIVATE NOTES', '<span class="attr-value" id="bp-notes-count">(0)</span>', '')
+    + '<div class="attr-body">' + attrTipLine('Saved on this device. (For your eyes only)') + '<textarea class="notes" id="bp-notes" placeholder="Scratch pad for this buddy… (For your eyes only)">'+escHtml(S.notes[id]||'')+'</textarea></div>'
     + '</div>'
     + '<div class="bp-sec" data-field="shared">'
-    + attrHead('shared', 'SHARED NOTES', '<span class="attr-value" id="bp-shared-count">(0)</span>', '',
-      'Anybody with repo access can see this note. Saved to the buddy’s repo (docs/notes.md).')
-    + '<div class="attr-body"><textarea class="notes" id="bp-shared-notes" placeholder="Anybody with repo access can see this note."></textarea>'
+    + attrHead('shared', 'SHARED NOTES', '<span class="attr-value" id="bp-shared-count">(0)</span>', '')
+    + '<div class="attr-body">' + attrTipLine('Anybody with repo access can see this note. Saved to the buddy’s repo (docs/notes.md).') + '<textarea class="notes" id="bp-shared-notes" placeholder="Anybody with repo access can see this note."></textarea>'
     + '<p class="fineprint" id="shared-status"></p></div></div>'
-    + '<div class="bp-build">Build 20261021.0342</div>'
+    + '<div class="bp-build">Build 20261021.0622</div>'
     + '</div>';
   // Update every visible label for a buddy after a rename/re-icon, across all
   // Atlas lenses. A rename changes no structure, so labels are patched in place
@@ -8222,7 +8240,7 @@ function renderPlan(id){
     + '<p class="fineprint">Saved on this device. (For your eyes only)</p></div>'
     + '<div class="bp-sec"><h3>📝 Shared notes<span class="info-tip" data-tip="Visible to everyone with access to this project.">\u24d8</span></h3><textarea class="notes" id="bp-shared" placeholder="Shared notes\u2026 (visible to everyone with access)">'+escHtml((S.planShared||{})[id]||'')+'</textarea>'
     + '<p class="fineprint">Shared — visible to everyone with access.</p></div>'
-    + '<div class="bp-build">Build 20261021.0342</div>'
+    + '<div class="bp-build">Build 20261021.0622</div>'
     + '</div>';
   const nt = document.getElementById('bp-notes');
   let t = null;
@@ -11086,14 +11104,14 @@ function openWhatsNew(){
     .then(r => r.ok ? r.text() : '')
     .then(t => {
       const serverBuild = t.trim();
-      if (serverBuild && serverBuild !== '20261021.0342') {
+      if (serverBuild && serverBuild !== '20261021.0622') {
         updBtn.style.display = '';
         updBtn.title = 'Update to build ' + serverBuild;
       }
       // Show build numbers at the top of the sheet (Dave's request 2026-10-12)
-      const myBuild = '20261021.0342';
+      const myBuild = '20261021.0622';
       let buildLine = '<p class="fineprint" style="margin-top:0">You’re on build ' + escHtml(myBuild) + '.';
-      if (serverBuild && serverBuild !== '20261021.0342' && isNewerBuild(serverBuild, myBuild)) {
+      if (serverBuild && serverBuild !== '20261021.0622' && isNewerBuild(serverBuild, myBuild)) {
         buildLine += ' Build ' + escHtml(serverBuild) + ' is available.';
       }
       buildLine += '</p>';
@@ -11143,7 +11161,7 @@ function isNewerBuild(server, mine){
   } catch (e) { return false; }
 }
 function initVersionCheck(){
-  const myBuild = '20261021.0342';
+  const myBuild = '20261021.0622';
   function showUpdateBanner(serverBuild){
     if (document.getElementById('update-banner')) return;
     const b = document.createElement('div');

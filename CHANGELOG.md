@@ -1,3 +1,9 @@
+## 2026-10-21
+### Section headers: the value never yields (Jonny's verdict, built 2026-10-21)
+- Dave circled the Manager row: "MANAGER: A…" — the manager's name truncated to a letter while a medallion, an add button, an ⓘ, a drag grip, and a hide link shared its line. Jonny's ruling, now built: the name line holds only the medallion, the label, the value, and one verb (the control that acts on the value — Manager's ⊕, or its "+ Add parent" pill when open). Label and value never truncate again; a long value wraps inside its column (≈224px on phone, ≈306px on the desktop panel, up from ≈111px).
+- The machinery gets a line of its own: a new `.sec-util` row directly beneath every section header — both the compact attr-head sections and the h3 sections — at 11px in the faint voice, grip ("⋮⋮ Reorder", spelled out) on the left, hide on the right, at full presence (the hover-reveal opacity treatment is retired). The line stays visible when an h3 section is collapsed, so its controls stay reachable. Cost accepted in the verdict: ≈20px more height per section.
+- The ⓘ dissolves into the body: each header's explanation sentence is now the first quiet line of its expanded body (the parent section gets a tip row of its own, ahead of the parent links). The Dump Box keeps its ⓘ — it's an h3 section, outside the verdict's scope.
+
 ## 2026-10-20
 ### Section borders removed; icons take the medallion (Dave, 2026-10-20)
 - Dave circled the Photos section on the Model A's panel: a rounded outline hugged the whole section. It was the sections' hover treatment from the free-floating build (19:07) — a tint plus an inset 1px outline — latching after taps on touch. Both are gone; sections sit flat on the panel again. (The Photos drop zone and the Dump Box keep their own borders — those outline the fields, not the sections.)
