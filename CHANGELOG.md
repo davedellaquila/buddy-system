@@ -1,4 +1,7 @@
 ## 2026-10-20
+### Info icon: italic serif i (Dave, 2026-10-20)
+- The panel-open button's serif i is now italic — the classic information glyph (Georgia italic). One property on `#panel-open .pi-serif`.
+
 ### One panel style for both panels (Dave, 2026-10-20)
 - The Settings choice formerly "Sidebar panel style" is now **Panel style** and governs BOTH panels. **Anchored:** both panels sit flush to their edge in the same squared-off style, the main view resizes to make room (the info-panel yield shipped earlier tonight is now scoped to Anchored), and neither panel can be dragged — switching to Anchored docks a floated panel and keeps its rect for when Floating returns. **Floating:** both panels are movable, resizable inset cards — the info panel as before, and now the sidebar too: a dotted gripper at its top-center drags it anywhere, grippers show on all sides once it floats, the rect persists (`S.sbFloat`), and double-clicking the gripper docks it again. While the sidebar is docked, only its gripper shows — its right-edge width grip keeps its own job — and collapsing to the rail or switching to Anchored docks it visually.
 - Verified in a DOM harness against the real build: float applies (frame tracks, free state), switching to Anchored clears the float and hides the frame, switching back restores the saved rect, and the dock path restores the standard 336px width. (jsdom cannot evaluate @media, so the media-block placement was confirmed by inspection, same as the anchored yield.)

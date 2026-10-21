@@ -1736,7 +1736,7 @@ body:has(#sidebar.sb-floating) #sb-resize{display:none}
   transition:transform .36s cubic-bezier(.32,.72,.35,1), opacity .28s ease}
 #main #view-buddy.panel.bp-unfolding{transform:translateX(34px) scale(.93);opacity:0}
 /* The open button's i is a serif i now (Dave, 2026-10-20). */
-#panel-open .pi-serif{font-family:Georgia,'Times New Roman',Times,serif;font-size:26px;
+#panel-open .pi-serif{font-family:Georgia,'Times New Roman',Times,serif;font-size:26px;font-style:italic;
   font-weight:600;line-height:1;display:block;transform:translateY(-2px)}
 /* The close x takes a little spin as it hands back to the i. */
 @keyframes bpx-spin{to{transform:rotate(360deg)}}
