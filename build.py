@@ -2336,13 +2336,21 @@ def build():
         if _m:
             _name = _m.group(1).strip()
             _rest = _m.group(2).strip()
+            # Optional per-persona voice: a trailing [voice: <catalog id>] token
+            # on the roster line gives the persona ITS voice (Dave 2026-10-21:
+            # a persona IS a voice). Stripped before quote/blurb extraction so
+            # name/quote/blurb stay exactly as they were without the token.
+            _vm = _re.search(r'\[voice:\s*([^\]]+)\]\s*$', _rest)
+            _voice = _vm.group(1).strip() if _vm else None
+            if _vm:
+                _rest = _rest[:_vm.start()].strip()
             # Extract the quoted voice sample (Dave's one-liner) from the front
             _qm = _re.match(r'"([^"]+)"\s*(.*)', _rest)
             if _qm:
                 _quote, _blurb = _qm.group(1).strip(), _qm.group(2).strip()
             else:
                 _quote, _blurb = "", _rest
-            _roster.append({"name": _name, "quote": _quote, "blurb": _blurb})
+            _roster.append({"name": _name, "quote": _quote, "blurb": _blurb, "voice": _voice})
     roster_js = json.dumps(_roster)
     n_buddies = len(buddies)
 
@@ -4878,6 +4886,10 @@ function personaQuote(name){
   const e = (typeof PERSONA_ROSTER !== 'undefined' ? PERSONA_ROSTER : []).find(x => x.name === name);
   return e ? (e.quote || '') : '';
 }
+function personaVoiceOf(name){
+  const e = (typeof PERSONA_ROSTER !== 'undefined' ? PERSONA_ROSTER : []).find(x => x.name === name);
+  return e ? (e.voice || '') : '';
+}
 function personaSecHtml(b){
   const p = b.persona || '';
   const pq = p ? personaQuote(p) : '';
@@ -5152,12 +5164,14 @@ async function setBuddyPersona(id, name){
     const arr = data.buddies || data;
     const e = arr.find(x => x.id === id);
     if (!e) throw new Error('Buddy not found in the registry.');
+    const _pv = name ? personaVoiceOf(name) : '';
     if (name) e.persona = name; else delete e.persona;
+    if (_pv) e.voice = _pv; else if (!name) delete e.voice;
     await ghPutFile('buddy-system', 'buddies.json', b64encode(JSON.stringify(data, null, 1)), 'Set persona for ' + id + ' (dashboard info panel)');
     const b = byId[id];
-    if (b) { if (name) b.persona = name; else delete b.persona; }
+    if (b) { if (name) b.persona = name; else delete b.persona; if (_pv) b.voice = _pv; else if (!name) delete b.voice; }
     save(); renderBuddy(id);
-    toast(name ? 'Persona set to ' + name + '.' : 'Persona cleared — back to the default voice.');
+    toast(name ? 'Persona set to ' + name + (_pv ? ' — with its own voice.' : '.') : 'Persona cleared — back to the default voice.');
   } catch (err) {
     if (st) st.textContent = '';
     toast('Could not save persona: ' + (err.message || err));
