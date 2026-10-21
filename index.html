@@ -1800,7 +1800,7 @@ html.light .status.st-dormant{background:rgba(139,148,158,.18);color:var(--muted
   /* Anchored dock (Dave, 2026-10-20): when the info panel is docked (open, not
      floated, not collapsed to the rail), the main view resizes to make room for
      it instead of being covered. Floated = free overlay, no yield. */
-  body.sb-anchored:not(.bp-collapsed):has(#view-buddy.panel.active:not(.floating)) #main{padding-right:calc(min(416px, calc(100vw - 250px)) + 22px)}
+  body.sb-anchored:not(.bp-collapsed):has(#view-buddy.panel.active:not(.floating)) #main{padding-right:calc(var(--bpw, min(416px, calc(100vw - 250px))) + 22px)}
 }
 /* ---- Large: >1100px (desktop) ---- */
 @media (min-width:1101px){
@@ -1808,8 +1808,11 @@ html.light .status.st-dormant{background:rgba(139,148,158,.18);color:var(--muted
     background:var(--panel);border:1px solid var(--border);border-right:none;border-radius:18px 0 0 18px;overflow-y:auto;overflow-x:hidden;overflow-anchor:none;
     padding:24px 20px 48px;box-shadow:0 16px 48px var(--shadow);box-sizing:border-box}
   /* Anchored dock (Dave, 2026-10-20): same rule as the iPad block — a docked
-     panel reserves its space in the layout; a floated one overlays freely. */
-  body.sb-anchored:not(.bp-collapsed):has(#view-buddy.panel.active:not(.floating)) #main{padding-right:472px}
+     panel reserves its space in the layout; a floated one overlays freely.
+     The yield follows the panel's live width (--bpw, set by applyPanelWidth
+     and the resize drag) instead of a fixed number, so a resized panel
+     leaves no dead gap (Dave's circled screenshot, 2026-10-20). */
+  body.sb-anchored:not(.bp-collapsed):has(#view-buddy.panel.active:not(.floating)) #main{padding-right:calc(var(--bpw, 440px) + 32px)}
 }
 #view-buddy.panel.active,#view-buddy.sheet.active{display:block}
 /* Right panel collapsed to floating section pill (Dave, 2026-10-14) */
@@ -3977,7 +3980,7 @@ function renderDevelopSection(){
   const dev = document.getElementById('fset-develop');
   if (!dev) return;
   const simulating = !!devBackup;
-  const buildNum = '20261020.2158';
+  const buildNum = '20261020.2206';
   dev.innerHTML = ''
     + '<label class="fset-check"><input type="checkbox" id="dev-empty-toggle"' + (simulating ? ' checked' : '') + '> <span><strong>Simulate new user</strong> — empty data file, as if opening the shared link fresh</span></label>'
     + '<div class="fineprint" style="margin:8px 0 12px">Build <span style="font-family:monospace">' + escHtml(String(buildNum)) + '</span> · ' + BUDDIES.length + ' buddies in this file</div>'
@@ -5530,7 +5533,7 @@ function renderBuddy(id){
       'Anybody with repo access can see this note. Saved to the buddy’s repo (docs/notes.md).')
     + '<div class="attr-body"><textarea class="notes" id="bp-shared-notes" placeholder="Anybody with repo access can see this note."></textarea>'
     + '<p class="fineprint" id="shared-status"></p></div></div>'
-    + '<div class="bp-build">Build 20261020.2158</div>'
+    + '<div class="bp-build">Build 20261020.2206</div>'
     + '</div>';
   // Update every visible label for a buddy after a rename/re-icon, across all
   // Atlas lenses. A rename changes no structure, so labels are patched in place
@@ -8181,7 +8184,7 @@ function renderPlan(id){
     + '<p class="fineprint">Saved on this device. (For your eyes only)</p></div>'
     + '<div class="bp-sec"><h3>📝 Shared notes<span class="info-tip" data-tip="Visible to everyone with access to this project.">\u24d8</span></h3><textarea class="notes" id="bp-shared" placeholder="Shared notes\u2026 (visible to everyone with access)">'+escHtml((S.planShared||{})[id]||'')+'</textarea>'
     + '<p class="fineprint">Shared — visible to everyone with access.</p></div>'
-    + '<div class="bp-build">Build 20261020.2158</div>'
+    + '<div class="bp-build">Build 20261020.2206</div>'
     + '</div>';
   const nt = document.getElementById('bp-notes');
   let t = null;
@@ -11045,14 +11048,14 @@ function openWhatsNew(){
     .then(r => r.ok ? r.text() : '')
     .then(t => {
       const serverBuild = t.trim();
-      if (serverBuild && serverBuild !== '20261020.2158') {
+      if (serverBuild && serverBuild !== '20261020.2206') {
         updBtn.style.display = '';
         updBtn.title = 'Update to build ' + serverBuild;
       }
       // Show build numbers at the top of the sheet (Dave's request 2026-10-12)
-      const myBuild = '20261020.2158';
+      const myBuild = '20261020.2206';
       let buildLine = '<p class="fineprint" style="margin-top:0">You’re on build ' + escHtml(myBuild) + '.';
-      if (serverBuild && serverBuild !== '20261020.2158' && isNewerBuild(serverBuild, myBuild)) {
+      if (serverBuild && serverBuild !== '20261020.2206' && isNewerBuild(serverBuild, myBuild)) {
         buildLine += ' Build ' + escHtml(serverBuild) + ' is available.';
       }
       buildLine += '</p>';
@@ -11102,7 +11105,7 @@ function isNewerBuild(server, mine){
   } catch (e) { return false; }
 }
 function initVersionCheck(){
-  const myBuild = '20261020.2158';
+  const myBuild = '20261020.2206';
   function showUpdateBanner(serverBuild){
     if (document.getElementById('update-banner')) return;
     const b = document.createElement('div');

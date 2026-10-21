@@ -1628,7 +1628,7 @@ html.light .status.st-dormant{background:rgba(139,148,158,.18);color:var(--muted
   /* Anchored dock (Dave, 2026-10-20): when the info panel is docked (open, not
      floated, not collapsed to the rail), the main view resizes to make room for
      it instead of being covered. Floated = free overlay, no yield. */
-  body.sb-anchored:not(.bp-collapsed):has(#view-buddy.panel.active:not(.floating)) #main{padding-right:calc(min(416px, calc(100vw - 250px)) + 22px)}
+  body.sb-anchored:not(.bp-collapsed):has(#view-buddy.panel.active:not(.floating)) #main{padding-right:calc(var(--bpw, min(416px, calc(100vw - 250px))) + 22px)}
 }
 /* ---- Large: >1100px (desktop) ---- */
 @media (min-width:1101px){
@@ -1636,8 +1636,11 @@ html.light .status.st-dormant{background:rgba(139,148,158,.18);color:var(--muted
     background:var(--panel);border:1px solid var(--border);border-right:none;border-radius:18px 0 0 18px;overflow-y:auto;overflow-x:hidden;overflow-anchor:none;
     padding:24px 20px 48px;box-shadow:0 16px 48px var(--shadow);box-sizing:border-box}
   /* Anchored dock (Dave, 2026-10-20): same rule as the iPad block — a docked
-     panel reserves its space in the layout; a floated one overlays freely. */
-  body.sb-anchored:not(.bp-collapsed):has(#view-buddy.panel.active:not(.floating)) #main{padding-right:472px}
+     panel reserves its space in the layout; a floated one overlays freely.
+     The yield follows the panel's live width (--bpw, set by applyPanelWidth
+     and the resize drag) instead of a fixed number, so a resized panel
+     leaves no dead gap (Dave's circled screenshot, 2026-10-20). */
+  body.sb-anchored:not(.bp-collapsed):has(#view-buddy.panel.active:not(.floating)) #main{padding-right:calc(var(--bpw, 440px) + 32px)}
 }
 #view-buddy.panel.active,#view-buddy.sheet.active{display:block}
 /* Right panel collapsed to floating section pill (Dave, 2026-10-14) */
