@@ -1,4 +1,9 @@
 ## 2026-10-20
+### Icons sized between, Hidden fields bulk actions, What's New type pills (Dave, 2026-10-20)
+- Buddy panel icons: the gear (in the panel's ··· menu) and the circled-✕ that closes the field-settings dialog grow to 22px — bigger than before (16px / 20px), a step below the 24px glyphs on the main view's chrome. The panel's own close ✕ was already 22px and now matches them.
+- Hidden fields menu: the last item is now a bulk row with two side-by-side choices — **Add all** restores every hidden field (arriving open, like a single show) and **Remove all** hides every field. Both act on the whole field set at once.
+- What's New sheet: every entry now carries a small colored pill naming its type (Added / Changed / Fixed / Other — classified from its changelog heading, since the headings are free-form), and those types drive the filter row at the top of the sheet: pills with counts, pinned sticky while the entries scroll beneath them. Tapping a pill filters the list; tapping again clears.
+
 ### Panel grows out of the ⓘ corner (Dave, 2026-10-20)
 - The buddy detail panel no longer slides in from off-canvas right. Dave: opening it should feel like it comes from the button that was clicked. The panel now grows out of the top-right corner where the ⓘ (Open buddy details) button sits — a short translate + scale from a top-right transform origin with a fade, on the same .5s Kin curve — and settles back into the corner when it closes. At rest the open panel carries no transform, so nothing inside it is re-anchored. Desktop/iPad panel only; the phone sheet and portrait takeover keep their existing entries.
 
