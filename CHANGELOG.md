@@ -1,4 +1,9 @@
 ## 2026-10-20
+### "The Bento picker, the wandering chevron, and a centered rail" (Dave, 2026-10-20)
+- Default View style picker (Bento / Ledger / Console / Pulse) actually works now. Two traps made it decorative: the picker row's sticky z-40 stacking context sat UNDER the picker's own full-screen scrim (z-59), so opening the menu raised the scrim over it and every card click landed on the scrim and merely closed the menu; and the dropdown opened rightward from the right-aligned pill, clipping most of it off the frame's edge (only Bento and one other card were ever visible). While open, the row now lifts above the scrim, and the dropdown opens leftward from the pill.
+- The sidebar's expand chevron moved out of the collapsed rail's icon stack: it now sits by itself at the page's top-left corner as its own 44px circular button, directly in line with the info (ⓘ) button on the other side, same design. It appears only while the sidebar is collapsed (never on phone widths). The rail's icons now only switch views.
+- The collapsed right panel's icon rail (#bp-rail) is vertically centered on the page (top:50%), mirroring how the collapsed left sidebar centers itself, instead of hanging at top:76px.
+
 ### "Uploads, recents, and landing where you made things" (Dave, 2026-10-20)
 - Creating a buddy now lands on it: after the new-buddy request sheet files its request (or the add-buddy dialog creates a buddy), the new buddy is selected and displayed in the main view (the detail panel opens) instead of the view staying on whatever was open before. A caller that passes its own onCreated callback keeps its own landing (the parent picker stays on the buddy being edited).
 - The info (ⓘ) "Open buddy details" button's icon now matches the footer button family (Back / Prev / Next): 24px glyph with a 2.5 stroke, up from 22px / 2.0.

@@ -510,6 +510,15 @@ body.sb-closed #pane-toggles .ptoggle{padding:6px 4px}
    pattern from the Atlas lens picker; style cards use .dv-card[data-dvstyle]. */
 .dv-wrap{max-width:1080px;margin:0 auto;padding:36px 28px 56px;color:var(--text)}
 .dv-picker-row{display:flex;justify-content:flex-end;margin-bottom:6px;position:sticky;top:0;z-index:40;background:var(--bg);padding:10px 0}
+/* Dave 2026-10-20: two traps made this picker decorative. (1) The row's
+   sticky z-40 stacking context sat UNDER the picker's own scrim
+   (.lens-scrim, fixed, z-59) — opening the menu raised the scrim over
+   it, so card clicks landed on the scrim and just closed the picker.
+   While open, the row lifts above the scrim. (2) The dropdown opened
+   rightward (left:0) from a right-aligned pill and clipped off the
+   frame's edge — it now opens leftward from the pill (right:0). */
+.dv-picker-row.open{z-index:62}
+.dv-picker-row .lens-dropdown{left:auto;right:0}
 /* ---- Bento: the feature quilt ---- */
 .dv-bento .dv-beyebrow{font-size:.6875rem;font-weight:700;letter-spacing:.1em;color:var(--muted);margin-bottom:6px}
 .dv-bento h1{font-size:1.875rem;font-weight:700;letter-spacing:-.02em;margin-bottom:18px}
@@ -1036,6 +1045,19 @@ textarea[disabled]{opacity:.5;cursor:not-allowed}
   background:var(--panel);border:1px solid var(--border);color:var(--muted);cursor:pointer;
   display:flex;align-items:center;justify-content:center;padding:0;
   box-shadow:0 2px 14px var(--shadow);-webkit-tap-highlight-color:transparent;transition:border-color .15s,color .15s,transform .15s}
+/* Dave 2026-10-20: the sidebar expand chevron, moved out of the collapsed
+   rail's icon stack to sit by itself at the page's top-left corner —
+   directly in line with #panel-open on the other side, same 44px circle
+   and glyph pattern. Visible only while the sidebar is collapsed, and
+   not on phone widths (the drawer has its own open affordance). */
+#sb-expand-corner{position:fixed;top:12px;left:12px;z-index:85;width:44px;height:44px;border-radius:50%;
+  background:var(--panel);border:1px solid var(--border);color:var(--muted);cursor:pointer;
+  display:none;align-items:center;justify-content:center;padding:0;
+  box-shadow:0 2px 14px var(--shadow);-webkit-tap-highlight-color:transparent;transition:border-color .15s,color .15s,transform .15s}
+#sb-expand-corner:hover{color:var(--text);border-color:var(--accent)}
+body.sb-closed #sb-expand-corner{display:flex}
+body.standalone #sb-expand-corner{display:none}
+@media (max-width:639px){body.sb-closed #sb-expand-corner{display:none}}
 #panel-open:hover{color:var(--accent);border-color:var(--accent);transform:scale(1.05)}
 #panel-open:active{transform:scale(.96)}
 #panel-open svg{display:block}
@@ -1280,20 +1302,21 @@ body.no-write .pdel,body.no-write [data-dump-del],body.no-write [data-dump-edit]
 /* Dave 2026-10-19: THE circled-✕ (see circleX()) — one shared close mark in
    every panel; the inline SVG renders block so it centers identically. */
 .cx-svg{display:block;flex:none}
-/* Dave 2026-10-14: round fills on the rail controls. The collapsed rail's
-   expand affordance is the first icon in #view-nav (#sb-expand-btn);
-   #sb-tools stays hidden while collapsed.
+/* Dave 2026-10-14: round fills on the rail controls. #sb-tools stays
+   hidden while collapsed.
    Dave 2026-10-19: the open panel's close control (#sb-close, upper-right
    corner of the sidebar) is a circled ✕ mark — it no longer flips to a
-   chevron, so the old rotate-on-collapse rule is gone. */
+   chevron, so the old rotate-on-collapse rule is gone.
+   Dave 2026-10-20: the collapsed rail's expand chevron left the icon
+   stack — it now sits by itself at the page's top-left corner as
+   #sb-expand-corner, in line with #panel-open on the other side. */
 #sb-tools button{border-radius:50% !important}
-#sb-expand-btn{display:none}
-body.sb-closed #sb-expand-btn{display:flex}
 body.sb-closed #sidebar #sb-tools{display:none}
 #sidebar .brand{padding-right:112px}
-/* Dave 2026-10-14: NO floating reopen button when the sidebar is collapsed —
-   the expand control is the first icon in the rail's own icon stack
-   (#sb-expand-btn); the rest of the rail icons only switch views.
+/* Dave 2026-10-14: NO floating reopen button when the sidebar is collapsed.
+   Dave 2026-10-20: superseded — the expand chevron is now a standalone
+   corner button (#sb-expand-corner, top-left of the page view); the
+   rail's icons only switch views.
    (body.sb-closed #menu-btn stays display:none per the rule above.) */
 #plans-sec.collapsed #plan-nav{display:none}
 #plans-sec #plans-arrow{transform:rotate(90deg);display:inline-block}
@@ -1572,7 +1595,7 @@ html.light .status.st-dormant{background:rgba(139,148,158,.18);color:var(--muted
 #view-buddy.panel.active,#view-buddy.sheet.active{display:block}
 /* Right panel collapsed to floating section pill (Dave, 2026-10-14) */
 body.bp-collapsed #view-buddy.panel.active, body.bp-collapsed #view-buddy.sheet.active{display:none}
-#bp-rail{position:fixed;right:12px;top:76px;z-index:64;display:none;flex-direction:column;gap:4px;
+#bp-rail{position:fixed;right:12px;top:50%;transform:translateY(-50%);z-index:64;display:none;flex-direction:column;gap:4px;
   padding:10px 8px;border-radius:18px;
   background:color-mix(in srgb, var(--panel) 82%, transparent);
   -webkit-backdrop-filter:blur(20px) saturate(1.8);backdrop-filter:blur(20px) saturate(1.8);
@@ -2736,11 +2759,10 @@ function renderChangelog(){
 }
 function renderNav(){
   const views = getViewOrder().map(id => VIEW_DEFS.find(v => v[0] === id)).filter(Boolean).filter(([v]) => isViewVisible(v));
-  /* Dave 2026-10-14: the expand control lives IN the rail's icon stack (first icon),
-     styled exactly like the other rail icons — no separate box. Visible only when collapsed. */
+  /* Dave 2026-10-20: the expand chevron no longer leads this stack — it
+     lives by itself at the page's top-left corner (#sb-expand-corner). */
   document.getElementById('view-nav').innerHTML =
-    '<button class="navbtn" id="sb-expand-btn" title="Expand sidebar" aria-label="Expand sidebar"><span class="nic"><svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M9.5 5.5L16 12l-6.5 6.5" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span></button>'
-    + views.map(([v,l,ic]) =>
+    views.map(([v,l,ic]) =>
     '<button class="navbtn'+(S.view===v?' sel':'')+'" data-view="'+v+'" draggable="true" title="'+(VIEW_TIPS[v]||l)+'"><span class="nic">'+ic+'</span><span class="nlab">'+l+'</span><span class="navgrip" title="Drag to reorder views">\u22ee\u22ee</span></button>').join('');
   /* Dave 2026-10-16: pane toggles for the Atlas view — show/hide the chart (top)
      and orphaned (bottom) subviews. Only rendered when Atlas is the active view. */
@@ -5707,6 +5729,8 @@ function closeDvPicker(){
   if (dd) dd.hidden = true;
   if (scrim) scrim.hidden = true;
   if (pill) pill.setAttribute('aria-expanded', 'false');
+  const openRow = document.querySelector('.dv-picker-row.open');
+  if (openRow) openRow.classList.remove('open');
 }
 function dvThumbSvg(id){
   const s = 'width="64" height="40" viewBox="0 0 64 40" fill="none" stroke="currentColor" stroke-width="1.5"';
@@ -10661,7 +10685,7 @@ document.addEventListener('click', e => {
     return;
   }
   if (e.target.closest && e.target.closest('#sb-close')) { setSidebarOpen(document.body.classList.contains('sb-closed')); return; }
-  if (e.target.closest && e.target.closest('#sb-expand-btn')) { setSidebarOpen(true); return; }
+  if (e.target.closest && e.target.closest('#sb-expand-corner')) { setSidebarOpen(true); return; }
   if (e.target.closest && e.target.closest('#hp-back')) { goBack(); return; }
   if (e.target.closest && e.target.closest('#hp-prev')) { hpStep(-1); return; }
   if (e.target.closest && e.target.closest('#hp-next')) { hpStep(1); return; }
@@ -10793,6 +10817,9 @@ document.addEventListener('click', e => {
     const open = dd.hidden;
     dd.hidden = !open; scrim.hidden = !open;
     dvpill.setAttribute('aria-expanded', open);
+    /* Lift the row above its own scrim while open (see .dv-picker-row.open). */
+    const row = dvpill.closest('.dv-picker-row');
+    if (row) row.classList.toggle('open', open);
     return;
   }
   const dvclose = e.target.closest('#dv-close');
@@ -11090,6 +11117,9 @@ initSbBrandSticky();
 <button id="menu-btn" aria-label="Open sidebar">\u203a</button>
 <button type="button" id="panel-open" title="Open buddy details" aria-label="Open buddy details">
   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+</button>
+<button type="button" id="sb-expand-corner" title="Expand sidebar" aria-label="Expand sidebar">
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9.5 5.5L16 12l-6.5 6.5"/></svg>
 </button>
 <div id="sb-scrim"></div>
 <aside id="sidebar">
