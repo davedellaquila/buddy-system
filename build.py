@@ -3113,6 +3113,70 @@ function saveAttrExpanded(sec, willExpand){
     save();
   } catch (e) {}
 }
+/* Dave 2026-10-21: expanding/collapsing a panel section must not move
+   anything above the click — hold the clicked header at its exact viewport
+   position across the toggle. The old one-shot rAF correction failed three
+   ways: it guessed the scroller by class (silently a no-op when the guess
+   missed), it fired exactly once (iOS focus-scroll and late layout land
+   after it), and it could not beat the browser's scroll clamp when a
+   collapse shrank the content past the current scroll depth. This helper
+   finds the real scroller, corrects immediately and again over the
+   following frames, lends the scroller temporary bottom room (a spacer)
+   when the clamp wins, and stops the moment the user scrolls themselves. */
+function closestScroller(el){
+  let n = el ? el.parentElement : null, loose = null;
+  while (n && n !== document.body) {
+    const oy = getComputedStyle(n).overflowY;
+    if (oy === 'auto' || oy === 'scroll' || oy === 'overlay') {
+      if (n.scrollHeight > n.clientHeight + 1) return n;
+      if (!loose) loose = n;
+    }
+    n = n.parentElement;
+  }
+  return loose || document.scrollingElement || document.documentElement;
+}
+function holdHeaderPosition(anchorEl, mutate){
+  if (!anchorEl) { mutate(); return; }
+  const scroller = closestScroller(anchorEl);
+  const stale = document.getElementById('sec-hold-spacer');
+  if (stale) stale.remove();
+  const beforeTop = anchorEl.getBoundingClientRect().top;
+  let userTookOver = false;
+  const onUserScroll = () => { userTookOver = true; };
+  window.addEventListener('touchstart', onUserScroll, { passive: true, once: true });
+  window.addEventListener('wheel', onUserScroll, { passive: true, once: true });
+  mutate();
+  const correct = () => {
+    if (userTookOver || !anchorEl.isConnected) return;
+    let guard = 0;
+    let delta = anchorEl.getBoundingClientRect().top - beforeTop;
+    while (delta !== 0 && guard++ < 3) {
+      const st = scroller.scrollTop;
+      scroller.scrollTop = st + delta;
+      const short = delta - (scroller.scrollTop - st);
+      if (short === 0) break;
+      // The browser clamped the scroll (a collapse near the bottom shrank
+      // the page): lend the scroller room with a temporary spacer at the
+      // end of its content so the full correction can land. The next
+      // toggle or panel re-render removes it.
+      let sp = document.getElementById('sec-hold-spacer');
+      if (!sp) {
+        sp = document.createElement('div');
+        sp.id = 'sec-hold-spacer';
+        sp.setAttribute('aria-hidden', 'true');
+        sp.style.cssText = 'flex:none;width:1px;height:0;pointer-events:none';
+        ((scroller === document.scrollingElement || scroller === document.documentElement) ? document.body : scroller).appendChild(sp);
+      }
+      sp.style.height = ((parseFloat(sp.style.height) || 0) + short) + 'px';
+      scroller.scrollTop = st + delta;
+      delta = anchorEl.getBoundingClientRect().top - beforeTop;
+    }
+  };
+  correct();
+  requestAnimationFrame(correct);
+  setTimeout(correct, 180);
+  setTimeout(correct, 450);
+}
 function applySectionCollapse(bid){
   const home = document.getElementById('buddy-home');
   if (!home) return;
@@ -3155,27 +3219,20 @@ function applySectionCollapse(bid){
       if (e.target.closest('.secgrip')) return; // grip drags; never toggles collapse
       if (e.target.closest('.bp-hide-btn')) return; // hide button has its own handler (document level)
       e.stopPropagation(); // block the document-level [data-buddy] handler (Dave 2026-10-15: it re-rendered the panel on every section click)
-      // Preserve the header's viewport position so content above doesn't jump (Dave 2026-10-15)
-      const scroller = h3.closest('#view-buddy.panel, #view-buddy.sheet');
-      const beforeTop = h3.getBoundingClientRect().top;
-      const beforeScroll = scroller ? scroller.scrollTop : 0;
-      const willCollapse = !sec.classList.contains('collapsed');
-      if (e.shiftKey) {
-        // Shift-click: apply to all sections
-        home.querySelectorAll('.bp-sec[data-field]').forEach(s2 => {
-          s2.classList.toggle('collapsed', willCollapse);
-          S.secCollapsed[s2.dataset.field] = willCollapse;
-        });
-      } else {
-        sec.classList.toggle('collapsed');
-        S.secCollapsed[fid] = sec.classList.contains('collapsed');
-      }
-      save();
-      // After layout, nudge scroll so the header sits where it was
-      requestAnimationFrame(() => {
-        if (!scroller) return;
-        const delta = h3.getBoundingClientRect().top - beforeTop;
-        if (delta !== 0) scroller.scrollTop = beforeScroll + delta;
+      // Hold the header's viewport position across the toggle (Dave 2026-10-21)
+      holdHeaderPosition(h3, () => {
+        const willCollapse = !sec.classList.contains('collapsed');
+        if (e.shiftKey) {
+          // Shift-click: apply to all sections
+          home.querySelectorAll('.bp-sec[data-field]').forEach(s2 => {
+            s2.classList.toggle('collapsed', willCollapse);
+            S.secCollapsed[s2.dataset.field] = willCollapse;
+          });
+        } else {
+          sec.classList.toggle('collapsed');
+          S.secCollapsed[fid] = sec.classList.contains('collapsed');
+        }
+        save();
       });
     });
   });
@@ -5000,6 +5057,7 @@ async function flushPendingRenames(){
 }
 function renderBuddy(id){
   const b = byId[id]; if(!b) return;
+  const _sp = document.getElementById('sec-hold-spacer'); if (_sp) _sp.remove(); // stale scroll-hold spacer never survives a re-render (Dave 2026-10-21)
   const _vb = document.getElementById('view-buddy'); if (_vb) _vb.dataset.buddy = id;
   // Direct click binding for the buddy icon (Finder Get Info style)
   setTimeout(() => {
@@ -9102,19 +9160,14 @@ document.addEventListener('click', e => {
     if (e.target.closest('.info-tip')) return; // the ⓘ popover handles its own taps
     e.preventDefault(); e.stopImmediatePropagation(); // block the later document-level [data-buddy] handler (Dave 2026-10-15: it re-rendered the panel and wiped the toggle)
     const sec = exp.closest('.bp-sec');
-    const scroller = exp.closest('#view-buddy.panel, #view-buddy.sheet');
-    const beforeTop = exp.getBoundingClientRect().top;
-    const beforeScroll = scroller ? scroller.scrollTop : 0;
-    if (sec) {
-      const willExpand = !sec.classList.contains('expanded');
-      sec.classList.toggle('expanded', willExpand);
-      sec.classList.remove('collapsed'); // ensure collapsed never blocks expanded
-      saveAttrExpanded(sec, willExpand); // Dave 2026-10-18: survive record navigation
-    }
-    requestAnimationFrame(() => {
-      if (!scroller) return;
-      const delta = exp.getBoundingClientRect().top - beforeTop;
-      if (delta !== 0) scroller.scrollTop = beforeScroll + delta;
+    // Hold the toggle's viewport position across the toggle (Dave 2026-10-21)
+    holdHeaderPosition(exp, () => {
+      if (sec) {
+        const willExpand = !sec.classList.contains('expanded');
+        sec.classList.toggle('expanded', willExpand);
+        sec.classList.remove('collapsed'); // ensure collapsed never blocks expanded
+        saveAttrExpanded(sec, willExpand); // Dave 2026-10-18: survive record navigation
+      }
     });
     return;
   }
@@ -9128,20 +9181,14 @@ document.addEventListener('click', e => {
     if (e.target.closest('input')) return;
     e.preventDefault(); e.stopImmediatePropagation(); // block the later document-level [data-buddy] handler (Dave 2026-10-15: it re-rendered the panel and wiped the toggle)
     const sec = ahead.closest('.bp-sec');
-    // Preserve header viewport position so content above doesn't jump
-    const scroller = ahead.closest('#view-buddy.panel, #view-buddy.sheet');
-    const beforeTop = ahead.getBoundingClientRect().top;
-    const beforeScroll = scroller ? scroller.scrollTop : 0;
-    if (sec) {
-      const willExpand = !sec.classList.contains('expanded');
-      sec.classList.toggle('expanded', willExpand);
-      sec.classList.remove('collapsed'); // ensure collapsed never blocks expanded
-      saveAttrExpanded(sec, willExpand); // Dave 2026-10-18: survive record navigation
-    }
-    requestAnimationFrame(() => {
-      if (!scroller) return;
-      const delta = ahead.getBoundingClientRect().top - beforeTop;
-      if (delta !== 0) scroller.scrollTop = beforeScroll + delta;
+    // Hold the header's viewport position across the toggle (Dave 2026-10-21)
+    holdHeaderPosition(ahead, () => {
+      if (sec) {
+        const willExpand = !sec.classList.contains('expanded');
+        sec.classList.toggle('expanded', willExpand);
+        sec.classList.remove('collapsed'); // ensure collapsed never blocks expanded
+        saveAttrExpanded(sec, willExpand); // Dave 2026-10-18: survive record navigation
+      }
     });
     return;
   }
