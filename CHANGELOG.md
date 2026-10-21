@@ -1,4 +1,8 @@
 ## 2026-10-20
+### Briefing Buddy — lineup sync + Tonight's dinner
+- Homepage lineups now mirror the updated crons: morning adds "Tonight's dinner" (13 sections), evening corrected to 9 sections + closing dinner question.
+- Sections library + Designer defaults gain "Tonight's dinner"; new Tonight's dinner live-data tile (Tue Oct 20: Croque Madame sandwiches); live-data location corrected to Fiddletown for the weeks of Oct 19 & 26.
+
 ### Plain × for the panel close (Dave, 2026-10-20)
 - The buddy panel's close mark drops its circle: it's now a regular × — two strokes, no ring (new plainX() glyph, 22px, same family weight as the plain i and the chevrons). circleX() remains in use where Dave hasn't asked to change it (avatar sheet, field settings, What's New).
 
