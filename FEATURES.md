@@ -136,6 +136,15 @@ Build: `build.py` generates `index.html` from `buddies.json` + `plans.json`.
   PLANNED (2) summary tiles.
 - **Horizontally resizable** — drag the edge, 220–560 px, width remembered
   per device.
+- **Grippers are dots only (Dave, 2026-10-21)** — every gripper on the
+  dashboard (panel + sidebar resize edges, floated-panel move grips and edge
+  clusters, the sidebar drawer pull, the settings-sheet grip, the Views
+  resize handle, Ledger and section/view drag grips) is nothing but dots:
+  ~3px dots on a 7px pitch, 2 columns wide by however many rows the grip
+  length calls for (transposed for horizontal grips), with NO background,
+  plate, or seam in any state — rest, hover, and dragging differ only in dot
+  colour (text2 78% mix at rest, full text2 on hover, accent while
+  dragging). Hit areas and cursors are unchanged.
 - **Drag-to-reparent** — drag any sidebar buddy onto a tree node or
   Projects row to change its parent.
 - **App name** — the top-left "Buddies" label is inline-editable,
