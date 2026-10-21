@@ -1,4 +1,8 @@
 ## 2026-10-20
+### Anchored side panel: the main view resizes (Dave, 2026-10-20)
+- When the info panel is docked — open, not floated, not collapsed to the rail — the main view now resizes to make room for it instead of being covered: #main's right padding grows to the panel's width plus its usual inset (472px on desktop, panel-width + 22px on iPad widths), easing on the panel's own .5s Kin curve so the two glide together.
+- A floated panel stays a free overlay (no yield), and collapsing to the rail releases the space. Pure CSS `:has()` rules in the panel's two media blocks, following the existing `body:not(.bp-collapsed):has(#view-buddy.panel.active)` pattern. Verified: selector logic exercised in a DOM harness (docked 472px / floated 32px / collapsed 32px; jsdom can't evaluate @media, so the in-block placement was confirmed by inspection).
+
 ### Voice picker: one-word tone pills + pill filters (Dave, 2026-10-20)
 - Every voice card in the Voice picker now wears its one-word tone (Warm, Gravelly, Calm…) as a colored pill under the blurb — the word was already in the catalog data, just never shown. Same word, same color everywhere: the color is hashed from a fixed 12-color palette.
 - A filter row under the search box shows the 14 most common tones with counts (Gravelly 30 · Warm 30 · Calm 28 · Bright 27 · Confident 27 · Smoky 27 · Crisp 20 · Throaty 20 · Velvety 20 · Energetic 19 · Smooth 19 · Earnest 18 · Resolute 18 · Wry 18). Tap a pill to filter the grid to that tone, tap again to clear; it composes with the text filter, which still reaches all 164 tone words.

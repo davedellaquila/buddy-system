@@ -121,7 +121,7 @@ body.glass-panels .sb-tipjar{background:color-mix(in srgb, var(--panel) 45%, tra
 body.glass-panels #view-buddy.panel, body.glass-panels #view-buddy.sheet{
   background:color-mix(in srgb, var(--panel) 55%, transparent);
   -webkit-backdrop-filter:blur(28px) saturate(1.9);backdrop-filter:blur(28px) saturate(1.9)}
-#main{flex:1;min-width:0;padding:36px 32px 80px;position:relative;z-index:1}
+#main{flex:1;min-width:0;padding:36px 32px 80px;position:relative;z-index:1;transition:padding-right .5s cubic-bezier(.32,.72,.35,1)}
 /* Dave 2026-10-16: wiggle the selected node when the chart recenters on it */
 @keyframes node-wiggle{
   0%,100%{transform:rotate(0deg)}
@@ -1612,12 +1612,19 @@ html.light .status.st-dormant{background:rgba(139,148,158,.18);color:var(--muted
   #view-buddy.panel{position:fixed;top:12px;right:0;bottom:12px;width:min(416px,calc(100vw - 250px));z-index:30;
     background:var(--panel);border:1px solid var(--border);border-right:none;border-radius:18px 0 0 18px;overflow-y:auto;overflow-x:hidden;overflow-anchor:none;
     padding:20px 18px 48px;box-shadow:0 16px 48px var(--shadow);box-sizing:border-box}
+  /* Anchored dock (Dave, 2026-10-20): when the info panel is docked (open, not
+     floated, not collapsed to the rail), the main view resizes to make room for
+     it instead of being covered. Floated = free overlay, no yield. */
+  body:not(.bp-collapsed):has(#view-buddy.panel.active:not(.floating)) #main{padding-right:calc(min(416px, calc(100vw - 250px)) + 22px)}
 }
 /* ---- Large: >1100px (desktop) ---- */
 @media (min-width:1101px){
   #view-buddy.panel{position:fixed;top:12px;right:0;bottom:12px;width:440px;z-index:60;
     background:var(--panel);border:1px solid var(--border);border-right:none;border-radius:18px 0 0 18px;overflow-y:auto;overflow-x:hidden;overflow-anchor:none;
     padding:24px 20px 48px;box-shadow:0 16px 48px var(--shadow);box-sizing:border-box}
+  /* Anchored dock (Dave, 2026-10-20): same rule as the iPad block — a docked
+     panel reserves its space in the layout; a floated one overlays freely. */
+  body:not(.bp-collapsed):has(#view-buddy.panel.active:not(.floating)) #main{padding-right:472px}
 }
 #view-buddy.panel.active,#view-buddy.sheet.active{display:block}
 /* Right panel collapsed to floating section pill (Dave, 2026-10-14) */
