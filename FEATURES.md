@@ -97,6 +97,14 @@ Build: `build.py` generates `index.html` from `buddies.json` + `plans.json`.
   Changelog; order is user-rearrangeable in settings (gear icon). Number
   keys 1–6 select views in that order; Up/Down arrow through views then
   buddies.
+- **Org Chart view zoom** — the Org Chart opens fitted to the whole staff;
+  a pinned cluster (top-right of the chart viewport) zooms −/+ (×1.25),
+  Fit, and 100% with a live % readout. Shift+scroll and pinch zoom on the
+  pointer, background drags pan, + / − / 0 work on the keyboard while the
+  view is active, and zoom/pan persist per device (10–300%).
+- **Views surface** — the sidebar's Views section (and the rail's
+  view-picker popover) sit on solid `--hover`, one surface step off the
+  buddy list's `--panel`, in both themes.
 - **Collapsible sections** — Views, Buddies, and Business Plans headers
   collapse their sections on click; state persists per device.
 - **Collapsible buddy rows** — buddies with children carry a chevron; click
