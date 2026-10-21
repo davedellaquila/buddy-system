@@ -1,4 +1,8 @@
 ## 2026-10-20
+### Sidebar tools get the big-button treatment; 📝 on the notes eyebrows (Dave, 2026-10-20)
+- The sidebar's top-right tools now wear the same glass-disc treatment as the big corner buttons (#panel-open / the info panel's close): 44px glass circles with blur, hairline border and soft shadow, lightening with an accent ring on hover. The sidebar close mark is now the same plain × the info panel uses (its smaller drawn circle-✕ is retired), and the gear grows 19px → 24px (still red).
+- 📝 now leads the Private notes and Shared notes eyebrows — in the buddy panel and in the plan detail view.
+
 ### Info icon: italic serif i (Dave, 2026-10-20)
 - The panel-open button's serif i is now italic — the classic information glyph (Georgia italic). One property on `#panel-open .pi-serif`.
 
