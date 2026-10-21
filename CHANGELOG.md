@@ -1,4 +1,7 @@
 ## 2026-10-20
+### The info button is a plain i now (Dave, 2026-10-20)
+- The Open buddy details button (top-right) drops the circle from its glyph: it's now just the regular **i** — dot and stem, same 24px / 2.5-stroke family as the other chrome glyphs — inside the same round glass button.
+
 ### Profile image leads the avatar sheet (Dave, 2026-10-20)
 - The Choose avatar sheet is restructured the way standard profile pictures are managed. A **Profile image** block now sits at the top: a preview of what's current (the uploaded image, or the emoji it falls back to), a state line ("Image set — it replaces the emoji" / "No image — using the emoji"), **Upload image** (becomes **Replace image** when one is set), and **Remove image** when one exists. Clearing deletes the image file and the buddy goes back to its emoji everywhere — card, homepage, favicon. The upload/remove machinery already existed but was buried below all eight emoji categories at the bottom of the sheet; the emoji grid and paste-your-own field now live underneath an "or pick an emoji" divider.
 
