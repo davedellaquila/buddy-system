@@ -199,6 +199,16 @@ h2 { font-size: 22px; margin: 32px 0 16px; }
 .rf-body a { color: var(--accent); }
 .rf-body hr { border: none; border-top: 1px solid var(--border); margin: 14px 0; }
 .rf-ta { width: 100%; box-sizing: border-box; background: var(--bg); color: var(--text); border: 1px solid var(--border); border-radius: 8px; padding: 12px; font-family: ui-monospace, Menlo, monospace; font-size: 13px; line-height: 1.55; }
+/* ---- Per-file sections (Dave 2026-10-21): one section per markdown file,
+   contents rendered inline, Edit in that file's own section ---- */
+.rf-files-wrap { display: flex; flex-direction: column; gap: 14px; }
+.rf-file-sec { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 16px; }
+.rf-file-sec .rf-viewhead { margin-bottom: 8px; }
+.rf-file-sec .rf-name { font-weight: 700; font-size: 16px; }
+.rf-file-sec .rf-dir { color: var(--muted); font-size: 13px; word-break: break-all; }
+.rf-loading { color: var(--muted); font-size: 14px; }
+.rf-file-sec .rf-editor { margin-top: 4px; }
+.rf-file-sec .rf-fstatus { margin-top: 8px; }
 
 </style>
 </head>
@@ -251,19 +261,10 @@ h2 { font-size: 22px; margin: 32px 0 16px; }
 
 <section class="repo-files" data-buddy-id="melody-lane">
 <h2>📄 Repo files</h2>
-<p class="rf-sub">The markdown files in <span data-buddy-name>Melody Lane</span>'s repo. Tap one to read it; edit in place and the save goes straight back to GitHub.</p>
+<p class="rf-sub">Every markdown file in <span data-buddy-name>Melody Lane</span>'s repo gets its own section below, with its contents right there. Edit in a file's section and the save goes straight back to GitHub. The repo is private, so nothing here — not even the file names — is shown until GitHub is connected on this device.</p>
 <div class="rf-locked" hidden>🔒 Connect GitHub in the 🧠 Brain dump box above to view and edit files — the repos are private, so a token is needed to read them. Then reload this page.</div>
 <div class="rf-main" hidden>
-<div class="rf-list"></div>
-<div class="rf-view" hidden>
-<div class="rf-viewhead"><span class="rf-path"></span><button type="button" class="attn-btn rf-edit">Edit</button><button type="button" class="attn-btn rf-close">Close</button></div>
-<div class="rf-body"></div>
-</div>
-<div class="rf-editor" hidden>
-<div class="rf-viewhead"><span class="rf-path"></span></div>
-<textarea class="rf-ta" rows="18" spellcheck="false" aria-label="Markdown source"></textarea>
-<div class="attn-actions"><button type="button" class="attn-btn primary rf-save">Save to GitHub</button><button type="button" class="attn-btn rf-cancel">Cancel</button></div>
-</div>
+<div class="rf-list rf-files-wrap"></div>
 <div class="rf-status attn-status" role="status"></div>
 </div>
 </section>
@@ -694,57 +695,102 @@ Generated 2026-10-21 · Part of the Buddy System<br>
     return out.join('\n');
   }
   var locked = sec.querySelector('.rf-locked'), main = sec.querySelector('.rf-main'),
-      list = sec.querySelector('.rf-list'), view = sec.querySelector('.rf-view'),
-      body = sec.querySelector('.rf-body'), editor = sec.querySelector('.rf-editor'),
-      ta = sec.querySelector('.rf-ta'), st = sec.querySelector('.rf-status');
-  var cur = null;
-  function openFile(f){
-    st.textContent = 'Loading ' + f.path + '…';
-    ghGetFile(repo, f.path).then(function(got){
-      if (!got) { st.textContent = '⚠ Could not load ' + f.path + '.'; return; }
-      cur = {path: f.path, sha: got.sha, text: got.text};
-      st.textContent = '';
-      editor.hidden = true;
-      view.hidden = false;
-      view.querySelector('.rf-path').textContent = f.path;
-      body.innerHTML = mdRender(got.text);
-    });
-  }
-  view.querySelector('.rf-close').addEventListener('click', function(){ view.hidden = true; });
-  view.querySelector('.rf-edit').addEventListener('click', function(){
-    if (!cur) return;
-    editor.querySelector('.rf-path').textContent = cur.path;
-    ta.value = cur.text;
-    view.hidden = true;
-    editor.hidden = false;
-    ta.focus();
-  });
-  editor.querySelector('.rf-cancel').addEventListener('click', function(){
+      list = sec.querySelector('.rf-list'), st = sec.querySelector('.rf-status');
+  /* Per-file sections (Dave 2026-10-21): every markdown file gets its own
+     section, its contents load inline on page load, and its Edit/Save lives
+     in that section. Each section keeps its own sha + text state. */
+  function buildFileSection(f){
+    var wrap = document.createElement('div');
+    wrap.className = 'rf-file-sec';
+    var head = document.createElement('div');
+    head.className = 'rf-viewhead';
+    var nm = document.createElement('span');
+    nm.className = 'rf-name';
+    nm.textContent = '📄 ' + f.name;
+    var dir = document.createElement('span');
+    dir.className = 'rf-dir';
+    dir.textContent = f.path;
+    var editBtn = document.createElement('button');
+    editBtn.type = 'button';
+    editBtn.className = 'attn-btn rf-edit';
+    editBtn.textContent = 'Edit';
+    editBtn.disabled = true;
+    head.appendChild(nm);
+    head.appendChild(dir);
+    head.appendChild(editBtn);
+    var bodyEl = document.createElement('div');
+    bodyEl.className = 'rf-body';
+    bodyEl.innerHTML = '<p class="rf-loading">Loading ' + esc(f.path) + '…</p>';
+    var editor = document.createElement('div');
+    editor.className = 'rf-editor';
     editor.hidden = true;
-    view.hidden = false;
-  });
-  editor.querySelector('.rf-save').addEventListener('click', async function(){
-    if (!cur) return;
-    var btn = this;
-    btn.disabled = true;
-    st.textContent = 'Saving…';
-    try {
-      var body = {message: 'Edit ' + cur.path + ' from the homepage', content: b64encode(ta.value), sha: cur.sha};
-      var j = await ghApi('/repos/davedellaquila/' + repo + '/contents/' + cur.path, 'PUT', body);
-      if (j && j.content && j.content.sha) cur.sha = j.content.sha;
-      cur.text = ta.value;
+    var ta = document.createElement('textarea');
+    ta.className = 'rf-ta';
+    ta.rows = 18;
+    ta.spellcheck = false;
+    ta.setAttribute('aria-label', 'Markdown source for ' + f.path);
+    var actions = document.createElement('div');
+    actions.className = 'attn-actions';
+    var saveBtn = document.createElement('button');
+    saveBtn.type = 'button';
+    saveBtn.className = 'attn-btn primary rf-save';
+    saveBtn.textContent = 'Save to GitHub';
+    var cancelBtn = document.createElement('button');
+    cancelBtn.type = 'button';
+    cancelBtn.className = 'attn-btn rf-cancel';
+    cancelBtn.textContent = 'Cancel';
+    actions.appendChild(saveBtn);
+    actions.appendChild(cancelBtn);
+    editor.appendChild(ta);
+    editor.appendChild(actions);
+    var fst = document.createElement('div');
+    fst.className = 'rf-fstatus attn-status';
+    fst.setAttribute('role', 'status');
+    wrap.appendChild(head);
+    wrap.appendChild(bodyEl);
+    wrap.appendChild(editor);
+    wrap.appendChild(fst);
+    var cur = null;
+    editBtn.addEventListener('click', function(){
+      if (!cur) return;
+      ta.value = cur.text;
+      bodyEl.hidden = true;
+      editor.hidden = false;
+      ta.focus();
+    });
+    cancelBtn.addEventListener('click', function(){
       editor.hidden = true;
-      view.hidden = false;
-      view.querySelector('.rf-body').innerHTML = mdRender(cur.text);
-      st.textContent = '✓ Saved to GitHub (' + repo + '/' + cur.path + ').';
-    } catch(err){
-      var why = (err && err.message) || String(err);
-      st.textContent = /409|422/.test(why)
-        ? '⚠ GitHub said the file changed since you opened it (' + why + ') — close it, reopen it, and try again.'
-        : '⚠ Save failed (' + why + ') — your edit is still in the editor.';
-    }
-    btn.disabled = false;
-  });
+      bodyEl.hidden = false;
+    });
+    saveBtn.addEventListener('click', async function(){
+      if (!cur) return;
+      saveBtn.disabled = true;
+      fst.textContent = 'Saving…';
+      try {
+        var payload = {message: 'Edit ' + cur.path + ' from the homepage', content: b64encode(ta.value), sha: cur.sha};
+        var j = await ghApi('/repos/davedellaquila/' + repo + '/contents/' + cur.path, 'PUT', payload);
+        if (j && j.content && j.content.sha) cur.sha = j.content.sha;
+        cur.text = ta.value;
+        editor.hidden = true;
+        bodyEl.hidden = false;
+        bodyEl.innerHTML = mdRender(cur.text);
+        fst.textContent = '✓ Saved to GitHub (' + repo + '/' + cur.path + ').';
+      } catch(err){
+        var why = (err && err.message) || String(err);
+        fst.textContent = /409|422/.test(why)
+          ? '⚠ GitHub said the file changed since you loaded it (' + why + ') — reload this page and try again.'
+          : '⚠ Save failed (' + why + ') — your edit is still in the editor.';
+      }
+      saveBtn.disabled = false;
+    });
+    ghGetFile(repo, f.path).then(function(got){
+      if (!got) { bodyEl.innerHTML = '<p class="rf-loading">⚠ Could not load ' + esc(f.path) + '.</p>'; return; }
+      cur = {path: f.path, sha: got.sha, text: got.text};
+      bodyEl.innerHTML = mdRender(got.text);
+      editBtn.disabled = false;
+    });
+    return wrap;
+  }
   async function init(){
     await resolveRepo();
     if (!repo) {
@@ -770,19 +816,7 @@ Generated 2026-10-21 · Part of the Buddy System<br>
     if (!files.length) { st.textContent = 'No markdown files found in the repo yet.'; return; }
     st.textContent = '';
     files.forEach(function(f){
-      var b = document.createElement('button');
-      b.type = 'button';
-      b.className = 'rf-file';
-      var n = document.createElement('span');
-      n.className = 'rf-name';
-      n.textContent = '📄 ' + f.name;
-      var dd = document.createElement('span');
-      dd.className = 'rf-dir';
-      dd.textContent = f.path;
-      b.appendChild(n);
-      b.appendChild(dd);
-      b.addEventListener('click', function(){ openFile(f); });
-      list.appendChild(b);
+      list.appendChild(buildFileSection(f));
     });
   }
   init();
