@@ -4,6 +4,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
 <meta name="color-scheme" content="dark light">
 <title>About Dave&#x27;s iPad Pro — Buddy Dossier</title>
 <style>
@@ -137,6 +138,18 @@ footer{margin-top:36px;padding-top:18px;border-top:1px solid var(--border);color
 .rf-body a { color: var(--accent); }
 .rf-body hr { border: none; border-top: 1px solid var(--border); margin: 14px 0; }
 .rf-ta { width: 100%; box-sizing: border-box; background: var(--bg); color: var(--text); border: 1px solid var(--border); border-radius: 8px; padding: 12px; font-family: ui-monospace, Menlo, monospace; font-size: 13px; line-height: 1.55; }
+/* ---- Accordion files (Dave 2026-10-21): the list of markdown files;
+   clicking a file name opens its contents inline right below that name.
+   Every file toggles independently — several can be open at once — and
+   Edit lives inside the opened panel. ---- */
+.rf-files-wrap { display: flex; flex-direction: column; gap: 8px; }
+.rf-fileitem { display: flex; flex-direction: column; }
+.rf-file .rf-chev { color: var(--muted); font-size: 13px; flex: none; }
+.rf-panel { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 16px; margin-top: 8px; }
+.rf-panel .rf-viewhead { margin-bottom: 8px; }
+.rf-loading { color: var(--muted); font-size: 14px; }
+.rf-panel .rf-editor { margin-top: 4px; }
+.rf-panel .rf-fstatus { margin-top: 8px; }
 
 @media (max-width:640px){.fact{grid-template-columns:1fr;gap:2px}.connlabel{width:88px}.wrap{padding:28px 16px 48px}h1{font-size:24px}}
 </style>
@@ -162,19 +175,10 @@ footer{margin-top:36px;padding-top:18px;border-top:1px solid var(--border);color
 <section class="card"><h2 class="kicker">From the repo — markdown files (9)</h2><p class="muted">In the local clone of davedellaquila/daves-ipad-pro — the reader below loads the live files from the repo itself:</p><ul class="mdinv"><li><code>KNOWLEDGE.md</code> <span class="muted">914 chars</span></li><li><code>CONFIG.md</code> <span class="muted">761 chars</span></li><li><code>STUDY.md</code> <span class="muted">303 chars</span></li><li><code>SOUL.md</code> <span class="muted">325 chars</span></li><li><code>DECISIONS.md</code> <span class="muted">216 chars</span></li><li><code>ACCOMPLISHMENTS.md</code> <span class="muted">155 chars</span></li><li><code>README.md</code> <span class="muted">699 chars</span></li><li><code>docs/ingest.md</code> <span class="muted">130 chars</span></li><li><code>docs/job-req.md</code> <span class="muted">586 chars</span></li></ul>
 <section class="repo-files" data-buddy-id="daves-ipad-pro">
 <h2>📄 Repo files</h2>
-<p class="rf-sub">The markdown files in <span data-buddy-name>Dave&#x27;s iPad Pro</span>'s repo. Tap one to read it; edit in place and the save goes straight back to GitHub.</p>
+<p class="rf-sub">The markdown files in <span data-buddy-name>Dave&#x27;s iPad Pro</span>'s repo. Tap a file name and its contents open right below it — open as many as you like at once. Edit inside an opened file and the save goes straight back to GitHub. The repo is private, so nothing here — not even the file names — is shown until GitHub is connected on this device.</p>
 <div class="rf-locked" hidden>🔒 Connect GitHub in the 🧠 Brain dump box above to view and edit files — the repos are private, so a token is needed to read them. Then reload this page.</div>
 <div class="rf-main" hidden>
-<div class="rf-list"></div>
-<div class="rf-view" hidden>
-<div class="rf-viewhead"><span class="rf-path"></span><button type="button" class="attn-btn rf-edit">Edit</button><button type="button" class="attn-btn rf-close">Close</button></div>
-<div class="rf-body"></div>
-</div>
-<div class="rf-editor" hidden>
-<div class="rf-viewhead"><span class="rf-path"></span></div>
-<textarea class="rf-ta" rows="18" spellcheck="false" aria-label="Markdown source"></textarea>
-<div class="attn-actions"><button type="button" class="attn-btn primary rf-save">Save to GitHub</button><button type="button" class="attn-btn rf-cancel">Cancel</button></div>
-</div>
+<div class="rf-list rf-files-wrap"></div>
 <div class="rf-status attn-status" role="status"></div>
 </div>
 </section>
@@ -476,57 +480,132 @@ footer{margin-top:36px;padding-top:18px;border-top:1px solid var(--border);color
     return out.join('\\n');
   }
   var locked = sec.querySelector('.rf-locked'), main = sec.querySelector('.rf-main'),
-      list = sec.querySelector('.rf-list'), view = sec.querySelector('.rf-view'),
-      body = sec.querySelector('.rf-body'), editor = sec.querySelector('.rf-editor'),
-      ta = sec.querySelector('.rf-ta'), st = sec.querySelector('.rf-status');
-  var cur = null;
-  function openFile(f){
-    st.textContent = 'Loading ' + f.path + '…';
-    ghGetFile(repo, f.path).then(function(got){
-      if (!got) { st.textContent = '⚠ Could not load ' + f.path + '.'; return; }
-      cur = {path: f.path, sha: got.sha, text: got.text};
-      st.textContent = '';
-      editor.hidden = true;
-      view.hidden = false;
-      view.querySelector('.rf-path').textContent = f.path;
-      body.innerHTML = mdRender(got.text);
-    });
-  }
-  view.querySelector('.rf-close').addEventListener('click', function(){ view.hidden = true; });
-  view.querySelector('.rf-edit').addEventListener('click', function(){
-    if (!cur) return;
-    editor.querySelector('.rf-path').textContent = cur.path;
-    ta.value = cur.text;
-    view.hidden = true;
-    editor.hidden = false;
-    ta.focus();
-  });
-  editor.querySelector('.rf-cancel').addEventListener('click', function(){
+      list = sec.querySelector('.rf-list'), st = sec.querySelector('.rf-status');
+  /* Accordion files (Dave 2026-10-21): a list of file names; clicking a
+     name toggles that file's contents open inline right below the name.
+     Toggles are independent — several files can be open at once. Contents
+     load lazily on first open and are cached in the item's own state;
+     Edit/Save lives inside the opened panel. */
+  function buildFileSection(f){
+    var wrap = document.createElement('div');
+    wrap.className = 'rf-fileitem';
+    var head = document.createElement('button');
+    head.type = 'button';
+    head.className = 'rf-file';
+    head.setAttribute('aria-expanded', 'false');
+    var nm = document.createElement('span');
+    nm.className = 'rf-name';
+    nm.textContent = '📄 ' + f.name;
+    var dir = document.createElement('span');
+    dir.className = 'rf-dir';
+    dir.textContent = f.path;
+    var chev = document.createElement('span');
+    chev.className = 'rf-chev';
+    chev.textContent = '▸';
+    head.appendChild(nm);
+    head.appendChild(dir);
+    head.appendChild(chev);
+    var panel = document.createElement('div');
+    panel.className = 'rf-panel';
+    panel.hidden = true;
+    var phead = document.createElement('div');
+    phead.className = 'rf-viewhead';
+    var ppath = document.createElement('span');
+    ppath.className = 'rf-path';
+    ppath.textContent = f.path;
+    var editBtn = document.createElement('button');
+    editBtn.type = 'button';
+    editBtn.className = 'attn-btn rf-edit';
+    editBtn.textContent = 'Edit';
+    editBtn.disabled = true;
+    phead.appendChild(ppath);
+    phead.appendChild(editBtn);
+    var bodyEl = document.createElement('div');
+    bodyEl.className = 'rf-body';
+    bodyEl.innerHTML = '<p class="rf-loading">Loading ' + esc(f.path) + '…</p>';
+    var editor = document.createElement('div');
+    editor.className = 'rf-editor';
     editor.hidden = true;
-    view.hidden = false;
-  });
-  editor.querySelector('.rf-save').addEventListener('click', async function(){
-    if (!cur) return;
-    var btn = this;
-    btn.disabled = true;
-    st.textContent = 'Saving…';
-    try {
-      var body = {message: 'Edit ' + cur.path + ' from the homepage', content: b64encode(ta.value), sha: cur.sha};
-      var j = await ghApi('/repos/davedellaquila/' + repo + '/contents/' + cur.path, 'PUT', body);
-      if (j && j.content && j.content.sha) cur.sha = j.content.sha;
-      cur.text = ta.value;
-      editor.hidden = true;
-      view.hidden = false;
-      view.querySelector('.rf-body').innerHTML = mdRender(cur.text);
-      st.textContent = '✓ Saved to GitHub (' + repo + '/' + cur.path + ').';
-    } catch(err){
-      var why = (err && err.message) || String(err);
-      st.textContent = /409|422/.test(why)
-        ? '⚠ GitHub said the file changed since you opened it (' + why + ') — close it, reopen it, and try again.'
-        : '⚠ Save failed (' + why + ') — your edit is still in the editor.';
+    var ta = document.createElement('textarea');
+    ta.className = 'rf-ta';
+    ta.rows = 18;
+    ta.spellcheck = false;
+    ta.setAttribute('aria-label', 'Markdown source for ' + f.path);
+    var actions = document.createElement('div');
+    actions.className = 'attn-actions';
+    var saveBtn = document.createElement('button');
+    saveBtn.type = 'button';
+    saveBtn.className = 'attn-btn primary rf-save';
+    saveBtn.textContent = 'Save to GitHub';
+    var cancelBtn = document.createElement('button');
+    cancelBtn.type = 'button';
+    cancelBtn.className = 'attn-btn rf-cancel';
+    cancelBtn.textContent = 'Cancel';
+    actions.appendChild(saveBtn);
+    actions.appendChild(cancelBtn);
+    editor.appendChild(ta);
+    editor.appendChild(actions);
+    var fst = document.createElement('div');
+    fst.className = 'rf-fstatus attn-status';
+    fst.setAttribute('role', 'status');
+    panel.appendChild(phead);
+    panel.appendChild(bodyEl);
+    panel.appendChild(editor);
+    panel.appendChild(fst);
+    wrap.appendChild(head);
+    wrap.appendChild(panel);
+    var cur = null, loaded = false;
+    function loadOnce(){
+      if (loaded) return;
+      loaded = true;
+      ghGetFile(repo, f.path).then(function(got){
+        if (!got) { loaded = false; bodyEl.innerHTML = '<p class="rf-loading">⚠ Could not load ' + esc(f.path) + ' — close and open it again to retry.</p>'; return; }
+        cur = {path: f.path, sha: got.sha, text: got.text};
+        bodyEl.innerHTML = mdRender(got.text);
+        editBtn.disabled = false;
+      });
     }
-    btn.disabled = false;
-  });
+    head.addEventListener('click', function(){
+      var open = panel.hidden;
+      panel.hidden = !open;
+      head.setAttribute('aria-expanded', open ? 'true' : 'false');
+      chev.textContent = open ? '▾' : '▸';
+      if (open) loadOnce();
+    });
+    editBtn.addEventListener('click', function(){
+      if (!cur) return;
+      ta.value = cur.text;
+      bodyEl.hidden = true;
+      editor.hidden = false;
+      ta.focus();
+    });
+    cancelBtn.addEventListener('click', function(){
+      editor.hidden = true;
+      bodyEl.hidden = false;
+    });
+    saveBtn.addEventListener('click', async function(){
+      if (!cur) return;
+      saveBtn.disabled = true;
+      fst.textContent = 'Saving…';
+      try {
+        var payload = {message: 'Edit ' + cur.path + ' from the homepage', content: b64encode(ta.value), sha: cur.sha};
+        var j = await ghApi('/repos/davedellaquila/' + repo + '/contents/' + cur.path, 'PUT', payload);
+        if (j && j.content && j.content.sha) cur.sha = j.content.sha;
+        cur.text = ta.value;
+        editor.hidden = true;
+        bodyEl.hidden = false;
+        bodyEl.innerHTML = mdRender(cur.text);
+        fst.textContent = '✓ Saved to GitHub (' + repo + '/' + cur.path + ').';
+      } catch(err){
+        var why = (err && err.message) || String(err);
+        fst.textContent = /409|422/.test(why)
+          ? '⚠ GitHub said the file changed since you loaded it (' + why + ') — reload this page and try again.'
+          : '⚠ Save failed (' + why + ') — your edit is still in the editor.';
+      }
+      saveBtn.disabled = false;
+    });
+    return wrap;
+  }
   async function init(){
     await resolveRepo();
     if (!repo) {
@@ -552,19 +631,7 @@ footer{margin-top:36px;padding-top:18px;border-top:1px solid var(--border);color
     if (!files.length) { st.textContent = 'No markdown files found in the repo yet.'; return; }
     st.textContent = '';
     files.forEach(function(f){
-      var b = document.createElement('button');
-      b.type = 'button';
-      b.className = 'rf-file';
-      var n = document.createElement('span');
-      n.className = 'rf-name';
-      n.textContent = '📄 ' + f.name;
-      var dd = document.createElement('span');
-      dd.className = 'rf-dir';
-      dd.textContent = f.path;
-      b.appendChild(n);
-      b.appendChild(dd);
-      b.addEventListener('click', function(){ openFile(f); });
-      list.appendChild(b);
+      list.appendChild(buildFileSection(f));
     });
   }
   init();

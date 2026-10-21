@@ -12233,6 +12233,7 @@ syncRailCurView();
 <meta charset="utf-8">
 <script>try{var _t=(JSON.parse(localStorage.getItem('buddyTree.v3')||'{}').theme)||'system';if(_t==='light'||(_t!=='dark'&&window.matchMedia&&window.matchMedia('(prefers-color-scheme: light)').matches))document.documentElement.classList.add('light');}catch(e){}</script>
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
 <meta name="application-name" content="Buddies">
 <meta name="apple-mobile-web-app-title" content="Buddies">
 <title>Buddies</title>
