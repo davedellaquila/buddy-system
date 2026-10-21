@@ -1041,8 +1041,8 @@ textarea[disabled]{opacity:.5;cursor:not-allowed}
 #token-pop .saved-check{display:none;color:var(--grn-tx);font-size:.875rem;font-weight:600;margin-top:8px}
 #token-pop .saved-check.show{display:block}
 /* Reopen right detail panel when closed (Muse-ish fixed chrome) */
-#panel-open{position:fixed;top:12px;right:12px;z-index:85;width:44px;height:44px;border-radius:50%;
-  background:var(--panel);border:1px solid var(--border);color:var(--muted);cursor:pointer;
+#panel-open{position:fixed;top:18px;right:12px;z-index:85;width:44px;height:44px;border-radius:50%;
+  background:color-mix(in srgb, var(--panel) 72%, transparent);-webkit-backdrop-filter:blur(14px) saturate(1.6);backdrop-filter:blur(14px) saturate(1.6);border:1px solid var(--border);color:var(--muted);cursor:pointer;
   display:flex;align-items:center;justify-content:center;padding:0;
   box-shadow:0 2px 14px var(--shadow);-webkit-tap-highlight-color:transparent;transition:border-color .15s,color .15s,transform .15s}
 /* Dave 2026-10-20: the sidebar expand chevron, moved out of the collapsed
@@ -1050,15 +1050,15 @@ textarea[disabled]{opacity:.5;cursor:not-allowed}
    directly in line with #panel-open on the other side, same 44px circle
    and glyph pattern. Visible only while the sidebar is collapsed, and
    not on phone widths (the drawer has its own open affordance). */
-#sb-expand-corner{position:fixed;top:12px;left:12px;z-index:85;width:44px;height:44px;border-radius:50%;
-  background:var(--panel);border:1px solid var(--border);color:var(--muted);cursor:pointer;
+#sb-expand-corner{position:fixed;top:18px;left:12px;z-index:85;width:44px;height:44px;border-radius:50%;
+  background:color-mix(in srgb, var(--panel) 72%, transparent);-webkit-backdrop-filter:blur(14px) saturate(1.6);backdrop-filter:blur(14px) saturate(1.6);border:1px solid var(--border);color:var(--muted);cursor:pointer;
   display:none;align-items:center;justify-content:center;padding:0;
   box-shadow:0 2px 14px var(--shadow);-webkit-tap-highlight-color:transparent;transition:border-color .15s,color .15s,transform .15s}
-#sb-expand-corner:hover{color:var(--text);border-color:var(--accent)}
+#sb-expand-corner:hover{color:var(--accent);border-color:var(--accent);background:color-mix(in srgb, var(--panel) 58%, rgba(255,255,255,.16))}
 body.sb-closed #sb-expand-corner{display:flex}
 body.standalone #sb-expand-corner{display:none}
 @media (max-width:639px){body.sb-closed #sb-expand-corner{display:none}}
-#panel-open:hover{color:var(--accent);border-color:var(--accent);transform:scale(1.05)}
+#panel-open:hover{color:var(--accent);border-color:var(--accent);transform:scale(1.05);background:color-mix(in srgb, var(--panel) 58%, rgba(255,255,255,.16))}
 #panel-open:active{transform:scale(.96)}
 #panel-open svg{display:block}
 body:has(#view-buddy.active) #panel-open,
@@ -1164,9 +1164,9 @@ body:has(#token-pill) #panel-open{right:148px}
 .bp-close-x:active{opacity:.7}
 /* Open panel: the close button floats at the exact screen position of the
    #panel-open expand button, styled as the same control */
-#view-buddy.panel .bp-close-x,#view-buddy.sheet .bp-close-x{display:flex;position:fixed;top:12px;right:12px;z-index:65;margin:0;
+#view-buddy.panel .bp-close-x,#view-buddy.sheet .bp-close-x{display:flex;position:fixed;top:18px;right:12px;z-index:65;margin:0;background:color-mix(in srgb, var(--panel) 72%, transparent);-webkit-backdrop-filter:blur(14px) saturate(1.6);backdrop-filter:blur(14px) saturate(1.6);
   background:var(--panel);border:1px solid var(--border);border-radius:50%;box-shadow:0 2px 14px var(--shadow)}
-#view-buddy.panel .bp-close-x:hover,#view-buddy.sheet .bp-close-x:hover{color:var(--accent);border-color:var(--accent)}
+#view-buddy.panel .bp-close-x:hover,#view-buddy.sheet .bp-close-x:hover{color:var(--accent);border-color:var(--accent);background:color-mix(in srgb, var(--panel) 58%, rgba(255,255,255,.16))}
 #view-buddy.panel .bp-close-x:active,#view-buddy.sheet .bp-close-x:active{transform:scale(.96)}
 body:has(#token-pill) #view-buddy.panel .bp-close-x,
 body:has(#token-pill) #view-buddy.sheet .bp-close-x{right:148px}
@@ -1640,6 +1640,67 @@ body.bp-collapsed #bp-rail{display:flex}
   transition:transform .5s cubic-bezier(.32,.72,.35,1), opacity .3s ease, visibility 0s linear .5s}
 #main #view-buddy.panel.active{right:0;visibility:visible;opacity:1;transform:none;
   transition:transform .5s cubic-bezier(.32,.72,.35,1), opacity .3s ease, visibility 0s}
+/* Dave 2026-10-20: the phone sheet gets the same courtesy — it rises
+   and fades instead of snapping. Kept rendered-but-hidden like the
+   panel so the close transition can actually play (closeDetail now
+   removes .active first and the mode classes after the glide). */
+#main #view-buddy.sheet{display:block;visibility:hidden;opacity:0;transform:translateY(18px);
+  transition:transform .38s cubic-bezier(.32,.72,.35,1), opacity .25s ease, visibility 0s linear .38s}
+#main #view-buddy.sheet.active{visibility:visible;opacity:1;transform:none;
+  transition:transform .38s cubic-bezier(.32,.72,.35,1), opacity .25s ease, visibility 0s}
+/* Dave 2026-10-20: the info panel is a free-floating panel. It works
+   the same way, but the gripper at top-center drags it anywhere and
+   the frame overlay's handles resize it from any corner or side.
+   The rect persists (S.panelFloat); double-click the gripper to dock. */
+#view-buddy.panel.floating{right:auto;bottom:auto;border-right:1px solid var(--border);
+  border-radius:18px;box-shadow:0 24px 64px var(--shadow)}
+#view-buddy.panel #bp-resize{display:none}
+#bp-frame{position:fixed;z-index:66;display:none;pointer-events:none}
+#bp-frame.on{display:block}
+#bp-grip{--gripdot:var(--faint);position:absolute;top:5px;left:50%;transform:translateX(-50%);z-index:2;
+  width:76px;height:22px;border-radius:999px;pointer-events:auto;cursor:grab;touch-action:none;
+  background-color:color-mix(in srgb, var(--panel) 88%, transparent);
+  border:1px solid var(--border);box-shadow:0 2px 10px var(--shadow-soft);
+  background-image:radial-gradient(circle, var(--gripdot) 1.4px, transparent 1.6px);
+  background-size:9px 9px;background-position:center}
+#bp-grip:hover{--gripdot:var(--accent);border-color:var(--accent)}
+#bp-grip:active{cursor:grabbing}
+.bp-rsz{position:absolute;pointer-events:auto;touch-action:none;z-index:1}
+.bp-rsz[data-dir="n"]{top:-6px;left:16px;right:16px;height:12px;cursor:ns-resize}
+.bp-rsz[data-dir="s"]{bottom:-6px;left:16px;right:16px;height:12px;cursor:ns-resize}
+.bp-rsz[data-dir="e"]{right:-6px;top:16px;bottom:16px;width:12px;cursor:ew-resize}
+.bp-rsz[data-dir="w"]{left:-6px;top:16px;bottom:16px;width:12px;cursor:ew-resize}
+.bp-rsz[data-dir="ne"]{top:-8px;right:-8px;width:22px;height:22px;cursor:nesw-resize}
+.bp-rsz[data-dir="sw"]{bottom:-8px;left:-8px;width:22px;height:22px;cursor:nesw-resize}
+.bp-rsz[data-dir="nw"]{top:-8px;left:-8px;width:22px;height:22px;cursor:nwse-resize}
+.bp-rsz[data-dir="se"]{bottom:-8px;right:-8px;width:22px;height:22px;cursor:nwse-resize}
+/* The rail collapse folds instead of snapping (Dave, 2026-10-20). */
+#main #view-buddy.panel.bp-folding{transform:translateX(34px) scale(.93);opacity:0;
+  transition:transform .36s cubic-bezier(.32,.72,.35,1), opacity .28s ease}
+#main #view-buddy.panel.bp-unfolding{transform:translateX(34px) scale(.93);opacity:0}
+/* The open button's i is a serif i now (Dave, 2026-10-20). */
+#panel-open .pi-serif{font-family:Georgia,'Times New Roman',Times,serif;font-size:26px;
+  font-weight:600;line-height:1;display:block;transform:translateY(-2px)}
+/* The close x takes a little spin as it hands back to the i. */
+@keyframes bpx-spin{to{transform:rotate(360deg)}}
+.bp-close-x.bpx-spin svg{animation:bpx-spin .45s cubic-bezier(.32,.72,.35,1)}
+/* Tiles and panel cards feel alive on hover (Dave, 2026-10-20): a
+   diagonal fill pattern fades in over the tile's own tint, the border
+   warms to the tint, the number swells a touch; panel sections get a
+   soft wash and an inset ring. No geometry changes, no layout shift. */
+.ptile::after{content:'';position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity .18s ease;
+  background:repeating-linear-gradient(45deg, color-mix(in srgb, var(--tint) 13%, transparent) 0 6px, transparent 6px, transparent 13px)}
+.ptile:hover::after{opacity:1}
+.ptile:hover{border-color:color-mix(in srgb, var(--tint) 55%, var(--border))}
+.ptile-num{transition:transform .18s ease;transform-origin:left bottom}
+.ptile:hover .ptile-num{transform:scale(1.045)}
+.ptile:hover .ptile-label{color:var(--text)}
+.bp-sec{transition:background .18s ease, box-shadow .18s ease;border-radius:12px}
+.bp-sec:hover{background:color-mix(in srgb, var(--hover) 45%, transparent);box-shadow:inset 0 0 0 1px var(--border)}
+@media (prefers-reduced-motion: reduce){
+  .bp-close-x.bpx-spin svg{animation:none}
+  #main #view-buddy.sheet{transition:none}
+}
 #main .view{display:none}
 #main .view.active{display:block}
 #main #view-project.active{display:flex;flex-direction:column;min-height:calc(100vh - 116px)}
@@ -2876,7 +2937,18 @@ function artRow(icon, label, sub, url){
 }
 function closeDetail(){
   const vb = document.getElementById('view-buddy');
-  if (vb) vb.classList.remove('active', 'panel', 'sheet');
+  if (vb && (vb.classList.contains('panel') || vb.classList.contains('sheet'))) {
+    /* Dave 2026-10-20: animate the close — drop .active first so the
+       glide-out plays, and only strip the mode classes once it has
+       settled. Stripping .panel in the same frame used to snap it. */
+    vb.classList.remove('active');
+    const gen = (vb._closeGen = (vb._closeGen || 0) + 1);
+    setTimeout(() => {
+      if (vb._closeGen === gen && !vb.classList.contains('active')) vb.classList.remove('panel', 'sheet');
+    }, 560);
+  } else if (vb) {
+    vb.classList.remove('active', 'panel', 'sheet');
+  }
   // Restore the middle canvas when nothing else is active (e.g. landed on #/buddy:…)
   const anyMain = document.querySelector('#main .view.active:not(#view-buddy)');
   if (!anyMain) {
@@ -3774,6 +3846,7 @@ function openFieldSettings(){
 }
 function applyPanelWidth(){
   const vb = document.getElementById('view-buddy');
+  if (vb && vb.classList.contains('floating')) return; /* the float rect owns the width */
   if (vb && S.panelWidth) {
     const w = Math.min(S.panelWidth, 560);
     vb.style.width = w + 'px';
@@ -3830,6 +3903,152 @@ function initPanelResize(){
     save();
   });
   h.addEventListener('dblclick', () => closeDetail());
+}
+/* Dave 2026-10-20: the info panel is free-floating — drag it by the
+   gripper at top-center, resize it from any corner or side. The frame
+   overlay (#bp-frame) tracks the panel's box and carries the gripper
+   and the eight resize handles, so nothing has to live inside the
+   panel's scrolling content. The rect persists in S.panelFloat;
+   double-clicking the gripper docks the panel again. */
+function panelFloatable(){
+  const vb = document.getElementById('view-buddy');
+  return !!(vb && vb.classList.contains('panel') && vb.classList.contains('active') && !document.body.classList.contains('bp-collapsed'));
+}
+function clampPanelSize(r){
+  r.w = Math.min(Math.max(r.w, 300), window.innerWidth);
+  r.h = Math.min(Math.max(r.h, 260), window.innerHeight);
+  return r;
+}
+function clampPanelPos(r){
+  r.x = Math.min(Math.max(r.x, -(r.w - 140)), window.innerWidth - 90);
+  r.y = Math.min(Math.max(r.y, 0), window.innerHeight - 54);
+  return r;
+}
+function applyPanelFloat(r){
+  const vb = document.getElementById('view-buddy'); if (!vb) return;
+  vb.classList.add('floating');
+  vb.style.left = r.x + 'px'; vb.style.top = r.y + 'px';
+  vb.style.width = r.w + 'px'; vb.style.height = r.h + 'px';
+  syncPanelFrame();
+}
+function clearPanelFloat(){
+  const vb = document.getElementById('view-buddy'); if (!vb) return;
+  vb.classList.remove('floating');
+  vb.style.left = vb.style.top = vb.style.width = vb.style.height = '';
+  const bx = document.getElementById('bp-close-x');
+  if (bx) { bx.style.left = bx.style.top = bx.style.right = ''; }
+  if (typeof applyPanelWidth === 'function') applyPanelWidth();
+  syncPanelFrame();
+}
+function savePanelFloat(){
+  const vb = document.getElementById('view-buddy'); if (!vb) return;
+  const r = vb.getBoundingClientRect();
+  S.panelFloat = { x: Math.round(r.left), y: Math.round(r.top), w: Math.round(r.width), h: Math.round(r.height) };
+  save();
+}
+function syncPanelFrame(){
+  const fr = document.getElementById('bp-frame');
+  const vb = document.getElementById('view-buddy');
+  if (!fr || !vb) return;
+  if (!panelFloatable()) { fr.classList.remove('on'); return; }
+  const r = vb.getBoundingClientRect();
+  fr.style.left = r.left + 'px'; fr.style.top = r.top + 'px';
+  fr.style.width = r.width + 'px'; fr.style.height = r.height + 'px';
+  fr.classList.add('on');
+  const bx = document.getElementById('bp-close-x');
+  if (bx) {
+    if (vb.classList.contains('floating')) {
+      bx.style.top = (r.top + 6) + 'px'; bx.style.left = (r.right - 56) + 'px'; bx.style.right = 'auto';
+    } else { bx.style.left = bx.style.top = bx.style.right = ''; }
+  }
+}
+function initPanelFloat(){
+  const vb = document.getElementById('view-buddy');
+  if (!vb || vb.dataset.floatInit) return;
+  vb.dataset.floatInit = '1';
+  const fr = document.createElement('div');
+  fr.id = 'bp-frame';
+  fr.innerHTML = '<div id="bp-grip" title="Drag to move the panel. Double-click to dock it again."></div>'
+    + ['n','s','e','w','ne','nw','se','sw'].map(d => '<div class="bp-rsz" data-dir="' + d + '"></div>').join('');
+  document.body.appendChild(fr);
+  const grip = fr.querySelector('#bp-grip');
+  grip.addEventListener('pointerdown', e => {
+    if (!panelFloatable()) return;
+    e.preventDefault();
+    const r0 = vb.getBoundingClientRect();
+    const sx = e.clientX, sy = e.clientY;
+    let moved = false;
+    try { grip.setPointerCapture(e.pointerId); } catch (err) {}
+    const mv = ev => {
+      const dx = ev.clientX - sx, dy = ev.clientY - sy;
+      if (!moved && Math.abs(dx) + Math.abs(dy) < 5) return;
+      moved = true;
+      applyPanelFloat(clampPanelPos({ x: r0.left + dx, y: r0.top + dy, w: r0.width, h: r0.height }));
+    };
+    const up = () => {
+      grip.removeEventListener('pointermove', mv);
+      grip.removeEventListener('pointerup', up);
+      grip.removeEventListener('pointercancel', up);
+      if (moved) savePanelFloat();
+    };
+    grip.addEventListener('pointermove', mv);
+    grip.addEventListener('pointerup', up);
+    grip.addEventListener('pointercancel', up);
+  });
+  grip.addEventListener('dblclick', () => { S.panelFloat = null; save(); clearPanelFloat(); });
+  fr.querySelectorAll('.bp-rsz').forEach(h => {
+    h.addEventListener('pointerdown', e => {
+      if (!panelFloatable()) return;
+      e.preventDefault();
+      const dir = h.dataset.dir;
+      const r0 = vb.getBoundingClientRect();
+      const sx = e.clientX, sy = e.clientY;
+      let snapped = false;
+      try { h.setPointerCapture(e.pointerId); } catch (err) {}
+      const mv = ev => {
+        if (snapped) return;
+        const dx = ev.clientX - sx, dy = ev.clientY - sy;
+        let r = { x: r0.left, y: r0.top, w: r0.width, h: r0.height };
+        if (dir.indexOf('e') >= 0) r.w = r0.width + dx;
+        if (dir.indexOf('s') >= 0) r.h = r0.height + dy;
+        if (dir.indexOf('w') >= 0) r.w = r0.width - dx;
+        if (dir.indexOf('n') >= 0) r.h = r0.height - dy;
+        if (r.w < 220) { snapped = true; S.panelFloat = null; save(); clearPanelFloat(); closeDetail(); return; }
+        r = clampPanelSize(r);
+        if (dir.indexOf('w') >= 0) r.x = r0.right - r.w;
+        if (dir.indexOf('n') >= 0) r.y = r0.bottom - r.h;
+        applyPanelFloat(clampPanelPos(r));
+      };
+      const up = () => {
+        h.removeEventListener('pointermove', mv);
+        h.removeEventListener('pointerup', up);
+        h.removeEventListener('pointercancel', up);
+        if (!snapped) savePanelFloat();
+      };
+      h.addEventListener('pointermove', mv);
+      h.addEventListener('pointerup', up);
+      h.addEventListener('pointercancel', up);
+    });
+  });
+  new MutationObserver(() => {
+    if (vb.classList.contains('active') && vb.classList.contains('panel')) {
+      if (S.panelFloat && !vb.classList.contains('floating')) {
+        applyPanelFloat(clampPanelPos(clampPanelSize({ x: S.panelFloat.x, y: S.panelFloat.y, w: S.panelFloat.w, h: S.panelFloat.h })));
+      }
+      setTimeout(syncPanelFrame, 60);
+      setTimeout(syncPanelFrame, 580);
+    } else {
+      fr.classList.remove('on');
+      const bx = document.getElementById('bp-close-x');
+      if (bx) { bx.style.left = bx.style.top = bx.style.right = ''; }
+    }
+  }).observe(vb, { attributes: true, attributeFilter: ['class'] });
+  window.addEventListener('resize', () => {
+    if (vb.classList.contains('floating') && S.panelFloat) {
+      applyPanelFloat(clampPanelPos(clampPanelSize({ x: S.panelFloat.x, y: S.panelFloat.y, w: S.panelFloat.w, h: S.panelFloat.h })));
+    }
+    syncPanelFrame();
+  });
 }
 function tileHtml(label, num, tint, sub, fkey, sel, tip){
   return '<div class="ptile' + (sel ? ' sel' : '') + '"' + (fkey ? ' data-tile="' + fkey + '"' : '') + (tip ? ' title="' + escHtml(tip) + '"' : '') + ' style="--tint:' + tint + '">'
@@ -4992,7 +5211,7 @@ function renderBuddy(id){
   initPhotoDrop(id);
   loadDocs(id);
   initDocDrop(id);
-  initPanelResize(); applyPanelWidth();
+  initPanelResize(); applyPanelWidth(); initPanelFloat();
   refreshTokenUI(id);
   applyFieldOrder();
   applySectionCollapse(id);
@@ -9742,10 +9961,30 @@ function getSectionToggleContent(fid){
   }
 }
 function setPanelCollapsed(collapsed) {
-  document.body.classList.toggle('bp-collapsed', !!collapsed);
-  // Persist panel state across refresh (Dave, 2026-10-19).
-  S.bpCollapsed = !!collapsed; save();
-  if (collapsed) renderBpRail();
+  const vb = document.getElementById('view-buddy');
+  /* Dave 2026-10-20: the collapse folds the panel toward the rail and
+     the expand unfolds it — no more display:none snap. Persist panel
+     state across refresh (Dave, 2026-10-19). */
+  const gen = vb ? (vb._foldGen = (vb._foldGen || 0) + 1) : 0;
+  if (collapsed) {
+    if (vb) vb.classList.add('bp-folding');
+    setTimeout(() => {
+      if (vb && vb._foldGen !== gen) return;
+      document.body.classList.add('bp-collapsed');
+      if (vb) vb.classList.remove('bp-folding');
+      S.bpCollapsed = true; save();
+      renderBpRail();
+      if (typeof syncPanelFrame === 'function') syncPanelFrame();
+    }, 360);
+    return;
+  }
+  document.body.classList.remove('bp-collapsed');
+  S.bpCollapsed = false; save();
+  if (vb) {
+    vb.classList.add('bp-unfolding');
+    requestAnimationFrame(() => requestAnimationFrame(() => vb.classList.remove('bp-unfolding')));
+  }
+  if (typeof syncPanelFrame === 'function') setTimeout(syncPanelFrame, 420);
 }
 function renderBpRail() {
   let rail = document.getElementById('bp-rail');
@@ -10726,7 +10965,14 @@ document.addEventListener('click', e => {
     const card = co.closest('.standing-order'); if (card) card.remove();
     return;
   }
-  if (e.target.closest && (e.target.closest('#bp-close-x') || e.target.closest('#bp-takeover-back'))) { closeDetail(); return; }
+  if (e.target.closest && e.target.closest('#bp-close-x')) {
+    /* Dave 2026-10-20: the x takes a little spin as it switches back to the i. */
+    const bx = e.target.closest('#bp-close-x');
+    bx.classList.remove('bpx-spin'); void bx.offsetWidth; bx.classList.add('bpx-spin');
+    setTimeout(() => bx.classList.remove('bpx-spin'), 540);
+    closeDetail(); return;
+  }
+  if (e.target.closest && e.target.closest('#bp-takeover-back')) { closeDetail(); return; }
   if (e.target.closest && e.target.closest('#bp-collapse-btn')) { setPanelCollapsed(!document.body.classList.contains('bp-collapsed')); return; }
   // Dave 2026-10-18: hide/show fields right from the info panel.
   if (e.target.closest && e.target.closest('.bp-hide-btn')) {
@@ -11214,7 +11460,7 @@ initSbBrandSticky();
 <div class="app">
 <button id="menu-btn" aria-label="Open sidebar">\u203a</button>
 <button type="button" id="panel-open" title="Open buddy details" aria-label="Open buddy details">
-  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 17v-5.5"/><path d="M12 7.5h.01"/></svg>
+  <span class="pi-serif" aria-hidden="true">i</span>
 </button>
 <button type="button" id="sb-expand-corner" title="Expand sidebar" aria-label="Expand sidebar">
   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9.5 5.5L16 12l-6.5 6.5"/></svg>

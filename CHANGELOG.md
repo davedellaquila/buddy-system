@@ -1,4 +1,12 @@
 ## 2026-10-20
+### The info panel floats — drag, resize, serif i, spinning x, animated closings (Dave, 2026-10-20)
+- **Free-floating panel:** the buddy detail panel now drags by a dotted **gripper at top-center** and resizes from **any corner or side** (8-handle frame overlay that tracks the panel's box). The rect persists across opens; **double-click the gripper to dock** again. Dragging a resize below 220px wide still snaps the panel shut, like the old left-edge strip it replaces. The close x rides with the panel when floated.
+- **Serif i:** the Open buddy details button's glyph is now a serif **i** (Georgia), replacing the plain dot-and-stem.
+- **Spinning x:** clicking the panel's close x gives it a little 360° spin as it hands back to the i.
+- **Corner buttons sit lower and go glass:** the i button, the sidebar's expand chevron, and the panel's close x drop from 12px to 18px and get translucent glass backgrounds (blur + saturation); on hover all three lighten and take the blue accent border.
+- **Animated closings:** closeDetail no longer strips the panel's mode classes in the same frame (that snapped the close) — the glide-out plays first. The phone sheet rises/fades both ways, and collapsing the panel to the section rail **folds** toward the rail (and unfolds) instead of display:none.
+- **Tiles feel alive on hover:** stat tiles fade in a diagonal fill pattern in their own tint, warm their border to the tint, and the number swells slightly; the panel's section cards get a soft wash + inset ring. No layout shift anywhere.
+
 ### Briefing Buddy — lineup sync + Tonight's dinner
 - Homepage lineups now mirror the updated crons: morning adds "Tonight's dinner" (13 sections), evening corrected to 9 sections + closing dinner question.
 - Sections library + Designer defaults gain "Tonight's dinner"; new Tonight's dinner live-data tile (Tue Oct 20: Croque Madame sandwiches); live-data location corrected to Fiddletown for the weeks of Oct 19 & 26.
