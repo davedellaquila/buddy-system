@@ -967,6 +967,45 @@ body.standalone #sb-to-top{opacity:0!important;pointer-events:none!important}
    under the headline. The identity row is the header. */
 .bp-topnav .linkbtn{font-size:.8125rem;color:var(--muted)}
 .bp-topnav .linkbtn:hover{color:var(--text)}
+/* Job 10 (Dave, 2026-10-21): flag/favorite toggles in the panel topnav \u2014
+   greyed until set, full color on an active-tint chip when on. */
+.bp-markbtn{font-size:1rem;line-height:1;padding:4px 7px;border-radius:8px;filter:grayscale(1);opacity:.45}
+.bp-markbtn:hover{opacity:.85}
+.bp-markbtn.on{filter:none;opacity:1;background:var(--active)}
+/* Flagged/Favorites view rows: the buddy row flexes, its untoggle sits
+   beside it (never nested, so untoggling can't also navigate). */
+.fv-row{display:flex;align-items:stretch;gap:8px;margin-bottom:8px}
+.fv-row .art-row{flex:1;margin-bottom:0}
+.fv-toggle{flex:0 0 auto;align-self:center;font-size:1.05rem;line-height:1;padding:8px 10px;border-radius:10px;border:1px solid var(--border2);background:var(--panel);cursor:pointer;filter:grayscale(1);opacity:.5}
+.fv-toggle.on{filter:none;opacity:1}
+/* Job 11 (Dave, 2026-10-21): Org Chart view \u2014 classic top-down boxes
+   with connector lines (nested-list technique), print-friendly. */
+.oc-head{padding:20px 22px 0}
+.oc-head h2{margin:0 0 4px}
+.oc-wrap{overflow-x:auto;padding:6px 16px 34px}
+.oc-tree{display:flex;justify-content:center}
+.oc-tree ul{display:flex;justify-content:center;padding-top:22px;position:relative}
+.oc-tree ul::before{content:'';position:absolute;top:0;left:50%;height:22px;border-left:2px solid var(--border)}
+.oc-tree li{display:flex;flex-direction:column;align-items:center;position:relative;padding:22px 7px 0}
+.oc-tree li::before,.oc-tree li::after{content:'';position:absolute;top:0;width:50%;height:22px;border-top:2px solid var(--border)}
+.oc-tree li::before{right:50%}
+.oc-tree li::after{left:50%;border-left:2px solid var(--border)}
+.oc-tree li:only-child::before,.oc-tree li:only-child::after{display:none}
+.oc-tree li:first-child::before,.oc-tree li:last-child::after{border:0 none}
+.oc-tree li:last-child::before{border-right:2px solid var(--border);border-radius:0 8px 0 0}
+.oc-tree li:first-child::after{border-radius:8px 0 0 0}
+.oc-tree > li{padding-top:0}
+.oc-tree > li::before,.oc-tree > li::after{display:none}
+.oc-tree > li > ul::before{top:0}
+.oc-box{position:relative;background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:10px 12px;width:168px;text-align:center;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.10)}
+.oc-box:hover{border-color:var(--accent)}
+.oc-box.oc-root{cursor:default;border:2px solid var(--accent);background:var(--active)}
+.oc-ic{font-size:1.35rem;line-height:1.15}
+.oc-name{font-weight:650;font-size:.92rem;margin-top:2px}
+.oc-role{color:var(--muted);font-size:.74rem;line-height:1.35;margin-top:2px}
+.oc-toggle{position:absolute;top:4px;right:4px;width:20px;height:20px;border-radius:50%;border:1px solid var(--border);background:var(--ghost);color:var(--muted);font-size:.8rem;line-height:1;cursor:pointer;padding:0;z-index:2}
+.oc-more{margin-top:8px;color:var(--faint);font-size:.72rem}
+@media print{ .oc-box{box-shadow:none} .oc-toggle{display:none} }
 /* Dave 2026-10-19: the menu must declare its anchor. With no top/left it took
    its static position — and as an abspos child of the flex .bp-topnav
    (align-items:center) that static position is CENTRED on the 18px strip, so
@@ -2727,8 +2766,11 @@ function fieldLabelFor(fid, b){
    exists and is empty, which is information ("that's a sign"). Circled set:
    A.K.A., Artifacts, Documents, Needs your attention, Peers, Private notes.
    Counts reuse each section header's own semantics, so the number never
-   changes meaning when a field moves between hidden and shown. */
-const COLLECTION_FIELDS = ['aka', 'artifacts', 'docs', 'attention', 'siblings', 'notes'];
+   changes meaning when a field moves between hidden and shown.
+   Dave 2026-10-21: the rule is now ALL collection fields, not a maintained
+   list — Direct reports and Linked buddies are folded in below (Siblings
+   was already in), each counted with its header's own semantics. */
+const COLLECTION_FIELDS = ['aka', 'artifacts', 'docs', 'attention', 'siblings', 'notes', 'reports', 'links'];
 function fieldCountFor(fid, b){
   if (!b || !COLLECTION_FIELDS.includes(fid)) return null;
   if (fid === 'aka') return effAka(b).length;
@@ -2736,6 +2778,12 @@ function fieldCountFor(fid, b){
   if (fid === 'attention') return (b.attention || []).filter(a => !attnSeen(b.id, a)).length;
   if (fid === 'siblings') return peersOf(b).length;
   if (fid === 'notes') return wordCount(S.notes[b.id] || '');
+  /* Direct reports: the header counts kidsOf minus any self-edge — same
+     number here, so hidden and shown never disagree. */
+  if (fid === 'reports') return (kidsOf[b.id] || []).filter(k => k && k.id !== b.id).length;
+  /* Linked buddies: the header's union of outgoing links + incoming
+     linkedBy (deduped, self excluded) — same union here. */
+  if (fid === 'links') { const out = (b.links || []).filter(lid => lid !== b.id); const inc = (b.linkedBy || []).filter(lid => lid !== b.id && out.indexOf(lid) < 0); return out.length + inc.length; }
   /* Documents: uploaded PDFs are counted by the async docs loader, which
      patches [data-count-for="docs"] when it lands — the same lifecycle as the
      section header's own (0) placeholder. */
@@ -2893,6 +2941,9 @@ function linkify(escaped){
 const VIEW_DEFS = [
   ['tree','Atlas','▦'],
   ['projects','Projects','☰'],
+  ['flagged','Flagged','🚩'],
+  ['favorites','Favorites','⭐'],
+  ['orgchart','Org Chart','🏢'],
   ['plans','Business Plans','💼'],
   ['manifest','Manifest','✓'],
   ['project','Homepage','🏠'],
@@ -2902,6 +2953,9 @@ const VIEW_DEFS = [
 const VIEW_TIPS = {
   tree: 'Atlas — seven lenses on your buddy hierarchy. Tap the pill to switch views. Click a node to open its details. Drag the background to pan, scroll to zoom. Drag a node onto another node to reparent it.',
   projects: 'Projects list — every buddy in hierarchy order with status. Click a tile to filter by attention status. Click the chevron to expand/collapse sections.',
+  flagged: 'Flagged — your working set: buddies you flagged from their info panel because they need your attention. Unflag from the panel or right here.',
+  favorites: 'Favorites — your shortcut shelf: buddies you starred from their info panel. Open one and go straight there, no searching.',
+  orgchart: 'Org Chart — the whole staff as a classic top-down chart: Dave at the top, Astro under him, then everyone by who they report to. Click a box to open that buddy; the +/\u2212 chip folds a team away.',
   plans: 'Business Plans — real-world ventures as cards. Click a status tile to filter. Each card links to its mission statement and related buddies.',
   manifest: 'New-Project Manifest — the checklist every new buddy gets. Click AUTOMATIC or PLANNED tiles to filter the steps.',
   project: 'Homepage — loads the selected buddy homepage full-bleed in the main view. Clicking a buddy with a homepage swaps it; clicking one without keeps the current page.',
@@ -3088,6 +3142,116 @@ function dayLabel(d){
   if (diff === 1) return 'Yesterday';
   return d.toLocaleDateString([], {month: 'long', day: 'numeric'});
 }
+/* Flagged + Favorites (Dave, 2026-10-21, Job 10): two distinct buddy
+   markers. Flags = a working set ("these need my attention"); Favorites =
+   a shortcut shelf ("pages I visit often"). State lives in S.flags /
+   S.favorites ({id: true}) and persists via save() into buddyTree.v3,
+   exactly like the panel's other toggles (dormant). Markers never touch
+   the buddy's own data. */
+function isFlagged(id){ return !!(S.flags && S.flags[id]); }
+function isFavorite(id){ return !!(S.favorites && S.favorites[id]); }
+function flaggedIds(){ return BUDDIES.filter(b => b && isFlagged(b.id)).map(b => b.id); }
+function favoriteIds(){ return BUDDIES.filter(b => b && isFavorite(b.id)).map(b => b.id); }
+function afterMarkChange(id){
+  if (S.projectId === id) {
+    const vb = document.getElementById('view-buddy');
+    if (vb && vb.classList.contains('active')) renderBuddy(id);
+  }
+  renderNav();
+  if (S.view === 'flagged') renderFlagged();
+  if (S.view === 'favorites') renderFavorites();
+}
+function setFlagged(id, on){
+  if (!id || !byId[id]) return;
+  if (!S.flags || typeof S.flags !== 'object') S.flags = {};
+  if (on) S.flags[id] = true; else delete S.flags[id];
+  save(); afterMarkChange(id);
+}
+function setFavorite(id, on){
+  if (!id || !byId[id]) return;
+  if (!S.favorites || typeof S.favorites !== 'object') S.favorites = {};
+  if (on) S.favorites[id] = true; else delete S.favorites[id];
+  save(); afterMarkChange(id);
+}
+function renderFlagged(){ renderMarkView('flagged'); }
+function renderFavorites(){ renderMarkView('favorites'); }
+function renderMarkView(kind){
+  const el = document.getElementById('view-' + kind);
+  if (!el) return;
+  const isFlag = kind === 'flagged';
+  const ids = isFlag ? flaggedIds() : favoriteIds();
+  const icon = isFlag ? '\U0001F6A9' : '\u2B50';
+  const title = isFlag ? 'Flagged' : 'Favorites';
+  const sub = isFlag
+    ? 'Your working set \u2014 buddies that need your attention.'
+    : 'Your shortcut shelf \u2014 the buddies you visit most. Pick one and go straight there.';
+  const empty = isFlag
+    ? 'No flagged buddies yet. Open a buddy and tap the \U0001F6A9 toggle in its panel \u2014 flagged buddies collect here until you clear them.'
+    : 'No favorites yet. Star a buddy from its panel and it\u2019ll live here.';
+  let h = '<section class="pad"><h2>' + icon + ' ' + title
+    + ' <span class="attn-count">(' + ids.length + ')</span></h2>'
+    + '<p class="sub">' + sub + '</p>';
+  if (!ids.length) { el.innerHTML = h + '<p class="bp-empty">' + empty + '</p></section>'; return; }
+  h += ids.map(id => {
+    const b = byId[id]; if (!b) return '';
+    return '<div class="fv-row">'
+      + '<a class="art-row" data-buddy="' + escHtml(id) + '">'
+      + '<span class="art-ic">' + escHtml(buddyDisplayIcon(b)) + '</span>'
+      + '<span><span class="art-label">' + escHtml(dispName(b)) + '</span>'
+      + '<div class="art-sub">' + escHtml((b.tagline || '').slice(0, 90)) + '</div></span>'
+      + '<span class="art-go">\u2192</span></a>'
+      + '<button type="button" class="fv-toggle on" data-' + (isFlag ? 'flag' : 'fav') + '-toggle="' + escHtml(id)
+      + '" aria-pressed="true" title="' + (isFlag ? 'Unflag' : 'Remove from Favorites') + '">' + icon + '</button>'
+      + '</div>';
+  }).join('');
+  el.innerHTML = h + '</section>';
+}
+/* Org Chart view (Dave, 2026-10-21, Job 11): the classic corporate
+   chart \u2014 top-down boxes with connector lines, from registry
+   parent data. Dave has no registry entry, so the root box is
+   synthetic; Astro sits under him, and every parentless or orphaned
+   buddy attaches under Astro (all staff report up through the chief
+   of staff). Subtrees collapse via S.ocClosed (persisted by save()).
+   Distinct from the Atlas "Tree" lens \u2014 this is the org chart. */
+function toggleOcTeam(id){
+  if (!S.ocClosed || typeof S.ocClosed !== 'object') S.ocClosed = {};
+  if (S.ocClosed[id]) delete S.ocClosed[id]; else S.ocClosed[id] = true;
+  save(); renderOrgChart();
+}
+function renderOrgChart(){
+  const el = document.getElementById('view-orgchart');
+  if (!el || !byId['astro']) return;
+  const kidsMap = {};
+  BUDDIES.forEach(b => {
+    if (!b || b.id === 'astro') return;
+    const pk = (b.parent && byId[b.parent]) ? b.parent : 'astro';
+    (kidsMap[pk] = kidsMap[pk] || []).push(b.id);
+  });
+  if (kidsMap['astro']) kidsMap['astro'] = Array.from(new Set(kidsMap['astro']));
+  const seen = { astro: true };
+  function node(id){
+    const b = byId[id]; if (!b) return '';
+    const kids = (kidsMap[id] || []).filter(k => !seen[k]);
+    kids.forEach(k => { seen[k] = true; });
+    const closed = !!(S.ocClosed && S.ocClosed[id]);
+    let h = '<li class="oc-node">'
+      + '<div class="oc-box" data-buddy="' + escHtml(id) + '">'
+      + (kids.length ? '<button type="button" class="oc-toggle" data-oc-toggle="' + escHtml(id) + '" title="' + (closed ? 'Expand' : 'Collapse') + ' this team" aria-label="' + (closed ? 'Expand' : 'Collapse') + ' this team">' + (closed ? '+' : '\u2212') + '</button>' : '')
+      + '<div class="oc-ic">' + escHtml(buddyDisplayIcon(b)) + '</div>'
+      + '<div class="oc-name">' + escHtml(dispName(b)) + '</div>'
+      + (b.tagline ? '<div class="oc-role">' + escHtml(b.tagline) + '</div>' : '')
+      + '</div>';
+    if (kids.length && !closed) h += '<ul class="oc-kids">' + kids.map(node).join('') + '</ul>';
+    if (kids.length && closed) h += '<div class="oc-more">' + kids.length + ' below</div>';
+    return h + '</li>';
+  }
+  const dave = '<li class="oc-node"><div class="oc-box oc-root"><div class="oc-ic">\U0001F464</div>'
+    + '<div class="oc-name">Dave</div><div class="oc-role">The boss</div></div>'
+    + '<ul class="oc-kids">' + node('astro') + '</ul></li>';
+  el.innerHTML = '<div class="oc-head"><h2>\U0001F3E2 Org Chart <span class="attn-count">(' + BUDDIES.length + ')</span></h2>'
+    + '<p class="sub">The whole staff, top-down by who reports to whom \u2014 everyone ultimately reports to Dave, through Astro. Click a box to open that buddy; the +/\u2212 chip folds a team away.</p></div>'
+    + '<div class="oc-wrap"><ul class="oc-tree">' + dave + '</ul></div>';
+}
 function renderChangelog(){
   const el = document.getElementById('view-changelog');
   if (!el) return;
@@ -3141,8 +3305,9 @@ function renderNav(){
      Dave 2026-10-21 (Job 5): it lives only in the rail (#rail-expand) —
      the short-lived corner button is gone; Recents owns the corner. */
   document.getElementById('view-nav').innerHTML =
-    views.map(([v,l,ic]) =>
-    '<button class="navbtn'+(S.view===v?' sel':'')+'" data-view="'+v+'" draggable="true" title="'+(VIEW_TIPS[v]||l)+'"><span class="nic">'+ic+'</span><span class="nlab">'+l+'</span><span class="navgrip" title="Drag to reorder views">\u22ee\u22ee</span></button>').join('');
+    views.map(([v,l,ic]) => {
+    const cnt = v === 'flagged' ? flaggedIds().length : v === 'favorites' ? favoriteIds().length : null;
+    return '<button class="navbtn'+(S.view===v?' sel':'')+'" data-view="'+v+'" draggable="true" title="'+(VIEW_TIPS[v]||l)+'"><span class="nic">'+ic+'</span><span class="nlab">'+l+(cnt !== null ? ' <span class="attn-count">('+cnt+')</span>' : '')+'</span><span class="navgrip" title="Drag to reorder views">\u22ee\u22ee</span></button>'; }).join('');
   /* Dave 2026-10-16: pane toggles for the Atlas view — show/hide the chart (top)
      and orphaned (bottom) subviews. Only rendered when Atlas is the active view. */
   if (S.view === 'tree') {
@@ -4409,7 +4574,7 @@ function toggleRailViewPop(){
   if (document.getElementById('rail-viewpop')) { closeRailViewPop(); return; }
   const btn = document.getElementById('rail-curview'); if (!btn) return;
   const p = document.createElement('div'); p.id = 'rail-viewpop'; p.setAttribute('role', 'menu');
-  p.innerHTML = VIEW_DEFS.map(v => '<button type="button" data-view="' + v[0] + '"' + (S.view === v[0] ? ' class="sel"' : '') + '><span class="rv-ic" aria-hidden="true">' + v[2] + '</span>' + v[1] + '</button>').join('');
+  p.innerHTML = VIEW_DEFS.map(v => '<button type="button" data-view="' + v[0] + '"' + (S.view === v[0] ? ' class="sel"' : '') + '><span class="rv-ic" aria-hidden="true">' + v[2] + '</span>' + v[1] + (v[0] === 'flagged' ? ' (' + flaggedIds().length + ')' : v[0] === 'favorites' ? ' (' + favoriteIds().length + ')' : '') + '</button>').join('');
   document.body.appendChild(p);
   const r = btn.getBoundingClientRect();
   p.style.left = (r.right + 10) + 'px';
@@ -5234,7 +5399,7 @@ function openVoicePicker(id){
   }));
   function renderGrid(){
     const q = filter.value.trim().toLowerCase();
-    const list = catalog.filter(v => (!activeTone || v.tone === activeTone) && (!q || v.name.toLowerCase().indexOf(q) >= 0 || v.desc.toLowerCase().indexOf(q) >= 0 || v.accent.toLowerCase().indexOf(q) >= 0 || v.tone.toLowerCase().indexOf(q) >= 0));
+    const list = catalog.filter(v => (!activeTone || v.tone === activeTone) && (!q || (v.name || '').toLowerCase().indexOf(q) >= 0 || (v.desc || '').toLowerCase().indexOf(q) >= 0 || (v.accent || '').toLowerCase().indexOf(q) >= 0 || (v.tone || '').toLowerCase().indexOf(q) >= 0));
     const countEl = m.querySelector('#pp-count');
     if (countEl) countEl.textContent = list.length + ' of ' + catalog.length;
     // Voices with audio samples (Dave 2026-10-12) — baked list of the 30 sampled voices
@@ -5569,6 +5734,8 @@ function renderBuddy(id){
     + '<button class="linkbtn bp-narrow-item" data-navbtn="next"><span class="bp-mi">\u2193</span> Next <span class="bp-key">(\u2193)</span></button>'
     + '<button class="linkbtn bp-narrow-item" data-view="projects">All buddies</button>' 
     + '</div>'
+    + '<button class="linkbtn bp-markbtn' + (isFlagged(id) ? ' on' : '') + '" id="bp-flag" type="button" aria-pressed="' + (isFlagged(id) ? 'true' : 'false') + '" title="Flag \u2014 needs my attention (collects in the Flagged view)">\U0001F6A9</button>'
+    + '<button class="linkbtn bp-markbtn' + (isFavorite(id) ? ' on' : '') + '" id="bp-fav" type="button" aria-pressed="' + (isFavorite(id) ? 'true' : 'false') + '" title="Favorite \u2014 my shortcut shelf (collects in the Favorites view)">\u2B50</button>'
     + '<button class="bp-collapse-btn" id="bp-collapse-btn" type="button" title="Section index" aria-label="Section index">\u2630</button>'
     + '</div>'
     + '<div class="bp-top">'
@@ -6440,7 +6607,7 @@ function renderOrgTree(){
    Seven visualizations of the same hierarchy. chartType persists in S.
    Each renderer returns the main-pane HTML; the orphan section is shared. */
 const CHART_TYPES = [
-  {id:'org', label:'Org chart'},
+  {id:'org', label:'Tree'},
   {id:'lineage', label:'Lineage'},
   {id:'ledger', label:'Ledger'},
   {id:'colonnade', label:'Colonnade'},
@@ -6609,7 +6776,7 @@ function chartSwitcherHtml(){
   /* Orientation segments (Jonny 2026-10-18): drawn node glyphs, 44px targets.
      Visible ONLY for orientation-meaningful lenses (org). Absent elsewhere. */
   const orientSeg = cur === 'org'
-    ? '<div class="orient-seg" id="orient-seg" role="tablist" aria-label="Org chart orientation">'
+    ? '<div class="orient-seg" id="orient-seg" role="tablist" aria-label="Tree orientation">'
       + '<button type="button" role="tab" data-orient="vertical" class="' + ((S.orgOrientation || 'vertical') === 'vertical' ? 'sel' : '') + '" aria-selected="' + ((S.orgOrientation || 'vertical') === 'vertical') + '" title="Vertical layout" aria-label="Vertical layout">'
       + '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="10" cy="4" r="2.4"/><circle cx="4.5" cy="15" r="2.4"/><circle cx="15.5" cy="15" r="2.4"/><path d="M10 6.5v4m0 0l-4.5 3m4.5-3l4.5 3"/></svg></button>'
       + '<button type="button" role="tab" data-orient="horizontal" class="' + ((S.orgOrientation || 'vertical') === 'horizontal' ? 'sel' : '') + '" aria-selected="' + ((S.orgOrientation || 'vertical') === 'horizontal') + '" title="Horizontal layout" aria-label="Horizontal layout">'
@@ -8472,6 +8639,9 @@ function show(sel, push){
       if (ev) ev.classList.add('active');
       if (sel === 'view:changelog') renderChangelog();
       if (sel === 'view:releases') renderReleases();
+      if (sel === 'view:flagged') renderFlagged();
+      if (sel === 'view:favorites') renderFavorites();
+      if (sel === 'view:orgchart') renderOrgChart();
       if (sel === 'view:tree') requestAnimationFrame(() => {
         // Init renders the tree while display:none (scrollWidth reads 0), so
         // re-measure once visible. Coming from a buddy: center on it
@@ -11820,6 +11990,34 @@ document.addEventListener('click', e => {
     }, 100);
     return;
   }
+  /* Voice / persona Change + voice Preview — delegation backstop
+     (Dave 2026-10-21, Job 7): these buttons are bound directly at render
+     time (initVoice / initPersona), and Dave hit a panel whose Change
+     button was dead — the picker never opened. The direct handlers call
+     stopPropagation, so when a binding is alive this branch never sees
+     the click; when the binding is missing (a render replaced the node
+     after binding, or the init phase aborted midway) this catches the
+     click instead of swallowing it. S.projectId is the panel's buddy. */
+  if (e.target.closest && e.target.closest('#bp-voice-change')) { if (S.projectId && byId[S.projectId]) openVoicePicker(S.projectId); return; }
+  if (e.target.closest && e.target.closest('#bp-persona-change')) { if (S.projectId && byId[S.projectId]) openPersonaPicker(S.projectId); return; }
+  /* Job 10 (Dave, 2026-10-21): flag / favorite toggles \u2014 the panel
+     topnav buttons act on the open buddy; the view rows' own buttons carry
+     the buddy id and untoggle in place. */
+  if (e.target.closest && e.target.closest('#bp-flag')) { if (S.projectId) setFlagged(S.projectId, !isFlagged(S.projectId)); return; }
+  if (e.target.closest && e.target.closest('#bp-fav')) { if (S.projectId) setFavorite(S.projectId, !isFavorite(S.projectId)); return; }
+  if (e.target.closest && e.target.closest('[data-flag-toggle]')) { const tid = e.target.closest('[data-flag-toggle]').getAttribute('data-flag-toggle'); setFlagged(tid, !isFlagged(tid)); return; }
+  if (e.target.closest && e.target.closest('[data-fav-toggle]')) { const tid = e.target.closest('[data-fav-toggle]').getAttribute('data-fav-toggle'); setFavorite(tid, !isFavorite(tid)); return; }
+  /* Job 11: org-chart subtree collapse chip \u2014 sits inside the box's
+     data-buddy area, so it must resolve before the row navigation. */
+  if (e.target.closest && e.target.closest('[data-oc-toggle]')) { toggleOcTeam(e.target.closest('[data-oc-toggle]').getAttribute('data-oc-toggle')); return; }
+  if (e.target.closest && e.target.closest('#bp-voice-preview')) {
+    const voiceId = (S.projectId && byId[S.projectId] && byId[S.projectId].voice) || '';
+    if (!voiceId) { toast('No voice selected.'); return; }
+    const fname = voiceId.replace(/:/g, '_').replace(/\//g, '_') + '.mp3';
+    const audio = new Audio('voices/samples/' + fname);
+    audio.play().catch(() => toast('Could not play the preview.'));
+    return;
+  }
   if (e.target.closest && e.target.closest('#recents-btn')) { toggleRecentsPop(); return; }
   if (e.target.closest && e.target.closest('#rail-expand')) { setSidebarOpen(true); return; }
   if (e.target.closest && e.target.closest('#panel-open')) {
@@ -12323,6 +12521,9 @@ syncRailCurView();
 <section id="view-project" class="view"></section>
 <section id="view-changelog" class="view"></section>
 <section id="view-releases" class="view"></section>
+<section id="view-flagged" class="view"></section>
+<section id="view-favorites" class="view"></section>
+<section id="view-orgchart" class="view"></section>
 </main>
 </div>
 <script>
