@@ -971,6 +971,8 @@ body.standalone #sb-to-top{opacity:0!important;pointer-events:none!important}
 .bp-more-menu .linkbtn svg{vertical-align:-3px}
 .bp-more-menu .linkbtn:disabled{opacity:.45;cursor:default}
 .bp-more-menu .linkbtn:disabled:hover{background:transparent}
+.bp-more-menu .bp-mi{display:inline-block;width:22px;text-align:center;flex:none}
+.bp-more-menu .bp-key{color:var(--muted)}
 /* Takeover back bar: hidden everywhere except the portrait-phone takeover (see below) */
 .bp-takeover-back{display:none;align-items:center;gap:4px;position:sticky;top:0;z-index:20;
   width:calc(100% + 36px);margin:0 -18px 4px;padding:14px 18px;min-height:52px;
@@ -1103,7 +1105,7 @@ body:has(#token-pill) #panel-open{right:148px}
   background:var(--panel);border:1px solid var(--border);border-radius:12px;width:340px;max-height:80vh;
   box-shadow:0 12px 40px var(--scrim);display:none;overflow:hidden;container-type:inline-size}
 #field-settings.show{display:flex;flex-direction:column}
-#field-settings .fset-head{padding:20px 20px 0;cursor:move;user-select:none;-webkit-user-select:none;flex:0 0 auto}
+#field-settings .fset-head{padding:20px 20px 0;cursor:move;user-select:none;-webkit-user-select:none;flex:0 0 auto;touch-action:none}
 #field-settings .fset-head h3{margin:0 0 12px;font-size:.875rem}
 #field-settings .fset-body{padding:0 20px 16px;overflow-y:auto;flex:1 1 auto;min-height:0}
 #field-settings .fset-sec{margin:0}
@@ -1149,11 +1151,11 @@ body:has(#token-pill) #panel-open{right:148px}
   #field-settings .fset-choice{flex-wrap:wrap}
   #field-settings .fset-choice>span:first-child{flex:1 1 100%}
 }
-/* Wide settings sheet: the Main views list scrolls on its own */
+/* Wide settings sheet: Main views + Buddy fields side by side, each scrolling on its own */
 @container (min-width:640px){
   #field-settings .fset-cols{display:flex;gap:16px;align-items:stretch}
   #field-settings .fset-cols>.fset-sec{flex:1 1 0;min-width:0}
-  #field-settings #vset-list{max-height:340px;overflow-y:auto}
+  #field-settings .fset-cols #vset-list,#field-settings .fset-cols #fset-list{max-height:340px;overflow-y:auto}
 }
 /* Narrow sidebar: drop the kind column so buddy names get full room */
 @container (max-width:290px){
@@ -3867,23 +3869,30 @@ function initFsetChrome(m){
   applyGeom();
   m._applyGeom = applyGeom;
   const head = m.querySelector('#fset-drag'), rz = m.querySelector('#fset-resize');
-  head.addEventListener('mousedown', e => {
-    if (e.button !== 0) return;
+  /* Dave 2026-10-21: pointer events, same pattern as the resize handle
+     below — the old mousedown-only drag never fires for touch, so the sheet
+     could not be dragged on iPad. (.fset-head CSS sets touch-action:none.) */
+  head.addEventListener('pointerdown', e => {
+    if (e.button !== undefined && e.button !== 0) return;
+    if (e.isPrimary === false) return;
     e.preventDefault();
+    try { head.setPointerCapture(e.pointerId); } catch (err) {}
     const r = m.getBoundingClientRect();
     m.style.left = r.left + 'px'; m.style.top = r.top + 'px'; m.style.transform = 'none';
-    const ox = e.clientX - r.left, oy = e.clientY - r.top;
+    const ox = e.clientX - r.left, oy = e.clientY - r.top, pid = e.pointerId;
     const mv = ev => {
+      if (ev.pointerId !== pid) return;
       m.style.left = Math.max(0, Math.min(window.innerWidth - 120, ev.clientX - ox)) + 'px';
       m.style.top = Math.max(0, Math.min(window.innerHeight - 80, ev.clientY - oy)) + 'px';
     };
-    const up = () => {
-      window.removeEventListener('mousemove', mv); window.removeEventListener('mouseup', up);
+    const up = ev => {
+      if (ev.pointerId !== pid) return;
+      head.removeEventListener('pointermove', mv); head.removeEventListener('pointerup', up); head.removeEventListener('pointercancel', up);
       const rr = m.getBoundingClientRect();
       S.fsetGeom = Object.assign(S.fsetGeom || {}, {x: Math.round(rr.left), y: Math.round(rr.top)});
       save();
     };
-    window.addEventListener('mousemove', mv); window.addEventListener('mouseup', up);
+    head.addEventListener('pointermove', mv); head.addEventListener('pointerup', up); head.addEventListener('pointercancel', up);
   });
   rz.addEventListener('pointerdown', e => {
     if (e.button !== undefined && e.button !== 0) return;
@@ -3915,7 +3924,10 @@ function openFieldSettings(){
       + '<div class="fset-head" id="fset-drag"><h3>Settings</h3></div>'
       + '<div class="fset-body">'
       + '<section class="fset-sec"><h3 class="fset-sec-h">Preferences</h3><div id="fset-settings"></div></section>'
+      + '<div class="fset-cols">'
       + '<section class="fset-sec"><h3 class="fset-sec-h">Main views</h3><p class="fineprint">Drag to reorder. Number keys 1–9 follow this order.</p><div id="vset-list"></div></section>'
+      + '<section class="fset-sec"><h3 class="fset-sec-h">Buddy fields</h3><p class="fineprint">Drag to reorder. Uncheck to hide.</p><div id="fset-list"></div></section>'
+      + '</div>'
       + '<section class="fset-sec"><h3 class="fset-sec-h">Advanced</h3><div id="fset-advanced"></div></section>'
       + '<section class="fset-sec"><h3 class="fset-sec-h">Support</h3><p class="fineprint">Enjoying the buddy system? <a href="https://ko-fi.com/davedellaquila" target="_blank" rel="noopener" style="color:var(--accent)">\U0001FAD9 Tip the jar</a> \u2014 every tip keeps the lights on.</p></section>'
       + '<section class="fset-sec"><h3 class="fset-sec-h">Develop</h3><p class="fineprint">Tools for preparing the app for new users. Nothing here affects your real data.</p><div id="fset-develop"></div></section>'
@@ -4081,6 +4093,43 @@ function openFieldSettings(){
       if (dragEl) { placeFsetInsert(listEl, e.clientY, dragEl); autoScrollTick(e.clientY); }
     });
     listEl.addEventListener('drop', e => { e.preventDefault(); finish(); });
+  }
+  const list = document.getElementById('fset-list');
+  if (list) {
+    list.innerHTML = getFieldOrder().map(fid => {
+      const def = FIELD_DEFS.find(f => f.id === fid);
+      if (!def) return '';
+      const vis = !(S.fieldHidden && S.fieldHidden[fid]);
+      return '<div class="fset-row" draggable="true" data-fid="' + fid + '">'
+        + '<input type="checkbox" ' + (vis ? 'checked' : '') + ' data-vis="' + fid + '" title="Show/hide">'
+        + '<span class="fl">' + def.label + '</span>'
+        + '<span class="fh" style="margin-left:auto">\u22ee\u22ee</span></div>';
+    }).join('');
+    bindFsetListDnD(list, r => r.dataset.fid, (fromId, beforeId) => {
+      S.fieldOrder = reorderBefore(getFieldOrder(), fromId, beforeId);
+      save();
+      openFieldSettings();
+      // Keep the dropped field in view after the re-render.
+      try {
+        const moved = document.querySelector('#fset-list .fset-row[data-fid="' + fromId + '"]');
+        if (moved && moved.scrollIntoView) moved.scrollIntoView({block:'nearest'});
+      } catch (e) {}
+      const vb2 = document.getElementById('view-buddy');
+      if (vb2 && vb2.classList.contains('active') && S.projectId && byId[S.projectId]) {
+        renderBuddy(S.projectId);
+      }
+    });
+    list.querySelectorAll('[data-vis]').forEach(cb => {
+      cb.addEventListener('change', () => {
+        if (!S.fieldHidden) S.fieldHidden = {};
+        S.fieldHidden[cb.dataset.vis] = !cb.checked;
+        save();
+        const vb = document.getElementById('view-buddy');
+        if (vb && vb.classList.contains('active') && S.projectId && byId[S.projectId]) {
+          renderBuddy(S.projectId);
+        }
+      });
+    });
   }
   const vlist = document.getElementById('vset-list');
   if (vlist) {
@@ -5383,7 +5432,7 @@ function renderBuddy(id){
     + '<div class="sa-bar"><span>\U0001f516 Standalone view</span><button class="linkbtn" id="sa-full">Open full dashboard \u2192</button></div>'
     + '<div class="bp-sticky-head">'
     + '<div class="bp-topnav"><button class="linkbtn" data-navbtn="back">\u2190 Back</button>'
-    + '<button class="linkbtn" data-navbtn="prev">\u2303 Prev</button><button class="linkbtn" data-navbtn="next">Next \u2304</button>'
+    + '<button class="linkbtn" data-navbtn="prev">\u2191 Prev</button><button class="linkbtn" data-navbtn="next">\u2193 Next</button>'
     + '<span class="sep">\u00b7</span><button class="linkbtn" data-view="projects" id="bp-allbuddies">All buddies</button>'
     + '<span class="sep">\u00b7</span><button class="linkbtn" id="bp-more" aria-haspopup="true" aria-expanded="false" title="More actions">\u00b7\u00b7\u00b7</button>'
     + '<div class="bp-more-menu" id="bp-more-menu" hidden>'
@@ -5391,8 +5440,8 @@ function renderBuddy(id){
     + '<button class="linkbtn" id="bp-repo"' + (b.repo ? '' : ' disabled title="No GitHub repo for this buddy"') + '>' + ghMarkSvg(16) + ' Open git repo</button>'
     + '<button class="linkbtn" id="bp-dormant" title="Mark dormant / wake up"></button>'
     + '<button class="linkbtn" id="bp-desktop">\U0001f4be Save to desktop</button>'
-    + '<button class="linkbtn bp-narrow-item" data-navbtn="prev">\u2303 Prev</button>'
-    + '<button class="linkbtn bp-narrow-item" data-navbtn="next">Next \u2304</button>'
+    + '<button class="linkbtn bp-narrow-item" data-navbtn="prev"><span class="bp-mi">\u2191</span> Prev <span class="bp-key">(\u2191)</span></button>'
+    + '<button class="linkbtn bp-narrow-item" data-navbtn="next"><span class="bp-mi">\u2193</span> Next <span class="bp-key">(\u2193)</span></button>'
     + '<button class="linkbtn bp-narrow-item" data-view="projects">All buddies</button>' 
     + '</div>'
     + '<button class="bp-collapse-btn" id="bp-collapse-btn" type="button" title="Section index" aria-label="Section index">\u2630</button>'
@@ -5947,6 +5996,16 @@ function addParentOverride(bid, pid){
   const ps = effParents(b).filter(p => p !== pid);
   ps.push(pid);
   applyParentOverride(bid, ps.length === 1 ? ps[0] : ps);
+}
+/* Re-render the info panel if it is currently showing buddy `id`. The panel
+   is driven by S.projectId + #view-buddy.active whenever it was opened from a
+   view (Atlas, Projects, ...), where S.sel stays 'view:...' — gating the
+   re-render on S.sel === 'buddy:' + id alone left the panel showing stale
+   sections after a parent change (Dave 2026-10-21). */
+function renderPanelIfShowing(id){
+  if (S.sel === 'buddy:' + id) { renderBuddy(id); return; }
+  const vbP = document.getElementById('view-buddy');
+  if (vbP && vbP.classList.contains('active') && S.projectId === id) renderBuddy(id);
 }
 function removeParentOverride(bid, pid){
   const b = byId[bid]; if (!b || !pid) return;
@@ -8974,6 +9033,7 @@ function addPendingBuddy(req, icon){
      into the registry, at which point the override reads identically. */
   if (ref && req.place_mode === 'parent') applyParentOverride(ref.id, id);
   save(); buildKids(); renderNav(); refreshViews();
+  centerNewBuddyInAtlas(id);
   return id;
 }
 function openAddBuddyDialog(mode, forId, onCreated){
@@ -9216,6 +9276,7 @@ async function createBuddyFromDialog(name, icon, kind, parentId, errEl, createBt
     }
     closeAddBuddyDialog();
     save(); buildKids(); renderNav(); refreshViews();
+    centerNewBuddyInAtlas(nid);
     if (S.projectId) renderBuddy(S.projectId);
     if (typeof onCreated === 'function') onCreated(nid);
     /* Dave 2026-10-20: after creating a buddy, it is selected and displayed
@@ -9320,7 +9381,7 @@ document.addEventListener('click', e => {
       removeParentOverride(cid, pid);
       logChange('move', cid, 'Removed parent \u201c' + dispName(byId[pid] || {name:pid}) + '\u201d of \u201c' + dispName(cb) + '\u201d', pid, null);
       save(); buildKids(); renderNav(); refreshViews();
-      if (S.sel === 'buddy:' + cid) renderBuddy(cid);
+      renderPanelIfShowing(cid);
       toast('Parent removed' + (effParents(cb).length ? '.' : ' \u2014 now top-level.'));
     }
     return;
@@ -9428,14 +9489,14 @@ function openChangeParentDialog(bid, mode){
     if (addMode) {
       if (!v) { close(); return; }
       addParentOverride(bid, v); save(); buildKids(); renderNav(); refreshViews();
-      if (S.sel === 'buddy:' + bid) renderBuddy(bid);
+      renderPanelIfShowing(bid);
       close();
       toast(addedParentToast(byId[v], b));
       return;
     }
     const beforeParents = effParents(b);
     applyParentOverride(bid, v); save(); buildKids(); renderNav(); refreshViews();
-    if (S.sel === 'buddy:' + bid) renderBuddy(bid);
+    renderPanelIfShowing(bid);
     close();
     offerMoveUndo(bid, beforeParents, vocabCap(pv.upS) + ' updated.');
   };
@@ -9451,7 +9512,7 @@ function openChangeParentDialog(bid, mode){
     if (addMode) {
       openAddBuddyDialog('peer', bid, (nid) => {
         addParentOverride(bid, nid); save(); buildKids(); renderNav(); refreshViews();
-        if (S.sel === 'buddy:' + bid) renderBuddy(bid);
+        renderPanelIfShowing(bid);
         toast(addedParentToast(byId[nid], b));
       });
     } else {
@@ -9911,6 +9972,14 @@ function atlasScrollToCenter(sc, vx, vy, instant){
    pane so the buddy's node lands centered. Works across all lenses — DOM nodes
    via [data-buddy], constellation via its canvas node map. Returns true when
    the buddy was found and centered. */
+/* Dave 2026-10-21: after a buddy is added, if the Atlas (tree) is the
+   currently selected view, center the new buddy in the visible chart so
+   the add lands in view. Any other view: change nothing (no forced switch). */
+function centerNewBuddyInAtlas(id){
+  if (!id || !byId[id]) return;
+  if (!(S.sel === 'view:tree' || S.view === 'tree')) return;
+  if (typeof centerOnBuddy === 'function') centerOnBuddy(id, false);
+}
 function centerOnBuddy(id, instant){
   if (!id || !byId[id]) return false;
   const tz = document.getElementById('treezoom');
