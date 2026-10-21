@@ -1,4 +1,8 @@
 ## 2026-10-20
+### Voice picker: one-word tone pills + pill filters (Dave, 2026-10-20)
+- Every voice card in the Voice picker now wears its one-word tone (Warm, Gravelly, Calm…) as a colored pill under the blurb — the word was already in the catalog data, just never shown. Same word, same color everywhere: the color is hashed from a fixed 12-color palette.
+- A filter row under the search box shows the 14 most common tones with counts (Gravelly 30 · Warm 30 · Calm 28 · Bright 27 · Confident 27 · Smoky 27 · Crisp 20 · Throaty 20 · Velvety 20 · Energetic 19 · Smooth 19 · Earnest 18 · Resolute 18 · Wry 18). Tap a pill to filter the grid to that tone, tap again to clear; it composes with the text filter, which still reaches all 164 tone words.
+
 ### Floated panel: visible grippers on all sides (Dave, 2026-10-20)
 - The floated info panel's resize handles were invisible strips. Now the south/east/west edges wear a dotted pill in the drag gripper's language, and all four corners wear a bracket; every gripper warms to the accent color on hover. The top edge's gripper is the drag pill itself, so the north strip draws nothing of its own. CSS-only, in the `#bp-frame` overlay — grippers show exactly when the panel is floated and resizable.
 
