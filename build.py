@@ -1615,7 +1615,7 @@ html.light .status.st-dormant{background:rgba(139,148,158,.18);color:var(--muted
   /* Anchored dock (Dave, 2026-10-20): when the info panel is docked (open, not
      floated, not collapsed to the rail), the main view resizes to make room for
      it instead of being covered. Floated = free overlay, no yield. */
-  body:not(.bp-collapsed):has(#view-buddy.panel.active:not(.floating)) #main{padding-right:calc(min(416px, calc(100vw - 250px)) + 22px)}
+  body.sb-anchored:not(.bp-collapsed):has(#view-buddy.panel.active:not(.floating)) #main{padding-right:calc(min(416px, calc(100vw - 250px)) + 22px)}
 }
 /* ---- Large: >1100px (desktop) ---- */
 @media (min-width:1101px){
@@ -1624,7 +1624,7 @@ html.light .status.st-dormant{background:rgba(139,148,158,.18);color:var(--muted
     padding:24px 20px 48px;box-shadow:0 16px 48px var(--shadow);box-sizing:border-box}
   /* Anchored dock (Dave, 2026-10-20): same rule as the iPad block — a docked
      panel reserves its space in the layout; a floated one overlays freely. */
-  body:not(.bp-collapsed):has(#view-buddy.panel.active:not(.floating)) #main{padding-right:472px}
+  body.sb-anchored:not(.bp-collapsed):has(#view-buddy.panel.active:not(.floating)) #main{padding-right:472px}
 }
 #view-buddy.panel.active,#view-buddy.sheet.active{display:block}
 /* Right panel collapsed to floating section pill (Dave, 2026-10-14) */
@@ -1682,6 +1682,24 @@ body.bp-collapsed #bp-rail{display:flex}
   background-size:9px 9px;background-position:center}
 #bp-grip:hover{--gripdot:var(--accent);border-color:var(--accent)}
 #bp-grip:active{cursor:grabbing}
+/* Unified panel style (Dave, 2026-10-20): the sidebar gets the same float
+   machinery as the info panel — a frame overlay carrying the dotted gripper
+   and the resize handles. While the sidebar is still docked only the gripper
+   shows (its right-edge width grip keeps its own job); the frame handles
+   appear once the sidebar is actually floating. */
+#sb-frame{position:fixed;z-index:66;display:none;pointer-events:none}
+#sb-frame.on{display:block}
+#sb-frame:not(.free) .bp-rsz{display:none}
+#sb-grip{--gripdot:var(--faint);position:absolute;top:5px;left:50%;transform:translateX(-50%);z-index:2;
+  width:76px;height:22px;border-radius:999px;pointer-events:auto;cursor:grab;touch-action:none;
+  background-color:color-mix(in srgb, var(--panel) 88%, transparent);
+  border:1px solid var(--border);box-shadow:0 2px 10px var(--shadow-soft);
+  background-image:radial-gradient(circle, var(--gripdot) 1.4px, transparent 1.6px);
+  background-size:9px 9px;background-position:center}
+#sb-grip:hover{--gripdot:var(--accent);border-color:var(--accent)}
+#sb-grip:active{cursor:grabbing}
+#sidebar.sb-floating{bottom:auto;border-radius:18px}
+body:has(#sidebar.sb-floating) #sb-resize{display:none}
 .bp-rsz{position:absolute;pointer-events:auto;touch-action:none;z-index:1}
 .bp-rsz[data-dir="n"]{top:-6px;left:16px;right:16px;height:12px;cursor:ns-resize}
 .bp-rsz[data-dir="s"]{bottom:-6px;left:16px;right:16px;height:12px;cursor:ns-resize}
@@ -3440,7 +3458,7 @@ const SETTING_DEFS = [
   {id:'nbSheetWidth', label:'New buddy sheet width', type:'number', def:560, min:320, max:900, advanced:true, tip:'Fixed width of the New Buddy bottom sheet, in pixels. Height follows the content; drag the grab handle to resize vertically.', unit:'px'},
   {id:'shiftLeftAction', label:'Shift+← action', type:'choice', options:['promote','go to parent','nothing'], def:'promote', advanced:true, tip:'What Shift+Left arrow does for the selected buddy. Promote moves it up one level; Go to parent just navigates there.'},
   {id:'fontScale', label:'Text size', type:'slider', def:100, min:80, max:130, step:5, advanced:true, tip:'Scales text throughout the app — layout, dialogs and buttons keep their size.', unit:'%'},
-  {id:'sidebarStyle', label:'Sidebar panel style', type:'choice', options:['floating','anchored'], def:'floating', tip:'Floating: inset translucent panel with rounded corners (Apple Messages style). Anchored: flush to the left edge with rounded right corners.'},
+  {id:'sidebarStyle', label:'Panel style', type:'choice', options:['floating','anchored'], def:'floating', tip:'One style for both panels — the sidebar and the info panel. Floating: inset cards; drag a panel by its gripper to move it, and resize it from any side. Anchored: both panels sit flush to their edge in the same squared-off style, the main view resizes to make room, and neither panel can be dragged.'},
   {id:'panelTranslucency', label:'Panel translucency', type:'choice', options:['standard','glass'], def:'standard', tip:'Glass: the sidebar and buddy panel go deeply translucent — the page behind them tints the glass (Apple Weather style). Standard: the usual soft frost.'},
   {id:'sectionToggleStyle', label:'Section toggle style', type:'choice', options:['chevron','section-icon','plus-minus','caret','arrow','dot','triangle','double-chevron','none'], def:'section-icon', tip:'How section headers show their expand/collapse control: classic chevron, the section\u2019s own icon, plus/minus, and more.'},
   {id:'sectionIconBehavior', label:'Section icon behavior', type:'choice', options:['rotate','spin','bounce','flip','pulse','none'], def:'rotate', tip:'What the section icon does when you expand/collapse: tips on its side, spins around, bounces, flips, pulses, or stays still.'},
@@ -3464,6 +3482,18 @@ function applyFontScale(){
 function applySidebarStyle(){
   document.body.classList.toggle('sb-anchored', getSetting('sidebarStyle') === 'anchored');
   document.body.classList.toggle('glass-panels', getSetting('panelTranslucency') === 'glass');
+  // Unified panel style (Dave, 2026-10-20): Anchored docks a floated info
+  // panel (its rect is kept and returns when the style goes back to
+  // Floating); Floating restores it. The sidebar reconciles itself the
+  // same way through reconcileSbFloat.
+  const vb2 = document.getElementById('view-buddy');
+  if (document.body.classList.contains('sb-anchored')) {
+    if (vb2 && vb2.classList.contains('floating')) clearPanelFloat();
+  } else if (vb2 && vb2.classList.contains('active') && vb2.classList.contains('panel') && S.panelFloat && !vb2.classList.contains('floating')) {
+    applyPanelFloat(clampPanelPos(clampPanelSize({ x: S.panelFloat.x, y: S.panelFloat.y, w: S.panelFloat.w, h: S.panelFloat.h })));
+  }
+  if (typeof reconcileSbFloat === 'function') reconcileSbFloat();
+  if (typeof syncPanelFrame === 'function') syncPanelFrame();
 }
 function snapshotSettable(){
   return {
@@ -3951,7 +3981,7 @@ function initPanelResize(){
    double-clicking the gripper docks the panel again. */
 function panelFloatable(){
   const vb = document.getElementById('view-buddy');
-  return !!(vb && vb.classList.contains('panel') && vb.classList.contains('active') && !document.body.classList.contains('bp-collapsed'));
+  return !!(vb && vb.classList.contains('panel') && vb.classList.contains('active') && !document.body.classList.contains('bp-collapsed') && !document.body.classList.contains('sb-anchored'));
 }
 function clampPanelSize(r){
   r.w = Math.min(Math.max(r.w, 300), window.innerWidth);
@@ -4071,7 +4101,7 @@ function initPanelFloat(){
   });
   new MutationObserver(() => {
     if (vb.classList.contains('active') && vb.classList.contains('panel')) {
-      if (S.panelFloat && !vb.classList.contains('floating')) {
+      if (S.panelFloat && !vb.classList.contains('floating') && !document.body.classList.contains('sb-anchored')) {
         applyPanelFloat(clampPanelPos(clampPanelSize({ x: S.panelFloat.x, y: S.panelFloat.y, w: S.panelFloat.w, h: S.panelFloat.h })));
       }
       setTimeout(syncPanelFrame, 60);
@@ -4089,6 +4119,139 @@ function initPanelFloat(){
     syncPanelFrame();
   });
 }
+/* Dave 2026-10-20: one panel style governs both panels. In Floating style the
+   sidebar can be dragged by its gripper and resized from any side, exactly
+   like the info panel — the rect persists in S.sbFloat and double-clicking
+   the gripper docks it again. In Anchored style neither panel can be
+   dragged: both sit flush, share the squared-off look, and the main view
+   makes room for them. */
+function sbFloatable(){
+  const sb = document.getElementById('sidebar');
+  return !!(sb && window.innerWidth >= 640 && !document.body.classList.contains('sb-anchored') && !document.body.classList.contains('sb-closed'));
+}
+function clampSbSize(r){
+  r.w = Math.min(Math.max(r.w, 260), window.innerWidth);
+  r.h = Math.min(Math.max(r.h, 300), window.innerHeight);
+  return r;
+}
+function clampSbPos(r){
+  r.x = Math.min(Math.max(r.x, -(r.w - 140)), window.innerWidth - 90);
+  r.y = Math.min(Math.max(r.y, 0), window.innerHeight - 54);
+  return r;
+}
+function applySbFloat(r){
+  const sb = document.getElementById('sidebar'); if (!sb) return;
+  sb.classList.add('sb-floating');
+  sb.style.left = r.x + 'px'; sb.style.top = r.y + 'px';
+  sb.style.width = r.w + 'px'; sb.style.height = r.h + 'px';
+  syncSbFrame();
+}
+function clearSbFloat(){
+  const sb = document.getElementById('sidebar'); if (!sb) return;
+  sb.classList.remove('sb-floating');
+  sb.style.left = sb.style.top = sb.style.width = sb.style.height = '';
+  if (typeof applySbWidth === 'function') applySbWidth();
+  syncSbFrame();
+}
+function saveSbFloat(){
+  const sb = document.getElementById('sidebar'); if (!sb) return;
+  const r = sb.getBoundingClientRect();
+  S.sbFloat = { x: Math.round(r.left), y: Math.round(r.top), w: Math.round(r.width), h: Math.round(r.height) };
+  save();
+}
+function syncSbFrame(){
+  const fr = document.getElementById('sb-frame');
+  const sb = document.getElementById('sidebar');
+  if (!fr || !sb) return;
+  if (!sbFloatable()) { fr.classList.remove('on'); fr.classList.remove('free'); return; }
+  const r = sb.getBoundingClientRect();
+  fr.style.left = r.left + 'px'; fr.style.top = r.top + 'px';
+  fr.style.width = r.width + 'px'; fr.style.height = r.height + 'px';
+  fr.classList.add('on');
+  fr.classList.toggle('free', sb.classList.contains('sb-floating'));
+}
+function reconcileSbFloat(){
+  const sb = document.getElementById('sidebar'); if (!sb) return;
+  if (!sbFloatable()) { if (sb.classList.contains('sb-floating')) clearSbFloat(); else syncSbFrame(); return; }
+  if (S.sbFloat && !sb.classList.contains('sb-floating')) {
+    applySbFloat(clampSbPos(clampSbSize({ x: S.sbFloat.x, y: S.sbFloat.y, w: S.sbFloat.w, h: S.sbFloat.h })));
+  } else syncSbFrame();
+}
+function initSbFloat(){
+  const sb = document.getElementById('sidebar');
+  if (!sb || sb.dataset.sbFloatInit) return;
+  sb.dataset.sbFloatInit = '1';
+  const fr = document.createElement('div');
+  fr.id = 'sb-frame';
+  fr.innerHTML = '<div id=\"sb-grip\" title=\"Drag to move the sidebar. Double-click to dock it again.\"></div>'
+    + ['n','s','e','w','ne','nw','se','sw'].map(d => '<div class=\"bp-rsz\" data-dir=\"' + d + '\"></div>').join('');
+  document.body.appendChild(fr);
+  const grip = fr.querySelector('#sb-grip');
+  grip.addEventListener('pointerdown', e => {
+    if (!sbFloatable()) return;
+    e.preventDefault();
+    const r0 = sb.getBoundingClientRect();
+    const sx = e.clientX, sy = e.clientY;
+    let moved = false;
+    try { grip.setPointerCapture(e.pointerId); } catch (err) {}
+    const mv = ev => {
+      const dx = ev.clientX - sx, dy = ev.clientY - sy;
+      if (!moved && Math.abs(dx) + Math.abs(dy) < 5) return;
+      moved = true;
+      applySbFloat(clampSbPos({ x: r0.left + dx, y: r0.top + dy, w: r0.width, h: r0.height }));
+    };
+    const up = () => {
+      grip.removeEventListener('pointermove', mv);
+      grip.removeEventListener('pointerup', up);
+      grip.removeEventListener('pointercancel', up);
+      if (moved) saveSbFloat();
+    };
+    grip.addEventListener('pointermove', mv);
+    grip.addEventListener('pointerup', up);
+    grip.addEventListener('pointercancel', up);
+  });
+  grip.addEventListener('dblclick', () => { S.sbFloat = null; save(); clearSbFloat(); });
+  fr.querySelectorAll('.bp-rsz').forEach(h => {
+    h.addEventListener('pointerdown', e => {
+      if (!sbFloatable()) return;
+      e.preventDefault();
+      const dir = h.dataset.dir;
+      const r0 = sb.getBoundingClientRect();
+      const sx = e.clientX, sy = e.clientY;
+      try { h.setPointerCapture(e.pointerId); } catch (err) {}
+      const mv = ev => {
+        const dx = ev.clientX - sx, dy = ev.clientY - sy;
+        let r = { x: r0.left, y: r0.top, w: r0.width, h: r0.height };
+        if (dir.indexOf('e') >= 0) r.w = r0.width + dx;
+        if (dir.indexOf('s') >= 0) r.h = r0.height + dy;
+        if (dir.indexOf('w') >= 0) r.w = r0.width - dx;
+        if (dir.indexOf('n') >= 0) r.h = r0.height - dy;
+        r = clampSbSize(r);
+        if (dir.indexOf('w') >= 0) r.x = r0.right - r.w;
+        if (dir.indexOf('n') >= 0) r.y = r0.bottom - r.h;
+        applySbFloat(clampSbPos(r));
+      };
+      const up = () => {
+        h.removeEventListener('pointermove', mv);
+        h.removeEventListener('pointerup', up);
+        h.removeEventListener('pointercancel', up);
+        saveSbFloat();
+      };
+      h.addEventListener('pointermove', mv);
+      h.addEventListener('pointerup', up);
+      h.addEventListener('pointercancel', up);
+    });
+  });
+  new MutationObserver(() => { setTimeout(reconcileSbFloat, 60); }).observe(document.body, { attributes: true, attributeFilter: ['class'] });
+  window.addEventListener('resize', () => {
+    if (sb.classList.contains('sb-floating') && S.sbFloat) {
+      applySbFloat(clampSbPos(clampSbSize({ x: S.sbFloat.x, y: S.sbFloat.y, w: S.sbFloat.w, h: S.sbFloat.h })));
+    }
+    syncSbFrame();
+  });
+  reconcileSbFloat();
+}
+
 function tileHtml(label, num, tint, sub, fkey, sel, tip){
   return '<div class="ptile' + (sel ? ' sel' : '') + '"' + (fkey ? ' data-tile="' + fkey + '"' : '') + (tip ? ' title="' + escHtml(tip) + '"' : '') + ' style="--tint:' + tint + '">'
     + '<div class="ptile-label">' + escHtml(label) + '</div>'
@@ -5265,7 +5428,7 @@ function renderBuddy(id){
   initPhotoDrop(id);
   loadDocs(id);
   initDocDrop(id);
-  initPanelResize(); applyPanelWidth(); initPanelFloat();
+  initPanelResize(); applyPanelWidth(); initPanelFloat(); initSbFloat();
   refreshTokenUI(id);
   applyFieldOrder();
   applySectionCollapse(id);
