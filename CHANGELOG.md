@@ -1,4 +1,7 @@
 ## 2026-10-20
+### Floated panel: visible grippers on all sides (Dave, 2026-10-20)
+- The floated info panel's resize handles were invisible strips. Now the south/east/west edges wear a dotted pill in the drag gripper's language, and all four corners wear a bracket; every gripper warms to the accent color on hover. The top edge's gripper is the drag pill itself, so the north strip draws nothing of its own. CSS-only, in the `#bp-frame` overlay — grippers show exactly when the panel is floated and resizable.
+
 ### Picker sheets: Cancel moves to the bottom-right (Dave, 2026-10-20)
 - In the Voice picker (and the Persona picker, which shares the footer), **Cancel** now sits at the sheet's bottom-right — Dave circled it at bottom-left and arrowed it across. "Default voice" keeps the left. One rule: `.pp-actions #pp-cancel{margin-left:auto}`.
 

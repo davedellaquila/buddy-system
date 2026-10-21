@@ -1676,6 +1676,28 @@ body.bp-collapsed #bp-rail{display:flex}
 .bp-rsz[data-dir="sw"]{bottom:-8px;left:-8px;width:22px;height:22px;cursor:nesw-resize}
 .bp-rsz[data-dir="nw"]{top:-8px;left:-8px;width:22px;height:22px;cursor:nwse-resize}
 .bp-rsz[data-dir="se"]{bottom:-8px;right:-8px;width:22px;height:22px;cursor:nwse-resize}
+/* Visible grippers on every side of the floated panel (Dave, 2026-10-20): the resize
+   handles were invisible strips. Now the south/east/west edges wear a dotted pill in
+   the drag gripper's language, and every corner wears a bracket. The top edge's
+   gripper is #bp-grip itself, so the north strip draws nothing of its own. */
+.bp-rsz::after{content:"";position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+  border-radius:999px;border:1px solid var(--border);
+  background-color:color-mix(in srgb, var(--panel) 88%, transparent);
+  box-shadow:0 2px 10px var(--shadow-soft);
+  background-image:radial-gradient(circle, var(--faint) 1.4px, transparent 1.6px);
+  background-size:9px 9px;background-position:center}
+.bp-rsz[data-dir="s"]::after{width:56px;height:12px}
+.bp-rsz[data-dir="e"]::after,.bp-rsz[data-dir="w"]::after{width:12px;height:56px}
+.bp-rsz[data-dir="n"]::after{display:none}
+.bp-rsz[data-dir="ne"]::after,.bp-rsz[data-dir="nw"]::after,.bp-rsz[data-dir="se"]::after,.bp-rsz[data-dir="sw"]::after{
+  width:13px;height:13px;background:none;box-shadow:none;border:none;border-radius:0}
+.bp-rsz[data-dir="ne"]::after{border-top:2px solid var(--faint);border-right:2px solid var(--faint);border-top-right-radius:5px}
+.bp-rsz[data-dir="nw"]::after{border-top:2px solid var(--faint);border-left:2px solid var(--faint);border-top-left-radius:5px}
+.bp-rsz[data-dir="se"]::after{border-bottom:2px solid var(--faint);border-right:2px solid var(--faint);border-bottom-right-radius:5px}
+.bp-rsz[data-dir="sw"]::after{border-bottom:2px solid var(--faint);border-left:2px solid var(--faint);border-bottom-left-radius:5px}
+.bp-rsz[data-dir="s"]:hover::after,.bp-rsz[data-dir="e"]:hover::after,.bp-rsz[data-dir="w"]:hover::after{
+  border-color:var(--accent);background-image:radial-gradient(circle, var(--accent) 1.4px, transparent 1.6px)}
+.bp-rsz[data-dir="ne"]:hover::after,.bp-rsz[data-dir="nw"]:hover::after,.bp-rsz[data-dir="se"]:hover::after,.bp-rsz[data-dir="sw"]:hover::after{border-color:var(--accent)}
 /* The rail collapse folds instead of snapping (Dave, 2026-10-20). */
 #main #view-buddy.panel.bp-folding{transform:translateX(34px) scale(.93);opacity:0;
   transition:transform .36s cubic-bezier(.32,.72,.35,1), opacity .28s ease}
