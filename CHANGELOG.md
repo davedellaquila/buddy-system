@@ -1,3 +1,8 @@
+## 2026-10-22
+### Mail Buddy 📬 launched — first real "Needs your attention" edition (2026-10-22 ~01:10 PT)
+- **Gmail reconnected ~01:02 PT** and Mail Buddy verified it first-hand (status = connected, live triage read), so the hire-night launch condition is met: the homepage's waiting state is flipped to the **first real edition** (Oct 19–22 scan, 100+ messages spiked down to 7 ranked items): CA State Controller claim approved; Kay Korbel's Llagas Creek shed list for tonight's 7:30 PM brothers call; Garage-reunion thread (Nov 6); Capital One $60 Cursor charge; Chase Zelle recipient-add alert; both Clean Crawl Space invoices closed/paid; the reconnect's own Google security alert marked expected. Mission line updated, stale launch-condition attention tile removed, footer generator-wipe phrase shortened (thread-owned page protection). Every edition link carries target="_blank".
+- **Crons live:** `mail-attention-am` (~06:41 PT) + `mail-attention-pm` (~17:41 PT), owned by Mail Buddy's thread, mirroring Social Media Buddy — each run checks the Gmail connection first and stays read-only.
+
 ## 2026-10-21
 ### Mail Buddy — registry chat wiring (build 20261022.0805)
 - Mail Buddy's side thread now exists (created from the main chat, INIT posted), so its registry `chat` field is wired, following Job J's pattern: `mail-buddy` → 2303ee77-1f94-43e2-9575-46970e296625. Registry only — no other entries touched. This closes the gap noted in the hire entry below.
