@@ -1,4 +1,7 @@
 ## 2026-10-21
+### Mail Buddy — registry chat wiring (build 20261022.0805)
+- Mail Buddy's side thread now exists (created from the main chat, INIT posted), so its registry `chat` field is wired, following Job J's pattern: `mail-buddy` → 2303ee77-1f94-43e2-9575-46970e296625. Registry only — no other entries touched. This closes the gap noted in the hire entry below.
+
 ### Mail Buddy 📬 hired (Dave, 2026-10-21; build 20261022.0758)
 - **Mail Buddy** (child of Personal Buddy) — Dave's inbox editor, the email counterpart to Social Media Buddy's feed-watching: registry 143 → 144. It watches dave@dellaquila.com Gmail **read-only** and publishes a ranked "📬 Needs your attention" list on its homepage twice daily (sender, subject, one-line why-it-matters, link to the message); the list feeds the morning briefing. It never sends, archives, deletes, or labels anything without Dave's explicit say-so.
 - **Launch condition:** Gmail is DISCONNECTED, so the homepage ships in an honest waiting state — its centerpiece card says plainly that it's waiting for the Gmail connection, with no invented or sample emails. The first real edition is its first job when Gmail reconnects.
