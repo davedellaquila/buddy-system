@@ -1414,11 +1414,17 @@ body:has(#token-pill) #view-buddy.sheet .bp-close-x{right:148px}
 .bp-sec > h3{cursor:pointer;user-select:none;display:flex;align-items:center;gap:6px}
 /* Reorder-by-name (Dave, 2026-10-21 — supersedes the Job M grip below in git
    history): panel sections have NO visible drag grip anymore. A section is
-   reordered by dragging its own header (the h3 title or the compact
-   attr-head); touch-action:none hands the header gesture to the drag on
-   touch, exactly as the old grip did, and the 6px threshold in
-   initSectionDrag keeps a plain click a click. Settings spells the tip out. */
-.bp-sec > h3, .bp-sec > .attr-head{touch-action:none}
+   reordered by dragging its own name; the 6px threshold in
+   initSectionDrag keeps a plain click a click. Settings spells the tip out.
+   Refinement (Dave, 2026-10-21, later): the grab zone is the name text
+   ALONE -- the h3 title words (wrapped in .sec-name by applySectionDrag)
+   or the attr-head's .attr-label. Presses anywhere else on the header --
+   padding, the collapse arrow, the ": value" half -- never start a drag,
+   and only the name carries the grab cursor and touch-action:none, so the
+   rest of the header scrolls and clicks exactly as it did before. */
+.bp-sec > h3 .sec-name, .bp-sec > .attr-head .attr-label{cursor:grab;touch-action:none}
+.bp-sec > h3 .sec-name:active, .bp-sec > .attr-head .attr-label:active{cursor:grabbing}
+.bp-sec.sec-dragging .sec-name, .bp-sec.sec-dragging .attr-label{cursor:grabbing}
 .bp-sec.sec-dragging{opacity:0.4}
 #sec-drag-divider{position:absolute;height:0;border-top:3px solid var(--accent);z-index:50;pointer-events:none;box-shadow:0 0 8px var(--accent)}
 #view-drag-divider{position:absolute;height:0;border-top:3px solid var(--accent);z-index:50;pointer-events:none;box-shadow:0 0 8px var(--accent)}
@@ -3998,9 +4004,13 @@ function applySectionCollapse(bid){
 }
 /* ---------- direct section reorder: drag a section by its own name ----------
    Reorder-by-name (Dave, 2026-10-21 — "drag by section name, kill the big
-   control"): no visible grip anywhere on the panel; the header itself (h3
-   title or compact attr-head) is the drag surface. Pointer-based (mouse +
-   touch). A press turns into a drag only after a 6px move, so a click still
+   control"): no visible grip anywhere on the panel; the drag surface is
+   the section's NAME text alone (Dave refinement, 2026-10-21 -- pressing
+   anywhere on the header made the whole header feel like a handle). For
+   an h3 the name is its bare leading text node, wrapped in a .sec-name
+   span in applySectionDrag so it has a hit-testable box; for an attr-head
+   the name is its .attr-label span. Pointer-based (mouse + touch). A
+   press on the name turns into a drag only after a 6px move, so a click still
    collapses/expands; while dragging a divider line shows the landing spot,
    and on release the section moves there and the DOM order is persisted to
    S.fieldOrder — the same store and save() the old grip wrote. Pointer
@@ -4028,6 +4038,30 @@ function applySectionDrag(){
     const head = sec.querySelector(':scope > h3, :scope > .attr-head');
     if (!head || head.dataset.sdrag) return;
     head.dataset.sdrag = '1';
+    // Grab zone = the name text alone (Dave, 2026-10-21 refinement). An
+    // h3 carries its name as a bare leading text node -- wrap it in a
+    // .sec-name span so the name has a box to hit-test (and to hang the
+    // grab cursor on). An attr-head's name is its .attr-label already.
+    if (head.tagName === 'H3' && !head.querySelector('.sec-name')) {
+      // Photos/Documents swap their name into a .ph-label span from async
+      // loaders that are invoked before this wiring in renderBuddy -- when
+      // a loader has already run, adopt its live label as the name element
+      // instead of wrapping, so a header never carries two name spans.
+      const pre = head.querySelector('.ph-label');
+      if (pre) {
+        pre.classList.add('sec-name');
+      } else {
+        for (const n of Array.from(head.childNodes)) {
+          if (n.nodeType === 3 && n.textContent.trim()) {
+            const sp = document.createElement('span');
+            sp.className = 'sec-name';
+            head.replaceChild(sp, n);
+            sp.appendChild(n);
+            break;
+          }
+        }
+      }
+    }
     head.addEventListener('pointerdown', e => {
       if (e.button !== undefined && e.button !== 0) return;
       if (e.isPrimary === false) return;
@@ -4036,6 +4070,13 @@ function applySectionDrag(){
       // No preventDefault here: a press that never crosses the 6px
       // threshold must stay an ordinary click (collapse/expand).
       if (e.target.closest('a, button, input, select, textarea, .info-tip')) return;
+      // Name-only grab zone: the press must land inside the name text's
+      // own box. Header padding, the collapse arrow, the attr-head's
+      // ": value" half -- none of them arm a drag candidate.
+      const nm = head.querySelector('.sec-name, .attr-label');
+      if (!nm) return;
+      const nr = nm.getBoundingClientRect();
+      if (e.clientX < nr.left || e.clientX > nr.right || e.clientY < nr.top || e.clientY > nr.bottom) return;
       secDrag.cand = { el: head, sec: sec, y0: e.clientY, pid: e.pointerId };
     });
   });
@@ -10421,14 +10462,15 @@ async function loadPhotos(id){
     // Update the label without disturbing the collapse arrow / drag grip
     // Dave 2026-10-18: drop the static attn-count — the live label replaces it.
     const stale = ph3.querySelector('.attn-count'); if (stale) stale.remove();
-    let label = ph3.querySelector('.ph-label');
+    let label = ph3.querySelector('.ph-label, .sec-name');
     if (!label) {
       label = document.createElement('span');
-      label.className = 'ph-label';
+      label.className = 'ph-label sec-name';
       Array.from(ph3.childNodes).forEach(n => { if (n.nodeType === 3) n.remove(); });
       const arrow = ph3.querySelector('.secarrow');
       if (arrow && arrow.after) arrow.after(label); else ph3.prepend(label);
     }
+    label.classList.add('ph-label'); label.classList.add('sec-name');
     label.textContent = 'Photos (' + all.length + ')';
   }
   strip.innerHTML = all.map(p => {
@@ -10847,14 +10889,15 @@ async function loadDocs(id){
   if (dh3) {
     // Dave 2026-10-18: drop the static attn-count — the live label replaces it.
     const stale = dh3.querySelector('.attn-count'); if (stale) stale.remove();
-    let label = dh3.querySelector('.ph-label');
+    let label = dh3.querySelector('.ph-label, .sec-name');
     if (!label) {
       label = document.createElement('span');
-      label.className = 'ph-label';
+      label.className = 'ph-label sec-name';
       Array.from(dh3.childNodes).forEach(n => { if (n.nodeType === 3) n.remove(); });
       const arrow = dh3.querySelector('.secarrow');
       if (arrow && arrow.after) arrow.after(label); else dh3.prepend(label);
     }
+    label.classList.add('ph-label'); label.classList.add('sec-name');
     label.textContent = 'Documents (' + files.length + ')';
     // Dave 2026-10-19: keep the Hidden fields row's Documents count in step.
     const hbc = document.querySelector('.bp-hiddenbar-row [data-count-for="docs"]');
