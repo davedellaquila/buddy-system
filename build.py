@@ -1369,7 +1369,7 @@ body:has(#token-pill) #view-buddy.sheet .bp-close-x{right:148px}
   #view-buddy.sheet .bp-sticky-head{padding-right:0}
 }
 #buddy-home{position:relative}
-#bp-resize{position:fixed;top:0;bottom:0;right:calc(var(--bpw, 440px) - 14px);z-index:60;display:flex;align-items:center;justify-content:center;width:28px;cursor:ew-resize;
+#bp-resize{position:fixed;top:0;bottom:0;right:calc(var(--bpw, 440px) - 14px);z-index:60;display:none;align-items:center;justify-content:center;width:28px;cursor:ew-resize;
   background:transparent;-webkit-tap-highlight-color:transparent;touch-action:none;user-select:none}
 /* Same dot signature as #sb-resize (Jonny verdict 2026-10-21) */
 #bp-resize::after{content:'';width:14px;height:35px;
@@ -1378,8 +1378,14 @@ body:has(#token-pill) #view-buddy.sheet .bp-close-x{right:148px}
 #bp-resize:hover::after{--gripdot:var(--text2)}
 #bp-resize:active::after{--gripdot:var(--accent)}
 #bp-resize:hover{background:transparent}
-#view-buddy.active:not(.panel):not(.sheet) #bp-resize{display:none}
-#view-buddy.sheet.active #bp-resize{display:none}
+/* Dave 2026-10-22: the gripper scrolled with the panel content - it lived
+   inside #view-buddy, whose backdrop-filter (Glass) / open-close transform
+   makes the panel the containing block for fixed descendants, so 'fixed'
+   resolved against the scrolling panel (the Job K trap, sprung before on
+   the close x). #bp-resize now lives on <body>; syncBpResize owns its
+   visibility via .bprz-on (docked panel open = shown; sheet, floating,
+   collapsed, or closed = hidden). */
+#bp-resize.bprz-on{display:flex}
 .pupload{height:150px;min-width:120px;border-radius:10px;border:1px dashed var(--border);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;background:var(--bg);flex:0 0 auto}
 .pupload .pbar{width:80px;height:6px;background:var(--border2);border-radius:3px;overflow:hidden}
 .pupload .pbar > div{height:100%;background:var(--accent);border-radius:3px;transition:width .2s}
@@ -1822,7 +1828,6 @@ html.light .status.st-dormant{background:rgba(139,148,158,.18);color:var(--muted
   #view-buddy.sheet{top:0;border-radius:0;border-top:none;padding:0 18px 60px;z-index:97;
     animation:takeoverIn .28s cubic-bezier(.32,.72,.35,1)}
   #view-buddy.sheet::before{display:none}
-  #view-buddy.sheet #bp-resize{display:none}
   #view-buddy.sheet .bp-takeover-back{display:flex}
   #view-buddy.sheet .bp-sticky-head{top:53px}
 }
@@ -1917,7 +1922,6 @@ body.bp-collapsed #bp-rail{display:flex}
    are addresses, not abilities — the docked panel's resize strip shows and
    drags like the sidebar's; only once the panel floats does its frame
    take over resizing. */
-#view-buddy.panel.floating #bp-resize{display:none}
 #bp-frame{position:fixed;z-index:66;display:none;pointer-events:none}
 #bp-frame.on{display:block}
 #bp-grip{--gripdot:color-mix(in srgb, var(--text2) 78%, var(--border));position:absolute;top:5px;left:50%;transform:translateX(-50%);z-index:2;
@@ -5130,6 +5134,7 @@ function syncPanelFrame(){
       bx.style.top = (r.top + 6) + 'px'; bx.style.left = (r.right - 56) + 'px'; bx.style.right = 'auto'; bx.style.position = 'fixed';
     } else { bx.style.left = bx.style.top = bx.style.right = ''; bx.style.position = ''; }
   }
+  try { syncBpResize(); } catch (e) {}
 }
 /* Job K (Dave 2026-10-21): the close x scrolled with the panel content.
    It lived inside #view-buddy, where the panel's own backdrop-filter
@@ -5148,6 +5153,21 @@ function syncCloseX(){
   document.body.classList.toggle('bp-sheet-open', !!(open && vb.classList.contains('sheet')));
   bx.classList.toggle('bpx-on', !!open);
   if (!open) { bx.style.left = bx.style.top = bx.style.right = ''; bx.style.position = ''; }
+  try { syncBpResize(); } catch (e) {}
+}
+/* Dave 2026-10-22: the panel resize gripper rides on <body> like the close
+   x (Job K) - inside #view-buddy its 'fixed' resolved against the scrolling
+   panel and the dots travelled with the content. syncBpResize owns the
+   reparent + visibility: shown only for the docked panel (open, not sheet,
+   not floating, not collapsed to the rail). Called from syncCloseX and
+   syncPanelFrame so every open/close/float/collapse path stays in sync. */
+function syncBpResize(){
+  const h = document.getElementById('bp-resize');
+  const vb = document.getElementById('view-buddy');
+  if (!h || !vb) return;
+  if (h.parentElement !== document.body) document.body.appendChild(h);
+  const show = vb.classList.contains('active') && vb.classList.contains('panel') && !vb.classList.contains('sheet') && !vb.classList.contains('floating') && !document.body.classList.contains('bp-collapsed');
+  h.classList.toggle('bprz-on', !!show);
 }
 /* Icon strip: current view + popover picker; panel narrow state; Views-section
    sizing (Dave, 2026-10-21). */
