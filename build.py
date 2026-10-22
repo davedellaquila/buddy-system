@@ -1274,10 +1274,10 @@ body.ub-nomotion #update-banner{transition:none}
   background:linear-gradient(135deg,transparent 55%,var(--muted) 55%);border-radius:0 0 8px 0}
 #field-settings .fset-resize:hover{opacity:1}
 #field-settings .fset-close-x{position:absolute;top:12px;right:12px;width:30px;height:30px;border-radius:50%;
-  border:1px solid var(--border);background:linear-gradient(135deg,var(--panel),var(--wash));color:var(--muted);cursor:pointer;
+  border:none;background:none;color:var(--muted);cursor:pointer;
   display:flex;align-items:center;justify-content:center;font-size:.875rem;line-height:1;padding:0;
-  box-shadow:0 2px 8px rgba(0,0,0,.08);transition:all .15s ease}
-#field-settings .fset-close-x:hover{color:#fff;background:linear-gradient(135deg,#e0533d,#c23e2a);border-color:#c23e2a;box-shadow:0 2px 12px rgba(224,83,61,.3);transform:scale(1.05)}
+  box-shadow:none;transition:all .15s ease}
+#field-settings .fset-close-x:hover,#field-settings .fset-close-x:active{color:#e0533d;background:color-mix(in srgb,#e0533d 12%,transparent);border:none;box-shadow:none;transform:scale(1.05)}
 .fset-row{display:flex;align-items:center;gap:8px;padding:8px;border:1px solid var(--border2);border-radius:8px;margin-bottom:6px;background:var(--bg);cursor:grab}
 .fset-row .fh{touch-action:none;cursor:grab;padding:4px 8px;font-size:1.125rem;min-width:44px;min-height:44px;display:flex;align-items:center;justify-content:center;color:var(--muted)}
 .fset-row .fl{flex:1;font-size:.8125rem}
@@ -1491,9 +1491,9 @@ body.no-write .pdel,body.no-write [data-dump-del],body.no-write [data-dump-edit]
    the big corner buttons (#panel-open / the info panel's close): 44px glass
    circle, blur, hairline border, soft shadow; hover lightens + accent ring.
    The gear keeps its red; the close now uses the panel's plain x mark. */
-#sb-tools button{width:44px;height:44px;background:color-mix(in srgb, var(--panel) 72%, transparent);-webkit-backdrop-filter:blur(14px) saturate(1.6);backdrop-filter:blur(14px) saturate(1.6);border:1px solid var(--border);border-radius:50%;color:var(--muted);box-shadow:0 2px 14px var(--shadow);
+#sb-tools button{width:44px;height:44px;background:color-mix(in srgb, var(--panel) 72%, transparent);-webkit-backdrop-filter:blur(14px) saturate(1.6);backdrop-filter:blur(14px) saturate(1.6);border:1px solid var(--border);border-radius:50%;color:var(--muted);box-shadow:inset 0 0 0 1px var(--border),0 2px 14px var(--shadow);
   cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0;-webkit-tap-highlight-color:transparent;transition:border-color .15s,color .15s,background .15s}
-#sb-tools button:hover{background:color-mix(in srgb, var(--panel) 58%, rgba(255,255,255,.16));color:var(--accent);border-color:var(--accent)}
+#sb-tools button:hover{background:color-mix(in srgb, var(--panel) 58%, rgba(255,255,255,.16));color:var(--accent);border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent),0 2px 14px var(--shadow)}
 #sb-tools button svg{display:block}
 #sb-gear{color:red}
 #sb-gear:hover{color:red}
@@ -2062,9 +2062,24 @@ body:has(#sidebar.sb-floating) #sb-resize{display:none}
    every collapse state. Resizing Views is absorbed by .sb-scroll — the
    Tip Jar's top edge never moves and the bottom section never resizes. */
 #sidebar{display:flex;flex-direction:column;overflow:hidden}
-#sidebar .sb-scroll{flex:1 1 auto;min-height:0;overflow-y:auto;overflow-x:hidden;overflow-wrap:break-word}
+#sidebar .sb-scroll{flex:1 1 auto;min-height:0;overflow-y:auto;overflow-x:hidden;overflow-wrap:break-word;scrollbar-gutter:stable}
 #sidebar #views-sec{position:relative;bottom:auto;flex:0 0 auto}
 #sidebar .sb-tipjar{position:static;flex:0 0 auto}
+/* ==== Fix build 2 (Dave 2026-10-21, Jobs P/Q) ==== */
+/* Job P: the collapsed rail sizes vertically to the icons it contains.
+   The box already shrink-wraps (height:auto, capped at 100dvh - 24px),
+   but two things broke the fit: overflow:visible let an over-tall rail
+   spill unreachable off-screen instead of scrolling, and the views list
+   kept the expanded panel's viewsH cap as an inline max-height, hiding
+   icons behind an inner scroll region. Now the rail itself is the
+   scroller (Dave: "if the viewport is too short to show all icons, the
+   side rail should scroll"), the views list shows every icon, and
+   .sb-scroll can never stretch the rail, so #rail-bottom sits directly
+   under the icon stack with no trailing void. Width, icon order, the
+   chevron's top slot and the pinned Recents slot are unchanged. */
+body.sb-closed #sidebar{overflow-y:auto;overflow-x:hidden}
+body.sb-closed #sidebar .sb-scroll{flex:0 0 auto}
+body.sb-closed #sidebar #view-nav{max-height:none!important;overflow:visible!important}
 /* Job I: expanding the sidebar from its collapsed rail — a measuring pass
    (transitions off) plus a two-frame parked pose that grows from the
    click point (the inline transform-origin is set by setSidebarOpen). */
@@ -4609,7 +4624,7 @@ function openFieldSettings(){
   let m = document.getElementById('field-settings');
   if (!m) {
     m = document.createElement('div'); m.id = 'field-settings';
-    m.innerHTML = '<button class="fset-close-x" id="fset-x" title="Close">' + circleX(22) + '</button>'
+    m.innerHTML = '<button class="fset-close-x" id="fset-x" title="Close">' + plainX(22) + '</button>'
       + '<div class="fset-head" id="fset-drag"><div class="fset-grip" title="Drag to move"></div><h3>Settings</h3></div>'
       + '<div class="fset-body">'
       + '<section class="fset-sec"><h3 class="fset-sec-h">Preferences</h3><div id="fset-settings"></div></section>'
@@ -9158,8 +9173,7 @@ document.addEventListener('keydown', e => {
       e.preventDefault(); e.target.blur();
       const bid = first.dataset.buddy;
       const wantPanel = S.autoOpenPanel || S.view !== 'project';
-      if (wantPanel) openBuddy(bid);
-      else selectBuddy(bid);
+      kbCycleSelect(bid, wantPanel); /* Job R: keyboard selection never triggers the auto-close */
     }
     return;
   }
@@ -9261,8 +9275,12 @@ document.addEventListener('keydown', e => {
   if (pos >= 0 && pos < rows.length) {
     const bid = rows[pos].dataset.buddy;
     const wantPanel = S.autoOpenPanel || S.view !== 'project';
-    if (wantPanel) openBuddy(bid);
-    else selectBuddy(bid);
+    /* Job R (Dave 2026-10-21): arrow-key selection rode the ordinary
+       selectBuddy/openBuddy path, so the auto-close-on-select setting
+       collapsed the left panel on every arrow step. Keyboard selection
+       goes through kbCycleSelect (Job A's mute) — arrows navigate, the
+       panel stays open; click selection keeps the auto-close. */
+    kbCycleSelect(bid, wantPanel);
   }
 });
 /* ---------- sidebar resize ---------- */

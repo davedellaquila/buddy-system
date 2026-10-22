@@ -115,6 +115,19 @@ Build: `build.py` generates `index.html` from `buddies.json` + `plans.json`.
   (popovers, menus, the field-settings sheet — one per press), then closes
   the info panel and the buddy panel together, from any focus location,
   including the search box.
+- **Collapsed rail fits its icons** — the icon rail's height shrink-wraps
+  its contents (expand chevron, view icons, current-view button): every
+  icon visible, no trailing void below the last one. On a viewport too
+  short for the stack, the rail caps at the viewport height and scrolls
+  internally.
+- **Keyboard selection never closes the panel** — arrow keys and Tab move
+  the buddy selection without triggering the sidebar's
+  auto-close-on-select; only ESC closes panels. Click selection keeps the
+  auto-close behavior.
+- **Settings close is a bare ×** — the Settings sheet's close control
+  carries no ring or border in any state. The header tools keep their
+  circled buttons; the header close ×'s ring is painted as border + inset
+  shadow so it always renders complete.
 - **Collapsible sections** — Views, Buddies, and Business Plans headers
   collapse their sections on click; state persists per device.
 - **Collapsible buddy rows** — buddies with children carry a chevron; click
