@@ -3981,6 +3981,7 @@ function applySectionCollapse(bid){
     h3.title = 'Click to collapse/expand — Shift+click applies to all sections';
     h3.addEventListener('click', e => {
       if (e.target.closest('.info-tip')) return;
+      if (e.target.closest('[data-addbuddy], [data-addparent]')) return; // add buttons route to the document-level delegation (openAddBuddyDialog / openChangeParentDialog) \u2014 stopping them here only toggled the section (Dave 2026-10-21)
       if (secDrag.justDragged) { secDrag.justDragged = false; e.stopPropagation(); return; } // a header drag just ended; never toggles collapse
       if (e.target.closest('.bp-hide-btn')) return; // hide button has its own handler (document level)
       e.stopPropagation(); // block the document-level [data-buddy] handler (Dave 2026-10-15: it re-rendered the panel on every section click)
