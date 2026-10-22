@@ -1412,18 +1412,13 @@ body:has(#token-pill) #view-buddy.sheet .bp-close-x{right:148px}
 .dumps-head h4{margin:0;font-size:.75rem;letter-spacing:1px;text-transform:uppercase;color:var(--muted)}
 .dumps-head .darrow{font-size:1.5625rem;color:var(--muted);transition:transform .15s;display:inline-block;line-height:1;position:relative;top:-2px}
 .bp-sec > h3{cursor:pointer;user-select:none;display:flex;align-items:center;gap:6px}
-/* Jonny verdict 2026-10-21: the drag grip lives on the section's utility
-   line (both header species) — one machinery pattern for the whole panel. */
-/* Job M (Dave 2026-10-21): the section grip was a faint text glyph
-   (muted on the faint utility line) and read as decoration, not a grip.
-   It is now the system's one dot language — dots only, no background,
-   small tier (2 wide x 3 deep, same as .ledger-grip), visible at rest. */
-.sec-util .secgrip{cursor:grab;color:var(--text2);line-height:1;padding:2px 4px;border-radius:4px;touch-action:none;background:transparent;display:inline-flex;align-items:center;gap:6px}
-.sec-util .secgrip::before{content:'';flex:0 0 auto;width:14px;height:21px;background-image:radial-gradient(circle,var(--gripdot,color-mix(in srgb,var(--text2) 78%,var(--border))) 1.5px,transparent 1.6px);background-size:7px 7px;background-position:center;background-repeat:repeat}
-.sec-util .secgrip:hover{color:var(--text);background:transparent}
-.sec-util .secgrip:hover::before{--gripdot:var(--text2)}
-.sec-util .secgrip:active{cursor:grabbing;color:var(--accent)}
-.sec-util .secgrip:active::before{--gripdot:var(--accent)}
+/* Reorder-by-name (Dave, 2026-10-21 — supersedes the Job M grip below in git
+   history): panel sections have NO visible drag grip anymore. A section is
+   reordered by dragging its own header (the h3 title or the compact
+   attr-head); touch-action:none hands the header gesture to the drag on
+   touch, exactly as the old grip did, and the 6px threshold in
+   initSectionDrag keeps a plain click a click. Settings spells the tip out. */
+.bp-sec > h3, .bp-sec > .attr-head{touch-action:none}
 .bp-sec.sec-dragging{opacity:0.4}
 #sec-drag-divider{position:absolute;height:0;border-top:3px solid var(--accent);z-index:50;pointer-events:none;box-shadow:0 0 8px var(--accent)}
 #view-drag-divider{position:absolute;height:0;border-top:3px solid var(--accent);z-index:50;pointer-events:none;box-shadow:0 0 8px var(--accent)}
@@ -3967,23 +3962,20 @@ function applySectionCollapse(bid){
     arrow.textContent = getSectionToggleContent(fid); arrow.style.fontSize = '1.125rem';
     sec.dataset.iconBehavior = getSetting('sectionIconBehavior') || 'rotate';
     h3.insertBefore(arrow, h3.firstChild);
-    const grip = document.createElement('span');
-    grip.className = 'secgrip';
-    grip.textContent = 'Reorder';
-    grip.title = 'Drag to reorder sections';
-    // Jonny verdict 2026-10-21: the grip lives on the section's utility line.
+    // Reorder-by-name (Dave, 2026-10-21): no grip is created here anymore —
+    // the section drags by this header itself (see applySectionDrag). The
+    // utility line stays: decorateBpHeaders puts the hide link on it.
     let util = sec.querySelector(':scope > .sec-util');
     if (!util) {
       util = document.createElement('div');
       util.className = 'sec-util';
       h3.after(util);
     }
-    util.appendChild(grip);
     if (S.secCollapsed[fid]) sec.classList.add('collapsed');
     h3.title = 'Click to collapse/expand — Shift+click applies to all sections';
     h3.addEventListener('click', e => {
       if (e.target.closest('.info-tip')) return;
-      if (e.target.closest('.secgrip')) return; // grip drags; never toggles collapse
+      if (secDrag.justDragged) { secDrag.justDragged = false; e.stopPropagation(); return; } // a header drag just ended; never toggles collapse
       if (e.target.closest('.bp-hide-btn')) return; // hide button has its own handler (document level)
       e.stopPropagation(); // block the document-level [data-buddy] handler (Dave 2026-10-15: it re-rendered the panel on every section click)
       // Hold the header's viewport position across the toggle (Dave 2026-10-21)
@@ -4004,12 +3996,18 @@ function applySectionCollapse(bid){
     });
   });
 }
-/* ---------- direct section reorder: drag the ⋮⋮ grip on a section title ----------
-   Pointer-based (mouse + touch). Shows a divider line at the landing spot while
-   dragging; on release the section moves there and the DOM order is persisted
-   to S.fieldOrder. The grip uses pointer capture so the follow-up click lands
-   on the grip, which never toggles collapse. (Divider-line UX — Dave 2026-10-14) */
-const secDrag = { cand: null, drag: null };
+/* ---------- direct section reorder: drag a section by its own name ----------
+   Reorder-by-name (Dave, 2026-10-21 — "drag by section name, kill the big
+   control"): no visible grip anywhere on the panel; the header itself (h3
+   title or compact attr-head) is the drag surface. Pointer-based (mouse +
+   touch). A press turns into a drag only after a 6px move, so a click still
+   collapses/expands; while dragging a divider line shows the landing spot,
+   and on release the section moves there and the DOM order is persisted to
+   S.fieldOrder — the same store and save() the old grip wrote. Pointer
+   capture on the header retargets the follow-up click to the dragged
+   header, where the justDragged guards swallow it instead of toggling.
+   (Divider-line UX — Dave 2026-10-14) */
+const secDrag = { cand: null, drag: null, justDragged: false };
 function secDragDivider(){
   let el = document.getElementById('sec-drag-divider');
   if (!el) {
@@ -4026,14 +4024,19 @@ function secDragHideDivider(){
 function applySectionDrag(){
   const home = document.getElementById('buddy-home');
   if (!home) return;
-  home.querySelectorAll('.bp-sec[data-field] > .sec-util .secgrip').forEach(grip => {
-    if (grip.dataset.sdrag) return;
-    grip.dataset.sdrag = '1';
-    grip.addEventListener('pointerdown', e => {
+  home.querySelectorAll('.bp-sec[data-field]').forEach(sec => {
+    const head = sec.querySelector(':scope > h3, :scope > .attr-head');
+    if (!head || head.dataset.sdrag) return;
+    head.dataset.sdrag = '1';
+    head.addEventListener('pointerdown', e => {
       if (e.button !== undefined && e.button !== 0) return;
       if (e.isPrimary === false) return;
-      e.preventDefault(); e.stopPropagation();
-      secDrag.cand = { grip: grip, sec: grip.closest('.bp-sec'), y0: e.clientY, pid: e.pointerId };
+      // Interactive header content (the attr toggle, buttons, links, info
+      // tips) keeps its own gestures — a drag starts from the name only.
+      // No preventDefault here: a press that never crosses the 6px
+      // threshold must stay an ordinary click (collapse/expand).
+      if (e.target.closest('a, button, input, select, textarea, .info-tip')) return;
+      secDrag.cand = { el: head, sec: sec, y0: e.clientY, pid: e.pointerId };
     });
   });
 }
@@ -4082,7 +4085,7 @@ function applySectionDrag(){
       if (Math.abs(e.clientY - c.y0) > 6) {
         secDrag.drag = c; secDrag.cand = null;
         c.sec.classList.add('sec-dragging');
-        try { c.grip.setPointerCapture(c.pid); } catch (err) {}
+        try { c.el.setPointerCapture(c.pid); } catch (err) {}
       }
     }
   }, { passive: false });
@@ -4090,6 +4093,11 @@ function applySectionDrag(){
     const d = secDrag.drag;
     if (d && e.pointerId === d.pid) {
       d.sec.classList.remove('sec-dragging');
+      // The pointerup is followed by a click retargeted to the dragged
+      // header (pointer capture) — arm the guard that keeps that click from
+      // also toggling the section; auto-disarm in case no click ever comes.
+      secDrag.justDragged = true;
+      setTimeout(() => { secDrag.justDragged = false; }, 400);
       const wrap = d.sec.parentElement;
       // Move to the divider's landing spot on drop (Dave 2026-10-14).
       if (wrap && d.landing) {
@@ -4239,9 +4247,9 @@ function applyFieldOrder(){
   });
 }
 /* Dave 2026-10-18: hide/show + reorder fields right from the info panel — no Settings detour.
-   decorateBpHeaders puts a quiet "hide" link on every section header, and adds the
-   ⋮⋮ drag grip to the compact attr-head headers (About, A.K.A., Parents, Persona,
-   Voice, notes) so every field is reorderable from the panel too.
+   decorateBpHeaders puts a quiet "hide" link on every section header. Every
+   field is reorderable from the panel too — by dragging the section's own
+   header (reorder-by-name, Dave 2026-10-21; see applySectionDrag).
    renderBpHiddenBar adds the "Hidden fields (n)" tray at the bottom of the field list. */
 function decorateBpHeaders(){
   const home = document.getElementById('buddy-home');
@@ -4258,14 +4266,8 @@ function decorateBpHeaders(){
       util.className = 'sec-util';
       head.after(util);
     }
-    // Drag grip for attr-head headers (h3 headers get theirs in applySectionCollapse).
-    if (head.classList.contains('attr-head') && !util.querySelector('.secgrip')) {
-      const grip = document.createElement('span');
-      grip.className = 'secgrip';
-      grip.textContent = 'Reorder';
-      grip.title = 'Drag to reorder sections';
-      util.appendChild(grip);
-    }
+    // Reorder-by-name (Dave, 2026-10-21): attr-head sections get no drag
+    // grip here — the header itself is the drag surface (applySectionDrag).
     if (util.querySelector('.bp-hide-btn')) return;
     const btn = document.createElement('button');
     btn.type = 'button';
@@ -4630,7 +4632,7 @@ function openFieldSettings(){
       + '<section class="fset-sec"><h3 class="fset-sec-h">Preferences</h3><div id="fset-settings"></div></section>'
       + '<div class="fset-cols">'
       + '<section class="fset-sec"><h3 class="fset-sec-h">Main views</h3><p class="fineprint">Drag to reorder. Number keys 1–9 follow this order.</p><div id="vset-list"></div></section>'
-      + '<section class="fset-sec"><h3 class="fset-sec-h">Buddy fields</h3><p class="fineprint">Drag to reorder. Uncheck to hide.</p><div id="fset-list"></div></section>'
+      + '<section class="fset-sec"><h3 class="fset-sec-h">Buddy fields</h3><p class="fineprint">Drag to reorder. Uncheck to hide.</p><p class="fineprint">Power-user tip: in the info panel, drag a section by its name to rearrange the panel.</p><div id="fset-list"></div></section>'
       + '</div>'
       + '<section class="fset-sec"><h3 class="fset-sec-h">Advanced</h3><div id="fset-advanced"></div></section>'
       + '<section class="fset-sec"><h3 class="fset-sec-h">Support</h3><p class="fineprint">Enjoying the buddy system? <a href="https://ko-fi.com/davedellaquila" target="_blank" rel="noopener" style="color:var(--accent)">\U0001FAD9 Tip the jar</a> \u2014 every tip keeps the lights on.</p></section>'
@@ -10244,7 +10246,7 @@ document.addEventListener('click', e => {
   const ahead = e.target.closest('.attr-head');
   if (ahead) {
     if (e.target.closest('.info-tip')) return;
-    if (e.target.closest('.secgrip')) return; // grip drags; never toggles expand (Dave 2026-10-18)
+    if (secDrag.justDragged) { secDrag.justDragged = false; return; } // a header drag just ended; never toggles expand (Dave 2026-10-21)
     if (e.target.closest('button')) return; // Change button etc. handles its own clicks
     if (e.target.closest('a')) return;
     if (e.target.closest('input')) return;
