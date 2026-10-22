@@ -1,4 +1,7 @@
 ## 2026-10-21
+### Insurance Buddy family — registry chat wiring (build 20261022.0438)
+- The three insurance buddies' side threads now exist (created from the main chat, INITs posted), so their registry `chat` fields are wired, following Job J's pattern: `insurance-buddy` → afb3f637…, `home-insurance` → 165197d3…, `auto-insurance` → 261e2bf9…. Registry only — no other entries touched. This closes the gap noted in the hire entry below.
+
 ### Insurance Buddy family hired (Dave, 2026-10-21; build 20261022.0429)
 - Three new buddies, one hire family, Dave's structure call (insurance belongs with an agent buddy, subs for home and auto): **Insurance Buddy 🛡️** (child of Finance Buddy) with sub-desks **Home Insurance 🏠** and **Auto Insurance 🚗** — registry 140 → 143. Insurance lives at the policy level: pointers, not copies; cars and houses keep one-line links to the policies.
 - Insurance Buddy owns the policy register, renewals, premiums, agent contacts, and the claims log. Seeded from the record: Eddie Huang (Farmers, Newark/Livermore) is the home-fire agent of record; the recorded home policies renew **August 28**; life is a pointer (Life Insurance buddy + premium-reduction goal), health is a pointer (Cigna record filed under Digitize Paper Records, Health Buddy owns benefits). **Umbrella: open question, not a fact.**
