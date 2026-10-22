@@ -289,10 +289,25 @@ Build: `build.py` generates `index.html` from `buddies.json` + `plans.json`.
 ## Responsive design
 
 - **Fit button (⛶)** next to the zoom slider — zooms to fit the chart content.
-- **Small (<640px)**: tiles stack as full-width cards; sidebar becomes a
-  drawer (hamburger button); detail opens as a bottom sheet; the Tree view
-  keeps the org chart (pan with a finger, floating zoom slider) instead of a
-  card list.
+- **Small (<640px) — iPhone Pass v2 (Jonny critique, 2026-10-22)**: tiles
+  stack as full-width cards; the Tree view keeps the org chart (pan with a
+  finger, floating zoom slider) instead of a card list. Panels are
+  slide-over **docks**: the buddy list lives under the canvas's left edge
+  (85vw, max 320px) and the detail panel under its right edge (88vw, max
+  360px); the canvas slides over them (280ms), one dock at a time, and the
+  exposed dimmed sliver of canvas taps shut. The resting state is a 66px
+  **icon strip** (the left dock at its narrowest: Recents pinned in the
+  first top-left slot, then every buddy as a 44px icon in walk order) plus
+  the **View pill** at the canvas's top-left. The View control carries a
+  **caret (▾)** at every size — it is a menu, and the caret rotates while
+  its menu is open. **Find** (first button in the bottom cluster) opens a
+  sticky search bar at the top of the screen: empty it lists Recents,
+  typing switches to auto-suggest with the sidebar search's matcher and
+  matched characters in bold; picking a result lands on that buddy's
+  homepage with the docks closed. A fresh load or deep link at phone
+  widths restores the selection but never an open panel (**closed on
+  open**). The old drawer, the portrait full-screen takeover, and the
+  floating-card sheet are retired.
 - **Medium (640–1100px)**: collapsible sidebar; view nav becomes a horizontal
   segmented control; detail opens as a right-docked side sheet (380px).
 - **Large (>1100px)**: tri-pane with persistent detail panel (400px).

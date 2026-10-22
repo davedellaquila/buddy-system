@@ -2515,6 +2515,82 @@ body.node-dragging,body.node-dragging *{cursor:grabbing !important}
   .node.drop-target{outline-width:3px;outline-offset:5px}
   #treezoom .node.drop-invalid{outline-offset:5px}
 }
+
+/* ==== iPhone Pass v2 (Jonny critique 2026-10-22; Dave build order 2026-10-22) ====
+   Phone model: two slide-over DOCKS fixed underneath, the canvas (#main)
+   slides over them; the resting state is the icon strip (the left dock at
+   its narrowest) + the View pill. Desktop/iPad geometry untouched. */
+/* The View control is a menu at every size — the caret says so before it is
+   touched, and rotates 180 degrees while its menu is open. */
+.view-caret{display:inline-block;font-size:.625rem;line-height:1;color:var(--muted);margin-left:3px;transition:transform .2s ease}
+body.viewpop-open .view-caret{transform:rotate(180deg)}
+#rail-curview .view-caret{font-size:.5625rem;margin-left:2px}
+#view-pill{display:none}
+/* Find — sticky top search bar + hanging menu (one behavior at every size).
+   The button lives in #hp-nav; the bar pins to the top and never dances
+   with the keyboard. Empty field = Recents; typing = auto-suggest with the
+   sidebar search's matcher, matched characters in bold. */
+#find-scrim{display:none;position:fixed;inset:0;z-index:9500;background:rgba(0,0,0,.35)}
+body.find-open #find-scrim{display:block}
+#find-bar{display:none;position:fixed;top:12px;left:50%;transform:translateX(-50%);width:min(640px,calc(100vw - 24px));height:56px;z-index:10004;align-items:center;gap:10px;padding:0 14px;border-radius:16px;background:color-mix(in srgb, var(--panel) 80%, transparent);-webkit-backdrop-filter:blur(16px) saturate(1.6);backdrop-filter:blur(16px) saturate(1.6);border:1px solid var(--border);box-shadow:0 14px 40px rgba(0,0,0,.30);box-sizing:border-box}
+body.find-open #find-bar{display:flex}
+#find-bar .find-ic{display:flex;flex:0 0 auto;color:var(--muted)}
+#find-input{flex:1;min-width:0;background:none;border:none;outline:none;color:var(--text);font:inherit;font-size:1rem;padding:4px 0;-webkit-appearance:none;appearance:none}
+#find-input::-webkit-search-cancel-button,#find-input::-webkit-search-decoration{display:none;-webkit-appearance:none}
+#find-clear{flex:0 0 auto;width:30px;height:30px;border-radius:50%;border:none;background:var(--ghost);color:var(--text2);font-size:1rem;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0}
+#find-clear:hover{color:var(--text)}
+#find-menu{display:none;position:fixed;top:76px;left:50%;transform:translateX(-50%);width:min(640px,calc(100vw - 24px));max-height:60vh;overflow-y:auto;z-index:10004;background:color-mix(in srgb, var(--panel) 88%, transparent);-webkit-backdrop-filter:blur(16px) saturate(1.6);backdrop-filter:blur(16px) saturate(1.6);border:1px solid var(--border);border-radius:16px;box-shadow:0 14px 40px rgba(0,0,0,.30);padding:6px;box-sizing:border-box}
+body.find-open #find-menu{display:block}
+.find-head{font-size:.6875rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text2);padding:8px 10px 4px}
+.find-row{display:flex;align-items:center;gap:12px;width:100%;min-height:52px;padding:6px 10px;border:none;background:none;color:var(--text);font:inherit;cursor:pointer;text-align:left;border-radius:10px;box-sizing:border-box}
+.find-row:hover{background:var(--ghost)}
+.find-row-ic{width:34px;height:34px;flex:0 0 auto;border-radius:10px;background:var(--hover);display:flex;align-items:center;justify-content:center;font-size:1.125rem}
+.find-row-tx{display:flex;flex-direction:column;min-width:0}
+.find-row-name{font-size:.9375rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.find-row-name b{font-weight:800}
+.find-row-sub{font-size:.75rem;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.find-row-sub b{color:var(--text2)}
+.find-empty{padding:10px;color:var(--text2);font-size:.875rem}
+body.find-open #hp-find{border-color:var(--accent);color:var(--accent);box-shadow:0 0 0 2px var(--accent)}
+@media (max-width:639px){
+  #find-bar{left:12px;right:12px;top:calc(12px + env(safe-area-inset-top, 0px));transform:none;width:auto}
+  #find-menu{left:12px;right:12px;top:calc(80px + env(safe-area-inset-top, 0px));transform:none;width:auto}
+  /* The old drawer opener retires at phone widths: Recents owns the first
+     top-left slot (Dave's chrome lock) and the strip is the way in. */
+  #menu-btn{display:none}
+  /* ---- Resting state: the strip. The sidebar is the left dock; closed it
+     is 66px wide and shows only #ph-strip. ---- */
+  body:not(.standalone) #sidebar{position:fixed;left:0;top:0;bottom:0;height:100dvh;width:66px;max-width:none;transform:none;visibility:visible;pointer-events:auto;margin:0;padding:0;border-radius:0;border-left:none;border-right:1px solid var(--border);background:var(--panel);z-index:96;overflow:hidden;flex:none;transition:width .28s cubic-bezier(.32,.72,.35,1)}
+  body:not(.standalone).ph-left-open #sidebar{width:min(85vw,320px)}
+  body:not(.standalone):not(.ph-left-open) #sidebar .sb-scroll,
+  body:not(.standalone):not(.ph-left-open) #sidebar #views-sec,
+  body:not(.standalone):not(.ph-left-open) #sidebar .sb-tipjar{display:none}
+  #ph-strip{display:none}
+  body:not(.standalone):not(.ph-left-open) #ph-strip{display:flex;flex-direction:column;align-items:center;gap:6px;height:100%;overflow-y:auto;overflow-x:hidden;padding:68px 0 12px;box-sizing:border-box;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+  #ph-strip::-webkit-scrollbar{display:none}
+  .strip-ic{width:44px;height:44px;flex:0 0 auto;border-radius:12px;border:1px solid transparent;background:none;color:var(--text);font-size:1.375rem;display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0}
+  .strip-ic:hover{background:var(--ghost)}
+  .strip-ic.sel{background:var(--wash);border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent)}
+  /* ---- The canvas slides over the docks (one axis, one reason, 280ms). ---- */
+  body:not(.standalone) #main{margin-left:66px;position:relative;left:0;transition:left .28s cubic-bezier(.32,.72,.35,1),box-shadow .28s cubic-bezier(.32,.72,.35,1)}
+  body:not(.standalone).ph-left-open #main{left:calc(min(85vw,320px) - 66px);box-shadow:-18px 0 36px rgba(0,0,0,.28)}
+  body:not(.standalone).ph-right-open #main{left:calc(-1 * min(88vw,360px));box-shadow:18px 0 36px rgba(0,0,0,.28)}
+  /* ---- The info panel is a right dock now: full height, own edge, the x
+     on its own corner. The portrait takeover and the floating card retire. ---- */
+  #view-buddy.sheet{left:auto;right:0;top:0;bottom:0;width:min(88vw,360px);max-width:88vw;height:auto;border-radius:18px 0 0 18px;border-right:none;padding:10px 16px calc(96px + env(safe-area-inset-bottom));animation:none}
+  #main #view-buddy.sheet{transform:translateX(103%);opacity:1;transition:transform .28s cubic-bezier(.32,.72,.35,1),opacity .28s ease,visibility 0s linear .28s}
+  #main #view-buddy.sheet.active{transition:transform .28s cubic-bezier(.32,.72,.35,1),opacity .28s ease,visibility 0s}
+  body.ph-right-open #main #view-buddy.sheet{transform:none}
+  #view-buddy.sheet .bp-takeover-back{display:none}
+  #view-buddy.sheet .bp-sticky-head{top:0}
+  body.bp-sheet-open #bp-close-x.bpx-on{display:flex;z-index:10005}
+  /* ---- The View pill rides with the canvas at its top-left. ---- */
+  #view-pill{display:flex;align-items:center;gap:7px;position:fixed;top:12px;left:78px;z-index:9001;height:40px;padding:0 14px;border-radius:999px;border:1px solid var(--border);background:color-mix(in srgb, var(--panel) 72%, transparent);-webkit-backdrop-filter:blur(14px) saturate(1.6);backdrop-filter:blur(14px) saturate(1.6);color:var(--text);font:inherit;font-size:.875rem;font-weight:600;cursor:pointer;box-shadow:0 4px 18px rgba(15,23,42,.10);transition:transform .28s cubic-bezier(.32,.72,.35,1)}
+  #view-pill .vp-ic{display:flex;font-size:1rem}
+  body.ph-left-open #view-pill{transform:translateX(calc(min(85vw,320px) - 66px))}
+  body.ph-right-open #view-pill{transform:translateX(calc(-1 * min(88vw,360px)))}
+  body.standalone #view-pill{display:none}
+}
 """
 
 ICON_DOC = ('<svg width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="currentColor"'
@@ -3212,6 +3288,8 @@ function selectBuddy(id){
 function openBuddy(id){
   if (!byId[id]) return;
   selectBuddy(id);
+  /* iPhone Pass v2: opening the right dock closes the left one. */
+  if (isDrawerNav()) setSidebarOpen(false);
   // Now open the right-side detail panel
   const inView = (S.sel || '').startsWith('view:');
   const b = byId[id];
@@ -3716,6 +3794,19 @@ function renderChangelog(){
   }).join('');
   el.innerHTML = h + '</section>';
 }
+/* One matcher for every search box (Jonny, iPhone Pass v2): the sidebar's
+   #buddy-search and Find's auto-suggest share buddyMatchesQuery so the
+   dashboard can never disagree with itself. Words ANDed over
+   name + display name + tagline + A.K.A. */
+function buddySearchHay(b){
+  return (dispName(b) + ' ' + (b.name || '') + ' ' + (b.tagline || '') + ' ' + effAka(b).join(' ')).toLowerCase();
+}
+function buddyMatchesQuery(b, q){
+  const words = (q || '').toLowerCase().trim().split(/\s+/).filter(Boolean);
+  if (!words.length) return true;
+  const hay = buddySearchHay(b);
+  return words.every(w => hay.includes(w));
+}
 function renderNav(){
   const views = getViewOrder().map(id => VIEW_DEFS.find(v => v[0] === id)).filter(Boolean).filter(([v]) => isViewVisible(v));
   /* Dave 2026-10-20: the expand chevron no longer leads this stack.
@@ -3742,11 +3833,7 @@ function renderNav(){
   const q = (document.getElementById('buddy-search').value || '').toLowerCase().trim();
   const words = q.split(/\s+/).filter(Boolean);
   let h = '';
-  function matches(b){
-    if (!words.length) return true;
-    const hay = (dispName(b) + ' ' + (b.name || '') + ' ' + (b.tagline || '') + ' ' + effAka(b).join(' ')).toLowerCase();
-    return words.every(w => hay.includes(w));
-  }
+  function matches(b){ return buddyMatchesQuery(b, q); }
   /* Dave 2026-10-15: per-branch ancestor chain — a buddy under two parents
      (a DAG diamond) renders under both; a true cycle can't loop the sidebar. */
   function row(id, depth, chain){
@@ -3786,6 +3873,7 @@ function renderNav(){
   watchScrollPos('sidebar', document.getElementById('sidebar'));
   restoreScrollPos('sidebar', document.getElementById('sidebar'));
   updateHpNav();
+  renderStrip();
 }
 function artRow(icon, label, sub, url){
   return '<a class="art-row" href="'+url+'" target="_blank" rel="noopener">'
@@ -5066,14 +5154,16 @@ function syncCloseX(){
 function syncRailCurView(){
   const btn = document.getElementById('rail-curview'); if (!btn) return;
   const def = VIEW_DEFS.find(v => v[0] === S.view) || VIEW_DEFS[0];
-  btn.innerHTML = '<span aria-hidden="true">' + def[2] + '</span>';
+  btn.innerHTML = '<span aria-hidden="true">' + def[2] + '</span><span class="view-caret" aria-hidden="true">▾</span>';
   btn.title = 'Current view: ' + def[1] + ' - tap to switch views';
   btn.setAttribute('aria-label', 'Current view: ' + def[1] + '. Tap to switch views.');
+  syncViewPill();
 }
 function railPopEsc(e){ if (e.key === 'Escape') { e.stopPropagation(); closeRailViewPop(); } }
-function railPopOutside(e){ const p = document.getElementById('rail-viewpop'); if (p && !p.contains(e.target) && !e.target.closest('#rail-curview')) closeRailViewPop(); }
+function railPopOutside(e){ const p = document.getElementById('rail-viewpop'); if (p && !p.contains(e.target) && !e.target.closest('#rail-curview') && !e.target.closest('#view-pill')) closeRailViewPop(); }
 function closeRailViewPop(){
   const p = document.getElementById('rail-viewpop'); if (p) p.remove();
+  document.body.classList.remove('viewpop-open');
   document.removeEventListener('pointerdown', railPopOutside, true);
   document.removeEventListener('keydown', railPopEsc, true);
 }
@@ -5083,6 +5173,7 @@ function toggleRailViewPop(){
   const p = document.createElement('div'); p.id = 'rail-viewpop'; p.setAttribute('role', 'menu');
   p.innerHTML = VIEW_DEFS.map(v => '<button type="button" data-view="' + v[0] + '"' + (S.view === v[0] ? ' class="sel"' : '') + '><span class="rv-ic" aria-hidden="true">' + v[2] + '</span>' + v[1] + (v[0] === 'flagged' ? ' (' + flaggedIds().length + ')' : v[0] === 'favorites' ? ' (' + favoriteIds().length + ')' : '') + '</button>').join('');
   document.body.appendChild(p);
+  document.body.classList.add('viewpop-open');
   const r = btn.getBoundingClientRect();
   p.style.left = (r.right + 10) + 'px';
   p.style.bottom = Math.max(8, window.innerHeight - r.bottom) + 'px';
@@ -11687,6 +11778,181 @@ function closeNerdSettings(){
   const m = document.getElementById('nerd-modal');
   if (m) m.remove();
 }
+/* ==== iPhone Pass v2 (Jonny critique 2026-10-22) ====
+   Slide-over docks: body.ph-left-open / body.ph-right-open drive the CSS;
+   syncPhoneDocks derives them from the same open state the drawer and the
+   sheet already track (#sidebar.open, #view-buddy.active.sheet), watched
+   by a MutationObserver so every open/close path stays in sync. One dock
+   at a time: when both would be open, the right dock wins and the left
+   closes (opening the left pre-closes the right in setSidebarOpen). */
+function syncPhoneDocks(){
+  if (!isDrawerNav()) { document.body.classList.remove('ph-left-open', 'ph-right-open'); return; }
+  const sb = document.getElementById('sidebar');
+  const vb = document.getElementById('view-buddy');
+  const sc = document.getElementById('sb-scrim');
+  let left = !!(sb && sb.classList.contains('open'));
+  const right = !!(vb && vb.classList.contains('active') && vb.classList.contains('sheet'));
+  if (left && right) { sb.classList.remove('open'); left = false; }
+  document.body.classList.toggle('ph-left-open', left);
+  document.body.classList.toggle('ph-right-open', right);
+  if (sc) sc.classList.toggle('show', left || right);
+}
+function initPhoneDocks(){
+  const sb = document.getElementById('sidebar');
+  const vb = document.getElementById('view-buddy');
+  if (window.MutationObserver) {
+    const obs = new MutationObserver(() => syncPhoneDocks());
+    if (sb) obs.observe(sb, { attributes: true, attributeFilter: ['class'] });
+    if (vb) obs.observe(vb, { attributes: true, attributeFilter: ['class'] });
+  }
+  window.addEventListener('resize', syncPhoneDocks);
+  const strip = document.getElementById('ph-strip');
+  if (strip) strip.addEventListener('click', e => { if (!e.target.closest('[data-buddy]')) setSidebarOpen(true); });
+  syncPhoneDocks();
+}
+/* The strip: the left dock at its narrowest — Recents pinned in the first
+   top-left slot (#recents-btn, as always), then the top-level buddy icons
+   in a vertical scroll; the selected buddy carries the accent wash. */
+function renderStrip(){
+  const strip = document.getElementById('ph-strip'); if (!strip) return;
+  /* Every buddy in the dock's own walk order, flattened — the strip is
+     the list at icon width, so Hans sits below Car Buddy here exactly as
+     he does in the full list. Deduped (a DAG diamond appears once). */
+  const seen = new Set(); const order = [];
+  function walk(id){
+    if (seen.has(id) || !byId[id]) return;
+    seen.add(id); order.push(id);
+    sortSiblingsByOrder((kidsOf[id] || []).map(k => k.id), id).forEach(walk);
+  }
+  sortSiblingsByOrder(ROOT_ORDER.filter(id => { const b = byId[id]; return b && effParents(b).length === 0; }), '__root__').forEach(walk);
+  strip.innerHTML = order.map(id => { const b = byId[id]; return '<button type="button" class="strip-ic' + (S.projectId === id ? ' sel' : '') + '" data-buddy="' + id + '" title="' + escHtml(dispName(b)) + '" aria-label="' + escHtml(dispName(b)) + '"><span aria-hidden="true">' + escHtml(buddyDisplayIcon(b) || b.icon || '•') + '</span></button>'; }).join('');
+}
+/* Closed on open (verdict section 5): at phone widths a fresh load or a
+   deep link selects the buddy and puts its homepage on the canvas — the
+   selection is restored, the openness never is. */
+function phoneBuddyLanding(id){
+  if (!byId[id]) { show(S.sel || 'view:tree'); return; }
+  selectBuddy(id);
+  show('view:project', false);
+}
+/* The View pill (phone resting state): the rail's view control, wearing
+   its caret, floating at the canvas's top-left. */
+function syncViewPill(){
+  const pill = document.getElementById('view-pill'); if (!pill) return;
+  const def = VIEW_DEFS.find(v => v[0] === S.view) || VIEW_DEFS[0];
+  pill.innerHTML = '<span class="vp-ic" aria-hidden="true">' + def[2] + '</span><span class="vp-name">' + escHtml(def[1]) + '</span><span class="view-caret" aria-hidden="true">▾</span>';
+  pill.title = 'Current view: ' + def[1] + ' - tap to switch views';
+  pill.setAttribute('aria-label', 'Current view: ' + def[1] + '. Tap to switch views.');
+}
+function togglePillViewPop(){
+  if (document.getElementById('rail-viewpop')) { closeRailViewPop(); return; }
+  const btn = document.getElementById('view-pill'); if (!btn) return;
+  const p = document.createElement('div'); p.id = 'rail-viewpop'; p.setAttribute('role', 'menu');
+  p.innerHTML = VIEW_DEFS.map(v => '<button type="button" data-view="' + v[0] + '"' + (S.view === v[0] ? ' class="sel"' : '') + '><span class="rv-ic" aria-hidden="true">' + v[2] + '</span>' + v[1] + (v[0] === 'flagged' ? ' (' + flaggedIds().length + ')' : v[0] === 'favorites' ? ' (' + favoriteIds().length + ')' : '') + '</button>').join('');
+  document.body.appendChild(p);
+  document.body.classList.add('viewpop-open');
+  const r = btn.getBoundingClientRect();
+  p.style.left = Math.max(8, r.left) + 'px';
+  p.style.top = (r.bottom + 8) + 'px';
+  p.addEventListener('click', e => { if (e.target.closest('[data-view]')) closeRailViewPop(); });
+  document.addEventListener('pointerdown', railPopOutside, true);
+  document.addEventListener('keydown', railPopEsc, true);
+}
+/* Find (verdict section 3): the magnifier leads #hp-nav; the search lives
+   in a sticky bar at the top. Empty = Recents; typing = auto-suggest with
+   the shared matcher and matched characters in bold. */
+function isFindOpen(){ return document.body.classList.contains('find-open'); }
+function findHi(text, words){
+  if (!words.length) return escHtml(text);
+  const lower = text.toLowerCase();
+  let segs = [[0, text.length, false]];
+  words.forEach(w => {
+    if (!w) return;
+    const next = [];
+    segs.forEach(seg => {
+      const s = seg[0], e = seg[1], bold = seg[2];
+      if (bold || e - s < w.length) { next.push(seg); return; }
+      let i = s;
+      while (i <= e - w.length) {
+        const idx = lower.indexOf(w, i);
+        if (idx < 0 || idx + w.length > e) break;
+        if (idx > i) next.push([i, idx, false]);
+        next.push([idx, idx + w.length, true]);
+        i = idx + w.length;
+      }
+      if (i < e) next.push([i, e, false]);
+    });
+    segs = next;
+  });
+  return segs.map(seg => seg[2] ? '<b>' + escHtml(text.slice(seg[0], seg[1])) + '</b>' : escHtml(text.slice(seg[0], seg[1]))).join('');
+}
+function findRowHtml(b, words){
+  const aka = effAka(b);
+  const akaHit = words.length && aka.some(a => words.some(w => a.toLowerCase().includes(w)));
+  const sub = akaHit ? 'a.k.a. ' + aka.join(', ') : (b.tagline || (aka.length ? 'a.k.a. ' + aka.join(', ') : ''));
+  return '<button type="button" class="find-row" data-find-buddy="' + b.id + '" role="option">'
+    + '<span class="find-row-ic" aria-hidden="true">' + escHtml(buddyDisplayIcon(b) || '•') + '</span>'
+    + '<span class="find-row-tx"><span class="find-row-name">' + findHi(dispName(b), words) + '</span>'
+    + (sub ? '<span class="find-row-sub">' + findHi(sub, words) + '</span>' : '')
+    + '</span></button>';
+}
+function renderFindMenu(){
+  const menu = document.getElementById('find-menu'); if (!menu) return;
+  const input = document.getElementById('find-input');
+  const q = input ? input.value : '';
+  const words = (q || '').toLowerCase().trim().split(/\s+/).filter(Boolean);
+  const clear = document.getElementById('find-clear'); if (clear) clear.hidden = !q;
+  if (!words.length) {
+    let n = parseInt(getSetting('recentsCount'), 10); if (!(n > 0)) n = 10;
+    const ids = (Array.isArray(S.recentBuddies) ? S.recentBuddies : []).filter(id => byId[id]).slice(0, Math.min(6, n));
+    menu.innerHTML = '<div class="find-head">Recent</div>' + (ids.length ? ids.map(id => findRowHtml(byId[id], [])).join('') : '<div class="find-empty">No recent buddies yet.</div>');
+    return;
+  }
+  const hits = BUDDIES.filter(b => b && buddyMatchesQuery(b, q));
+  menu.innerHTML = '<div class="find-head">Suggestions</div>' + (hits.length ? hits.map(b => findRowHtml(b, words)).join('') : '<div class="find-empty">' + `No buddy matches '${escHtml(q.trim())}'.` + '</div>');
+}
+function openFind(){
+  closeRailViewPop(); closeRecentsPop();
+  document.body.classList.add('find-open');
+  renderFindMenu();
+  const input = document.getElementById('find-input');
+  if (input) { input.focus(); input.select(); }
+}
+function closeFind(){ document.body.classList.remove('find-open'); }
+function toggleFind(){ if (isFindOpen()) closeFind(); else openFind(); }
+function pickFindResult(id){
+  closeFind();
+  if (!byId[id]) return;
+  /* One landing everywhere: the found buddy's homepage, docks closed. */
+  if (isDrawerNav()) setSidebarOpen(false);
+  const vb = document.getElementById('view-buddy');
+  if (vb && vb.classList.contains('active') && (vb.classList.contains('panel') || vb.classList.contains('sheet'))) closeDetail();
+  selectBuddy(id);
+  if (S.view !== 'project') show('view:project', false); else renderProjectView();
+}
+function initFind(){
+  if (document.getElementById('find-bar')) return;
+  const scrim = document.createElement('div'); scrim.id = 'find-scrim';
+  const bar = document.createElement('div'); bar.id = 'find-bar';
+  bar.innerHTML = '<span class="find-ic" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="M15.5 15.5L21 21" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></span>'
+    + '<input type="search" id="find-input" placeholder="Find a buddy…" aria-label="Find a buddy" autocomplete="off">'
+    + '<button type="button" id="find-clear" aria-label="Clear search" title="Clear search" hidden>×</button>';
+  const menu = document.createElement('div'); menu.id = 'find-menu'; menu.setAttribute('role', 'listbox');
+  document.body.appendChild(scrim);
+  document.body.appendChild(bar);
+  document.body.appendChild(menu);
+  const input = document.getElementById('find-input');
+  input.addEventListener('input', renderFindMenu);
+  input.addEventListener('keydown', e => {
+    if (e.key === 'Enter') { const row = document.querySelector('#find-menu .find-row'); if (row) pickFindResult(row.getAttribute('data-find-buddy')); }
+  });
+  document.getElementById('find-clear').addEventListener('click', () => { input.value = ''; renderFindMenu(); input.focus(); });
+  menu.addEventListener('click', e => { const row = e.target.closest('[data-find-buddy]'); if (row) pickFindResult(row.getAttribute('data-find-buddy')); });
+  scrim.addEventListener('click', closeFind);
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && isFindOpen()) { e.preventDefault(); e.stopPropagation(); closeFind(); }
+  }, true);
+}
 function isDrawerNav(){ return window.matchMedia('(max-width:639px)').matches; }
 function isSidebarOpen(){
   const sb = document.getElementById('sidebar');
@@ -11717,6 +11983,9 @@ function setSidebarOpen(open){
   if (!sb) return;
   if (isDrawerNav()) {
     document.body.classList.remove('sb-closed');
+    /* iPhone Pass v2: one dock at a time, through closed — opening the
+       left dock closes the right one first. */
+    if (open) { const _vb = document.getElementById('view-buddy'); if (_vb && _vb.classList.contains('active') && _vb.classList.contains('sheet')) closeDetail(); }
     sb.classList.toggle('open', !!open);
     if (sc) sc.classList.toggle('show', !!open);
   } else {
@@ -12930,6 +13199,8 @@ document.addEventListener('click', e => {
   if (e.target.closest && e.target.closest('#rail-curview')) { toggleRailViewPop(); return; }
   if (e.target.closest && e.target.closest('#sb-close')) { setSidebarOpen(document.body.classList.contains('sb-closed')); return; }
   if (e.target.closest && e.target.closest('#hp-back')) { goBack(); return; }
+  if (e.target.closest && e.target.closest('#hp-find')) { toggleFind(); return; }
+  if (e.target.closest && e.target.closest('#view-pill')) { togglePillViewPop(); return; }
   if (e.target.closest && e.target.closest('#hp-prev')) { hpStep(-1); return; }
   if (e.target.closest && e.target.closest('#hp-next')) { hpStep(1); return; }
   if (e.target.closest && e.target.closest('#menu-btn')) {
@@ -12940,7 +13211,7 @@ document.addEventListener('click', e => {
     setSidebarOpen(!isSidebarOpen()); return;
   }
   if (e.target.closest && e.target.closest('#sb-tab')) { setSidebarOpen(true); return; }
-  if (e.target.closest && e.target.closest('#sb-scrim')) { setSidebarOpen(false); return; }
+  if (e.target.closest && e.target.closest('#sb-scrim')) { setSidebarOpen(false); if (isDrawerNav()) { const _vb = document.getElementById('view-buddy'); if (_vb && _vb.classList.contains('active') && _vb.classList.contains('sheet')) closeDetail(); } return; }
   if (e.target.closest && e.target.closest('#bp-desktop')) { const m = S.sel.match(/^buddy:(.+)$/); if (m) saveToDesktop(m[1]); closeBpMoreMenu(); return; }
   if (e.target.closest && e.target.closest('#bp-repo')) { const m = S.sel.match(/^buddy:(.+)$/); const bb = m && byId[m[1]]; if (bb && bb.repo) window.open('https://github.com/davedellaquila/' + bb.repo, '_blank', 'noopener'); closeBpMoreMenu(); return; }
   if (e.target.closest && e.target.closest('#bp-settings')) { openFieldSettings(); closeBpMoreMenu(); return; }
@@ -13263,7 +13534,8 @@ refreshViews();
   // traversal carries a state object (replaceState = no extra entry).
   try { history.replaceState(navState(), '', locHash() || hashFor(S.sel || 'view:tree')); } catch (e) {}
   const m = locHash().match(/^#\/(buddy:[^\/]+|view:[^\/]+|plan:[^\/]+)(\/standalone)?$/);
-  if (m) { document.body.classList.toggle('standalone', !!m[2]); show(m[1], false); }
+  if (m) { document.body.classList.toggle('standalone', !!m[2]); if (m[1].indexOf('buddy:') === 0 && !m[2] && isDrawerNav()) phoneBuddyLanding(m[1].slice(6)); else show(m[1], false); }
+  else if (isDrawerNav() && S.sel && S.sel.indexOf('buddy:') === 0 && !document.body.classList.contains('standalone')) phoneBuddyLanding(S.sel.slice(6));
   else show(S.sel || 'view:tree');
   window.addEventListener('hashchange', () => {
     const mm = locHash().match(/^#\/(buddy:[^\/]+|view:[^\/]+|plan:[^\/]+)(\/standalone)?$/);
@@ -13328,6 +13600,8 @@ initNerdSettings();
 initNewBuddyFab();
 initEdgeSwipeOpen();
 initPanelSwipeGestures();
+initPhoneDocks();
+initFind();
 initVersionCheck();
 initPullToRefresh();
 initPlansToggle();
@@ -13370,8 +13644,10 @@ syncRailCurView();
 <button type="button" id="recents-btn" title="Recent buddies" aria-label="Recent buddies">
   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 8.5A9 9 0 1 1 3.2 13.6"/><path d="M3.2 3.8v4.8h4.8"/><path d="M12 7.5V12l3 2"/></svg>
 </button>
+<button type="button" id="view-pill" title="Current view - tap to switch views" aria-label="Current view - tap to switch views"></button>
 <div id="sb-scrim"></div>
 <aside id="sidebar">
+  <div id="ph-strip" role="navigation" aria-label="Buddy strip"></div>
   <div id="rail-top"><button type="button" id="rail-expand" title="Expand sidebar" aria-label="Expand sidebar"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9.5 5.5L16 12l-6.5 6.5"/></svg></button></div>
   <div class="sb-scroll">
   <div class="sb-brand-sticky">
@@ -13410,6 +13686,9 @@ syncRailCurView();
   <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><polyline points="9 14 4 9 9 4" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M20 20v-7a4 4 0 0 0-4-4H4" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
 </button>
 <div id="hp-nav" role="group" aria-label="Previous and next buddy homepage">
+<button type="button" id="hp-find" title="Find a buddy" aria-label="Find a buddy">
+  <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="2.4"/><path d="M15.5 15.5L21 21" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>
+</button>
 <button type="button" id="hp-prev" title="Previous homepage" aria-label="Previous buddy homepage">
   <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><path d="M5.5 14.5L12 8l6.5 6.5" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
 </button>
