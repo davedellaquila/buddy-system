@@ -296,8 +296,12 @@ Build: `build.py` generates `index.html` from `buddies.json` + `plans.json`.
   (85vw, max 320px) and the detail panel under its right edge (88vw, max
   360px); the canvas slides over them (280ms), one dock at a time, and the
   exposed dimmed sliver of canvas taps shut. The resting state is a 66px
-  **icon strip** (the left dock at its narrowest: Recents pinned in the
-  first top-left slot, then every buddy as a 44px icon in walk order) plus
+  **icon strip** — Recents worn vertically (Jonny's crit, 2026-10-22): the
+  Recents button pinned in the first top-left slot, then any favorites,
+  then the recent buddies themselves (as many as the Recents count in
+  Settings), the selected buddy always present and accent-marked — and
+  then the strip ends; a grid door at its foot opens the full dock, and
+  first run (no history yet) falls back to the root buddies — plus
   the **View pill** at the canvas's top-left. The View control carries a
   **caret (▾)** at every size — it is a menu, and the caret rotates while
   its menu is open. **Find** (first button in the bottom cluster) opens a

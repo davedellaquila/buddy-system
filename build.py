@@ -2575,6 +2575,7 @@ body.find-open #hp-find{border-color:var(--accent);color:var(--accent);box-shado
   .strip-ic{width:44px;height:44px;flex:0 0 auto;border-radius:12px;border:1px solid transparent;background:none;color:var(--text);font-size:1.375rem;display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0}
   .strip-ic:hover{background:var(--ghost)}
   .strip-ic.sel{background:var(--wash);border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent)}
+  #ph-strip .strip-door{margin-top:auto;color:var(--text2)}
   /* ---- The canvas slides over the docks (one axis, one reason, 280ms). ---- */
   body:not(.standalone) #main{margin-left:66px;position:relative;left:0;transition:left .28s cubic-bezier(.32,.72,.35,1),box-shadow .28s cubic-bezier(.32,.72,.35,1)}
   body:not(.standalone).ph-left-open #main{left:calc(min(85vw,320px) - 66px);box-shadow:-18px 0 36px rgba(0,0,0,.28)}
@@ -11830,22 +11831,31 @@ function initPhoneDocks(){
   if (strip) strip.addEventListener('click', e => { if (!e.target.closest('[data-buddy]')) setSidebarOpen(true); });
   syncPhoneDocks();
 }
-/* The strip: the left dock at its narrowest — Recents pinned in the first
-   top-left slot (#recents-btn, as always), then the top-level buddy icons
-   in a vertical scroll; the selected buddy carries the accent wash. */
+/* The strip is Recents, worn vertically (Jonny's resting-state crit,
+   2026-10-22): the Recents button stays pinned in the first top-left slot
+   (#recents-btn), favorites pin below it, then the recent buddies
+   themselves — and then the strip ends. The whole tree lives behind the
+   grid door at the strip's foot, and in Find. */
 function renderStrip(){
   const strip = document.getElementById('ph-strip'); if (!strip) return;
-  /* Every buddy in the dock's own walk order, flattened — the strip is
-     the list at icon width, so Hans sits below Car Buddy here exactly as
-     he does in the full list. Deduped (a DAG diamond appears once). */
+  let n = parseInt(getSetting('recentsCount'), 10); if (!(n > 0)) n = 10;
+  const recent = (Array.isArray(S.recentBuddies) ? S.recentBuddies : []).filter(id => byId[id]);
+  const favs = favoriteIds();
   const seen = new Set(); const order = [];
-  function walk(id){
-    if (seen.has(id) || !byId[id]) return;
-    seen.add(id); order.push(id);
-    sortSiblingsByOrder((kidsOf[id] || []).map(k => k.id), id).forEach(walk);
+  favs.forEach(id => { if (!seen.has(id)) { seen.add(id); order.push(id); } });
+  recent.slice(0, n).forEach(id => { if (!seen.has(id)) { seen.add(id); order.push(id); } });
+  /* The selected buddy is always present and accent-marked, even when it
+     arrived by deep link or Find and is not among the recents. */
+  if (S.projectId && byId[S.projectId] && !seen.has(S.projectId)) {
+    seen.add(S.projectId); order.splice(favs.length, 0, S.projectId);
   }
-  sortSiblingsByOrder(ROOT_ORDER.filter(id => { const b = byId[id]; return b && effParents(b).length === 0; }), '__root__').forEach(walk);
-  strip.innerHTML = order.map(id => { const b = byId[id]; return '<button type="button" class="strip-ic' + (S.projectId === id ? ' sel' : '') + '" data-buddy="' + id + '" title="' + escHtml(dispName(b)) + '" aria-label="' + escHtml(dispName(b)) + '"><span aria-hidden="true">' + escHtml(buddyDisplayIcon(b) || b.icon || '•') + '</span></button>'; }).join('');
+  /* First run only: no favorites and no recents yet — fall back to the
+     roots, the org's front door, until Dave's own history replaces them. */
+  if (!order.length) {
+    sortSiblingsByOrder(ROOT_ORDER.filter(id => { const b = byId[id]; return b && effParents(b).length === 0; }), '__root__').forEach(id => { if (!seen.has(id)) { seen.add(id); order.push(id); } });
+  }
+  const door = '<button type="button" class="strip-ic strip-door" id="strip-door" title="All buddies" aria-label="Show all buddies"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/></svg></button>';
+  strip.innerHTML = order.map(id => { const b = byId[id]; return '<button type="button" class="strip-ic' + (S.projectId === id ? ' sel' : '') + (isFavorite(id) ? ' fav' : '') + '" data-buddy="' + id + '" title="' + escHtml(dispName(b)) + '" aria-label="' + escHtml(dispName(b)) + '"><span aria-hidden="true">' + escHtml(buddyDisplayIcon(b) || b.icon || '•') + '</span></button>'; }).join('') + door;
 }
 /* Closed on open (verdict section 5): at phone widths a fresh load or a
    deep link selects the buddy and puts its homepage on the canvas — the
