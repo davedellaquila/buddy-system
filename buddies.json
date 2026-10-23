@@ -3478,7 +3478,7 @@
       "parent": "finance-buddy",
       "status": "New",
       "statusClass": "st-new",
-      "mission": "Dave's insurance agent in the buddy system — owns ALL insurance at the policy level: the policy register, renewals, premiums, coverage questions, agent contacts (Eddie Huang, Farmers), and the claims log. Home and auto live with its sub-desks (Home Insurance, Auto Insurance); umbrella status unknown; life and health by pointer only. Pointers, not copies — cars and houses keep one-line links to the policies here. Never invents a figure: what's unrecorded is written down as unrecorded.",
+      "mission": "Dave's insurance agent in the buddy system — owns ALL insurance at the policy level: the policy register, renewals, premiums, coverage questions, agent contacts (Eddie Huang, Farmers), and the claims log. Home, auto, and health live with its sub-desks (Home Insurance, Auto Insurance, Health Insurance); umbrella status unknown; life by pointer only. Pointers, not copies — cars and houses keep one-line links to the policies here. Never invents a figure: what's unrecorded is written down as unrecorded.",
       "tagline": "The whole book at policy level — register, renewals, claims log",
       "repo": "insurance-buddy",
       "homepage": "insurance-buddy/",
@@ -3508,6 +3508,7 @@
       "links": [
         "home-insurance",
         "auto-insurance",
+        "health-insurance",
         "life-insurance",
         "health-buddy"
       ],
@@ -3598,6 +3599,49 @@
       "voice": "avocado_v2:chip"
     },
     {
+      "id": "health-insurance",
+      "name": "Health Insurance",
+      "icon": "🏥",
+      "parent": "insurance-buddy",
+      "status": "New",
+      "statusClass": "st-new",
+      "mission": "Health-policy desk under Insurance Buddy — owns Dave's health coverage at the policy level: the Cigna Open Access Plus plan (plan C-3; Medical/Rx/Dental/Vision) carried through his employer benefits (ProUnlimited HR/Benefits), and its claims. Opens with claim #1: the $2,794.48 balance on the July 5, 2026 ambulance run (run #26-E3829700, auto accident; auto insurance paid $438.92), escalated 2026-10-23 to bill Cigna as secondary — statement on hold 30–45 business days, resolution check Dec 5. The full member ID never lives here: it stays in Dave's filed insurance record, referenced as ending 8300 at most.",
+      "tagline": "The Cigna plan and its claims — claim #1 on hold, check Dec 5",
+      "repo": "health-insurance",
+      "homepage": "health-insurance/",
+      "attention": [
+        {
+          "date": "2026-10-23",
+          "id": "health-insurance-job-req-review",
+          "text": "Job req ready for review — looks good, edits, or defer?",
+          "url": "https://docs.google.com/document/d/1IuRkge9DPmCAkPSr6Eykxzu4w-iz8MaR6FzCozpGyy4/edit"
+        },
+        {
+          "date": "2026-10-23",
+          "id": "health-insurance-cigna-claim",
+          "text": "Claim #1 open: $2,794.48 July 5 ambulance balance billed to Cigna as secondary — statement on hold 30–45 business days; resolution check Dec 5.",
+          "url": "https://github.com/davedellaquila/health-insurance/blob/master/docs/claims/cigna-secondary-2026-07-05.md"
+        }
+      ],
+      "brief": "https://docs.google.com/document/d/1IuRkge9DPmCAkPSr6Eykxzu4w-iz8MaR6FzCozpGyy4/edit",
+      "docs": [
+        {
+          "label": "Health Insurance — Job Req",
+          "url": "https://docs.google.com/document/d/1IuRkge9DPmCAkPSr6Eykxzu4w-iz8MaR6FzCozpGyy4/edit"
+        }
+      ],
+      "persona": "Patient Advocate",
+      "kind": "standalone",
+      "links": [
+        "insurance-buddy",
+        "home-insurance",
+        "auto-insurance",
+        "health-buddy"
+      ],
+      "photos": [],
+      "voice": "avocado_v2:qvd_04050"
+    },
+    {
       "id": "mail-buddy",
       "name": "Mail Buddy",
       "icon": "📬",
@@ -3649,7 +3693,7 @@
         {
           "date": "2026-10-23",
           "id": "elba-and-susan-dossier-review",
-          "text": "Dossier ready for Dave's review \u2014 he said he'll add more facts about Elba & Susan."
+          "text": "Dossier ready for Dave's review — he said he'll add more facts about Elba & Susan."
         },
         {
           "date": "2026-10-23",
@@ -3660,15 +3704,15 @@
       "brief": "https://docs.google.com/document/d/1TMpMv-mwAhZNzXXQrfuAe53EO_fg5Nq8DpfDisuhbcE/edit",
       "docs": [
         {
-          "label": "Elba & Susan \u2014 Dossier",
+          "label": "Elba & Susan — Dossier",
           "url": "https://docs.google.com/document/d/1TMpMv-mwAhZNzXXQrfuAe53EO_fg5Nq8DpfDisuhbcE/edit"
         }
       ],
       "homepage": "elba-and-susan/",
-      "icon": "\ud83d\udc34",
+      "icon": "🐴",
       "id": "elba-and-susan",
       "kind": "personal",
-      "mission": "Living dossier for Elba & Susan \u2014 Dave's cousin Elba and her partner Susan of Volcano, CA (Amador County, near Fiddletown). Tracks who they are, their horses (Dave thinks ~30, unconfirmed), and Elba's MGB GT restoration (believed Mark I, metal dash \u2014 unconfirmed), and works connection threads through them, starting with a leather worker for Shanon Essex's father's briefcase. Surnames and contact info unknown, never guessed; Dave will supply more facts.",
+      "mission": "Living dossier for Elba & Susan — Dave's cousin Elba and her partner Susan of Volcano, CA (Amador County, near Fiddletown). Tracks who they are, their horses (Dave thinks ~30, unconfirmed), and Elba's MGB GT restoration (believed Mark I, metal dash — unconfirmed), and works connection threads through them, starting with a leather worker for Shanon Essex's father's briefcase. Surnames and contact info unknown, never guessed; Dave will supply more facts.",
       "name": "Elba & Susan",
       "parent": "family-buddy",
       "persona": "Warm, down-to-earth dossier keeper",
@@ -3676,7 +3720,7 @@
       "repo": "elba-and-susan",
       "status": "New",
       "statusClass": "st-new",
-      "tagline": "Dave's cousin Elba & her partner Susan \u2014 Volcano, horses, and an MGB GT",
+      "tagline": "Dave's cousin Elba & her partner Susan — Volcano, horses, and an MGB GT",
       "type": "person"
     }
   ]
