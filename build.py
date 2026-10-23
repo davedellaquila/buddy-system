@@ -2569,8 +2569,13 @@ body.find-open #hp-find{border-color:var(--accent);color:var(--accent);box-shado
   body:not(.standalone):not(.ph-left-open) #sidebar .sb-scroll,
   body:not(.standalone):not(.ph-left-open) #sidebar #views-sec,
   body:not(.standalone):not(.ph-left-open) #sidebar .sb-tipjar{display:none}
+  /* The strip's bottom padding clears the floating bottom nav cluster
+     (56px circles at bottom:20px — its top edge sits 76px up): the door
+     (margin-top:auto at the column's foot) now rests 96px up, the same
+     clearance the phone sheet uses. Dave's fix order 2026-10-23 — the
+     cluster used to tuck over the door and swallow its taps. */
   #ph-strip{display:none}
-  body:not(.standalone):not(.ph-left-open) #ph-strip{display:flex;flex-direction:column;align-items:center;gap:6px;height:100%;overflow-y:auto;overflow-x:hidden;padding:68px 0 12px;box-sizing:border-box;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+  body:not(.standalone):not(.ph-left-open) #ph-strip{display:flex;flex-direction:column;align-items:center;gap:6px;height:100%;overflow-y:auto;overflow-x:hidden;padding:68px 0 calc(96px + env(safe-area-inset-bottom, 0px));box-sizing:border-box;scrollbar-width:none;-webkit-overflow-scrolling:touch}
   #ph-strip::-webkit-scrollbar{display:none}
   .strip-ic{width:44px;height:44px;flex:0 0 auto;border-radius:12px;border:1px solid transparent;background:none;color:var(--text);font-size:1.375rem;display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0}
   .strip-ic:hover{background:var(--ghost)}

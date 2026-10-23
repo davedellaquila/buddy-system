@@ -300,7 +300,9 @@ Build: `build.py` generates `index.html` from `buddies.json` + `plans.json`.
   Recents button pinned in the first top-left slot, then any favorites,
   then the recent buddies themselves (as many as the Recents count in
   Settings), the selected buddy always present and accent-marked — and
-  then the strip ends; a grid door at its foot opens the full dock, and
+  then the strip ends; a grid door at its foot opens the full dock (the
+  strip's bottom padding holds the door clear of the floating bottom nav
+  cluster), and
   first run (no history yet) falls back to the root buddies — plus
   the **View pill** at the canvas's top-left. The View control carries a
   **caret (▾)** at every size — it is a menu, and the caret rotates while

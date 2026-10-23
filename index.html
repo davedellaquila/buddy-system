@@ -2742,8 +2742,13 @@ body.find-open #hp-find{border-color:var(--accent);color:var(--accent);box-shado
   body:not(.standalone):not(.ph-left-open) #sidebar .sb-scroll,
   body:not(.standalone):not(.ph-left-open) #sidebar #views-sec,
   body:not(.standalone):not(.ph-left-open) #sidebar .sb-tipjar{display:none}
+  /* The strip's bottom padding clears the floating bottom nav cluster
+     (56px circles at bottom:20px — its top edge sits 76px up): the door
+     (margin-top:auto at the column's foot) now rests 96px up, the same
+     clearance the phone sheet uses. Dave's fix order 2026-10-23 — the
+     cluster used to tuck over the door and swallow its taps. */
   #ph-strip{display:none}
-  body:not(.standalone):not(.ph-left-open) #ph-strip{display:flex;flex-direction:column;align-items:center;gap:6px;height:100%;overflow-y:auto;overflow-x:hidden;padding:68px 0 12px;box-sizing:border-box;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+  body:not(.standalone):not(.ph-left-open) #ph-strip{display:flex;flex-direction:column;align-items:center;gap:6px;height:100%;overflow-y:auto;overflow-x:hidden;padding:68px 0 calc(96px + env(safe-area-inset-bottom, 0px));box-sizing:border-box;scrollbar-width:none;-webkit-overflow-scrolling:touch}
   #ph-strip::-webkit-scrollbar{display:none}
   .strip-ic{width:44px;height:44px;flex:0 0 auto;border-radius:12px;border:1px solid transparent;background:none;color:var(--text);font-size:1.375rem;display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0}
   .strip-ic:hover{background:var(--ghost)}
@@ -4981,7 +4986,7 @@ function renderDevelopSection(){
   const dev = document.getElementById('fset-develop');
   if (!dev) return;
   const simulating = !!devBackup;
-  const buildNum = '20261023.0342';
+  const buildNum = '20261023.1335';
   dev.innerHTML = ''
     + '<label class="fset-check"><input type="checkbox" id="dev-empty-toggle"' + (simulating ? ' checked' : '') + '> <span><strong>Simulate new user</strong> — empty data file, as if opening the shared link fresh</span></label>'
     + '<div class="fineprint" style="margin:8px 0 12px">Build <span style="font-family:monospace">' + escHtml(String(buildNum)) + '</span> · ' + BUDDIES.length + ' buddies in this file</div>'
@@ -6810,7 +6815,7 @@ function renderBuddy(id){
     + attrHead('shared', 'SHARED NOTES', '<span class="attr-value" id="bp-shared-count">(0)</span>', '')
     + '<div class="attr-body">' + attrTipLine('Anybody with repo access can see this note. Saved to the buddy’s repo (docs/notes.md).') + '<textarea class="notes" id="bp-shared-notes" placeholder="Anybody with repo access can see this note."></textarea>'
     + '<p class="fineprint" id="shared-status"></p></div></div>'
-    + '<div class="bp-build">Build 20261023.0342</div>'
+    + '<div class="bp-build">Build 20261023.1335</div>'
     + '</div>';
   // Update every visible label for a buddy after a rename/re-icon, across all
   // Atlas lenses. A rename changes no structure, so labels are patched in place
@@ -9473,7 +9478,7 @@ function renderPlan(id){
     + '<p class="fineprint">Saved on this device. (For your eyes only)</p></div>'
     + '<div class="bp-sec"><h3>📝 Shared notes<span class="info-tip" data-tip="Visible to everyone with access to this project.">\u24d8</span></h3><textarea class="notes" id="bp-shared" placeholder="Shared notes\u2026 (visible to everyone with access)">'+escHtml((S.planShared||{})[id]||'')+'</textarea>'
     + '<p class="fineprint">Shared — visible to everyone with access.</p></div>'
-    + '<div class="bp-build">Build 20261023.0342</div>'
+    + '<div class="bp-build">Build 20261023.1335</div>'
     + '</div>';
   const nt = document.getElementById('bp-notes');
   let t = null;
@@ -12956,14 +12961,14 @@ function openWhatsNew(){
     .then(r => r.ok ? r.text() : '')
     .then(t => {
       const serverBuild = t.trim();
-      if (serverBuild && serverBuild !== '20261023.0342') {
+      if (serverBuild && serverBuild !== '20261023.1335') {
         updBtn.style.display = '';
         updBtn.title = 'Update to build ' + serverBuild;
       }
       // Show build numbers at the top of the sheet (Dave's request 2026-10-12)
-      const myBuild = '20261023.0342';
+      const myBuild = '20261023.1335';
       let buildLine = '<p class="fineprint" style="margin-top:0">You’re on build ' + escHtml(myBuild) + '.';
-      if (serverBuild && serverBuild !== '20261023.0342' && isNewerBuild(serverBuild, myBuild)) {
+      if (serverBuild && serverBuild !== '20261023.1335' && isNewerBuild(serverBuild, myBuild)) {
         buildLine += ' Build ' + escHtml(serverBuild) + ' is available.';
       }
       buildLine += '</p>';
@@ -13033,7 +13038,7 @@ function syncUpdateBanner(){
   if (b.dataset.state !== state) b.dataset.state = state;
 }
 function initVersionCheck(){
-  const myBuild = '20261023.0342';
+  const myBuild = '20261023.1335';
   function showUpdateBanner(serverBuild){
     if (document.getElementById('update-banner')) return;
     const b = document.createElement('div');
