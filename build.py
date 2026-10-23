@@ -814,12 +814,24 @@ body.sb-closed #sb-tab{display:none !important}
    with no backing plate the dots must carry themselves; the old 34% read
    as dirt), hover full secondary, accent while dragging. Honest
    affordance, no hover required (Jonny's pick, 2026-10-11). */
-#sb-resize::after{content:'';width:14px;height:35px;
+/* Panel grippers — ONE shared dot cluster (Dave 2026-10-23): the sidebar
+   (buddy panel) and info panel resize grippers render the SAME 2x5 grid
+   of identical dots, defined once here so they can never drift apart.
+   14x35 box, 7px tiles, tile phase anchored at 0 0: dot centers land at
+   3.5/10.5px across and 3.5..31.5px down, so every dot is whole and the
+   spacing is even. (background-position:center phased the tiling by
+   half a tile, putting dot centers ON the box edges — every edge dot
+   half-clipped into a ragged 3-wide scatter; Dave's "looks terrible"
+   screenshot, 2026-10-23.) Both gripper strips are 28px wide and
+   centered on their panel's INNER edge (the edge nearest screen
+   center), so the cluster sits at the same offset from that edge on
+   both panels, mirrored. */
+#sb-resize::after,#bp-resize::after{content:'';width:14px;height:35px;flex:none;
   background-image:radial-gradient(circle,var(--gripdot,color-mix(in srgb,var(--text2) 78%,var(--border))) 1.5px,transparent 1.6px);
-  background-size:7px 7px;background-position:center;background-repeat:repeat}
-#sb-resize:hover::after{--gripdot:var(--text2)}
-#sb-resize:active::after{--gripdot:var(--accent)}
-#sb-resize:hover{background:transparent}
+  background-size:7px 7px;background-position:0 0;background-repeat:repeat}
+#sb-resize:hover::after,#bp-resize:hover::after{--gripdot:var(--text2)}
+#sb-resize:active::after,#bp-resize:active::after{--gripdot:var(--accent)}
+#sb-resize:hover,#bp-resize:hover{background:transparent}
 /* While a strip drag is live: accent dots only (Job F, Dave 2026-10-21 —
    dots only, no background, no seam line, in every state). */
 #sb-resize.rz-dragging,#bp-resize.rz-dragging{--gripdot:var(--accent)}
@@ -1385,13 +1397,8 @@ body:has(#token-pill) #view-buddy.sheet .bp-close-x{right:148px}
 #buddy-home{position:relative}
 #bp-resize{position:fixed;top:0;bottom:0;right:calc(var(--bpw, 440px) - 14px);z-index:60;display:none;align-items:center;justify-content:center;width:28px;cursor:ew-resize;
   background:transparent;-webkit-tap-highlight-color:transparent;touch-action:none;user-select:none}
-/* Same dot signature as #sb-resize (Jonny verdict 2026-10-21) */
-#bp-resize::after{content:'';width:14px;height:35px;
-  background-image:radial-gradient(circle,var(--gripdot,color-mix(in srgb,var(--text2) 78%,var(--border))) 1.5px,transparent 1.6px);
-  background-size:7px 7px;background-position:center;background-repeat:repeat}
-#bp-resize:hover::after{--gripdot:var(--text2)}
-#bp-resize:active::after{--gripdot:var(--accent)}
-#bp-resize:hover{background:transparent}
+/* Dot cluster: the shared panel-gripper rule beside #sb-resize::after
+   (Dave 2026-10-23 — both panel grippers defined once, identical 2x5). */
 /* Dave 2026-10-22: the gripper scrolled with the panel content - it lived
    inside #view-buddy, whose backdrop-filter (Glass) / open-close transform
    makes the panel the containing block for fixed descendants, so 'fixed'
