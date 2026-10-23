@@ -313,7 +313,20 @@ Build: `build.py` generates `index.html` from `buddies.json` + `plans.json`.
   homepage with the docks closed. A fresh load or deep link at phone
   widths restores the selection but never an open panel (**closed on
   open**). The old drawer, the portrait full-screen takeover, and the
-  floating-card sheet are retired.
+  floating-card sheet are retired. The phone icon strip never renders at
+  ≥640px (a global hide rule; its show rule lives only inside the <640px
+  query).
+- **First open (fresh context, phone)**: with no stored state on the
+  device, the dashboard opens as a front door — the resting geometry is
+  invariant at first paint (66px strip + canvas, never dock width), the
+  canvas lands on Astro's homepage without recording a visit, and a
+  one-time **Welcome Card** (dismissed per device, stored in its own
+  `buddyWelcome.system` key) names the place, states the scale, and
+  teaches the doors in one sentence. The strip seeds from the root
+  buddies until real history exists — no fake recency.
+- **The Lift**: while typing on the phone (keyboard open), the Prev/Next
+  pill rides above the keyboard via a `--kb-lift` offset driven by focus
+  and `visualViewport`, and settles back when the keyboard closes.
 - **Medium (640–1100px)**: collapsible sidebar; view nav becomes a horizontal
   segmented control; detail opens as a right-docked side sheet (380px).
 - **Large (>1100px)**: tri-pane with persistent detail panel (400px).

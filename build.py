@@ -23,6 +23,15 @@ ROOT_ORDER = [
 ]
 
 NEW_CSS = """
+/* ---- phone strip containment (iPhone polish pass, 2026-10-23) ----
+   #ph-strip is the phone-only buddy strip (first child of #sidebar); its
+   show rule lives inside the <=639px media query below. This global hide
+   is what keeps it out of the rail/panel at tablet and desktop widths,
+   where it used to render as a mini icon-grid at the top of the sidebar.
+   The phone show rule (body:not(.standalone):not(.ph-left-open)
+   #ph-strip) outranks this on specificity, so phone behavior is
+   unchanged. */
+#ph-strip{display:none}
 /* ---- theme variables ---- */
 :root{
   color-scheme:dark; /* native scrollbars/controls match dark theme — kills white flashes */
@@ -866,7 +875,7 @@ body:has(#field-settings.show) #new-buddy-fab{display:none}
    all the time" — the sheet now shows them too, floating above it.)
    History: on 2026-10-19 the cluster lived next to the + button in the
    lower-right; Dave redistributed it the next morning. */
-#hp-nav{position:fixed;left:50%;transform:translateX(-50%);bottom:20px;z-index:9000;display:none;gap:12px}
+#hp-nav{position:fixed;left:50%;transform:translate(-50%, calc(-1 * var(--kb-lift, 0px)));transition:transform .25s ease-out;bottom:20px;z-index:9000;display:none;gap:12px}
 #hp-back{position:fixed;left:20px;bottom:20px;z-index:9000;display:none}
 body:has(#main.homepage-mode):has(#view-project.active) #hp-nav,
 body:has(#main.homepage-mode):has(#view-project.active) #hp-back,
@@ -2556,6 +2565,24 @@ body.find-open #find-menu{display:block}
 .find-row-sub b{color:var(--text2)}
 .find-empty{padding:10px;color:var(--text2);font-size:.875rem}
 body.find-open #hp-find{border-color:var(--accent);color:var(--accent);box-shadow:0 0 0 2px var(--accent)}
+/* ==== Welcome Card (Jonny's welcome-card system, 2026-10-15; connected to
+   the first open by the first-open crit, 2026-10-23) ====
+   In-flow at the head of Astro's homepage, first visit only per device:
+   icon tile, name, why, try-this well, one Got it. */
+.welcome-card{position:relative;max-width:400px;margin:28px auto 8px;padding:36px 30px 30px;border-radius:24px;background:var(--panel);color:var(--text);text-align:center;box-shadow:0 2px 6px rgba(0,0,0,.04),0 18px 48px rgba(0,0,0,.30);animation:wc-in .45s cubic-bezier(.32,.72,0,1);box-sizing:border-box}
+html.light .welcome-card{box-shadow:0 2px 6px rgba(0,0,0,.04),0 18px 48px rgba(0,0,0,.12)}
+.welcome-card.wc-out{opacity:0;transform:scale(.97);transition:opacity .25s ease,transform .25s ease}
+@keyframes wc-in{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion: reduce){.welcome-card{animation:none}}
+.wc-icon{width:96px;height:96px;margin:0 auto 18px;border-radius:24px;background:#2C2C2E;display:flex;align-items:center;justify-content:center;font-size:56px;line-height:1}
+html.light .wc-icon{background:#F2F2F7}
+.wc-name{font-size:24px;font-weight:700;letter-spacing:-.02em;margin:0 0 10px}
+.wc-why{font-size:16px;line-height:1.55;color:var(--text2);margin:0 0 18px}
+.wc-try{background:rgba(0,122,255,.13);border-radius:14px;padding:12px 14px;font-size:15px;line-height:1.5;color:var(--text);margin:0 0 20px;text-align:left}
+.wc-got{display:block;width:100%;height:52px;border:none;border-radius:14px;background:#0A84FF;color:#fff;font:inherit;font-size:17px;font-weight:600;cursor:pointer}
+html.light .wc-got{background:#007AFF}
+.wc-x{position:absolute;top:10px;right:10px;width:44px;height:44px;border:none;border-radius:50%;background:none;color:var(--faint);font-size:20px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0}
+.wc-x:hover{color:var(--text)}
 @media (max-width:639px){
   #find-bar{left:12px;right:12px;top:calc(12px + env(safe-area-inset-top, 0px));transform:none;width:auto}
   #find-menu{left:12px;right:12px;top:calc(80px + env(safe-area-inset-top, 0px));transform:none;width:auto}
@@ -2600,6 +2627,15 @@ body.find-open #hp-find{border-color:var(--accent);color:var(--accent);box-shado
   body.ph-left-open #view-pill{transform:translateX(calc(min(85vw,320px) - 66px))}
   body.ph-right-open #view-pill{transform:translateX(calc(-1 * min(88vw,360px)))}
   body.standalone #view-pill{display:none}
+  /* First-open invariant (Jonny's first-open crit, 2026-10-23): the
+     resting geometry holds at first paint, in every state. boot-hold
+     (set by the pre-app boot script on phone loads, released by the
+     main script once settled) freezes transitions so nothing can
+     arrive hall-sized; first-open (no stored state on this device)
+     pins the closed geometry outright while no dock is open. */
+  body.boot-hold:not(.standalone) #sidebar, body.boot-hold:not(.standalone) #main, body.boot-hold #view-pill{transition:none}
+  body.first-open:not(.standalone):not(.ph-left-open):not(.ph-right-open) #sidebar{width:66px}
+  body.first-open:not(.standalone):not(.ph-left-open):not(.ph-right-open) #main{left:0}
 }
 """
 
@@ -5702,6 +5738,36 @@ function initHomepageDumpbox(root, b){
   renderHpDumpFeed(root, b.id);
 }
 
+/* ==== Welcome Card (Jonny's welcome-card system, 2026-10-15; connected to
+   the first open by the first-open crit, 2026-10-23) ====
+   In-flow at the head of Astro's homepage, on the first open only.
+   Dismissal persists per device in its own localStorage key, independent
+   of the dashboard state; Got it and the x both dismiss permanently. */
+const WELCOME_KEY = 'buddyWelcome.system';
+function welcomeDismissed(){ try { return !!localStorage.getItem(WELCOME_KEY); } catch (e) { return false; } }
+function buildWelcomeCard(){
+  if (!document.body.classList.contains('first-open') || welcomeDismissed()) return null;
+  const b = byId[ROOT_ID]; if (!b) return null;
+  const n = Object.keys(byId).length;
+  const card = document.createElement('section');
+  card.id = 'welcome-card';
+  card.className = 'welcome-card';
+  card.setAttribute('aria-label', 'Welcome to the Buddy System');
+  card.innerHTML = '<button type="button" class="wc-x" aria-label="Dismiss welcome">\u00d7</button>'
+    + '<div class="wc-icon" aria-hidden="true">' + escHtml(buddyDisplayIcon(b) || b.icon || '🚀') + '</div>'
+    + '<h2 class="wc-name">Welcome to the Buddy System</h2>'
+    + '<p class="wc-why">' + n + ' buddies \u2014 your staff, family, and projects \u2014 organized in one place. Astro runs the front desk.</p>'
+    + '<div class="wc-try"><span aria-hidden="true">\u2728</span> <b>Try this:</b> The strip holds where you’ve been. The grid opens everyone. Find (bottom) leaps to anyone by name.</div>'
+    + '<button type="button" class="wc-got">Got it</button>';
+  const dismiss = () => {
+    try { localStorage.setItem(WELCOME_KEY, '1'); } catch (e) {}
+    card.classList.add('wc-out');
+    setTimeout(() => { if (card.parentNode) card.remove(); }, 260);
+  };
+  card.querySelector('.wc-got').addEventListener('click', dismiss);
+  card.querySelector('.wc-x').addEventListener('click', dismiss);
+  return card;
+}
 function renderProjectView(){
   const pv = document.getElementById('view-project');
   if (!pv) return;
@@ -5775,6 +5841,7 @@ function renderProjectView(){
     initHomepageDumpbox(content, b);
     wrap.appendChild(content);
   }
+  if (projectId() === ROOT_ID) { const wc = buildWelcomeCard(); if (wc) pv.appendChild(wc); }
   pv.appendChild(wrap);
   updateHpNav();
 }
@@ -11836,6 +11903,62 @@ function initPhoneDocks(){
   if (strip) strip.addEventListener('click', e => { if (!e.target.closest('[data-buddy]')) setSidebarOpen(true); });
   syncPhoneDocks();
 }
+
+/* ==== The Lift (Jonny verdict, 2026-10-21; built 2026-10-23) ====
+   While Dave types, #hp-nav rides above the keyboard: on iPad the floating
+   pill is a system overlay that never shrinks the visual viewport, so
+   focus on a text-entry element is the signal (a fixed 56px — the pill's
+   height plus a breath of air); on iPhone the docked keyboard does shrink
+   the visual viewport, so occlusion drives the lift instead. Take the
+   larger of the two. Only #hp-nav lifts, via the --kb-lift variable
+   composed into its transform; the return is debounced (~150ms) so focus
+   hops field-to-field don't bounce the pair. Only text entry triggers it:
+   textarea, text-like inputs, contenteditable. */
+const KB_LIFT_PILL = 56;
+let kbFocusLift = 0, kbOcclLift = 0, kbReturnTimer = null;
+function applyKbLift(){
+  const lift = Math.max(kbFocusLift, kbOcclLift);
+  document.documentElement.style.setProperty('--kb-lift', lift + 'px');
+}
+function kbIsTextEntry(el){
+  if (!el || el.nodeType !== 1) return false;
+  if (el.isContentEditable) return true;
+  if (el.tagName === 'TEXTAREA') return true;
+  if (el.tagName === 'INPUT') {
+    const t = (el.getAttribute('type') || 'text').toLowerCase();
+    return ['text', 'search', 'email', 'url', 'tel', 'password', 'number'].indexOf(t) >= 0;
+  }
+  return false;
+}
+function kbFocusApplies(){
+  if (window.innerWidth < 640) return true;
+  try { return !!(window.matchMedia && window.matchMedia('(pointer: coarse)').matches); } catch (e) { return false; }
+}
+function initKbLift(){
+  document.addEventListener('focusin', e => {
+    if (!kbFocusApplies() || !kbIsTextEntry(e.target)) return;
+    if (kbReturnTimer) { clearTimeout(kbReturnTimer); kbReturnTimer = null; }
+    kbFocusLift = KB_LIFT_PILL; applyKbLift();
+  });
+  document.addEventListener('focusout', e => {
+    if (!kbIsTextEntry(e.target)) return;
+    if (kbReturnTimer) clearTimeout(kbReturnTimer);
+    kbReturnTimer = setTimeout(() => {
+      kbReturnTimer = null;
+      if (!kbIsTextEntry(document.activeElement)) { kbFocusLift = 0; applyKbLift(); }
+    }, 150);
+  });
+  if (window.visualViewport) {
+    const onVv = () => {
+      const occ = window.innerHeight - window.visualViewport.height - (window.visualViewport.offsetTop || 0);
+      kbOcclLift = occ > 40 ? Math.round(occ) + 12 : 0;
+      applyKbLift();
+    };
+    window.visualViewport.addEventListener('resize', onVv);
+    window.visualViewport.addEventListener('scroll', onVv);
+    onVv();
+  }
+}
 /* The strip is Recents, worn vertically (Jonny's resting-state crit,
    2026-10-22): the Recents button stays pinned in the first top-left slot
    (#recents-btn), favorites pin below it, then the recent buddies
@@ -11860,7 +11983,7 @@ function renderStrip(){
     sortSiblingsByOrder(ROOT_ORDER.filter(id => { const b = byId[id]; return b && effParents(b).length === 0; }), '__root__').forEach(id => { if (!seen.has(id)) { seen.add(id); order.push(id); } });
   }
   const door = '<button type="button" class="strip-ic strip-door" id="strip-door" title="All buddies" aria-label="Show all buddies"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/></svg></button>';
-  strip.innerHTML = order.map(id => { const b = byId[id]; return '<button type="button" class="strip-ic' + (S.projectId === id ? ' sel' : '') + (isFavorite(id) ? ' fav' : '') + '" data-buddy="' + id + '" title="' + escHtml(dispName(b)) + '" aria-label="' + escHtml(dispName(b)) + '"><span aria-hidden="true">' + escHtml(buddyDisplayIcon(b) || b.icon || '•') + '</span></button>'; }).join('') + door;
+  strip.innerHTML = order.map(id => { const b = byId[id]; return '<button type="button" class="strip-ic' + ((S.projectId || (document.body.classList.contains('first-open') ? ROOT_ID : null)) === id ? ' sel' : '') + (isFavorite(id) ? ' fav' : '') + '" data-buddy="' + id + '" title="' + escHtml(dispName(b)) + '" aria-label="' + escHtml(dispName(b)) + '"><span aria-hidden="true">' + escHtml(buddyDisplayIcon(b) || b.icon || '•') + '</span></button>'; }).join('') + door;
 }
 /* Closed on open (verdict section 5): at phone widths a fresh load or a
    deep link selects the buddy and puts its homepage on the canvas — the
@@ -11868,6 +11991,15 @@ function renderStrip(){
 function phoneBuddyLanding(id){
   if (!byId[id]) { show(S.sel || 'view:tree'); return; }
   selectBuddy(id);
+  show('view:project', false);
+}
+/* First open (Jonny's first-open crit, 2026-10-23): a device with no stored
+   state lands on Astro's homepage — the chief of staff is the front door —
+   with the Welcome Card at its head (see buildWelcomeCard). Deliberately
+   NOT selectBuddy(): no visit is recorded, so the strip keeps its roots
+   seed and recency stays Dave's alone. The pre-app boot script sets
+   body.first-open when buddyTree.v3 is absent at parse time. */
+function firstOpenLanding(){
   show('view:project', false);
 }
 /* The View pill (phone resting state): the rail's view control, wearing
@@ -13567,10 +13699,12 @@ refreshViews();
 (function initRoute(){
   // Dave 2026-10-15: seed the initial history.state so the first back/forward
   // traversal carries a state object (replaceState = no extra entry).
-  try { history.replaceState(navState(), '', locHash() || hashFor(S.sel || 'view:tree')); } catch (e) {}
+  const incomingHash = locHash();
+  try { history.replaceState(navState(), '', incomingHash || hashFor(S.sel || 'view:tree')); } catch (e) {}
   const m = locHash().match(/^#\/(buddy:[^\/]+|view:[^\/]+|plan:[^\/]+)(\/standalone)?$/);
-  if (m) { document.body.classList.toggle('standalone', !!m[2]); if (m[1].indexOf('buddy:') === 0 && !m[2] && isDrawerNav()) phoneBuddyLanding(m[1].slice(6)); else show(m[1], false); }
+  if (m) { document.body.classList.toggle('standalone', !!m[2]); if (!m[2] && !incomingHash && m[1] === 'view:tree' && document.body.classList.contains('first-open')) firstOpenLanding(); else if (m[1].indexOf('buddy:') === 0 && !m[2] && isDrawerNav()) phoneBuddyLanding(m[1].slice(6)); else show(m[1], false); }
   else if (isDrawerNav() && S.sel && S.sel.indexOf('buddy:') === 0 && !document.body.classList.contains('standalone')) phoneBuddyLanding(S.sel.slice(6));
+  else if (document.body.classList.contains('first-open')) firstOpenLanding();
   else show(S.sel || 'view:tree');
   window.addEventListener('hashchange', () => {
     const mm = locHash().match(/^#\/(buddy:[^\/]+|view:[^\/]+|plan:[^\/]+)(\/standalone)?$/);
@@ -13636,6 +13770,10 @@ initNewBuddyFab();
 initEdgeSwipeOpen();
 initPanelSwipeGestures();
 initPhoneDocks();
+initKbLift();
+/* First paint has settled: release the boot-hold so transitions live again. */
+requestAnimationFrame(() => requestAnimationFrame(() => document.body.classList.remove('boot-hold')));
+setTimeout(() => document.body.classList.remove('boot-hold'), 600);
 initFind();
 initVersionCheck();
 initPullToRefresh();
@@ -13671,6 +13809,7 @@ syncRailCurView();
 </head>
 <body>
 <script>try{var _s=JSON.parse(localStorage.getItem('buddyTree.v3')||'{}');if(window.matchMedia&&window.matchMedia('(min-width:640px)').matches){if(_s.sbClosed)document.body.classList.add('sb-closed');if(_s.bpCollapsed)document.body.classList.add('bp-collapsed');}}catch(e){}</script>
+<script>try{if(window.matchMedia&&window.matchMedia('(max-width:639px)').matches)document.body.classList.add('boot-hold');if(!localStorage.getItem('buddyTree.v3'))document.body.classList.add('first-open');}catch(e){}</script>
 <div class="app">
 <button id="menu-btn" aria-label="Open sidebar">\u203a</button>
 <button type="button" id="panel-open" title="Open buddy details" aria-label="Open buddy details">
