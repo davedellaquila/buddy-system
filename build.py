@@ -5055,6 +5055,10 @@ function applyPanelWidth(){
 function applySbWidth(){
   const sb = document.getElementById('sidebar');
   if (!sb) return;
+  if (window.matchMedia('(max-width:639px)').matches) {
+    sb.style.width = ''; sb.style.flex = ''; /* phone geometry is CSS-owned (66px rail / open dock): the desktop drag width must never land inline here */
+    return;
+  }
   if (document.body.classList.contains('sb-closed')) {
     sb.style.width = '64px'; sb.style.flex = '0 0 64px';
     return;
