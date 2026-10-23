@@ -243,6 +243,18 @@
   .attn-status { font-size: 13px; color: var(--muted); margin-top: 8px; min-height: 18px; }
   .attention li.attn.resolved { opacity: .6; }
   .attention li.attn.resolved .attn-actions { display: none; }
+
+  /* ---- maintenance schedule ---- */
+  .maint-wrap { overflow-x: auto; margin: 4px 0 10px; }
+  table.maint { border-collapse: collapse; width: 100%; font-size: 14px; line-height: 1.45; }
+  table.maint th, table.maint td { border: 1px solid var(--border); padding: 8px 10px; text-align: left; vertical-align: top; }
+  table.maint th { background: var(--card); color: var(--muted); font-size: 12px; text-transform: uppercase; letter-spacing: .06em; }
+  table.maint td.item { font-weight: 600; white-space: nowrap; }
+  .st { font-weight: 600; }
+  .st-ok { color: #3d9970; }
+  .st-due { color: #d9930d; }
+  .st-open { color: #d9534f; }
+  .maint-note { font-size: 13px; color: var(--muted); }
 </style>
 </head>
 <body>
@@ -1930,7 +1942,7 @@ z
     <p class="sunrise-note">Official Fiddletown sunrise — Dave sees it from the hot tub about 13 minutes later. Chart by <strong>Charts Buddy</strong>, styled per Jonny's verdict. Refreshed 2026-10-12.</p>
   </div>
 
-  <h2>🔁 Recurring chores <span class="rule"></span></h2>
+  <h2 id="recurring-chores">🔁 Recurring chores <span class="rule"></span></h2>
   <p class="chores-dek">The standing maintenance rhythm for the cabin — what repeats, and how often. Nudges for the timed ones live with Astro.</p>
   <h3 class="chores-when">Weekly</h3>
   <div class="cards">
@@ -1976,6 +1988,34 @@ z
       <p>Spring: RM43 one-shot application (~$150/yr budget).</p>
     </div>
   </div>
+
+  <h2>🔧 Maintenance schedule <span class="rule"></span></h2>
+  <p>Every item at the cabin, what it needs, and how often. Started Oct 23, 2026 at Dave's direction — my children report their items in and I keep this page current. Rows marked <em>report pending</em> are waiting on the owning buddy; frequencies with a † are standard-practice drafts until the owner confirms them. The week-to-week rhythm view is <a href="#recurring-chores">🔁 Recurring chores</a> above.</p>
+  <div class="maint-wrap">
+  <table class="maint">
+    <tr><th>Item</th><th>What needs doing</th><th>How often</th><th>Owner</th><th>Last done / status</th></tr>
+    <tr><td class="item">Hot tub — Sundance Optima 880</td><td>Water treatment (Saturdays); filter visual check; filter wash — pull, rinse, rotate (1st of month); cover care</td><td>Weekly treatment + check; monthly wash</td><td><a href="https://davedellaquila.github.io/buddy-system/hot-tub-buddy/">♨️ Hot Tub Buddy</a></td><td>Last treatment Sep 29, 2026 · <span class="st st-due">detailed report pending</span></td></tr>
+    <tr><td class="item">String trimmer — DeWalt DCST925B</td><td>Line/spool check (.080&quot; only), head clean, battery care</td><td>As needed / seasonal †</td><td><a href="https://davedellaquila.github.io/buddy-system/trimmer-buddy/">🌿 Trimmer Buddy</a></td><td><span class="st st-due">Report pending</span> · .080&quot; line reorder open</td></tr>
+    <tr><td class="item">HVAC</td><td>Filter check/change; professional service</td><td>Filter quarterly †; service yearly †</td><td>🏕️ Cabin Buddy</td><td>Hockaday visit Oct 7, 2026 — <span class="st st-open">diagnosis not yet reported</span></td></tr>
+    <tr><td class="item">Well + pressure tank</td><td>Pressure &amp; leak check; watch the known leak by the tank</td><td>Yearly † + ongoing watch</td><td>🏕️ Cabin Buddy</td><td><span class="st st-open">Open:</span> leak by the tank — photo email to Mike McGee drafted, not sent</td></tr>
+    <tr><td class="item">Water filtration (utility room)</td><td>Cartridge change — spares from Amazon, keep one on hand. Clear-housing upgrade is separate</td><td>Every 3 months</td><td>🏕️ Cabin Buddy</td><td><span class="st st-due">Housing upgrade waiting on Dave's photo + measurements</span></td></tr>
+    <tr><td class="item">Log exterior</td><td>Inspect finish + caulking; maintenance coat — Proluxe Clear Satin over Cetol SRD 077 Cedar</td><td>Inspect yearly; coat ~2–3 yrs †</td><td>🏕️ Cabin Buddy</td><td><span class="st st-ok">Done Sep 2025</span> — finish + Bora-Care treatment</td></tr>
+    <tr><td class="item">Deck door hinges (adjustable)</td><td>Clean barrels/washers; silicone or light lithium lube; check every mounting screw is snug</td><td>1–2× / year</td><td>🏕️ Cabin Buddy</td><td>Hinges identified Oct 23, 2026 · <span class="st st-due">first service due</span></td></tr>
+    <tr><td class="item">Trash</td><td>Bins to the curb — ACES Waste Services pickup</td><td>Weekly, Thursdays by ~9:30 AM</td><td>🏕️ Cabin Buddy</td><td>Standing rhythm</td></tr>
+    <tr><td class="item">Street cleanup</td><td>Weed-whack the street, pick up pine needles</td><td>Weekly (weekends)</td><td>🏕️ Cabin Buddy</td><td>Standing rhythm</td></tr>
+    <tr><td class="item">Fire-season weed clearance</td><td>RM43 one-shot application (~$150/yr budget)</td><td>Spring, yearly</td><td>🏕️ Cabin Buddy</td><td>Seasonal</td></tr>
+    <tr><td class="item">Leaf burn piles</td><td>Fall burn piles</td><td>Fall, seasonal</td><td>🏕️ Cabin Buddy</td><td>Seasonal</td></tr>
+    <tr><td class="item">Two-post car lift</td><td>Inspect cables, anchors, hydraulics, safety locks</td><td>Yearly †</td><td>🏕️ Cabin Buddy</td><td>Not on record</td></tr>
+    <tr><td class="item">Polaris Ranger 700</td><td>Oil + fluids, battery, tires</td><td>Yearly / seasonal †</td><td>🏕️ Cabin Buddy</td><td>Not on record</td></tr>
+    <tr><td class="item">Enclosed trailer</td><td>Wheel bearings, tires, lights</td><td>Bearings yearly †</td><td>🏕️ Cabin Buddy</td><td>Not on record</td></tr>
+    <tr><td class="item">Downstairs gym</td><td>Wipe down equipment; check bolts, cables, bike trainer</td><td>Twice a year †</td><td>🏕️ Cabin Buddy</td><td>Not on record</td></tr>
+    <tr><td class="item">Smoke &amp; CO alarms</td><td>Test; replace batteries</td><td>Test monthly †; batteries yearly †</td><td>🏕️ Cabin Buddy</td><td>Not on record</td></tr>
+    <tr><td class="item">Smart switches &amp; media</td><td>Leviton switches, Apple TV, HomePods, PS4 — software updates as offered</td><td>As needed</td><td>🏕️ Cabin Buddy</td><td>—</td></tr>
+    <tr><td class="item">Party readiness</td><td colspan="2">Domain report requested Oct 23, 2026</td><td><a href="https://davedellaquila.github.io/buddy-system/party-buddy/">🎉 Party Buddy</a></td><td><span class="st st-due">Report pending</span></td></tr>
+    <tr><td class="item">Hiking gear &amp; trails</td><td colspan="2">Domain report requested Oct 23, 2026</td><td><a href="https://davedellaquila.github.io/buddy-system/hiking-buddy/">🥾 Hiking Buddy</a></td><td><span class="st st-due">Report pending</span></td></tr>
+  </table>
+  </div>
+  <p class="maint-note">Child reports fold in as they land — Hot Tub and Trimmer own their rows outright once they confirm tasks and frequencies. Something missing from this list? Brain-dump it below and I'll add it.</p>
 
   <h2>Needs Dave's attention <span class="rule"></span></h2>
   <ul class="attention">
