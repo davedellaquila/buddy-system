@@ -5165,6 +5165,14 @@ function savePanelFloat(){
   save();
 }
 function syncPanelFrame(){
+  /* The gripper sync rides EVERY call, ahead of every early return: in
+     Anchored mode panelFloatable() is always false, so when applySidebarStyle
+     docks a floated panel this is the only sync point on the path — without
+     it the strip kept its floating-era hidden state and the docked right
+     panel could not be resized (Dave, 2026-10-23). It also cannot wait for
+     the #bp-frame guard below: the frame is a JS-created element and the
+     strip's visibility must never depend on its existence. */
+  try { syncBpResize(); } catch (e) {}
   const fr = document.getElementById('bp-frame');
   const vb = document.getElementById('view-buddy');
   if (!fr || !vb) return;
