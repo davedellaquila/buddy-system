@@ -249,6 +249,11 @@ body.sb-closed #main .zoombar{left:calc(50% + 38px)}
 .sb-search-sticky #buddy-search{
   width:100%;box-sizing:border-box;background:var(--bg);border:1px solid var(--border);
   color:var(--text);border-radius:8px;padding:7px 30px 7px 10px;font-size:.8125rem}
+/* Dave 2026-10-23: designed focus ring for the buddy search — replaces the browser
+   default (chunky double blue glow) with the house input language (.notes:focus):
+   accent border + one slim soft halo hugging the field's own radius. */
+#buddy-search:focus{outline:none;border-color:var(--accent);
+  box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 22%,transparent)}
 .sb-search-wrap{position:relative;display:flex;align-items:center}
 #buddy-search-clear{position:absolute;right:6px;top:50%;transform:translateY(-50%);border:none;background:transparent;color:var(--muted);font-size:1.125rem;line-height:1;cursor:pointer;padding:4px 8px;border-radius:6px}
 /* Dave 2026-10-16: kill the native search clear button — we have our own × (#buddy-search-clear) */
