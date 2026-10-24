@@ -49,6 +49,13 @@ NEW_CSS = """
   --shadow:rgba(0,0,0,.5); --shadow-soft:rgba(0,0,0,.3);
   --scrim:rgba(0,0,0,.6);
   --canvas:color-mix(in srgb, var(--bg) 97.5%, black); /* whisper-dark chart canvas (Jonny, 2026-10-11) */
+  /* THE gripper dot, defined ONCE (Dave 2026-10-23: "these grippers should
+     all look alike. just dots"). Every grip/drag surface consumes these two
+     vars — same dot, same 7px pitch — always with background-position:0 0
+     so dots land whole (the build-20261023.2009 panel reference). The dot's
+     color still flows through --gripdot, so hover/active states are unchanged. */
+  --grip-tile:7px;
+  --grip-dot:radial-gradient(circle, var(--gripdot, color-mix(in srgb, var(--text2) 78%, var(--border))) 1.5px, transparent 1.6px);
 }
 html.light{
   color-scheme:light;
@@ -644,8 +651,8 @@ body.sb-closed #pane-toggles .ptoggle{padding:6px 4px}
    a 2x3 cluster centered in the 22px hit box; the gripper is the drag handle */
 .ledger-grip{flex:0 0 auto;width:22px;height:22px;align-self:center;cursor:grab;touch-action:none;position:relative;border-radius:6px}
 .ledger-grip::after{content:'';position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:14px;height:21px;
-  background-image:radial-gradient(circle,var(--gripdot,color-mix(in srgb,var(--text2) 78%,var(--border))) 1.5px,transparent 1.6px);
-  background-size:7px 7px;background-position:center;background-repeat:repeat}
+  background-image:var(--grip-dot);
+  background-size:var(--grip-tile) var(--grip-tile);background-position:0 0;background-repeat:repeat}
 .ledger-row:hover .ledger-grip::after{--gripdot:var(--text2)}
 .ledger-grip:active{cursor:grabbing}
 .ledger-grip:active::after{--gripdot:var(--accent)}
@@ -731,8 +738,8 @@ body.sb-closed #pane-toggles .ptoggle{padding:6px 4px}
   background:var(--bg);border-top:1px solid var(--border);border-bottom:1px solid var(--border);
   touch-action:none;z-index:4}
 #tree-split .split-grip{width:35px;height:14px;
-  background-image:radial-gradient(circle,var(--gripdot,color-mix(in srgb,var(--text2) 78%,var(--border))) 1.5px,transparent 1.6px);
-  background-size:7px 7px;background-position:center;background-repeat:repeat}
+  background-image:var(--grip-dot);
+  background-size:var(--grip-tile) var(--grip-tile);background-position:0 0;background-repeat:repeat}
 #tree-split:hover .split-grip{--gripdot:var(--text2)}
 #tree-split:active .split-grip{--gripdot:var(--accent)}
 /* Orphan pane mini mode (Dave, 2026-10-13): at minimum split height, vertically center
@@ -795,8 +802,8 @@ input[type=range].zrange::-moz-range-thumb{width:16px;height:16px;border-radius:
   cursor:pointer;display:none;align-items:center;justify-content:center;
   padding:0;box-shadow:none}
 #sb-tab::after{content:'';width:14px;height:35px;flex:none;
-  background-image:radial-gradient(circle,var(--gripdot,color-mix(in srgb,var(--text2) 78%,var(--border))) 1.5px,transparent 1.6px);
-  background-size:7px 7px;background-position:center;background-repeat:repeat}
+  background-image:var(--grip-dot);
+  background-size:var(--grip-tile) var(--grip-tile);background-position:0 0;background-repeat:repeat}
 #sb-tab:hover{background:transparent}
 #sb-tab:hover::after{--gripdot:var(--text2)}
 #sb-tab:active::after{--gripdot:var(--accent)}
@@ -827,8 +834,8 @@ body.sb-closed #sb-tab{display:none !important}
    center), so the cluster sits at the same offset from that edge on
    both panels, mirrored. */
 #sb-resize::after,#bp-resize::after{content:'';width:14px;height:35px;flex:none;
-  background-image:radial-gradient(circle,var(--gripdot,color-mix(in srgb,var(--text2) 78%,var(--border))) 1.5px,transparent 1.6px);
-  background-size:7px 7px;background-position:0 0;background-repeat:repeat}
+  background-image:var(--grip-dot);
+  background-size:var(--grip-tile) var(--grip-tile);background-position:0 0;background-repeat:repeat}
 #sb-resize:hover::after,#bp-resize:hover::after{--gripdot:var(--text2)}
 #sb-resize:active::after,#bp-resize:active::after{--gripdot:var(--accent)}
 #sb-resize:hover,#bp-resize:hover{background:transparent}
@@ -1285,8 +1292,8 @@ body.ub-nomotion #update-banner{transition:none}
    the dots moves the sheet exactly like dragging the head itself. */
 #field-settings .fset-grip{position:absolute;top:6px;left:50%;transform:translateX(-50%);width:21px;height:14px;cursor:move;touch-action:none}
 #field-settings .fset-grip::after{content:'';display:block;width:21px;height:14px;
-  background-image:radial-gradient(circle,var(--gripdot,color-mix(in srgb,var(--text2) 78%,var(--border))) 1.5px,transparent 1.6px);
-  background-size:7px 7px;background-position:center;background-repeat:repeat}
+  background-image:var(--grip-dot);
+  background-size:var(--grip-tile) var(--grip-tile);background-position:0 0;background-repeat:repeat}
 #field-settings .fset-head:hover .fset-grip::after{--gripdot:var(--text2)}
 #field-settings .fset-head:active .fset-grip::after{--gripdot:var(--accent)}
 #field-settings .fset-body{padding:0 20px 16px;overflow-y:auto;flex:1 1 auto;min-height:0}
@@ -1459,7 +1466,7 @@ body:has(#token-pill) #view-buddy.sheet .bp-close-x{right:148px}
    This is the touch path for reordering — HTML5 DnD can't start from touch. */
 #view-nav .navbtn .navgrip{cursor:grab;line-height:1;border-radius:6px;background:transparent;width:22px;height:22px;position:relative;
   margin-left:auto;touch-action:none;flex:none}
-#view-nav .navbtn .navgrip::after{content:'';position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:14px;height:21px;background-image:radial-gradient(circle,var(--gripdot,color-mix(in srgb,var(--text2) 78%,var(--border))) 1.5px,transparent 1.6px);background-size:7px 7px;background-position:center;background-repeat:repeat}
+#view-nav .navbtn .navgrip::after{content:'';position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:14px;height:21px;background-image:var(--grip-dot);background-size:var(--grip-tile) var(--grip-tile);background-position:0 0;background-repeat:repeat}
 #view-nav .navbtn .navgrip:hover{background:transparent}
 #view-nav .navbtn .navgrip:hover::after{--gripdot:var(--text2)}
 #view-nav .navbtn .navgrip:active{cursor:grabbing;background:transparent}
@@ -1948,8 +1955,8 @@ body.bp-collapsed #bp-rail{display:flex}
 #bp-grip{--gripdot:color-mix(in srgb, var(--text2) 78%, var(--border));position:absolute;top:5px;left:50%;transform:translateX(-50%);z-index:2;
   width:76px;height:22px;pointer-events:auto;cursor:grab;touch-action:none;background:transparent}
 #bp-grip::after{content:'';position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:70px;height:14px;
-  background-image:radial-gradient(circle, var(--gripdot) 1.5px, transparent 1.6px);
-  background-size:7px 7px;background-position:center;background-repeat:repeat}
+  background-image:var(--grip-dot);
+  background-size:var(--grip-tile) var(--grip-tile);background-position:0 0;background-repeat:repeat}
 #bp-grip:hover{--gripdot:var(--text2)}
 #bp-grip:active{--gripdot:var(--accent);cursor:grabbing}
 /* Unified panel style (Dave, 2026-10-20): the sidebar gets the same float
@@ -1963,8 +1970,8 @@ body.bp-collapsed #bp-rail{display:flex}
 #sb-grip{--gripdot:color-mix(in srgb, var(--text2) 78%, var(--border));position:absolute;top:5px;left:50%;transform:translateX(-50%);z-index:2;
   width:76px;height:22px;pointer-events:auto;cursor:grab;touch-action:none;background:transparent}
 #sb-grip::after{content:'';position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:70px;height:14px;
-  background-image:radial-gradient(circle, var(--gripdot) 1.5px, transparent 1.6px);
-  background-size:7px 7px;background-position:center;background-repeat:repeat}
+  background-image:var(--grip-dot);
+  background-size:var(--grip-tile) var(--grip-tile);background-position:0 0;background-repeat:repeat}
 #sb-grip:hover{--gripdot:var(--text2)}
 #sb-grip:active{--gripdot:var(--accent);cursor:grabbing}
 #sidebar.sb-floating{bottom:auto;border-radius:18px}
@@ -1987,8 +1994,8 @@ body:has(#sidebar.sb-floating) #sb-resize{display:none}
    accent while dragging. */
 .bp-rsz{--gripdot:color-mix(in srgb, var(--text2) 78%, var(--border))}
 .bp-rsz::after{content:"";position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);pointer-events:none;
-  background-image:radial-gradient(circle, var(--gripdot) 1.5px, transparent 1.6px);
-  background-size:7px 7px;background-position:center}
+  background-image:var(--grip-dot);
+  background-size:var(--grip-tile) var(--grip-tile);background-position:0 0}
 .bp-rsz[data-dir="e"]::after,.bp-rsz[data-dir="w"]::after{width:14px;height:35px}
 .bp-rsz[data-dir="n"]::after,.bp-rsz[data-dir="s"]::after{width:35px;height:14px}
 .bp-rsz[data-dir="ne"]::after,.bp-rsz[data-dir="nw"]::after,.bp-rsz[data-dir="se"]::after,.bp-rsz[data-dir="sw"]::after{display:none}
@@ -2025,8 +2032,8 @@ body:has(#sidebar.sb-floating) #sb-resize{display:none}
     body.glass-panels #views-sec{background:var(--hover)}
     #views-resize{height:12px;margin:0 -14px;cursor:ns-resize;touch-action:none;position:relative}
     #views-resize::after{content:"";position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:21px;height:14px;
-      background-image:radial-gradient(circle,var(--gripdot,color-mix(in srgb,var(--text2) 78%,var(--border))) 1.5px,transparent 1.6px);
-      background-size:7px 7px;background-position:center;background-repeat:repeat}
+      background-image:var(--grip-dot);
+      background-size:var(--grip-tile) var(--grip-tile);background-position:0 0;background-repeat:repeat}
     #views-resize:hover::after{--gripdot:var(--text2)}
     #views-resize:active::after{--gripdot:var(--accent)}
     body.sb-closed #views-resize{display:none}
@@ -2125,7 +2132,7 @@ body:has(#token-pill) #bp-close-x.bpx-on{right:148px}
 #field-settings .fset-insert{position:absolute;height:0;margin:0;border:0;border-top:3px dashed var(--accent);pointer-events:none;z-index:5}
 /* Job O: Org Chart zoom cluster gripper — dots only, small tier. */
 .oc-zgrip{flex:0 0 auto;width:22px;height:40px;cursor:grab;touch-action:none;position:relative;border-radius:6px}
-.oc-zgrip::after{content:'';position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:14px;height:21px;background-image:radial-gradient(circle,var(--gripdot,color-mix(in srgb,var(--text2) 78%,var(--border))) 1.5px,transparent 1.6px);background-size:7px 7px;background-position:center;background-repeat:repeat}
+.oc-zgrip::after{content:'';position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:14px;height:21px;background-image:var(--grip-dot);background-size:var(--grip-tile) var(--grip-tile);background-position:0 0;background-repeat:repeat}
 .oc-zgrip:hover::after{--gripdot:var(--text2)}
 .oc-zgrip:active{cursor:grabbing}
 .oc-zgrip:active::after{--gripdot:var(--accent)}
@@ -2258,8 +2265,8 @@ body.sb-anchored:has(#main.homepage-mode):not(.bp-collapsed):has(#view-buddy.pan
 .proj-grip{display:inline-block;flex:0 0 auto;align-self:center;vertical-align:middle;width:22px;height:22px;
   cursor:grab;touch-action:none;position:relative;border-radius:6px}
 .proj-grip::after{content:'';position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:14px;height:21px;
-  background-image:radial-gradient(circle,var(--gripdot,color-mix(in srgb,var(--text2) 78%,var(--border))) 1.5px,transparent 1.6px);
-  background-size:7px 7px;background-position:center;background-repeat:repeat}
+  background-image:var(--grip-dot);
+  background-size:var(--grip-tile) var(--grip-tile);background-position:0 0;background-repeat:repeat}
 .proj-row-head:hover .proj-grip::after{--gripdot:var(--text2)}
 .proj-grip:active{cursor:grabbing}
 .proj-grip:active::after{--gripdot:var(--accent)}
