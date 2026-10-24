@@ -331,6 +331,10 @@ Build: `build.py` generates `index.html` from `buddies.json` + `plans.json`.
   segmented control; detail opens as a right-docked side sheet (380px).
 - **Large (>1100px)**: tri-pane with persistent detail panel (400px).
 - **Keyboard**: arrows move between buddies, Esc closes the detail panel.
+  **⌘F** toggles Find (the same action as the footer Find button), and
+  **⌘I** toggles the info panel — collapse/expand, or open it when no
+  buddy panel is up. Both work even when a buddy homepage iframe has
+  focus (the iframe forwards the chords to the parent chrome).
 
 ## Known limitations / follow-ups
 

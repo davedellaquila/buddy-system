@@ -5827,6 +5827,12 @@ function renderProjectView(){
             document.dispatchEvent(new KeyboardEvent('keydown', {key: e.key, bubbles: true, cancelable: true}));
             e.preventDefault();
           }
+          /* Dave 2026-10-24: ⌘F / ⌘I pressed while the homepage iframe has
+             focus still drive the parent chrome's Find / info panel. */
+          if (e.metaKey && !e.ctrlKey && !e.altKey && ['f','i'].includes((e.key || '').toLowerCase())) {
+            document.dispatchEvent(new KeyboardEvent('keydown', {key: e.key, metaKey: true, bubbles: true, cancelable: true}));
+            e.preventDefault();
+          }
         });
         // Same-origin homepage: bind pull-to-refresh inside the iframe so the
         // gesture works while a buddy homepage is showing (cross-origin fails
@@ -12118,6 +12124,22 @@ function openFind(){
 }
 function closeFind(){ document.body.classList.remove('find-open'); }
 function toggleFind(){ if (isFindOpen()) closeFind(); else openFind(); }
+/* Dave 2026-10-24: keyboard map — ⌘F is the footer Find icon (toggleFind),
+   ⌘I toggles the info panel (collapse/expand, or open it like #panel-open). */
+function toggleInfoPanel(){
+  const vb = document.getElementById('view-buddy');
+  const panelActive = !!(vb && vb.classList.contains('active') && (vb.classList.contains('panel') || vb.classList.contains('sheet')));
+  if (panelActive) { setPanelCollapsed(!document.body.classList.contains('bp-collapsed')); return; }
+  if (document.body.classList.contains('bp-collapsed')) setPanelCollapsed(false);
+  const id = (S.projectId && byId[S.projectId]) ? S.projectId : ROOT_ID;
+  openBuddy(id);
+}
+document.addEventListener('keydown', function(e){
+  if (!e.metaKey || e.ctrlKey || e.altKey || e.repeat) return;
+  const k = (e.key || '').toLowerCase();
+  if (k === 'f') { e.preventDefault(); toggleFind(); }
+  else if (k === 'i') { e.preventDefault(); toggleInfoPanel(); }
+});
 function pickFindResult(id){
   closeFind();
   if (!byId[id]) return;
@@ -13843,7 +13865,7 @@ syncRailCurView();
 <script>try{if(window.matchMedia&&window.matchMedia('(max-width:639px)').matches)document.body.classList.add('boot-hold');if(!localStorage.getItem('buddyTree.v3'))document.body.classList.add('first-open');}catch(e){}</script>
 <div class="app">
 <button id="menu-btn" aria-label="Open sidebar">\u203a</button>
-<button type="button" id="panel-open" title="Open buddy details" aria-label="Open buddy details">
+<button type="button" id="panel-open" title="Open buddy details (⌘I)" aria-label="Open buddy details">
   <span class="pi-serif" aria-hidden="true">i</span>
 </button>
 <button type="button" id="recents-btn" title="Recent buddies" aria-label="Recent buddies">
@@ -13891,7 +13913,7 @@ syncRailCurView();
   <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><polyline points="9 14 4 9 9 4" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M20 20v-7a4 4 0 0 0-4-4H4" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
 </button>
 <div id="hp-nav" role="group" aria-label="Previous and next buddy homepage">
-<button type="button" id="hp-find" title="Find a buddy" aria-label="Find a buddy">
+<button type="button" id="hp-find" title="Find a buddy (⌘F)" aria-label="Find a buddy">
   <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="2.4"/><path d="M15.5 15.5L21 21" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>
 </button>
 <button type="button" id="hp-prev" title="Previous homepage" aria-label="Previous buddy homepage">
