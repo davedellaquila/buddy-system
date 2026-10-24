@@ -213,6 +213,34 @@ h2 { font-size: 22px; margin: 32px 0 16px; }
 .rf-panel .rf-editor { margin-top: 4px; }
 .rf-panel .rf-fstatus { margin-top: 8px; }
 
+/* ---- Fireplace Buddy custom sections (charts + stove specs) ---- */
+.section-sub { color: var(--muted); font-size: 14px; margin-bottom: 16px; }
+.chart-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px 20px 8px;
+  margin-bottom: 8px;
+  overflow-x: auto;
+}
+.spec-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 12px;
+  margin-bottom: 8px;
+}
+.spec {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px 16px;
+}
+.spec-label { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; margin-bottom: 4px; }
+.spec-value { font-size: 18px; font-weight: 700; }
+.spec-note { font-size: 12px; color: var(--muted); margin-top: 2px; }
+.attn.urgent { border-left-color: #c92a2a; }
+.last-updated { color: var(--muted); font-size: 13px; text-align: center; margin-top: 24px; font-style: italic; }
+
 </style>
 </head>
 <body>
@@ -225,6 +253,76 @@ h2 { font-size: 22px; margin: 32px 0 16px; }
 </div>
 
 <div class="mission">Keeps the Fiddletown cabin fireplace burning — wood supply, chimney, winter readiness.</div>
+
+<h2>Are we ready for winter?</h2>
+<p class="section-sub">The one number that matters — cords on hand vs. what the season will ask for. Burning season is on: the 36-Elite ran nearly non-stop the week of Oct 17–24 and worked great, so the ready pile is drawing down for real now.</p>
+<div class="chart-card">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 300" width="100%" role="img" aria-label="Winter wood readiness" style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;max-width:720px;display:block">
+<title>Winter Wood Readiness — cords on hand vs projected need (estimates)</title>
+<text x="28" y="34" font-size="26" font-weight="700" fill="var(--text)">~2.5 of ~5 cords</text>
+<text x="28" y="58" font-size="13.5" fill="var(--muted)" font-style="italic">projected winter need — all figures are estimates until Dave confirms</text>
+<rect x="28.0" y="130" width="199.2" height="44" rx="8" fill="#2f9e44"/>
+<text x="127.6" y="200.0" text-anchor="middle" font-size="13.5" font-weight="600" fill="var(--text)">Ready to burn</text>
+<text x="127.6" y="220.0" text-anchor="middle" font-size="13" fill="var(--muted)">~1.5 cords</text>
+<rect x="227.2" y="130" width="132.8" height="44" rx="8" fill="#e8890c"/>
+<text x="293.6" y="200.0" text-anchor="middle" font-size="13.5" font-weight="600" fill="var(--text)">In progress</text>
+<text x="293.6" y="220.0" text-anchor="middle" font-size="13" fill="var(--muted)">~1 cords</text>
+<rect x="360.0" y="130" width="332.0" height="44" rx="8" fill="var(--card)" stroke="var(--muted)" stroke-width="1.5" stroke-dasharray="7 5"/>
+<text x="526.0" y="200.0" text-anchor="middle" font-size="13.5" font-weight="600" fill="var(--text)">Still needed</text>
+<text x="526.0" y="220.0" text-anchor="middle" font-size="13" fill="var(--muted)">~2.5 cords</text>
+<line x1="28.0" y1="174" x2="28.0" y2="182" stroke="var(--muted)" stroke-width="1"/>
+<text x="28.0" y="246.0" text-anchor="middle" font-size="10.5" fill="var(--muted)">0</text>
+<line x1="160.8" y1="174" x2="160.8" y2="182" stroke="var(--muted)" stroke-width="1"/>
+<text x="160.8" y="246.0" text-anchor="middle" font-size="10.5" fill="var(--muted)">1</text>
+<line x1="293.6" y1="174" x2="293.6" y2="182" stroke="var(--muted)" stroke-width="1"/>
+<text x="293.6" y="246.0" text-anchor="middle" font-size="10.5" fill="var(--muted)">2</text>
+<line x1="426.4" y1="174" x2="426.4" y2="182" stroke="var(--muted)" stroke-width="1"/>
+<text x="426.4" y="246.0" text-anchor="middle" font-size="10.5" fill="var(--muted)">3</text>
+<line x1="559.2" y1="174" x2="559.2" y2="182" stroke="var(--muted)" stroke-width="1"/>
+<text x="559.2" y="246.0" text-anchor="middle" font-size="10.5" fill="var(--muted)">4</text>
+<line x1="692.0" y1="174" x2="692.0" y2="182" stroke="var(--muted)" stroke-width="1"/>
+<text x="692.0" y="246.0" text-anchor="middle" font-size="10.5" fill="var(--muted)">5</text>
+<text x="28" y="286" font-size="11.5" fill="var(--muted)" font-style="italic">(!) Estimates: burn rate and current stock still open questions — correct me and I re-cut.</text>
+</svg>
+</div>
+
+<h2>The stove</h2>
+<p class="section-sub">Fireplace Xtrordinair 36-Elite (Travis Industries) — from the owner's manual on file.</p>
+<div class="spec-grid">
+<div class="spec"><div class="spec-label">Firebox</div><div class="spec-value">3.7 cu ft</div><div class="spec-note">max log length 24"</div></div>
+<div class="spec"><div class="spec-label">Burn time</div><div class="spec-value">up to 10 hrs</div><div class="spec-note">overnight-capable</div></div>
+<div class="spec"><div class="spec-label">Heats</div><div class="spec-value">2,500 sq ft</div><div class="spec-note">10,300–66,000 BTU/hr</div></div>
+<div class="spec"><div class="spec-label">Blower</div><div class="spec-value">388 CFM</div><div class="spec-note">thermostat-controlled</div></div>
+<div class="spec"><div class="spec-label">Fuel</div><div class="spec-value">Cord wood</div><div class="spec-note">dry &amp; seasoned only</div></div>
+<div class="spec"><div class="spec-label">Chimney rule</div><div class="spec-value">2× / year</div><div class="spec-note">inspect for creosote</div></div>
+</div>
+
+<h2>Chimney watch</h2>
+<p class="section-sub">Twice-yearly inspection per the manual. Reality check (confirmed by Dave, Oct 24): the chimney has <strong>never been swept</strong> in his six years at the cabin — 12 inspections behind. A sweep + Level 2 camera inspection is tracked and being booked; first service by a pro, DIY only for upkeep after.</p>
+<div class="chart-card">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 250" width="100%" role="img" aria-label="Chimney inspection timeline" style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;max-width:720px;display:block">
+<title>Chimney inspections — twice-yearly cadence per the manual</title>
+<text x="72" y="34" font-size="20" font-weight="700" fill="var(--text)">Chimney inspections</text>
+<text x="72" y="56" font-size="13" fill="var(--muted)" font-style="italic">twice a year per the 36-Elite manual</text>
+<line x1="72" y1="120" x2="648" y2="120" stroke="var(--border)" stroke-width="2"/>
+<circle cx="72.0" cy="120" r="11" fill="#c92a2a"/>
+<text x="72.0" y="126" text-anchor="middle" font-size="14" font-weight="700" fill="white">!</text>
+<text x="72.0" y="94.0" text-anchor="middle" font-size="13.5" font-weight="600" fill="var(--text)">Last sweep</text>
+<text x="72.0" y="154.0" text-anchor="middle" font-size="12.5" fill="var(--muted)" font-style="italic">never — 6 years</text>
+<circle cx="216.0" cy="120" r="11" fill="#e8890c"/>
+<text x="216.0" y="94.0" text-anchor="middle" font-size="13.5" font-weight="600" fill="var(--text)">Fall 2026</text>
+<text x="216.0" y="154.0" text-anchor="middle" font-size="12.5" fill="var(--muted)" font-style="italic">booking now</text>
+<circle cx="360.0" cy="120" r="9" fill="var(--card)" stroke="var(--muted)" stroke-width="2"/>
+<text x="360.0" y="94.0" text-anchor="middle" font-size="13.5" font-weight="600" fill="var(--muted)">Spring 2027</text>
+<text x="360.0" y="154.0" text-anchor="middle" font-size="12.5" fill="var(--muted)" font-style="italic">scheduled</text>
+<circle cx="504.0" cy="120" r="9" fill="var(--card)" stroke="var(--muted)" stroke-width="2"/>
+<text x="504.0" y="94.0" text-anchor="middle" font-size="13.5" font-weight="600" fill="var(--muted)">Fall 2027</text>
+<text x="504.0" y="154.0" text-anchor="middle" font-size="12.5" fill="var(--muted)" font-style="italic">scheduled</text>
+<circle cx="648.0" cy="120" r="9" fill="var(--card)" stroke="var(--muted)" stroke-width="2"/>
+<text x="648.0" y="94.0" text-anchor="middle" font-size="13.5" font-weight="600" fill="var(--muted)">Spring 2028</text>
+<text x="648.0" y="154.0" text-anchor="middle" font-size="12.5" fill="var(--muted)" font-style="italic">scheduled</text>
+</svg>
+</div>
 
 
 
@@ -251,6 +349,9 @@ h2 { font-size: 22px; margin: 32px 0 16px; }
 
 <h2>Needs Attention</h2>
 <div class="attn" data-attn-id="mission-review"><div class="attn-text">Mission statement awaiting Dave review</div><div class="attn-date">2026-10-12</div><div class="attn-actions"><button type="button" class="attn-btn primary" data-act="done">Done</button><button type="button" class="attn-btn" data-act="info">Need more info</button></div><div class="attn-status" role="status"></div></div>
+<div class="attn urgent" data-attn-id="chimney-sweep"><div class="attn-text"><strong>Chimney sweep — NEVER done in 6 years.</strong> Confirmed by Dave Oct 24, 2026: no creosote cleaning since he moved in (~2020), so the manual's twice-a-year cadence is 12 inspections behind — and the stove just ran nearly non-stop for a week. Sweep + Level 2 camera inspection is tracked; Amador County vendor research running. First service: professional with camera; possible same-visit add: door gasket (#98500717).</div><div class="attn-date">2026-10-24</div><div class="attn-actions"><button type="button" class="attn-btn primary" data-act="done">Done</button><button type="button" class="attn-btn" data-act="info">Need more info</button></div><div class="attn-status" role="status"></div></div>
+<div class="attn" data-attn-id="door-seal"><div class="attn-text"><strong>Door-seal job (open):</strong> clean the door glass with a plastic razor blade, then replace the door gasket (Travis Industries #98500717, ~$60) — air leak is sooting the glass. Candidate to bundle into the chimney-sweep visit. Plan: docs/door-seal-fix.md in the repo.</div><div class="attn-date">2026-10-21</div><div class="attn-actions"><button type="button" class="attn-btn primary" data-act="done">Done</button><button type="button" class="attn-btn" data-act="info">Need more info</button></div><div class="attn-status" role="status"></div></div>
+<div class="attn" data-attn-id="firewood-backlog"><div class="attn-text"><strong>Firewood backlog:</strong> split the fresh cut → borrow Carl's splitter → stack wet/dry separate → cover the pile. Robert's rhythm: collects Fridays, cuts Saturdays.</div><div class="attn-date">2026-10-12</div><div class="attn-actions"><button type="button" class="attn-btn primary" data-act="done">Done</button><button type="button" class="attn-btn" data-act="info">Need more info</button></div><div class="attn-status" role="status"></div></div>
 
 
 
@@ -268,6 +369,8 @@ h2 { font-size: 22px; margin: 32px 0 16px; }
 </div>
 </section>
 
+
+<p class="last-updated">Fireplace Buddy refresh 2026-10-24 — chimney status confirmed (never swept in 6 years); charts restored after the fleet template regeneration.</p>
 
 <div class="footer">
 Generated 2026-10-24 · Part of the Buddy System<br>
