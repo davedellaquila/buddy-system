@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>🚵 Stumpjumper Buddy — The Stumpjumper's Service Book</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚵</text></svg>">
+<style>
+:root{
+  --bg:#f4f1ec; --paper:#fffdf9; --paper2:#f8f2e7; --text:#241d16; --muted:#756a5c;
+  --card:#fffdf9; --border:#ddd2c0; --accent:#c92a1f; --accent2:#e8590c;
+  --steel:#495057; --ok:#1b7a2e; --warn:#b8860b; --warnbg:#fdf3d7;
+  --shadow:0 10px 30px rgba(80,50,20,.10);
+  --sans:-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --mono:ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#141210; --paper:#1f1b17; --paper2:#1a1613; --text:#ece4d6; --muted:#a89a86;
+    --card:#211c17; --border:#3a322a; --accent:#ff6b5e; --accent2:#ffa94d;
+    --steel:#adb5bd; --ok:#5fd08a; --warn:#e8b93c; --warnbg:#2a230d;
+    --shadow:0 10px 30px rgba(0,0,0,.35);
+  }
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.6;-webkit-text-size-adjust:100%;overflow-x:hidden}
+a{color:var(--accent)}
+.wrap{max-width:960px;margin:0 auto;padding:0 20px 72px}
+/* sticky header */
+.topbar{position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:10px;background:var(--bg);border-bottom:1px solid var(--border);padding:11px 2px;font-size:17px;font-weight:700}
+.topbar .ic{font-size:22px;line-height:1}
+.topbar .sub{margin-left:auto;font-size:12px;font-weight:600;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;text-align:right}
+.crumb{padding:14px 2px 0;font-size:14px}
+.crumb a{color:inherit;opacity:.65;text-decoration:none}
+/* hero */
+.hero{margin-top:18px;background:linear-gradient(160deg,var(--paper),var(--paper2));border:1px solid var(--border);border-left:10px solid var(--accent);border-radius:14px;padding:34px 32px;box-shadow:var(--shadow)}
+.hero .kicker{font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--accent);font-weight:800}
+.hero-flex{display:flex;gap:28px;align-items:flex-start}
+.hero-main{flex:1;min-width:0}
+.hero h1{font-size:clamp(30px,5.5vw,46px);line-height:1.12;margin:10px 0 10px;font-weight:800;letter-spacing:-.01em}
+.hero p.lede{font-size:clamp(16px,2.5vw,19px);color:var(--muted);max-width:62ch}
+.hero .dateline{margin-top:18px;display:flex;flex-wrap:wrap;gap:8px}
+.pill{display:inline-block;border:1px solid var(--border);background:var(--bg);border-radius:999px;padding:5px 12px;font-size:13px;font-weight:600;text-decoration:none;color:var(--text)}
+.pill:hover{border-color:var(--accent)}
+.ringcard{flex:0 0 172px;background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:16px 14px 12px;text-align:center}
+.ringcard svg{width:128px;height:128px;max-width:100%}
+.ringcard .cap{font-size:12.5px;color:var(--muted);margin-top:8px;line-height:1.45}
+.ringcard .cap b{color:var(--text)}
+.hear{margin-top:20px;background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:14px 16px;display:flex;flex-direction:column;gap:8px;max-width:520px}
+.hear .hear-label{font-size:14.5px;font-weight:700}
+.hear .hear-label span{color:var(--muted);font-weight:600;font-size:13px}
+.hear audio{width:100%;height:40px}
+/* stats */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:16px}
+.stat{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px}
+.stat .n{font-size:26px;font-weight:800;line-height:1.1}
+.stat .l{font-size:12px;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);margin-top:5px;font-weight:700}
+.stat .d{font-size:13px;color:var(--muted);margin-top:4px}
+h2{font-size:24px;margin:38px 0 6px;letter-spacing:-.01em}
+.h2sub{color:var(--muted);font-size:14px;margin-bottom:16px;max-width:68ch}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:18px 20px}
+.card h3{font-size:16px;margin-bottom:6px}
+.card p,.card li{font-size:14.5px;color:var(--muted)}
+.card ul{margin-left:18px}
+.card a{font-weight:600;text-decoration:none}
+.card a:hover{text-decoration:underline}
+.emoji{font-size:22px;display:block;margin-bottom:8px}
+/* on the stand — today's job */
+.stand{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px 22px;box-shadow:var(--shadow)}
+.stand-head{display:flex;flex-wrap:wrap;gap:8px;align-items:baseline;justify-content:space-between}
+.stand-head .t{font-size:19px;font-weight:800}
+.stand-head .no{font-family:var(--mono);font-size:13px;color:var(--muted)}
+.steps{list-style:none;margin-top:14px}
+.steps li{display:flex;gap:12px;padding:10px 0;border-top:1px dashed var(--border);font-size:15px}
+.steps li:first-child{border-top:none}
+.steps .mark{flex:0 0 26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;border:2px solid var(--border);background:var(--bg)}
+.steps li.done .mark{border-color:var(--ok);color:var(--ok);font-weight:800}
+.steps li.now .mark{border-color:var(--accent);color:var(--accent);font-weight:800}
+.steps li.wait .mark{color:var(--muted)}
+.steps .what{min-width:0}
+.steps .what b{display:block}
+.steps .what span{color:var(--muted);font-size:13.5px}
+.badge{display:inline-block;font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;border-radius:999px;padding:2px 9px;vertical-align:middle}
+.badge.live{background:var(--accent);color:#fff}
+.badge.tbd{border:1px solid var(--warn);color:var(--warn)}
+/* spec sheet */
+.spec{background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden;box-shadow:var(--shadow)}
+.spec-row{display:flex;flex-wrap:wrap;gap:6px 14px;padding:13px 20px;border-top:1px solid var(--border);align-items:baseline}
+.spec-row:first-child{border-top:none}
+.spec-k{flex:0 0 168px;font-size:12px;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);font-weight:800;padding-top:2px}
+.spec-v{flex:1;min-width:200px;font-size:15.5px;font-weight:600}
+.spec-v .note{display:block;font-weight:400;font-size:13.5px;color:var(--muted)}
+.tag{flex:0 0 auto;font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;border-radius:999px;padding:3px 10px}
+.tag.ok{border:1px solid var(--ok);color:var(--ok)}
+.tag.un{border:1px solid var(--warn);color:var(--warn);background:var(--warnbg)}
+/* open issue */
+.issue{background:var(--card);border:1px solid var(--border);border-left:6px solid var(--accent2);border-radius:0 14px 14px 0;padding:20px 22px;box-shadow:var(--shadow)}
+.issue h3{font-size:19px}
+.issue p{font-size:14.5px;color:var(--muted);margin-top:6px}
+.issue a{font-weight:600}
+.tl{list-style:none;margin-top:14px}
+.tl li{display:flex;gap:12px;padding:9px 0;border-top:1px dashed var(--border);font-size:14.5px}
+.tl li:first-child{border-top:none}
+.tl .when{flex:0 0 86px;font-family:var(--mono);font-size:13px;color:var(--muted);padding-top:2px}
+.tl .what{min-width:0}
+.tl .what span{color:var(--muted)}
+/* service log */
+.log{background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden;box-shadow:var(--shadow)}
+.log-row{display:flex;gap:16px;padding:16px 20px;border-top:1px solid var(--border)}
+.log-row:first-child{border-top:none}
+.log-no{flex:0 0 58px;font-family:var(--mono);font-size:13px;color:var(--muted);padding-top:3px}
+.log-body{min-width:0}
+.log-body .t{font-weight:700;font-size:15.5px}
+.log-body p{font-size:14px;color:var(--muted);margin-top:2px}
+.log-body .who{font-size:12.5px;color:var(--muted);letter-spacing:.04em;text-transform:uppercase;font-weight:700;margin-top:5px}
+/* attention */
+.attn{background:var(--card);border:1px solid var(--border);border-left:5px solid #f59e0b;border-radius:0 12px 12px 0;padding:16px 20px;margin-bottom:12px}
+.attn h3{font-size:16px}
+.attn p{font-size:14.5px;color:var(--muted);margin-top:4px}
+.attn .go{display:inline-block;margin-top:10px;background:var(--accent);color:#fff;border-radius:8px;padding:8px 16px;font-size:13.5px;font-weight:700;text-decoration:none}
+@media (prefers-color-scheme: dark){.attn .go{color:#1d0f0c}}
+/* dump box — canonical, restyled to the workbench */
+.dumpbox{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px 22px;margin-top:16px}
+.dumpbox h2{margin:0 0 6px;font-size:20px}
+.dumpbox-sub{color:var(--muted);font-size:14px;margin-bottom:14px}
+.dumpbox textarea{width:100%;min-height:110px;resize:vertical;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-size:15px;color:var(--text);font-family:var(--sans)}
+.dumpbox textarea:focus{outline:none;border-color:var(--accent)}
+.dumpbox-row{display:flex;align-items:center;gap:12px;margin-top:10px;flex-wrap:wrap}
+.dumpbox-btn{background:var(--accent);color:#fff;border:none;border-radius:8px;padding:9px 22px;font-size:14px;font-weight:600;cursor:pointer}
+@media (prefers-color-scheme: dark){.dumpbox-btn{color:#1d0f0c}}
+.dumpbox-btn:disabled{opacity:.45;cursor:default}
+.dumpbox-btn.saved{background:var(--ok)}
+@media (prefers-color-scheme: dark){.dumpbox-btn.saved{color:#0c1d10}}
+.dumpbox-status{font-size:13px;color:var(--muted)}
+.dumpbox-status.flash{color:var(--ok);font-weight:700}
+.dumpbox-hint{font-size:12px;color:var(--muted);margin-top:8px}
+.dumpbox-token{background:rgba(245,158,11,.09);background:color-mix(in srgb,#f59e0b 9%,var(--bg));border:2px solid #f59e0b;box-shadow:0 0 0 3px rgba(245,158,11,.16);box-shadow:0 0 0 3px color-mix(in srgb,#f59e0b 16%,transparent);border-radius:8px;padding:12px 14px;margin-bottom:12px;font-size:14px}
+.dumpbox-token p{margin-bottom:8px;font-weight:700;color:#cf222e}
+@media (prefers-color-scheme: dark){.dumpbox-token p{color:#ff7b72}}
+.dumpbox-tokenrow{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.dumpbox-tokenrow input{flex:1;min-width:170px;background:var(--card);border:1px solid var(--border);border-radius:8px;padding:7px 10px;font-size:13px;color:var(--text)}
+.dumpbox-tokenrow button{background:transparent;color:var(--accent);border:1px solid var(--accent);border-radius:8px;padding:7px 14px;font-size:13px;font-weight:600;cursor:pointer}
+.dumpbox-tokenrow a{color:var(--accent);font-size:13px}
+.footer{margin-top:48px;padding-top:22px;border-top:1px solid var(--border);color:var(--muted);font-size:13.5px;text-align:center}
+.footer a{text-decoration:none;font-weight:600}
+@media (max-width:760px){
+  .stats{grid-template-columns:1fr 1fr}
+  .grid,.grid3{grid-template-columns:1fr}
+  .hero{padding:26px 22px}
+  .hero-flex{flex-direction:column}
+  .ringcard{flex:none;width:100%;display:flex;align-items:center;gap:16px;text-align:left}
+  .ringcard svg{width:84px;height:84px;flex:0 0 84px}
+  .ringcard .cap{margin-top:0}
+  .spec-k{flex:0 0 118px}
+  .log-row{flex-direction:column;gap:4px}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="crumb"><a href="https://davedellaquila.github.io/buddy-system/bicycle-buddy/">← 🚲 Bicycle Buddy</a></div>
+  <div class="topbar"><span class="ic">🚵</span><span>Stumpjumper Buddy</span><span class="sub">Service book · One bike</span></div>
+
+  <section class="hero">
+    <div class="kicker">Day One · Saturday, October 24, 2026 · On the stand today</div>
+    <div class="hero-flex">
+      <div class="hero-main">
+        <h1>One bike. Known deeply.</h1>
+        <p class="lede">I'm the dedicated caretaker of Dave's Specialized Stumpjumper — its spec sheet, its setup notes, and its unbroken service log. Dave does the wrenching himself; I'm his service book and second memory, not his instructor. Every part identified, every job logged, every quirk written down, so this bike's history is never lost.</p>
+        <div class="dateline">
+          <a class="pill" href="https://docs.google.com/document/d/1ne85ctynGBzfd8DgumguOt_jD_g7vRZ-iw86ki_HiX8/edit">📄 Stumpjumper Buddy — Job Req</a>
+          <a class="pill" href="https://github.com/davedellaquila/stumpjumper-buddy">🔒 Private repo — stumpjumper-buddy</a>
+          <a class="pill" href="https://davedellaquila.github.io/buddy-system/bicycle-buddy/">🚲 Bicycle Buddy — the fleet</a>
+          <a class="pill" href="#spec">🔧 Spec sheet</a>
+          <a class="pill" href="#log">📒 Service log</a>
+        </div>
+        <div class="hear">
+          <div class="hear-label">🔊 Hear my role <span>— the first paragraph of my job req's Role summary, in my own voice (Grounded Workbench) · 0:27</span></div>
+          <audio controls preload="none" src="role-intro.mp3">Your browser doesn't support audio playback — read the <a href="https://docs.google.com/document/d/1ne85ctynGBzfd8DgumguOt_jD_g7vRZ-iw86ki_HiX8/edit">job req</a> instead.</audio>
+        </div>
+      </div>
+      <div class="ringcard" aria-label="Strongarm II triple crankset, on the bench today">
+        <svg viewBox="0 0 120 120" role="img" aria-label="Triple chainring diagram">
+          <circle cx="60" cy="60" r="52" fill="none" stroke="var(--steel)" stroke-width="5" stroke-dasharray="5 4"/>
+          <circle cx="60" cy="60" r="38" fill="none" stroke="var(--muted)" stroke-width="4" stroke-dasharray="4 3.4"/>
+          <circle cx="60" cy="60" r="25" fill="none" stroke="var(--accent)" stroke-width="4" stroke-dasharray="3.4 2.8"/>
+          <circle cx="60" cy="60" r="6.5" fill="var(--accent)"/>
+          <circle cx="60" cy="22" r="3" fill="var(--steel)"/><circle cx="93" cy="41" r="3" fill="var(--steel)"/>
+          <circle cx="93" cy="79" r="3" fill="var(--steel)"/><circle cx="60" cy="98" r="3" fill="var(--steel)"/>
+          <circle cx="27" cy="79" r="3" fill="var(--steel)"/><circle cx="27" cy="41" r="3" fill="var(--steel)"/>
+        </svg>
+        <p class="cap"><b>Strongarm II triple</b><br>Off the bike today — 8&nbsp;mm bolt, then the puller. Square-taper BB underneath.</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="stats" aria-label="The bike at a glance">
+    <div class="stat"><div class="n">1</div><div class="l">Bike on this book</div><div class="d">The fleet lives with <a href="https://davedellaquila.github.io/buddy-system/bicycle-buddy/">Bicycle Buddy</a>. This page is one machine, in depth.</div></div>
+    <div class="stat"><div class="n">#001</div><div class="l">Service entry — today</div><div class="d">Crank removal, in progress on Dave's stand. <a href="#log">Read the log ↓</a></div></div>
+    <div class="stat"><div class="n">1</div><div class="l">Open issue</div><div class="d">The front derailleur — open since early Oct 2026. <a href="#issue">See the record ↓</a></div></div>
+    <div class="stat"><div class="n">2</div><div class="l">Specs unconfirmed</div><div class="d">Model year (~1995) and the front-derailleur model. Marked honestly, never guessed.</div></div>
+  </div>
+
+  <h2>On the stand today</h2>
+  <p class="h2sub">Saturday, October 24, 2026 — the first job in this book, and Dave's own hands on the wrench.</p>
+  <div class="stand">
+    <div class="stand-head"><span class="t">Crank removal <span class="badge live">In progress</span></span><span class="no">SERVICE ENTRY #001 · 2026-10-24</span></div>
+    <ol class="steps">
+      <li class="done"><span class="mark">✓</span><span class="what"><b>Bike up on the stand</b><span>Dave's red Feedback Sports stand.</span></span></li>
+      <li class="done"><span class="mark">✓</span><span class="what"><b>Crank bolt out</b><span>8&nbsp;mm — the square-taper Strongarm II triple's fixing bolt.</span></span></li>
+      <li class="now"><span class="mark">→</span><span class="what"><b>Crank puller</b><span>Arms off the square taper — the step under way today.</span></span></li>
+      <li class="wait"><span class="mark">·</span><span class="what"><b>Reason &amp; findings <span class="badge tbd">Awaiting Dave's report</span></b><span>Why the crank came off and what he found — logged verbatim when he reports. Nothing invented in the meantime.</span></span></li>
+    </ol>
+  </div>
+
+  <h2 id="spec">Spec sheet</h2>
+  <p class="h2sub">What's known, what's observed, and what's still unconfirmed — the unconfirmed bits stay marked until a marking or a photo settles them. Full record: <a href="https://github.com/davedellaquila/stumpjumper-buddy/blob/main/KNOWLEDGE.md">KNOWLEDGE.md in the private repo</a>.</p>
+  <div class="spec">
+    <div class="spec-row"><span class="spec-k">Bike</span><span class="spec-v">Specialized Stumpjumper<span class="note">FSR-era frame, red/black graphics.</span></span><span class="tag ok">Confirmed</span></div>
+    <div class="spec-row"><span class="spec-k">Model year</span><span class="spec-v">~1995<span class="note">Per Dave's records — not yet pinned to a catalog year or serial.</span></span><span class="tag un">Unconfirmed</span></div>
+    <div class="spec-row"><span class="spec-k">Crankset</span><span class="spec-v">Specialized Strongarm II — triple<span class="note">Observed in Dave's photo, Oct 24, 2026. Coming off today — see <a href="#log">entry #001</a>.</span></span><span class="tag ok">Observed</span></div>
+    <div class="spec-row"><span class="spec-k">Bottom bracket</span><span class="spec-v">Square taper<span class="note">Spindle length and shell details — to be recorded when they're measured.</span></span><span class="tag ok">Observed</span></div>
+    <div class="spec-row"><span class="spec-k">Drivetrain</span><span class="spec-v">Shimano equipment<span class="note">Per Dave's records. Component-by-component registry comes as parts are identified.</span></span><span class="tag ok">Confirmed</span></div>
+    <div class="spec-row"><span class="spec-k">Front derailleur</span><span class="spec-v">Model unknown<span class="note">Identification pending a photo / the stamped FD-Mxxx code. Period variants differ — no guessing. It also has the <a href="#issue">open issue below</a>.</span></span><span class="tag un">Unconfirmed</span></div>
+    <div class="spec-row"><span class="spec-k">Pedals</span><span class="spec-v">Clipless<span class="note">Ridden clipped in Oct 4, 2026 — Dave noted the clips make a large difference.</span></span><span class="tag ok">Confirmed</span></div>
+    <div class="spec-row"><span class="spec-k">Workstand</span><span class="spec-v">Feedback Sports — red<span class="note">Where the bike sits for <a href="#log">entry #001</a>, today.</span></span><span class="tag ok">Observed</span></div>
+  </div>
+
+  <h2 id="issue">Open issue — the front derailleur</h2>
+  <p class="h2sub">First on the board, tracked here until Dave calls it fixed. Full record: <a href="https://github.com/davedellaquila/stumpjumper-buddy/blob/main/KNOWLEDGE.md">KNOWLEDGE.md — Open issues</a> · also carried in the <a href="https://docs.google.com/document/d/1ne85ctynGBzfd8DgumguOt_jD_g7vRZ-iw86ki_HiX8/edit">job req</a>.</p>
+  <div class="issue">
+    <h3>⚠️ Won't take both ends of the triple <span class="badge tbd">Status unconfirmed — Oct 24</span></h3>
+    <p>The problem moved ends in early October: first the low side, then the high side. Whether today's crank work is part of the fix — and whether the big-ring shift is back — is Dave's to confirm. This card stays open until he does.</p>
+    <ul class="tl">
+      <li><span class="when">Oct 4</span><span class="what"><b>Wouldn't easily reach the granny gear.</b> <span>Noted on the Oct 4 ride (clipless, saddle adjusted by the pond).</span></span></li>
+      <li><span class="when">Oct 6</span><span class="what"><b>Wouldn't shift into the large chainring.</b> <span>Brief mid-climb stop for a mechanical; more work needed, per Dave.</span></span></li>
+      <li><span class="when">Oct 24</span><span class="what"><b>Status unconfirmed.</b> <span>Crank is off today — possibly related, not assumed. Awaiting Dave's word.</span></span></li>
+    </ul>
+    <p style="margin-top:12px"><b style="color:var(--text)">What closes it:</b> Dave confirms the front shifts run clean across all three rings — or reports what's next, and the next step goes on this board.</p>
+  </div>
+
+  <h2 id="log">Service log</h2>
+  <p class="h2sub">Unbroken from today forward. Earlier work is labelled pre-log history, from Dave's records — kept, but never dressed up as a log entry.</p>
+  <div class="log">
+    <div class="log-row">
+      <div class="log-no">#001<br>2026-10-24</div>
+      <div class="log-body">
+        <div class="t">Crank removal — in progress <span class="badge live">Today</span></div>
+        <p>Strongarm II triple off the square-taper BB: 8&nbsp;mm crank bolt, then a crank puller. Bike on the red Feedback Sports stand. Reason and findings to be added when Dave reports them.</p>
+        <div class="who">Wrench: Dave · Book: Stumpjumper Buddy</div>
+      </div>
+    </div>
+    <div class="log-row">
+      <div class="log-no">PRE-LOG<br>2026-10-06</div>
+      <div class="log-body">
+        <div class="t">Front-derailleur problem changed ends</div>
+        <p>Would no longer shift into the large chainring (was: reluctant to reach the granny gear). Still open — see <a href="#issue">the issue record</a>.</p>
+        <div class="who">From Dave's records</div>
+      </div>
+    </div>
+    <div class="log-row">
+      <div class="log-no">PRE-LOG<br>2026-10-04</div>
+      <div class="log-body">
+        <div class="t">Ride notes — clipless + saddle</div>
+        <p>Ridden with clipless pedals; Dave noted the clips make a large difference. Saddle adjusted by the pond. Front derailleur already reluctant at the granny gear.</p>
+        <div class="who">From Dave's records</div>
+      </div>
+    </div>
+  </div>
+
+  <h2>Setup notes</h2>
+  <p class="h2sub">Fit and kit, as Dave reports them — added to, never overwritten silently.</p>
+  <div class="grid3">
+    <div class="card"><span class="emoji">🔗</span><h3>Clipless pedals</h3><p>On the bike and staying: clipped in on the Oct 4 ride, and the difference was large. The Oct 2 benchmark ride was without clips — context that matters when comparing rides.</p></div>
+    <div class="card"><span class="emoji">💺</span><h3>Saddle</h3><p>Adjusted by Dave in Oct 2026, “by the pond.” Position details (height, setback) TBD — recorded when he measures or reports them.</p></div>
+    <div class="card"><span class="emoji">🧰</span><h3>The stand</h3><p>Red Feedback Sports stand — the bike's home for service work, starting with <a href="#log">entry #001</a> today.</p></div>
+  </div>
+
+  <h2>Needs Dave's attention</h2>
+  <p class="h2sub">Three short items. Two are one-line answers; one is a photo.</p>
+  <div class="attn">
+    <h3>🔧 Front-derailleur status check</h3>
+    <p>Last confirmed state (Oct 6): it wouldn't shift into the large chainring. Is today's crank work part of that fix — and is the big-ring shift back?</p>
+    <a class="go" href="#issue">See the issue record →</a>
+  </div>
+  <div class="attn">
+    <h3>📒 Close out entry #001</h3>
+    <p>When the crank job's done: why it came off, what you found (BB condition, taper, threads — whatever you saw), and what went back on. I log it verbatim in <a href="https://github.com/davedellaquila/stumpjumper-buddy/blob/main/KNOWLEDGE.md">KNOWLEDGE.md</a>.</p>
+    <a class="go" href="#dump">Report it in the dump box ↓</a>
+  </div>
+  <div class="attn">
+    <h3>📷 Identify the front derailleur</h3>
+    <p>A drivetrain-side photo plus a close-up of the derailleur's stamped FD-Mxxx code settles the last unconfirmed drivetrain spec — and the model year question may fall out of the same shot.</p>
+    <a class="go" href="#spec">See the spec sheet →</a>
+  </div>
+  <div class="attn">
+    <h3>📄 Review the job req</h3>
+    <p>The role as hired: spec sheet, setup notes, unbroken service log, open issues tracked to closure — reporting to <a href="https://davedellaquila.github.io/buddy-system/bicycle-buddy/">🚲 Bicycle Buddy</a>, out of scope: the rest of the fleet and anything training.</p>
+    <a class="go" href="https://docs.google.com/document/d/1ne85ctynGBzfd8DgumguOt_jD_g7vRZ-iw86ki_HiX8/edit">Open the job req →</a>
+  </div>
+
+  <section class="dumpbox" id="dump" data-buddy-id="stumpjumper-buddy">
+    <h2>🧠 Brain dump — service notes welcome</h2>
+    <p class="dumpbox-sub">Dump what's on your mind about <span data-buddy-name>Stumpjumper Buddy</span> — raw and unfiltered. Each dump lands in the buddy's repo (docs/ingest.md) as a timestamped entry — or saves on this device until a repo is linked and a token is connected. A job report dumped here gets worked into the <a href="#log">service log</a> and <a href="https://github.com/davedellaquila/stumpjumper-buddy/blob/main/KNOWLEDGE.md">KNOWLEDGE.md</a>.</p>
+    <div class="dumpbox-token" hidden>
+      <p>🔒 Connect GitHub to unlock dumping. Paste a token once — it stays on this device only.</p>
+      <div class="dumpbox-tokenrow">
+        <input type="password" placeholder="GitHub token (repo scope)" aria-label="GitHub token">
+        <button type="button">Save token</button>
+        <a href="https://github.com/settings/tokens" target="_blank" rel="noopener">Get a token</a>
+      </div>
+    </div>
+    <textarea rows="4" placeholder="Crank's off. Here's why, and here's what I found…"></textarea>
+    <div class="dumpbox-row">
+      <button type="button" class="dumpbox-btn">Dump it</button>
+      <span class="dumpbox-status" role="status"></span>
+    </div>
+    <p class="dumpbox-hint">Enter dumps it &middot; Shift+Enter for a new line</p>
+  </section>
+
+  <h2>The desk</h2>
+  <p class="h2sub">Everything I keep lives in the private repo — the book itself, not a summary of it.</p>
+  <div class="grid">
+    <div class="card"><h3>📁 Repo files</h3><ul>
+      <li><a href="https://github.com/davedellaquila/stumpjumper-buddy/blob/main/KNOWLEDGE.md">KNOWLEDGE.md</a> — spec sheet, setup notes, open issues, service log</li>
+      <li><a href="https://github.com/davedellaquila/stumpjumper-buddy/blob/main/docs/job-req.md">docs/job-req.md</a> — the canonical job req</li>
+      <li><a href="https://github.com/davedellaquila/stumpjumper-buddy/blob/main/DECISIONS.md">DECISIONS.md</a> — decisions, dated</li>
+      <li><a href="https://github.com/davedellaquila/stumpjumper-buddy/blob/main/ACCOMPLISHMENTS.md">ACCOMPLISHMENTS.md</a> — what I've shipped</li>
+      <li><a href="https://github.com/davedellaquila/stumpjumper-buddy/blob/main/docs/ingest.md">docs/ingest.md</a> — my inbox, triaged: mine / someone else's / unclear → Astro</li>
+    </ul></div>
+    <div class="card"><h3>🚲 Up one level</h3><p><a href="https://davedellaquila.github.io/buddy-system/bicycle-buddy/">Bicycle Buddy</a> keeps the whole fleet — every bike Dave rides, what each is for, and the state each is in. This book covers exactly one of them, in depth. Other bikes get their own buddies as needed; riding and training live elsewhere too.</p></div>
+  </div>
+
+  <div class="footer">
+    🚵 Stumpjumper Buddy · Hired Saturday, October 24, 2026 · Child of <a href="https://davedellaquila.github.io/buddy-system/bicycle-buddy/">🚲 Bicycle Buddy</a><br>
+    <a href="https://davedellaquila.github.io/buddy-system/">Buddy System dashboard</a> · <a href="https://github.com/davedellaquila/stumpjumper-buddy">Repo</a> · <a href="https://docs.google.com/document/d/1ne85ctynGBzfd8DgumguOt_jD_g7vRZ-iw86ki_HiX8/edit">Job req</a>
+  </div>
+</div>
+
+<script>
+(function(){
+  var box = document.querySelector('.dumpbox');
+  if (!box || box.dataset.dumpInit) return;
+  box.dataset.dumpInit = '1';
+  var bid = box.getAttribute('data-buddy-id') || (function(){
+    var p = location.pathname.replace(/\/+$/, '');
+    return p.substring(p.lastIndexOf('/') + 1);
+  })();
+  var ta = box.querySelector('textarea'),
+      btn = box.querySelector('.dumpbox-btn'),
+      st = box.querySelector('.dumpbox-status'),
+      tokWrap = box.querySelector('.dumpbox-token');
+  function lsGet(){ try { return JSON.parse(localStorage.getItem('buddyTree.v3') || '{}'); } catch(e){ return {}; } }
+  function lsSet(patch){ try { var s = lsGet(); for (var k in patch) s[k] = patch[k]; localStorage.setItem('buddyTree.v3', JSON.stringify(s)); } catch(e){} }
+  function token(){ return lsGet().ghToken || ''; }
+  function b64encode(str){
+    var bytes = new TextEncoder().encode(str), bin = '';
+    bytes.forEach(function(b){ bin += String.fromCharCode(b); });
+    return btoa(bin);
+  }
+  async function ghApi(path, method, body){
+    var t = token();
+    if (!t) throw new Error('Add a GitHub token first.');
+    var r = await fetch('https://api.github.com' + path, {
+      method: method || 'GET',
+      headers: {'Authorization': 'Bearer ' + t, 'Accept': 'application/vnd.github+json', 'Content-Type': 'application/json'},
+      body: body ? JSON.stringify(body) : undefined
+    });
+    if (!r.ok) throw new Error('GitHub ' + r.status);
+    return r.status === 204 ? null : await r.json();
+  }
+  async function ghGetFile(repo, path){
+    try {
+      var j = await ghApi('/repos/davedellaquila/' + repo + '/contents/' + path);
+      if (j && j.content) return {
+        text: new TextDecoder().decode(Uint8Array.from(atob(j.content.replace(/\n/g, '')), function(c){ return c.charCodeAt(0); })),
+        sha: j.sha
+      };
+    } catch(e){}
+    return null;
+  }
+  var repo = null, repoName = bid;
+  async function resolveRepo(){
+    try {
+      var r = await fetch('../buddies.json', {cache: 'no-store'});
+      var d = await r.json();
+      var buds = d.buddies || [];
+      for (var i = 0; i < buds.length; i++) {
+        if (buds[i].id === bid && buds[i].repo) { repo = buds[i].repo; repoName = buds[i].name || bid; break; }
+      }
+    } catch(e){}
+    /* Fallback until the registry wiring lands: the INIT names this repo. */
+    if (!repo && bid === 'stumpjumper-buddy') { repo = 'stumpjumper-buddy'; repoName = 'Stumpjumper Buddy'; }
+  }
+  function localKey(){ return 'buddyTree.ingest.' + bid; }
+  function localBacklog(){
+    try { var a = JSON.parse(localStorage.getItem(localKey()) || '[]'); return Array.isArray(a) ? a : []; }
+    catch(e){ return []; }
+  }
+  function localSave(entry){
+    var a = localBacklog(); a.push(entry);
+    try { localStorage.setItem(localKey(), JSON.stringify(a)); } catch(e){}
+  }
+  function localClear(){ try { localStorage.removeItem(localKey()); } catch(e){} }
+  function refreshUI(){
+    var has = !!token();
+    tokWrap.hidden = has;
+    ta.disabled = false;
+    btn.disabled = false;
+    var n = localBacklog().length;
+    if (!repo) {
+      st.textContent = n
+        ? n + ' local ' + (n === 1 ? 'dump' : 'dumps') + ' saved on this device — will sync when a repo is linked.'
+        : 'No repo linked yet — dumps save on this device and will sync when one is linked.';
+      return;
+    }
+    st.textContent = has
+      ? (n ? n + ' local ' + (n === 1 ? 'dump' : 'dumps') + ' will sync on next dump.' : '')
+      : 'No GitHub token — dumps save on this device for now.';
+  }
+  var tokInput = tokWrap.querySelector('input'),
+      tokSave = tokWrap.querySelector('button');
+  function flashSaved(){
+    var label = btn.textContent;
+    btn.classList.add('saved');
+    btn.textContent = '✓ Saved';
+    st.classList.add('flash');
+    setTimeout(function(){
+      btn.classList.remove('saved');
+      if (btn.textContent === '✓ Saved') btn.textContent = label;
+      st.classList.remove('flash');
+    }, 1800);
+  }
+  tokSave.addEventListener('click', async function(){
+    var v = tokInput.value.trim();
+    if (!v) return;
+    lsSet({ghToken: v});
+    tokInput.value = '';
+    st.textContent = 'Checking token…';
+    try {
+      await ghApi('/user');
+      refreshUI();
+      st.textContent = '✓ Token verified — dumps will sync to GitHub.';
+    } catch(e) {
+      refreshUI();
+      st.textContent = '⚠ GitHub rejected that token (' + ((e && e.message) || e) + ') — dumps stay on this device until a working token is added.';
+    }
+  });
+  async function dump(){
+    var text = ta.value.trim();
+    if (!text) return;
+    var stamp = new Date().toLocaleString();
+    var NL = String.fromCharCode(10);
+    if (!repo) {
+      localSave({t: stamp, text: text});
+      ta.value = '';
+      refreshUI();
+      st.textContent = '✓ Saved on this device — will sync to the repo once one is linked.';
+      flashSaved();
+      return;
+    }
+    if (!token()) {
+      localSave({t: stamp, text: text});
+      ta.value = '';
+      st.textContent = '✓ Saved on this device — add a GitHub token to sync it to the repo.';
+      flashSaved();
+      return;
+    }
+    st.textContent = 'Dumping…';
+    btn.disabled = true;
+    try {
+      var backlog = localBacklog();
+      var parts = backlog.map(function(b){ return '## ' + b.t + NL + NL + b.text + NL + NL; });
+      parts.push('## ' + stamp + NL + NL + text + NL + NL);
+      var cur = await ghGetFile(repo, 'docs/ingest.md');
+      var base = cur ? cur.text : '# Ingest log — ' + repoName + NL + NL;
+      var body = {message: 'Ingest dump for ' + bid, content: b64encode(base + parts.join(''))};
+      if (cur && cur.sha) body.sha = cur.sha;
+      await ghApi('/repos/davedellaquila/' + repo + '/contents/docs/ingest.md', 'PUT', body);
+      localClear();
+      ta.value = '';
+      st.textContent = '✓ Dumped to ' + repo + '/docs/ingest.md' + (backlog.length ? ' (' + backlog.length + ' local synced)' : '');
+      flashSaved();
+    } catch(err){
+      try { localSave({t: stamp, text: text}); } catch(e2){}
+      ta.value = '';
+      refreshUI();
+      var why = (err && err.message) || String(err);
+      var nq = 0; try { nq = localBacklog().length; } catch(e2){}
+      var tail = nq > 1 ? ' (' + nq + ' on this device waiting to sync)' : '';
+      st.textContent = (/404/.test(why)
+        ? '⚠ Saved on this device — GitHub said 404 (usually a wrong/expired token, or no access to this private repo). Fix the token, then dump again to sync.'
+        : '⚠ Saved on this device — GitHub said: ' + why + '. It will sync on your next successful dump.') + tail;
+    }
+    btn.disabled = false;
+  }
+  btn.addEventListener('click', dump);
+  ta.addEventListener('keydown', function(ev){
+    if (ev.key === 'Enter' && !ev.shiftKey && !ev.altKey) { ev.preventDefault(); dump(); }
+  });
+  resolveRepo().then(refreshUI);
+})();
+</script>
+<!-- TIP JAR — canonical snippet: paste just before </body>; links Dave's Ko-fi -->
+<style>
+  .tipjar{position:fixed;right:18px;bottom:18px;z-index:60;
+    font-family:inherit;-webkit-tap-highlight-color:transparent}
+  .tipjar a{display:inline-flex;align-items:center;gap:.5em;
+    padding:.55em 1em;border-radius:999px;text-decoration:none;
+    font-size:.9rem;font-weight:600;line-height:1;
+    color:#fff;background:linear-gradient(135deg,#7c4dff,#b388ff);
+    box-shadow:0 6px 18px rgba(124,77,255,.35),0 2px 6px rgba(0,0,0,.25);
+    animation:tipjar-breathe 6s ease-in-out infinite}
+  .tipjar .jar{display:inline-block;font-size:1.15em;position:relative;
+    animation:tipjar-hop 9s ease-in-out infinite}
+  .tipjar .coin{position:absolute;left:50%;top:-.9em;transform:translateX(-50%);
+    font-size:.8em;opacity:0;animation:tipjar-coin 9s ease-in-out infinite}
+  .tipjar a:hover .jar{animation:tipjar-spin .7s cubic-bezier(.34,1.56,.64,1)}
+  .tipjar a:hover .tiptext{animation:tipjar-shimmer 2.5s linear infinite}
+  .tipjar a:focus-visible{outline:3px solid #ffd54f;outline-offset:3px}
+  @keyframes tipjar-breathe{0%,100%{transform:scale(1)}50%{transform:scale(1.035)}}
+  @keyframes tipjar-hop{0%,88%,100%{transform:translateY(0)}92%{transform:translateY(-4px) rotate(-8deg)}96%{transform:translateY(0)}}
+  @keyframes tipjar-coin{0%,88%,100%{opacity:0;transform:translate(-50%,0)}92%{opacity:1;transform:translate(-50%,4px)}96%,98%{opacity:0;transform:translate(-50%,9px)}}
+  @keyframes tipjar-spin{to{transform:rotate(360deg)}}
+  @keyframes tipjar-shimmer{0%{filter:brightness(1)}50%{filter:brightness(1.45)}100%{filter:brightness(1)}}
+  @media (prefers-reduced-motion: reduce){
+    .tipjar a,.tipjar .jar,.tipjar .coin{animation:none}
+  }
+</style>
+<div class="tipjar">
+  <a href="https://ko-fi.com/davedellaquila" target="_blank" rel="noopener"
+     aria-label="Tip jar — if this page helped you, you can leave Dave a tip on Ko-fi">
+    <span class="jar">🫙<span class="coin">🪙</span></span><span class="tiptext">Tip Jar</span>
+  </a>
+</div>
+</body>
+</html>
