@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>E39 Touring Shirt Vote — pick the gift tee</title>
+<meta name="description" content="Ten design concepts for an E39 Touring gift tee. Vote for your favorite — the winner gets printed.">
+<meta name="robots" content="noindex">
+<style>
+  :root{
+    --bg:#f6f4ef; --card:#ffffff; --ink:#1d2733; --muted:#5c6a76;
+    --line:#ddd6c9; --accent:#20538c; --accent-ink:#ffffff;
+    --good:#1e7a3c; --warn-bg:#fff4d6; --warn-line:#e3c566; --warn-ink:#6b5510;
+    --info-bg:#e8f0fa; --info-line:#b9cfe8; --info-ink:#1d4066;
+    --ok-bg:#e6f4ea; --ok-line:#a9d6b5; --ok-ink:#175c2c;
+    --bar:#20538c; --bar-mine:#1e7a3c;
+    --shadow:0 2px 10px rgba(29,39,51,.08);
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --bg:#12161c; --card:#1b222c; --ink:#e8edf2; --muted:#9fb0bf;
+      --line:#2e3947; --accent:#5b9be0; --accent-ink:#0d1520;
+      --warn-bg:#3a2f12; --warn-line:#8a6d1f; --warn-ink:#f0d48a;
+      --info-bg:#16283d; --info-line:#2c4a6e; --info-ink:#bcd6f5;
+      --ok-bg:#14301d; --ok-line:#2c5c3a; --ok-ink:#a9dfba;
+      --bar:#5b9be0; --bar-mine:#3fae62;
+      --shadow:0 2px 10px rgba(0,0,0,.4);
+    }
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    line-height:1.5}
+  header.site{position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:.55rem;
+    padding:.55rem 1rem;background:color-mix(in srgb, var(--bg) 88%, transparent);
+    backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--line);font-weight:700;font-size:1rem}
+  header.site .sub{margin-left:auto;font-weight:500;font-size:.82rem;color:var(--muted)}
+  main{max-width:1180px;margin:0 auto;padding:1.1rem 1rem 5.5rem}
+  .hero h1{font-size:1.65rem;line-height:1.2;margin:.3rem 0 .5rem}
+  .hero p{margin:.35rem 0;color:var(--ink);max-width:46rem}
+  .hero .fine{color:var(--muted);font-size:.9rem}
+  .banner{border:1px solid;border-radius:12px;padding:.7rem .9rem;margin:1rem 0;font-size:.95rem}
+  .banner[hidden]{display:none}
+  .banner.info{background:var(--info-bg);border-color:var(--info-line);color:var(--info-ink)}
+  .banner.warn{background:var(--warn-bg);border-color:var(--warn-line);color:var(--warn-ink)}
+  .banner.ok{background:var(--ok-bg);border-color:var(--ok-line);color:var(--ok-ink)}
+  .banner button{margin-left:.6rem;font:inherit;font-size:.85rem;padding:.25rem .7rem;border-radius:999px;
+    border:1px solid currentColor;background:transparent;color:inherit;cursor:pointer}
+  .namebar{display:flex;flex-wrap:wrap;gap:.5rem;align-items:center;margin:.9rem 0 .2rem}
+  .namebar label{font-size:.92rem;color:var(--muted)}
+  .namebar input{font:inherit;font-size:1rem;padding:.5rem .7rem;border-radius:10px;
+    border:1px solid var(--line);background:var(--card);color:var(--ink);min-width:min(260px,70vw)}
+  .tallyline{margin:.8rem 0 0;font-size:.95rem;color:var(--muted)}
+  .grid{display:grid;grid-template-columns:1fr;gap:1rem;margin-top:1rem}
+  @media (min-width:640px){.grid{grid-template-columns:1fr 1fr}}
+  @media (min-width:1024px){.grid{grid-template-columns:1fr 1fr 1fr}}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:16px;overflow:hidden;
+    box-shadow:var(--shadow);display:flex;flex-direction:column}
+  .card.mine{border-color:var(--good);outline:2px solid var(--good);outline-offset:-1px}
+  .card img{width:100%;height:auto;display:block;background:#e9e6df}
+  .card .body{padding:.85rem .95rem 1rem;display:flex;flex-direction:column;gap:.5rem;flex:1}
+  .card h2{font-size:1.05rem;margin:0;line-height:1.3}
+  .card h2 .num{display:inline-block;background:var(--accent);color:var(--accent-ink);
+    border-radius:8px;padding:.02rem .5rem;margin-right:.45rem;font-size:.9rem;vertical-align:2px}
+  .card .desc{margin:0;color:var(--muted);font-size:.92rem;flex:1}
+  .result{display:none}
+  body.has-voted .result{display:block}
+  .result .track{height:10px;border-radius:99px;background:var(--line);overflow:hidden}
+  .result .fill{height:100%;width:0;background:var(--bar);border-radius:99px;transition:width .5s ease}
+  .card.mine .result .fill{background:var(--bar-mine)}
+  .result .nums{font-size:.88rem;color:var(--muted);margin-top:.3rem}
+  .result .nums strong{color:var(--ink)}
+  .pickbadge{display:none;font-size:.82rem;font-weight:700;color:var(--good)}
+  .card.mine .pickbadge{display:inline}
+  .card button.vote{font:inherit;font-weight:700;font-size:1rem;padding:.75rem 1rem;border-radius:12px;
+    border:0;background:var(--accent);color:var(--accent-ink);cursor:pointer;width:100%}
+  .card button.vote:active{transform:scale(.99)}
+  .card button.vote[disabled]{opacity:.45;cursor:default}
+  .card.mine button.vote{background:var(--good)}
+  footer.site{margin-top:2.2rem;color:var(--muted);font-size:.88rem;border-top:1px solid var(--line);padding-top:1rem}
+</style>
+</head>
+<body>
+<header class="site">🗳️ <span>E39 Touring Shirt Vote</span><span class="sub">Voting Buddy</span></header>
+<main>
+  <section class="hero">
+    <h1>Pick the gift tee 🎁</h1>
+    <p>The car is an <strong>BMW E39 5 Series Touring</strong> — the long-roof wagon. Ten design concepts are in the running for a custom tee, and the winning design gets printed for real. Tap your favorite below.</p>
+    <p class="fine">One vote per browser — you can change your pick any time, and changing it replaces your old vote. Results appear after you vote. Voting takes about ten seconds.</p>
+  </section>
+
+  <div id="banner" class="banner info" hidden></div>
+
+  <div class="namebar">
+    <label for="voterName">Your first name (optional — anonymous is fine):</label>
+    <input id="voterName" type="text" maxlength="40" autocomplete="given-name" placeholder="e.g. Alex">
+  </div>
+
+  <p class="tallyline" id="tallyLine" hidden></p>
+
+  <section class="grid" id="grid">
+    <article class="card" data-option="design-01">
+      <img src="img/design-01.webp" alt="Design 1 — Blueprint back print, navy tee" width="1080" height="720">
+      <div class="body">
+        <h2><span class="num">1</span>Blueprint back print <span class="pickbadge">✓ your pick</span></h2>
+        <p class="desc">The full technical blueprint across the back of a navy tee.</p>
+        <div class="result"><div class="track"><div class="fill"></div></div><div class="nums"></div></div>
+        <button class="vote" type="button">Vote for this one</button>
+      </div>
+    </article>
+
+    <article class="card" data-option="design-02">
+      <img src="img/design-02.webp" alt="Design 2 — Three-view patent sheet, white tee" width="1080" height="720" loading="lazy">
+      <div class="body">
+        <h2><span class="num">2</span>Three-view patent sheet <span class="pickbadge">✓ your pick</span></h2>
+        <p class="desc">Side, front and rear elevations in patent-drawing style, on white.</p>
+        <div class="result"><div class="track"><div class="fill"></div></div><div class="nums"></div></div>
+        <button class="vote" type="button">Vote for this one</button>
+      </div>
+    </article>
+
+    <article class="card" data-option="design-03">
+      <img src="img/design-03.webp" alt="Design 3 — Exploded drivetrain, dark grey hoodie" width="1080" height="1620" loading="lazy">
+      <div class="body">
+        <h2><span class="num">3</span>Exploded drivetrain (hoodie) <span class="pickbadge">✓ your pick</span></h2>
+        <p class="desc">The whole drivetrain, exploded — big back print on a dark grey hoodie.</p>
+        <div class="result"><div class="track"><div class="fill"></div></div><div class="nums"></div></div>
+        <button class="vote" type="button">Vote for this one</button>
+      </div>
+    </article>
+
+    <article class="card" data-option="design-04">
+      <img src="img/design-04.webp" alt="Design 4 — Some Assembly Required, charcoal tee" width="1080" height="720" loading="lazy">
+      <div class="body">
+        <h2><span class="num">4</span>&ldquo;Some Assembly Required&rdquo; <span class="pickbadge">✓ your pick</span></h2>
+        <p class="desc">&ldquo;Automatic&rdquo; crossed out, a 5-speed drawn in — the manual-swap joke, on charcoal.</p>
+        <div class="result"><div class="track"><div class="fill"></div></div><div class="nums"></div></div>
+        <button class="vote" type="button">Vote for this one</button>
+      </div>
+    </article>
+
+    <article class="card" data-option="design-05">
+      <img src="img/design-05.webp" alt="Design 5 — Shift-gate badge, heather grey tee" width="1080" height="720" loading="lazy">
+      <div class="body">
+        <h2><span class="num">5</span>Shift-gate badge <span class="pickbadge">✓ your pick</span></h2>
+        <p class="desc">An H-pattern gate badge: &ldquo;three-pedal conversion in progress&rdquo; — heather grey.</p>
+        <div class="result"><div class="track"><div class="fill"></div></div><div class="nums"></div></div>
+        <button class="vote" type="button">Vote for this one</button>
+      </div>
+    </article>
+
+    <article class="card" data-option="design-06">
+      <img src="img/design-06.webp" alt="Design 6 — Keep It Classy. Keep It Factory-Plus., forest green tee" width="1080" height="720" loading="lazy">
+      <div class="body">
+        <h2><span class="num">6</span>&ldquo;Keep It Classy. Keep It Factory-Plus.&rdquo; <span class="pickbadge">✓ your pick</span></h2>
+        <p class="desc">The motto, adapted — forest green tee.</p>
+        <div class="result"><div class="track"><div class="fill"></div></div><div class="nums"></div></div>
+        <button class="vote" type="button">Vote for this one</button>
+      </div>
+    </article>
+
+    <article class="card" data-option="design-07">
+      <img src="img/design-07.webp" alt="Design 7 — Single-line profile, cream tee" width="1080" height="720" loading="lazy">
+      <div class="body">
+        <h2><span class="num">7</span>Single-line profile <span class="pickbadge">✓ your pick</span></h2>
+        <p class="desc">One continuous line draws the wagon — cream tee, quiet and classy.</p>
+        <div class="result"><div class="track"><div class="fill"></div></div><div class="nums"></div></div>
+        <button class="vote" type="button">Vote for this one</button>
+      </div>
+    </article>
+
+    <article class="card" data-option="design-08">
+      <img src="img/design-08.webp" alt="Design 8 — Vintage brochure, royal blue tee" width="1080" height="1440" loading="lazy">
+      <div class="body">
+        <h2><span class="num">8</span>Vintage brochure — &ldquo;The Ultimate Hauling Machine&rdquo; <span class="pickbadge">✓ your pick</span></h2>
+        <p class="desc">1990s brochure-cover energy — royal blue tee.</p>
+        <div class="result"><div class="track"><div class="fill"></div></div><div class="nums"></div></div>
+        <button class="vote" type="button">Vote for this one</button>
+      </div>
+    </article>
+
+    <article class="card" data-option="design-09">
+      <img src="img/design-09.webp" alt="Design 9 — X-ray cutaway, white tee" width="1080" height="720" loading="lazy">
+      <div class="body">
+        <h2><span class="num">9</span>X-ray cutaway <span class="pickbadge">✓ your pick</span></h2>
+        <p class="desc">See through the wagon — engine, gearbox, seats and cargo — on white.</p>
+        <div class="result"><div class="track"><div class="fill"></div></div><div class="nums"></div></div>
+        <button class="vote" type="button">Vote for this one</button>
+      </div>
+    </article>
+
+    <article class="card" data-option="design-10">
+      <img src="img/design-10.webp" alt="Design 10 — Night-grid glowing blueprint, black tee" width="1080" height="1440" loading="lazy">
+      <div class="body">
+        <h2><span class="num">10</span>Night-grid glowing blueprint <span class="pickbadge">✓ your pick</span></h2>
+        <p class="desc">The blueprint, glowing on black.</p>
+        <div class="result"><div class="track"><div class="fill"></div></div><div class="nums"></div></div>
+        <button class="vote" type="button">Vote for this one</button>
+      </div>
+    </article>
+  </section>
+
+  <footer class="site">
+    <p>Designs are concept mockups — the winner gets redrawn cleanly before printing. Thanks for voting!</p>
+  </footer>
+</main>
+
+<!-- TIP JAR — canonical snippet (Dave's standard, 2026-10-24) -->
+<style>
+  .tipjar{position:fixed;right:18px;bottom:18px;z-index:60;
+    font-family:inherit;-webkit-tap-highlight-color:transparent}
+  .tipjar a{display:inline-flex;align-items:center;gap:.5em;
+    padding:.55em 1em;border-radius:999px;text-decoration:none;
+    font-size:.9rem;font-weight:600;line-height:1;
+    color:#fff;background:linear-gradient(135deg,#7c4dff,#b388ff);
+    box-shadow:0 6px 18px rgba(124,77,255,.35),0 2px 6px rgba(0,0,0,.25);
+    animation:tipjar-breathe 6s ease-in-out infinite}
+  .tipjar .jar{display:inline-block;font-size:1.15em;position:relative;
+    animation:tipjar-hop 9s ease-in-out infinite}
+  .tipjar .coin{position:absolute;left:50%;top:-.9em;transform:translateX(-50%);
+    font-size:.8em;opacity:0;animation:tipjar-coin 9s ease-in-out infinite}
+  .tipjar a:hover .jar{animation:tipjar-spin .7s cubic-bezier(.34,1.56,.64,1)}
+  .tipjar a:hover .tiptext{animation:tipjar-shimmer 2.5s linear infinite}
+  .tipjar a:focus-visible{outline:3px solid #ffd54f;outline-offset:3px}
+  @keyframes tipjar-breathe{0%,100%{transform:scale(1)}50%{transform:scale(1.035)}}
+  @keyframes tipjar-hop{0%,88%,100%{transform:translateY(0)}92%{transform:translateY(-4px) rotate(-8deg)}96%{transform:translateY(0)}}
+  @keyframes tipjar-coin{0%,88%,100%{opacity:0;transform:translate(-50%,0)}92%{opacity:1;transform:translate(-50%,4px)}96%,98%{opacity:0;transform:translate(-50%,9px)}}
+  @keyframes tipjar-spin{to{transform:rotate(360deg)}}
+  @keyframes tipjar-shimmer{0%{filter:brightness(1)}50%{filter:brightness(1.45)}100%{filter:brightness(1)}}
+  @media (prefers-reduced-motion: reduce){
+    .tipjar a,.tipjar .jar,.tipjar .coin{animation:none}
+  }
+</style>
+<div class="tipjar">
+  <a href="https://ko-fi.com/davedellaquila" target="_blank" rel="noopener"
+     aria-label="Tip jar — if this page helped you, you can leave Dave a tip on Ko-fi">
+    <span class="jar">🫙<span class="coin">🪙</span></span><span class="tiptext">Tip Jar</span>
+  </a>
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  /* ===== Voting Buddy client =====
+     Votes POST to the buddy-server `vote` function; tallies come from `tally`.
+     Until the server is deployed, API_BASE keeps its REPLACE-WITH marker and
+     the page runs in queued mode: your pick is saved on this device and sent
+     automatically the moment tallying goes live. Nothing is ever dropped. */
+  var API_BASE = 'https://us-central1-REPLACE-WITH-PROJECT-ID.cloudfunctions.net';
+  var POLL_ID = 'e39-touring-shirts';
+
+  var LS = {
+    token: 'vb.' + POLL_ID + '.token',
+    mine: 'vb.' + POLL_ID + '.mine',
+    queued: 'vb.' + POLL_ID + '.queued',
+    name: 'vb.' + POLL_ID + '.name',
+  };
+
+  function lsGet(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+  function lsSet(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+  function lsDel(k) { try { localStorage.removeItem(k); } catch (e) {} }
+
+  function configured() { return API_BASE.indexOf('REPLACE-WITH') === -1; }
+
+  function voterToken() {
+    var t = lsGet(LS.token);
+    if (!t) {
+      t = (window.crypto && crypto.randomUUID)
+        ? crypto.randomUUID()
+        : 'vt-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 12);
+      lsSet(LS.token, t);
+    }
+    return t;
+  }
+
+  var banner = document.getElementById('banner');
+  var tallyLine = document.getElementById('tallyLine');
+  var nameInput = document.getElementById('voterName');
+  var cards = Array.prototype.slice.call(document.querySelectorAll('.card'));
+  var closed = false;
+  var live = false; // true once the server has answered at least once
+
+  nameInput.value = lsGet(LS.name) || '';
+  nameInput.addEventListener('change', function () {
+    lsSet(LS.name, nameInput.value.trim().slice(0, 40));
+    // If a vote is already counted, re-send it so the name rides along.
+    var mine = lsGet(LS.mine);
+    if (mine && live && !closed) castVote(mine, true);
+  });
+
+  function setBanner(kind, html, retry) {
+    banner.className = 'banner ' + kind;
+    banner.innerHTML = html;
+    banner.hidden = false;
+    if (retry) {
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.textContent = 'Try again';
+      b.addEventListener('click', sync);
+      banner.appendChild(b);
+    }
+  }
+  function hideBanner() { banner.hidden = true; }
+
+  function myVote() { return lsGet(LS.mine); }
+
+  function paintMine() {
+    var mine = myVote();
+    document.body.classList.toggle('has-voted', !!mine);
+    cards.forEach(function (card) {
+      var isMine = card.getAttribute('data-option') === mine;
+      card.classList.toggle('mine', isMine);
+      var btn = card.querySelector('button.vote');
+      btn.textContent = closed
+        ? 'Voting is closed'
+        : isMine
+          ? '✓ Your pick'
+          : mine
+            ? 'Switch my vote to this'
+            : 'Vote for this one';
+      btn.disabled = closed;
+    });
+  }
+
+  function paintTally(tally) {
+    if (!tally || !tally.options) return;
+    var byId = {};
+    tally.options.forEach(function (o) { byId[o.id] = o; });
+    cards.forEach(function (card) {
+      var o = byId[card.getAttribute('data-option')];
+      if (!o) return;
+      card.querySelector('.fill').style.width = o.pct + '%';
+      card.querySelector('.nums').innerHTML =
+        '<strong>' + o.pct + '%</strong> · ' + o.count + (o.count === 1 ? ' vote' : ' votes');
+    });
+    tallyLine.hidden = false;
+    tallyLine.textContent = tally.total + (tally.total === 1 ? ' vote' : ' votes') + ' counted so far' +
+      (tally.status === 'closed' ? ' — voting is closed, this is the final tally.' : '.');
+    if (tally.status === 'closed') {
+      closed = true;
+      paintMine();
+      setBanner('info', '🗳️ Voting is closed — the final tally is below. Thanks to everyone who voted!');
+    }
+  }
+
+  function queueVote(optionId) {
+    lsSet(LS.queued, JSON.stringify({
+      optionId: optionId,
+      name: nameInput.value.trim().slice(0, 40) || null,
+      at: Date.now(),
+    }));
+  }
+
+  function queuedBanner() {
+    setBanner('warn',
+      '⏳ <strong>Tallying is not live yet.</strong> Your pick is saved on this device and will be sent automatically as soon as the vote counter goes live — nothing is lost, and you can still change your pick here any time.',
+      configured());
+  }
+
+  async function postVote(optionId) {
+    var r = await fetch(API_BASE + '/vote', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        pollId: POLL_ID,
+        optionId: optionId,
+        voterToken: voterToken(),
+        name: nameInput.value.trim().slice(0, 40) || undefined,
+      }),
+    });
+    var json = null;
+    try { json = await r.json(); } catch (e) {}
+    if (!r.ok || !json || !json.ok) {
+      var err = new Error((json && json.error) || ('Server ' + r.status));
+      err.status = r.status;
+      throw err;
+    }
+    return json;
+  }
+
+  async function fetchTally() {
+    var r = await fetch(API_BASE + '/tally?pollId=' + encodeURIComponent(POLL_ID));
+    var json = null;
+    try { json = await r.json(); } catch (e) {}
+    if (!r.ok || !json || !json.ok) throw new Error('tally unavailable');
+    return json.tally;
+  }
+
+  async function castVote(optionId, quiet) {
+    lsSet(LS.mine, optionId);
+    paintMine();
+    if (!configured()) {
+      queueVote(optionId);
+      queuedBanner();
+      return;
+    }
+    try {
+      var res = await postVote(optionId);
+      live = true;
+      lsDel(LS.queued);
+      paintTally(res.tally);
+      if (!quiet) setBanner('ok', '✅ <strong>Vote counted.</strong> The live tally is below — change your pick any time and it replaces this one.');
+    } catch (e) {
+      if (e && e.status === 403) {
+        closed = true;
+        paintMine();
+        setBanner('info', '🗳️ Voting has closed for this poll — thanks for coming by! The final tally is below.');
+        try { paintTally(await fetchTally()); } catch (e2) {}
+        return;
+      }
+      queueVote(optionId);
+      setBanner('warn',
+        '⏳ <strong>The vote counter could not be reached.</strong> Your pick is saved on this device and will be sent automatically when the counter is back — nothing is lost.',
+        true);
+    }
+  }
+
+  async function sync() {
+    if (!configured()) {
+      if (myVote()) queuedBanner();
+      return;
+    }
+    // Send a queued vote first, then pull the tally if we've voted.
+    var q = null;
+    try { q = JSON.parse(lsGet(LS.queued) || 'null'); } catch (e) {}
+    if (q && q.optionId) {
+      try {
+        var res = await postVote(q.optionId);
+        live = true;
+        lsDel(LS.queued);
+        paintTally(res.tally);
+        setBanner('ok', '✅ <strong>Your saved vote just went through.</strong> The live tally is below.');
+        return;
+      } catch (e) {
+        if (e && e.status === 403) { closed = true; lsDel(LS.queued); }
+      }
+    }
+    if (myVote()) {
+      try {
+        var t = await fetchTally();
+        live = true;
+        paintTally(t);
+        if (lsGet(LS.queued)) queuedBanner();
+        else hideBanner();
+      } catch (e) {
+        setBanner('warn', '⏳ The vote counter could not be reached just now — your pick is saved on this device.', true);
+      }
+    }
+  }
+
+  cards.forEach(function (card) {
+    card.querySelector('button.vote').addEventListener('click', function () {
+      castVote(card.getAttribute('data-option'), false);
+    });
+  });
+
+  paintMine();
+  sync();
+})();
+</script>
+</body>
+</html>
