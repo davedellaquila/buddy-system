@@ -536,33 +536,62 @@
   .secpage .storyitem h3 a:hover{color:var(--accent)}
   .secpage .lede{font-size:16px;line-height:1.65;color:var(--ink);max-width:70ch;margin:10px 0 6px}
 
+  
+  .sec-head h2 a{color:inherit;text-decoration:none;border-bottom:2px solid transparent}
+  .sec-head h2 a:hover{color:var(--accent);border-bottom-color:var(--accent)}
+  .mini-mast{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 20px;border-bottom:3px double var(--ink);margin-bottom:8px;flex-wrap:wrap}
+  .mini-mast a.brand{font-family:Georgia,'Times New Roman',serif;font-weight:700;font-size:20px;color:var(--ink);text-decoration:none}
+  .mini-mast .ed{font-size:12px;color:var(--muted)}
+  .kicker{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:18px 0 4px}
+  .kicker a{color:var(--accent);text-decoration:none}
+  .detail h1{font-family:Georgia,'Times New Roman',serif;font-size:clamp(26px,5vw,40px);line-height:1.15;margin:6px 0 10px;letter-spacing:-.01em}
+  .detail h4.sec{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--accent);margin:22px 0 6px}
+  .detail p.body{font-size:16px;line-height:1.65;margin:0 0 12px;max-width:68ch}
+  .sourcebox{border:1px solid var(--rule);border-left:4px solid var(--accent);border-radius:8px;padding:12px 16px;margin:18px 0;max-width:68ch}
+  .sourcebox p{font-size:14px;line-height:1.6;margin:6px 0}
+  .sourcebox .flag{display:inline-block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;background:#fde68a;color:#7c2d12;border-radius:4px;padding:2px 8px;margin-bottom:4px}
+  .read-original{display:inline-block;margin:10px 0;padding:10px 20px;background:var(--accent);color:#fff !important;border-radius:8px;font-weight:700;text-decoration:none;font-size:15px}
+  .related{margin-top:28px;border-top:1px solid var(--rule);padding-top:14px}
+  .related h4.sec{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:0 0 10px}
+  .related ul{list-style:none;margin:0;padding:0}
+  .related li{margin:0 0 10px;font-size:15px;line-height:1.45}
+  .related a{color:var(--ink);text-decoration:none;border-bottom:1px solid var(--rule)}
+  .related a:hover{color:var(--accent);border-bottom-color:var(--accent)}
+  .backfoot{margin:30px 0 40px;font-size:14px}
+  .backfoot a{color:var(--accent);text-decoration:none;font-weight:600}
+  .secpage .storyitem{border-bottom:1px solid var(--rule);padding:16px 0}
+  .secpage .storyitem h3{font-size:20px;margin:0 0 6px;line-height:1.3}
+  .secpage .storyitem h3 a{color:var(--ink);text-decoration:none}
+  .secpage .storyitem h3 a:hover{color:var(--accent)}
+  .secpage .lede{font-size:16px;line-height:1.65;color:var(--ink);max-width:70ch;margin:10px 0 6px}
+
   </style>
 </head>
 <body>
 <header class="mini-mast">
   <a class="brand" href="../index.html">📰 The Morning Edition</a>
-  <span class="ed">Friday, October 23, 2026</span>
+  <span class="ed">Saturday, October 24, 2026</span>
   <button id="themeBtn" class="voice-change" style="margin-left:0">Theme: Auto</button>
 </header>
 <main class="detail secpage" style="max-width:860px;margin:0 auto;padding:0 20px">
   <p class="kicker">Section</p>
   <h1>Engineering</h1>
-  <p class="lede">The week&#x27;s infrastructure stories, specified: PHP2Shell&#x27;s two CVSS 9.2 flaws and the sites taken offline to patch them; the $80 billion-plus terrestrial build under SpaceX&#x27;s carrier bid; and Western Digital&#x27;s order visibility stretching into the 2030s.</p>
+  <p class="lede">PHP&#x27;s week, day four: a third RCE (CVE-2026-115560) disclosed Friday with a one-line mitigation and no patch, NAS vendors split on PHP2Shell fixes (Synology shipped, QNAP listed, three dateless), and the official patch guide for 8.5.12 / 8.4.27 with compromise checks.</p>
   <div class="storyitem">
-      <h3><a href="../articles/2026-10-23-your-favorite-websites-are-down-the-internet-breaking-p.html">Your favorite websites are down: the internet-breaking PHP flaw, explained</a></h3>
-      <p class="byline">How-To Geek</p>
-      <p class="body">The accessible engineering explainer: the PHP2Shell exploit tool can remotely run code in PHP’s core engine without logins, across WordPress, MediaWiki, Joomla and Drupal; researcher Silas Cutler estimates as many as 1.3 million hosts at risk, and WatchTowr claims releases dating back to 2004 are compromised. EU government sites, Asana, GOG and Wikipedia all went offline to patch or prepare — backing up data and disconnecting non-crucial systems.</p>
-      <p class="body"><em>Why it matters:</em> Why Wikipedia went dark and EU sites closed: the consumer-readable version of the week&#x27;s biggest infrastructure scare.</p>
+      <h3><a href="../articles/2026-10-24-php-shares-mitigation-for-a-new-rce-vulnerability-with.html">PHP shares mitigation for a new RCE vulnerability with no patch — CVE-2026-115560</a></h3>
+      <p class="byline">Cybernoz</p>
+      <p class="body">A third PHP flaw, disclosed Friday — distinct from PHP2Shell: CVE-2026-115560 is exploitable only when an app sets session.serialize_handler to php_binary or php_serialize, then switches it to php at runtime before session_start(), with upload progress enabled. The PHP team calls the combination unlikely, is handling it in the regular release cycle, and advises session.upload_progress.enabled=0 as mitigation. VirusTotal estimates 5.1M PHP hosts exposed online.</p>
+      <p class="body"><em>Why it matters:</em> A third PHP flaw, narrower than PHP2Shell, with a one-line mitigation: session.upload_progress.enabled=0. Check any PHP host you control.</p>
     </div><div class="storyitem">
-      <h3><a href="../articles/2026-10-23-what-80-000-cell-sites-actually-means-a-80-billion-plus.html">What 80,000 cell sites actually means: a $80 billion-plus terrestrial build on satellite spectrum</a></h3>
+      <h3><a href="../articles/2026-10-24-php2shell-nas-risk-four-vendors-still-patching-synology.html">PHP2Shell NAS risk: four vendors still patching — Synology shipped, QNAP lists, others silent on dates</a></h3>
       <p class="byline">Tech Insider</p>
-      <p class="body">The hardware read on SpaceX’s carrier bid: a nationwide network needs antennas, radios, power and backhaul on real steel — exactly what tower companies sell. SpaceX has acquired nationwide low-band spectrum and FCC authorization for 15,000 direct-to-cell satellites; TD Cowen estimates the terrestrial build at over $80 billion. Nothing is signed; the piece separates what sources establish from what the market assumes.</p>
-      <p class="body"><em>Why it matters:</em> The $80 billion question under the SpaceX headline: towers are steel, power and backhaul, and Cowen&#x27;s estimate prices the ambition.</p>
+      <p class="body">The storage aisle, Oct. 24: Synology shipped updated PHP packages via Package Center; QNAP confirmed affected products but gave no timeline; TerraMaster said Oct. 22 it was investigating; Ugreen and Asustor are working on fixes with no dates, per TechRadar’s reporting. Attackers recorded attempts on Oct. 17, four days before disclosure — the gap is the story.</p>
+      <p class="body"><em>Why it matters:</em> If you own a NAS, this is today&#x27;s action list: Synology done, QNAP listed, three vendors dateless. The Oct. 17 attack attempts set the urgency.</p>
     </div><div class="storyitem">
-      <h3><a href="../articles/2026-10-23-western-digital-revenue-up-55-order-visibility-extendin.html">Western Digital: revenue up 55%, order visibility extending into the 2030s</a></h3>
-      <p class="byline">BigGo Finance</p>
-      <p class="body">Inside the premarket roundup, an engineering-demand datum worth isolating: Western Digital management’s comments put order visibility extending into the 2030s, and optical/memory names rallied premarket (Lumentum over +4%, SK Hynix nearly +6%) — the AI infrastructure build still pulling storage and interconnect demand forward even in a risk-off week.</p>
-      <p class="body"><em>Why it matters:</em> Order visibility into the 2030s is a remarkable sentence in a risk-off week -- storage demand is the AI buildout&#x27;s quiet tell.</p>
+      <h3><a href="../articles/2026-10-24-critical-php-security-update-8-5-12-and-8-4-27-what-web.html">Critical PHP security update 8.5.12 and 8.4.27: what website owners must do now</a></h3>
+      <p class="byline">Nexus Web Security</p>
+      <p class="body">The patch guide, Saturday edition: PHP’s Oct. 21 emergency releases fix CVE-2026-109618 and CVE-2026-109619, both unauthenticated RCE, in 8.5.12, 8.4.27, 8.3.36 and 8.2.35. No complete workaround exists — updating is the only safe fix. Check for compromise first: unusual multipart requests followed by memory-limit errors, repeated PHP worker 500s, oversized PHPSESSID cookies.</p>
+      <p class="body"><em>Why it matters:</em> The patch guide with compromise checks: fixed versions named, IOCs listed. Updating PHP is the only safe fix -- no workaround exists.</p>
     </div>
   <section class="suggestbox" data-buddy-id="news-buddy">
     <h2>Suggestions</h2>
