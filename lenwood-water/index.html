@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<meta name="color-scheme" content="dark light">
+<title>💧 Water — Lenwood</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💧</text></svg>">
+<style>
+:root{
+  color-scheme:light;
+  --bg:#f4f9fc; --text:#12242e; --muted:#5b7280; --card:#ffffff; --border:#d7e6ee;
+  --accent:#0277bd; --accent-hi:#0288d1; --ok:#1b7a2e;
+  --dave:#0277bd; --house:#00897b;
+  --wave1:#e1f2fa; --wave2:#b3e0f2;
+  --shadow:0 8px 24px rgba(2,90,140,.10);
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    color-scheme:dark;
+    --bg:#0b1620; --text:#e3f0f7; --muted:#8fb0c1; --card:#12222f; --border:#23404f;
+    --accent:#4fc3f7; --accent-hi:#81d4fa; --ok:#5fd08a;
+    --dave:#29b6f6; --house:#26a69a;
+    --wave1:#0e2233; --wave2:#12344a;
+    --shadow:0 8px 24px rgba(0,0,0,.45);
+  }
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  background:var(--bg);color:var(--text);line-height:1.6;
+  -webkit-text-size-adjust:100%;
+}
+.wrap{max-width:880px;margin:0 auto;padding:0 20px 64px}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
+.topbar{
+  position:sticky;top:0;z-index:50;
+  display:flex;align-items:center;gap:10px;
+  background:var(--bg);border-bottom:1px solid var(--border);
+  padding:10px 2px;margin-bottom:26px;
+  font-size:17px;font-weight:700;
+}
+.topbar-icon{font-size:22px;line-height:1}
+.topbar-refresh{
+  margin-left:auto;background:none;border:1px solid transparent;border-radius:8px;
+  color:var(--muted);font-size:16px;cursor:pointer;padding:4px 10px;line-height:1;
+}
+.topbar-refresh:hover{color:var(--text);border-color:var(--border)}
+.hero{text-align:center;margin-bottom:30px}
+.hero .icon{font-size:62px;line-height:1.1}
+.hero h1{font-size:32px;letter-spacing:-.01em;margin:6px 0 6px}
+.hero .tagline{color:var(--muted);font-size:17px;max-width:620px;margin:0 auto}
+.hero .addr{margin-top:12px;font-size:15px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:16px}
+.chip{
+  background:var(--card);border:1px solid var(--border);border-radius:999px;
+  padding:5px 13px;font-size:13.5px;color:var(--text);font-weight:600;
+}
+a.chip:hover{border-color:var(--accent);text-decoration:none}
+.chip span{color:var(--muted);font-weight:500}
+.card{
+  background:var(--card);border:1px solid var(--border);border-radius:14px;
+  padding:22px 24px;margin-bottom:22px;box-shadow:var(--shadow);
+}
+.card h2{font-size:20px;margin:0 0 6px}
+.card .sub{color:var(--muted);font-size:14px;margin-bottom:14px}
+.kicker{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:var(--muted);margin:0 0 10px}
+/* ---- the split bar ---- */
+.splitbar{display:flex;height:64px;border-radius:12px;overflow:hidden;border:1px solid var(--border)}
+.splitbar .seg-dave{
+  flex:0 0 33.333%;background:linear-gradient(160deg,var(--wave2),var(--dave));
+  color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.25;
+}
+.splitbar .seg-house{
+  flex:1;background:linear-gradient(160deg,var(--wave1),var(--house));
+  color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.25;
+}
+@media (prefers-color-scheme: light){ .splitbar .seg-house{color:#06302b} }
+.splitbar .frac{font-size:21px;font-weight:800}
+.splitbar .who{font-size:12.5px;font-weight:600;opacity:.92}
+.split-legend{display:flex;gap:18px;flex-wrap:wrap;margin-top:12px;font-size:14px;color:var(--muted)}
+.split-legend b{color:var(--text)}
+.dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px;vertical-align:baseline}
+.dot.dave{background:var(--dave)} .dot.house{background:var(--house)}
+/* ---- calculator ---- */
+.calc-row{display:flex;gap:10px;flex-wrap:wrap;align-items:stretch}
+.calc-row .money{
+  flex:1;min-width:180px;display:flex;align-items:center;gap:6px;
+  background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:0 14px;
+}
+.calc-row .money span{color:var(--muted);font-weight:700}
+.calc-row input{
+  flex:1;min-width:0;border:none;background:none;color:var(--text);
+  font-size:19px;font-weight:700;padding:12px 0;font-family:inherit;
+}
+.calc-row input:focus{outline:none}
+.calc-row .money:focus-within{border-color:var(--accent)}
+.calc-btn{
+  background:var(--accent);color:#fff;border:none;border-radius:10px;
+  padding:12px 22px;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;
+}
+.calc-out{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px}
+.calc-cell{background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:14px 16px}
+.calc-cell .lbl{font-size:12.5px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.calc-cell .amt{font-size:26px;font-weight:800;margin-top:2px;font-variant-numeric:tabular-nums}
+.calc-cell.dave .amt{color:var(--dave)} .calc-cell.house .amt{color:var(--house)}
+.calc-note{font-size:13px;color:var(--muted);margin-top:12px}
+.calc-note:empty{display:none}
+/* ---- ledger table ---- */
+.tblwrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+table{border-collapse:collapse;width:100%;font-size:14.5px;min-width:560px}
+th,td{border-bottom:1px solid var(--border);padding:9px 10px;text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+th:first-child,td:first-child{text-align:left}
+th{color:var(--muted);font-size:12.5px;text-transform:uppercase;letter-spacing:.05em}
+tfoot td{font-weight:800;border-bottom:none}
+.emptyrow td{text-align:center;color:var(--muted);font-style:italic;padding:20px 10px;white-space:normal}
+/* ---- facts ---- */
+.facts{display:grid;gap:2px}
+.fact{display:grid;grid-template-columns:170px 1fr;gap:12px;padding:8px 0;border-top:1px solid var(--border);font-size:14.5px}
+.fact:first-child{border-top:0}
+.fact dt{color:var(--muted);font-weight:600}
+.fact dd{margin:0}
+.tbd{color:var(--muted);font-style:italic}
+/* ---- attention ---- */
+.attn{
+  background:var(--card);border:1px solid var(--border);border-left:4px solid var(--accent);
+  border-radius:0 12px 12px 0;padding:16px 20px;margin-bottom:12px;box-shadow:var(--shadow);
+}
+.attn p{font-size:15px}
+.attn .links{margin-top:8px;font-size:14px;display:flex;gap:16px;flex-wrap:wrap}
+.attn .links a{font-weight:600}
+/* ---- steps ---- */
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.step{background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:16px}
+.step .n{font-size:22px}
+.step h3{font-size:15px;margin:6px 0 4px}
+.step p{font-size:13.5px;color:var(--muted)}
+/* ---- links grid ---- */
+.linkgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px}
+.linkcard{
+  display:flex;gap:12px;align-items:center;background:var(--bg);border:1px solid var(--border);
+  border-radius:12px;padding:13px 16px;color:var(--text);
+}
+.linkcard:hover{border-color:var(--accent);text-decoration:none}
+.linkcard .lic{font-size:24px;flex:none}
+.linkcard .lname{font-weight:700;font-size:14.5px}
+.linkcard .ldesc{color:var(--muted);font-size:12.5px;line-height:1.4}
+.voice{
+  display:flex;gap:14px;align-items:center;background:var(--bg);border:1px dashed var(--border);
+  border-radius:12px;padding:14px 18px;font-size:14.5px;
+}
+.voice .vic{font-size:26px;flex:none}
+.voice p{color:var(--muted)} .voice p b{color:var(--text)}
+footer{margin-top:40px;padding-top:20px;border-top:1px solid var(--border);color:var(--muted);font-size:13px;text-align:center}
+.dumpbox {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px 22px;
+  margin-bottom: 32px;
+}
+.dumpbox h2 { margin: 0 0 6px; font-size: 20px; }
+.dumpbox-sub { color: var(--muted); font-size: 14px; margin-bottom: 14px; }
+.dumpbox textarea {
+  width: 100%; min-height: 96px; resize: vertical;
+  background: var(--bg); border: 1px solid var(--border); border-radius: 8px;
+  padding: 10px 12px; font-size: 14px; color: var(--text); font-family: inherit;
+}
+.dumpbox textarea:focus { outline: none; border-color: var(--accent); }
+.dumpbox textarea:disabled { opacity: .55; }
+.dumpbox-row { display: flex; align-items: center; gap: 12px; margin-top: 10px; flex-wrap: wrap; }
+.dumpbox-btn {
+  background: var(--accent); color: #fff; border: none; border-radius: 8px;
+  padding: 9px 22px; font-size: 14px; font-weight: 600; cursor: pointer;
+}
+.dumpbox-btn:disabled { opacity: .45; cursor: default; }
+.dumpbox-btn.saved { background: var(--ok); }
+.dumpbox-status { font-size: 13px; color: var(--muted); }
+.dumpbox-status.flash { color: var(--ok); font-weight: 700; }
+.dumpbox-hint { font-size: 12px; color: var(--muted); margin-top: 8px; }
+.dumpbox-token {
+  /* Jonny, 2026-10-19 (Dave's ask): amber, not zebra. A solid amber frame +
+     a soft amber wash says "one small step needs you" — zebra striping is
+     hazard tape, it signals danger and fights every calm surface around it.
+     Dashed grey read as placeholder; solid amber reads as deliberate. */
+  background: rgba(245, 158, 11, .09);
+  background: color-mix(in srgb, #f59e0b 9%, var(--bg));
+  border: 2px solid #f59e0b;
+  box-shadow: 0 0 0 3px rgba(245, 158, 11, .16);
+  box-shadow: 0 0 0 3px color-mix(in srgb, #f59e0b 16%, transparent);
+  border-radius: 8px;
+  padding: 12px 14px; margin-bottom: 12px; font-size: 14px;
+}
+.dumpbox-token p { margin-bottom: 8px; font-weight: 700; color: #cf222e; }
+@media (prefers-color-scheme: dark) { .dumpbox-token p { color: #ff7b72; } }
+.dumpbox-tokenrow { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.dumpbox-tokenrow input {
+  flex: 1; min-width: 170px; background: var(--card); border: 1px solid var(--border);
+  border-radius: 8px; padding: 7px 10px; font-size: 13px; color: var(--text);
+}
+.dumpbox-tokenrow button {
+  background: transparent; color: var(--accent); border: 1px solid var(--accent);
+  border-radius: 8px; padding: 7px 14px; font-size: 13px; font-weight: 600; cursor: pointer;
+}
+.dumpbox-tokenrow a { color: var(--accent); font-size: 13px; }
+@media (max-width:640px){
+  .wrap{padding:0 14px 56px}
+  .hero h1{font-size:26px}
+  .card{padding:18px 16px}
+  .calc-out{grid-template-columns:1fr}
+  .steps{grid-template-columns:1fr}
+  .fact{grid-template-columns:1fr;gap:2px}
+  .splitbar{height:74px}
+  .splitbar .frac{font-size:18px}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="topbar"><span class="topbar-icon">💧</span><span data-buddy-name>Water — Lenwood</span><button class="topbar-refresh" title="Reload this page (bypasses cache)" onclick="location.href=location.pathname+'?v='+Date.now()">&#8635;</button></div>
+
+<header class="hero">
+  <div class="icon">💧</div>
+  <h1>Water — Lenwood</h1>
+  <p class="tagline">The water ledger for one house: every bill recorded exactly, split <b>Dave ⅓ · household ⅔</b>, and reconciled to the cent.</p>
+  <p class="addr">🏡 Service address: <a href="https://maps.apple.com/?q=6929%20Lenwood%20Way%2C%20San%20Jose%2C%20CA">6929 Lenwood Way, San Jose, CA</a></p>
+  <div class="chips">
+    <a class="chip" href="../lenwood-buddy/">🏡 Lenwood Buddy <span>· parent</span></a>
+    <a class="chip" href="../lenwood-pge/">⚡ PG&amp;E — Lenwood <span>· sibling utility</span></a>
+    <a class="chip" href="../quentin-buddy/">🧑 Quentin</a>
+    <a class="chip" href="../amanda-buddy/">🏈 Amanda</a>
+    <a class="chip" href="../sawyer-buddy/">👦 Sawyer</a>
+  </div>
+</header>
+
+<section class="card" aria-label="The split">
+  <p class="kicker">The arrangement · Dave, 2026-10-24</p>
+  <h2>The split</h2>
+  <p class="sub">Every water bill for Lenwood divides the same way. The household splits its two-thirds among <a href="../quentin-buddy/">Quentin</a>, <a href="../amanda-buddy/">Amanda</a>, and <a href="../sawyer-buddy/">Sawyer</a> however they choose — that part is their call, and it isn't tracked here.</p>
+  <div class="splitbar" role="img" aria-label="Bar showing Dave pays one third and the household pays two thirds of each water bill">
+    <div class="seg-dave"><span class="frac">⅓</span><span class="who">Dave</span></div>
+    <div class="seg-house"><span class="frac">⅔</span><span class="who">The household</span></div>
+  </div>
+  <div class="split-legend">
+    <span><span class="dot dave"></span><b>Dave</b> covers one-third of each bill</span>
+    <span><span class="dot house"></span><b>Quentin · Amanda · Sawyer</b> owe two-thirds</span>
+  </div>
+</section>
+
+<section class="card" aria-label="Split calculator">
+  <p class="kicker">Try the math</p>
+  <h2>Split calculator</h2>
+  <p class="sub">Preview only — type a bill total to see the split. Nothing is owed, logged, or recorded until a real bill lands in the ledger below.</p>
+  <div class="calc-row">
+    <label class="money"><span>$</span><input id="calc-in" type="text" inputmode="decimal" placeholder="Bill total, e.g. 187.42" aria-label="Bill total in dollars"></label>
+    <button class="calc-btn" id="calc-btn" type="button">Split it</button>
+  </div>
+  <div class="calc-out">
+    <div class="calc-cell dave"><div class="lbl">Dave pays · ⅓</div><div class="amt" id="calc-dave">—</div></div>
+    <div class="calc-cell house"><div class="lbl">Household owes · ⅔</div><div class="amt" id="calc-house">—</div></div>
+  </div>
+  <p class="calc-note" id="calc-note"></p>
+  <p class="calc-note">Rounding, so the ledger always balances: Dave's share is the total ÷ 3 rounded to the nearest cent; the household's share is the remainder — the two always sum exactly to the bill.</p>
+</section>
+
+<section class="card" aria-label="Bill ledger">
+  <p class="kicker">The record</p>
+  <h2>Bill ledger</h2>
+  <p class="sub">Figures come only from actual bills or from Dave — never estimates. This ledger is mirrored in the repo's <a href="https://github.com/davedellaquila/lenwood-water/blob/main/KNOWLEDGE.md">KNOWLEDGE.md</a>.</p>
+  <div class="tblwrap">
+  <table>
+    <thead><tr><th>Statement</th><th>Due</th><th>Total</th><th>Dave ⅓</th><th>Household ⅔</th><th>Usage</th></tr></thead>
+    <tbody>
+      <tr class="emptyrow"><td colspan="6">No bills logged yet — the first real bill starts this ledger and fills in the account facts below.</td></tr>
+    </tbody>
+    <tfoot><tr><td colspan="2">Running total · 0 bills</td><td>—</td><td>—</td><td>—</td><td></td></tr></tfoot>
+  </table>
+  </div>
+</section>
+
+<h2 style="font-size:22px;margin:30px 0 14px">Needs attention</h2>
+
+<div class="attn">
+  <p><b>First real water bill wanted.</b> One bill establishes everything still marked TBD — the provider, the account number, and the billing cycle — and starts the ledger. Until it arrives, no figures exist and none are invented.</p>
+  <div class="links">
+    <a href="https://docs.google.com/document/d/1Qzh2yD1zI0mJv9JsANGWl5IoLHkUfsdSwCQq6DcC4s/edit">📄 Water — Lenwood — Job Req</a>
+    <a href="https://github.com/davedellaquila/lenwood-water">🗂️ Repo — lenwood-water</a>
+    <a href="../lenwood-buddy/">🏡 Lenwood Buddy</a>
+  </div>
+</div>
+
+<div class="attn">
+  <p><b>Voice assignment in flight.</b> When Decision Buddy's pick lands, this page gets its 🔊 “Hear my role” control — Water reading the first paragraph of its <a href="https://docs.google.com/document/d/1Qzh2yD1zI0mJv9JsANGWl5IoLHkUfsdSwCQq6DcC4s/edit">job req</a> aloud. Nothing to do until then.</p>
+  <div class="links">
+    <a href="https://davedellaquila.github.io/buddy-system/">🌳 Buddy System dashboard</a>
+  </div>
+</div>
+
+<section class="card" aria-label="Account facts">
+  <p class="kicker">On file</p>
+  <h2>Account facts</h2>
+  <dl class="facts">
+    <div class="fact"><dt>Service address</dt><dd><a href="https://maps.apple.com/?q=6929%20Lenwood%20Way%2C%20San%20Jose%2C%20CA">6929 Lenwood Way, San Jose, CA</a></dd></div>
+    <div class="fact"><dt>Household</dt><dd><a href="../quentin-buddy/">Quentin Dell'Aquila</a> · <a href="../amanda-buddy/">Amanda Perez</a> · <a href="../sawyer-buddy/">Sawyer Dell'Aquila</a></dd></div>
+    <div class="fact"><dt>Split</dt><dd>Dave ⅓ · household ⅔ (set by Dave, 2026-10-24)</dd></div>
+    <div class="fact"><dt>Provider</dt><dd><span class="tbd">TBD — from the first real bill; never assumed</span></dd></div>
+    <div class="fact"><dt>Account number</dt><dd><span class="tbd">TBD</span></dd></div>
+    <div class="fact"><dt>Billing cycle</dt><dd><span class="tbd">TBD</span></dd></div>
+    <div class="fact"><dt>Reports to</dt><dd><a href="../lenwood-buddy/">🏡 Lenwood Buddy</a> · Dave via <a href="../astro/">🚀 Astro</a></dd></div>
+  </dl>
+</section>
+
+<section class="card" aria-label="How it works">
+  <p class="kicker">The routine</p>
+  <h2>How each cycle runs</h2>
+  <div class="steps">
+    <div class="step"><div class="n">🧾</div><h3>1 · Record</h3><p>Statement date, due date, exact total, and usage if the bill shows it — logged within a day of the bill surfacing.</p></div>
+    <div class="step"><div class="n">✂️</div><h3>2 · Split</h3><p>Dave's third and the household's two-thirds, computed to the cent and added to the running ledger.</p></div>
+    <div class="step"><div class="n">👀</div><h3>3 · Watch</h3><p>Due dates flagged ahead of time; a spike (possible leak) or a missing bill flagged to <a href="../lenwood-buddy/">Lenwood Buddy</a> and <a href="../astro/">Astro</a>.</p></div>
+  </div>
+  <p class="calc-note">Out of scope, by design: Water never pays bills and never contacts the provider or the tenants — Dave and Astro handle payments and all tenant communication. Together with <a href="../lenwood-pge/">⚡ PG&amp;E — Lenwood</a>, this page rolls up into the house's full utilities picture under <a href="../lenwood-buddy/">🏡 Lenwood Buddy</a>.</p>
+</section>
+
+<section class="card" aria-label="Hear my role">
+  <div class="voice">
+    <div class="vic">🔊</div>
+    <p><b>Hear my role — coming soon.</b> My voice is being assigned now. When it lands, this is where you'll hear me read the first paragraph of my <a href="https://docs.google.com/document/d/1Qzh2yD1zI0mJv9JsANGWl5IoLHkUfsdSwCQq6DcC4s/edit">job req</a>.</p>
+  </div>
+</section>
+
+<section class="card" aria-label="Links">
+  <p class="kicker">Jump to</p>
+  <h2>Everything about this water</h2>
+  <div class="linkgrid">
+    <a class="linkcard" href="https://docs.google.com/document/d/1Qzh2yD1zI0mJv9JsANGWl5IoLHkUfsdSwCQq6DcC4s/edit"><span class="lic">📄</span><span><span class="lname">Job Req</span><div class="ldesc">The canonical charter — role, responsibilities, success criteria</div></span></a>
+    <a class="linkcard" href="https://github.com/davedellaquila/lenwood-water"><span class="lic">🗂️</span><span><span class="lname">Repo — lenwood-water</span><div class="ldesc">Private — KNOWLEDGE.md holds the living ledger</div></span></a>
+    <a class="linkcard" href="../lenwood-buddy/"><span class="lic">🏡</span><span><span class="lname">Lenwood Buddy</span><div class="ldesc">Parent — the whole house, its ideas and its future</div></span></a>
+    <a class="linkcard" href="../lenwood-pge/"><span class="lic">⚡</span><span><span class="lname">PG&amp;E — Lenwood</span><div class="ldesc">Sibling utility — PG&amp;E is 100% the tenants'</div></span></a>
+    <a class="linkcard" href="https://davedellaquila.github.io/buddy-system/"><span class="lic">🌳</span><span><span class="lname">Buddy System dashboard</span><div class="ldesc">The whole tree, every buddy in one place</div></span></a>
+    <a class="linkcard" href="https://muse.ai/chat/d4ad3617-9610-468d-b24a-c1af310a69b4"><span class="lic">💬</span><span><span class="lname">This buddy's thread</span><div class="ldesc">Talk to Water — Lenwood directly</div></span></a>
+  </div>
+</section>
+
+<section class="dumpbox" data-buddy-id="lenwood-water">
+<h2>🧠 Brain dump</h2>
+<p class="dumpbox-sub">Dump what's on your mind about <span data-buddy-name>Water — Lenwood</span> — raw and unfiltered. Each dump lands in the buddy's repo (docs/ingest.md) as a timestamped entry — or saves on this device until a repo is linked and a token is connected.</p>
+<div class="dumpbox-token" hidden>
+<p>🔒 Connect GitHub to unlock dumping. Paste a token once — it stays on this device only.</p>
+<div class="dumpbox-tokenrow">
+<input type="password" placeholder="GitHub token (repo scope)" aria-label="GitHub token">
+<button type="button">Save token</button>
+<a href="https://github.com/settings/tokens" target="_blank" rel="noopener">Get a token</a>
+</div>
+</div>
+<textarea rows="4" placeholder="Dump what's on your mind about Water — Lenwood…"></textarea>
+<div class="dumpbox-row">
+<button type="button" class="dumpbox-btn">Dump it</button>
+<span class="dumpbox-status" role="status"></span>
+</div>
+<p class="dumpbox-hint">Enter dumps it &middot; Shift+Enter for a new line</p>
+</section>
+
+<footer>
+  💧 Water — Lenwood · The ledger stays exact · Updated Oct 24, 2026<br>
+  <span>Bills logged: 0 · Provider: TBD · Next step: the first real bill</span>
+</footer>
+
+</div>
+
+<script>
+(function(){
+  var inp = document.getElementById('calc-in'),
+      btn = document.getElementById('calc-btn'),
+      dEl = document.getElementById('calc-dave'),
+      hEl = document.getElementById('calc-house'),
+      nEl = document.getElementById('calc-note');
+  function fmt(cents){
+    return '$' + (cents/100).toLocaleString('en-US',{minimumFractionDigits:2, maximumFractionDigits:2});
+  }
+  function run(){
+    var raw = (inp.value || '').replace(/[$,\s]/g,'');
+    var v = parseFloat(raw);
+    if (!raw || isNaN(v) || v < 0) {
+      dEl.textContent = '—'; hEl.textContent = '—';
+      nEl.textContent = raw ? 'Enter a bill total like 187.42 to see the split.' : '';
+      return;
+    }
+    var cents = Math.round(v * 100);
+    var dave = Math.round(cents / 3);
+    var house = cents - dave;
+    dEl.textContent = fmt(dave);
+    hEl.textContent = fmt(house);
+    var each = Math.round(house / 3);
+    nEl.textContent = 'On a ' + fmt(cents) + ' bill: Dave pays ' + fmt(dave) + ', the household owes ' + fmt(house) +
+      ' — if they split theirs evenly three ways, ' + fmt(each) + ' each. (Their division is their call; this is preview math only, nothing is logged.)';
+  }
+  btn.addEventListener('click', run);
+  inp.addEventListener('input', run);
+  inp.addEventListener('keydown', function(ev){ if (ev.key === 'Enter') { ev.preventDefault(); run(); } });
+})();
+</script>
+
+<script>
+(function(){
+  var box = document.querySelector('.dumpbox');
+  if (!box || box.dataset.dumpInit) return;
+  box.dataset.dumpInit = '1';
+  var bid = box.getAttribute('data-buddy-id') || (function(){
+    var p = location.pathname.replace(/\/+$/, '');
+    return p.substring(p.lastIndexOf('/') + 1);
+  })();
+  var ta = box.querySelector('textarea'),
+      btn = box.querySelector('.dumpbox-btn'),
+      st = box.querySelector('.dumpbox-status'),
+      tokWrap = box.querySelector('.dumpbox-token');
+  function lsGet(){ try { return JSON.parse(localStorage.getItem('buddyTree.v3') || '{}'); } catch(e){ return {}; } }
+  function lsSet(patch){ try { var s = lsGet(); for (var k in patch) s[k] = patch[k]; localStorage.setItem('buddyTree.v3', JSON.stringify(s)); } catch(e){} }
+  function token(){ return lsGet().ghToken || ''; }
+  function b64encode(str){
+    var bytes = new TextEncoder().encode(str), bin = '';
+    bytes.forEach(function(b){ bin += String.fromCharCode(b); });
+    return btoa(bin);
+  }
+  async function ghApi(path, method, body){
+    var t = token();
+    if (!t) throw new Error('Add a GitHub token first.');
+    var r = await fetch('https://api.github.com' + path, {
+      method: method || 'GET',
+      headers: {'Authorization': 'Bearer ' + t, 'Accept': 'application/vnd.github+json', 'Content-Type': 'application/json'},
+      body: body ? JSON.stringify(body) : undefined
+    });
+    if (!r.ok) throw new Error('GitHub ' + r.status);
+    return r.status === 204 ? null : await r.json();
+  }
+  async function ghGetFile(repo, path){
+    try {
+      var j = await ghApi('/repos/davedellaquila/' + repo + '/contents/' + path);
+      if (j && j.content) return {
+        text: new TextDecoder().decode(Uint8Array.from(atob(j.content.replace(/\n/g, '')), function(c){ return c.charCodeAt(0); })),
+        sha: j.sha
+      };
+    } catch(e){}
+    return null;
+  }
+  var repo = null, repoName = bid;
+  async function resolveRepo(){
+    try {
+      var r = await fetch('../buddies.json', {cache: 'no-store'});
+      var d = await r.json();
+      var buds = d.buddies || [];
+      for (var i = 0; i < buds.length; i++) {
+        if (buds[i].id === bid && buds[i].repo) { repo = buds[i].repo; repoName = buds[i].name || bid; break; }
+      }
+    } catch(e){}
+  }
+  /* Local fallback (Dave 2026-10-15, widened 2026-10-16): dumping always works,
+     even with no GitHub token AND no repo linked — entries are saved in this
+     device's localStorage until the GitHub write path can take them. The backlog
+     flushes into the repo on the next successful GitHub dump (once a repo is
+     linked and a token is present). */
+  function localKey(){ return 'buddyTree.ingest.' + bid; }
+  function localBacklog(){
+    try { var a = JSON.parse(localStorage.getItem(localKey()) || '[]'); return Array.isArray(a) ? a : []; }
+    catch(e){ return []; }
+  }
+  function localSave(entry){
+    var a = localBacklog(); a.push(entry);
+    try { localStorage.setItem(localKey(), JSON.stringify(a)); } catch(e){}
+  }
+  function localClear(){ try { localStorage.removeItem(localKey()); } catch(e){} }
+  function refreshUI(){
+    var has = !!token();
+    tokWrap.hidden = has;
+    /* The box always works: no token and/or no repo just means local saves. */
+    ta.disabled = false;
+    btn.disabled = false;
+    var n = localBacklog().length;
+    if (!repo) {
+      st.textContent = n
+        ? n + ' local ' + (n === 1 ? 'dump' : 'dumps') + ' saved on this device — will sync when a repo is linked.'
+        : 'No repo linked yet — dumps save on this device and will sync when one is linked.';
+      return;
+    }
+    st.textContent = has
+      ? (n ? n + ' local ' + (n === 1 ? 'dump' : 'dumps') + ' will sync on next dump.' : '')
+      : 'No GitHub token — dumps save on this device for now.';
+  }
+  var tokInput = tokWrap.querySelector('input'),
+      tokSave = tokWrap.querySelector('button');
+  /* Visual save confirmation (Dave 2026-10-16): the button flashes green
+     with a ✓ for ~2s on every successful save, so the save is unmissable. */
+  function flashSaved(){
+    var label = btn.textContent;
+    btn.classList.add('saved');
+    btn.textContent = '✓ Saved';
+    st.classList.add('flash');
+    setTimeout(function(){
+      btn.classList.remove('saved');
+      if (btn.textContent === '✓ Saved') btn.textContent = label;
+      st.classList.remove('flash');
+    }, 1800);
+  }
+  /* Dave 2026-10-18: verify the token against GitHub when pasted, so a
+     bad token is caught here instead of surfacing as a mysterious 404 on
+     the next dump. The token is kept either way; dumps queue locally until
+     a working token is in place. */
+  tokSave.addEventListener('click', async function(){
+    var v = tokInput.value.trim();
+    if (!v) return;
+    lsSet({ghToken: v});
+    tokInput.value = '';
+    st.textContent = 'Checking token…';
+    try {
+      await ghApi('/user');
+      refreshUI();
+      st.textContent = '✓ Token verified — dumps will sync to GitHub.';
+    } catch(e) {
+      refreshUI();
+      st.textContent = '⚠ GitHub rejected that token (' + ((e && e.message) || e) + ') — dumps stay on this device until a working token is added.';
+    }
+  });
+  async function dump(){
+    var text = ta.value.trim();
+    if (!text) return;
+    var stamp = new Date().toLocaleString();
+    var NL = String.fromCharCode(10);
+    if (!repo) {
+      /* No repo linked yet — save on this device; syncs once one is linked. */
+      localSave({t: stamp, text: text});
+      ta.value = '';
+      refreshUI();
+      st.textContent = '✓ Saved on this device — will sync to the repo once one is linked.';
+      flashSaved();
+      return;
+    }
+    if (!token()) {
+      /* Temporary workaround: no token → save on this device. */
+      localSave({t: stamp, text: text});
+      ta.value = '';
+      st.textContent = '✓ Saved on this device — add a GitHub token to sync it to the repo.';
+      flashSaved();
+      return;
+    }
+    st.textContent = 'Dumping…';
+    btn.disabled = true;
+    try {
+      /* Flush any locally-saved backlog first, then the new entry. */
+      var backlog = localBacklog();
+      var parts = backlog.map(function(b){ return '## ' + b.t + NL + NL + b.text + NL + NL; });
+      parts.push('## ' + stamp + NL + NL + text + NL + NL);
+      var cur = await ghGetFile(repo, 'docs/ingest.md');
+      var base = cur ? cur.text : '# Ingest log — ' + repoName + NL + NL;
+      var body = {message: 'Ingest dump for ' + bid, content: b64encode(base + parts.join(''))};
+      if (cur && cur.sha) body.sha = cur.sha;
+      await ghApi('/repos/davedellaquila/' + repo + '/contents/docs/ingest.md', 'PUT', body);
+      localClear();
+      ta.value = '';
+      st.textContent = '✓ Dumped to ' + repo + '/docs/ingest.md' + (backlog.length ? ' (' + backlog.length + ' local synced)' : '');
+      flashSaved();
+    } catch(err){
+      /* Dave 2026-10-18: a failed GitHub write must never drop the dump.
+         Keep it on this device and say so plainly, with the backlog count —
+         it syncs on the next successful dump. */
+      try { localSave({t: stamp, text: text}); } catch(e2){}
+      ta.value = '';
+      refreshUI();
+      var why = (err && err.message) || String(err);
+      var nq = 0; try { nq = localBacklog().length; } catch(e2){}
+      var tail = nq > 1 ? ' (' + nq + ' on this device waiting to sync)' : '';
+      st.textContent = (/404/.test(why)
+        ? '⚠ Saved on this device — GitHub said 404 (usually a wrong/expired token, or no access to this private repo). Fix the token, then dump again to sync.'
+        : '⚠ Saved on this device — GitHub said: ' + why + '. It will sync on your next successful dump.') + tail;
+    }
+    btn.disabled = false;
+  }
+  btn.addEventListener('click', dump);
+  ta.addEventListener('keydown', function(ev){
+    /* Dave 2026-10-16: plain Return dumps, like the button. Shift+Return for a newline. */
+    if (ev.key === 'Enter' && !ev.shiftKey && !ev.altKey) { ev.preventDefault(); dump(); }
+  });
+  resolveRepo().then(refreshUI);
+})();
+</script>
+
+<style>
+  .tipjar{position:fixed;right:18px;bottom:18px;z-index:60;
+    font-family:inherit;-webkit-tap-highlight-color:transparent}
+  .tipjar a{display:inline-flex;align-items:center;gap:.5em;
+    padding:.55em 1em;border-radius:999px;text-decoration:none;
+    font-size:.9rem;font-weight:600;line-height:1;
+    color:#fff;background:linear-gradient(135deg,#7c4dff,#b388ff);
+    box-shadow:0 6px 18px rgba(124,77,255,.35),0 2px 6px rgba(0,0,0,.25);
+    animation:tipjar-breathe 6s ease-in-out infinite}
+  .tipjar .jar{display:inline-block;font-size:1.15em;position:relative;
+    animation:tipjar-hop 9s ease-in-out infinite}
+  .tipjar .coin{position:absolute;left:50%;top:-.9em;transform:translateX(-50%);
+    font-size:.8em;opacity:0;animation:tipjar-coin 9s ease-in-out infinite}
+  .tipjar a:hover .jar{animation:tipjar-spin .7s cubic-bezier(.34,1.56,.64,1)}
+  .tipjar a:hover .tiptext{animation:tipjar-shimmer 2.5s linear infinite}
+  .tipjar a:focus-visible{outline:3px solid #ffd54f;outline-offset:3px}
+  @keyframes tipjar-breathe{0%,100%{transform:scale(1)}50%{transform:scale(1.035)}}
+  @keyframes tipjar-hop{0%,88%,100%{transform:translateY(0)}92%{transform:translateY(-4px) rotate(-8deg)}96%{transform:translateY(0)}}
+  @keyframes tipjar-coin{0%,88%,100%{opacity:0;transform:translate(-50%,0)}92%{opacity:1;transform:translate(-50%,4px)}96%,98%{opacity:0;transform:translate(-50%,9px)}}
+  @keyframes tipjar-spin{to{transform:rotate(360deg)}}
+  @keyframes tipjar-shimmer{0%{filter:brightness(1)}50%{filter:brightness(1.45)}100%{filter:brightness(1)}}
+  @media (prefers-reduced-motion: reduce){
+    .tipjar a,.tipjar .jar,.tipjar .coin{animation:none}
+  }
+</style>
+<div class="tipjar">
+  <a href="https://ko-fi.com/davedellaquila" target="_blank" rel="noopener"
+     aria-label="Tip jar — if this page helped you, you can leave Dave a tip on Ko-fi">
+    <span class="jar">🫙<span class="coin">🪙</span></span><span class="tiptext">Tip Jar</span>
+  </a>
+</div>
+
+</body>
+</html>
