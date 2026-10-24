@@ -349,6 +349,7 @@
   function queueVote(optionId) {
     lsSet(LS.queued, JSON.stringify({
       optionId: optionId,
+      voterToken: voterToken(),
       name: nameInput.value.trim().slice(0, 40) || null,
       at: Date.now(),
     }));
@@ -390,6 +391,7 @@
   }
 
   async function castVote(optionId, quiet) {
+    voterToken(); // fix this browser's voter identity from its first vote on
     lsSet(LS.mine, optionId);
     paintMine();
     if (!configured()) {
