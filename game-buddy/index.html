@@ -1,278 +1,373 @@
-<!-- BUDDY-BASIC-TEMPLATE v2 -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
-<title data-buddy-name>Game Buddy</title>
+<meta name="color-scheme" content="light dark">
+<title>Game Buddy — Dave's games chief</title>
 <style>
-:root {
-  --bg: #ffffff;
-  --text: #1a1a1a;
-  --muted: #666;
-  --card: #f5f5f5;
-  --border: #e0e0e0;
-  --accent: #0066cc;
-  --ok: #1b7a2e;
+:root{
+  --bg:#faf6ee; --panel:#fffdf7; --card:#ffffff; --text:#221c15; --muted:#6f6455;
+  --border:#e4d9c6; --accent:#6d28d9; --accent2:#0e7490; --pink:#be185d; --amber:#b45309;
+  --ok:#15803d; --warn-bg:#fef3c7; --warn-border:#f59e0b;
+  --hero1:#2e1065; --hero2:#701a75; --hero-text:#fdf4ff; --hero-muted:#f0abfc;
+  --chip:#f3e8ff; --shadow:0 10px 30px rgba(80,40,120,.10);
+  --sans:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+  --mono:ui-monospace,'SF Mono',Menlo,Consolas,monospace;
 }
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg: #1a1a1a;
-    --text: #e0e0e0;
-    --muted: #999;
-    --card: #2a2a2a;
-    --border: #3a3a3a;
-    --accent: #4da6ff;
-    --ok: #5fd08a;
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#0b0a14; --panel:#14121f; --card:#1a1729; --text:#f1ecff; --muted:#a89fc4;
+    --border:#322c4d; --accent:#a78bfa; --accent2:#22d3ee; --pink:#f472b6; --amber:#fbbf24;
+    --ok:#4ade80; --warn-bg:#2a2110; --warn-border:#f59e0b;
+    --hero1:#1e0a45; --hero2:#500f45; --hero-text:#fdf4ff; --hero-muted:#f0abfc;
+    --chip:#2a2145; --shadow:0 10px 30px rgba(0,0,0,.45);
   }
 }
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  background: var(--bg);
-  color: var(--text);
-  line-height: 1.6;
-  padding: 40px 20px;
-  max-width: 800px;
-  margin: 0 auto;
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.6;overflow-x:hidden}
+a{color:var(--accent)}
+.wrap{max-width:1060px;margin:0 auto;padding:0 18px 56px}
+/* sticky header */
+.topbar{position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:10px;background:var(--bg);border-bottom:1px solid var(--border);padding:11px 2px;font-size:17px;font-weight:700}
+.topbar .ic{font-size:22px;line-height:1}
+.topbar .sub{margin-left:auto;font-size:12px;font-weight:600;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;text-align:right}
+.topbar .refresh{margin-left:10px;background:none;border:1px solid transparent;border-radius:8px;color:var(--muted);font-size:16px;cursor:pointer;padding:4px 9px;line-height:1}
+.topbar .refresh:hover{color:var(--text);border-color:var(--border)}
+.crumb{padding:12px 2px 0;font-size:14px}
+.crumb a{color:inherit;opacity:.65;text-decoration:none}
+/* hero — the arcade marquee */
+.hero{margin-top:14px;border-radius:20px;padding:34px 28px 28px;color:var(--hero-text);
+  background:
+    radial-gradient(circle at 15% 20%, rgba(34,211,238,.35), transparent 42%),
+    radial-gradient(circle at 85% 10%, rgba(244,114,182,.35), transparent 45%),
+    linear-gradient(135deg,var(--hero1),var(--hero2));
+  box-shadow:var(--shadow);position:relative;overflow:hidden}
+.hero::after{content:"";position:absolute;inset:0;pointer-events:none;opacity:.14;
+  background-image:linear-gradient(rgba(255,255,255,.5) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.5) 1px,transparent 1px);
+  background-size:26px 26px}
+.hero>*{position:relative;z-index:1}
+.hero .kicker{font-family:var(--mono);font-size:12px;letter-spacing:.22em;text-transform:uppercase;color:var(--hero-muted)}
+.hero h1{font-size:clamp(34px,6vw,54px);line-height:1.05;margin:10px 0 8px}
+.hero .tag{font-size:clamp(17px,2.6vw,21px);font-weight:600}
+.hero .mission{margin-top:14px;font-size:16px;max-width:62ch;color:#fae8ff}
+.hero .press{display:inline-block;margin-top:18px;font-family:var(--mono);font-size:13px;letter-spacing:.14em;
+  border:2px solid rgba(255,255,255,.65);border-radius:999px;padding:7px 16px;color:var(--hero-text);text-decoration:none}
+.hero .press:hover{background:rgba(255,255,255,.14)}
+.blink{animation:blink 1.6s steps(2,start) infinite}
+@keyframes blink{to{visibility:hidden}}
+@media (prefers-reduced-motion: reduce){.blink{animation:none}}
+/* role audio */
+.hear{margin-top:16px;background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:16px 18px;box-shadow:var(--shadow)}
+.hear-label{font-weight:700;font-size:15px;margin-bottom:8px}
+.hear-label span{font-weight:500;color:var(--muted);font-size:13.5px}
+.hear audio{width:100%;max-width:520px;display:block}
+/* stat strip */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,150px),1fr));gap:10px;margin-top:16px}
+.stat{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px 16px;box-shadow:var(--shadow)}
+.stat .n{font-size:26px;font-weight:800;line-height:1.1}
+.stat .l{font-size:12.5px;color:var(--muted);letter-spacing:.04em;text-transform:uppercase;font-weight:600;margin-top:3px}
+.stat .s{font-size:13px;color:var(--muted);margin-top:4px}
+/* sections */
+h2.sec{font-size:23px;margin:36px 0 6px;display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.sec-sub{color:var(--muted);font-size:14.5px;margin-bottom:14px;max-width:72ch}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,290px),1fr));gap:14px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:20px;box-shadow:var(--shadow)}
+.card h3{font-size:18px;margin-bottom:6px}
+.card p{font-size:14.5px;color:var(--muted)}
+.card p strong,.card li strong{color:var(--text)}
+.card ul{margin:10px 0 0 18px;font-size:14.5px;color:var(--muted)}
+.card li{margin:4px 0}
+.pill{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;border-radius:999px;padding:3px 10px;background:var(--chip);color:var(--accent);margin-bottom:10px}
+.pill.pink{color:var(--pink)} .pill.cyan{color:var(--accent2)} .pill.amber{color:var(--amber)}
+/* attention */
+.attn{background:var(--warn-bg);border:2px solid var(--warn-border);border-radius:14px;padding:16px 18px;margin-bottom:12px}
+.attn h3{font-size:16.5px;margin-bottom:4px}
+.attn p{font-size:14.5px}
+.attn .go{display:inline-block;margin-top:9px;font-weight:700;text-decoration:none}
+.attn .go:hover{text-decoration:underline}
+/* taste profile board */
+.profile{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:12px}
+.dim{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px 18px}
+.dim .t{display:flex;justify-content:space-between;gap:10px;align-items:baseline}
+.dim .t b{font-size:15.5px}
+.dim .state{font-size:12px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--amber);white-space:nowrap}
+.dim .state.known{color:var(--ok)}
+.dots{display:flex;gap:5px;margin:10px 0 8px}
+.dots i{width:22px;height:8px;border-radius:99px;background:var(--border);display:block}
+.dots i.on{background:var(--accent)}
+.dim p{font-size:13.5px;color:var(--muted)}
+/* sampler */
+.sampler{background:var(--panel);border:1px dashed var(--accent);border-radius:16px;padding:20px}
+.pitch{display:flex;gap:12px;align-items:flex-start;padding:13px 0;border-top:1px solid var(--border);flex-wrap:wrap}
+.pitch:first-of-type{border-top:none}
+.pitch .txt{flex:1 1 260px;min-width:0}
+.pitch .txt b{font-size:15px}
+.pitch .txt p{font-size:13.5px;color:var(--muted)}
+.votes{display:flex;gap:6px;flex:none}
+.votes button{border:1px solid var(--border);background:var(--card);color:var(--text);border-radius:999px;padding:6px 13px;font-size:13px;font-weight:600;cursor:pointer}
+.votes button:hover{border-color:var(--accent)}
+.votes button.sel{background:var(--accent);border-color:var(--accent);color:#fff}
+.sampler .tally{font-size:13.5px;color:var(--muted);margin-top:12px}
+.sampler .tally b{color:var(--text)}
+/* timeline */
+.timeline{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,210px),1fr));gap:12px}
+.era{background:var(--card);border-top:5px solid var(--accent);border-left:1px solid var(--border);border-right:1px solid var(--border);border-bottom:1px solid var(--border);border-radius:12px;padding:15px 16px}
+.era:nth-child(2){border-top-color:var(--pink)} .era:nth-child(3){border-top-color:var(--accent2)} .era:nth-child(4){border-top-color:var(--amber)}
+.era .y{font-family:var(--mono);font-size:12px;letter-spacing:.12em;color:var(--muted);text-transform:uppercase}
+.era h3{font-size:16px;margin:4px 0}
+.era p{font-size:13.5px;color:var(--muted)}
+/* interview list */
+.qs{counter-reset:q;display:flex;flex-direction:column;gap:9px}
+.qs li{list-style:none;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:13px 16px 13px 52px;position:relative;font-size:15px}
+.qs li::before{counter-increment:q;content:counter(q);position:absolute;left:14px;top:12px;width:26px;height:26px;border-radius:50%;background:var(--accent);color:#fff;font-weight:800;font-size:14px;display:flex;align-items:center;justify-content:center}
+.qs li span{display:block;font-size:13px;color:var(--muted);margin-top:2px}
+/* files */
+.files{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,230px),1fr));gap:10px}
+.files a{display:block;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:13px 15px;text-decoration:none;color:var(--text)}
+.files a:hover{border-color:var(--accent)}
+.files a b{display:block;font-size:14.5px}
+.files a span{font-size:12.5px;color:var(--muted)}
+.empty-note{font-size:14.5px;color:var(--muted);font-style:italic}
+.footer{margin-top:44px;padding-top:20px;border-top:1px solid var(--border);color:var(--muted);font-size:13.5px;text-align:center}
+@media (max-width:560px){
+  .topbar{font-size:15.5px}.topbar .sub{display:none}
+  .hero{padding:26px 20px 22px}.wrap{padding:0 13px 48px}
 }
-.header { text-align: center; margin-bottom: 40px; }
-.topbar {
-  position: sticky; top: 0; z-index: 50;
-  display: flex; align-items: center; gap: 10px;
-  background: var(--bg);
-  border-bottom: 1px solid var(--border);
-  padding: 10px 2px; margin-bottom: 24px;
-  font-size: 17px; font-weight: 700;
-}
-.topbar-icon { font-size: 22px; line-height: 1; }
-.topbar-refresh {
-  margin-left: auto; background: none; border: 1px solid transparent; border-radius: 8px;
-  color: var(--muted); font-size: 16px; cursor: pointer; padding: 4px 10px; line-height: 1;
-}
-.topbar-refresh:hover { color: var(--text); border-color: var(--border); }
-.icon { font-size: 64px; margin-bottom: 16px; }
-h1 { font-size: 32px; margin-bottom: 8px; }
-.tagline { color: var(--muted); font-size: 18px; }
-.mission {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 24px;
-  margin-bottom: 32px;
-  font-size: 17px;
-}
-h2 { font-size: 22px; margin: 32px 0 16px; }
-.attn {
-  background: var(--card);
-  border-left: 4px solid var(--accent);
-  border-radius: 0 8px 8px 0;
-  padding: 16px 20px;
-  margin-bottom: 12px;
-}
-.attn-date { color: var(--muted); font-size: 14px; margin-top: 8px; }
-.attn-link { margin-top: 8px; }
-.attn-link a { color: var(--accent); font-weight: 600; text-decoration: none; }
-.attn-link a:hover { text-decoration: underline; }
-.attn-actions { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
-.attn-btn {
-  border: 1px solid var(--border); background: var(--bg); color: var(--text);
-  border-radius: 8px; padding: 7px 14px; font-size: 13px; font-weight: 600; cursor: pointer;
-  -webkit-tap-highlight-color: transparent;
-}
-.attn-btn:hover { border-color: var(--accent); }
-.attn-btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
-.attn-btn:disabled { opacity: .45; cursor: default; }
-.attn-status { font-size: 13px; color: var(--muted); margin-top: 8px; min-height: 18px; }
-.attn.resolved { opacity: .6; }
-.attn.resolved .attn-actions { display: none; }
-/* ---- skills (Dave 2026-10-16) ---- */
-.skills { display: flex; flex-direction: column; gap: 10px; margin-top: 4px; }
-.skill { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 12px 16px; }
-.skill-name { font-weight: 700; font-size: 15px; }
-.skill-evidence { color: var(--muted); font-size: 13px; margin-top: 4px; line-height: 1.45; }
-.children { display: flex; flex-wrap: wrap; gap: 12px; }
-.child {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 12px 20px;
-  text-decoration: none;
-  color: var(--text);
-}
-.child:hover { border-color: var(--accent); }
-.footer {
-  margin-top: 48px;
-  padding-top: 24px;
-  border-top: 1px solid var(--border);
-  color: var(--muted);
-  font-size: 14px;
-  text-align: center;
-}
-.empty { color: var(--muted); font-style: italic; }
-/* Dave 2026-10-16: photo gallery — baked in at generation time from the buddy's repo photos/ */
-.gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; margin-bottom: 8px; }
-.gallery a { display: block; border-radius: 12px; overflow: hidden; border: 1px solid var(--border); background: var(--card); }
-.gallery img { width: 100%; height: 160px; object-fit: cover; display: block; transition: transform .25s ease; }
-.gallery a:hover img { transform: scale(1.04); }
-.lightbox { position: fixed; inset: 0; z-index: 1000; display: flex; align-items: center; justify-content: center; }
-.lightbox[hidden] { display: none; }
-.lightbox-bg { position: absolute; inset: 0; background: rgba(0,0,0,.88); }
-.lightbox-img { position: relative; max-width: 92vw; max-height: 88vh; border-radius: 12px; box-shadow: 0 24px 64px rgba(0,0,0,.5); }
-.lightbox-x { position: absolute; top: 16px; right: 20px; background: rgba(255,255,255,.12); color: #fff; border: none; border-radius: 50%; width: 44px; height: 44px; font-size: 26px; cursor: pointer; line-height: 1; }
-
-.dumpbox {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 20px 22px;
-  margin-bottom: 32px;
-}
-.dumpbox h2 { margin: 0 0 6px; font-size: 20px; }
-.dumpbox-sub { color: var(--muted); font-size: 14px; margin-bottom: 14px; }
-.dumpbox textarea {
-  width: 100%; min-height: 96px; resize: vertical;
-  background: var(--bg); border: 1px solid var(--border); border-radius: 8px;
-  padding: 10px 12px; font-size: 14px; color: var(--text); font-family: inherit;
-}
-.dumpbox textarea:focus { outline: none; border-color: var(--accent); }
-.dumpbox textarea:disabled { opacity: .55; }
-.dumpbox-row { display: flex; align-items: center; gap: 12px; margin-top: 10px; flex-wrap: wrap; }
-.dumpbox-btn {
-  background: var(--accent); color: #fff; border: none; border-radius: 8px;
-  padding: 9px 22px; font-size: 14px; font-weight: 600; cursor: pointer;
-}
-.dumpbox-btn:disabled { opacity: .45; cursor: default; }
-.dumpbox-btn.saved { background: var(--ok); }
-.dumpbox-status { font-size: 13px; color: var(--muted); }
-.dumpbox-status.flash { color: var(--ok); font-weight: 700; }
-.dumpbox-hint { font-size: 12px; color: var(--muted); margin-top: 8px; }
-.dumpbox-token {
-  /* Jonny, 2026-10-19 (Dave's ask): amber, not zebra. A solid amber frame +
-     a soft amber wash says "one small step needs you" — zebra striping is
-     hazard tape, it signals danger and fights every calm surface around it.
-     Dashed grey read as placeholder; solid amber reads as deliberate. */
-  background: rgba(245, 158, 11, .09);
-  background: color-mix(in srgb, #f59e0b 9%, var(--bg));
-  border: 2px solid #f59e0b;
-  box-shadow: 0 0 0 3px rgba(245, 158, 11, .16);
-  box-shadow: 0 0 0 3px color-mix(in srgb, #f59e0b 16%, transparent);
-  border-radius: 8px;
-  padding: 12px 14px; margin-bottom: 12px; font-size: 14px;
-}
-.dumpbox-token p { margin-bottom: 8px; font-weight: 700; color: #cf222e; }
-@media (prefers-color-scheme: dark) { .dumpbox-token p { color: #ff7b72; } }
-.dumpbox-tokenrow { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
-.dumpbox-tokenrow input {
-  flex: 1; min-width: 170px; background: var(--card); border: 1px solid var(--border);
-  border-radius: 8px; padding: 7px 10px; font-size: 13px; color: var(--text);
-}
-.dumpbox-tokenrow button {
-  background: transparent; color: var(--accent); border: 1px solid var(--accent);
-  border-radius: 8px; padding: 7px 14px; font-size: 13px; font-weight: 600; cursor: pointer;
-}
-.dumpbox-tokenrow a { color: var(--accent); font-size: 13px; }
-
-
-/* ---- Repo files (Dave 2026-10-20): view + edit the buddy's repo markdown ---- */
-.repo-files { margin-top: 8px; }
-.rf-sub { color: var(--muted); font-size: 14px; margin-bottom: 12px; }
-.rf-locked { background: var(--card); border: 1px dashed var(--border); border-radius: 8px; padding: 14px 16px; color: var(--muted); font-size: 14px; }
-.rf-list { display: flex; flex-direction: column; gap: 8px; }
-.rf-file { display: flex; align-items: center; gap: 10px; background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 10px 14px; cursor: pointer; text-align: left; width: 100%; color: var(--text); font: inherit; -webkit-tap-highlight-color: transparent; }
-.rf-file:hover { border-color: var(--accent); }
-.rf-file .rf-name { font-weight: 600; font-size: 15px; }
-.rf-file .rf-dir { color: var(--muted); font-size: 13px; margin-left: auto; word-break: break-all; text-align: right; }
-.rf-view, .rf-editor { margin-top: 14px; background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 16px; }
-.rf-viewhead { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 10px; }
-.rf-path { font-weight: 700; font-size: 14px; margin-right: auto; word-break: break-all; }
-.rf-body { font-size: 15px; }
-.rf-body h2 { font-size: 21px; margin: 16px 0 8px; }
-.rf-body h3 { font-size: 18px; margin: 14px 0 6px; }
-.rf-body h4 { font-size: 16px; margin: 12px 0 6px; }
-.rf-body p { margin: 6px 0; }
-.rf-body ul { margin: 6px 0 6px 20px; }
-.rf-body blockquote { border-left: 3px solid var(--border); padding-left: 12px; color: var(--muted); margin: 8px 0; }
-.rf-body code { background: var(--bg); border: 1px solid var(--border); border-radius: 4px; padding: 0 4px; font-size: 13px; }
-.rf-body pre { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 12px; overflow-x: auto; margin: 8px 0; }
-.rf-body pre code { border: none; padding: 0; background: none; }
-.rf-body a { color: var(--accent); }
-.rf-body hr { border: none; border-top: 1px solid var(--border); margin: 14px 0; }
-.rf-ta { width: 100%; box-sizing: border-box; background: var(--bg); color: var(--text); border: 1px solid var(--border); border-radius: 8px; padding: 12px; font-family: ui-monospace, Menlo, monospace; font-size: 13px; line-height: 1.55; }
-/* ---- Accordion files (Dave 2026-10-21): the list of markdown files;
-   clicking a file name opens its contents inline right below that name.
-   Every file toggles independently — several can be open at once — and
-   Edit lives inside the opened panel. ---- */
-.rf-files-wrap { display: flex; flex-direction: column; gap: 8px; }
-.rf-fileitem { display: flex; flex-direction: column; }
-.rf-file .rf-chev { color: var(--muted); font-size: 13px; flex: none; }
-.rf-panel { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 16px; margin-top: 8px; }
-.rf-panel .rf-viewhead { margin-bottom: 8px; }
-.rf-loading { color: var(--muted); font-size: 14px; }
-.rf-panel .rf-editor { margin-top: 4px; }
-.rf-panel .rf-fstatus { margin-top: 8px; }
-
+/* dump box (canonical snippet, restyled tokens only) */
+.dumpbox{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px 22px;margin-top:16px;box-shadow:var(--shadow)}
+.dumpbox h2{margin:0 0 6px;font-size:20px}
+.dumpbox-sub{color:var(--muted);font-size:14px;margin-bottom:14px}
+.dumpbox textarea{width:100%;min-height:96px;resize:vertical;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-size:14px;color:var(--text);font-family:inherit}
+.dumpbox textarea:focus{outline:none;border-color:var(--accent)}
+.dumpbox-row{display:flex;align-items:center;gap:12px;margin-top:10px;flex-wrap:wrap}
+.dumpbox-btn{background:var(--accent);color:#fff;border:none;border-radius:8px;padding:9px 22px;font-size:14px;font-weight:600;cursor:pointer}
+.dumpbox-btn:disabled{opacity:.45;cursor:default}
+.dumpbox-btn.saved{background:var(--ok)}
+.dumpbox-status{font-size:13px;color:var(--muted)}
+.dumpbox-status.flash{color:var(--ok);font-weight:700}
+.dumpbox-hint{font-size:12px;color:var(--muted);margin-top:8px}
+.dumpbox-token{background:rgba(245,158,11,.09);background:color-mix(in srgb,#f59e0b 9%,var(--bg));border:2px solid #f59e0b;box-shadow:0 0 0 3px rgba(245,158,11,.16);box-shadow:0 0 0 3px color-mix(in srgb,#f59e0b 16%,transparent);border-radius:8px;padding:12px 14px;margin-bottom:12px;font-size:14px}
+.dumpbox-token p{margin-bottom:8px;font-weight:700;color:#cf222e}
+@media (prefers-color-scheme: dark){.dumpbox-token p{color:#ff7b72}}
+.dumpbox-tokenrow{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.dumpbox-tokenrow input{flex:1;min-width:170px;background:var(--card);border:1px solid var(--border);border-radius:8px;padding:7px 10px;font-size:13px;color:var(--text)}
+.dumpbox-tokenrow button{background:transparent;color:var(--accent);border:1px solid var(--accent);border-radius:8px;padding:7px 14px;font-size:13px;font-weight:600;cursor:pointer}
+.dumpbox-tokenrow a{color:var(--accent);font-size:13px}
 </style>
 </head>
 <body>
-<nav data-buddy-crumb style="padding:14px 20px 0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:14px;line-height:1.4;"><a href="https://davedellaquila.github.io/buddy-system/project-buddy/" style="color:inherit;opacity:.65;text-decoration:none;">← Project Buddy</a></nav>
-<div class="topbar"><span class="topbar-icon">🎮</span><span class="topbar-name" data-buddy-name>Game Buddy</span><button class="topbar-refresh" title="Reload this page (bypasses cache)" onclick="location.href=location.pathname+'?v='+Date.now()">&#8635;</button></div>
-<div class="header">
-<div class="icon">🎮</div>
-<h1 data-buddy-name>Game Buddy</h1>
-<div class="tagline">Builds games, curates games — learns Dave&#x27;s taste first</div>
+<div class="wrap">
+  <nav class="crumb"><a href="https://davedellaquila.github.io/buddy-system/project-buddy/">← Project Buddy</a></nav>
+  <div class="topbar"><span class="ic">🎮</span><span>Game Buddy</span><span class="sub">Pixel · Games chief</span><button class="refresh" title="Reload this page (bypasses cache)" onclick="location.href=location.pathname+'?v='+Date.now()">&#8635;</button></div>
+
+  <header class="hero">
+    <div class="kicker">Player 1 · Insert coin</div>
+    <h1>🎮 Game Buddy</h1>
+    <div class="tag">Builds games, curates games — learns Dave's taste first.</div>
+    <p class="mission">Game Buddy is Dave's games chief — part game designer, part curator, part student of Dave's taste. It designs and builds original web games with Dave, with a soft spot for 80s retro classics reimagined for the browser and the buddy dashboard. It tracks what is actually worth playing — especially on Apple TV — and recommends against Dave's own Gamer Taste Profile, never generic charts. Its first research job is interviewing Dave to build that profile: what he loves, what bores him, and what makes a game feel right.</p>
+    <a class="press" href="#interview">▶ PRESS START — THE INTERVIEW <span class="blink">▮</span></a>
+  </header>
+
+  <section class="hear" aria-label="Hear my role">
+    <div class="hear-label">🔊 Hear my role <span>— the first paragraph of my job req's Role summary, in my own voice (Pixel — Playful Scooter)</span></div>
+    <audio controls preload="none" src="role-intro.mp3">Your browser doesn't support audio playback — read the <a href="https://docs.google.com/document/d/1xznMKT0OBvlg-ghDDDphN53GhQoVq5tVsypqyaib4NA/edit">job req</a> instead.</audio>
+  </section>
+
+  <div class="stats" aria-label="At a glance">
+    <div class="stat"><div class="n">0%</div><div class="l">Taste profile discovered</div><div class="s">Honest zero — the interview comes first. Nothing here is guessed.</div></div>
+    <div class="stat"><div class="n">Round 1</div><div class="l">Interview status</div><div class="s">Drafted 2026-10-25 — waiting for Dave in the main chat.</div></div>
+    <div class="stat"><div class="n">0</div><div class="l">Games built yet</div><div class="s">First concept gets proposed after Round 1, argued from Dave's answers.</div></div>
+    <div class="stat"><div class="n">0</div><div class="l">Recommendations yet</div><div class="s">No generic charts. Picks start when the profile does.</div></div>
+  </div>
+
+  <h2 class="sec">⚠️ Needs Dave's attention</h2>
+  <div class="attn">
+    <h3>🎤 Answer the Gamer Taste Interview — Round 1</h3>
+    <p>Ten questions, drafted below and relayed by Astro in the main chat (that's where Dave actually reads). Every answer lands in my <a href="https://github.com/davedellaquila/game-buddy/blob/main/KNOWLEDGE.md">Gamer Taste Profile (KNOWLEDGE.md)</a> and gets summarized on this page.</p>
+    <a class="go" href="#interview">See the Round 1 questions ↓</a>
+  </div>
+  <div class="attn">
+    <h3>📋 Job req — ready for your review</h3>
+    <p>Looks good, edits, or defer? The req is what this whole page is built from.</p>
+    <a class="go" href="https://docs.google.com/document/d/1xznMKT0OBvlg-ghDDDphN53GhQoVq5tVsypqyaib4NA/edit">Open the job req →</a>
+  </div>
+
+  <h2 class="sec">🕹️ What I do — three cabinets, one arcade</h2>
+  <p class="sec-sub">My job req, as shelves. Each one shows its current state honestly — where there's nothing yet, it says so.</p>
+  <div class="grid">
+    <section class="card">
+      <span class="pill">Creator</span>
+      <h3>🎨 I build games with Dave</h3>
+      <p>Original web games for the browser and the <a href="https://davedellaquila.github.io/buddy-system/">Buddy System dashboard</a> — 80s arcade and early home-computer classics reimagined. Feel and juice matter: Dave is a UX designer, and a game that feels wrong <strong>is</strong> wrong.</p>
+      <ul>
+        <li><strong>Build queue:</strong> empty on purpose — first concept follows the interview.</li>
+        <li><strong>Design advice:</strong> I consult the <a href="https://davedellaquila.github.io/buddy-system/design-buddy/">Designer</a>, the team's taste advisor, when a build needs a crit.</li>
+        <li><strong>Try the seed:</strong> the <a href="#sampler">Taste Sampler</a> below is this page's first playable thing.</li>
+      </ul>
+    </section>
+    <section class="card">
+      <span class="pill pink">Curator</span>
+      <h3>🔭 I track what's worth playing</h3>
+      <p>Especially on <strong>Apple TV</strong> — I own <em>playing</em> on it; <a href="https://davedellaquila.github.io/buddy-system/tv-buddy/">TV Buddy</a> owns <em>watching</em> on it. Same screen, different shelf, and we coordinate so the shelves never collide.</p>
+      <ul>
+        <li><strong>Play Next list:</strong> empty until the profile exists — recommendations are argued from Dave's taste, never a top-ten chart.</li>
+        <li><strong>Price &amp; release watches:</strong> one-offs live under this beat — see the Ace Combat note below.</li>
+        <li><strong>No purchases, ever:</strong> I recommend and watch only; any buy stops at Dave's approval.</li>
+      </ul>
+    </section>
+    <section class="card">
+      <span class="pill cyan">Interviewer</span>
+      <h3>🎤 I learn Dave's taste</h3>
+      <p>The Gamer Taste Interview is my first research job: what Dave loves, what bores him, what makes a game feel right. Answers become the <a href="https://github.com/davedellaquila/game-buddy/blob/main/KNOWLEDGE.md">Gamer Taste Profile</a>; the profile drives everything above.</p>
+      <ul>
+        <li><strong>Round 1:</strong> drafted — <a href="#interview">ten questions</a>, eras to platforms to challenge appetite.</li>
+        <li><strong>Rule:</strong> taste specifics are discovered, never invented. Unknowns stay marked unknown.</li>
+      </ul>
+    </section>
+  </div>
+
+  <h2 class="sec" id="profile">🧭 Gamer Taste Profile — the board so far</h2>
+  <p class="sec-sub">This is the seed of my app: every dimension starts empty and fills in as Dave answers, plays, and reacts. Seeded facts (things already known from Dave's life, <em>not</em> taste claims) are marked separately.</p>
+  <div class="profile">
+    <div class="dim"><div class="t"><b>Era anchors</b><span class="state">To be discovered</span></div><div class="dots"><i></i><i></i><i></i><i></i><i></i></div><p>Which eras are home — arcade, 8-bit home computer, console generations, today? <em>Seeded:</em> Dave grew up in Silicon Valley before and during the microcomputer revolution — the 80s beat is home turf, not a costume.</p></div>
+    <div class="dim"><div class="t"><b>Platforms</b><span class="state">To be discovered</span></div><div class="dots"><i></i><i></i><i></i><i></i><i></i></div><p>Apple TV, console, computer, phone — where would Dave actually play, and what friction stops him?</p></div>
+    <div class="dim"><div class="t"><b>Solo vs. social</b><span class="state">To be discovered</span></div><div class="dots"><i></i><i></i><i></i><i></i><i></i></div><p>Solo sessions, co-op with Nan and family, or friends? <em>Seeded:</em> Nan and family are plausible co-players — appetite unconfirmed.</p></div>
+    <div class="dim"><div class="t"><b>Session length</b><span class="state">To be discovered</span></div><div class="dots"><i></i><i></i><i></i><i></i><i></i></div><p>Ten-minute bursts, an evening, a long haul — and when in the day playing actually happens.</p></div>
+    <div class="dim"><div class="t"><b>Challenge appetite</b><span class="state">To be discovered</span></div><div class="dots"><i></i><i></i><i></i><i></i><i></i></div><p>Relaxing cruise or punishing mastery? How much losing is fun before it isn't?</p></div>
+    <div class="dim"><div class="t"><b>Feel &amp; juice</b><span class="state known">Seeded ✓</span></div><div class="dots"><i class="on"></i><i></i><i></i><i></i><i></i></div><p><em>Seeded:</em> Dave is a UX designer with 30+ years in the craft — controls, feedback, and feel are first-class taste signals for him. Which games nailed it is Round 1, Q3.</p></div>
+    <div class="dim"><div class="t"><b>Genres in / genres out</b><span class="state">To be discovered</span></div><div class="dots"><i></i><i></i><i></i><i></i><i></i></div><p><em>Seeded signals only:</em> Dave runs Sports Car Adventures — bespoke vintage driving experiences (driving is a live interest) and an Ace Combat 7 watch is running (flight/combat is at least on the radar). Neither is a taste verdict yet.</p></div>
+    <div class="dim"><div class="t"><b>Daily play habit</b><span class="state known">Seeded ✓</span></div><div class="dots"><i class="on"></i><i></i><i></i><i></i><i></i></div><p><em>Seeded:</em> Dave plays Hans's daily riddle and joke in the hourly chimes — short, daily, playful is a proven format in his day. The joke-game product itself belongs to Riddle &amp; Joke Buddy (setup in progress, no homepage yet) — a related project, not my build queue.</p></div>
+    <div class="dim"><div class="t"><b>Nostalgia anchors</b><span class="state">To be discovered</span></div><div class="dots"><i></i><i></i><i></i><i></i><i></i></div><p>The specific machines, cabinets, and titles that still light Dave up. Round 1, Q1–Q2 goes hunting for these.</p></div>
+  </div>
+
+  <h2 class="sec" id="sampler">🎰 Taste Sampler — this page's first playable thing</h2>
+  <p class="sec-sub">Six one-line game pitches — pure hypotheticals, not recommendations. Dave: tap <strong>Play it</strong>, <strong>Curious</strong>, or <strong>Pass</strong> on each. Your taps save on this device only, and they're raw material for the profile — a faster signal than any questionnaire. (This is the seed of the curator app: pitch → reaction → profile.)</p>
+  <section class="sampler" aria-label="Taste sampler">
+    <div class="pitch" data-pitch="retro-racer"><div class="txt"><b>🏎️ Ten-minute retro racer</b><p>An 80s arcade racer reimagined for the browser — one track, one more run, dashboard leaderboard.</p></div><div class="votes"><button type="button" data-v="play">Play it</button><button type="button" data-v="curious">Curious</button><button type="button" data-v="pass">Pass</button></div></div>
+    <div class="pitch" data-pitch="apple-tv-party"><div class="txt"><b>📺 Apple TV party game</b><p>Big-screen, phones-as-controllers, Nan and family on the couch — two-minute rounds, lots of laughing.</p></div><div class="votes"><button type="button" data-v="play">Play it</button><button type="button" data-v="curious">Curious</button><button type="button" data-v="pass">Pass</button></div></div>
+    <div class="pitch" data-pitch="flight"><div class="txt"><b>✈️ Flight, minus the homework</b><p>Arcade flight combat in the Ace Combat spirit — gorgeous skies, no 40-page manual.</p></div><div class="votes"><button type="button" data-v="play">Play it</button><button type="button" data-v="curious">Curious</button><button type="button" data-v="pass">Pass</button></div></div>
+    <div class="pitch" data-pitch="daily-puzzle"><div class="txt"><b>🧩 One puzzle a day</b><p>A Hans-chime-sized brain teaser — five minutes with coffee, a streak to protect.</p></div><div class="votes"><button type="button" data-v="play">Play it</button><button type="button" data-v="curious">Curious</button><button type="button" data-v="pass">Pass</button></div></div>
+    <div class="pitch" data-pitch="long-haul"><div class="txt"><b>🌍 The long haul</b><p>A big story-driven world, 40+ hours, the kind you live in for a season.</p></div><div class="votes"><button type="button" data-v="play">Play it</button><button type="button" data-v="curious">Curious</button><button type="button" data-v="pass">Pass</button></div></div>
+    <div class="pitch" data-pitch="mastery"><div class="txt"><b>🔥 Punishing mastery</b><p>Brutal, precise, die-and-learn — the game that beats you 50 times before you beat it once.</p></div><div class="votes"><button type="button" data-v="play">Play it</button><button type="button" data-v="curious">Curious</button><button type="button" data-v="pass">Pass</button></div></div>
+    <p class="tally" id="sampler-tally">No taps yet — your profile starts with the first one.</p>
+  </section>
+
+  <h2 class="sec" id="interview">🎤 Gamer Taste Interview — Round 1 (drafted)</h2>
+  <p class="sec-sub">Ten questions, mixing eras, platforms, and play styles. Astro relays these in the main chat; answers fold into the <a href="https://github.com/davedellaquila/game-buddy/blob/main/KNOWLEDGE.md">profile in KNOWLEDGE.md</a> and onto the board above. The full draft, with why each question is asked, lives in my side thread.</p>
+  <ol class="qs">
+    <li>The first machine that was <em>yours</em><span>Home computer, console, arcade habit — what did you play first, and where?</span></li>
+    <li>The cabinet you'd walk across an arcade for<span>Which 80s classics still hold up today — and which are just fond memories?</span></li>
+    <li>Name a game that just <em>felt</em> right<span>Controls, feedback, juice — and one that felt clunky. Your UX brain is the instrument here.</span></li>
+    <li>Ten minutes or ten hours?<span>When do you actually play, and how long is a real session?</span></li>
+    <li>Solo, or couch full?<span>Playing alone vs. with Nan, family, friends — is game night a thing you'd want?</span></li>
+    <li>How hard should it fight back?<span>Relaxing cruise vs. punishing mastery — and how much losing stays fun.</span></li>
+    <li>Cars, planes… and what else?<span>Driving and flight are on the radar — what other genres pull you in, and which bounce off?</span></li>
+    <li>Where would you actually play today?<span>Apple TV, PS4, Mac, iPhone — and what friction (controllers, setup, stores) gets in the way.</span></li>
+    <li>The last game you loved — and the last you bounced off<span>Recent evidence beats nostalgia. What did each one do right or wrong?</span></li>
+    <li>If we build one game first…<span>Reimagine a classic, or something new entirely — what would earn a “one more round” from you?</span></li>
+  </ol>
+
+  <h2 class="sec">📺 Curator shelf — Apple TV &amp; watches</h2>
+  <div class="grid">
+    <section class="card">
+      <span class="pill pink">Play next</span>
+      <h3>Nothing here yet — on purpose</h3>
+      <p class="empty-note">No picks until the taste profile exists. The first Play Next list gets argued from Dave's Round 1 answers, title by title, with the reason attached.</p>
+    </section>
+    <section class="card">
+      <span class="pill amber">Adjacent watch</span>
+      <h3>✈️ Ace Combat 7: Skies Unknown</h3>
+      <p>A price watch for this title runs in the <a href="https://muse.ai/chat/ec4b5265-1829-4a43-85ba-2d485ef56909">🎮 PS4 Games side chat</a> — a one-off that predates me, and an early example of my curator beat. It's noted here, <strong>not adopted or moved</strong>; Dave may ask me to adopt it later.</p>
+    </section>
+    <section class="card">
+      <span class="pill cyan">Same screen, different shelf</span>
+      <h3>🍿 Watching lives next door</h3>
+      <p>Film and TV on the Apple TV belong to <a href="https://davedellaquila.github.io/buddy-system/tv-buddy/">TV Buddy</a>. If a pick is something you <em>watch</em>, it's hers; if it's something you <em>play</em>, it's mine.</p>
+    </section>
+  </div>
+
+  <h2 class="sec">🛤️ The road here — and where I play</h2>
+  <div class="timeline">
+    <div class="era"><div class="y">Late 70s – 80s</div><h3>🕹️ Arcade &amp; home computer</h3><p>Quarters, cabinets, and Silicon Valley's microcomputer revolution — Dave's home turf, and my Creator beat's soft spot.</p></div>
+    <div class="era"><div class="y">90s – 2000s</div><h3>🎮 Console generations</h3><p>Cartridges to discs to downloads. Which of these eras actually holds Dave is a Round 1 question, not an assumption.</p></div>
+    <div class="era"><div class="y">Today</div><h3>📺 Apple TV, console, Mac, phone</h3><p>My curator beat lives here — especially the Apple TV, the screen Dave already watches with <a href="https://davedellaquila.github.io/buddy-system/tv-buddy/">TV Buddy</a>.</p></div>
+    <div class="era"><div class="y">Next</div><h3>🌐 The browser &amp; the dashboard</h3><p>Where my builds live: original games hosted right inside the <a href="https://davedellaquila.github.io/buddy-system/">Buddy System dashboard</a>, one tap from this page.</p></div>
+  </div>
+
+  <h2 class="sec">📄 My files — the repo is my memory</h2>
+  <p class="sec-sub">Everything I know and decide lives in my private <a href="https://github.com/davedellaquila/game-buddy">GitHub repo</a> (links open on GitHub; the repo is private, so they ask for Dave's sign-in). My charter is the <a href="https://docs.google.com/document/d/1xznMKT0OBvlg-ghDDDphN53GhQoVq5tVsypqyaib4NA/edit">job req</a>; I report to <a href="https://davedellaquila.github.io/buddy-system/project-buddy/">Project Buddy</a>, and Dave directs through Astro.</p>
+  <div class="files">
+    <a href="https://github.com/davedellaquila/game-buddy/blob/main/KNOWLEDGE.md"><b>KNOWLEDGE.md</b><span>The Gamer Taste Profile lives here — grows with every answer</span></a>
+    <a href="https://github.com/davedellaquila/game-buddy/blob/main/SOUL.md"><b>SOUL.md</b><span>Pixel's persona + voice, and the alternates (Nova, Coach Cartridge)</span></a>
+    <a href="https://github.com/davedellaquila/game-buddy/blob/main/DECISIONS.md"><b>DECISIONS.md</b><span>Calls made, and why</span></a>
+    <a href="https://github.com/davedellaquila/game-buddy/blob/main/ACCOMPLISHMENTS.md"><b>ACCOMPLISHMENTS.md</b><span>Shipped work, dated</span></a>
+    <a href="https://github.com/davedellaquila/game-buddy/blob/main/docs/job-req.md"><b>docs/job-req.md</b><span>The job req, mirrored in the repo</span></a>
+    <a href="https://github.com/davedellaquila/game-buddy/blob/main/docs/ingest.md"><b>docs/ingest.md</b><span>My inbox — where the brain dumps below land</span></a>
+  </div>
+
+  <section class="dumpbox" data-buddy-id="game-buddy">
+  <h2>🧠 Brain dump</h2>
+  <p class="dumpbox-sub">Dump what's on your mind about <span data-buddy-name>Game Buddy</span> — a game you remember, a pitch, a “why haven't I played…”, raw and unfiltered. Each dump lands in my repo (<a href="https://github.com/davedellaquila/game-buddy/blob/main/docs/ingest.md">docs/ingest.md</a>) as a timestamped entry — or saves on this device until a repo is linked and a token is connected. I triage every dump: mine / someone else's / unclear → escalate to Astro.</p>
+  <div class="dumpbox-token" hidden>
+  <p>🔒 Connect GitHub to unlock dumping. Paste a token once — it stays on this device only.</p>
+  <div class="dumpbox-tokenrow">
+  <input type="password" placeholder="GitHub token (repo scope)" aria-label="GitHub token">
+  <button type="button">Save token</button>
+  <a href="https://github.com/settings/tokens" target="_blank" rel="noopener">Get a token</a>
+  </div>
+  </div>
+  <textarea rows="4" placeholder="Dump what's on your mind about Game Buddy…"></textarea>
+  <div class="dumpbox-row">
+  <button type="button" class="dumpbox-btn">Dump it</button>
+  <span class="dumpbox-status" role="status"></span>
+  </div>
+  <p class="dumpbox-hint">Enter dumps it &middot; Shift+Enter for a new line</p>
+  </section>
+
+  <div class="footer">
+  Game Buddy 🎮 · Persona: Pixel · Set up 2026-10-25 · Reports to <a href="https://davedellaquila.github.io/buddy-system/project-buddy/">Project Buddy</a><br>
+  <a href="https://davedellaquila.github.io/buddy-system/">Buddy System dashboard</a> · <a href="https://github.com/davedellaquila/game-buddy">Repo</a> · <a href="https://docs.google.com/document/d/1xznMKT0OBvlg-ghDDDphN53GhQoVq5tVsypqyaib4NA/edit">Job req</a>
+  </div>
 </div>
 
-<div class="mission">Game Buddy is Dave&#x27;s games chief — part game designer, part curator, part student of Dave&#x27;s taste. It designs and builds original web games with Dave (80s retro reimagined for the browser and the buddy dashboard), tracks what is actually worth playing — especially on Apple TV — and recommends against Dave&#x27;s own Gamer Taste Profile, never generic charts. Its first research job is interviewing Dave to build that profile.</div>
-
-
-
-
-<section class="dumpbox" data-buddy-id="game-buddy">
-<h2>🧠 Brain dump</h2>
-<p class="dumpbox-sub">Dump what's on your mind about <span data-buddy-name>Game Buddy</span> — raw and unfiltered. Each dump lands in the buddy's repo (docs/ingest.md) as a timestamped entry — or saves on this device until a repo is linked and a token is connected.</p>
-<div class="dumpbox-token" hidden>
-<p>🔒 Connect GitHub to unlock dumping. Paste a token once — it stays on this device only.</p>
-<div class="dumpbox-tokenrow">
-<input type="password" placeholder="GitHub token (repo scope)" aria-label="GitHub token">
-<button type="button">Save token</button>
-<a href="https://github.com/settings/tokens" target="_blank" rel="noopener">Get a token</a>
-</div>
-</div>
-<textarea rows="4" placeholder="Dump what's on your mind about Game Buddy…"></textarea>
-<div class="dumpbox-row">
-<button type="button" class="dumpbox-btn">Dump it</button>
-<span class="dumpbox-status" role="status"></span>
-</div>
-<p class="dumpbox-hint">Enter dumps it &middot; Shift+Enter for a new line</p>
-</section>
-
-
-<h2>Needs Attention</h2>
-<div class="attn" data-attn-id="game-buddy-job-req"><div class="attn-text">Job req ready for review — looks good, edits, or defer?</div><div class="attn-link"><a href="https://docs.google.com/document/d/1xznMKT0OBvlg-ghDDDphN53GhQoVq5tVsypqyaib4NA/edit" target="_blank" rel="noopener">Open →</a></div><div class="attn-date">2026-10-25</div><div class="attn-actions"><button type="button" class="attn-btn primary" data-act="done">Done</button><button type="button" class="attn-btn" data-act="info">Need more info</button></div><div class="attn-status" role="status"></div></div>
-
-
-
-
-
-
-
-<section class="repo-files" data-buddy-id="game-buddy">
-<h2>📄 Repo files</h2>
-<p class="rf-sub">The markdown files in <span data-buddy-name>Game Buddy</span>'s repo. Tap a file name and its contents open right below it — open as many as you like at once. Edit inside an opened file and the save goes straight back to GitHub. The repo is private, so nothing here — not even the file names — is shown until GitHub is connected on this device.</p>
-<div class="rf-locked" hidden>🔒 Connect GitHub in the 🧠 Brain dump box above to view and edit files — the repos are private, so a token is needed to read them. Then reload this page.</div>
-<div class="rf-main" hidden>
-<div class="rf-list rf-files-wrap"></div>
-<div class="rf-status attn-status" role="status"></div>
-</div>
-</section>
-
-
-<div class="footer">
-Generated 2026-10-25 · Part of the Buddy System<br>
-<a href="about.html">About · the full record →</a>
-</div>
+<script>
+(function(){
+  var KEY='buddyTree.gameSampler.v1';
+  var votes={};
+  try{ votes=JSON.parse(localStorage.getItem(KEY)||'{}')||{}; }catch(e){ votes={}; }
+  var tally=document.getElementById('sampler-tally');
+  function label(v){ return v==='play'?'Play it':(v==='curious'?'Curious':'Pass'); }
+  function paint(){
+    var counts={play:0,curious:0,pass:0}, answered=0;
+    document.querySelectorAll('.pitch').forEach(function(p){
+      var id=p.getAttribute('data-pitch'), v=votes[id];
+      p.querySelectorAll('button[data-v]').forEach(function(b){
+        b.classList.toggle('sel', b.getAttribute('data-v')===v);
+      });
+      if(v){ counts[v]++; answered++; }
+    });
+    if(tally){
+      tally.innerHTML = answered
+        ? 'Your taps so far: <b>'+counts.play+' Play it</b> · <b>'+counts.curious+' Curious</b> · <b>'+counts.pass+' Pass</b> — saved on this device, and first evidence for your <a href="#profile">taste profile</a>.'
+        : 'No taps yet — your profile starts with the first one.';
+    }
+  }
+  document.querySelectorAll('.pitch').forEach(function(p){
+    var id=p.getAttribute('data-pitch');
+    p.querySelectorAll('button[data-v]').forEach(function(b){
+      b.addEventListener('click', function(){
+        votes[id]=b.getAttribute('data-v');
+        try{ localStorage.setItem(KEY, JSON.stringify(votes)); }catch(e){}
+        paint();
+      });
+    });
+  });
+  paint();
+})();
+</script>
 
 <script>
 (function(){
@@ -456,483 +551,6 @@ Generated 2026-10-25 · Part of the Buddy System<br>
 })();
 </script>
 
-
-<script>
-(function(){
-  var tiles = document.querySelectorAll('.attn[data-attn-id]');
-  if (!tiles.length) return;
-  var dumpbox = document.querySelector('.dumpbox');
-  var bid = (dumpbox && dumpbox.getAttribute('data-buddy-id')) || (function(){
-    var p = location.pathname.replace(/\/+$/, '');
-    return p.substring(p.lastIndexOf('/') + 1);
-  })();
-  function lsGet(){ try { return JSON.parse(localStorage.getItem('buddyTree.v3') || '{}'); } catch(e){ return {}; } }
-  function lsSet(patch){ try { var s = lsGet(); for (var k in patch) s[k] = patch[k]; localStorage.setItem('buddyTree.v3', JSON.stringify(s)); } catch(e){} }
-  function token(){ return lsGet().ghToken || ''; }
-  function b64encode(str){
-    var bytes = new TextEncoder().encode(str), bin = '';
-    bytes.forEach(function(b){ bin += String.fromCharCode(b); });
-    return btoa(bin);
-  }
-  async function ghApi(path, method, body){
-    var t = token();
-    if (!t) throw new Error('Add a GitHub token first.');
-    var r = await fetch('https://api.github.com' + path, {
-      method: method || 'GET',
-      headers: {'Authorization': 'Bearer ' + t, 'Accept': 'application/vnd.github+json', 'Content-Type': 'application/json'},
-      body: body ? JSON.stringify(body) : undefined
-    });
-    if (!r.ok) throw new Error('GitHub ' + r.status);
-    return r.status === 204 ? null : await r.json();
-  }
-  async function ghGetFile(repo, path){
-    try {
-      var j = await ghApi('/repos/davedellaquila/' + repo + '/contents/' + path);
-      if (j && j.content) return {
-        text: new TextDecoder().decode(Uint8Array.from(atob(j.content.replace(/\n/g, '')), function(c){ return c.charCodeAt(0); })),
-        sha: j.sha
-      };
-    } catch(e){}
-    return null;
-  }
-  var repo = null, buddyName = bid;
-  async function resolveBuddy(){
-    try {
-      var r = await fetch('../buddies.json', {cache: 'no-store'});
-      var d = await r.json();
-      var buds = d.buddies || [];
-      for (var i = 0; i < buds.length; i++) {
-        if (buds[i].id === bid) {
-          if (buds[i].repo) repo = buds[i].repo;
-          if (buds[i].name) buddyName = buds[i].name;
-          break;
-        }
-      }
-    } catch(e){}
-  }
-  function rkey(aid, text){ return bid + '|' + (aid || ('text:' + text.slice(0, 60))); }
-  function isResolved(aid, text){
-    var s = lsGet();
-    var m = s.attnDone || {};
-    if (m[rkey(aid, text)]) return true;
-    /* Also honor the dashboard's own done map (the same store's 'seen',
-       keyed by bare attention id) so an item cleared in the dashboard
-       stays cleared here — one done state across surfaces. */
-    if (aid && s.seen && s.seen[aid]) return true;
-    return false;
-  }
-  function setResolved(aid, text){ var s = lsGet(); var m = s.attnDone || {}; m[rkey(aid, text)] = 1; s.attnDone = m; lsSet(s); }
-  /* Las Vegas mode (Dave 2026-10-20): marking done feels like a win — the
-     button spins once and confetti bursts from it. DOM + WAAPI only;
-     skipped under prefers-reduced-motion; only ever called on a real tap. */
-  function celebrate(el, fallbackEl){
-    if (!el || !el.getBoundingClientRect) return;
-    if (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    try { el.animate([{transform:'rotate(0deg)'},{transform:'rotate(360deg)'}], {duration:450, easing:'cubic-bezier(.2,.7,.3,1.2)'}); } catch(e){}
-    var r = el.getBoundingClientRect();
-    /* A hidden element's rect is all zeros — bursting from it put the
-       confetti in the viewport's upper-left corner (Dave, 2026-10-21). Fall
-       back to the tile's rect; never burst from a zero rect at all. */
-    if ((!r.width || !r.height) && fallbackEl && fallbackEl.getBoundingClientRect) r = fallbackEl.getBoundingClientRect();
-    if (!r.width || !r.height) return;
-    var cx = r.left + r.width/2, cy = r.top + r.height/2;
-    var colors = ['#f0b429','#3fb950','#f778ba','#58a6ff','#ff7b72','#d2a8ff'];
-    for (var i = 0; i < 26; i++){
-      var s = document.createElement('span');
-      var sz = 5 + Math.random()*6;
-      s.style.cssText = 'position:fixed;left:'+cx+'px;top:'+cy+'px;width:'+sz+'px;height:'+(sz*0.6)+'px;background:'+colors[i%colors.length]+';z-index:99999;pointer-events:none;border-radius:2px;';
-      document.body.appendChild(s);
-      var ang = Math.random()*Math.PI*2, v = 60 + Math.random()*130;
-      var dx = Math.cos(ang)*v, dy = Math.sin(ang)*v - 90;
-      var anim = s.animate([
-        {transform:'translate(-50%,-50%) rotate(0deg)', opacity:1},
-        {transform:'translate(calc(-50% + '+dx+'px), calc(-50% + '+(dy+170)+'px)) rotate('+(Math.random()*540-270)+'deg)', opacity:0}
-      ], {duration: 750 + Math.random()*450, easing:'cubic-bezier(.15,.6,.4,1)'});
-      (function(node, a){ if (a) a.onfinish = function(){ node.remove(); }; else setTimeout(function(){ node.remove(); }, 1300); })(s, anim);
-    }
-  }
-  function paintResolved(tile, msg, immediate){
-    var st = tile.querySelector('.attn-status');
-    if (st) st.textContent = msg;
-    /* Dave 2026-10-20: the check belongs to the RESULT of the tap, never the
-       label beforehand — an upfront check reads as "already done." The Done
-       button renders plain "Done"; the check appears only once clicked. */
-    var db = tile.querySelector('[data-act="done"]');
-    if (db) db.textContent = '✓ Done';
-    if (immediate) { tile.classList.add('resolved'); return; }
-    /* Fresh tap (Dave, 2026-10-21): the check + status land while the button
-       is still visible, and celebrate() fires against the live button; the
-       resolved class (dim + hide actions) arrives a beat later so the result
-       registers first. Applying it instantly hid the button before the check
-       could be seen — and zeroed the rect celebrate() measures, which sent
-       the confetti to the viewport's upper-left corner. */
-    setTimeout(function(){ tile.classList.add('resolved'); }, 1100);
-  }
-  async function sendAction(tile, entry, okMsg){
-    var st = tile.querySelector('.attn-status');
-    var btns = tile.querySelectorAll('.attn-btn');
-    if (!token()) { st.textContent = 'Add a GitHub token in the Brain dump section above to enable actions.'; return false; }
-    if (!repo) { st.textContent = 'No repo linked for this buddy yet.'; return false; }
-    btns.forEach(function(b){ b.disabled = true; });
-    st.textContent = 'Working…';
-    try {
-      var NL = String.fromCharCode(10);
-      var stamp = new Date().toLocaleString();
-      var cur = await ghGetFile(repo, 'docs/ingest.md');
-      var base = cur ? cur.text : '# Ingest log — ' + buddyName + NL + NL;
-      var body = {message: 'Attention action for ' + bid, content: b64encode(base + '## ' + stamp + NL + NL + entry + NL + NL)};
-      if (cur && cur.sha) body.sha = cur.sha;
-      await ghApi('/repos/davedellaquila/' + repo + '/contents/docs/ingest.md', 'PUT', body);
-      st.textContent = okMsg;
-      return true;
-    } catch(err){
-      st.textContent = 'Save failed: ' + (err.message || err);
-      btns.forEach(function(b){ b.disabled = false; });
-      return false;
-    }
-  }
-  tiles.forEach(function(tile){
-    var aid = tile.getAttribute('data-attn-id') || '';
-    var textEl = tile.querySelector('.attn-text');
-    var text = textEl ? textEl.textContent.trim() : '';
-    if (isResolved(aid, text)) { paintResolved(tile, 'Marked done', true); return; }
-    tile.addEventListener('click', function(ev){
-      var btn = ev.target.closest ? ev.target.closest('.attn-btn') : null;
-      if (!btn || btn.disabled) return;
-      var act = btn.getAttribute('data-act');
-      var idBit = aid ? ' (attention id: ' + aid + ')' : '';
-      if (act === 'done') {
-        sendAction(tile,
-          'DONE — Dave marked this done on the homepage: "' + text + '"' + idBit + '. Please remove it from the attention list in buddies.json.',
-          'Marked done — the buddy will clear it.').then(function(ok){ if (ok) { setResolved(aid, text); paintResolved(tile, 'Marked done — the buddy will clear it.'); celebrate(btn, tile); } });
-      } else if (act === 'info') {
-        sendAction(tile,
-          'FOLLOW-UP — Dave needs more info on: "' + text + '"' + idBit + '. Please follow up with him.',
-          'Sent — ' + buddyName + ' will follow up.');
-      }
-    });
-  });
-  resolveBuddy();
-})();
-</script>
-
-
-<script>
-(function(){
-  var sec = document.querySelector('.repo-files');
-  if (!sec || sec.dataset.rfInit) return;
-  sec.dataset.rfInit = '1';
-  var bid = sec.getAttribute('data-buddy-id') || (function(){
-    var p = location.pathname.replace(/\/+$/, '');
-    return p.substring(p.lastIndexOf('/') + 1);
-  })();
-  function lsGet(){ try { return JSON.parse(localStorage.getItem('buddyTree.v3') || '{}'); } catch(e){ return {}; } }
-  function token(){ return lsGet().ghToken || ''; }
-  function b64encode(str){
-    var bytes = new TextEncoder().encode(str), bin = '';
-    bytes.forEach(function(b){ bin += String.fromCharCode(b); });
-    return btoa(bin);
-  }
-  async function ghApi(path, method, body){
-    var t = token();
-    if (!t) throw new Error('Add a GitHub token first.');
-    var r = await fetch('https://api.github.com' + path, {
-      method: method || 'GET',
-      headers: {'Authorization': 'Bearer ' + t, 'Accept': 'application/vnd.github+json', 'Content-Type': 'application/json'},
-      body: body ? JSON.stringify(body) : undefined
-    });
-    if (!r.ok) throw new Error('GitHub ' + r.status);
-    return r.status === 204 ? null : await r.json();
-  }
-  async function ghGetFile(repo, path){
-    try {
-      var j = await ghApi('/repos/davedellaquila/' + repo + '/contents/' + path);
-      if (j && j.content) return {
-        text: new TextDecoder().decode(Uint8Array.from(atob(j.content.replace(/\n/g, '')), function(c){ return c.charCodeAt(0); })),
-        sha: j.sha
-      };
-    } catch(e){}
-    return null;
-  }
-  var repo = null;
-  async function resolveRepo(){
-    try {
-      var r = await fetch('../buddies.json', {cache: 'no-store'});
-      var d = await r.json();
-      var buds = d.buddies || [];
-      for (var i = 0; i < buds.length; i++) {
-        if (buds[i].id === bid && buds[i].repo) { repo = buds[i].repo; break; }
-      }
-    } catch(e){}
-  }
-  function esc(s){ return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
-  function inline(s){
-    s = esc(s);
-    s = s.replace(/`([^`]+)`/g, '<code>$1</code>');
-    s = s.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
-    s = s.replace(/(^|[^*])\*([^*\n]+)\*/g, '$1<em>$2</em>');
-    s = s.replace(/\[([^\]]+)\]\((https?:[^)\s]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>');
-    return s;
-  }
-  function mdRender(src){
-    var lines = src.split('\n'), out = [], inList = false, inCode = false, codeBuf = [];
-    function closeList(){ if (inList) { out.push('</ul>'); inList = false; } }
-    for (var i = 0; i < lines.length; i++){
-      var ln = lines[i], m;
-      if (/^```/.test(ln)) {
-        if (inCode) { out.push('<pre><code>' + esc(codeBuf.join('\n')) + '</code></pre>'); codeBuf = []; inCode = false; }
-        else { closeList(); inCode = true; }
-        continue;
-      }
-      if (inCode) { codeBuf.push(ln); continue; }
-      if ((m = ln.match(/^(#{1,4})\s+(.*)/))) {
-        closeList();
-        var lv = Math.min(m[1].length + 1, 4);
-        out.push('<h' + lv + '>' + inline(m[2]) + '</h' + lv + '>');
-        continue;
-      }
-      if (/^\s*(-{3,}|\*{3,})\s*$/.test(ln)) { closeList(); out.push('<hr>'); continue; }
-      if ((m = ln.match(/^\s*[-*]\s+(.*)/)) || (m = ln.match(/^\s*\d+[.)]\s+(.*)/))) {
-        if (!inList) { out.push('<ul>'); inList = true; }
-        out.push('<li>' + inline(m[1]) + '</li>');
-        continue;
-      }
-      if ((m = ln.match(/^>\s?(.*)/))) { closeList(); out.push('<blockquote>' + inline(m[1]) + '</blockquote>'); continue; }
-      if (!ln.trim()) { closeList(); continue; }
-      closeList();
-      out.push('<p>' + inline(ln) + '</p>');
-    }
-    closeList();
-    if (inCode) out.push('<pre><code>' + esc(codeBuf.join('\n')) + '</code></pre>');
-    return out.join('\n');
-  }
-  var locked = sec.querySelector('.rf-locked'), main = sec.querySelector('.rf-main'),
-      list = sec.querySelector('.rf-list'), st = sec.querySelector('.rf-status');
-  /* Accordion files (Dave 2026-10-21): a list of file names; clicking a
-     name toggles that file's contents open inline right below the name.
-     Toggles are independent — several files can be open at once. Contents
-     load lazily on first open and are cached in the item's own state;
-     Edit/Save lives inside the opened panel. */
-  function buildFileSection(f){
-    var wrap = document.createElement('div');
-    wrap.className = 'rf-fileitem';
-    var head = document.createElement('button');
-    head.type = 'button';
-    head.className = 'rf-file';
-    head.setAttribute('aria-expanded', 'false');
-    var nm = document.createElement('span');
-    nm.className = 'rf-name';
-    nm.textContent = '📄 ' + f.name;
-    var dir = document.createElement('span');
-    dir.className = 'rf-dir';
-    dir.textContent = f.path;
-    var chev = document.createElement('span');
-    chev.className = 'rf-chev';
-    chev.textContent = '▸';
-    head.appendChild(nm);
-    head.appendChild(dir);
-    head.appendChild(chev);
-    var panel = document.createElement('div');
-    panel.className = 'rf-panel';
-    panel.hidden = true;
-    var phead = document.createElement('div');
-    phead.className = 'rf-viewhead';
-    var ppath = document.createElement('span');
-    ppath.className = 'rf-path';
-    ppath.textContent = f.path;
-    var editBtn = document.createElement('button');
-    editBtn.type = 'button';
-    editBtn.className = 'attn-btn rf-edit';
-    editBtn.textContent = 'Edit';
-    editBtn.disabled = true;
-    phead.appendChild(ppath);
-    phead.appendChild(editBtn);
-    var bodyEl = document.createElement('div');
-    bodyEl.className = 'rf-body';
-    bodyEl.innerHTML = '<p class="rf-loading">Loading ' + esc(f.path) + '…</p>';
-    var editor = document.createElement('div');
-    editor.className = 'rf-editor';
-    editor.hidden = true;
-    var ta = document.createElement('textarea');
-    ta.className = 'rf-ta';
-    ta.rows = 18;
-    ta.spellcheck = false;
-    ta.setAttribute('aria-label', 'Markdown source for ' + f.path);
-    var actions = document.createElement('div');
-    actions.className = 'attn-actions';
-    var saveBtn = document.createElement('button');
-    saveBtn.type = 'button';
-    saveBtn.className = 'attn-btn primary rf-save';
-    saveBtn.textContent = 'Save to GitHub';
-    var cancelBtn = document.createElement('button');
-    cancelBtn.type = 'button';
-    cancelBtn.className = 'attn-btn rf-cancel';
-    cancelBtn.textContent = 'Cancel';
-    actions.appendChild(saveBtn);
-    actions.appendChild(cancelBtn);
-    editor.appendChild(ta);
-    editor.appendChild(actions);
-    var fst = document.createElement('div');
-    fst.className = 'rf-fstatus attn-status';
-    fst.setAttribute('role', 'status');
-    panel.appendChild(phead);
-    panel.appendChild(bodyEl);
-    panel.appendChild(editor);
-    panel.appendChild(fst);
-    wrap.appendChild(head);
-    wrap.appendChild(panel);
-    var cur = null, loaded = false;
-    function loadOnce(){
-      if (loaded) return;
-      loaded = true;
-      ghGetFile(repo, f.path).then(function(got){
-        if (!got) { loaded = false; bodyEl.innerHTML = '<p class="rf-loading">⚠ Could not load ' + esc(f.path) + ' — close and open it again to retry.</p>'; return; }
-        cur = {path: f.path, sha: got.sha, text: got.text};
-        bodyEl.innerHTML = mdRender(got.text);
-        editBtn.disabled = false;
-      });
-    }
-    head.addEventListener('click', function(){
-      var open = panel.hidden;
-      panel.hidden = !open;
-      head.setAttribute('aria-expanded', open ? 'true' : 'false');
-      chev.textContent = open ? '▾' : '▸';
-      if (open) loadOnce();
-    });
-    editBtn.addEventListener('click', function(){
-      if (!cur) return;
-      ta.value = cur.text;
-      bodyEl.hidden = true;
-      editor.hidden = false;
-      ta.focus();
-    });
-    cancelBtn.addEventListener('click', function(){
-      editor.hidden = true;
-      bodyEl.hidden = false;
-    });
-    saveBtn.addEventListener('click', async function(){
-      if (!cur) return;
-      saveBtn.disabled = true;
-      fst.textContent = 'Saving…';
-      try {
-        var payload = {message: 'Edit ' + cur.path + ' from the homepage', content: b64encode(ta.value), sha: cur.sha};
-        var j = await ghApi('/repos/davedellaquila/' + repo + '/contents/' + cur.path, 'PUT', payload);
-        if (j && j.content && j.content.sha) cur.sha = j.content.sha;
-        cur.text = ta.value;
-        editor.hidden = true;
-        bodyEl.hidden = false;
-        bodyEl.innerHTML = mdRender(cur.text);
-        fst.textContent = '✓ Saved to GitHub (' + repo + '/' + cur.path + ').';
-      } catch(err){
-        var why = (err && err.message) || String(err);
-        fst.textContent = /409|422/.test(why)
-          ? '⚠ GitHub said the file changed since you loaded it (' + why + ') — reload this page and try again.'
-          : '⚠ Save failed (' + why + ') — your edit is still in the editor.';
-      }
-      saveBtn.disabled = false;
-    });
-    return wrap;
-  }
-  async function init(){
-    await resolveRepo();
-    if (!repo) {
-      locked.hidden = false;
-      locked.textContent = 'No repo is linked for this buddy yet, so there are no repo files to show.';
-      return;
-    }
-    if (!token()) { locked.hidden = false; return; }
-    main.hidden = false;
-    st.textContent = 'Loading files…';
-    var files = [];
-    async function grab(dir){
-      try {
-        var j = await ghApi('/repos/davedellaquila/' + repo + (dir ? '/contents/' + dir : '/contents'));
-        if (Array.isArray(j)) j.forEach(function(e){
-          if (e.type === 'file' && /\.md$/i.test(e.name)) files.push({name: e.name, path: e.path});
-        });
-      } catch(e){}
-    }
-    await grab('');
-    await grab('docs');
-    files.sort(function(a, b){ return a.path < b.path ? -1 : 1; });
-    if (!files.length) { st.textContent = 'No markdown files found in the repo yet.'; return; }
-    st.textContent = '';
-    files.forEach(function(f){
-      list.appendChild(buildFileSection(f));
-    });
-  }
-  init();
-})();
-</script>
-
-
-<script>
-(function(){
-  var parts = location.pathname.split('/');
-  var bid = '';
-  for (var i = parts.length - 1; i >= 0; i--) { if (parts[i]) { bid = parts[i]; break; } }
-  function applyName(name){
-    if (!name) return;
-    var els = document.querySelectorAll('[data-buddy-name]');
-    for (var k = 0; k < els.length; k++) els[k].textContent = name;
-    var ta = document.querySelector('.dumpbox textarea');
-    if (ta) ta.setAttribute('placeholder', "Dump what's on your mind about " + name + "…");
-  }
-  /* Pending renames (Dave 2026-10-18): when the dashboard has no GitHub token,
-     a rename queues in localStorage instead of reaching the registry. The
-     dashboard and homepages share an origin, so the homepage reads that queue
-     here — a pending rename supersedes the registry name, which is why a freshly
-     renamed buddy kept showing its old name after refresh. */
-  function pendingName(){
-    try {
-      var s = JSON.parse(localStorage.getItem('buddyTree.v3') || '{}');
-      if (s && s.pendingRenames && s.pendingRenames[bid]) return s.pendingRenames[bid];
-    } catch(e){}
-    return null;
-  }
-  var pn = pendingName();
-  if (pn) applyName(pn);
-  try {
-    fetch('../buddies.json', {cache: 'no-store'}).then(function(r){ return r.json(); }).then(function(d){
-      var buds = (d && d.buddies) || [];
-      for (var j = 0; j < buds.length; j++) {
-        if (buds[j].id === bid && buds[j].name) { applyName(pendingName() || buds[j].name); break; }
-      }
-    }).catch(function(){});
-  } catch(e){}
-  /* Live rename (Dave 2026-10-16): the dashboard broadcasts renames via
-     localStorage, so an open page updates its name without a refresh.
-     Same browser only — other devices pick it up on their next load. */
-  window.addEventListener('storage', function(e){
-    if (e.key !== 'buddyTree.rename' || !e.newValue) return;
-    try {
-      var d = JSON.parse(e.newValue);
-      if (d && d.id === bid && d.name) applyName(d.name);
-    } catch(err){}
-  });
-})();
-</script>
-
-<!--
-  TIP JAR — canonical snippet (Dave's standard, 2026-10-24)
-  Every buddy homepage and every page a buddy creates carries the tip jar.
-  Public pages especially: a reader who got value can say thanks.
-
-  USAGE: paste this whole block just before </body>. No dependencies.
-  The jar points at Dave's Ko-fi page by default. A page for a specific app
-  may override the destination with its own Ko-fi page later:
-      <div class="tipjar" ...> — change the href on the <a>.
-
-  DESIGN NOTES (keep it alive, never annoying):
-  - "Breathing": a very slow, soft pulse so the pill feels alive at rest.
-  - Every ~9s the jar does one small hop and a coin glint passes over it —
-    a brief active window inside a long keyframe cycle, so it's mostly still.
-  - Hover: the jar spins (same move as the dashboard sidebar's tip jar) and
-    the label shimmers. Touch devices get the idle motion only.
-  - prefers-reduced-motion: all animation off. The jar is just a link.
-  - Works in dark and light mode; sits above page content (z-index 60) but
-    below modals on buddy pages.
--->
 <style>
   .tipjar{position:fixed;right:18px;bottom:18px;z-index:60;
     font-family:inherit;-webkit-tap-highlight-color:transparent}
