@@ -2595,6 +2595,7 @@ body.find-open #find-menu{display:block}
 .find-head{font-size:.6875rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text2);padding:8px 10px 4px}
 .find-row{display:flex;align-items:center;gap:12px;width:100%;min-height:52px;padding:6px 10px;border:none;background:none;color:var(--text);font:inherit;cursor:pointer;text-align:left;border-radius:10px;box-sizing:border-box}
 .find-row:hover{background:var(--ghost)}
+.find-row:focus{background:var(--ghost);outline:none;box-shadow:inset 0 0 0 2px var(--accent)}
 .find-row-ic{width:34px;height:34px;flex:0 0 auto;border-radius:10px;background:var(--hover);display:flex;align-items:center;justify-content:center;font-size:1.125rem}
 .find-row-tx{display:flex;flex-direction:column;min-width:0}
 .find-row-name{font-size:.9375rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -12184,9 +12185,37 @@ function initFind(){
   input.addEventListener('input', renderFindMenu);
   input.addEventListener('keydown', e => {
     if (e.key === 'Enter') { const row = document.querySelector('#find-menu .find-row'); if (row) pickFindResult(row.getAttribute('data-find-buddy')); }
+    else if (e.key === 'Tab' || e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+      if (!findRows().length) return;
+      e.preventDefault();
+      cycleFindRow((e.key === 'ArrowUp' || (e.key === 'Tab' && e.shiftKey)) ? -1 : 1);
+    }
   });
   document.getElementById('find-clear').addEventListener('click', () => { input.value = ''; renderFindMenu(); input.focus(); });
   menu.addEventListener('click', e => { const row = e.target.closest('[data-find-buddy]'); if (row) pickFindResult(row.getAttribute('data-find-buddy')); });
+  /* Dave 2026-10-25: Tab cycles the suggestion list, like the buddy panel —
+     Tab/Shift+Tab and the arrow keys move through the rows and wrap around;
+     typing a character while a row is focused jumps back to the input. */
+  function findRows(){ return Array.from(document.querySelectorAll('#find-menu .find-row')); }
+  function cycleFindRow(dir){
+    const rows = findRows(); if (!rows.length) return;
+    const i = rows.indexOf(document.activeElement);
+    (i < 0 ? (dir > 0 ? rows[0] : rows[rows.length - 1]) : rows[(i + dir + rows.length) % rows.length]).focus();
+  }
+  menu.addEventListener('keydown', e => {
+    if (e.key === 'Enter') { const row = e.target.closest('[data-find-buddy]'); if (row) { e.preventDefault(); pickFindResult(row.getAttribute('data-find-buddy')); } }
+    else if (e.key === 'Tab') { e.preventDefault(); cycleFindRow(e.shiftKey ? -1 : 1); }
+    else if (e.key === 'ArrowDown') { e.preventDefault(); cycleFindRow(1); }
+    else if (e.key === 'ArrowUp') { e.preventDefault(); cycleFindRow(-1); }
+    else if (e.key === 'Home') { e.preventDefault(); const r = findRows(); if (r.length) r[0].focus(); }
+    else if (e.key === 'End') { e.preventDefault(); const r = findRows(); if (r.length) r[r.length - 1].focus(); }
+    else if (e.key.length === 1 && e.key !== ' ' && !e.metaKey && !e.ctrlKey && !e.altKey) {
+      e.preventDefault();
+      input.focus();
+      input.value += e.key;
+      input.dispatchEvent(new Event('input', { bubbles: true }));
+    }
+  });
   scrim.addEventListener('click', closeFind);
   document.addEventListener('keydown', e => {
     if (e.key === 'Escape' && isFindOpen()) { e.preventDefault(); e.stopPropagation(); closeFind(); }
