@@ -169,7 +169,7 @@ body.sb-closed #tree-chrome-main{padding-left:76px}
    under the fixed sidebar, so the Projects rows' chevron/grip sat beneath
    sidebar rows and collapse clicks never reached them. Anchored mode
    yields via the #main padding instead, so the clearance drops there. */
-#view-projects,#view-plans,#view-manifest,#view-changelog{padding-left:348px}
+#view-projects,#view-plans,#view-manifest,#view-changelog{padding-left:calc(var(--sbw, 336px) + 12px)} /* tracks the sidebar's real width — a drag-widened sidebar must not re-cover the rows */
 body.sb-closed #view-projects,body.sb-closed #view-plans,body.sb-closed #view-manifest,body.sb-closed #view-changelog{padding-left:76px}
 @media (max-width:639px){#view-projects,#view-plans,#view-manifest,#view-changelog{padding-left:0}}
 @media (min-width:640px){body.sb-anchored:not(.sb-closed) #view-projects,body.sb-anchored:not(.sb-closed) #view-plans,body.sb-anchored:not(.sb-closed) #view-manifest,body.sb-anchored:not(.sb-closed) #view-changelog{padding-left:0}}
@@ -1254,12 +1254,22 @@ body:has(#token-pill) #panel-open{right:148px}
    Adaptations to this app's chrome, same rule: the base right inset is
    68px so the full banner clears the 44px #panel-open corner circle
    (12px offset + 44px + 12px gap), and the left inset grows to 68px
-   while the sidebar is collapsed, clearing the corner Recents button. */
+   while the sidebar is collapsed, clearing the corner Recents button.
+   Dave 2026-10-25: with the sidebar OPEN, Recents sits at --sbw + 24
+   (z-index 10001, above the banner) and landed mid-banner, clobbering
+   the build text — the banner now steps aside for it too: on desktop
+   its left inset tracks the sidebar width, starting past Recents
+   (--sbw + 24 offset + 44px button + 12px gap). Standalone keeps the
+   corner geometry (Recents at left:12 there). */
 #update-banner{position:fixed;top:12px;left:16px;right:68px;height:48px;z-index:9999;
   background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:0 14px;
   box-shadow:0 8px 32px rgba(0,0,0,.3);display:flex;align-items:center;font-size:.875rem;
   transition:left .5s cubic-bezier(.32,.72,.35,1),right .5s cubic-bezier(.32,.72,.35,1),height .5s cubic-bezier(.32,.72,.35,1),border-radius .5s cubic-bezier(.32,.72,.35,1)}
 body.sb-closed #update-banner{left:68px}
+@media (min-width:640px){
+  body:not(.sb-closed):not(.standalone) #update-banner{left:calc(var(--sbw, 336px) + 80px)}
+  body.standalone #update-banner{left:68px}
+}
 body.has-buddy-panel #update-banner{right:calc(var(--bpw, 440px) + 24px)}
 #update-banner .ub-msg-full,#update-banner .ub-msg-short{transition:opacity .12s ease}
 #update-banner .ub-msg-short,#update-banner .ub-dot,#update-banner .ub-wn-pill,#update-banner .ub-now-short{display:none}

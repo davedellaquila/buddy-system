@@ -1427,12 +1427,22 @@ body:has(#token-pill) #panel-open{right:148px}
    Adaptations to this app's chrome, same rule: the base right inset is
    68px so the full banner clears the 44px #panel-open corner circle
    (12px offset + 44px + 12px gap), and the left inset grows to 68px
-   while the sidebar is collapsed, clearing the corner Recents button. */
+   while the sidebar is collapsed, clearing the corner Recents button.
+   Dave 2026-10-25: with the sidebar OPEN, Recents sits at --sbw + 24
+   (z-index 10001, above the banner) and landed mid-banner, clobbering
+   the build text — the banner now steps aside for it too: on desktop
+   its left inset tracks the sidebar width, starting past Recents
+   (--sbw + 24 offset + 44px button + 12px gap). Standalone keeps the
+   corner geometry (Recents at left:12 there). */
 #update-banner{position:fixed;top:12px;left:16px;right:68px;height:48px;z-index:9999;
   background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:0 14px;
   box-shadow:0 8px 32px rgba(0,0,0,.3);display:flex;align-items:center;font-size:.875rem;
   transition:left .5s cubic-bezier(.32,.72,.35,1),right .5s cubic-bezier(.32,.72,.35,1),height .5s cubic-bezier(.32,.72,.35,1),border-radius .5s cubic-bezier(.32,.72,.35,1)}
 body.sb-closed #update-banner{left:68px}
+@media (min-width:640px){
+  body:not(.sb-closed):not(.standalone) #update-banner{left:calc(var(--sbw, 336px) + 80px)}
+  body.standalone #update-banner{left:68px}
+}
 body.has-buddy-panel #update-banner{right:calc(var(--bpw, 440px) + 24px)}
 #update-banner .ub-msg-full,#update-banner .ub-msg-short{transition:opacity .12s ease}
 #update-banner .ub-msg-short,#update-banner .ub-dot,#update-banner .ub-wn-pill,#update-banner .ub-now-short{display:none}
@@ -5051,7 +5061,7 @@ function renderDevelopSection(){
   const dev = document.getElementById('fset-develop');
   if (!dev) return;
   const simulating = !!devBackup;
-  const buildNum = '20261025.0342';
+  const buildNum = '20261025.0604';
   dev.innerHTML = ''
     + '<label class="fset-check"><input type="checkbox" id="dev-empty-toggle"' + (simulating ? ' checked' : '') + '> <span><strong>Simulate new user</strong> — empty data file, as if opening the shared link fresh</span></label>'
     + '<div class="fineprint" style="margin:8px 0 12px">Build <span style="font-family:monospace">' + escHtml(String(buildNum)) + '</span> · ' + BUDDIES.length + ' buddies in this file</div>'
@@ -6929,7 +6939,7 @@ function renderBuddy(id){
     + attrHead('shared', 'SHARED NOTES', '<span class="attr-value" id="bp-shared-count">(0)</span>', '')
     + '<div class="attr-body">' + attrTipLine('Anybody with repo access can see this note. Saved to the buddy’s repo (docs/notes.md).') + '<textarea class="notes" id="bp-shared-notes" placeholder="Anybody with repo access can see this note."></textarea>'
     + '<p class="fineprint" id="shared-status"></p></div></div>'
-    + '<div class="bp-build">Build 20261025.0342</div>'
+    + '<div class="bp-build">Build 20261025.0604</div>'
     + '</div>';
   // Update every visible label for a buddy after a rename/re-icon, across all
   // Atlas lenses. A rename changes no structure, so labels are patched in place
@@ -9592,7 +9602,7 @@ function renderPlan(id){
     + '<p class="fineprint">Saved on this device. (For your eyes only)</p></div>'
     + '<div class="bp-sec"><h3>📝 Shared notes<span class="info-tip" data-tip="Visible to everyone with access to this project.">\u24d8</span></h3><textarea class="notes" id="bp-shared" placeholder="Shared notes\u2026 (visible to everyone with access)">'+escHtml((S.planShared||{})[id]||'')+'</textarea>'
     + '<p class="fineprint">Shared — visible to everyone with access.</p></div>'
-    + '<div class="bp-build">Build 20261025.0342</div>'
+    + '<div class="bp-build">Build 20261025.0604</div>'
     + '</div>';
   const nt = document.getElementById('bp-notes');
   let t = null;
@@ -13156,14 +13166,14 @@ function openWhatsNew(){
     .then(r => r.ok ? r.text() : '')
     .then(t => {
       const serverBuild = t.trim();
-      if (serverBuild && serverBuild !== '20261025.0342') {
+      if (serverBuild && serverBuild !== '20261025.0604') {
         updBtn.style.display = '';
         updBtn.title = 'Update to build ' + serverBuild;
       }
       // Show build numbers at the top of the sheet (Dave's request 2026-10-12)
-      const myBuild = '20261025.0342';
+      const myBuild = '20261025.0604';
       let buildLine = '<p class="fineprint" style="margin-top:0">You’re on build ' + escHtml(myBuild) + '.';
-      if (serverBuild && serverBuild !== '20261025.0342' && isNewerBuild(serverBuild, myBuild)) {
+      if (serverBuild && serverBuild !== '20261025.0604' && isNewerBuild(serverBuild, myBuild)) {
         buildLine += ' Build ' + escHtml(serverBuild) + ' is available.';
       }
       buildLine += '</p>';
@@ -13233,7 +13243,7 @@ function syncUpdateBanner(){
   if (b.dataset.state !== state) b.dataset.state = state;
 }
 function initVersionCheck(){
-  const myBuild = '20261025.0342';
+  const myBuild = '20261025.0604';
   function showUpdateBanner(serverBuild){
     if (document.getElementById('update-banner')) return;
     const b = document.createElement('div');
