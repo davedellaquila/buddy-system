@@ -8438,7 +8438,7 @@ function renderProjects(){
       if (showIds && !showIds[id]) return;
       const kids = visibleKids(id);
       const hasKids = kids.length > 0;
-      const collapsed = (projFilter || statusFilter) ? false : !!S.projCollapsed[id];
+      const collapsed = !!S.projCollapsed[id]; // Dave 2026-10-24: collapse is honored under filters too — forcing parents open made chevron clicks no-ops whenever a tile filter was on
       s += '<div class="proj-row d' + Math.min(depth, 3) + '" data-buddy="' + b.id + '">'
         + '<div class="proj-row-head">'
         + '<span class="proj-grip" data-proj-grip="' + b.id + '" title="Drag to move ' + escHtml(dispName(b)) + '"></span>'
