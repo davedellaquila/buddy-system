@@ -145,7 +145,11 @@ Build: `build.py` generates `index.html` from `buddies.json` + `plans.json`.
   view-menu option never dismisses the right-side buddy panel.
 - **Projects view** — hierarchical outline of every buddy with its status;
   opens with global attention tiles (TO REVIEW / NEW / CLEARED across all
-  buddies), constrained to the same 860px width as the list below.
+  buddies), constrained to the same 860px width as the list below. The list
+  views (Projects, Business Plans, Manifest, Changelog) keep the tree
+  chrome's sidebar clearance in floating panel style (348px, 76px when the
+  sidebar is collapsed to its rail), so row controls never sit under the
+  floating sidebar.
   Clicking a tile filters the list to matching buddies; clicking again
   clears. Clicking a row toggles its section and loads the buddy in the
   right-side panel.

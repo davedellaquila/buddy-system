@@ -164,6 +164,15 @@ body.glass-panels #view-buddy.panel, body.glass-panels #view-buddy.sheet{
    area (clear of the sidebar) while the chart content runs full-bleed underneath. */
 #tree-chrome-main{display:flex;flex-direction:column;align-items:center;gap:8px;padding-left:348px}
 body.sb-closed #tree-chrome-main{padding-left:76px}
+/* Dave 2026-10-24 (bug report): the list views share the tree chrome's
+   sidebar clearance. In floating mode their centered 860px columns slid
+   under the fixed sidebar, so the Projects rows' chevron/grip sat beneath
+   sidebar rows and collapse clicks never reached them. Anchored mode
+   yields via the #main padding instead, so the clearance drops there. */
+#view-projects,#view-plans,#view-manifest,#view-changelog{padding-left:348px}
+body.sb-closed #view-projects,body.sb-closed #view-plans,body.sb-closed #view-manifest,body.sb-closed #view-changelog{padding-left:76px}
+@media (max-width:639px){#view-projects,#view-plans,#view-manifest,#view-changelog{padding-left:0}}
+@media (min-width:640px){body.sb-anchored:not(.sb-closed) #view-projects,body.sb-anchored:not(.sb-closed) #view-plans,body.sb-anchored:not(.sb-closed) #view-manifest,body.sb-anchored:not(.sb-closed) #view-changelog{padding-left:0}}
 #tree-chrome-main #quick-answers{width:100%;max-width:900px}
 #tree-chrome-main .lens-picker-wrap{margin:0}
 #main .zoombar{left:calc(50% + 174px)}
