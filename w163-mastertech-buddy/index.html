@@ -1,234 +1,172 @@
-<!-- BUDDY-BASIC-TEMPLATE v2 -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
-<title data-buddy-name>W163 Mastertech Buddy</title>
+<title>W163 Mastertech Buddy — ⭐ The W163 Tech</title>
 <style>
-:root {
-  --bg: #ffffff;
-  --text: #1a1a1a;
-  --muted: #666;
-  --card: #f5f5f5;
-  --border: #e0e0e0;
-  --accent: #0066cc;
-  --ok: #1b7a2e;
+:root{
+  --bg:#f4f4f2; --bg2:#e9eae7; --card:#ffffff; --border:#d4d7d2; --text:#1c1e1c; --muted:#656b65;
+  --silver:#7d8791; --accent:#33566e; --accent2:#b98a1d; --ok:#1b7a2e; --warn:#9a6a00; --bad:#b42318; --un:#6b5ca5;
+  --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
 }
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg: #1a1a1a;
-    --text: #e0e0e0;
-    --muted: #999;
-    --card: #2a2a2a;
-    --border: #3a3a3a;
-    --accent: #4da6ff;
-    --ok: #5fd08a;
-  }
+@media (prefers-color-scheme: dark){
+  :root{ --bg:#111314; --bg2:#171a1b; --card:#1d2021; --border:#34393b; --text:#eceeed; --muted:#a7ada7;
+  --silver:#aeb8bf; --accent:#8fc1de; --accent2:#e0aa2e; --ok:#5fd08a; --warn:#e5b84f; --bad:#ff8a7a; --un:#c0b3f0; }
 }
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  background: var(--bg);
-  color: var(--text);
-  line-height: 1.6;
-  padding: 40px 20px;
-  max-width: 800px;
-  margin: 0 auto;
-}
-.header { text-align: center; margin-bottom: 40px; }
-.topbar {
-  position: sticky; top: 0; z-index: 50;
-  display: flex; align-items: center; gap: 10px;
-  background: var(--bg);
-  border-bottom: 1px solid var(--border);
-  padding: 10px 2px; margin-bottom: 24px;
-  font-size: 17px; font-weight: 700;
-}
-.topbar-icon { font-size: 22px; line-height: 1; }
-.topbar-refresh {
-  margin-left: auto; background: none; border: 1px solid transparent; border-radius: 8px;
-  color: var(--muted); font-size: 16px; cursor: pointer; padding: 4px 10px; line-height: 1;
-}
-.topbar-refresh:hover { color: var(--text); border-color: var(--border); }
-.icon { font-size: 64px; margin-bottom: 16px; }
-h1 { font-size: 32px; margin-bottom: 8px; }
-.tagline { color: var(--muted); font-size: 18px; }
-.mission {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 24px;
-  margin-bottom: 32px;
-  font-size: 17px;
-}
-h2 { font-size: 22px; margin: 32px 0 16px; }
-.attn {
-  background: var(--card);
-  border-left: 4px solid var(--accent);
-  border-radius: 0 8px 8px 0;
-  padding: 16px 20px;
-  margin-bottom: 12px;
-}
-.attn-date { color: var(--muted); font-size: 14px; margin-top: 8px; }
-.attn-link { margin-top: 8px; }
-.attn-link a { color: var(--accent); font-weight: 600; text-decoration: none; }
-.attn-link a:hover { text-decoration: underline; }
-.attn-actions { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
-.attn-btn {
-  border: 1px solid var(--border); background: var(--bg); color: var(--text);
-  border-radius: 8px; padding: 7px 14px; font-size: 13px; font-weight: 600; cursor: pointer;
-  -webkit-tap-highlight-color: transparent;
-}
-.attn-btn:hover { border-color: var(--accent); }
-.attn-btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
-.attn-btn:disabled { opacity: .45; cursor: default; }
-.attn-status { font-size: 13px; color: var(--muted); margin-top: 8px; min-height: 18px; }
-.attn.resolved { opacity: .6; }
-.attn.resolved .attn-actions { display: none; }
-/* ---- skills (Dave 2026-10-16) ---- */
-.skills { display: flex; flex-direction: column; gap: 10px; margin-top: 4px; }
-.skill { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 12px 16px; }
-.skill-name { font-weight: 700; font-size: 15px; }
-.skill-evidence { color: var(--muted); font-size: 13px; margin-top: 4px; line-height: 1.45; }
-.children { display: flex; flex-wrap: wrap; gap: 12px; }
-.child {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 12px 20px;
-  text-decoration: none;
-  color: var(--text);
-}
-.child:hover { border-color: var(--accent); }
-.footer {
-  margin-top: 48px;
-  padding-top: 24px;
-  border-top: 1px solid var(--border);
-  color: var(--muted);
-  font-size: 14px;
-  text-align: center;
-}
-.empty { color: var(--muted); font-style: italic; }
-/* Dave 2026-10-16: photo gallery — baked in at generation time from the buddy's repo photos/ */
-.gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; margin-bottom: 8px; }
-.gallery a { display: block; border-radius: 12px; overflow: hidden; border: 1px solid var(--border); background: var(--card); }
-.gallery img { width: 100%; height: 160px; object-fit: cover; display: block; transition: transform .25s ease; }
-.gallery a:hover img { transform: scale(1.04); }
-.lightbox { position: fixed; inset: 0; z-index: 1000; display: flex; align-items: center; justify-content: center; }
-.lightbox[hidden] { display: none; }
-.lightbox-bg { position: absolute; inset: 0; background: rgba(0,0,0,.88); }
-.lightbox-img { position: relative; max-width: 92vw; max-height: 88vh; border-radius: 12px; box-shadow: 0 24px 64px rgba(0,0,0,.5); }
-.lightbox-x { position: absolute; top: 16px; right: 20px; background: rgba(255,255,255,.12); color: #fff; border: none; border-radius: 50%; width: 44px; height: 44px; font-size: 26px; cursor: pointer; line-height: 1; }
-
-.dumpbox {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 20px 22px;
-  margin-bottom: 32px;
-}
-.dumpbox h2 { margin: 0 0 6px; font-size: 20px; }
-.dumpbox-sub { color: var(--muted); font-size: 14px; margin-bottom: 14px; }
-.dumpbox textarea {
-  width: 100%; min-height: 96px; resize: vertical;
-  background: var(--bg); border: 1px solid var(--border); border-radius: 8px;
-  padding: 10px 12px; font-size: 14px; color: var(--text); font-family: inherit;
-}
-.dumpbox textarea:focus { outline: none; border-color: var(--accent); }
-.dumpbox textarea:disabled { opacity: .55; }
-.dumpbox-row { display: flex; align-items: center; gap: 12px; margin-top: 10px; flex-wrap: wrap; }
-.dumpbox-btn {
-  background: var(--accent); color: #fff; border: none; border-radius: 8px;
-  padding: 9px 22px; font-size: 14px; font-weight: 600; cursor: pointer;
-}
-.dumpbox-btn:disabled { opacity: .45; cursor: default; }
-.dumpbox-btn.saved { background: var(--ok); }
-.dumpbox-status { font-size: 13px; color: var(--muted); }
-.dumpbox-status.flash { color: var(--ok); font-weight: 700; }
-.dumpbox-hint { font-size: 12px; color: var(--muted); margin-top: 8px; }
-.dumpbox-token {
-  /* Jonny, 2026-10-19 (Dave's ask): amber, not zebra. A solid amber frame +
-     a soft amber wash says "one small step needs you" — zebra striping is
-     hazard tape, it signals danger and fights every calm surface around it.
-     Dashed grey read as placeholder; solid amber reads as deliberate. */
-  background: rgba(245, 158, 11, .09);
-  background: color-mix(in srgb, #f59e0b 9%, var(--bg));
-  border: 2px solid #f59e0b;
-  box-shadow: 0 0 0 3px rgba(245, 158, 11, .16);
-  box-shadow: 0 0 0 3px color-mix(in srgb, #f59e0b 16%, transparent);
-  border-radius: 8px;
-  padding: 12px 14px; margin-bottom: 12px; font-size: 14px;
-}
-.dumpbox-token p { margin-bottom: 8px; font-weight: 700; color: #cf222e; }
-@media (prefers-color-scheme: dark) { .dumpbox-token p { color: #ff7b72; } }
-.dumpbox-tokenrow { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
-.dumpbox-tokenrow input {
-  flex: 1; min-width: 170px; background: var(--card); border: 1px solid var(--border);
-  border-radius: 8px; padding: 7px 10px; font-size: 13px; color: var(--text);
-}
-.dumpbox-tokenrow button {
-  background: transparent; color: var(--accent); border: 1px solid var(--accent);
-  border-radius: 8px; padding: 7px 14px; font-size: 13px; font-weight: 600; cursor: pointer;
-}
-.dumpbox-tokenrow a { color: var(--accent); font-size: 13px; }
-
-
-/* ---- Repo files (Dave 2026-10-20): view + edit the buddy's repo markdown ---- */
-.repo-files { margin-top: 8px; }
-.rf-sub { color: var(--muted); font-size: 14px; margin-bottom: 12px; }
-.rf-locked { background: var(--card); border: 1px dashed var(--border); border-radius: 8px; padding: 14px 16px; color: var(--muted); font-size: 14px; }
-.rf-list { display: flex; flex-direction: column; gap: 8px; }
-.rf-file { display: flex; align-items: center; gap: 10px; background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 10px 14px; cursor: pointer; text-align: left; width: 100%; color: var(--text); font: inherit; -webkit-tap-highlight-color: transparent; }
-.rf-file:hover { border-color: var(--accent); }
-.rf-file .rf-name { font-weight: 600; font-size: 15px; }
-.rf-file .rf-dir { color: var(--muted); font-size: 13px; margin-left: auto; word-break: break-all; text-align: right; }
-.rf-view, .rf-editor { margin-top: 14px; background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 16px; }
-.rf-viewhead { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 10px; }
-.rf-path { font-weight: 700; font-size: 14px; margin-right: auto; word-break: break-all; }
-.rf-body { font-size: 15px; }
-.rf-body h2 { font-size: 21px; margin: 16px 0 8px; }
-.rf-body h3 { font-size: 18px; margin: 14px 0 6px; }
-.rf-body h4 { font-size: 16px; margin: 12px 0 6px; }
-.rf-body p { margin: 6px 0; }
-.rf-body ul { margin: 6px 0 6px 20px; }
-.rf-body blockquote { border-left: 3px solid var(--border); padding-left: 12px; color: var(--muted); margin: 8px 0; }
-.rf-body code { background: var(--bg); border: 1px solid var(--border); border-radius: 4px; padding: 0 4px; font-size: 13px; }
-.rf-body pre { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 12px; overflow-x: auto; margin: 8px 0; }
-.rf-body pre code { border: none; padding: 0; background: none; }
-.rf-body a { color: var(--accent); }
-.rf-body hr { border: none; border-top: 1px solid var(--border); margin: 14px 0; }
-.rf-ta { width: 100%; box-sizing: border-box; background: var(--bg); color: var(--text); border: 1px solid var(--border); border-radius: 8px; padding: 12px; font-family: ui-monospace, Menlo, monospace; font-size: 13px; line-height: 1.55; }
-/* ---- Accordion files (Dave 2026-10-21): the list of markdown files;
-   clicking a file name opens its contents inline right below that name.
-   Every file toggles independently — several can be open at once — and
-   Edit lives inside the opened panel. ---- */
-.rf-files-wrap { display: flex; flex-direction: column; gap: 8px; }
-.rf-fileitem { display: flex; flex-direction: column; }
-.rf-file .rf-chev { color: var(--muted); font-size: 13px; flex: none; }
-.rf-panel { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 16px; margin-top: 8px; }
-.rf-panel .rf-viewhead { margin-bottom: 8px; }
-.rf-loading { color: var(--muted); font-size: 14px; }
-.rf-panel .rf-editor { margin-top: 4px; }
-.rf-panel .rf-fstatus { margin-top: 8px; }
-
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.55;padding:0 0 84px}
+a{color:var(--accent)}
+.topbar{position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:10px;background:var(--bg);border-bottom:1px solid var(--border);padding:10px 20px;font-size:17px;font-weight:700}
+.topbar-icon{font-size:22px}.topbar-refresh{margin-left:auto;background:none;border:1px solid transparent;border-radius:8px;color:var(--muted);font-size:16px;cursor:pointer;padding:4px 10px}
+.topbar-refresh:hover{color:var(--text);border-color:var(--border)}
+.crumb{max-width:980px;margin:0 auto;padding:14px 20px 0;font-size:14px}.crumb a{color:inherit;opacity:.65;text-decoration:none}
+.wrap{max-width:980px;margin:0 auto;padding:0 20px}
+.hero{padding:28px 0 26px;border-bottom:3px double var(--border)}
+.kicker{font-family:var(--mono);text-transform:uppercase;letter-spacing:2.5px;font-size:11px;color:var(--accent2);margin-bottom:10px}
+h1{font-size:clamp(30px,6vw,46px);line-height:1.05;letter-spacing:-.5px;margin-bottom:8px}
+.tagline{font-size:clamp(17px,3vw,20px);color:var(--muted);max-width:720px}
+.rolebox{margin-top:18px;background:var(--card);border:1px solid var(--border);border-left:4px solid var(--accent2);border-radius:10px;padding:14px 16px;display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.rolebox strong{font-size:15px}.rolebox span{color:var(--muted);font-size:13px;display:block}
+.rolebox audio{height:36px;max-width:100%}
+h2{font-size:23px;margin:38px 0 6px;display:flex;align-items:center;gap:10px} h2 .rule{flex:1;height:1px;background:var(--border)}
+.sub{color:var(--muted);font-size:14px;margin-bottom:16px;max-width:760px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px 18px}
+.card h3{font-size:15px;margin-bottom:8px}.card p,.card li{font-size:14px;color:var(--muted)} .card li{margin-left:18px;margin-bottom:4px}.card strong{color:var(--text)}
+.spec{font-family:var(--mono);font-size:13px}
+dl.specgrid{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;font-size:14px} dt{font-family:var(--mono);font-size:12px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);padding-top:2px} dd{font-weight:600}
+.pill{display:inline-block;font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;padding:3px 9px;border-radius:999px;border:1px solid;margin-bottom:8px}
+.pill.ok{color:var(--ok);border-color:var(--ok)} .pill.unknown{color:var(--warn);border-color:var(--warn)} .pill.un{color:var(--un);border-color:var(--un)} .pill.open{color:var(--accent);border-color:var(--accent)}
+.settled{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:16px 18px;font-size:15px}
+.settled b{font-family:var(--mono)}
+.watch{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}
+.watch .card{border-top:3px solid var(--un)}
+ol.seq{margin-left:20px;font-size:15px} ol.seq li{margin-bottom:8px} ol.seq span{color:var(--muted);font-size:14px}
+.attn{list-style:none}.attn li{background:var(--card);border:1px solid var(--border);border-left:3px solid var(--accent2);border-radius:8px;padding:13px 16px;margin-bottom:10px;font-size:15px}.attn li span{color:var(--muted);font-size:14px;display:block}
+.links{display:flex;gap:12px;flex-wrap:wrap}.linkcard{flex:1 1 210px;background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:14px 16px;text-decoration:none;color:var(--muted);font-size:14px;display:block}.linkcard:hover{border-color:var(--accent2)}.linkcard strong{color:var(--text);display:block;font-size:15px;margin-bottom:3px}
+footer{margin-top:48px;padding-top:18px;border-top:1px solid var(--border);color:var(--muted);font-size:13px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
+/* brain dump — standard dashboard styles, themed */
+.dumpbox{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px 22px;margin-top:14px}
+.dumpbox h2{margin:0 0 6px;font-size:20px}.dumpbox-sub{color:var(--muted);font-size:14px;margin-bottom:14px}
+.dumpbox textarea{width:100%;min-height:96px;resize:vertical;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-size:14px;color:var(--text);font-family:inherit}
+.dumpbox textarea:focus{outline:none;border-color:var(--accent)}
+.dumpbox-row{display:flex;align-items:center;gap:12px;margin-top:10px;flex-wrap:wrap}
+.dumpbox-btn{background:var(--accent);color:#fff;border:none;border-radius:8px;padding:9px 22px;font-size:14px;font-weight:600;cursor:pointer}
+@media (prefers-color-scheme: dark){.dumpbox-btn{color:#111314}}
+.dumpbox-btn:disabled{opacity:.45;cursor:default}.dumpbox-btn.saved{background:var(--ok)}
+.dumpbox-status{font-size:13px;color:var(--muted)}.dumpbox-status.flash{color:var(--ok);font-weight:700}
+.dumpbox-hint{font-size:12px;color:var(--muted);margin-top:8px}
+.dumpbox-token{background:color-mix(in srgb,#f59e0b 9%,var(--bg));border:2px solid #f59e0b;border-radius:8px;padding:12px 14px;margin-bottom:12px;font-size:14px}
+.dumpbox-token p{margin-bottom:8px;font-weight:700;color:#cf222e}@media (prefers-color-scheme: dark){.dumpbox-token p{color:#ff7b72}}
+.dumpbox-tokenrow{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.dumpbox-tokenrow input{flex:1;min-width:170px;background:var(--card);border:1px solid var(--border);border-radius:8px;padding:7px 10px;font-size:13px;color:var(--text)}
+.dumpbox-tokenrow button{background:transparent;color:var(--accent);border:1px solid var(--accent);border-radius:8px;padding:7px 14px;font-size:13px;font-weight:600;cursor:pointer}
+@media (max-width:560px){ dl.specgrid{grid-template-columns:1fr} dt{padding-top:8px} }
 </style>
 </head>
 <body>
-<nav data-buddy-crumb style="padding:14px 20px 0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:14px;line-height:1.4;"><a href="https://davedellaquila.github.io/buddy-system/car-buddy/" style="color:inherit;opacity:.65;text-decoration:none;">← Car Buddy</a></nav>
-<div class="topbar"><span class="topbar-icon">⭐</span><span class="topbar-name" data-buddy-name>W163 Mastertech Buddy</span><button class="topbar-refresh" title="Reload this page (bypasses cache)" onclick="location.href=location.pathname+'?v='+Date.now()">&#8635;</button></div>
-<div class="header">
-<div class="icon">⭐</div>
-<h1 data-buddy-name>W163 Mastertech Buddy</h1>
-<div class="tagline">The W163 tech — ML500 five-liter first</div>
+<div class="topbar"><span class="topbar-icon">⭐</span><span>W163 Mastertech Buddy</span><button class="topbar-refresh" title="Reload this page (bypasses cache)" onclick="location.href=location.pathname+'?v='+Date.now()">&#8635;</button></div>
+<nav class="crumb"><a href="https://davedellaquila.github.io/buddy-system/car-buddy/">← 🚗 Car Buddy</a> &nbsp;·&nbsp; sibling: <a href="https://davedellaquila.github.io/buddy-system/ml500-buddy/">🚙 ML500 Buddy</a></nav>
+<div class="wrap">
+
+<header class="hero">
+  <div class="kicker">Factory-grade technician · W163 platform · ML500 five-liter first</div>
+  <h1>⭐ W163 Mastertech Buddy</h1>
+  <p class="tagline">The W163 tech — diagnostics by test sequence, specs verified and cited, and no parts-cannon guesses. Dave turns the wrenches; this desk does the technical thinking.</p>
+  <div class="rolebox">
+    <div><strong>🔊 Hear my role</strong><span>Persona: The Mastertech · Voice: Dry Tambour (default — Dave's audition pick pending)</span></div>
+    <audio controls preload="metadata" src="role-intro.mp3">Your browser does not support audio.</audio>
+  </div>
+  <p style="margin-top:18px;font-size:16px;max-width:780px">W163 Mastertech Buddy is the factory-grade technician for Dave's Mercedes-Benz W163 — completely versed, first, in the ways of the ML500 with the five-liter: Dave's 2002 ML500, the M113 5.0L V8, the 722.6 five-speed automatic, full-time all-wheel drive with low range. <a href="https://docs.google.com/document/d/1b7ZN9JezHLa0bJkZith1ejv0QlRNIpplkDWwU5c9jYY/edit">Job req</a> · <a href="https://github.com/davedellaquila/w163-mastertech-buddy">Repo</a></p>
+</header>
+
+<h2>🔧 Technical state board <span class="rule"></span></h2>
+<p class="sub">The car at a glance — only what's actually known. Everything else is labelled, not guessed. Every spec below carries its source, or the word <em>unverified</em>.</p>
+<div class="grid">
+  <section class="card">
+    <span class="pill ok">Confirmed</span>
+    <h3>Drivetrain identity</h3>
+    <dl class="specgrid">
+      <dt>Car</dt><dd>2002 Mercedes-Benz ML500, white</dd>
+      <dt>Platform</dt><dd>W163</dd>
+      <dt>Engine</dt><dd>M113 5.0L V8</dd>
+      <dt>Gearbox</dt><dd>722.6 five-speed automatic</dd>
+      <dt>Drive</dt><dd>Full-time AWD, low range</dd>
+      <dt>Home</dt><dd>Fiddletown, CA</dd>
+    </dl>
+    <p style="margin-top:10px">Source: <a href="https://docs.google.com/document/d/1b7ZN9JezHLa0bJkZith1ejv0QlRNIpplkDWwU5c9jYY/edit">job req — Known facts at hire</a>; car identified on the cabin Ring cameras, Sep 2026, via <a href="https://davedellaquila.github.io/buddy-system/ml500-buddy/">ML500 Buddy</a>.</p>
+  </section>
+  <section class="card">
+    <span class="pill unknown">Unknown — baseline first</span>
+    <h3>What's due</h3>
+    <p><strong>Nothing can honestly be called due yet.</strong> Current mileage and real service history are still to gather — <a href="https://davedellaquila.github.io/buddy-system/ml500-buddy/">ML500 Buddy's dossier</a> has both sections empty. Until that baseline exists, any “due” list would be a guess, and this desk doesn't guess.</p>
+    <p style="margin-top:8px">First job, jointly with <a href="https://muse.ai/chat/45ee61bc-9304-41fa-987d-99f2aad3b58f">ML500 Buddy's thread</a>: reconstruct the baseline, then the maintenance brain starts.</p>
+  </section>
+  <section class="card">
+    <span class="pill open">Open</span>
+    <h3>Registration / tags</h3>
+    <p>An October 2026 note said the Mercedes' tags were <strong>well out of date</strong>. Current status: <strong>unverified</strong> — to confirm before any road plan leans on it.</p>
+    <p style="margin-top:8px">Source: job req — Open questions at hire.</p>
+  </section>
 </div>
 
-<div class="mission">Factory-grade technician for the Mercedes-Benz W163 platform, completely versed first in the ML500 five-liter (Dave&#x27;s 2002 ML500 — M113 V8, 722.6 automatic, AWD with low range): diagnostics by test sequence, torque specs, procedures and part numbers verified against sources and cited, the platform&#x27;s known-weak-point watch list, and technical vetting for the ML500&#x27;s planned lift-and-33s build. Reads ML500 Buddy&#x27;s dossier and files its findings back.</div>
+<h2>📌 Settled facts <span class="rule"></span></h2>
+<div class="settled">
+  <p><b>The 722.6 has NO factory dipstick.</b> Settled — do not relitigate.</p>
+  <p style="margin-top:8px">Dave's genuine Mercedes dipstick, part <b>113 010 04 72</b> (ordered via FCP Euro, Sep 2026), is the <b>engine-oil</b> dipstick. Source: the dipstick saga, recorded in <a href="https://davedellaquila.github.io/buddy-system/ml500-buddy/">ML500 Buddy's dossier</a> and the <a href="https://docs.google.com/document/d/1b7ZN9JezHLa0bJkZith1ejv0QlRNIpplkDWwU5c9jYY/edit">job req</a>.</p>
+  <p style="margin-top:8px">Stock tire size: <b>275/55R17 109V</b> — source: ML500 tire research, 2026-10-17 (tirepressure.org / Firestone / MotorTrend, cited there). Load index 109 or higher stays the floor for towing.</p>
+</div>
 
+<h2>👀 Weak-point watch list <span class="rule"></span></h2>
+<p class="sub">The platform's usual suspects, from the job req's categories: ignition, sensing, sealing, driveline, suspension, and electrical. Status is per Dave's car, honestly: every entry is <strong>uninspected</strong> until a test says otherwise. No entry gets a verdict from platform reputation alone.</p>
+<div class="watch">
+  <section class="card"><span class="pill un">Uninspected</span><h3>Ignition</h3><p>Coils, leads, and plugs on the M113. First check: mileage / service evidence, then a misfire count / scan — condition <em>unverified</em> until then.</p></section>
+  <section class="card"><span class="pill un">Uninspected</span><h3>Sensing</h3><p>Crank / cam position and airflow sensing — the classic no-start and hot-restart suspects on this platform. No symptoms reported yet; no test run yet.</p></section>
+  <section class="card"><span class="pill un">Uninspected</span><h3>Sealing</h3><p>Valve-cover / breather sealing and the usual M113 oil weeps. First check is a visual once-over with a light — not yet done on this car.</p></section>
+  <section class="card"><span class="pill un">Uninspected</span><h3>Driveline — 722.6 &amp; transfer case</h3><p>Shift quality, fluid condition, and low-range engagement. Remember: no factory dipstick on the 722.6 — fluid checks follow the factory procedure, not a dipstick reading.</p></section>
+  <section class="card"><span class="pill un">Uninspected</span><h3>Suspension &amp; steering</h3><p>Front-end wear and ride height — doubly relevant before the planned front lift. Baseline measurements come before any lift geometry discussion.</p></section>
+  <section class="card"><span class="pill un">Uninspected</span><h3>Electrical gremlins</h3><p>The W163's intermittent-electrical reputation. No faults reported on Dave's car yet — <em>unverified</em> either way until a scan and a battery / charging check.</p></section>
+</div>
 
+<h2>🛠️ First inspection sequence <span class="rule"></span></h2>
+<p class="sub">Cheapest information first — the order this desk will work the baseline, once Dave says go.</p>
+<ol class="seq">
+  <li><strong>Read the dossier.</strong> <span>Everything <a href="https://davedellaquila.github.io/buddy-system/ml500-buddy/">ML500 Buddy</a> already holds; don't re-ask for settled facts.</span></li>
+  <li><strong>Capture mileage + identity.</strong> <span>Odometer photo, VIN, and the registration/tag status — closes attention items 2 and 3 below.</span></li>
+  <li><strong>Scan + battery / charging check.</strong> <span>Stored codes first; they order everything after.</span></li>
+  <li><strong>Fluids and a lit visual once-over.</strong> <span>Engine oil (with the genuine dipstick, 113 010 04 72), coolant, brake fluid; sealing and suspension get their first honest look.</span></li>
+  <li><strong>File findings back.</strong> <span>Verdicts — confirmed / cleared / still uninspected — go to <a href="https://muse.ai/chat/45ee61bc-9304-41fa-987d-99f2aad3b58f">ML500 Buddy</a> for the dossier, and this board updates.</span></li>
+</ol>
 
+<h2>🏔️ The build — “big brother of the Ranger” <span class="rule"></span></h2>
+<p class="sub">Dave's planned conversion for the ML500, modelled on his Polaris Ranger 700: flat military green + black, chunky welded front/rear bumpers, front lift, knobby 33-inch tires. This desk vets it before money moves.</p>
+<div class="grid">
+  <section class="card"><span class="pill open">Not yet reviewed</span><h3>Technical vetting</h3><ul><li>Lift geometry</li><li>33″ fitment &amp; clearance — Dave already owns the ~33″ knobbies (job req)</li><li>Gearing &amp; speedometer effects</li><li>Cooling &amp; braking margins</li></ul><p style="margin-top:8px">No part gets ordered for this build until a written review is on file here.</p></section>
+  <section class="card"><span class="pill open">Open decision</span><h3>Intermediate tires</h3><p>Dual-purpose set — off-road / snow capable, quiet and economical for freeway trailer hauls — in the <strong>265/65R17 class</strong>. Shortlist sits with Dave. Source: job req — Known facts at hire.</p></section>
+  <section class="card"><span class="pill ok">Researched</span><h3>Highway all-seasons</h3><p>For the casual-driving / towing brief, the Oct 17 research pick was the <strong>Michelin Defender LTX M/S2</strong> in stock 275/55R17, Continental TerrainContact H/T as runner-up. Prices there are ranges, not quotes — re-verify at purchase.</p></section>
+</div>
 
+<h2>⚠️ Needs Dave's attention <span class="rule"></span></h2>
+<ul class="attn">
+  <li><strong>1. Job req review</strong><span><a href="https://docs.google.com/document/d/1b7ZN9JezHLa0bJkZith1ejv0QlRNIpplkDWwU5c9jYY/edit">W163 Mastertech Buddy — Job Req</a> — Dave reviews it in the main chat; held as draft until his edits land.</span></li>
+  <li><strong>2. Service baseline is unknown</strong><span>Current mileage and real service history still to gather — <a href="https://davedellaquila.github.io/buddy-system/ml500-buddy/">ML500 Buddy's dossier</a> has those sections empty. Reconstructing it together is early work.</span></li>
+  <li><strong>3. Registration / tag status to confirm</strong><span>An October note said the Mercedes' tags were well out of date — confirm where that stands now.</span></li>
+  <li><strong>4. A specific first job may be coming</strong><span>Dave asked for this buddy by name, mid-thought. Ready when he is — symptom first, test sequence second, verdict third.</span></li>
+</ul>
+
+<h2>🔗 Linked desks <span class="rule"></span></h2>
+<div class="links">
+  <a class="linkcard" href="https://davedellaquila.github.io/buddy-system/car-buddy/"><strong>🚗 Car Buddy — parent</strong>The fleet desk this Mastertech reports to.</a>
+  <a class="linkcard" href="https://davedellaquila.github.io/buddy-system/ml500-buddy/"><strong>🚙 ML500 Buddy — sibling</strong>The car's living dossier: service history, parts, mileage.</a>
+  <a class="linkcard" href="https://muse.ai/chat/45ee61bc-9304-41fa-987d-99f2aad3b58f"><strong>🚙 ML500 Buddy — thread</strong>Where the dossier work happens; my findings file back there.</a>
+  <a class="linkcard" href="https://docs.google.com/document/d/1syTyDmQcMCPQ4Wl9EKQeJZvtlKE7HOhLkWZsgItoDrU/edit"><strong>🚙 ML500 Buddy — brief</strong>The sibling's founding document.</a>
+  <a class="linkcard" href="https://github.com/davedellaquila/ml500-buddy"><strong>🚙 ML500 Buddy — repo</strong>The dossier's private repo.</a>
+  <a class="linkcard" href="https://github.com/davedellaquila/w163-mastertech-buddy"><strong>⭐ My repo</strong>SOUL, KNOWLEDGE, DECISIONS — this desk's memory, private.</a>
+</div>
+
+<h2>🧠 Brain dump <span class="rule"></span></h2>
 <section class="dumpbox" data-buddy-id="w163-mastertech-buddy">
 <h2>🧠 Brain dump</h2>
 <p class="dumpbox-sub">Dump what's on your mind about <span data-buddy-name>W163 Mastertech Buddy</span> — raw and unfiltered. Each dump lands in the buddy's repo (docs/ingest.md) as a timestamped entry — or saves on this device until a repo is linked and a token is connected.</p>
@@ -247,33 +185,6 @@ h2 { font-size: 22px; margin: 32px 0 16px; }
 </div>
 <p class="dumpbox-hint">Enter dumps it &middot; Shift+Enter for a new line</p>
 </section>
-
-
-<h2>Needs Attention</h2>
-<div class="attn" data-attn-id="w163-mastertech-buddy-job-req-review"><div class="attn-text">Job req ready for review — looks good, edits, or defer?</div><div class="attn-link"><a href="https://docs.google.com/document/d/1b7ZN9JezHLa0bJkZith1ejv0QlRNIpplkDWwU5c9jYY/edit" target="_blank" rel="noopener">Open →</a></div><div class="attn-date">2026-10-25</div><div class="attn-actions"><button type="button" class="attn-btn primary" data-act="done">Done</button><button type="button" class="attn-btn" data-act="info">Need more info</button></div><div class="attn-status" role="status"></div></div>
-<div class="attn" data-attn-id="w163-mastertech-buddy-service-baseline"><div class="attn-text">Service baseline unknown: current mileage and real service history are still to gather (ML500 Buddy&#x27;s dossier has those sections empty) — reconstructing it is early joint work.</div><div class="attn-link"><a href="https://docs.google.com/document/d/1b7ZN9JezHLa0bJkZith1ejv0QlRNIpplkDWwU5c9jYY/edit" target="_blank" rel="noopener">Open →</a></div><div class="attn-date">2026-10-25</div><div class="attn-actions"><button type="button" class="attn-btn primary" data-act="done">Done</button><button type="button" class="attn-btn" data-act="info">Need more info</button></div><div class="attn-status" role="status"></div></div>
-
-
-
-
-
-
-
-<section class="repo-files" data-buddy-id="w163-mastertech-buddy">
-<h2>📄 Repo files</h2>
-<p class="rf-sub">The markdown files in <span data-buddy-name>W163 Mastertech Buddy</span>'s repo. Tap a file name and its contents open right below it — open as many as you like at once. Edit inside an opened file and the save goes straight back to GitHub. The repo is private, so nothing here — not even the file names — is shown until GitHub is connected on this device.</p>
-<div class="rf-locked" hidden>🔒 Connect GitHub in the 🧠 Brain dump box above to view and edit files — the repos are private, so a token is needed to read them. Then reload this page.</div>
-<div class="rf-main" hidden>
-<div class="rf-list rf-files-wrap"></div>
-<div class="rf-status attn-status" role="status"></div>
-</div>
-</section>
-
-
-<div class="footer">
-Generated 2026-10-25 · Part of the Buddy System<br>
-<a href="about.html">About · the full record →</a>
-</div>
 
 <script>
 (function(){
@@ -457,462 +368,59 @@ Generated 2026-10-25 · Part of the Buddy System<br>
 })();
 </script>
 
+<footer><span>⭐ W163 Mastertech Buddy · The Mastertech · Dry Tambour</span><span>Homepage v1 · 2026-10-25 · Specs cited or labelled unverified</span></footer>
+</div>
+<!--
+  TIP JAR — canonical snippet (Dave's standard, 2026-10-24)
+  Every buddy homepage and every page a buddy creates carries the tip jar.
+  Public pages especially: a reader who got value can say thanks.
 
-<script>
-(function(){
-  var tiles = document.querySelectorAll('.attn[data-attn-id]');
-  if (!tiles.length) return;
-  var dumpbox = document.querySelector('.dumpbox');
-  var bid = (dumpbox && dumpbox.getAttribute('data-buddy-id')) || (function(){
-    var p = location.pathname.replace(/\/+$/, '');
-    return p.substring(p.lastIndexOf('/') + 1);
-  })();
-  function lsGet(){ try { return JSON.parse(localStorage.getItem('buddyTree.v3') || '{}'); } catch(e){ return {}; } }
-  function lsSet(patch){ try { var s = lsGet(); for (var k in patch) s[k] = patch[k]; localStorage.setItem('buddyTree.v3', JSON.stringify(s)); } catch(e){} }
-  function token(){ return lsGet().ghToken || ''; }
-  function b64encode(str){
-    var bytes = new TextEncoder().encode(str), bin = '';
-    bytes.forEach(function(b){ bin += String.fromCharCode(b); });
-    return btoa(bin);
-  }
-  async function ghApi(path, method, body){
-    var t = token();
-    if (!t) throw new Error('Add a GitHub token first.');
-    var r = await fetch('https://api.github.com' + path, {
-      method: method || 'GET',
-      headers: {'Authorization': 'Bearer ' + t, 'Accept': 'application/vnd.github+json', 'Content-Type': 'application/json'},
-      body: body ? JSON.stringify(body) : undefined
-    });
-    if (!r.ok) throw new Error('GitHub ' + r.status);
-    return r.status === 204 ? null : await r.json();
-  }
-  async function ghGetFile(repo, path){
-    try {
-      var j = await ghApi('/repos/davedellaquila/' + repo + '/contents/' + path);
-      if (j && j.content) return {
-        text: new TextDecoder().decode(Uint8Array.from(atob(j.content.replace(/\n/g, '')), function(c){ return c.charCodeAt(0); })),
-        sha: j.sha
-      };
-    } catch(e){}
-    return null;
-  }
-  var repo = null, buddyName = bid;
-  async function resolveBuddy(){
-    try {
-      var r = await fetch('../buddies.json', {cache: 'no-store'});
-      var d = await r.json();
-      var buds = d.buddies || [];
-      for (var i = 0; i < buds.length; i++) {
-        if (buds[i].id === bid) {
-          if (buds[i].repo) repo = buds[i].repo;
-          if (buds[i].name) buddyName = buds[i].name;
-          break;
-        }
-      }
-    } catch(e){}
-  }
-  function rkey(aid, text){ return bid + '|' + (aid || ('text:' + text.slice(0, 60))); }
-  function isResolved(aid, text){
-    var s = lsGet();
-    var m = s.attnDone || {};
-    if (m[rkey(aid, text)]) return true;
-    /* Also honor the dashboard's own done map (the same store's 'seen',
-       keyed by bare attention id) so an item cleared in the dashboard
-       stays cleared here — one done state across surfaces. */
-    if (aid && s.seen && s.seen[aid]) return true;
-    return false;
-  }
-  function setResolved(aid, text){ var s = lsGet(); var m = s.attnDone || {}; m[rkey(aid, text)] = 1; s.attnDone = m; lsSet(s); }
-  /* Las Vegas mode (Dave 2026-10-20): marking done feels like a win — the
-     button spins once and confetti bursts from it. DOM + WAAPI only;
-     skipped under prefers-reduced-motion; only ever called on a real tap. */
-  function celebrate(el, fallbackEl){
-    if (!el || !el.getBoundingClientRect) return;
-    if (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    try { el.animate([{transform:'rotate(0deg)'},{transform:'rotate(360deg)'}], {duration:450, easing:'cubic-bezier(.2,.7,.3,1.2)'}); } catch(e){}
-    var r = el.getBoundingClientRect();
-    /* A hidden element's rect is all zeros — bursting from it put the
-       confetti in the viewport's upper-left corner (Dave, 2026-10-21). Fall
-       back to the tile's rect; never burst from a zero rect at all. */
-    if ((!r.width || !r.height) && fallbackEl && fallbackEl.getBoundingClientRect) r = fallbackEl.getBoundingClientRect();
-    if (!r.width || !r.height) return;
-    var cx = r.left + r.width/2, cy = r.top + r.height/2;
-    var colors = ['#f0b429','#3fb950','#f778ba','#58a6ff','#ff7b72','#d2a8ff'];
-    for (var i = 0; i < 26; i++){
-      var s = document.createElement('span');
-      var sz = 5 + Math.random()*6;
-      s.style.cssText = 'position:fixed;left:'+cx+'px;top:'+cy+'px;width:'+sz+'px;height:'+(sz*0.6)+'px;background:'+colors[i%colors.length]+';z-index:99999;pointer-events:none;border-radius:2px;';
-      document.body.appendChild(s);
-      var ang = Math.random()*Math.PI*2, v = 60 + Math.random()*130;
-      var dx = Math.cos(ang)*v, dy = Math.sin(ang)*v - 90;
-      var anim = s.animate([
-        {transform:'translate(-50%,-50%) rotate(0deg)', opacity:1},
-        {transform:'translate(calc(-50% + '+dx+'px), calc(-50% + '+(dy+170)+'px)) rotate('+(Math.random()*540-270)+'deg)', opacity:0}
-      ], {duration: 750 + Math.random()*450, easing:'cubic-bezier(.15,.6,.4,1)'});
-      (function(node, a){ if (a) a.onfinish = function(){ node.remove(); }; else setTimeout(function(){ node.remove(); }, 1300); })(s, anim);
-    }
-  }
-  function paintResolved(tile, msg, immediate){
-    var st = tile.querySelector('.attn-status');
-    if (st) st.textContent = msg;
-    /* Dave 2026-10-20: the check belongs to the RESULT of the tap, never the
-       label beforehand — an upfront check reads as "already done." The Done
-       button renders plain "Done"; the check appears only once clicked. */
-    var db = tile.querySelector('[data-act="done"]');
-    if (db) db.textContent = '✓ Done';
-    if (immediate) { tile.classList.add('resolved'); return; }
-    /* Fresh tap (Dave, 2026-10-21): the check + status land while the button
-       is still visible, and celebrate() fires against the live button; the
-       resolved class (dim + hide actions) arrives a beat later so the result
-       registers first. Applying it instantly hid the button before the check
-       could be seen — and zeroed the rect celebrate() measures, which sent
-       the confetti to the viewport's upper-left corner. */
-    setTimeout(function(){ tile.classList.add('resolved'); }, 1100);
-  }
-  async function sendAction(tile, entry, okMsg){
-    var st = tile.querySelector('.attn-status');
-    var btns = tile.querySelectorAll('.attn-btn');
-    if (!token()) { st.textContent = 'Add a GitHub token in the Brain dump section above to enable actions.'; return false; }
-    if (!repo) { st.textContent = 'No repo linked for this buddy yet.'; return false; }
-    btns.forEach(function(b){ b.disabled = true; });
-    st.textContent = 'Working…';
-    try {
-      var NL = String.fromCharCode(10);
-      var stamp = new Date().toLocaleString();
-      var cur = await ghGetFile(repo, 'docs/ingest.md');
-      var base = cur ? cur.text : '# Ingest log — ' + buddyName + NL + NL;
-      var body = {message: 'Attention action for ' + bid, content: b64encode(base + '## ' + stamp + NL + NL + entry + NL + NL)};
-      if (cur && cur.sha) body.sha = cur.sha;
-      await ghApi('/repos/davedellaquila/' + repo + '/contents/docs/ingest.md', 'PUT', body);
-      st.textContent = okMsg;
-      return true;
-    } catch(err){
-      st.textContent = 'Save failed: ' + (err.message || err);
-      btns.forEach(function(b){ b.disabled = false; });
-      return false;
-    }
-  }
-  tiles.forEach(function(tile){
-    var aid = tile.getAttribute('data-attn-id') || '';
-    var textEl = tile.querySelector('.attn-text');
-    var text = textEl ? textEl.textContent.trim() : '';
-    if (isResolved(aid, text)) { paintResolved(tile, 'Marked done', true); return; }
-    tile.addEventListener('click', function(ev){
-      var btn = ev.target.closest ? ev.target.closest('.attn-btn') : null;
-      if (!btn || btn.disabled) return;
-      var act = btn.getAttribute('data-act');
-      var idBit = aid ? ' (attention id: ' + aid + ')' : '';
-      if (act === 'done') {
-        sendAction(tile,
-          'DONE — Dave marked this done on the homepage: "' + text + '"' + idBit + '. Please remove it from the attention list in buddies.json.',
-          'Marked done — the buddy will clear it.').then(function(ok){ if (ok) { setResolved(aid, text); paintResolved(tile, 'Marked done — the buddy will clear it.'); celebrate(btn, tile); } });
-      } else if (act === 'info') {
-        sendAction(tile,
-          'FOLLOW-UP — Dave needs more info on: "' + text + '"' + idBit + '. Please follow up with him.',
-          'Sent — ' + buddyName + ' will follow up.');
-      }
-    });
-  });
-  resolveBuddy();
-})();
-</script>
+  USAGE: paste this whole block just before </body>. No dependencies.
+  The jar points at Dave's Ko-fi page by default. A page for a specific app
+  may override the destination with its own Ko-fi page later:
+      <div class="tipjar" ...> — change the href on the <a>.
 
-
-<script>
-(function(){
-  var sec = document.querySelector('.repo-files');
-  if (!sec || sec.dataset.rfInit) return;
-  sec.dataset.rfInit = '1';
-  var bid = sec.getAttribute('data-buddy-id') || (function(){
-    var p = location.pathname.replace(/\/+$/, '');
-    return p.substring(p.lastIndexOf('/') + 1);
-  })();
-  function lsGet(){ try { return JSON.parse(localStorage.getItem('buddyTree.v3') || '{}'); } catch(e){ return {}; } }
-  function token(){ return lsGet().ghToken || ''; }
-  function b64encode(str){
-    var bytes = new TextEncoder().encode(str), bin = '';
-    bytes.forEach(function(b){ bin += String.fromCharCode(b); });
-    return btoa(bin);
+  DESIGN NOTES (keep it alive, never annoying):
+  - "Breathing": a very slow, soft pulse so the pill feels alive at rest.
+  - Every ~9s the jar does one small hop and a coin glint passes over it —
+    a brief active window inside a long keyframe cycle, so it's mostly still.
+  - Hover: the jar spins (same move as the dashboard sidebar's tip jar) and
+    the label shimmers. Touch devices get the idle motion only.
+  - prefers-reduced-motion: all animation off. The jar is just a link.
+  - Works in dark and light mode; sits above page content (z-index 60) but
+    below modals on buddy pages.
+-->
+<style>
+  .tipjar{position:fixed;right:18px;bottom:18px;z-index:60;
+    font-family:inherit;-webkit-tap-highlight-color:transparent}
+  .tipjar a{display:inline-flex;align-items:center;gap:.5em;
+    padding:.55em 1em;border-radius:999px;text-decoration:none;
+    font-size:.9rem;font-weight:600;line-height:1;
+    color:#fff;background:linear-gradient(135deg,#7c4dff,#b388ff);
+    box-shadow:0 6px 18px rgba(124,77,255,.35),0 2px 6px rgba(0,0,0,.25);
+    animation:tipjar-breathe 6s ease-in-out infinite}
+  .tipjar .jar{display:inline-block;font-size:1.15em;position:relative;
+    animation:tipjar-hop 9s ease-in-out infinite}
+  .tipjar .coin{position:absolute;left:50%;top:-.9em;transform:translateX(-50%);
+    font-size:.8em;opacity:0;animation:tipjar-coin 9s ease-in-out infinite}
+  .tipjar a:hover .jar{animation:tipjar-spin .7s cubic-bezier(.34,1.56,.64,1)}
+  .tipjar a:hover .tiptext{animation:tipjar-shimmer 2.5s linear infinite}
+  .tipjar a:focus-visible{outline:3px solid #ffd54f;outline-offset:3px}
+  @keyframes tipjar-breathe{0%,100%{transform:scale(1)}50%{transform:scale(1.035)}}
+  @keyframes tipjar-hop{0%,88%,100%{transform:translateY(0)}92%{transform:translateY(-4px) rotate(-8deg)}96%{transform:translateY(0)}}
+  @keyframes tipjar-coin{0%,88%,100%{opacity:0;transform:translate(-50%,0)}92%{opacity:1;transform:translate(-50%,4px)}96%,98%{opacity:0;transform:translate(-50%,9px)}}
+  @keyframes tipjar-spin{to{transform:rotate(360deg)}}
+  @keyframes tipjar-shimmer{0%{filter:brightness(1)}50%{filter:brightness(1.45)}100%{filter:brightness(1)}}
+  @media (prefers-reduced-motion: reduce){
+    .tipjar a,.tipjar .jar,.tipjar .coin{animation:none}
   }
-  async function ghApi(path, method, body){
-    var t = token();
-    if (!t) throw new Error('Add a GitHub token first.');
-    var r = await fetch('https://api.github.com' + path, {
-      method: method || 'GET',
-      headers: {'Authorization': 'Bearer ' + t, 'Accept': 'application/vnd.github+json', 'Content-Type': 'application/json'},
-      body: body ? JSON.stringify(body) : undefined
-    });
-    if (!r.ok) throw new Error('GitHub ' + r.status);
-    return r.status === 204 ? null : await r.json();
-  }
-  async function ghGetFile(repo, path){
-    try {
-      var j = await ghApi('/repos/davedellaquila/' + repo + '/contents/' + path);
-      if (j && j.content) return {
-        text: new TextDecoder().decode(Uint8Array.from(atob(j.content.replace(/\n/g, '')), function(c){ return c.charCodeAt(0); })),
-        sha: j.sha
-      };
-    } catch(e){}
-    return null;
-  }
-  var repo = null;
-  async function resolveRepo(){
-    try {
-      var r = await fetch('../buddies.json', {cache: 'no-store'});
-      var d = await r.json();
-      var buds = d.buddies || [];
-      for (var i = 0; i < buds.length; i++) {
-        if (buds[i].id === bid && buds[i].repo) { repo = buds[i].repo; break; }
-      }
-    } catch(e){}
-  }
-  function esc(s){ return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
-  function inline(s){
-    s = esc(s);
-    s = s.replace(/`([^`]+)`/g, '<code>$1</code>');
-    s = s.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
-    s = s.replace(/(^|[^*])\*([^*\n]+)\*/g, '$1<em>$2</em>');
-    s = s.replace(/\[([^\]]+)\]\((https?:[^)\s]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>');
-    return s;
-  }
-  function mdRender(src){
-    var lines = src.split('\n'), out = [], inList = false, inCode = false, codeBuf = [];
-    function closeList(){ if (inList) { out.push('</ul>'); inList = false; } }
-    for (var i = 0; i < lines.length; i++){
-      var ln = lines[i], m;
-      if (/^```/.test(ln)) {
-        if (inCode) { out.push('<pre><code>' + esc(codeBuf.join('\n')) + '</code></pre>'); codeBuf = []; inCode = false; }
-        else { closeList(); inCode = true; }
-        continue;
-      }
-      if (inCode) { codeBuf.push(ln); continue; }
-      if ((m = ln.match(/^(#{1,4})\s+(.*)/))) {
-        closeList();
-        var lv = Math.min(m[1].length + 1, 4);
-        out.push('<h' + lv + '>' + inline(m[2]) + '</h' + lv + '>');
-        continue;
-      }
-      if (/^\s*(-{3,}|\*{3,})\s*$/.test(ln)) { closeList(); out.push('<hr>'); continue; }
-      if ((m = ln.match(/^\s*[-*]\s+(.*)/)) || (m = ln.match(/^\s*\d+[.)]\s+(.*)/))) {
-        if (!inList) { out.push('<ul>'); inList = true; }
-        out.push('<li>' + inline(m[1]) + '</li>');
-        continue;
-      }
-      if ((m = ln.match(/^>\s?(.*)/))) { closeList(); out.push('<blockquote>' + inline(m[1]) + '</blockquote>'); continue; }
-      if (!ln.trim()) { closeList(); continue; }
-      closeList();
-      out.push('<p>' + inline(ln) + '</p>');
-    }
-    closeList();
-    if (inCode) out.push('<pre><code>' + esc(codeBuf.join('\n')) + '</code></pre>');
-    return out.join('\n');
-  }
-  var locked = sec.querySelector('.rf-locked'), main = sec.querySelector('.rf-main'),
-      list = sec.querySelector('.rf-list'), st = sec.querySelector('.rf-status');
-  /* Accordion files (Dave 2026-10-21): a list of file names; clicking a
-     name toggles that file's contents open inline right below the name.
-     Toggles are independent — several files can be open at once. Contents
-     load lazily on first open and are cached in the item's own state;
-     Edit/Save lives inside the opened panel. */
-  function buildFileSection(f){
-    var wrap = document.createElement('div');
-    wrap.className = 'rf-fileitem';
-    var head = document.createElement('button');
-    head.type = 'button';
-    head.className = 'rf-file';
-    head.setAttribute('aria-expanded', 'false');
-    var nm = document.createElement('span');
-    nm.className = 'rf-name';
-    nm.textContent = '📄 ' + f.name;
-    var dir = document.createElement('span');
-    dir.className = 'rf-dir';
-    dir.textContent = f.path;
-    var chev = document.createElement('span');
-    chev.className = 'rf-chev';
-    chev.textContent = '▸';
-    head.appendChild(nm);
-    head.appendChild(dir);
-    head.appendChild(chev);
-    var panel = document.createElement('div');
-    panel.className = 'rf-panel';
-    panel.hidden = true;
-    var phead = document.createElement('div');
-    phead.className = 'rf-viewhead';
-    var ppath = document.createElement('span');
-    ppath.className = 'rf-path';
-    ppath.textContent = f.path;
-    var editBtn = document.createElement('button');
-    editBtn.type = 'button';
-    editBtn.className = 'attn-btn rf-edit';
-    editBtn.textContent = 'Edit';
-    editBtn.disabled = true;
-    phead.appendChild(ppath);
-    phead.appendChild(editBtn);
-    var bodyEl = document.createElement('div');
-    bodyEl.className = 'rf-body';
-    bodyEl.innerHTML = '<p class="rf-loading">Loading ' + esc(f.path) + '…</p>';
-    var editor = document.createElement('div');
-    editor.className = 'rf-editor';
-    editor.hidden = true;
-    var ta = document.createElement('textarea');
-    ta.className = 'rf-ta';
-    ta.rows = 18;
-    ta.spellcheck = false;
-    ta.setAttribute('aria-label', 'Markdown source for ' + f.path);
-    var actions = document.createElement('div');
-    actions.className = 'attn-actions';
-    var saveBtn = document.createElement('button');
-    saveBtn.type = 'button';
-    saveBtn.className = 'attn-btn primary rf-save';
-    saveBtn.textContent = 'Save to GitHub';
-    var cancelBtn = document.createElement('button');
-    cancelBtn.type = 'button';
-    cancelBtn.className = 'attn-btn rf-cancel';
-    cancelBtn.textContent = 'Cancel';
-    actions.appendChild(saveBtn);
-    actions.appendChild(cancelBtn);
-    editor.appendChild(ta);
-    editor.appendChild(actions);
-    var fst = document.createElement('div');
-    fst.className = 'rf-fstatus attn-status';
-    fst.setAttribute('role', 'status');
-    panel.appendChild(phead);
-    panel.appendChild(bodyEl);
-    panel.appendChild(editor);
-    panel.appendChild(fst);
-    wrap.appendChild(head);
-    wrap.appendChild(panel);
-    var cur = null, loaded = false;
-    function loadOnce(){
-      if (loaded) return;
-      loaded = true;
-      ghGetFile(repo, f.path).then(function(got){
-        if (!got) { loaded = false; bodyEl.innerHTML = '<p class="rf-loading">⚠ Could not load ' + esc(f.path) + ' — close and open it again to retry.</p>'; return; }
-        cur = {path: f.path, sha: got.sha, text: got.text};
-        bodyEl.innerHTML = mdRender(got.text);
-        editBtn.disabled = false;
-      });
-    }
-    head.addEventListener('click', function(){
-      var open = panel.hidden;
-      panel.hidden = !open;
-      head.setAttribute('aria-expanded', open ? 'true' : 'false');
-      chev.textContent = open ? '▾' : '▸';
-      if (open) loadOnce();
-    });
-    editBtn.addEventListener('click', function(){
-      if (!cur) return;
-      ta.value = cur.text;
-      bodyEl.hidden = true;
-      editor.hidden = false;
-      ta.focus();
-    });
-    cancelBtn.addEventListener('click', function(){
-      editor.hidden = true;
-      bodyEl.hidden = false;
-    });
-    saveBtn.addEventListener('click', async function(){
-      if (!cur) return;
-      saveBtn.disabled = true;
-      fst.textContent = 'Saving…';
-      try {
-        var payload = {message: 'Edit ' + cur.path + ' from the homepage', content: b64encode(ta.value), sha: cur.sha};
-        var j = await ghApi('/repos/davedellaquila/' + repo + '/contents/' + cur.path, 'PUT', payload);
-        if (j && j.content && j.content.sha) cur.sha = j.content.sha;
-        cur.text = ta.value;
-        editor.hidden = true;
-        bodyEl.hidden = false;
-        bodyEl.innerHTML = mdRender(cur.text);
-        fst.textContent = '✓ Saved to GitHub (' + repo + '/' + cur.path + ').';
-      } catch(err){
-        var why = (err && err.message) || String(err);
-        fst.textContent = /409|422/.test(why)
-          ? '⚠ GitHub said the file changed since you loaded it (' + why + ') — reload this page and try again.'
-          : '⚠ Save failed (' + why + ') — your edit is still in the editor.';
-      }
-      saveBtn.disabled = false;
-    });
-    return wrap;
-  }
-  async function init(){
-    await resolveRepo();
-    if (!repo) {
-      locked.hidden = false;
-      locked.textContent = 'No repo is linked for this buddy yet, so there are no repo files to show.';
-      return;
-    }
-    if (!token()) { locked.hidden = false; return; }
-    main.hidden = false;
-    st.textContent = 'Loading files…';
-    var files = [];
-    async function grab(dir){
-      try {
-        var j = await ghApi('/repos/davedellaquila/' + repo + (dir ? '/contents/' + dir : '/contents'));
-        if (Array.isArray(j)) j.forEach(function(e){
-          if (e.type === 'file' && /\.md$/i.test(e.name)) files.push({name: e.name, path: e.path});
-        });
-      } catch(e){}
-    }
-    await grab('');
-    await grab('docs');
-    files.sort(function(a, b){ return a.path < b.path ? -1 : 1; });
-    if (!files.length) { st.textContent = 'No markdown files found in the repo yet.'; return; }
-    st.textContent = '';
-    files.forEach(function(f){
-      list.appendChild(buildFileSection(f));
-    });
-  }
-  init();
-})();
-</script>
-
-
-<script>
-(function(){
-  var parts = location.pathname.split('/');
-  var bid = '';
-  for (var i = parts.length - 1; i >= 0; i--) { if (parts[i]) { bid = parts[i]; break; } }
-  function applyName(name){
-    if (!name) return;
-    var els = document.querySelectorAll('[data-buddy-name]');
-    for (var k = 0; k < els.length; k++) els[k].textContent = name;
-    var ta = document.querySelector('.dumpbox textarea');
-    if (ta) ta.setAttribute('placeholder', "Dump what's on your mind about " + name + "…");
-  }
-  /* Pending renames (Dave 2026-10-18): when the dashboard has no GitHub token,
-     a rename queues in localStorage instead of reaching the registry. The
-     dashboard and homepages share an origin, so the homepage reads that queue
-     here — a pending rename supersedes the registry name, which is why a freshly
-     renamed buddy kept showing its old name after refresh. */
-  function pendingName(){
-    try {
-      var s = JSON.parse(localStorage.getItem('buddyTree.v3') || '{}');
-      if (s && s.pendingRenames && s.pendingRenames[bid]) return s.pendingRenames[bid];
-    } catch(e){}
-    return null;
-  }
-  var pn = pendingName();
-  if (pn) applyName(pn);
-  try {
-    fetch('../buddies.json', {cache: 'no-store'}).then(function(r){ return r.json(); }).then(function(d){
-      var buds = (d && d.buddies) || [];
-      for (var j = 0; j < buds.length; j++) {
-        if (buds[j].id === bid && buds[j].name) { applyName(pendingName() || buds[j].name); break; }
-      }
-    }).catch(function(){});
-  } catch(e){}
-  /* Live rename (Dave 2026-10-16): the dashboard broadcasts renames via
-     localStorage, so an open page updates its name without a refresh.
-     Same browser only — other devices pick it up on their next load. */
-  window.addEventListener('storage', function(e){
-    if (e.key !== 'buddyTree.rename' || !e.newValue) return;
-    try {
-      var d = JSON.parse(e.newValue);
-      if (d && d.id === bid && d.name) applyName(d.name);
-    } catch(err){}
-  });
-})();
-</script>
+</style>
+<div class="tipjar">
+  <a href="https://ko-fi.com/davedellaquila" target="_blank" rel="noopener"
+     aria-label="Tip jar — if this page helped you, you can leave Dave a tip on Ko-fi">
+    <span class="jar">🫙<span class="coin">🪙</span></span><span class="tiptext">Tip Jar</span>
+  </a>
+</div>
 
 </body>
 </html>
