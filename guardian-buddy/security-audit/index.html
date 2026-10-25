@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Security &amp; Privacy Audit 2026-10-25 — Guardian Buddy</title>
+<style>
+  :root{
+    --bg:#0d1117; --panel:#161b22; --card:#1c2330; --border:#2a3342;
+    --text:#e6edf3; --muted:#8b949e;
+    --amber:#d99a26; --green:#3fb950; --red:#f85149; --accent:#58a6ff;
+  }
+  html[data-theme="light"]{
+    --bg:#f7f7f7; --panel:#ffffff; --card:#ffffff; --border:#e0e0e0;
+    --text:#1f2328; --muted:#59636e;
+    --amber:#9a6700; --green:#1a7f37; --red:#d1242c; --accent:#0969da;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--text);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;
+    line-height:1.65;min-height:100vh}
+  .wrap{max-width:720px;margin:0 auto;padding:40px 22px 72px}
+  .theme-btn{position:fixed;top:14px;right:14px;background:var(--panel);
+    border:1px solid var(--border);border-radius:999px;color:var(--text);
+    padding:8px 14px;font-size:14px;cursor:pointer;z-index:10}
+  .theme-btn:hover{border-color:var(--amber)}
+  .back{display:inline-block;margin-bottom:18px;color:var(--accent);
+    text-decoration:none;font-weight:600;font-size:15px}
+  .back:hover{text-decoration:underline}
+  .kicker{font-size:12px;text-transform:uppercase;letter-spacing:.14em;
+    color:var(--muted);margin-bottom:8px}
+  h1{font-size:30px;letter-spacing:-.5px;margin-bottom:10px;line-height:1.25}
+  .pos{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 6px}
+  .tag{font-size:12px;font-weight:700;letter-spacing:.06em;border-radius:999px;
+    padding:5px 12px;border:1px solid var(--border);color:var(--muted)}
+  .tag.crit{background:rgba(248,81,73,.13);color:var(--red);border-color:var(--red)}
+  .tag.high{background:rgba(217,154,38,.13);color:var(--amber);border-color:var(--amber)}
+  .tag.med{color:var(--muted);border-color:var(--muted)}
+  .tag.note{background:rgba(63,185,80,.13);color:var(--green);border-color:var(--green)}
+  section{background:var(--panel);border:1px solid var(--border);border-radius:12px;
+    padding:18px 22px;margin-top:14px}
+  section h2{font-size:13px;text-transform:uppercase;letter-spacing:.12em;
+    color:var(--muted);margin-bottom:8px}
+  section p{font-size:15.5px;margin-bottom:10px}
+  section p:last-child{margin-bottom:0}
+  section strong{color:var(--text)}
+  section ul{margin:0 0 10px 18px;font-size:15.5px}
+  section li{margin-bottom:6px}
+  .verdict{border-left:4px solid var(--red);border-radius:0 12px 12px 0}
+  .verdict h2{color:var(--red)}
+  .reco{border-left:4px solid var(--amber);border-radius:0 12px 12px 0}
+  .reco h2{color:var(--amber)}
+  .grade-h{font-size:15px;text-transform:uppercase;letter-spacing:.12em;margin:26px 0 2px}
+  footer{margin-top:34px;color:var(--muted);font-size:13px;font-style:italic}
+  footer a{color:var(--accent);text-decoration:none;font-style:normal;font-weight:600}
+  @media (max-width:560px){ h1{font-size:25px} .wrap{padding:28px 16px 56px} }
+</style>
+</head>
+<body>
+<button class="theme-btn" id="themeBtn" type="button" aria-label="Toggle theme">☀️</button>
+<div class="wrap">
+  <a class="back" href="../">← Guardian Buddy</a>
+  <div class="kicker">Guardian · Security audit · 2026-10-25</div>
+  <h1>BuddyOS security &amp; privacy audit</h1>
+  <div class="pos"><span class="tag crit">3 critical</span><span class="tag high">3 high</span><span class="tag med">5 medium</span><span class="tag note">6 notes</span></div>
+  <p style="color:var(--muted);font-size:14.5px">Verified live against the served site and the actual repos on 2026-10-25. Anything not directly checked is marked <strong>unverified</strong>. Canonical full text: <a href="https://github.com/davedellaquila/guardian-buddy/blob/master/docs/security-audit-2026-10-25.md" style="color:var(--accent)">the audit in Guardian's private repo</a>.</p>
+
+  <section class="verdict"><h2>Verdict</h2>
+  <p><strong>Privacy-first in intention and in the private half of the architecture. Not privacy-first in fact on the public half — and the public half is the half a stranger sees.</strong></p>
+  <p>The private architecture is genuinely well built: 187 of 192 GitHub repos are private, no secrets are committed in the repos scanned, and the planned server fix is soundly designed. But the dashboard repo is public, so all 154 buddy homepages are world-readable — family, estate, finance, and property material included — and the registry has no privacy field at all: the rule "pages are private unless Dave says otherwise, one page at a time" is enforced nowhere. Underneath, the browser-side GitHub token is one scripting bug away from handing a stranger read/write access to every private repo. The two highest-leverage fixes are both already built or already awaiting Dave's word: his ~15-minute Firebase deploy, and his pending decision on the Neighborhood page.</p>
+  </section>
+
+  <div class="grade-h" style="color:var(--red)">Critical</div>
+
+  <section><h2>C1 · Public homepages expose personal material at fleet scale</h2>
+  <p>Every buddy homepage is world-readable: names, missions, and needs-attention items for 154 buddies spanning family, the estate Dave is executing (assets named, a tenant named), finances, and property. The live registry carries 109 attention items and 144 Google Doc links in one public fetch; each doc's own sharing still gates its contents, but the links are discoverable. The full source repo and its history are equally public.</p>
+  <p><strong>Fix:</strong> until the gate ships, consider stripping the most sensitive registry content from the public build. Anything public today should be treated as permanently out — deletion does not unpublish history.</p>
+  </section>
+
+  <section><h2>C2 · Home addresses and precise coordinates are published</h2>
+  <p>The Neighborhood Buddy page publishes two residential street addresses (Fiddletown and San Jose/Lenwood) with precise latitude/longitude — verified live today. Physical-world location data for Dave's household and his sons' home, on a page whose fate (take down vs. strip) is Dave's pending decision.</p>
+  <p><strong>Fix:</strong> decide this one first. Stripping the addresses and coordinates keeps the page's civic function; taking it down is cleaner.</p>
+  </section>
+
+  <section><h2>C3 · A GitHub token lives in browser localStorage on a public origin</h2>
+  <p>295 files carry the flow: every buddy page reads Dave's personal access token from <span style="font-family:ui-monospace,monospace">localStorage</span> and uses it to read and write the private repos (the Desk, Repo files, brain-dump). Any script that runs on this origin can read that key; a classic token's <em>repo</em> scope means read <strong>and write</strong> access to every repo — the blast radius includes rewriting or deleting every buddy's files. Dave pinned this in October as "real, not urgent." The token's exact type, scope, and expiry are <strong>unverified</strong> — they cannot be observed from Astro's machine.</p>
+  <p><strong>Fix:</strong> deploy the already-built <em>buddy-server</em> and move the token server-side. Interim: Dave's 2-minute token-settings check (fine-grained, named repos, Contents read/write, with expiry).</p>
+  </section>
+
+  <div class="grade-h" style="color:var(--amber)">High</div>
+
+  <section><h2>H1 · The privacy principle has no representation in the system</h2>
+  <p>The live registry has no privacy or visibility field on any of the 154 buddies. "Private by default, public one page at a time, inheriting parent → child" exists only as an instruction to Astro. A new buddy is public the moment its page builds — the opposite of the stated default.</p>
+  <p><strong>Fix:</strong> add a <span style="font-family:ui-monospace,monospace">privacy</span> field now, default private, and have the build render private buddies as shell pages (no mission, attention, or doc links) until the real gate exists.</p>
+  </section>
+
+  <section><h2>H2 · The fix is built but undeployed, blocked on one manual step</h2>
+  <p>The <em>buddy-server</em> design is right — Firebase Auth allowlist for Dave only, ID-token verification, a strict GitHub path allowlist, the token in Secret Manager, deny-all Firestore client rules. It has waited since 2026-10-18 on Dave's ~15-minute deploy from his own machine. Every day of delay extends C1 and C3.</p>
+  <p><strong>Fix:</strong> schedule the deploy. It is the highest-leverage 15 minutes in the system.</p>
+  </section>
+
+  <section><h2>H3 · This operation runs on a standard Muse VM, where Meta can review content</h2>
+  <p>Per Muse's own data-handling documentation, on a standard VM interactions may be logged and reviewed by Meta; conversations are not end-to-end encrypted; and conversations contribute to AI development unless the user opts out in Settings → Data Controls. Dave's opt-out status is <strong>unverified</strong>. Family, estate, and financial material — and the sensitive matter of a friend's legal case that Dave relays — all flow through this channel.</p>
+  <p><strong>Fix:</strong> Dave to check the Data Controls opt-out himself. Named plainly: Meta is a trusted party to everything, by architecture, today.</p>
+  </section>
+
+  <div class="grade-h" style="color:var(--muted)">Medium</div>
+
+  <section><h2>M1 · No client-side encryption anywhere</h2>
+  <p>Verified: no git-crypt or equivalent. GitHub, Google, Meta, and Plaid can each read what they hold; protection is access control, not secrecy from the platform. GitHub's position is the deepest — the canonical copy of nearly everything lives there. This is a trust decision to hold consciously, not necessarily a defect.</p>
+  </section>
+
+  <section><h2>M2 · One public repo carries more than it should</h2>
+  <p><em>fiddletown-data-admin</em> (the events admin app) is public, including a support-email draft naming the legacy Supabase project. No service-role keys found. The events stack still runs partly on that legacy Supabase project pending the Firebase migration. <strong>Fix:</strong> make the repo private; finish the migration.</p>
+  </section>
+
+  <section><h2>M3 · The tester promise is kept by policy, not by architecture</h2>
+  <p>Testers run their own Muse and their own repos — that half of "pages are private by default" is architectural and sound. But Dave-side systems retain a private living dossier per tester (including one tester's email and a verbatim quote of her reply) plus a feedback log. "Nothing you say is quoted or shared without permission" is therefore a discipline, not a guarantee. <strong>Fix:</strong> keep the guide's wording honest about retention, and get explicit consent before any tester words are used anywhere public.</p>
+  </section>
+
+  <section><h2>M4 · Voice synthesis sends message text to a speech service</h2>
+  <p>Every spoken briefing, standup, and voice note sends its full text to the platform TTS service for synthesis. Retention on that side is <strong>unverified</strong>. Low sensitivity per message; cumulative volume is not trivial. <strong>Fix:</strong> awareness only — don't put the most sensitive material in spoken form.</p>
+  </section>
+
+  <section><h2>M5 · Page Lockdown Phase 0 is a courtesy, not a control</h2>
+  <p>Verified live: <span style="font-family:ui-monospace,monospace">robots.txt</span> disallows all crawlers and pages carry <em>noindex, nofollow</em>. Compliant crawlers stay away; a curious human is unaffected — every page still serves HTTP 200. It should never be described as the pages being "locked down."</p>
+  </section>
+
+  <div class="grade-h" style="color:var(--green)">Notes — what is genuinely sound</div>
+
+  <section><h2>The good posture, for the record</h2>
+  <ul>
+    <li><strong>187 of 192 repos private</strong>, including every buddy repo; private repos return a plain 404 to strangers — existence not even confirmed. <em>personal-dashboard</em> went private since the October check.</li>
+    <li><strong>No committed secrets found</strong> in pattern scans of the dashboard repo or the server workspace; no Supabase service-role keys in the public repos.</li>
+    <li><strong>Airtable is a model citizen</strong> — read-only token, one base, secure credential store — which also makes it retirable cleanly. Mid-retirement, the canonical data already lives in Dave's own files.</li>
+    <li><strong>The voting backend's Firestore rules deny all direct client access</strong>; votes move only through authenticated functions. Dave's financial exports serve the same test: if Plaid vanished tomorrow, the exported books remain.</li>
+    <li><strong>Tailscale is currently disconnected</strong> on Astro's VM (approval expired) — no live tailnet path in, though the intended private route is also down until reconnected.</li>
+    <li><strong>The stale <span style="font-family:ui-monospace,monospace">GITHUB_TOKEN</span></strong> is not set in Astro's shell; the CLI's own token carries <em>repo</em> scope only. Still worth deleting wherever else it lingers.</li>
+  </ul>
+  </section>
+
+  <section><h2>The stance check, principle by principle</h2>
+  <ul>
+    <li><strong>Privacy inherits parent → child:</strong> designed, not implemented — no field, no enforcement. <em>Gap.</em></li>
+    <li><strong>Pages private unless Dave says otherwise, one page at a time:</strong> inverted in practice — every page is public; none was individually opted in. <em>Gap — the central one.</em></li>
+    <li><strong>If a vendor vanished tomorrow, would Dave still have his stuff?</strong> Mostly yes for GitHub (local clones), Google Docs (partially — the estate and briefs live substantially only there), Airtable (yes, by the retirement design), Plaid (yes — exports), Meta/Muse (the canonical copy of the operation's memory lives on this VM and in Dave's repos; the VM itself is rented ground).</li>
+    <li><strong>Secrets hygiene:</strong> sound, with the one big exception of the browser token (C3).</li>
+  </ul>
+  </section>
+
+  <section class="reco"><h2>Recommendations, in order</h2>
+  <ul>
+    <li><strong>Decide the Neighborhood page today</strong> — strip the addresses/coordinates or take it down. (C2)</li>
+    <li><strong>Do the 15-minute Firebase deploy.</strong> Everything else gets easier behind it. (C3, H2)</li>
+    <li><strong>Add the registry privacy field</strong> and strip private buddies' sensitive fields from the public build as the interim gate. (C1, H1)</li>
+    <li><strong>Run the 2-minute PAT check</strong> and rotate to a fine-grained, expiring token if the browser token is classic/no-expiry. (C3)</li>
+    <li><strong>Check the Muse data-controls opt-out.</strong> (H3)</li>
+    <li><strong>Make <em>fiddletown-data-admin</em> private; finish the Airtable retirement and the events migration.</strong> (M2)</li>
+  </ul>
+  <p>A note on this page itself: publishing an audit on the public site it audits is Dave's explicit call, and this page repeats no addresses, tokens, or doc contents — it describes the surface any visitor can already see.</p>
+  </section>
+
+  <section><h2>What I could not verify</h2>
+  <ul>
+    <li>The browser PAT's type, scope, and expiry (lives only in Dave's browsers).</li>
+    <li>Dave's Muse training opt-out status (his account settings).</li>
+    <li>Per-document sharing settings behind the 144 public Doc links (spot risk noted; contents not audited).</li>
+    <li>TTS provider retention; Substack's account/credential posture (per prior reports, not re-checked).</li>
+    <li>Secrets in the 187 private repos (spot-checked via the token flow design, not exhaustively scanned).</li>
+  </ul>
+  </section>
+
+  <footer>Guardian's audit — verified findings, graded, with the gaps named as gaps.<br>
+  <a href="../">Back to Guardian Buddy</a> · <a href="https://davedellaquila.github.io/buddy-system/">Buddy System dashboard</a></footer>
+</div>
+<script>(function(){
+  var root=document.documentElement,btn=document.getElementById('themeBtn');
+  function apply(t){root.setAttribute('data-theme',t);
+    btn.textContent=(t==='light')?'\uD83C\uDF19':'\u2600\uFE0F';
+    try{localStorage.setItem('guardian-buddy-theme',t);}catch(e){}}
+  var saved=null;
+  try{saved=localStorage.getItem('guardian-buddy-theme');}catch(e){}
+  apply(saved||((window.matchMedia&&matchMedia('(prefers-color-scheme: light)').matches)?'light':'dark'));
+  btn.addEventListener('click',function(){
+    apply(root.getAttribute('data-theme')==='light'?'dark':'light');});
+})();</script>
+</body>
+</html>
