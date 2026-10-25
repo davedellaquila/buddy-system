@@ -1244,6 +1244,7 @@ body.standalone #recents-btn{left:12px}
 #recents-pop button:hover{background:var(--ghost)}
 #recents-pop .rv-ic{width:22px;text-align:center;flex:0 0 auto}
 #recents-pop .rec-empty{padding:8px 10px;color:var(--text2);font-size:.875rem}
+#recents-pop button.rec-more{justify-content:center;color:var(--text2);font-weight:600}
 body:has(#token-pill) #panel-open{right:148px}
 /* Update banner — Jonny verdict 2026-10-20, "The Banner Steps Aside".
    The banner is a threshold, not a task: when the buddy panel opens it
@@ -4545,7 +4546,7 @@ const SETTING_DEFS = [
   {id:'autoOpenPanel', label:'Always open detail panel on buddy click', type:'bool', def:false, tip:'When off (default), the panel auto-opens in every view EXCEPT Homepage — there, use the \u24d8 icon. When on, the panel opens on every click in every view.'},
   {id:'autoCloseSidebar', label:'Auto-close sidebar on buddy select', type:'bool', def:false, tip:'When on, the sidebar collapses to the icon rail every time you select a buddy — so the buddy\u2019s homepage or current view gets the full screen.'},
   {id:'attnEffect', label:'Attention header effect', type:'choice', options:['pulse','glow','shake','blink','wiggle','bounce','swing','none'], def:'pulse', advanced:true, tip:'How the \u201cNeeds your attention\u201d section header grabs your eye when items are waiting.'},
-  {id:'recentsCount', label:'Recent items to remember', type:'number', def:10, min:1, max:50, unit:'items', tip:'How many recently visited buddies the Recent menu (clock icon, top left of the page) lists.'},
+  {id:'recentsCount', label:'Recent items to remember', type:'number', def:10, min:1, max:50, unit:'items', tip:'How many recently visited buddies the Recent menu (clock icon, top left of the page) shows first; when more are remembered, a "Show more" row reveals 10 more per tap.'},
   {id:'nbSheetWidth', label:'New buddy sheet width', type:'number', def:560, min:320, max:900, advanced:true, tip:'Fixed width of the New Buddy bottom sheet, in pixels. Height follows the content; drag the grab handle to resize vertically.', unit:'px'},
   {id:'shiftLeftAction', label:'Shift+← action', type:'choice', options:['promote','go to parent','nothing'], def:'promote', advanced:true, tip:'What Shift+Left arrow does for the selected buddy. Promote moves it up one level; Go to parent just navigates there.'},
   {id:'fontScale', label:'Text size', type:'slider', def:100, min:80, max:130, step:5, advanced:true, tip:'Scales text throughout the app — layout, dialogs and buttons keep their size.', unit:'%'},
@@ -5296,8 +5297,9 @@ function toggleRailViewPop(){
 }
 /* Recents menu (Dave, 2026-10-21, Job 6): clock-history button anchored
    top-left; the popover lists the most recently visited buddies from
-   S.recentBuddies (recorded in selectBuddy), capped by the recentsCount
-   setting (default 10). Picking a row opens that buddy's panel. */
+   S.recentBuddies (recorded in selectBuddy), first page capped by the
+   recentsCount setting (default 10) with a "Show more" row paging 10 at a
+   time (Dave, 2026-10-25). Picking a row opens that buddy's panel. */
 function recentsPopEsc(e){ if (e.key === 'Escape') { e.stopPropagation(); closeRecentsPop(); } }
 function recentsPopOutside(e){ const p = document.getElementById('recents-pop'); if (p && !p.contains(e.target) && !e.target.closest('#recents-btn')) closeRecentsPop(); }
 function closeRecentsPop(){
@@ -5309,13 +5311,27 @@ function toggleRecentsPop(){
   if (document.getElementById('recents-pop')) { closeRecentsPop(); return; }
   const btn = document.getElementById('recents-btn'); if (!btn) return;
   let n = parseInt(getSetting('recentsCount'), 10); if (!(n > 0)) n = 10;
-  const ids = (Array.isArray(S.recentBuddies) ? S.recentBuddies : []).filter(id => byId[id]).slice(0, n);
+  const all = (Array.isArray(S.recentBuddies) ? S.recentBuddies : []).filter(id => byId[id]).slice(0, 50);
+  // Dave 2026-10-25: the menu pages — the first page is recentsCount (default
+  // 10); when more remain, the next row is "Show more", and each tap of it
+  // reveals 10 more, up to the 50 remembered.
+  let shown = n;
   const p = document.createElement('div'); p.id = 'recents-pop'; p.setAttribute('role', 'menu');
-  p.innerHTML = '<div class="rec-head">Recent</div>' + (ids.length ? ids.map(id => { const b = byId[id]; return '<button type="button" data-recent-buddy="' + id + '"><span class="rv-ic" aria-hidden="true">' + escHtml(buddyDisplayIcon(b) || '\u2022') + '</span>' + escHtml(dispName(b)) + '</button>'; }).join('') : '<div class="rec-empty">No buddies visited yet.</div>');
+  p.innerHTML = '<div class=\"rec-head\">Recent</div><div class=\"rec-rows\"></div>';
   document.body.appendChild(p);
+  const rowsEl = p.querySelector('.rec-rows');
+  const renderRows = () => {
+    const ids = all.slice(0, shown);
+    rowsEl.innerHTML = (ids.length ? ids.map(id => { const b = byId[id]; return '<button type=\"button\" data-recent-buddy=\"' + id + '\"><span class=\"rv-ic\" aria-hidden=\"true\">' + escHtml(buddyDisplayIcon(b) || '\\u2022') + '</span>' + escHtml(dispName(b)) + '</button>'; }).join('') : '<div class=\"rec-empty\">No buddies visited yet.</div>')
+      + (shown < all.length ? '<button type=\"button\" class=\"rec-more\" data-recents-more=\"1\">Show more</button>' : '');
+  };
+  renderRows();
   const r = btn.getBoundingClientRect();
   p.style.left = Math.max(8, r.left) + 'px'; p.style.top = (r.bottom + 8) + 'px';
-  p.addEventListener('click', e => { const row = e.target.closest('[data-recent-buddy]'); if (row) { closeRecentsPop(); openBuddy(row.getAttribute('data-recent-buddy')); } });
+  p.addEventListener('click', e => {
+    if (e.target.closest('[data-recents-more]')) { shown += 10; renderRows(); return; }
+    const row = e.target.closest('[data-recent-buddy]'); if (row) { closeRecentsPop(); openBuddy(row.getAttribute('data-recent-buddy')); }
+  });
   document.addEventListener('pointerdown', recentsPopOutside, true);
   document.addEventListener('keydown', recentsPopEsc, true);
 }
