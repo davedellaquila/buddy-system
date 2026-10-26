@@ -197,6 +197,12 @@ Build: `build.py` generates `index.html` from `buddies.json` + `plans.json`.
   collapses/expands, and the Settings sheet's Buddy fields section spells
   the tip out. Order persists per device via `fieldOrder` (also editable
   in field settings).
+- **Sticky section headers** — as the buddy panel scrolls, each section
+  header sticks just under the sticky identity head and holds there while
+  its section scrolls beneath it, until the next section's header pushes
+  it off — the classic list behavior. The stick line is measured from the
+  rendered head on every render and resize, so it stays flush in the
+  desktop panel, the iPad sheet, and the phone takeover layouts.
 - **Tooltips** — ⓘ icons show hover popovers on mouse, tap-to-pin popovers
   with an × close button on touch; tap-outside and Escape dismiss.
 - **Build numbers** — every buddy and business-plan page shows a timestamp

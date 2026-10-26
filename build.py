@@ -1466,6 +1466,17 @@ body:has(#token-pill) #view-buddy.sheet .bp-close-x{right:148px}
 .dumps-head h4{margin:0;font-size:.75rem;letter-spacing:1px;text-transform:uppercase;color:var(--muted)}
 .dumps-head .darrow{font-size:1.5625rem;color:var(--muted);transition:transform .15s;display:inline-block;line-height:1;position:relative;top:-2px}
 .bp-sec > h3{cursor:pointer;user-select:none;display:flex;align-items:center;gap:6px}
+/* Sticky section headers (Dave, 2026-10-26): panel section headers stick
+   just under the sticky identity head as the panel scrolls — the classic
+   list behavior ("when they bump up against the sticky panel that's already
+   there"). Each header holds until the next section's header pushes it off.
+   --bp-sec-stick is the head's stuck bottom edge, measured from the rendered
+   head by fitBpStickySections(); the fallback approximates the panel head.
+   z-index stays below the head's 6 so headers slide under it cleanly, and
+   the solid panel background keeps section content from showing through. */
+.bp-sec>h3,.bp-sec>.attr-head{position:sticky;top:var(--bp-sec-stick,118px);z-index:5;background:var(--panel)}
+.bp-sec>h3{padding-top:10px;padding-bottom:10px}
+.bp-sec>.attr-head{padding-top:10px;padding-bottom:10px}
 /* Reorder-by-name (Dave, 2026-10-21 — supersedes the Job M grip below in git
    history): panel sections have NO visible drag grip anymore. A section is
    reordered by dragging its own name; the 6px threshold in
@@ -4467,6 +4478,29 @@ function applyFieldOrder(){
    field is reorderable from the panel too — by dragging the section's own
    header (reorder-by-name, Dave 2026-10-21; see applySectionDrag).
    renderBpHiddenBar adds the "Hidden fields (n)" tray at the bottom of the field list. */
+/* Sticky section headers (Dave, 2026-10-26): measure the rendered sticky
+   identity head and publish its stuck bottom edge as --bp-sec-stick on the
+   wrap, so .bp-sec headers stick directly beneath it (CSS beside .bp-sec>h3).
+   Re-run on every panel render and on resize — the head's height changes
+   with layout (sheet vs panel, portrait takeover offset, narrow mode). */
+let bpStickWired = false;
+function fitBpStickySections(){
+  try {
+    document.querySelectorAll('.bp-wrap').forEach(wrap => {
+      const head = wrap.querySelector('.bp-sticky-head');
+      if (!head) return;
+      const cs = getComputedStyle(head);
+      const top = parseFloat(cs.top) || 0;
+      const mb = parseFloat(cs.marginBottom) || 0;
+      wrap.style.setProperty('--bp-sec-stick', (top + head.offsetHeight + mb) + 'px');
+    });
+    if (!bpStickWired) {
+      bpStickWired = true;
+      let rt = null;
+      window.addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(fitBpStickySections, 150); });
+    }
+  } catch (e) {}
+}
 function decorateBpHeaders(){
   const home = document.getElementById('buddy-home');
   if (!home) return;
@@ -6868,6 +6902,7 @@ function renderBuddy(id){
   decorateBpHeaders();
   renderBpHiddenBar();
   applySectionDrag();
+  fitBpStickySections();
   renderJournal();
   if (id === ROOT_ID) {
     const tw = document.querySelector('#buddy-home .bp-tree-wrap');
@@ -9258,6 +9293,7 @@ function renderPlan(id){
   const sht = document.getElementById('bp-shared');
   let st2 = null;
   if (sht) sht.addEventListener('input', () => { clearTimeout(st2); st2 = setTimeout(() => { if (!S.planShared) S.planShared = {}; S.planShared[id] = sht.value; save(); }, 400); });
+  fitBpStickySections();
 }
 const navHist = [];
 function locHash(){ try { return (typeof location !== 'undefined' && location.hash) || ''; } catch (e) { return ''; } }
