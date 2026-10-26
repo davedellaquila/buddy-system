@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Page Gallery — Preference Poll — rate the pages, pick a favorite</title>
+<meta name="description" content="Four pages are in the running. Rate each one 1–5 stars, crown a favorite, and see the tally.">
+<meta name="robots" content="noindex">
+<style>
+  :root{
+    --bg:#f6f4ef; --card:#ffffff; --ink:#1d2733; --muted:#5c6a76;
+    --line:#ddd6c9; --accent:#20538c; --accent-ink:#ffffff;
+    --good:#1e7a3c; --warn-bg:#fff4d6; --warn-line:#e3c566; --warn-ink:#6b5510;
+    --info-bg:#e8f0fa; --info-line:#b9cfe8; --info-ink:#1d4066;
+    --ok-bg:#e6f4ea; --ok-line:#a9d6b5; --ok-ink:#175c2c;
+    --bar:#20538c; --bar-mine:#1e7a3c;
+    --star:#c9cfd8; --star-on:#e8a33d; --frame-bg:#eceff3;
+    --shadow:0 2px 10px rgba(29,39,51,.08);
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --bg:#12161c; --card:#1b222c; --ink:#e8edf2; --muted:#9fb0bf;
+      --line:#2e3947; --accent:#5b9be0; --accent-ink:#0d1520;
+      --warn-bg:#3a2f12; --warn-line:#8a6d1f; --warn-ink:#f0d48a;
+      --info-bg:#16283d; --info-line:#2c4a6e; --info-ink:#bcd6f5;
+      --ok-bg:#14301d; --ok-line:#2c5c3a; --ok-ink:#a9dfba;
+      --bar:#5b9be0; --bar-mine:#3fae62;
+      --star:#48586a; --star-on:#f0b95a; --frame-bg:#232c38;
+      --shadow:0 2px 10px rgba(0,0,0,.4);
+    }
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    line-height:1.5}
+  header.site{position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:.55rem;
+    padding:.55rem 1rem;background:color-mix(in srgb, var(--bg) 88%, transparent);
+    backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--line);font-weight:700;font-size:1rem}
+  header.site .sub{margin-left:auto;font-weight:500;font-size:.82rem;color:var(--muted)}
+  main{max-width:1180px;margin:0 auto;padding:1.1rem 1rem 5.5rem}
+  .hero h1{font-size:1.65rem;line-height:1.2;margin:.3rem 0 .5rem}
+  .hero p{margin:.35rem 0;color:var(--ink);max-width:46rem}
+  .hero .fine{color:var(--muted);font-size:.9rem}
+  .banner{border:1px solid;border-radius:12px;padding:.7rem .9rem;margin:1rem 0;font-size:.95rem}
+  .banner[hidden]{display:none}
+  .banner.info{background:var(--info-bg);border-color:var(--info-line);color:var(--info-ink)}
+  .banner.warn{background:var(--warn-bg);border-color:var(--warn-line);color:var(--warn-ink)}
+  .banner.ok{background:var(--ok-bg);border-color:var(--ok-line);color:var(--ok-ink)}
+  .banner button{margin-left:.6rem;font:inherit;font-size:.85rem;padding:.25rem .7rem;border-radius:999px;
+    border:1px solid currentColor;background:transparent;color:inherit;cursor:pointer}
+  .namebar{display:flex;flex-wrap:wrap;gap:.5rem;align-items:center;margin:.9rem 0 .2rem}
+  .namebar label{font-size:.92rem;color:var(--muted)}
+  .namebar input{font:inherit;font-size:1rem;padding:.5rem .7rem;border-radius:10px;
+    border:1px solid var(--line);background:var(--card);color:var(--ink);min-width:min(260px,70vw)}
+  .tallyline{margin:.8rem 0 0;font-size:.95rem;color:var(--muted)}
+  .resultsnote{margin:.35rem 0 0;font-size:.88rem;color:var(--muted);font-style:italic}
+  .grid{display:grid;grid-template-columns:1fr;gap:1rem;margin-top:1rem}
+  @media (min-width:768px){.grid{grid-template-columns:1fr 1fr}}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:16px;overflow:hidden;
+    box-shadow:var(--shadow);display:flex;flex-direction:column}
+  .card.mine{border-color:var(--good);outline:2px solid var(--good);outline-offset:-1px}
+  /* --- scaled live preview (from the verified gallery draft) ----------
+     The iframe renders the real page at 1280x820, scaled to 0.25 inside a
+     320x205 frame: a small LIVE version of the page, not a screenshot.
+     Pointer events are off — clicks land on the card's own controls.   */
+  .frame{width:320px;height:205px;overflow:hidden;position:relative;background:var(--frame-bg);
+    margin:16px auto 0;border:1px solid var(--line);border-radius:8px;flex:none}
+  .frame iframe{width:1280px;height:820px;border:0;transform:scale(0.25);transform-origin:top left;
+    pointer-events:none;background:#fff}
+  @media (max-width:420px){.frame{transform:scale(.92);transform-origin:top center;margin-bottom:-16px}}
+  .card .body{padding:.85rem .95rem 1rem;display:flex;flex-direction:column;gap:.5rem;flex:1}
+  .card h2{font-size:1.05rem;margin:0;line-height:1.3}
+  .open-link{font-size:.9rem;font-weight:600;color:var(--accent);text-decoration:none}
+  .open-link:hover{text-decoration:underline}
+  .stars{display:flex;gap:.15rem;align-items:center}
+  .stars .star{font:inherit;font-size:1.55rem;line-height:1;padding:.1rem .18rem;border:0;background:transparent;
+    color:var(--star);cursor:pointer}
+  .stars .star.on{color:var(--star-on)}
+  .stars .star[disabled]{cursor:default;opacity:.55}
+  .stars .hint{font-size:.85rem;color:var(--muted);margin-left:.45rem}
+  .mine-line{display:none;font-size:.9rem;color:var(--muted)}
+  body.has-voted .mine-line{display:block}
+  .mine-line strong{color:var(--ink)}
+  .result{display:none}
+  body.has-voted.live .result{display:block}
+  .result .track{height:10px;border-radius:99px;background:var(--line);overflow:hidden}
+  .result .fill{height:100%;width:0;background:var(--bar);border-radius:99px;transition:width .5s ease}
+  .card.mine .result .fill{background:var(--bar-mine)}
+  .result .nums{font-size:.88rem;color:var(--muted);margin-top:.3rem}
+  .result .nums strong{color:var(--ink)}
+  .result .ratingnums{font-size:.88rem;color:var(--muted);margin-top:.15rem}
+  .result .ratingnums strong{color:var(--ink)}
+  .favbadge{display:none;font-size:.82rem;font-weight:700;color:var(--good)}
+  .card.mine .favbadge{display:inline}
+  .card button.fav{font:inherit;font-weight:700;font-size:1rem;padding:.75rem 1rem;border-radius:12px;
+    border:0;background:var(--accent);color:var(--accent-ink);cursor:pointer;width:100%;margin-top:auto}
+  .card button.fav:active{transform:scale(.99)}
+  .card button.fav[disabled]{opacity:.45;cursor:default}
+  .card.mine button.fav{background:var(--good)}
+  footer.site{margin-top:2.2rem;color:var(--muted);font-size:.88rem;border-top:1px solid var(--line);padding-top:1rem}
+</style>
+</head>
+<body>
+<header class="site">🗳️ <span>Page Gallery — Preference Poll</span><span class="sub">Voting Buddy</span></header>
+<main>
+  <section class="hero">
+    <h1>Which page wears it best? 🖥️</h1>
+    <p>Four pages are in the running. Each card below is a small <strong>live</strong> version of the real page — open the full page to look closer, then rate each one from 1 to 5 stars and crown a single favorite.</p>
+    <p class="fine">You can change your answers any time — changing them replaces your old ballot, never adds a second one. Results appear after you vote. Voting takes about twenty seconds.</p>
+    <p class="fine" id="identityNote"></p>
+  </section>
+
+  <div id="banner" class="banner info" hidden></div>
+
+  <div class="namebar">
+    <label for="voterName">Your first name (optional — anonymous is fine):</label>
+    <input id="voterName" type="text" maxlength="40" autocomplete="given-name" placeholder="e.g. Alex">
+  </div>
+
+  <p class="tallyline" id="tallyLine" hidden></p>
+  <p class="resultsnote" id="resultsNote" hidden></p>
+
+  <section class="grid" id="grid">
+    <article class="card" data-option="page-dashboard">
+      <div class="frame">
+        <iframe src="https://davedellaquila.github.io/buddy-system/" title="Buddy System Dashboard — live miniature" loading="lazy"></iframe>
+      </div>
+      <div class="body">
+        <h2>Buddy System Dashboard <span class="favbadge">✓ your favorite</span></h2>
+        <a class="open-link" href="https://davedellaquila.github.io/buddy-system/" target="_blank" rel="noopener">Open full page ↗</a>
+        <div class="stars" role="radiogroup" aria-label="Rate Buddy System Dashboard, 1 to 5 stars"></div>
+        <p class="mine-line"></p>
+        <div class="result"><div class="track"><div class="fill"></div></div><div class="nums"></div><div class="ratingnums"></div></div>
+        <button class="fav" type="button">★ My favorite</button>
+      </div>
+    </article>
+
+    <article class="card" data-option="page-news-buddy">
+      <div class="frame">
+        <iframe src="https://davedellaquila.github.io/buddy-system/news-buddy/" title="News Buddy — Monday Edition — live miniature" loading="lazy"></iframe>
+      </div>
+      <div class="body">
+        <h2>News Buddy — Monday Edition <span class="favbadge">✓ your favorite</span></h2>
+        <a class="open-link" href="https://davedellaquila.github.io/buddy-system/news-buddy/" target="_blank" rel="noopener">Open full page ↗</a>
+        <div class="stars" role="radiogroup" aria-label="Rate News Buddy — Monday Edition, 1 to 5 stars"></div>
+        <p class="mine-line"></p>
+        <div class="result"><div class="track"><div class="fill"></div></div><div class="nums"></div><div class="ratingnums"></div></div>
+        <button class="fav" type="button">★ My favorite</button>
+      </div>
+    </article>
+
+    <article class="card" data-option="page-e39-vote">
+      <div class="frame">
+        <iframe src="https://davedellaquila.github.io/buddy-system/vote/e39-touring-shirts/" title="E39 Touring Shirt Vote — live miniature" loading="lazy"></iframe>
+      </div>
+      <div class="body">
+        <h2>E39 Touring Shirt Vote <span class="favbadge">✓ your favorite</span></h2>
+        <a class="open-link" href="https://davedellaquila.github.io/buddy-system/vote/e39-touring-shirts/" target="_blank" rel="noopener">Open full page ↗</a>
+        <div class="stars" role="radiogroup" aria-label="Rate E39 Touring Shirt Vote, 1 to 5 stars"></div>
+        <p class="mine-line"></p>
+        <div class="result"><div class="track"><div class="fill"></div></div><div class="nums"></div><div class="ratingnums"></div></div>
+        <button class="fav" type="button">★ My favorite</button>
+      </div>
+    </article>
+
+    <article class="card" data-option="page-soundboard">
+      <div class="frame">
+        <iframe src="https://davedellaquila.github.io/buddy-system/soundboard/" title="Awards Soundboard — live miniature" loading="lazy"></iframe>
+      </div>
+      <div class="body">
+        <h2>Awards Soundboard <span class="favbadge">✓ your favorite</span></h2>
+        <a class="open-link" href="https://davedellaquila.github.io/buddy-system/soundboard/" target="_blank" rel="noopener">Open full page ↗</a>
+        <div class="stars" role="radiogroup" aria-label="Rate Awards Soundboard, 1 to 5 stars"></div>
+        <p class="mine-line"></p>
+        <div class="result"><div class="track"><div class="fill"></div></div><div class="nums"></div><div class="ratingnums"></div></div>
+        <button class="fav" type="button">★ My favorite</button>
+      </div>
+    </article>
+  </section>
+
+  <footer class="site">
+    <p>Rough draft — the stand-in pages above are the gallery's first four cards; campaign pages replace them as they&rsquo;re built. Thanks for voting!</p>
+  </footer>
+</main>
+
+<!-- TIP JAR — canonical snippet (Dave's standard, 2026-10-24) -->
+<style>
+  .tipjar{position:fixed;right:18px;bottom:18px;z-index:60;
+    font-family:inherit;-webkit-tap-highlight-color:transparent}
+  .tipjar a{display:inline-flex;align-items:center;gap:.5em;
+    padding:.55em 1em;border-radius:999px;text-decoration:none;
+    font-size:.9rem;font-weight:600;line-height:1;
+    color:#fff;background:linear-gradient(135deg,#7c4dff,#b388ff);
+    box-shadow:0 6px 18px rgba(124,77,255,.35),0 2px 6px rgba(0,0,0,.25);
+    animation:tipjar-breathe 6s ease-in-out infinite}
+  .tipjar .jar{display:inline-block;font-size:1.15em;position:relative;
+    animation:tipjar-hop 9s ease-in-out infinite}
+  .tipjar .coin{position:absolute;left:50%;top:-.9em;transform:translateX(-50%);
+    font-size:.8em;opacity:0;animation:tipjar-coin 9s ease-in-out infinite}
+  .tipjar a:hover .jar{animation:tipjar-spin .7s cubic-bezier(.34,1.56,.64,1)}
+  .tipjar a:hover .tiptext{animation:tipjar-shimmer 2.5s linear infinite}
+  .tipjar a:focus-visible{outline:3px solid #ffd54f;outline-offset:3px}
+  @keyframes tipjar-breathe{0%,100%{transform:scale(1)}50%{transform:scale(1.035)}}
+  @keyframes tipjar-hop{0%,88%,100%{transform:translateY(0)}92%{transform:translateY(-4px) rotate(-8deg)}96%{transform:translateY(0)}}
+  @keyframes tipjar-coin{0%,88%,100%{opacity:0;transform:translate(-50%,0)}92%{opacity:1;transform:translate(-50%,4px)}96%,98%{opacity:0;transform:translate(-50%,9px)}}
+  @keyframes tipjar-spin{to{transform:rotate(360deg)}}
+  @keyframes tipjar-shimmer{0%{filter:brightness(1)}50%{filter:brightness(1.45)}100%{filter:brightness(1)}}
+  @media (prefers-reduced-motion: reduce){
+    .tipjar a,.tipjar .jar,.tipjar .coin{animation:none}
+  }
+</style>
+<div class="tipjar">
+  <a href="https://ko-fi.com/davedellaquila" target="_blank" rel="noopener"
+     aria-label="Tip jar — if this page helped you, you can leave Dave a tip on Ko-fi">
+    <span class="jar">🫙<span class="coin">🪙</span></span><span class="tiptext">Tip Jar</span>
+  </a>
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  /* ===== Voting Buddy client — v2 preference ballot =====
+     One ballot per person: rate any of the pages 1–5 stars and/or crown
+     one favorite. Ballots POST to the buddy-server `vote` function;
+     tallies come from `tally`. An invite token in the URL (?v=…) makes
+     this a personal invite link — the server keys the ballot by the
+     token's hash, so re-voting replaces, never double-counts. Without
+     one, the page falls back to the v1 browser token (one vote per
+     browser). Until the server is deployed, API_BASE keeps its
+     REPLACE-WITH marker and the page runs in queued mode: your ballot
+     is saved on this device and sent automatically the moment tallying
+     goes live. Nothing is ever dropped. */
+  var API_BASE = 'https://us-central1-REPLACE-WITH-PROJECT-ID.cloudfunctions.net';
+  var POLL_ID = 'gallery-pages';
+
+  var LS = {
+    token: 'vb.' + POLL_ID + '.token',
+    invite: 'vb.' + POLL_ID + '.invite',
+    mine: 'vb.' + POLL_ID + '.mine',
+    queued: 'vb.' + POLL_ID + '.queued',
+    name: 'vb.' + POLL_ID + '.name',
+  };
+
+  function lsGet(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+  function lsSet(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+  function lsDel(k) { try { localStorage.removeItem(k); } catch (e) {} }
+
+  function configured() { return API_BASE.indexOf('REPLACE-WITH') === -1; }
+
+  function validToken(t) {
+    return typeof t === 'string' && t.length >= 8 && t.length <= 128 && /^[A-Za-z0-9._-]+$/.test(t);
+  }
+
+  /* --- identity: invite token from ?v= wins; else the browser token --- */
+  var inviteToken = null;
+  try {
+    var fromUrl = new URLSearchParams(window.location.search).get('v');
+    if (validToken(fromUrl)) {
+      inviteToken = fromUrl;
+      lsSet(LS.invite, fromUrl);
+      // Scrub the token from the address bar; it lives in localStorage now.
+      if (window.history && history.replaceState) {
+        history.replaceState(null, '', window.location.pathname + window.location.hash);
+      }
+    }
+  } catch (e) {}
+  if (!inviteToken) inviteToken = lsGet(LS.invite);
+
+  function browserToken() {
+    var t = lsGet(LS.token);
+    if (!t) {
+      t = (window.crypto && crypto.randomUUID)
+        ? crypto.randomUUID()
+        : 'vt-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 12);
+      lsSet(LS.token, t);
+    }
+    return t;
+  }
+  function activeToken() { return inviteToken || browserToken(); }
+
+  var banner = document.getElementById('banner');
+  var tallyLine = document.getElementById('tallyLine');
+  var resultsNote = document.getElementById('resultsNote');
+  var nameInput = document.getElementById('voterName');
+  var identityNote = document.getElementById('identityNote');
+  var cards = Array.prototype.slice.call(document.querySelectorAll('.card'));
+  var closed = false;
+  var live = false; // true once the server has answered at least once
+  var inviteRejected = false;
+
+  identityNote.textContent = inviteToken
+    ? '🔑 You\u2019re voting with your personal invite link — one ballot per link, and only the link holder can change it.'
+    : 'One vote per browser on this poll. If you were sent a personal invite link, open that instead — it makes your ballot count once, by name.';
+
+  /* --- ballot state: { pick: optionId|null, ratings: {optionId: 1..5} } --- */
+  function emptyBallot() { return { pick: null, ratings: {} }; }
+  function loadBallot() {
+    try {
+      var b = JSON.parse(lsGet(LS.mine) || 'null');
+      if (b && typeof b === 'object') {
+        return { pick: b.pick || null, ratings: (b.ratings && typeof b.ratings === 'object') ? b.ratings : {} };
+      }
+    } catch (e) {}
+    return emptyBallot();
+  }
+  var ballot = loadBallot();
+  function ballotEmpty() {
+    return !ballot.pick && !Object.keys(ballot.ratings).length;
+  }
+  function saveBallot() { lsSet(LS.mine, JSON.stringify(ballot)); }
+
+  nameInput.value = lsGet(LS.name) || '';
+  nameInput.addEventListener('change', function () {
+    lsSet(LS.name, nameInput.value.trim().slice(0, 40));
+    // If a ballot is already counted, re-send it so the name rides along.
+    if (!ballotEmpty() && live && !closed) submitBallot(true);
+  });
+
+  function setBanner(kind, html, retry) {
+    banner.className = 'banner ' + kind;
+    banner.innerHTML = html;
+    banner.hidden = false;
+    if (retry) {
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.textContent = 'Try again';
+      b.addEventListener('click', sync);
+      banner.appendChild(b);
+    }
+  }
+  function hideBanner() { banner.hidden = true; }
+
+  function starString(n) {
+    var s = '';
+    for (var i = 1; i <= 5; i++) s += i <= n ? '★' : '☆';
+    return s;
+  }
+
+  function paintMine() {
+    document.body.classList.toggle('has-voted', !ballotEmpty());
+    cards.forEach(function (card) {
+      var id = card.getAttribute('data-option');
+      var isFav = ballot.pick === id;
+      card.classList.toggle('mine', isFav);
+      var rating = ballot.ratings[id] || 0;
+      card.querySelectorAll('.star').forEach(function (star) {
+        var n = Number(star.getAttribute('data-star'));
+        star.classList.toggle('on', n <= rating);
+        star.setAttribute('aria-checked', n === rating ? 'true' : 'false');
+        star.disabled = closed;
+      });
+      var bits = [];
+      if (rating) bits.push('Your rating: <strong>' + starString(rating) + '</strong>');
+      if (isFav) bits.push('<strong>✓ your favorite</strong>');
+      card.querySelector('.mine-line').innerHTML = bits.join(' · ');
+      var btn = card.querySelector('button.fav');
+      btn.textContent = closed
+        ? 'Voting is closed'
+        : isFav
+          ? '✓ Your favorite — tap to undo'
+          : ballot.pick
+            ? 'Make this my favorite instead'
+            : '★ My favorite';
+      btn.disabled = closed;
+    });
+    paintResultsNote();
+  }
+
+  function paintResultsNote() {
+    if (ballotEmpty()) { resultsNote.hidden = true; return; }
+    resultsNote.hidden = false;
+    resultsNote.textContent = live
+      ? 'The bars and averages below are the live tally — everyone\u2019s ballots, including yours. Your own answers are marked on each card.'
+      : 'The tally is not live yet, so for now each card shows your ballot on this device. The live tally — everyone\u2019s ballots together — appears here as soon as the vote counter goes live.';
+  }
+
+  function paintTally(tally) {
+    if (!tally || !tally.options) return;
+    live = true;
+    document.body.classList.add('live');
+    var byId = {};
+    var labels = {};
+    tally.options.forEach(function (o) { byId[o.id] = o; labels[o.id] = o.label; });
+    cards.forEach(function (card) {
+      var o = byId[card.getAttribute('data-option')];
+      if (!o) return;
+      card.querySelector('.fill').style.width = o.pct + '%';
+      card.querySelector('.nums').innerHTML =
+        '<strong>' + o.pct + '%</strong> · ' + o.count + (o.count === 1 ? ' favorite' : ' favorites');
+      var rn = card.querySelector('.ratingnums');
+      if (o.rating && o.rating.count) {
+        var parts = [];
+        for (var s = 5; s >= 1; s--) {
+          var c = o.rating.distribution[String(s)] || 0;
+          if (c) parts.push(s + '★×' + c);
+        }
+        rn.innerHTML = 'Average <strong>★ ' + o.rating.average + '</strong> · ' +
+          o.rating.count + (o.rating.count === 1 ? ' rating' : ' ratings') +
+          (parts.length ? ' · ' + parts.join(' ') : '');
+      } else {
+        rn.textContent = 'No ratings yet.';
+      }
+    });
+    tallyLine.hidden = false;
+    tallyLine.textContent = tally.total + (tally.total === 1 ? ' ballot' : ' ballots') + ' counted so far' +
+      (tally.leader ? ' — leading: ' + (labels[tally.leader.id] || tally.leader.id) +
+        ' by ' + tally.leader.margin + '.' : '.') +
+      (tally.status === 'closed' ? ' Voting is closed — this is the final tally.' : '');
+    if (tally.status === 'closed') {
+      closed = true;
+      paintMine();
+      setBanner('info', '🗳️ Voting is closed — the final tally is below. Thanks to everyone who voted!');
+    }
+    paintResultsNote();
+  }
+
+  function ballotBody() {
+    var body = { pollId: POLL_ID, voterToken: activeToken() };
+    if (ballot.pick) body.pick = ballot.pick;
+    if (Object.keys(ballot.ratings).length) body.ratings = ballot.ratings;
+    var name = nameInput.value.trim().slice(0, 40);
+    if (name) body.name = name;
+    return body;
+  }
+
+  function queueBallot() {
+    lsSet(LS.queued, JSON.stringify(Object.assign(ballotBody(), { at: Date.now() })));
+  }
+
+  function queuedBanner() {
+    setBanner('warn',
+      '⏳ <strong>Tallying is not live yet.</strong> Your ballot is saved on this device and will be sent automatically as soon as the vote counter goes live — nothing is lost, and you can still change your answers here any time.',
+      configured());
+  }
+
+  async function postBallot(body) {
+    var r = await fetch(API_BASE + '/vote', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body || ballotBody()),
+    });
+    var json = null;
+    try { json = await r.json(); } catch (e) {}
+    if (!r.ok || !json || !json.ok) {
+      var err = new Error((json && json.error) || ('Server ' + r.status));
+      err.status = r.status;
+      throw err;
+    }
+    return json;
+  }
+
+  async function fetchTally() {
+    var r = await fetch(API_BASE + '/tally?pollId=' + encodeURIComponent(POLL_ID));
+    var json = null;
+    try { json = await r.json(); } catch (e) {}
+    if (!r.ok || !json || !json.ok) throw new Error('tally unavailable');
+    return json.tally;
+  }
+
+  function handlePostError(e, quiet) {
+    var msg = (e && e.message) || '';
+    if (e && e.status === 403 && /invite link is not recognized/i.test(msg)) {
+      // The server refused this invite link — queueing would loop forever.
+      inviteRejected = true;
+      lsDel(LS.queued);
+      setBanner('warn', '🔑 <strong>This invite link was not recognized.</strong> ' + msg +
+        ' Your answers are still shown on this device, but they are not counted.');
+      return;
+    }
+    if (e && e.status === 403) {
+      closed = true;
+      paintMine();
+      setBanner('info', '🗳️ Voting has closed for this poll — thanks for coming by! The final tally is below.');
+      fetchTally().then(paintTally).catch(function () {});
+      return;
+    }
+    queueBallot();
+    if (!quiet) {
+      setBanner('warn',
+        '⏳ <strong>The vote counter could not be reached.</strong> Your ballot is saved on this device and will be sent automatically when the counter is back — nothing is lost.',
+        true);
+    }
+  }
+
+  async function submitBallot(quiet) {
+    saveBallot();
+    paintMine();
+    if (ballotEmpty()) { lsDel(LS.queued); return; }
+    if (!configured()) {
+      queueBallot();
+      if (!quiet) queuedBanner();
+      return;
+    }
+    try {
+      var res = await postBallot();
+      live = true;
+      lsDel(LS.queued);
+      paintTally(res.tally);
+      if (!quiet) setBanner('ok', '✅ <strong>Ballot counted.</strong> The live tally is below — change your answers any time and they replace this ballot.');
+    } catch (e) {
+      handlePostError(e, quiet);
+    }
+  }
+
+  async function sync() {
+    if (!configured()) {
+      if (!ballotEmpty()) queuedBanner();
+      return;
+    }
+    // Send a queued ballot first, then pull the tally if we've voted.
+    var q = null;
+    try { q = JSON.parse(lsGet(LS.queued) || 'null'); } catch (e) {}
+    if (q && (q.pick || q.ratings)) {
+      try {
+        var res = await postBallot(q);
+        live = true;
+        lsDel(LS.queued);
+        paintTally(res.tally);
+        setBanner('ok', '✅ <strong>Your saved ballot just went through.</strong> The live tally is below.');
+        return;
+      } catch (e) {
+        handlePostError(e, true);
+        if (closed || inviteRejected) return;
+      }
+    }
+    if (!ballotEmpty()) {
+      try {
+        var t = await fetchTally();
+        live = true;
+        paintTally(t);
+        if (lsGet(LS.queued)) queuedBanner();
+        else hideBanner();
+      } catch (e) {
+        setBanner('warn', '⏳ The vote counter could not be reached just now — your ballot is saved on this device.', true);
+      }
+    }
+  }
+
+  /* --- build the star rows + wire the controls --- */
+  cards.forEach(function (card) {
+    var id = card.getAttribute('data-option');
+    var stars = card.querySelector('.stars');
+    for (var n = 1; n <= 5; n++) {
+      (function (n) {
+        var b = document.createElement('button');
+        b.type = 'button';
+        b.className = 'star';
+        b.setAttribute('data-star', String(n));
+        b.setAttribute('role', 'radio');
+        b.setAttribute('aria-label', 'Rate ' + n + (n === 1 ? ' star' : ' stars'));
+        b.textContent = '★';
+        b.addEventListener('click', function () {
+          if (closed) return;
+          // Tapping your current rating again clears it.
+          ballot.ratings[id] = ballot.ratings[id] === n ? undefined : n;
+          if (ballot.ratings[id] === undefined) delete ballot.ratings[id];
+          submitBallot(false);
+        });
+        stars.appendChild(b);
+      })(n);
+    }
+    var hint = document.createElement('span');
+    hint.className = 'hint';
+    hint.textContent = 'Tap to rate';
+    stars.appendChild(hint);
+    card.querySelector('button.fav').addEventListener('click', function () {
+      if (closed) return;
+      ballot.pick = ballot.pick === id ? null : id;
+      submitBallot(false);
+    });
+  });
+
+  paintMine();
+  sync();
+})();
+</script>
+</body>
+</html>
