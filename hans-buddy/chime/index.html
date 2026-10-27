@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hourly Chime — Control Panel · Hans</title>
+<style>
+:root {
+  --bg: #faf8f4;
+  --text: #1c1a17;
+  --muted: #6f6a5e;
+  --card: #ffffff;
+  --card2: #f1ede3;
+  --border: #ddd5c2;
+  --accent: #b45f06;
+  --accent-soft: #fdf0dc;
+  --ok: #1b7a2e;
+  --warn: #9a6a00;
+  --warn-bg: #fdf3d7;
+  --danger: #b3261e;
+  --danger-bg: #fbe9e7;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #141311;
+    --text: #ece7db;
+    --muted: #a39a86;
+    --card: #1e1c19;
+    --card2: #262320;
+    --border: #3a362e;
+    --accent: #f0a13c;
+    --accent-soft: #33270f;
+    --ok: #5fd08a;
+    --warn: #e4bd66;
+    --warn-bg: #33290f;
+    --danger: #ef8b80;
+    --danger-bg: #3a1d1a;
+  }
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  padding: 0 20px 40px;
+  max-width: 860px;
+  margin: 0 auto;
+}
+.topbar {
+  position: sticky; top: 0; z-index: 50;
+  display: flex; align-items: center; gap: 10px;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+  padding: 10px 2px; margin-bottom: 24px;
+  font-size: 17px; font-weight: 700;
+}
+.topbar-icon { font-size: 22px; line-height: 1; }
+.topbar a { margin-left: auto; font-size: 14px; font-weight: 600; }
+.crumb { padding: 14px 0 0; font-size: 14px; }
+.crumb a { color: inherit; opacity: .65; text-decoration: none; }
+.header { text-align: center; margin: 18px 0 28px; }
+.icon { font-size: 56px; margin-bottom: 10px; }
+h1 { font-size: 32px; margin-bottom: 6px; letter-spacing: -.01em; }
+.tagline { color: var(--muted); font-size: 17px; }
+h2 { font-size: 22px; margin: 34px 0 6px; }
+h2 .sub { display: block; font-size: 14px; font-weight: 400; color: var(--muted); margin-top: 2px; }
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px 22px;
+  margin-bottom: 16px;
+}
+.card h3 { font-size: 17px; margin-bottom: 6px; }
+.muted { color: var(--muted); }
+.small { font-size: 14px; }
+a { color: var(--accent); }
+.spec { width: 100%; border-collapse: collapse; font-size: 15px; }
+.spec td { padding: 7px 8px; border-bottom: 1px solid var(--border); vertical-align: top; }
+.spec tr:last-child td { border-bottom: none; }
+.spec td.k { color: var(--muted); width: 34%; }
+.spec td.v { font-weight: 600; }
+.chip {
+  display: inline-block; font-size: 12px; font-weight: 700;
+  border: 1px solid var(--border); border-radius: 999px;
+  padding: 1px 9px; background: var(--card2); vertical-align: middle;
+}
+.chip.new { background: var(--accent-soft); color: var(--accent); border-color: var(--accent); }
+.chip.core { background: var(--accent); color: #fff; border-color: var(--accent); }
+/* module rows */
+.modrow {
+  display: flex; align-items: center; gap: 12px;
+  padding: 11px 4px; border-bottom: 1px solid var(--border);
+}
+.modrow:last-child { border-bottom: none; }
+.modrow .grow { flex: 1; min-width: 0; }
+.modrow .mname { font-weight: 700; font-size: 15.5px; }
+.modrow .mdesc { color: var(--muted); font-size: 13.5px; line-height: 1.45; }
+.modrow.off .mname, .modrow.off .mdesc { opacity: .45; }
+.ordbtns { display: flex; flex-direction: column; gap: 4px; }
+.ordbtn {
+  background: var(--card2); border: 1px solid var(--border); border-radius: 6px;
+  color: var(--muted); font-size: 12px; line-height: 1; padding: 4px 8px; cursor: pointer;
+}
+.ordbtn:hover:not(:disabled) { color: var(--text); border-color: var(--accent); }
+.ordbtn:disabled { opacity: .35; cursor: default; }
+/* toggle rows & inputs */
+.trow {
+  display: flex; align-items: center; gap: 12px;
+  padding: 9px 0; border-bottom: 1px solid var(--border);
+}
+.trow:last-child { border-bottom: none; }
+.trow .grow { flex: 1; }
+.trow .tname { font-weight: 600; font-size: 15px; }
+.trow .tdesc { color: var(--muted); font-size: 13.5px; line-height: 1.45; }
+input[type="checkbox"] { width: 20px; height: 20px; accent-color: var(--accent); flex: none; cursor: pointer; }
+input[type="checkbox"]:disabled { cursor: default; }
+input[type="range"] { accent-color: var(--accent); width: 150px; }
+select {
+  background: var(--bg); color: var(--text); border: 1px solid var(--border);
+  border-radius: 8px; padding: 6px 8px; font-size: 14.5px; font-family: inherit;
+}
+.val { font-weight: 700; min-width: 44px; text-align: right; }
+.checks { display: flex; flex-wrap: wrap; gap: 8px 18px; padding: 8px 0 2px; }
+.checks label { display: inline-flex; align-items: center; gap: 7px; font-size: 14.5px; cursor: pointer; }
+.checks input[type="checkbox"] { width: 17px; height: 17px; }
+.person .pvoice { color: var(--muted); font-weight: 400; font-size: 13.5px; }
+/* buttons & status */
+.btn {
+  background: var(--accent); color: #fff; border: none; border-radius: 8px;
+  padding: 11px 26px; font-size: 15.5px; font-weight: 700; cursor: pointer; font-family: inherit;
+}
+.btn:hover { filter: brightness(1.08); }
+.btn:disabled { opacity: .55; cursor: default; }
+.btn.saved { background: var(--ok); }
+.btn-ghost {
+  background: none; border: 1px solid var(--border); border-radius: 8px;
+  padding: 9px 18px; font-size: 14.5px; font-weight: 600; cursor: pointer;
+  color: var(--text); font-family: inherit;
+}
+.savebar { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin: 20px 0 8px; }
+.status { font-size: 14.5px; min-height: 1.5em; }
+.status.ok { color: var(--ok); font-weight: 600; }
+.status.warn { color: var(--warn); font-weight: 600; }
+.queuebar {
+  background: var(--warn-bg); border: 1px solid var(--warn); border-radius: 12px;
+  padding: 14px 18px; margin-bottom: 16px; font-size: 14.5px;
+}
+.tokenbox {
+  background: var(--card2); border: 1px solid var(--border); border-radius: 12px;
+  padding: 16px 18px; margin-bottom: 16px;
+}
+.tokenrow { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 10px; }
+.tokenrow input {
+  flex: 1; min-width: 220px; background: var(--bg); border: 1px solid var(--border);
+  border-radius: 8px; padding: 9px 12px; font-size: 14px; color: var(--text); font-family: inherit;
+}
+.tokenrow input:focus { outline: none; border-color: var(--accent); }
+.summary-list { list-style: none; }
+.summary-list li { padding: 5px 0 5px 22px; position: relative; font-size: 15px; }
+.summary-list li::before { content: "•"; position: absolute; left: 6px; color: var(--accent); font-weight: 800; }
+details.jsonbox { margin-top: 12px; }
+details.jsonbox summary { cursor: pointer; font-size: 14px; color: var(--muted); font-weight: 600; }
+details.jsonbox pre {
+  background: var(--card2); border: 1px solid var(--border); border-radius: 8px;
+  padding: 12px; font-size: 12px; overflow-x: auto; margin-top: 8px; line-height: 1.5;
+}
+.footer {
+  margin-top: 44px; padding-top: 22px;
+  border-top: 1px solid var(--border);
+  color: var(--muted); font-size: 14px; text-align: center;
+}
+</style>
+</head>
+<body>
+<div class="topbar"><span class="topbar-icon">👨‍🔧</span> Hourly Chime — Settings <a href="../">Hans's homepage</a></div>
+<div class="crumb"><a href="../../">Buddy System dashboard</a> · <a href="../">Hans</a> · <span>Hourly chime</span></div>
+<div class="header">
+  <div class="icon">🔔</div>
+  <h1>Hourly Chime — Control Panel</h1>
+  <p class="tagline">Dial in Hans's on-the-hour chime: what shows up in it, who presents it, and how it behaves.</p>
+</div>
+
+<div class="card">
+  <h3>⏱️ Chime status</h3>
+  <table class="spec">
+    <tr><td class="k">Scheduled job</td><td class="v">hans-hourly-chime — runs every hour, on the hour</td></tr>
+    <tr><td class="k">Timezone</td><td class="v">America/Los_Angeles</td></tr>
+    <tr><td class="k">Delivered to</td><td class="v">Main chat <span class="muted" style="font-weight:400">(set in the scheduled job itself — shown for reference)</span></td></tr>
+    <tr><td class="k">Settings file</td><td class="v"><a href="../chime-config.json">hans-buddy/chime-config.json</a> <span class="muted" style="font-weight:400">— the chime reads it before every run; saved changes apply from the next chime</span></td></tr>
+    <tr><td class="k">Settings last saved</td><td class="v" id="cfgUpdated">—</td></tr>
+  </table>
+</div>
+
+<div class="queuebar" id="queueBar" hidden></div>
+
+<div class="tokenbox" id="tokenBox" hidden>
+  <h3 style="font-size:16px;margin-bottom:4px">🔑 GitHub token needed to save</h3>
+  <p class="small muted">Saving writes the settings file to the buddy-system repo on GitHub, which needs your GitHub token — the same one the buddy pages already use (stored only in this browser, under the shared <b>buddyTree</b> store). Create one at <a href="https://github.com/settings/tokens/new" target="_blank" rel="noopener">github.com/settings/tokens/new</a> — a classic token with the <b>repo</b> scope. Without a token, your settings still save on this device and send automatically once a token is added — nothing is lost.</p>
+  <div class="tokenrow">
+    <input type="password" id="tokenInput" placeholder="Paste GitHub token (ghp_…)" autocomplete="off">
+    <button class="btn-ghost" id="tokenSaveBtn" type="button">Save token</button>
+  </div>
+  <p class="status" id="tokenStatus"></p>
+</div>
+
+<h2>🧩 What shows up in the chime
+  <span class="sub">Switch segments on or off, and use the arrows to change the order they appear in. The presenter intro and sign-off always frame the chime.</span>
+</h2>
+<div class="card" id="moduleCard"></div>
+
+<h2>🎚️ How it behaves</h2>
+<div class="card">
+  <h3>🔊 Recording</h3>
+  <div class="trow">
+    <div class="grow"><div class="tname">Audio on every chime</div><div class="tdesc">Each chime ships with its recording, read aloud in the presenter's voice.</div></div>
+    <input type="checkbox" id="audioEnabled">
+  </div>
+</div>
+
+<div class="card">
+  <h3>🧩 Riddle &amp; joke window</h3>
+  <div class="trow">
+    <div class="grow"><div class="tname">Riddle &amp; joke block active</div><div class="tdesc">Master switch for the riddle/joke segments, on top of their own switches above.</div></div>
+    <input type="checkbox" id="rjEnabled">
+  </div>
+  <div class="trow">
+    <div class="grow"><div class="tname">Window</div><div class="tdesc">Riddle and joke only run between these hours (Pacific). Overnight chimes are couplet-only.</div></div>
+    <select id="rjStart"></select><span class="muted">to</span><select id="rjEnd"></select>
+  </div>
+</div>
+
+<div class="card">
+  <h3>🌍 Foreign-language chimes</h3>
+  <div class="trow">
+    <div class="grow"><div class="tname">Foreign-language time announcements</div><div class="tdesc">Some chimes give the time in another language, with the English translation underneath.</div></div>
+    <input type="checkbox" id="flEnabled">
+  </div>
+  <div class="trow">
+    <div class="grow"><div class="tname">How often</div><div class="tdesc">Share of chimes announced in another language.</div></div>
+    <input type="range" id="flRate" min="0" max="50" step="5"><span class="val" id="flRateVal"></span>
+  </div>
+  <div class="trow">
+    <div class="grow"><div class="tname">Never two in a row</div><div class="tdesc">A foreign-language chime is always followed by an English one.</div></div>
+    <input type="checkbox" id="flNoBack">
+  </div>
+  <div class="small muted" style="padding-top:10px">Languages in rotation:</div>
+  <div class="checks" id="flLangs"></div>
+</div>
+
+<div class="card">
+  <h3>🎧 Sound effects</h3>
+  <div class="trow">
+    <div class="grow"><div class="tname">Sound effects from the Awards Soundboard</div><div class="tdesc">Rimshots, drumrolls, gasps and the like, mixed in by ear — seasoning, not stuffing.</div></div>
+    <input type="checkbox" id="sfxEnabled">
+  </div>
+  <div class="trow">
+    <div class="grow"><div class="tname">Max effects per chime</div><div class="tdesc">Hard cap on effects in any single chime.</div></div>
+    <select id="sfxMax"><option value="0">0 — none</option><option value="1">1</option><option value="2">2</option><option value="3">3</option></select>
+  </div>
+  <div class="trow">
+    <div class="grow"><div class="tname">How often</div><div class="tdesc">Rough share of daytime chimes that get at least one effect.</div></div>
+    <input type="range" id="sfxShare" min="0" max="100" step="10"><span class="val" id="sfxShareVal"></span>
+  </div>
+  <div class="trow">
+    <div class="grow"><div class="tname">Quiet hours</div><div class="tdesc">No effects between these hours — sleep wins.</div></div>
+    <select id="sfxQuietStart"></select><span class="muted">to</span><select id="sfxQuietEnd"></select>
+  </div>
+  <div class="trow">
+    <div class="grow"><div class="tname">Midnight gong exception</div><div class="tdesc">One soft gong is allowed at midnight, inside quiet hours.</div></div>
+    <input type="checkbox" id="sfxGong">
+  </div>
+  <div class="trow">
+    <div class="grow"><div class="tname">Never the same spot twice in a row</div><div class="tdesc">Effects rotate placement hour to hour — no rimshot in the same place two chimes running.</div></div>
+    <input type="checkbox" id="sfxNoRepeat">
+  </div>
+</div>
+
+<div class="card">
+  <h3>⚠️ Urgent check</h3>
+  <div class="trow">
+    <div class="grow"><div class="tname">Urgent-item check on every chime</div><div class="tdesc">Each run scans the buddies' attention items and the awaiting-reply list; only genuinely urgent items ride along.</div></div>
+    <input type="checkbox" id="urgEnabled">
+  </div>
+  <div class="trow">
+    <div class="grow"><div class="tname">Max urgent lines per chime</div><div class="tdesc">Routine items never ride the chime — urgent only.</div></div>
+    <select id="urgMax"><option value="1">1</option><option value="2">2</option><option value="3">3</option></select>
+  </div>
+</div>
+
+<h2>🎙️ Who presents
+  <span class="sub">The rotating presenter roster. Uncheck anyone you'd like benched. The Scooby gang are occasional guests.</span>
+</h2>
+<div class="card">
+  <div id="presenterList"></div>
+  <div class="trow" style="margin-top:6px">
+    <div class="grow"><div class="tname">Never the same presenter twice in a row</div><div class="tdesc">Rotation always moves to a different voice next hour.</div></div>
+    <input type="checkbox" id="rotNoBack">
+  </div>
+</div>
+
+<h2>📋 Current settings</h2>
+<div class="card">
+  <ul class="summary-list" id="summaryList"></ul>
+  <details class="jsonbox">
+    <summary>Show the settings file (JSON) as it will be saved</summary>
+    <pre id="jsonPreview"></pre>
+  </details>
+</div>
+
+<div class="savebar">
+  <button class="btn" id="saveBtn" type="button">Save settings</button>
+  <span class="status" id="saveStatus"></span>
+</div>
+<p class="small muted">Changes apply from the next hourly chime. If a save can't reach GitHub, it stays queued on this device and sends automatically once a working token is added — it is never silently dropped.</p>
+
+<div class="footer">
+  Hans — German master technician, keeper of the clock. · <a href="../">Hans's homepage</a> · <a href="../../">Buddy System dashboard</a>
+</div>
+
+<script>
+(function(){
+  'use strict';
+  var REPO = 'buddy-system';
+  var CFG_PATH = 'hans-buddy/chime-config.json';
+  var QUEUE_KEY = 'buddyTree.chimeConfig.queue';
+
+  var MODULE_META = {
+    time: { name: 'Time announcement', desc: 'The hour, announced in the presenter’s voice.', core: true },
+    couplet: { name: 'Rhyming couplet', desc: 'A fresh two-line rhyme, written in the presenter’s character.' },
+    riddle: { name: 'Riddle', desc: 'Reveals the pending riddle’s answer, then poses a new one. The riddle & joke window applies.' },
+    joke: { name: 'Joke', desc: 'One fresh joke, never repeated. The riddle & joke window applies.' },
+    weather: { name: 'Weather line', desc: 'Current conditions where Dave is (Fiddletown when he’s home), in one short line.', isNew: true },
+    zen: { name: 'Zen saying', desc: 'One genuine, attributed Zen quote — never repeated within 30 days.', isNew: true },
+    news: { name: 'News headline', desc: 'One top headline from a reputable source, with the source named in the line.', isNew: true },
+    positiveThought: { name: 'Positive thought', desc: 'One short uplifting thought for the day — warm and secular, distinct from the Zen quote.', isNew: true }
+  };
+  var KNOWN_LANGS = ['German','Spanish','French','Italian','Portuguese','Japanese','Dutch','Swedish'];
+
+  var DEFAULTS = {
+    version: 1,
+    configFor: 'hans-hourly-chime',
+    timezone: 'America/Los_Angeles',
+    delivery: { target: 'main-chat' },
+    audio: { enabled: true, everyChime: true },
+    modules: [
+      { id: 'time', enabled: true, locked: true },
+      { id: 'couplet', enabled: true },
+      { id: 'riddle', enabled: true },
+      { id: 'joke', enabled: true },
+      { id: 'weather', enabled: false },
+      { id: 'zen', enabled: false },
+      { id: 'news', enabled: false },
+      { id: 'positiveThought', enabled: false }
+    ],
+    riddleAndJoke: { enabled: true, windowStartHour: 7, windowEndHour: 22 },
+    foreignLanguage: { enabled: true, rate: 0.2, neverBackToBack: true, languages: KNOWN_LANGS.slice() },
+    soundEffects: { enabled: true, maxPerChime: 2, approxShareOfDaytimeChimes: 0.5, quietStartHour: 23, quietEndHour: 6, midnightGongException: true, neverSamePlacementBackToBack: true, retiredEffects: ['airhorn'] },
+    urgentCheck: { enabled: true, maxLines: 2 },
+    rotation: { noBackToBack: true },
+    presenters: [
+      { id: 'herald', name: 'The Herald', voiceName: 'Boomy Mountain', voiceId: 'avocado_v2:magnus', group: 'regular', enabled: true },
+      { id: 'southern-uncle', name: 'The Southern Uncle', voiceName: 'Neighborly Syrup', voiceId: 'avocado_v2:bud', group: 'regular', enabled: true },
+      { id: 'old-mechanic', name: 'The Old Mechanic', voiceName: 'Gruff Brick', voiceId: 'avocado_v2:vincent', group: 'regular', enabled: true },
+      { id: 'cab-driver', name: 'The Cab Driver', voiceName: 'Loud Gravel', voiceId: 'avocado_v2:hubert', group: 'regular', enabled: true },
+      { id: 'irish-bard', name: 'The Irish Bard', voiceName: 'Polished Coin', voiceId: 'avocado_v2:conor', group: 'regular', enabled: true },
+      { id: 'campfire-storyteller', name: 'The Campfire Storyteller', voiceName: 'Husky Campfire', voiceId: 'avocado_v2:briggs', group: 'regular', enabled: true },
+      { id: 'aussie-wanderer', name: 'The Aussie Wanderer', voiceName: 'Burnished Trophy', voiceId: 'avocado_v2:atlas', group: 'regular', enabled: true },
+      { id: 'lighthouse-keeper', name: 'The Lighthouse Keeper', voiceName: 'Wise Lighthouse', voiceId: 'avocado_v2:TruthTeller', group: 'regular', enabled: true },
+      { id: 'night-watchman', name: 'The Night Watchman', voiceName: 'Helio', voiceId: 'avocado_v2:MAI_03', group: 'regular', enabled: true },
+      { id: 'aunt-aria', name: 'Aunt Aria', voiceName: 'Aria', voiceId: 'avocado_v2:MAI_01', group: 'regular', enabled: true },
+      { id: 'hans-the-meister', name: 'Hans the Meister', voiceName: 'Avid Chimney', voiceId: 'avocado_v2:vd2_r8_rep1k_a085_v068_28k_g5k', group: 'regular', enabled: true },
+      { id: 'scooby-doo', name: 'Scooby-Doo', voiceName: 'Husky Campfire', voiceId: 'avocado_v2:briggs', group: 'scooby-gang', role: 'occasional-guest', enabled: true },
+      { id: 'shaggy', name: 'Shaggy', voiceName: 'Fluid Hammock', voiceId: 'avocado_v2:ronan', group: 'scooby-gang', role: 'occasional-guest', enabled: true },
+      { id: 'velma', name: 'Velma', voiceName: 'Precise Window', voiceId: 'avocado_v2:vdc_NOID65', group: 'scooby-gang', role: 'occasional-guest', enabled: true },
+      { id: 'daphne', name: 'Daphne', voiceName: 'Cheerful Sunflower', voiceId: 'avocado_v2:Vanessa', group: 'scooby-gang', role: 'occasional-guest', enabled: true },
+      { id: 'fred', name: 'Fred', voiceName: 'Bold Flag', voiceId: 'avocado_v2:Twenty', group: 'scooby-gang', role: 'occasional-guest', enabled: true }
+    ],
+    updatedAt: null
+  };
+
+  function clone(o){ return JSON.parse(JSON.stringify(o)); }
+  function $(id){ return document.getElementById(id); }
+  function fmtHour(h){
+    h = ((+h % 24) + 24) % 24;
+    if (h === 0) return '12 AM';
+    if (h === 12) return '12 PM';
+    return h < 12 ? h + ' AM' : (h - 12) + ' PM';
+  }
+
+  /* ---------- token store (shared fleet pattern) ---------- */
+  function lsGet(){ try { return JSON.parse(localStorage.getItem('buddyTree.v3') || '{}'); } catch(e){ return {}; } }
+  function lsSet(patch){ try { var s = lsGet(); for (var k in patch) s[k] = patch[k]; localStorage.setItem('buddyTree.v3', JSON.stringify(s)); } catch(e){} }
+  function token(){ return lsGet().ghToken || ''; }
+  function b64encode(str){
+    var bytes = new TextEncoder().encode(str), bin = '';
+    bytes.forEach(function(b){ bin += String.fromCharCode(b); });
+    return btoa(bin);
+  }
+  async function ghApi(path, method, body){
+    var t = token();
+    if (!t) throw new Error('Add a GitHub token first.');
+    var r = await fetch('https://api.github.com' + path, {
+      method: method || 'GET',
+      headers: { 'Authorization': 'Bearer ' + t, 'Accept': 'application/vnd.github+json', 'Content-Type': 'application/json' },
+      body: body ? JSON.stringify(body) : undefined
+    });
+    if (!r.ok) throw new Error('GitHub ' + r.status);
+    return r.status === 204 ? null : await r.json();
+  }
+  async function ghGetSha(){
+    try {
+      var j = await ghApi('/repos/davedellaquila/' + REPO + '/contents/' + CFG_PATH);
+      return j && j.sha ? j.sha : null;
+    } catch(e){ return null; }
+  }
+  async function ghPutConfig(cfg){
+    var sha = await ghGetSha();
+    var body = { message: 'Chime settings saved from the control panel', content: b64encode(JSON.stringify(cfg, null, 2) + '\n') };
+    if (sha) body.sha = sha;
+    await ghApi('/repos/davedellaquila/' + REPO + '/contents/' + CFG_PATH, 'PUT', body);
+  }
+  function friendlyErr(err){
+    var why = (err && err.message) || String(err);
+    if (/404/.test(why)) return 'GitHub said 404 (usually a wrong/expired token, or no access to this repo)';
+    if (/401/.test(why)) return 'GitHub said 401 (token rejected — it may be expired or mistyped)';
+    return why;
+  }
+
+  /* ---------- local queue (never drop a save) ---------- */
+  function queueRead(){ try { var q = JSON.parse(localStorage.getItem(QUEUE_KEY) || 'null'); return q && q.config ? q : null; } catch(e){ return null; } }
+  function queueSave(cfg, reason){ try { localStorage.setItem(QUEUE_KEY, JSON.stringify({ savedAt: new Date().toISOString(), reason: reason, config: cfg })); } catch(e){} }
+  function queueClear(){ try { localStorage.removeItem(QUEUE_KEY); } catch(e){} }
+  function renderQueue(){
+    var bar = $('queueBar'), q = queueRead();
+    if (!q) { bar.hidden = true; bar.textContent = ''; return; }
+    bar.hidden = false;
+    bar.textContent = '⏳ 1 settings save is queued on this device (' + new Date(q.savedAt).toLocaleString() + ') — waiting for: ' + q.reason + '. ' +
+      (token()
+        ? 'A token is on file, so it will send automatically — or press Save to send it now. Until it lands, the chime keeps using the last published settings.'
+        : 'Add a GitHub token above and it will send automatically. Until then, the chime keeps using the last published settings — your dialed-in settings are not lost.');
+  }
+
+  /* ---------- state ---------- */
+  var baseCfg = clone(DEFAULTS);
+  var state = { modules: [], presenters: [] };
+
+  function mergeModules(src){
+    var byId = {};
+    (src || []).forEach(function(m){ if (m && m.id) byId[m.id] = m; });
+    var order = (src || []).map(function(m){ return m && m.id; }).filter(Boolean);
+    DEFAULTS.modules.forEach(function(d){ if (!byId[d.id]) { byId[d.id] = clone(d); order.push(d.id); } });
+    return order.map(function(id){
+      var m = byId[id], meta = MODULE_META[id] || {};
+      return { id: id, name: meta.name || id, desc: meta.desc || (m.note || ''), isNew: !!meta.isNew,
+               locked: !!(m.locked || meta.core), enabled: m.enabled !== false, note: m.note || null };
+    });
+  }
+  function mergePresenters(src){
+    var byId = {};
+    (src || []).forEach(function(p){ if (p && p.id) byId[p.id] = p; });
+    var out = (src || []).slice();
+    DEFAULTS.presenters.forEach(function(d){ if (!byId[d.id]) out.push(clone(d)); });
+    return out.map(function(p){
+      return { id: p.id, name: p.name || p.id, voiceName: p.voiceName || '', voiceId: p.voiceId || '',
+               group: p.group || 'regular', role: p.role || null, enabled: p.enabled !== false };
+    });
+  }
+
+  /* ---------- rendering ---------- */
+  function renderModules(){
+    var card = $('moduleCard'); card.innerHTML = '';
+    state.modules.forEach(function(m, idx){
+      var row = document.createElement('div');
+      row.className = 'modrow' + (m.enabled ? '' : ' off');
+      var cb = document.createElement('input');
+      cb.type = 'checkbox'; cb.checked = m.enabled; cb.disabled = !!m.locked;
+      cb.setAttribute('aria-label', 'Include ' + m.name);
+      cb.addEventListener('change', function(){ m.enabled = cb.checked; row.classList.toggle('off', !m.enabled); refreshOutputs(); });
+      var grow = document.createElement('div'); grow.className = 'grow';
+      var nm = document.createElement('div'); nm.className = 'mname'; nm.textContent = m.name + ' ';
+      if (m.locked) { var c1 = document.createElement('span'); c1.className = 'chip core'; c1.textContent = 'CORE — ALWAYS ON'; nm.appendChild(c1); }
+      if (m.isNew) { var c2 = document.createElement('span'); c2.className = 'chip new'; c2.textContent = 'NEW'; nm.appendChild(c2); }
+      var ds = document.createElement('div'); ds.className = 'mdesc'; ds.textContent = m.desc;
+      grow.appendChild(nm); grow.appendChild(ds);
+      var ord = document.createElement('div'); ord.className = 'ordbtns';
+      var up = document.createElement('button'); up.type = 'button'; up.className = 'ordbtn'; up.textContent = '▲'; up.title = 'Move earlier'; up.disabled = idx === 0;
+      var dn = document.createElement('button'); dn.type = 'button'; dn.className = 'ordbtn'; dn.textContent = '▼'; dn.title = 'Move later'; dn.disabled = idx === state.modules.length - 1;
+      up.addEventListener('click', function(){ var t = state.modules[idx - 1]; state.modules[idx - 1] = m; state.modules[idx] = t; renderModules(); refreshOutputs(); });
+      dn.addEventListener('click', function(){ var t = state.modules[idx + 1]; state.modules[idx + 1] = m; state.modules[idx] = t; renderModules(); refreshOutputs(); });
+      ord.appendChild(up); ord.appendChild(dn);
+      row.appendChild(cb); row.appendChild(grow); row.appendChild(ord);
+      card.appendChild(row);
+    });
+  }
+  function renderPresenters(){
+    var wrap = $('presenterList'); wrap.innerHTML = '';
+    var groups = [ ['regular', null], ['scooby-gang', 'Occasional guests — the Scooby gang'] ];
+    groups.forEach(function(g){
+      if (g[1]) { var h = document.createElement('div'); h.className = 'small muted'; h.style.padding = '12px 0 2px'; h.textContent = g[1]; wrap.appendChild(h); }
+      state.presenters.filter(function(p){ return p.group === g[0]; }).forEach(function(p){
+        var row = document.createElement('div'); row.className = 'trow person';
+        var cb = document.createElement('input'); cb.type = 'checkbox'; cb.checked = p.enabled;
+        cb.setAttribute('aria-label', 'Presenter ' + p.name);
+        cb.addEventListener('change', function(){ p.enabled = cb.checked; refreshOutputs(); });
+        var grow = document.createElement('div'); grow.className = 'grow';
+        var nm = document.createElement('span'); nm.className = 'tname'; nm.textContent = p.name;
+        var vv = document.createElement('span'); vv.className = 'pvoice'; vv.textContent = p.voiceName ? ' — voice: ' + p.voiceName : '';
+        grow.appendChild(nm); grow.appendChild(vv);
+        row.appendChild(grow); row.appendChild(cb);
+        wrap.appendChild(row);
+      });
+    });
+  }
+  function fillHourSelect(sel, val){
+    sel.innerHTML = '';
+    for (var h = 0; h < 24; h++) {
+      var o = document.createElement('option'); o.value = h; o.textContent = fmtHour(h);
+      if (h === val) o.selected = true;
+      sel.appendChild(o);
+    }
+  }
+
+  /* ---------- collect + summary ---------- */
+  function collect(){
+    var cfg = clone(baseCfg);
+    cfg.version = 1; cfg.configFor = 'hans-hourly-chime'; cfg.timezone = 'America/Los_Angeles';
+    cfg.delivery = { target: 'main-chat' };
+    cfg.audio = { enabled: $('audioEnabled').checked, everyChime: $('audioEnabled').checked };
+    cfg.modules = state.modules.map(function(m){
+      var out = { id: m.id, enabled: m.enabled };
+      if (m.locked) out.locked = true;
+      if (m.note) out.note = m.note;
+      return out;
+    });
+    cfg.riddleAndJoke = { enabled: $('rjEnabled').checked, windowStartHour: +$('rjStart').value, windowEndHour: +$('rjEnd').value };
+    var langs = [];
+    document.querySelectorAll('#flLangs input[type="checkbox"]').forEach(function(cb){ if (cb.checked) langs.push(cb.value); });
+    (baseCfg.foreignLanguage && baseCfg.foreignLanguage.languages || []).forEach(function(l){ if (KNOWN_LANGS.indexOf(l) < 0 && langs.indexOf(l) < 0) langs.push(l); });
+    cfg.foreignLanguage = { enabled: $('flEnabled').checked, rate: +$('flRate').value / 100, neverBackToBack: $('flNoBack').checked, languages: langs };
+    cfg.soundEffects = { enabled: $('sfxEnabled').checked, maxPerChime: +$('sfxMax').value, approxShareOfDaytimeChimes: +$('sfxShare').value / 100,
+      quietStartHour: +$('sfxQuietStart').value, quietEndHour: +$('sfxQuietEnd').value,
+      midnightGongException: $('sfxGong').checked, neverSamePlacementBackToBack: $('sfxNoRepeat').checked,
+      retiredEffects: (baseCfg.soundEffects && baseCfg.soundEffects.retiredEffects) || ['airhorn'] };
+    cfg.urgentCheck = { enabled: $('urgEnabled').checked, maxLines: +$('urgMax').value };
+    cfg.rotation = { noBackToBack: $('rotNoBack').checked };
+    cfg.presenters = state.presenters.map(function(p){
+      var out = { id: p.id, name: p.name, voiceName: p.voiceName, voiceId: p.voiceId, group: p.group, enabled: p.enabled };
+      if (p.role) out.role = p.role;
+      return out;
+    });
+    return cfg;
+  }
+  function refreshOutputs(){
+    var cfg = collect();
+    var on = state.modules.filter(function(m){ return m.enabled; });
+    var lines = [];
+    lines.push('Runs every hour on the hour (America/Los_Angeles), delivered to the main chat.');
+    lines.push(cfg.audio.enabled ? 'Every chime ships with its recording, read aloud in the presenter’s voice.' : 'Audio is off — chimes arrive as text only.');
+    lines.push('Segments, in order: ' + on.map(function(m){ return m.name; }).join(' · ') + '.');
+    if (state.modules.some(function(m){ return (m.id === 'riddle' || m.id === 'joke') && m.enabled; }))
+      lines.push('Riddle & joke run ' + fmtHour(cfg.riddleAndJoke.windowStartHour) + '–' + fmtHour(cfg.riddleAndJoke.windowEndHour) + ' only' + (cfg.riddleAndJoke.enabled ? '.' : ' — and the block master switch is OFF.'));
+    lines.push(cfg.foreignLanguage.enabled
+      ? 'About ' + Math.round(cfg.foreignLanguage.rate * 100) + '% of chimes announce the time in another language (' + cfg.foreignLanguage.languages.length + ' languages in rotation)' + (cfg.foreignLanguage.neverBackToBack ? ', never twice in a row.' : '.')
+      : 'Foreign-language announcements are off.');
+    lines.push(cfg.soundEffects.enabled
+      ? 'Sound effects on — at most ' + cfg.soundEffects.maxPerChime + ' per chime, in roughly ' + Math.round(cfg.soundEffects.approxShareOfDaytimeChimes * 100) + '% of daytime chimes; quiet ' + fmtHour(cfg.soundEffects.quietStartHour) + '–' + fmtHour(cfg.soundEffects.quietEndHour) + (cfg.soundEffects.midnightGongException ? ', midnight gong allowed.' : '.')
+      : 'Sound effects are off.');
+    lines.push(cfg.urgentCheck.enabled ? 'Urgent check on — up to ' + cfg.urgentCheck.maxLines + ' ⚠️ line' + (cfg.urgentCheck.maxLines === 1 ? '' : 's') + ' per chime.' : 'Urgent check is off — chimes ship alone.');
+    var act = state.presenters.filter(function(p){ return p.enabled; }).length;
+    lines.push(act + ' of ' + state.presenters.length + ' presenters active' + (cfg.rotation.noBackToBack ? '; never the same presenter twice in a row.' : '.'));
+    var ul = $('summaryList'); ul.innerHTML = '';
+    lines.forEach(function(t){ var li = document.createElement('li'); li.textContent = t; ul.appendChild(li); });
+    $('jsonPreview').textContent = JSON.stringify(cfg, null, 2);
+    $('flRateVal').textContent = $('flRate').value + '%';
+    $('sfxShareVal').textContent = $('sfxShare').value + '%';
+  }
+
+  /* ---------- populate ---------- */
+  function populate(cfg){
+    baseCfg = clone(cfg);
+    state.modules = mergeModules(cfg.modules);
+    state.presenters = mergePresenters(cfg.presenters);
+    $('audioEnabled').checked = !cfg.audio || cfg.audio.enabled !== false;
+    var rj = cfg.riddleAndJoke || {};
+    $('rjEnabled').checked = rj.enabled !== false;
+    fillHourSelect($('rjStart'), rj.windowStartHour != null ? rj.windowStartHour : 7);
+    fillHourSelect($('rjEnd'), rj.windowEndHour != null ? rj.windowEndHour : 22);
+    var fl = cfg.foreignLanguage || {};
+    $('flEnabled').checked = fl.enabled !== false;
+    $('flRate').value = Math.round((fl.rate != null ? fl.rate : 0.2) * 100);
+    $('flNoBack').checked = fl.neverBackToBack !== false;
+    var lw = $('flLangs'); lw.innerHTML = '';
+    KNOWN_LANGS.forEach(function(l){
+      var lab = document.createElement('label');
+      var cb = document.createElement('input'); cb.type = 'checkbox'; cb.value = l;
+      cb.checked = !fl.languages || fl.languages.indexOf(l) >= 0;
+      cb.addEventListener('change', refreshOutputs);
+      lab.appendChild(cb); lab.appendChild(document.createTextNode(l));
+      lw.appendChild(lab);
+    });
+    var sx = cfg.soundEffects || {};
+    $('sfxEnabled').checked = sx.enabled !== false;
+    $('sfxMax').value = String(sx.maxPerChime != null ? sx.maxPerChime : 2);
+    $('sfxShare').value = Math.round((sx.approxShareOfDaytimeChimes != null ? sx.approxShareOfDaytimeChimes : 0.5) * 100);
+    fillHourSelect($('sfxQuietStart'), sx.quietStartHour != null ? sx.quietStartHour : 23);
+    fillHourSelect($('sfxQuietEnd'), sx.quietEndHour != null ? sx.quietEndHour : 6);
+    $('sfxGong').checked = sx.midnightGongException !== false;
+    $('sfxNoRepeat').checked = sx.neverSamePlacementBackToBack !== false;
+    var ug = cfg.urgentCheck || {};
+    $('urgEnabled').checked = ug.enabled !== false;
+    $('urgMax').value = String(ug.maxLines != null ? ug.maxLines : 2);
+    $('rotNoBack').checked = !cfg.rotation || cfg.rotation.noBackToBack !== false;
+    $('cfgUpdated').textContent = cfg.updatedAt ? new Date(cfg.updatedAt).toLocaleString() : '—';
+    renderModules();
+    renderPresenters();
+    refreshOutputs();
+  }
+
+  /* ---------- status ---------- */
+  function setStatus(cls, text){ var s = $('saveStatus'); s.className = 'status' + (cls ? ' ' + cls : ''); s.textContent = text; }
+  function refreshTokenUI(){
+    var has = !!token();
+    $('tokenBox').hidden = has;
+    $('saveBtn').textContent = has ? 'Save settings to GitHub' : 'Save settings — will queue (no GitHub token yet)';
+    renderQueue();
+  }
+  function flashSaved(){
+    var b = $('saveBtn'), label = b.textContent;
+    b.classList.add('saved'); b.textContent = '✓ Saved';
+    setTimeout(function(){ b.classList.remove('saved'); b.textContent = label; }, 1800);
+  }
+
+  /* ---------- save flow ---------- */
+  async function save(){
+    var cfg = collect();
+    cfg.updatedAt = new Date().toISOString();
+    queueSave(cfg, token() ? 'waiting to send to GitHub' : 'no GitHub token on this device yet');
+    renderQueue();
+    if (!token()) {
+      setStatus('warn', '✓ Saved on this device — queued. Add a GitHub token above and it sends automatically; until then the chime keeps using the last published settings.');
+      return;
+    }
+    setStatus('', 'Saving to GitHub…');
+    $('saveBtn').disabled = true;
+    try {
+      await ghPutConfig(cfg);
+      queueClear(); renderQueue();
+      baseCfg = cfg;
+      $('cfgUpdated').textContent = new Date(cfg.updatedAt).toLocaleString();
+      setStatus('ok', '✓ Saved to GitHub — the chime reads the settings file before every run, so your changes apply from the next chime.');
+      flashSaved();
+    } catch(err) {
+      var why = friendlyErr(err);
+      queueSave(cfg, why);
+      renderQueue();
+      setStatus('warn', '⚠ Could not publish (' + why + ') — your settings are queued on this device and will send automatically once a working token is added. Nothing was lost.');
+    }
+    $('saveBtn').disabled = false;
+  }
+  async function syncQueue(){
+    var q = queueRead();
+    if (!q || !token()) { renderQueue(); return; }
+    try {
+      await ghPutConfig(q.config);
+      queueClear();
+      baseCfg = q.config;
+      populate(baseCfg);
+      refreshTokenUI();
+      setStatus('ok', '✓ Your queued settings were sent to GitHub and are now live — they apply from the next chime.');
+    } catch(err) {
+      queueSave(q.config, friendlyErr(err));
+      renderQueue();
+    }
+  }
+
+  /* ---------- wiring ---------- */
+  ['audioEnabled','rjEnabled','rjStart','rjEnd','flEnabled','flRate','flNoBack','sfxEnabled','sfxMax','sfxShare','sfxQuietStart','sfxQuietEnd','sfxGong','sfxNoRepeat','urgEnabled','urgMax','rotNoBack'].forEach(function(id){
+    var el = $(id);
+    el.addEventListener('change', refreshOutputs);
+    el.addEventListener('input', refreshOutputs);
+  });
+  $('saveBtn').addEventListener('click', save);
+  $('tokenSaveBtn').addEventListener('click', async function(){
+    var v = $('tokenInput').value.trim();
+    if (!v) return;
+    lsSet({ ghToken: v });
+    $('tokenInput').value = '';
+    var ts = $('tokenStatus'); ts.textContent = 'Checking token…'; ts.className = 'status';
+    try {
+      await ghApi('/user');
+      refreshTokenUI();
+      ts.textContent = '';
+      setStatus('ok', '✓ Token verified — publishing is on.');
+      syncQueue();
+    } catch(e) {
+      refreshTokenUI();
+      ts.className = 'status warn';
+      ts.textContent = '⚠ GitHub rejected that token (' + friendlyErr(e) + '). Make a classic token with the repo scope at github.com/settings/tokens/new — queued settings stay on this device until a working token is added.';
+    }
+  });
+
+  /* ---------- init ---------- */
+  (async function init(){
+    var published = null;
+    try {
+      var r = await fetch('../chime-config.json', { cache: 'no-store' });
+      if (r.ok) published = await r.json();
+    } catch(e){}
+    var start = published || clone(DEFAULTS);
+    var q = queueRead();
+    populate(q && q.config ? q.config : start);
+    refreshTokenUI();
+    if (q && token()) syncQueue();
+    else if (q) setStatus('warn', 'Showing your queued (not yet published) settings — they send automatically once a GitHub token is added.');
+  })();
+})();
+</script>
+<!--
+  TIP JAR — canonical snippet (Dave's standard, 2026-10-24)
+  Every buddy homepage and every page a buddy creates carries the tip jar.
+  Public pages especially: a reader who got value can say thanks.
+
+  USAGE: paste this whole block just before </body>. No dependencies.
+  The jar points at Dave's Ko-fi page by default. A page for a specific app
+  may override the destination with its own Ko-fi page later:
+      <div class="tipjar" ...> — change the href on the <a>.
+
+  DESIGN NOTES (keep it alive, never annoying):
+  - "Breathing": a very slow, soft pulse so the pill feels alive at rest.
+  - Every ~9s the jar does one small hop and a coin glint passes over it —
+    a brief active window inside a long keyframe cycle, so it's mostly still.
+  - Hover: the jar spins (same move as the dashboard sidebar's tip jar) and
+    the label shimmers. Touch devices get the idle motion only.
+  - prefers-reduced-motion: all animation off. The jar is just a link.
+  - Works in dark and light mode; sits above page content (z-index 60) but
+    below modals on buddy pages.
+-->
+<style>
+  .tipjar{position:fixed;right:18px;bottom:18px;z-index:60;
+    font-family:inherit;-webkit-tap-highlight-color:transparent}
+  .tipjar a{display:inline-flex;align-items:center;gap:.5em;
+    padding:.55em 1em;border-radius:999px;text-decoration:none;
+    font-size:.9rem;font-weight:600;line-height:1;
+    color:#fff;background:linear-gradient(135deg,#7c4dff,#b388ff);
+    box-shadow:0 6px 18px rgba(124,77,255,.35),0 2px 6px rgba(0,0,0,.25);
+    animation:tipjar-breathe 6s ease-in-out infinite}
+  .tipjar .jar{display:inline-block;font-size:1.15em;position:relative;
+    animation:tipjar-hop 9s ease-in-out infinite}
+  .tipjar .coin{position:absolute;left:50%;top:-.9em;transform:translateX(-50%);
+    font-size:.8em;opacity:0;animation:tipjar-coin 9s ease-in-out infinite}
+  .tipjar a:hover .jar{animation:tipjar-spin .7s cubic-bezier(.34,1.56,.64,1)}
+  .tipjar a:hover .tiptext{animation:tipjar-shimmer 2.5s linear infinite}
+  .tipjar a:focus-visible{outline:3px solid #ffd54f;outline-offset:3px}
+  @keyframes tipjar-breathe{0%,100%{transform:scale(1)}50%{transform:scale(1.035)}}
+  @keyframes tipjar-hop{0%,88%,100%{transform:translateY(0)}92%{transform:translateY(-4px) rotate(-8deg)}96%{transform:translateY(0)}}
+  @keyframes tipjar-coin{0%,88%,100%{opacity:0;transform:translate(-50%,0)}92%{opacity:1;transform:translate(-50%,4px)}96%,98%{opacity:0;transform:translate(-50%,9px)}}
+  @keyframes tipjar-spin{to{transform:rotate(360deg)}}
+  @keyframes tipjar-shimmer{0%{filter:brightness(1)}50%{filter:brightness(1.45)}100%{filter:brightness(1)}}
+  @media (prefers-reduced-motion: reduce){
+    .tipjar a,.tipjar .jar,.tipjar .coin{animation:none}
+  }
+</style>
+<div class="tipjar">
+  <a href="https://ko-fi.com/davedellaquila" target="_blank" rel="noopener"
+     aria-label="Tip jar — if this page helped you, you can leave Dave a tip on Ko-fi">
+    <span class="jar">🫙<span class="coin">🪙</span></span><span class="tiptext">Tip Jar</span>
+  </a>
+</div>
+</body>
+</html>
