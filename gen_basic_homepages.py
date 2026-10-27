@@ -926,6 +926,8 @@ body {{
   color: var(--muted); font-size: 16px; cursor: pointer; padding: 4px 10px; line-height: 1;
 }}
 .topbar-refresh:hover {{ color: var(--text); border-color: var(--border); }}
+.bs-dash-link {{ font-size: 13px; font-weight: 600; color: var(--accent); text-decoration: none; white-space: nowrap; margin-left: 10px; }}
+.bs-dash-link:hover {{ text-decoration: underline; }}
 .icon {{ font-size: 64px; margin-bottom: 16px; }}
 h1 {{ font-size: 32px; margin-bottom: 8px; }}
 .tagline {{ color: var(--muted); font-size: 18px; }}
@@ -1001,7 +1003,7 @@ h2 {{ font-size: 22px; margin: 32px 0 16px; }}
 </head>
 <body>
 {family_nav}
-<div class="topbar"><span class="topbar-icon">{icon}</span><span class="topbar-name" data-buddy-name>{name}</span><button class="topbar-refresh" title="Reload this page (bypasses cache)" onclick="location.href=location.pathname+'?v='+Date.now()">&#8635;</button></div>
+<div class="topbar"><span class="topbar-icon">{icon}</span><span class="topbar-name" data-buddy-name>{name}</span><button class="topbar-refresh" title="Reload this page (bypasses cache)" onclick="location.href=location.pathname+'?v='+Date.now()">&#8635;</button><a class="bs-dash-link" href="https://davedellaquila.github.io/buddy-system/">Buddy System dashboard</a></div>
 <div class="header">
 <div class="icon">{icon}</div>
 <h1 data-buddy-name>{name}</h1>

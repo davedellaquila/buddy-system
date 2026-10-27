@@ -1422,6 +1422,18 @@ body:has(#token-pill) #view-buddy.sheet .bp-close-x{right:148px}
   #view-buddy.sheet .bp-sticky-head{padding-right:0}
 }
 #buddy-home{position:relative}
+/* Panel buddy search (Dave 2026-10-27, A3): a search row at the top of the
+   buddy/info panel, shown only in panel/sheet mode. It drives the same
+   filter as the sidebar search — it never displaces the panel chrome. */
+#bp-search-wrap{display:none}
+#view-buddy.panel #bp-search-wrap,#view-buddy.sheet #bp-search-wrap{display:flex;align-items:center;position:relative;margin:0 0 4px}
+#bp-search-wrap .bp-search-ic{position:absolute;left:10px;color:var(--muted);display:flex;pointer-events:none}
+#bp-search{flex:1;width:100%;box-sizing:border-box;background:var(--bg);border:1px solid var(--border);color:var(--text);border-radius:8px;padding:7px 30px 7px 32px;font-size:.8125rem}
+#bp-search:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 22%,transparent)}
+#bp-search::-webkit-search-cancel-button,#bp-search::-webkit-search-decoration{display:none;-webkit-appearance:none}
+#bp-search::-ms-clear{display:none}
+#bp-search-clear{position:absolute;right:6px;top:50%;transform:translateY(-50%);border:none;background:transparent;color:var(--muted);font-size:1.125rem;line-height:1;cursor:pointer;padding:4px 8px;border-radius:6px}
+#bp-search-clear:hover{color:var(--text);background:rgba(127,127,127,.18)}
 #bp-resize{position:fixed;top:0;bottom:0;right:calc(var(--bpw, 440px) - 14px);z-index:60;display:none;align-items:center;justify-content:center;width:28px;cursor:ew-resize;
   background:transparent;-webkit-tap-highlight-color:transparent;touch-action:none;user-select:none}
 /* Dot cluster: the shared panel-gripper rule beside #sb-resize::after
@@ -9623,7 +9635,7 @@ document.addEventListener('keydown', e => {
      popover or the settings sheet), it preventDefaulted — do not also
      close the panel on the same keypress. */
   if (e.key === 'Escape') { if (!e.defaultPrevented) closeDetail(); return; }
-  if (e.key === '/' && !e.target.matches('input, textarea, [contenteditable="true"]')) { e.preventDefault(); const bs = document.getElementById('buddy-search'); if (bs) bs.focus(); return; }
+  if (e.key === '/' && !(e.target && e.target.matches && e.target.matches('input, textarea, [contenteditable="true"]'))) { e.preventDefault(); focusPanelSearch(); return; }
   if (S.view === 'orgchart' && !e.metaKey && !e.ctrlKey && !e.altKey) {
     /* Org Chart zoom keys (Dave, 2026-10-21): + / \u2212 step \u00d71.25,
        0 fits. Gated to the Org Chart view so the Atlas keys below keep
@@ -12250,7 +12262,10 @@ function openFind(){
 function closeFind(){ document.body.classList.remove('find-open'); }
 function toggleFind(){ if (isFindOpen()) closeFind(); else openFind(); }
 /* Dave 2026-10-24: keyboard map — ⌘F is the footer Find icon (toggleFind),
-   ⌘I toggles the info panel (collapse/expand, or open it like #panel-open). */
+   ⌘I toggles the info panel (collapse/expand, or open it like #panel-open).
+   Dave 2026-10-27 (A3): ⌘F / Ctrl+F now route to the buddy panel's own
+   search field instead — the panel opens first when needed and #bp-search
+   takes focus. The Find overlay stays one tap away on the #hp-find button. */
 function toggleInfoPanel(){
   const vb = document.getElementById('view-buddy');
   const panelActive = !!(vb && vb.classList.contains('active') && (vb.classList.contains('panel') || vb.classList.contains('sheet')));
@@ -12260,10 +12275,11 @@ function toggleInfoPanel(){
   openBuddy(id);
 }
 document.addEventListener('keydown', function(e){
-  if (!e.metaKey || e.ctrlKey || e.altKey || e.repeat) return;
+  if (e.altKey || e.repeat) return;
   const k = (e.key || '').toLowerCase();
-  if (k === 'f') { e.preventDefault(); toggleFind(); }
-  else if (k === 'i') { e.preventDefault(); toggleInfoPanel(); }
+  if (k === 'f' && (e.metaKey !== e.ctrlKey)) { e.preventDefault(); if (isFindOpen()) closeFind(); focusPanelSearch(); return; }
+  if (!e.metaKey || e.ctrlKey) return;
+  if (k === 'i') { e.preventDefault(); toggleInfoPanel(); }
 });
 function pickFindResult(id){
   closeFind();
@@ -13337,6 +13353,55 @@ function initSearch(){
     bs.dispatchEvent(new Event('input', {bubbles: true}));
   }
 }
+/* Panel buddy search (Dave 2026-10-27, A3): the search field at the top of
+   the buddy/info panel (#bp-search). One filter for the whole dashboard: it
+   mirrors its query into the sidebar's #buddy-search, whose input handler
+   re-renders the buddy list through the shared buddyMatchesQuery matcher —
+   the two boxes can never disagree. Enter opens the top match in the panel;
+   Escape clears the query first, then blurs (the panel itself still closes
+   on the next Escape, exactly as locked). */
+function focusPanelSearch(){
+  const vb = document.getElementById('view-buddy');
+  const open = !!(vb && vb.classList.contains('active') && (vb.classList.contains('panel') || vb.classList.contains('sheet')));
+  if (!open) {
+    if (document.body.classList.contains('bp-collapsed')) setPanelCollapsed(false);
+    const id = (S.projectId && byId[S.projectId]) ? S.projectId : ROOT_ID;
+    openBuddy(id);
+  } else if (document.body.classList.contains('bp-collapsed')) {
+    setPanelCollapsed(false);
+  }
+  const inp = document.getElementById('bp-search');
+  if (inp) setTimeout(() => { try { inp.focus(); inp.select(); } catch (e) {} }, 60);
+}
+function initBpSearch(){
+  const inp = document.getElementById('bp-search');
+  if (!inp || inp.dataset.init) return;
+  inp.dataset.init = '1';
+  const bs = document.getElementById('buddy-search');
+  const clr = document.getElementById('bp-search-clear');
+  const syncClear = () => { if (clr) clr.hidden = !inp.value; };
+  const mirrorToSidebar = () => {
+    if (bs && bs.value !== inp.value) { bs.value = inp.value; bs.dispatchEvent(new Event('input', { bubbles: true })); }
+  };
+  inp.addEventListener('input', () => { syncClear(); mirrorToSidebar(); });
+  if (bs) {
+    bs.addEventListener('input', () => {
+      if (document.activeElement !== inp && inp.value !== bs.value) { inp.value = bs.value; syncClear(); }
+    });
+    if (bs.value) { inp.value = bs.value; syncClear(); }
+  }
+  if (clr) clr.addEventListener('click', () => { inp.value = ''; syncClear(); mirrorToSidebar(); inp.focus(); });
+  inp.addEventListener('keydown', e => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      const id = (typeof firstSearchMatch === 'function') ? firstSearchMatch() : null;
+      if (id) openBuddy(id);
+    } else if (e.key === 'Escape') {
+      if (inp.value) { e.preventDefault(); inp.value = ''; syncClear(); mirrorToSidebar(); }
+      else inp.blur();
+    }
+  });
+}
 function refreshTokenUI(id){
   updateTokenPill();
   updateTokenGating(id);
@@ -13959,6 +14024,7 @@ renderJournal();
 initTokenPill();
 updateTokenGating();
 initSearch();
+initBpSearch();
 // Flush any dumps that were queued while offline or token-less (Dave 2026-10-12)
 flushPendingDumps();
 // Flush any global renames queued while offline or token-less (Dave 2026-10-16)
@@ -14037,7 +14103,7 @@ syncRailCurView();
   <div class="sb-search-sticky">
     <div class="sb-search-wrap">
     <input type="search" id="buddy-search" placeholder="Search buddies\u2026" aria-label="Search buddies"
-      title="Search all buddies by name or tagline. Filters the sidebar list as you type. Press / anywhere to jump here. Arrow keys navigate results.">
+      title="Search all buddies by name or tagline. Filters the sidebar list as you type. Arrow keys navigate results.">
     <button type="button" id="buddy-search-clear" aria-label="Clear search" title="Clear search" hidden>×</button>
     </div>
   </div>
@@ -14066,7 +14132,7 @@ syncRailCurView();
   <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><polyline points="9 14 4 9 9 4" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M20 20v-7a4 4 0 0 0-4-4H4" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
 </button>
 <div id="hp-nav" role="group" aria-label="Previous and next buddy homepage">
-<button type="button" id="hp-find" title="Find a buddy (⌘F)" aria-label="Find a buddy">
+<button type="button" id="hp-find" title="Find a buddy" aria-label="Find a buddy">
   <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="2.4"/><path d="M15.5 15.5L21 21" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>
 </button>
 <button type="button" id="hp-prev" title="Previous homepage" aria-label="Previous buddy homepage">
@@ -14079,7 +14145,7 @@ syncRailCurView();
 <main id="main">
 <div id="journal-bar"></div>
 """ + vt + vp + vpl + vm + """
-<section id="view-buddy" class="view"><div id="bp-resize" title="Drag left or right to resize the buddy detail panel. Double-click to reset to default width."></div><div id="buddy-home"></div></section>
+<section id="view-buddy" class="view"><div id="bp-resize" title="Drag left or right to resize the buddy detail panel. Double-click to reset to default width."></div><div id="bp-search-wrap"><span class="bp-search-ic" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="M15.5 15.5L21 21" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></span><input type="search" id="bp-search" placeholder="Search buddies…" aria-label="Search buddies" autocomplete="off" title="Search all buddies by name or tagline. Filters the buddy list as you type; Enter opens the top match in this panel."><button type="button" id="bp-search-clear" aria-label="Clear search" title="Clear search" hidden>×</button></div><div id="buddy-home"></div></section>
 <section id="view-project" class="view"></section>
 <section id="view-changelog" class="view"></section>
 <section id="view-releases" class="view"></section>
