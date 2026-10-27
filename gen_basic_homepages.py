@@ -1276,6 +1276,16 @@ for b in d['buddies']:
         namesync_js=NAMESYNC_JS,
     )
 
+    # Tip jar (Dave's standing rule, 2026-10-24; generator wiring 2026-10-27):
+    # every generated page carries the canonical snippet, read live from
+    # docs/tipjar-snippet.html so the fleet never drifts from the canonical copy.
+    if 'class="tipjar"' not in page:
+        try:
+            with open(os.path.join(HERE, 'docs', 'tipjar-snippet.html'), encoding='utf-8') as _tf:
+                page = page.replace('</body>', _tf.read().strip('\n') + '\n</body>')
+        except OSError:
+            pass
+
     # Write to <bid>/index.html
     os.makedirs(dirpath, exist_ok=True)
     with open(idxpath, 'w') as f:

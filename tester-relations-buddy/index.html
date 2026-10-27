@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="auto">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>Tester Relations Buddy — Dave's development tester program</title>
+<style>
+:root{
+  --bg:#0d1117; --panel:#161b22; --panel2:#1c2330; --border:#262e3b;
+  --text:#e6edf3; --muted:#9aa7b4; --dim:#6b7684;
+  --accent:#58a6ff; --green:#3fb950; --amber:#d29922; --pink:#f778ba; --purple:#a371f7;
+  --chip:#21262d; --shadow:0 8px 24px rgba(0,0,0,.25);
+}
+@media (prefers-color-scheme: light){
+  :root{--bg:#f6f8fa; --panel:#ffffff; --panel2:#f0f3f6; --border:#d8dee4; --text:#1f2328; --muted:#59636e; --dim:#818c98; --chip:#eaeef2; --shadow:0 8px 24px rgba(31,35,40,.08)}
+}
+html[data-theme="light"]{--bg:#f6f8fa; --panel:#ffffff; --panel2:#f0f3f6; --border:#d8dee4; --text:#1f2328; --muted:#59636e; --dim:#818c98; --chip:#eaeef2; --shadow:0 8px 24px rgba(31,35,40,.08)}
+html[data-theme="dark"]{--bg:#0d1117; --panel:#161b22; --panel2:#1c2330; --border:#262e3b; --text:#e6edf3; --muted:#9aa7b4; --dim:#6b7684; --chip:#21262d; --shadow:0 8px 24px rgba(0,0,0,.25)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;line-height:1.55;min-height:100vh;overflow-x:hidden}
+a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
+.wrap{max-width:960px;margin:0 auto;padding:20px 16px 64px;width:100%}
+/* sticky header */
+.sticky{position:sticky;top:0;z-index:50;background:var(--bg);border-bottom:1px solid var(--border);backdrop-filter:blur(8px)}
+.sticky-in{max-width:960px;margin:0 auto;padding:10px 16px;display:flex;align-items:center;gap:10px}
+.sticky .ico{font-size:20px}.sticky .name{font-weight:700;font-size:15px}
+.sticky .sp{flex:1}
+.theme-btn{background:var(--chip);color:var(--text);border:1px solid var(--border);border-radius:999px;padding:6px 12px;font-size:13px;cursor:pointer;min-height:36px}
+/* hero */
+.hero{text-align:center;padding:28px 8px 8px}
+.hero .big{font-size:52px}
+h1{font-size:clamp(30px,6vw,46px);font-weight:800;letter-spacing:-.5px;line-height:1.1}
+.tag{color:var(--muted);font-size:clamp(15px,3.5vw,18px);max-width:640px;margin:10px auto 0}
+.tag b{color:var(--text)}
+.pillrow{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:16px}
+.pill{background:var(--chip);border:1px solid var(--border);border-radius:999px;padding:6px 12px;font-size:13px;color:var(--muted)}
+.pill b{color:var(--text)}
+h2{font-size:13px;text-transform:uppercase;letter-spacing:.14em;color:var(--dim);margin:40px 0 14px;display:flex;align-items:center;gap:10px}
+h2::after{content:"";flex:1;height:1px;background:var(--border)}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(140px,100%),1fr));gap:12px}
+.stat{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:16px 10px;text-align:center;box-shadow:var(--shadow)}
+.stat-num{font-size:34px;font-weight:800;line-height:1.1;color:var(--tint,var(--accent))}
+.stat-label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin-top:5px}
+.attn{background:var(--panel);border:1px solid var(--amber);border-radius:14px;overflow:hidden}
+.attn-item{display:flex;gap:12px;padding:14px 16px;border-bottom:1px solid var(--border);align-items:flex-start}
+.attn-item:last-child{border-bottom:none}
+.attn-item .n{font-size:20px;flex-shrink:0}
+.attn-item p{font-size:14px;color:var(--muted)} .attn-item p b{color:var(--text);font-size:15px}
+/* tester cards */
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(280px,100%),1fr));gap:12px}
+.card{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:16px 18px;box-shadow:var(--shadow)}
+a.card{display:block;color:inherit;text-decoration:none;cursor:pointer;transition:transform .15s ease,border-color .15s ease}
+a.card:hover{border-color:var(--accent);transform:translateY(-2px);text-decoration:none}
+a.card:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.openline{margin-top:10px;font-size:13px;font-weight:700;color:var(--accent)}
+.openline.none{color:var(--dim);font-weight:400}
+.card h3{font-size:16px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.badge{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;border-radius:999px;padding:3px 9px;background:var(--chip);color:var(--muted);border:1px solid var(--border)}
+.badge.go{color:#fff;background:var(--green);border-color:var(--green)}
+.badge.hold{color:#111;background:var(--amber);border-color:var(--amber)}
+.card .who{font-size:13px;color:var(--muted);margin-top:4px}
+.stages{display:flex;align-items:center;gap:0;margin:14px 0 6px;flex-wrap:nowrap}
+.stage{flex:1;text-align:center;position:relative}
+.stage .dot{width:22px;height:22px;border-radius:50%;margin:0 auto;border:2px solid var(--border);background:var(--panel2);display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--dim)}
+.stage.done .dot{background:var(--green);border-color:var(--green);color:#fff}
+.stage.now .dot{border-color:var(--amber);color:var(--amber)}
+.stage .lab{font-size:9.5px;color:var(--dim);text-transform:uppercase;letter-spacing:.04em;margin-top:4px;line-height:1.2}
+.stage::before{content:"";position:absolute;top:11px;left:-50%;width:100%;height:2px;background:var(--border);z-index:-1}
+.stage:first-child::before{display:none}
+.card .next{font-size:13px;color:var(--muted);margin-top:8px}.card .next b{color:var(--text)}
+.spot{background:linear-gradient(160deg,var(--panel2),var(--panel));border:1px solid var(--accent);border-radius:14px;padding:20px}
+.spot h3{font-size:19px;margin-bottom:6px}.spot p{font-size:14.5px;color:var(--muted)}.spot p b{color:var(--text)}
+.feed{background:var(--panel);border:1px solid var(--border);border-radius:14px;overflow:hidden}
+.feed-item{padding:14px 16px;border-bottom:1px solid var(--border)} .feed-item:last-child{border-bottom:none}
+.feed-item .meta{font-size:12px;color:var(--dim);text-transform:uppercase;letter-spacing:.06em}
+.feed-item p{font-size:14px;color:var(--muted);margin-top:3px}.feed-item p b{color:var(--text)}
+.rules{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(260px,100%),1fr));gap:12px}
+.rule{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:14px 16px;display:flex;gap:12px}
+.rule .ri{font-size:22px;flex-shrink:0}.rule strong{display:block;font-size:15px}.rule p{font-size:13.5px;color:var(--muted)}
+.dumpbox{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:18px}
+.dumpbox h3{font-size:16px}.dumpbox p{font-size:13.5px;color:var(--muted);margin:4px 0 12px}
+.dumpbox textarea{width:100%;background:var(--panel2);color:var(--text);border:1px solid var(--border);border-radius:10px;padding:12px;font:inherit;font-size:14px;resize:vertical}
+.dumpbox textarea:focus{outline:none;border-color:var(--accent)}
+.dumpbox .row{display:flex;gap:10px;align-items:center;margin-top:10px;flex-wrap:wrap}
+.dump-btn{background:var(--accent);color:#fff;border:none;border-radius:10px;padding:10px 18px;font-size:14px;font-weight:700;cursor:pointer;min-height:44px}
+.dump-status{font-size:13px;color:var(--muted)}
+footer{margin-top:48px;padding-top:20px;border-top:1px solid var(--border);color:var(--dim);font-size:13px;text-align:center}
+footer .links{display:flex;flex-wrap:wrap;gap:8px 18px;justify-content:center;margin-bottom:12px}
+@media(max-width:560px){.stages .lab{font-size:8.5px}.hero .big{font-size:42px}}
+</style>
+</head>
+<body>
+<div class="sticky"><div class="sticky-in"><span class="ico">🤝</span><span class="name">Tester Relations Buddy</span><span class="sp"></span><button class="theme-btn" id="themeBtn" type="button">◐ Theme</button></div></div>
+<div class="wrap">
+  <div class="hero">
+    <div class="big">🤝</div>
+    <h1>Tester Relations Buddy</h1>
+    <p class="tag">Dave's development tester program, run as <b>relations, not QA</b>. These are people Dave cares about — family, old friends, original Rae Assist users. I'm their concierge and Dave's memory for the whole program: who's invited, who's in, who's stuck, and what every tester has actually said.</p>
+    <div class="pillrow">
+      <span class="pill">Parent: 🧭 <a href="https://davedellaquila.github.io/buddy-system/project-buddy/">Project Buddy</a></span>
+      <span class="pill">Roster: 🧪 <a href="https://davedellaquila.github.io/buddy-system/tester-buddy/">Tester Buddy</a></span>
+      <span class="pill"><a href="https://docs.google.com/document/d/1BVXXDhlsHPY36qaF-JTWshoqYhokTQZW9UYLh2twDv8/edit">Job req</a></span>
+      <span class="pill"><a href="https://github.com/davedellaquila/tester-relations-buddy">Repo (private)</a></span>
+      <span class="pill"><a href="https://davedellaquila.github.io/buddy-system/">Buddy System dashboard</a></span>
+    </div>
+    <div style="margin-top:18px">
+      <div style="font-size:13px;color:var(--muted);margin-bottom:6px">🔊 <b style="color:var(--text)">Hear my role</b> — the first paragraph of my job req, in my own voice (Steady Blanket, cast by Dave Oct 24, 2026)</div>
+      <audio controls preload="none" src="role-intro.mp3" style="width:min(420px,100%)"></audio>
+    </div>
+  </div>
+
+  <h2>📊 The program, today — Oct 24, 2026</h2>
+  <div class="stats">
+    <div class="stat" style="--tint:var(--accent)"><div class="stat-num">10</div><div class="stat-label">On the list</div></div>
+    <div class="stat" style="--tint:var(--purple)"><div class="stat-num">1</div><div class="stat-label">Invited</div></div>
+    <div class="stat" style="--tint:var(--green)"><div class="stat-num">1</div><div class="stat-label">Accepted</div></div>
+    <div class="stat" style="--tint:var(--amber)"><div class="stat-num">0</div><div class="stat-label">Set up</div></div>
+    <div class="stat" style="--tint:var(--pink)"><div class="stat-num">9</div><div class="stat-label">Invite-pending</div></div>
+  </div>
+
+  <h2>⚠️ Needs Dave's attention</h2>
+  <div class="attn">
+    <div class="attn-item"><span class="n">🌱</span><div><p><b>1. Dave's founder dry run — then Nan is seed #1</b><br>Sequence (Dave, Oct 25): Dave runs the full onboarding process end-to-end himself <b>first</b>, cold — the guide's three procedural sections (device/OS setup, first-buddy walkthrough prompts, who-to-contact-when-stuck) are drafted and ready for his run; his snags seed the friction list. Then Nan, <b>observed</b> — Dave present, kit v1 is fine, her run doubles as the rehearsal. Then Penny's clean unassisted pass on the hardened kit, then the ring only as Dave names people. The kit (finished guide + seed package + walkthrough) is assembled and awaiting Dave's review — nothing goes to Nan or Penny until he approves it.</p></div></div>
+    <div class="attn-item"><span class="n">✉️</span><div><p><b>2. Review the ring invite draft — staged, NOT sent</b><br>One master invite in Dave's voice, with a personal line for each of Ron, Emile, Diana, Nan, Quentin, Sawyer, Amanda, and Jeremy. Dave sends, in his own channel, when Penny clears. Draft lives with Tester Relations Buddy — ask Astro for the latest version.</p></div></div>
+    <div class="attn-item"><span class="n">📄</span><div><p><b>3. Review the job req</b><br><a href="https://docs.google.com/document/d/1BVXXDhlsHPY36qaF-JTWshoqYhokTQZW9UYLh2twDv8/edit">Tester Relations Buddy — Job Req</a> — the review ask is in the main chat.</p></div></div>
+    <div class="attn-item"><span class="n">⏸️</span><div><p><b>4. Craig stays on hold</b><br>Potential tester (Apple, Money Buddy). Dave's note: evaluate features + onboarding after current work settles. No invite until Dave says go.</p></div></div>
+  </div>
+
+  <h2>🌱 The seeding sequence — Nan, then Penny</h2>
+  <div class="spot">
+    <h3>Seed #1: <a href="https://davedellaquila.github.io/buddy-system/nancy-buddy/">Nan Dell'Aquila ↗</a> — observed</h3>
+    <p>Dave relaxed the Penny-first gate on <b>Oct 25</b>: <b>Nan goes first because he can observe</b> — he's present for her seeding, the kit is allowed to be v1, and her pass doubles as the rehearsal. Then <a href="https://davedellaquila.github.io/buddy-system/penny-luedtke/">Penny Luedtke</a> — invited Oct 15, accepted instantly (“YES, YES, YES!!!”), white paper sent — runs the hardened kit <b>clean and unassisted</b> as the civilian rehearsal; her friction list still jumps the queue. A few others follow only as Dave names them. Craig stays held.</p>
+  </div>
+
+  <h2>🧭 Onboarding pipeline — invited → accepted → set up → first buddy → first feedback</h2>
+  <div class="grid" id="pipeline"></div>
+
+  <h2>💬 Feedback log — honest, sourced</h2>
+  <div class="feed">
+    <div class="feed-item"><div class="meta">2026-10-08 · Jeremy Miller · Money Buddy</div><p><b>7-point first-run feedback</b> — the overhaul driver: overwhelming feature load, default chart count, onboarding walkthrough placement, and a real bug question (unpaid October bills, blank upcoming). Proven tester — that's why he's top of the ring.</p></div>
+    <div class="feed-item"><div class="meta">2026-10-15 · Penny Luedtke · General</div><p><b>Accepted + asked about OS requirements.</b> Logged as acceptance, not first feedback — her substantive feedback starts with the unassisted pass.</p></div>
+    <div class="feed-item"><div class="meta">Standing rule</div><p>No smoothing. Every entry: date, tester, what they actually said, buddy/area, source link — kept in the tester list Dave owns.</p></div>
+  </div>
+
+  <h2>🧑‍🤝‍🧑 How I work</h2>
+  <div class="rules">
+    <div class="rule"><span class="ri">✍️</span><div><strong>I draft, Dave sends</strong><p>Every invite and check-in in Dave's voice, for Dave's review. I never contact a tester directly.</p></div></div>
+    <div class="rule"><span class="ri">🚫</span><div><strong>Relations, not QA</strong><p>I never test the software myself. I track people, stages, and what they've said — and who's stuck getting set up.</p></div></div>
+    <div class="rule"><span class="ri">📬</span><div><strong>Weekly digest to Astro</strong><p>While development testing runs: who moved a stage, who's stuck, and the themes across testers — so Dave hears it once, clearly.</p></div></div>
+    <div class="rule"><span class="ri">🔒</span><div><strong>Private by default</strong><p>Tester pages are a sneak peek, not public. Nothing a tester says gets quoted or shared without their permission.</p></div></div>
+    <div class="rule"><span class="ri">❤️</span><div><strong>Every guide teaches reactions</strong><p>Standing requirement (Dave, Oct 24, 2026): every tester guide carries the “Communicating with emoji reactions” section — a reaction can answer; ❤️ = full approval, full send; 👍 = seen, <i>not</i> an approval; use the whole range, there's no wrong way. It's in the onboarding guide draft and gated in the tracker — no guide ships without it.</p></div></div>
+  </div>
+
+  <h2>🧠 Brain dump</h2>
+  <div class="dumpbox">
+    <h3>Dump it here</h3>
+    <p>Raw and unfiltered — a name Dave mentioned, a tester thought, anything. Each dump is meant for this buddy's repo inbox (<code>docs/ingest.md</code> in the <a href="https://github.com/davedellaquila/tester-relations-buddy">private repo</a>). If no GitHub token is on this device, the dump queues locally on this device and says so — it is never silently dropped.</p>
+    <textarea id="dumpText" rows="4" placeholder="Dump what's on your mind about the tester program…"></textarea>
+    <div class="row"><button class="dump-btn" id="dumpBtn" type="button">Dump it</button><span class="dump-status" id="dumpStatus"></span></div>
+  </div>
+
+  <footer>
+    <div class="links">
+      <a href="https://docs.google.com/document/d/1BVXXDhlsHPY36qaF-JTWshoqYhokTQZW9UYLh2twDv8/edit">Job req</a>
+      <a href="https://github.com/davedellaquila/tester-relations-buddy">Repo</a>
+      <a href="https://davedellaquila.github.io/buddy-system/project-buddy/">🧭 Project Buddy</a>
+      <a href="https://davedellaquila.github.io/buddy-system/tester-buddy/">🧪 Tester Buddy</a>
+      <a href="https://davedellaquila.github.io/buddy-system/">Buddy System dashboard</a>
+    </div>
+    🤝 Tester Relations Buddy · Reports to Project Buddy; Dave via Astro · Roster source of truth: Dave's tester list (10 names, Oct 24, 2026)
+  </footer>
+</div>
+<script>
+var BASE="https://davedellaquila.github.io/buddy-system/";
+var TESTERS=[
+ {n:"Penny Luedtke",url:BASE+"penny-luedtke/",who:"Original Rae Assist user · NYC · Tester #1",badge:"REHEARSAL",cls:"go",stage:2,next:"<b>Next:</b> clean, unassisted onboarding — friction list jumps the queue."},
+ {n:"Jeremy Miller",who:"Dave's friend · first Money Buddy development tester",badge:"PROVEN",cls:"",stage:0,next:"<b>Next:</b> ring invite (draft staged). Legacy first feedback: Oct 8, 7 points."},
+ {n:"Craig",who:"At Apple · interested in Money Buddy",badge:"ON HOLD",cls:"hold",stage:0,next:"<b>Next:</b> nothing — Dave evaluates after current work settles."},
+ {n:"Ron Dell'Aquila",url:BASE+"ron-buddy/",who:"Dave's oldest brother · family ring",badge:"INVITE PENDING",cls:"",stage:0,next:"<b>Next:</b> ring invite, after Penny clears."},
+ {n:"Emile Dell'Aquila",url:BASE+"emile-buddy/",who:"Dave's middle brother · family ring",badge:"INVITE PENDING",cls:"",stage:0,next:"<b>Next:</b> ring invite, after Penny clears."},
+ {n:"Diana Mullins",who:"Rae Technology's fourth member · Pacific Bell days",badge:"INVITE PENDING",cls:"",stage:0,next:"<b>Next:</b> ring invite with the Rae-circle personal line."},
+ {n:"Nan Dell'Aquila",url:BASE+"nancy-buddy/",who:"Dave's wife · closest tester of all",badge:"SEED #1",cls:"go",stage:0,next:"<b>Next:</b> observed seeding with Dave present, once he approves the seed kit."},
+ {n:"Quentin Dell'Aquila",url:BASE+"quentin-buddy/",who:"Dave's son · family ring",badge:"INVITE PENDING",cls:"",stage:0,next:"<b>Next:</b> ring invite, after Penny clears."},
+ {n:"Sawyer Dell'Aquila",url:BASE+"sawyer-buddy/",who:"Dave's son · family ring",badge:"INVITE PENDING",cls:"",stage:0,next:"<b>Next:</b> ring invite, after Penny clears."},
+ {n:"Amanda Perez",url:BASE+"amanda-buddy/",who:"Quentin's fiancée · family ring",badge:"INVITE PENDING",cls:"",stage:0,next:"<b>Next:</b> ring invite, after Penny clears."}
+];
+var LABELS=["Invited","Accepted","Set up","1st buddy","1st feedback"];
+var grid=document.getElementById('pipeline');
+TESTERS.forEach(function(t){
+  var stages=LABELS.map(function(l,i){
+    var cls=i<t.stage?"done":(i===t.stage&&t.stage<2?"now":"");
+    var mark=i<t.stage?"✓":"";
+    return '<div class="stage '+cls+'"><div class="dot">'+mark+'</div><div class="lab">'+l+'</div></div>';
+  }).join('');
+  var card=document.createElement(t.url?'a':'div');card.className='card';
+  if(t.url){card.href=t.url;card.setAttribute('aria-label',t.n+' — open buddy homepage');}
+  var openline=t.url?'<div class="openline">Open '+t.n.split(' ')[0]+'’s buddy homepage ↗</div>':'<div class="openline none">No buddy homepage yet — tile stays put until one exists</div>';
+  card.innerHTML='<h3>'+t.n+' <span class="badge '+t.cls+'">'+t.badge+'</span></h3><div class="who">'+t.who+'</div><div class="stages">'+stages+'</div><div class="next">'+t.next+'</div>'+openline;
+  grid.appendChild(card);
+});
+document.getElementById('themeBtn').addEventListener('click',function(){
+  var h=document.documentElement;var cur=h.getAttribute('data-theme');
+  h.setAttribute('data-theme',cur==='dark'?'light':'dark');
+});
+document.getElementById('dumpBtn').addEventListener('click',function(){
+  var ta=document.getElementById('dumpText'),st=document.getElementById('dumpStatus');
+  var v=ta.value.trim(); if(!v){st.textContent='Write something first — even one line.';return;}
+  try{var k='testerRelations.ingest.queue';var q=JSON.parse(localStorage.getItem(k)||'[]');q.push({at:new Date().toISOString(),text:v});localStorage.setItem(k,JSON.stringify(q));}catch(e){}
+  ta.value=''; st.textContent='✓ Queued locally on this device for docs/ingest.md — no GitHub token here, so nothing was lost and nothing pretended to sync.';
+});
+</script>
+<!--
+  TIP JAR — canonical snippet (Dave's standard, 2026-10-24; motion v2, 2026-10-26)
+  Every buddy homepage and every page a buddy creates carries the tip jar.
+  Public pages especially: a reader who got value can say thanks.
+
+  USAGE: paste this whole block just before </body>. No dependencies.
+  The jar points at Dave's Ko-fi page by default. A page for a specific app
+  may override the destination with its own Ko-fi page later:
+      <div class="tipjar" ...> — change the href on the <a>.
+
+  DESIGN NOTES (keep it alive, never annoying):
+  - "Breathing" (v2): a calm but clearly visible pulse — the pill scales
+    1 → 1.045 over a 3.2s ease-in-out cycle while its glow swells with it.
+    (V1 breathed at 1.035 over 6s — Dave: "rather static." Too subtle.)
+  - "Shimmer" (v2): a soft light sweep crosses the pill once every ~8s —
+    a ~1.3s pass inside a long rest, built into the keyframe cycle.
+  - Hover: the jar spins (same move as the dashboard sidebar's tip jar).
+  - V1's hop + coin glint were retired in v2 — with the breathing and the
+    shimmer running, the stack got busy; breathing + shimmer + hover spin
+    is the trio now.
+  - prefers-reduced-motion: all animation off. The jar is just a link.
+  - Transform/opacity/box-shadow only — no layout shift.
+  - Works in dark and light mode; sits above page content (z-index 60) but
+    below modals on buddy pages.
+-->
+<style>
+  .tipjar{position:fixed;right:18px;bottom:18px;z-index:60;
+    font-family:inherit;-webkit-tap-highlight-color:transparent}
+  .tipjar a{display:inline-flex;align-items:center;gap:.5em;position:relative;overflow:hidden;
+    padding:.55em 1em;border-radius:999px;text-decoration:none;
+    font-size:.9rem;font-weight:600;line-height:1;
+    color:#fff;background:linear-gradient(135deg,#7c4dff,#b388ff);
+    box-shadow:0 6px 18px rgba(124,77,255,.35),0 2px 6px rgba(0,0,0,.25);
+    animation:tipjar-breathe 3.2s ease-in-out infinite}
+  .tipjar a::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;
+    background:linear-gradient(105deg,rgba(255,255,255,0) 35%,rgba(255,255,255,.45) 50%,rgba(255,255,255,0) 65%);
+    transform:translateX(-110%);animation:tipjar-sheen 8s ease-in-out infinite}
+  .tipjar .jar{display:inline-block;font-size:1.15em}
+  .tipjar a:hover .jar{animation:tipjar-spin .7s cubic-bezier(.34,1.56,.64,1)}
+  .tipjar a:focus-visible{outline:3px solid #ffd54f;outline-offset:3px}
+  @keyframes tipjar-breathe{0%,100%{transform:scale(1);box-shadow:0 6px 18px rgba(124,77,255,.35),0 2px 6px rgba(0,0,0,.25)}50%{transform:scale(1.045);box-shadow:0 9px 26px rgba(124,77,255,.55),0 3px 8px rgba(0,0,0,.28)}}
+  @keyframes tipjar-sheen{0%{transform:translateX(-110%)}16%{transform:translateX(110%)}100%{transform:translateX(110%)}}
+  @keyframes tipjar-spin{to{transform:rotate(360deg)}}
+  @media (prefers-reduced-motion: reduce){
+    .tipjar a,.tipjar a:hover .jar{animation:none}
+    .tipjar a::after{display:none}
+  }
+</style>
+<div class="tipjar">
+  <a href="https://ko-fi.com/davedellaquila" target="_blank" rel="noopener"
+     aria-label="Tip jar — if this page helped you, you can leave Dave a tip on Ko-fi">
+    <span class="jar">🫙</span><span class="tiptext">Tip Jar</span>
+  </a>
+</div>
+</body>
+</html>

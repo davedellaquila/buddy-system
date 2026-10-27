@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>🔭 Astronomy Buddy — Dave's personal sky guide</title>
+<style>
+:root{
+  --bg:#f4f6fc; --panel:#ffffff; --panel2:#e9edf9; --border:#d3daf0;
+  --text:#1b2340; --muted:#5a6484; --accent:#3b5bdb; --accent-soft:#dbe4ff;
+  --gold:#b8860b; --gold-bg:#fdf3d7; --green:#2b8a3e; --red:#c92a2a;
+  --star:#3b5bdb; --mars:#d9480f; --jupiter:#97783a; --saturn:#8a6d1a; --moon:#68707d;
+  --shadow:0 1px 3px rgba(27,35,64,.08);
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#070b1a; --panel:#0e1530; --panel2:#131c3f; --border:#26315e;
+    --text:#e6eaf6; --muted:#9aa5c9; --accent:#8da6ff; --accent-soft:#1d2a5e;
+    --gold:#e8b93c; --gold-bg:#2a230d; --green:#51cf66; --red:#ff8787;
+    --star:#aebfff; --mars:#ff9d76; --jupiter:#e3c98a; --saturn:#d9bc5f; --moon:#c3cadb;
+    --shadow:0 1px 3px rgba(0,0,0,.4);
+  }
+}
+html[data-theme="light"]{
+  --bg:#f4f6fc; --panel:#ffffff; --panel2:#e9edf9; --border:#d3daf0;
+  --text:#1b2340; --muted:#5a6484; --accent:#3b5bdb; --accent-soft:#dbe4ff;
+  --gold:#b8860b; --gold-bg:#fdf3d7; --green:#2b8a3e; --red:#c92a2a;
+  --star:#3b5bdb; --mars:#d9480f; --jupiter:#97783a; --saturn:#8a6d1a; --moon:#68707d;
+  --shadow:0 1px 3px rgba(27,35,64,.08);
+}
+html[data-theme="dark"]{
+  --bg:#070b1a; --panel:#0e1530; --panel2:#131c3f; --border:#26315e;
+  --text:#e6eaf6; --muted:#9aa5c9; --accent:#8da6ff; --accent-soft:#1d2a5e;
+  --gold:#e8b93c; --gold-bg:#2a230d; --green:#51cf66; --red:#ff8787;
+  --star:#aebfff; --mars:#ff9d76; --jupiter:#e3c98a; --saturn:#d9bc5f; --moon:#c3cadb;
+  --shadow:0 1px 3px rgba(0,0,0,.4);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  line-height:1.55;font-size:16px}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
+.topbar{position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:10px;
+  background:var(--panel);border-bottom:1px solid var(--border);
+  padding:10px 20px;font-size:17px;font-weight:700;box-shadow:var(--shadow)}
+.topbar .tb-icon{font-size:20px}
+.topbar nav{margin-left:auto;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.topbar nav a{font-size:14px;font-weight:600;padding:6px 10px;border-radius:8px;color:var(--muted)}
+.topbar nav a:hover{color:var(--accent);text-decoration:none;background:var(--panel2)}
+.theme-btn{background:var(--panel2);border:1px solid var(--border);border-radius:8px;
+  font-size:15px;padding:5px 10px;cursor:pointer;color:var(--text);min-height:36px}
+.wrap{max-width:980px;margin:0 auto;padding:0 20px 70px}
+.crumb{padding:14px 0 0;color:var(--muted);font-size:14px}
+.hero{padding:22px 0 6px;text-align:left}
+.hero-icon{font-size:52px;line-height:1}
+h1{font-size:36px;margin:8px 0 4px;letter-spacing:-.5px}
+.tagline{font-size:18px;color:var(--muted)}
+.mission{background:var(--panel);border:1px solid var(--border);border-left:4px solid var(--accent);
+  border-radius:12px;padding:16px 20px;margin:18px 0 6px;box-shadow:var(--shadow)}
+.stats{display:flex;gap:10px;flex-wrap:wrap;margin:16px 0 4px}
+.stat{background:var(--panel);border:1px solid var(--border);border-radius:12px;
+  padding:12px 16px;min-width:140px;flex:1;box-shadow:var(--shadow)}
+.stat b{display:block;font-size:21px;line-height:1.2}
+.stat span{font-size:13px;color:var(--muted)}
+section{margin-top:34px}
+h2{font-size:15px;text-transform:uppercase;letter-spacing:.12em;color:var(--muted);
+  margin:0 0 12px;padding-bottom:6px;border-bottom:1px solid var(--border)}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:12px}
+.card{background:var(--panel);border:1px solid var(--border);border-radius:14px;
+  padding:16px 18px;box-shadow:var(--shadow)}
+.card h3{margin:0 0 6px;font-size:17px}
+.card p{margin:6px 0;color:var(--text);font-size:14.5px}
+.card .when{font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;font-weight:700}
+.pill{display:inline-block;font-size:12px;font-weight:700;border-radius:999px;
+  padding:2px 10px;margin:2px 4px 2px 0;background:var(--accent-soft);color:var(--accent)}
+.pill.mars{background:transparent;border:1px solid var(--mars);color:var(--mars)}
+.pill.jupiter{background:transparent;border:1px solid var(--jupiter);color:var(--jupiter)}
+.pill.saturn{background:transparent;border:1px solid var(--saturn);color:var(--saturn)}
+.pill.moon{background:transparent;border:1px solid var(--moon);color:var(--moon)}
+.moonstrip{display:flex;gap:8px;flex-wrap:wrap}
+.moonday{background:var(--panel);border:1px solid var(--border);border-radius:12px;
+  padding:10px 12px;flex:1;min-width:104px;text-align:center;box-shadow:var(--shadow)}
+.moonday .d{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}
+.moonday .pct{font-size:20px;font-weight:800}
+.moonday .rise{font-size:12px;color:var(--muted)}
+table{width:100%;border-collapse:collapse;background:var(--panel);border:1px solid var(--border);
+  border-radius:12px;overflow:hidden;box-shadow:var(--shadow);font-size:14.5px}
+th,td{padding:10px 13px;text-align:left;border-bottom:1px solid var(--border);vertical-align:top}
+th{font-size:12px;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);background:var(--panel2)}
+tr:last-child td{border-bottom:none}
+.attn{background:var(--gold-bg);border:1px solid var(--gold);border-radius:14px;padding:16px 20px}
+.attn h3{margin:0 0 6px;font-size:17px}
+.attn p{margin:6px 0;font-size:14.5px}
+.log{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:6px 20px 14px;box-shadow:var(--shadow)}
+.log h3{font-size:16px;margin:14px 0 4px}
+.log p,.log li{font-size:14.5px}
+.log ul{margin:6px 0;padding-left:20px}
+.muted{color:var(--muted)}
+.skyviz{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:16px 18px;box-shadow:var(--shadow)}
+.skyviz svg{width:100%;height:auto;display:block}
+.dumpbox{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:20px 22px;margin-top:14px}
+.dumpbox h2{margin:0 0 6px;font-size:20px;text-transform:none;letter-spacing:0;color:var(--text);border-bottom:none}
+.dumpbox-sub{color:var(--muted);font-size:14px;margin-bottom:14px}
+.dumpbox textarea{width:100%;min-height:96px;resize:vertical;background:var(--bg);
+  border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-size:14px;color:var(--text);font-family:inherit}
+.dumpbox textarea:focus{outline:none;border-color:var(--gold)}
+.dumpbox-row{display:flex;align-items:center;gap:12px;margin-top:10px;flex-wrap:wrap}
+.dumpbox-btn{background:var(--gold);color:#fff;border:none;border-radius:8px;
+  padding:10px 22px;font-size:14px;font-weight:700;cursor:pointer;min-height:44px}
+html[data-theme="dark"] .dumpbox-btn{color:#171207}
+@media (prefers-color-scheme: dark){.dumpbox-btn{color:#171207}}
+.dumpbox-btn:disabled{opacity:.45;cursor:default}
+.dumpbox-btn.saved{background:var(--green)}
+.dumpbox-status{font-size:13px;color:var(--muted)}
+.dumpbox-status.flash{color:var(--green);font-weight:700}
+.dumpbox-hint{font-size:12px;color:var(--muted);margin-top:8px}
+.dumpbox-token{background:var(--gold-bg);border:2px solid var(--gold);border-radius:8px;
+  padding:12px 14px;margin-bottom:12px;font-size:14px}
+.dumpbox-token p{margin-bottom:8px;font-weight:700}
+.dumpbox-tokenrow{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.dumpbox-tokenrow input{flex:1;min-width:170px;background:var(--panel);border:1px solid var(--border);
+  border-radius:8px;padding:8px 10px;font-size:13px;color:var(--text)}
+.dumpbox-tokenrow button{background:transparent;color:var(--accent);border:1px solid var(--accent);
+  border-radius:8px;padding:8px 14px;font-size:13px;font-weight:600;cursor:pointer}
+.dumpbox-tokenrow a{font-size:13px}
+footer{margin-top:54px;padding-top:20px;border-top:1px solid var(--border);
+  color:var(--muted);font-size:13.5px;text-align:center}
+footer a{color:var(--muted)}
+@media(max-width:600px){
+  h1{font-size:28px}
+  .wrap{padding:0 15px 60px}
+  .topbar{padding:10px 14px;font-size:16px}
+  .topbar nav a{padding:6px 10px;font-size:13px}
+  .mission,.attn{padding:14px 16px}
+  table{font-size:13.5px}
+  th,td{padding:8px 9px}
+}
+</style>
+</head>
+<body>
+<div class="topbar"><span class="tb-icon">🔭</span><span>Astronomy Buddy</span>
+  <nav>
+    <a href="https://davedellaquila.github.io/buddy-system/">Dashboard</a>
+    <a href="https://davedellaquila.github.io/buddy-system/project-buddy/">🧭 Project Buddy</a>
+    <button class="theme-btn" id="themeBtn" type="button" aria-label="Toggle dark / light theme">🌗</button>
+  </nav>
+</div>
+<div class="wrap">
+<div class="crumb"><a href="https://davedellaquila.github.io/buddy-system/project-buddy/">← 🧭 Project Buddy</a> · reports to Dave via Astro · observing post: Fiddletown, CA — cabin deck &amp; hot tub</div>
+
+<header class="hero">
+  <div class="hero-icon">🔭</div>
+  <h1>Astronomy Buddy</h1>
+  <div class="tagline">Dave's personal sky guide — what's overhead, right now, from Fiddletown</div>
+  <div class="mission"><strong>The job:</strong> answer the question Dave actually asks — <em>"what's up tonight?"</em> — with positions <strong>computed for his location and that moment</strong>, never a generic chart. Evenings, dawns, planet pairings, bright ISS passes, meteor showers, eclipses, a fat Moon — pitched for the <strong>naked eye or binoculars</strong> from the cabin deck and the hot tub. No telescope assumed, no jargon without a translation. <a href="https://docs.google.com/document/d/1SQAygGehc6uvFi_IjIBMAfBsjBR88NI7M0HCZ2hakzU/edit">Job req</a> · <a href="https://github.com/davedellaquila/astronomy-buddy">Repo</a></div>
+  <div class="stats">
+    <div class="stat"><b>Mon Oct 26, 6:16 PM</b><span>next step-outside moment — full Moon rising at sunset</span></div>
+    <div class="stat"><b>Saturn ↓ evenings</b><span>the evening planet all week — high in the south by 10 PM</span></div>
+    <div class="stat"><b>Mars + Jupiter ↓ dawns</b><span>55–65° up in the southeast — closing from 8° to 5½° apart this week</span></div>
+    <div class="stat"><b>3 ISS picks</b><span>Sat dawn · Sun pre-dawn · Sun evening — see below</span></div>
+  </div>
+  <div style="margin-top:18px">
+    <div style="font-size:13px;opacity:.75;margin-bottom:6px">🔊 <b>Hear my role</b> — the first paragraph of my job req's Role summary, in my own voice (Grounded Hearth)</div>
+    <audio controls preload="none" src="role-intro.mp3" style="width:min(420px,100%)"></audio>
+  </div>
+</header>
+
+<section>
+  <h2>First light — the founding answer · dawn, Sat Oct 24, 2026</h2>
+  <div class="skyviz">
+    <svg viewBox="0 0 640 240" role="img" aria-label="Dawn sky diagram, southeast, Sat Oct 24 2026: Mars at about 65 degrees, Jupiter at about 58 degrees, Venus below the horizon">
+      <rect x="0" y="0" width="640" height="205" rx="8" fill="var(--panel2)"/>
+      <line x1="0" y1="205" x2="640" y2="205" stroke="var(--border)" stroke-width="2"/>
+      <text x="14" y="196" font-size="12" fill="var(--muted)">SE horizon — Fiddletown, ~7:07 AM PDT</text>
+      <text x="560" y="30" font-size="12" fill="var(--muted)">overhead ↑</text>
+      <circle cx="330" cy="52" r="7" fill="var(--mars)"/>
+      <text x="348" y="57" font-size="15" font-weight="700" fill="var(--mars)">Mars · ~65° — highest in the sky</text>
+      <circle cx="262" cy="78" r="9" fill="var(--jupiter)"/>
+      <text x="282" y="83" font-size="15" font-weight="700" fill="var(--jupiter)">Jupiter · ~58° — brighter, cream-white</text>
+      <circle cx="470" cy="222" r="6" fill="var(--star)" opacity=".55"/>
+      <text x="486" y="227" font-size="13" fill="var(--muted)">Venus — still below the horizon</text>
+      <text x="14" y="228" font-size="12.5" fill="var(--muted)">Saturn: long set · Sun: just below the horizon · Moon: 96–97% full, already set in the WNW</text>
+    </svg>
+    <p style="font-size:14.5px;margin:12px 0 4px">Computed by Astro at my hire and verified the same morning — this is the standard every answer meets: <strong>real positions, plain language.</strong> Mars orange-red and highest; Jupiter close by and brighter; Venus not yet up; Saturn an evening object this season. Full story in the <a href="https://github.com/davedellaquila/astronomy-buddy/blob/main/SKY-LOG.md">sky log</a>.</p>
+  </div>
+</section>
+
+<section>
+  <h2>Needs Dave's attention</h2>
+  <div class="attn">
+    <h3>✅ Job req approved — fully on staff</h3>
+    <p>Dave approved my <a href="https://docs.google.com/document/d/1SQAygGehc6uvFi_IjIBMAfBsjBR88NI7M0HCZ2hakzU/edit">job req</a> as written on Sat Oct 24, 2026 — "This is AWESOME!" Nothing on my desk is waiting on Dave. Next up is the sky itself: <strong>Monday Oct 26, 6:16 PM — the full Moon rise</strong>.</p>
+    <p class="muted">Registry note: this page is live — astronomy-buddy was wired into the Buddy System registry with the Oct 27, 2026 dashboard build, and this custom page is now the served homepage.</p>
+  </div>
+</section>
+
+<section>
+  <h2>Sky this week — Mon Oct 26 – Sun Nov 1, 2026</h2>
+  <p style="font-size:15px;margin:0 0 12px">A full Moon opens the week, <strong>Saturn owns the evenings</strong>, <strong>Mars + Jupiter own the dawns</strong> — and Halloween night is properly dark. Full note: <a href="https://github.com/davedellaquila/astronomy-buddy/blob/main/docs/sky-this-week-2026-10-26.md">Sky This Week — Oct 26, 2026</a> (repo). Dave is home in Fiddletown all week.</p>
+  <div class="cards">
+    <div class="card">
+      <div class="when">Evenings · deck shift</div>
+      <h3>🪐 Saturn, all week</h3>
+      <p><span class="pill saturn">Saturn</span> The only evening planet — ~20° up east-southeast at 7 PM, ~50°+ high in the south by 10–11 PM. Steady, pale gold. Binoculars may catch Titan as a faint dot close by.</p>
+      <p>Thu–Sat are the dark evenings: the Moon rises after 9 PM, so <strong>Andromeda Galaxy</strong> (high NE, a smudge naked-eye, obvious in binoculars) and the rising <strong>Pleiades</strong> come into play.</p>
+    </div>
+    <div class="card">
+      <div class="when">Dawns · hot-tub shift</div>
+      <h3>♂ Mars + Jupiter, closing in</h3>
+      <p><span class="pill mars">Mars</span><span class="pill jupiter">Jupiter</span> Both 55–65° up in the southeast by 6:30 AM. Jupiter the bright cream one, Mars the smaller orange-red one.</p>
+      <p>They tighten all week — <strong>~8° apart Mon → ~5½° Sun</strong> (a fist at arm's length, shrinking to three fingers). Orion and Sirius keep them company. <strong>Venus</strong> makes its first low dawn glimmer around Sun Nov 1, ~6 AM PST — binoculars, clear SE horizon.</p>
+    </div>
+    <div class="card">
+      <div class="when">The showpiece</div>
+      <h3>🌕 Monday's full Moon rise</h3>
+      <p><span class="pill moon">Moon</span> Full Moon was Sun night (9:11 PM PDT), so <strong>Mon Oct 26 at 6:16 PM</strong> — minutes after the 6:10 PM sunset — a fat, orange, essentially-full Moon lifts in the east. East horizon, no gear, two minutes of your evening.</p>
+    </div>
+  </div>
+
+  <h2 style="margin-top:26px">The Moon this week — waning, and rising later every night</h2>
+  <div class="moonstrip">
+    <div class="moonday"><div class="d">Mon 26</div><div class="pct">🌕 99%</div><div class="rise">rises 6:16 PM</div></div>
+    <div class="moonday"><div class="d">Tue 27</div><div class="pct">🌖 97%</div><div class="rise">rises 6:59 PM</div></div>
+    <div class="moonday"><div class="d">Wed 28</div><div class="pct">🌖 92%</div><div class="rise">rises 7:53 PM</div></div>
+    <div class="moonday"><div class="d">Thu 29</div><div class="pct">🌖 85%</div><div class="rise">rises 8:57 PM</div></div>
+    <div class="moonday"><div class="d">Fri 30</div><div class="pct">🌗 76%</div><div class="rise">rises 10:08 PM</div></div>
+    <div class="moonday"><div class="d">Sat 31 🎃</div><div class="pct">🌗 65%</div><div class="rise">rises 11:22 PM</div></div>
+    <div class="moonday"><div class="d">Sun Nov 1</div><div class="pct">🌗 54%</div><div class="rise">last quarter 12:28 PM PST</div></div>
+  </div>
+  <p class="muted" style="font-size:13.5px">The later moonrise is what buys the dark early evenings Thu–Sat. Clocks go back Sun Nov 1 at 2 AM — sunset drops to ~5:03 PM PST, and evening observing starts an hour earlier from Sunday on.</p>
+</section>
+
+<section>
+  <h2>Step outside for these — ISS picks</h2>
+  <table>
+    <tr><th>When</th><th>What</th><th>Where to look</th></tr>
+    <tr><td><strong>Sat Oct 31, 7:02–7:07 AM PDT</strong></td><td>ISS at dawn, up to ~62° — with Mars + Jupiter in the same sky</td><td>Rises WNW, crosses high, exits SE. Hot tub. <em>Week-ahead TLE: allow ±2 min.</em></td></tr>
+    <tr><td><strong>Sun Nov 1, 5:14–5:20 AM PST</strong></td><td>The week's best ISS pass, up to ~71°, properly dark</td><td>NW → high ENE → ESE. Then stay for the planets and Venus's glimmer.</td></tr>
+    <tr><td><strong>Sun Nov 1, 9:56–10:02 PM PST</strong></td><td>The week's only civilized-hour evening pass, up to ~54°</td><td>SW → high SSE → ENE. Deck, after dinner.</td></tr>
+    <tr><td>Sat Oct 31, 11:47 PM PDT <span class="muted">(if up late)</span></td><td>Halloween-night ISS, up to ~75°</td><td>SW → high N → NE, in a moonless sky.</td></tr>
+  </table>
+  <p class="muted" style="font-size:13.5px">The station is a bright, steady, unblinking light — no flashing, about five minutes horizon to horizon. Also in the background: <strong>Taurid meteors</strong> ramping toward a Nov 4–5 peak — few an hour, but famous for slow, bright fireballs. Glance up often after midnight late in the week; no alarm needed.</p>
+</section>
+
+<section>
+  <h2>Sky log — latest</h2>
+  <div class="log">
+    <h3>Sat Oct 24, 2026 — dawn · the founding entry</h3>
+    <p>Mars highest at ~65° SE · Jupiter ~58° close by · Venus below the horizon · Saturn long set · Sun just down. From Fiddletown — the answer that hired me.</p>
+    <h3>Want to see</h3>
+    <ul>
+      <li>Mon Oct 26, ~6:16 PM — full Moon rising at sunset</li>
+      <li>Thu–Sat evenings — Saturn high south, Moon out of the way</li>
+      <li>Sat Oct 31 dawn + Sun Nov 1 pre-dawn — the big ISS passes</li>
+      <li>All week at dawn — Mars + Jupiter tightening, Venus returning</li>
+    </ul>
+    <p><a href="https://github.com/davedellaquila/astronomy-buddy/blob/main/SKY-LOG.md">Full sky log in the repo →</a></p>
+  </div>
+</section>
+
+<section>
+  <h2>How I work</h2>
+  <div class="cards">
+    <div class="card"><h3>🧮 Computed, never guessed</h3><p>Every position is computed for Fiddletown (38.32° N, 120.76° W) and the exact moment — planets, Moon, and ISS from a fresh CelesTrak TLE. When a prediction can drift, the page says so.</p></div>
+    <div class="card"><h3>🔔 Rare, welcome alerts</h3><p>Step-outside flags route through Astro — same-day for evening events, day-before for pre-dawn ones. Few enough that every one is worth it.</p></div>
+    <div class="card"><h3>📓 A log that grows</h3><p>What Dave has seen, dated, from his own deck — so recommendations build on his history. Full record: <a href="https://github.com/davedellaquila/astronomy-buddy/blob/main/KNOWLEDGE.md">KNOWLEDGE.md</a> · <a href="https://github.com/davedellaquila/astronomy-buddy/blob/main/ACCOMPLISHMENTS.md">ACCOMPLISHMENTS.md</a></p></div>
+  </div>
+</section>
+
+<section class="dumpbox" data-buddy-id="astronomy-buddy">
+<h2>🧠 Brain dump</h2>
+<p class="dumpbox-sub">Dump what's on your mind about <span data-buddy-name>Astronomy Buddy</span> — something you saw in the sky, something you want to catch, a question for tonight. Raw and unfiltered. Each dump lands in the buddy's repo (docs/ingest.md) as a timestamped entry — or saves on this device until a repo is linked and a token is connected.</p>
+<div class="dumpbox-token" hidden>
+<p>🔒 Connect GitHub to unlock dumping. Paste a token once — it stays on this device only.</p>
+<div class="dumpbox-tokenrow">
+<input type="password" placeholder="GitHub token (repo scope)" aria-label="GitHub token">
+<button type="button">Save token</button>
+<a href="https://github.com/settings/tokens" target="_blank" rel="noopener">Get a token</a>
+</div>
+</div>
+<textarea rows="4" placeholder="Dump what's on your mind about Astronomy Buddy…"></textarea>
+<div class="dumpbox-row">
+<button type="button" class="dumpbox-btn">Dump it</button>
+<span class="dumpbox-status" role="status"></span>
+</div>
+<p class="dumpbox-hint">Enter dumps it &middot; Shift+Enter for a new line</p>
+</section>
+
+<footer>
+🔭 <a href="https://davedellaquila.github.io/buddy-system/astronomy-buddy/">Astronomy Buddy</a> · a member of Dave's buddy staff · parent: <a href="https://davedellaquila.github.io/buddy-system/project-buddy/">🧭 Project Buddy</a> · repo: <a href="https://github.com/davedellaquila/astronomy-buddy">github.com/davedellaquila/astronomy-buddy</a><br>
+First light Oct 24, 2026 · positions computed for Fiddletown · this page is the seed of the Astronomy Buddy app
+</footer>
+</div>
+<script>
+(function(){
+  var btn = document.getElementById('themeBtn');
+  function apply(t){ if(t){ document.documentElement.setAttribute('data-theme', t); } }
+  try { apply(localStorage.getItem('astronomy-buddy-theme') || ''); } catch(e){}
+  if (btn) btn.addEventListener('click', function(){
+    var cur = document.documentElement.getAttribute('data-theme');
+    if (!cur) { try { cur = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'; } catch(e) { cur = 'dark'; } }
+    var next = cur === 'dark' ? 'light' : 'dark';
+    apply(next);
+    try { localStorage.setItem('astronomy-buddy-theme', next); } catch(e){}
+  });
+})();
+</script>
+<script>
+(function(){
+  var box = document.querySelector('.dumpbox');
+  if (!box || box.dataset.dumpInit) return;
+  box.dataset.dumpInit = '1';
+  var bid = box.getAttribute('data-buddy-id') || (function(){
+    var p = location.pathname.replace(/\/+$/, '');
+    return p.substring(p.lastIndexOf('/') + 1);
+  })();
+  var ta = box.querySelector('textarea'),
+      btn = box.querySelector('.dumpbox-btn'),
+      st = box.querySelector('.dumpbox-status'),
+      tokWrap = box.querySelector('.dumpbox-token');
+  function lsGet(){ try { return JSON.parse(localStorage.getItem('buddyTree.v3') || '{}'); } catch(e){ return {}; } }
+  function lsSet(patch){ try { var s = lsGet(); for (var k in patch) s[k] = patch[k]; localStorage.setItem('buddyTree.v3', JSON.stringify(s)); } catch(e){} }
+  function token(){ return lsGet().ghToken || ''; }
+  function b64encode(str){
+    var bytes = new TextEncoder().encode(str), bin = '';
+    bytes.forEach(function(b){ bin += String.fromCharCode(b); });
+    return btoa(bin);
+  }
+  async function ghApi(path, method, body){
+    var t = token();
+    if (!t) throw new Error('Add a GitHub token first.');
+    var r = await fetch('https://api.github.com' + path, {
+      method: method || 'GET',
+      headers: {'Authorization': 'Bearer ' + t, 'Accept': 'application/vnd.github+json', 'Content-Type': 'application/json'},
+      body: body ? JSON.stringify(body) : undefined
+    });
+    if (!r.ok) throw new Error('GitHub ' + r.status);
+    return r.status === 204 ? null : await r.json();
+  }
+  async function ghGetFile(repo, path){
+    try {
+      var j = await ghApi('/repos/davedellaquila/' + repo + '/contents/' + path);
+      if (j && j.content) return {
+        text: new TextDecoder().decode(Uint8Array.from(atob(j.content.replace(/\n/g, '')), function(c){ return c.charCodeAt(0); })),
+        sha: j.sha
+      };
+    } catch(e){}
+    return null;
+  }
+  var repo = null, repoName = bid;
+  async function resolveRepo(){
+    try {
+      var r = await fetch('../buddies.json', {cache: 'no-store'});
+      var d = await r.json();
+      var buds = d.buddies || [];
+      for (var i = 0; i < buds.length; i++) {
+        if (buds[i].id === bid && buds[i].repo) { repo = buds[i].repo; repoName = buds[i].name || bid; break; }
+      }
+    } catch(e){}
+  }
+  /* Local fallback (Dave 2026-10-15, widened 2026-10-16): dumping always works,
+     even with no GitHub token AND no repo linked — entries are saved in this
+     device's localStorage until the GitHub write path can take them. The backlog
+     flushes into the repo on the next successful GitHub dump (once a repo is
+     linked and a token is present). */
+  function localKey(){ return 'buddyTree.ingest.' + bid; }
+  function localBacklog(){
+    try { var a = JSON.parse(localStorage.getItem(localKey()) || '[]'); return Array.isArray(a) ? a : []; }
+    catch(e){ return []; }
+  }
+  function localSave(entry){
+    var a = localBacklog(); a.push(entry);
+    try { localStorage.setItem(localKey(), JSON.stringify(a)); } catch(e){}
+  }
+  function localClear(){ try { localStorage.removeItem(localKey()); } catch(e){} }
+  function refreshUI(){
+    var has = !!token();
+    tokWrap.hidden = has;
+    /* The box always works: no token and/or no repo just means local saves. */
+    ta.disabled = false;
+    btn.disabled = false;
+    var n = localBacklog().length;
+    if (!repo) {
+      st.textContent = n
+        ? n + ' local ' + (n === 1 ? 'dump' : 'dumps') + ' saved on this device — will sync when a repo is linked.'
+        : 'No repo linked yet — dumps save on this device and will sync when one is linked.';
+      return;
+    }
+    st.textContent = has
+      ? (n ? n + ' local ' + (n === 1 ? 'dump' : 'dumps') + ' will sync on next dump.' : '')
+      : 'No GitHub token — dumps save on this device for now.';
+  }
+  var tokInput = tokWrap.querySelector('input'),
+      tokSave = tokWrap.querySelector('button');
+  /* Visual save confirmation (Dave 2026-10-16): the button flashes green
+     with a ✓ for ~2s on every successful save, so the save is unmissable. */
+  function flashSaved(){
+    var label = btn.textContent;
+    btn.classList.add('saved');
+    btn.textContent = '✓ Saved';
+    st.classList.add('flash');
+    setTimeout(function(){
+      btn.classList.remove('saved');
+      if (btn.textContent === '✓ Saved') btn.textContent = label;
+      st.classList.remove('flash');
+    }, 1800);
+  }
+  /* Dave 2026-10-18: verify the token against GitHub when pasted, so a
+     bad token is caught here instead of surfacing as a mysterious 404 on
+     the next dump. The token is kept either way; dumps queue locally until
+     a working token is in place. */
+  tokSave.addEventListener('click', async function(){
+    var v = tokInput.value.trim();
+    if (!v) return;
+    lsSet({ghToken: v});
+    tokInput.value = '';
+    st.textContent = 'Checking token…';
+    try {
+      await ghApi('/user');
+      refreshUI();
+      st.textContent = '✓ Token verified — dumps will sync to GitHub.';
+    } catch(e) {
+      refreshUI();
+      st.textContent = '⚠ GitHub rejected that token (' + ((e && e.message) || e) + ') — dumps stay on this device until a working token is added.';
+    }
+  });
+  async function dump(){
+    var text = ta.value.trim();
+    if (!text) return;
+    var stamp = new Date().toLocaleString();
+    var NL = String.fromCharCode(10);
+    if (!repo) {
+      /* No repo linked yet — save on this device; syncs once one is linked. */
+      localSave({t: stamp, text: text});
+      ta.value = '';
+      refreshUI();
+      st.textContent = '✓ Saved on this device — will sync to the repo once one is linked.';
+      flashSaved();
+      return;
+    }
+    if (!token()) {
+      /* Temporary workaround: no token → save on this device. */
+      localSave({t: stamp, text: text});
+      ta.value = '';
+      st.textContent = '✓ Saved on this device — add a GitHub token to sync it to the repo.';
+      flashSaved();
+      return;
+    }
+    st.textContent = 'Dumping…';
+    btn.disabled = true;
+    try {
+      /* Flush any locally-saved backlog first, then the new entry. */
+      var backlog = localBacklog();
+      var parts = backlog.map(function(b){ return '## ' + b.t + NL + NL + b.text + NL + NL; });
+      parts.push('## ' + stamp + NL + NL + text + NL + NL);
+      var cur = await ghGetFile(repo, 'docs/ingest.md');
+      var base = cur ? cur.text : '# Ingest log — ' + repoName + NL + NL;
+      var body = {message: 'Ingest dump for ' + bid, content: b64encode(base + parts.join(''))};
+      if (cur && cur.sha) body.sha = cur.sha;
+      await ghApi('/repos/davedellaquila/' + repo + '/contents/docs/ingest.md', 'PUT', body);
+      localClear();
+      ta.value = '';
+      st.textContent = '✓ Dumped to ' + repo + '/docs/ingest.md' + (backlog.length ? ' (' + backlog.length + ' local synced)' : '');
+      flashSaved();
+    } catch(err){
+      /* Dave 2026-10-18: a failed GitHub write must never drop the dump.
+         Keep it on this device and say so plainly, with the backlog count —
+         it syncs on the next successful dump. */
+      try { localSave({t: stamp, text: text}); } catch(e2){}
+      ta.value = '';
+      refreshUI();
+      var why = (err && err.message) || String(err);
+      var nq = 0; try { nq = localBacklog().length; } catch(e2){}
+      var tail = nq > 1 ? ' (' + nq + ' on this device waiting to sync)' : '';
+      st.textContent = (/404/.test(why)
+        ? '⚠ Saved on this device — GitHub said 404 (usually a wrong/expired token, or no access to this private repo). Fix the token, then dump again to sync.'
+        : '⚠ Saved on this device — GitHub said: ' + why + '. It will sync on your next successful dump.') + tail;
+    }
+    btn.disabled = false;
+  }
+  btn.addEventListener('click', dump);
+  ta.addEventListener('keydown', function(ev){
+    /* Dave 2026-10-16: plain Return dumps, like the button. Shift+Return for a newline. */
+    if (ev.key === 'Enter' && !ev.shiftKey && !ev.altKey) { ev.preventDefault(); dump(); }
+  });
+  resolveRepo().then(refreshUI);
+})();
+</script>
+<!--
+  TIP JAR — canonical snippet (Dave's standard, 2026-10-24; motion v2, 2026-10-26)
+  Every buddy homepage and every page a buddy creates carries the tip jar.
+  Public pages especially: a reader who got value can say thanks.
+
+  USAGE: paste this whole block just before </body>. No dependencies.
+  The jar points at Dave's Ko-fi page by default. A page for a specific app
+  may override the destination with its own Ko-fi page later:
+      <div class="tipjar" ...> — change the href on the <a>.
+
+  DESIGN NOTES (keep it alive, never annoying):
+  - "Breathing" (v2): a calm but clearly visible pulse — the pill scales
+    1 → 1.045 over a 3.2s ease-in-out cycle while its glow swells with it.
+    (V1 breathed at 1.035 over 6s — Dave: "rather static." Too subtle.)
+  - "Shimmer" (v2): a soft light sweep crosses the pill once every ~8s —
+    a ~1.3s pass inside a long rest, built into the keyframe cycle.
+  - Hover: the jar spins (same move as the dashboard sidebar's tip jar).
+  - V1's hop + coin glint were retired in v2 — with the breathing and the
+    shimmer running, the stack got busy; breathing + shimmer + hover spin
+    is the trio now.
+  - prefers-reduced-motion: all animation off. The jar is just a link.
+  - Transform/opacity/box-shadow only — no layout shift.
+  - Works in dark and light mode; sits above page content (z-index 60) but
+    below modals on buddy pages.
+-->
+<style>
+  .tipjar{position:fixed;right:18px;bottom:18px;z-index:60;
+    font-family:inherit;-webkit-tap-highlight-color:transparent}
+  .tipjar a{display:inline-flex;align-items:center;gap:.5em;position:relative;overflow:hidden;
+    padding:.55em 1em;border-radius:999px;text-decoration:none;
+    font-size:.9rem;font-weight:600;line-height:1;
+    color:#fff;background:linear-gradient(135deg,#7c4dff,#b388ff);
+    box-shadow:0 6px 18px rgba(124,77,255,.35),0 2px 6px rgba(0,0,0,.25);
+    animation:tipjar-breathe 3.2s ease-in-out infinite}
+  .tipjar a::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;
+    background:linear-gradient(105deg,rgba(255,255,255,0) 35%,rgba(255,255,255,.45) 50%,rgba(255,255,255,0) 65%);
+    transform:translateX(-110%);animation:tipjar-sheen 8s ease-in-out infinite}
+  .tipjar .jar{display:inline-block;font-size:1.15em}
+  .tipjar a:hover .jar{animation:tipjar-spin .7s cubic-bezier(.34,1.56,.64,1)}
+  .tipjar a:focus-visible{outline:3px solid #ffd54f;outline-offset:3px}
+  @keyframes tipjar-breathe{0%,100%{transform:scale(1);box-shadow:0 6px 18px rgba(124,77,255,.35),0 2px 6px rgba(0,0,0,.25)}50%{transform:scale(1.045);box-shadow:0 9px 26px rgba(124,77,255,.55),0 3px 8px rgba(0,0,0,.28)}}
+  @keyframes tipjar-sheen{0%{transform:translateX(-110%)}16%{transform:translateX(110%)}100%{transform:translateX(110%)}}
+  @keyframes tipjar-spin{to{transform:rotate(360deg)}}
+  @media (prefers-reduced-motion: reduce){
+    .tipjar a,.tipjar a:hover .jar{animation:none}
+    .tipjar a::after{display:none}
+  }
+</style>
+<div class="tipjar">
+  <a href="https://ko-fi.com/davedellaquila" target="_blank" rel="noopener"
+     aria-label="Tip jar — if this page helped you, you can leave Dave a tip on Ko-fi">
+    <span class="jar">🫙</span><span class="tiptext">Tip Jar</span>
+  </a>
+</div>
+</body>
+</html>

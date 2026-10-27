@@ -164,7 +164,7 @@ footer{margin-top:36px;padding-top:18px;border-top:1px solid var(--border);color
 <nav data-buddy-crumb style="margin-bottom:14px;font-size:14px;"><a href="https://davedellaquila.github.io/buddy-system/pet-buddy/" style="color:var(--muted);text-decoration:none;">← Pet Buddy</a></nav>
 <div class="stats"><span class="status st-active">Active</span><span class="stat"><b>1</b> need attention</span></div>
 <section class="card"><h2 class="kicker">About</h2><p class="mission">Rocky Buddy is the living dossier for Rocky — one of Dave&#x27;s three cats, alongside Marley (Mars) and Little Guy. Key facts, vet visits and medical notes, and reminders (flea treatment, vet appointments) live here.</p><p class="brief">https://docs.google.com/document/d/1Xm6mqiOZQxw7DqThK2NFjVh0deZEzK4r_EgpHxytjdM/edit</p><p class="persona">🎭 Persona: Boxing cornerman</p></section>
-<section class="card"><h2 class="kicker">Fact sheet — the data chain</h2><dl class="facts"><div class="fact"><dt>Buddy ID</dt><dd><code>rocky-buddy</code></dd></div><div class="fact"><dt>Kind</dt><dd>family</dd></div><div class="fact"><dt>Parent chain</dt><dd><a href="../family-buddy/">👨‍👩‍👧‍👦 Family Buddy</a> › <a href="../pet-buddy/">🐾 Pet Buddy</a></dd></div><div class="fact"><dt>Repository</dt><dd><a href="https://github.com/davedellaquila/rocky-buddy" target="_blank" rel="noopener">davedellaquila/rocky-buddy</a></dd></div><div class="fact"><dt>Homepage URL</dt><dd><code>rocky-buddy/</code></dd></div></dl></section>
+<section class="card"><h2 class="kicker">Fact sheet — the data chain</h2><dl class="facts"><div class="fact"><dt>Buddy ID</dt><dd><code>rocky-buddy</code></dd></div><div class="fact"><dt>Kind</dt><dd>family</dd></div><div class="fact"><dt>Parent chain</dt><dd><a href="../family-buddy/">👨‍👩‍👧‍👦 Family</a> › <a href="../pet-buddy/">🐾 Pet Buddy</a></dd></div><div class="fact"><dt>Repository</dt><dd><a href="https://github.com/davedellaquila/rocky-buddy" target="_blank" rel="noopener">davedellaquila/rocky-buddy</a></dd></div><div class="fact"><dt>Homepage URL</dt><dd><code>rocky-buddy/</code></dd></div></dl></section>
 <section class="card"><h2 class="kicker">Complete registry record (17 fields)</h2><dl class="facts"><div class="fact"><dt>id</dt><dd>rocky-buddy</dd></div><div class="fact"><dt>name</dt><dd>Rocky</dd></div><div class="fact"><dt>icon</dt><dd>🐈</dd></div><div class="fact"><dt>tagline</dt><dd>Living dossier for the cat Rocky</dd></div><div class="fact"><dt>type</dt><dd>pet</dd></div><div class="fact"><dt>kind</dt><dd>family</dd></div><div class="fact"><dt>status</dt><dd>Active</dd></div><div class="fact"><dt>statusClass</dt><dd>st-active</dd></div><div class="fact"><dt>parent</dt><dd>pet-buddy</dd></div><div class="fact"><dt>mission</dt><dd>Rocky Buddy is the living dossier for Rocky — one of Dave&#x27;s three cats, alongside Marley (Mars) and Little Guy. Key facts, vet visits and medical notes, and reminders (flea treatment, vet appointments) live here.</dd></div><div class="fact"><dt>brief</dt><dd><a href="https://docs.google.com/document/d/1Xm6mqiOZQxw7DqThK2NFjVh0deZEzK4r_EgpHxytjdM/edit" target="_blank" rel="noopener">https://docs.google.com/document/d/1Xm6mqiOZQxw7DqThK2NFjVh0deZEzK4r_EgpHxytjdM/edit</a></dd></div><div class="fact"><dt>persona</dt><dd>Boxing cornerman</dd></div><div class="fact"><dt>repo</dt><dd>rocky-buddy</dd></div><div class="fact"><dt>homepage</dt><dd>rocky-buddy/</dd></div><div class="fact"><dt>docs</dt><dd><span class="unset">— not set —</span></dd></div><div class="fact"><dt>attention</dt><dd>Four open questions about Rocky: age, breed, vet history, which house he lives at — flagged, not guessed.</dd></div><div class="fact"><dt>photos</dt><dd><span class="unset">— not set —</span></dd></div></dl></section>
 <section class="card"><h2 class="kicker">Needs attention (1)</h2><div class="attn"><div class="aitem"><span class="adot">●</span><div><div>Four open questions about Rocky: age, breed, vet history, which house he lives at — flagged, not guessed.</div><div class="adate">2026-10-09</div></div></div></div></section>
 
@@ -203,7 +203,7 @@ footer{margin-top:36px;padding-top:18px;border-top:1px solid var(--border);color
 <p class="dumpbox-hint">Enter dumps it &middot; Shift+Enter for a new line</p>
 </section>
 
-<footer>Default Homepage v3 — "The Dossier" · Generated 2026-10-21 · Part of the Buddy System<br>
+<footer>Default Homepage v3 — "The Dossier" · Generated 2026-10-27 · Part of the Buddy System<br>
 <span class="muted">Archived PDF snapshots live in the buddy-system archive folder.</span></footer>
 </div>
 
@@ -798,5 +798,59 @@ footer{margin-top:36px;padding-top:18px;border-top:1px solid var(--border);color
 })();
 </script>
 
+<!--
+  TIP JAR — canonical snippet (Dave's standard, 2026-10-24; motion v2, 2026-10-26)
+  Every buddy homepage and every page a buddy creates carries the tip jar.
+  Public pages especially: a reader who got value can say thanks.
+
+  USAGE: paste this whole block just before </body>. No dependencies.
+  The jar points at Dave's Ko-fi page by default. A page for a specific app
+  may override the destination with its own Ko-fi page later:
+      <div class="tipjar" ...> — change the href on the <a>.
+
+  DESIGN NOTES (keep it alive, never annoying):
+  - "Breathing" (v2): a calm but clearly visible pulse — the pill scales
+    1 → 1.045 over a 3.2s ease-in-out cycle while its glow swells with it.
+    (V1 breathed at 1.035 over 6s — Dave: "rather static." Too subtle.)
+  - "Shimmer" (v2): a soft light sweep crosses the pill once every ~8s —
+    a ~1.3s pass inside a long rest, built into the keyframe cycle.
+  - Hover: the jar spins (same move as the dashboard sidebar's tip jar).
+  - V1's hop + coin glint were retired in v2 — with the breathing and the
+    shimmer running, the stack got busy; breathing + shimmer + hover spin
+    is the trio now.
+  - prefers-reduced-motion: all animation off. The jar is just a link.
+  - Transform/opacity/box-shadow only — no layout shift.
+  - Works in dark and light mode; sits above page content (z-index 60) but
+    below modals on buddy pages.
+-->
+<style>
+  .tipjar{position:fixed;right:18px;bottom:18px;z-index:60;
+    font-family:inherit;-webkit-tap-highlight-color:transparent}
+  .tipjar a{display:inline-flex;align-items:center;gap:.5em;position:relative;overflow:hidden;
+    padding:.55em 1em;border-radius:999px;text-decoration:none;
+    font-size:.9rem;font-weight:600;line-height:1;
+    color:#fff;background:linear-gradient(135deg,#7c4dff,#b388ff);
+    box-shadow:0 6px 18px rgba(124,77,255,.35),0 2px 6px rgba(0,0,0,.25);
+    animation:tipjar-breathe 3.2s ease-in-out infinite}
+  .tipjar a::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;
+    background:linear-gradient(105deg,rgba(255,255,255,0) 35%,rgba(255,255,255,.45) 50%,rgba(255,255,255,0) 65%);
+    transform:translateX(-110%);animation:tipjar-sheen 8s ease-in-out infinite}
+  .tipjar .jar{display:inline-block;font-size:1.15em}
+  .tipjar a:hover .jar{animation:tipjar-spin .7s cubic-bezier(.34,1.56,.64,1)}
+  .tipjar a:focus-visible{outline:3px solid #ffd54f;outline-offset:3px}
+  @keyframes tipjar-breathe{0%,100%{transform:scale(1);box-shadow:0 6px 18px rgba(124,77,255,.35),0 2px 6px rgba(0,0,0,.25)}50%{transform:scale(1.045);box-shadow:0 9px 26px rgba(124,77,255,.55),0 3px 8px rgba(0,0,0,.28)}}
+  @keyframes tipjar-sheen{0%{transform:translateX(-110%)}16%{transform:translateX(110%)}100%{transform:translateX(110%)}}
+  @keyframes tipjar-spin{to{transform:rotate(360deg)}}
+  @media (prefers-reduced-motion: reduce){
+    .tipjar a,.tipjar a:hover .jar{animation:none}
+    .tipjar a::after{display:none}
+  }
+</style>
+<div class="tipjar">
+  <a href="https://ko-fi.com/davedellaquila" target="_blank" rel="noopener"
+     aria-label="Tip jar — if this page helped you, you can leave Dave a tip on Ko-fi">
+    <span class="jar">🫙</span><span class="tiptext">Tip Jar</span>
+  </a>
+</div>
 </body>
 </html>
