@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<meta name="color-scheme" content="dark light">
+<title>Decision Buddy — Dave's Decision Journal</title>
+<style>
+:root{
+  color-scheme:light;
+  --bg:#f6f4ef; --panel:#ffffff; --card:#ffffff; --border:#ddd6c9;
+  --text:#1d1a14; --muted:#6b6353;
+  --gold:#9a6b00; --gold-bg:rgba(217,154,38,.13);
+  --red:#b42318; --red-bg:rgba(217,48,37,.09);
+  --green:#1a7f37; --green-bg:rgba(26,127,55,.09);
+  --accent:#0969da;
+  --ring1:#d93025; --ring2:#e8710a; --ring3:#9a6b00; --ring4:#57606a;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    color-scheme:dark;
+    --bg:#0e0d0a; --panel:#171510; --card:#1c1913; --border:#37312a;
+    --text:#ece7db; --muted:#a39a86;
+    --gold:#e3a008; --gold-bg:rgba(227,160,8,.13);
+    --red:#ff7b72; --red-bg:rgba(248,81,73,.13);
+    --green:#5fd08a; --green-bg:rgba(63,185,80,.12);
+    --accent:#58a6ff;
+    --ring1:#ff7b72; --ring2:#f29900; --ring3:#e3a008; --ring4:#8b949e;
+  }
+}
+html[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#0e0d0a; --panel:#171510; --card:#1c1913; --border:#37312a;
+  --text:#ece7db; --muted:#a39a86;
+  --gold:#e3a008; --gold-bg:rgba(227,160,8,.13);
+  --red:#ff7b72; --red-bg:rgba(248,81,73,.13);
+  --green:#5fd08a; --green-bg:rgba(63,185,80,.12);
+  --accent:#58a6ff;
+  --ring1:#ff7b72; --ring2:#f29900; --ring3:#e3a008; --ring4:#8b949e;
+}
+html[data-theme="light"]{
+  color-scheme:light;
+  --bg:#f6f4ef; --panel:#ffffff; --card:#ffffff; --border:#ddd6c9;
+  --text:#1d1a14; --muted:#6b6353;
+  --gold:#9a6b00; --gold-bg:rgba(217,154,38,.13);
+  --red:#b42318; --red-bg:rgba(217,48,37,.09);
+  --green:#1a7f37; --green-bg:rgba(26,127,55,.09);
+  --accent:#0969da;
+  --ring1:#d93025; --ring2:#e8710a; --ring3:#9a6b00; --ring4:#57606a;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{overflow-x:hidden}
+body{background:var(--bg);color:var(--text);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;
+  line-height:1.6;min-height:100vh;overflow-x:hidden}
+a{color:var(--accent)}
+.wrap{max-width:920px;margin:0 auto;padding:0 20px 72px}
+/* sticky header — icon left of the page name, content scrolls underneath */
+.topbar{position:sticky;top:0;z-index:60;display:flex;align-items:center;gap:10px;
+  background:var(--bg);border-bottom:1px solid var(--border);
+  padding:10px 20px;font-size:17px;font-weight:700}
+.topbar .tb-icon{font-size:22px;line-height:1}
+.topbar nav{margin-left:auto;display:flex;gap:8px;align-items:center}
+.topbar nav a{color:var(--muted);text-decoration:none;font-size:14px;font-weight:600;
+  border:1px solid var(--border);border-radius:999px;padding:6px 13px;background:var(--panel)}
+.topbar nav a:hover{color:var(--text);border-color:var(--gold)}
+.theme-btn{background:var(--panel);border:1px solid var(--border);border-radius:999px;
+  color:var(--text);padding:6px 13px;font-size:14px;cursor:pointer}
+.theme-btn:hover{border-color:var(--gold)}
+.crumb{padding:14px 2px 0;font-size:14px}
+.crumb a{color:var(--muted);text-decoration:none}
+.crumb a:hover{color:var(--text)}
+header.hero{text-align:center;padding:26px 0 6px}
+.hero-icon{font-size:62px;line-height:1.1}
+h1{font-size:34px;letter-spacing:-.5px;margin:6px 0}
+.tagline{color:var(--muted);font-size:17px}
+.mission{border:1px solid var(--border);border-left:4px solid var(--gold);
+  border-radius:0 12px 12px 0;background:var(--panel);
+  padding:18px 22px;font-size:16px;margin:22px auto 4px;max-width:760px;text-align:left}
+.mission strong{color:var(--gold)}
+.stats{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:20px 0 4px}
+.stat{font-size:13px;color:var(--muted);background:var(--panel);border:1px solid var(--border);
+  border-radius:999px;padding:5px 13px}
+.stat b{color:var(--text)}
+h2{font-size:13px;text-transform:uppercase;letter-spacing:.14em;color:var(--muted);
+  margin:46px 0 6px;display:flex;align-items:center;gap:10px}
+h2::after{content:"";flex:1;height:1px;background:var(--border)}
+.secsub{color:var(--muted);font-size:14px;margin-bottom:14px}
+.rings{display:flex;gap:22px;align-items:center;background:var(--panel);
+  border:1px solid var(--border);border-radius:14px;padding:20px 22px;margin-top:14px;flex-wrap:wrap}
+.rings svg{flex:none}
+.rings ul{list-style:none;font-size:14px}
+.rings li{margin:5px 0;color:var(--muted)}
+.rings li b{color:var(--text)}
+.dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:8px;vertical-align:baseline}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(262px,1fr));gap:12px}
+.qcard{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:17px 19px}
+.qcard.hot{border-color:var(--red)}
+.qcard h3{font-size:16px;margin:0 34px 6px 0;line-height:1.35}
+.qcard h3 a{color:var(--text);text-decoration:none}
+.qcard h3 a:hover{color:var(--accent);text-decoration:underline}
+.qcard p{font-size:14px;color:var(--muted)}
+.qnum{float:right;font-size:12px;font-weight:800;color:var(--muted);letter-spacing:.06em}
+.pills{display:flex;gap:6px;flex-wrap:wrap;margin-top:11px}
+.pill{font-size:11px;font-weight:700;letter-spacing:.05em;border-radius:999px;padding:3px 10px;white-space:nowrap;border:1px solid}
+.pill.stakes-h{color:var(--red);background:var(--red-bg);border-color:var(--red)}
+.pill.stakes-m{color:var(--gold);background:var(--gold-bg);border-color:var(--gold)}
+.pill.press-h{color:var(--red);background:var(--red-bg);border-color:var(--red)}
+.pill.press-m{color:var(--gold);background:var(--gold-bg);border-color:var(--gold)}
+.pill.door{color:var(--muted);border-color:var(--border);background:var(--bg)}
+.pill.next{color:var(--green);background:var(--green-bg);border-color:var(--green)}
+.walk{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:6px 20px}
+.walk .wrow{display:flex;gap:13px;padding:13px 0;border-top:1px solid var(--border);font-size:15px;align-items:baseline}
+.walk .wrow:first-child{border-top:0}
+.walk .wid{font-weight:800;color:var(--gold);font-size:13px;white-space:nowrap;min-width:38px}
+.walk .wrow p{color:var(--muted);font-size:14px}
+.walk .wrow a{font-weight:600;text-decoration:none}
+.walk .wrow a:hover{text-decoration:underline}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{display:inline-flex;align-items:center;gap:7px;background:var(--panel);
+  border:1px solid var(--border);border-radius:999px;padding:8px 14px;
+  color:var(--text);text-decoration:none;font-size:14px;font-weight:600;min-height:40px}
+.chip:hover{border-color:var(--gold)}
+.chip small{color:var(--muted);font-weight:500}
+.chip.t1{border-color:var(--red)}
+.decided{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:6px 20px}
+.decided .drow{display:flex;gap:13px;padding:12px 0;border-top:1px solid var(--border);font-size:15px;align-items:baseline}
+.decided .drow:first-child{border-top:0}
+.decided .did{font-weight:800;color:var(--green);font-size:13px;white-space:nowrap}
+.decided p{color:var(--muted);font-size:14px}
+.two{display:grid;grid-template-columns:repeat(auto-fit,minmax(262px,1fr));gap:12px}
+.panelcard{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:18px 20px}
+.panelcard h3{font-size:16px;margin-bottom:8px}
+.panelcard h3 a{text-decoration:none;color:var(--text)}
+.panelcard h3 a:hover{color:var(--accent)}
+.panelcard p,.panelcard li{font-size:14px;color:var(--muted)}
+.panelcard ul{margin:6px 0 0 18px}
+.panelcard li{margin:4px 0}
+.howto{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.howto .step{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:16px 18px}
+.howto .step .n{font-size:22px}
+.howto .step h3{font-size:15px;margin:6px 0 4px}
+.howto .step p{font-size:14px;color:var(--muted)}
+.files{display:flex;flex-wrap:wrap;gap:10px}
+a.btn{background:var(--panel);border:1px solid var(--border);border-radius:10px;
+  padding:11px 18px;text-decoration:none;color:var(--text);font-weight:600;font-size:15px}
+a.btn:hover{border-color:var(--gold)}
+a.btn small{display:block;font-weight:500;color:var(--muted);font-size:12.5px;margin-top:2px}
+/* brain dump — standard fleet pattern */
+.dumpbox{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:20px 22px;margin-top:14px}
+.dumpbox h2{margin:0 0 6px;font-size:20px;text-transform:none;letter-spacing:0;color:var(--text)}
+.dumpbox h2::after{display:none}
+.dumpbox-sub{color:var(--muted);font-size:14px;margin-bottom:14px}
+.dumpbox textarea{width:100%;min-height:96px;resize:vertical;background:var(--bg);
+  border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-size:14px;color:var(--text);font-family:inherit}
+.dumpbox textarea:focus{outline:none;border-color:var(--gold)}
+.dumpbox-row{display:flex;align-items:center;gap:12px;margin-top:10px;flex-wrap:wrap}
+.dumpbox-btn{background:var(--gold);color:#fff;border:none;border-radius:8px;
+  padding:10px 22px;font-size:14px;font-weight:700;cursor:pointer;min-height:44px}
+html[data-theme="dark"] .dumpbox-btn{color:#171207}
+@media (prefers-color-scheme: dark){.dumpbox-btn{color:#171207}}
+.dumpbox-btn:disabled{opacity:.45;cursor:default}
+.dumpbox-btn.saved{background:var(--green)}
+.dumpbox-status{font-size:13px;color:var(--muted)}
+.dumpbox-status.flash{color:var(--green);font-weight:700}
+.dumpbox-hint{font-size:12px;color:var(--muted);margin-top:8px}
+.dumpbox-token{background:var(--gold-bg);border:2px solid var(--gold);border-radius:8px;
+  padding:12px 14px;margin-bottom:12px;font-size:14px}
+.dumpbox-token p{margin-bottom:8px;font-weight:700}
+.dumpbox-tokenrow{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.dumpbox-tokenrow input{flex:1;min-width:170px;background:var(--panel);border:1px solid var(--border);
+  border-radius:8px;padding:8px 10px;font-size:13px;color:var(--text)}
+.dumpbox-tokenrow button{background:transparent;color:var(--accent);border:1px solid var(--accent);
+  border-radius:8px;padding:8px 14px;font-size:13px;font-weight:600;cursor:pointer}
+.dumpbox-tokenrow a{font-size:13px}
+footer{margin-top:54px;padding-top:20px;border-top:1px solid var(--border);
+  color:var(--muted);font-size:13.5px;text-align:center}
+footer a{color:var(--muted)}
+@media(max-width:600px){
+  h1{font-size:28px}
+  .wrap{padding:0 15px 60px}
+  .topbar{padding:10px 14px;font-size:16px}
+  .topbar nav a{padding:6px 10px;font-size:13px}
+  .rings{flex-direction:column;text-align:left;align-items:flex-start}
+  .mission{padding:16px 18px}
+}
+</style>
+</head>
+<body>
+<div class="topbar"><span class="tb-icon">🎯</span><span>Decision Buddy</span>
+  <nav>
+    <a href="https://davedellaquila.github.io/buddy-system/">Dashboard</a>
+    <a href="https://davedellaquila.github.io/buddy-system/project-buddy/">🧭 Project Buddy</a>
+    <button class="theme-btn" id="themeBtn" type="button" aria-label="Toggle dark / light theme">🌗</button>
+  </nav>
+</div>
+<div class="wrap">
+<div class="crumb"><a href="https://davedellaquila.github.io/buddy-system/project-buddy/">← 🧭 Project Buddy</a> · reports to Dave via Astro</div>
+
+<header class="hero">
+  <div class="hero-icon">🎯</div>
+  <h1>Decision Buddy</h1>
+  <div class="tagline">Dave's decision journal &amp; framing partner</div>
+  <div class="mission"><strong>The job:</strong> when a consequential decision starts forming, I structure it <em>before</em> it's made — the options, the criteria, the reasoning, the outcome Dave expects — all written down with a date. Then I follow up at 30, 60, and 90 days to record what actually happened. I keep the live queue of everything waiting on Dave's call, ranked by stakes × time pressure, and feed it to Astro. <strong>I frame and track · Dave decides · Astro executes.</strong></div>
+  <div class="stats">
+    <span class="stat"><b>27</b> calls in the ranked queue</span>
+    <span class="stat"><b>16</b> held briefs tracked</span>
+    <span class="stat"><b>11</b> decisions in the journal</span>
+    <span class="stat">Charter: <b>approved Oct 24, 2026</b> — job req as written</span>
+    <span class="stat">Next outcome review: <b>Nov 20, 2026</b></span>
+    <span class="stat">Queue reconciled: <b>Oct 24, 2026</b></span>
+  </div>
+</header>
+
+<h2>The queue at a glance</h2>
+<p class="secsub">Four tiers, one ranked pass — reconciled Oct 24, 2026 against the registry and the walk record. The full register, with every brief link, lives in <a href="https://github.com/davedellaquila/decision-buddy/blob/master/KNOWLEDGE.md">KNOWLEDGE.md</a> in the <a href="https://github.com/davedellaquila/decision-buddy">Decision Buddy repo</a>.</p>
+<div class="rings">
+  <svg width="150" height="150" viewBox="0 0 150 150" role="img" aria-label="Concentric rings showing the four queue tiers">
+    <circle cx="75" cy="75" r="70" fill="none" stroke="var(--ring4)" stroke-width="7" opacity=".55"/>
+    <circle cx="75" cy="75" r="52" fill="none" stroke="var(--ring3)" stroke-width="7" opacity=".75"/>
+    <circle cx="75" cy="75" r="34" fill="none" stroke="var(--ring2)" stroke-width="7" opacity=".9"/>
+    <circle cx="75" cy="75" r="16" fill="var(--ring1)"/>
+  </svg>
+  <ul>
+    <li><span class="dot" style="background:var(--ring1)"></span><b>Tier 1 · Decide first (5)</b> — live clocks &amp; real exposure: the estate lease, estate timing, public-exposure closers, the launch gate, the portfolio rebuild.</li>
+    <li><span class="dot" style="background:var(--ring2)"></span><b>Tier 2 · Gates (4)</b> — privacy model, property architecture, wedding budget, suite brand.</li>
+    <li><span class="dot" style="background:var(--ring3)"></span><b>Tier 3 · The walk (10)</b> — Astro's one-at-a-time backlog, D5 at the front door.</li>
+    <li><span class="dot" style="background:var(--ring4)"></span><b>Tier 4 · Quick calls (8)</b> — held briefs that fall to a single tap, cheapest first.</li>
+  </ul>
+</div>
+
+<h2>Decide first — Tier 1</h2>
+<p class="secsub">Highest stakes × time pressure. Each card names the owner — the decision stays with them; this page just keeps the queue honest.</p>
+<div class="grid">
+  <div class="qcard hot"><span class="qnum">Q1</span>
+    <h3><a href="https://davedellaquila.github.io/buddy-system/larry-osana/">🔑 Larry Osana — the lease</a></h3>
+    <p>A new lease naming the estate as landlord. Flagged urgent since Oct 15; the tenancy runs without a correct contract until Dave calls it. <a href="https://docs.google.com/document/d/1jaBqA--enkhYDjEfYVt5ZcbSaRF1f3hfVybIn24pNwQ/edit">Dossier →</a></p>
+    <div class="pills"><span class="pill stakes-h">Stakes: High</span><span class="pill press-h">Pressure: High</span><span class="pill door">🔒 One-way door</span></div>
+  </div>
+  <div class="qcard hot"><span class="qnum">Q2</span>
+    <h3><a href="https://davedellaquila.github.io/buddy-system/emil-estate/">🏛️ Emil's Estate — timing &amp; REG 5</a></h3>
+    <p>Inheritance timing and the REG 5 threshold check for Dad's estate. Estate deadlines run whether the queue does or not — and Q1 hangs off this estate. <a href="https://docs.google.com/document/d/18oyr177HgtrWsWtStp783D_Qm9dVeMk9BHoAczW-A04/edit">Mission statement →</a></p>
+    <div class="pills"><span class="pill stakes-h">Stakes: High</span><span class="pill press-h">Pressure: Med-High</span><span class="pill door">🔒 One-way door</span></div>
+  </div>
+  <div class="qcard"><span class="qnum">Q3</span>
+    <h3><a href="https://davedellaquila.github.io/buddy-system/project-buddy/">🧭 Lockdown — Phase-0 closers</a></h3>
+    <p>Two cheap harm-reducers for the public dashboard: sign off the strip list (attention URLs, doc links, sensitive missions) and approve GitHub Pro (~$4/mo) so the source repo can go private. Noindex already shipped Oct 21.</p>
+    <div class="pills"><span class="pill stakes-h">Stakes: High</span><span class="pill press-m">Pressure: Med</span><span class="pill door">🚪 Two-way door</span></div>
+  </div>
+  <div class="qcard"><span class="qnum">Q4</span>
+    <h3><a href="https://davedellaquila.github.io/buddy-system/guardian-buddy/">🛡️ Guardian — OSS, pricing, domain</a></h3>
+    <p>The launch gate: open-source vs proprietary, the pricing hypothesis, trademark priorities — plus the domain pick (researched recommendation: getbuddy.io, or buy both candidates for ~$39 first year). <a href="https://docs.google.com/document/d/1sznSg7jSLRlDnAgFb-FaKnxp5lktWnFNQqK6DIEqF6E/edit">Brief →</a></p>
+    <div class="pills"><span class="pill stakes-h">Stakes: High</span><span class="pill press-m">Pressure: Med</span><span class="pill door">🔒 One-way door</span></div>
+  </div>
+  <div class="qcard"><span class="qnum">Q5</span>
+    <h3><a href="https://davedellaquila.github.io/buddy-system/portfolio-buddy/">📸 Portfolio — decommission &amp; rebuild</a></h3>
+    <p>Squarespace out, from-scratch rebuild in. Twenty-four crit case studies were written Oct 22 and sit unpublished — this brief call is what unlocks them. <a href="https://docs.google.com/document/d/1TXYvUcSWWDV07IsA2aiVTLDnx6SwhbfrEchAip5qAbQ/edit">Brief →</a></p>
+    <div class="pills"><span class="pill stakes-m">Stakes: Med-High</span><span class="pill press-m">Pressure: Med</span><span class="pill door">🚪 Two-way door</span></div>
+  </div>
+</div>
+
+<h2>The walk — next up</h2>
+<p class="secsub">Astro walks Dave through these one at a time, in this order. D1–D4, D7, and D8 are already decided — they're in the log below, not here.</p>
+<div class="walk">
+  <div class="wrow"><span class="wid">D5</span><div><a href="https://github.com/davedellaquila/decision-buddy/blob/master/KNOWLEDGE.md">The Quiet Confirmation</a> — replace confirm dialogs with undo toasts. Presented Oct 21; awaiting Dave's tap. <span class="pill next">NEXT</span><p>Everything below queues behind this one — it's the walk's front door.</p></div></div>
+  <div class="wrow"><span class="wid">D15</span><div>AppleCare One for the iPhone 18 Pro — enroll from Settings after the phone lands (window Oct 29 – Nov 5).<p>Ripening, not yet decidable — it surfaces itself on arrival instead of burning a walk slot.</p></div></div>
+  <div class="wrow"><span class="wid">D9</span><div>“The Lift” — build Jonny's keyboard-pill verdict (Prev/Next ride above the keyboard, then settle back), or defer.<p>Verdict delivered Oct 21; the build call is Dave's.</p></div></div>
+  <div class="wrow"><span class="wid">D10</span><div>What's New — pick the surface for the two-row filter (Money Buddy strip, dashboard sheet, or Release Notes).<p>Dave's design is given; one tap on the surface unblocks it.</p></div></div>
+  <div class="wrow"><span class="wid">D11</span><div>Two papers: the <a href="https://docs.google.com/document/d/1gGfb1jaDI3rx4qcY4MKsZOj69EBwicdB0PU4U3ujD4I/edit">Buddy Artifacts spec</a> + “Artifacts, Owned.” draft (already in Dave's review queue since Oct 22), and the “Portability in a Multi-Agent Framework” thesis, awaiting a draft / fold-in / workshop call.</div></div>
+  <div class="wrow"><span class="wid">D6+</span><div>Meta dashboard v1 · Engine Portability Plan · Money Buddy API spec · Kay texts intake · Llagas job-req review.<p>Tracked in the <a href="https://github.com/davedellaquila/decision-buddy/blob/master/KNOWLEDGE.md">queue register</a> — three of them need their source docs attached before they're decidable, and the register says so.</p></div></div>
+</div>
+
+<h2>Held briefs — all 16, one tap each</h2>
+<p class="secsub">Held in Mission review on Oct 21 because each carries a decision (45 clean briefs were bulk-approved the same day). Tier 1–2 briefs appear above; these are the rest, plus the full set for the record.</p>
+<div class="chips">
+  <a class="chip t1" href="https://davedellaquila.github.io/buddy-system/larry-osana/">🔑 Larry Osana <small>Q1 · lease</small></a>
+  <a class="chip t1" href="https://davedellaquila.github.io/buddy-system/emil-estate/">🏛️ Emil's Estate <small>Q2 · timing</small></a>
+  <a class="chip t1" href="https://davedellaquila.github.io/buddy-system/guardian-buddy/">🛡️ Guardian <small>Q4 · OSS/pricing</small></a>
+  <a class="chip t1" href="https://davedellaquila.github.io/buddy-system/portfolio-buddy/">📸 Portfolio <small>Q5 · rebuild</small></a>
+  <a class="chip" href="https://davedellaquila.github.io/buddy-system/sharing-buddy/">🔗 Sharing <small>Q6 · privacy model</small></a>
+  <a class="chip" href="https://davedellaquila.github.io/buddy-system/property-buddy/">🏠 Property <small>Q7 · architecture</small></a>
+  <a class="chip" href="https://davedellaquila.github.io/buddy-system/venue-buddy/">📍 Venue <small>Q8 · wedding budget</small></a>
+  <a class="chip" href="https://davedellaquila.github.io/buddy-system/buddy-suite/">🧩 Buddy Suite <small>Q9 · title/domain</small></a>
+  <a class="chip" href="https://davedellaquila.github.io/buddy-system/work-buddy/">💻 Work <small>Q20 · re-read</small></a>
+  <a class="chip" href="https://davedellaquila.github.io/buddy-system/reminder-buddy/">⏰ Reminder <small>Q21 · standalone?</small></a>
+  <a class="chip" href="https://davedellaquila.github.io/buddy-system/personal-buddy/">🙋 Personal <small>Q22 · the name</small></a>
+  <a class="chip" href="https://davedellaquila.github.io/buddy-system/career-buddy/">💼 Career <small>Q23 · direction</small></a>
+  <a class="chip" href="https://davedellaquila.github.io/buddy-system/travel-buddy/">✈️ Travel <small>Q24 · direction</small></a>
+  <a class="chip" href="https://davedellaquila.github.io/buddy-system/pet-buddy/">🐾 Pet <small>Q25 · scope</small></a>
+  <a class="chip" href="https://davedellaquila.github.io/buddy-system/zen-buddy/">🧘 Zen <small>Q26 · practice shape</small></a>
+  <a class="chip" href="https://davedellaquila.github.io/buddy-system/ticket-buddy/">🎟️ Ticket <small>Q27 · budget/range</small></a>
+</div>
+
+<h2>Two stacks, not ten decisions</h2>
+<div class="two">
+  <div class="panelcard">
+    <h3><a href="https://davedellaquila.github.io/buddy-system/legal-buddy/">⚖️ The naming stack</a></h3>
+    <p>Looks like five calls; it's one stack in dependency order:</p>
+    <ul>
+      <li><b>Trademark clearance</b> for “Buddy” / “Buddy OS” — <a href="https://davedellaquila.github.io/buddy-system/legal-buddy/">Legal Buddy</a> has owned this since Oct 16. <b>Blocked on Legal's research, not on Dave.</b></li>
+      <li><b>Domain pick</b> — researched and ready inside Q4 (<a href="https://davedellaquila.github.io/buddy-system/guardian-buddy/">Guardian</a>).</li>
+      <li><b>Suite title + domain</b> — Q9, sequenced after clearance lands.</li>
+      <li><b>Personal's name</b> — Q22; also unlocks the parked Pops rename chain.</li>
+    </ul>
+  </div>
+  <div class="panelcard">
+    <h3><a href="https://davedellaquila.github.io/buddy-system/sharing-buddy/">🔗 The lockdown stack</a></h3>
+    <p>Phase 0 (noindex + robots) shipped Oct 21; the personal-dashboard repo is private. Still open:</p>
+    <ul>
+      <li><b>Q3</b> — strip list + Pro/private source repo (Tier 1, above).</li>
+      <li><b>Q6</b> — <a href="https://davedellaquila.github.io/buddy-system/sharing-buddy/">Sharing Buddy's</a> privacy model, which Phases 1–2 will enforce.</li>
+      <li>Who keeps access after the gate · which domain · which pages stay public on purpose · the mirror's fate · a slot for Dave's ~15-minute Firebase deploy.</li>
+      <li><b>Parked by Dave:</b> the <a href="https://davedellaquila.github.io/buddy-system/neighborhood-buddy/">Neighborhood Buddy</a> page question — not re-raised until he does. <b>Pinned by Dave:</b> the token-flow item — real, not urgent.</li>
+    </ul>
+  </div>
+</div>
+
+<h2>Recently decided — the journal so far</h2>
+<p class="secsub">DB-001 → 008 entered on day one, each verified against the record; DB-009 is the first live entry — this buddy's own charter. Full entries — options, criteria, review dates — in <a href="https://github.com/davedellaquila/decision-buddy/blob/master/DECISIONS.md">DECISIONS.md</a>.</p>
+<div class="decided">
+  <div class="drow"><span class="did">DB-001</span><div><b>Bulk-approve the clean briefs, hold the decision-carriers</b> — Oct 21<p>45 briefs → Active; the 16 on this page held. Outcome reviews: Nov 20 · Dec 20 · Jan 19 — <em>is the held queue shrinking by decision, or just aging?</em></p></div></div>
+  <div class="drow"><span class="did">DB-002</span><div><b>Walk D1–D4 + D7</b> — Oct 21<p>Mirror re-sync approved &amp; done · double-click = reset width · Banner Steps Aside built · the Recents menu IS the Trail.</p></div></div>
+  <div class="drow"><span class="did">DB-003</span><div><b>Dashboard chrome spec</b> — Oct 21<p>Recents pinned top-left; info icon ↔ close × swap pixel-for-pixel. Built &amp; served-verified.</p></div></div>
+  <div class="drow"><span class="did">DB-004</span><div><b>Collection counts: every collection field</b> — Oct 21<p>“Even if it's zero — that's a sign.” Generalization handed off for build; completion flagged for verification.</p></div></div>
+  <div class="drow"><span class="did">DB-005</span><div><b>Token flow: real, not urgent — pinned</b> — Oct 21<p>Dave's call. Fix direction (server-side) recorded; not re-litigated until he unpins it.</p></div></div>
+  <div class="drow"><span class="did">DB-006</span><div><b>Neighborhood page: parked</b> — Oct 21<p>Dave: “revisit later — I'm not too worried about it right now.” Stays up; stays parked.</p></div></div>
+  <div class="drow"><span class="did">DB-007</span><div><b>Lockdown Phase 0</b> — Oct 21<p>Noindex + robots shipped fleet-wide, served-verified.</p></div></div>
+  <div class="drow"><span class="did">DB-008</span><div><b>Hardware job req approved</b> — Oct 21<p>Closes the Hardware half of the walk's D18/D19; the <a href="https://davedellaquila.github.io/buddy-system/llagas-creek-sale/">Llagas Creek Sale</a> half is still open (Q19).</p></div></div>
+  <div class="drow"><span class="did">DB-009</span><div><b>Decision Buddy chartered — job req approved as written</b> — Oct 24<p>Dave tapped “This is AWESOME!” on the review ask, no edits. The journal, the ranked queue, and the 30/60/90 reviews are now standing staff work. First charter review: Nov 23.</p></div></div>
+  <div class="drow"><span class="did">DB-010</span><div><b>Voice selection joins the charter — 138-buddy backlog cast in one pass</b> — Oct 24<p>Dave's new standing duty: Decision Buddy picks each new buddy's voice (Dave's audition pick overrides). First pass cast all 138 voiceless buddies plus a flagged replacement for Relationship Buddy — criteria: persona gender → accent → tone-to-job; roster-verified voices kept, siblings de-cloned, every id validated against the verified catalog. Full table in the repo's journal entry.</p></div></div>
+  <div class="drow"><span class="did">DB-011</span><div><b>Jev adopted as first-pass layer — GO on a shadow-mode pilot</b> — Oct 26<p>Dave's standing intent, surfaced Oct 26: Decision Buddy is to utilize Jev, TypeSafe's decision model. Researched and briefed the same day; Dave tapped GO on the bounded version — Jev votes on brain-dump routing and queue decidability, the reasoning model still decides, agreement gets measured before any auto-act is proposed. Data-class guard: operational text only, ever. Pilot scaffolding built in the repo (jev-pilot/); reviews Nov 25 / Dec 25 / Jan 24.</p></div></div>
+</div>
+
+<h2>How the journal works</h2>
+<div class="howto">
+  <div class="step"><div class="n">✍️</div><h3>Framed before it's made</h3><p>Options, criteria, reasoning, expected outcome — written down with a date, before the call. No retroactive “I knew it all along.”</p></div>
+  <div class="step"><div class="n">🚪</div><h3>Right-sized rigor</h3><p>Two-way doors get a fast call and a light log. One-way doors get the full treatment — premortem, regret minimization, 10-10-10, or weighted criteria. One model per decision; no framework theater.</p></div>
+  <div class="step"><div class="n">📅</div><h3>30 / 60 / 90 reviews</h3><p>Consequential decisions get outcome reviews: expected vs actual, and what the gap teaches. Small calls are logged and closed — reviewing everything would bury what matters.</p></div>
+  <div class="step"><div class="n">🧭</div><h3>A queue Astro can carry</h3><p>The ranked register feeds Astro, who walks Dave through it one decision at a time — each with its links inline, decidable in one tap.</p></div>
+</div>
+
+<h2>Patterns on watch</h2>
+<div class="two">
+  <div class="panelcard"><h3>The held-16 age as a bloc</h3><p>Every held brief has waited since Oct 9–10 while fact-only briefs flowed through. If the count hasn't dropped by the Nov 20 review, the bottleneck is walk cadence — not the briefs.</p></div>
+  <div class="panelcard"><h3>Nameless queue items</h3><p>D6, D12–D14, and D16 survived as names without their source documents. New rule, effective today: <b>no queue item without a link</b> — an item Dave can't tap through to is an item he can't decide.</p></div>
+</div>
+
+<h2>Journal files &amp; key links</h2>
+<div class="files">
+  <a class="btn" href="https://docs.google.com/document/d/1_NhLUK-jqNrbnqgTdgM4kWF5jRkwqgJyC6IBHUSbBf0/edit">📄 Job req<small>The canonical role definition</small></a>
+  <a class="btn" href="https://github.com/davedellaquila/decision-buddy/blob/master/DECISIONS.md">🎯 DECISIONS.md<small>The journal — decided calls + review dates</small></a>
+  <a class="btn" href="https://github.com/davedellaquila/decision-buddy/blob/master/KNOWLEDGE.md">📚 KNOWLEDGE.md<small>The ranked queue register, in full</small></a>
+  <a class="btn" href="https://github.com/davedellaquila/decision-buddy">🗂️ Repo (private)<small>decision-buddy on GitHub</small></a>
+  <a class="btn" href="https://davedellaquila.github.io/buddy-system/project-buddy/">🧭 Project Buddy<small>Parent — the macro view</small></a>
+  <a class="btn" href="https://davedellaquila.github.io/buddy-system/">🗺️ Buddy System dashboard<small>Every buddy, one map</small></a>
+</div>
+
+<section class="dumpbox" data-buddy-id="decision-buddy">
+<h2>🧠 Brain dump</h2>
+<p class="dumpbox-sub">Dump what's on your mind about <span data-buddy-name>Decision Buddy</span> — a decision forming, a call you want framed, second thoughts on one already made. Raw and unfiltered. Each dump lands in the buddy's repo (docs/ingest.md) as a timestamped entry — or saves on this device until a repo is linked and a token is connected.</p>
+<div class="dumpbox-token" hidden>
+<p>🔒 Connect GitHub to unlock dumping. Paste a token once — it stays on this device only.</p>
+<div class="dumpbox-tokenrow">
+<input type="password" placeholder="GitHub token (repo scope)" aria-label="GitHub token">
+<button type="button">Save token</button>
+<a href="https://github.com/settings/tokens" target="_blank" rel="noopener">Get a token</a>
+</div>
+</div>
+<textarea rows="4" placeholder="Dump what's on your mind about Decision Buddy…"></textarea>
+<div class="dumpbox-row">
+<button type="button" class="dumpbox-btn">Dump it</button>
+<span class="dumpbox-status" role="status"></span>
+</div>
+<p class="dumpbox-hint">Enter dumps it &middot; Shift+Enter for a new line</p>
+</section>
+
+<footer>
+🎯 <a href="https://davedellaquila.github.io/buddy-system/decision-buddy/">Decision Buddy</a> · a member of Dave's buddy staff · parent: <a href="https://davedellaquila.github.io/buddy-system/project-buddy/">🧭 Project Buddy</a> · journal &amp; queue: <a href="https://github.com/davedellaquila/decision-buddy">github.com/davedellaquila/decision-buddy</a><br>
+Framed Oct 24, 2026 · queue reconciled the same day · this page is the seed of the Decision Buddy app
+</footer>
+</div>
+
+<script>
+(function(){
+  var btn = document.getElementById('themeBtn');
+  function apply(t){ if(t){ document.documentElement.setAttribute('data-theme', t); } }
+  try { apply(localStorage.getItem('decision-buddy-theme') || ''); } catch(e){}
+  if (btn) btn.addEventListener('click', function(){
+    var cur = document.documentElement.getAttribute('data-theme');
+    if (!cur) { try { cur = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'; } catch(e) { cur = 'dark'; } }
+    var next = cur === 'dark' ? 'light' : 'dark';
+    apply(next);
+    try { localStorage.setItem('decision-buddy-theme', next); } catch(e){}
+  });
+})();
+</script>
+<script>
+(function(){
+  var box = document.querySelector('.dumpbox');
+  if (!box || box.dataset.dumpInit) return;
+  box.dataset.dumpInit = '1';
+  var bid = box.getAttribute('data-buddy-id') || (function(){
+    var p = location.pathname.replace(/\/+$/, '');
+    return p.substring(p.lastIndexOf('/') + 1);
+  })();
+  var ta = box.querySelector('textarea'),
+      btn = box.querySelector('.dumpbox-btn'),
+      st = box.querySelector('.dumpbox-status'),
+      tokWrap = box.querySelector('.dumpbox-token');
+  function lsGet(){ try { return JSON.parse(localStorage.getItem('buddyTree.v3') || '{}'); } catch(e){ return {}; } }
+  function lsSet(patch){ try { var s = lsGet(); for (var k in patch) s[k] = patch[k]; localStorage.setItem('buddyTree.v3', JSON.stringify(s)); } catch(e){} }
+  function token(){ return lsGet().ghToken || ''; }
+  function b64encode(str){
+    var bytes = new TextEncoder().encode(str), bin = '';
+    bytes.forEach(function(b){ bin += String.fromCharCode(b); });
+    return btoa(bin);
+  }
+  async function ghApi(path, method, body){
+    var t = token();
+    if (!t) throw new Error('Add a GitHub token first.');
+    var r = await fetch('https://api.github.com' + path, {
+      method: method || 'GET',
+      headers: {'Authorization': 'Bearer ' + t, 'Accept': 'application/vnd.github+json', 'Content-Type': 'application/json'},
+      body: body ? JSON.stringify(body) : undefined
+    });
+    if (!r.ok) throw new Error('GitHub ' + r.status);
+    return r.status === 204 ? null : await r.json();
+  }
+  async function ghGetFile(repo, path){
+    try {
+      var j = await ghApi('/repos/davedellaquila/' + repo + '/contents/' + path);
+      if (j && j.content) return {
+        text: new TextDecoder().decode(Uint8Array.from(atob(j.content.replace(/\n/g, '')), function(c){ return c.charCodeAt(0); })),
+        sha: j.sha
+      };
+    } catch(e){}
+    return null;
+  }
+  var repo = null, repoName = bid;
+  async function resolveRepo(){
+    try {
+      var r = await fetch('../buddies.json', {cache: 'no-store'});
+      var d = await r.json();
+      var buds = d.buddies || [];
+      for (var i = 0; i < buds.length; i++) {
+        if (buds[i].id === bid && buds[i].repo) { repo = buds[i].repo; repoName = buds[i].name || bid; break; }
+      }
+    } catch(e){}
+  }
+  /* Local fallback (Dave 2026-10-15, widened 2026-10-16): dumping always works,
+     even with no GitHub token AND no repo linked — entries are saved in this
+     device's localStorage until the GitHub write path can take them. The backlog
+     flushes into the repo on the next successful GitHub dump (once a repo is
+     linked and a token is present). */
+  function localKey(){ return 'buddyTree.ingest.' + bid; }
+  function localBacklog(){
+    try { var a = JSON.parse(localStorage.getItem(localKey()) || '[]'); return Array.isArray(a) ? a : []; }
+    catch(e){ return []; }
+  }
+  function localSave(entry){
+    var a = localBacklog(); a.push(entry);
+    try { localStorage.setItem(localKey(), JSON.stringify(a)); } catch(e){}
+  }
+  function localClear(){ try { localStorage.removeItem(localKey()); } catch(e){} }
+  function refreshUI(){
+    var has = !!token();
+    tokWrap.hidden = has;
+    /* The box always works: no token and/or no repo just means local saves. */
+    ta.disabled = false;
+    btn.disabled = false;
+    var n = localBacklog().length;
+    if (!repo) {
+      st.textContent = n
+        ? n + ' local ' + (n === 1 ? 'dump' : 'dumps') + ' saved on this device — will sync when a repo is linked.'
+        : 'No repo linked yet — dumps save on this device and will sync when one is linked.';
+      return;
+    }
+    st.textContent = has
+      ? (n ? n + ' local ' + (n === 1 ? 'dump' : 'dumps') + ' will sync on next dump.' : '')
+      : 'No GitHub token — dumps save on this device for now.';
+  }
+  var tokInput = tokWrap.querySelector('input'),
+      tokSave = tokWrap.querySelector('button');
+  /* Visual save confirmation (Dave 2026-10-16): the button flashes green
+     with a ✓ for ~2s on every successful save, so the save is unmissable. */
+  function flashSaved(){
+    var label = btn.textContent;
+    btn.classList.add('saved');
+    btn.textContent = '✓ Saved';
+    st.classList.add('flash');
+    setTimeout(function(){
+      btn.classList.remove('saved');
+      if (btn.textContent === '✓ Saved') btn.textContent = label;
+      st.classList.remove('flash');
+    }, 1800);
+  }
+  /* Dave 2026-10-18: verify the token against GitHub when pasted, so a
+     bad token is caught here instead of surfacing as a mysterious 404 on
+     the next dump. The token is kept either way; dumps queue locally until
+     a working token is in place. */
+  tokSave.addEventListener('click', async function(){
+    var v = tokInput.value.trim();
+    if (!v) return;
+    lsSet({ghToken: v});
+    tokInput.value = '';
+    st.textContent = 'Checking token…';
+    try {
+      await ghApi('/user');
+      refreshUI();
+      st.textContent = '✓ Token verified — dumps will sync to GitHub.';
+    } catch(e) {
+      refreshUI();
+      st.textContent = '⚠ GitHub rejected that token (' + ((e && e.message) || e) + ') — dumps stay on this device until a working token is added.';
+    }
+  });
+  async function dump(){
+    var text = ta.value.trim();
+    if (!text) return;
+    var stamp = new Date().toLocaleString();
+    var NL = String.fromCharCode(10);
+    if (!repo) {
+      /* No repo linked yet — save on this device; syncs once one is linked. */
+      localSave({t: stamp, text: text});
+      ta.value = '';
+      refreshUI();
+      st.textContent = '✓ Saved on this device — will sync to the repo once one is linked.';
+      flashSaved();
+      return;
+    }
+    if (!token()) {
+      /* Temporary workaround: no token → save on this device. */
+      localSave({t: stamp, text: text});
+      ta.value = '';
+      st.textContent = '✓ Saved on this device — add a GitHub token to sync it to the repo.';
+      flashSaved();
+      return;
+    }
+    st.textContent = 'Dumping…';
+    btn.disabled = true;
+    try {
+      /* Flush any locally-saved backlog first, then the new entry. */
+      var backlog = localBacklog();
+      var parts = backlog.map(function(b){ return '## ' + b.t + NL + NL + b.text + NL + NL; });
+      parts.push('## ' + stamp + NL + NL + text + NL + NL);
+      var cur = await ghGetFile(repo, 'docs/ingest.md');
+      var base = cur ? cur.text : '# Ingest log — ' + repoName + NL + NL;
+      var body = {message: 'Ingest dump for ' + bid, content: b64encode(base + parts.join(''))};
+      if (cur && cur.sha) body.sha = cur.sha;
+      await ghApi('/repos/davedellaquila/' + repo + '/contents/docs/ingest.md', 'PUT', body);
+      localClear();
+      ta.value = '';
+      st.textContent = '✓ Dumped to ' + repo + '/docs/ingest.md' + (backlog.length ? ' (' + backlog.length + ' local synced)' : '');
+      flashSaved();
+    } catch(err){
+      /* Dave 2026-10-18: a failed GitHub write must never drop the dump.
+         Keep it on this device and say so plainly, with the backlog count —
+         it syncs on the next successful dump. */
+      try { localSave({t: stamp, text: text}); } catch(e2){}
+      ta.value = '';
+      refreshUI();
+      var why = (err && err.message) || String(err);
+      var nq = 0; try { nq = localBacklog().length; } catch(e2){}
+      var tail = nq > 1 ? ' (' + nq + ' on this device waiting to sync)' : '';
+      st.textContent = (/404/.test(why)
+        ? '⚠ Saved on this device — GitHub said 404 (usually a wrong/expired token, or no access to this private repo). Fix the token, then dump again to sync.'
+        : '⚠ Saved on this device — GitHub said: ' + why + '. It will sync on your next successful dump.') + tail;
+    }
+    btn.disabled = false;
+  }
+  btn.addEventListener('click', dump);
+  ta.addEventListener('keydown', function(ev){
+    /* Dave 2026-10-16: plain Return dumps, like the button. Shift+Return for a newline. */
+    if (ev.key === 'Enter' && !ev.shiftKey && !ev.altKey) { ev.preventDefault(); dump(); }
+  });
+  resolveRepo().then(refreshUI);
+})();
+</script>
+</body>
+</html>
