@@ -106,6 +106,17 @@ a { color: var(--accent); }
 }
 .ordbtn:hover:not(:disabled) { color: var(--text); border-color: var(--accent); }
 .ordbtn:disabled { opacity: .35; cursor: default; }
+/* composition mode (AND / OR) */
+.modeopt {
+  display: flex; gap: 12px; align-items: flex-start;
+  border: 1px solid var(--border); border-radius: 10px;
+  padding: 13px 15px; margin-top: 10px; cursor: pointer;
+}
+.modeopt:hover { border-color: var(--accent); }
+.modeopt:has(input:checked) { border-color: var(--accent); background: var(--accent-soft); }
+.modeopt input[type="radio"] { width: 20px; height: 20px; accent-color: var(--accent); flex: none; margin-top: 2px; cursor: pointer; }
+.modeopt .mtitle { display: block; font-weight: 700; font-size: 15.5px; }
+.modeopt .mexplain { display: block; color: var(--muted); font-size: 13.5px; line-height: 1.45; }
 /* toggle rows & inputs */
 .trow {
   display: flex; align-items: center; gap: 12px;
@@ -209,6 +220,24 @@ details.jsonbox pre {
 <h2>🧩 What shows up in the chime
   <span class="sub">Switch segments on or off, and use the arrows to change the order they appear in. The presenter intro and sign-off always frame the chime.</span>
 </h2>
+<div class="card" id="modeCard">
+  <h3>🔀 One at a time, or all together?</h3>
+  <p class="small muted">How the segments below combine in each chime. The time announcement always opens the chime, either way.</p>
+  <label class="modeopt">
+    <input type="radio" name="compMode" id="modeRotate" value="rotate">
+    <span>
+      <span class="mtitle">One at a time — cycle through my picks (OR)</span>
+      <span class="mexplain">Each chime carries just one segment: a rhyme one hour, a riddle the next, a joke after that — cycling through the ones switched on, in the order below. One focus per chime.</span>
+    </span>
+  </label>
+  <label class="modeopt">
+    <input type="radio" name="compMode" id="modeAll" value="all">
+    <span>
+      <span class="mtitle">All together — every chime (AND)</span>
+      <span class="mexplain">Every chime includes all the segments switched on below, in order — the original way the chime worked.</span>
+    </span>
+  </label>
+</div>
 <div class="card" id="moduleCard"></div>
 
 <h2>🎚️ How it behaves</h2>
@@ -345,6 +374,7 @@ details.jsonbox pre {
     timezone: 'America/Los_Angeles',
     delivery: { target: 'main-chat' },
     audio: { enabled: true, everyChime: true },
+    composition: { mode: 'rotate', appliesTo: 'content modules (all except time)', cycleOrder: 'config module order' },
     modules: [
       { id: 'time', enabled: true, locked: true },
       { id: 'couplet', enabled: true },
@@ -529,6 +559,12 @@ details.jsonbox pre {
     cfg.version = 1; cfg.configFor = 'hans-hourly-chime'; cfg.timezone = 'America/Los_Angeles';
     cfg.delivery = { target: 'main-chat' };
     cfg.audio = { enabled: $('audioEnabled').checked, everyChime: $('audioEnabled').checked };
+    var compPrev = (baseCfg && baseCfg.composition) || {};
+    cfg.composition = {
+      appliesTo: compPrev.appliesTo || 'content modules (all except time)',
+      cycleOrder: compPrev.cycleOrder || 'config module order',
+      mode: $('modeRotate').checked ? 'rotate' : 'all'
+    };
     cfg.modules = state.modules.map(function(m){
       var out = { id: m.id, enabled: m.enabled };
       if (m.locked) out.locked = true;
@@ -559,7 +595,14 @@ details.jsonbox pre {
     var lines = [];
     lines.push('Runs every hour on the hour (America/Los_Angeles), delivered to the main chat.');
     lines.push(cfg.audio.enabled ? 'Every chime ships with its recording, read aloud in the presenter’s voice.' : 'Audio is off — chimes arrive as text only.');
-    lines.push('Segments, in order: ' + on.map(function(m){ return m.name; }).join(' · ') + '.');
+    var contentOn = on.filter(function(m){ return !m.locked; });
+    if (cfg.composition && cfg.composition.mode === 'rotate') {
+      if (contentOn.length === 0) lines.push('Each chime is just the time announcement — no extra segments are switched on.');
+      else if (contentOn.length === 1) lines.push('Only one segment is on (' + contentOn[0].name + '), so every chime carries it — after the time announcement, which always opens the chime.');
+      else lines.push('Each chime carries one segment, cycling: ' + contentOn.map(function(m){ return m.name; }).join(' → ') + ' — the time announcement always opens the chime.');
+    } else {
+      lines.push('Segments, in order, in every chime: ' + on.map(function(m){ return m.name; }).join(' · ') + '.');
+    }
     if (state.modules.some(function(m){ return (m.id === 'riddle' || m.id === 'joke') && m.enabled; }))
       lines.push('Riddle & joke run ' + fmtHour(cfg.riddleAndJoke.windowStartHour) + '–' + fmtHour(cfg.riddleAndJoke.windowEndHour) + ' only' + (cfg.riddleAndJoke.enabled ? '.' : ' — and the block master switch is OFF.'));
     lines.push(cfg.foreignLanguage.enabled
@@ -583,6 +626,9 @@ details.jsonbox pre {
     baseCfg = clone(cfg);
     state.modules = mergeModules(cfg.modules);
     state.presenters = mergePresenters(cfg.presenters);
+    var compMode = (cfg.composition && cfg.composition.mode) || 'rotate';
+    $('modeAll').checked = compMode === 'all';
+    $('modeRotate').checked = compMode !== 'all';
     $('audioEnabled').checked = !cfg.audio || cfg.audio.enabled !== false;
     var rj = cfg.riddleAndJoke || {};
     $('rjEnabled').checked = rj.enabled !== false;
@@ -677,7 +723,7 @@ details.jsonbox pre {
   }
 
   /* ---------- wiring ---------- */
-  ['audioEnabled','rjEnabled','rjStart','rjEnd','flEnabled','flRate','flNoBack','sfxEnabled','sfxMax','sfxShare','sfxQuietStart','sfxQuietEnd','sfxGong','sfxNoRepeat','urgEnabled','urgMax','rotNoBack'].forEach(function(id){
+  ['modeRotate','modeAll','audioEnabled','rjEnabled','rjStart','rjEnd','flEnabled','flRate','flNoBack','sfxEnabled','sfxMax','sfxShare','sfxQuietStart','sfxQuietEnd','sfxGong','sfxNoRepeat','urgEnabled','urgMax','rotNoBack'].forEach(function(id){
     var el = $(id);
     el.addEventListener('change', refreshOutputs);
     el.addEventListener('input', refreshOutputs);
