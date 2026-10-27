@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>📓 Journal Buddy — Dave's Journal, in Dave's Words</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📓</text></svg>">
+<style>
+:root{
+  --bg:#f7f1e3; --paper:#fffdf6; --paper2:#fdf6e3; --text:#2b2118; --muted:#7a6a58;
+  --card:#fffdf6; --border:#e3d5bd; --accent:#8a5a2b; --accent2:#b7793b;
+  --ok:#1b7a2e; --rule:#d9c7a5; --margin:#e8a0a0; --shadow:0 10px 30px rgba(90,60,20,.10);
+  --serif: Georgia, 'Iowan Old Style', 'Times New Roman', serif;
+  --sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#171310; --paper:#211a15; --paper2:#1d1712; --text:#ece2d0; --muted:#a89880;
+    --card:#241c16; --border:#3d3226; --accent:#e0a458; --accent2:#c98f3e;
+    --ok:#5fd08a; --rule:#382d21; --margin:#6b3a3a; --shadow:0 10px 30px rgba(0,0,0,.35);
+  }
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.6;-webkit-text-size-adjust:100%}
+a{color:var(--accent)}
+.wrap{max-width:960px;margin:0 auto;padding:0 20px 56px}
+/* sticky header */
+.topbar{position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:10px;background:var(--bg);border-bottom:1px solid var(--border);padding:11px 2px;font-size:17px;font-weight:700}
+.topbar .ic{font-size:22px;line-height:1}
+.topbar .sub{margin-left:auto;font-size:12px;font-weight:600;color:var(--muted);letter-spacing:.08em;text-transform:uppercase}
+.crumb{padding:14px 2px 0;font-size:14px}
+.crumb a{color:inherit;opacity:.65;text-decoration:none}
+/* hero — a journal cover */
+.hero{margin-top:18px;background:linear-gradient(160deg,var(--paper),var(--paper2));border:1px solid var(--border);border-left:10px solid var(--accent);border-radius:14px;padding:34px 32px;box-shadow:var(--shadow)}
+.hero .kicker{font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--accent);font-weight:800}
+.hero h1{font-family:var(--serif);font-size:clamp(30px,5.5vw,46px);line-height:1.12;margin:10px 0 10px;font-weight:700}
+.hero p.lede{font-family:var(--serif);font-size:clamp(17px,2.6vw,20px);color:var(--muted);max-width:62ch}
+.hero .dateline{margin-top:18px;display:flex;flex-wrap:wrap;gap:8px}
+.pill{display:inline-block;border:1px solid var(--border);background:var(--bg);border-radius:999px;padding:5px 12px;font-size:13px;font-weight:600;text-decoration:none;color:var(--text)}
+.pill:hover{border-color:var(--accent)}
+.hear{margin-top:20px;background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:14px 16px;display:flex;flex-direction:column;gap:8px;max-width:520px}
+.hear .hear-label{font-size:14.5px;font-weight:700}
+.hear .hear-label span{color:var(--muted);font-weight:600;font-size:13px}
+.hear audio{width:100%;height:40px}
+/* stats */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:16px}
+.stat{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px}
+.stat .n{font-family:var(--serif);font-size:26px;font-weight:700;line-height:1.1}
+.stat .l{font-size:12px;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);margin-top:5px;font-weight:700}
+.stat .d{font-size:13px;color:var(--muted);margin-top:4px}
+h2{font-family:var(--serif);font-size:24px;margin:38px 0 6px}
+.h2sub{color:var(--muted);font-size:14px;margin-bottom:16px;max-width:68ch}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:18px 20px}
+.card h3{font-size:16px;margin-bottom:6px}
+.card p,.card li{font-size:14.5px;color:var(--muted)}
+.card ul{margin-left:18px}
+.card a{font-weight:600;text-decoration:none}
+.card a:hover{text-decoration:underline}
+.emoji{font-size:22px;display:block;margin-bottom:8px}
+/* attention */
+.attn{background:var(--card);border:1px solid var(--border);border-left:5px solid #f59e0b;border-radius:0 12px 12px 0;padding:16px 20px;margin-bottom:12px}
+.attn h3{font-size:16px}
+.attn p{font-size:14.5px;color:var(--muted);margin-top:4px}
+.attn .go{display:inline-block;margin-top:10px;background:var(--accent);color:#fff;border-radius:8px;padding:8px 16px;font-size:13.5px;font-weight:700;text-decoration:none}
+@media (prefers-color-scheme: dark){.attn .go{color:#1d150c}}
+/* ruled entry template */
+.entry{background:
+  linear-gradient(var(--paper),var(--paper));
+  border:1px solid var(--border);border-radius:12px;padding:0;overflow:hidden;box-shadow:var(--shadow)}
+.entry-head{display:flex;flex-wrap:wrap;gap:8px;align-items:baseline;padding:16px 22px 10px;border-bottom:1px dashed var(--border)}
+.entry-head .date{font-family:var(--serif);font-weight:700;font-size:18px}
+.entry-head .tag{font-size:11.5px;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);font-weight:700}
+.entry-body{padding:14px 22px 20px 54px;position:relative;
+  background-image:linear-gradient(to right, transparent 0 38px, var(--margin) 38px 39px, transparent 39px), repeating-linear-gradient(to bottom, transparent 0 30px, var(--rule) 30px 31px);
+}
+.entry-body p{font-family:var(--serif);font-size:16.5px;line-height:31px;color:var(--text)}
+.entry-body p+p{margin-top:0}
+.entry-body .ph{color:var(--muted);font-style:italic}
+.entry-foot{padding:12px 22px;border-top:1px dashed var(--border);font-size:13px;color:var(--muted)}
+/* look-backs */
+.look{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.look .card{text-align:left}
+.look .when{font-family:var(--serif);font-size:20px;font-weight:700;color:var(--text)}
+/* boundaries */
+.bounds{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.bounds .card p{min-height:66px}
+/* dump box — canonical, restyled to journal paper */
+.dumpbox{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px 22px;margin-top:16px}
+.dumpbox h2{margin:0 0 6px;font-size:20px;font-family:var(--sans)}
+.dumpbox-sub{color:var(--muted);font-size:14px;margin-bottom:14px}
+.dumpbox textarea{width:100%;min-height:110px;resize:vertical;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-size:15px;color:var(--text);font-family:var(--serif)}
+.dumpbox textarea:focus{outline:none;border-color:var(--accent)}
+.dumpbox-row{display:flex;align-items:center;gap:12px;margin-top:10px;flex-wrap:wrap}
+.dumpbox-btn{background:var(--accent);color:#fff;border:none;border-radius:8px;padding:9px 22px;font-size:14px;font-weight:600;cursor:pointer}
+@media (prefers-color-scheme: dark){.dumpbox-btn{color:#1d150c}}
+.dumpbox-btn:disabled{opacity:.45;cursor:default}
+.dumpbox-btn.saved{background:var(--ok)}
+.dumpbox-status{font-size:13px;color:var(--muted)}
+.dumpbox-status.flash{color:var(--ok);font-weight:700}
+.dumpbox-hint{font-size:12px;color:var(--muted);margin-top:8px}
+.dumpbox-token{background:rgba(245,158,11,.09);background:color-mix(in srgb,#f59e0b 9%,var(--bg));border:2px solid #f59e0b;box-shadow:0 0 0 3px rgba(245,158,11,.16);box-shadow:0 0 0 3px color-mix(in srgb,#f59e0b 16%,transparent);border-radius:8px;padding:12px 14px;margin-bottom:12px;font-size:14px}
+.dumpbox-token p{margin-bottom:8px;font-weight:700;color:#cf222e}
+@media (prefers-color-scheme: dark){.dumpbox-token p{color:#ff7b72}}
+.dumpbox-tokenrow{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.dumpbox-tokenrow input{flex:1;min-width:170px;background:var(--card);border:1px solid var(--border);border-radius:8px;padding:7px 10px;font-size:13px;color:var(--text)}
+.dumpbox-tokenrow button{background:transparent;color:var(--accent);border:1px solid var(--accent);border-radius:8px;padding:7px 14px;font-size:13px;font-weight:600;cursor:pointer}
+.dumpbox-tokenrow a{color:var(--accent);font-size:13px}
+.footer{margin-top:48px;padding-top:22px;border-top:1px solid var(--border);color:var(--muted);font-size:13.5px;text-align:center}
+.footer a{text-decoration:none;font-weight:600}
+@media (max-width:760px){
+  .stats{grid-template-columns:1fr 1fr}
+  .grid,.bounds{grid-template-columns:1fr}
+  .look{grid-template-columns:1fr}
+  .hero{padding:26px 22px}
+  .entry-body{padding-left:44px}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="crumb"><a href="https://davedellaquila.github.io/buddy-system/project-buddy/">← 🧭 Project Buddy</a></div>
+  <div class="topbar"><span class="ic">📓</span><span>Journal Buddy</span><span class="sub">Private · By Dave</span></div>
+
+  <section class="hero">
+    <div class="kicker">Day One · Saturday, October 24, 2026</div>
+    <h1>Your days, in your words.</h1>
+    <p class="lede">I'm the keeper of your personal journal. Dictate a thought, recount your day, or drop a moment you want kept — I turn it into a dated entry in your own voice. Verbatim first, tidied second, never rewritten into someone else's words.</p>
+    <div class="dateline">
+      <a class="pill" href="https://docs.google.com/document/d/1-UuBq8TshUACvmXeqeeyH_7-McZb9zCN9av7mfL5E8I/edit">📄 Journal Buddy — Job Req</a>
+      <a class="pill" href="https://github.com/davedellaquila/journal-buddy">🔒 Private repo — journal-buddy</a>
+      <a class="pill" href="#dump">✍️ Start today's entry</a>
+      <a class="pill" href="#lookback">🔁 Look-backs</a>
+    </div>
+    <div class="hear">
+      <div class="hear-label">🔊 Hear my role <span>— the first paragraph of my job req's Role summary, in my own voice · 0:33</span></div>
+      <audio controls preload="none" src="role-intro.mp3">Your browser doesn't support audio playback — read the <a href="https://docs.google.com/document/d/1-UuBq8TshUACvmXeqeeyH_7-McZb9zCN9av7mfL5E8I/edit">job req</a> instead.</audio>
+    </div>
+  </section>
+
+  <div class="stats" aria-label="Journal at a glance">
+    <div class="stat"><div class="n">3</div><div class="l">Entries kept</div><div class="d">Oct 24, 25 &amp; 26, 2026 filed — see the <a href="https://github.com/davedellaquila/journal-buddy/blob/master/journal/INDEX.md">journal index</a>. A nightly compile now files each day you recap.</div></div>
+    <div class="stat"><div class="n">1 / day</div><div class="l">File per day</div><div class="d">Each day gets its own dated file in the <a href="https://github.com/davedellaquila/journal-buddy">private repo</a>.</div></div>
+    <div class="stat"><div class="n">3</div><div class="l">Look-back horizons</div><div class="d">A week, a month, a year ago today — when there's history to show.</div></div>
+    <div class="stat"><div class="n">0</div><div class="l">Quotes shared</div><div class="d">Nothing from this journal is quoted to anyone, ever, without your explicit say-so.</div></div>
+  </div>
+
+  <h2>Needs your attention</h2>
+  <p class="h2sub">Two things, both yours to call — nothing here nags twice.</p>
+  <div class="attn">
+    <h3>📄 Review the job req</h3>
+    <p>The role as hired: capture in your voice, one file per day, gentle look-backs, absolute privacy — and what's out of scope for v1 (no auto-diary from calendar or location, no mood scoring, no publishing).</p>
+    <a class="go" href="https://docs.google.com/document/d/1-UuBq8TshUACvmXeqeeyH_7-McZb9zCN9av7mfL5E8I/edit">Open the job req →</a>
+  </div>
+  <div class="attn">
+    <h3>✍️ First entry is in — keep them coming</h3>
+    <p>The journal opened tonight: one entry, filed same-day in your words. Anything from a day — a sentence is enough — dictate it in my thread or type it in the brain-dump box below.</p>
+    <a class="go" href="#dump">Add today's in the dump box ↓</a>
+  </div>
+
+  <h2>How an entry happens</h2>
+  <p class="h2sub">Capture is universal and instant. The craft is in keeping it yours.</p>
+  <div class="grid">
+    <div class="card"><span class="emoji">🎙️</span><h3>1 · You talk, I keep</h3><p>Dictated, typed, or dumped into the <a href="#dump">brain-dump box</a> on this page. The moment you offer it is the moment it's an entry — same day, no backlog.</p></div>
+    <div class="card"><span class="emoji">🖋️</span><h3>2 · Verbatim first, tidied second</h3><p>Your wording stands. I tidy punctuation and line breaks only. Corrections later are appended as dated notes — the journal never pretends you thought something you didn't.</p></div>
+    <div class="card"><span class="emoji">🗂️</span><h3>3 · Filed by date, findable by thread</h3><p>One file per day in the <a href="https://github.com/davedellaquila/journal-buddy">journal-buddy repo</a>, indexed by date. People, places, and projects mentioned get linked to their buddies where they exist — so “when did I last write about the MG?” answers in one step.</p></div>
+    <div class="card"><span class="emoji">🔁</span><h3>4 · Look-backs, gently</h3><p>A weekly digest of the week's entries, and “a year ago today” when there's an entry worth resurfacing — routed through Astro, silent when there's nothing to show. Gifts, not chores.</p></div>
+  </div>
+
+  <h2>What a day page looks like</h2>
+  <p class="h2sub">This is the template — the shape every entry takes. It is <em>not</em> an entry: the real days live, unquoted, in the private repo — and I don't invent days.</p>
+  <div class="entry" aria-label="Journal entry template">
+    <div class="entry-head"><span class="date">Saturday, October 24, 2026</span><span class="tag">Template · Your first entry goes here</span></div>
+    <div class="entry-body">
+      <p class="ph">Your words, as you gave them — dictated on a walk, typed at the desk, dropped in the dump box at midnight.</p>
+      <p class="ph">What happened. What you noticed. What you felt about it.</p>
+      <p class="ph">Tidied only for punctuation and line breaks. Nothing rephrased, nothing added.</p>
+    </div>
+    <div class="entry-foot">Filed same day · People / places / projects mentioned will be linked here · Corrections append below the line, dated — never edited in place.</div>
+  </div>
+
+  <h2 id="lookback">Look-backs</h2>
+  <p class="h2sub">The journal's second job: bringing the right old day back at the right moment. Anniversaries and recurring threads — first snow, the Morgan Hill house, rally season — get flagged to Astro as they approach.</p>
+  <div class="look">
+    <div class="card"><div class="when">A week ago</div><p>No history yet. In seven days, this is where last Saturday surfaces.</p></div>
+    <div class="card"><div class="when">A month ago</div><p>Empty for now — by late November, a month-ago entry will land here when it's worth seeing again.</p></div>
+    <div class="card"><div class="when">A year ago today</div><p>The long view. It starts earning its place in October 2027 — and it'll be worth the wait.</p></div>
+  </div>
+
+  <h2>Three boundaries, held from day one</h2>
+  <p class="h2sub">Close neighbours, different desks. Entries may link across — they never blur.</p>
+  <div class="bounds">
+    <div class="card"><span class="emoji">📓</span><h3>This journal — yours</h3><p>Your days as you choose to tell them, authored by you. Not surveilled, not auto-generated from calendar or location.</p></div>
+    <div class="card"><span class="emoji">💭</span><h3><a href="https://davedellaquila.github.io/buddy-system/dream-buddy/">Dream Buddy</a></h3><p>Dreams, captured on waking. If a dream makes it into a day's entry, I link to it — I don't keep it.</p></div>
+    <div class="card"><span class="emoji">🎯</span><h3><a href="https://davedellaquila.github.io/buddy-system/decision-buddy/">Decision Buddy</a></h3><p>Decisions and how they were made. A journal entry that turns on a decision links there — the decision record stays there.</p></div>
+  </div>
+  <div class="card" style="margin-top:12px"><span class="emoji">🧭</span><h3>And not Astro's memory</h3><p>Those are operational notes about the work. This is your journal, by you. Different book, different shelf — I report to <a href="https://davedellaquila.github.io/buddy-system/project-buddy/">🧭 Project Buddy</a>, and to you via Astro.</p></div>
+
+  <section class="dumpbox" id="dump" data-buddy-id="journal-buddy">
+    <h2>🧠 Brain dump — or today's first line</h2>
+    <p class="dumpbox-sub">Dump what's on your mind about <span data-buddy-name>Journal Buddy</span> — raw and unfiltered. Each dump lands in the buddy's repo (docs/ingest.md) as a timestamped entry — or saves on this device until a repo is linked and a token is connected. Journal material dumped here gets triaged as an entry, in your words.</p>
+    <div class="dumpbox-token" hidden>
+      <p>🔒 Connect GitHub to unlock dumping. Paste a token once — it stays on this device only.</p>
+      <div class="dumpbox-tokenrow">
+        <input type="password" placeholder="GitHub token (repo scope)" aria-label="GitHub token">
+        <button type="button">Save token</button>
+        <a href="https://github.com/settings/tokens" target="_blank" rel="noopener">Get a token</a>
+      </div>
+    </div>
+    <textarea rows="4" placeholder="Today…"></textarea>
+    <div class="dumpbox-row">
+      <button type="button" class="dumpbox-btn">Dump it</button>
+      <span class="dumpbox-status" role="status"></span>
+    </div>
+    <p class="dumpbox-hint">Enter dumps it &middot; Shift+Enter for a new line</p>
+  </section>
+
+  <h2>The desk</h2>
+  <p class="h2sub">Everything I keep lives in the private repo — read it, or open a file on GitHub.</p>
+  <div class="grid">
+    <div class="card"><h3>📁 Repo files</h3><ul>
+      <li><a href="https://github.com/davedellaquila/journal-buddy/blob/master/journal/INDEX.md">journal/INDEX.md</a> — every entry, by date (3 so far)</li>
+      <li><a href="https://github.com/davedellaquila/journal-buddy/blob/master/docs/job-req.md">docs/job-req.md</a> — the canonical job req</li>
+      <li><a href="https://github.com/davedellaquila/journal-buddy/blob/master/KNOWLEDGE.md">KNOWLEDGE.md</a> — what I've learned</li>
+      <li><a href="https://github.com/davedellaquila/journal-buddy/blob/master/DECISIONS.md">DECISIONS.md</a> — decisions, dated</li>
+      <li><a href="https://github.com/davedellaquila/journal-buddy/blob/master/ACCOMPLISHMENTS.md">ACCOMPLISHMENTS.md</a> — what I've shipped</li>
+      <li><a href="https://github.com/davedellaquila/journal-buddy/blob/master/docs/ingest.md">docs/ingest.md</a> — my inbox, triaged: mine / someone else's / unclear → Astro</li>
+    </ul></div>
+    <div class="card"><h3>🔒 Privacy, plainly</h3><p>The repo is private. This page names no entry content — entries aren't quoted here or anywhere else without your explicit instruction. Zero shared is a number I intend to keep.</p></div>
+  </div>
+
+  <div class="footer">
+    📓 Journal Buddy · Hired Saturday, October 24, 2026 · Child of <a href="https://davedellaquila.github.io/buddy-system/project-buddy/">🧭 Project Buddy</a> · Siblings: <a href="https://davedellaquila.github.io/buddy-system/dream-buddy/">💭 Dream Buddy</a> · <a href="https://davedellaquila.github.io/buddy-system/decision-buddy/">🎯 Decision Buddy</a><br>
+    <a href="https://davedellaquila.github.io/buddy-system/">Buddy System dashboard</a> · <a href="https://github.com/davedellaquila/journal-buddy">Repo</a> · <a href="https://docs.google.com/document/d/1-UuBq8TshUACvmXeqeeyH_7-McZb9zCN9av7mfL5E8I/edit">Job req</a>
+  </div>
+</div>
+
+<script>
+(function(){
+  var box = document.querySelector('.dumpbox');
+  if (!box || box.dataset.dumpInit) return;
+  box.dataset.dumpInit = '1';
+  var bid = box.getAttribute('data-buddy-id') || (function(){
+    var p = location.pathname.replace(/\/+$/, '');
+    return p.substring(p.lastIndexOf('/') + 1);
+  })();
+  var ta = box.querySelector('textarea'),
+      btn = box.querySelector('.dumpbox-btn'),
+      st = box.querySelector('.dumpbox-status'),
+      tokWrap = box.querySelector('.dumpbox-token');
+  function lsGet(){ try { return JSON.parse(localStorage.getItem('buddyTree.v3') || '{}'); } catch(e){ return {}; } }
+  function lsSet(patch){ try { var s = lsGet(); for (var k in patch) s[k] = patch[k]; localStorage.setItem('buddyTree.v3', JSON.stringify(s)); } catch(e){} }
+  function token(){ return lsGet().ghToken || ''; }
+  function b64encode(str){
+    var bytes = new TextEncoder().encode(str), bin = '';
+    bytes.forEach(function(b){ bin += String.fromCharCode(b); });
+    return btoa(bin);
+  }
+  async function ghApi(path, method, body){
+    var t = token();
+    if (!t) throw new Error('Add a GitHub token first.');
+    var r = await fetch('https://api.github.com' + path, {
+      method: method || 'GET',
+      headers: {'Authorization': 'Bearer ' + t, 'Accept': 'application/vnd.github+json', 'Content-Type': 'application/json'},
+      body: body ? JSON.stringify(body) : undefined
+    });
+    if (!r.ok) throw new Error('GitHub ' + r.status);
+    return r.status === 204 ? null : await r.json();
+  }
+  async function ghGetFile(repo, path){
+    try {
+      var j = await ghApi('/repos/davedellaquila/' + repo + '/contents/' + path);
+      if (j && j.content) return {
+        text: new TextDecoder().decode(Uint8Array.from(atob(j.content.replace(/\n/g, '')), function(c){ return c.charCodeAt(0); })),
+        sha: j.sha
+      };
+    } catch(e){}
+    return null;
+  }
+  var repo = null, repoName = bid;
+  async function resolveRepo(){
+    try {
+      var r = await fetch('../buddies.json', {cache: 'no-store'});
+      var d = await r.json();
+      var buds = d.buddies || [];
+      for (var i = 0; i < buds.length; i++) {
+        if (buds[i].id === bid && buds[i].repo) { repo = buds[i].repo; repoName = buds[i].name || bid; break; }
+      }
+    } catch(e){}
+    /* Fallback until the registry wiring lands: the INIT names this repo. */
+    if (!repo && bid === 'journal-buddy') { repo = 'journal-buddy'; repoName = 'Journal Buddy'; }
+  }
+  function localKey(){ return 'buddyTree.ingest.' + bid; }
+  function localBacklog(){
+    try { var a = JSON.parse(localStorage.getItem(localKey()) || '[]'); return Array.isArray(a) ? a : []; }
+    catch(e){ return []; }
+  }
+  function localSave(entry){
+    var a = localBacklog(); a.push(entry);
+    try { localStorage.setItem(localKey(), JSON.stringify(a)); } catch(e){}
+  }
+  function localClear(){ try { localStorage.removeItem(localKey()); } catch(e){} }
+  function refreshUI(){
+    var has = !!token();
+    tokWrap.hidden = has;
+    ta.disabled = false;
+    btn.disabled = false;
+    var n = localBacklog().length;
+    if (!repo) {
+      st.textContent = n
+        ? n + ' local ' + (n === 1 ? 'dump' : 'dumps') + ' saved on this device — will sync when a repo is linked.'
+        : 'No repo linked yet — dumps save on this device and will sync when one is linked.';
+      return;
+    }
+    st.textContent = has
+      ? (n ? n + ' local ' + (n === 1 ? 'dump' : 'dumps') + ' will sync on next dump.' : '')
+      : 'No GitHub token — dumps save on this device for now.';
+  }
+  var tokInput = tokWrap.querySelector('input'),
+      tokSave = tokWrap.querySelector('button');
+  function flashSaved(){
+    var label = btn.textContent;
+    btn.classList.add('saved');
+    btn.textContent = '✓ Saved';
+    st.classList.add('flash');
+    setTimeout(function(){
+      btn.classList.remove('saved');
+      if (btn.textContent === '✓ Saved') btn.textContent = label;
+      st.classList.remove('flash');
+    }, 1800);
+  }
+  tokSave.addEventListener('click', async function(){
+    var v = tokInput.value.trim();
+    if (!v) return;
+    lsSet({ghToken: v});
+    tokInput.value = '';
+    st.textContent = 'Checking token…';
+    try {
+      await ghApi('/user');
+      refreshUI();
+      st.textContent = '✓ Token verified — dumps will sync to GitHub.';
+    } catch(e) {
+      refreshUI();
+      st.textContent = '⚠ GitHub rejected that token (' + ((e && e.message) || e) + ') — dumps stay on this device until a working token is added.';
+    }
+  });
+  async function dump(){
+    var text = ta.value.trim();
+    if (!text) return;
+    var stamp = new Date().toLocaleString();
+    var NL = String.fromCharCode(10);
+    if (!repo) {
+      localSave({t: stamp, text: text});
+      ta.value = '';
+      refreshUI();
+      st.textContent = '✓ Saved on this device — will sync to the repo once one is linked.';
+      flashSaved();
+      return;
+    }
+    if (!token()) {
+      localSave({t: stamp, text: text});
+      ta.value = '';
+      st.textContent = '✓ Saved on this device — add a GitHub token to sync it to the repo.';
+      flashSaved();
+      return;
+    }
+    st.textContent = 'Dumping…';
+    btn.disabled = true;
+    try {
+      var backlog = localBacklog();
+      var parts = backlog.map(function(b){ return '## ' + b.t + NL + NL + b.text + NL + NL; });
+      parts.push('## ' + stamp + NL + NL + text + NL + NL);
+      var cur = await ghGetFile(repo, 'docs/ingest.md');
+      var base = cur ? cur.text : '# Ingest log — ' + repoName + NL + NL;
+      var body = {message: 'Ingest dump for ' + bid, content: b64encode(base + parts.join(''))};
+      if (cur && cur.sha) body.sha = cur.sha;
+      await ghApi('/repos/davedellaquila/' + repo + '/contents/docs/ingest.md', 'PUT', body);
+      localClear();
+      ta.value = '';
+      st.textContent = '✓ Dumped to ' + repo + '/docs/ingest.md' + (backlog.length ? ' (' + backlog.length + ' local synced)' : '');
+      flashSaved();
+    } catch(err){
+      try { localSave({t: stamp, text: text}); } catch(e2){}
+      ta.value = '';
+      refreshUI();
+      var why = (err && err.message) || String(err);
+      var nq = 0; try { nq = localBacklog().length; } catch(e2){}
+      var tail = nq > 1 ? ' (' + nq + ' on this device waiting to sync)' : '';
+      st.textContent = (/404/.test(why)
+        ? '⚠ Saved on this device — GitHub said 404 (usually a wrong/expired token, or no access to this private repo). Fix the token, then dump again to sync.'
+        : '⚠ Saved on this device — GitHub said: ' + why + '. It will sync on your next successful dump.') + tail;
+    }
+    btn.disabled = false;
+  }
+  btn.addEventListener('click', dump);
+  ta.addEventListener('keydown', function(ev){
+    if (ev.key === 'Enter' && !ev.shiftKey && !ev.altKey) { ev.preventDefault(); dump(); }
+  });
+  resolveRepo().then(refreshUI);
+})();
+</script>
+<!--
+  TIP JAR — canonical snippet (Dave's standard, 2026-10-24; motion v2, 2026-10-26)
+  Every buddy homepage and every page a buddy creates carries the tip jar.
+  Public pages especially: a reader who got value can say thanks.
+
+  USAGE: paste this whole block just before </body>. No dependencies.
+  The jar points at Dave's Ko-fi page by default. A page for a specific app
+  may override the destination with its own Ko-fi page later:
+      <div class="tipjar" ...> — change the href on the <a>.
+
+  DESIGN NOTES (keep it alive, never annoying):
+  - "Breathing" (v2): a calm but clearly visible pulse — the pill scales
+    1 → 1.045 over a 3.2s ease-in-out cycle while its glow swells with it.
+    (V1 breathed at 1.035 over 6s — Dave: "rather static." Too subtle.)
+  - "Shimmer" (v2): a soft light sweep crosses the pill once every ~8s —
+    a ~1.3s pass inside a long rest, built into the keyframe cycle.
+  - Hover: the jar spins (same move as the dashboard sidebar's tip jar).
+  - V1's hop + coin glint were retired in v2 — with the breathing and the
+    shimmer running, the stack got busy; breathing + shimmer + hover spin
+    is the trio now.
+  - prefers-reduced-motion: all animation off. The jar is just a link.
+  - Transform/opacity/box-shadow only — no layout shift.
+  - Works in dark and light mode; sits above page content (z-index 60) but
+    below modals on buddy pages.
+-->
+<style>
+  .tipjar{position:fixed;right:18px;bottom:18px;z-index:60;
+    font-family:inherit;-webkit-tap-highlight-color:transparent}
+  .tipjar a{display:inline-flex;align-items:center;gap:.5em;position:relative;overflow:hidden;
+    padding:.55em 1em;border-radius:999px;text-decoration:none;
+    font-size:.9rem;font-weight:600;line-height:1;
+    color:#fff;background:linear-gradient(135deg,#7c4dff,#b388ff);
+    box-shadow:0 6px 18px rgba(124,77,255,.35),0 2px 6px rgba(0,0,0,.25);
+    animation:tipjar-breathe 3.2s ease-in-out infinite}
+  .tipjar a::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;
+    background:linear-gradient(105deg,rgba(255,255,255,0) 35%,rgba(255,255,255,.45) 50%,rgba(255,255,255,0) 65%);
+    transform:translateX(-110%);animation:tipjar-sheen 8s ease-in-out infinite}
+  .tipjar .jar{display:inline-block;font-size:1.15em}
+  .tipjar a:hover .jar{animation:tipjar-spin .7s cubic-bezier(.34,1.56,.64,1)}
+  .tipjar a:focus-visible{outline:3px solid #ffd54f;outline-offset:3px}
+  @keyframes tipjar-breathe{0%,100%{transform:scale(1);box-shadow:0 6px 18px rgba(124,77,255,.35),0 2px 6px rgba(0,0,0,.25)}50%{transform:scale(1.045);box-shadow:0 9px 26px rgba(124,77,255,.55),0 3px 8px rgba(0,0,0,.28)}}
+  @keyframes tipjar-sheen{0%{transform:translateX(-110%)}16%{transform:translateX(110%)}100%{transform:translateX(110%)}}
+  @keyframes tipjar-spin{to{transform:rotate(360deg)}}
+  @media (prefers-reduced-motion: reduce){
+    .tipjar a,.tipjar a:hover .jar{animation:none}
+    .tipjar a::after{display:none}
+  }
+</style>
+<div class="tipjar">
+  <a href="https://ko-fi.com/davedellaquila" target="_blank" rel="noopener"
+     aria-label="Tip jar — if this page helped you, you can leave Dave a tip on Ko-fi">
+    <span class="jar">🫙</span><span class="tiptext">Tip Jar</span>
+  </a>
+</div>
+</body>
+</html>
