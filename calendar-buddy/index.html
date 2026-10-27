@@ -309,6 +309,187 @@ renderCalendar("fiddletown");
 
   </div>
 
+  <div class="section-label">On the calendar</div>
+  <div class="card" style="padding-top:20px">
+<!-- ===== On the calendar: month grid + day agenda from events.json (self-contained, namespaced cal-) ===== -->
+<style>
+.cal-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 6px; flex-wrap: wrap; }
+.cal-head h3 { font-size: 20px; margin: 0; }
+.cal-nav { display: flex; gap: 8px; align-items: center; }
+.cal-btn { font-size: 13px; font-weight: 600; color: var(--muted); background: none;
+  border: 1px solid var(--border); border-radius: 20px; padding: 6px 14px; cursor: pointer; font-family: inherit; }
+.cal-btn:hover:not(:disabled) { color: var(--accent); border-color: var(--accent); }
+.cal-btn:disabled { opacity: .4; cursor: default; }
+.cal-sub { font-size: 13px; color: var(--muted); font-style: italic; margin: 0 0 14px; }
+.cal-dow { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; margin-bottom: 4px; }
+.cal-dow div { font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); text-align: center; padding: 2px 0; }
+.cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
+.cal-day { background: var(--bg); border: 1px solid var(--border); border-radius: 8px;
+  min-height: 88px; padding: 5px 6px; cursor: pointer; overflow: hidden; text-align: left;
+  font-family: inherit; color: var(--text); width: 100%; }
+.cal-day:hover { border-color: var(--accent); }
+.cal-day.cal-out { opacity: .38; cursor: default; }
+.cal-day.cal-out:hover { border-color: var(--border); }
+.cal-day.cal-today { border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); }
+.cal-day.cal-sel { background: var(--accent-soft); border-color: var(--accent); }
+.cal-dnum { font-size: 12.5px; font-weight: 700; margin-bottom: 3px; }
+.cal-ev { display: block; font-size: 11px; line-height: 1.35; background: var(--accent-soft);
+  border-radius: 4px; padding: 1px 4px; margin-bottom: 2px; white-space: nowrap;
+  overflow: hidden; text-overflow: ellipsis; }
+.cal-more { display: block; font-size: 10.5px; color: var(--muted); padding-left: 2px; }
+.cal-agenda { margin-top: 18px; border-top: 1px dashed var(--border); padding-top: 14px; }
+.cal-agenda h4 { font-size: 16px; margin: 0 0 8px; }
+.cal-agenda ul { list-style: none; }
+.cal-agenda li { display: flex; gap: 12px; padding: 7px 0; border-bottom: 1px dashed var(--border); font-size: 14.5px; }
+.cal-agenda li:last-child { border-bottom: none; }
+.cal-when { flex: 0 0 118px; color: var(--muted); font-size: 13.5px; }
+.cal-none { color: var(--muted); font-size: 14.5px; font-style: italic; }
+@media (max-width: 560px) {
+  .cal-day { min-height: 62px; padding: 4px; }
+  .cal-ev { font-size: 9.5px; }
+  .cal-when { flex-basis: 92px; }
+}
+</style>
+<div class="cal-head">
+  <h3>📅 On the calendar</h3>
+  <div class="cal-nav">
+    <button type="button" class="cal-btn" id="cal-prev">← Prev</button>
+    <button type="button" class="cal-btn" id="cal-today-btn">Today</button>
+    <button type="button" class="cal-btn" id="cal-next">Next →</button>
+  </div>
+</div>
+<p class="cal-sub" id="cal-month-label">Loading…</p>
+<div class="cal-dow"><div>Sun</div><div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div></div>
+<div class="cal-grid" id="cal-grid"></div>
+<div class="cal-agenda" id="cal-agenda"></div>
+<p class="cal-sub" style="margin-top:12px">Snapshot of Dave's own Google calendars (titles &amp; times only), refreshed daily.</p>
+<script>
+(function () {
+  var MONTHS = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+  var DOWS = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+  var events = [];
+  var today = new Date(); today.setHours(0, 0, 0, 0);
+  var viewY = today.getFullYear(), viewM = today.getMonth();
+  var selKey = keyOf(today);
+  var minKey = null, maxKey = null;
+
+  function keyOf(d) {
+    return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+  }
+  function esc(t) {
+    return String(t).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+  }
+  function fmtTime(iso) {
+    var d = new Date(iso);
+    var h = d.getHours(), m = d.getMinutes();
+    var ap = h < 12 ? "AM" : "PM"; h = h % 12 === 0 ? 12 : h % 12;
+    return h + ":" + String(m).padStart(2, "0") + " " + ap;
+  }
+  /* days (as date keys) an event touches; all-day end date is exclusive */
+  function eventDays(ev) {
+    var out = [];
+    if (ev.allDay) {
+      var d = new Date(ev.start + "T00:00:00"), end = new Date(ev.end + "T00:00:00");
+      if (end <= d) end = new Date(d.getTime() + 864e5);
+      while (d < end) { out.push(keyOf(d)); d = new Date(d.getTime() + 864e5); }
+    } else {
+      var s = new Date(ev.start), e = new Date(ev.end);
+      var cur = new Date(s.getFullYear(), s.getMonth(), s.getDate());
+      var last = new Date(e.getFullYear(), e.getMonth(), e.getDate());
+      if (e.getHours() === 0 && e.getMinutes() === 0 && e > s) last = new Date(last.getTime() - 864e5);
+      while (cur <= last) { out.push(keyOf(cur)); cur = new Date(cur.getTime() + 864e5); }
+    }
+    return out;
+  }
+  function byDay() {
+    var map = {};
+    events.forEach(function (ev) {
+      eventDays(ev).forEach(function (k) { (map[k] = map[k] || []).push(ev); });
+    });
+    Object.keys(map).forEach(function (k) {
+      map[k].sort(function (a, b) {
+        if (a.allDay !== b.allDay) return a.allDay ? -1 : 1;
+        return a.start < b.start ? -1 : a.start > b.start ? 1 : 0;
+      });
+    });
+    return map;
+  }
+  function render() {
+    var map = byDay();
+    document.getElementById("cal-month-label").textContent = MONTHS[viewM] + " " + viewY;
+    var first = new Date(viewY, viewM, 1);
+    var startOffset = first.getDay();
+    var dim = new Date(viewY, viewM + 1, 0).getDate();
+    var cells = [];
+    for (var i = 0; i < startOffset; i++) cells.push(null);
+    for (var d = 1; d <= dim; d++) cells.push(new Date(viewY, viewM, d));
+    while (cells.length % 7) cells.push(null);
+    var html = "";
+    cells.forEach(function (dt) {
+      if (!dt) { html += '<div class="cal-day cal-out"></div>'; return; }
+      var k = keyOf(dt), evs = map[k] || [];
+      var cls = "cal-day" + (k === keyOf(today) ? " cal-today" : "") + (k === selKey ? " cal-sel" : "");
+      html += '<button type="button" class="' + cls + '" data-day="' + k + '"><span class="cal-dnum">' + dt.getDate() + "</span>";
+      evs.slice(0, 2).forEach(function (ev) {
+        html += '<span class="cal-ev">' + (ev.allDay ? "" : fmtTime(ev.start) + " ") + esc(ev.title) + "</span>";
+      });
+      if (evs.length > 2) html += '<span class="cal-more">+' + (evs.length - 2) + " more</span>";
+      html += "</button>";
+    });
+    var grid = document.getElementById("cal-grid");
+    grid.innerHTML = html;
+    grid.querySelectorAll("[data-day]").forEach(function (b) {
+      b.addEventListener("click", function () { selKey = b.dataset.day; render(); });
+    });
+    document.getElementById("cal-prev").disabled = minKey !== null && viewY * 12 + viewM <= minKey;
+    document.getElementById("cal-next").disabled = maxKey !== null && viewY * 12 + viewM >= maxKey;
+    renderAgenda(map);
+  }
+  function renderAgenda(map) {
+    var parts = selKey.split("-");
+    var dt = new Date(+parts[0], +parts[1] - 1, +parts[2]);
+    var evs = map[selKey] || [];
+    var html = "<h4>" + DOWS[dt.getDay()] + ", " + MONTHS[dt.getMonth()] + " " + dt.getDate() + "</h4>";
+    if (!evs.length) {
+      html += '<p class="cal-none">Nothing on the calendar.</p>';
+    } else {
+      html += "<ul>";
+      evs.forEach(function (ev) {
+        var when = ev.allDay ? "All day" : fmtTime(ev.start) + " – " + fmtTime(ev.end);
+        html += "<li><span class=\"cal-when\">" + when + "</span><span>" + esc(ev.title) + "</span></li>";
+      });
+      html += "</ul>";
+    }
+    document.getElementById("cal-agenda").innerHTML = html;
+  }
+  document.getElementById("cal-prev").addEventListener("click", function () {
+    viewM--; if (viewM < 0) { viewM = 11; viewY--; } render();
+  });
+  document.getElementById("cal-next").addEventListener("click", function () {
+    viewM++; if (viewM > 11) { viewM = 0; viewY++; } render();
+  });
+  document.getElementById("cal-today-btn").addEventListener("click", function () {
+    viewY = today.getFullYear(); viewM = today.getMonth(); selKey = keyOf(today); render();
+  });
+  fetch("events.json", { cache: "no-store" })
+    .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
+    .then(function (data) {
+      events = Array.isArray(data) ? data : [];
+      if (events.length) {
+        var firstD = new Date(events[0].start), lastD = new Date(events[events.length - 1].start);
+        minKey = Math.min(today.getFullYear() * 12 + today.getMonth(), firstD.getFullYear() * 12 + firstD.getMonth());
+        maxKey = lastD.getFullYear() * 12 + lastD.getMonth();
+      }
+      render();
+    })
+    .catch(function () {
+      document.getElementById("cal-month-label").textContent = "Calendar snapshot couldn't load — try again later.";
+    });
+})();
+</script>
+<!-- ===== end On the calendar ===== -->
+  </div>
+
   <div class="section-label">On the calendar radar</div>
   <div class="card">
     <ul class="radar">
