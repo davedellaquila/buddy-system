@@ -2117,6 +2117,7 @@ body:has(#sidebar.sb-floating) #sb-resize{display:none}
    border around the whole section. Removed at his request. */
 @media (prefers-reduced-motion: reduce){
   .bp-close-x.bpx-spin svg{animation:none}
+  .bp-name-flash{animation:none}
   #main #view-buddy.sheet{transition:none}
 }
 /* ==== Fix build (Dave 2026-10-21, Jobs G/I/K/N/O) ==== */
@@ -2331,6 +2332,28 @@ body.proj-dragging,body.proj-dragging *{cursor:grabbing !important}
 .bp-crumb .reposlug{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-weight:600}
 .bp-crumb b{color:var(--text);font-weight:600}
 .bp-top{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+/* Profile hero at the top of the info panel (Dave 2026-10-26, after the
+   Muse profile-card treatment in his screenshot): a large centered
+   circular avatar with a pencil badge overlapping its bottom-right edge,
+   the buddy's name in large type under it, and a quiet centered status
+   line. The compact sticky identity bar above it is unchanged; the hero
+   scrolls away with the content. The avatar reuses the panel's image
+   logic (avatars/<id>.jpg over the emoji); the pencil badge focuses the
+   sticky bar's rename input (#bp-name). */
+.bp-hero{display:flex;flex-direction:column;align-items:center;text-align:center;padding:22px 8px 6px}
+.bp-hero-ava{position:relative;width:104px;height:104px;flex:0 0 auto}
+.bp-hero-icon{position:absolute;inset:0;border-radius:50%;overflow:hidden;display:flex;align-items:center;justify-content:center;background:color-mix(in srgb, var(--panel) 82%, var(--text));border:1px solid var(--border)}
+.bp-hero-emoji{font-size:3.25rem;line-height:1;position:relative}
+.bp-hero-edit{position:absolute;right:-3px;bottom:-3px;width:34px;height:34px;border-radius:50%;background:var(--panel);border:1px solid var(--border);color:var(--text);cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0;box-shadow:0 2px 10px var(--shadow);z-index:2;-webkit-tap-highlight-color:transparent}
+.bp-hero-edit:hover{color:var(--accent);border-color:var(--accent)}
+.bp-hero-edit:active{transform:scale(.94)}
+.bp-hero-name{font-size:1.625rem;font-weight:700;line-height:1.2;margin-top:14px;color:var(--text)}
+.bp-hero-status{margin-top:5px;color:var(--muted);font-size:.875rem;display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:center}
+.bp-hero-status .status{background:none;border:none;padding:0;font-size:.875rem;font-weight:500;text-transform:none;letter-spacing:0}
+.bp-hero-dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:currentColor;margin-right:7px;vertical-align:1px}
+.bp-hero-attn{color:var(--amber-tx)}
+.bp-name-flash{animation:bp-name-flash 1.5s ease}
+@keyframes bp-name-flash{0%,60%{background:var(--wash2);border-bottom-color:var(--accent)}100%{background:transparent;border-bottom-color:transparent}}
 /* Compact sticky identity bar — one row; nav / crumb / tagline scroll away */
 .bp-sticky-head{position:sticky;top:0;z-index:6;
   /* Dave 2026-10-18: the header card got lost against the panel — give it a
@@ -6575,9 +6598,20 @@ function renderBuddy(id){
     // Status renders as a quiet annotation line under the tagline instead.
     + '<button class="bp-close-x" id="bp-close-x" type="button" title="Close detail \u2014 back to main view" aria-label="Close detail \u2014 back to main view">' + plainX(22) + '</button></div>'
     + '</div>'
+    + '<div class="bp-hero">'
+    + '<div class="bp-hero-ava"><span class="bp-hero-icon" id="bp-hero-icon" title="Click to change avatar" style="cursor:pointer">'
+    + '<img class="bp-avatarimg" src="'+escHtml(buddyImageUrl(b))+'" alt="" onerror="this.remove()">'
+    + '<span class="bp-hero-emoji">'+escHtml(buddyDisplayIcon(b))+'</span></span>'
+    + '<button class="bp-hero-edit" id="bp-hero-edit" type="button" title="Edit name" aria-label="Edit name"><svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.05a1 1 0 0 0 0-1.42l-2.34-2.34a1 1 0 0 0-1.42 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg></button></div>'
+    + '<div class="bp-hero-name">'+escHtml(dispName(b))+'</div>'
+    + '<div class="bp-hero-status"><span class="status '+(b.statusClass||'st-active')+'"><span class="bp-hero-dot"></span>'+escHtml(b.status||'Active')+'</span>'
+    + (unseenCount > 0 ? '<span class="bp-hero-attn">⚑ '+unseenCount+(unseenCount === 1 ? ' needs' : ' need')+' attention</span>' : '')
+    + '</div></div>'
     + '<div class="bp-crumb">'+crumb(id)+'</div>'
     + '<p class="bp-tagline">'+escHtml(b.tagline||'')+'</p>'
-    + ((b.status && b.status !== 'Active') ? '<div class="bp-statusline status '+b.statusClass+'">'+escHtml(b.status)+'</div>' : '')
+    // Profile hero (Dave 2026-10-26): the registry status now renders in the
+    // hero's status line for every buddy (Active included), so the old
+    // annotation line under the tagline is retired to avoid a duplicate.
     + '<div id="token-warn-slot"></div>'
     + standingOrdersHtml()
     + '<div class="bp-sec" data-field="ingest"><h3>Dump box<span class="info-tip" data-tip="Brain-dump anything about this buddy \u2014 raw and unfiltered. Each dump lands in the buddy\u2019s repo (docs/ingest.md) as a timestamped entry.">\u24d8</span></h3>'
@@ -6658,6 +6692,25 @@ function renderBuddy(id){
     if (typeof getChartType === 'function' && getChartType() === 'constellation'
         && typeof initConstellation === 'function') initConstellation();
   };
+  // Profile hero wiring (Dave 2026-10-26): the hero avatar opens the same
+  // avatar picker as the sticky bar's icon; the pencil badge jumps to the
+  // rename input in the sticky bar, focuses it with the text selected, and
+  // flashes it so the eye lands on the control.
+  const heroIcon = document.getElementById('bp-hero-icon');
+  if (heroIcon) heroIcon.addEventListener('click', e => { e.stopPropagation(); openAvatarPicker(id, heroIcon); });
+  const heroEdit = document.getElementById('bp-hero-edit');
+  if (heroEdit) heroEdit.addEventListener('click', e => {
+    e.stopPropagation();
+    const n = document.getElementById('bp-name');
+    if (!n) return;
+    n.scrollIntoView({block: 'center', behavior: 'smooth'});
+    n.focus();
+    try { n.select(); } catch (err) {}
+    n.classList.remove('bp-name-flash');
+    void n.offsetWidth; // restart the flash animation
+    n.classList.add('bp-name-flash');
+    setTimeout(() => n.classList.remove('bp-name-flash'), 1600);
+  });
   const nm = document.getElementById('bp-name');
   nm.addEventListener('keydown', e => { if (e.key === 'Enter'){ e.preventDefault(); nm.blur(); } });
   nm.addEventListener('blur', () => {

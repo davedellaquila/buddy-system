@@ -133,6 +133,16 @@ Build: `build.py` generates `index.html` from `buddies.json` + `plans.json`.
 - **Collapsible buddy rows** — buddies with children carry a chevron; click
   toggles just that row, Shift+click collapses/expands the whole subtree.
   State persists per device.
+- **Profile hero** — every buddy's info panel opens with a profile
+  header in the Muse profile-card treatment: a large centered circular
+  avatar (the buddy's uploaded image when it has one, its emoji large
+  otherwise) with a pencil badge overlapping its bottom-right edge, the
+  buddy's name in large type under it, and a centered status line —
+  the registry status with a colored dot, plus a "⚑ N need attention"
+  flag when attention items are waiting. The pencil badge scrolls to
+  and focuses the panel's rename input; the avatar opens the avatar
+  picker. The hero scrolls away with the content; the compact sticky
+  identity bar above it is unchanged.
 - **Persona picker** — every buddy's info panel shows its current persona
   (name + voice blurb) with "Change persona" (searchable picker over the
   full 116-entry roster) and "🎲 Surprise me" (random pick). Persists to
