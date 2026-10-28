@@ -80,6 +80,28 @@ h2{font-family:var(--serif);font-size:24px;margin:38px 0 6px}
 .entry-body p+p{margin-top:0}
 .entry-body .ph{color:var(--muted);font-style:italic}
 .entry-foot{padding:12px 22px;border-top:1px dashed var(--border);font-size:13px;color:var(--muted)}
+/* journal reader — token-gated, entries load from the private repo only */
+.reader-locked{background:rgba(245,158,11,.09);background:color-mix(in srgb,#f59e0b 9%,var(--bg));border:2px solid #f59e0b;box-shadow:0 0 0 3px rgba(245,158,11,.16);box-shadow:0 0 0 3px color-mix(in srgb,#f59e0b 16%,transparent);border-radius:12px;padding:16px 18px;font-size:14.5px}
+.reader-locked p{font-weight:700;color:#cf222e;margin-bottom:8px}
+@media (prefers-color-scheme: dark){.reader-locked p{color:#ff7b72}}
+.reader-locked .why{font-weight:400;color:var(--text);margin-bottom:10px}
+.jr-list{display:flex;flex-direction:column;gap:8px}
+.jr-item{display:flex;flex-direction:column}
+.jr-head{display:flex;align-items:center;gap:10px;background:var(--card);border:1px solid var(--border);border-radius:8px;padding:12px 16px;cursor:pointer;text-align:left;width:100%;color:var(--text);font:inherit;-webkit-tap-highlight-color:transparent}
+.jr-head:hover{border-color:var(--accent)}
+.jr-head .jr-date{font-family:var(--serif);font-weight:700;font-size:16px}
+.jr-head .jr-chev{color:var(--muted);font-size:13px;margin-left:auto;flex:none}
+.jr-panel{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:18px 20px;margin-top:8px}
+.jr-status{font-size:13.5px;color:var(--muted);margin-top:10px;min-height:18px}
+.jr-body{font-size:15.5px}
+.jr-body h2{font-size:22px;margin:10px 0 10px}
+.jr-body h3{font-size:18px;margin:18px 0 6px;font-family:var(--serif)}
+.jr-body p{margin:7px 0}
+.jr-body ul{margin:7px 0 7px 20px}
+.jr-body blockquote{border-left:3px solid var(--accent);padding:4px 0 4px 14px;color:var(--text);font-family:var(--serif);font-size:16.5px;margin:10px 0;background:var(--paper2);border-radius:0 8px 8px 0;padding-right:12px}
+.jr-body code{background:var(--bg);border:1px solid var(--border);border-radius:4px;padding:0 4px;font-size:13px}
+.jr-body a{color:var(--accent)}
+.jr-body hr{border:none;border-top:1px solid var(--border);margin:14px 0}
 /* look-backs */
 .look{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
 .look .card{text-align:left}
@@ -129,19 +151,20 @@ h2{font-family:var(--serif);font-size:24px;margin:38px 0 6px}
     <h1>Your days, in your words.</h1>
     <p class="lede">I'm the keeper of your personal journal. Dictate a thought, recount your day, or drop a moment you want kept — I turn it into a dated entry in your own voice. Verbatim first, tidied second, never rewritten into someone else's words.</p>
     <div class="dateline">
-      <a class="pill" href="https://docs.google.com/document/d/1-UuBq8TshUACvmXeqeeyH_7-McZb9zCN9av7mfL5E8I/edit" target="_blank" rel="noopener">📄 Journal Buddy — Job Req</a>
+      <a class="pill" href="https://docs.google.com/document/d/1-UuBq8TshUACvmXeqeeyH_7-McZb9zCN9av7mfL5E8I/edit">📄 Journal Buddy — Job Req</a>
       <a class="pill" href="https://github.com/davedellaquila/journal-buddy">🔒 Private repo — journal-buddy</a>
+      <a class="pill" href="#entries">📖 Read the journal</a>
       <a class="pill" href="#dump">✍️ Start today's entry</a>
       <a class="pill" href="#lookback">🔁 Look-backs</a>
     </div>
     <div class="hear">
       <div class="hear-label">🔊 Hear my role <span>— the first paragraph of my job req's Role summary, in my own voice · 0:33</span></div>
-      <audio controls preload="none" src="role-intro.mp3">Your browser doesn't support audio playback — read the <a href="https://docs.google.com/document/d/1-UuBq8TshUACvmXeqeeyH_7-McZb9zCN9av7mfL5E8I/edit" target="_blank" rel="noopener">job req</a> instead.</audio>
+      <audio controls preload="none" src="role-intro.mp3">Your browser doesn't support audio playback — read the <a href="https://docs.google.com/document/d/1-UuBq8TshUACvmXeqeeyH_7-McZb9zCN9av7mfL5E8I/edit">job req</a> instead.</audio>
     </div>
   </section>
 
   <div class="stats" aria-label="Journal at a glance">
-    <div class="stat"><div class="n">3</div><div class="l">Entries kept</div><div class="d">Oct 24, 25 &amp; 26, 2026 filed — see the <a href="https://github.com/davedellaquila/journal-buddy/blob/master/journal/INDEX.md">journal index</a>. A nightly compile now files each day you recap.</div></div>
+    <div class="stat"><div class="n">5</div><div class="l">Entries kept</div><div class="d">Oct 24–28, 2026 filed — see the <a href="https://github.com/davedellaquila/journal-buddy/blob/master/journal/INDEX.md">journal index</a> in the private repo. A nightly compile files each day you recap.</div></div>
     <div class="stat"><div class="n">1 / day</div><div class="l">File per day</div><div class="d">Each day gets its own dated file in the <a href="https://github.com/davedellaquila/journal-buddy">private repo</a>.</div></div>
     <div class="stat"><div class="n">3</div><div class="l">Look-back horizons</div><div class="d">A week, a month, a year ago today — when there's history to show.</div></div>
     <div class="stat"><div class="n">0</div><div class="l">Quotes shared</div><div class="d">Nothing from this journal is quoted to anyone, ever, without your explicit say-so.</div></div>
@@ -152,7 +175,7 @@ h2{font-family:var(--serif);font-size:24px;margin:38px 0 6px}
   <div class="attn">
     <h3>📄 Review the job req</h3>
     <p>The role as hired: capture in your voice, one file per day, gentle look-backs, absolute privacy — and what's out of scope for v1 (no auto-diary from calendar or location, no mood scoring, no publishing).</p>
-    <a class="go" href="https://docs.google.com/document/d/1-UuBq8TshUACvmXeqeeyH_7-McZb9zCN9av7mfL5E8I/edit" target="_blank" rel="noopener">Open the job req →</a>
+    <a class="go" href="https://docs.google.com/document/d/1-UuBq8TshUACvmXeqeeyH_7-McZb9zCN9av7mfL5E8I/edit">Open the job req →</a>
   </div>
   <div class="attn">
     <h3>✍️ First entry is in — keep them coming</h3>
@@ -180,6 +203,24 @@ h2{font-family:var(--serif);font-size:24px;margin:38px 0 6px}
     </div>
     <div class="entry-foot">Filed same day · People / places / projects mentioned will be linked here · Corrections append below the line, dated — never edited in place.</div>
   </div>
+
+  <h2 id="entries">Read the journal</h2>
+  <p class="h2sub">Your entries, readable right here — but only by you. Nothing entry-shaped lives on this page: the list and the words load live from the private <a href="https://github.com/davedellaquila/journal-buddy">journal-buddy repo</a>, straight to this device, using the same GitHub token as the Desk and the dump box. No token on this device, no entries — that's the lock working. Fallback: the <a href="https://github.com/davedellaquila/journal-buddy/blob/master/journal/INDEX.md">journal index on GitHub</a>.</p>
+  <section class="reader" id="reader">
+    <div class="reader-locked" hidden>
+      <p>🔒 Your journal is locked on this device.</p>
+      <div class="why">Paste your GitHub token once — it's verified against GitHub, stays in this device's storage only, and unlocks your entries here, the Desk, and the dump box.</div>
+      <div class="dumpbox-tokenrow">
+        <input type="password" placeholder="GitHub token (repo scope)" aria-label="GitHub token">
+        <button type="button">Save token &amp; unlock</button>
+        <a href="https://github.com/settings/tokens" target="_blank" rel="noopener">Get a token</a>
+      </div>
+    </div>
+    <div class="reader-main" hidden>
+      <div class="jr-list"></div>
+    </div>
+    <div class="jr-status" role="status"></div>
+  </section>
 
   <h2 id="lookback">Look-backs</h2>
   <p class="h2sub">The journal's second job: bringing the right old day back at the right moment. Anniversaries and recurring threads — first snow, the Morgan Hill house, rally season — get flagged to Astro as they approach.</p>
@@ -221,7 +262,7 @@ h2{font-family:var(--serif);font-size:24px;margin:38px 0 6px}
   <p class="h2sub">Everything I keep lives in the private repo — read it, or open a file on GitHub.</p>
   <div class="grid">
     <div class="card"><h3>📁 Repo files</h3><ul>
-      <li><a href="https://github.com/davedellaquila/journal-buddy/blob/master/journal/INDEX.md">journal/INDEX.md</a> — every entry, by date (3 so far)</li>
+      <li><a href="https://github.com/davedellaquila/journal-buddy/blob/master/journal/INDEX.md">journal/INDEX.md</a> — every entry, by date (5 so far)</li>
       <li><a href="https://github.com/davedellaquila/journal-buddy/blob/master/docs/job-req.md">docs/job-req.md</a> — the canonical job req</li>
       <li><a href="https://github.com/davedellaquila/journal-buddy/blob/master/KNOWLEDGE.md">KNOWLEDGE.md</a> — what I've learned</li>
       <li><a href="https://github.com/davedellaquila/journal-buddy/blob/master/DECISIONS.md">DECISIONS.md</a> — decisions, dated</li>
@@ -233,7 +274,7 @@ h2{font-family:var(--serif);font-size:24px;margin:38px 0 6px}
 
   <div class="footer">
     📓 Journal Buddy · Hired Saturday, October 24, 2026 · Child of <a href="https://davedellaquila.github.io/buddy-system/project-buddy/">🧭 Project Buddy</a> · Siblings: <a href="https://davedellaquila.github.io/buddy-system/dream-buddy/">💭 Dream Buddy</a> · <a href="https://davedellaquila.github.io/buddy-system/decision-buddy/">🎯 Decision Buddy</a><br>
-    <a href="https://davedellaquila.github.io/buddy-system/">Buddy System dashboard</a> · <a href="https://github.com/davedellaquila/journal-buddy">Repo</a> · <a href="https://docs.google.com/document/d/1-UuBq8TshUACvmXeqeeyH_7-McZb9zCN9av7mfL5E8I/edit" target="_blank" rel="noopener">Job req</a>
+    <a href="https://davedellaquila.github.io/buddy-system/">Buddy System dashboard</a> · <a href="https://github.com/davedellaquila/journal-buddy">Repo</a> · <a href="https://docs.google.com/document/d/1-UuBq8TshUACvmXeqeeyH_7-McZb9zCN9av7mfL5E8I/edit">Job req</a>
   </div>
 </div>
 
@@ -455,5 +496,169 @@ h2{font-family:var(--serif);font-size:24px;margin:38px 0 6px}
     <span class="jar">🫙</span><span class="tiptext">Tip Jar</span>
   </a>
 </div>
+<script>
+(function(){
+  var sec = document.getElementById('reader');
+  if (!sec || sec.dataset.jrInit) return;
+  sec.dataset.jrInit = '1';
+  var REPO = 'journal-buddy';
+  var locked = sec.querySelector('.reader-locked'),
+      main = sec.querySelector('.reader-main'),
+      list = sec.querySelector('.jr-list'),
+      st = sec.querySelector('.jr-status');
+  function lsGet(){ try { return JSON.parse(localStorage.getItem('buddyTree.v3') || '{}'); } catch(e){ return {}; } }
+  function lsSet(patch){ try { var s = lsGet(); for (var k in patch) s[k] = patch[k]; localStorage.setItem('buddyTree.v3', JSON.stringify(s)); } catch(e){} }
+  function token(){ return lsGet().ghToken || ''; }
+  async function ghApi(path){
+    var t = token();
+    if (!t) throw new Error('no-token');
+    var r = await fetch('https://api.github.com' + path, {
+      headers: {'Authorization': 'Bearer ' + t, 'Accept': 'application/vnd.github+json'}
+    });
+    if (!r.ok) throw new Error('GitHub ' + r.status);
+    return r.json();
+  }
+  function decodeB64(content){
+    return new TextDecoder().decode(Uint8Array.from(atob(content.replace(/\n/g, '')), function(c){ return c.charCodeAt(0); }));
+  }
+  function esc(s){ return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+  function inline(s){
+    s = esc(s);
+    s = s.replace(/`([^`]+)`/g, '<code>$1</code>');
+    s = s.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+    s = s.replace(/(^|[^*])\*([^*\n]+)\*/g, '$1<em>$2</em>');
+    s = s.replace(/\[([^\]]+)\]\((https?:[^)\s]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>');
+    return s;
+  }
+  function mdRender(src){
+    var lines = src.split('\n'), out = [], inList = false, inCode = false, codeBuf = [];
+    function closeList(){ if (inList) { out.push('</ul>'); inList = false; } }
+    for (var i = 0; i < lines.length; i++){
+      var ln = lines[i], m;
+      if (/^```/.test(ln)) {
+        if (inCode) { out.push('<pre><code>' + esc(codeBuf.join('\n')) + '</code></pre>'); codeBuf = []; inCode = false; }
+        else { closeList(); inCode = true; }
+        continue;
+      }
+      if (inCode) { codeBuf.push(ln); continue; }
+      if ((m = ln.match(/^(#{1,4})\s+(.*)/))) {
+        closeList();
+        var lv = Math.min(m[1].length + 1, 4);
+        out.push('<h' + lv + '>' + inline(m[2]) + '</h' + lv + '>');
+        continue;
+      }
+      if (/^\s*---+\s*$/.test(ln)) { closeList(); out.push('<hr>'); continue; }
+      if ((m = ln.match(/^\s*[-*]\s+(.*)/))) {
+        if (!inList) { out.push('<ul>'); inList = true; }
+        out.push('<li>' + inline(m[1]) + '</li>');
+        continue;
+      }
+      if ((m = ln.match(/^>\s?(.*)/))) { closeList(); out.push('<blockquote>' + inline(m[1]) + '</blockquote>'); continue; }
+      if (!ln.trim()) { closeList(); continue; }
+      closeList();
+      out.push('<p>' + inline(ln) + '</p>');
+    }
+    closeList();
+    if (inCode) out.push('<pre><code>' + esc(codeBuf.join('\n')) + '</code></pre>');
+    return out.join('\n');
+  }
+  function fmtDate(name){
+    var m = name.match(/^(\d{4})-(\d{2})-(\d{2})\.md$/);
+    if (!m) return name;
+    var d = new Date(+m[1], +m[2] - 1, +m[3]);
+    return d.toLocaleDateString(undefined, {weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'});
+  }
+  var loaded = false;
+  async function loadList(){
+    st.textContent = 'Loading your entries from the private repo…';
+    try {
+      var items = await ghApi('/repos/davedellaquila/' + REPO + '/contents/journal?ref=master');
+      var files = items.filter(function(x){ return /^\d{4}-\d{2}-\d{2}\.md$/.test(x.name); })
+                       .sort(function(a, b){ return a.name < b.name ? 1 : -1; });
+      list.innerHTML = '';
+      if (!files.length) { st.textContent = 'No entries in the repo yet.'; loaded = true; return; }
+      files.forEach(function(f){ list.appendChild(buildItem(f)); });
+      st.textContent = files.length + (files.length === 1 ? ' entry' : ' entries') + ' — newest first. Tap a day to read it here.';
+      loaded = true;
+    } catch(e) {
+      var why = (e && e.message) || String(e);
+      if (/401|403/.test(why)) {
+        showLocked('⚠ GitHub rejected the saved token (' + why + ') — paste a working one to unlock your entries.');
+      } else {
+        st.textContent = '⚠ Could not load your entries — GitHub said: ' + why + '. The journal itself is safe in the repo; try reloading the page.';
+      }
+    }
+  }
+  function buildItem(f){
+    var wrap = document.createElement('div');
+    wrap.className = 'jr-item';
+    var head = document.createElement('button');
+    head.type = 'button';
+    head.className = 'jr-head';
+    head.setAttribute('aria-expanded', 'false');
+    var date = document.createElement('span');
+    date.className = 'jr-date';
+    date.textContent = '📓 ' + fmtDate(f.name);
+    var chev = document.createElement('span');
+    chev.className = 'jr-chev';
+    chev.textContent = '▸';
+    head.appendChild(date);
+    head.appendChild(chev);
+    var panel = document.createElement('div');
+    panel.className = 'jr-panel';
+    panel.hidden = true;
+    var body = document.createElement('div');
+    body.className = 'jr-body';
+    body.innerHTML = '<p>Loading…</p>';
+    panel.appendChild(body);
+    var got = null;
+    head.addEventListener('click', async function(){
+      var open = panel.hidden;
+      panel.hidden = !open;
+      head.setAttribute('aria-expanded', String(open));
+      chev.textContent = open ? '▾' : '▸';
+      if (open && !got) {
+        try {
+          var j = await ghApi('/repos/davedellaquila/' + REPO + '/contents/journal/' + f.name + '?ref=master');
+          got = decodeB64(j.content);
+          body.innerHTML = mdRender(got);
+        } catch(e) {
+          body.innerHTML = '<p>⚠ Could not load this entry (' + esc((e && e.message) || String(e)) + ') — close and open it again to retry, or read it in the <a href="https://github.com/davedellaquila/' + REPO + '/blob/master/journal/' + f.name + '" target="_blank" rel="noopener">repo</a>.</p>';
+        }
+      }
+    });
+    wrap.appendChild(head);
+    wrap.appendChild(panel);
+    return wrap;
+  }
+  function showLocked(msg){
+    locked.hidden = false;
+    main.hidden = true;
+    st.textContent = msg || '';
+  }
+  function showMain(){
+    locked.hidden = true;
+    main.hidden = false;
+    if (!loaded) loadList();
+  }
+  var tokInput = locked.querySelector('input'),
+      tokSave = locked.querySelector('button');
+  tokSave.addEventListener('click', async function(){
+    var v = tokInput.value.trim();
+    if (!v) return;
+    lsSet({ghToken: v});
+    tokInput.value = '';
+    st.textContent = 'Checking token…';
+    try {
+      await ghApi('/user');
+      st.textContent = '✓ Token verified — your journal is unlocked on this device.';
+      showMain();
+    } catch(e) {
+      showLocked('⚠ GitHub rejected that token (' + ((e && e.message) || e) + ') — entries stay locked until a working token is added.');
+    }
+  });
+  if (token()) showMain(); else showLocked('');
+})();
+</script>
 </body>
 </html>
