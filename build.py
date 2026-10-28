@@ -123,6 +123,7 @@ body.sb-anchored #sidebar{left:0;background:var(--panel);border-left:none;border
   box-shadow:8px 0 28px var(--shadow-soft);
   -webkit-backdrop-filter:none;backdrop-filter:none}
 body.sb-anchored #sidebar .brand, body.sb-anchored #sidebar .sb-tipjar{background:var(--panel)}
+body.sb-anchored #sb-resize{left:calc(var(--sbw, 336px) - 14px)} /* anchored sidebar is flush to the viewport edge (left:0) — no 12px offset to add (2026-10-28) */
 /* Anchored sidebar yield (Dave, 2026-10-20): in Anchored the sidebar is a
    dock, not an overlay; the main view resizes to make room for it,
    mirroring the info panel's right-side yield. The width follows --sbw (set
@@ -255,7 +256,7 @@ body.sb-closed #main .zoombar{left:calc(50% + 38px)}
   position:sticky;top:0;z-index:7;background:var(--panel);
   margin:0 -14px;padding:0 14px;
   border-bottom:1px solid var(--border)}
-.sb-brand-sticky #sb-tools{position:absolute;top:8px;right:8px;z-index:10}
+.sb-brand-sticky #sb-tools{position:absolute;top:8px;right:24px;z-index:10} /* Dave 2026-10-28: 24px, not 8 — the brand header bleeds edge-to-edge under the .sb-scroll classic scrollbar band (~16px), which painted over the right arc of the close (x) circle; 24 = 16 band + 8 breathing room, on every surface */
 /* Search stacks under brand sticky block; --sb-brand-h set from measured brand height */
 .sb-search-sticky{
   position:sticky;top:var(--sb-brand-h,96px);z-index:6;background:var(--panel);
@@ -800,7 +801,7 @@ input[type=range].zrange::-moz-range-thumb{width:16px;height:16px;border-radius:
 /* Fixed to viewport at sidebar edge so vertical #sidebar scroll doesn't move it.
    MUST be a DOM sibling of #sidebar (not a child): overflow on #sidebar clips
    hit-testing/paint for fixed descendants, which made the gripper invisible. */
-#sb-resize{position:fixed;top:12px;left:calc(var(--sbw, 336px) - 14px);z-index:50;
+#sb-resize{position:fixed;top:12px;left:calc(var(--sbw, 336px) - 2px);z-index:50; /* Dave 2026-10-28: -2px, not -14 — the floating sidebar sits 12px in from the viewport edge (left:12px), so centring the strip on its inner edge is (12 + sbw) - 14 = sbw - 2. The old formula shifted the strip 12px left, over the sidebar close (x) button, and pushed the gripper dots 12px further inboard than spec. Anchored mode (flush left:0) overrides below. */
   display:flex;align-items:center;justify-content:center;width:28px;height:calc(100vh - 24px);height:calc(100dvh - 24px);cursor:ew-resize;
   background:transparent;-webkit-tap-highlight-color:transparent;touch-action:none;user-select:none}
 /* Drawer-pull tab (Dave, 2026-10-13): half a tab protrudes from the left edge when the
@@ -947,7 +948,7 @@ html.light #hp-nav button, html.light #hp-back{background:rgba(255,255,255,.20);
   box-shadow:0 -8px 40px rgba(0,0,0,.4);transform:translateY(100%);transition:transform .3s cubic-bezier(.32,.72,.35,1)}
 #newbuddy-sheet .nb-body{overflow-y:auto;padding:4px 4px 16px;margin:0 -4px;min-width:0}
 #newbuddy-sheet .nb-body > *{min-width:0;max-width:100%}
-#newbuddy-sheet .nb-actions{position:sticky;bottom:0;background:var(--panel);padding:14px 0 26px;border-top:1px solid var(--border2);display:flex;gap:10px;justify-content:flex-end;margin:0 -22px;padding-left:22px;padding-right:22px}
+#newbuddy-sheet .nb-actions{position:sticky;bottom:0;background:var(--panel);padding:14px 0 26px;border-top:1px solid var(--border2);display:flex;gap:10px;justify-content:flex-end;align-items:center;margin:0 -22px;padding-left:22px;padding-right:22px}
 #newbuddy-sheet .nb-actions button{font-size:.875rem;font-weight:600;padding:10px 22px;border-radius:20px;cursor:pointer;border:1px solid var(--border)}
 #newbuddy-sheet .nb-actions .ab-cancel{background:none;color:var(--text)}
 #newbuddy-sheet .nb-actions .ab-create{background:var(--accent);border-color:var(--accent);color:#fff}
@@ -967,6 +968,11 @@ html.light #hp-nav button, html.light #hp-back{background:rgba(255,255,255,.20);
 #newbuddy-sheet .nb-personas button.sel{border-color:var(--accent);background:var(--wash)}
 #newbuddy-sheet .nb-p-emoji{font-size:1.5rem}
 #newbuddy-sheet .nb-p-name{text-align:center;line-height:1.25}
+#newbuddy-sheet .ab-err{color:#e5484d;font-size:.8125rem;margin-top:10px;min-height:18px}
+#newbuddy-sheet .nb-status{flex:1 1 auto;font-size:.8125rem;line-height:1.35;margin-right:8px}
+#newbuddy-sheet .nb-status.err{color:#e5484d}
+#newbuddy-sheet .nb-status.ok{color:var(--grn-tx)}
+#newbuddy-sheet #nb-persona-filter{width:100%;box-sizing:border-box;font-size:1rem;padding:10px 12px;border-radius:10px;border:1px solid var(--border);background:var(--bg);color:var(--text);font-family:inherit;margin-bottom:8px}
 /* ---- Persona picker (info panel) — Kin language, phone-first, dark-mode safe ---- */
 .bp-persona-cur{padding:2px 0}
 .bp-persona-name{font-size:.9375rem;font-weight:700;color:var(--text)}
@@ -1445,18 +1451,8 @@ body:has(#token-pill) #view-buddy.sheet .bp-close-x{right:148px}
   #view-buddy.sheet .bp-sticky-head{padding-right:0}
 }
 #buddy-home{position:relative}
-/* Panel buddy search (Dave 2026-10-27, A3): a search row at the top of the
-   buddy/info panel, shown only in panel/sheet mode. It drives the same
-   filter as the sidebar search — it never displaces the panel chrome. */
-#bp-search-wrap{display:none}
-#view-buddy.panel #bp-search-wrap,#view-buddy.sheet #bp-search-wrap{display:flex;align-items:center;position:relative;margin:0 0 4px}
-#bp-search-wrap .bp-search-ic{position:absolute;left:10px;color:var(--muted);display:flex;pointer-events:none}
-#bp-search{flex:1;width:100%;box-sizing:border-box;background:var(--bg);border:1px solid var(--border);color:var(--text);border-radius:8px;padding:7px 30px 7px 32px;font-size:.8125rem}
-#bp-search:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 22%,transparent)}
-#bp-search::-webkit-search-cancel-button,#bp-search::-webkit-search-decoration{display:none;-webkit-appearance:none}
-#bp-search::-ms-clear{display:none}
-#bp-search-clear{position:absolute;right:6px;top:50%;transform:translateY(-50%);border:none;background:transparent;color:var(--muted);font-size:1.125rem;line-height:1;cursor:pointer;padding:4px 8px;border-radius:6px}
-#bp-search-clear:hover{color:var(--text);background:rgba(127,127,127,.18)}
+/* Panel buddy search (added Dave 2026-10-27, A3) — REMOVED 2026-10-28 at Dave's word: the buddy/info panel has no search field of its own. One filter for the whole dashboard: the main-view Find (Cmd-F). */
+/* (the #bp-search rules that stood here were removed with the field, 2026-10-28) */
 #bp-resize{position:fixed;top:0;bottom:0;right:calc(var(--bpw, 440px) - 14px);z-index:60;display:none;align-items:center;justify-content:center;width:28px;cursor:ew-resize;
   background:transparent;-webkit-tap-highlight-color:transparent;touch-action:none;user-select:none}
 /* Dot cluster: the shared panel-gripper rule beside #sb-resize::after
@@ -1612,7 +1608,7 @@ body.no-write .pdel,body.no-write [data-dump-del],body.no-write [data-dump-edit]
    (#rail-expand); Recents owns the top-left corner. */
 #sb-tools button{border-radius:50% !important}
 body.sb-closed #sidebar #sb-tools{display:none}
-#sidebar .brand{padding-right:112px}
+#sidebar .brand{padding-right:128px} /* 112 + the 16px the tools moved left (2026-10-28) */
 /* Dave 2026-10-14: NO floating reopen button when the sidebar is collapsed.
    Dave 2026-10-20: superseded — the expand chevron is now a standalone
    corner button (#sb-expand-corner, top-left of the page view); the
@@ -9680,7 +9676,6 @@ document.addEventListener('keydown', e => {
      popover or the settings sheet), it preventDefaulted — do not also
      close the panel on the same keypress. */
   if (e.key === 'Escape') { if (!e.defaultPrevented) closeDetail(); return; }
-  if (e.key === '/' && !(e.target && e.target.matches && e.target.matches('input, textarea, [contenteditable="true"]'))) { e.preventDefault(); focusPanelSearch(); return; }
   if (S.view === 'orgchart' && !e.metaKey && !e.ctrlKey && !e.altKey) {
     /* Org Chart zoom keys (Dave, 2026-10-21): + / \u2212 step \u00d71.25,
        0 fits. Gated to the Org Chart view so the Atlas keys below keep
@@ -10370,16 +10365,52 @@ function closeAddBuddyDialog(){
   const m = document.getElementById('addbuddy-modal');
   if (m) m.remove();
 }
+/* New-buddy request queue (token-gated client writes): a failed inbox write
+   is never lost — the request queues in S.nbQueue on this device and
+   flushNbQueue() retries it at boot once a working token is present. */
+function nbQueueAdd(req, emoji, reason){
+  if (!Array.isArray(S.nbQueue)) S.nbQueue = [];
+  S.nbQueue = S.nbQueue.filter(item => !(item && item.req && req && item.req.id === req.id));
+  S.nbQueue.push({req: req, emoji: emoji, queued_at: new Date().toISOString(), reason: reason || ''});
+  save();
+}
+function nbPlainReason(e, hasToken){
+  if (!hasToken) return "there's no GitHub token on this device";
+  const msg = (e && e.message) || String(e || '');
+  if (/GitHub (401|403)/.test(msg)) return "GitHub didn't accept the token on this device (it may have expired)";
+  if (e instanceof TypeError || /network|fetch|connection|load failed/i.test(msg)) return 'the connection failed';
+  return msg;
+}
+async function flushNbQueue(){
+  if (!ghToken() || !Array.isArray(S.nbQueue) || !S.nbQueue.length) return;
+  const snapshot = S.nbQueue.slice();
+  for (const item of snapshot){
+    if (!item || !item.req || !item.req.path || !item.req.body) continue;
+    try {
+      await ghPutFile('buddy-system', item.req.path, b64encode(JSON.stringify(item.req.body, null, 2)), 'New buddy request: ' + item.req.name);
+      S.nbQueue = (S.nbQueue || []).filter(q => q !== item && !(q && q.req && q.req.id === item.req.id && q.req.path === item.req.path));
+      save();
+      addPendingBuddy(item.req.body, item.emoji);
+      toast('✓ Queued request sent \u2014 "' + item.req.name + '" is in the inbox and Astro will run the setup.');
+    } catch (e) {
+      item.reason = nbPlainReason(e, !!ghToken());
+      save();
+    }
+  }
+}
 /* New-buddy request sheet (FAB) — bottom sheet with name, persona picker, purpose */
 const REQUEST_PERSONAS = [
-  ['Hawaiian bruddah', '🤙'], ['Japanese zen master', '🧘'], ['Valley girl', '💅'],
-  ['Bruno Tonioli', '💃'], ['Hans, German master tech', '🔧'], ['Film noir detective', '🕵️'],
-  ['Southern grandmother', '👵'], ['Drill sergeant', '🎖️'], ['Deadpan British butler', '🤵'],
-  ['Pirate captain', '🏴‍☠️'], ['French existentialist', '🚬'], ['Auctioneer', '🔨'],
-  ['Cowboy ranch hand', '🤠'], ['Rastafarian elder', '🦁'], ['Dr. Evil', '😈'],
-  ['Shakespearean actor', '🎭'], ['Mafia consigliere', '🤌'], ['Italian nonna', '🍝'],
-  ['Surfer dude', '🏄'], ['Mad scientist', '🧪'], ['BBC documentarian', '🎥'],
-  ['Game show host', '🎤'], ['Sommelier', '🍷'], ['Viking warrior', '⚔️'],
+  ['Generic Male', '👨', 'generic default standard plain man male straightforward no-frills normal'],
+  ['Generic Female', '👩', 'generic default standard plain woman female straightforward no-frills normal'],
+  ['Gender-Neutral', '🧑', 'generic default standard plain neutral nonbinary straightforward no-frills normal'],
+  ['Hawaiian bruddah', '🤙', 'laid-back calm relaxed friendly warm island chill'], ['Japanese zen master', '🧘', 'calm quiet mindful peaceful minimal serene'], ['Valley girl', '💅', 'bubbly feisty chatty dramatic fun perky'],
+  ['Bruno Tonioli', '💃', 'flamboyant feisty dramatic theatrical judge expressive'], ['Hans, German master tech', '🔧', 'precise stern technical exacting dry no-nonsense'], ['Film noir detective', '🕵️', 'dry deadpan cynical moody terse mysterious'],
+  ['Southern grandmother', '👵', 'warm kind wise gentle loving homespun'], ['Drill sergeant', '🎖️', 'loud feisty strict intense commanding tough'], ['Deadpan British butler', '🤵', 'deadpan dry calm polite understated witty'],
+  ['Pirate captain', '🏴‍☠️', 'bold feisty adventurous loud nautical swagger'], ['French existentialist', '🚬', 'moody philosophical dry melancholic deep'], ['Auctioneer', '🔨', 'fast loud energetic rapid punchy'],
+  ['Cowboy ranch hand', '🤠', 'calm plainspoken dry easygoing rugged laconic'], ['Rastafarian elder', '🦁', 'calm peaceful relaxed wise mellow spiritual'], ['Dr. Evil', '😈', 'theatrical villainous dramatic scheming deadpan'],
+  ['Shakespearean actor', '🎭', 'dramatic theatrical eloquent grand poetic'], ['Mafia consigliere', '🤌', 'calm quiet measured strategic understated smooth'], ['Italian nonna', '🍝', 'warm feisty loving bossy homespun funny'],
+  ['Surfer dude', '🏄', 'laid-back calm relaxed chill friendly mellow'], ['Mad scientist', '🧪', 'wild energetic eccentric theatrical manic'], ['BBC documentarian', '🎥', 'calm measured serene authoritative gentle'],
+  ['Game show host', '🎤', 'loud energetic bubbly theatrical enthusiastic'], ['Sommelier', '🍷', 'refined calm elegant knowledgeable smooth understated'], ['Viking warrior', '⚔️', 'bold feisty loud fierce intense brave'],
 ];
 function openNewBuddyRequest(prefillName){
   closeAddBuddyDialog();
@@ -10400,13 +10431,13 @@ function openNewBuddyRequest(prefillName){
     + BUDDIES.filter(x => x && x.id).sort((a,b) => dispName(a).localeCompare(dispName(b))).map(x => '<option value="' + escHtml(x.id) + '">' + escHtml((x.icon || '') + ' ' + dispName(x)) + '</option>').join('')
     + '</select><p class="fineprint" id="nb-place-hint" style="margin-top:6px">As a child of the selected buddy (or top level).</p></div>'
     + '<label>Persona</label><p class="fineprint" style="margin:-4px 0 8px">Pick the voice that makes you grin.</p>'
-    + '<div class="nb-personas">' + REQUEST_PERSONAS.map((p,i) =>
-        '<button type="button" data-persona="' + escHtml(p[0]) + '">'
-        + '<span class="nb-p-emoji">' + p[1] + '</span><span class="nb-p-name">' + escHtml(p[0]) + '</span></button>').join('') + '</div>'
+    + '<input type="search" id="nb-persona-filter" placeholder="Filter personas — try feisty or calm" aria-label="Filter personas" autocomplete="off">'
+    + '<p style="margin:0 0 8px"><span id="nb-persona-count" class="fineprint"></span></p>'
+    + '<div class="nb-personas" id="nb-personas"></div>'
     + '<label>What should it do?</label><textarea id="nb-purpose" rows="3" placeholder="e.g. Track my car maintenance, remind me about oil changes, and help me plan the restoration."></textarea>'
     + '<div class="ab-err" id="nb-err"></div>'
     + '</div>'
-    + '<div class="nb-actions"><button class="ab-cancel" id="nb-cancel">Cancel</button><button class="ab-create" id="nb-create" disabled>Start the setup</button></div></div>';
+    + '<div class="nb-actions"><div class="nb-status" id="nb-status" role="status"></div><button class="ab-cancel" id="nb-cancel">Cancel</button><button class="ab-create" id="nb-create" disabled>Start the setup</button></div></div>';
   document.body.appendChild(m);
   const sheet = m.querySelector('.nb-sheet');
   // Fixed width from Advanced settings
@@ -10418,6 +10449,11 @@ function openNewBuddyRequest(prefillName){
   const purposeInput = m.querySelector('#nb-purpose');
   const createBtn = m.querySelector('#nb-create');
   const errEl = m.querySelector('#nb-err');
+  const statusEl = m.querySelector('#nb-status');
+  if (Array.isArray(S.nbQueue) && S.nbQueue.length) {
+    statusEl.textContent = S.nbQueue.length + " request(s) saved on this device, waiting to send — they'll go automatically once a working token is present.";
+    statusEl.className = 'nb-status err';
+  }
   let persona = null, personaEmoji = '', placeMode = 'child';
   const refSel = m.querySelector('#nb-ref'), placeHint = m.querySelector('#nb-place-hint');
   const updateHint = () => {
@@ -10444,12 +10480,32 @@ function openNewBuddyRequest(prefillName){
   const close = () => m.remove();
   m.querySelector('.nb-backdrop').addEventListener('click', close);
   m.querySelector('#nb-cancel').addEventListener('click', close);
-  m.querySelectorAll('.nb-personas button').forEach(b => b.addEventListener('click', () => {
-    m.querySelectorAll('.nb-personas button').forEach(x => x.classList.remove('sel'));
-    b.classList.add('sel'); persona = b.dataset.persona;
-    const pe = b.querySelector('.nb-p-emoji'); personaEmoji = pe ? pe.textContent : '';
-    validate();
-  }));
+  const personaGrid = m.querySelector('#nb-personas');
+  const personaFilter = m.querySelector('#nb-persona-filter');
+  const personaCount = m.querySelector('#nb-persona-count');
+  function renderNbPersonas(){
+    const words = (personaFilter.value || '').toLowerCase().split(/\s+/).filter(Boolean);
+    const shown = REQUEST_PERSONAS.filter(p => {
+      const hay = (p[0] + ' ' + (p[2] || '')).toLowerCase();
+      return words.every(w => hay.includes(w));
+    });
+    if (!shown.length) {
+      personaGrid.innerHTML = '<p class="fineprint" style="grid-column:1/-1">No personas match — try a trait like calm, feisty, dry, or warm.</p>';
+    } else {
+      personaGrid.innerHTML = shown.map(p =>
+        '<button type="button" data-persona="' + escHtml(p[0]) + '"' + (p[0] === persona ? ' class="sel"' : '') + '>'
+        + '<span class="nb-p-emoji">' + p[1] + '</span><span class="nb-p-name">' + escHtml(p[0]) + '</span></button>').join('');
+      personaGrid.querySelectorAll('button').forEach(b => b.addEventListener('click', () => {
+        personaGrid.querySelectorAll('button').forEach(x => x.classList.remove('sel'));
+        b.classList.add('sel'); persona = b.dataset.persona;
+        const pe = b.querySelector('.nb-p-emoji'); personaEmoji = pe ? pe.textContent : '';
+        validate();
+      }));
+    }
+    personaCount.textContent = shown.length + ' of ' + REQUEST_PERSONAS.length;
+  }
+  personaFilter.addEventListener('input', renderNbPersonas);
+  renderNbPersonas();
   const validate = () => { createBtn.disabled = !(nameInput.value.trim() && persona); errEl.textContent = ''; };
   // Pre-fill name: explicit arg wins, otherwise fall back to the current sidebar search query (Dave 2026-10-15)
   let prefill = (prefillName || '').trim();
@@ -10462,35 +10518,46 @@ function openNewBuddyRequest(prefillName){
   purposeInput.addEventListener('input', validate);
   createBtn.addEventListener('click', async () => {
     errEl.textContent = '';
+    statusEl.textContent = ''; statusEl.className = 'nb-status';
     createBtn.disabled = true;
     createBtn.textContent = 'Starting…';
+    /* Build the request (and its inbox path) BEFORE any await, so a failure
+       can queue the exact write for flushNbQueue() to redo later. req wraps
+       the JSON body: {id, name, path, body}. */
+    const stamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19);
+    const newName = nameInput.value.trim();
+    const reqBody = {
+      name: newName,
+      id: slugifyBuddy(newName),
+      persona: persona,
+      purpose: purposeInput.value.trim(),
+      place_mode: placeMode,
+      ref_buddy: refSel.value || null,
+      requested_at: new Date().toISOString(),
+      requested_from: 'dashboard-fab',
+    };
+    const path = 'docs/inbox/new-buddy-' + stamp + '.json';
+    const req = {id: reqBody.id, name: reqBody.name, path: path, body: reqBody};
     try {
-      if (!ghToken()) throw new Error('Add a GitHub token first (gear menu → GitHub token) so the dashboard can save.');
-      const stamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19);
-      const newName = nameInput.value.trim();
-      const req = {
-        name: newName,
-        id: slugifyBuddy(newName),
-        persona: persona,
-        purpose: purposeInput.value.trim(),
-        place_mode: placeMode,
-        ref_buddy: refSel.value || null,
-        requested_at: new Date().toISOString(),
-        requested_from: 'dashboard-fab',
-      };
-      const path = 'docs/inbox/new-buddy-' + stamp + '.json';
-      await ghPutFile('buddy-system', path, b64encode(JSON.stringify(req, null, 2)), 'New buddy request: ' + req.name);
+      if (!ghToken()) { const noTok = new Error('nb-no-token'); noTok.nbNoToken = true; throw noTok; }
+      await ghPutFile('buddy-system', req.path, b64encode(JSON.stringify(req.body, null, 2)), 'New buddy request: ' + req.name);
       close();
       /* Instant add (Dave 2026-10-19): only AFTER the request file is safely
-         on GitHub — a failed write adds nothing, so there is never a phantom
-         buddy. The placeholder carries the same id the drill will use. */
-      const newId = addPendingBuddy(req, personaEmoji);
-      toast('Buddy added — setting it up now.');
+         on GitHub — a failed direct write adds no phantom buddy here; it
+         queues instead (below) and the placeholder lands when the queued
+         write flushes. The placeholder carries the same id the drill will use. */
+      const newId = addPendingBuddy(req.body, personaEmoji);
+      toast('✓ Saved \u2014 "' + req.name + '" request is in the inbox (docs/inbox) and Astro will run the full setup.');
       /* Dave 2026-10-20: after creating a buddy, it is selected and
          displayed in the main view — you land on what you just made. */
       if (newId) openBuddy(newId);
     } catch (e) {
-      errEl.textContent = e.message || String(e);
+      const hasToken = !!ghToken();
+      const reason = nbPlainReason(e, hasToken);
+      nbQueueAdd(req, personaEmoji, reason);
+      const msg = "Couldn't save — " + reason + ". Your request is saved on this device and will send automatically once " + (hasToken ? 'the token is fixed' : 'a token is added (gear → GitHub token)') + ". You can also tap Start the setup to retry.";
+      statusEl.textContent = msg; statusEl.className = 'nb-status err';
+      errEl.textContent = msg;
       createBtn.disabled = false;
       createBtn.textContent = 'Start the setup';
     }
@@ -12326,8 +12393,9 @@ function toggleFind(){ if (isFindOpen()) closeFind(); else openFind(); }
    Dave 2026-10-28: ⌘F / Ctrl+F go back to the Find overlay. Later the
    same day the overlay's placement moved to the WINDOW's centre (Jonny's
    palette spec): it floats in the upper third over a full scrim, one
-   card, invariant across sidebar/panel states. The panel search
-   keeps '/'. */
+   card, invariant across sidebar/panel states. Later still (Dave,
+   2026-10-28): the panel search was removed entirely — one filter for
+   the whole dashboard (Find); '/' no longer routes to any panel field. */
 function toggleInfoPanel(){
   const vb = document.getElementById('view-buddy');
   const panelActive = !!(vb && vb.classList.contains('active') && (vb.classList.contains('panel') || vb.classList.contains('sheet')));
@@ -13482,55 +13550,7 @@ function initSearch(){
     bs.dispatchEvent(new Event('input', {bubbles: true}));
   }
 }
-/* Panel buddy search (Dave 2026-10-27, A3): the search field at the top of
-   the buddy/info panel (#bp-search). One filter for the whole dashboard: it
-   mirrors its query into the sidebar's #buddy-search, whose input handler
-   re-renders the buddy list through the shared buddyMatchesQuery matcher —
-   the two boxes can never disagree. Enter opens the top match in the panel;
-   Escape clears the query first, then blurs (the panel itself still closes
-   on the next Escape, exactly as locked). */
-function focusPanelSearch(){
-  const vb = document.getElementById('view-buddy');
-  const open = !!(vb && vb.classList.contains('active') && (vb.classList.contains('panel') || vb.classList.contains('sheet')));
-  if (!open) {
-    if (document.body.classList.contains('bp-collapsed')) setPanelCollapsed(false);
-    const id = (S.projectId && byId[S.projectId]) ? S.projectId : ROOT_ID;
-    openBuddy(id);
-  } else if (document.body.classList.contains('bp-collapsed')) {
-    setPanelCollapsed(false);
-  }
-  const inp = document.getElementById('bp-search');
-  if (inp) setTimeout(() => { try { inp.focus(); inp.select(); } catch (e) {} }, 60);
-}
-function initBpSearch(){
-  const inp = document.getElementById('bp-search');
-  if (!inp || inp.dataset.init) return;
-  inp.dataset.init = '1';
-  const bs = document.getElementById('buddy-search');
-  const clr = document.getElementById('bp-search-clear');
-  const syncClear = () => { if (clr) clr.hidden = !inp.value; };
-  const mirrorToSidebar = () => {
-    if (bs && bs.value !== inp.value) { bs.value = inp.value; bs.dispatchEvent(new Event('input', { bubbles: true })); }
-  };
-  inp.addEventListener('input', () => { syncClear(); mirrorToSidebar(); });
-  if (bs) {
-    bs.addEventListener('input', () => {
-      if (document.activeElement !== inp && inp.value !== bs.value) { inp.value = bs.value; syncClear(); }
-    });
-    if (bs.value) { inp.value = bs.value; syncClear(); }
-  }
-  if (clr) clr.addEventListener('click', () => { inp.value = ''; syncClear(); mirrorToSidebar(); inp.focus(); });
-  inp.addEventListener('keydown', e => {
-    if (e.key === 'Enter') {
-      e.preventDefault();
-      const id = (typeof firstSearchMatch === 'function') ? firstSearchMatch() : null;
-      if (id) openBuddy(id);
-    } else if (e.key === 'Escape') {
-      if (inp.value) { e.preventDefault(); inp.value = ''; syncClear(); mirrorToSidebar(); }
-      else inp.blur();
-    }
-  });
-}
+/* Panel buddy search (added Dave 2026-10-27, A3) REMOVED 2026-10-28 at Dave's word: the panel gets no search field of its own — one filter for the whole dashboard (the main-view Find, Cmd-F). focusPanelSearch/initBpSearch and the '/' routing went with the field. */
 function refreshTokenUI(id){
   updateTokenPill();
   updateTokenGating(id);
@@ -14153,11 +14173,12 @@ renderJournal();
 initTokenPill();
 updateTokenGating();
 initSearch();
-initBpSearch();
 // Flush any dumps that were queued while offline or token-less (Dave 2026-10-12)
 flushPendingDumps();
 // Flush any global renames queued while offline or token-less (Dave 2026-10-16)
 flushPendingRenames();
+// Flush any new-buddy requests queued while offline or token-less
+flushNbQueue();
 // Pull the global flags + favorites and merge (Job C, Dave 2026-10-21)
 syncMarks();
 tipPoof();
@@ -14274,7 +14295,7 @@ syncRailCurView();
 <main id="main">
 <div id="journal-bar"></div>
 """ + vt + vp + vpl + vm + """
-<section id="view-buddy" class="view"><div id="bp-resize" title="Drag left or right to resize the buddy detail panel. Double-click to reset to default width."></div><div id="bp-search-wrap"><span class="bp-search-ic" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="M15.5 15.5L21 21" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></span><input type="search" id="bp-search" placeholder="Search buddies…" aria-label="Search buddies" autocomplete="off" title="Search all buddies by name or tagline. Filters the buddy list as you type; Enter opens the top match in this panel."><button type="button" id="bp-search-clear" aria-label="Clear search" title="Clear search" hidden>×</button></div><div id="buddy-home"></div></section>
+<section id="view-buddy" class="view"><div id="bp-resize" title="Drag left or right to resize the buddy detail panel. Double-click to reset to default width."></div><div id="buddy-home"></div></section>
 <section id="view-project" class="view"></section>
 <section id="view-changelog" class="view"></section>
 <section id="view-releases" class="view"></section>
