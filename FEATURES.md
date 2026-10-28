@@ -381,8 +381,10 @@ Build: `build.py` generates `index.html` from `buddies.json` + `plans.json`.
   segmented control; detail opens as a right-docked side sheet (380px).
 - **Large (>1100px)**: tri-pane with persistent detail panel (400px).
 - **Keyboard**: arrows move between buddies, Esc closes the detail panel.
-  **⌘F / Ctrl+F** opens the Find overlay, centred at the top of the main
-  view (clear of the info panel when it is docked); **/** opens the buddy
+  **⌘F / Ctrl+F** opens the Find overlay — one card centred on the window,
+  floating in the upper third over a full scrim (bar, results, and a hint
+  footer in a single card; placement invariant across sidebar/panel
+  states); **/** opens the buddy
   panel when needed and focuses its search field; **⌘I** toggles the info
   panel — collapse/expand, or open it when no buddy panel is up. All work
   even when a buddy homepage iframe has focus (the iframe forwards the

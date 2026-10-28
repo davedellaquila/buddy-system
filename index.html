@@ -1018,6 +1018,12 @@ body.sb-closed #sb-tab{display:none !important}
 #sb-resize::after,#bp-resize::after{content:'';width:14px;height:35px;flex:none;
   background-image:var(--grip-dot);
   background-size:var(--grip-tile) var(--grip-tile);background-position:0 0;background-repeat:repeat}
+/* Dave 2026-10-28: the dots sit INSIDE the panel, never straddling its
+   edge — the painted cluster shifts 10px inboard (mirrored, like the
+   panels). The strips keep their edge-centred hit area, cursors, and
+   drag behaviour; only the visible dots move. */
+#sb-resize::after{transform:translateX(-10px)}
+#bp-resize::after{transform:translateX(10px)}
 #sb-resize:hover::after,#bp-resize:hover::after{--gripdot:var(--text2)}
 #sb-resize:active::after,#bp-resize:active::after{--gripdot:var(--accent)}
 #sb-resize:hover,#bp-resize:hover{background:transparent}
@@ -1422,7 +1428,7 @@ body.standalone #recents-btn{left:12px}
    for there. */
 body.fw-footer #panel-open{top:auto;bottom:26px;right:88px}
 body.fw-footer:has(#token-pill) #panel-open{right:88px}
-body.fw-footer #recents-btn{top:auto;bottom:26px;left:88px}
+body.fw-footer #recents-btn{top:auto;bottom:20px;left:88px;width:56px;height:56px}
 @media (max-width:639px){
   body.fw-footer #panel-open{top:12px;bottom:auto;right:12px}
   body.fw-footer #recents-btn{top:12px;bottom:auto;left:12px}
@@ -1434,6 +1440,7 @@ body.fw-footer #recents-btn{top:auto;bottom:26px;left:88px}
 #recents-pop .rv-ic{width:22px;text-align:center;flex:0 0 auto}
 #recents-pop .rec-empty{padding:8px 10px;color:var(--text2);font-size:.875rem}
 #recents-pop button.rec-more{justify-content:center;color:var(--text2);font-weight:600}
+body.fw-footer #recents-pop{max-height:min(60vh,calc(100vh - 124px))}
 body:has(#token-pill) #panel-open{right:148px}
 /* Update banner — Jonny verdict 2026-10-20, "The Banner Steps Aside".
    The banner is a threshold, not a task: when the buddy panel opens it
@@ -2817,28 +2824,36 @@ body.viewpop-open .view-caret{transform:rotate(180deg)}
    The button lives in #hp-nav; the bar pins to the top and never dances
    with the keyboard. Empty field = Recents; typing = auto-suggest with the
    sidebar search's matcher, matched characters in bold. */
-#find-scrim{display:none;position:fixed;inset:0;z-index:9500;background:rgba(0,0,0,.35)}
+#find-scrim{display:none;position:fixed;inset:0;z-index:10003;background:rgba(0,0,0,.42);-webkit-backdrop-filter:blur(2px);backdrop-filter:blur(2px)}
 body.find-open #find-scrim{display:block}
-#find-bar{display:none;position:fixed;top:12px;left:50%;transform:translateX(-50%);width:min(640px,calc(100vw - 24px));height:56px;z-index:10004;align-items:center;gap:10px;padding:0 14px;border-radius:16px;background:color-mix(in srgb, var(--panel) 80%, transparent);-webkit-backdrop-filter:blur(16px) saturate(1.6);backdrop-filter:blur(16px) saturate(1.6);border:1px solid var(--border);box-shadow:0 14px 40px rgba(0,0,0,.30);box-sizing:border-box}
-body.find-open #find-bar{display:flex}
+/* Jonny spec, Dave-approved 2026-10-28: the palette is ONE card centred
+   on the WINDOW (superseding the morning's main-view centring), floating
+   in the upper third on a full scrim; bar + menu + hint footer are static
+   children, so placement is invariant across sidebar/panel states. */
+#find-card{display:none;position:fixed;top:max(64px,min(14vh,120px));left:50%;transform:translateX(-50%);width:min(640px,calc(100vw - 24px));z-index:10004;border-radius:16px;border:1px solid var(--border);background:color-mix(in srgb, var(--panel) 88%, transparent);-webkit-backdrop-filter:blur(16px) saturate(1.6);backdrop-filter:blur(16px) saturate(1.6);box-shadow:0 24px 70px rgba(0,0,0,.45),0 4px 18px rgba(0,0,0,.22);box-sizing:border-box;overflow:hidden}
+body.find-open #find-card{display:block;animation:findIn .14s cubic-bezier(.32,.72,.35,1)}
+@keyframes findIn{from{opacity:0;transform:translate(-50%,-6px) scale(.995)}to{opacity:1;transform:translate(-50%,0) scale(1)}}
+#find-bar{display:flex;align-items:center;gap:10px;height:56px;padding:0 14px;box-sizing:border-box}
 #find-bar .find-ic{display:flex;flex:0 0 auto;color:var(--muted)}
 #find-input{flex:1;min-width:0;background:none;border:none;outline:none;color:var(--text);font:inherit;font-size:1rem;padding:4px 0;-webkit-appearance:none;appearance:none}
 #find-input::-webkit-search-cancel-button,#find-input::-webkit-search-decoration{display:none;-webkit-appearance:none}
 #find-clear{flex:0 0 auto;width:30px;height:30px;border-radius:50%;border:none;background:var(--ghost);color:var(--text2);font-size:1rem;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0}
 #find-clear:hover{color:var(--text)}
-#find-menu{display:none;position:fixed;top:76px;left:50%;transform:translateX(-50%);width:min(640px,calc(100vw - 24px));max-height:60vh;overflow-y:auto;z-index:10004;background:color-mix(in srgb, var(--panel) 88%, transparent);-webkit-backdrop-filter:blur(16px) saturate(1.6);backdrop-filter:blur(16px) saturate(1.6);border:1px solid var(--border);border-radius:16px;box-shadow:0 14px 40px rgba(0,0,0,.30);padding:6px;box-sizing:border-box}
-body.find-open #find-menu{display:block}
-.find-head{font-size:.6875rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text2);padding:8px 10px 4px}
+#find-menu{max-height:min(46vh,420px);overflow-y:auto;border-top:1px solid var(--border);padding:6px;box-sizing:border-box;scrollbar-width:none}
+#find-menu::-webkit-scrollbar{display:none}
+#find-foot{border-top:1px solid var(--border);padding:8px 14px;font-size:.71875rem;color:var(--muted)}
+.find-head{font-size:.6875rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);padding:12px 12px 4px}
 .find-row{display:flex;align-items:center;gap:12px;width:100%;min-height:52px;padding:6px 10px;border:none;background:none;color:var(--text);font:inherit;cursor:pointer;text-align:left;border-radius:10px;box-sizing:border-box}
 .find-row:hover{background:var(--ghost)}
-.find-row:focus{background:var(--ghost);outline:none;box-shadow:inset 0 0 0 2px var(--accent)}
+.find-row:focus{background:var(--wash);outline:none;box-shadow:inset 0 0 0 1.5px var(--accent)}
+.find-row:focus::after{content:'B5';margin-left:12px;color:var(--muted);font-size:.875rem;flex:0 0 auto}
 .find-row-ic{width:34px;height:34px;flex:0 0 auto;border-radius:10px;background:var(--hover);display:flex;align-items:center;justify-content:center;font-size:1.125rem}
-.find-row-tx{display:flex;flex-direction:column;min-width:0}
+.find-row-tx{display:flex;flex-direction:column;min-width:0;flex:1}
 .find-row-name{font-size:.9375rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .find-row-name b{font-weight:800}
-.find-row-sub{font-size:.75rem;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.find-row-sub{font-size:.8125rem;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .find-row-sub b{color:var(--text2)}
-.find-empty{padding:10px;color:var(--text2);font-size:.875rem}
+.find-empty{padding:20px 14px;color:var(--muted);font-size:.875rem;text-align:center}
 body.find-open #hp-find{border-color:var(--accent);color:var(--accent);box-shadow:0 0 0 2px var(--accent)}
 /* ==== Welcome Card (Jonny's welcome-card system, 2026-10-15; connected to
    the first open by the first-open crit, 2026-10-23) ====
@@ -2859,8 +2874,9 @@ html.light .wc-got{background:#007AFF}
 .wc-x{position:absolute;top:10px;right:10px;width:44px;height:44px;border:none;border-radius:50%;background:none;color:var(--faint);font-size:20px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0}
 .wc-x:hover{color:var(--text)}
 @media (max-width:639px){
-  #find-bar{left:12px;right:12px;top:calc(12px + env(safe-area-inset-top, 0px));transform:none;width:auto}
-  #find-menu{left:12px;right:12px;top:calc(80px + env(safe-area-inset-top, 0px));transform:none;width:auto}
+  #find-card{left:12px;right:12px;top:calc(12px + env(safe-area-inset-top, 0px));transform:none;width:auto}
+  body.find-open #find-card{animation-name:findInFlat}
+  @keyframes findInFlat{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}
   /* The old drawer opener retires at phone widths: Recents owns the first
      top-left slot (Dave's chrome lock) and the strip is the way in. */
   #menu-btn{display:none}
@@ -5152,7 +5168,7 @@ function renderDevelopSection(){
   const dev = document.getElementById('fset-develop');
   if (!dev) return;
   const simulating = !!devBackup;
-  const buildNum = '20261028.0712';
+  const buildNum = '20261028.0815';
   dev.innerHTML = ''
     + '<label class="fset-check"><input type="checkbox" id="dev-empty-toggle"' + (simulating ? ' checked' : '') + '> <span><strong>Simulate new user</strong> — empty data file, as if opening the shared link fresh</span></label>'
     + '<div class="fineprint" style="margin:8px 0 12px">Build <span style="font-family:monospace">' + escHtml(String(buildNum)) + '</span> · ' + BUDDIES.length + ' buddies in this file</div>'
@@ -5786,6 +5802,12 @@ function toggleRecentsPop(){
   renderRows();
   const r = btn.getBoundingClientRect();
   p.style.left = Math.max(8, r.left) + 'px'; p.style.top = (r.bottom + 8) + 'px';
+  // A menu never opens off-screen (Dave 2026-10-28): if the pop would run
+  // past the window's bottom edge — the footer placement, where the button
+  // lives at bottom-left — it grows UP from the button instead.
+  if (r.bottom + 8 + p.offsetHeight > window.innerHeight - 8) {
+    p.style.top = Math.max(8, r.top - 8 - p.offsetHeight) + 'px';
+  }
   p.addEventListener('click', e => {
     if (e.target.closest('[data-recents-more]')) { shown += 10; renderRows(); return; }
     const row = e.target.closest('[data-recent-buddy]'); if (row) { closeRecentsPop(); openBuddy(row.getAttribute('data-recent-buddy')); }
@@ -7059,7 +7081,7 @@ function renderBuddy(id){
     + attrHead('shared', 'SHARED NOTES', '<span class="attr-value" id="bp-shared-count">(0)</span>', '')
     + '<div class="attr-body">' + attrTipLine('Anybody with repo access can see this note. Saved to the buddy’s repo (docs/notes.md).') + '<textarea class="notes" id="bp-shared-notes" placeholder="Anybody with repo access can see this note."></textarea>'
     + '<p class="fineprint" id="shared-status"></p></div></div>'
-    + '<div class="bp-build">Build 20261028.0712</div>'
+    + '<div class="bp-build">Build 20261028.0815</div>'
     + '</div>';
   // Update every visible label for a buddy after a rename/re-icon, across all
   // Atlas lenses. A rename changes no structure, so labels are patched in place
@@ -9742,7 +9764,7 @@ function renderPlan(id){
     + '<p class="fineprint">Saved on this device. (For your eyes only)</p></div>'
     + '<div class="bp-sec"><h3>📝 Shared notes<span class="info-tip" data-tip="Visible to everyone with access to this project.">\u24d8</span></h3><textarea class="notes" id="bp-shared" placeholder="Shared notes\u2026 (visible to everyone with access)">'+escHtml((S.planShared||{})[id]||'')+'</textarea>'
     + '<p class="fineprint">Shared — visible to everyone with access.</p></div>'
-    + '<div class="bp-build">Build 20261028.0712</div>'
+    + '<div class="bp-build">Build 20261028.0815</div>'
     + '</div>';
   const nt = document.getElementById('bp-notes');
   let t = null;
@@ -12644,29 +12666,16 @@ function renderFindMenu(){
   const hits = BUDDIES.filter(b => b && buddyMatchesQuery(b, q));
   menu.innerHTML = '<div class="find-head">Suggestions</div>' + (hits.length ? hits.map(b => findRowHtml(b, words)).join('') : '<div class="find-empty">' + `No buddy matches '${escHtml(q.trim())}'.` + '</div>');
 }
-/* Dave 2026-10-28: centre the Find bar and its menu on the main view
-   (#main), not the window — and stop at the info panel's left edge when
-   the panel is docked over the main view's right side. Phone widths
-   (<=639px) keep the stylesheet's full-width placement. */
+/* Dave 2026-10-28, later the same day (superseding the morning's
+   main-view centring): the palette centres on the WINDOW — placement is
+   the stylesheet's (upper third, invariant across sidebar/panel states).
+   positionFind() remains only to clear any inline left/width an older
+   build may have set; it positions nothing. */
 function positionFind(){
   const bar = document.getElementById('find-bar');
   const menu = document.getElementById('find-menu');
-  if (!bar) return;
-  const clear = () => { bar.style.left = ''; bar.style.width = ''; if (menu) { menu.style.left = ''; menu.style.width = ''; } };
-  if (window.matchMedia('(max-width:639px)').matches) { clear(); return; }
-  const m = document.getElementById('main');
-  if (!m) { clear(); return; }
-  const r = m.getBoundingClientRect();
-  let right = r.right;
-  const vb = document.getElementById('view-buddy');
-  if (vb && vb.classList.contains('active') && (vb.classList.contains('panel') || vb.classList.contains('sheet'))) {
-    const pr = vb.getBoundingClientRect();
-    if (pr.left > r.left && pr.left < right) right = pr.left;
-  }
-  const w = Math.max(280, Math.min(640, right - r.left - 24));
-  const cx = ((r.left + right) / 2) + 'px';
-  bar.style.left = cx; bar.style.width = w + 'px';
-  if (menu) { menu.style.left = cx; menu.style.width = w + 'px'; }
+  if (bar) { bar.style.left = ''; bar.style.width = ''; }
+  if (menu) { menu.style.left = ''; menu.style.width = ''; }
 }
 function openFind(){
   closeRailViewPop(); closeRecentsPop();
@@ -12683,10 +12692,11 @@ function toggleFind(){ if (isFindOpen()) closeFind(); else openFind(); }
    Dave 2026-10-27 (A3): ⌘F / Ctrl+F routed to the buddy panel's own search
    field instead — the panel opens first when needed and #bp-search takes
    focus; the Find overlay stayed on the #hp-find button.
-   Dave 2026-10-28: ⌘F / Ctrl+F go back to the Find overlay, and the overlay
-   sits at the top of the MAIN VIEW, not over a side panel — openFind calls
-   positionFind() to centre the bar on #main, short of the info panel's
-   left edge when the panel is docked. The panel search keeps '/'. */
+   Dave 2026-10-28: ⌘F / Ctrl+F go back to the Find overlay. Later the
+   same day the overlay's placement moved to the WINDOW's centre (Jonny's
+   palette spec): it floats in the upper third over a full scrim, one
+   card, invariant across sidebar/panel states. The panel search
+   keeps '/'. */
 function toggleInfoPanel(){
   const vb = document.getElementById('view-buddy');
   const panelActive = !!(vb && vb.classList.contains('active') && (vb.classList.contains('panel') || vb.classList.contains('sheet')));
@@ -12720,9 +12730,13 @@ function initFind(){
     + '<input type="search" id="find-input" placeholder="Find a buddy…" aria-label="Find a buddy" autocomplete="off">'
     + '<button type="button" id="find-clear" aria-label="Clear search" title="Clear search" hidden>×</button>';
   const menu = document.createElement('div'); menu.id = 'find-menu'; menu.setAttribute('role', 'listbox');
+  const card = document.createElement('div'); card.id = 'find-card';
+  const foot = document.createElement('div'); foot.id = 'find-foot'; foot.textContent = '↑↓ navigate · ↵ open · esc dismiss';
+  card.appendChild(bar);
+  card.appendChild(menu);
+  card.appendChild(foot);
   document.body.appendChild(scrim);
-  document.body.appendChild(bar);
-  document.body.appendChild(menu);
+  document.body.appendChild(card);
   const input = document.getElementById('find-input');
   input.addEventListener('input', renderFindMenu);
   input.addEventListener('keydown', e => {
@@ -13431,14 +13445,14 @@ function openWhatsNew(){
     .then(r => r.ok ? r.text() : '')
     .then(t => {
       const serverBuild = t.trim();
-      if (serverBuild && serverBuild !== '20261028.0712') {
+      if (serverBuild && serverBuild !== '20261028.0815') {
         updBtn.style.display = '';
         updBtn.title = 'Update to build ' + serverBuild;
       }
       // Show build numbers at the top of the sheet (Dave's request 2026-10-12)
-      const myBuild = '20261028.0712';
+      const myBuild = '20261028.0815';
       let buildLine = '<p class="fineprint" style="margin-top:0">You’re on build ' + escHtml(myBuild) + '.';
-      if (serverBuild && serverBuild !== '20261028.0712' && isNewerBuild(serverBuild, myBuild)) {
+      if (serverBuild && serverBuild !== '20261028.0815' && isNewerBuild(serverBuild, myBuild)) {
         buildLine += ' Build ' + escHtml(serverBuild) + ' is available.';
       }
       buildLine += '</p>';
@@ -13508,7 +13522,7 @@ function syncUpdateBanner(){
   if (b.dataset.state !== state) b.dataset.state = state;
 }
 function initVersionCheck(){
-  const myBuild = '20261028.0712';
+  const myBuild = '20261028.0815';
   function showUpdateBanner(serverBuild){
     if (document.getElementById('update-banner')) return;
     const b = document.createElement('div');
