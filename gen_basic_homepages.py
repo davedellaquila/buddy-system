@@ -1014,6 +1014,7 @@ h2 {{ font-size: 22px; margin: 32px 0 16px; }}
 
 {gallery_section}
 
+{role_audio_section}
 {dumpbox_html}
 
 {attention_section}
@@ -1252,6 +1253,27 @@ for b in d['buddies']:
     else:
         children_section = ''
 
+    # Role audio (Dave's standing rule, 2026-10-24): when the buddy's
+    # role-intro.mp3 is hosted next to this page, emit the "Hear my role"
+    # control. The generator owns this block — a hand-inserted copy on
+    # garden-buddy was wiped by the 2026-10-28 regen because the generator
+    # didn't emit it. Voice display name only when the registry voice id
+    # ends in a plain readable name (e.g. avocado_v2:marisol → Marisol).
+    role_audio_section = ''
+    if os.path.exists(os.path.join(HERE, bid, 'role-intro.mp3')):
+        voice_disp = ''
+        vsuffix = (b.get('voice') or '').rsplit(':', 1)[-1]
+        if vsuffix.isalpha() and vsuffix.islower():
+            voice_disp = ' (' + vsuffix.capitalize() + ')'
+        role_audio_section = (
+            '<div style="margin:16px 0 4px">\n'
+            '<div style="font-size:13px;opacity:.75;margin-bottom:6px">🔊 <b>Hear my role</b>'
+            ' — the first paragraph of my job req\'s Role summary, in my own voice'
+            + voice_disp + '</div>\n'
+            '<audio controls preload="none" src="role-intro.mp3" style="width:min(420px,100%)"></audio>\n'
+            '</div>\n'
+        )
+
     dumpbox_html = DUMPBOX_HTML.replace('__BID__', bid).replace('__BNAME__', name)
     repo_files_html = FILES_HTML.replace('__BID__', bid).replace('__BNAME__', name)
 
@@ -1268,6 +1290,7 @@ for b in d['buddies']:
         children_section=children_section,
         date=today,
         gallery_section=gallery_section,
+        role_audio_section=role_audio_section,
         dumpbox_css=DUMPBOX_CSS,
         dumpbox_html=dumpbox_html,
         dumpbox_js=DUMPBOX_JS,
