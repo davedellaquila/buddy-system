@@ -5944,6 +5944,9 @@ function renderProjectView(){
         // silently and keeps parent-only behavior).
         if (window.__bindPullToRefresh && frame.contentDocument) window.__bindPullToRefresh(frame.contentDocument);
         if (window.__bindEdgeSwipes && frame.contentDocument){ try { window.__bindEdgeSwipes(frame.contentDocument, frame, b.id); } catch (err2) {} }
+        // Keep the homepage's Tip Jar clear of the floating + button (below).
+        if (window.__syncFabTipjar) window.__syncFabTipjar(frame);
+        if (window.__observeFabTipjar) window.__observeFabTipjar(frame);
       } catch (err) {}
     });
     frame.src = hp;
@@ -12702,6 +12705,68 @@ function bindIframeEdgeSwipes(iframeDoc, frameEl, buddyId){
   iframeDoc.addEventListener('touchcancel', function(){ track = null; }, { passive: true, capture: true });
 }
 window.__bindEdgeSwipes = bindIframeEdgeSwipes;
+
+/* Tip Jar vs the floating + button (Dave, 2026-10-27 — iPad screenshot: the
+   + button sat on top of Birthday Buddy's Tip Jar pill, cutting it in half).
+   Root cause: #new-buddy-fab is position:fixed in the SHELL at the window's
+   bottom-right (right:20, bottom:20, 56px circle → it spans right 20–76,
+   bottom 20–76), while every buddy homepage's .tipjar pill is
+   position:fixed inside the homepage IFRAME at right:18, bottom:18. When
+   the frame fills the window — floating panels, or anchored with the info
+   panel closed; the frame's bottom edge sits ~40px above the window's for
+   the Refresh row, still inside the collision band — the iframe's
+   bottom-right corner IS the window's bottom-right corner, so the shell's
+   FAB paints over the pill's right half. Standalone homepages have no FAB
+   and were never affected.
+   Fix: the shell owns the FAB, so the shell reserves the corner. When the
+   frame's bottom-right corner is at the window's (gaps ≤56px; collision
+   starts under 58px), inject one rule into the frame's document lifting the
+   jar to bottom:88px — its bottom edge then sits 12px above the FAB's top
+   edge (76), stacked in the same corner column, fully visible and tappable.
+   Anchored mode with the info panel open pushes the frame ~456px off the
+   window's right edge, the gaps exceed the threshold, and the jar keeps its
+   canonical corner spot. The jar's own CSS/motion (snippet v2: breathing +
+   shimmer, off under prefers-reduced-motion) is untouched — this only
+   overrides its bottom offset, only inside the dashboard.
+   Re-synced on frame load, on window resize, and via a ResizeObserver on
+   the frame (the anchored panel opening/closing resizes the frame without
+   a window resize). Cross-origin frames fail silently, like the other
+   iframe bindings. */
+function syncFabTipjarClearance(frame){
+  try {
+    const doc = frame && frame.contentDocument;
+    if (!doc || !doc.documentElement) return;
+    const r = frame.getBoundingClientRect();
+    const atCorner = (window.innerWidth - r.right) <= 56 && (window.innerHeight - r.bottom) <= 56;
+    let st = doc.getElementById('fab-tipjar-clearance');
+    if (atCorner) {
+      if (!st) {
+        st = doc.createElement('style');
+        st.id = 'fab-tipjar-clearance';
+        (doc.head || doc.documentElement).appendChild(st);
+      }
+      st.textContent = '.tipjar{bottom:88px !important}';
+    } else if (st) {
+      st.textContent = '';
+    }
+  } catch (e) {}
+}
+window.__syncFabTipjar = syncFabTipjarClearance;
+let __fabTipjarRO = null;
+function observeFabTipjar(frame){
+  try {
+    if (__fabTipjarRO) __fabTipjarRO.disconnect();
+    __fabTipjarRO = null;
+    if (!('ResizeObserver' in window) || !frame) return;
+    __fabTipjarRO = new ResizeObserver(() => syncFabTipjarClearance(frame));
+    __fabTipjarRO.observe(frame);
+  } catch (e) {}
+}
+window.__observeFabTipjar = observeFabTipjar;
+window.addEventListener('resize', () => {
+  const f = document.getElementById('homepage-frame');
+  if (f && f.tagName === 'IFRAME') syncFabTipjarClearance(f);
+});
 
 // Checks for a newer deployed version; shows an update banner if the server
 // has a newer build than the one currently loaded (helps Safari web apps

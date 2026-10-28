@@ -206,7 +206,11 @@ Build: `build.py` generates `index.html` from `buddies.json` + `plans.json`.
   copy lives at `docs/tipjar-snippet.html`; both homepage generators
   (`gen_basic_homepages.py`, `gen_default_homepages.py`) read it live at
   generation time and embed it before `</body>`, so regenerated pages
-  keep the jar instead of drifting.
+  keep the jar instead of drifting. Inside the dashboard, the shell keeps
+  the pill clear of the floating + button: when a homepage frame reaches
+  the window's bottom-right corner, the jar stacks just above the button
+  (bottom:88px) instead of sliding under it; standalone pages keep the
+  canonical corner position.
 - **Hear my role (Dave, 2026-10-24)** — a buddy homepage carries a 🔊
   "Hear my role" audio control: the buddy reads the first paragraph of
   its job req's Role summary aloud in its own voice. The recording
