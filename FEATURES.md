@@ -76,6 +76,19 @@ Build: `build.py` generates `index.html` from `buddies.json` + `plans.json`.
 - **Text size slider** — Settings → Advanced; scales text and UI throughout
   the app from 80% to 130% (default 100%), with live preview as you drag.
   Like the text-size slider on iPhone and Watch.
+- **Framework buttons** — the four shell buttons (New, Back, Info,
+  Recents) wear nearly see-through glass (16–20% fills over a blur, both
+  themes; the panel's close ×, the Info button's twin, matches). The
+  Settings toggle **Group framework buttons in the footer** (default on)
+  seats all four in one row along the bottom of the screen — New and Back
+  at the corners, Info and Recents one slot in, centred on the row;
+  turning it off returns Info and Recents to the top corners. On phone
+  widths the buttons keep their corner spots either way.
+- **Google Doc links open in a new tab** — every docs.google.com /
+  drive.google.com link on buddy homepages and About pages carries
+  target="_blank": a Doc loaded inside the dashboard's homepage frame
+  hits Google's cookie wall and can't open, so Docs always open in their
+  own browser tab. (Dashboard-panel document links already did this.)
 - **Develop section** — Settings → Develop; pre-launch tools for readying the
   app for new users. **Simulate new user** empties the data file in-memory so
   you can preview the fresh-link experience; real data is stashed and restored
