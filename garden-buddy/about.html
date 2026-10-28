@@ -58,7 +58,7 @@ a:hover{text-decoration:underline}
 .muted{color:var(--muted);font-size:13px}
 .empty{color:var(--muted);font-style:italic;margin:4px 0}
 footer{margin-top:36px;padding-top:18px;border-top:1px solid var(--border);color:var(--muted);font-size:12.5px;text-align:center}
-.aboutnav{display:flex;gap:14px;flex-wrap:wrap;align-items:baseline;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px 16px;margin-bottom:22px;font-size:14px}.unset{color:var(--muted);font-style:italic}.recjson{margin:0;font-size:12px;white-space:pre-wrap;overflow-wrap:break-word}.mdfile{border-top:1px solid var(--border);padding:14px 0}.mdfile-head{display:flex;gap:12px;align-items:baseline;margin-bottom:8px}details.mdfile summary{cursor:pointer;font-size:14px}.md-body{font-size:14.5px}.md-body h1{font-size:21px;margin:14px 0 8px}.md-body h2{font-size:18px;margin:14px 0 6px}.md-body h3{font-size:15.5px;margin:12px 0 4px}.md-body p{margin:8px 0}.md-body ul,.md-body ol{margin:8px 0 8px 22px}.md-body li{margin:3px 0}.md-body pre{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:10px 12px;overflow-x:auto;font-size:12.5px}.md-body table{border-collapse:collapse;margin:10px 0;font-size:13.5px}.md-body th,.md-body td{border:1px solid var(--border);padding:5px 9px;text-align:left}.md-body blockquote{border-left:3px solid var(--border);margin:10px 0;padding:2px 14px;color:var(--muted)}.mdfallback{white-space:pre-wrap;font-size:12.5px}.mdinv{margin:6px 0 12px 20px;font-size:14px}.mdinv li{margin:3px 0}.repo-files h2{font-size:17px;margin:0 0 4px;color:var(--text)}.attn-btn{background:var(--bg);color:var(--text);border:1px solid var(--border);border-radius:8px;padding:6px 14px;font-size:13px;font-weight:600;cursor:pointer}.attn-btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}.attn-actions{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}.attn-status{font-size:13px;color:var(--muted);margin-top:8px}
+.aboutnav{display:flex;gap:14px;flex-wrap:wrap;align-items:baseline;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px 16px;margin-bottom:22px;font-size:14px}.aboutnav .header-tip{margin-left:auto}header.hero .header-tip{margin-left:auto;flex:none}.unset{color:var(--muted);font-style:italic}.recjson{margin:0;font-size:12px;white-space:pre-wrap;overflow-wrap:break-word}.mdfile{border-top:1px solid var(--border);padding:14px 0}.mdfile-head{display:flex;gap:12px;align-items:baseline;margin-bottom:8px}details.mdfile summary{cursor:pointer;font-size:14px}.md-body{font-size:14.5px}.md-body h1{font-size:21px;margin:14px 0 8px}.md-body h2{font-size:18px;margin:14px 0 6px}.md-body h3{font-size:15.5px;margin:12px 0 4px}.md-body p{margin:8px 0}.md-body ul,.md-body ol{margin:8px 0 8px 22px}.md-body li{margin:3px 0}.md-body pre{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:10px 12px;overflow-x:auto;font-size:12.5px}.md-body table{border-collapse:collapse;margin:10px 0;font-size:13.5px}.md-body th,.md-body td{border:1px solid var(--border);padding:5px 9px;text-align:left}.md-body blockquote{border-left:3px solid var(--border);margin:10px 0;padding:2px 14px;color:var(--muted)}.mdfallback{white-space:pre-wrap;font-size:12.5px}.mdinv{margin:6px 0 12px 20px;font-size:14px}.mdinv li{margin:3px 0}.repo-files h2{font-size:17px;margin:0 0 4px;color:var(--text)}.attn-btn{background:var(--bg);color:var(--text);border:1px solid var(--border);border-radius:8px;padding:6px 14px;font-size:13px;font-weight:600;cursor:pointer}.attn-btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}.attn-actions{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}.attn-status{font-size:13px;color:var(--muted);margin-top:8px}
 
 .dumpbox {
   background: var(--card);
@@ -153,10 +153,28 @@ footer{margin-top:36px;padding-top:18px;border-top:1px solid var(--border);color
 
 @media (max-width:640px){.fact{grid-template-columns:1fr;gap:2px}.connlabel{width:88px}.wrap{padding:28px 16px 48px}h1{font-size:24px}}
 </style>
+<style>
+.header-tip{position:relative;overflow:hidden;display:inline-flex;align-items:center;gap:.45em;padding:6px 12px;border-radius:999px;text-decoration:none;
+  font-size:13px;font-weight:800;line-height:1;color:#fff;background:linear-gradient(135deg,#7c4dff,#b388ff);
+  box-shadow:0 4px 14px rgba(124,77,255,.35);animation:tip-breathe 3.2s ease-in-out infinite;white-space:nowrap}
+.header-tip::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;
+  background:linear-gradient(105deg,rgba(255,255,255,0) 35%,rgba(255,255,255,.45) 50%,rgba(255,255,255,0) 65%);
+  transform:translateX(-110%);animation:tip-sheen 8s ease-in-out infinite}
+.header-tip .jar{display:inline-block;font-size:1.1em}
+.header-tip:hover .jar{animation:tip-spin .7s cubic-bezier(.34,1.56,.64,1)}
+.header-tip:focus-visible{outline:3px solid #ffd54f;outline-offset:3px}
+@keyframes tip-breathe{0%,100%{transform:scale(1)}50%{transform:scale(1.045)}}
+@keyframes tip-sheen{0%{transform:translateX(-110%)}16%{transform:translateX(110%)}100%{transform:translateX(110%)}}
+@keyframes tip-spin{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion: reduce){
+  .header-tip,.header-tip:hover .jar{animation:none}
+  .header-tip::after{display:none}
+}
+</style>
 </head>
 <body>
 <div class="wrap">
-<div class="aboutnav"><a href="./">← 🌱 Garden Buddy — homepage</a><span class="muted">This About page is the full record: every registry field and every markdown file in the buddy's repo.</span></div>
+<div class="aboutnav"><a href="./">← 🌱 Garden Buddy — homepage</a><span class="muted">This About page is the full record: every registry field and every markdown file in the buddy's repo.</span><a class="header-tip" href="https://ko-fi.com/davedellaquila" target="_blank" rel="noopener" aria-label="Tip Jar — if this page helped you, you can leave Dave a tip on Ko-fi"><span class="jar" aria-hidden="true">🫙</span><span>Tip Jar</span></a></div>
 <header class="hero">
 <div class="heroicon">🌱</div>
 <div><h1>Garden Buddy</h1><p class="tagline">The cabin&#x27;s plants, trim calendar, and yard records</p></div>
@@ -164,15 +182,15 @@ footer{margin-top:36px;padding-top:18px;border-top:1px solid var(--border);color
 <nav data-buddy-crumb style="margin-bottom:14px;font-size:14px;"><a href="https://davedellaquila.github.io/buddy-system/cabin-buddy/" style="color:var(--muted);text-decoration:none;">← Cabin Buddy</a></nav>
 <div class="stats"><span class="status st-brief">Mission review</span><span class="stat"><b>1</b> need attention</span><span class="stat"><b>1</b> documents</span></div>
 <section class="card"><h2 class="kicker">About</h2><p class="mission">Garden Buddy keeps the living half of the Fiddletown cabin — every plant in the ground, when it gets cut back, fed, and watered, and what the yard needs each season. It holds the plant inventory (built from Dave&#x27;s photos), a per-plant pruning calendar tuned to Sierra foothills conditions — major cuts late winter–early spring, rosemary&#x27;s big prune in spring after flowering and never deep into old wood, spring bloomers right after bloom — seasonal yard reminders, and the vegetation-control records (RM43-2 with its cautions, RM18 as the no-residual fallback), so nothing gets trimmed at the wrong time of year or sprayed in the wrong place.</p><p class="brief">https://docs.google.com/document/d/1Ri6GOjGOmJRC8lpEA61ghPvL9qgPfPm_m7EIN5LP2sw/edit</p><p class="persona">🎭 Persona: The Head Gardener</p><p class="persona">🔊 Voice: avocado_v2:marisol</p></section>
-<section class="card"><h2 class="kicker">Fact sheet — the data chain</h2><dl class="facts"><div class="fact"><dt>Buddy ID</dt><dd><code>garden-buddy</code></dd></div><div class="fact"><dt>Kind</dt><dd>project</dd></div><div class="fact"><dt>Parent chain</dt><dd><a href="../astro/">🚀 Astro</a> › <a href="../property-buddy/">🏠 Property Buddy</a> › <a href="../cabin-buddy/">🏕️ Cabin Buddy</a></dd></div><div class="fact"><dt>Repository</dt><dd><a href="https://github.com/davedellaquila/garden-buddy" target="_blank" rel="noopener">davedellaquila/garden-buddy</a></dd></div><div class="fact"><dt>Homepage URL</dt><dd><code>garden-buddy/</code></dd></div><div class="fact"><dt>Alt personas</dt><dd>The Groundskeeper, The Orchard Keeper</dd></div></dl></section>
-<section class="card"><h2 class="kicker">Complete registry record (20 fields)</h2><dl class="facts"><div class="fact"><dt>id</dt><dd>garden-buddy</dd></div><div class="fact"><dt>name</dt><dd>Garden Buddy</dd></div><div class="fact"><dt>icon</dt><dd>🌱</dd></div><div class="fact"><dt>tagline</dt><dd>The cabin&#x27;s plants, trim calendar, and yard records</dd></div><div class="fact"><dt>type</dt><dd>assistant</dd></div><div class="fact"><dt>kind</dt><dd>project</dd></div><div class="fact"><dt>status</dt><dd>Mission review</dd></div><div class="fact"><dt>statusClass</dt><dd>st-brief</dd></div><div class="fact"><dt>parent</dt><dd>cabin-buddy</dd></div><div class="fact"><dt>mission</dt><dd>Garden Buddy keeps the living half of the Fiddletown cabin — every plant in the ground, when it gets cut back, fed, and watered, and what the yard needs each season. It holds the plant inventory (built from Dave&#x27;s photos), a per-plant pruning calendar tuned to Sierra foothills conditions — major cuts late winter–early spring, rosemary&#x27;s big prune in spring after flowering and never deep into old wood, spring bloomers right after bloom — seasonal yard reminders, and the vegetation-control records (RM43-2 with its cautions, RM18 as the no-residual fallback), so nothing gets trimmed at the wrong time of year or sprayed in the wrong place.</dd></div><div class="fact"><dt>brief</dt><dd><a href="https://docs.google.com/document/d/1Ri6GOjGOmJRC8lpEA61ghPvL9qgPfPm_m7EIN5LP2sw/edit" target="_blank" rel="noopener">https://docs.google.com/document/d/1Ri6GOjGOmJRC8lpEA61ghPvL9qgPfPm_m7EIN5LP2sw/edit</a></dd></div><div class="fact"><dt>persona</dt><dd>The Head Gardener</dd></div><div class="fact"><dt>voice</dt><dd>avocado_v2:marisol</dd></div><div class="fact"><dt>repo</dt><dd>garden-buddy</dd></div><div class="fact"><dt>homepage</dt><dd>garden-buddy/</dd></div><div class="fact"><dt>docs</dt><dd><a href="https://docs.google.com/document/d/1Ri6GOjGOmJRC8lpEA61ghPvL9qgPfPm_m7EIN5LP2sw/edit" target="_blank" rel="noopener">Garden Buddy — Job Req</a></dd></div><div class="fact"><dt>attention</dt><dd><a href="https://docs.google.com/document/d/1Ri6GOjGOmJRC8lpEA61ghPvL9qgPfPm_m7EIN5LP2sw/edit" target="_blank" rel="noopener">Job req ready for review — looks good, edits, or defer?</a></dd></div><div class="fact"><dt>links</dt><dd>cabin-buddy</dd></div><div class="fact"><dt>photos</dt><dd><span class="unset">— not set —</span></dd></div><div class="fact"><dt>alt_personas</dt><dd>The Groundskeeper<br>The Orchard Keeper</dd></div></dl></section>
+<section class="card"><h2 class="kicker">Fact sheet — the data chain</h2><dl class="facts"><div class="fact"><dt>Buddy ID</dt><dd><code>garden-buddy</code></dd></div><div class="fact"><dt>Kind</dt><dd>project</dd></div><div class="fact"><dt>Parent chain</dt><dd><a href="../astro/">🚀 Astro</a> › <a href="../property-buddy/">🏠 Property Buddy</a> › <a href="../cabin-buddy/">🏕️ Cabin Buddy</a></dd></div><div class="fact"><dt>Repository</dt><dd><a href="https://github.com/davedellaquila/garden-buddy" target="_blank" rel="noopener">davedellaquila/garden-buddy</a></dd></div><div class="fact"><dt>Side thread</dt><dd><a href="https://muse.ai/chat/efe3e0fe-8e0e-43d0-8695-0b29c62a93ae" target="_blank" rel="noopener">open thread</a></dd></div><div class="fact"><dt>Homepage URL</dt><dd><code>garden-buddy/</code></dd></div><div class="fact"><dt>Alt personas</dt><dd>The Groundskeeper, The Orchard Keeper</dd></div></dl></section>
+<section class="card"><h2 class="kicker">Complete registry record (21 fields)</h2><dl class="facts"><div class="fact"><dt>id</dt><dd>garden-buddy</dd></div><div class="fact"><dt>name</dt><dd>Garden Buddy</dd></div><div class="fact"><dt>icon</dt><dd>🌱</dd></div><div class="fact"><dt>tagline</dt><dd>The cabin&#x27;s plants, trim calendar, and yard records</dd></div><div class="fact"><dt>type</dt><dd>assistant</dd></div><div class="fact"><dt>kind</dt><dd>project</dd></div><div class="fact"><dt>status</dt><dd>Mission review</dd></div><div class="fact"><dt>statusClass</dt><dd>st-brief</dd></div><div class="fact"><dt>parent</dt><dd>cabin-buddy</dd></div><div class="fact"><dt>mission</dt><dd>Garden Buddy keeps the living half of the Fiddletown cabin — every plant in the ground, when it gets cut back, fed, and watered, and what the yard needs each season. It holds the plant inventory (built from Dave&#x27;s photos), a per-plant pruning calendar tuned to Sierra foothills conditions — major cuts late winter–early spring, rosemary&#x27;s big prune in spring after flowering and never deep into old wood, spring bloomers right after bloom — seasonal yard reminders, and the vegetation-control records (RM43-2 with its cautions, RM18 as the no-residual fallback), so nothing gets trimmed at the wrong time of year or sprayed in the wrong place.</dd></div><div class="fact"><dt>brief</dt><dd><a href="https://docs.google.com/document/d/1Ri6GOjGOmJRC8lpEA61ghPvL9qgPfPm_m7EIN5LP2sw/edit" target="_blank" rel="noopener">https://docs.google.com/document/d/1Ri6GOjGOmJRC8lpEA61ghPvL9qgPfPm_m7EIN5LP2sw/edit</a></dd></div><div class="fact"><dt>persona</dt><dd>The Head Gardener</dd></div><div class="fact"><dt>voice</dt><dd>avocado_v2:marisol</dd></div><div class="fact"><dt>repo</dt><dd>garden-buddy</dd></div><div class="fact"><dt>homepage</dt><dd>garden-buddy/</dd></div><div class="fact"><dt>chat</dt><dd>efe3e0fe-8e0e-43d0-8695-0b29c62a93ae</dd></div><div class="fact"><dt>docs</dt><dd><a href="https://docs.google.com/document/d/1Ri6GOjGOmJRC8lpEA61ghPvL9qgPfPm_m7EIN5LP2sw/edit" target="_blank" rel="noopener">Garden Buddy — Job Req</a></dd></div><div class="fact"><dt>attention</dt><dd><a href="https://docs.google.com/document/d/1Ri6GOjGOmJRC8lpEA61ghPvL9qgPfPm_m7EIN5LP2sw/edit" target="_blank" rel="noopener">Job req ready for review — looks good, edits, or defer?</a></dd></div><div class="fact"><dt>links</dt><dd>cabin-buddy</dd></div><div class="fact"><dt>photos</dt><dd><span class="unset">— not set —</span></dd></div><div class="fact"><dt>alt_personas</dt><dd>The Groundskeeper<br>The Orchard Keeper</dd></div></dl></section>
 <section class="card"><h2 class="kicker">Needs attention (1)</h2><div class="attn"><div class="aitem"><span class="adot">●</span><div><div><a href="https://docs.google.com/document/d/1Ri6GOjGOmJRC8lpEA61ghPvL9qgPfPm_m7EIN5LP2sw/edit" target="_blank" rel="noopener">Job req ready for review — looks good, edits, or defer? ↗</a></div><div class="adate">2026-10-27</div></div></div></div></section>
 
 <section class="card"><h2 class="kicker">Documents (1)</h2><div class="docrow"><a href="https://docs.google.com/document/d/1Ri6GOjGOmJRC8lpEA61ghPvL9qgPfPm_m7EIN5LP2sw/edit" target="_blank" rel="noopener">Garden Buddy — Job Req</a></div></section>
 <section class="card"><h2 class="kicker">Sub-buddies (0)</h2><p class="empty">No sub-buddies.</p></section>
 <section class="card"><h2 class="kicker">Connections</h2><div class="connrow"><span class="connlabel">Parent</span><a href="../cabin-buddy/">🏕️ Cabin Buddy</a></div><div class="connrow"><span class="connlabel">Siblings</span><a href="../beer-keg-buddy/">🍺 Beer Keg Buddy</a>, <a href="../hiking-buddy/">🥾 Hiking Buddy</a>, <a href="../hot-tub-buddy/">♨️ Hot Tub Buddy</a>, <a href="../party-buddy/">🎉 Party Buddy</a></div><div class="connrow"><span class="connlabel">Linked to</span><a href="../cabin-buddy/">🏕️ Cabin Buddy</a></div></section>
 <section class="card"><h2 class="kicker">Repository &amp; memory</h2><div class="connrow"><span class="connlabel">Repo</span><a href="https://github.com/davedellaquila/garden-buddy" target="_blank" rel="noopener">davedellaquila/garden-buddy</a> <span class="muted">— brain dumps land in docs/ingest.md</span></div></section>
-<section class="card"><h2 class="kicker">From the repo — markdown files (8)</h2><p class="muted">In the local clone of davedellaquila/garden-buddy — the reader below loads the live files from the repo itself:</p><ul class="mdinv"><li><code>KNOWLEDGE.md</code> <span class="muted">1,800 chars</span></li><li><code>SOUL.md</code> <span class="muted">1,343 chars</span></li><li><code>DECISIONS.md</code> <span class="muted">820 chars</span></li><li><code>ACCOMPLISHMENTS.md</code> <span class="muted">113 chars</span></li><li><code>README.md</code> <span class="muted">422 chars</span></li><li><code>docs/brief.md</code> <span class="muted">5,326 chars</span></li><li><code>docs/ingest.md</code> <span class="muted">125 chars</span></li><li><code>docs/job-req.md</code> <span class="muted">5,326 chars</span></li></ul>
+<section class="card"><h2 class="kicker">From the repo — markdown files (9)</h2><p class="muted">In the local clone of davedellaquila/garden-buddy — the reader below loads the live files from the repo itself:</p><ul class="mdinv"><li><code>KNOWLEDGE.md</code> <span class="muted">2,402 chars</span></li><li><code>CONFIG.md</code> <span class="muted">2,183 chars</span></li><li><code>SOUL.md</code> <span class="muted">1,343 chars</span></li><li><code>DECISIONS.md</code> <span class="muted">2,098 chars</span></li><li><code>ACCOMPLISHMENTS.md</code> <span class="muted">591 chars</span></li><li><code>README.md</code> <span class="muted">422 chars</span></li><li><code>docs/brief.md</code> <span class="muted">5,326 chars</span></li><li><code>docs/ingest.md</code> <span class="muted">125 chars</span></li><li><code>docs/job-req.md</code> <span class="muted">5,326 chars</span></li></ul>
 <section class="repo-files" data-buddy-id="garden-buddy">
 <h2>📄 Repo files</h2>
 <p class="rf-sub">The markdown files in <span data-buddy-name>Garden Buddy</span>'s repo. Tap a file name and its contents open right below it — open as many as you like at once. Edit inside an opened file and the save goes straight back to GitHub. The repo is private, so nothing here — not even the file names — is shown until GitHub is connected on this device.</p>
@@ -798,59 +816,5 @@ footer{margin-top:36px;padding-top:18px;border-top:1px solid var(--border);color
 })();
 </script>
 
-<!--
-  TIP JAR — canonical snippet (Dave's standard, 2026-10-24; motion v2, 2026-10-26)
-  Every buddy homepage and every page a buddy creates carries the tip jar.
-  Public pages especially: a reader who got value can say thanks.
-
-  USAGE: paste this whole block just before </body>. No dependencies.
-  The jar points at Dave's Ko-fi page by default. A page for a specific app
-  may override the destination with its own Ko-fi page later:
-      <div class="tipjar" ...> — change the href on the <a>.
-
-  DESIGN NOTES (keep it alive, never annoying):
-  - "Breathing" (v2): a calm but clearly visible pulse — the pill scales
-    1 → 1.045 over a 3.2s ease-in-out cycle while its glow swells with it.
-    (V1 breathed at 1.035 over 6s — Dave: "rather static." Too subtle.)
-  - "Shimmer" (v2): a soft light sweep crosses the pill once every ~8s —
-    a ~1.3s pass inside a long rest, built into the keyframe cycle.
-  - Hover: the jar spins (same move as the dashboard sidebar's tip jar).
-  - V1's hop + coin glint were retired in v2 — with the breathing and the
-    shimmer running, the stack got busy; breathing + shimmer + hover spin
-    is the trio now.
-  - prefers-reduced-motion: all animation off. The jar is just a link.
-  - Transform/opacity/box-shadow only — no layout shift.
-  - Works in dark and light mode; sits above page content (z-index 60) but
-    below modals on buddy pages.
--->
-<style>
-  .tipjar{position:fixed;right:18px;bottom:18px;z-index:60;
-    font-family:inherit;-webkit-tap-highlight-color:transparent}
-  .tipjar a{display:inline-flex;align-items:center;gap:.5em;position:relative;overflow:hidden;
-    padding:.55em 1em;border-radius:999px;text-decoration:none;
-    font-size:.9rem;font-weight:600;line-height:1;
-    color:#fff;background:linear-gradient(135deg,#7c4dff,#b388ff);
-    box-shadow:0 6px 18px rgba(124,77,255,.35),0 2px 6px rgba(0,0,0,.25);
-    animation:tipjar-breathe 3.2s ease-in-out infinite}
-  .tipjar a::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;
-    background:linear-gradient(105deg,rgba(255,255,255,0) 35%,rgba(255,255,255,.45) 50%,rgba(255,255,255,0) 65%);
-    transform:translateX(-110%);animation:tipjar-sheen 8s ease-in-out infinite}
-  .tipjar .jar{display:inline-block;font-size:1.15em}
-  .tipjar a:hover .jar{animation:tipjar-spin .7s cubic-bezier(.34,1.56,.64,1)}
-  .tipjar a:focus-visible{outline:3px solid #ffd54f;outline-offset:3px}
-  @keyframes tipjar-breathe{0%,100%{transform:scale(1);box-shadow:0 6px 18px rgba(124,77,255,.35),0 2px 6px rgba(0,0,0,.25)}50%{transform:scale(1.045);box-shadow:0 9px 26px rgba(124,77,255,.55),0 3px 8px rgba(0,0,0,.28)}}
-  @keyframes tipjar-sheen{0%{transform:translateX(-110%)}16%{transform:translateX(110%)}100%{transform:translateX(110%)}}
-  @keyframes tipjar-spin{to{transform:rotate(360deg)}}
-  @media (prefers-reduced-motion: reduce){
-    .tipjar a,.tipjar a:hover .jar{animation:none}
-    .tipjar a::after{display:none}
-  }
-</style>
-<div class="tipjar">
-  <a href="https://ko-fi.com/davedellaquila" target="_blank" rel="noopener"
-     aria-label="Tip jar — if this page helped you, you can leave Dave a tip on Ko-fi">
-    <span class="jar">🫙</span><span class="tiptext">Tip Jar</span>
-  </a>
-</div>
 </body>
 </html>

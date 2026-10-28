@@ -15,9 +15,30 @@ treatment, not basic-template pages, despite the shared footer signature.
 import json
 import os
 import html
+import re
 import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
+
+def _tipjar_parts():
+    """Canonical Tip Jar (docs/tipjar-snippet.html): returns (style_block, anchor)
+    for the HEADER placement (Dave 2026-10-28) — a compact bug in the page's
+    header row, superseding the retired floating pill. ('', '') if unreadable."""
+    try:
+        txt = open(os.path.join(HERE, 'docs', 'tipjar-snippet.html'), encoding='utf-8').read()
+    except OSError:
+        return '', ''
+    txt = re.sub(r'<!--.*?-->', '', txt, flags=re.S)  # strip comments first: the
+    # usage prose itself mentions <style>/<a> and must not poison extraction
+    m = re.search(r'<style>.*?</style>', txt, re.S)
+    style = m.group(0) if m else ''
+    anchor = ''
+    for line in txt.splitlines():
+        if 'class="header-tip"' in line and line.strip().startswith('<a '):
+            anchor = line.strip()
+            break
+    return style, anchor
+
 os.chdir(HERE)
 
 # Optional: --only <buddy-id> regenerates a single page (used to test
@@ -928,6 +949,7 @@ body {{
 .topbar-refresh:hover {{ color: var(--text); border-color: var(--border); }}
 .bs-dash-link {{ font-size: 13px; font-weight: 600; color: var(--accent); text-decoration: none; white-space: nowrap; margin-left: 10px; }}
 .bs-dash-link:hover {{ text-decoration: underline; }}
+.topbar .header-tip {{ margin-left: auto; }}
 .icon {{ font-size: 64px; margin-bottom: 16px; }}
 h1 {{ font-size: 32px; margin-bottom: 8px; }}
 .tagline {{ color: var(--muted); font-size: 18px; }}
@@ -1301,15 +1323,20 @@ for b in d['buddies']:
         namesync_js=NAMESYNC_JS,
     )
 
-    # Tip jar (Dave's standing rule, 2026-10-24; generator wiring 2026-10-27):
-    # every generated page carries the canonical snippet, read live from
-    # docs/tipjar-snippet.html so the fleet never drifts from the canonical copy.
-    if 'class="tipjar"' not in page:
-        try:
-            with open(os.path.join(HERE, 'docs', 'tipjar-snippet.html'), encoding='utf-8') as _tf:
-                page = page.replace('</body>', _tf.read().strip('\n') + '\n</body>')
-        except OSError:
-            pass
+    # Tip jar (Dave's standing rule, 2026-10-24; HEADER placement 2026-10-28):
+    # the jar is a compact bug in the sticky topbar now (Developer Buddy's
+    # homepage is the reference implementation), no longer a floating pill
+    # injected before </body>. Canonical copy: docs/tipjar-snippet.html,
+    # read live so the fleet never drifts — <style> into <head>, anchor into
+    # the topbar after the dashboard link. Regeneration drops the old pill
+    # automatically (the template never contained it; it was injected).
+    if 'class="header-tip"' not in page:
+        _tstyle, _tanchor = _tipjar_parts()
+        if _tstyle and '</head>' in page:
+            page = page.replace('</head>', _tstyle + '\n</head>', 1)
+        if _tanchor and 'Buddy System dashboard</a></div>' in page:
+            page = page.replace('Buddy System dashboard</a></div>',
+                                'Buddy System dashboard</a>' + _tanchor + '</div>', 1)
 
     # Write to <bid>/index.html
     os.makedirs(dirpath, exist_ok=True)

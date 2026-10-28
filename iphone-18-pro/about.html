@@ -58,7 +58,7 @@ a:hover{text-decoration:underline}
 .muted{color:var(--muted);font-size:13px}
 .empty{color:var(--muted);font-style:italic;margin:4px 0}
 footer{margin-top:36px;padding-top:18px;border-top:1px solid var(--border);color:var(--muted);font-size:12.5px;text-align:center}
-.aboutnav{display:flex;gap:14px;flex-wrap:wrap;align-items:baseline;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px 16px;margin-bottom:22px;font-size:14px}.unset{color:var(--muted);font-style:italic}.recjson{margin:0;font-size:12px;white-space:pre-wrap;overflow-wrap:break-word}.mdfile{border-top:1px solid var(--border);padding:14px 0}.mdfile-head{display:flex;gap:12px;align-items:baseline;margin-bottom:8px}details.mdfile summary{cursor:pointer;font-size:14px}.md-body{font-size:14.5px}.md-body h1{font-size:21px;margin:14px 0 8px}.md-body h2{font-size:18px;margin:14px 0 6px}.md-body h3{font-size:15.5px;margin:12px 0 4px}.md-body p{margin:8px 0}.md-body ul,.md-body ol{margin:8px 0 8px 22px}.md-body li{margin:3px 0}.md-body pre{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:10px 12px;overflow-x:auto;font-size:12.5px}.md-body table{border-collapse:collapse;margin:10px 0;font-size:13.5px}.md-body th,.md-body td{border:1px solid var(--border);padding:5px 9px;text-align:left}.md-body blockquote{border-left:3px solid var(--border);margin:10px 0;padding:2px 14px;color:var(--muted)}.mdfallback{white-space:pre-wrap;font-size:12.5px}.mdinv{margin:6px 0 12px 20px;font-size:14px}.mdinv li{margin:3px 0}.repo-files h2{font-size:17px;margin:0 0 4px;color:var(--text)}.attn-btn{background:var(--bg);color:var(--text);border:1px solid var(--border);border-radius:8px;padding:6px 14px;font-size:13px;font-weight:600;cursor:pointer}.attn-btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}.attn-actions{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}.attn-status{font-size:13px;color:var(--muted);margin-top:8px}
+.aboutnav{display:flex;gap:14px;flex-wrap:wrap;align-items:baseline;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px 16px;margin-bottom:22px;font-size:14px}.aboutnav .header-tip{margin-left:auto}header.hero .header-tip{margin-left:auto;flex:none}.unset{color:var(--muted);font-style:italic}.recjson{margin:0;font-size:12px;white-space:pre-wrap;overflow-wrap:break-word}.mdfile{border-top:1px solid var(--border);padding:14px 0}.mdfile-head{display:flex;gap:12px;align-items:baseline;margin-bottom:8px}details.mdfile summary{cursor:pointer;font-size:14px}.md-body{font-size:14.5px}.md-body h1{font-size:21px;margin:14px 0 8px}.md-body h2{font-size:18px;margin:14px 0 6px}.md-body h3{font-size:15.5px;margin:12px 0 4px}.md-body p{margin:8px 0}.md-body ul,.md-body ol{margin:8px 0 8px 22px}.md-body li{margin:3px 0}.md-body pre{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:10px 12px;overflow-x:auto;font-size:12.5px}.md-body table{border-collapse:collapse;margin:10px 0;font-size:13.5px}.md-body th,.md-body td{border:1px solid var(--border);padding:5px 9px;text-align:left}.md-body blockquote{border-left:3px solid var(--border);margin:10px 0;padding:2px 14px;color:var(--muted)}.mdfallback{white-space:pre-wrap;font-size:12.5px}.mdinv{margin:6px 0 12px 20px;font-size:14px}.mdinv li{margin:3px 0}.repo-files h2{font-size:17px;margin:0 0 4px;color:var(--text)}.attn-btn{background:var(--bg);color:var(--text);border:1px solid var(--border);border-radius:8px;padding:6px 14px;font-size:13px;font-weight:600;cursor:pointer}.attn-btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}.attn-actions{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}.attn-status{font-size:13px;color:var(--muted);margin-top:8px}
 
 .dumpbox {
   background: var(--card);
@@ -153,10 +153,28 @@ footer{margin-top:36px;padding-top:18px;border-top:1px solid var(--border);color
 
 @media (max-width:640px){.fact{grid-template-columns:1fr;gap:2px}.connlabel{width:88px}.wrap{padding:28px 16px 48px}h1{font-size:24px}}
 </style>
+<style>
+.header-tip{position:relative;overflow:hidden;display:inline-flex;align-items:center;gap:.45em;padding:6px 12px;border-radius:999px;text-decoration:none;
+  font-size:13px;font-weight:800;line-height:1;color:#fff;background:linear-gradient(135deg,#7c4dff,#b388ff);
+  box-shadow:0 4px 14px rgba(124,77,255,.35);animation:tip-breathe 3.2s ease-in-out infinite;white-space:nowrap}
+.header-tip::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;
+  background:linear-gradient(105deg,rgba(255,255,255,0) 35%,rgba(255,255,255,.45) 50%,rgba(255,255,255,0) 65%);
+  transform:translateX(-110%);animation:tip-sheen 8s ease-in-out infinite}
+.header-tip .jar{display:inline-block;font-size:1.1em}
+.header-tip:hover .jar{animation:tip-spin .7s cubic-bezier(.34,1.56,.64,1)}
+.header-tip:focus-visible{outline:3px solid #ffd54f;outline-offset:3px}
+@keyframes tip-breathe{0%,100%{transform:scale(1)}50%{transform:scale(1.045)}}
+@keyframes tip-sheen{0%{transform:translateX(-110%)}16%{transform:translateX(110%)}100%{transform:translateX(110%)}}
+@keyframes tip-spin{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion: reduce){
+  .header-tip,.header-tip:hover .jar{animation:none}
+  .header-tip::after{display:none}
+}
+</style>
 </head>
 <body>
 <div class="wrap">
-<div class="aboutnav"><a href="./">← 📱 iPhone 18 Pro — homepage</a><span class="muted">This About page is the full record: every registry field and every markdown file in the buddy's repo.</span></div>
+<div class="aboutnav"><a href="./">← 📱 iPhone 18 Pro — homepage</a><span class="muted">This About page is the full record: every registry field and every markdown file in the buddy's repo.</span><a class="header-tip" href="https://ko-fi.com/davedellaquila" target="_blank" rel="noopener" aria-label="Tip Jar — if this page helped you, you can leave Dave a tip on Ko-fi"><span class="jar" aria-hidden="true">🫙</span><span>Tip Jar</span></a></div>
 <header class="hero">
 <div class="heroicon">📱</div>
 <div><h1>iPhone 18 Pro</h1><p class="tagline">Dave&#x27;s new flagship — 1 TB, Black, on AT&amp;T · arriving Oct 29 – Nov 5</p></div>
@@ -203,7 +221,7 @@ footer{margin-top:36px;padding-top:18px;border-top:1px solid var(--border);color
 <p class="dumpbox-hint">Enter dumps it &middot; Shift+Enter for a new line</p>
 </section>
 
-<footer>Default Homepage v3 — "The Dossier" · Generated 2026-10-27 · Part of the Buddy System<br>
+<footer>Default Homepage v3 — "The Dossier" · Generated 2026-10-28 · Part of the Buddy System &middot; <a href="https://davedellaquila.github.io/buddy-system/">Buddy System dashboard</a><br>
 <span class="muted">Archived PDF snapshots live in the buddy-system archive folder.</span></footer>
 </div>
 
@@ -798,59 +816,5 @@ footer{margin-top:36px;padding-top:18px;border-top:1px solid var(--border);color
 })();
 </script>
 
-<!--
-  TIP JAR — canonical snippet (Dave's standard, 2026-10-24; motion v2, 2026-10-26)
-  Every buddy homepage and every page a buddy creates carries the tip jar.
-  Public pages especially: a reader who got value can say thanks.
-
-  USAGE: paste this whole block just before </body>. No dependencies.
-  The jar points at Dave's Ko-fi page by default. A page for a specific app
-  may override the destination with its own Ko-fi page later:
-      <div class="tipjar" ...> — change the href on the <a>.
-
-  DESIGN NOTES (keep it alive, never annoying):
-  - "Breathing" (v2): a calm but clearly visible pulse — the pill scales
-    1 → 1.045 over a 3.2s ease-in-out cycle while its glow swells with it.
-    (V1 breathed at 1.035 over 6s — Dave: "rather static." Too subtle.)
-  - "Shimmer" (v2): a soft light sweep crosses the pill once every ~8s —
-    a ~1.3s pass inside a long rest, built into the keyframe cycle.
-  - Hover: the jar spins (same move as the dashboard sidebar's tip jar).
-  - V1's hop + coin glint were retired in v2 — with the breathing and the
-    shimmer running, the stack got busy; breathing + shimmer + hover spin
-    is the trio now.
-  - prefers-reduced-motion: all animation off. The jar is just a link.
-  - Transform/opacity/box-shadow only — no layout shift.
-  - Works in dark and light mode; sits above page content (z-index 60) but
-    below modals on buddy pages.
--->
-<style>
-  .tipjar{position:fixed;right:18px;bottom:18px;z-index:60;
-    font-family:inherit;-webkit-tap-highlight-color:transparent}
-  .tipjar a{display:inline-flex;align-items:center;gap:.5em;position:relative;overflow:hidden;
-    padding:.55em 1em;border-radius:999px;text-decoration:none;
-    font-size:.9rem;font-weight:600;line-height:1;
-    color:#fff;background:linear-gradient(135deg,#7c4dff,#b388ff);
-    box-shadow:0 6px 18px rgba(124,77,255,.35),0 2px 6px rgba(0,0,0,.25);
-    animation:tipjar-breathe 3.2s ease-in-out infinite}
-  .tipjar a::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;
-    background:linear-gradient(105deg,rgba(255,255,255,0) 35%,rgba(255,255,255,.45) 50%,rgba(255,255,255,0) 65%);
-    transform:translateX(-110%);animation:tipjar-sheen 8s ease-in-out infinite}
-  .tipjar .jar{display:inline-block;font-size:1.15em}
-  .tipjar a:hover .jar{animation:tipjar-spin .7s cubic-bezier(.34,1.56,.64,1)}
-  .tipjar a:focus-visible{outline:3px solid #ffd54f;outline-offset:3px}
-  @keyframes tipjar-breathe{0%,100%{transform:scale(1);box-shadow:0 6px 18px rgba(124,77,255,.35),0 2px 6px rgba(0,0,0,.25)}50%{transform:scale(1.045);box-shadow:0 9px 26px rgba(124,77,255,.55),0 3px 8px rgba(0,0,0,.28)}}
-  @keyframes tipjar-sheen{0%{transform:translateX(-110%)}16%{transform:translateX(110%)}100%{transform:translateX(110%)}}
-  @keyframes tipjar-spin{to{transform:rotate(360deg)}}
-  @media (prefers-reduced-motion: reduce){
-    .tipjar a,.tipjar a:hover .jar{animation:none}
-    .tipjar a::after{display:none}
-  }
-</style>
-<div class="tipjar">
-  <a href="https://ko-fi.com/davedellaquila" target="_blank" rel="noopener"
-     aria-label="Tip jar — if this page helped you, you can leave Dave a tip on Ko-fi">
-    <span class="jar">🫙</span><span class="tiptext">Tip Jar</span>
-  </a>
-</div>
 </body>
 </html>

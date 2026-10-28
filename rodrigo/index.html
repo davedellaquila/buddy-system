@@ -54,6 +54,7 @@ body {
 .topbar-refresh:hover { color: var(--text); border-color: var(--border); }
 .bs-dash-link { font-size: 13px; font-weight: 600; color: var(--accent); text-decoration: none; white-space: nowrap; margin-left: 10px; }
 .bs-dash-link:hover { text-decoration: underline; }
+.topbar .header-tip { margin-left: auto; }
 .icon { font-size: 64px; margin-bottom: 16px; }
 h1 { font-size: 32px; margin-bottom: 8px; }
 .tagline { color: var(--muted); font-size: 18px; }
@@ -216,10 +217,28 @@ h2 { font-size: 22px; margin: 32px 0 16px; }
 .rf-panel .rf-fstatus { margin-top: 8px; }
 
 </style>
+<style>
+.header-tip{position:relative;overflow:hidden;display:inline-flex;align-items:center;gap:.45em;padding:6px 12px;border-radius:999px;text-decoration:none;
+  font-size:13px;font-weight:800;line-height:1;color:#fff;background:linear-gradient(135deg,#7c4dff,#b388ff);
+  box-shadow:0 4px 14px rgba(124,77,255,.35);animation:tip-breathe 3.2s ease-in-out infinite;white-space:nowrap}
+.header-tip::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;
+  background:linear-gradient(105deg,rgba(255,255,255,0) 35%,rgba(255,255,255,.45) 50%,rgba(255,255,255,0) 65%);
+  transform:translateX(-110%);animation:tip-sheen 8s ease-in-out infinite}
+.header-tip .jar{display:inline-block;font-size:1.1em}
+.header-tip:hover .jar{animation:tip-spin .7s cubic-bezier(.34,1.56,.64,1)}
+.header-tip:focus-visible{outline:3px solid #ffd54f;outline-offset:3px}
+@keyframes tip-breathe{0%,100%{transform:scale(1)}50%{transform:scale(1.045)}}
+@keyframes tip-sheen{0%{transform:translateX(-110%)}16%{transform:translateX(110%)}100%{transform:translateX(110%)}}
+@keyframes tip-spin{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion: reduce){
+  .header-tip,.header-tip:hover .jar{animation:none}
+  .header-tip::after{display:none}
+}
+</style>
 </head>
 <body>
 <nav data-buddy-crumb style="padding:14px 20px 0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:14px;line-height:1.4;"><a href="https://davedellaquila.github.io/buddy-system/wwsf/" style="color:inherit;opacity:.65;text-decoration:none;">← WWSF/STIX</a></nav>
-<div class="topbar"><span class="topbar-icon">🔨</span><span class="topbar-name" data-buddy-name>Rodrigo</span><button class="topbar-refresh" title="Reload this page (bypasses cache)" onclick="location.href=location.pathname+'?v='+Date.now()">&#8635;</button><a class="bs-dash-link" href="https://davedellaquila.github.io/buddy-system/">Buddy System dashboard</a></div>
+<div class="topbar"><span class="topbar-icon">🔨</span><span class="topbar-name" data-buddy-name>Rodrigo</span><button class="topbar-refresh" title="Reload this page (bypasses cache)" onclick="location.href=location.pathname+'?v='+Date.now()">&#8635;</button><a class="bs-dash-link" href="https://davedellaquila.github.io/buddy-system/">Buddy System dashboard</a><a class="header-tip" href="https://ko-fi.com/davedellaquila" target="_blank" rel="noopener" aria-label="Tip Jar — if this page helped you, you can leave Dave a tip on Ko-fi"><span class="jar" aria-hidden="true">🫙</span><span>Tip Jar</span></a></div>
 <div class="header">
 <div class="icon">🔨</div>
 <h1 data-buddy-name>Rodrigo</h1>
@@ -916,59 +935,5 @@ Generated 2026-10-28 · Part of the Buddy System<br>
 })();
 </script>
 
-<!--
-  TIP JAR — canonical snippet (Dave's standard, 2026-10-24; motion v2, 2026-10-26)
-  Every buddy homepage and every page a buddy creates carries the tip jar.
-  Public pages especially: a reader who got value can say thanks.
-
-  USAGE: paste this whole block just before </body>. No dependencies.
-  The jar points at Dave's Ko-fi page by default. A page for a specific app
-  may override the destination with its own Ko-fi page later:
-      <div class="tipjar" ...> — change the href on the <a>.
-
-  DESIGN NOTES (keep it alive, never annoying):
-  - "Breathing" (v2): a calm but clearly visible pulse — the pill scales
-    1 → 1.045 over a 3.2s ease-in-out cycle while its glow swells with it.
-    (V1 breathed at 1.035 over 6s — Dave: "rather static." Too subtle.)
-  - "Shimmer" (v2): a soft light sweep crosses the pill once every ~8s —
-    a ~1.3s pass inside a long rest, built into the keyframe cycle.
-  - Hover: the jar spins (same move as the dashboard sidebar's tip jar).
-  - V1's hop + coin glint were retired in v2 — with the breathing and the
-    shimmer running, the stack got busy; breathing + shimmer + hover spin
-    is the trio now.
-  - prefers-reduced-motion: all animation off. The jar is just a link.
-  - Transform/opacity/box-shadow only — no layout shift.
-  - Works in dark and light mode; sits above page content (z-index 60) but
-    below modals on buddy pages.
--->
-<style>
-  .tipjar{position:fixed;right:18px;bottom:18px;z-index:60;
-    font-family:inherit;-webkit-tap-highlight-color:transparent}
-  .tipjar a{display:inline-flex;align-items:center;gap:.5em;position:relative;overflow:hidden;
-    padding:.55em 1em;border-radius:999px;text-decoration:none;
-    font-size:.9rem;font-weight:600;line-height:1;
-    color:#fff;background:linear-gradient(135deg,#7c4dff,#b388ff);
-    box-shadow:0 6px 18px rgba(124,77,255,.35),0 2px 6px rgba(0,0,0,.25);
-    animation:tipjar-breathe 3.2s ease-in-out infinite}
-  .tipjar a::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;
-    background:linear-gradient(105deg,rgba(255,255,255,0) 35%,rgba(255,255,255,.45) 50%,rgba(255,255,255,0) 65%);
-    transform:translateX(-110%);animation:tipjar-sheen 8s ease-in-out infinite}
-  .tipjar .jar{display:inline-block;font-size:1.15em}
-  .tipjar a:hover .jar{animation:tipjar-spin .7s cubic-bezier(.34,1.56,.64,1)}
-  .tipjar a:focus-visible{outline:3px solid #ffd54f;outline-offset:3px}
-  @keyframes tipjar-breathe{0%,100%{transform:scale(1);box-shadow:0 6px 18px rgba(124,77,255,.35),0 2px 6px rgba(0,0,0,.25)}50%{transform:scale(1.045);box-shadow:0 9px 26px rgba(124,77,255,.55),0 3px 8px rgba(0,0,0,.28)}}
-  @keyframes tipjar-sheen{0%{transform:translateX(-110%)}16%{transform:translateX(110%)}100%{transform:translateX(110%)}}
-  @keyframes tipjar-spin{to{transform:rotate(360deg)}}
-  @media (prefers-reduced-motion: reduce){
-    .tipjar a,.tipjar a:hover .jar{animation:none}
-    .tipjar a::after{display:none}
-  }
-</style>
-<div class="tipjar">
-  <a href="https://ko-fi.com/davedellaquila" target="_blank" rel="noopener"
-     aria-label="Tip jar — if this page helped you, you can leave Dave a tip on Ko-fi">
-    <span class="jar">🫙</span><span class="tiptext">Tip Jar</span>
-  </a>
-</div>
 </body>
 </html>
