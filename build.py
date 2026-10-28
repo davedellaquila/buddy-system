@@ -12255,8 +12255,33 @@ function renderFindMenu(){
   const hits = BUDDIES.filter(b => b && buddyMatchesQuery(b, q));
   menu.innerHTML = '<div class="find-head">Suggestions</div>' + (hits.length ? hits.map(b => findRowHtml(b, words)).join('') : '<div class="find-empty">' + `No buddy matches '${escHtml(q.trim())}'.` + '</div>');
 }
+/* Dave 2026-10-28: centre the Find bar and its menu on the main view
+   (#main), not the window — and stop at the info panel's left edge when
+   the panel is docked over the main view's right side. Phone widths
+   (<=639px) keep the stylesheet's full-width placement. */
+function positionFind(){
+  const bar = document.getElementById('find-bar');
+  const menu = document.getElementById('find-menu');
+  if (!bar) return;
+  const clear = () => { bar.style.left = ''; bar.style.width = ''; if (menu) { menu.style.left = ''; menu.style.width = ''; } };
+  if (window.matchMedia('(max-width:639px)').matches) { clear(); return; }
+  const m = document.getElementById('main');
+  if (!m) { clear(); return; }
+  const r = m.getBoundingClientRect();
+  let right = r.right;
+  const vb = document.getElementById('view-buddy');
+  if (vb && vb.classList.contains('active') && (vb.classList.contains('panel') || vb.classList.contains('sheet'))) {
+    const pr = vb.getBoundingClientRect();
+    if (pr.left > r.left && pr.left < right) right = pr.left;
+  }
+  const w = Math.max(280, Math.min(640, right - r.left - 24));
+  const cx = ((r.left + right) / 2) + 'px';
+  bar.style.left = cx; bar.style.width = w + 'px';
+  if (menu) { menu.style.left = cx; menu.style.width = w + 'px'; }
+}
 function openFind(){
   closeRailViewPop(); closeRecentsPop();
+  positionFind();
   document.body.classList.add('find-open');
   renderFindMenu();
   const input = document.getElementById('find-input');
@@ -12266,9 +12291,13 @@ function closeFind(){ document.body.classList.remove('find-open'); }
 function toggleFind(){ if (isFindOpen()) closeFind(); else openFind(); }
 /* Dave 2026-10-24: keyboard map — ⌘F is the footer Find icon (toggleFind),
    ⌘I toggles the info panel (collapse/expand, or open it like #panel-open).
-   Dave 2026-10-27 (A3): ⌘F / Ctrl+F now route to the buddy panel's own
-   search field instead — the panel opens first when needed and #bp-search
-   takes focus. The Find overlay stays one tap away on the #hp-find button. */
+   Dave 2026-10-27 (A3): ⌘F / Ctrl+F routed to the buddy panel's own search
+   field instead — the panel opens first when needed and #bp-search takes
+   focus; the Find overlay stayed on the #hp-find button.
+   Dave 2026-10-28: ⌘F / Ctrl+F go back to the Find overlay, and the overlay
+   sits at the top of the MAIN VIEW, not over a side panel — openFind calls
+   positionFind() to centre the bar on #main, short of the info panel's
+   left edge when the panel is docked. The panel search keeps '/'. */
 function toggleInfoPanel(){
   const vb = document.getElementById('view-buddy');
   const panelActive = !!(vb && vb.classList.contains('active') && (vb.classList.contains('panel') || vb.classList.contains('sheet')));
@@ -12280,7 +12309,7 @@ function toggleInfoPanel(){
 document.addEventListener('keydown', function(e){
   if (e.altKey || e.repeat) return;
   const k = (e.key || '').toLowerCase();
-  if (k === 'f' && (e.metaKey !== e.ctrlKey)) { e.preventDefault(); if (isFindOpen()) closeFind(); focusPanelSearch(); return; }
+  if (k === 'f' && (e.metaKey !== e.ctrlKey)) { e.preventDefault(); toggleFind(); return; }
   if (!e.metaKey || e.ctrlKey) return;
   if (k === 'i') { e.preventDefault(); toggleInfoPanel(); }
 });
@@ -12341,6 +12370,7 @@ function initFind(){
     }
   });
   scrim.addEventListener('click', closeFind);
+  window.addEventListener('resize', () => { if (isFindOpen()) positionFind(); });
   document.addEventListener('keydown', e => {
     if (e.key === 'Escape' && isFindOpen()) { e.preventDefault(); e.stopPropagation(); closeFind(); }
   }, true);

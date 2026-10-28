@@ -368,16 +368,18 @@ Build: `build.py` generates `index.html` from `buddies.json` + `plans.json`.
   segmented control; detail opens as a right-docked side sheet (380px).
 - **Large (>1100px)**: tri-pane with persistent detail panel (400px).
 - **Keyboard**: arrows move between buddies, Esc closes the detail panel.
-  **⌘F / Ctrl+F** and **/** open the buddy panel when needed and focus
-  its search field; **⌘I** toggles the info panel — collapse/expand, or
-  open it when no buddy panel is up. All work even when a buddy homepage
-  iframe has focus (the iframe forwards the chords to the parent chrome).
+  **⌘F / Ctrl+F** opens the Find overlay, centred at the top of the main
+  view (clear of the info panel when it is docked); **/** opens the buddy
+  panel when needed and focuses its search field; **⌘I** toggles the info
+  panel — collapse/expand, or open it when no buddy panel is up. All work
+  even when a buddy homepage iframe has focus (the iframe forwards the
+  chords to the parent chrome).
 - **Panel search**: the buddy/info panel carries its own search field at
   the top (panel/sheet modes). It mirrors the sidebar search — one shared
   matcher over name + tagline + A.K.A. filters the buddy list as you
   type, the two boxes stay in sync, Enter opens the top match in the
   panel, and Escape clears the query before it ever closes the panel.
-  The Find overlay still lives on the footer Find button.
+  The Find overlay also lives on the footer Find button and on ⌘F / Ctrl+F.
 - **Dashboard link on every homepage**: every buddy homepage links back
   to the Buddy System dashboard (`bs-dash-link`, in its sticky header or
   top nav), and both homepage generators emit the link natively.
