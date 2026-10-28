@@ -2251,14 +2251,14 @@ body:has(#sidebar.sb-floating) #sb-resize{display:none}
        the rail shows too. Strip only - phones keep their Door A corner button. */
     #rail-top,#rail-bottom{display:none}
     body.sb-closed #rail-top{display:flex;justify-content:center;padding-bottom:8px;margin-bottom:4px;border-bottom:1px solid var(--border)}
-    body.sb-closed #rail-bottom{display:flex;justify-content:center;padding-top:8px;margin-top:4px;border-top:1px solid var(--border)}
+    body.sb-closed #rail-bottom{display:flex;flex-direction:column;align-items:center;gap:4px;justify-content:center;padding-top:8px;margin-top:4px;border-top:1px solid var(--border)}
     @media (max-width:639px){#rail-top,#rail-bottom,#rail-mid{display:none!important}}
     /* Dave 2026-10-28: the collapsed rail is exactly four icons — expand
        chevron, Find, Business Plans, current view. The mid slot carries
        Find + Plans, between the expand slot and the current-view slot. */
     #rail-mid{display:none}
     body.sb-closed #rail-mid{display:flex;flex-direction:column;align-items:center;gap:4px;padding:2px 0}
-    #rail-find,#rail-plans{width:44px;height:44px;border-radius:12px;border:1px solid transparent;background:none;color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1.25rem;padding:0}
+    #rail-find,#rail-plans,#rail-gear{width:44px;height:44px;border-radius:12px;border:1px solid transparent;background:none;color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1.25rem;padding:0}
     #rail-find:hover,#rail-plans:hover{color:var(--accent);border-color:var(--border);background:var(--ghost)}
     #rail-expand{width:44px;height:44px;border-radius:50%;border:1px solid var(--border);background:color-mix(in srgb, var(--panel) 72%, transparent);color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0}
     #rail-expand:hover{color:var(--accent);border-color:var(--accent)}
@@ -2361,11 +2361,12 @@ body:has(#sidebar.sb-floating) #sb-resize{display:none}
 body.sb-closed #sidebar{overflow-y:auto;overflow-x:hidden}
 body.sb-closed #sidebar .sb-scroll{flex:0 0 auto}
 body.sb-closed #sidebar #view-nav{max-height:none!important;overflow:visible!important}
-/* Job I: expanding the sidebar from its collapsed rail — a measuring pass
-   (transitions off) plus a two-frame parked pose that grows from the
-   click point (the inline transform-origin is set by setSidebarOpen). */
+/* Sidebar expand (Dave 2026-10-28): a transitions-off measuring pass
+   (sb-measuring) lets setSidebarOpen park the expanded panel on the
+   rail's footprint, then the sidebar's own width/transform transition
+   glides it open — the mirror of the collapse. (Replaces the Job I
+   sb-opening fade/scale pose, whose transition:none killed the glide.) */
 body.sb-measuring #sidebar{transition:none!important}
-#sidebar.sb-opening{transition:none!important;opacity:0;transform:scale(.965)}
 /* Job K: the info panel's close x lives on <body> (out of the scrolling,
    backdrop-filtered panel subtree); .bpx-on is its shown state, at the
    exact #panel-open spot — top:12px right:12px, 44px circle. */
@@ -2976,7 +2977,7 @@ html.light .wc-got{background:#007AFF}
   <h3 style="cursor:pointer" id="views-toggle"><span class="nav-arrow" id="views-arrow">›</span> Views</h3><div id="view-nav"></div></div>
   <div class="sb-tipjar"><a href="https://ko-fi.com/davedellaquila" target="_blank" rel="noopener" title="Support the buddy system"><span class="jar">🫙</span> <span class="tiptext">Tip the jar</span></a></div>
   <div id="rail-mid"><button type="button" id="rail-find" title="Find (⌘F)" aria-label="Find"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L21 21"/></svg></button><button type="button" id="rail-plans" title="Business Plans" aria-label="Business Plans"><span aria-hidden="true">💼</span></button></div>
-  <div id="rail-bottom"><button type="button" id="rail-curview" title="Current view" aria-label="Current view - tap to switch views"></button></div>
+  <div id="rail-bottom"><button type="button" id="rail-curview" title="Current view" aria-label="Current view - tap to switch views"></button><button type="button" id="rail-gear" title="Settings (⌘,)" aria-label="Settings"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button></div>
 </aside>
 <div id="sb-resize" title="Drag left or right to resize the sidebar. Double-click to close."></div>
 <button type="button" id="sb-tab" title="Open sidebar" aria-label="Open sidebar"></button>
@@ -5177,7 +5178,7 @@ function renderDevelopSection(){
   const dev = document.getElementById('fset-develop');
   if (!dev) return;
   const simulating = !!devBackup;
-  const buildNum = '20261028.1348';
+  const buildNum = '20261028.1451';
   dev.innerHTML = ''
     + '<label class="fset-check"><input type="checkbox" id="dev-empty-toggle"' + (simulating ? ' checked' : '') + '> <span><strong>Simulate new user</strong> — empty data file, as if opening the shared link fresh</span></label>'
     + '<div class="fineprint" style="margin:8px 0 12px">Build <span style="font-family:monospace">' + escHtml(String(buildNum)) + '</span> · ' + BUDDIES.length + ' buddies in this file</div>'
@@ -7110,7 +7111,7 @@ function renderBuddy(id){
     + attrHead('shared', 'SHARED NOTES', '<span class="attr-value" id="bp-shared-count">(0)</span>', '')
     + '<div class="attr-body">' + attrTipLine('Anybody with repo access can see this note. Saved to the buddy’s repo (docs/notes.md).') + '<textarea class="notes" id="bp-shared-notes" placeholder="Anybody with repo access can see this note."></textarea>'
     + '<p class="fineprint" id="shared-status"></p></div></div>'
-    + '<div class="bp-build">Build 20261028.1348</div>'
+    + '<div class="bp-build">Build 20261028.1451</div>'
     + '</div>';
   // Update every visible label for a buddy after a rename/re-icon, across all
   // Atlas lenses. A rename changes no structure, so labels are patched in place
@@ -9793,7 +9794,7 @@ function renderPlan(id){
     + '<p class="fineprint">Saved on this device. (For your eyes only)</p></div>'
     + '<div class="bp-sec"><h3>📝 Shared notes<span class="info-tip" data-tip="Visible to everyone with access to this project.">\u24d8</span></h3><textarea class="notes" id="bp-shared" placeholder="Shared notes\u2026 (visible to everyone with access)">'+escHtml((S.planShared||{})[id]||'')+'</textarea>'
     + '<p class="fineprint">Shared — visible to everyone with access.</p></div>'
-    + '<div class="bp-build">Build 20261028.1348</div>'
+    + '<div class="bp-build">Build 20261028.1451</div>'
     + '</div>';
   const nt = document.getElementById('bp-notes');
   let t = null;
@@ -12447,6 +12448,9 @@ function initSbBrandSticky(){
 function initGear(){
   const g = document.getElementById('sb-gear');
   if (g && !g.dataset.init) { g.dataset.init = '1'; g.addEventListener('click', () => openFieldSettings()); }
+  /* Dave 2026-10-28: Settings also lives in the collapsed rail. */
+  const rg = document.getElementById('rail-gear');
+  if (rg && !rg.dataset.init) { rg.dataset.init = '1'; rg.addEventListener('click', () => openFieldSettings()); }
 }
 /* Floating control at the bottom of the left sidebar — jump back to brand/search. */
 function initSbToTop(){
@@ -12886,23 +12890,8 @@ function isSidebarOpen(){
   if (isDrawerNav()) return sb.classList.contains('open');
   return !document.body.classList.contains('sb-closed');
 }
-/* Job I (Dave 2026-10-21): last-pointer / last-key point capture for the
-   sidebar expand, mirroring Job D's panel-open capture (whose variables
-   are scoped inside initPanelFloat). Keyboard expands use the centre of
-   the control that had focus. */
-let sbLastPointer = null, sbLastKeyPoint = null;
-document.addEventListener('pointerdown', function(e){ sbLastPointer = { x: e.clientX, y: e.clientY, t: Date.now() }; }, true);
-document.addEventListener('keydown', function(e){
-  if (e.key !== 'Enter' && e.key !== ' ') return;
-  const el = (e.target && e.target.getBoundingClientRect) ? e.target : document.activeElement;
-  if (el && el.getBoundingClientRect) { const r = el.getBoundingClientRect(); if (r.width || r.height) sbLastKeyPoint = { x: r.left + r.width / 2, y: r.top + r.height / 2, t: Date.now() }; }
-}, true);
-function sbExpandPoint(){
-  const now = Date.now();
-  if (sbLastPointer && now - sbLastPointer.t < 2000) return sbLastPointer;
-  if (sbLastKeyPoint && now - sbLastKeyPoint.t < 2000) return sbLastKeyPoint;
-  return null;
-}
+/* (The Job I click-point capture that fed the old sb-opening expand pose
+   was removed 2026-10-28 — the mirror-glide expand needs no click point.) */
 function setSidebarOpen(open){
   const sb = document.getElementById('sidebar');
   const sc = document.getElementById('sb-scrim');
@@ -12915,27 +12904,38 @@ function setSidebarOpen(open){
     sb.classList.toggle('open', !!open);
     if (sc) sc.classList.toggle('show', !!open);
   } else {
+    let glidePose = false;
     if (open && document.body.classList.contains('sb-closed')) {
-      /* Job I (Dave 2026-10-21): expanding from the collapsed rail grew
-         out of the screen's vertical centre (the rail floats centred)
-         instead of from the click. Same treatment as Job D's panel open:
-         measure the expanded rect in a transitions-off pass, park the
-         sidebar in the sb-opening pose with the origin mapped from the
-         click point, then release. Duration/easing untouched. */
-      const pt = sbExpandPoint();
-      if (pt) {
-        document.body.classList.add('sb-measuring');
-        document.body.classList.remove('sb-closed');
-        const r = sb.getBoundingClientRect();
+      /* Dave 2026-10-28: the expand MIRRORS the collapse. The Job I pose
+         (sb-opening: opacity 0 + scale .965 under transition:none) killed
+         the width glide, so expanding snapped while collapsing glided.
+         Now: measure the rail rect, then the expanded rect in a
+         transitions-off pass; park the expanded panel on the rail's
+         footprint (rail width + a px translateY down to the rail's top);
+         release — width and transform glide together on the sidebar's
+         own transition, the reverse of the collapse's sink-and-narrow.
+         The trailing applySbWidth below is skipped while posed (it would
+         stomp the parked width before first paint); the release and a
+         560ms cleanup re-assert the canonical width instead. */
+      const r0 = sb.getBoundingClientRect();
+      document.body.classList.add('sb-measuring');
+      document.body.classList.remove('sb-closed');
+      if (typeof applySbWidth === 'function') applySbWidth();
+      const r1 = sb.getBoundingClientRect();
+      if (r0.width && r1.width && (Math.abs(r0.width - r1.width) > 1 || Math.abs(r0.top - r1.top) > 1)) {
+        sb.style.width = r0.width.toFixed(1) + 'px';
+        sb.style.transform = 'translateY(' + (r0.top - r1.top).toFixed(1) + 'px)';
+        void sb.offsetWidth; /* commit the pose as the transition's start state */
+        document.body.classList.remove('sb-measuring');
+        glidePose = true;
+        requestAnimationFrame(() => {
+          sb.style.transform = '';
+          if (typeof applySbWidth === 'function') applySbWidth();
+          setTimeout(() => { sb.style.transform = ''; if (typeof applySbWidth === 'function') applySbWidth(); }, 560);
+        });
+      } else {
         document.body.classList.add('sb-closed');
         document.body.classList.remove('sb-measuring');
-        if (r.width && r.height) {
-          const ox = Math.max(0, Math.min(r.width, pt.x - r.left));
-          const oy = Math.max(0, Math.min(r.height, pt.y - r.top));
-          sb.style.transformOrigin = ox.toFixed(1) + 'px ' + oy.toFixed(1) + 'px';
-          sb.classList.add('sb-opening');
-          requestAnimationFrame(() => requestAnimationFrame(() => sb.classList.remove('sb-opening')));
-        }
       }
     }
     document.body.classList.toggle('sb-closed', !open);
@@ -12943,7 +12943,7 @@ function setSidebarOpen(open){
     S.sbClosed = !open; save();
     sb.classList.remove('open');
     if (sc) sc.classList.remove('show');
-    if (typeof applySbWidth === 'function') applySbWidth();
+    if (!glidePose && typeof applySbWidth === 'function') applySbWidth();
     const _tab = document.getElementById('sb-tab');
     if (_tab) _tab.style.display = open ? '' : 'none';
     // Dave 2026-10-14: the rail-top control flips its meaning — keep its label honest
@@ -13546,14 +13546,14 @@ function openWhatsNew(){
     .then(r => r.ok ? r.text() : '')
     .then(t => {
       const serverBuild = t.trim();
-      if (serverBuild && serverBuild !== '20261028.1348') {
+      if (serverBuild && serverBuild !== '20261028.1451') {
         updBtn.style.display = '';
         updBtn.title = 'Update to build ' + serverBuild;
       }
       // Show build numbers at the top of the sheet (Dave's request 2026-10-12)
-      const myBuild = '20261028.1348';
+      const myBuild = '20261028.1451';
       let buildLine = '<p class="fineprint" style="margin-top:0">You’re on build ' + escHtml(myBuild) + '.';
-      if (serverBuild && serverBuild !== '20261028.1348' && isNewerBuild(serverBuild, myBuild)) {
+      if (serverBuild && serverBuild !== '20261028.1451' && isNewerBuild(serverBuild, myBuild)) {
         buildLine += ' Build ' + escHtml(serverBuild) + ' is available.';
       }
       buildLine += '</p>';
@@ -13623,7 +13623,7 @@ function syncUpdateBanner(){
   if (b.dataset.state !== state) b.dataset.state = state;
 }
 function initVersionCheck(){
-  const myBuild = '20261028.1348';
+  const myBuild = '20261028.1451';
   function showUpdateBanner(serverBuild){
     if (document.getElementById('update-banner')) return;
     const b = document.createElement('div');
