@@ -102,6 +102,7 @@ body.sb-closed #sidebar .sb-tipjar, body.sb-closed #sidebar #sb-tools #sb-gear,
 body.sb-closed #sidebar .navbtn .nlab, body.sb-closed #sidebar .navbtn .navgrip, body.sb-closed #sidebar .nav-sec h3,
 body.sb-closed #sidebar #views-sec h3{display:none}
 body.sb-closed #sidebar .sb-brand-sticky{display:none} /* Dave 2026-10-15: empty bar serves no purpose on the collapsed rail */
+body.sb-closed #sidebar #views-sec{display:none} /* Dave 2026-10-28: no Views stack in the rail — the current-view icon + its popover (rail-bottom) carry view switching when collapsed */
 body.sb-closed #sidebar #sb-tools{position:static;display:flex;justify-content:center;margin:0 auto}
 /* Dave 2026-10-14: round selection indicator on the mini rail (not a rounded rect) */
 body.sb-closed #view-nav .navbtn.sel{border-radius:50%;box-shadow:none}
@@ -1602,6 +1603,10 @@ body.no-write .pdel,body.no-write [data-dump-del],body.no-write [data-dump-edit]
    Dave 2026-10-19: the open panel's close control (#sb-close, upper-right
    corner of the sidebar) is a circled ✕ mark — it no longer flips to a
    chevron, so the old rotate-on-collapse rule is gone.
+   Dave 2026-10-28: superseded for THIS button — the sidebar never closes,
+   it collapses to the rail (there is no state with no left panel), so in
+   full view #sb-close wears a left chevron, the collapse direction. The
+   circled ✕ (circleX) stays the mark for true dismiss/close controls.
    Dave 2026-10-20: the collapsed rail's expand chevron left the icon
    stack for a standalone corner button. Dave 2026-10-21 (Job 5): that
    corner button is removed again — the chevron lives only in the rail
@@ -2074,7 +2079,14 @@ body:has(#sidebar.sb-floating) #sb-resize{display:none}
     #rail-top,#rail-bottom{display:none}
     body.sb-closed #rail-top{display:flex;justify-content:center;padding-bottom:8px;margin-bottom:4px;border-bottom:1px solid var(--border)}
     body.sb-closed #rail-bottom{display:flex;justify-content:center;padding-top:8px;margin-top:4px;border-top:1px solid var(--border)}
-    @media (max-width:639px){#rail-top,#rail-bottom{display:none!important}}
+    @media (max-width:639px){#rail-top,#rail-bottom,#rail-mid{display:none!important}}
+    /* Dave 2026-10-28: the collapsed rail is exactly four icons — expand
+       chevron, Find, Business Plans, current view. The mid slot carries
+       Find + Plans, between the expand slot and the current-view slot. */
+    #rail-mid{display:none}
+    body.sb-closed #rail-mid{display:flex;flex-direction:column;align-items:center;gap:4px;padding:2px 0}
+    #rail-find,#rail-plans{width:44px;height:44px;border-radius:12px;border:1px solid transparent;background:none;color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1.25rem;padding:0}
+    #rail-find:hover,#rail-plans:hover{color:var(--accent);border-color:var(--border);background:var(--ghost)}
     #rail-expand{width:44px;height:44px;border-radius:50%;border:1px solid var(--border);background:color-mix(in srgb, var(--panel) 72%, transparent);color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0}
     #rail-expand:hover{color:var(--accent);border-color:var(--accent)}
     #rail-expand:active{transform:scale(.96)}
@@ -5375,7 +5387,7 @@ function syncRailCurView(){
   syncViewPill();
 }
 function railPopEsc(e){ if (e.key === 'Escape') { e.stopPropagation(); closeRailViewPop(); } }
-function railPopOutside(e){ const p = document.getElementById('rail-viewpop'); if (p && !p.contains(e.target) && !e.target.closest('#rail-curview') && !e.target.closest('#view-pill')) closeRailViewPop(); }
+function railPopOutside(e){ const p = document.getElementById('rail-viewpop'); if (p && !p.contains(e.target) && !e.target.closest('#rail-curview') && !e.target.closest('#view-pill') && !e.target.closest('#rail-plans')) closeRailViewPop(); }
 function closeRailViewPop(){
   const p = document.getElementById('rail-viewpop'); if (p) p.remove();
   document.body.classList.remove('viewpop-open');
@@ -5393,6 +5405,26 @@ function toggleRailViewPop(){
   p.style.left = (r.right + 10) + 'px';
   p.style.bottom = Math.max(8, window.innerHeight - r.bottom) + 'px';
   p.addEventListener('click', e => { if (e.target.closest('[data-view]')) closeRailViewPop(); });
+  document.addEventListener('pointerdown', railPopOutside, true);
+  document.addEventListener('keydown', railPopEsc, true);
+}
+/* Business Plans popover for the collapsed rail (Dave, 2026-10-28): same
+   popover shell as the views picker; a pick rides the global [data-plan]
+   delegation (show('plan:…')), this only opens/closes the menu. */
+function toggleRailPlanPop(){
+  if (document.getElementById('rail-viewpop')) { closeRailViewPop(); return; }
+  const btn = document.getElementById('rail-plans'); if (!btn) return;
+  const p = document.createElement('div'); p.id = 'rail-viewpop'; p.setAttribute('role', 'menu');
+  const cur = (S.sel && S.sel.startsWith('plan:')) ? S.sel.slice(5) : null;
+  const items = getPlanOrder().map(pid => PLANS.find(x => x.id === pid)).filter(Boolean);
+  p.innerHTML = items.length ? items.map(pl => '<button type="button" data-plan="' + pl.id + '"' + (cur === pl.id ? ' class="sel"' : '') + '><span class="rv-ic" aria-hidden="true">' + escHtml(pl.icon || '\U0001F4BC') + '</span>' + escHtml(pl.name) + '</button>').join('')
+    : '<div class="fineprint" style="padding:8px 10px">No business plans yet.</div>';
+  document.body.appendChild(p);
+  document.body.classList.add('viewpop-open');
+  const r = btn.getBoundingClientRect();
+  p.style.left = (r.right + 10) + 'px';
+  p.style.top = Math.max(8, Math.min(r.top - 6, window.innerHeight - p.offsetHeight - 8)) + 'px';
+  p.addEventListener('click', e => { if (e.target.closest('[data-plan]')) closeRailViewPop(); });
   document.addEventListener('pointerdown', railPopOutside, true);
   document.addEventListener('keydown', railPopEsc, true);
 }
@@ -13784,6 +13816,8 @@ document.addEventListener('click', e => {
     return;
   }
   if (e.target.closest && e.target.closest('#rail-curview')) { toggleRailViewPop(); return; }
+  if (e.target.closest && e.target.closest('#rail-find')) { closeRailViewPop(); toggleFind(); return; }
+  if (e.target.closest && e.target.closest('#rail-plans')) { toggleRailPlanPop(); return; }
   if (e.target.closest && e.target.closest('#sb-close')) { setSidebarOpen(document.body.classList.contains('sb-closed')); return; }
   if (e.target.closest && e.target.closest('#hp-back')) { goBack(); return; }
   if (e.target.closest && e.target.closest('#hp-find')) { toggleFind(); return; }
@@ -14247,7 +14281,7 @@ syncRailCurView();
   <div id="rail-top"><button type="button" id="rail-expand" title="Expand sidebar" aria-label="Expand sidebar"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9.5 5.5L16 12l-6.5 6.5"/></svg></button></div>
   <div class="sb-scroll">
   <div class="sb-brand-sticky">
-    <div id="sb-tools"><button id="sb-gear" title="Settings (⌘,)" aria-label="Settings"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button><button id="sb-close" title="Collapse sidebar" aria-label="Collapse sidebar"><svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path d="M7.2 7.2l9.6 9.6M16.8 7.2l-9.6 9.6" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></button></div>
+    <div id="sb-tools"><button id="sb-gear" title="Settings (⌘,)" aria-label="Settings"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button><button id="sb-close" title="Collapse sidebar" aria-label="Collapse sidebar"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.5 5.5L8 12l6.5 6.5"/></svg></button></div>
     <div class="brand"><div class="eyebrow">Project Buddy</div><h1 id="brand-name" title="Click to rename">Buddies</h1><div class="bcount">NBUD buddies &middot; one family</div></div>
   </div>
   <div class="sb-search-sticky">
@@ -14265,6 +14299,7 @@ syncRailCurView();
   <div id="views-resize" title="Drag to resize the Views section" aria-hidden="true"></div>
   <h3 style="cursor:pointer" id="views-toggle"><span class="nav-arrow" id="views-arrow">\u203a</span> Views</h3><div id="view-nav"></div></div>
   <div class="sb-tipjar"><a href="https://ko-fi.com/davedellaquila" target="_blank" rel="noopener" title="Support the buddy system"><span class="jar">\U0001FAD9</span> <span class="tiptext">Tip the jar</span></a></div>
+  <div id="rail-mid"><button type="button" id="rail-find" title="Find (\u2318F)" aria-label="Find"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L21 21"/></svg></button><button type="button" id="rail-plans" title="Business Plans" aria-label="Business Plans"><span aria-hidden="true">\U0001F4BC</span></button></div>
   <div id="rail-bottom"><button type="button" id="rail-curview" title="Current view" aria-label="Current view - tap to switch views"></button></div>
 </aside>
 <div id="sb-resize" title="Drag left or right to resize the sidebar. Double-click to close."></div>
