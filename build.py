@@ -886,11 +886,11 @@ body.sb-closed #sb-resize{display:none}
 #bp-to-top.show{opacity:1;pointer-events:auto;transform:none}
 /* Floating + button — iOS frosted-glass translucency (Jonny-approved look, Dave 2026-10-13) */
 #new-buddy-fab{position:fixed;right:20px;bottom:20px;z-index:9000;width:56px;height:56px;border-radius:50%;
-  background:rgba(50,50,52,.55);color:#fff;border:.5px solid rgba(255,255,255,.25);cursor:pointer;
+  background:rgba(50,50,52,.16);color:#fff;border:.5px solid rgba(255,255,255,.25);cursor:pointer;
   display:flex;align-items:center;justify-content:center;
   -webkit-backdrop-filter:blur(20px) saturate(180%);backdrop-filter:blur(20px) saturate(180%);
   box-shadow:0 4px 16px rgba(0,0,0,.25);-webkit-tap-highlight-color:transparent}
-html.light #new-buddy-fab{background:rgba(255,255,255,.55);color:#1c1c1e;border-color:rgba(0,0,0,.08)}
+html.light #new-buddy-fab{background:rgba(255,255,255,.20);color:#1c1c1e;border-color:rgba(0,0,0,.08)}
 /* Hide the FAB while Settings is open — it overlapped the Done button */
 body:has(#field-settings.show) #new-buddy-fab{display:none}
 #new-buddy-fab:active{transform:scale(.94)}
@@ -925,12 +925,12 @@ body:has(#view-buddy.sheet.active) #hp-back{display:flex}
 body:has(#field-settings.show) #hp-nav,
 body:has(#field-settings.show) #hp-back{display:none !important}
 #hp-nav button, #hp-back{width:56px;height:56px;border-radius:50%;padding:0;
-  background:rgba(50,50,52,.55);color:#fff;border:.5px solid rgba(255,255,255,.25);cursor:pointer;
+  background:rgba(50,50,52,.16);color:#fff;border:.5px solid rgba(255,255,255,.25);cursor:pointer;
   align-items:center;justify-content:center;
   -webkit-backdrop-filter:blur(20px) saturate(180%);backdrop-filter:blur(20px) saturate(180%);
   box-shadow:0 4px 16px rgba(0,0,0,.25);-webkit-tap-highlight-color:transparent}
 #hp-nav button{display:flex}
-html.light #hp-nav button, html.light #hp-back{background:rgba(255,255,255,.55);color:#1c1c1e;border-color:rgba(0,0,0,.08)}
+html.light #hp-nav button, html.light #hp-back{background:rgba(255,255,255,.20);color:#1c1c1e;border-color:rgba(0,0,0,.08)}
 #hp-nav button:active, #hp-back:active{transform:scale(.94)}
 #hp-nav button:disabled{opacity:.35;cursor:default}
 #hp-nav button:disabled:active{transform:none}
@@ -1205,7 +1205,7 @@ textarea[disabled]{opacity:.5;cursor:not-allowed}
 #token-pop .saved-check.show{display:block}
 /* Reopen right detail panel when closed (Muse-ish fixed chrome) */
 #panel-open{position:fixed;top:12px;right:12px;z-index:85;width:44px;height:44px;border-radius:50%;
-  background:color-mix(in srgb, var(--panel) 72%, transparent);-webkit-backdrop-filter:blur(14px) saturate(1.6);backdrop-filter:blur(14px) saturate(1.6);border:1px solid var(--border);color:var(--muted);cursor:pointer;
+  background:color-mix(in srgb, var(--panel) 16%, transparent);-webkit-backdrop-filter:blur(14px) saturate(1.6);backdrop-filter:blur(14px) saturate(1.6);border:1px solid var(--border);color:var(--muted);cursor:pointer;
   display:flex;align-items:center;justify-content:center;padding:0;
   box-shadow:0 2px 14px var(--shadow);-webkit-tap-highlight-color:transparent;transition:border-color .15s,color .15s,transform .15s}
 /* Dave 2026-10-20: the sidebar expand chevron, moved out of the collapsed
@@ -1218,7 +1218,7 @@ textarea[disabled]{opacity:.5;cursor:not-allowed}
    chevron (#rail-expand) and crowded the corner. Recents (#recents-btn)
    owns the first top-left slot now; the buddy panel never moves it —
    its only positional behavior is the sidebar expand/collapse shift. */
-#panel-open:hover{color:var(--accent);border-color:var(--accent);transform:scale(1.05);background:color-mix(in srgb, var(--panel) 58%, rgba(255,255,255,.16))}
+#panel-open:hover{color:var(--accent);border-color:var(--accent);transform:scale(1.05);background:color-mix(in srgb, var(--panel) 34%, transparent)}
 #panel-open:active{transform:scale(.96)}
 #panel-open svg{display:block}
 /* Dave 2026-10-21 (Jobs 4+6): the info icon (#panel-open) and the panel's
@@ -1232,12 +1232,28 @@ textarea[disabled]{opacity:.5;cursor:not-allowed}
    (#rail-expand), and Recents (#recents-btn) anchors top-left. */
 body:not(.bp-collapsed):has(#view-buddy.active) #panel-open,
 body.standalone #panel-open{display:none}
-#recents-btn{position:fixed;top:12px;left:calc(var(--sbw, 336px) + 24px);z-index:10001;width:44px;height:44px;border-radius:50%;border:1px solid var(--border);background:color-mix(in srgb, var(--panel) 72%, transparent);-webkit-backdrop-filter:blur(14px) saturate(1.6);backdrop-filter:blur(14px) saturate(1.6);color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0;box-shadow:0 4px 18px rgba(15,23,42,.10)}
-#recents-btn:hover{color:var(--accent);border-color:var(--accent);background:color-mix(in srgb, var(--panel) 58%, rgba(255,255,255,.16))}
+#recents-btn{position:fixed;top:12px;left:calc(var(--sbw, 336px) + 24px);z-index:10001;width:44px;height:44px;border-radius:50%;border:1px solid var(--border);background:color-mix(in srgb, var(--panel) 16%, transparent);-webkit-backdrop-filter:blur(14px) saturate(1.6);backdrop-filter:blur(14px) saturate(1.6);color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0;box-shadow:0 4px 18px rgba(15,23,42,.10)}
+#recents-btn:hover{color:var(--accent);border-color:var(--accent);background:color-mix(in srgb, var(--panel) 34%, transparent)}
 #recents-btn:active{transform:scale(.96)}
 body.sb-closed #recents-btn{left:12px}
 body.standalone #recents-btn{left:12px}
 @media (max-width:639px){#recents-btn,body.sb-closed #recents-btn{left:12px}}
+/* Dave 2026-10-28: framework buttons grouped in the footer (setting
+   'Group framework buttons in the footer', body.fw-footer). New and Back
+   already anchor the bottom corners as 56px circles; Info and Recents
+   drop from the top corners into the same row, inset one slot (88px =
+   20 margin + 56 button + 12 gap), their 44px circles centred on the
+   row at bottom:26px. The four buttons also go nearly see-through
+   (16-20% fills, above) in both modes — Dave's ask the same morning.
+   Phone widths keep the corner spots: the bottom cluster is spoken
+   for there. */
+body.fw-footer #panel-open{top:auto;bottom:26px;right:88px}
+body.fw-footer:has(#token-pill) #panel-open{right:88px}
+body.fw-footer #recents-btn{top:auto;bottom:26px;left:88px}
+@media (max-width:639px){
+  body.fw-footer #panel-open{top:12px;bottom:auto;right:12px}
+  body.fw-footer #recents-btn{top:12px;bottom:auto;left:12px}
+}
 #recents-pop{position:fixed;z-index:10002;min-width:220px;max-width:300px;max-height:60vh;overflow-y:auto;background:var(--panel);border:1px solid var(--border);border-radius:12px;box-shadow:0 14px 40px rgba(0,0,0,.28);padding:6px}
 #recents-pop .rec-head{font-size:.6875rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text2);padding:6px 10px 4px}
 #recents-pop button{display:flex;align-items:center;gap:10px;width:100%;padding:8px 10px;border:none;background:none;color:var(--text);font:inherit;font-size:.875rem;border-radius:8px;cursor:pointer;text-align:left}
@@ -1408,7 +1424,7 @@ body.ub-nomotion #update-banner{transition:none}
 .bp-close-x:active{opacity:.7}
 /* Open panel: the close button floats at the exact screen position of the
    #panel-open expand button, styled as the same control */
-#view-buddy.panel .bp-close-x,#view-buddy.sheet .bp-close-x{display:flex;position:fixed;top:12px;right:12px;z-index:65;margin:0;background:color-mix(in srgb, var(--panel) 72%, transparent);-webkit-backdrop-filter:blur(14px) saturate(1.6);backdrop-filter:blur(14px) saturate(1.6);
+#view-buddy.panel .bp-close-x,#view-buddy.sheet .bp-close-x{display:flex;position:fixed;top:12px;right:12px;z-index:65;margin:0;background:color-mix(in srgb, var(--panel) 16%, transparent);-webkit-backdrop-filter:blur(14px) saturate(1.6);backdrop-filter:blur(14px) saturate(1.6);
   background:var(--panel);border:1px solid var(--border);border-radius:50%;box-shadow:0 2px 14px var(--shadow)}
 #view-buddy.panel .bp-close-x:hover,#view-buddy.sheet .bp-close-x:hover{color:var(--accent);border-color:var(--accent);background:color-mix(in srgb, var(--panel) 58%, rgba(255,255,255,.16))}
 #view-buddy.panel .bp-close-x:active,#view-buddy.sheet .bp-close-x:active{transform:scale(.96)}
@@ -4621,6 +4637,7 @@ const SETTING_DEFS = [
   {id:'fontScale', label:'Text size', type:'slider', def:100, min:80, max:130, step:5, advanced:true, tip:'Scales text throughout the app — layout, dialogs and buttons keep their size.', unit:'%'},
   {id:'sidebarStyle', label:'Panel style', type:'choice', options:['floating','anchored'], def:'floating', tip:'One style for both panels — the sidebar and the info panel. Floating: inset cards; drag a panel by its gripper to move it, and resize it from any side. Anchored: both panels sit flush to their edge in the same squared-off style, the main view resizes to make room, and neither panel can be dragged.'},
   {id:'panelTranslucency', label:'Panel translucency', type:'choice', options:['standard','glass'], def:'standard', tip:'Glass: the sidebar and buddy panel go deeply translucent — the page behind them tints the glass (Apple Weather style). Standard: the usual soft frost.'},
+  {id:'frameworkButtonsFooter', label:'Group framework buttons in the footer', type:'bool', def:true, tip:'On: New, Back, Info and Recents sit together in one row along the bottom of the screen, nearly see-through. Off: they take their separate corners (New bottom-right, Back bottom-left, Info top-right, Recents top-left). On phone widths the buttons keep their corner spots either way.'},
   {id:'sectionToggleStyle', label:'Section toggle style', type:'choice', options:['chevron','section-icon','plus-minus','caret','arrow','dot','triangle','double-chevron','none'], def:'section-icon', tip:'How section headers show their expand/collapse control: classic chevron, the section\u2019s own icon, plus/minus, and more.'},
   {id:'sectionIconBehavior', label:'Section icon behavior', type:'choice', options:['rotate','spin','bounce','flip','pulse','none'], def:'rotate', tip:'What the section icon does when you expand/collapse: tips on its side, spins around, bounces, flips, pulses, or stays still.'},
 ];
@@ -4643,6 +4660,7 @@ function applyFontScale(){
 function applySidebarStyle(){
   document.body.classList.toggle('sb-anchored', getSetting('sidebarStyle') === 'anchored');
   document.body.classList.toggle('glass-panels', getSetting('panelTranslucency') === 'glass');
+  document.body.classList.toggle('fw-footer', !!getSetting('frameworkButtonsFooter'));
   // Unified panel style (Dave, 2026-10-20): Anchored docks a floated info
   // panel (its rect is kept and returns when the style goes back to
   // Floating); Floating restores it. The sidebar reconciles itself the
@@ -4667,6 +4685,7 @@ function snapshotSettable(){
     panelWidth: S.panelWidth || BP_DEFAULT_W,
     sidebarStyle: S.sidebarStyle || 'floating',
     panelTranslucency: S.panelTranslucency || 'standard',
+    frameworkButtonsFooter: !!S.frameworkButtonsFooter,
   };
 }
 function resetToFactory(){
@@ -4675,6 +4694,7 @@ function resetToFactory(){
   S.autoOpenPanel = !!f.autoOpenPanel;
   S.sidebarStyle = f.sidebarStyle || 'floating';
   S.panelTranslucency = f.panelTranslucency || 'standard';
+  S.frameworkButtonsFooter = !!f.frameworkButtonsFooter;
   if (Array.isArray(f.fieldOrder) && f.fieldOrder.length) S.fieldOrder = f.fieldOrder.slice();
   if (f.fieldHidden && typeof f.fieldHidden === 'object') S.fieldHidden = Object.assign({}, f.fieldHidden);
   if (Array.isArray(f.viewOrder) && f.viewOrder.length) S.viewOrder = f.viewOrder.slice();
