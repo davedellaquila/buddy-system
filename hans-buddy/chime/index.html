@@ -242,6 +242,18 @@ details.jsonbox pre {
 
 <h2>🎚️ How it behaves</h2>
 <div class="card">
+  <h3>🌙 Quiet hours — delivery</h3>
+  <div class="trow">
+    <div class="grow"><div class="tname">Don’t announce chimes during quiet hours</div><div class="tdesc">Chimes inside the window aren’t announced in chat and no recording is made. The run still happens and lands in the daily log, and anything urgent found overnight surfaces on the first chime after the window.</div></div>
+    <input type="checkbox" id="dqEnabled">
+  </div>
+  <div class="trow">
+    <div class="grow"><div class="tname">Window</div><div class="tdesc">No announcements between these hours (Pacific) — your sleep window.</div></div>
+    <select id="dqStart"></select><span class="muted">to</span><select id="dqEnd"></select>
+  </div>
+</div>
+
+<div class="card">
   <h3>🔊 Recording</h3>
   <div class="trow">
     <div class="grow"><div class="tname">Audio on every chime</div><div class="tdesc">Each chime ships with its recording, read aloud in the presenter's voice.</div></div>
@@ -372,7 +384,7 @@ details.jsonbox pre {
     version: 1,
     configFor: 'hans-hourly-chime',
     timezone: 'America/Los_Angeles',
-    delivery: { target: 'main-chat' },
+    delivery: { target: 'main-chat', quietHours: { enabled: true, startHour: 23, endHour: 6 } },
     audio: { enabled: true, everyChime: true },
     composition: { mode: 'rotate', appliesTo: 'content modules (all except time)', cycleOrder: 'config module order' },
     modules: [
@@ -557,7 +569,10 @@ details.jsonbox pre {
   function collect(){
     var cfg = clone(baseCfg);
     cfg.version = 1; cfg.configFor = 'hans-hourly-chime'; cfg.timezone = 'America/Los_Angeles';
-    cfg.delivery = { target: 'main-chat' };
+    var dqPrev = (baseCfg && baseCfg.delivery && baseCfg.delivery.quietHours) || {};
+    var dqOut = { enabled: $('dqEnabled').checked, startHour: +$('dqStart').value, endHour: +$('dqEnd').value };
+    if (dqPrev.note) dqOut.note = dqPrev.note;
+    cfg.delivery = { target: 'main-chat', quietHours: dqOut };
     cfg.audio = { enabled: $('audioEnabled').checked, everyChime: $('audioEnabled').checked };
     var compPrev = (baseCfg && baseCfg.composition) || {};
     cfg.composition = {
@@ -595,6 +610,10 @@ details.jsonbox pre {
     var lines = [];
     lines.push('Runs every hour on the hour (America/Los_Angeles), delivered to the main chat.');
     lines.push(cfg.audio.enabled ? 'Every chime ships with its recording, read aloud in the presenter’s voice.' : 'Audio is off — chimes arrive as text only.');
+    var qh = cfg.delivery && cfg.delivery.quietHours;
+    lines.push(qh && qh.enabled
+      ? 'Quiet hours ' + fmtHour(qh.startHour) + '–' + fmtHour(qh.endHour) + ' — chimes inside the window aren’t announced; anything urgent found overnight surfaces on the first chime after.'
+      : 'Quiet hours off — every chime is announced as it runs.');
     var contentOn = on.filter(function(m){ return !m.locked; });
     if (cfg.composition && cfg.composition.mode === 'rotate') {
       if (contentOn.length === 0) lines.push('Each chime is just the time announcement — no extra segments are switched on.');
@@ -630,6 +649,10 @@ details.jsonbox pre {
     $('modeAll').checked = compMode === 'all';
     $('modeRotate').checked = compMode !== 'all';
     $('audioEnabled').checked = !cfg.audio || cfg.audio.enabled !== false;
+    var dqCfg = (cfg.delivery && cfg.delivery.quietHours) || {};
+    $('dqEnabled').checked = dqCfg.enabled !== false;
+    fillHourSelect($('dqStart'), dqCfg.startHour != null ? dqCfg.startHour : 23);
+    fillHourSelect($('dqEnd'), dqCfg.endHour != null ? dqCfg.endHour : 6);
     var rj = cfg.riddleAndJoke || {};
     $('rjEnabled').checked = rj.enabled !== false;
     fillHourSelect($('rjStart'), rj.windowStartHour != null ? rj.windowStartHour : 7);
@@ -723,7 +746,7 @@ details.jsonbox pre {
   }
 
   /* ---------- wiring ---------- */
-  ['modeRotate','modeAll','audioEnabled','rjEnabled','rjStart','rjEnd','flEnabled','flRate','flNoBack','sfxEnabled','sfxMax','sfxShare','sfxQuietStart','sfxQuietEnd','sfxGong','sfxNoRepeat','urgEnabled','urgMax','rotNoBack'].forEach(function(id){
+  ['modeRotate','modeAll','audioEnabled','dqEnabled','dqStart','dqEnd','rjEnabled','rjStart','rjEnd','flEnabled','flRate','flNoBack','sfxEnabled','sfxMax','sfxShare','sfxQuietStart','sfxQuietEnd','sfxGong','sfxNoRepeat','urgEnabled','urgMax','rotNoBack'].forEach(function(id){
     var el = $(id);
     el.addEventListener('change', refreshOutputs);
     el.addEventListener('input', refreshOutputs);
