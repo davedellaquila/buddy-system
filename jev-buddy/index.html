@@ -1,4 +1,4 @@
-<!-- BUDDY-BASIC-TEMPLATE v2 -->
+<!-- JEV-BUDDY CUSTOM HOMEPAGE - thread-owned. Generator: do not regenerate. -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -216,6 +216,29 @@ h2 { font-size: 22px; margin: 32px 0 16px; }
 .rf-panel .rf-editor { margin-top: 4px; }
 .rf-panel .rf-fstatus { margin-top: 8px; }
 
+/* ---- Recent decisions (Jev shadow log snapshot) ---- */
+.jd-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(128px,1fr));gap:10px;margin:14px 0 6px}
+.jd-stat{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px 14px}
+.jd-stat b{font-size:21px;display:block;line-height:1.2}
+.jd-stat span{color:var(--muted);font-size:12.5px}
+.jd-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px 18px;margin-bottom:12px}
+.jd-head{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:baseline}
+.jd-ref{font-weight:800}
+.jd-verdict{font-weight:700}
+.jd-yes{color:var(--ok)}
+.jd-no{color:#b3541e}
+@media (prefers-color-scheme: dark){.jd-no{color:#e8935c}}
+.jd-pill{border:1px solid var(--border);border-radius:999px;padding:1px 10px;font-size:12.5px;color:var(--muted)}
+.jd-agree{color:var(--ok);font-weight:700;font-size:13.5px}
+.jd-why{color:var(--muted);font-size:14.5px;margin-top:6px}
+.jd-gates{margin-top:10px;display:grid;gap:5px}
+.jd-gate{display:grid;grid-template-columns:118px 1fr 36px;align-items:center;gap:8px;font-size:12.5px;color:var(--muted)}
+.jd-bar{background:var(--border);border-radius:99px;height:7px;overflow:hidden}
+.jd-bar i{display:block;height:100%;background:var(--accent);border-radius:99px}
+.jd-bar i.low{background:#d97706}
+.jd-gate b{text-align:right;font-weight:600;color:var(--text)}
+.jd-note{font-size:13.5px;color:var(--muted);margin-top:10px}
+
 </style>
 <style>
 .header-tip{position:relative;overflow:hidden;display:inline-flex;align-items:center;gap:.45em;padding:6px 12px;border-radius:999px;text-decoration:none;
@@ -254,6 +277,29 @@ h2 { font-size: 22px; margin: 32px 0 16px; }
 <audio controls preload="none" src="role-intro.mp3" style="width:min(420px,100%)"></audio>
 </div>
 
+
+
+<section class="jd">
+<h2>⚖️ Recent decisions — Jev’s shadow votes</h2>
+<p>Jev votes in <b>shadow mode</b> under <a href="https://davedellaquila.github.io/buddy-system/decision-buddy/">Decision Buddy</a>’s pilot DB-2026-011: Jev makes the call below, the reasoning model still makes the actual decision, and agreement is kept score of. This batch is a <b>decidability pre-screen</b> — is each queue item ready to be decided at all? The pilot stays with Decision Buddy until Dave transfers it; this page is the fleet’s window into the log.</p>
+<div class="jd-stats">
+<div class="jd-stat"><b>7</b><span>shadow votes logged</span></div>
+<div class="jd-stat"><b>7 / 7</b><span>agreement with the model</span></div>
+<div class="jd-stat"><b>1 decidable</b><span>6 not decidable (5 on the missing-source gate)</span></div>
+<div class="jd-stat"><b>6,029</b><span>input tokens ≈ $0.00025 of the $5 credit</span></div>
+<div class="jd-stat"><b>jev-1.14.0</b><span>model returned on every call (pinned)</span></div>
+<div class="jd-stat"><b>Nov 25</b><span>next formal review (then Dec 25 · Jan 24)</span></div>
+</div>
+<p class="jd-note">Latest batch: <b>Mon Oct 26, 2026 · 11:57 PM PT</b> · use case: queue-decidability · guard passed all 7 (operational text only). Verdicts were pre-registered in the manifest <i>before</i> any Jev vote existed. Gate scores are Jev’s per-gate probabilities; the source gate is the story of this batch — 0.03 on every item with no link attached, 0.99 on the one that had them.</p>
+<div class="jd-card"><div class="jd-head"><span class="jd-ref">Q18</span><span>iPhone Oct 27 cron</span></div><div class="jd-head" style="margin-top:6px"><span class="jd-verdict jd-no">Jev: Not decidable · 0.63</span><span class="jd-pill">Model: Not decidable</span><span class="jd-agree">✓ Agree</span><span class="jd-pill">Draft band: Present with lean (0.50–0.80)</span><span class="jd-pill">834 tokens</span></div><p class="jd-why">The register cannot say what decision this names — fails the options, source, and owner gates.</p><div class="jd-gates"><div class="jd-gate"><span>Options defined</span><span class="jd-bar"><i class="low" style="width:37%"></i></span><b>0.37</b></div><div class="jd-gate"><span>Source attached</span><span class="jd-bar"><i class="low" style="width:3%"></i></span><b>0.03</b></div><div class="jd-gate"><span>Owner named</span><span class="jd-bar"><i class="low" style="width:5%"></i></span><b>0.05</b></div><div class="jd-gate"><span>Criteria stated</span><span class="jd-bar"><i class="low" style="width:8%"></i></span><b>0.08</b></div><div class="jd-gate"><span>Reversible classified</span><span class="jd-bar"><i class="low" style="width:23%"></i></span><b>0.23</b></div></div></div>
+<div class="jd-card"><div class="jd-head"><span class="jd-ref">Q15</span><span>Buddy Artifacts spec + ‘Artifacts, Owned.’ white paper — Dave’s review call</span></div><div class="jd-head" style="margin-top:6px"><span class="jd-verdict jd-yes">Jev: Decidable · 0.80</span><span class="jd-pill">Model: Decidable</span><span class="jd-agree">✓ Agree</span><span class="jd-pill">Draft band: Proceed + log (0.80–0.95)</span><span class="jd-pill">918 tokens</span></div><p class="jd-why">The batch’s positive control: both drafts linked, the call (review / approve / edit) stated, owner clear. Criteria soft but present — Jev scored criteria_stated 0.25 against the model’s ‘soft but present’; logged as a divergence for the Nov 25 review.</p><div class="jd-gates"><div class="jd-gate"><span>Options defined</span><span class="jd-bar"><i style="width:95%"></i></span><b>0.95</b></div><div class="jd-gate"><span>Source attached</span><span class="jd-bar"><i style="width:99%"></i></span><b>0.99</b></div><div class="jd-gate"><span>Owner named</span><span class="jd-bar"><i style="width:80%"></i></span><b>0.80</b></div><div class="jd-gate"><span>Criteria stated</span><span class="jd-bar"><i class="low" style="width:25%"></i></span><b>0.25</b></div><div class="jd-gate"><span>Reversible classified</span><span class="jd-bar"><i style="width:98%"></i></span><b>0.98</b></div></div></div>
+<div class="jd-card"><div class="jd-head"><span class="jd-ref">Q14</span><span>Meta dashboard v1</span></div><div class="jd-head" style="margin-top:6px"><span class="jd-verdict jd-no">Jev: Not decidable · 0.97</span><span class="jd-pill">Model: Not decidable</span><span class="jd-agree">✓ Agree</span><span class="jd-pill">Draft band: Act (≥0.95)</span><span class="jd-pill">830 tokens</span></div><p class="jd-why">Fails everything: no options, no source, no owner. The register calls it underspecified in its own words — Jev’s firmest call of the batch.</p><div class="jd-gates"><div class="jd-gate"><span>Options defined</span><span class="jd-bar"><i class="low" style="width:2%"></i></span><b>0.02</b></div><div class="jd-gate"><span>Source attached</span><span class="jd-bar"><i class="low" style="width:3%"></i></span><b>0.03</b></div><div class="jd-gate"><span>Owner named</span><span class="jd-bar"><i class="low" style="width:3%"></i></span><b>0.03</b></div><div class="jd-gate"><span>Criteria stated</span><span class="jd-bar"><i class="low" style="width:3%"></i></span><b>0.03</b></div><div class="jd-gate"><span>Reversible classified</span><span class="jd-bar"><i class="low" style="width:11%"></i></span><b>0.11</b></div></div></div>
+<div class="jd-card"><div class="jd-head"><span class="jd-ref">Q13</span><span>What’s New: pick the surface</span></div><div class="jd-head" style="margin-top:6px"><span class="jd-verdict jd-no">Jev: Not decidable · 0.75</span><span class="jd-pill">Model: Not decidable</span><span class="jd-agree">✓ Agree</span><span class="jd-pill">Draft band: Present with lean (0.50–0.80)</span><span class="jd-pill">852 tokens</span></div><p class="jd-why">The three surfaces are concretely named (genuinely pickable), but no links to any of them are attached — fails the source gate. Expected closest call in the batch.</p><div class="jd-gates"><div class="jd-gate"><span>Options defined</span><span class="jd-bar"><i style="width:93%"></i></span><b>0.93</b></div><div class="jd-gate"><span>Source attached</span><span class="jd-bar"><i class="low" style="width:3%"></i></span><b>0.03</b></div><div class="jd-gate"><span>Owner named</span><span class="jd-bar"><i style="width:75%"></i></span><b>0.75</b></div><div class="jd-gate"><span>Criteria stated</span><span class="jd-bar"><i class="low" style="width:24%"></i></span><b>0.24</b></div><div class="jd-gate"><span>Reversible classified</span><span class="jd-bar"><i style="width:99%"></i></span><b>0.99</b></div></div></div>
+<div class="jd-card"><div class="jd-head"><span class="jd-ref">Q12</span><span>‘The Lift’: build the keyboard-pill call, or not</span></div><div class="jd-head" style="margin-top:6px"><span class="jd-verdict jd-no">Jev: Not decidable · 0.59</span><span class="jd-pill">Model: Not decidable</span><span class="jd-agree">✓ Agree</span><span class="jd-pill">Draft band: Present with lean (0.50–0.80)</span><span class="jd-pill">864 tokens</span></div><p class="jd-why">A clean binary with the verdict text quoted in the register, but no link to the verdict document travels with the item — fails the source gate. Jev read owner_named at 0.41 (‘Astro builds if approved’ as weak ownership); logged as a divergence for the Nov 25 review.</p><div class="jd-gates"><div class="jd-gate"><span>Options defined</span><span class="jd-bar"><i style="width:79%"></i></span><b>0.79</b></div><div class="jd-gate"><span>Source attached</span><span class="jd-bar"><i class="low" style="width:3%"></i></span><b>0.03</b></div><div class="jd-gate"><span>Owner named</span><span class="jd-bar"><i class="low" style="width:41%"></i></span><b>0.41</b></div><div class="jd-gate"><span>Criteria stated</span><span class="jd-bar"><i style="width:56%"></i></span><b>0.56</b></div><div class="jd-gate"><span>Reversible classified</span><span class="jd-bar"><i style="width:98%"></i></span><b>0.98</b></div></div></div>
+<div class="jd-card"><div class="jd-head"><span class="jd-ref">Q11</span><span>AppleCare One enrollment for the iPhone 18 Pro</span></div><div class="jd-head" style="margin-top:6px"><span class="jd-verdict jd-no">Jev: Not decidable · 0.91</span><span class="jd-pill">Model: Not decidable</span><span class="jd-agree">✓ Agree</span><span class="jd-pill">Draft band: Proceed + log (0.80–0.95)</span><span class="jd-pill">881 tokens</span></div><p class="jd-why">Options defined and owner named, but no source link attached, and the register itself marks it not-yet-decidable until the phone arrives.</p><div class="jd-gates"><div class="jd-gate"><span>Options defined</span><span class="jd-bar"><i style="width:96%"></i></span><b>0.96</b></div><div class="jd-gate"><span>Source attached</span><span class="jd-bar"><i class="low" style="width:3%"></i></span><b>0.03</b></div><div class="jd-gate"><span>Owner named</span><span class="jd-bar"><i style="width:91%"></i></span><b>0.91</b></div><div class="jd-gate"><span>Criteria stated</span><span class="jd-bar"><i style="width:52%"></i></span><b>0.52</b></div><div class="jd-gate"><span>Reversible classified</span><span class="jd-bar"><i class="low" style="width:26%"></i></span><b>0.26</b></div></div></div>
+<div class="jd-card"><div class="jd-head"><span class="jd-ref">Q10</span><span>Jonny’s ‘The Quiet Confirmation’: quiet undo toasts vs confirm dialogs</span></div><div class="jd-head" style="margin-top:6px"><span class="jd-verdict jd-no">Jev: Not decidable · 0.65</span><span class="jd-pill">Model: Not decidable</span><span class="jd-agree">✓ Agree</span><span class="jd-pill">Draft band: Present with lean (0.50–0.80)</span><span class="jd-pill">850 tokens</span></div><p class="jd-why">Options and owner are defined, but no source link travels with the item in the register — fails the source gate under the pilot’s strict composite.</p><div class="jd-gates"><div class="jd-gate"><span>Options defined</span><span class="jd-bar"><i style="width:86%"></i></span><b>0.86</b></div><div class="jd-gate"><span>Source attached</span><span class="jd-bar"><i class="low" style="width:3%"></i></span><b>0.03</b></div><div class="jd-gate"><span>Owner named</span><span class="jd-bar"><i style="width:65%"></i></span><b>0.65</b></div><div class="jd-gate"><span>Criteria stated</span><span class="jd-bar"><i style="width:66%"></i></span><b>0.66</b></div><div class="jd-gate"><span>Reversible classified</span><span class="jd-bar"><i style="width:98%"></i></span><b>0.98</b></div></div></div>
+<p class="jd-note">Two sub-verdict divergences are logged for the Nov 25 review: Q15 criteria_stated (Jev 0.25 vs model “soft but present”) and Q12 owner_named (Jev 0.41 — “Astro builds if approved” read as weak ownership). Honest read on the batch: encouraging but weak evidence — the negatives were telegraphed by the register; borderline items are the real test. The log itself lives in the decision-buddy repo (<code>jev-pilot/shadow-log.jsonl</code>) and stores only the item ref + a hash of the state — never the raw text. A separate one-off connector check on Oct 26 (415 tokens, routed a test note to “records” at confidence 1.0) is not part of this tally. Draft bands are recorded, never acted on, in shadow mode.</p>
+</section>
 
 <section class="dumpbox" data-buddy-id="jev-buddy">
 <h2>🧠 Brain dump</h2>
@@ -296,7 +342,7 @@ h2 { font-size: 22px; margin: 32px 0 16px; }
 
 
 <div class="footer">
-Generated 2026-10-28 · Part of the Buddy System<br>
+Updated 2026-10-28 · A Buddy System page<br>
 <a href="about.html">About · the full record →</a>
 </div>
 
