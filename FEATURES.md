@@ -145,8 +145,11 @@ Build: `build.py` generates `index.html` from `buddies.json` + `plans.json`.
 - **Collapsed rail fits its icons** — the icon rail's height shrink-wraps
   its contents: exactly six controls, top to bottom — the expand
   chevron, Recents (the same recent-buddies popover the panel header's
-  Recents button opens), Find, Business Plans (a menu), the current-view
-  icon (a view picker), and Settings. Every icon visible, no trailing void below the
+  Recents button opens), Settings, Find, then the rail's single divider,
+  then the collections group: Business Plans (a menu) and the current-view
+  icon (a view picker). (Dave's reorder, 2026-10-28: in the expanded
+  panel's header tools the order is Settings, Recents, collapse chevron.)
+  Every icon visible, no trailing void below the
   last one. On a viewport too short for the stack, the rail caps at the
   viewport height and scrolls internally. Expanding the rail glides on
   the same width/transform transition as collapsing, in reverse: the
@@ -369,9 +372,10 @@ Build: `build.py` generates `index.html` from `buddies.json` + `plans.json`.
   **six-icon rail** — the same controls as the desktop's collapsed rail
   (Dave's call, 2026-10-28, superseding the 2026-10-22 recents icon
   strip, whose renderer stays in the tree dormant): › expand (opens the
-  full dock — the old grid door's job), 🕘 Recents (the popover), 🔍
-  Find, 💼 Business Plans, the current-view icon (views popover), and
-  ⚙ Settings — in the rail's three sections (1 + 3 + 2) inside the 66px
+  full dock — the old grid door's job), 🕘 Recents (the popover),
+  ⚙ Settings, 🔍 Find, then a divider, then the collections group —
+  💼 Business Plans and the current-view icon (views popover) — in the
+  rail's two sections (4 + 2) inside the 66px
   dock, grouped in one cluster and vertically centered, exactly as the
   desktop rail groups them in its floating card (nothing foot-pinned;
   the footer belongs to the bottom glass cluster alone). Recent buddies

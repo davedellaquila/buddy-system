@@ -103,7 +103,7 @@ body.sb-closed #sidebar .navbtn .nlab, body.sb-closed #sidebar .navbtn .navgrip,
 body.sb-closed #sidebar #views-sec h3{display:none}
 body.sb-closed #sidebar .sb-brand-sticky{display:none} /* Dave 2026-10-15: empty bar serves no purpose on the collapsed rail */
 body.sb-closed #sidebar #views-sec{display:none}
-body.sb-closed #sidebar #collections-sec{display:none} /* Dave 2026-10-28: no Views stack in the rail — the current-view icon + its popover (rail-bottom) carry view switching when collapsed */
+body.sb-closed #sidebar #collections-sec{display:none} /* Dave 2026-10-28: no Views stack in the rail — the current-view icon + its popover (rail-mid) carry view switching when collapsed */
 body.sb-closed #sidebar #sb-tools{position:static;display:flex;justify-content:center;margin:0 auto}
 /* Dave 2026-10-14: round selection indicator on the mini rail (not a rounded rect) */
 body.sb-closed #view-nav .navbtn.sel{border-radius:50%;box-shadow:none}
@@ -1268,8 +1268,9 @@ textarea[disabled]{opacity:.5;cursor:not-allowed}
 body:not(.bp-collapsed):has(#view-buddy.active) #panel-open,
 body.standalone #panel-open{display:none}
 /* Dave 2026-10-28: the standalone Recents floater is retired — Recents
-   lives in the buddy panel now (#sb-recents in the header tools, left of
-   the gear; #rail-recents in the collapsed rail). Its corner/footer/phone
+   lives in the buddy panel now (#sb-recents in the header tools, right of
+   the gear since Dave's 2026-10-28 swap; #rail-recents in the collapsed
+   rail). Its corner/footer/phone
    placement rules went with it. */
 /* Dave 2026-10-28 (morning): framework buttons grouped in the footer
    (setting 'Group framework buttons in the footer', body.fw-footer).
@@ -2085,24 +2086,23 @@ body:has(#sidebar.sb-floating) #sb-resize{display:none}
 .bp-rsz:active{--gripdot:var(--accent)}
 
     /* ==== Icon strip, Views dock, panel header v2 (Dave + Jonny, 2026-10-21) ==== */
-    /* Rail: the strip's top slot holds the expand chevron (#rail-expand,
-       Job 6) over a divider; the current view sits at the strip's foot under
-       another divider, with a popover picker. The info icon is NOT here any
-       more - it lives at the page's fixed top-right, swapping pixel-for-pixel
-       with the panel's close x, so the corner button must stay visible while
-       the rail shows too. Strip only - phones keep their Door A corner button. */
-    #rail-top,#rail-bottom{display:none}
-    body.sb-closed #rail-top{display:flex;justify-content:center;padding-bottom:8px;margin-bottom:4px;border-bottom:1px solid var(--border)}
-    body.sb-closed #rail-bottom{display:flex;flex-direction:column;align-items:center;gap:4px;justify-content:center;padding-top:8px;margin-top:4px;border-top:1px solid var(--border)}
-    /* Phone widths: the rail hides only while the dock is open (the buddy
+    /* Rail (Dave 2026-10-28 evening reorder): two groups in one cluster -
+       the top group is expand chevron, Recents, Settings, Find; a single
+       divider; then the collections group, Business Plans + the current-view
+       icon (popover picker). The info icon is NOT here - it lives at the
+       page's fixed top-right, swapping pixel-for-pixel with the panel's
+       close x, so the corner button must stay visible while the rail shows
+       too. Strip only - phones keep their Door A corner button. */
+    #rail-top{display:none}
+    body.sb-closed #rail-top{display:flex;flex-direction:column;align-items:center;gap:4px;padding:2px 0}
+        /* Phone widths: the rail hides only while the dock is open (the buddy
        list owns the panel then) or in standalone. The CLOSED phone dock
        wears the rail — see the phone block below (Dave 2026-10-28). */
     @media (max-width:639px){body.ph-left-open #rail-top,body.ph-left-open #rail-bottom,body.ph-left-open #rail-mid,body.standalone #rail-top,body.standalone #rail-bottom,body.standalone #rail-mid{display:none!important}}
-    /* Dave 2026-10-28: the collapsed rail is exactly four icons — expand
-       chevron, Find, Business Plans, current view. The mid slot carries
-       Find + Plans, between the expand slot and the current-view slot. */
+    /* The mid slot carries the collections group (Business Plans +
+       current view) under the rail's single divider. */
     #rail-mid{display:none}
-    body.sb-closed #rail-mid{display:flex;flex-direction:column;align-items:center;gap:4px;padding:2px 0}
+    body.sb-closed #rail-mid{display:flex;flex-direction:column;align-items:center;gap:4px;padding:10px 0 2px;margin-top:4px;border-top:1px solid var(--border)}
     #rail-find,#rail-plans,#rail-gear,#rail-recents{width:44px;height:44px;border-radius:12px;border:1px solid transparent;background:none;color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1.25rem;padding:0}
     #rail-find:hover,#rail-plans:hover{color:var(--accent);border-color:var(--border);background:var(--ghost)}
     #rail-expand{width:44px;height:44px;border-radius:50%;border:1px solid var(--border);background:color-mix(in srgb, var(--panel) 72%, transparent);color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0}
@@ -2201,8 +2201,8 @@ body:has(#sidebar.sb-floating) #sb-resize{display:none}
    icons behind an inner scroll region. Now the rail itself is the
    scroller (Dave: "if the viewport is too short to show all icons, the
    side rail should scroll"), the views list shows every icon, and
-   .sb-scroll can never stretch the rail, so #rail-bottom sits directly
-   under the icon stack with no trailing void. Width, icon order, the
+   .sb-scroll can never stretch the rail, so the last rail section sits
+directly under the icon stack with no trailing void. Width, icon order, the
    chevron's top slot and the pinned Recents slot are unchanged. */
 body.sb-closed #sidebar{overflow-y:auto;overflow-x:hidden}
 body.sb-closed #sidebar .sb-scroll{flex:0 0 auto}
@@ -2758,13 +2758,12 @@ html.light .wc-got{background:#007AFF}
      the desktop rail groups them in its floating card (Dave's follow-up
      the same evening — the first phone cut split them top vs. foot with
      a gap, and nothing is foot-pinned here: the footer belongs to the
-     bottom glass cluster alone). The three rail sections stack
-     contiguously with their dividers inside the centered column. */
+     bottom glass cluster alone). The two rail sections stack
+     contiguously with their one divider inside the centered column. */
   body:not(.standalone):not(.ph-left-open) #sidebar{display:flex;flex-direction:column;justify-content:center;padding:8px 0}
-  body:not(.standalone):not(.ph-left-open) #rail-top{display:flex;justify-content:center;padding-bottom:8px;margin-bottom:4px;border-bottom:1px solid var(--border)}
-  body:not(.standalone):not(.ph-left-open) #rail-mid{display:flex;flex-direction:column;align-items:center;gap:4px;padding:2px 0}
-  body:not(.standalone):not(.ph-left-open) #rail-bottom{display:flex;flex-direction:column;align-items:center;gap:4px;justify-content:center;padding-top:8px;border-top:1px solid var(--border)}
-  .strip-ic{width:44px;height:44px;flex:0 0 auto;border-radius:12px;border:1px solid transparent;background:none;color:var(--text);font-size:1.375rem;display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0}
+  body:not(.standalone):not(.ph-left-open) #rail-top{display:flex;flex-direction:column;align-items:center;gap:4px;padding:2px 0}
+  body:not(.standalone):not(.ph-left-open) #rail-mid{display:flex;flex-direction:column;align-items:center;gap:4px;padding:10px 0 2px;border-top:1px solid var(--border)}
+    .strip-ic{width:44px;height:44px;flex:0 0 auto;border-radius:12px;border:1px solid transparent;background:none;color:var(--text);font-size:1.375rem;display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0}
   .strip-ic:hover{background:var(--ghost)}
   .strip-ic.sel{background:var(--wash);border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent)}
   #ph-strip .strip-door{margin-top:auto;color:var(--text2)}
@@ -14356,10 +14355,10 @@ syncRailCurView();
 <div id="sb-scrim"></div>
 <aside id="sidebar">
   <div id="ph-strip" role="navigation" aria-label="Buddy strip"></div>
-  <div id="rail-top"><button type="button" id="rail-expand" title="Expand sidebar" aria-label="Expand sidebar"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9.5 5.5L16 12l-6.5 6.5"/></svg></button></div>
+  <div id="rail-top"><button type="button" id="rail-expand" title="Expand sidebar" aria-label="Expand sidebar"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9.5 5.5L16 12l-6.5 6.5"/></svg></button><button type="button" id="rail-recents" title="Recent buddies" aria-label="Recent buddies"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 8.5A9 9 0 1 1 3.2 13.6"/><path d="M3.2 3.8v4.8h4.8"/><path d="M12 7.5V12l3 2"/></svg></button><button type="button" id="rail-gear" title="Settings (⌘,)" aria-label="Settings"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button><button type="button" id="rail-find" title="Find (\u2318F)" aria-label="Find"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L21 21"/></svg></button></div>
   <div class="sb-scroll">
   <div class="sb-brand-sticky">
-    <div id="sb-tools"><button type="button" id="sb-recents" title="Recent buddies" aria-label="Recent buddies"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 8.5A9 9 0 1 1 3.2 13.6"/><path d="M3.2 3.8v4.8h4.8"/><path d="M12 7.5V12l3 2"/></svg></button><button id="sb-gear" title="Settings (⌘,)" aria-label="Settings"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button><button id="sb-close" title="Collapse sidebar" aria-label="Collapse sidebar"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.5 5.5L8 12l6.5 6.5"/></svg></button></div>
+    <div id="sb-tools"><button id="sb-gear" title="Settings (⌘,)" aria-label="Settings"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button><button type="button" id="sb-recents" title="Recent buddies" aria-label="Recent buddies"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 8.5A9 9 0 1 1 3.2 13.6"/><path d="M3.2 3.8v4.8h4.8"/><path d="M12 7.5V12l3 2"/></svg></button><button id="sb-close" title="Collapse sidebar" aria-label="Collapse sidebar"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.5 5.5L8 12l6.5 6.5"/></svg></button></div>
     <div class="brand"><div class="eyebrow">Project Buddy</div><h1 id="brand-name" title="Click to rename">Buddies</h1><div class="bcount">NBUD buddies &middot; one family</div></div>
   </div>
   <div class="sb-search-sticky">
@@ -14379,8 +14378,7 @@ syncRailCurView();
   <div class="nav-sec" id="collections-sec">
   <h3 style="cursor:pointer" id="collections-toggle"><span class="nav-arrow" id="collections-arrow">\u203a</span> Collections</h3><div id="collection-nav"></div></div>
   <div class="sb-tipjar"><a href="https://ko-fi.com/davedellaquila" target="_blank" rel="noopener" title="Support the buddy system"><span class="jar">\U0001FAD9</span> <span class="tiptext">Tip the jar</span></a></div>
-  <div id="rail-mid"><button type="button" id="rail-recents" title="Recent buddies" aria-label="Recent buddies"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 8.5A9 9 0 1 1 3.2 13.6"/><path d="M3.2 3.8v4.8h4.8"/><path d="M12 7.5V12l3 2"/></svg></button><button type="button" id="rail-find" title="Find (\u2318F)" aria-label="Find"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L21 21"/></svg></button><button type="button" id="rail-plans" title="Business Plans" aria-label="Business Plans"><span aria-hidden="true">\U0001F4BC</span></button></div>
-  <div id="rail-bottom"><button type="button" id="rail-curview" title="Current view" aria-label="Current view - tap to switch views"></button><button type="button" id="rail-gear" title="Settings (⌘,)" aria-label="Settings"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button></div>
+  <div id="rail-mid"><button type="button" id="rail-plans" title="Business Plans" aria-label="Business Plans"><span aria-hidden="true">\U0001F4BC</span></button><button type="button" id="rail-curview" title="Current view" aria-label="Current view - tap to switch views"></button></div>
 </aside>
 <div id="sb-resize" title="Drag left or right to resize the sidebar. Double-click to close."></div>
 <button type="button" id="sb-tab" title="Open sidebar" aria-label="Open sidebar"></button>
