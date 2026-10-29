@@ -2359,12 +2359,19 @@ a.plan-card-name:hover{text-decoration:underline}
    Dave 2026-10-28 (late): the wide "Refresh page" rectangle that used
    to sit under the frame is retired (Refresh is a disc in #hp-nav
    now), so the frame's band only has to clear the discs themselves:
-   20px offset + 56px disc + 12px air = 88px. The sidebar's own 96px
-   reservation above is unchanged. */
+   20px offset + 56px disc + 12px air = 88px.
+   Dave 2026-10-29: the sidebar's own reservation drops 96px -> 48px.
+   At 96 the panel's bottom was a tall empty well under the Tip Jar
+   line. The jar is a FIXED footer (~38px band), not scrollable
+   content, and Dave expressly allows the Back disc to overlap its
+   lower area - so the band only has to keep the last scrollable row
+   (Collections, resting directly above the jar) clear of the disc:
+   48 + 38 = 86px >= the disc's top edge (76px) + 10px air. The
+   framed page's 88px band above is untouched. */
 body:has(#main.homepage-mode):has(#view-project.active) #homepage-wrap{padding-bottom:88px}
 @media (min-width:640px){
   body:not(.sb-closed):not(.standalone):has(#view-project.active) #homepage-wrap{padding-bottom:88px}
-  body:not(.sb-closed):not(.standalone) #sidebar{padding-bottom:96px}
+  body:not(.sb-closed):not(.standalone) #sidebar{padding-bottom:48px}
 }
 @media (max-width:760px){#main #view-project.active{min-height:calc(100vh - 88px)}
 #main.homepage-mode{padding:0}

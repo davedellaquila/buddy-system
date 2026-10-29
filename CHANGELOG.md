@@ -1,3 +1,9 @@
+## 2026-10-29
+
+### 20261029.0002 — Tip Jar well tightened: sidebar bottom band 96px → 48px (Dave)
+- Dave's midnight screenshot: a tall empty well (100px+) under the "Tip the jar" line at the buddy panel's bottom — the visible cost of build 2224's 96px sidebar reservation. His direction: tighten it; the Back disc may overlap the fixed Tip Jar section.
+- The sidebar's bottom padding drops to 48px. The Tip Jar is a fixed ~38px footer, not scrollable content, so the geometry still protects what 2209–2224 protected: the last Collections row rests directly above the jar, at 48 + 38 = 86px from the window's bottom — 10px clear of the Back disc's top edge. The disc now overlaps the jar band's lower-left, as Dave allowed, and the framed page's 88px disc band is unchanged.
+
 ## 2026-10-28
 
 ### 20261028.2346 — Grippers lightened: first pass overshot (Dave)
