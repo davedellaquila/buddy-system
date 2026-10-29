@@ -2749,6 +2749,7 @@ html.light .wc-got{background:#007AFF}
   body:not(.standalone).ph-left-open #sidebar{width:min(85vw,320px)}
   body:not(.standalone):not(.ph-left-open) #sidebar .sb-scroll,
   body:not(.standalone):not(.ph-left-open) #sidebar #views-sec,
+  body:not(.standalone):not(.ph-left-open) #sidebar #collections-sec,
   body:not(.standalone):not(.ph-left-open) #sidebar .sb-tipjar{display:none}
   /* The strip's bottom padding clears the floating bottom nav cluster
      (56px circles at bottom:20px — its top edge sits 76px up): the door
@@ -12033,7 +12034,7 @@ function normalizeSbSections(){
   const scroller = sb.querySelector('.sb-scroll');
   const views = document.getElementById('views-sec');
   const jar = sb.querySelector('.sb-tipjar');
-  const order = (S.navSecOrder && S.navSecOrder.length) ? S.navSecOrder : ['buddies-sec', 'plans-sec', 'views-sec'];
+  const order = (S.navSecOrder && S.navSecOrder.length) ? S.navSecOrder : ['buddies-sec', 'plans-sec', 'views-sec', 'collections-sec'];
   order.forEach(id => {
     const s = document.getElementById(id);
     if (!s) return;
