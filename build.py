@@ -311,6 +311,13 @@ body.sb-closed #main .zoombar{left:calc(50% + 38px)}
 #attn-pill{background:var(--accent);color:var(--on-accent);font-size:.6875rem;font-weight:700;border-radius:999px;
   padding:1px 8px;letter-spacing:0;text-transform:none}
 #attn-pill.zero{background:var(--border2);color:var(--muted)}
+/* Dave 2026-10-28: the buddy panel's two tabs - Buddies (the hierarchy) and
+   Recents (every visit, most recent first). A segmented control under the
+   Buddies header; the choice persists per device (S.panelTab). */
+#sb-tabs{display:flex;gap:4px;padding:0 0 8px}
+.sb-tab{flex:1;padding:6px 10px;border-radius:999px;border:1px solid var(--border);background:transparent;color:var(--text2);font:inherit;font-size:.8125rem;font-weight:600;cursor:pointer}
+.sb-tab:hover{color:var(--text);border-color:var(--accent)}
+.sb-tab.sel{background:var(--wash);color:var(--text);border-color:var(--accent)}
 .attn-count{font-size:.6875rem;font-weight:700;color:var(--muted);letter-spacing:0;text-transform:none}
 .navbtn{display:flex;align-items:center;gap:10px;width:100%;text-align:left;background:none;border:0;
   color:var(--text);font:inherit;font-size:.875rem;padding:8px 10px;border-radius:8px;cursor:pointer}
@@ -3458,7 +3465,7 @@ function kbCycleSelect(bid, wantPanel){
 function recordRecent(id){
   if (!id || !byId[id]) return;
   if (!Array.isArray(S.recentBuddies)) S.recentBuddies = [];
-  if (S.recentBuddies[0] !== id) S.recentBuddies = [id].concat(S.recentBuddies.filter(x => x !== id)).slice(0, 50);
+  if (S.recentBuddies[0] !== id) S.recentBuddies = [id].concat(S.recentBuddies.filter(x => x !== id)).slice(0, 200);
 }
 function selectBuddy(id){
   if (!byId[id]) return;
@@ -4029,6 +4036,18 @@ function buddyMatchesQuery(b, q){
   const hay = buddySearchHay(b);
   return words.every(w => hay.includes(w));
 }
+function syncPanelTabs(){
+  const tab = S.panelTab === 'recents' ? 'recents' : 'buddies';
+  document.querySelectorAll('#sb-tabs .sb-tab').forEach(b => {
+    const on = b.dataset.ptab === tab;
+    b.classList.toggle('sel', on);
+    b.setAttribute('aria-selected', String(on));
+  });
+}
+function setPanelTab(tab){
+  S.panelTab = tab === 'recents' ? 'recents' : 'buddies';
+  save(); syncPanelTabs(); renderNav();
+}
 function renderNav(){
   const views = getViewOrder().map(id => VIEW_DEFS.find(v => v[0] === id)).filter(Boolean).filter(([v]) => isViewVisible(v));
   /* Dave 2026-10-20: the expand chevron no longer leads this stack.
@@ -4058,6 +4077,24 @@ function renderNav(){
   const words = q.split(/\s+/).filter(Boolean);
   let h = '';
   function matches(b){ return buddyMatchesQuery(b, q); }
+  /* Dave 2026-10-28: the Recents tab - every buddy visit on record
+     (S.recentBuddies, most recent first), as flat rows in the tree rows'
+     own markup, so clicks, selection and the info affordance behave
+     exactly as they do in the hierarchy. */
+  function recentsHtml(){
+    const ids = (Array.isArray(S.recentBuddies) ? S.recentBuddies : []).filter(id => byId[id]);
+    const shown = ids.filter(id => !words.length || matches(byId[id]));
+    if (!shown.length) return '<p class="fineprint" style="padding:10px">' + (ids.length ? 'No recent buddies match your search.' : 'No buddies visited yet.') + '</p>';
+    return shown.map(id => {
+      const b = byId[id];
+      const kind = b.kind === 'root' ? 'root' : (b.parent === ROOT_ID ? 'direct' : b.kind);
+      const un = unseenItems(b).length;
+      return '<button class="brow'+((S.projectId===id || S.sel==='buddy:'+id)?' sel':'')+(un?' has-unseen':'')+(isDormant(id)?' dormant':'')+'" data-buddy="'+id+'" style="padding-left:8px" title="'+escHtml(b.tagline||'')+'">'
+        + '<span class="bdot"></span><span class="bicon">'+escHtml(b.icon||'')+'</span><span class="bname">'+escHtml(dispName(b))+'</span>'
+        + '<span class="bkind">'+kind+'</span>'
+        + '<span class="binfo" data-buddy-info="'+id+'" title="Open '+escHtml(dispName(b))+' details" style="margin-left:auto;padding:2px 6px;opacity:0;transition:opacity 0.15s;cursor:pointer" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0">\\u24d8</span></button>';
+    }).join('');
+  }
   /* Dave 2026-10-15: per-branch ancestor chain — a buddy under two parents
      (a DAG diamond) renders under both; a true cycle can't loop the sidebar. */
   function row(id, depth, chain){
@@ -4080,10 +4117,14 @@ function renderNav(){
       + '<span class="binfo" data-buddy-info="'+id+'" title="Open '+escHtml(dispName(b))+' details" style="margin-left:auto;padding:2px 6px;opacity:0;transition:opacity 0.15s;cursor:pointer" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0">\u24d8</span></button>';
     if (!collapsed) kidIds.forEach(kid => { if (!anc.has(kid)) row(kid, depth+1, anc); });
   }
-  sortSiblingsByOrder(ROOT_ORDER.filter(id => { const b = byId[id]; return b && effParents(b).length === 0; }), '__root__')
-    .forEach(id => row(id, 0));
+  if (S.panelTab === 'recents') { h = recentsHtml(); }
+  else {
+    sortSiblingsByOrder(ROOT_ORDER.filter(id => { const b = byId[id]; return b && effParents(b).length === 0; }), '__root__')
+      .forEach(id => row(id, 0));
+  }
   document.getElementById('buddy-nav').innerHTML = h;
-  if (Object.keys(S.parents).length) {
+  syncPanelTabs();
+  if (S.panelTab !== 'recents' && Object.keys(S.parents).length) {
     document.getElementById('buddy-nav').insertAdjacentHTML('beforeend',
       '<div style="padding:10px 10px 0"><button class="linkbtn" id="reset-parents">Reset moved buddies</button></div>'
       + '<div class="fineprint" style="padding:2px 10px 0">Hierarchy moves save on this device.</div>');
@@ -5502,7 +5543,7 @@ function toggleRecentsPop(anchorBtn){
      to whichever button opened it. */
   const btn = anchorBtn || document.getElementById('sb-recents') || document.getElementById('rail-recents'); if (!btn) return;
   let n = parseInt(getSetting('recentsCount'), 10); if (!(n > 0)) n = 10;
-  const all = (Array.isArray(S.recentBuddies) ? S.recentBuddies : []).filter(id => byId[id]).slice(0, 50);
+  const all = (Array.isArray(S.recentBuddies) ? S.recentBuddies : []).filter(id => byId[id]).slice(0, 200);
   // Dave 2026-10-25: the menu pages — the first page is recentsCount (default
   // 10); when more remain, the next row is "Show more", and each tap of it
   // reveals 10 more, up to the 50 remembered.
@@ -14215,6 +14256,8 @@ document.addEventListener('click', e => {
     if (window.innerWidth < 640) { const sbo=document.getElementById('sidebar'); if(sbo) sbo.classList.remove('open'); const sco=document.getElementById('sb-scrim'); if(sco) sco.classList.remove('show'); }
     return;
   }
+  const pt = e.target.closest('[data-ptab]');
+  if (pt) { setPanelTab(pt.dataset.ptab); return; }
   const sb = e.target.closest('[data-done]');
   if (sb) { markAttentionDone(sb.dataset.done, sb); return; }
   const sa = e.target.closest('[data-done-all]');
@@ -14369,7 +14412,7 @@ syncRailCurView();
     </div>
   </div>
   <div class="nav-sec" id="buddies-sec">
-  <h3 style="cursor:pointer" id="buddies-toggle"><span class="nav-arrow" id="buddies-arrow">\u203a</span> Buddies <span id="attn-pill" class="zero">0</span></h3><div id="buddy-nav"></div></div>
+  <h3 style="cursor:pointer" id="buddies-toggle"><span class="nav-arrow" id="buddies-arrow">\u203a</span> Buddies <span id="attn-pill" class="zero">0</span></h3><div class="sb-listwrap"><div id="sb-tabs" role="tablist" aria-label="Buddy list mode"><button type="button" class="sb-tab sel" data-ptab="buddies" role="tab" aria-selected="true">Buddies</button><button type="button" class="sb-tab" data-ptab="recents" role="tab" aria-selected="false">Recents</button></div><div id="buddy-nav"></div></div></div>
   <div class="nav-sec" id="plans-sec"><h3 style="cursor:pointer" id="plans-toggle"><span id="plans-arrow">\u203a</span> Business Plans</h3><div id="plan-nav"></div></div>
   </div>
   <div class="nav-sec" id="views-sec">

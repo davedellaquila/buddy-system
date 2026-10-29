@@ -137,7 +137,11 @@ Build: `build.py` generates `index.html` from `buddies.json` + `plans.json`.
   the rail's view popover groups its list under the
   same two headings. Picking a buddy from the Recents popover only selects
   it — an open info panel follows the selection; a closed one stays closed
-  until opened.
+  until opened. The buddy panel's list is two tabs (Dave 2026-10-28):
+  **Buddies** (the hierarchy) and **Recents** — every buddy visit on
+  record, most recent first, as flat rows with the tree rows' behavior;
+  the visit record keeps the last 200 visits, and the search field filters
+  whichever tab is showing.
 - **Escape closes the panels** — ESC dismisses transient UI first
   (popovers, menus, the field-settings sheet — one per press), then closes
   the info panel and the buddy panel together, from any focus location,
