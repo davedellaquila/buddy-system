@@ -410,6 +410,13 @@ Build: `build.py` generates `index.html` from `buddies.json` + `plans.json`.
 - **The Lift**: while typing on the phone (keyboard open), the Prev/Next
   pill rides above the keyboard via a `--kb-lift` offset driven by focus
   and `visualViewport`, and settles back when the keyboard closes.
+- **Disc clearance**: the floating homepage-nav discs (Find/Prev/Next
+  centered, Back bottom-left) never cover hosted chrome: when a
+  homepage/app is in the frame, the frame wrap reserves the discs' 96px
+  footprint at its bottom so the hosted page's own bottom bars reflow
+  above the discs, and at sidebar-open widths the sidebar scroller
+  reserves the same band so its last rows and the Tip Jar stay clear of
+  the Back disc.
 - **Medium (640–1100px)**: collapsible sidebar; view nav becomes a horizontal
   segmented control; detail opens as a right-docked side sheet (380px).
 - **Large (>1100px)**: tri-pane with persistent detail panel (400px).

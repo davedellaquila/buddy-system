@@ -2332,6 +2332,21 @@ a.plan-card-name:hover{text-decoration:underline}
 #homepage-open{display:none}
 #homepage-open:hover{border-color:var(--accent);color:var(--accent)}
 #homepage-frame{flex:1;width:100%;min-height:0;border:0;border-radius:0;background:var(--bg);display:block;color-scheme:dark light}
+/* Dave 2026-10-28 (iPad screenshot): the floating homepage-nav discs
+   (#hp-nav centered, #hp-back bottom-left) are viewport-fixed and painted
+   over whatever sits at the bottom - including a hosted app's own bottom
+   tab bar inside the frame (the expense tracker's Import tab) and the
+   sidebar's last Collections rows. Clearance, not relocation: when a
+   homepage/app is in the frame and the discs show, the frame wrap
+   reserves the discs' footprint (20px offset + 56px disc + 20px air =
+   96px) at its bottom, so the hosted page reflows with its own chrome
+   above the discs; and at sidebar-open widths the sidebar scroller
+   reserves the same band so its rows and Tip Jar never flow under Back. */
+body:has(#main.homepage-mode):has(#view-project.active) #homepage-wrap{padding-bottom:96px}
+@media (min-width:640px){
+  body:not(.sb-closed):not(.standalone):has(#view-project.active) #homepage-wrap{padding-bottom:96px}
+  body:not(.sb-closed):not(.standalone) #sidebar .sb-scroll{padding-bottom:96px}
+}
 @media (max-width:760px){#main #view-project.active{min-height:calc(100vh - 88px)}
 #main.homepage-mode{padding:0}
 #main.homepage-mode #view-project.active{min-height:100vh}}
