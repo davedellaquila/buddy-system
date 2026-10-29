@@ -2767,6 +2767,15 @@ html.light .wc-got{background:#007AFF}
   #view-buddy.sheet .bp-takeover-back{display:none}
   #view-buddy.sheet .bp-sticky-head{top:0}
   body.bp-sheet-open #bp-close-x.bpx-on{display:flex;z-index:10005}
+  /* The scrim (z 99 when shown) exists to dim the canvas behind an open
+     dock — but the open sheet is foreground, and at z 96/97 it was
+     wearing the 45% wash itself (Dave's iPhone shot, 2026-10-28: Health
+     Buddy's panel greyed out behind its own scrim). The sheet rides at
+     z 100 — the open drawer's layer — while it is the only dock open.
+     When the left dock opens OVER it (body.ph-left-open) this rule steps
+     aside and the sheet drops back under the scrim, the drawer-over-
+     sheet dimming that z 99 / z 100 split was built for. */
+  body:not(.ph-left-open) #view-buddy.sheet{z-index:100}
   /* ---- The View pill rides with the canvas at its top-left. ---- */
   #view-pill{display:flex;align-items:center;gap:7px;position:fixed;top:12px;left:78px;z-index:9001;height:40px;padding:0 14px;border-radius:999px;border:1px solid var(--border);background:color-mix(in srgb, var(--panel) 72%, transparent);-webkit-backdrop-filter:blur(14px) saturate(1.6);backdrop-filter:blur(14px) saturate(1.6);color:var(--text);font:inherit;font-size:.875rem;font-weight:600;cursor:pointer;box-shadow:0 4px 18px rgba(15,23,42,.10);transition:transform .28s cubic-bezier(.32,.72,.35,1)}
   #view-pill .vp-ic{display:flex;font-size:1rem}
