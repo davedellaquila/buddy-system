@@ -1262,22 +1262,17 @@ body.standalone #panel-open{display:none}
    lives in the buddy panel now (#sb-recents in the header tools, left of
    the gear; #rail-recents in the collapsed rail). Its corner/footer/phone
    placement rules went with it. */
-/* Dave 2026-10-28: framework buttons grouped in the footer (setting
-   'Group framework buttons in the footer', body.fw-footer). New and Back
-   already anchor the bottom corners as 56px circles; Info drops from
-   the top corner into the same row, inset one slot (88px = 20 margin +
-   56 button + 12 gap), its 44px circle centred on the row at
-   bottom:26px. (Recents was the fourth button until 2026-10-28, when
-   Dave moved it into the buddy panel and retired its floater.) The
-   grouped buttons also go nearly see-through
-   (16-20% fills, above) in both modes — Dave's ask the same morning.
-   Phone widths keep the corner spots: the bottom cluster is spoken
-   for there. */
-body.fw-footer #panel-open{top:auto;bottom:26px;right:88px}
-body.fw-footer:has(#token-pill) #panel-open{right:88px}
-@media (max-width:639px){
-  body.fw-footer #panel-open{top:12px;bottom:auto;right:12px}
-}
+/* Dave 2026-10-28 (morning): framework buttons grouped in the footer
+   (setting 'Group framework buttons in the footer', body.fw-footer).
+   New and Back anchor the bottom corners as 56px circles, nearly
+   see-through (16-20% fills, above) in both modes. Info was the third
+   grouped button until the same evening, when Dave ruled it out of the
+   group: the info icon stays in the upper-right corner at every width,
+   swapping pixel-for-pixel with the panel's close x (#bp-close-x, same
+   44px circle at top:12px; right:12px, both shifting past the token
+   pill together). No rule below may move #panel-open off that corner.
+   (Recents was the fourth button until 2026-10-28, when Dave moved it
+   into the buddy panel and retired its floater.) */
 #recents-pop{position:fixed;z-index:10002;min-width:220px;max-width:300px;max-height:60vh;overflow-y:auto;background:var(--panel);border:1px solid var(--border);border-radius:12px;box-shadow:0 14px 40px rgba(0,0,0,.28);padding:6px}
 #recents-pop .rec-head{font-size:.6875rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text2);padding:6px 10px 4px}
 #recents-pop button{display:flex;align-items:center;gap:10px;width:100%;padding:8px 10px;border:none;background:none;color:var(--text);font:inherit;font-size:.875rem;border-radius:8px;cursor:pointer;text-align:left}
@@ -1305,7 +1300,7 @@ body:has(#token-pill) #panel-open{right:148px}
    corner geometry (Recents at left:12 there). */
 #update-banner{position:fixed;top:12px;left:16px;right:68px;height:48px;z-index:9999;
   background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:0 14px;
-  box-shadow:0 8px 32px rgba(0,0,0,.3);display:flex;align-items:center;font-size:.875rem;
+  box-shadow:0 8px 32px rgba(0,0,0,.3);display:flex;align-items:center;justify-content:center;font-size:.875rem; /* Dave 2026-10-28: the content group centers inside the card — it used to pack left and leave the rest of the bar empty. */
   transition:left .5s cubic-bezier(.32,.72,.35,1),right .5s cubic-bezier(.32,.72,.35,1),height .5s cubic-bezier(.32,.72,.35,1),border-radius .5s cubic-bezier(.32,.72,.35,1)}
 body.sb-closed #update-banner{left:68px}
 @media (min-width:640px){
@@ -4693,7 +4688,7 @@ const SETTING_DEFS = [
   {id:'fontScale', label:'Text size', type:'slider', def:100, min:80, max:130, step:5, advanced:true, tip:'Scales text throughout the app — layout, dialogs and buttons keep their size.', unit:'%'},
   {id:'sidebarStyle', label:'Panel style', type:'choice', options:['floating','anchored'], def:'floating', tip:'One style for both panels — the sidebar and the info panel. Floating: inset cards; drag a panel by its gripper to move it, and resize it from any side. Anchored: both panels sit flush to their edge in the same squared-off style, the main view resizes to make room, and neither panel can be dragged.'},
   {id:'panelTranslucency', label:'Panel translucency', type:'choice', options:['standard','glass'], def:'standard', tip:'Glass: the sidebar and buddy panel go deeply translucent — the page behind them tints the glass (Apple Weather style). Standard: the usual soft frost.'},
-  {id:'frameworkButtonsFooter', label:'Group framework buttons in the footer', type:'bool', def:true, tip:'On: New, Back and Info sit together in one row along the bottom of the screen, nearly see-through. Off: they take their separate corners (New bottom-right, Back bottom-left, Info top-right). On phone widths the buttons keep their corner spots either way. (Recents lives in the buddy panel now — header and rail — and is not part of this group.)'},
+  {id:'frameworkButtonsFooter', label:'Group framework buttons in the footer', type:'bool', def:true, tip:'On: New and Back sit along the bottom of the screen, nearly see-through. Off: they take their separate corners (New bottom-right, Back bottom-left). Info always stays in the top-right corner, swapping with the panel close x — it is not part of this group. On phone widths the buttons keep their corner spots either way. (Recents lives in the buddy panel now — header and rail — and is not part of this group.)'},
   {id:'sectionToggleStyle', label:'Section toggle style', type:'choice', options:['chevron','section-icon','plus-minus','caret','arrow','dot','triangle','double-chevron','none'], def:'section-icon', tip:'How section headers show their expand/collapse control: classic chevron, the section\u2019s own icon, plus/minus, and more.'},
   {id:'sectionIconBehavior', label:'Section icon behavior', type:'choice', options:['rotate','spin','bounce','flip','pulse','none'], def:'rotate', tip:'What the section icon does when you expand/collapse: tips on its side, spins around, bounces, flips, pulses, or stays still.'},
 ];

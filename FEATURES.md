@@ -79,11 +79,12 @@ Build: `build.py` generates `index.html` from `buddies.json` + `plans.json`.
 - **Framework buttons** — the shell buttons (New, Back, Info) wear
   nearly see-through glass (16–20% fills over a blur, both themes; the
   panel's close ×, the Info button's twin, matches). The Settings toggle
-  **Group framework buttons in the footer** (default on) seats all three
-  in one row along the bottom of the screen — New and Back at the
-  corners, Info one slot in, centred on the row; turning it off returns
-  Info to the top-right corner. On phone widths the buttons keep their
-  corner spots either way. (Recents was the fourth button until
+  **Group framework buttons in the footer** (default on) seats New and
+  Back along the bottom of the screen at the corners. Info is not in
+  the group (Dave's ruling, 2026-10-28): it stays in the top-right
+  corner at every width and setting, swapping pixel-for-pixel with the
+  panel's close ×. On phone widths the buttons keep their corner spots
+  either way. (Recents was the fourth button until
   2026-10-28; it lives in the buddy panel now — header tools, left of
   the gear, and 2nd in the collapsed rail — and its menu always fits the
   visible viewport, scrolling internally rather than running off the
