@@ -3460,8 +3460,12 @@ const VIEW_DEFS = [
 /* Dave 2026-10-29: Manifest is a collection, not a view ("it's more of
    a collection than a view") - it joins Favorites, Flagged and Business
    Plans in the Collections group, in the sidebar and the rail popover
-   alike (both filter on this one list). */
-const COLLECTION_VIEWS = ['favorites', 'flagged', 'plans', 'manifest'];
+   alike (both filter on this one list). Same day, Dave extended the
+   move: "Same with changelog and release notes." Views is now just
+   Homepage, Atlas, Org Chart and Projects. Change Log and Release
+   Notes carry no count: their entries load with their own views, so
+   there is no honest number at menu-render time (no invented counts). */
+const COLLECTION_VIEWS = ['favorites', 'flagged', 'plans', 'manifest', 'changelog', 'releases'];
 function isCollectionView(v){ return COLLECTION_VIEWS.indexOf(v) >= 0; }
 const VIEW_TIPS = {
   tree: 'Atlas — seven lenses on your buddy hierarchy. Tap the pill to switch views. Click a node to open its details. Drag the background to pan, scroll to zoom. Drag a node onto another node to reparent it.',
