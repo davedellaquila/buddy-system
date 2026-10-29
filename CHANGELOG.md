@@ -1,5 +1,12 @@
 ## 2026-10-29
 
+### 20261029.0146 — Rail glass: the collapsed rail card goes translucent, page runs beneath it (Jonny crit, Dave)
+- Dave heart-approved Jonny's rail-glass crit (~/workspace/rail-glass/crit.md): "Go ahead and implement his suggestions." Built to the spec exactly.
+- Phone (<=639px), closed state: the rail card's fill drops from 82% to 42% panel tint, backdrop blur 20px -> 24px (saturate 1.8 kept), shadow deepens to 0 10px 34px. Card geometry untouched (left 6, width 60, centered, radius 18, border unchanged).
+- The overlap comes from the content, not the card: the closed-state 66px reservation is retired (#main margin-left 66px -> 0), so the page runs full-bleed beneath the glass and buddy homepages regain 66px of width. The open-drawer slide offset compensates by the same 66px (ph-left-open #main left is now min(85vw,320px), was calc(min(85vw,320px) - 66px)) - the drawer's travel and its solid fill are unchanged; no tint interpolation during the slide.
+- Desktop: the collapsed rail in FLOATING mode takes the same glass recipe (42% / blur 24 / 0 10px 34px). ANCHORED stays solid with no edit needed - the body.sb-anchored rule already re-specifies background, backdrop-filter and shadow after the rail-card rule. No desktop geometry changes. Icon order/grouping, the bottom framework cluster and standalone mode are untouched.
+- Also confirmed while scoping this pass: Jonny's keyboard-lift crit (Prev/Next riding above the iPad keyboard pill) was ALREADY built on 2026-10-23 (see the 2026-10-23 entry) - the --kb-lift machinery is live in this build and was re-verified, not rebuilt.
+
 ### 20261029.0142 — Refresh disc removed from the footer cluster (Dave)
 - Dave's reversal, via the main chat: "Let's remove the refresh button from the footer." The #hp-refresh disc (added yesterday in 20261028.2303 when the wide "Refresh page" rectangle was retired) is removed from #hp-nav, along with its click wiring, the refreshHomepageFrame() helper, and the dimming logic in updateHpNav(). The cluster is back to three discs: Find / Prev / Next.
 - The wide rectangle is NOT restored — the footer simply carries no Refresh control, per Dave's read confirmed by Astro. The framed wrap's 88px clearance band is unchanged (it was sized for the cluster's height, which doesn't change).
