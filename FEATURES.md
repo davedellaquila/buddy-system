@@ -355,15 +355,17 @@ Build: `build.py` generates `index.html` from `buddies.json` + `plans.json`.
   slide-over **docks**: the buddy list lives under the canvas's left edge
   (85vw, max 320px) and the detail panel under its right edge (88vw, max
   360px); the canvas slides over them (280ms), one dock at a time, and the
-  exposed dimmed sliver of canvas taps shut. The resting state is a 66px
-  **icon strip** — Recents worn vertically (Jonny's crit, 2026-10-22): the
-  Recents button pinned in the first top-left slot, then any favorites,
-  then the recent buddies themselves (as many as the Recents count in
-  Settings), the selected buddy always present and accent-marked — and
-  then the strip ends; a grid door at its foot opens the full dock (the
-  strip's bottom padding holds the door clear of the floating bottom nav
-  cluster), and
-  first run (no history yet) falls back to the root buddies — plus
+  exposed dimmed sliver of canvas taps shut. The resting state is the
+  **six-icon rail** — the same controls as the desktop's collapsed rail
+  (Dave's call, 2026-10-28, superseding the 2026-10-22 recents icon
+  strip, whose renderer stays in the tree dormant): › expand (opens the
+  full dock — the old grid door's job), 🕘 Recents (the popover), 🔍
+  Find, 💼 Business Plans, the current-view icon (views popover), and
+  ⚙ Settings at the foot — in the rail's three sections (1 + 3 + 2)
+  inside the 66px dock, with 68px of top clearance and 96px at the foot
+  so Settings clears the floating bottom nav cluster. Recent buddies
+  live one tap away in the Recents popover; the strip's current-buddy
+  accent marking has no rail equivalent. Plus
   the **View pill** at the canvas's top-left. The View control carries a
   **caret (▾)** at every size — it is a menu, and the caret rotates while
   its menu is open. **Find** (first button in the bottom cluster) opens a
@@ -373,17 +375,16 @@ Build: `build.py` generates `index.html` from `buddies.json` + `plans.json`.
   homepage with the docks closed. A fresh load or deep link at phone
   widths restores the selection but never an open panel (**closed on
   open**). The old drawer, the portrait full-screen takeover, and the
-  floating-card sheet are retired. The phone icon strip never renders at
-  ≥640px (a global hide rule; its show rule lives only inside the <640px
-  query).
+  floating-card sheet are retired. The phone strip element never renders
+  at any width now (base hide rule; no show rule remains).
 - **First open (fresh context, phone)**: with no stored state on the
   device, the dashboard opens as a front door — the resting geometry is
-  invariant at first paint (66px strip + canvas, never dock width), the
+  invariant at first paint (66px rail + canvas, never dock width), the
   canvas lands on Astro's homepage without recording a visit, and a
   one-time **Welcome Card** (dismissed per device, stored in its own
   `buddyWelcome.system` key) names the place, states the scale, and
-  teaches the doors in one sentence. The strip seeds from the root
-  buddies until real history exists — no fake recency.
+  teaches the doors in one sentence. The resting rail is state-free —
+  the same six controls regardless of history; no fake recency.
 - **The Lift**: while typing on the phone (keyboard open), the Prev/Next
   pill rides above the keyboard via a `--kb-lift` offset driven by focus
   and `visualViewport`, and settles back when the keyboard closes.

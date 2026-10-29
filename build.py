@@ -2090,7 +2090,10 @@ body:has(#sidebar.sb-floating) #sb-resize{display:none}
     #rail-top,#rail-bottom{display:none}
     body.sb-closed #rail-top{display:flex;justify-content:center;padding-bottom:8px;margin-bottom:4px;border-bottom:1px solid var(--border)}
     body.sb-closed #rail-bottom{display:flex;flex-direction:column;align-items:center;gap:4px;justify-content:center;padding-top:8px;margin-top:4px;border-top:1px solid var(--border)}
-    @media (max-width:639px){#rail-top,#rail-bottom,#rail-mid{display:none!important}}
+    /* Phone widths: the rail hides only while the dock is open (the buddy
+       list owns the panel then) or in standalone. The CLOSED phone dock
+       wears the rail — see the phone block below (Dave 2026-10-28). */
+    @media (max-width:639px){body.ph-left-open #rail-top,body.ph-left-open #rail-bottom,body.ph-left-open #rail-mid,body.standalone #rail-top,body.standalone #rail-bottom,body.standalone #rail-mid{display:none!important}}
     /* Dave 2026-10-28: the collapsed rail is exactly four icons — expand
        chevron, Find, Business Plans, current view. The mid slot carries
        Find + Plans, between the expand slot and the current-view slot. */
@@ -2740,8 +2743,18 @@ html.light .wc-got{background:#007AFF}
      clearance the phone sheet uses. Dave's fix order 2026-10-23 — the
      cluster used to tuck over the door and swallow its taps. */
   #ph-strip{display:none}
-  body:not(.standalone):not(.ph-left-open) #ph-strip{display:flex;flex-direction:column;align-items:center;gap:6px;height:100%;overflow-y:auto;overflow-x:hidden;padding:68px 0 calc(96px + env(safe-area-inset-bottom, 0px));box-sizing:border-box;scrollbar-width:none;-webkit-overflow-scrolling:touch}
-  #ph-strip::-webkit-scrollbar{display:none}
+  /* Dave 2026-10-28 (decided in the Briefings thread): the phone's resting
+     state wears the same six-icon rail as the desktop — expand, Recents,
+     Find, Business Plans, current view, Settings. The recent-buddies strip
+     retires as the resting face (recents live one tap away in the rail's
+     Recents popover); its renderer stays in the tree, dormant. The closed
+     dock becomes a flex column wearing the strip's own clearances: 68px
+     at the top, 96px at the foot over the floating bottom cluster, with
+     rail-bottom (current view + Settings) resting at the foot. */
+  body:not(.standalone):not(.ph-left-open) #sidebar{display:flex;flex-direction:column;padding:calc(68px + env(safe-area-inset-top, 0px)) 0 calc(96px + env(safe-area-inset-bottom, 0px))}
+  body:not(.standalone):not(.ph-left-open) #rail-top{display:flex;justify-content:center;padding-bottom:8px;margin-bottom:4px;border-bottom:1px solid var(--border)}
+  body:not(.standalone):not(.ph-left-open) #rail-mid{display:flex;flex-direction:column;align-items:center;gap:4px;padding:2px 0}
+  body:not(.standalone):not(.ph-left-open) #rail-bottom{display:flex;flex-direction:column;align-items:center;gap:4px;justify-content:center;padding-top:8px;margin-top:auto;border-top:1px solid var(--border)}
   .strip-ic{width:44px;height:44px;flex:0 0 auto;border-radius:12px;border:1px solid transparent;background:none;color:var(--text);font-size:1.375rem;display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0}
   .strip-ic:hover{background:var(--ghost)}
   .strip-ic.sel{background:var(--wash);border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent)}
