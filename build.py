@@ -2146,11 +2146,17 @@ body:has(#sidebar.sb-floating) #sb-resize{display:none}
        translucency or backdrop blur here, in Standard or Glass mode. */
     body:not(.sb-closed) #views-sec{position:sticky;bottom:42px;z-index:6;margin-left:-14px;margin-right:-14px;padding-left:14px;padding-right:14px;background:var(--hover);border-top:1px solid var(--border)}
     body.glass-panels #views-sec{background:var(--hover)}
-    #views-resize{height:12px;margin:0 -14px;cursor:ns-resize;touch-action:none;position:relative}
+    #views-resize{height:12px;margin:0 -14px;cursor:ns-resize;touch-action:none;position:relative;z-index:6}
     /* Dave 2026-10-29: the visible strip is 12px tall (its dots 16px) - a
        thin, grip-dependent touch target. An invisible ::before extends
-       the live zone 7px above and below; layout and visuals unchanged. */
-    #views-resize::before{content:'';position:absolute;left:0;right:0;top:-7px;bottom:-7px}
+       the live zone above and below; layout and visuals unchanged.
+       The extension alone was not enough (20261029.0016 retest: 8/10,
+       both failures on grabs just above/below the dots): the section h3
+       is sticky at z-index 5 and won the overlap above, and the first
+       view row won below. So the strip sits at z-index 6 - above the h3
+       and the nav - and the live zone reaches 12px past the strip on
+       both sides, past the dots' 5px overhang. */
+    #views-resize::before{content:'';position:absolute;left:0;right:0;top:-12px;bottom:-12px}
     #views-resize::after{content:"";position:absolute;left:50%;top:calc(50% + 3px);transform:translate(-50%,-50%);width:24px;height:16px;
       background-image:var(--grip-dot);
       background-size:var(--grip-tile) var(--grip-tile);background-position:0 0;background-repeat:repeat}

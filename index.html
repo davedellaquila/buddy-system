@@ -2319,11 +2319,17 @@ body:has(#sidebar.sb-floating) #sb-resize{display:none}
        translucency or backdrop blur here, in Standard or Glass mode. */
     body:not(.sb-closed) #views-sec{position:sticky;bottom:42px;z-index:6;margin-left:-14px;margin-right:-14px;padding-left:14px;padding-right:14px;background:var(--hover);border-top:1px solid var(--border)}
     body.glass-panels #views-sec{background:var(--hover)}
-    #views-resize{height:12px;margin:0 -14px;cursor:ns-resize;touch-action:none;position:relative}
+    #views-resize{height:12px;margin:0 -14px;cursor:ns-resize;touch-action:none;position:relative;z-index:6}
     /* Dave 2026-10-29: the visible strip is 12px tall (its dots 16px) - a
        thin, grip-dependent touch target. An invisible ::before extends
-       the live zone 7px above and below; layout and visuals unchanged. */
-    #views-resize::before{content:'';position:absolute;left:0;right:0;top:-7px;bottom:-7px}
+       the live zone above and below; layout and visuals unchanged.
+       The extension alone was not enough (20261029.0016 retest: 8/10,
+       both failures on grabs just above/below the dots): the section h3
+       is sticky at z-index 5 and won the overlap above, and the first
+       view row won below. So the strip sits at z-index 6 - above the h3
+       and the nav - and the live zone reaches 12px past the strip on
+       both sides, past the dots' 5px overhang. */
+    #views-resize::before{content:'';position:absolute;left:0;right:0;top:-12px;bottom:-12px}
     #views-resize::after{content:"";position:absolute;left:50%;top:calc(50% + 3px);transform:translate(-50%,-50%);width:24px;height:16px;
       background-image:var(--grip-dot);
       background-size:var(--grip-tile) var(--grip-tile);background-position:0 0;background-repeat:repeat}
@@ -5328,7 +5334,7 @@ function renderDevelopSection(){
   const dev = document.getElementById('fset-develop');
   if (!dev) return;
   const simulating = !!devBackup;
-  const buildNum = '20261029.0016';
+  const buildNum = '20261029.0032';
   dev.innerHTML = ''
     + '<label class="fset-check"><input type="checkbox" id="dev-empty-toggle"' + (simulating ? ' checked' : '') + '> <span><strong>Simulate new user</strong> — empty data file, as if opening the shared link fresh</span></label>'
     + '<div class="fineprint" style="margin:8px 0 12px">Build <span style="font-family:monospace">' + escHtml(String(buildNum)) + '</span> · ' + BUDDIES.length + ' buddies in this file</div>'
@@ -7278,7 +7284,7 @@ function renderBuddy(id){
     + attrHead('shared', 'SHARED NOTES', '<span class="attr-value" id="bp-shared-count">(0)</span>', '')
     + '<div class="attr-body">' + attrTipLine('Anybody with repo access can see this note. Saved to the buddy’s repo (docs/notes.md).') + '<textarea class="notes" id="bp-shared-notes" placeholder="Anybody with repo access can see this note."></textarea>'
     + '<p class="fineprint" id="shared-status"></p></div></div>'
-    + '<div class="bp-build">Build 20261029.0016</div>'
+    + '<div class="bp-build">Build 20261029.0032</div>'
     + '</div>';
   // Update every visible label for a buddy after a rename/re-icon, across all
   // Atlas lenses. A rename changes no structure, so labels are patched in place
@@ -9961,7 +9967,7 @@ function renderPlan(id){
     + '<p class="fineprint">Saved on this device. (For your eyes only)</p></div>'
     + '<div class="bp-sec"><h3>📝 Shared notes<span class="info-tip" data-tip="Visible to everyone with access to this project.">\u24d8</span></h3><textarea class="notes" id="bp-shared" placeholder="Shared notes\u2026 (visible to everyone with access)">'+escHtml((S.planShared||{})[id]||'')+'</textarea>'
     + '<p class="fineprint">Shared — visible to everyone with access.</p></div>'
-    + '<div class="bp-build">Build 20261029.0016</div>'
+    + '<div class="bp-build">Build 20261029.0032</div>'
     + '</div>';
   const nt = document.getElementById('bp-notes');
   let t = null;
@@ -13772,14 +13778,14 @@ function openWhatsNew(){
     .then(r => r.ok ? r.text() : '')
     .then(t => {
       const serverBuild = t.trim();
-      if (serverBuild && serverBuild !== '20261029.0016') {
+      if (serverBuild && serverBuild !== '20261029.0032') {
         updBtn.style.display = '';
         updBtn.title = 'Update to build ' + serverBuild;
       }
       // Show build numbers at the top of the sheet (Dave's request 2026-10-12)
-      const myBuild = '20261029.0016';
+      const myBuild = '20261029.0032';
       let buildLine = '<p class="fineprint" style="margin-top:0">You’re on build ' + escHtml(myBuild) + '.';
-      if (serverBuild && serverBuild !== '20261029.0016' && isNewerBuild(serverBuild, myBuild)) {
+      if (serverBuild && serverBuild !== '20261029.0032' && isNewerBuild(serverBuild, myBuild)) {
         buildLine += ' Build ' + escHtml(serverBuild) + ' is available.';
       }
       buildLine += '</p>';
@@ -13849,7 +13855,7 @@ function syncUpdateBanner(){
   if (b.dataset.state !== state) b.dataset.state = state;
 }
 function initVersionCheck(){
-  const myBuild = '20261029.0016';
+  const myBuild = '20261029.0032';
   function showUpdateBanner(serverBuild){
     if (document.getElementById('update-banner')) return;
     const b = document.createElement('div');

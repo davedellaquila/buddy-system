@@ -1,5 +1,8 @@
 ## 2026-10-29
 
+### 20261029.0032 — Views-resize follow-up: the hit zone has to WIN its overlaps (Dave)
+- The 0016 counted retest scored the sidebar width grip 10/10 and the info-panel grip 10/10, but the Views resize 8/10 — both failures on grabs just above/below the dots. Diagnosis: the +-7px invisible extension existed but lost hit-testing in its overlaps — the section h3 is sticky at z-index 5 and owns the band above the strip; the first view row owns the band below. The strip now sits at z-index 6 (above both, within the section) and the live zone extends 12px past the strip on each side (past the dots' 5px overhang below). Visuals and layout unchanged. Retest of the off-dot grabs follows.
+
 ### 20261029.0016 — Resize drags made reliable: capture on pointerdown + real hit areas (Dave)
 - Dave: "resizing sections in general is a little flaky — when I click on a gripper and try to drag it, oftentimes the gripper or the divider does not change position… I've repositioned my grip and it doesn't always work."
 - Root cause, found in the two panel-width strips (#sb-resize, #bp-resize): they recorded the drag on pointerdown but only set pointer capture AFTER a move crossed the 6px slop, with no preventDefault. A fast or diagonal first motion carried the pointer off the 28px strip (or over the homepage iframe) before capture engaged, and every later move went elsewhere — the divider never moved. The tree split, Settings sheet, Views resize, and floated-panel grips already capture on pointerdown; the two strips now use the same idiom (button/primary guards, preventDefault, capture on down; the slop still gates when resizing applies, and snap-shut behavior is unchanged).
