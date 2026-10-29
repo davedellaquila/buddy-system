@@ -129,6 +129,15 @@ Build: `build.py` generates `index.html` from `buddies.json` + `plans.json`.
   sidebar's pinned footer — anchored to the panel's bottom in every
   collapse state while the sections above scroll in their own region;
   resizing Views is absorbed by that scroll region, never by the Tip Jar.
+  The panel's navigation splits in two (Dave 2026-10-28): **Views**
+  (Homepage, Atlas, Org Chart, Projects, Manifest, Change Log, Release
+  Notes) and a separate **Collections** section (Favorites, Flagged,
+  Business Plans — gathered sets of specific objects, not ways of looking
+  at the tree), each collapsible and grip-reorderable within its own group;
+  the rail's and phone pill's view popovers group their lists under the
+  same two headings. Picking a buddy from the Recents popover only selects
+  it — an open info panel follows the selection; a closed one stays closed
+  until opened.
 - **Escape closes the panels** — ESC dismisses transient UI first
   (popovers, menus, the field-settings sheet — one per press), then closes
   the info panel and the buddy panel together, from any focus location,
@@ -397,7 +406,8 @@ Build: `build.py` generates `index.html` from `buddies.json` + `plans.json`.
   **⌘F / Ctrl+F** opens the Find overlay — one card centred on the window,
   floating in the upper third over a full scrim (bar, results, and a hint
   footer in a single card; placement invariant across sidebar/panel
-  states); **/** opens the buddy
+  states; a bordered circle × at the end of its bar dismisses it — the
+  smaller ghost × beside it only clears the typed text); **/** opens the buddy
   panel when needed and focuses its search field; **⌘I** toggles the info
   panel — collapse/expand, or open it when no buddy panel is up. All work
   even when a buddy homepage iframe has focus (the iframe forwards the

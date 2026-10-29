@@ -102,7 +102,8 @@ body.sb-closed #sidebar .sb-tipjar, body.sb-closed #sidebar #sb-tools #sb-gear, 
 body.sb-closed #sidebar .navbtn .nlab, body.sb-closed #sidebar .navbtn .navgrip, body.sb-closed #sidebar .nav-sec h3,
 body.sb-closed #sidebar #views-sec h3{display:none}
 body.sb-closed #sidebar .sb-brand-sticky{display:none} /* Dave 2026-10-15: empty bar serves no purpose on the collapsed rail */
-body.sb-closed #sidebar #views-sec{display:none} /* Dave 2026-10-28: no Views stack in the rail — the current-view icon + its popover (rail-bottom) carry view switching when collapsed */
+body.sb-closed #sidebar #views-sec{display:none}
+body.sb-closed #sidebar #collections-sec{display:none} /* Dave 2026-10-28: no Views stack in the rail — the current-view icon + its popover (rail-bottom) carry view switching when collapsed */
 body.sb-closed #sidebar #sb-tools{position:static;display:flex;justify-content:center;margin:0 auto}
 /* Dave 2026-10-14: round selection indicator on the mini rail (not a rounded rect) */
 body.sb-closed #view-nav .navbtn.sel{border-radius:50%;box-shadow:none}
@@ -318,7 +319,9 @@ body.sb-closed #main .zoombar{left:calc(50% + 38px)}
 .navbtn .nic{width:20px;text-align:center;color:var(--muted)}
 /* Views always stack vertically (desktop + iPad); phone keeps the same */
 #view-nav{display:flex;flex-direction:column;gap:2px}
+#collection-nav{display:flex;flex-direction:column;gap:2px}
 #view-nav .navbtn{flex:none;width:100%}
+#collection-nav .navbtn{flex:none;width:100%}
 /* Pane toggles (Dave 2026-10-16): show/hide the Atlas chart and orphan subviews.
    Lives in the view nav (icon strip); only visible when the Atlas view is active. */
 #pane-toggles{display:flex;flex-direction:column;gap:6px;padding:8px 4px 4px;margin-top:4px;
@@ -2112,6 +2115,7 @@ body:has(#sidebar.sb-floating) #sb-resize{display:none}
     #rail-viewpop button:hover{background:var(--ghost)}
     #rail-viewpop button.sel{color:var(--accent);font-weight:600}
     #rail-viewpop .rv-ic{width:22px;text-align:center;flex:0 0 auto}
+#rail-viewpop .rv-head{font-size:.6875rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text2);padding:6px 10px 4px}
     /* Views section docked at the sidebar footer, above the Tip Jar, resizable.
        Dave 2026-10-21: the Views surface is SOLID \u2014 var(--hover), one step
        up the surface ladder from the buddy list's var(--panel) in both
@@ -2120,7 +2124,7 @@ body:has(#sidebar.sb-floating) #sb-resize{display:none}
     body:not(.sb-closed) #views-sec{position:sticky;bottom:42px;z-index:6;margin-left:-14px;margin-right:-14px;padding-left:14px;padding-right:14px;background:var(--hover);border-top:1px solid var(--border)}
     body.glass-panels #views-sec{background:var(--hover)}
     #views-resize{height:12px;margin:0 -14px;cursor:ns-resize;touch-action:none;position:relative}
-    #views-resize::after{content:"";position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:21px;height:14px;
+    #views-resize::after{content:"";position:absolute;left:50%;top:calc(50% + 3px);transform:translate(-50%,-50%);width:21px;height:14px;
       background-image:var(--grip-dot);
       background-size:var(--grip-tile) var(--grip-tile);background-position:0 0;background-repeat:repeat}
     #views-resize:hover::after{--gripdot:var(--text2)}
@@ -2688,8 +2692,10 @@ body.find-open #find-card{display:block;animation:findIn .14s cubic-bezier(.32,.
 #find-bar .find-ic{display:flex;flex:0 0 auto;color:var(--muted)}
 #find-input{flex:1;min-width:0;background:none;border:none;outline:none;color:var(--text);font:inherit;font-size:1rem;padding:4px 0;-webkit-appearance:none;appearance:none}
 #find-input::-webkit-search-cancel-button,#find-input::-webkit-search-decoration{display:none;-webkit-appearance:none}
-#find-clear{flex:0 0 auto;width:30px;height:30px;border-radius:50%;border:none;background:var(--ghost);color:var(--text2);font-size:1rem;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0}
+#find-clear{flex:0 0 auto;width:26px;height:26px;border-radius:50%;border:none;background:var(--ghost);color:var(--text2);font-size:.875rem;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0}
 #find-clear:hover{color:var(--text)}
+#find-close{flex:0 0 auto;width:30px;height:30px;border-radius:50%;border:1.5px solid var(--border);background:transparent;color:var(--text);cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0}
+#find-close:hover{border-color:var(--accent);color:var(--accent)}
 #find-menu{max-height:min(46vh,420px);overflow-y:auto;border-top:1px solid var(--border);padding:6px;box-sizing:border-box;scrollbar-width:none}
 #find-menu::-webkit-scrollbar{display:none}
 #find-foot{border-top:1px solid var(--border);padding:8px 14px;font-size:.71875rem;color:var(--muted)}
@@ -3342,6 +3348,13 @@ const VIEW_DEFS = [
   ['changelog','Change Log','🕘'],
   ['releases','Release Notes','🎁'],
 ];
+/* Dave 2026-10-28: Views vs Collections. A view is a way of looking at the
+   whole tree; a collection is a gathered set of specific objects. Favorites,
+   Flagged and Business Plans are collections - they get their own section on
+   the buddy panel and their own group in the view popovers. Everything else
+   in VIEW_DEFS is a view. */
+const COLLECTION_VIEWS = ['favorites', 'flagged', 'plans'];
+function isCollectionView(v){ return COLLECTION_VIEWS.indexOf(v) >= 0; }
 const VIEW_TIPS = {
   tree: 'Atlas — seven lenses on your buddy hierarchy. Tap the pill to switch views. Click a node to open its details. Drag the background to pan, scroll to zoom. Drag a node onto another node to reparent it.',
   projects: 'Projects list — every buddy in hierarchy order with status. Click a tile to filter by attention status. Click the chevron to expand/collapse sections.',
@@ -4029,10 +4042,12 @@ function renderNav(){
   /* Dave 2026-10-20: the expand chevron no longer leads this stack.
      Dave 2026-10-21 (Job 5): it lives only in the rail (#rail-expand) —
      the short-lived corner button is gone; Recents owns the corner. */
-  document.getElementById('view-nav').innerHTML =
-    views.map(([v,l,ic]) => {
+  const viewRow = ([v,l,ic]) => {
     const cnt = v === 'flagged' ? flaggedIds().length : v === 'favorites' ? favoriteIds().length : null;
-    return '<button class="navbtn'+(S.view===v?' sel':'')+'" data-view="'+v+'" draggable="true" title="'+(VIEW_TIPS[v]||l)+'"><span class="nic">'+ic+'</span><span class="nlab">'+l+(cnt !== null ? ' <span class="attn-count">('+cnt+')</span>' : '')+'</span><span class="navgrip" title="Drag to reorder views"></span></button>'; }).join('');
+    return '<button class="navbtn'+(S.view===v?' sel':'')+'" data-view="'+v+'" draggable="true" title="'+(VIEW_TIPS[v]||l)+'"><span class="nic">'+ic+'</span><span class="nlab">'+l+(cnt !== null ? ' <span class="attn-count">('+cnt+')</span>' : '')+'</span><span class="navgrip" title="Drag to reorder views"></span></button>'; };
+  document.getElementById('view-nav').innerHTML = views.filter(([v]) => !isCollectionView(v)).map(viewRow).join('');
+  const collNavEl = document.getElementById('collection-nav');
+  if (collNavEl) collNavEl.innerHTML = views.filter(([v]) => isCollectionView(v)).map(viewRow).join('');
   /* Dave 2026-10-16: pane toggles for the Atlas view — show/hide the chart (top)
      and orphaned (bottom) subviews. Only rendered when Atlas is the active view. */
   if (S.view === 'tree') {
@@ -4478,9 +4493,7 @@ function applySectionDrag(){
    S.viewOrder. The grip never switches views (see the .navgrip click guard). */
 const viewGripDrag = { cand: null, drag: null };
 function applyViewGripDrag(){
-  const nav = document.getElementById('view-nav');
-  if (!nav) return;
-  nav.querySelectorAll('.navgrip').forEach(grip => {
+  document.querySelectorAll('#view-nav .navgrip, #collection-nav .navgrip').forEach(grip => {
     if (grip.dataset.vdrag) return;
     grip.dataset.vdrag = '1';
     grip.addEventListener('pointerdown', e => {
@@ -4498,7 +4511,7 @@ function applyViewGripDrag(){
     if (viewGripDrag.drag) {
       if (e.pointerId !== viewGripDrag.drag.pid) return;
       const d = viewGripDrag.drag;
-      const nav = document.getElementById('view-nav');
+      const nav = d.btn ? d.btn.closest('#view-nav, #collection-nav') : null;
       if (!nav || !d.btn) return;
       let target = null, before = true;
       const rows = Array.from(nav.querySelectorAll(':scope > button.navbtn[data-view]')).filter(b => b !== d.btn);
@@ -4541,7 +4554,7 @@ function applyViewGripDrag(){
         d.btn.classList.remove('item-dragging');
         d.btn.draggable = true;
       }
-      const nav = document.getElementById('view-nav');
+      const nav = d.btn ? d.btn.closest('#view-nav, #collection-nav') : null;
       // Move to the divider's landing spot on drop (Dave 2026-10-14).
       const vdiv = document.getElementById('view-drag-divider');
       if (vdiv) vdiv.remove();
@@ -5439,11 +5452,18 @@ function closeRailViewPop(){
   document.removeEventListener('pointerdown', railPopOutside, true);
   document.removeEventListener('keydown', railPopEsc, true);
 }
+function viewPopHtml(){
+  const row = v => '<button type="button" data-view="' + v[0] + '"' + (S.view === v[0] ? ' class="sel"' : '') + '><span class="rv-ic" aria-hidden="true">' + v[2] + '</span>' + v[1] + (v[0] === 'flagged' ? ' (' + flaggedIds().length + ')' : v[0] === 'favorites' ? ' (' + favoriteIds().length + ')' : '') + '</button>';
+  const vs = VIEW_DEFS.filter(v => !isCollectionView(v[0]));
+  const cs = VIEW_DEFS.filter(v => isCollectionView(v[0]));
+  return (vs.length ? '<div class="rv-head">Views</div>' + vs.map(row).join('') : '')
+       + (cs.length ? '<div class="rv-head">Collections</div>' + cs.map(row).join('') : '');
+}
 function toggleRailViewPop(){
   if (document.getElementById('rail-viewpop')) { closeRailViewPop(); return; }
   const btn = document.getElementById('rail-curview'); if (!btn) return;
   const p = document.createElement('div'); p.id = 'rail-viewpop'; p.setAttribute('role', 'menu');
-  p.innerHTML = VIEW_DEFS.map(v => '<button type="button" data-view="' + v[0] + '"' + (S.view === v[0] ? ' class="sel"' : '') + '><span class="rv-ic" aria-hidden="true">' + v[2] + '</span>' + v[1] + (v[0] === 'flagged' ? ' (' + flaggedIds().length + ')' : v[0] === 'favorites' ? ' (' + favoriteIds().length + ')' : '') + '</button>').join('');
+  p.innerHTML = viewPopHtml();
   document.body.appendChild(p);
   document.body.classList.add('viewpop-open');
   const r = btn.getBoundingClientRect();
@@ -5533,7 +5553,7 @@ function toggleRecentsPop(anchorBtn){
   fitPop();
   p.addEventListener('click', e => {
     if (e.target.closest('[data-recents-more]')) { shown += 10; renderRows(); fitPop(); return; }
-    const row = e.target.closest('[data-recent-buddy]'); if (row) { closeRecentsPop(); openBuddy(row.getAttribute('data-recent-buddy')); }
+    const row = e.target.closest('[data-recent-buddy]'); if (row) { closeRecentsPop(); selectBuddy(row.getAttribute('data-recent-buddy')); if (isDrawerNav()) setSidebarOpen(false); }
   });
   document.addEventListener('pointerdown', recentsPopOutside, true);
   document.addEventListener('keydown', recentsPopEsc, true);
@@ -11950,6 +11970,7 @@ function initPlansToggle(){
 /* Collapsible sidebar sections: Views and Buddies headers toggle like Business Plans */
 function initNavSecToggles(){
   [['views-toggle', 'views-sec', 'viewsCollapsed'],
+   ['collections-toggle', 'collections-sec', 'collectionsCollapsed'],
    ['buddies-toggle', 'buddies-sec', 'buddiesCollapsed']].forEach(([tid, sid, key]) => {
     const t = document.getElementById(tid);
     const sec = document.getElementById(sid);
@@ -12427,7 +12448,7 @@ function togglePillViewPop(){
   if (document.getElementById('rail-viewpop')) { closeRailViewPop(); return; }
   const btn = document.getElementById('view-pill'); if (!btn) return;
   const p = document.createElement('div'); p.id = 'rail-viewpop'; p.setAttribute('role', 'menu');
-  p.innerHTML = VIEW_DEFS.map(v => '<button type="button" data-view="' + v[0] + '"' + (S.view === v[0] ? ' class="sel"' : '') + '><span class="rv-ic" aria-hidden="true">' + v[2] + '</span>' + v[1] + (v[0] === 'flagged' ? ' (' + flaggedIds().length + ')' : v[0] === 'favorites' ? ' (' + favoriteIds().length + ')' : '') + '</button>').join('');
+  p.innerHTML = viewPopHtml();
   document.body.appendChild(p);
   document.body.classList.add('viewpop-open');
   const r = btn.getBoundingClientRect();
@@ -12553,7 +12574,8 @@ function initFind(){
   const bar = document.createElement('div'); bar.id = 'find-bar';
   bar.innerHTML = '<span class="find-ic" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="M15.5 15.5L21 21" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></span>'
     + '<input type="search" id="find-input" placeholder="Find a buddy…" aria-label="Find a buddy" autocomplete="off">'
-    + '<button type="button" id="find-clear" aria-label="Clear search" title="Clear search" hidden>×</button>';
+    + '<button type="button" id="find-clear" aria-label="Clear search" title="Clear search" hidden>×</button>'
+    + '<button type="button" id="find-close" aria-label="Dismiss find panel" title="Dismiss (esc)">' + plainX(15) + '</button>';
   const menu = document.createElement('div'); menu.id = 'find-menu'; menu.setAttribute('role', 'listbox');
   const card = document.createElement('div'); card.id = 'find-card';
   const foot = document.createElement('div'); foot.id = 'find-foot'; foot.textContent = '\u2191\u2193 navigate \u00B7 \u21B5 open \u00B7 esc dismiss';
@@ -12573,6 +12595,7 @@ function initFind(){
     }
   });
   document.getElementById('find-clear').addEventListener('click', () => { input.value = ''; renderFindMenu(); input.focus(); });
+  document.getElementById('find-close').addEventListener('click', closeFind);
   menu.addEventListener('click', e => { const row = e.target.closest('[data-find-buddy]'); if (row) pickFindResult(row.getAttribute('data-find-buddy')); });
   /* Dave 2026-10-25: Tab cycles the suggestion list, like the buddy panel —
      Tab/Shift+Tab and the arrow keys move through the rows and wrap around;
@@ -14386,6 +14409,8 @@ syncRailCurView();
   <div class="nav-sec" id="views-sec">
   <div id="views-resize" title="Drag to resize the Views section" aria-hidden="true"></div>
   <h3 style="cursor:pointer" id="views-toggle"><span class="nav-arrow" id="views-arrow">\u203a</span> Views</h3><div id="view-nav"></div></div>
+  <div class="nav-sec" id="collections-sec">
+  <h3 style="cursor:pointer" id="collections-toggle"><span class="nav-arrow" id="collections-arrow">\u203a</span> Collections</h3><div id="collection-nav"></div></div>
   <div class="sb-tipjar"><a href="https://ko-fi.com/davedellaquila" target="_blank" rel="noopener" title="Support the buddy system"><span class="jar">\U0001FAD9</span> <span class="tiptext">Tip the jar</span></a></div>
   <div id="rail-mid"><button type="button" id="rail-recents" title="Recent buddies" aria-label="Recent buddies"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 8.5A9 9 0 1 1 3.2 13.6"/><path d="M3.2 3.8v4.8h4.8"/><path d="M12 7.5V12l3 2"/></svg></button><button type="button" id="rail-find" title="Find (\u2318F)" aria-label="Find"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L21 21"/></svg></button><button type="button" id="rail-plans" title="Business Plans" aria-label="Business Plans"><span aria-hidden="true">\U0001F4BC</span></button></div>
   <div id="rail-bottom"><button type="button" id="rail-curview" title="Current view" aria-label="Current view - tap to switch views"></button><button type="button" id="rail-gear" title="Settings (⌘,)" aria-label="Settings"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button></div>
