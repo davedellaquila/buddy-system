@@ -2347,10 +2347,15 @@ a.plan-card-name:hover{text-decoration:underline}
    the scroller instead (padding, then margin, builds 2209/2214) was
    wrong twice over: the band belongs at the window's bottom, where
    Views and the Tip Jar sit below the scroller - a scroller margin
-   just opened a dead gap above the Views section. */
-body:has(#main.homepage-mode):has(#view-project.active) #homepage-wrap{padding-bottom:96px}
+   just opened a dead gap above the Views section.
+   Dave 2026-10-28 (late): the wide "Refresh page" rectangle that used
+   to sit under the frame is retired (Refresh is a disc in #hp-nav
+   now), so the frame's band only has to clear the discs themselves:
+   20px offset + 56px disc + 12px air = 88px. The sidebar's own 96px
+   reservation above is unchanged. */
+body:has(#main.homepage-mode):has(#view-project.active) #homepage-wrap{padding-bottom:88px}
 @media (min-width:640px){
-  body:not(.sb-closed):not(.standalone):has(#view-project.active) #homepage-wrap{padding-bottom:96px}
+  body:not(.sb-closed):not(.standalone):has(#view-project.active) #homepage-wrap{padding-bottom:88px}
   body:not(.sb-closed):not(.standalone) #sidebar{padding-bottom:96px}
 }
 @media (max-width:760px){#main #view-project.active{min-height:calc(100vh - 88px)}
@@ -6159,20 +6164,12 @@ function renderProjectView(){
     open.rel = 'noopener';
     open.textContent = 'Open in a new tab';
     wrap.appendChild(open);
-    // Refresh control (Dave 2026-10-16): the browser's own reload button
-    // refreshes the whole dashboard, not the embedded page — this reloads
-    // just the homepage iframe so content changes (renames, new data) show up.
-    const refresh = document.createElement('button');
-    refresh.id = 'homepage-refresh';
-    refresh.type = 'button';
-    refresh.textContent = '↻ Refresh page';
-    refresh.title = 'Reload this homepage';
-    refresh.style.cssText = 'margin-left:12px;background:none;border:1px solid var(--border);border-radius:8px;color:var(--muted);font-size:.8125rem;padding:5px 12px;cursor:pointer';
-    refresh.addEventListener('click', () => {
-      try { frame.contentWindow.location.reload(); }
-      catch (e) { frame.src = frame.src; }
-    });
-    wrap.appendChild(refresh);
+    // Refresh control (Dave 2026-10-16, moved 2026-10-28): the browser's
+    // own reload button refreshes the whole dashboard, not the embedded
+    // page. This used to be a wide "Refresh page" rectangle under the
+    // frame; Dave retired the rectangle - Refresh is now the fourth disc
+    // in #hp-nav (refreshHomepageFrame), and the frame reclaims the
+    // rectangle's height.
   } else {
     // No custom URL: auto-generate homepage
     const open = document.createElement('span');
@@ -6213,9 +6210,24 @@ function hpNavActive(){
     && !!(pv && pv.classList.contains('active'))
     && !document.querySelector('#view-buddy.sheet.active');
 }
+/* Dave 2026-10-28: the Refresh disc reloads just the framed homepage -
+   the browser's own reload would refresh the whole dashboard. Same
+   reload the retired under-frame rectangle performed. */
+function refreshHomepageFrame(){
+  const frame = document.getElementById('homepage-frame');
+  if (!frame || frame.tagName !== 'IFRAME') return;
+  try { frame.contentWindow.location.reload(); }
+  catch (e) { frame.src = frame.src; }
+}
 function updateHpNav(){
   const prev = document.getElementById('hp-prev'), next = document.getElementById('hp-next');
   if (!prev || !next) return;
+  const refr = document.getElementById('hp-refresh');
+  if (refr) {
+    const frame = document.getElementById('homepage-frame');
+    refr.disabled = !(hpNavActive() && frame && frame.tagName === 'IFRAME');
+    refr.title = refr.disabled ? 'Refresh page' : 'Reload this homepage';
+  }
   const ids = hpCollection();
   const i = ids.indexOf(projectId());
   prev.disabled = !(i > 0);
@@ -14000,6 +14012,7 @@ document.addEventListener('click', e => {
   if (e.target.closest && e.target.closest('#hp-find')) { toggleFind(); return; }
   if (e.target.closest && e.target.closest('#hp-prev')) { hpStep(-1); return; }
   if (e.target.closest && e.target.closest('#hp-next')) { hpStep(1); return; }
+  if (e.target.closest && e.target.closest('#hp-refresh')) { refreshHomepageFrame(); return; }
   if (e.target.closest && e.target.closest('#menu-btn')) {
     // State-dependent per Dave's rule: with the right (detail) panel open, the
     // floating › closes it (same screen position as the drawer's open chevron).
@@ -14501,6 +14514,9 @@ syncRailCurView();
 </button>
 <button type="button" id="hp-next" title="Next homepage" aria-label="Next buddy homepage">
   <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><path d="M5.5 9.5L12 16l6.5-6.5" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+</button>
+<button type="button" id="hp-refresh" title="Reload this homepage" aria-label="Refresh page">
+  <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><polyline points="23 4 23 10 17 10" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
 </button>
 </div>
 <main id="main">

@@ -1,5 +1,12 @@
 ## 2026-10-28
 
+### 20261028.2303 — Refresh rectangle retired: Refresh is the fourth homepage disc (Dave)
+- Dave: "Instead of having that wide refresh button above the discs, why don't we add a fourth disc that's refresh and that'll save some vertical height, by getting rid of that refresh rectangle."
+- The wide "Refresh page" bar under the framed homepage is removed. #hp-nav gains a fourth glass disc, #hp-refresh (circular-arrow icon, same styling), after Next; it performs the identical reload of the framed page (refreshHomepageFrame), and dims/disables whenever no framed homepage is showing (auto-generated homepages and other views), exactly as Prev/Next dim at the ends of the collection.
+- Vertical economy: with the rectangle gone the frame reclaims its height, and the wrap's disc-clearance band (builds 2209–2224) drops from 96px to 88px — now sized to the disc cluster alone (20px offset + 56px disc + 12px air). The sidebar's own 96px reservation is unchanged.
+
+## 2026-10-28
+
 ### 20261028.2259 — Photos: panel strip loads thumbnails, not multi-MB originals (Dave)
 - Dave: uploaded photos "did not load on the Mac" and took forever on the iPad. Cause: the info panel's Photos strip used each original's full-size download URL as the img src — Model A Buddy's three originals are 3.0–3.4MB each (~10MB for a 150px-tall strip). Same-named 480px thumbnails (~40KB) already sit in photos/<id>/thumbs/ but no code used them.
 - loadPhotos now also lists the thumbs/ folder and pairs by filename: the strip's img src is the thumbnail when one exists, the click-through href stays the full-size original, and the delete button carries the thumb path so deleting a photo cleans up its thumbnail too. Uploads now generate and file a 480px JPEG thumbnail beside the original (best-effort — a failed thumb never fails the upload; small/already-small images skip it).
