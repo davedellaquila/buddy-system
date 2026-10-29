@@ -2085,7 +2085,7 @@ body:has(#sidebar.sb-floating) #sb-resize{display:none}
        Find + Plans, between the expand slot and the current-view slot. */
     #rail-mid{display:none}
     body.sb-closed #rail-mid{display:flex;flex-direction:column;align-items:center;gap:4px;padding:2px 0}
-    #rail-find,#rail-plans,#rail-gear{width:44px;height:44px;border-radius:12px;border:1px solid transparent;background:none;color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1.25rem;padding:0}
+    #rail-find,#rail-plans,#rail-gear,#rail-recents{width:44px;height:44px;border-radius:12px;border:1px solid transparent;background:none;color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1.25rem;padding:0}
     #rail-find:hover,#rail-plans:hover{color:var(--accent);border-color:var(--border);background:var(--ghost)}
     #rail-expand{width:44px;height:44px;border-radius:50%;border:1px solid var(--border);background:color-mix(in srgb, var(--panel) 72%, transparent);color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0}
     #rail-expand:hover{color:var(--accent);border-color:var(--accent)}
@@ -5435,15 +5435,17 @@ function toggleRailPlanPop(){
    recentsCount setting (default 10) with a "Show more" row paging 10 at a
    time (Dave, 2026-10-25). Picking a row opens that buddy's panel. */
 function recentsPopEsc(e){ if (e.key === 'Escape') { e.stopPropagation(); closeRecentsPop(); } }
-function recentsPopOutside(e){ const p = document.getElementById('recents-pop'); if (p && !p.contains(e.target) && !e.target.closest('#recents-btn')) closeRecentsPop(); }
+function recentsPopOutside(e){ const p = document.getElementById('recents-pop'); if (p && !p.contains(e.target) && !e.target.closest('#recents-btn, #rail-recents')) closeRecentsPop(); }
 function closeRecentsPop(){
   const p = document.getElementById('recents-pop'); if (p) p.remove();
   document.removeEventListener('pointerdown', recentsPopOutside, true);
   document.removeEventListener('keydown', recentsPopEsc, true);
 }
-function toggleRecentsPop(){
+function toggleRecentsPop(anchorBtn){
   if (document.getElementById('recents-pop')) { closeRecentsPop(); return; }
-  const btn = document.getElementById('recents-btn'); if (!btn) return;
+  /* Dave 2026-10-28: the rail carries Recents too — the same list, anchored
+     to whichever button opened it. */
+  const btn = anchorBtn || document.getElementById('recents-btn'); if (!btn) return;
   let n = parseInt(getSetting('recentsCount'), 10); if (!(n > 0)) n = 10;
   const all = (Array.isArray(S.recentBuddies) ? S.recentBuddies : []).filter(id => byId[id]).slice(0, 50);
   // Dave 2026-10-25: the menu pages — the first page is recentsCount (default
@@ -5461,7 +5463,9 @@ function toggleRecentsPop(){
   };
   renderRows();
   const r = btn.getBoundingClientRect();
-  p.style.left = Math.max(8, r.left) + 'px'; p.style.top = (r.bottom + 8) + 'px';
+  /* The rail anchor opens the pop beside the rail; the corner/footer
+     button opens it under itself (flipping up on overflow, below). */
+  p.style.left = (btn.id === 'rail-recents' ? (r.right + 8) : Math.max(8, r.left)) + 'px'; p.style.top = (r.bottom + 8) + 'px';
   // A menu never opens off-screen (Dave 2026-10-28): if the pop would run
   // past the window's bottom edge — the footer placement, where the button
   // lives at bottom-left — it grows UP from the button instead.
@@ -13818,6 +13822,7 @@ document.addEventListener('click', e => {
   if (e.target.closest && e.target.closest('#rail-curview')) { toggleRailViewPop(); return; }
   if (e.target.closest && e.target.closest('#rail-find')) { closeRailViewPop(); toggleFind(); return; }
   if (e.target.closest && e.target.closest('#rail-plans')) { toggleRailPlanPop(); return; }
+  if (e.target.closest && e.target.closest('#rail-recents')) { closeRailViewPop(); toggleRecentsPop(document.getElementById('rail-recents')); return; }
   if (e.target.closest && e.target.closest('#sb-close')) { setSidebarOpen(document.body.classList.contains('sb-closed')); return; }
   if (e.target.closest && e.target.closest('#hp-back')) { goBack(); return; }
   if (e.target.closest && e.target.closest('#hp-find')) { toggleFind(); return; }
@@ -14300,7 +14305,7 @@ syncRailCurView();
   <h3 style="cursor:pointer" id="views-toggle"><span class="nav-arrow" id="views-arrow">\u203a</span> Views</h3><div id="view-nav"></div></div>
   <div class="sb-tipjar"><a href="https://ko-fi.com/davedellaquila" target="_blank" rel="noopener" title="Support the buddy system"><span class="jar">\U0001FAD9</span> <span class="tiptext">Tip the jar</span></a></div>
   <div id="rail-mid"><button type="button" id="rail-find" title="Find (\u2318F)" aria-label="Find"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L21 21"/></svg></button><button type="button" id="rail-plans" title="Business Plans" aria-label="Business Plans"><span aria-hidden="true">\U0001F4BC</span></button></div>
-  <div id="rail-bottom"><button type="button" id="rail-curview" title="Current view" aria-label="Current view - tap to switch views"></button><button type="button" id="rail-gear" title="Settings (⌘,)" aria-label="Settings"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button></div>
+  <div id="rail-bottom"><button type="button" id="rail-curview" title="Current view" aria-label="Current view - tap to switch views"></button><button type="button" id="rail-recents" title="Recent buddies" aria-label="Recent buddies"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 8.5A9 9 0 1 1 3.2 13.6"/><path d="M3.2 3.8v4.8h4.8"/><path d="M12 7.5V12l3 2"/></svg></button><button type="button" id="rail-gear" title="Settings (⌘,)" aria-label="Settings"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button></div>
 </aside>
 <div id="sb-resize" title="Drag left or right to resize the sidebar. Double-click to close."></div>
 <button type="button" id="sb-tab" title="Open sidebar" aria-label="Open sidebar"></button>

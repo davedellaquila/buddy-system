@@ -129,9 +129,10 @@ Build: `build.py` generates `index.html` from `buddies.json` + `plans.json`.
   the info panel and the buddy panel together, from any focus location,
   including the search box.
 - **Collapsed rail fits its icons** — the icon rail's height shrink-wraps
-  its contents: exactly five controls, top to bottom — the expand
+  its contents: exactly six controls, top to bottom — the expand
   chevron, Find, Business Plans (a menu), the current-view icon (a view
-  picker), and Settings. Every icon visible, no trailing void below the
+  picker), Recents (the same recent-buddies popover the corner button
+  opens), and Settings. Every icon visible, no trailing void below the
   last one. On a viewport too short for the stack, the rail caps at the
   viewport height and scrolls internally. Expanding the rail glides on
   the same width/transform transition as collapsing, in reverse: the
