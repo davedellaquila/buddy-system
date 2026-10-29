@@ -90,6 +90,8 @@ h2{font-family:var(--serif);font-size:24px;margin:38px 0 6px}
 .jr-head{display:flex;align-items:center;gap:10px;background:var(--card);border:1px solid var(--border);border-radius:8px;padding:12px 16px;cursor:pointer;text-align:left;width:100%;color:var(--text);font:inherit;-webkit-tap-highlight-color:transparent}
 .jr-head:hover{border-color:var(--accent)}
 .jr-head .jr-date{font-family:var(--serif);font-weight:700;font-size:16px}
+.jr-head .jr-main{display:flex;flex-direction:column;gap:2px;min-width:0}
+.jr-head .jr-sum{font-size:13.5px;color:var(--muted);line-height:1.45}
 .jr-head .jr-chev{color:var(--muted);font-size:13px;margin-left:auto;flex:none}
 .jr-panel{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:18px 20px;margin-top:8px}
 .jr-status{font-size:13.5px;color:var(--muted);margin-top:10px;min-height:18px}
@@ -205,7 +207,7 @@ h2{font-family:var(--serif);font-size:24px;margin:38px 0 6px}
   </div>
 
   <h2 id="entries">Read the journal</h2>
-  <p class="h2sub">Your entries, readable right here — but only by you. Nothing entry-shaped lives on this page: the list and the words load live from the private <a href="https://github.com/davedellaquila/journal-buddy">journal-buddy repo</a>, straight to this device, using the same GitHub token as the Desk and the dump box. No token on this device, no entries — that's the lock working. Fallback: the <a href="https://github.com/davedellaquila/journal-buddy/blob/master/journal/INDEX.md">journal index on GitHub</a>.</p>
+  <p class="h2sub">Your entries, readable right here — but only by you. Each day in the list carries its one-sentence summary — the day's highlight, in your own words — so you can feel the shape of a week without opening a page. Nothing entry-shaped lives on this page: the list, the summaries, and the words load live from the private <a href="https://github.com/davedellaquila/journal-buddy">journal-buddy repo</a>, straight to this device, using the same GitHub token as the Desk and the dump box. No token on this device, no entries — that's the lock working. Fallback: the <a href="https://github.com/davedellaquila/journal-buddy/blob/master/journal/INDEX.md">journal index on GitHub</a>.</p>
   <section class="reader" id="reader">
     <div class="reader-locked" hidden>
       <p>🔒 Your journal is locked on this device.</p>
@@ -568,11 +570,17 @@ h2{font-family:var(--serif);font-size:24px;margin:38px 0 6px}
     var d = new Date(+m[1], +m[2] - 1, +m[3]);
     return d.toLocaleDateString(undefined, {weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'});
   }
-  var loaded = false;
+  var loaded = false, summaries = {};
   async function loadList(){
     st.textContent = 'Loading your entries from the private repo…';
     try {
       var items = await ghApi('/repos/davedellaquila/' + REPO + '/contents/journal?ref=master');
+      /* One-sentence day summaries live in journal/summaries.json in the same
+         private repo — fetched with the same token, shown only in this gated list. */
+      try {
+        var sj = await ghApi('/repos/davedellaquila/' + REPO + '/contents/journal/summaries.json?ref=master');
+        summaries = JSON.parse(decodeB64(sj.content));
+      } catch(e) { summaries = {}; }
       var files = items.filter(function(x){ return /^\d{4}-\d{2}-\d{2}\.md$/.test(x.name); })
                        .sort(function(a, b){ return a.name < b.name ? 1 : -1; });
       list.innerHTML = '';
@@ -596,13 +604,23 @@ h2{font-family:var(--serif);font-size:24px;margin:38px 0 6px}
     head.type = 'button';
     head.className = 'jr-head';
     head.setAttribute('aria-expanded', 'false');
+    var mainCol = document.createElement('span');
+    mainCol.className = 'jr-main';
     var date = document.createElement('span');
     date.className = 'jr-date';
     date.textContent = '📓 ' + fmtDate(f.name);
+    mainCol.appendChild(date);
+    var sum = summaries[f.name.replace(/\.md$/, '')];
+    if (sum) {
+      var sumEl = document.createElement('span');
+      sumEl.className = 'jr-sum';
+      sumEl.textContent = sum;
+      mainCol.appendChild(sumEl);
+    }
     var chev = document.createElement('span');
     chev.className = 'jr-chev';
     chev.textContent = '▸';
-    head.appendChild(date);
+    head.appendChild(mainCol);
     head.appendChild(chev);
     var panel = document.createElement('div');
     panel.className = 'jr-panel';
