@@ -2866,6 +2866,18 @@ html.light .wc-got{background:#007AFF}
   body:not(.standalone):not(.ph-left-open) #rail-top button,body:not(.standalone):not(.ph-left-open) #rail-mid button{pointer-events:auto;background:color-mix(in srgb, var(--panel) 16%, transparent);-webkit-backdrop-filter:blur(14px) saturate(1.6);backdrop-filter:blur(14px) saturate(1.6);border:1px solid var(--border);border-radius:50%;box-shadow:0 2px 14px var(--shadow)}
   body:not(.standalone):not(.ph-left-open) #rail-top{display:flex;flex-direction:column;align-items:center;gap:4px;padding:11px 0 0}
   body:not(.standalone):not(.ph-left-open) #rail-mid{display:flex;flex-direction:column;align-items:center;gap:8px;padding:0;border-top:none;position:absolute;top:50%;left:0;right:0;transform:translateY(-50%)}
+  /* Dave 2026-10-29 (phone Atlas): no Quick Answers section, and a
+     compact toolbar. Quick Answers lives only in the tree chrome, so
+     hiding it here is Atlas-only by construction; other views and
+     desktop are untouched. The toolbar kept every control but wrapped
+     to about three rows (~180px: 44px rows, 12px gaps, 12px padding,
+     a 180px slider). Compact: 40px targets, a 120px slider, 8/10px
+     gaps, 6px padding - about two rows, ~108px. */
+  #tree-chrome-main #quick-answers{display:none}
+  .atlas-controls{padding:6px 8px;gap:8px 10px}
+  .atlas-controls input[type=range].zrange{width:120px;min-width:120px;height:40px}
+  .atlas-controls .util-btn{width:40px;height:40px}
+  .atlas-controls .color-dot{width:40px;height:40px}
     .strip-ic{width:44px;height:44px;flex:0 0 auto;border-radius:12px;border:1px solid transparent;background:none;color:var(--text);font-size:1.375rem;display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0}
   .strip-ic:hover{background:var(--ghost)}
   .strip-ic.sel{background:var(--wash);border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent)}

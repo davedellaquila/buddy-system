@@ -3039,6 +3039,18 @@ html.light .wc-got{background:#007AFF}
   body:not(.standalone):not(.ph-left-open) #rail-top button,body:not(.standalone):not(.ph-left-open) #rail-mid button{pointer-events:auto;background:color-mix(in srgb, var(--panel) 16%, transparent);-webkit-backdrop-filter:blur(14px) saturate(1.6);backdrop-filter:blur(14px) saturate(1.6);border:1px solid var(--border);border-radius:50%;box-shadow:0 2px 14px var(--shadow)}
   body:not(.standalone):not(.ph-left-open) #rail-top{display:flex;flex-direction:column;align-items:center;gap:4px;padding:11px 0 0}
   body:not(.standalone):not(.ph-left-open) #rail-mid{display:flex;flex-direction:column;align-items:center;gap:8px;padding:0;border-top:none;position:absolute;top:50%;left:0;right:0;transform:translateY(-50%)}
+  /* Dave 2026-10-29 (phone Atlas): no Quick Answers section, and a
+     compact toolbar. Quick Answers lives only in the tree chrome, so
+     hiding it here is Atlas-only by construction; other views and
+     desktop are untouched. The toolbar kept every control but wrapped
+     to about three rows (~180px: 44px rows, 12px gaps, 12px padding,
+     a 180px slider). Compact: 40px targets, a 120px slider, 8/10px
+     gaps, 6px padding - about two rows, ~108px. */
+  #tree-chrome-main #quick-answers{display:none}
+  .atlas-controls{padding:6px 8px;gap:8px 10px}
+  .atlas-controls input[type=range].zrange{width:120px;min-width:120px;height:40px}
+  .atlas-controls .util-btn{width:40px;height:40px}
+  .atlas-controls .color-dot{width:40px;height:40px}
     .strip-ic{width:44px;height:44px;flex:0 0 auto;border-radius:12px;border:1px solid transparent;background:none;color:var(--text);font-size:1.375rem;display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0}
   .strip-ic:hover{background:var(--ghost)}
   .strip-ic.sel{background:var(--wash);border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent)}
@@ -5383,7 +5395,7 @@ function renderDevelopSection(){
   const dev = document.getElementById('fset-develop');
   if (!dev) return;
   const simulating = !!devBackup;
-  const buildNum = '20261029.0736';
+  const buildNum = '20261029.0741';
   dev.innerHTML = ''
     + '<label class="fset-check"><input type="checkbox" id="dev-empty-toggle"' + (simulating ? ' checked' : '') + '> <span><strong>Simulate new user</strong> — empty data file, as if opening the shared link fresh</span></label>'
     + '<div class="fineprint" style="margin:8px 0 12px">Build <span style="font-family:monospace">' + escHtml(String(buildNum)) + '</span> · ' + BUDDIES.length + ' buddies in this file</div>'
@@ -7356,7 +7368,7 @@ function renderBuddy(id){
     + attrHead('shared', 'SHARED NOTES', '<span class="attr-value" id="bp-shared-count">(0)</span>', '')
     + '<div class="attr-body">' + attrTipLine('Anybody with repo access can see this note. Saved to the buddy’s repo (docs/notes.md).') + '<textarea class="notes" id="bp-shared-notes" placeholder="Anybody with repo access can see this note."></textarea>'
     + '<p class="fineprint" id="shared-status"></p></div></div>'
-    + '<div class="bp-build">Build 20261029.0736</div>'
+    + '<div class="bp-build">Build 20261029.0741</div>'
     + '</div>';
   // Update every visible label for a buddy after a rename/re-icon, across all
   // Atlas lenses. A rename changes no structure, so labels are patched in place
@@ -10039,7 +10051,7 @@ function renderPlan(id){
     + '<p class="fineprint">Saved on this device. (For your eyes only)</p></div>'
     + '<div class="bp-sec"><h3>📝 Shared notes<span class="info-tip" data-tip="Visible to everyone with access to this project.">\u24d8</span></h3><textarea class="notes" id="bp-shared" placeholder="Shared notes\u2026 (visible to everyone with access)">'+escHtml((S.planShared||{})[id]||'')+'</textarea>'
     + '<p class="fineprint">Shared — visible to everyone with access.</p></div>'
-    + '<div class="bp-build">Build 20261029.0736</div>'
+    + '<div class="bp-build">Build 20261029.0741</div>'
     + '</div>';
   const nt = document.getElementById('bp-notes');
   let t = null;
@@ -13847,14 +13859,14 @@ function openWhatsNew(){
     .then(r => r.ok ? r.text() : '')
     .then(t => {
       const serverBuild = t.trim();
-      if (serverBuild && serverBuild !== '20261029.0736') {
+      if (serverBuild && serverBuild !== '20261029.0741') {
         updBtn.style.display = '';
         updBtn.title = 'Update to build ' + serverBuild;
       }
       // Show build numbers at the top of the sheet (Dave's request 2026-10-12)
-      const myBuild = '20261029.0736';
+      const myBuild = '20261029.0741';
       let buildLine = '<p class="fineprint" style="margin-top:0">You’re on build ' + escHtml(myBuild) + '.';
-      if (serverBuild && serverBuild !== '20261029.0736' && isNewerBuild(serverBuild, myBuild)) {
+      if (serverBuild && serverBuild !== '20261029.0741' && isNewerBuild(serverBuild, myBuild)) {
         buildLine += ' Build ' + escHtml(serverBuild) + ' is available.';
       }
       buildLine += '</p>';
@@ -13924,7 +13936,7 @@ function syncUpdateBanner(){
   if (b.dataset.state !== state) b.dataset.state = state;
 }
 function initVersionCheck(){
-  const myBuild = '20261029.0736';
+  const myBuild = '20261029.0741';
   function showUpdateBanner(serverBuild){
     if (document.getElementById('update-banner')) return;
     const b = document.createElement('div');
