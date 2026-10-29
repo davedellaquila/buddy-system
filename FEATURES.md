@@ -321,8 +321,10 @@ Build: `build.py` generates `index.html` from `buddies.json` + `plans.json`.
 
 - Tracks buddy renames, note edits, hierarchy moves, and app-name changes.
 - Shows `Revert (N)`, "What changed?", and a labeled Dismiss button;
-  persists across reloads via localStorage; reverts all logged changes
-  at once.
+  persists across reloads via localStorage. Revert asks first: a
+  confirmation dialog lists every logged change (old → new, with times)
+  and only its red Revert button proceeds — Cancel, Escape, or a
+  backdrop tap leaves the journal untouched.
 - "What changed?" lists each entry with old → new values; expanding it
   marks entries reviewed so the sticky bar only returns for new changes.
 - The **Changelog** main view keeps the full history permanently, opening

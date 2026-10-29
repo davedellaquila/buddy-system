@@ -1136,6 +1136,19 @@ button.bp-markbtn{font-size:1.68rem;line-height:1;padding:0;width:32px;height:27
 #journal-bar ul{margin:8px 0 4px;padding-left:18px;display:none}
 #journal-bar.open ul{display:block}
 #journal-bar li{margin:3px 0;color:var(--text2)}
+/* Revert confirmation (Dave 2026-10-28): a deliberate gate on the journal
+   bar's destructive button — lists what will be undone before it happens. */
+#j-confirm{position:fixed;inset:0;z-index:10005;background:rgba(10,12,20,.5);-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px);display:flex;align-items:center;justify-content:center;padding:16px}
+#j-confirm .jc-card{background:var(--panel);color:var(--text);border:1px solid var(--border);border-radius:16px;box-shadow:0 24px 60px rgba(0,0,0,.35);max-width:520px;width:100%;max-height:calc(100dvh - 32px);overflow-y:auto;padding:20px}
+#j-confirm h3{margin:0 0 6px;font-size:1.0625rem}
+#j-confirm .jc-warn{margin:0 0 12px;color:var(--text2);font-size:.875rem}
+#j-confirm .jc-list{margin:0 0 16px;padding-left:18px;font-size:.875rem;display:grid;gap:6px;max-height:40vh;overflow-y:auto}
+#j-confirm .jc-list li{color:var(--text2)}
+#j-confirm .jc-btns{display:flex;gap:10px;justify-content:flex-end}
+#j-confirm .jc-btns button{font:inherit;font-weight:600;border-radius:10px;padding:9px 16px;cursor:pointer;border:1px solid var(--border)}
+#j-confirm .jc-cancel{background:var(--ghost);color:var(--text)}
+#j-confirm .jc-revert{background:#d64545;border-color:#d64545;color:#fff}
+#j-confirm .jc-revert:hover{background:#c23333;border-color:#c23333}
 .jchg{color:var(--muted);font-size:.75rem;margin:0 8px}
 .cl-day{font-size:1.25rem;font-weight:700;color:var(--text);margin:28px 0 12px}
 .cl-day:first-child{margin-top:0}
@@ -9869,13 +9882,39 @@ function renderJournal(){
     else renderJournal();
   });
   document.getElementById('j-dismiss').addEventListener('click', () => { markJournalSeen(); renderJournal(); });
-  document.getElementById('j-revert').addEventListener('click', () => { revertJournal(); });
+  document.getElementById('j-revert').addEventListener('click', () => { confirmRevertJournal(); });
 }
 function markJournalSeen(){ (S.journal || []).forEach(c => { c.seen = true; }); save(); }
 function applyBrand(){
   const bn = document.getElementById('brand-name'); const name = S.appName || 'Buddies';
   if (bn && document.activeElement !== bn) bn.textContent = name;
   document.title = name;
+}
+/* Dave 2026-10-28: Revert asks first. One accidental tap on the journal
+   bar undid every logged change at once and cleared the journal — this
+   dialog lists exactly what will be undone and makes the destructive
+   choice the deliberate one. Cancel is the default focus; Escape and a
+   backdrop tap also cancel, leaving the journal untouched. */
+function confirmRevertJournal(){
+  if (document.getElementById('j-confirm')) return;
+  const js = (S.journal || []).slice().reverse();
+  if (!js.length) return;
+  const ov = document.createElement('div'); ov.id = 'j-confirm';
+  ov.setAttribute('role', 'alertdialog'); ov.setAttribute('aria-modal', 'true');
+  ov.innerHTML = '<div class="jc-card">'
+    + '<h3>Revert ' + js.length + ' change' + (js.length === 1 ? '' : 's') + '?</h3>'
+    + '<p class="jc-warn">This undoes all of the changes below and clears the change journal. It cannot be undone.</p>'
+    + '<ul class="jc-list">' + js.map(c => '<li>' + escHtml(c.desc) + changeOldNew(c) + '<span class="jtime">' + escHtml(new Date(c.t).toLocaleString()) + '</span></li>').join('') + '</ul>'
+    + '<div class="jc-btns"><button type="button" class="jc-cancel">Cancel</button>'
+    + '<button type="button" class="jc-revert">Revert ' + js.length + ' change' + (js.length === 1 ? '' : 's') + '</button></div></div>';
+  document.body.appendChild(ov);
+  const onKey = e => { if (e.key === 'Escape') { e.stopPropagation(); close(); } };
+  const close = () => { ov.remove(); document.removeEventListener('keydown', onKey, true); };
+  document.addEventListener('keydown', onKey, true);
+  ov.addEventListener('pointerdown', e => { if (e.target === ov) close(); });
+  ov.querySelector('.jc-cancel').addEventListener('click', close);
+  ov.querySelector('.jc-revert').addEventListener('click', () => { close(); revertJournal(); });
+  const cancelBtn = ov.querySelector('.jc-cancel'); if (cancelBtn) cancelBtn.focus();
 }
 function revertJournal(){
   const js = S.journal.slice().reverse(), n = js.length;
