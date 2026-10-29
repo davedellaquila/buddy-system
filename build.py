@@ -11086,6 +11086,23 @@ async function ghGetFile(repo, path){
 }
 function b64encode(str){ const bytes = new TextEncoder().encode(str); let bin = ''; bytes.forEach(b => { bin += String.fromCharCode(b); }); return btoa(bin); }
 function blobToB64(blob){ return new Promise((res, rej) => { const fr = new FileReader(); fr.onload = () => res(String(fr.result).split(',')[1]); fr.onerror = rej; fr.readAsDataURL(blob); }); }
+/* Dave 2026-10-28: 480px-long-edge JPEG thumbnail of an image blob,
+   as base64 - the panel strip loads these instead of the originals. */
+async function makeThumbB64(blob){
+  try {
+    if (!/^image\//.test(blob.type || '') || /gif|svg/.test(blob.type)) return null;
+    const bmp = await createImageBitmap(blob);
+    const scale = Math.min(1, 480 / Math.max(bmp.width, bmp.height));
+    if (scale >= 1 && blob.size < 150000) { bmp.close && bmp.close(); return null; }
+    const c = document.createElement('canvas');
+    c.width = Math.max(1, Math.round(bmp.width * scale));
+    c.height = Math.max(1, Math.round(bmp.height * scale));
+    c.getContext('2d').drawImage(bmp, 0, 0, c.width, c.height);
+    bmp.close && bmp.close();
+    const tb = await new Promise(res => c.toBlob(res, 'image/jpeg', 0.85));
+    return tb ? blobToB64(tb) : null;
+  } catch (e) { return null; }
+}
 function loadHeicLib(){
   return new Promise((res, rej) => {
     if (window.heic2any) return res();
@@ -11111,13 +11128,29 @@ async function loadPhotos(id){
       const r = await fetch('https://api.github.com/repos/davedellaquila/' + rc.repo + '/contents/' + rc.path, {headers});
       if (r.ok) {
         const j = await r.json();
+        // Dave 2026-10-28: the strip renders 150px tiles - loading the
+        // multi-MB originals for that took forever on the iPad and looked
+        // broken on the Mac. A same-named file under thumbs/ (480px,
+        // ~40KB) becomes the img src; the click-through href stays the
+        // full-size original.
+        const thumbs = {};
+        try {
+          const tr = await fetch('https://api.github.com/repos/davedellaquila/' + rc.repo + '/contents/' + rc.path + '/thumbs', {headers});
+          if (tr.ok) {
+            const tj = await tr.json();
+            (Array.isArray(tj) ? tj : []).filter(f => f.type === 'file').forEach(f => { thumbs[f.name] = f; });
+          }
+        } catch (e) {}
         const files = (Array.isArray(j) ? j : []).filter(f => f.type === 'file')
-          .map(f => ({src: f.download_url, href: f.download_url, path: f.path, repo: rc.repo}));
-        for (const f of files) { if (!repo.some(x => x.src === f.src)) repo.push(f); }
+          .map(f => {
+            const th = thumbs[f.name];
+            return {src: th ? th.download_url : f.download_url, href: f.download_url, path: f.path, repo: rc.repo, thumbPath: th ? th.path : null};
+          });
+        for (const f of files) { if (!repo.some(x => x.href === f.href)) repo.push(f); }
       }
     } catch (e) {}
   }
-  const all = seeds.concat(repo.filter(x => !seeds.some(s => s.src === x.src)));
+  const all = seeds.concat(repo.filter(x => !seeds.some(s => s.href === x.href)));
   const ph3 = document.getElementById('photos-h3');
   if (ph3) {
     // Update the label without disturbing the collapse arrow / drag grip
@@ -11135,7 +11168,7 @@ async function loadPhotos(id){
     label.textContent = 'Photos (' + all.length + ')';
   }
   strip.innerHTML = all.map(p => {
-    const del = p.path ? '<button class="pdel" data-del="' + escHtml(p.path) + '" data-repo="' + escHtml(p.repo || 'buddy-system') + '" title="Delete photo">' + ICON_TRASH + '</button>' : '';
+    const del = p.path ? '<button class="pdel" data-del="' + escHtml(p.path) + '" data-repo="' + escHtml(p.repo || 'buddy-system') + '"' + (p.thumbPath ? ' data-delthumb="' + escHtml(p.thumbPath) + '"' : '') + ' title="Delete photo">' + ICON_TRASH + '</button>' : '';
     return '<div class="pwrap"><a href="' + escHtml(p.href) + '" target="_blank" rel="noopener"><img src="' + escHtml(p.src) + '" loading="lazy" alt=""></a>' + del + '</div>';
   }).join('');
   const st = document.getElementById('pstat');
@@ -11188,6 +11221,13 @@ async function handlePhotoFiles(id, files){
       const upRepo = (byId[id] && byId[id].repo) ? byId[id].repo : 'buddy-system';
       const upPath = (byId[id] && byId[id].repo) ? 'photos/' + Date.now() + '-' + safe + '.' + ext : 'photos/' + id + '/' + Date.now() + '-' + safe + '.' + ext;
       await ghPutFile(upRepo, upPath, b64, 'Add photo for ' + id);
+      // Dave 2026-10-28: file a 480px thumbnail beside the original
+      // (thumbs/<same name>) so the panel strip loads the small file.
+      // Best-effort - a failed thumb never fails the upload.
+      try {
+        const thumbB64 = await makeThumbB64(blob);
+        if (thumbB64) await ghPutFile(upRepo, upPath.replace(/\/([^\/]+)$/, '/thumbs/$1'), thumbB64, 'Add photo thumbnail for ' + id);
+      } catch (e) {}
       n++;
       updateProg(n, list.length);
     } catch (err) { toast('Photo failed: ' + (err.message || err)); }
@@ -13996,6 +14036,7 @@ document.addEventListener('click', e => {
     const wrap = pd.closest('.pwrap');
     ghDeleteFile(repo, path, 'Delete photo for ' + (bid || 'buddy'))
       .then(() => {
+        if (pd.dataset.delthumb) ghDeleteFile(repo, pd.dataset.delthumb, 'Delete photo thumbnail').catch(() => {});
         toast('Photo deleted.');
         if (wrap) wrap.remove();
       })
