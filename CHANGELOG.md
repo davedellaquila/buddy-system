@@ -1,5 +1,12 @@
 ## 2026-10-29
 
+### Cabin HVAC 🌡️ — new buddy hired (dashboard request 2026-10-29)
+- New request docs/inbox/new-buddy-2026-10-29T18-56-58.json: Cabin HVAC, id `cabin-hvac`, persona Gender-Neutral, place_mode child of Cabin Buddy, requested_from dashboard-fab. The request's purpose field was BLANK — flagged as an open question in the job req, KNOWLEDGE.md, and registry attention item; the scope is built only from the name, the Cabin Buddy parent, and Dave's existing October 2026 cabin HVAC record, and is Dave's to confirm at review.
+- Registry: cabin-hvac inserted textually right after cabin-buddy (166 → 167 buddies), kind standalone, parent cabin-buddy, icon 🌡️, status New / st-new, brief + docs linked to the job req, attention item cabin-hvac-job-req-review.
+- Job req: [Cabin HVAC — Job Req](https://docs.google.com/document/d/138hC9pQNVg5qzi2i_Rxamqmm38To-bc8cURlIs-mSsQ/edit) in Buddy Docs, TITLE/HEADING_1 styling verified by read-back. Seeded known facts: symptoms raised 2026-10-04 (large copper/suction line not running cold; bearing-like noise from the outdoor unit), Mountain Air service history, Hockaday Heating and Air Conditioning (Pine Grove; owners Sarah and Daniel Hockaday; tech Zach visited 2026-10-07) — diagnosis/outcome of that visit not yet reported, held open. Alpine Air Conditioning (Pioneer) noted as another candidate from 2026-10-06.
+- Repo: private https://github.com/davedellaquila/cabin-hvac with the standard file set (README, SOUL, CONFIG, KNOWLEDGE seeded from the record above, DECISIONS, ACCOMPLISHMENTS, docs/job-req.md, docs/ingest.md, docs/init-message.md), commit 3e110b3.
+- Homepage: generated cabin-hvac/index.html + about.html (dark + light via prefers-color-scheme, sticky slim header, noindex).
+
 ### Social Media Buddy — morning edition correction: Reddit + X are fresh after all
 - The morning edition initially labelled the Reddit and X sections "carried over" because the browser read's report had not yet reached the worker when it published. The read had in fact completed at 6:50 AM (all eight subs + all four X profiles, nothing blocked). Correction: Reddit counts updated to this morning's (Porsche GT3 RS 2.8K → 3.2K, ClaudeAI safeguards 4.1K → 4.2K) with a fresh-read platform note and fresh sub leaders below the cut; X note and time references updated to the fresh 6:42–6:50 AM profile reads. Item selection unchanged on both — the fresh reads confirmed last night's leaders.
 
