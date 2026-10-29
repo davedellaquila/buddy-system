@@ -3809,7 +3809,6 @@ function linkify(escaped){
 }
 const VIEW_DEFS = [
   ['tree','Atlas','▦'],
-  ['projects','Projects','☰'],
   ['flagged','Flagged','🚩'],
   ['favorites','Favorites','⭐'],
   ['orgchart','Org Chart','🏢'],
@@ -3818,6 +3817,7 @@ const VIEW_DEFS = [
   ['project','Homepage','🏠'],
   ['changelog','Change Log','🕘'],
   ['releases','Release Notes','🎁'],
+  ['projects','Projects','☰'],
 ];
 /* Dave 2026-10-28: Views vs Collections. A view is a way of looking at the
    whole tree; a collection is a gathered set of specific objects. Favorites,
@@ -3831,8 +3831,12 @@ const VIEW_DEFS = [
    move: "Same with changelog and release notes." Views is now just
    Homepage, Atlas, Org Chart and Projects. Change Log and Release
    Notes carry no count: their entries load with their own views, so
-   there is no honest number at menu-render time (no invented counts). */
-const COLLECTION_VIEWS = ['favorites', 'flagged', 'plans', 'manifest', 'changelog', 'releases'];
+   there is no honest number at menu-render time (no invented counts).
+   Projects followed the same day ("Same with projects."): it sits
+   last in Collections (VIEW_DEFS was reordered to put it there) and
+   carries the buddy total as its count - the same TOTAL its own view
+   leads with, since every buddy is a project here. */
+const COLLECTION_VIEWS = ['favorites', 'flagged', 'plans', 'manifest', 'changelog', 'releases', 'projects'];
 function isCollectionView(v){ return COLLECTION_VIEWS.indexOf(v) >= 0; }
 const VIEW_TIPS = {
   tree: 'Atlas — seven lenses on your buddy hierarchy. Tap the pill to switch views. Click a node to open its details. Drag the background to pan, scroll to zoom. Drag a node onto another node to reparent it.',
@@ -4534,7 +4538,7 @@ function renderNav(){
      Dave 2026-10-21 (Job 5): it lives only in the rail (#rail-expand) —
      the short-lived corner button is gone; Recents owns the corner. */
   const viewRow = ([v,l,ic]) => {
-    const cnt = v === 'flagged' ? flaggedIds().length : v === 'favorites' ? favoriteIds().length : v === 'manifest' ? BUDDIES.length : null;
+    const cnt = v === 'flagged' ? flaggedIds().length : v === 'favorites' ? favoriteIds().length : v === 'manifest' ? BUDDIES.length : v === 'projects' ? BUDDIES.length : null;
     return '<button class="navbtn'+(S.view===v?' sel':'')+'" data-view="'+v+'" draggable="true" title="'+(VIEW_TIPS[v]||l)+'"><span class="nic">'+ic+'</span><span class="nlab">'+l+(cnt !== null ? ' <span class="attn-count">('+cnt+')</span>' : '')+'</span><span class="navgrip" title="Drag to reorder views"></span></button>'; };
   document.getElementById('view-nav').innerHTML = views.filter(([v]) => !isCollectionView(v)).map(viewRow).join('');
   const collNavEl = document.getElementById('collection-nav');
@@ -5379,7 +5383,7 @@ function renderDevelopSection(){
   const dev = document.getElementById('fset-develop');
   if (!dev) return;
   const simulating = !!devBackup;
-  const buildNum = '20261029.0734';
+  const buildNum = '20261029.0736';
   dev.innerHTML = ''
     + '<label class="fset-check"><input type="checkbox" id="dev-empty-toggle"' + (simulating ? ' checked' : '') + '> <span><strong>Simulate new user</strong> — empty data file, as if opening the shared link fresh</span></label>'
     + '<div class="fineprint" style="margin:8px 0 12px">Build <span style="font-family:monospace">' + escHtml(String(buildNum)) + '</span> · ' + BUDDIES.length + ' buddies in this file</div>'
@@ -5971,7 +5975,7 @@ function closeRailViewPop(){
   document.removeEventListener('keydown', railPopEsc, true);
 }
 function viewPopHtml(){
-  const row = v => '<button type="button" data-view="' + v[0] + '"' + (S.view === v[0] ? ' class="sel"' : '') + '><span class="rv-ic" aria-hidden="true">' + v[2] + '</span>' + v[1] + (v[0] === 'flagged' ? ' (' + flaggedIds().length + ')' : v[0] === 'favorites' ? ' (' + favoriteIds().length + ')' : v[0] === 'manifest' ? ' (' + BUDDIES.length + ')' : '') + '</button>';
+  const row = v => '<button type="button" data-view="' + v[0] + '"' + (S.view === v[0] ? ' class="sel"' : '') + '><span class="rv-ic" aria-hidden="true">' + v[2] + '</span>' + v[1] + (v[0] === 'flagged' ? ' (' + flaggedIds().length + ')' : v[0] === 'favorites' ? ' (' + favoriteIds().length + ')' : v[0] === 'manifest' ? ' (' + BUDDIES.length + ')' : v[0] === 'projects' ? ' (' + BUDDIES.length + ')' : '') + '</button>';
   const vs = VIEW_DEFS.filter(v => !isCollectionView(v[0]));
   const cs = VIEW_DEFS.filter(v => isCollectionView(v[0]));
   return (vs.length ? '<div class="rv-head">Views</div>' + vs.map(row).join('') : '')
@@ -7352,7 +7356,7 @@ function renderBuddy(id){
     + attrHead('shared', 'SHARED NOTES', '<span class="attr-value" id="bp-shared-count">(0)</span>', '')
     + '<div class="attr-body">' + attrTipLine('Anybody with repo access can see this note. Saved to the buddy’s repo (docs/notes.md).') + '<textarea class="notes" id="bp-shared-notes" placeholder="Anybody with repo access can see this note."></textarea>'
     + '<p class="fineprint" id="shared-status"></p></div></div>'
-    + '<div class="bp-build">Build 20261029.0734</div>'
+    + '<div class="bp-build">Build 20261029.0736</div>'
     + '</div>';
   // Update every visible label for a buddy after a rename/re-icon, across all
   // Atlas lenses. A rename changes no structure, so labels are patched in place
@@ -10035,7 +10039,7 @@ function renderPlan(id){
     + '<p class="fineprint">Saved on this device. (For your eyes only)</p></div>'
     + '<div class="bp-sec"><h3>📝 Shared notes<span class="info-tip" data-tip="Visible to everyone with access to this project.">\u24d8</span></h3><textarea class="notes" id="bp-shared" placeholder="Shared notes\u2026 (visible to everyone with access)">'+escHtml((S.planShared||{})[id]||'')+'</textarea>'
     + '<p class="fineprint">Shared — visible to everyone with access.</p></div>'
-    + '<div class="bp-build">Build 20261029.0734</div>'
+    + '<div class="bp-build">Build 20261029.0736</div>'
     + '</div>';
   const nt = document.getElementById('bp-notes');
   let t = null;
@@ -13843,14 +13847,14 @@ function openWhatsNew(){
     .then(r => r.ok ? r.text() : '')
     .then(t => {
       const serverBuild = t.trim();
-      if (serverBuild && serverBuild !== '20261029.0734') {
+      if (serverBuild && serverBuild !== '20261029.0736') {
         updBtn.style.display = '';
         updBtn.title = 'Update to build ' + serverBuild;
       }
       // Show build numbers at the top of the sheet (Dave's request 2026-10-12)
-      const myBuild = '20261029.0734';
+      const myBuild = '20261029.0736';
       let buildLine = '<p class="fineprint" style="margin-top:0">You’re on build ' + escHtml(myBuild) + '.';
-      if (serverBuild && serverBuild !== '20261029.0734' && isNewerBuild(serverBuild, myBuild)) {
+      if (serverBuild && serverBuild !== '20261029.0736' && isNewerBuild(serverBuild, myBuild)) {
         buildLine += ' Build ' + escHtml(serverBuild) + ' is available.';
       }
       buildLine += '</p>';
@@ -13920,7 +13924,7 @@ function syncUpdateBanner(){
   if (b.dataset.state !== state) b.dataset.state = state;
 }
 function initVersionCheck(){
-  const myBuild = '20261029.0734';
+  const myBuild = '20261029.0736';
   function showUpdateBanner(serverBuild){
     if (document.getElementById('update-banner')) return;
     const b = document.createElement('div');

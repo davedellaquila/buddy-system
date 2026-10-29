@@ -3442,7 +3442,6 @@ function linkify(escaped){
 }
 const VIEW_DEFS = [
   ['tree','Atlas','▦'],
-  ['projects','Projects','☰'],
   ['flagged','Flagged','🚩'],
   ['favorites','Favorites','⭐'],
   ['orgchart','Org Chart','🏢'],
@@ -3451,6 +3450,7 @@ const VIEW_DEFS = [
   ['project','Homepage','🏠'],
   ['changelog','Change Log','🕘'],
   ['releases','Release Notes','🎁'],
+  ['projects','Projects','☰'],
 ];
 /* Dave 2026-10-28: Views vs Collections. A view is a way of looking at the
    whole tree; a collection is a gathered set of specific objects. Favorites,
@@ -3464,8 +3464,12 @@ const VIEW_DEFS = [
    move: "Same with changelog and release notes." Views is now just
    Homepage, Atlas, Org Chart and Projects. Change Log and Release
    Notes carry no count: their entries load with their own views, so
-   there is no honest number at menu-render time (no invented counts). */
-const COLLECTION_VIEWS = ['favorites', 'flagged', 'plans', 'manifest', 'changelog', 'releases'];
+   there is no honest number at menu-render time (no invented counts).
+   Projects followed the same day ("Same with projects."): it sits
+   last in Collections (VIEW_DEFS was reordered to put it there) and
+   carries the buddy total as its count - the same TOTAL its own view
+   leads with, since every buddy is a project here. */
+const COLLECTION_VIEWS = ['favorites', 'flagged', 'plans', 'manifest', 'changelog', 'releases', 'projects'];
 function isCollectionView(v){ return COLLECTION_VIEWS.indexOf(v) >= 0; }
 const VIEW_TIPS = {
   tree: 'Atlas — seven lenses on your buddy hierarchy. Tap the pill to switch views. Click a node to open its details. Drag the background to pan, scroll to zoom. Drag a node onto another node to reparent it.',
@@ -4167,7 +4171,7 @@ function renderNav(){
      Dave 2026-10-21 (Job 5): it lives only in the rail (#rail-expand) —
      the short-lived corner button is gone; Recents owns the corner. */
   const viewRow = ([v,l,ic]) => {
-    const cnt = v === 'flagged' ? flaggedIds().length : v === 'favorites' ? favoriteIds().length : v === 'manifest' ? BUDDIES.length : null;
+    const cnt = v === 'flagged' ? flaggedIds().length : v === 'favorites' ? favoriteIds().length : v === 'manifest' ? BUDDIES.length : v === 'projects' ? BUDDIES.length : null;
     return '<button class="navbtn'+(S.view===v?' sel':'')+'" data-view="'+v+'" draggable="true" title="'+(VIEW_TIPS[v]||l)+'"><span class="nic">'+ic+'</span><span class="nlab">'+l+(cnt !== null ? ' <span class="attn-count">('+cnt+')</span>' : '')+'</span><span class="navgrip" title="Drag to reorder views"></span></button>'; };
   document.getElementById('view-nav').innerHTML = views.filter(([v]) => !isCollectionView(v)).map(viewRow).join('');
   const collNavEl = document.getElementById('collection-nav');
@@ -5604,7 +5608,7 @@ function closeRailViewPop(){
   document.removeEventListener('keydown', railPopEsc, true);
 }
 function viewPopHtml(){
-  const row = v => '<button type="button" data-view="' + v[0] + '"' + (S.view === v[0] ? ' class="sel"' : '') + '><span class="rv-ic" aria-hidden="true">' + v[2] + '</span>' + v[1] + (v[0] === 'flagged' ? ' (' + flaggedIds().length + ')' : v[0] === 'favorites' ? ' (' + favoriteIds().length + ')' : v[0] === 'manifest' ? ' (' + BUDDIES.length + ')' : '') + '</button>';
+  const row = v => '<button type="button" data-view="' + v[0] + '"' + (S.view === v[0] ? ' class="sel"' : '') + '><span class="rv-ic" aria-hidden="true">' + v[2] + '</span>' + v[1] + (v[0] === 'flagged' ? ' (' + flaggedIds().length + ')' : v[0] === 'favorites' ? ' (' + favoriteIds().length + ')' : v[0] === 'manifest' ? ' (' + BUDDIES.length + ')' : v[0] === 'projects' ? ' (' + BUDDIES.length + ')' : '') + '</button>';
   const vs = VIEW_DEFS.filter(v => !isCollectionView(v[0]));
   const cs = VIEW_DEFS.filter(v => isCollectionView(v[0]));
   return (vs.length ? '<div class="rv-head">Views</div>' + vs.map(row).join('') : '')
