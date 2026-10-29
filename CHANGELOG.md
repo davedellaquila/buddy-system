@@ -1,5 +1,10 @@
 ## 2026-10-29
 
+### 20261029.0142 — Refresh disc removed from the footer cluster (Dave)
+- Dave's reversal, via the main chat: "Let's remove the refresh button from the footer." The #hp-refresh disc (added yesterday in 20261028.2303 when the wide "Refresh page" rectangle was retired) is removed from #hp-nav, along with its click wiring, the refreshHomepageFrame() helper, and the dimming logic in updateHpNav(). The cluster is back to three discs: Find / Prev / Next.
+- The wide rectangle is NOT restored — the footer simply carries no Refresh control, per Dave's read confirmed by Astro. The framed wrap's 88px clearance band is unchanged (it was sized for the cluster's height, which doesn't change).
+- Refresh path that remains: a framed homepage refreshes itself via the reload button in its own top bar (the standard-topbar homepages carry one — 79 pages, e.g. BMW E61's ⟳ beside the dashboard link, which reloads just that page bypassing cache); the browser's own reload refreshes the whole dashboard.
+
 ### 20261029.0032 — Views-resize follow-up: the hit zone has to WIN its overlaps (Dave)
 - The 0016 counted retest scored the sidebar width grip 10/10 and the info-panel grip 10/10, but the Views resize 8/10 — both failures on grabs just above/below the dots. Diagnosis: the +-7px invisible extension existed but lost hit-testing in its overlaps — the section h3 is sticky at z-index 5 and owns the band above the strip; the first view row owns the band below. The strip now sits at z-index 6 (above both, within the section) and the live zone extends 12px past the strip on each side (past the dots' 5px overhang below). Visuals and layout unchanged. Retest of the off-dot grabs follows.
 
