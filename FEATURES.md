@@ -362,9 +362,10 @@ Build: `build.py` generates `index.html` from `buddies.json` + `plans.json`.
   strip, whose renderer stays in the tree dormant): › expand (opens the
   full dock — the old grid door's job), 🕘 Recents (the popover), 🔍
   Find, 💼 Business Plans, the current-view icon (views popover), and
-  ⚙ Settings at the foot — in the rail's three sections (1 + 3 + 2)
-  inside the 66px dock, with 68px of top clearance and 96px at the foot
-  so Settings clears the floating bottom nav cluster. Recent buddies
+  ⚙ Settings — in the rail's three sections (1 + 3 + 2) inside the 66px
+  dock, grouped in one cluster and vertically centered, exactly as the
+  desktop rail groups them in its floating card (nothing foot-pinned;
+  the footer belongs to the bottom glass cluster alone). Recent buddies
   live one tap away in the Recents popover; the strip's current-buddy
   accent marking has no rail equivalent. Plus
   the **View pill** at the canvas's top-left. The View control carries a

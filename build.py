@@ -2748,14 +2748,17 @@ html.light .wc-got{background:#007AFF}
      state wears the same six-icon rail as the desktop — expand, Recents,
      Find, Business Plans, current view, Settings. The recent-buddies strip
      retires as the resting face (recents live one tap away in the rail's
-     Recents popover); its renderer stays in the tree, dormant. The closed
-     dock becomes a flex column wearing the strip's own clearances: 68px
-     at the top, 96px at the foot over the floating bottom cluster, with
-     rail-bottom (current view + Settings) resting at the foot. */
-  body:not(.standalone):not(.ph-left-open) #sidebar{display:flex;flex-direction:column;padding:calc(68px + env(safe-area-inset-top, 0px)) 0 calc(96px + env(safe-area-inset-bottom, 0px))}
+     Recents popover); its renderer stays in the tree, dormant. The six sit
+     GROUPED in one cluster, vertically centered in the dock, exactly as
+     the desktop rail groups them in its floating card (Dave's follow-up
+     the same evening — the first phone cut split them top vs. foot with
+     a gap, and nothing is foot-pinned here: the footer belongs to the
+     bottom glass cluster alone). The three rail sections stack
+     contiguously with their dividers inside the centered column. */
+  body:not(.standalone):not(.ph-left-open) #sidebar{display:flex;flex-direction:column;justify-content:center;padding:8px 0}
   body:not(.standalone):not(.ph-left-open) #rail-top{display:flex;justify-content:center;padding-bottom:8px;margin-bottom:4px;border-bottom:1px solid var(--border)}
   body:not(.standalone):not(.ph-left-open) #rail-mid{display:flex;flex-direction:column;align-items:center;gap:4px;padding:2px 0}
-  body:not(.standalone):not(.ph-left-open) #rail-bottom{display:flex;flex-direction:column;align-items:center;gap:4px;justify-content:center;padding-top:8px;margin-top:auto;border-top:1px solid var(--border)}
+  body:not(.standalone):not(.ph-left-open) #rail-bottom{display:flex;flex-direction:column;align-items:center;gap:4px;justify-content:center;padding-top:8px;border-top:1px solid var(--border)}
   .strip-ic{width:44px;height:44px;flex:0 0 auto;border-radius:12px;border:1px solid transparent;background:none;color:var(--text);font-size:1.375rem;display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0}
   .strip-ic:hover{background:var(--ghost)}
   .strip-ic.sel{background:var(--wash);border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent)}
