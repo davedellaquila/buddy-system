@@ -1,5 +1,11 @@
 ## 2026-10-29
 
+### 20261029.0622 — Rail: phone card moves to the top (chevron level with the info icon); Find leaves the rail (Dave)
+- Dave, via the main chat: (1) "Move the minimized buddy panel all the way to the top" so the expand chevron shares a horizontal line with the info icon; (2) remove Find from the rail — "there's already a Find disc in the footer cluster."
+- PHONE: the closed card is top-anchored instead of vertically centered. The math, from the shipped values: the info icon sits at top:12px and is 44px tall, so its center line is y=34; the chevron's center sits 33px below the card's top edge (1px border + 8px card padding + 2px rail-top padding + 22px, half the 44px button) — so the card's top is 34 - 33 = 1px. Card still hugs its cluster (now four icons tall on top), glass values untouched, and the 0612 rail-hide still governs the info-open state (the alignment is a resting-state property).
+- DESKTOP: flagged, not forced (per the relayed scope). The same formula gives top:-3px — the desktop card's chevron sits 37px below its top edge (12px card padding instead of 8px), 3px MORE than the icon's 34px center line — so exact alignment would clip the card's top border off-screen or need a padding trim plus a flush top:0. The desktop floating rail keeps its vertical centering; Dave can overrule with the numbers in hand.
+- FIND REMOVAL (both surfaces — the rail is one component): the #rail-find button, its CSS and its click wiring are gone. The rail is now four icons: expand, Recents, Settings, divider, current-view. The footer cluster's Find disc (#hp-find) is untouched and still opens the Find palette.
+
 ### 20261029.0614 — Rail glass lightened: fill 42% -> 30% (Dave)
 - Dave, after seeing the rail glass live: "make the background of the minimized buddy panel more translucent." The fill drops to 30% — the floor Jonny's crit set (below it, page contrast starts competing with the glyphs) — on both glass surfaces: the phone closed card and the desktop floating collapsed rail. Anchored stays solid.
 - Everything else in the recipe is unchanged: blur stays 24px, saturate 1.8, shadow 0 10px 34px, border and geometry untouched. One variable moved on purpose, so Dave's on-device read calibrates cleanly: if covered text reads busy at 30%, the crit's prescribed next step is blur toward 28-30px, not a tint retreat.
