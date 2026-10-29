@@ -1,5 +1,11 @@
 ## 2026-10-28
 
+### 20261028.2346 — Grippers lightened: first pass overshot (Dave)
+- Dave's iPad screenshot of build 2332: the grippers "still look a little messed up… too junky — the sample looked a little bit lighter, which I like." Close-up diagnosis: dots rendered as bright hard beads (4px at near-full strength), the floating panels' frame grips were wide 10×2 dot slabs overlapping the header tools, and the sidebar width grip's tall 2×5 cluster parks right where the nav rows' own grippers end, so the two read as one messy blob per row.
+- The shared dot goes back to 3px across on the same airy 8px pitch, with the rest tone softened well below text2 (hover still steps up, active still accent). The frame grips (#sb-grip / #bp-grip) narrow from 10×2 to 6×2, and the tall edge clusters (#sb-resize / #bp-resize, #sb-tab, panel frame resize grips) shorten from 2×5 to 2×3 (3×2 on the horizontal edges).
+
+## 2026-10-28
+
 ### 20261028.2332 — Collections rows get their grippers (verification follow-up)
 - The live check of the gripper restyle caught a gap: Collections rows (Favorites, Flagged, Business Plans) carried grip elements with working drag wiring but no dots — the gripper CSS was scoped to #view-nav only, a leftover from the Views/Collections split (build 20261028.2004), so their grips rendered as blank space. The navgrip rules now cover #collection-nav identically: same 2×3 dots, same hover/active behavior, drag-to-reorder included.
 

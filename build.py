@@ -54,12 +54,16 @@ NEW_CSS = """
      vars — same dot, same pitch — always with background-position:0 0
      so dots land whole (the build-20261023.2009 panel reference). The dot's
      color still flows through --gripdot, so hover/active states are unchanged.
-     Dave 2026-10-28 (late): restyled to the gripper in his screenshot of a
-     macOS list - chunkier dots (4px across, was 3px) on an airier 8px pitch
-     (was 7px), a touch more presence at rest. Every consumer's dot box is
-     sized in whole tiles, so the boxes grew with the pitch. */
+     Dave 2026-10-28 (late): restyled toward the gripper in his screenshot
+     of a macOS list - an airier 8px pitch (was 7px). First pass (2323)
+     overshot: 4px dots at near-full strength read bright and junky on
+     his iPad, and the wide frame grips were slabs. His word on the
+     sample was "lighter" - so the dot is back to 3px across and the
+     rest tone is softened well below text2; hover still steps up to
+     text2 and active to accent. Every consumer's dot box is sized in
+     whole tiles, so dots land whole. */
   --grip-tile:8px;
-  --grip-dot:radial-gradient(circle, var(--gripdot, color-mix(in srgb, var(--text2) 88%, var(--border))) 2px, transparent 2.1px);
+  --grip-dot:radial-gradient(circle, var(--gripdot, color-mix(in srgb, var(--text2) 55%, var(--border))) 1.5px, transparent 1.6px);
 }
 html.light{
   color-scheme:light;
@@ -826,7 +830,7 @@ input[type=range].zrange::-moz-range-thumb{width:16px;height:16px;border-radius:
   width:30px;height:76px;background:transparent;border:none;border-radius:0;
   cursor:pointer;display:none;align-items:center;justify-content:center;
   padding:0;box-shadow:none}
-#sb-tab::after{content:'';width:16px;height:40px;flex:none;
+#sb-tab::after{content:'';width:16px;height:24px;flex:none;
   background-image:var(--grip-dot);
   background-size:var(--grip-tile) var(--grip-tile);background-position:0 0;background-repeat:repeat}
 #sb-tab:hover{background:transparent}
@@ -858,7 +862,7 @@ body.sb-closed #sb-tab{display:none !important}
    centered on their panel's INNER edge (the edge nearest screen
    center), so the cluster sits at the same offset from that edge on
    both panels, mirrored. */
-#sb-resize::after,#bp-resize::after{content:'';width:16px;height:40px;flex:none;
+#sb-resize::after,#bp-resize::after{content:'';width:16px;height:24px;flex:none;
   background-image:var(--grip-dot);
   background-size:var(--grip-tile) var(--grip-tile);background-position:0 0;background-repeat:repeat}
 /* Dave 2026-10-28: the dots sit INSIDE the panel, never straddling its
@@ -2054,7 +2058,7 @@ body.bp-collapsed #bp-rail{display:flex}
 #bp-frame.on{display:block}
 #bp-grip{--gripdot:color-mix(in srgb, var(--text2) 78%, var(--border));position:absolute;top:5px;left:50%;transform:translateX(-50%);z-index:2;
   width:76px;height:22px;pointer-events:auto;cursor:grab;touch-action:none;background:transparent}
-#bp-grip::after{content:'';position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:80px;height:16px;
+#bp-grip::after{content:'';position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:48px;height:16px;
   background-image:var(--grip-dot);
   background-size:var(--grip-tile) var(--grip-tile);background-position:0 0;background-repeat:repeat}
 #bp-grip:hover{--gripdot:var(--text2)}
@@ -2069,7 +2073,7 @@ body.bp-collapsed #bp-rail{display:flex}
 #sb-frame:not(.free) .bp-rsz{display:none}
 #sb-grip{--gripdot:color-mix(in srgb, var(--text2) 78%, var(--border));position:absolute;top:5px;left:50%;transform:translateX(-50%);z-index:2;
   width:76px;height:22px;pointer-events:auto;cursor:grab;touch-action:none;background:transparent}
-#sb-grip::after{content:'';position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:80px;height:16px;
+#sb-grip::after{content:'';position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:48px;height:16px;
   background-image:var(--grip-dot);
   background-size:var(--grip-tile) var(--grip-tile);background-position:0 0;background-repeat:repeat}
 #sb-grip:hover{--gripdot:var(--text2)}
@@ -2096,8 +2100,8 @@ body:has(#sidebar.sb-floating) #sb-resize{display:none}
 .bp-rsz::after{content:"";position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);pointer-events:none;
   background-image:var(--grip-dot);
   background-size:var(--grip-tile) var(--grip-tile);background-position:0 0}
-.bp-rsz[data-dir="e"]::after,.bp-rsz[data-dir="w"]::after{width:16px;height:40px}
-.bp-rsz[data-dir="n"]::after,.bp-rsz[data-dir="s"]::after{width:40px;height:16px}
+.bp-rsz[data-dir="e"]::after,.bp-rsz[data-dir="w"]::after{width:16px;height:24px}
+.bp-rsz[data-dir="n"]::after,.bp-rsz[data-dir="s"]::after{width:24px;height:16px}
 .bp-rsz[data-dir="ne"]::after,.bp-rsz[data-dir="nw"]::after,.bp-rsz[data-dir="se"]::after,.bp-rsz[data-dir="sw"]::after{display:none}
 .bp-rsz:hover{--gripdot:var(--text2)}
 .bp-rsz:active{--gripdot:var(--accent)}
