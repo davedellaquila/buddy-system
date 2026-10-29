@@ -4182,12 +4182,13 @@ function renderNav(){
   const words = q.split(/\s+/).filter(Boolean);
   let h = '';
   function matches(b){ return buddyMatchesQuery(b, q); }
-  /* Dave 2026-10-28: the Recents tab - every buddy visit on record
-     (S.recentBuddies, most recent first), as flat rows in the tree rows'
+  /* Dave 2026-10-28: the Recents tab - buddy visits, most recent first
+     (the latest 15, per Dave 2026-10-29 - same cap as the Recents menu),
+     as flat rows in the tree rows'
      own markup, so clicks, selection and the info affordance behave
      exactly as they do in the hierarchy. */
   function recentsHtml(){
-    const ids = (Array.isArray(S.recentBuddies) ? S.recentBuddies : []).filter(id => byId[id]);
+    const ids = (Array.isArray(S.recentBuddies) ? S.recentBuddies : []).filter(id => byId[id]).slice(0, 15);
     const shown = ids.filter(id => !words.length || matches(byId[id]));
     if (!shown.length) return '<p class="fineprint" style="padding:10px">' + (ids.length ? 'No recent buddies match your search.' : 'No buddies visited yet.') + '</p>';
     return shown.map(id => {
@@ -4851,7 +4852,7 @@ const SETTING_DEFS = [
   {id:'autoOpenPanel', label:'Always open detail panel on buddy click', type:'bool', def:false, tip:'When off (default), the panel auto-opens in every view EXCEPT Homepage — there, use the \u24d8 icon. When on, the panel opens on every click in every view.'},
   {id:'autoCloseSidebar', label:'Auto-close sidebar on buddy select', type:'bool', def:false, tip:'When on, the sidebar collapses to the icon rail every time you select a buddy — so the buddy\u2019s homepage or current view gets the full screen.'},
   {id:'attnEffect', label:'Attention header effect', type:'choice', options:['pulse','glow','shake','blink','wiggle','bounce','swing','none'], def:'pulse', advanced:true, tip:'How the \u201cNeeds your attention\u201d section header grabs your eye when items are waiting.'},
-  {id:'recentsCount', label:'Recent items to remember', type:'number', def:10, min:1, max:50, unit:'items', tip:'How many recently visited buddies the Recent menu (clock icon, top left of the page) shows first; when more are remembered, a "Show more" row reveals 10 more per tap.'},
+  {id:'recentsCount', label:'Recent items to remember', type:'number', def:10, min:1, max:50, unit:'items', tip:'The Recent menu and the panel Recents tab always show the latest 15 visits (set by Dave 2026-10-29). This number now only caps the short Recent list inside Find (at most 6 shown).'},
   {id:'nbSheetWidth', label:'New buddy sheet width', type:'number', def:560, min:320, max:900, advanced:true, tip:'Fixed width of the New Buddy bottom sheet, in pixels. Height follows the content; drag the grab handle to resize vertically.', unit:'px'},
   {id:'shiftLeftAction', label:'Shift+← action', type:'choice', options:['promote','go to parent','nothing'], def:'promote', advanced:true, tip:'What Shift+Left arrow does for the selected buddy. Promote moves it up one level; Go to parent just navigates there.'},
   {id:'fontScale', label:'Text size', type:'slider', def:100, min:80, max:130, step:5, advanced:true, tip:'Scales text throughout the app — layout, dialogs and buttons keep their size.', unit:'%'},
@@ -5629,11 +5630,10 @@ function toggleRailViewPop(){
   document.addEventListener('pointerdown', railPopOutside, true);
   document.addEventListener('keydown', railPopEsc, true);
 }
-/* Recents menu (Dave, 2026-10-21, Job 6): clock-history button anchored
-   top-left; the popover lists the most recently visited buddies from
-   S.recentBuddies (recorded in selectBuddy), first page capped by the
-   recentsCount setting (default 10) with a "Show more" row paging 10 at a
-   time (Dave, 2026-10-25). Picking a row opens that buddy's panel. */
+/* Recents menu (Dave, 2026-10-21, Job 6): clock-history button; the
+   popover lists the most recently visited buddies from S.recentBuddies
+   (recorded in selectBuddy) - the latest 15, flat, since 2026-10-29.
+   Picking a row opens that buddy's panel. */
 function recentsPopEsc(e){ if (e.key === 'Escape') { e.stopPropagation(); closeRecentsPop(); } }
 function recentsPopOutside(e){ const p = document.getElementById('recents-pop'); if (p && !p.contains(e.target) && !e.target.closest('#sb-recents, #rail-recents')) closeRecentsPop(); }
 function closeRecentsPop(){
@@ -5646,12 +5646,14 @@ function toggleRecentsPop(anchorBtn){
   /* Dave 2026-10-28: the rail carries Recents too — the same list, anchored
      to whichever button opened it. */
   const btn = anchorBtn || document.getElementById('sb-recents') || document.getElementById('rail-recents'); if (!btn) return;
-  let n = parseInt(getSetting('recentsCount'), 10); if (!(n > 0)) n = 10;
-  const all = (Array.isArray(S.recentBuddies) ? S.recentBuddies : []).filter(id => byId[id]).slice(0, 200);
-  // Dave 2026-10-25: the menu pages — the first page is recentsCount (default
-  // 10); when more remain, the next row is "Show more", and each tap of it
-  // reveals 10 more, up to the 50 remembered.
-  let shown = n;
+  /* Dave 2026-10-29: the menu shows the latest 15 visits, total - no
+     paging, no "Show more" (supersedes the 2026-10-25 paging, which
+     opened at the recentsCount setting and grew 10 more per tap). The
+     remembered history underneath is unchanged (up to 200 visits).
+     shown starts at the full capped list, so renderRows' "Show more"
+     tail never renders and its handler never fires. */
+  const all = (Array.isArray(S.recentBuddies) ? S.recentBuddies : []).filter(id => byId[id]).slice(0, 15);
+  let shown = all.length;
   const p = document.createElement('div'); p.id = 'recents-pop'; p.setAttribute('role', 'menu');
   p.innerHTML = '<div class=\"rec-head\">Recent</div><div class=\"rec-rows\"></div>';
   document.body.appendChild(p);
@@ -5670,8 +5672,7 @@ function toggleRecentsPop(anchorBtn){
      height cap and the final position are computed in px from
      visualViewport/innerHeight, ending with a clamp that guarantees the
      invariant — top >= 8, bottom <= visible height - 8 — with the menu
-     scrolling internally past the cap. fitPop re-runs when "Show more"
-     grows the list. A menu never opens off-screen. */
+     scrolling internally past the cap. A menu never opens off-screen. */
   const fitPop = () => {
     const vv = window.visualViewport;
     const visH = vv ? vv.height : window.innerHeight;
@@ -5688,7 +5689,6 @@ function toggleRecentsPop(anchorBtn){
   };
   fitPop();
   p.addEventListener('click', e => {
-    if (e.target.closest('[data-recents-more]')) { shown += 10; renderRows(); fitPop(); return; }
     const row = e.target.closest('[data-recent-buddy]'); if (row) { closeRecentsPop(); selectBuddy(row.getAttribute('data-recent-buddy')); if (isDrawerNav()) setSidebarOpen(false); }
   });
   document.addEventListener('pointerdown', recentsPopOutside, true);
