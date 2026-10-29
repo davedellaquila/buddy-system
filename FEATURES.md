@@ -76,14 +76,18 @@ Build: `build.py` generates `index.html` from `buddies.json` + `plans.json`.
 - **Text size slider** — Settings → Advanced; scales text and UI throughout
   the app from 80% to 130% (default 100%), with live preview as you drag.
   Like the text-size slider on iPhone and Watch.
-- **Framework buttons** — the four shell buttons (New, Back, Info,
-  Recents) wear nearly see-through glass (16–20% fills over a blur, both
-  themes; the panel's close ×, the Info button's twin, matches). The
-  Settings toggle **Group framework buttons in the footer** (default on)
-  seats all four in one row along the bottom of the screen — New and Back
-  at the corners, Info and Recents one slot in, centred on the row;
-  turning it off returns Info and Recents to the top corners. On phone
-  widths the buttons keep their corner spots either way.
+- **Framework buttons** — the shell buttons (New, Back, Info) wear
+  nearly see-through glass (16–20% fills over a blur, both themes; the
+  panel's close ×, the Info button's twin, matches). The Settings toggle
+  **Group framework buttons in the footer** (default on) seats all three
+  in one row along the bottom of the screen — New and Back at the
+  corners, Info one slot in, centred on the row; turning it off returns
+  Info to the top-right corner. On phone widths the buttons keep their
+  corner spots either way. (Recents was the fourth button until
+  2026-10-28; it lives in the buddy panel now — header tools, left of
+  the gear, and 2nd in the collapsed rail — and its menu always fits the
+  visible viewport, scrolling internally rather than running off the
+  bottom.)
 - **Google Doc links open in a new tab** — every docs.google.com /
   drive.google.com link on buddy homepages and About pages carries
   target="_blank": a Doc loaded inside the dashboard's homepage frame
@@ -130,9 +134,9 @@ Build: `build.py` generates `index.html` from `buddies.json` + `plans.json`.
   including the search box.
 - **Collapsed rail fits its icons** — the icon rail's height shrink-wraps
   its contents: exactly six controls, top to bottom — the expand
-  chevron, Recents (the same recent-buddies popover the corner button
-  opens), Find, Business Plans (a menu), the current-view icon (a view
-  picker), and Settings. Every icon visible, no trailing void below the
+  chevron, Recents (the same recent-buddies popover the panel header's
+  Recents button opens), Find, Business Plans (a menu), the current-view
+  icon (a view picker), and Settings. Every icon visible, no trailing void below the
   last one. On a viewport too short for the stack, the rail caps at the
   viewport height and scrolls internally. Expanding the rail glides on
   the same width/transform transition as collapsing, in reverse: the

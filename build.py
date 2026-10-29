@@ -98,7 +98,7 @@ body.sb-closed #sidebar{width:64px;padding:12px 8px;overflow:visible;height:auto
   border:1px solid var(--border);box-shadow:0 8px 32px var(--shadow)} /* Dave 2026-10-18: collapsed rail floats vertically centered, not top-anchored */
 body.sb-closed #sidebar .brand, body.sb-closed #sidebar .sb-search-sticky,
 body.sb-closed #sidebar #buddies-sec, body.sb-closed #sidebar #plans-sec,
-body.sb-closed #sidebar .sb-tipjar, body.sb-closed #sidebar #sb-tools #sb-gear,
+body.sb-closed #sidebar .sb-tipjar, body.sb-closed #sidebar #sb-tools #sb-gear, body.sb-closed #sidebar #sb-tools #sb-recents,
 body.sb-closed #sidebar .navbtn .nlab, body.sb-closed #sidebar .navbtn .navgrip, body.sb-closed #sidebar .nav-sec h3,
 body.sb-closed #sidebar #views-sec h3{display:none}
 body.sb-closed #sidebar .sb-brand-sticky{display:none} /* Dave 2026-10-15: empty bar serves no purpose on the collapsed rail */
@@ -1245,27 +1245,25 @@ textarea[disabled]{opacity:.5;cursor:not-allowed}
    (#rail-expand), and Recents (#recents-btn) anchors top-left. */
 body:not(.bp-collapsed):has(#view-buddy.active) #panel-open,
 body.standalone #panel-open{display:none}
-#recents-btn{position:fixed;top:12px;left:calc(var(--sbw, 336px) + 24px);z-index:10001;width:44px;height:44px;border-radius:50%;border:1px solid var(--border);background:color-mix(in srgb, var(--panel) 16%, transparent);-webkit-backdrop-filter:blur(14px) saturate(1.6);backdrop-filter:blur(14px) saturate(1.6);color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0;box-shadow:0 4px 18px rgba(15,23,42,.10)}
-#recents-btn:hover{color:var(--accent);border-color:var(--accent);background:color-mix(in srgb, var(--panel) 34%, transparent)}
-#recents-btn:active{transform:scale(.96)}
-body.sb-closed #recents-btn{left:12px}
-body.standalone #recents-btn{left:12px}
-@media (max-width:639px){#recents-btn,body.sb-closed #recents-btn{left:12px}}
+/* Dave 2026-10-28: the standalone Recents floater is retired — Recents
+   lives in the buddy panel now (#sb-recents in the header tools, left of
+   the gear; #rail-recents in the collapsed rail). Its corner/footer/phone
+   placement rules went with it. */
 /* Dave 2026-10-28: framework buttons grouped in the footer (setting
    'Group framework buttons in the footer', body.fw-footer). New and Back
-   already anchor the bottom corners as 56px circles; Info and Recents
-   drop from the top corners into the same row, inset one slot (88px =
-   20 margin + 56 button + 12 gap), their 44px circles centred on the
-   row at bottom:26px. The four buttons also go nearly see-through
+   already anchor the bottom corners as 56px circles; Info drops from
+   the top corner into the same row, inset one slot (88px = 20 margin +
+   56 button + 12 gap), its 44px circle centred on the row at
+   bottom:26px. (Recents was the fourth button until 2026-10-28, when
+   Dave moved it into the buddy panel and retired its floater.) The
+   grouped buttons also go nearly see-through
    (16-20% fills, above) in both modes — Dave's ask the same morning.
    Phone widths keep the corner spots: the bottom cluster is spoken
    for there. */
 body.fw-footer #panel-open{top:auto;bottom:26px;right:88px}
 body.fw-footer:has(#token-pill) #panel-open{right:88px}
-body.fw-footer #recents-btn{top:auto;bottom:20px;left:88px;width:56px;height:56px}
 @media (max-width:639px){
   body.fw-footer #panel-open{top:12px;bottom:auto;right:12px}
-  body.fw-footer #recents-btn{top:12px;bottom:auto;left:12px}
 }
 #recents-pop{position:fixed;z-index:10002;min-width:220px;max-width:300px;max-height:60vh;overflow-y:auto;background:var(--panel);border:1px solid var(--border);border-radius:12px;box-shadow:0 14px 40px rgba(0,0,0,.28);padding:6px}
 #recents-pop .rec-head{font-size:.6875rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text2);padding:6px 10px 4px}
@@ -3409,12 +3407,19 @@ function kbCycleSelect(bid, wantPanel){
   try { if (wantPanel) openBuddy(bid); else selectBuddy(bid); } catch (e) {}
   kbCycleMuteAutoClose = false;
 }
+/* Dave 2026-10-21 (Job 6): record a visit for the Recents menu.
+   Dave 2026-10-28: factored out — show() records too, so buddies reached
+   by Prev/Next stepping (which navigates via show, not selectBuddy) land
+   in Recents like any other visit. */
+function recordRecent(id){
+  if (!id || !byId[id]) return;
+  if (!Array.isArray(S.recentBuddies)) S.recentBuddies = [];
+  if (S.recentBuddies[0] !== id) S.recentBuddies = [id].concat(S.recentBuddies.filter(x => x !== id)).slice(0, 50);
+}
 function selectBuddy(id){
   if (!byId[id]) return;
   const b = byId[id];
-  // Dave 2026-10-21 (Job 6): record the visit for the Recents menu.
-  if (!Array.isArray(S.recentBuddies)) S.recentBuddies = [];
-  if (S.recentBuddies[0] !== id) S.recentBuddies = [id].concat(S.recentBuddies.filter(x => x !== id)).slice(0, 50);
+  recordRecent(id);
   // Select the buddy and update the main view, WITHOUT opening the right-side panel.
   // But if the panel is already open, refresh it to show the newly selected buddy.
   const vb = document.getElementById('view-buddy');
@@ -4662,7 +4667,7 @@ const SETTING_DEFS = [
   {id:'fontScale', label:'Text size', type:'slider', def:100, min:80, max:130, step:5, advanced:true, tip:'Scales text throughout the app — layout, dialogs and buttons keep their size.', unit:'%'},
   {id:'sidebarStyle', label:'Panel style', type:'choice', options:['floating','anchored'], def:'floating', tip:'One style for both panels — the sidebar and the info panel. Floating: inset cards; drag a panel by its gripper to move it, and resize it from any side. Anchored: both panels sit flush to their edge in the same squared-off style, the main view resizes to make room, and neither panel can be dragged.'},
   {id:'panelTranslucency', label:'Panel translucency', type:'choice', options:['standard','glass'], def:'standard', tip:'Glass: the sidebar and buddy panel go deeply translucent — the page behind them tints the glass (Apple Weather style). Standard: the usual soft frost.'},
-  {id:'frameworkButtonsFooter', label:'Group framework buttons in the footer', type:'bool', def:true, tip:'On: New, Back, Info and Recents sit together in one row along the bottom of the screen, nearly see-through. Off: they take their separate corners (New bottom-right, Back bottom-left, Info top-right, Recents top-left). On phone widths the buttons keep their corner spots either way.'},
+  {id:'frameworkButtonsFooter', label:'Group framework buttons in the footer', type:'bool', def:true, tip:'On: New, Back and Info sit together in one row along the bottom of the screen, nearly see-through. Off: they take their separate corners (New bottom-right, Back bottom-left, Info top-right). On phone widths the buttons keep their corner spots either way. (Recents lives in the buddy panel now — header and rail — and is not part of this group.)'},
   {id:'sectionToggleStyle', label:'Section toggle style', type:'choice', options:['chevron','section-icon','plus-minus','caret','arrow','dot','triangle','double-chevron','none'], def:'section-icon', tip:'How section headers show their expand/collapse control: classic chevron, the section\u2019s own icon, plus/minus, and more.'},
   {id:'sectionIconBehavior', label:'Section icon behavior', type:'choice', options:['rotate','spin','bounce','flip','pulse','none'], def:'rotate', tip:'What the section icon does when you expand/collapse: tips on its side, spins around, bounces, flips, pulses, or stays still.'},
 ];
@@ -5435,7 +5440,7 @@ function toggleRailPlanPop(){
    recentsCount setting (default 10) with a "Show more" row paging 10 at a
    time (Dave, 2026-10-25). Picking a row opens that buddy's panel. */
 function recentsPopEsc(e){ if (e.key === 'Escape') { e.stopPropagation(); closeRecentsPop(); } }
-function recentsPopOutside(e){ const p = document.getElementById('recents-pop'); if (p && !p.contains(e.target) && !e.target.closest('#recents-btn, #rail-recents')) closeRecentsPop(); }
+function recentsPopOutside(e){ const p = document.getElementById('recents-pop'); if (p && !p.contains(e.target) && !e.target.closest('#sb-recents, #rail-recents')) closeRecentsPop(); }
 function closeRecentsPop(){
   const p = document.getElementById('recents-pop'); if (p) p.remove();
   document.removeEventListener('pointerdown', recentsPopOutside, true);
@@ -5445,7 +5450,7 @@ function toggleRecentsPop(anchorBtn){
   if (document.getElementById('recents-pop')) { closeRecentsPop(); return; }
   /* Dave 2026-10-28: the rail carries Recents too — the same list, anchored
      to whichever button opened it. */
-  const btn = anchorBtn || document.getElementById('recents-btn'); if (!btn) return;
+  const btn = anchorBtn || document.getElementById('sb-recents') || document.getElementById('rail-recents'); if (!btn) return;
   let n = parseInt(getSetting('recentsCount'), 10); if (!(n > 0)) n = 10;
   const all = (Array.isArray(S.recentBuddies) ? S.recentBuddies : []).filter(id => byId[id]).slice(0, 50);
   // Dave 2026-10-25: the menu pages — the first page is recentsCount (default
@@ -5463,17 +5468,32 @@ function toggleRecentsPop(anchorBtn){
   };
   renderRows();
   const r = btn.getBoundingClientRect();
-  /* The rail anchor opens the pop beside the rail; the corner/footer
-     button opens it under itself (flipping up on overflow, below). */
-  p.style.left = (btn.id === 'rail-recents' ? (r.right + 8) : Math.max(8, r.left)) + 'px'; p.style.top = (r.bottom + 8) + 'px';
-  // A menu never opens off-screen (Dave 2026-10-28): if the pop would run
-  // past the window's bottom edge — the footer placement, where the button
-  // lives at bottom-left — it grows UP from the button instead.
-  if (r.bottom + 8 + p.offsetHeight > window.innerHeight - 8) {
-    p.style.top = Math.max(8, r.top - 8 - p.offsetHeight) + 'px';
-  }
+  /* Dave 2026-10-28 (overflow fix): fit against the VISIBLE viewport.
+     The menu used to cap at 60vh and flip above its button on overflow —
+     but in app webviews the CSS vh runs taller than the visible area, so
+     a long menu still bladed off the bottom (Dave's screenshot). Now the
+     height cap and the final position are computed in px from
+     visualViewport/innerHeight, ending with a clamp that guarantees the
+     invariant — top >= 8, bottom <= visible height - 8 — with the menu
+     scrolling internally past the cap. fitPop re-runs when "Show more"
+     grows the list. A menu never opens off-screen. */
+  const fitPop = () => {
+    const vv = window.visualViewport;
+    const visH = vv ? vv.height : window.innerHeight;
+    const visW = vv ? vv.width : window.innerWidth;
+    p.style.maxHeight = Math.max(140, Math.min(Math.round(window.innerHeight * 0.6), Math.round(visH) - 16)) + 'px';
+    let top = r.bottom + 8;
+    if (top + p.offsetHeight > visH - 8) top = r.top - 8 - p.offsetHeight;
+    if (top + p.offsetHeight > visH - 8) top = visH - 8 - p.offsetHeight;
+    if (top < 8) top = 8;
+    let left = (btn.id === 'rail-recents') ? (r.right + 8) : Math.max(8, r.left);
+    if (left + p.offsetWidth > visW - 8) left = visW - 8 - p.offsetWidth;
+    if (left < 8) left = 8;
+    p.style.left = left + 'px'; p.style.top = top + 'px';
+  };
+  fitPop();
   p.addEventListener('click', e => {
-    if (e.target.closest('[data-recents-more]')) { shown += 10; renderRows(); return; }
+    if (e.target.closest('[data-recents-more]')) { shown += 10; renderRows(); fitPop(); return; }
     const row = e.target.closest('[data-recent-buddy]'); if (row) { closeRecentsPop(); openBuddy(row.getAttribute('data-recent-buddy')); }
   });
   document.addEventListener('pointerdown', recentsPopOutside, true);
@@ -9581,6 +9601,7 @@ function show(sel, push){
   // homepage/project view follows the selection (Dave 2026-10-14).
   if (sel.indexOf('buddy:') === 0) {
     const bid = sel.slice(6);
+    if (prevBuddy !== bid) recordRecent(bid);
     if (byId[bid] && S.projectId !== bid) {
       S.projectId = bid;
       if (S.view === 'project') renderProjectView();
@@ -13808,7 +13829,7 @@ document.addEventListener('click', e => {
     audio.play().catch(() => toast('Could not play the preview.'));
     return;
   }
-  if (e.target.closest && e.target.closest('#recents-btn')) { toggleRecentsPop(); return; }
+  if (e.target.closest && e.target.closest('#sb-recents')) { toggleRecentsPop(document.getElementById('sb-recents')); return; }
   if (e.target.closest && e.target.closest('#rail-expand')) { setSidebarOpen(true); return; }
   if (e.target.closest && e.target.closest('#panel-open')) {
     /* Dave 2026-10-21 (regression fix): reopening from the collapsed
@@ -14276,9 +14297,6 @@ syncRailCurView();
 <button type="button" id="panel-open" title="Open buddy details (⌘I)" aria-label="Open buddy details">
   <span class="pi-serif" aria-hidden="true">i</span>
 </button>
-<button type="button" id="recents-btn" title="Recent buddies" aria-label="Recent buddies">
-  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 8.5A9 9 0 1 1 3.2 13.6"/><path d="M3.2 3.8v4.8h4.8"/><path d="M12 7.5V12l3 2"/></svg>
-</button>
 <button type="button" id="view-pill" title="Current view - tap to switch views" aria-label="Current view - tap to switch views"></button>
 <div id="sb-scrim"></div>
 <aside id="sidebar">
@@ -14286,7 +14304,7 @@ syncRailCurView();
   <div id="rail-top"><button type="button" id="rail-expand" title="Expand sidebar" aria-label="Expand sidebar"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9.5 5.5L16 12l-6.5 6.5"/></svg></button></div>
   <div class="sb-scroll">
   <div class="sb-brand-sticky">
-    <div id="sb-tools"><button id="sb-gear" title="Settings (⌘,)" aria-label="Settings"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button><button id="sb-close" title="Collapse sidebar" aria-label="Collapse sidebar"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.5 5.5L8 12l6.5 6.5"/></svg></button></div>
+    <div id="sb-tools"><button type="button" id="sb-recents" title="Recent buddies" aria-label="Recent buddies"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 8.5A9 9 0 1 1 3.2 13.6"/><path d="M3.2 3.8v4.8h4.8"/><path d="M12 7.5V12l3 2"/></svg></button><button id="sb-gear" title="Settings (⌘,)" aria-label="Settings"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button><button id="sb-close" title="Collapse sidebar" aria-label="Collapse sidebar"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.5 5.5L8 12l6.5 6.5"/></svg></button></div>
     <div class="brand"><div class="eyebrow">Project Buddy</div><h1 id="brand-name" title="Click to rename">Buddies</h1><div class="bcount">NBUD buddies &middot; one family</div></div>
   </div>
   <div class="sb-search-sticky">
