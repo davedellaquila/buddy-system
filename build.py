@@ -12672,7 +12672,7 @@ const BP_SECTION_ICONS = {
   photos: '📷', plans: '💼', reports: '👥',
   parent: '⬆️', siblings: '👯', links: '🔗',
   mission: '🎯', notes: '📝', aka: '📛',
-  homepage: '🏠', ingest: '📥', artifacts: '📦',
+  homepage: '🏠', ingest: '📥', artifacts: '📦', docs: '📄',
   shared: '🤝', tree: '🌳'
 };
 const BP_SECTION_LABELS = {
@@ -12680,7 +12680,7 @@ const BP_SECTION_LABELS = {
   photos: 'Photos', plans: 'Business plans', reports: 'Children',
   parent: 'Parent', siblings: 'Peers', links: 'Linked buddies',
   mission: 'Mission', notes: 'Notes', aka: 'Also known as',
-  homepage: 'Homepage', ingest: 'Inbox', artifacts: 'Artifacts',
+  homepage: 'Homepage', ingest: 'Inbox', artifacts: 'Artifacts', docs: 'Documents',
   shared: 'Shared', tree: 'Tree'
 };
 function getSectionToggleContent(fid){
