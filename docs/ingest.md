@@ -154,3 +154,7 @@ DONE — Dave marked this done on the homepage: "Job req ready for review — lo
 
 DONE — Dave marked this done on the homepage: "Job req ready for review — looks good, edits, or defer?" (attention id: garden-buddy-job-req). Please remove it from the attention list in buddies.json.
 
+## 10/28/2026, 8:27:56 PM
+
+DONE — Dave marked this done on the homepage: "Job req ready for review — looks good, edits, or defer?" (attention id: jev-buddy-job-req). Please remove it from the attention list in buddies.json.
+
