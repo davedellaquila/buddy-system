@@ -2340,14 +2340,18 @@ a.plan-card-name:hover{text-decoration:underline}
    homepage/app is in the frame and the discs show, the frame wrap
    reserves the discs' footprint (20px offset + 56px disc + 20px air =
    96px) at its bottom, so the hosted page reflows with its own chrome
-   above the discs; and at sidebar-open widths the sidebar scroller
-   ends 96px early (margin, not padding - padding only adds scroll
-   room and leaves resting rows in the band), so its last rows never
-   sit under Back. */
+   above the discs; and at sidebar-open widths the sidebar itself
+   reserves the same 96px at its own bottom (padding on #sidebar, so
+   the whole column - scroller, Views, Tip Jar - packs 96px higher and
+   the disc floats over the sidebar's empty bottom edge). Reserving on
+   the scroller instead (padding, then margin, builds 2209/2214) was
+   wrong twice over: the band belongs at the window's bottom, where
+   Views and the Tip Jar sit below the scroller - a scroller margin
+   just opened a dead gap above the Views section. */
 body:has(#main.homepage-mode):has(#view-project.active) #homepage-wrap{padding-bottom:96px}
 @media (min-width:640px){
   body:not(.sb-closed):not(.standalone):has(#view-project.active) #homepage-wrap{padding-bottom:96px}
-  body:not(.sb-closed):not(.standalone) #sidebar .sb-scroll{margin-bottom:96px}
+  body:not(.sb-closed):not(.standalone) #sidebar{padding-bottom:96px}
 }
 @media (max-width:760px){#main #view-project.active{min-height:calc(100vh - 88px)}
 #main.homepage-mode{padding:0}

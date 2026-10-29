@@ -414,9 +414,10 @@ Build: `build.py` generates `index.html` from `buddies.json` + `plans.json`.
   centered, Back bottom-left) never cover hosted chrome: when a
   homepage/app is in the frame, the frame wrap reserves the discs' 96px
   footprint at its bottom so the hosted page's own bottom bars reflow
-  above the discs, and at sidebar-open widths the sidebar scroller
-  reserves the same band so its last rows and the Tip Jar stay clear of
-  the Back disc.
+  above the discs, and at sidebar-open widths the sidebar reserves the
+  same band at its own bottom (padding on the sidebar itself), so the
+  whole column - list, Views, Tip Jar - packs above the Back disc with
+  no gap opened mid-column.
 - **Medium (640–1100px)**: collapsible sidebar; view nav becomes a horizontal
   segmented control; detail opens as a right-docked side sheet (380px).
 - **Large (>1100px)**: tri-pane with persistent detail panel (400px).
