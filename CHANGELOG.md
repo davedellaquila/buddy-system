@@ -1,5 +1,11 @@
 ## 2026-10-28
 
+### 20261028.2323 — Grippers restyled to Dave's reference: chunkier dots, airier pitch
+- Dave sent a screenshot of a macOS list's drag grippers ("i like the appearance of these grippers. can we make our grippers look like these?"): a calm 2×3 grid of round dots, clearly present at rest.
+- The shared gripper tokens (defined once, Dave 2026-10-23) now draw a 4px dot (was 3px) on an 8px pitch (was 7px), with slightly more presence at rest; hover/active color flow unchanged. Every consumer's dot box was resized to whole tiles so dots still land whole: nav-row grips, the Views resize cluster, sidebar/panel edge grips, ledger grips, org-chart and project grips, the field-settings grip, and the panel frame resize grips.
+
+## 2026-10-28
+
 ### 20261028.2303 — Refresh rectangle retired: Refresh is the fourth homepage disc (Dave)
 - Dave: "Instead of having that wide refresh button above the discs, why don't we add a fourth disc that's refresh and that'll save some vertical height, by getting rid of that refresh rectangle."
 - The wide "Refresh page" bar under the framed homepage is removed. #hp-nav gains a fourth glass disc, #hp-refresh (circular-arrow icon, same styling), after Next; it performs the identical reload of the framed page (refreshHomepageFrame), and dims/disables whenever no framed homepage is showing (auto-generated homepages and other views), exactly as Prev/Next dim at the ends of the collection.
