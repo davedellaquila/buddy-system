@@ -1304,7 +1304,13 @@ button.bp-markbtn{font-size:1.68rem;line-height:1;padding:0;width:32px;height:27
   #sb-scrim.show{z-index:99}
 }
 @keyframes takeoverIn{from{transform:translateX(60px);opacity:.4}to{transform:none;opacity:1}}
-#journal-bar{display:none;margin:0 0 12px;background:var(--wash);border:1px solid var(--accent);border-radius:10px;padding:9px 13px;font-size:.8125rem}
+/* Dave 2026-10-28: the bar stops short of the top-right corner — the
+   fixed info icon (44px at right:12) used to overdraw its Dismiss end.
+   The 68px clearance is the update banner's own convention (12 offset +
+   44 circle + 12 gap); with the token pill present the icon shifts to
+   right:148, so the bar steps in to 204px the same way. */
+#journal-bar{display:none;margin:0 68px 12px 0;background:var(--wash);border:1px solid var(--accent);border-radius:10px;padding:9px 13px;font-size:.8125rem}
+body:has(#token-pill) #journal-bar{margin-right:204px}
 #journal-bar.show{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 #journal-bar ul{margin:8px 0 4px;padding-left:18px;display:none}
 #journal-bar.open ul{display:block}
@@ -5210,7 +5216,7 @@ function renderDevelopSection(){
   const dev = document.getElementById('fset-develop');
   if (!dev) return;
   const simulating = !!devBackup;
-  const buildNum = '20261028.1951';
+  const buildNum = '20261028.1953';
   dev.innerHTML = ''
     + '<label class="fset-check"><input type="checkbox" id="dev-empty-toggle"' + (simulating ? ' checked' : '') + '> <span><strong>Simulate new user</strong> — empty data file, as if opening the shared link fresh</span></label>'
     + '<div class="fineprint" style="margin:8px 0 12px">Build <span style="font-family:monospace">' + escHtml(String(buildNum)) + '</span> · ' + BUDDIES.length + ' buddies in this file</div>'
@@ -7162,7 +7168,7 @@ function renderBuddy(id){
     + attrHead('shared', 'SHARED NOTES', '<span class="attr-value" id="bp-shared-count">(0)</span>', '')
     + '<div class="attr-body">' + attrTipLine('Anybody with repo access can see this note. Saved to the buddy’s repo (docs/notes.md).') + '<textarea class="notes" id="bp-shared-notes" placeholder="Anybody with repo access can see this note."></textarea>'
     + '<p class="fineprint" id="shared-status"></p></div></div>'
-    + '<div class="bp-build">Build 20261028.1951</div>'
+    + '<div class="bp-build">Build 20261028.1953</div>'
     + '</div>';
   // Update every visible label for a buddy after a rename/re-icon, across all
   // Atlas lenses. A rename changes no structure, so labels are patched in place
@@ -9845,7 +9851,7 @@ function renderPlan(id){
     + '<p class="fineprint">Saved on this device. (For your eyes only)</p></div>'
     + '<div class="bp-sec"><h3>📝 Shared notes<span class="info-tip" data-tip="Visible to everyone with access to this project.">\u24d8</span></h3><textarea class="notes" id="bp-shared" placeholder="Shared notes\u2026 (visible to everyone with access)">'+escHtml((S.planShared||{})[id]||'')+'</textarea>'
     + '<p class="fineprint">Shared — visible to everyone with access.</p></div>'
-    + '<div class="bp-build">Build 20261028.1951</div>'
+    + '<div class="bp-build">Build 20261028.1953</div>'
     + '</div>';
   const nt = document.getElementById('bp-notes');
   let t = null;
@@ -13624,14 +13630,14 @@ function openWhatsNew(){
     .then(r => r.ok ? r.text() : '')
     .then(t => {
       const serverBuild = t.trim();
-      if (serverBuild && serverBuild !== '20261028.1951') {
+      if (serverBuild && serverBuild !== '20261028.1953') {
         updBtn.style.display = '';
         updBtn.title = 'Update to build ' + serverBuild;
       }
       // Show build numbers at the top of the sheet (Dave's request 2026-10-12)
-      const myBuild = '20261028.1951';
+      const myBuild = '20261028.1953';
       let buildLine = '<p class="fineprint" style="margin-top:0">You’re on build ' + escHtml(myBuild) + '.';
-      if (serverBuild && serverBuild !== '20261028.1951' && isNewerBuild(serverBuild, myBuild)) {
+      if (serverBuild && serverBuild !== '20261028.1953' && isNewerBuild(serverBuild, myBuild)) {
         buildLine += ' Build ' + escHtml(serverBuild) + ' is available.';
       }
       buildLine += '</p>';
@@ -13701,7 +13707,7 @@ function syncUpdateBanner(){
   if (b.dataset.state !== state) b.dataset.state = state;
 }
 function initVersionCheck(){
-  const myBuild = '20261028.1951';
+  const myBuild = '20261028.1953';
   function showUpdateBanner(serverBuild){
     if (document.getElementById('update-banner')) return;
     const b = document.createElement('div');

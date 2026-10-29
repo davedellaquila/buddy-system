@@ -1131,7 +1131,13 @@ button.bp-markbtn{font-size:1.68rem;line-height:1;padding:0;width:32px;height:27
   #sb-scrim.show{z-index:99}
 }
 @keyframes takeoverIn{from{transform:translateX(60px);opacity:.4}to{transform:none;opacity:1}}
-#journal-bar{display:none;margin:0 0 12px;background:var(--wash);border:1px solid var(--accent);border-radius:10px;padding:9px 13px;font-size:.8125rem}
+/* Dave 2026-10-28: the bar stops short of the top-right corner — the
+   fixed info icon (44px at right:12) used to overdraw its Dismiss end.
+   The 68px clearance is the update banner's own convention (12 offset +
+   44 circle + 12 gap); with the token pill present the icon shifts to
+   right:148, so the bar steps in to 204px the same way. */
+#journal-bar{display:none;margin:0 68px 12px 0;background:var(--wash);border:1px solid var(--accent);border-radius:10px;padding:9px 13px;font-size:.8125rem}
+body:has(#token-pill) #journal-bar{margin-right:204px}
 #journal-bar.show{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 #journal-bar ul{margin:8px 0 4px;padding-left:18px;display:none}
 #journal-bar.open ul{display:block}
