@@ -1,5 +1,9 @@
 ## 2026-10-29
 
+### 20261029.0614 — Rail glass lightened: fill 42% -> 30% (Dave)
+- Dave, after seeing the rail glass live: "make the background of the minimized buddy panel more translucent." The fill drops to 30% — the floor Jonny's crit set (below it, page contrast starts competing with the glyphs) — on both glass surfaces: the phone closed card and the desktop floating collapsed rail. Anchored stays solid.
+- Everything else in the recipe is unchanged: blur stays 24px, saturate 1.8, shadow 0 10px 34px, border and geometry untouched. One variable moved on purpose, so Dave's on-device read calibrates cleanly: if covered text reads busy at 30%, the crit's prescribed next step is blur toward 28-30px, not a tint retreat.
+
 ### 20261029.0612 — Phone: the minimized buddy rail hides while the info panel is open (Dave)
 - Dave's rule, via the main chat: on the iPhone only, hide the minimized buddy panel (the collapsed rail stripe) whenever the info panel is open — however it was opened — and bring it back when the panel closes.
 - One CSS rule inside the <=639px block: body.ph-right-open (and not .ph-left-open, not .standalone) hides #sidebar. It keys off the same body class syncPhoneDocks already derives from the info panel's own open state (#view-buddy.active.sheet, MutationObserver-synced across every open/close path), so the hide has no state of its own, persists nothing, and the rail returns pixel-identical on close. The expanded drawer is never touched (one dock at a time already closes it when the panel opens), desktop is untouched (the rule lives in the phone media block), and the rail-glass recipe, geometry and retired reservation from 20261029.0146 are unchanged — visibility only.

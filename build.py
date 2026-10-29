@@ -101,9 +101,9 @@ body{padding:0}
    panel tracks the pointer instead of chasing it. */
 body.sb-resizing #sidebar{transition:transform .5s cubic-bezier(.32,.72,.35,1), visibility 0s}
 body.sb-closed #sidebar{width:64px;padding:12px 8px;overflow:visible;height:auto;max-height:calc(100dvh - 24px);top:50%;transform:translateY(-50%);bottom:auto;border-radius:18px;
-  left:12px;right:auto;background:color-mix(in srgb, var(--panel) 42%, transparent);
+  left:12px;right:auto;background:color-mix(in srgb, var(--panel) 30%, transparent);
   -webkit-backdrop-filter:blur(24px) saturate(1.8);backdrop-filter:blur(24px) saturate(1.8);
-  border:1px solid var(--border);box-shadow:0 10px 34px var(--shadow)} /* Dave 2026-10-18: collapsed rail floats vertically centered, not top-anchored. Jonny rail-glass crit, Dave 2026-10-29: the floating collapsed rail is glass (42% fill, blur 24, deeper shadow - definition from border + shadow + blur, not fill). Anchored stays solid: the body.sb-anchored rule below re-specifies all three for that mode. */
+  border:1px solid var(--border);box-shadow:0 10px 34px var(--shadow)} /* Dave 2026-10-18: collapsed rail floats vertically centered, not top-anchored. Jonny rail-glass crit, Dave 2026-10-29: the floating collapsed rail is glass (30% fill since Dave's 2026-10-29 follow-up - Jonny's floor; was 42% earlier that day - blur 24, deeper shadow - definition from border + shadow + blur, not fill). Anchored stays solid: the body.sb-anchored rule below re-specifies all three for that mode. */
 body.sb-closed #sidebar .brand, body.sb-closed #sidebar .sb-search-sticky,
 body.sb-closed #sidebar #buddies-sec, body.sb-closed #sidebar #plans-sec,
 body.sb-closed #sidebar .sb-tipjar, body.sb-closed #sidebar #sb-tools #sb-gear, body.sb-closed #sidebar #sb-tools #sb-recents,
@@ -2832,13 +2832,14 @@ html.light .wc-got{background:#007AFF}
      a floating card with the desktop rail card's own chrome, not a
      full-height column (this rule is closed-state only; the open drawer
      keeps its full-height geometry). Jonny rail-glass crit, Dave
-     2026-10-29: the card is GLASS (42% fill, blur 24px, shadow
+     2026-10-29: the card is GLASS (30% fill since Dave's follow-up
+     that day - Jonny's floor; shipped at 42% that morning - blur 24px, shadow
      0 10px 34px - border/shadow/blur carry its definition) and #main no
      longer reserves the 66px column, so the page runs full-bleed
      beneath the card; the ph-left-open slide offset grew by the same
      66px so the drawer's travel is unchanged. The card itself did not
      move: inset 6px at 60px wide, right edge on the old 66px line. */
-  body:not(.standalone):not(.ph-left-open) #sidebar{top:50%;bottom:auto;height:auto;max-height:calc(100dvh - 24px);left:6px;width:60px;transform:translateY(-50%);border:1px solid var(--border);border-radius:18px;background:color-mix(in srgb, var(--panel) 42%, transparent);box-shadow:0 10px 34px var(--shadow);-webkit-backdrop-filter:blur(24px) saturate(1.8);backdrop-filter:blur(24px) saturate(1.8)}
+  body:not(.standalone):not(.ph-left-open) #sidebar{top:50%;bottom:auto;height:auto;max-height:calc(100dvh - 24px);left:6px;width:60px;transform:translateY(-50%);border:1px solid var(--border);border-radius:18px;background:color-mix(in srgb, var(--panel) 30%, transparent);box-shadow:0 10px 34px var(--shadow);-webkit-backdrop-filter:blur(24px) saturate(1.8);backdrop-filter:blur(24px) saturate(1.8)}
   body:not(.standalone):not(.ph-left-open) #rail-top{display:flex;flex-direction:column;align-items:center;gap:4px;padding:2px 0}
   body:not(.standalone):not(.ph-left-open) #rail-mid{display:flex;flex-direction:column;align-items:center;gap:4px;padding:10px 0 2px;border-top:1px solid var(--border)}
     .strip-ic{width:44px;height:44px;flex:0 0 auto;border-radius:12px;border:1px solid transparent;background:none;color:var(--text);font-size:1.375rem;display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0}
