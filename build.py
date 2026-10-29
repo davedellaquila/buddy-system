@@ -2674,7 +2674,6 @@ body.node-dragging,body.node-dragging *{cursor:grabbing !important}
 .view-caret{display:inline-block;font-size:.625rem;line-height:1;color:var(--muted);margin-left:3px;transition:transform .2s ease}
 body.viewpop-open .view-caret{transform:rotate(180deg)}
 #rail-curview .view-caret{font-size:.5625rem;margin-left:2px}
-#view-pill{display:none}
 /* Find — sticky top search bar + hanging menu (one behavior at every size).
    The button lives in #hp-nav; the bar pins to the top and never dances
    with the keyboard. Empty field = Recents; typing = auto-suggest with the
@@ -2791,19 +2790,13 @@ html.light .wc-got{background:#007AFF}
      aside and the sheet drops back under the scrim, the drawer-over-
      sheet dimming that z 99 / z 100 split was built for. */
   body:not(.ph-left-open) #view-buddy.sheet{z-index:100}
-  /* ---- The View pill rides with the canvas at its top-left. ---- */
-  #view-pill{display:flex;align-items:center;gap:7px;position:fixed;top:12px;left:78px;z-index:9001;height:40px;padding:0 14px;border-radius:999px;border:1px solid var(--border);background:color-mix(in srgb, var(--panel) 72%, transparent);-webkit-backdrop-filter:blur(14px) saturate(1.6);backdrop-filter:blur(14px) saturate(1.6);color:var(--text);font:inherit;font-size:.875rem;font-weight:600;cursor:pointer;box-shadow:0 4px 18px rgba(15,23,42,.10);transition:transform .28s cubic-bezier(.32,.72,.35,1)}
-  #view-pill .vp-ic{display:flex;font-size:1rem}
-  body.ph-left-open #view-pill{transform:translateX(calc(min(85vw,320px) - 66px))}
-  body.ph-right-open #view-pill{transform:translateX(calc(-1 * min(88vw,360px)))}
-  body.standalone #view-pill{display:none}
   /* First-open invariant (Jonny's first-open crit, 2026-10-23): the
      resting geometry holds at first paint, in every state. boot-hold
      (set by the pre-app boot script on phone loads, released by the
      main script once settled) freezes transitions so nothing can
      arrive hall-sized; first-open (no stored state on this device)
      pins the closed geometry outright while no dock is open. */
-  body.boot-hold:not(.standalone) #sidebar, body.boot-hold:not(.standalone) #main, body.boot-hold #view-pill{transition:none}
+  body.boot-hold:not(.standalone) #sidebar, body.boot-hold:not(.standalone) #main{transition:none}
   body.first-open:not(.standalone):not(.ph-left-open):not(.ph-right-open) #sidebar{width:66px}
   body.first-open:not(.standalone):not(.ph-left-open):not(.ph-right-open) #main{left:0}
 }
@@ -5442,10 +5435,9 @@ function syncRailCurView(){
   btn.innerHTML = '<span aria-hidden="true">' + def[2] + '</span><span class="view-caret" aria-hidden="true">▾</span>';
   btn.title = 'Current view: ' + def[1] + ' - tap to switch views';
   btn.setAttribute('aria-label', 'Current view: ' + def[1] + '. Tap to switch views.');
-  syncViewPill();
 }
 function railPopEsc(e){ if (e.key === 'Escape') { e.stopPropagation(); closeRailViewPop(); } }
-function railPopOutside(e){ const p = document.getElementById('rail-viewpop'); if (p && !p.contains(e.target) && !e.target.closest('#rail-curview') && !e.target.closest('#view-pill') && !e.target.closest('#rail-plans')) closeRailViewPop(); }
+function railPopOutside(e){ const p = document.getElementById('rail-viewpop'); if (p && !p.contains(e.target) && !e.target.closest('#rail-curview') && !e.target.closest('#rail-plans')) closeRailViewPop(); }
 function closeRailViewPop(){
   const p = document.getElementById('rail-viewpop'); if (p) p.remove();
   document.body.classList.remove('viewpop-open');
@@ -12435,29 +12427,6 @@ function phoneBuddyLanding(id){
 function firstOpenLanding(){
   show('view:project', false);
 }
-/* The View pill (phone resting state): the rail's view control, wearing
-   its caret, floating at the canvas's top-left. */
-function syncViewPill(){
-  const pill = document.getElementById('view-pill'); if (!pill) return;
-  const def = VIEW_DEFS.find(v => v[0] === S.view) || VIEW_DEFS[0];
-  pill.innerHTML = '<span class="vp-ic" aria-hidden="true">' + def[2] + '</span><span class="vp-name">' + escHtml(def[1]) + '</span><span class="view-caret" aria-hidden="true">▾</span>';
-  pill.title = 'Current view: ' + def[1] + ' - tap to switch views';
-  pill.setAttribute('aria-label', 'Current view: ' + def[1] + '. Tap to switch views.');
-}
-function togglePillViewPop(){
-  if (document.getElementById('rail-viewpop')) { closeRailViewPop(); return; }
-  const btn = document.getElementById('view-pill'); if (!btn) return;
-  const p = document.createElement('div'); p.id = 'rail-viewpop'; p.setAttribute('role', 'menu');
-  p.innerHTML = viewPopHtml();
-  document.body.appendChild(p);
-  document.body.classList.add('viewpop-open');
-  const r = btn.getBoundingClientRect();
-  p.style.left = Math.max(8, r.left) + 'px';
-  p.style.top = (r.bottom + 8) + 'px';
-  p.addEventListener('click', e => { if (e.target.closest('[data-view]')) closeRailViewPop(); });
-  document.addEventListener('pointerdown', railPopOutside, true);
-  document.addEventListener('keydown', railPopEsc, true);
-}
 /* Find (verdict section 3): the magnifier leads #hp-nav; the search lives
    in a sticky bar at the top. Empty = Recents; typing = auto-suggest with
    the shared matcher and matched characters in bold. */
@@ -13935,7 +13904,6 @@ document.addEventListener('click', e => {
   if (e.target.closest && e.target.closest('#sb-close')) { setSidebarOpen(document.body.classList.contains('sb-closed')); return; }
   if (e.target.closest && e.target.closest('#hp-back')) { goBack(); return; }
   if (e.target.closest && e.target.closest('#hp-find')) { toggleFind(); return; }
-  if (e.target.closest && e.target.closest('#view-pill')) { togglePillViewPop(); return; }
   if (e.target.closest && e.target.closest('#hp-prev')) { hpStep(-1); return; }
   if (e.target.closest && e.target.closest('#hp-next')) { hpStep(1); return; }
   if (e.target.closest && e.target.closest('#menu-btn')) {
@@ -14385,7 +14353,6 @@ syncRailCurView();
 <button type="button" id="panel-open" title="Open buddy details (⌘I)" aria-label="Open buddy details">
   <span class="pi-serif" aria-hidden="true">i</span>
 </button>
-<button type="button" id="view-pill" title="Current view - tap to switch views" aria-label="Current view - tap to switch views"></button>
 <div id="sb-scrim"></div>
 <aside id="sidebar">
   <div id="ph-strip" role="navigation" aria-label="Buddy strip"></div>

@@ -134,7 +134,7 @@ Build: `build.py` generates `index.html` from `buddies.json` + `plans.json`.
   Notes) and a separate **Collections** section (Favorites, Flagged,
   Business Plans — gathered sets of specific objects, not ways of looking
   at the tree), each collapsible and grip-reorderable within its own group;
-  the rail's and phone pill's view popovers group their lists under the
+  the rail's view popover groups its list under the
   same two headings. Picking a buddy from the Recents popover only selects
   it — an open info panel follows the selection; a closed one stays closed
   until opened.
@@ -376,8 +376,7 @@ Build: `build.py` generates `index.html` from `buddies.json` + `plans.json`.
   desktop rail groups them in its floating card (nothing foot-pinned;
   the footer belongs to the bottom glass cluster alone). Recent buddies
   live one tap away in the Recents popover; the strip's current-buddy
-  accent marking has no rail equivalent. Plus
-  the **View pill** at the canvas's top-left. The View control carries a
+  accent marking has no rail equivalent. The View control carries a
   **caret (▾)** at every size — it is a menu, and the caret rotates while
   its menu is open. **Find** (first button in the bottom cluster) opens a
   sticky search bar at the top of the screen: empty it lists Recents,
