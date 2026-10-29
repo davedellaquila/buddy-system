@@ -5371,7 +5371,7 @@ function renderDevelopSection(){
   const dev = document.getElementById('fset-develop');
   if (!dev) return;
   const simulating = !!devBackup;
-  const buildNum = '20261029.0727';
+  const buildNum = '20261029.0730';
   dev.innerHTML = ''
     + '<label class="fset-check"><input type="checkbox" id="dev-empty-toggle"' + (simulating ? ' checked' : '') + '> <span><strong>Simulate new user</strong> — empty data file, as if opening the shared link fresh</span></label>'
     + '<div class="fineprint" style="margin:8px 0 12px">Build <span style="font-family:monospace">' + escHtml(String(buildNum)) + '</span> · ' + BUDDIES.length + ' buddies in this file</div>'
@@ -6003,10 +6003,24 @@ function toggleRailViewPop(){
    Picking a row opens that buddy's panel. */
 function recentsPopEsc(e){ if (e.key === 'Escape') { e.stopPropagation(); closeRecentsPop(); } }
 function recentsPopOutside(e){ const p = document.getElementById('recents-pop'); if (p && !p.contains(e.target) && !e.target.closest('#sb-recents, #rail-recents')) closeRecentsPop(); }
+function recentsFrameTap(){ closeRecentsPop(); }
+function recentsPopBlur(){ closeRecentsPop(); }
+function recentsPopFrameAttach(){
+  const f = document.getElementById('homepage-frame'); if (!f) return;
+  try { const d = f.contentDocument; if (d) d.addEventListener('pointerdown', recentsFrameTap, true); } catch (e) {}
+}
+function recentsPopFrameLoad(){ if (document.getElementById('recents-pop')) recentsPopFrameAttach(); }
+function recentsPopFrameDetach(){
+  const f = document.getElementById('homepage-frame'); if (!f) return;
+  try { const d = f.contentDocument; if (d) d.removeEventListener('pointerdown', recentsFrameTap, true); } catch (e) {}
+  f.removeEventListener('load', recentsPopFrameLoad);
+}
 function closeRecentsPop(){
   const p = document.getElementById('recents-pop'); if (p) p.remove();
   document.removeEventListener('pointerdown', recentsPopOutside, true);
   document.removeEventListener('keydown', recentsPopEsc, true);
+  recentsPopFrameDetach();
+  window.removeEventListener('blur', recentsPopBlur);
 }
 function toggleRecentsPop(anchorBtn){
   if (document.getElementById('recents-pop')) { closeRecentsPop(); return; }
@@ -6060,6 +6074,16 @@ function toggleRecentsPop(anchorBtn){
   });
   document.addEventListener('pointerdown', recentsPopOutside, true);
   document.addEventListener('keydown', recentsPopEsc, true);
+  /* Dave 2026-10-29: "tapping outside of the opened recents menu should
+     close it." It already did - on this document. But taps INSIDE the
+     framed homepage never reach this document's pointerdown (the frame
+     is its own document), so over most of the screen the menu silently
+     stayed open. Listen inside the frame too (re-attaching if the frame
+     navigates while the menu is open), with window blur as a backstop. */
+  recentsPopFrameAttach();
+  const fr2 = document.getElementById('homepage-frame');
+  if (fr2) fr2.addEventListener('load', recentsPopFrameLoad);
+  window.addEventListener('blur', recentsPopBlur);
 }
 function syncPanelNarrow(){
   const vb = document.getElementById('view-buddy'); if (!vb) return;
@@ -7320,7 +7344,7 @@ function renderBuddy(id){
     + attrHead('shared', 'SHARED NOTES', '<span class="attr-value" id="bp-shared-count">(0)</span>', '')
     + '<div class="attr-body">' + attrTipLine('Anybody with repo access can see this note. Saved to the buddy’s repo (docs/notes.md).') + '<textarea class="notes" id="bp-shared-notes" placeholder="Anybody with repo access can see this note."></textarea>'
     + '<p class="fineprint" id="shared-status"></p></div></div>'
-    + '<div class="bp-build">Build 20261029.0727</div>'
+    + '<div class="bp-build">Build 20261029.0730</div>'
     + '</div>';
   // Update every visible label for a buddy after a rename/re-icon, across all
   // Atlas lenses. A rename changes no structure, so labels are patched in place
@@ -10003,7 +10027,7 @@ function renderPlan(id){
     + '<p class="fineprint">Saved on this device. (For your eyes only)</p></div>'
     + '<div class="bp-sec"><h3>📝 Shared notes<span class="info-tip" data-tip="Visible to everyone with access to this project.">\u24d8</span></h3><textarea class="notes" id="bp-shared" placeholder="Shared notes\u2026 (visible to everyone with access)">'+escHtml((S.planShared||{})[id]||'')+'</textarea>'
     + '<p class="fineprint">Shared — visible to everyone with access.</p></div>'
-    + '<div class="bp-build">Build 20261029.0727</div>'
+    + '<div class="bp-build">Build 20261029.0730</div>'
     + '</div>';
   const nt = document.getElementById('bp-notes');
   let t = null;
@@ -13811,14 +13835,14 @@ function openWhatsNew(){
     .then(r => r.ok ? r.text() : '')
     .then(t => {
       const serverBuild = t.trim();
-      if (serverBuild && serverBuild !== '20261029.0727') {
+      if (serverBuild && serverBuild !== '20261029.0730') {
         updBtn.style.display = '';
         updBtn.title = 'Update to build ' + serverBuild;
       }
       // Show build numbers at the top of the sheet (Dave's request 2026-10-12)
-      const myBuild = '20261029.0727';
+      const myBuild = '20261029.0730';
       let buildLine = '<p class="fineprint" style="margin-top:0">You’re on build ' + escHtml(myBuild) + '.';
-      if (serverBuild && serverBuild !== '20261029.0727' && isNewerBuild(serverBuild, myBuild)) {
+      if (serverBuild && serverBuild !== '20261029.0730' && isNewerBuild(serverBuild, myBuild)) {
         buildLine += ' Build ' + escHtml(serverBuild) + ' is available.';
       }
       buildLine += '</p>';
@@ -13888,7 +13912,7 @@ function syncUpdateBanner(){
   if (b.dataset.state !== state) b.dataset.state = state;
 }
 function initVersionCheck(){
-  const myBuild = '20261029.0727';
+  const myBuild = '20261029.0730';
   function showUpdateBanner(serverBuild){
     if (document.getElementById('update-banner')) return;
     const b = document.createElement('div');

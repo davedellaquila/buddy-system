@@ -5636,10 +5636,24 @@ function toggleRailViewPop(){
    Picking a row opens that buddy's panel. */
 function recentsPopEsc(e){ if (e.key === 'Escape') { e.stopPropagation(); closeRecentsPop(); } }
 function recentsPopOutside(e){ const p = document.getElementById('recents-pop'); if (p && !p.contains(e.target) && !e.target.closest('#sb-recents, #rail-recents')) closeRecentsPop(); }
+function recentsFrameTap(){ closeRecentsPop(); }
+function recentsPopBlur(){ closeRecentsPop(); }
+function recentsPopFrameAttach(){
+  const f = document.getElementById('homepage-frame'); if (!f) return;
+  try { const d = f.contentDocument; if (d) d.addEventListener('pointerdown', recentsFrameTap, true); } catch (e) {}
+}
+function recentsPopFrameLoad(){ if (document.getElementById('recents-pop')) recentsPopFrameAttach(); }
+function recentsPopFrameDetach(){
+  const f = document.getElementById('homepage-frame'); if (!f) return;
+  try { const d = f.contentDocument; if (d) d.removeEventListener('pointerdown', recentsFrameTap, true); } catch (e) {}
+  f.removeEventListener('load', recentsPopFrameLoad);
+}
 function closeRecentsPop(){
   const p = document.getElementById('recents-pop'); if (p) p.remove();
   document.removeEventListener('pointerdown', recentsPopOutside, true);
   document.removeEventListener('keydown', recentsPopEsc, true);
+  recentsPopFrameDetach();
+  window.removeEventListener('blur', recentsPopBlur);
 }
 function toggleRecentsPop(anchorBtn){
   if (document.getElementById('recents-pop')) { closeRecentsPop(); return; }
@@ -5693,6 +5707,16 @@ function toggleRecentsPop(anchorBtn){
   });
   document.addEventListener('pointerdown', recentsPopOutside, true);
   document.addEventListener('keydown', recentsPopEsc, true);
+  /* Dave 2026-10-29: "tapping outside of the opened recents menu should
+     close it." It already did - on this document. But taps INSIDE the
+     framed homepage never reach this document's pointerdown (the frame
+     is its own document), so over most of the screen the menu silently
+     stayed open. Listen inside the frame too (re-attaching if the frame
+     navigates while the menu is open), with window blur as a backstop. */
+  recentsPopFrameAttach();
+  const fr2 = document.getElementById('homepage-frame');
+  if (fr2) fr2.addEventListener('load', recentsPopFrameLoad);
+  window.addEventListener('blur', recentsPopBlur);
 }
 function syncPanelNarrow(){
   const vb = document.getElementById('view-buddy'); if (!vb) return;
