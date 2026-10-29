@@ -1,5 +1,12 @@
 ## 2026-10-29
 
+### 20261029.0016 — Resize drags made reliable: capture on pointerdown + real hit areas (Dave)
+- Dave: "resizing sections in general is a little flaky — when I click on a gripper and try to drag it, oftentimes the gripper or the divider does not change position… I've repositioned my grip and it doesn't always work."
+- Root cause, found in the two panel-width strips (#sb-resize, #bp-resize): they recorded the drag on pointerdown but only set pointer capture AFTER a move crossed the 6px slop, with no preventDefault. A fast or diagonal first motion carried the pointer off the 28px strip (or over the homepage iframe) before capture engaged, and every later move went elsewhere — the divider never moved. The tree split, Settings sheet, Views resize, and floated-panel grips already capture on pointerdown; the two strips now use the same idiom (button/primary guards, preventDefault, capture on down; the slop still gates when resizing applies, and snap-shut behavior is unchanged).
+- Hit areas grew invisibly (visuals untouched — strip centers and dots exactly where they were): both width strips 28px → 40px wide (their dots sat offset, partly outside the live zone); the Views-resize strip (12px tall, 16px dots) gains an invisible ±7px live zone; the floated panel's 12px edge resizers gain a 4px invisible margin.
+
+## 2026-10-29
+
 ### 20261029.0002 — Tip Jar well tightened: sidebar bottom band 96px → 48px (Dave)
 - Dave's midnight screenshot: a tall empty well (100px+) under the "Tip the jar" line at the buddy panel's bottom — the visible cost of build 2224's 96px sidebar reservation. His direction: tighten it; the Back disc may overlap the fixed Tip Jar section.
 - The sidebar's bottom padding drops to 48px. The Tip Jar is a fixed ~38px footer, not scrollable content, so the geometry still protects what 2209–2224 protected: the last Collections row rests directly above the jar, at 48 + 38 = 86px from the window's bottom — 10px clear of the Back disc's top edge. The disc now overlaps the jar band's lower-left, as Dave allowed, and the framed page's 88px disc band is unchanged.

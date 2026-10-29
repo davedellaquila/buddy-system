@@ -133,7 +133,7 @@ body.sb-anchored #sidebar{left:0;background:var(--panel);border-left:none;border
   box-shadow:8px 0 28px var(--shadow-soft);
   -webkit-backdrop-filter:none;backdrop-filter:none}
 body.sb-anchored #sidebar .brand, body.sb-anchored #sidebar .sb-tipjar{background:var(--panel)}
-body.sb-anchored #sb-resize{left:calc(var(--sbw, 336px) - 14px)} /* anchored sidebar is flush to the viewport edge (left:0) — no 12px offset to add (2026-10-28) */
+body.sb-anchored #sb-resize{left:calc(var(--sbw, 336px) - 20px)} /* anchored sidebar is flush to the viewport edge (left:0) — no 12px offset to add (2026-10-28) */
 /* Anchored sidebar yield (Dave, 2026-10-20): in Anchored the sidebar is a
    dock, not an overlay; the main view resizes to make room for it,
    mirroring the info panel's right-side yield. The width follows --sbw (set
@@ -820,8 +820,8 @@ input[type=range].zrange::-moz-range-thumb{width:16px;height:16px;border-radius:
 /* Fixed to viewport at sidebar edge so vertical #sidebar scroll doesn't move it.
    MUST be a DOM sibling of #sidebar (not a child): overflow on #sidebar clips
    hit-testing/paint for fixed descendants, which made the gripper invisible. */
-#sb-resize{position:fixed;top:12px;left:calc(var(--sbw, 336px) - 2px);z-index:50; /* Dave 2026-10-28: -2px, not -14 — the floating sidebar sits 12px in from the viewport edge (left:12px), so centring the strip on its inner edge is (12 + sbw) - 14 = sbw - 2. The old formula shifted the strip 12px left, over the sidebar close (x) button, and pushed the gripper dots 12px further inboard than spec. Anchored mode (flush left:0) overrides below. */
-  display:flex;align-items:center;justify-content:center;width:28px;height:calc(100vh - 24px);height:calc(100dvh - 24px);cursor:ew-resize;
+#sb-resize{position:fixed;top:12px;left:calc(var(--sbw, 336px) - 8px);z-index:50; /* Dave 2026-10-28: -2px, not -14 — the floating sidebar sits 12px in from the viewport edge (left:12px), so centring the strip on its inner edge is (12 + sbw) - 14 = sbw - 2. The old formula shifted the strip 12px left, over the sidebar close (x) button, and pushed the gripper dots 12px further inboard than spec. Anchored mode (flush left:0) overrides below. */
+  display:flex;align-items:center;justify-content:center;width:40px;height:calc(100vh - 24px);height:calc(100dvh - 24px);cursor:ew-resize;
   background:transparent;-webkit-tap-highlight-color:transparent;touch-action:none;user-select:none}
 /* Drawer-pull tab (Dave, 2026-10-13): half a tab protrudes from the left edge when the
    sidebar is closed. Clicking opens the sidebar to its last width; the tab hands off
@@ -880,7 +880,7 @@ body.sb-closed #sb-tab{display:none !important}
 body.sb-closed #sb-resize{display:none}
 /* Phone drawer: stay fixed (sibling of #sidebar); show only while drawer is open */
 @media (max-width:639px){
-  #sb-resize{display:none;left:calc(var(--sbw, 336px) - 14px);width:28px;z-index:96}
+  #sb-resize{display:none;left:calc(var(--sbw, 336px) - 20px);width:40px;z-index:96}
   #sidebar.open ~ #sb-resize{display:flex}
 }
 /* Sidebar scroll-to-top — Muse-ish frosted chip, pinned to bottom of left panel */
@@ -1491,7 +1491,7 @@ body:has(#token-pill) #view-buddy.sheet .bp-close-x{right:148px}
 #buddy-home{position:relative}
 /* Panel buddy search (added Dave 2026-10-27, A3) — REMOVED 2026-10-28 at Dave's word: the buddy/info panel has no search field of its own. One filter for the whole dashboard: the main-view Find (Cmd-F). */
 /* (the #bp-search rules that stood here were removed with the field, 2026-10-28) */
-#bp-resize{position:fixed;top:0;bottom:0;right:calc(var(--bpw, 440px) - 14px);z-index:60;display:none;align-items:center;justify-content:center;width:28px;cursor:ew-resize;
+#bp-resize{position:fixed;top:0;bottom:0;right:calc(var(--bpw, 440px) - 20px);z-index:60;display:none;align-items:center;justify-content:center;width:40px;cursor:ew-resize;
   background:transparent;-webkit-tap-highlight-color:transparent;touch-action:none;user-select:none}
 /* Dot cluster: the shared panel-gripper rule beside #sb-resize::after
    (Dave 2026-10-23 — both panel grippers defined once, identical 2x5). */
@@ -2081,6 +2081,7 @@ body.bp-collapsed #bp-rail{display:flex}
 #sidebar.sb-floating{bottom:auto;border-radius:18px}
 body:has(#sidebar.sb-floating) #sb-resize{display:none}
 .bp-rsz{position:absolute;pointer-events:auto;touch-action:none;z-index:1}
+.bp-rsz::before{content:'';position:absolute;inset:-4px} /* Dave 2026-10-29: invisible hit margin - the strips are 12px wide */
 .bp-rsz[data-dir="n"]{top:-6px;left:16px;right:16px;height:12px;cursor:ns-resize}
 .bp-rsz[data-dir="s"]{bottom:-6px;left:16px;right:16px;height:12px;cursor:ns-resize}
 .bp-rsz[data-dir="e"]{right:-6px;top:16px;bottom:16px;width:12px;cursor:ew-resize}
@@ -2146,6 +2147,10 @@ body:has(#sidebar.sb-floating) #sb-resize{display:none}
     body:not(.sb-closed) #views-sec{position:sticky;bottom:42px;z-index:6;margin-left:-14px;margin-right:-14px;padding-left:14px;padding-right:14px;background:var(--hover);border-top:1px solid var(--border)}
     body.glass-panels #views-sec{background:var(--hover)}
     #views-resize{height:12px;margin:0 -14px;cursor:ns-resize;touch-action:none;position:relative}
+    /* Dave 2026-10-29: the visible strip is 12px tall (its dots 16px) - a
+       thin, grip-dependent touch target. An invisible ::before extends
+       the live zone 7px above and below; layout and visuals unchanged. */
+    #views-resize::before{content:'';position:absolute;left:0;right:0;top:-7px;bottom:-7px}
     #views-resize::after{content:"";position:absolute;left:50%;top:calc(50% + 3px);transform:translate(-50%,-50%);width:24px;height:16px;
       background-image:var(--grip-dot);
       background-size:var(--grip-tile) var(--grip-tile);background-position:0 0;background-repeat:repeat}
@@ -5374,8 +5379,14 @@ function initPanelResize(){
   if (!h) return;
   let sx = null, sw = 0, sdrag = false, snapped = false;
   const SNAP_SHUT = 220; /* drag narrower than this → snap the panel closed */
+  /* Dave 2026-10-29: capture on pointerdown - see initSbResize for why
+     the deferred capture made these drags flaky. */
   h.addEventListener('pointerdown', e => {
+    if (e.button !== undefined && e.button !== 0) return;
+    if (e.isPrimary === false) return;
+    e.preventDefault();
     sx = e.clientX; sw = vb.getBoundingClientRect().width; sdrag = false; snapped = false;
+    try { h.setPointerCapture(e.pointerId); } catch (err) {}
   });
   h.addEventListener('pointermove', e => {
     if (sx === null || snapped) return;
@@ -5384,7 +5395,6 @@ function initPanelResize(){
       sdrag = true;
       h.classList.add('rz-dragging');
       document.body.classList.add('ub-nomotion'); /* banner tracks the drag with no lag (verdict) */
-      try { h.setPointerCapture(e.pointerId); } catch (err) {}
       e.preventDefault();
     }
     const raw = sw + (sx - e.clientX);
@@ -9926,7 +9936,20 @@ document.addEventListener('keydown', e => {
   const h = document.getElementById('sb-resize');
   let sx = null, sw = 0, sdrag = false, snapped = false;
   const SNAP_SHUT = 140; /* drag narrower than this → snap the sidebar closed */
-  h.addEventListener('pointerdown', e => { sx = e.clientX; sw = sb.getBoundingClientRect().width; sdrag = false; snapped = false; });
+  /* Dave 2026-10-29: capture on pointerdown, not after the slop below.
+     The old order (record on down, capture only once a move crossed 6px)
+     made drags flaky: a fast or diagonal first motion could carry the
+     pointer off the strip (or over the homepage iframe) before capture
+     engaged, and every later move went elsewhere - the divider simply
+     never moved, however the grip was repositioned. Same idiom as the
+     tree split and the Settings sheet: guard, preventDefault, capture. */
+  h.addEventListener('pointerdown', e => {
+    if (e.button !== undefined && e.button !== 0) return;
+    if (e.isPrimary === false) return;
+    e.preventDefault();
+    sx = e.clientX; sw = sb.getBoundingClientRect().width; sdrag = false; snapped = false;
+    try { h.setPointerCapture(e.pointerId); } catch (err) {}
+  });
   h.addEventListener('pointermove', e => {
     if (sx === null || snapped) return;
     if (!sdrag) {
@@ -9934,7 +9957,6 @@ document.addEventListener('keydown', e => {
       sdrag = true;
       h.classList.add('rz-dragging');
       document.body.classList.add('sb-resizing'); // Dave 2026-10-18: no width transition mid-drag
-      try { h.setPointerCapture(e.pointerId); } catch (err) {}
       e.preventDefault();
     }
     const raw = sw + e.clientX - sx;
