@@ -2109,8 +2109,9 @@ body:has(#sidebar.sb-floating) #sb-resize{display:none}
 
     /* ==== Icon strip, Views dock, panel header v2 (Dave + Jonny, 2026-10-21) ==== */
     /* Rail (Dave 2026-10-28 evening reorder): two groups in one cluster -
-       the top group is expand chevron, Recents, Settings (Find removed
-       2026-10-29 - the footer cluster's Find disc covers it); a single
+       the top group is expand chevron, Recents (Find removed 2026-10-29
+       - the footer cluster's Find disc covers it; Settings' gear removed
+       the same day - the expanded panel's gear and Cmd-, still open it); a single
        divider; then the current-view icon alone (popover picker) -
        Business Plans' own rail icon was retired the same evening; plans
        live in that popover's Collections group.  The info icon is NOT here - it lives at the
@@ -2127,7 +2128,7 @@ body:has(#sidebar.sb-floating) #sb-resize{display:none}
        rail's single divider. */
     #rail-mid{display:none}
     body.sb-closed #rail-mid{display:flex;flex-direction:column;align-items:center;gap:4px;padding:10px 0 2px;margin-top:4px;border-top:1px solid var(--border)}
-    #rail-gear,#rail-recents{width:44px;height:44px;border-radius:12px;border:1px solid transparent;background:none;color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1.25rem;padding:0}
+    #rail-recents{width:44px;height:44px;border-radius:12px;border:1px solid transparent;background:none;color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1.25rem;padding:0}
     #rail-expand{width:44px;height:44px;border-radius:50%;border:1px solid var(--border);background:color-mix(in srgb, var(--panel) 72%, transparent);color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0}
     #rail-expand:hover{color:var(--accent);border-color:var(--accent)}
     #rail-expand:active{transform:scale(.96)}
@@ -2135,17 +2136,20 @@ body:has(#sidebar.sb-floating) #sb-resize{display:none}
     #rail-curview:hover{color:var(--accent);border-color:var(--border);background:var(--ghost)}
     /* Rail split (Dave 2026-10-29): the collapsed rail is TWO glass cards,
        not one - the expand chevron alone in a card fixed to the top-left
-       corner, and the navigation cluster (Recents, Settings, divider,
-       current-view) in its own card centered vertically on the left edge.
+       corner, and the navigation cluster (Recents, current-view) in its
+       own group centered vertically on the left edge. Dave (later that
+       day): no cards at all - the icons float as bare discs, the expand
+       disc matching the info icon's shell exactly (16% panel, blur 14px,
+       1px border, soft shadow), the way the footer discs float.
        The sidebar box becomes a transparent full-height positioning strip
        (pointer-events off except on the cards). Anchored keeps its single
        solid card, unchanged - every rule here is :not(.sb-anchored). */
     .rail-div{display:none}
     body.sb-closed:not(.sb-anchored) #sidebar{top:12px;bottom:12px;height:auto;max-height:none;transform:none;padding:0;background:none;border:none;box-shadow:none;-webkit-backdrop-filter:none;backdrop-filter:none;overflow:visible;pointer-events:none}
-    body.sb-closed:not(.sb-anchored) #rail-top,body.sb-closed:not(.sb-anchored) #rail-mid{pointer-events:auto;background:color-mix(in srgb, var(--panel) 30%, transparent);border:1px solid var(--border);border-radius:18px;box-shadow:0 10px 34px var(--shadow);-webkit-backdrop-filter:blur(24px) saturate(1.8);backdrop-filter:blur(24px) saturate(1.8)}
-    body.sb-closed:not(.sb-anchored) #rail-top{padding:14px 8px}
-    body.sb-closed:not(.sb-anchored) #rail-mid{position:absolute;top:50%;left:0;right:0;transform:translateY(-50%);margin-top:0;border-top:none;padding:12px 8px}
-    body.sb-closed:not(.sb-anchored) #rail-mid .rail-div{display:block;width:100%;border-top:1px solid var(--border);margin:4px 0}
+    body.sb-closed:not(.sb-anchored) #rail-top,body.sb-closed:not(.sb-anchored) #rail-mid{pointer-events:none}
+    body.sb-closed:not(.sb-anchored) #rail-top button,body.sb-closed:not(.sb-anchored) #rail-mid button{pointer-events:auto;background:color-mix(in srgb, var(--panel) 16%, transparent);-webkit-backdrop-filter:blur(14px) saturate(1.6);backdrop-filter:blur(14px) saturate(1.6);border:1px solid var(--border);border-radius:50%;box-shadow:0 2px 14px var(--shadow)}
+    body.sb-closed:not(.sb-anchored) #rail-top{padding:0 8px}
+    body.sb-closed:not(.sb-anchored) #rail-mid{position:absolute;top:50%;left:0;right:0;transform:translateY(-50%);margin-top:0;border-top:none;padding:0 8px;gap:8px}
     #rail-viewpop{position:fixed;z-index:120;min-width:196px;max-height:calc(100dvh - 16px);overflow-y:auto;background:var(--hover);border:1px solid var(--border);border-radius:12px;box-shadow:0 14px 40px rgba(0,0,0,.28);padding:6px}
     #rail-viewpop button{display:flex;align-items:center;gap:10px;width:100%;padding:8px 10px;border:none;background:none;color:var(--text);font:inherit;font-size:.875rem;border-radius:8px;cursor:pointer;text-align:left}
     #rail-viewpop button:hover{background:var(--ghost)}
@@ -2858,10 +2862,10 @@ html.light .wc-got{background:#007AFF}
      44px button) sits on the info icon's center line (top:12px + 22px
      = 34px). The card still hugs its cluster; only the anchor moved. */
   body:not(.standalone):not(.ph-left-open) #sidebar{top:1px;bottom:0;height:auto;max-height:none;left:6px;width:60px;transform:none;border:none;border-radius:0;background:none;box-shadow:none;-webkit-backdrop-filter:none;backdrop-filter:none;overflow:visible;pointer-events:none}
-  body:not(.standalone):not(.ph-left-open) #rail-top,body:not(.standalone):not(.ph-left-open) #rail-mid{pointer-events:auto;background:color-mix(in srgb, var(--panel) 30%, transparent);border:1px solid var(--border);border-radius:18px;box-shadow:0 10px 34px var(--shadow);-webkit-backdrop-filter:blur(24px) saturate(1.8);backdrop-filter:blur(24px) saturate(1.8)}
-  body:not(.standalone):not(.ph-left-open) #rail-top{display:flex;flex-direction:column;align-items:center;gap:4px;padding:10px 0 8px}
-  body:not(.standalone):not(.ph-left-open) #rail-mid{display:flex;flex-direction:column;align-items:center;gap:4px;padding:10px 0 8px;border-top:none;position:absolute;top:50%;left:0;right:0;transform:translateY(-50%)}
-  body:not(.standalone):not(.ph-left-open) #rail-mid .rail-div{display:block;width:100%;border-top:1px solid var(--border);margin:4px 0}
+  body:not(.standalone):not(.ph-left-open) #rail-top,body:not(.standalone):not(.ph-left-open) #rail-mid{pointer-events:none}
+  body:not(.standalone):not(.ph-left-open) #rail-top button,body:not(.standalone):not(.ph-left-open) #rail-mid button{pointer-events:auto;background:color-mix(in srgb, var(--panel) 16%, transparent);-webkit-backdrop-filter:blur(14px) saturate(1.6);backdrop-filter:blur(14px) saturate(1.6);border:1px solid var(--border);border-radius:50%;box-shadow:0 2px 14px var(--shadow)}
+  body:not(.standalone):not(.ph-left-open) #rail-top{display:flex;flex-direction:column;align-items:center;gap:4px;padding:11px 0 0}
+  body:not(.standalone):not(.ph-left-open) #rail-mid{display:flex;flex-direction:column;align-items:center;gap:8px;padding:0;border-top:none;position:absolute;top:50%;left:0;right:0;transform:translateY(-50%)}
     .strip-ic{width:44px;height:44px;flex:0 0 auto;border-radius:12px;border:1px solid transparent;background:none;color:var(--text);font-size:1.375rem;display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0}
   .strip-ic:hover{background:var(--ghost)}
   .strip-ic.sel{background:var(--wash);border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent)}
@@ -12366,9 +12370,6 @@ function initSbBrandSticky(){
 function initGear(){
   const g = document.getElementById('sb-gear');
   if (g && !g.dataset.init) { g.dataset.init = '1'; g.addEventListener('click', () => openFieldSettings()); }
-  /* Dave 2026-10-28: Settings also lives in the collapsed rail. */
-  const rg = document.getElementById('rail-gear');
-  if (rg && !rg.dataset.init) { rg.dataset.init = '1'; rg.addEventListener('click', () => openFieldSettings()); }
 }
 /* Floating control at the bottom of the left sidebar — jump back to brand/search. */
 function initSbToTop(){
@@ -14565,7 +14566,7 @@ syncRailCurView();
   <div class="nav-sec" id="collections-sec">
   <h3 style="cursor:pointer" id="collections-toggle"><span class="nav-arrow" id="collections-arrow">\u203a</span> Collections</h3><div id="collection-nav"></div></div>
   <div class="sb-tipjar"><a href="https://ko-fi.com/davedellaquila" target="_blank" rel="noopener" title="Support the buddy system"><span class="jar">\U0001FAD9</span> <span class="tiptext">Tip the jar</span></a></div>
-  <div id="rail-mid"><button type="button" id="rail-recents" title="Recent buddies" aria-label="Recent buddies"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 8.5A9 9 0 1 1 3.2 13.6"/><path d="M3.2 3.8v4.8h4.8"/><path d="M12 7.5V12l3 2"/></svg></button><button type="button" id="rail-gear" title="Settings (⌘,)" aria-label="Settings"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button><div class="rail-div" aria-hidden="true"></div><button type="button" id="rail-curview" title="Current view" aria-label="Current view - tap to switch views"></button></div>
+  <div id="rail-mid"><button type="button" id="rail-recents" title="Recent buddies" aria-label="Recent buddies"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 8.5A9 9 0 1 1 3.2 13.6"/><path d="M3.2 3.8v4.8h4.8"/><path d="M12 7.5V12l3 2"/></svg></button><div class="rail-div" aria-hidden="true"></div><button type="button" id="rail-curview" title="Current view" aria-label="Current view - tap to switch views"></button></div>
 </aside>
 <div id="sb-resize" title="Drag left or right to resize the sidebar. Double-click to close."></div>
 <button type="button" id="sb-tab" title="Open sidebar" aria-label="Open sidebar"></button>
