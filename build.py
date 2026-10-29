@@ -2341,11 +2341,13 @@ a.plan-card-name:hover{text-decoration:underline}
    reserves the discs' footprint (20px offset + 56px disc + 20px air =
    96px) at its bottom, so the hosted page reflows with its own chrome
    above the discs; and at sidebar-open widths the sidebar scroller
-   reserves the same band so its rows and Tip Jar never flow under Back. */
+   ends 96px early (margin, not padding - padding only adds scroll
+   room and leaves resting rows in the band), so its last rows never
+   sit under Back. */
 body:has(#main.homepage-mode):has(#view-project.active) #homepage-wrap{padding-bottom:96px}
 @media (min-width:640px){
   body:not(.sb-closed):not(.standalone):has(#view-project.active) #homepage-wrap{padding-bottom:96px}
-  body:not(.sb-closed):not(.standalone) #sidebar .sb-scroll{padding-bottom:96px}
+  body:not(.sb-closed):not(.standalone) #sidebar .sb-scroll{margin-bottom:96px}
 }
 @media (max-width:760px){#main #view-project.active{min-height:calc(100vh - 88px)}
 #main.homepage-mode{padding:0}
