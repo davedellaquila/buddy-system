@@ -2101,8 +2101,9 @@ body:has(#sidebar.sb-floating) #sb-resize{display:none}
     /* ==== Icon strip, Views dock, panel header v2 (Dave + Jonny, 2026-10-21) ==== */
     /* Rail (Dave 2026-10-28 evening reorder): two groups in one cluster -
        the top group is expand chevron, Recents, Settings, Find; a single
-       divider; then the collections group, Business Plans + the current-view
-       icon (popover picker). The info icon is NOT here - it lives at the
+       divider; then the current-view icon alone (popover picker) -
+       Business Plans' own rail icon was retired the same evening; plans
+       live in that popover's Collections group.  The info icon is NOT here - it lives at the
        page's fixed top-right, swapping pixel-for-pixel with the panel's
        close x, so the corner button must stay visible while the rail shows
        too. Strip only - phones keep their Door A corner button. */
@@ -2112,12 +2113,12 @@ body:has(#sidebar.sb-floating) #sb-resize{display:none}
        list owns the panel then) or in standalone. The CLOSED phone dock
        wears the rail — see the phone block below (Dave 2026-10-28). */
     @media (max-width:639px){body.ph-left-open #rail-top,body.ph-left-open #rail-bottom,body.ph-left-open #rail-mid,body.standalone #rail-top,body.standalone #rail-bottom,body.standalone #rail-mid{display:none!important}}
-    /* The mid slot carries the collections group (Business Plans +
-       current view) under the rail's single divider. */
+    /* The mid slot carries the current-view icon alone under the
+       rail's single divider. */
     #rail-mid{display:none}
     body.sb-closed #rail-mid{display:flex;flex-direction:column;align-items:center;gap:4px;padding:10px 0 2px;margin-top:4px;border-top:1px solid var(--border)}
-    #rail-find,#rail-plans,#rail-gear,#rail-recents{width:44px;height:44px;border-radius:12px;border:1px solid transparent;background:none;color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1.25rem;padding:0}
-    #rail-find:hover,#rail-plans:hover{color:var(--accent);border-color:var(--border);background:var(--ghost)}
+    #rail-find,#rail-gear,#rail-recents{width:44px;height:44px;border-radius:12px;border:1px solid transparent;background:none;color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1.25rem;padding:0}
+    #rail-find:hover{color:var(--accent);border-color:var(--border);background:var(--ghost)}
     #rail-expand{width:44px;height:44px;border-radius:50%;border:1px solid var(--border);background:color-mix(in srgb, var(--panel) 72%, transparent);color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0}
     #rail-expand:hover{color:var(--accent);border-color:var(--accent)}
     #rail-expand:active{transform:scale(.96)}
@@ -5484,7 +5485,7 @@ function syncRailCurView(){
   btn.setAttribute('aria-label', 'Current view: ' + def[1] + '. Tap to switch views.');
 }
 function railPopEsc(e){ if (e.key === 'Escape') { e.stopPropagation(); closeRailViewPop(); } }
-function railPopOutside(e){ const p = document.getElementById('rail-viewpop'); if (p && !p.contains(e.target) && !e.target.closest('#rail-curview') && !e.target.closest('#rail-plans')) closeRailViewPop(); }
+function railPopOutside(e){ const p = document.getElementById('rail-viewpop'); if (p && !p.contains(e.target) && !e.target.closest('#rail-curview')) closeRailViewPop(); }
 function closeRailViewPop(){
   const p = document.getElementById('rail-viewpop'); if (p) p.remove();
   document.body.classList.remove('viewpop-open');
@@ -5509,26 +5510,6 @@ function toggleRailViewPop(){
   p.style.left = (r.right + 10) + 'px';
   p.style.bottom = Math.max(8, window.innerHeight - r.bottom) + 'px';
   p.addEventListener('click', e => { if (e.target.closest('[data-view]')) closeRailViewPop(); });
-  document.addEventListener('pointerdown', railPopOutside, true);
-  document.addEventListener('keydown', railPopEsc, true);
-}
-/* Business Plans popover for the collapsed rail (Dave, 2026-10-28): same
-   popover shell as the views picker; a pick rides the global [data-plan]
-   delegation (show('plan:…')), this only opens/closes the menu. */
-function toggleRailPlanPop(){
-  if (document.getElementById('rail-viewpop')) { closeRailViewPop(); return; }
-  const btn = document.getElementById('rail-plans'); if (!btn) return;
-  const p = document.createElement('div'); p.id = 'rail-viewpop'; p.setAttribute('role', 'menu');
-  const cur = (S.sel && S.sel.startsWith('plan:')) ? S.sel.slice(5) : null;
-  const items = getPlanOrder().map(pid => PLANS.find(x => x.id === pid)).filter(Boolean);
-  p.innerHTML = items.length ? items.map(pl => '<button type="button" data-plan="' + pl.id + '"' + (cur === pl.id ? ' class="sel"' : '') + '><span class="rv-ic" aria-hidden="true">' + escHtml(pl.icon || '\U0001F4BC') + '</span>' + escHtml(pl.name) + '</button>').join('')
-    : '<div class="fineprint" style="padding:8px 10px">No business plans yet.</div>';
-  document.body.appendChild(p);
-  document.body.classList.add('viewpop-open');
-  const r = btn.getBoundingClientRect();
-  p.style.left = (r.right + 10) + 'px';
-  p.style.top = Math.max(8, Math.min(r.top - 6, window.innerHeight - p.offsetHeight - 8)) + 'px';
-  p.addEventListener('click', e => { if (e.target.closest('[data-plan]')) closeRailViewPop(); });
   document.addEventListener('pointerdown', railPopOutside, true);
   document.addEventListener('keydown', railPopEsc, true);
 }
@@ -13946,7 +13927,6 @@ document.addEventListener('click', e => {
   }
   if (e.target.closest && e.target.closest('#rail-curview')) { toggleRailViewPop(); return; }
   if (e.target.closest && e.target.closest('#rail-find')) { closeRailViewPop(); toggleFind(); return; }
-  if (e.target.closest && e.target.closest('#rail-plans')) { toggleRailPlanPop(); return; }
   if (e.target.closest && e.target.closest('#rail-recents')) { closeRailViewPop(); toggleRecentsPop(document.getElementById('rail-recents')); return; }
   if (e.target.closest && e.target.closest('#sb-close')) { setSidebarOpen(document.body.classList.contains('sb-closed')); return; }
   if (e.target.closest && e.target.closest('#hp-back')) { goBack(); return; }
@@ -14428,7 +14408,7 @@ syncRailCurView();
   <div class="nav-sec" id="collections-sec">
   <h3 style="cursor:pointer" id="collections-toggle"><span class="nav-arrow" id="collections-arrow">\u203a</span> Collections</h3><div id="collection-nav"></div></div>
   <div class="sb-tipjar"><a href="https://ko-fi.com/davedellaquila" target="_blank" rel="noopener" title="Support the buddy system"><span class="jar">\U0001FAD9</span> <span class="tiptext">Tip the jar</span></a></div>
-  <div id="rail-mid"><button type="button" id="rail-plans" title="Business Plans" aria-label="Business Plans"><span aria-hidden="true">\U0001F4BC</span></button><button type="button" id="rail-curview" title="Current view" aria-label="Current view - tap to switch views"></button></div>
+  <div id="rail-mid"><button type="button" id="rail-curview" title="Current view" aria-label="Current view - tap to switch views"></button></div>
 </aside>
 <div id="sb-resize" title="Drag left or right to resize the sidebar. Double-click to close."></div>
 <button type="button" id="sb-tab" title="Open sidebar" aria-label="Open sidebar"></button>
