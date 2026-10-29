@@ -1,5 +1,9 @@
 ## 2026-10-29
 
+### 20261029.0612 — Phone: the minimized buddy rail hides while the info panel is open (Dave)
+- Dave's rule, via the main chat: on the iPhone only, hide the minimized buddy panel (the collapsed rail stripe) whenever the info panel is open — however it was opened — and bring it back when the panel closes.
+- One CSS rule inside the <=639px block: body.ph-right-open (and not .ph-left-open, not .standalone) hides #sidebar. It keys off the same body class syncPhoneDocks already derives from the info panel's own open state (#view-buddy.active.sheet, MutationObserver-synced across every open/close path), so the hide has no state of its own, persists nothing, and the rail returns pixel-identical on close. The expanded drawer is never touched (one dock at a time already closes it when the panel opens), desktop is untouched (the rule lives in the phone media block), and the rail-glass recipe, geometry and retired reservation from 20261029.0146 are unchanged — visibility only.
+
 ### 20261029.0146 — Rail glass: the collapsed rail card goes translucent, page runs beneath it (Jonny crit, Dave)
 - Dave heart-approved Jonny's rail-glass crit (~/workspace/rail-glass/crit.md): "Go ahead and implement his suggestions." Built to the spec exactly.
 - Phone (<=639px), closed state: the rail card's fill drops from 82% to 42% panel tint, backdrop blur 20px -> 24px (saturate 1.8 kept), shadow deepens to 0 10px 34px. Card geometry untouched (left 6, width 60, centered, radius 18, border unchanged).

@@ -2855,6 +2855,15 @@ html.light .wc-got{background:#007AFF}
   #main #view-buddy.sheet{transform:translateX(103%);opacity:1;transition:transform .28s cubic-bezier(.32,.72,.35,1),opacity .28s ease,visibility 0s linear .28s}
   #main #view-buddy.sheet.active{transition:transform .28s cubic-bezier(.32,.72,.35,1),opacity .28s ease,visibility 0s}
   body.ph-right-open #main #view-buddy.sheet{transform:none}
+  /* Dave 2026-10-29 (phone only): when the info panel is open, the
+     minimized buddy rail hides; it returns the moment the panel closes.
+     Purely presentational - keyed off body.ph-right-open, which
+     syncPhoneDocks derives from the panel's own open state on every
+     open/close path (icon tap or any other route), so there is no state
+     of its own and nothing persists. Only the minimized rail is
+     affected: the expanded drawer (:not(.ph-left-open)) is untouched,
+     and above phone widths this media block never applies. */
+  body:not(.standalone):not(.ph-left-open).ph-right-open #sidebar{display:none}
   #view-buddy.sheet .bp-takeover-back{display:none}
   #view-buddy.sheet .bp-sticky-head{top:0}
   body.bp-sheet-open #bp-close-x.bpx-on{display:flex;z-index:10005}
