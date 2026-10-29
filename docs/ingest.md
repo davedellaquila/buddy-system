@@ -170,3 +170,7 @@ DONE — Dave marked this done on the homepage: "New buddy added from the dashbo
 
 DONE — Dave marked this done on the homepage: "Job req ready for review — looks good, edits, or defer?" (attention id: game-buddy-job-req). Please remove it from the attention list in buddies.json.
 
+## 10/28/2026, 10:49:50 PM
+
+DONE — Dave marked this done on the homepage: "Product brief review — the idea, the problem, how it could work, room for growth, and the merge question front and center as its own section. Review it, then we decide: PRD, or rethink." (attention id: reminder-buddy-brief). Please remove it from the attention list in buddies.json.
+
