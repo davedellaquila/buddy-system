@@ -3457,7 +3457,11 @@ const VIEW_DEFS = [
    Flagged and Business Plans are collections - they get their own section on
    the buddy panel and their own group in the view popovers. Everything else
    in VIEW_DEFS is a view. */
-const COLLECTION_VIEWS = ['favorites', 'flagged', 'plans'];
+/* Dave 2026-10-29: Manifest is a collection, not a view ("it's more of
+   a collection than a view") - it joins Favorites, Flagged and Business
+   Plans in the Collections group, in the sidebar and the rail popover
+   alike (both filter on this one list). */
+const COLLECTION_VIEWS = ['favorites', 'flagged', 'plans', 'manifest'];
 function isCollectionView(v){ return COLLECTION_VIEWS.indexOf(v) >= 0; }
 const VIEW_TIPS = {
   tree: 'Atlas — seven lenses on your buddy hierarchy. Tap the pill to switch views. Click a node to open its details. Drag the background to pan, scroll to zoom. Drag a node onto another node to reparent it.',
@@ -4159,7 +4163,7 @@ function renderNav(){
      Dave 2026-10-21 (Job 5): it lives only in the rail (#rail-expand) —
      the short-lived corner button is gone; Recents owns the corner. */
   const viewRow = ([v,l,ic]) => {
-    const cnt = v === 'flagged' ? flaggedIds().length : v === 'favorites' ? favoriteIds().length : null;
+    const cnt = v === 'flagged' ? flaggedIds().length : v === 'favorites' ? favoriteIds().length : v === 'manifest' ? BUDDIES.length : null;
     return '<button class="navbtn'+(S.view===v?' sel':'')+'" data-view="'+v+'" draggable="true" title="'+(VIEW_TIPS[v]||l)+'"><span class="nic">'+ic+'</span><span class="nlab">'+l+(cnt !== null ? ' <span class="attn-count">('+cnt+')</span>' : '')+'</span><span class="navgrip" title="Drag to reorder views"></span></button>'; };
   document.getElementById('view-nav').innerHTML = views.filter(([v]) => !isCollectionView(v)).map(viewRow).join('');
   const collNavEl = document.getElementById('collection-nav');
@@ -5596,7 +5600,7 @@ function closeRailViewPop(){
   document.removeEventListener('keydown', railPopEsc, true);
 }
 function viewPopHtml(){
-  const row = v => '<button type="button" data-view="' + v[0] + '"' + (S.view === v[0] ? ' class="sel"' : '') + '><span class="rv-ic" aria-hidden="true">' + v[2] + '</span>' + v[1] + (v[0] === 'flagged' ? ' (' + flaggedIds().length + ')' : v[0] === 'favorites' ? ' (' + favoriteIds().length + ')' : '') + '</button>';
+  const row = v => '<button type="button" data-view="' + v[0] + '"' + (S.view === v[0] ? ' class="sel"' : '') + '><span class="rv-ic" aria-hidden="true">' + v[2] + '</span>' + v[1] + (v[0] === 'flagged' ? ' (' + flaggedIds().length + ')' : v[0] === 'favorites' ? ' (' + favoriteIds().length + ')' : v[0] === 'manifest' ? ' (' + BUDDIES.length + ')' : '') + '</button>';
   const vs = VIEW_DEFS.filter(v => !isCollectionView(v[0]));
   const cs = VIEW_DEFS.filter(v => isCollectionView(v[0]));
   return (vs.length ? '<div class="rv-head">Views</div>' + vs.map(row).join('') : '')
