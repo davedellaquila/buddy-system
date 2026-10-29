@@ -1,5 +1,9 @@
 ## 2026-10-29
 
+### 20261029.0630 — Fix: the rail's view menu ran off the top of the phone screen (Dave's screenshot)
+- Dave's screenshot: the current-view menu opened from the rail showed Change Log and Release Notes at its top, with the Views header and the first view rows (Atlas, Projects, Manifest, Homepage) nowhere to be seen. Cause: this menu is bottom-anchored to the rail's current-view button and grows upward with no top clamp — fine while the rail card sat mid-screen, but since build 0622 moved the card to the top of the phone, the menu's top now lands off-screen. (Change Log and Release Notes themselves are unchanged — they were simply the first rows still visible.)
+- Fix, following the Recents menu's 2026-10-28 fit pattern ("a menu never opens off-screen"): the menu caps at the visible viewport height and scrolls internally, and if its upward growth would cross the top edge it pins its top at 8px instead. Desktop behavior on a normal-height window is unchanged (the flip only engages when the menu would actually overflow).
+
 ### 20261029.0622 — Rail: phone card moves to the top (chevron level with the info icon); Find leaves the rail (Dave)
 - Dave, via the main chat: (1) "Move the minimized buddy panel all the way to the top" so the expand chevron shares a horizontal line with the info icon; (2) remove Find from the rail — "there's already a Find disc in the footer cluster."
 - PHONE: the closed card is top-anchored instead of vertically centered. The math, from the shipped values: the info icon sits at top:12px and is 44px tall, so its center line is y=34; the chevron's center sits 33px below the card's top edge (1px border + 8px card padding + 2px rail-top padding + 22px, half the 44px button) — so the card's top is 34 - 33 = 1px. Card still hugs its cluster (now four icons tall on top), glass values untouched, and the 0612 rail-hide still governs the info-open state (the alignment is a resting-state property).

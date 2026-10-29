@@ -2133,7 +2133,7 @@ body:has(#sidebar.sb-floating) #sb-resize{display:none}
     #rail-expand:active{transform:scale(.96)}
     #rail-curview{width:44px;height:44px;border-radius:12px;border:1px solid transparent;background:none;color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1.25rem;padding:0}
     #rail-curview:hover{color:var(--accent);border-color:var(--border);background:var(--ghost)}
-    #rail-viewpop{position:fixed;z-index:120;min-width:196px;background:var(--hover);border:1px solid var(--border);border-radius:12px;box-shadow:0 14px 40px rgba(0,0,0,.28);padding:6px}
+    #rail-viewpop{position:fixed;z-index:120;min-width:196px;max-height:calc(100dvh - 16px);overflow-y:auto;background:var(--hover);border:1px solid var(--border);border-radius:12px;box-shadow:0 14px 40px rgba(0,0,0,.28);padding:6px}
     #rail-viewpop button{display:flex;align-items:center;gap:10px;width:100%;padding:8px 10px;border:none;background:none;color:var(--text);font:inherit;font-size:.875rem;border-radius:8px;cursor:pointer;text-align:left}
     #rail-viewpop button:hover{background:var(--ghost)}
     #rail-viewpop button.sel{color:var(--accent);font-weight:600}
@@ -5592,6 +5592,20 @@ function toggleRailViewPop(){
   const r = btn.getBoundingClientRect();
   p.style.left = (r.right + 10) + 'px';
   p.style.bottom = Math.max(8, window.innerHeight - r.bottom) + 'px';
+  /* Dave 2026-10-29: the rail card moved to the top of the phone screen
+     (build 0622), so this bottom-anchored menu growing upward ran off
+     the top edge - the Views header and the first rows unreachable
+     (Dave's screenshot). Same fit invariant as the Recents menu
+     (2026-10-28): a menu never opens off-screen. If the upward growth
+     would cross the top, pin the menu's top at 8px instead and let it
+     scroll internally past the cap. */
+  const vvPop = window.visualViewport;
+  const visHPop = vvPop ? vvPop.height : window.innerHeight;
+  if (window.innerHeight - parseFloat(p.style.bottom) - p.offsetHeight < 8) {
+    p.style.bottom = 'auto';
+    p.style.top = '8px';
+    p.style.maxHeight = Math.max(140, Math.round(visHPop) - 16) + 'px';
+  }
   p.addEventListener('click', e => { if (e.target.closest('[data-view]')) closeRailViewPop(); });
   document.addEventListener('pointerdown', railPopOutside, true);
   document.addEventListener('keydown', railPopEsc, true);
