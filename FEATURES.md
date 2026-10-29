@@ -383,7 +383,10 @@ Build: `build.py` generates `index.html` from `buddies.json` + `plans.json`.
   rail's two sections (4 + 1) inside the 66px
   dock, grouped in one cluster and vertically centered, exactly as the
   desktop rail groups them in its floating card (nothing foot-pinned;
-  the footer belongs to the bottom glass cluster alone). Recent buddies
+  the footer belongs to the bottom glass cluster alone). The dock's
+  background is a floating card too - it hugs the cluster (full border,
+  rounded, translucent, shadowed) rather than running the view's full
+  height. Recent buddies
   live one tap away in the Recents popover; the strip's current-buddy
   accent marking has no rail equivalent. The View control carries a
   **caret (▾)** at every size — it is a menu, and the caret rotates while

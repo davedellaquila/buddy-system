@@ -2776,6 +2776,12 @@ html.light .wc-got{background:#007AFF}
      bottom glass cluster alone). The two rail sections stack
      contiguously with their one divider inside the centered column. */
   body:not(.standalone):not(.ph-left-open) #sidebar{display:flex;flex-direction:column;justify-content:center;padding:8px 0}
+  /* Dave 2026-10-28: the closed dock's background hugs the icon cluster -
+     a floating card with the desktop rail card's own chrome, not a
+     full-height column. Inset 6px at 60px wide, so the card's right edge
+     still lands on the 66px column line #main reserves; the open drawer
+     keeps its full-height geometry (this rule is closed-state only). */
+  body:not(.standalone):not(.ph-left-open) #sidebar{top:50%;bottom:auto;height:auto;max-height:calc(100dvh - 24px);left:6px;width:60px;transform:translateY(-50%);border:1px solid var(--border);border-radius:18px;background:color-mix(in srgb, var(--panel) 82%, transparent);box-shadow:0 8px 32px var(--shadow);-webkit-backdrop-filter:blur(20px) saturate(1.8);backdrop-filter:blur(20px) saturate(1.8)}
   body:not(.standalone):not(.ph-left-open) #rail-top{display:flex;flex-direction:column;align-items:center;gap:4px;padding:2px 0}
   body:not(.standalone):not(.ph-left-open) #rail-mid{display:flex;flex-direction:column;align-items:center;gap:4px;padding:10px 0 2px;border-top:1px solid var(--border)}
     .strip-ic{width:44px;height:44px;flex:0 0 auto;border-radius:12px;border:1px solid transparent;background:none;color:var(--text);font-size:1.375rem;display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0}
