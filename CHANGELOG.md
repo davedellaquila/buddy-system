@@ -1,5 +1,10 @@
 ## 2026-10-28
 
+### 20261028.2332 — Collections rows get their grippers (verification follow-up)
+- The live check of the gripper restyle caught a gap: Collections rows (Favorites, Flagged, Business Plans) carried grip elements with working drag wiring but no dots — the gripper CSS was scoped to #view-nav only, a leftover from the Views/Collections split (build 20261028.2004), so their grips rendered as blank space. The navgrip rules now cover #collection-nav identically: same 2×3 dots, same hover/active behavior, drag-to-reorder included.
+
+## 2026-10-28
+
 ### 20261028.2323 — Grippers restyled to Dave's reference: chunkier dots, airier pitch
 - Dave sent a screenshot of a macOS list's drag grippers ("i like the appearance of these grippers. can we make our grippers look like these?"): a calm 2×3 grid of round dots, clearly present at rest.
 - The shared gripper tokens (defined once, Dave 2026-10-23) now draw a 4px dot (was 3px) on an 8px pitch (was 7px), with slightly more presence at rest; hover/active color flow unchanged. Every consumer's dot box was resized to whole tiles so dots still land whole: nav-row grips, the Views resize cluster, sidebar/panel edge grips, ledger grips, org-chart and project grips, the field-settings grip, and the panel frame resize grips.

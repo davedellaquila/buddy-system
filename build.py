@@ -1560,13 +1560,13 @@ body:has(#token-pill) #view-buddy.sheet .bp-close-x{right:148px}
 #view-drag-divider{position:absolute;height:0;border-top:3px solid var(--accent);z-index:50;pointer-events:none;box-shadow:0 0 8px var(--accent)}
 /* Views-list ⋮⋮ grip: same language as the info-panel section grips.
    This is the touch path for reordering — HTML5 DnD can't start from touch. */
-#view-nav .navbtn .navgrip{cursor:grab;line-height:1;border-radius:6px;background:transparent;width:22px;height:22px;position:relative;
+#view-nav .navbtn .navgrip, #collection-nav .navbtn .navgrip{cursor:grab;line-height:1;border-radius:6px;background:transparent;width:22px;height:22px;position:relative;
   margin-left:auto;touch-action:none;flex:none}
-#view-nav .navbtn .navgrip::after{content:'';position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:16px;height:24px;background-image:var(--grip-dot);background-size:var(--grip-tile) var(--grip-tile);background-position:0 0;background-repeat:repeat}
-#view-nav .navbtn .navgrip:hover{background:transparent}
-#view-nav .navbtn .navgrip:hover::after{--gripdot:var(--text2)}
-#view-nav .navbtn .navgrip:active{cursor:grabbing;background:transparent}
-#view-nav .navbtn .navgrip:active::after{--gripdot:var(--accent)}
+#view-nav .navbtn .navgrip::after, #collection-nav .navbtn .navgrip::after{content:'';position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:16px;height:24px;background-image:var(--grip-dot);background-size:var(--grip-tile) var(--grip-tile);background-position:0 0;background-repeat:repeat}
+#view-nav .navbtn .navgrip:hover, #collection-nav .navbtn .navgrip:hover{background:transparent}
+#view-nav .navbtn .navgrip:hover::after, #collection-nav .navbtn .navgrip:hover::after{--gripdot:var(--text2)}
+#view-nav .navbtn .navgrip:active, #collection-nav .navbtn .navgrip:active{cursor:grabbing;background:transparent}
+#view-nav .navbtn .navgrip:active::after, #collection-nav .navbtn .navgrip:active::after{--gripdot:var(--accent)}
 .bp-sec > h3 .secarrow{font-size:1.5625rem;color:var(--muted);transition:transform .15s;display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:50%;background:var(--ghost);line-height:1;flex:0 0 auto}
 .bp-sec.collapsed > *:not(h3):not(.sec-util){display:none !important} /* !important beats inline display styles (e.g. homepage URL row); the utility line stays — its controls stay reachable (Jonny 2026-10-21) */
 .bp-sec .secarrow{transform:rotate(90deg)}
