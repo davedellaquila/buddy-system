@@ -134,3 +134,7 @@ How's our MEGA feature quilt coming?
 
 Remind me to confirm with the brothers its ok to cancel internet access at llagas creek
 
+## 10/28/2026, 8:27:23 PM
+
+DONE — Dave marked this done on the homepage: "New buddy added from the dashboard — run the full onboarding (mission doc, repo, side chat, homepage)." (attention id: setup-nancys-tech). Please remove it from the attention list in buddies.json.
+
