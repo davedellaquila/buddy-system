@@ -1148,6 +1148,12 @@ button.bp-markbtn{font-size:1.68rem;line-height:1;padding:0;width:32px;height:27
    right:148, so the bar steps in to 204px the same way. */
 #journal-bar{display:none;margin:0 68px 12px 0;background:var(--wash);border:1px solid var(--accent);border-radius:10px;padding:9px 13px;font-size:.8125rem}
 body:has(#token-pill) #journal-bar{margin-right:204px}
+/* Dave 2026-10-28: with the buddy panel docked (anchored + active), #main
+   already yields the panel's width + 16px, so the bar's corner clearance
+   double-counts and leaves a notch at its right end — run it to the
+   column edge instead. Closed and floating-sheet states keep the 68px:
+   the corner button really is over the bar then. */
+body:has(#view-buddy.panel.active:not(.floating)) #journal-bar{margin-right:0}
 #journal-bar.show{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 #journal-bar ul{margin:8px 0 4px;padding-left:18px;display:none}
 #journal-bar.open ul{display:block}
