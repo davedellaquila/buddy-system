@@ -124,7 +124,7 @@ body.sb-closed #menu-btn{display:none}
    iframe (and main content) must clear it instead of sliding underneath.
    88px = 12px rail offset + 64px rail width + 12px breathing room. */
 body.sb-closed #main{padding-left:88px}
-body.sb-closed #main.homepage-mode{padding-left:88px}
+body.sb-closed #main.homepage-mode{padding-left:0} /* Dave 2026-10-30: homepage mode is EXEMPT from the rail clearance above - the framed page runs full-bleed under the floating discs (the gutters are gone; the 2026-10-18 clearance survives only for the app's own views, whose left-edge content is the dashboard's, not a buddy page's). */
 /* Floating-panel illusion (Dave, 2026-10-14 — Apple Messages style): fully floating
    inset panel — 12px from all viewport edges, rounded on all four corners,
    translucent with backdrop blur. Fixed overlay — the main view stays full-width
@@ -2446,10 +2446,21 @@ a.plan-card-name:hover{text-decoration:underline}
    lower area - so the band only has to keep the last scrollable row
    (Collections, resting directly above the jar) clear of the disc:
    48 + 38 = 86px >= the disc's top edge (76px) + 10px air. The
-   framed page's 88px band above is untouched. */
-body:has(#main.homepage-mode):has(#view-project.active) #homepage-wrap{padding-bottom:88px}
+   framed page's 88px band above is untouched.
+   Dave 2026-10-30 (reversal): the gutters are gone. The framed page
+   runs full-bleed - full window width and height, no left clearance
+   for the collapsed rail, no 88px bottom band - and every disc floats
+   over the page as a bare glass overlay (the rail strip and its
+   containers are pointer-events:none outside the discs themselves,
+   so the page stays scrollable and tappable right up to both edges).
+   Known collisions this accepts, Dave's to nudge if they bite: a
+   hosted app's own bottom tab bar (the expense tracker's) now sits
+   under the footer discs, and a buddy page's own bottom Tip Jar line
+   can sit under the footer cluster / + disc when scrolled to the
+   very bottom. The sidebar's own 48px bottom packing (the open
+   panel's internal clearance) is NOT part of this reversal and
+   stays. */
 @media (min-width:640px){
-  body:not(.sb-closed):not(.standalone):has(#view-project.active) #homepage-wrap{padding-bottom:88px}
   body:not(.sb-closed):not(.standalone) #sidebar{padding-bottom:48px}
 }
 @media (max-width:760px){#main #view-project.active{min-height:calc(100vh - 88px)}

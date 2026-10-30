@@ -12,6 +12,33 @@
 
 - **Mail Buddy — morning edition (06:41 PT):** Dave's inbox since Thu 5:41 PM — 117 messages, 111 spiked, 5 ranked items (Capital One $172.39 Zappos charge matching Wednesday's order; Capital One card added to Apple Pay + an X new-iPhone login — an overnight new-device cluster; Docusign Marshall Hospital ROI completed; USPS Stamps.com package due today by 9 PM). Dad's mailbox: 5 messages, 4 spiked, 1 item (Apple — a recovery contact was removed from Emil's account at 4:53 AM). Details: mail-buddy homepage "📬 Needs your attention".
 
+### 20261030.1610 — Full-bleed homepage: the gutters are gone (Dave, Oct 30)
+- Dave's annotated iPad screenshot marked the white left rail column and the
+  white bottom bar around a framed homepage for elimination. Both
+  reservations are removed: the collapsed rail's 88px left clearance no
+  longer applies in homepage mode, and the frame wrap's 88px bottom band
+  (the 2026-10-28 disc clearance) is deleted. A framed buddy page now runs
+  the full window width and height, and every disc — the left rail family,
+  the Prev / Find / Next footer cluster, Back, +, the info icon — floats
+  over it as a bare glass overlay. Hit-testing discipline is unchanged and
+  now load-bearing: the rail strip and its containers are
+  pointer-events:none outside the discs themselves, so the page stays
+  scrollable and tappable right up to the left and bottom edges. The open
+  panel drawer's behavior (including the sidebar's own 48px bottom
+  packing and the anchored yields) is untouched.
+- Verified in emulated Chrome at 1440x900, 1180x820, 820x1180 and
+  390x844, light and dark: the frame's rect equals the viewport exactly
+  at every size; drawer open/close flips 10/10; every overlay disc takes
+  its tap; content taps land in the framed page at the left strip and the
+  bottom-left corner, and content scrolls from the left edge (wheel and
+  touch drag). Collisions, reported not solved (Dave's call): template
+  pages' own footers (Tip Jar line included) still clear the footer
+  cluster by ~16px thanks to their own bottom padding, so no overlap
+  there; the real exposure is framed pages with fixed bottom chrome —
+  the expense tracker's tab bar and the Investment page's bottom tab row
+  now sit at the viewport's bottom edge, and the stretch of them under
+  the footer discs' footprint is covered while the discs show.
+
 ### 20261030.1536 — 🗺️ Route Buddy wired into the registry (Dave hire, via relay)
 - New entry `route-buddy` (registry 168 → 169): 🗺️ Route Buddy, child of Sports Car Adventures (Dave's explicit pick), persona The Cartographer (default; alternates being presented in the main chat), provisional voice `avocado_v2:vincent` (Gruff Brick — auditions live in the buddy's own thread), chat wired to its side thread, repo `route-buddy` (private). The route librarian: the route library (cataloged routes, master GPX, 14-attribute records, Dave's notes) with a US-map homepage, and the working home of the Milemarker concept. Docs carry both the job req and the Homepage & Route Attribute Brief; one attention item covers both reviews. The job req doc is also linked on Sports Car Adventures' record. Generated homepage + About page ship in the same pass, with the role intro audio hosted beside the homepage.
 

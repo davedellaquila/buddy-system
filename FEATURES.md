@@ -255,6 +255,12 @@ Build: `build.py` generates `index.html` from `buddies.json` + `plans.json`.
   its job req's Role summary aloud in its own voice. The recording
   (`role-intro.mp3`) is hosted beside the homepage and referenced
   relatively.
+- **Full-bleed homepage (Dave, 2026-10-30)** — a framed buddy page runs
+  the full window width and height: no left clearance for the collapsed
+  rail, no bottom band for the footer discs. Every disc floats over the
+  page as a bare glass overlay, and only the discs themselves capture
+  taps — the page stays scrollable and tappable right up to the left and
+  bottom edges. The open panel drawer keeps its own clearances.
 - **Navigation** — Back, Prev, Next, and All buddies.
 - **Draggable sections** — no visible gripper (Dave, 2026-10-21): drag a
   section by its name text to reorder it directly on the panel — the name
