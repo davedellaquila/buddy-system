@@ -288,7 +288,9 @@ Build: `build.py` generates `index.html` from `buddies.json` + `plans.json`.
   corner.
 - **Rail icon family** — the collapsed rail's four slots (expand, Recents,
   current-view, Dump) share one glass disc and one line-icon weight
-  everywhere the rail renders, anchored included (Dave, 2026-10-30).
+  everywhere the rail renders, anchored included (Dave, 2026-10-30). The
+  discs float bare — no container card, border, or divider in either
+  panel style — in one top cluster spaced like the footer cluster (12px).
 - **Universal Dump button** — a 📥 disc on the collapsed rail (below the
   current-view icon, phone and desktop) opens a capture box that routes to
   the TOP LEVEL: entries append to Astro's ingest
