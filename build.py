@@ -2149,7 +2149,7 @@ body:has(#sidebar.sb-floating) #sb-resize{display:none}
     body.sb-closed:not(.sb-anchored) #rail-top,body.sb-closed:not(.sb-anchored) #rail-mid{pointer-events:none}
     body.sb-closed:not(.sb-anchored) #rail-top button,body.sb-closed:not(.sb-anchored) #rail-mid button{pointer-events:auto;background:color-mix(in srgb, var(--panel) 16%, transparent);-webkit-backdrop-filter:blur(14px) saturate(1.6);backdrop-filter:blur(14px) saturate(1.6);border:1px solid var(--border);border-radius:50%;box-shadow:0 2px 14px var(--shadow)}
     body.sb-closed:not(.sb-anchored) #rail-top{padding:0 8px}
-    body.sb-closed:not(.sb-anchored) #rail-mid{position:absolute;top:50%;left:0;right:0;transform:translateY(-50%);margin-top:0;border-top:none;padding:0 8px;gap:8px}
+    body.sb-closed:not(.sb-anchored) #rail-mid{position:absolute;top:52px;left:0;right:0;transform:none;margin-top:0;border-top:none;padding:0 8px;gap:8px} /* Dave 2026-10-30: the mid pair rides directly under the expand disc (44px disc + 8px gap = 52) - one tight top cluster, no longer vertically centered */
     #rail-viewpop{position:fixed;z-index:120;min-width:196px;max-height:calc(100dvh - 16px);overflow-y:auto;background:var(--hover);border:1px solid var(--border);border-radius:12px;box-shadow:0 14px 40px rgba(0,0,0,.28);padding:6px}
     #rail-viewpop button{display:flex;align-items:center;gap:10px;width:100%;padding:8px 10px;border:none;background:none;color:var(--text);font:inherit;font-size:.875rem;border-radius:8px;cursor:pointer;text-align:left}
     #rail-viewpop button:hover{background:var(--ghost)}
@@ -2865,7 +2865,7 @@ html.light .wc-got{background:#007AFF}
   body:not(.standalone):not(.ph-left-open) #rail-top,body:not(.standalone):not(.ph-left-open) #rail-mid{pointer-events:none}
   body:not(.standalone):not(.ph-left-open) #rail-top button,body:not(.standalone):not(.ph-left-open) #rail-mid button{pointer-events:auto;background:color-mix(in srgb, var(--panel) 16%, transparent);-webkit-backdrop-filter:blur(14px) saturate(1.6);backdrop-filter:blur(14px) saturate(1.6);border:1px solid var(--border);border-radius:50%;box-shadow:0 2px 14px var(--shadow)}
   body:not(.standalone):not(.ph-left-open) #rail-top{display:flex;flex-direction:column;align-items:center;gap:4px;padding:11px 0 0}
-  body:not(.standalone):not(.ph-left-open) #rail-mid{display:flex;flex-direction:column;align-items:center;gap:8px;padding:0;border-top:none;position:absolute;top:50%;left:0;right:0;transform:translateY(-50%)}
+  body:not(.standalone):not(.ph-left-open) #rail-mid{display:flex;flex-direction:column;align-items:center;gap:8px;padding:0;border-top:none;margin-top:0;position:absolute;top:63px;left:0;right:0;transform:none} /* Dave 2026-10-30: same tight top cluster as desktop - 63 = 11px rail-top pad + 44px disc + 8px gap (sidebar-relative; the disc itself sits at viewport 12..56, center y=34) */
   /* Dave 2026-10-29 (phone Atlas): no Quick Answers section, and a
      compact toolbar. Quick Answers lives only in the tree chrome, so
      hiding it here is Atlas-only by construction; other views and
