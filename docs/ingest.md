@@ -210,3 +210,7 @@ DONE — Dave marked this done on the homepage: "Job req ready for review — lo
 
 DONE — Dave marked this done on the homepage: "New buddy added from the dashboard — run the full onboarding (mission doc, repo, side chat, homepage)." (attention id: setup-is-t). Please remove it from the attention list in buddies.json.
 
+## 10/30/2026, 5:57:12 AM
+
+DONE — Dave marked this done on the homepage: "New buddy added from the dashboard — run the full onboarding (mission doc, repo, side chat, homepage)." (attention id: setup-sparsh). Please remove it from the attention list in buddies.json.
+
