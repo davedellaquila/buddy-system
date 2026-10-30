@@ -5886,7 +5886,13 @@ function toggleDumpPop(){
   const q = dumpQueueRead();
   if (q.length) st.textContent = q.length + (q.length === 1 ? ' dump' : ' dumps') + ' on this device waiting to sync' + (ghToken() ? ' — your next dump flushes them too.' : ' — add a GitHub token in Settings to sync them.');
   send.addEventListener('click', sendDump);
-  ta.addEventListener('keydown', e => { if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') { e.preventDefault(); sendDump(); } });
+  ta.addEventListener('keydown', e => {
+    /* Dave 2026-10-30: Shift+Return submits, exactly like the Dump it
+       button (and Cmd/Ctrl+Return, as before). A plain Return is left
+       completely alone - it inserts a newline and never submits. */
+    if (e.key !== 'Enter') return;
+    if (e.shiftKey || e.metaKey || e.ctrlKey) { e.preventDefault(); sendDump(); }
+  });
   const r = btn.getBoundingClientRect();
   const vv = window.visualViewport;
   const visH = vv ? vv.height : window.innerHeight;

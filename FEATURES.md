@@ -292,7 +292,9 @@ Build: `build.py` generates `index.html` from `buddies.json` + `plans.json`.
   (buddy-system/docs/ingest.md) through the same token-gated write path as
   the homepage dump boxes — no token or a failed write queues the dump on
   the device (buddyTree.dumpQueue) and flushes it on the next successful
-  dump or at boot; nothing is ever silently dropped. A dump is optional
+  dump or at boot; nothing is ever silently dropped. Shift+Return (or
+  ⌘/Ctrl+Return) in the text field submits, exactly like the Dump it
+  button; a plain Return just inserts a newline. A dump is optional
   text plus optional files (1 MB per file — the Contents API ceiling,
   enforced at pick time with the reason shown): files upload to
   buddy-system/docs/ingest-files/<one folder per dump>/ and the entry
