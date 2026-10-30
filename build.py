@@ -5687,8 +5687,16 @@ function closeRailViewPop(){
 }
 function viewPopHtml(){
   const row = v => '<button type="button" data-view="' + v[0] + '"' + (S.view === v[0] ? ' class="sel"' : '') + '><span class="rv-ic" aria-hidden="true">' + v[2] + '</span>' + v[1] + (v[0] === 'flagged' ? ' (' + flaggedIds().length + ')' : v[0] === 'favorites' ? ' (' + favoriteIds().length + ')' : v[0] === 'manifest' ? ' (' + BUDDIES.length + ')' : v[0] === 'projects' ? ' (' + BUDDIES.length + ')' : '') + '</button>';
-  const vs = VIEW_DEFS.filter(v => !isCollectionView(v[0]));
-  const cs = VIEW_DEFS.filter(v => isCollectionView(v[0]));
+  /* Dave 2026-10-30: the Settings order (S.viewOrder, one mixed
+     sequence) is the single source of truth - this popover used to
+     iterate raw VIEW_DEFS order and ignored it, so the minimized
+     panel's menu never matched Settings. The popover keeps its
+     Views / Collections grouping (a grouped menu cannot express the
+     mixed sequence literally), but the order WITHIN each group now
+     follows the Settings sequence exactly. */
+  const ordered = getViewOrder().map(id => VIEW_DEFS.find(v => v[0] === id)).filter(Boolean);
+  const vs = ordered.filter(v => !isCollectionView(v[0]));
+  const cs = ordered.filter(v => isCollectionView(v[0]));
   return (vs.length ? '<div class="rv-head">Views</div>' + vs.map(row).join('') : '')
        + (cs.length ? '<div class="rv-head">Collections</div>' + cs.map(row).join('') : '');
 }
