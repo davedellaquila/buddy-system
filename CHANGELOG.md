@@ -1,5 +1,7 @@
 ## 2026-10-30
 
+- **Mail Buddy — morning edition (06:41 PT):** Dave's inbox since Thu 5:41 PM — 117 messages, 111 spiked, 5 ranked items (Capital One $172.39 Zappos charge matching Wednesday's order; Capital One card added to Apple Pay + an X new-iPhone login — an overnight new-device cluster; Docusign Marshall Hospital ROI completed; USPS Stamps.com package due today by 9 PM). Dad's mailbox: 5 messages, 4 spiked, 1 item (Apple — a recovery contact was removed from Emil's account at 4:53 AM). Details: mail-buddy homepage "📬 Needs your attention".
+
 ### 20261030.0624 — Universal Dump: file attachments (Dave addendum)
 - The Dump card now takes files as well as text — a dump is optional text + optional files, either or both. An "📎 Attach files" row (with the limit stated up front: 1 MB per file) opens the picker; chosen files render as chips with sizes and a × to remove one. **The limit is the write path's own ceiling** — the GitHub Contents API caps a single-file write at 1 MB — so an oversize file is refused at pick time with a message naming the file, its size, and the limit; it is never attached and never fails silently mid-send.
 - **Landing:** files upload through the same token-gated ghPutFile path into buddy-system/docs/ingest-files/<one timestamped folder per dump>/ — alongside the ingest log, in the same top-level area — and the ingest entry then lists each file with its GitHub blob link, so Astro triages the text and its files together. Files-only dumps (no text) send fine; the entry is the heading plus the file list.
