@@ -201,6 +201,29 @@
   .wall-tile img{width:52px;height:52px;border-radius:50%;object-fit:cover}
   .wall-name{font-size:11px;color:var(--muted);text-align:center;line-height:1.3;
     display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+
+  /* Repos — public/private control (Dave 2026-10-30) */
+  .rv-tools{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:0 0 10px}
+  .rv-tools .docsearch{flex:1;min-width:200px}
+  .rv-list{display:flex;flex-direction:column;gap:6px;max-height:430px;overflow-y:auto;padding:2px}
+  .rv-row{display:flex;align-items:center;gap:10px;padding:8px 12px;border:1px solid var(--border);border-radius:10px;background:var(--panel)}
+  .rv-main{flex:1;min-width:0}
+  .rv-buddies{font-weight:600;font-size:14px}
+  .rv-repo{font-family:var(--mono,monospace);font-size:12px;color:var(--muted);text-decoration:none;margin-left:8px;word-break:break-all}
+  .rv-repo:hover{color:var(--accent,#58a6ff)}
+  .rv-note2{font-size:12px;color:var(--muted);white-space:nowrap}
+  .rv-pill{font:inherit;font-size:12.5px;font-weight:700;padding:7px 12px;border-radius:999px;border:1px solid var(--border);background:var(--panel2);color:var(--text);cursor:pointer;white-space:nowrap;-webkit-tap-highlight-color:transparent}
+  .rv-pill.priv{color:var(--muted)}
+  .rv-pill.pub{border-color:var(--gold,#f0b429);color:var(--gold,#f0b429)}
+  .rv-pill.armed{border-color:var(--red,#ff6b6b);color:var(--red,#ff6b6b);background:var(--bg)}
+  .rv-pill[disabled]{opacity:.55;cursor:wait}
+  .rv-pill.locked{cursor:default;color:var(--gold,#f0b429)}
+  .rv-cancel{font:inherit;font-size:12px;padding:7px 10px;border-radius:999px;border:1px solid var(--border);background:none;color:var(--muted);cursor:pointer}
+  .rv-err{font-size:12.5px;color:var(--red,#ff6b6b);padding:2px 12px 4px}
+  .rv-sub{font-size:15px;margin:20px 0 4px}
+  .rv-note{font-size:13px;color:var(--muted);margin:0 0 10px}
+  .rv-chips{display:flex;flex-wrap:wrap;gap:6px}
+  .rv-chip{font-size:12.5px;padding:5px 10px;border:1px solid var(--border);border-radius:999px;color:var(--muted);background:var(--panel)}
 </style>
 </head>
 <body>
@@ -431,6 +454,19 @@
   <h2>📈 Buddies by status</h2>
   <div class="bars" id="bars"><p style="color:var(--muted);font-size:14px">Loading…</p></div>
 
+
+
+  <h2>🔐 Repos — public / private</h2>
+  <p style="font-size:14px;color:var(--muted);margin:-6px 0 14px;max-width:680px">Every buddy repo and who can see it. The default posture is <strong style="color:var(--text)">private</strong>. Making a repo public makes the <strong style="color:var(--text)">whole repo world-readable</strong>, so that direction always asks twice; making one private takes a single tap. Flips run through the GitHub API with the same saved token the dashboard uses — no token, no flip, and a failed flip says so instead of pretending. <strong style="color:var(--text)">buddy-system</strong> is excluded from toggling: the dashboard's Pages site lives there.</p>
+  <div class="rv-tools">
+    <input class="docsearch" id="rvSearch" type="search" placeholder="Filter repos… try a buddy or repo name">
+    <button type="button" class="attn-btn" id="rvRefresh">Refresh live states</button>
+  </div>
+  <div class="docs-count" id="rvStatus">Snapshot: GitHub census, Oct 30, 2026.</div>
+  <div class="rv-list" id="rvList"></div>
+  <h3 class="rv-sub">No repo</h3>
+  <p class="rv-note">These buddies have no GitHub repo — nothing to flip. Accident is local-only by design.</p>
+  <div class="rv-chips" id="rvNorepo"></div>
 
   <h2>📚 Buddy Docs library</h2>
   <p style="font-size:14px;color:var(--muted);margin:-6px 0 14px;max-width:640px">Every brief, PRD, and tracker in the Buddy Docs Drive folder — no buddy owns the library, so it lives here with me.</p>
@@ -1075,5 +1111,143 @@ async function dump(){
     <span class="jar">🫙</span><span class="tiptext">Tip Jar</span>
   </a>
 </div>
+
+<script>
+/* ---------- Repos: public/private visibility control (Dave 2026-10-30) ----------
+   Snapshot data from the GitHub census at build time; live state via the
+   GitHub API using the dashboard's saved token (localStorage buddyTree.v3).
+   Safeguards: private -> public is a two-tap arm + confirm (the whole repo
+   becomes world-readable); buddy-system is locked out of toggling; a failed
+   API call reverts the pill and reports the error verbatim. Flips are never
+   queued: a visibility change needs a live token and a fresh confirm. */
+(function initRepoVis(){
+  var REPOS = [{"repo": "buddy-system", "buddies": ["Project Buddy", "Astro"], "vis": "public", "locked": true}, {"repo": "1968-mgb-gt", "buddies": ["1968 MGB-GT"], "vis": "private", "locked": false}, {"repo": "4-post-lift", "buddies": ["4 post lift"], "vis": "private", "locked": false}, {"repo": "amador-county", "buddies": ["Amador County"], "vis": "private", "locked": false}, {"repo": "amanda-buddy", "buddies": ["Amanda Perez"], "vis": "private", "locked": false}, {"repo": "architect-buddy", "buddies": ["Architect Buddy"], "vis": "private", "locked": false}, {"repo": "art-director-buddy", "buddies": ["Art Director"], "vis": "private", "locked": false}, {"repo": "ashish-chettiar", "buddies": ["Ashish Chettiar"], "vis": "private", "locked": false}, {"repo": "astronomy-buddy", "buddies": ["Astronomy Buddy"], "vis": "private", "locked": false}, {"repo": "auto-insurance", "buddies": ["Auto Insurance"], "vis": "private", "locked": false}, {"repo": "beer-keg-buddy", "buddies": ["Beer Keg Buddy"], "vis": "private", "locked": false}, {"repo": "bicycle-buddy", "buddies": ["Bicycle Buddy"], "vis": "private", "locked": false}, {"repo": "bmw-buddy", "buddies": ["BMW E61"], "vis": "private", "locked": false}, {"repo": "bmw-parts-specialist", "buddies": ["BMW Parts Specialist"], "vis": "private", "locked": false}, {"repo": "briefing-buddy", "buddies": ["Briefing Buddy"], "vis": "private", "locked": false}, {"repo": "buddy-suite", "buddies": ["Buddy Suite"], "vis": "private", "locked": false}, {"repo": "buddy-types", "buddies": ["Buddy Buddy"], "vis": "private", "locked": false}, {"repo": "cabin-hvac", "buddies": ["Cabin HVAC"], "vis": "private", "locked": false}, {"repo": "calendar-buddy", "buddies": ["Calendar Buddy"], "vis": "private", "locked": false}, {"repo": "car-buddy", "buddies": ["Car Buddy"], "vis": "private", "locked": false}, {"repo": "career-buddy", "buddies": ["Career Buddy"], "vis": "private", "locked": false}, {"repo": "carl-buddy", "buddies": ["Carl Towne"], "vis": "private", "locked": false}, {"repo": "charts-buddy", "buddies": ["Charts Buddy"], "vis": "private", "locked": false}, {"repo": "connie-ko", "buddies": ["Connie Ko"], "vis": "private", "locked": false}, {"repo": "crush-pizzeria", "buddies": ["Crush Pizzeria"], "vis": "private", "locked": false}, {"repo": "dave-swiger-buddy", "buddies": ["Dave Swager"], "vis": "private", "locked": false}, {"repo": "daves-apple-watch", "buddies": ["Dave's Apple Watch"], "vis": "private", "locked": false}, {"repo": "daves-ipad-pro", "buddies": ["Dave's iPad Pro"], "vis": "private", "locked": false}, {"repo": "decision-buddy", "buddies": ["Decision Buddy"], "vis": "private", "locked": false}, {"repo": "dellaquila-com", "buddies": ["Dellaquila.com"], "vis": "private", "locked": false}, {"repo": "dellaquilas-buddy", "buddies": ["The Dell'Aquilas"], "vis": "private", "locked": false}, {"repo": "design-buddy", "buddies": ["Designer"], "vis": "private", "locked": false}, {"repo": "developer-buddy", "buddies": ["Developer Buddy"], "vis": "private", "locked": false}, {"repo": "discovery-buddy", "buddies": ["Discovery Buddy"], "vis": "private", "locked": false}, {"repo": "document-buddy", "buddies": ["Document Buddy"], "vis": "private", "locked": false}, {"repo": "documentarian-buddy", "buddies": ["Documentarian"], "vis": "private", "locked": false}, {"repo": "dpg-shop-software", "buddies": ["DPG Shop Software"], "vis": "private", "locked": false}, {"repo": "dream-buddy", "buddies": ["Dream Buddy"], "vis": "private", "locked": false}, {"repo": "elba-and-susan", "buddies": ["Elba & Susan"], "vis": "private", "locked": false}, {"repo": "emil-buddy", "buddies": ["Emil Dell'Aquila"], "vis": "private", "locked": false}, {"repo": "emil-estate", "buddies": ["Emil's Estate"], "vis": "private", "locked": false}, {"repo": "emil-house-sale", "buddies": ["Emil's House Sale"], "vis": "private", "locked": false}, {"repo": "emile-buddy", "buddies": ["Emile Dell'Aquila"], "vis": "private", "locked": false}, {"repo": "eric", "buddies": ["Eric"], "vis": "private", "locked": false}, {"repo": "family-buddy", "buddies": ["Family"], "vis": "private", "locked": false}, {"repo": "feedback-buddy", "buddies": ["Feedback Buddy"], "vis": "private", "locked": false}, {"repo": "finance-buddy", "buddies": ["Finance Buddy"], "vis": "private", "locked": false}, {"repo": "game-buddy", "buddies": ["Game Buddy"], "vis": "private", "locked": false}, {"repo": "garden-buddy", "buddies": ["Garden Buddy"], "vis": "private", "locked": false}, {"repo": "guardian-buddy", "buddies": ["Guardian Buddy"], "vis": "private", "locked": false}, {"repo": "hans-buddy", "buddies": ["Hans"], "vis": "private", "locked": false}, {"repo": "hardware", "buddies": ["Hardware"], "vis": "private", "locked": false}, {"repo": "health-insurance", "buddies": ["Health Insurance"], "vis": "private", "locked": false}, {"repo": "hiking-buddy", "buddies": ["Hiking Buddy"], "vis": "private", "locked": false}, {"repo": "home-insurance", "buddies": ["Home Insurance"], "vis": "private", "locked": false}, {"repo": "hot-tub-buddy", "buddies": ["Hot Tub Buddy"], "vis": "private", "locked": false}, {"repo": "idea-buddy", "buddies": ["Idea Buddy"], "vis": "private", "locked": false}, {"repo": "insurance-buddy", "buddies": ["Insurance Buddy"], "vis": "private", "locked": false}, {"repo": "iphone-16e", "buddies": ["iPhone 16e"], "vis": "private", "locked": false}, {"repo": "iphone-18-pro", "buddies": ["iPhone 18 Pro"], "vis": "private", "locked": false}, {"repo": "james-buddy", "buddies": ["James Michael Day"], "vis": "private", "locked": false}, {"repo": "jessica-buddy", "buddies": ["Jessica"], "vis": "private", "locked": false}, {"repo": "jev-buddy", "buddies": ["Jev Buddy"], "vis": "private", "locked": false}, {"repo": "jody-reed", "buddies": ["Jody Reed"], "vis": "private", "locked": false}, {"repo": "joel-buddy", "buddies": ["Joel Nelson"], "vis": "private", "locked": false}, {"repo": "journal-buddy", "buddies": ["Journal Buddy"], "vis": "private", "locked": false}, {"repo": "larry-osana", "buddies": ["Larry Osana"], "vis": "private", "locked": false}, {"repo": "legal-buddy", "buddies": ["Legal Buddy"], "vis": "private", "locked": false}, {"repo": "lenwood-buddy", "buddies": ["Lenwood Buddy"], "vis": "private", "locked": false}, {"repo": "lenwood-water", "buddies": ["Water \u2014 Lenwood"], "vis": "private", "locked": false}, {"repo": "little-guy-buddy", "buddies": ["Little Guy"], "vis": "private", "locked": false}, {"repo": "llagas-creek-sale", "buddies": ["Llagas Creek Sale"], "vis": "private", "locked": false}, {"repo": "macbook-air-m2", "buddies": ["MacBook Air M2"], "vis": "private", "locked": false}, {"repo": "mail-buddy", "buddies": ["Mail Buddy"], "vis": "private", "locked": false}, {"repo": "marketing-buddy", "buddies": ["Marketing Buddy"], "vis": "private", "locked": false}, {"repo": "marketplace-buddy", "buddies": ["Marketplace Buddy"], "vis": "private", "locked": false}, {"repo": "marley-buddy", "buddies": ["Marley"], "vis": "private", "locked": false}, {"repo": "martha-buddy", "buddies": ["Martha Dell'Aquila"], "vis": "private", "locked": false}, {"repo": "mei-ying-buddy", "buddies": ["Mei-ying Dell'Aquila"], "vis": "private", "locked": false}, {"repo": "melody-lane", "buddies": ["Melody Lane"], "vis": "private", "locked": false}, {"repo": "mga-buddy", "buddies": ["MGA Buddy"], "vis": "private", "locked": false}, {"repo": "miata-apprentice", "buddies": ["Miata Apprentice"], "vis": "private", "locked": false}, {"repo": "miata-nc-parts-specialist", "buddies": ["Miata NC Parts Specialist"], "vis": "private", "locked": false}, {"repo": "miata-parts-specialist", "buddies": ["Miata Parts Specialist"], "vis": "private", "locked": false}, {"repo": "miata-tech", "buddies": ["Miata Tech"], "vis": "private", "locked": false}, {"repo": "ml500-buddy", "buddies": ["ML500 Buddy"], "vis": "private", "locked": false}, {"repo": "model-a-buddy", "buddies": ["1931 Ford Model A"], "vis": "private", "locked": false}, {"repo": "money-buddy", "buddies": ["Money Buddy"], "vis": "private", "locked": false}, {"repo": "music-buddy", "buddies": ["Music Buddy"], "vis": "private", "locked": false}, {"repo": "nancy-buddy", "buddies": ["Nancy Dell'Aquila"], "vis": "private", "locked": false}, {"repo": "nans-apple-watch", "buddies": ["Nan's Apple Watch"], "vis": "private", "locked": false}, {"repo": "nans-ipad-air", "buddies": ["Nan's iPad Air"], "vis": "private", "locked": false}, {"repo": "nans-iphone-17-pro-max", "buddies": ["Nan's iPhone 17 Pro Max"], "vis": "private", "locked": false}, {"repo": "nans-tech", "buddies": ["Nan's Tech"], "vis": "private", "locked": false}, {"repo": "neighborhood-buddy", "buddies": ["Neighborhood Buddy"], "vis": "private", "locked": false}, {"repo": "news-buddy", "buddies": ["News Buddy"], "vis": "private", "locked": false}, {"repo": "onboarding-buddy", "buddies": ["Onboarding Buddy"], "vis": "private", "locked": false}, {"repo": "party-buddy", "buddies": ["Party Buddy"], "vis": "private", "locked": false}, {"repo": "penny-luedtke", "buddies": ["Penny Luedtke"], "vis": "private", "locked": false}, {"repo": "persona-buddy", "buddies": ["Persona Buddy"], "vis": "private", "locked": false}, {"repo": "personal-buddy", "buddies": ["Personal Buddy"], "vis": "private", "locked": false}, {"repo": "pet-buddy", "buddies": ["Pet Buddy"], "vis": "private", "locked": false}, {"repo": "plumber-buddy", "buddies": ["Plumber Buddy"], "vis": "private", "locked": false}, {"repo": "pops-buddy", "buddies": ["Pops' Buddy"], "vis": "private", "locked": false}, {"repo": "portfolio-buddy", "buddies": ["Portfolio Buddy"], "vis": "private", "locked": false}, {"repo": "property-buddy", "buddies": ["Property Buddy"], "vis": "private", "locked": false}, {"repo": "quentin-buddy", "buddies": ["Quentin Dell'Aquila"], "vis": "private", "locked": false}, {"repo": "rachel-buddy", "buddies": ["Rachel"], "vis": "private", "locked": false}, {"repo": "refresh-buddy", "buddies": ["Refresh"], "vis": "private", "locked": false}, {"repo": "relationship-buddy", "buddies": ["Relationship Buddy"], "vis": "private", "locked": false}, {"repo": "research-buddy", "buddies": ["Research Buddy"], "vis": "private", "locked": false}, {"repo": "rocky-buddy", "buddies": ["Rocky"], "vis": "private", "locked": false}, {"repo": "rodrigo", "buddies": ["Rodrigo"], "vis": "private", "locked": false}, {"repo": "ron-buddy", "buddies": ["Ron Dell'Aquila"], "vis": "private", "locked": false}, {"repo": "sarah-buddy", "buddies": ["Sarah Dell'Aquila"], "vis": "private", "locked": false}, {"repo": "sawyer-buddy", "buddies": ["Sawyer Dell'Aquila"], "vis": "private", "locked": false}, {"repo": "scaffold-buddy", "buddies": ["Scaffold Buddy"], "vis": "private", "locked": false}, {"repo": "school-buddy", "buddies": ["Learning Buddy"], "vis": "private", "locked": false}, {"repo": "service-advisor-buddy", "buddies": ["Service Advisor"], "vis": "private", "locked": false}, {"repo": "sharing-buddy", "buddies": ["Sharing Buddy"], "vis": "private", "locked": false}, {"repo": "shopping-buddy", "buddies": ["Shopping Buddy"], "vis": "private", "locked": false}, {"repo": "shreya-dhingra", "buddies": ["Shreya Dhingra"], "vis": "private", "locked": false}, {"repo": "social-media-buddy", "buddies": ["Social Media Buddy"], "vis": "private", "locked": false}, {"repo": "sports-car-adventures", "buddies": ["Sports Car Adventures"], "vis": "private", "locked": false}, {"repo": "stumpjumper-buddy", "buddies": ["Stumpjumper Buddy"], "vis": "private", "locked": false}, {"repo": "tech-buddy", "buddies": ["Tech Buddy"], "vis": "private", "locked": false}, {"repo": "tester-relations-buddy", "buddies": ["Tester Relations Buddy"], "vis": "private", "locked": false}, {"repo": "ticket-buddy", "buddies": ["Ticket Buddy"], "vis": "private", "locked": false}, {"repo": "travel-buddy", "buddies": ["Travel Buddy"], "vis": "private", "locked": false}, {"repo": "venue-buddy", "buddies": ["Venue Buddy"], "vis": "private", "locked": false}, {"repo": "w163-mastertech-buddy", "buddies": ["W163 Mastertech Buddy"], "vis": "private", "locked": false}, {"repo": "wisdom", "buddies": ["Wisdom Buddy"], "vis": "private", "locked": false}, {"repo": "work-buddy", "buddies": ["Work Buddy"], "vis": "private", "locked": false}, {"repo": "zen-buddy", "buddies": ["Zen Buddy"], "vis": "private", "locked": false}];
+  var NOREPO = ["Accident", "Acquaintances", "Ali", "Andy (Ire Tide)", "Apple", "Birthday Buddy", "Cabin Buddy", "Dave & Nancy", "Dave's Tech", "Dr. Travis Lyman", "Em & Sarah", "Fireplace Buddy", "Health Buddy", "Hong Kong Palace", "Housing Buddy", "IS&T", "Investment Buddy", "Job Buddy", "Johnny", "Keelan", "Kyle Dell\u2019Aquila", "Life Insurance", "Nina", "Reminder Buddy", "Renee", "Ron & Mei", "Sawyer\u2019s", "Sparsh", "TV Buddy", "Testers", "Trudy", "WWSF/STIX"];
+  var OWNER = 'davedellaquila';
+  var listEl = document.getElementById('rvList');
+  var statusEl = document.getElementById('rvStatus');
+  var searchEl = document.getElementById('rvSearch');
+  var norepoEl = document.getElementById('rvNorepo');
+  if (!listEl || !statusEl) return;
+  var armed = null, armTimer = null, busy = {};
+  function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+  function lsGet(){ try { return JSON.parse(localStorage.getItem('buddyTree.v3') || '{}'); } catch(e){ return {}; } }
+  function token(){ return lsGet().ghToken || ''; }
+  function now(){ return new Date().toLocaleTimeString('en-US', {hour:'numeric', minute:'2-digit'}); }
+  async function rvApi(path, method, body){
+    var tk = token();
+    if (!tk) throw new Error('no-token');
+    var r = await fetch('https://api.github.com' + path, {
+      method: method || 'GET',
+      headers: {'Authorization': 'Bearer ' + tk, 'Accept': 'application/vnd.github+json', 'Content-Type': 'application/json'},
+      body: body ? JSON.stringify(body) : undefined
+    });
+    var j = null;
+    try { j = await r.json(); } catch(e){}
+    if (!r.ok) { var err = new Error('GitHub ' + r.status + (j && j.message ? ': ' + j.message : '')); err.status = r.status; throw err; }
+    return j;
+  }
+  function counts(){
+    var c = {private:0, public:0, missing:0};
+    REPOS.forEach(function(r){ c[r.vis] = (c[r.vis] || 0) + 1; });
+    return c;
+  }
+  function snapshotStatus(){
+    var c = counts();
+    statusEl.textContent = 'Snapshot: GitHub census, Oct 30, 2026 — ' + c.private + ' private · ' + c.public + ' public' + (c.missing ? ' · ' + c.missing + ' not found' : '') + '. Live states need your token (Refresh).';
+  }
+  function pillHtml(r){
+    if (r.locked) return '<span class="rv-pill locked" title="Excluded from toggling">🌐 Public — locked</span>';
+    if (r.vis === 'missing') return '<span class="rv-pill" title="Not found on GitHub">Not found</span>';
+    if (busy[r.repo]) return '<button type="button" class="rv-pill" disabled>Working…</button>';
+    if (armed === r.repo) return '<button type="button" class="rv-pill armed" data-act="' + esc(r.repo) + '">⚠️ Make PUBLIC? Tap again to confirm — the whole repo becomes world-readable</button><button type="button" class="rv-cancel" data-cancel="' + esc(r.repo) + '">Cancel</button>';
+    if (r.vis === 'public') return '<button type="button" class="rv-pill pub" data-act="' + esc(r.repo) + '" title="Tap to make private">🌐 Public</button>';
+    return '<button type="button" class="rv-pill priv" data-act="' + esc(r.repo) + '" title="Tap to make public (asks twice)">🔒 Private</button>';
+  }
+  function render(){
+    var q = (searchEl.value || '').toLowerCase().trim();
+    listEl.innerHTML = REPOS.filter(function(r){
+      return !q || r.repo.toLowerCase().indexOf(q) >= 0 || r.buddies.join(' ').toLowerCase().indexOf(q) >= 0;
+    }).map(function(r){
+      return '<div class="rv-row" data-row="' + esc(r.repo) + '"><div class="rv-main"><span class="rv-buddies">' + esc(r.buddies.join(' · ')) + '</span>'
+        + '<a class="rv-repo" href="https://github.com/' + OWNER + '/' + esc(r.repo) + '" target="_blank" rel="noopener">' + esc(r.repo) + '</a></div>'
+        + (r.note ? '<span class="rv-note2">' + esc(r.note) + '</span>' : '')
+        + pillHtml(r) + '</div>'
+        + (r.err ? '<div class="rv-err">' + esc(r.err) + '</div>' : '');
+    }).join('') || '<p class="rv-note" style="padding:8px 2px">No repos match that filter.</p>';
+  }
+  function disarm(){
+    armed = null;
+    if (armTimer) { clearTimeout(armTimer); armTimer = null; }
+  }
+  function noToken(r){
+    var msg = 'Add your GitHub token on the dashboard first — the toggles use the same saved token. Nothing was changed.';
+    if (r) { r.err = msg; render(); }
+    statusEl.textContent = msg;
+  }
+  async function flip(r, makePrivate){
+    if (!token()) { noToken(r); return; }
+    busy[r.repo] = true; r.err = ''; render();
+    try {
+      await rvApi('/repos/' + OWNER + '/' + r.repo, 'PATCH', {private: makePrivate});
+      r.vis = makePrivate ? 'private' : 'public';
+      r.note = (makePrivate ? 'Set private' : 'Set PUBLIC') + ' · ' + now() + ' · live via API';
+      var c = counts();
+      statusEl.textContent = 'Done: ' + r.repo + ' is now ' + r.vis.toUpperCase() + ' (' + now() + '). Totals: ' + c.private + ' private · ' + c.public + ' public.';
+    } catch(e) {
+      r.err = 'Flip failed — ' + (e.message || e) + '. The repo is still ' + r.vis.toUpperCase() + '. If this is a 403, the saved token cannot change visibility (it needs admin access to the repo — a classic token needs the repo scope; a fine-grained one needs Administration read/write).';
+      statusEl.textContent = 'Last flip failed for ' + r.repo + ' — nothing was changed. See the note under its row.';
+    }
+    delete busy[r.repo];
+    render();
+  }
+  listEl.addEventListener('click', function(e){
+    var cancel = e.target.closest('[data-cancel]');
+    if (cancel) { disarm(); render(); return; }
+    var btn = e.target.closest('[data-act]');
+    if (!btn) return;
+    var repo = btn.getAttribute('data-act');
+    var r = REPOS.filter(function(x){ return x.repo === repo; })[0];
+    if (!r || r.locked || busy[r.repo]) return;
+    if (r.vis === 'public') { disarm(); flip(r, true); return; }
+    if (r.vis === 'private') {
+      if (!token()) { noToken(r); return; }
+      if (armed === r.repo) { disarm(); flip(r, false); }
+      else {
+        disarm(); armed = r.repo; r.err = '';
+        armTimer = setTimeout(function(){ if (armed === r.repo) { armed = null; render(); } }, 8000);
+        render();
+      }
+    }
+  });
+  searchEl.addEventListener('input', render);
+  document.getElementById('rvRefresh').addEventListener('click', async function(){
+    if (!token()) { noToken(null); return; }
+    statusEl.textContent = 'Checking live states…';
+    var done = 0, failed = 0, i, batch;
+    for (i = 0; i < REPOS.length; i += 8) {
+      batch = REPOS.slice(i, i + 8);
+      await Promise.all(batch.map(async function(r){
+        if (r.locked) { done++; return; }
+        try {
+          var j = await rvApi('/repos/' + OWNER + '/' + r.repo);
+          r.vis = j.private ? 'private' : 'public';
+          r.note = 'Checked live · ' + now();
+          r.err = '';
+          done++;
+        } catch(e) { failed++; r.err = 'Live check failed — ' + (e.message || e); }
+      }));
+      statusEl.textContent = 'Checking live states… ' + done + '/' + REPOS.length;
+      render();
+    }
+    var c = counts();
+    statusEl.textContent = 'Live check done · ' + now() + ' — ' + c.private + ' private · ' + c.public + ' public' + (failed ? ' · ' + failed + ' failed to check' : '') + '.';
+    render();
+  });
+  norepoEl.innerHTML = NOREPO.map(function(n){ return '<span class="rv-chip">' + esc(n) + ' — no repo</span>'; }).join('');
+  snapshotStatus();
+  render();
+})();
+</script>
 </body>
 </html>
