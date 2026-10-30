@@ -344,6 +344,18 @@ renderCalendar("fiddletown");
 .cal-agenda li:last-child { border-bottom: none; }
 .cal-when { flex: 0 0 118px; color: var(--muted); font-size: 13.5px; }
 .cal-none { color: var(--muted); font-size: 14.5px; font-style: italic; }
+.cal-agenda li.cal-evrow { cursor: pointer; margin: 0 -8px; padding: 7px 8px; border-radius: 8px; -webkit-tap-highlight-color: transparent; }
+.cal-agenda li.cal-evrow:hover, .cal-agenda li.cal-evrow:focus-visible { background: var(--accent-soft); outline: none; }
+.cal-go { margin-left: auto; color: var(--muted); font-size: 16px; line-height: 1.2; padding-left: 8px; }
+.cal-detail { margin-top: 18px; border-top: 1px dashed var(--border); padding-top: 14px; }
+.cal-dtitle { font-size: 19px; margin: 10px 0 10px; line-height: 1.3; }
+.cal-facts { list-style: none; }
+.cal-facts li { display: flex; gap: 12px; padding: 6px 0; border-bottom: 1px dashed var(--border); font-size: 14.5px; }
+.cal-facts li:last-child { border-bottom: none; }
+.cal-flab { flex: 0 0 92px; color: var(--muted); font-size: 13.5px; }
+.cal-gcal { display: inline-block; margin-top: 12px; font-weight: 600; color: var(--accent); text-decoration: none; border: 1px solid var(--border); border-radius: 20px; padding: 7px 14px; font-size: 13.5px; }
+.cal-gcal:hover { border-color: var(--accent); }
+.cal-dnote { font-size: 12.5px; color: var(--muted); font-style: italic; margin-top: 10px; }
 @media (max-width: 560px) {
   .cal-day { min-height: 62px; padding: 4px; }
   .cal-ev { font-size: 9.5px; }
@@ -362,6 +374,7 @@ renderCalendar("fiddletown");
 <div class="cal-dow"><div>Sun</div><div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div></div>
 <div class="cal-grid" id="cal-grid"></div>
 <div class="cal-agenda" id="cal-agenda"></div>
+<div class="cal-detail" id="cal-detail" hidden></div>
 <p class="cal-sub" style="margin-top:12px">Snapshot of Dave's own Google calendars (titles &amp; times only), refreshed daily.</p>
 <script>
 (function () {
@@ -371,6 +384,7 @@ renderCalendar("fiddletown");
   var today = new Date(); today.setHours(0, 0, 0, 0);
   var viewY = today.getFullYear(), viewM = today.getMonth();
   var selKey = keyOf(today);
+  var agendaEvs = [];
   var minKey = null, maxKey = null;
 
   function keyOf(d) {
@@ -415,6 +429,7 @@ renderCalendar("fiddletown");
     return map;
   }
   function render() {
+    closeDetail();
     var map = byDay();
     document.getElementById("cal-month-label").textContent = MONTHS[viewM] + " " + viewY;
     var first = new Date(viewY, viewM, 1);
@@ -449,18 +464,85 @@ renderCalendar("fiddletown");
     var parts = selKey.split("-");
     var dt = new Date(+parts[0], +parts[1] - 1, +parts[2]);
     var evs = map[selKey] || [];
+    agendaEvs = evs;
     var html = "<h4>" + DOWS[dt.getDay()] + ", " + MONTHS[dt.getMonth()] + " " + dt.getDate() + "</h4>";
     if (!evs.length) {
       html += '<p class="cal-none">Nothing on the calendar.</p>';
     } else {
       html += "<ul>";
-      evs.forEach(function (ev) {
+      evs.forEach(function (ev, i) {
         var when = ev.allDay ? "All day" : fmtTime(ev.start) + " – " + fmtTime(ev.end);
-        html += "<li><span class=\"cal-when\">" + when + "</span><span>" + esc(ev.title) + "</span></li>";
+        html += '<li class="cal-evrow" data-evi="' + i + '" role="button" tabindex="0" title="See event details"><span class=\"cal-when\">' + when + '</span><span>' + esc(ev.title) + '</span><span class="cal-go" aria-hidden="true">›</span></li>';
       });
       html += "</ul>";
     }
-    document.getElementById("cal-agenda").innerHTML = html;
+    var ag = document.getElementById("cal-agenda");
+    ag.innerHTML = html;
+    ag.querySelectorAll("[data-evi]").forEach(function (row) {
+      function open() { openDetail(agendaEvs[+row.dataset.evi]); }
+      row.addEventListener("click", open);
+      row.addEventListener("keydown", function (e) {
+        if (e.key === "Enter" || e.key === " ") { e.preventDefault(); open(); }
+      });
+    });
+  }
+  /* ----- event detail view (built only from the snapshot's title + times) ----- */
+  function fmtFullDate(d) {
+    return DOWS[d.getDay()] + ", " + MONTHS[d.getMonth()] + " " + d.getDate() + ", " + d.getFullYear();
+  }
+  function fmtDur(ms) {
+    var mins = Math.round(ms / 60000);
+    var days = Math.floor(mins / 1440); mins -= days * 1440;
+    var hrs = Math.floor(mins / 60), rem = mins - hrs * 60;
+    var parts = [];
+    if (days) parts.push(days + (days === 1 ? " day" : " days"));
+    if (hrs) parts.push(hrs + (hrs === 1 ? " hour" : " hours"));
+    if (rem) parts.push(rem + (rem === 1 ? " minute" : " minutes"));
+    return parts.length ? parts.join(" ") : "0 minutes";
+  }
+  function factRow(label, value) {
+    return '<li><span class="cal-flab">' + label + '</span><span>' + value + "</span></li>";
+  }
+  function openDetail(ev) {
+    if (!ev) return;
+    var rows = "";
+    if (ev.allDay) {
+      var s = new Date(ev.start + "T00:00:00"), e = new Date(ev.end + "T00:00:00");
+      if (e <= s) e = new Date(s.getTime() + 864e5);
+      var last = new Date(e.getTime() - 864e5);
+      var days = Math.round((e - s) / 864e5);
+      rows += factRow("Date", days > 1 ? fmtFullDate(s) + " – " + fmtFullDate(last) : fmtFullDate(s));
+      rows += factRow("Type", "All-day event");
+      rows += factRow("Duration", days + (days === 1 ? " day" : " days"));
+    } else {
+      var st = new Date(ev.start), en = new Date(ev.end);
+      if (keyOf(st) === keyOf(en)) {
+        rows += factRow("Date", fmtFullDate(st));
+        rows += factRow("Time", fmtTime(ev.start) + " – " + fmtTime(ev.end));
+      } else {
+        rows += factRow("Starts", fmtFullDate(st) + " · " + fmtTime(ev.start));
+        rows += factRow("Ends", fmtFullDate(en) + " · " + fmtTime(ev.end));
+      }
+      rows += factRow("Type", "Timed event");
+      rows += factRow("Duration", fmtDur(en - st));
+    }
+    var parts = selKey.split("-");
+    var gcal = "https://calendar.google.com/calendar/r/day/" + (+parts[0]) + "/" + (+parts[1]) + "/" + (+parts[2]);
+    var dEl = document.getElementById("cal-detail");
+    dEl.innerHTML = '<button type="button" class="cal-btn" id="cal-back">← Back to ' + esc(document.querySelector("#cal-agenda h4") ? document.querySelector("#cal-agenda h4").textContent : "the day") + "</button>"
+      + '<h4 class="cal-dtitle">' + esc(ev.title) + "</h4>"
+      + '<ul class="cal-facts">' + rows + "</ul>"
+      + '<a class="cal-gcal" href="' + gcal + '" target="_blank" rel="noopener">Open this day in Google Calendar ↗</a>'
+      + '<p class="cal-dnote">This page\'s snapshot carries titles &amp; times only, by design — location, guests, and notes live in Google Calendar.</p>';
+    document.getElementById("cal-agenda").hidden = true;
+    dEl.hidden = false;
+    document.getElementById("cal-back").addEventListener("click", closeDetail);
+  }
+  function closeDetail() {
+    var dEl = document.getElementById("cal-detail");
+    var ag = document.getElementById("cal-agenda");
+    if (dEl) { dEl.hidden = true; dEl.innerHTML = ""; }
+    if (ag) ag.hidden = false;
   }
   document.getElementById("cal-prev").addEventListener("click", function () {
     viewM--; if (viewM < 0) { viewM = 11; viewY--; } render();
