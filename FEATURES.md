@@ -112,7 +112,7 @@ Build: `build.py` generates `index.html` from `buddies.json` + `plans.json`.
 ## Sidebar
 
 - **Main views** — Tree, Projects, Business Plans, Manifest, Project,
-  Changelog; order is user-rearrangeable in settings (gear icon). Number
+  Changelog; order is user-rearrangeable in settings (gear icon) and is the single source of truth — the sidebar sections and the collapsed rail's current-view popover both render in that order (within their Views / Collections grouping). Number
   keys 1–6 select views in that order; Up/Down arrow through views then
   buddies.
 - **Org Chart view zoom** — the Org Chart opens fitted to the whole staff (on a phone-width viewport the fit fills the height instead and the width pans, with a compact title + one-line header that clears the rail cluster; Dave 2026-10-30);
