@@ -2996,6 +2996,7 @@ html.light .wc-got{background:#007AFF}
      is 66px wide and shows only #ph-strip. ---- */
   body:not(.standalone) #sidebar{position:fixed;left:0;top:0;bottom:0;height:100dvh;width:66px;max-width:none;transform:none;visibility:visible;pointer-events:auto;margin:0;padding:0;border-radius:0;border-left:none;border-right:1px solid var(--border);background:var(--panel);z-index:96;overflow:hidden;flex:none;transition:width .28s cubic-bezier(.32,.72,.35,1)}
   body:not(.standalone).ph-left-open #sidebar{width:min(85vw,320px)}
+  body:not(.standalone).ph-left-open #sidebar{z-index:100} /* Dave 2026-10-30 bug fix: the open drawer must paint ABOVE its scrim. The z-100 for #sidebar.open (in the small ≤639 block near the top of this stylesheet) LOSES on specificity to the phone base rule above (body:not(.standalone) #sidebar = (1,1,1) beats #sidebar.open = (1,1,0)), so the drawer sat at z-96 while the shown scrim (#sb-scrim.show, z-99) covered it: dimmed panel, every tap landing on the scrim. ph-left-open is the drawer's true phone open state (syncPhoneDocks derives it from .open), so the z-100 lives here, where it wins. */
   body:not(.standalone):not(.ph-left-open) #sidebar .sb-scroll,
   body:not(.standalone):not(.ph-left-open) #sidebar #views-sec,
   body:not(.standalone):not(.ph-left-open) #sidebar #collections-sec,
@@ -5396,7 +5397,7 @@ function renderDevelopSection(){
   const dev = document.getElementById('fset-develop');
   if (!dev) return;
   const simulating = !!devBackup;
-  const buildNum = '20261030.0559';
+  const buildNum = '20261030.0606';
   dev.innerHTML = ''
     + '<label class="fset-check"><input type="checkbox" id="dev-empty-toggle"' + (simulating ? ' checked' : '') + '> <span><strong>Simulate new user</strong> — empty data file, as if opening the shared link fresh</span></label>'
     + '<div class="fineprint" style="margin:8px 0 12px">Build <span style="font-family:monospace">' + escHtml(String(buildNum)) + '</span> · ' + BUDDIES.length + ' buddies in this file</div>'
@@ -7396,7 +7397,7 @@ function renderBuddy(id){
     + attrHead('shared', 'SHARED NOTES', '<span class="attr-value" id="bp-shared-count">(0)</span>', '')
     + '<div class="attr-body">' + attrTipLine('Anybody with repo access can see this note. Saved to the buddy’s repo (docs/notes.md).') + '<textarea class="notes" id="bp-shared-notes" placeholder="Anybody with repo access can see this note."></textarea>'
     + '<p class="fineprint" id="shared-status"></p></div></div>'
-    + '<div class="bp-build">Build 20261030.0559</div>'
+    + '<div class="bp-build">Build 20261030.0606</div>'
     + '</div>';
   // Update every visible label for a buddy after a rename/re-icon, across all
   // Atlas lenses. A rename changes no structure, so labels are patched in place
@@ -10079,7 +10080,7 @@ function renderPlan(id){
     + '<p class="fineprint">Saved on this device. (For your eyes only)</p></div>'
     + '<div class="bp-sec"><h3>📝 Shared notes<span class="info-tip" data-tip="Visible to everyone with access to this project.">\u24d8</span></h3><textarea class="notes" id="bp-shared" placeholder="Shared notes\u2026 (visible to everyone with access)">'+escHtml((S.planShared||{})[id]||'')+'</textarea>'
     + '<p class="fineprint">Shared — visible to everyone with access.</p></div>'
-    + '<div class="bp-build">Build 20261030.0559</div>'
+    + '<div class="bp-build">Build 20261030.0606</div>'
     + '</div>';
   const nt = document.getElementById('bp-notes');
   let t = null;
@@ -13887,14 +13888,14 @@ function openWhatsNew(){
     .then(r => r.ok ? r.text() : '')
     .then(t => {
       const serverBuild = t.trim();
-      if (serverBuild && serverBuild !== '20261030.0559') {
+      if (serverBuild && serverBuild !== '20261030.0606') {
         updBtn.style.display = '';
         updBtn.title = 'Update to build ' + serverBuild;
       }
       // Show build numbers at the top of the sheet (Dave's request 2026-10-12)
-      const myBuild = '20261030.0559';
+      const myBuild = '20261030.0606';
       let buildLine = '<p class="fineprint" style="margin-top:0">You’re on build ' + escHtml(myBuild) + '.';
-      if (serverBuild && serverBuild !== '20261030.0559' && isNewerBuild(serverBuild, myBuild)) {
+      if (serverBuild && serverBuild !== '20261030.0606' && isNewerBuild(serverBuild, myBuild)) {
         buildLine += ' Build ' + escHtml(serverBuild) + ' is available.';
       }
       buildLine += '</p>';
@@ -13964,7 +13965,7 @@ function syncUpdateBanner(){
   if (b.dataset.state !== state) b.dataset.state = state;
 }
 function initVersionCheck(){
-  const myBuild = '20261030.0559';
+  const myBuild = '20261030.0606';
   function showUpdateBanner(serverBuild){
     if (document.getElementById('update-banner')) return;
     const b = document.createElement('div');

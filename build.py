@@ -2823,6 +2823,7 @@ html.light .wc-got{background:#007AFF}
      is 66px wide and shows only #ph-strip. ---- */
   body:not(.standalone) #sidebar{position:fixed;left:0;top:0;bottom:0;height:100dvh;width:66px;max-width:none;transform:none;visibility:visible;pointer-events:auto;margin:0;padding:0;border-radius:0;border-left:none;border-right:1px solid var(--border);background:var(--panel);z-index:96;overflow:hidden;flex:none;transition:width .28s cubic-bezier(.32,.72,.35,1)}
   body:not(.standalone).ph-left-open #sidebar{width:min(85vw,320px)}
+  body:not(.standalone).ph-left-open #sidebar{z-index:100} /* Dave 2026-10-30 bug fix: the open drawer must paint ABOVE its scrim. The z-100 for #sidebar.open (in the small ≤639 block near the top of this stylesheet) LOSES on specificity to the phone base rule above (body:not(.standalone) #sidebar = (1,1,1) beats #sidebar.open = (1,1,0)), so the drawer sat at z-96 while the shown scrim (#sb-scrim.show, z-99) covered it: dimmed panel, every tap landing on the scrim. ph-left-open is the drawer's true phone open state (syncPhoneDocks derives it from .open), so the z-100 lives here, where it wins. */
   body:not(.standalone):not(.ph-left-open) #sidebar .sb-scroll,
   body:not(.standalone):not(.ph-left-open) #sidebar #views-sec,
   body:not(.standalone):not(.ph-left-open) #sidebar #collections-sec,
