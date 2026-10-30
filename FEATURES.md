@@ -408,7 +408,7 @@ Build: `build.py` generates `index.html` from `buddies.json` + `plans.json`.
   live one tap away in the Recents popover; the strip's current-buddy
   accent marking has no rail equivalent. The View control carries a
   **caret (▾)** at every size — it is a menu, and the caret rotates while
-  its menu is open. **Find** (center button in the bottom cluster — Prev / Find / Next, Dave 2026-10-30) opens a
+  its menu is open. **Find** (center button in the bottom cluster — the cluster's discs are 44px, the same diameter as the rail discs (Dave, 2026-10-30) — Prev / Find / Next, Dave 2026-10-30) opens a
   sticky search bar at the top of the screen: empty it lists Recents,
   typing switches to auto-suggest with the sidebar search's matcher and
   matched characters in bold; picking a result lands on that buddy's

@@ -959,7 +959,7 @@ body:has(#view-buddy.sheet.active) #hp-nav,
 body:has(#view-buddy.sheet.active) #hp-back{display:flex}
 body:has(#field-settings.show) #hp-nav,
 body:has(#field-settings.show) #hp-back{display:none !important}
-#hp-nav button, #hp-back{width:56px;height:56px;border-radius:50%;padding:0;
+#hp-nav button, #hp-back{width:44px;height:44px;border-radius:50%;padding:0; /* Dave 2026-10-30: the footer discs shrink to the rail discs' 44px - one disc diameter across the chrome. (Was 56px. #hp-back shares this rule and the footer family, so it matches too.) Icons, gap (12px), glass, and the --kb-lift transform on the container are untouched. */
   background:rgba(50,50,52,.16);color:#fff;border:.5px solid rgba(255,255,255,.25);cursor:pointer;
   align-items:center;justify-content:center;
   -webkit-backdrop-filter:blur(20px) saturate(180%);backdrop-filter:blur(20px) saturate(180%);
