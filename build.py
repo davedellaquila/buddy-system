@@ -2156,12 +2156,19 @@ body:has(#sidebar.sb-floating) #sb-resize{display:none}
        rail's single divider. */
     #rail-mid{display:none}
     body.sb-closed #rail-mid{display:flex;flex-direction:column;align-items:center;gap:4px;padding:10px 0 2px;margin-top:4px;border-top:1px solid var(--border)}
-    #rail-recents{width:44px;height:44px;border-radius:12px;border:1px solid transparent;background:none;color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1.25rem;padding:0}
-    #rail-expand{width:44px;height:44px;border-radius:50%;border:1px solid var(--border);background:color-mix(in srgb, var(--panel) 72%, transparent);color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0}
-    #rail-expand:hover{color:var(--accent);border-color:var(--accent)}
-    #rail-expand:active{transform:scale(.96)}
-    #rail-curview{width:44px;height:44px;border-radius:12px;border:1px solid transparent;background:none;color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1.25rem;padding:0}
-    #rail-curview:hover{color:var(--accent);border-color:var(--border);background:var(--ghost)}
+    /* One icon family (Dave, 2026-10-30): all four rail slots wear the
+       SAME glass disc - the cluster's standing shell (16% panel, blur
+       14px, 1px border, soft shadow, 44px circle) - in every scope the
+       rail renders. Before this, the base rules diverged (expand an
+       opaque 72% circle, Recents and current-view transparent rounded
+       squares, Dump no rule at all) and only the floating-desktop and
+       phone overrides happened to repaint them alike, so the anchored
+       rail showed three different styles at once. The line icons inside
+       are one weight (24px, stroke 2); the current-view slot keeps the
+       view's own icon, sized by the same font-size, inside the same disc. */
+    #rail-expand, #rail-recents, #rail-curview, #rail-dump{width:44px;height:44px;border-radius:50%;border:1px solid var(--border);background:color-mix(in srgb, var(--panel) 16%, transparent);-webkit-backdrop-filter:blur(14px) saturate(1.6);backdrop-filter:blur(14px) saturate(1.6);box-shadow:0 2px 14px var(--shadow);color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1.25rem;padding:0}
+    #rail-expand:hover, #rail-recents:hover, #rail-curview:hover, #rail-dump:hover{color:var(--accent);border-color:var(--accent)}
+    #rail-expand:active, #rail-recents:active, #rail-curview:active, #rail-dump:active{transform:scale(.96)}
     /* Rail split (Dave 2026-10-29): the collapsed rail is TWO glass cards,
        not one - the expand chevron alone in a card fixed to the top-left
        corner, and the navigation cluster (Recents, current-view) in its
@@ -14873,7 +14880,7 @@ flushDumpQueue();
 <div id="sb-scrim"></div>
 <aside id="sidebar">
   <div id="ph-strip" role="navigation" aria-label="Buddy strip"></div>
-  <div id="rail-top"><button type="button" id="rail-expand" title="Expand sidebar" aria-label="Expand sidebar"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9.5 5.5L16 12l-6.5 6.5"/></svg></button></div>
+  <div id="rail-top"><button type="button" id="rail-expand" title="Expand sidebar" aria-label="Expand sidebar"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9.5 5.5L16 12l-6.5 6.5"/></svg></button></div>
   <div class="sb-scroll">
   <div class="sb-brand-sticky">
     <div id="sb-tools"><button id="sb-gear" title="Settings (⌘,)" aria-label="Settings"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button><button type="button" id="sb-recents" title="Recent buddies" aria-label="Recent buddies"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 8.5A9 9 0 1 1 3.2 13.6"/><path d="M3.2 3.8v4.8h4.8"/><path d="M12 7.5V12l3 2"/></svg></button><button id="sb-close" title="Collapse sidebar" aria-label="Collapse sidebar"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.5 5.5L8 12l6.5 6.5"/></svg></button></div>

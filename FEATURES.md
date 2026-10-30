@@ -286,6 +286,9 @@ Build: `build.py` generates `index.html` from `buddies.json` + `plans.json`.
   "Dumps (n)" section (collapsed by default, state remembered per buddy);
   each dump tile has edit (✏️) and delete (🗑️) buttons in its upper-right
   corner.
+- **Rail icon family** — the collapsed rail's four slots (expand, Recents,
+  current-view, Dump) share one glass disc and one line-icon weight
+  everywhere the rail renders, anchored included (Dave, 2026-10-30).
 - **Universal Dump button** — a 📥 disc on the collapsed rail (below the
   current-view icon, phone and desktop) opens a capture box that routes to
   the TOP LEVEL: entries append to Astro's ingest
