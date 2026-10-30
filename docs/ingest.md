@@ -198,3 +198,7 @@ DONE — Dave marked this done on the homepage: "Field guide ready for review �
 
 DONE — Dave marked this done on the homepage: "Job req ready for review — looks good, edits, or defer?" (attention id: nans-tech-job-req). Please remove it from the attention list in buddies.json.
 
+## 10/30/2026, 5:57:02 AM
+
+DONE — Dave marked this done on the homepage: "Job req ready for review — looks good, edits, or defer?" (attention id: garden-buddy-job-req). Please remove it from the attention list in buddies.json.
+
