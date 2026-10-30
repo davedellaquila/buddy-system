@@ -14908,11 +14908,11 @@ flushDumpQueue();
   <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><polyline points="9 14 4 9 9 4" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M20 20v-7a4 4 0 0 0-4-4H4" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
 </button>
 <div id="hp-nav" role="group" aria-label="Previous and next buddy homepage">
-<button type="button" id="hp-find" title="Find a buddy" aria-label="Find a buddy">
-  <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="2.4"/><path d="M15.5 15.5L21 21" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>
-</button>
 <button type="button" id="hp-prev" title="Previous homepage" aria-label="Previous buddy homepage">
   <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><path d="M5.5 14.5L12 8l6.5 6.5" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+</button>
+<button type="button" id="hp-find" title="Find a buddy" aria-label="Find a buddy">
+  <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="2.4"/><path d="M15.5 15.5L21 21" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>
 </button>
 <button type="button" id="hp-next" title="Next homepage" aria-label="Next buddy homepage">
   <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><path d="M5.5 9.5L12 16l6.5-6.5" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>

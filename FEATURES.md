@@ -401,7 +401,7 @@ Build: `build.py` generates `index.html` from `buddies.json` + `plans.json`.
   live one tap away in the Recents popover; the strip's current-buddy
   accent marking has no rail equivalent. The View control carries a
   **caret (▾)** at every size — it is a menu, and the caret rotates while
-  its menu is open. **Find** (first button in the bottom cluster) opens a
+  its menu is open. **Find** (center button in the bottom cluster — Prev / Find / Next, Dave 2026-10-30) opens a
   sticky search bar at the top of the screen: empty it lists Recents,
   typing switches to auto-suggest with the sidebar search's matcher and
   matched characters in bold; picking a result lands on that buddy's
@@ -421,7 +421,7 @@ Build: `build.py` generates `index.html` from `buddies.json` + `plans.json`.
 - **The Lift**: while typing on the phone (keyboard open), the Prev/Next
   pill rides above the keyboard via a `--kb-lift` offset driven by focus
   and `visualViewport`, and settles back when the keyboard closes.
-- **Disc clearance**: the floating homepage-nav discs (Find/Prev/Next
+- **Disc clearance**: the floating homepage-nav discs (Prev/Find/Next
   centered, Back bottom-left) never cover hosted chrome: when a
   homepage/app is in the frame, the frame wrap reserves the discs' 96px
   footprint at its bottom so the hosted page's own bottom bars reflow
