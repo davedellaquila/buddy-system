@@ -6021,13 +6021,21 @@ function applyViewsH(){
 function initViewsResize(){
   const h = document.getElementById('views-resize'); if (!h || h.dataset.init) return;
   h.dataset.init = '1';
-  if (!S.viewsH) S.viewsH = 176;
   applyViewsH();
   h.addEventListener('pointerdown', e => {
     e.preventDefault();
     const nav = document.getElementById('view-nav'); const sb = document.getElementById('sidebar');
     if (!nav || !sb) return;
-    const startY = e.clientY; const startH = S.viewsH || nav.offsetHeight;
+    /* Start from the height on screen, never the stored cap: since the
+       2026-10-30 reclassification the Views list holds 3 rows (~116px),
+       while stored caps (the old forced 176 default, or heights dragged
+       when the section held ten views) sit above the content - the cap
+       never bit, so whole drags moved nothing visible and the grip read
+       as dead. nav.offsetHeight is the capped height when a cap bites
+       and the natural height when it does not, so the first pixel of a
+       drag always shows. (Collections never had the forced default,
+       which is why its grip never showed this.) */
+    const startY = e.clientY; const startH = nav.offsetHeight;
     const maxH = Math.max(140, sb.clientHeight - 190);
     try { h.setPointerCapture(e.pointerId); } catch (err) {}
     const mv = ev => { S.viewsH = Math.round(Math.min(maxH, Math.max(56, startH + (startY - ev.clientY)))); applyViewsH(); };
