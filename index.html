@@ -497,7 +497,8 @@ body.sb-closed #main .zoombar{left:calc(50% + 38px)}
    full-bleed (negative margins like the other sidebar stickies) with an
    opaque background so rows pass underneath it, not through it. */
 #sidebar .nav-sec>h3{position:sticky;top:calc(var(--sb-brand-h,96px) + var(--sb-search-h,56px));z-index:5;
-  background:var(--panel);margin:0 -14px 8px;padding:6px 14px 6px 22px}
+  background:var(--panel);margin:0 -14px 8px;padding:6px 14px 6px 22px;
+  -webkit-touch-callout:none;-webkit-user-select:none;user-select:none} /* the header is a tap target (collapse/expand): a dwell must not raise the iOS callout or a text selection instead of the click (Dave's untappable Buddies header, 2026-10-30) */
 #attn-pill{background:var(--accent);color:var(--on-accent);font-size:.6875rem;font-weight:700;border-radius:999px;
   padding:1px 8px;letter-spacing:0;text-transform:none}
 #attn-pill.zero{background:var(--border2);color:var(--muted)}
@@ -2390,7 +2391,13 @@ body:has(#sidebar.sb-floating) #sb-resize{display:none}
        view row won below. So the strip sits at z-index 6 - above the h3
        and the nav - and the live zone reaches 12px past the strip on
        both sides, past the dots' 5px overhang. */
-    #views-resize::before,#collections-resize::before{content:'';position:absolute;left:0;right:0;top:-12px;bottom:-12px}
+    #views-resize::before,#collections-resize::before{content:'';position:absolute;left:0;right:0;top:-3px;bottom:-12px}
+    /* Zone trimmed upward 2026-10-30: the 12px reach ABOVE the strip
+       could sit over the previous section's header tap area (the
+       sections stack tight when collapsed); the grab band that matters
+       is the dots plus the reach DOWN into the strip's own section,
+       which stays 12px. Upward reach is now 3px - inside the section
+       margin, never over a neighbor's header. */
     #views-resize::after,#collections-resize::after{content:"";position:absolute;left:50%;top:calc(50% + 3px);transform:translate(-50%,-50%);width:24px;height:16px;
       background-image:var(--grip-dot);
       background-size:var(--grip-tile) var(--grip-tile);background-position:0 0;background-repeat:repeat}
@@ -5462,7 +5469,7 @@ function renderDevelopSection(){
   const dev = document.getElementById('fset-develop');
   if (!dev) return;
   const simulating = !!devBackup;
-  const buildNum = '20261030.1041';
+  const buildNum = '20261030.1244';
   dev.innerHTML = ''
     + '<label class="fset-check"><input type="checkbox" id="dev-empty-toggle"' + (simulating ? ' checked' : '') + '> <span><strong>Simulate new user</strong> — empty data file, as if opening the shared link fresh</span></label>'
     + '<div class="fineprint" style="margin:8px 0 12px">Build <span style="font-family:monospace">' + escHtml(String(buildNum)) + '</span> · ' + BUDDIES.length + ' buddies in this file</div>'
@@ -7680,7 +7687,7 @@ function renderBuddy(id){
     + attrHead('shared', 'SHARED NOTES', '<span class="attr-value" id="bp-shared-count">(0)</span>', '')
     + '<div class="attr-body">' + attrTipLine('Anybody with repo access can see this note. Saved to the buddy’s repo (docs/notes.md).') + '<textarea class="notes" id="bp-shared-notes" placeholder="Anybody with repo access can see this note."></textarea>'
     + '<p class="fineprint" id="shared-status"></p></div></div>'
-    + '<div class="bp-build">Build 20261030.1041</div>'
+    + '<div class="bp-build">Build 20261030.1244</div>'
     + '</div>';
   // Update every visible label for a buddy after a rename/re-icon, across all
   // Atlas lenses. A rename changes no structure, so labels are patched in place
@@ -10363,7 +10370,7 @@ function renderPlan(id){
     + '<p class="fineprint">Saved on this device. (For your eyes only)</p></div>'
     + '<div class="bp-sec"><h3>📝 Shared notes<span class="info-tip" data-tip="Visible to everyone with access to this project.">\u24d8</span></h3><textarea class="notes" id="bp-shared" placeholder="Shared notes\u2026 (visible to everyone with access)">'+escHtml((S.planShared||{})[id]||'')+'</textarea>'
     + '<p class="fineprint">Shared — visible to everyone with access.</p></div>'
-    + '<div class="bp-build">Build 20261030.1041</div>'
+    + '<div class="bp-build">Build 20261030.1244</div>'
     + '</div>';
   const nt = document.getElementById('bp-notes');
   let t = null;
@@ -12928,8 +12935,14 @@ function initNavSecDnD(){
   sb.dataset.secdnd = '1';
   let dragId = null;
   const clearHints = () => sb.querySelectorAll('.nav-sec').forEach(s => s.classList.remove('sec-drop-before', 'sec-drop-after'));
+  const finePointer = !(window.matchMedia && window.matchMedia('(pointer:coarse)').matches);
   sb.querySelectorAll('.nav-sec > h3').forEach(h => {
-    h.draggable = true;
+    /* Drag-reorder is a mouse idiom. On touch devices the headers stay
+       plain tap targets: an HTML5-draggable header lets iOS route the
+       touch into drag/callout handling instead of the click, which is
+       what left Dave's Buddies header untappable on iPhone
+       (2026-10-30). Desktop (fine pointer) is unchanged. */
+    h.draggable = finePointer;
     h.addEventListener('dragstart', e => {
       dragId = h.parentElement.id;
       e.dataTransfer.effectAllowed = 'move';
@@ -14183,14 +14196,14 @@ function openWhatsNew(){
     .then(r => r.ok ? r.text() : '')
     .then(t => {
       const serverBuild = t.trim();
-      if (serverBuild && serverBuild !== '20261030.1041') {
+      if (serverBuild && serverBuild !== '20261030.1244') {
         updBtn.style.display = '';
         updBtn.title = 'Update to build ' + serverBuild;
       }
       // Show build numbers at the top of the sheet (Dave's request 2026-10-12)
-      const myBuild = '20261030.1041';
+      const myBuild = '20261030.1244';
       let buildLine = '<p class="fineprint" style="margin-top:0">You’re on build ' + escHtml(myBuild) + '.';
-      if (serverBuild && serverBuild !== '20261030.1041' && isNewerBuild(serverBuild, myBuild)) {
+      if (serverBuild && serverBuild !== '20261030.1244' && isNewerBuild(serverBuild, myBuild)) {
         buildLine += ' Build ' + escHtml(serverBuild) + ' is available.';
       }
       buildLine += '</p>';
@@ -14260,7 +14273,7 @@ function syncUpdateBanner(){
   if (b.dataset.state !== state) b.dataset.state = state;
 }
 function initVersionCheck(){
-  const myBuild = '20261030.1041';
+  const myBuild = '20261030.1244';
   function showUpdateBanner(serverBuild){
     if (document.getElementById('update-banner')) return;
     const b = document.createElement('div');

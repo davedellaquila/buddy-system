@@ -324,7 +324,8 @@ body.sb-closed #main .zoombar{left:calc(50% + 38px)}
    full-bleed (negative margins like the other sidebar stickies) with an
    opaque background so rows pass underneath it, not through it. */
 #sidebar .nav-sec>h3{position:sticky;top:calc(var(--sb-brand-h,96px) + var(--sb-search-h,56px));z-index:5;
-  background:var(--panel);margin:0 -14px 8px;padding:6px 14px 6px 22px}
+  background:var(--panel);margin:0 -14px 8px;padding:6px 14px 6px 22px;
+  -webkit-touch-callout:none;-webkit-user-select:none;user-select:none} /* the header is a tap target (collapse/expand): a dwell must not raise the iOS callout or a text selection instead of the click (Dave's untappable Buddies header, 2026-10-30) */
 #attn-pill{background:var(--accent);color:var(--on-accent);font-size:.6875rem;font-weight:700;border-radius:999px;
   padding:1px 8px;letter-spacing:0;text-transform:none}
 #attn-pill.zero{background:var(--border2);color:var(--muted)}
@@ -2217,7 +2218,13 @@ body:has(#sidebar.sb-floating) #sb-resize{display:none}
        view row won below. So the strip sits at z-index 6 - above the h3
        and the nav - and the live zone reaches 12px past the strip on
        both sides, past the dots' 5px overhang. */
-    #views-resize::before,#collections-resize::before{content:'';position:absolute;left:0;right:0;top:-12px;bottom:-12px}
+    #views-resize::before,#collections-resize::before{content:'';position:absolute;left:0;right:0;top:-3px;bottom:-12px}
+    /* Zone trimmed upward 2026-10-30: the 12px reach ABOVE the strip
+       could sit over the previous section's header tap area (the
+       sections stack tight when collapsed); the grab band that matters
+       is the dots plus the reach DOWN into the strip's own section,
+       which stays 12px. Upward reach is now 3px - inside the section
+       margin, never over a neighbor's header. */
     #views-resize::after,#collections-resize::after{content:"";position:absolute;left:50%;top:calc(50% + 3px);transform:translate(-50%,-50%);width:24px;height:16px;
       background-image:var(--grip-dot);
       background-size:var(--grip-tile) var(--grip-tile);background-position:0 0;background-repeat:repeat}
@@ -12560,8 +12567,14 @@ function initNavSecDnD(){
   sb.dataset.secdnd = '1';
   let dragId = null;
   const clearHints = () => sb.querySelectorAll('.nav-sec').forEach(s => s.classList.remove('sec-drop-before', 'sec-drop-after'));
+  const finePointer = !(window.matchMedia && window.matchMedia('(pointer:coarse)').matches);
   sb.querySelectorAll('.nav-sec > h3').forEach(h => {
-    h.draggable = true;
+    /* Drag-reorder is a mouse idiom. On touch devices the headers stay
+       plain tap targets: an HTML5-draggable header lets iOS route the
+       touch into drag/callout handling instead of the click, which is
+       what left Dave's Buddies header untappable on iPhone
+       (2026-10-30). Desktop (fine pointer) is unchanged. */
+    h.draggable = finePointer;
     h.addEventListener('dragstart', e => {
       dragId = h.parentElement.id;
       e.dataTransfer.effectAllowed = 'move';
