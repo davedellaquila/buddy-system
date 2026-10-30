@@ -1,4 +1,5 @@
 ## 2026-10-30
+- 📬 Mail Buddy: fix — the disposition-buttons script from the entry above was injected into an HTML comment (the page's Tip Jar snippet comment contains a literal '</body>' string, which caught the insertion) and never executed; a browser check caught it. The script now sits before the real closing </body>; verified rendering in a DOM harness (6 items, 20 buttons, click queues a record correctly) and on the served page.
 - 📬 Mail Buddy: one-tap disposition buttons on every “Needs your attention” item (Dave's feature ask, Oct 30) — Resolved first, plus a per-kind set (reply/money/security/fyi); a tap records the call into dispositions.json in the mail-buddy repo via the shared dashboard token (queued on-device when no token), and both edition crons now honour the store: closed items stop resurfacing, open items keep their state, reminders resurface on their date. Current edition retrofitted with the button markup.
 
 ### Social Media Buddy — morning edition correction: LinkedIn is fresh after all
