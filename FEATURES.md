@@ -314,6 +314,12 @@ Build: `build.py` generates `index.html` from `buddies.json` + `plans.json`.
   the new buddy's name, icon, and type, then writes the entry straight to
   `buddies.json` on GitHub (needs the GitHub token). New buddies are flagged
   `setup_pending` with an attention item so Astro runs the full onboarding.
+- **Road Trip Buddy** (2026-10-30) — 🛣️ child of Travel Buddy keeping the
+  Road Trip Register: great roads + worthy stops, seeded with the Million
+  Dollar Highway + Ouray cluster and Three Rivers/Gateway. Registry-wired
+  with its side-thread chat, a provisional voice, the job-req doc (also
+  linked from Travel Buddy's record), a generated homepage + About page,
+  and its role audio hosted beside the homepage.
 - **Parent one-liner** — the Parent section shows just "Name (kind)" as a
   clickable link instead of a tile; tapping it opens the parent's panel. The
   Change button stays in the section header.
