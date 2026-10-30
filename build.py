@@ -14821,10 +14821,18 @@ refreshViews();
   const incomingHash = locHash();
   try { history.replaceState(navState(), '', incomingHash || hashFor(S.sel || 'view:tree')); } catch (e) {}
   const m = locHash().match(/^#\/(buddy:[^\/]+|view:[^\/]+|plan:[^\/]+)(\/standalone)?$/);
-  if (m) { document.body.classList.toggle('standalone', !!m[2]); if (!m[2] && !incomingHash && m[1] === 'view:tree' && document.body.classList.contains('first-open')) firstOpenLanding(); else if (m[1].indexOf('buddy:') === 0 && !m[2] && isDrawerNav()) phoneBuddyLanding(m[1].slice(6)); else show(m[1], false); }
+  // Dave 2026-10-30: a cold start lands on the Homepage view, wherever he
+  // left off. A stored view selection (S.sel = view:*) and any #/view:*
+  // hash are last-session state, not a destination - both land on
+  // Homepage now. Explicit object links (#/buddy:*, #/plan:*), stored
+  // object selections, standalone links, and the phone buddy landing
+  // still route as before; in-session navigation (hashchange, popstate,
+  // view clicks) is untouched.
+  if (m) { document.body.classList.toggle('standalone', !!m[2]); if (!m[2] && m[1].indexOf('view:') === 0) firstOpenLanding(); else if (m[1].indexOf('buddy:') === 0 && !m[2] && isDrawerNav()) phoneBuddyLanding(m[1].slice(6)); else show(m[1], false); }
   else if (isDrawerNav() && S.sel && S.sel.indexOf('buddy:') === 0 && !document.body.classList.contains('standalone')) phoneBuddyLanding(S.sel.slice(6));
   else if (document.body.classList.contains('first-open')) firstOpenLanding();
-  else show(S.sel || 'view:tree');
+  else if (S.sel && S.sel.indexOf('view:') !== 0) show(S.sel, false);
+  else firstOpenLanding();
   window.addEventListener('hashchange', () => {
     const mm = locHash().match(/^#\/(buddy:[^\/]+|view:[^\/]+|plan:[^\/]+)(\/standalone)?$/);
     if (!mm) return;

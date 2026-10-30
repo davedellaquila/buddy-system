@@ -12,6 +12,24 @@
 
 - **Mail Buddy — morning edition (06:41 PT):** Dave's inbox since Thu 5:41 PM — 117 messages, 111 spiked, 5 ranked items (Capital One $172.39 Zappos charge matching Wednesday's order; Capital One card added to Apple Pay + an X new-iPhone login — an overnight new-device cluster; Docusign Marshall Hospital ROI completed; USPS Stamps.com package due today by 9 PM). Dad's mailbox: 5 messages, 4 spiked, 1 item (Apple — a recovery contact was removed from Emil's account at 4:53 AM). Details: mail-buddy homepage "📬 Needs your attention".
 
+### 20261030.1624 — Cold start lands on Homepage (Dave, Oct 30)
+- Dave kept landing on Atlas when opening the app. Diagnosis: not a
+  stored default and not the fresh-open path (a device with no stored
+  state already landed on Homepage via firstOpenLanding) — it was the
+  last-view restore: the boot router fell through to the persisted
+  selection (S.sel), and the app also mirrors that selection into the
+  URL hash, so a home-screen reopen could restore Atlas through either
+  door. Fix, in initRoute: at boot, a stored view selection (view:*)
+  and any #/view:* hash now land on Homepage instead of restoring;
+  explicit object links (#/buddy:*, #/plan:*), stored object
+  selections, standalone links, and the phone buddy landing still
+  route as before, and in-session navigation (view clicks, number
+  keys, hashchange, back/forward) is untouched. Verified in emulated
+  Chrome: fresh profile 10/10 boots on Homepage; stored-Atlas state
+  10/10 cold reopens on Homepage (and the stored selection self-heals
+  to #/view:project); cold #/view:tree and #/view:orgchart links land
+  on Homepage; a cold #/buddy: link still routes to its buddy.
+
 ### 20261030.1610 — Full-bleed homepage: the gutters are gone (Dave, Oct 30)
 - Dave's annotated iPad screenshot marked the white left rail column and the
   white bottom bar around a framed homepage for elimination. Both
