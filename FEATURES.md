@@ -314,6 +314,13 @@ Build: `build.py` generates `index.html` from `buddies.json` + `plans.json`.
   the new buddy's name, icon, and type, then writes the entry straight to
   `buddies.json` on GitHub (needs the GitHub token). New buddies are flagged
   `setup_pending` with an attention item so Astro runs the full onboarding.
+- **Route Buddy** (2026-10-30) — 🗺️ child of Sports Car Adventures, the
+  route librarian: the route library (cataloged routes, master GPX,
+  14-attribute records, Dave's notes) behind a US-map homepage, and the
+  working home of the Milemarker concept. Registry-wired with its
+  side-thread chat, a provisional voice, the job req + design brief docs
+  (the job req also linked from Sports Car Adventures' record), a
+  generated homepage + About page, and role audio beside the homepage.
 - **Road Trip Buddy** (2026-10-30) — 🛣️ child of Travel Buddy keeping the
   Road Trip Register: great roads + worthy stops, seeded with the Million
   Dollar Highway + Ouray cluster and Three Rivers/Gateway. Registry-wired
