@@ -74,6 +74,19 @@
   .idx-read .meta { color: var(--muted); font-size: 13px; }
   .idx-chart { margin-top: 6px; }
   .idx-chart svg { width: 100%; height: auto; display: block; }
+  .cmp-pills { display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin: 14px 0 4px; }
+  .mpill { font:inherit; font-size:12.5px; padding:6px 12px 6px 9px; border-radius:999px; border:1px solid var(--line);
+    background:var(--chip-bg); color:var(--muted); cursor:pointer; display:inline-flex; align-items:center; gap:7px; }
+  .mpill .dot { width:9px; height:9px; border-radius:50%; background:var(--mc,#888); flex:none; }
+  .mpill[aria-pressed="true"] { color:var(--text); border-color:var(--mc); background:var(--card); font-weight:700; }
+  .mpill[aria-pressed="false"] .dot { opacity:.35; }
+  .mpill:focus-visible { outline:2px solid var(--blue); outline-offset:2px; }
+  .cmp-legend { display:flex; flex-wrap:wrap; gap:7px 18px; margin-top:10px; }
+  .cmp-leg { display:inline-flex; align-items:center; gap:7px; font-size:13px; color:var(--muted); }
+  .cmp-leg .sw { width:16px; height:3px; border-radius:2px; background:var(--mc); flex:none; }
+  .cmp-leg strong { color:var(--text); font-weight:700; }
+  .cmp-leg .meta { color:var(--faint); font-size:12px; }
+  .cmp-empty { color:var(--faint); font-size:13.5px; padding:26px 4px; }
   .idx-src { color: var(--faint); font-size: 12px; margin-top: 8px; }
   .dot { display:inline-block; width:7px; height:7px; border-radius:50%; margin-right:7px; vertical-align: 1px; }
   .dot.g { background: var(--green); } .dot.b { background: var(--blue); } .dot.au { background: var(--gold); }
@@ -178,6 +191,14 @@
     <div class="idx-read" id="idxRead"></div>
     <div class="idx-chart" id="idxChart"></div>
     <p class="idx-src">Normalized to % change from each index's first close on/after Jan 30, 2025 (weekly points). US indices from Dave's Schwab alert emails; Europe &amp; Asia from Yahoo Finance market data, through Oct 28, 2026.</p>
+  </section>
+
+  <section class="block">
+    <div class="sec-head"><h2>Compare markets</h2><span class="sub">side by side · every market rebased to 100 at the start · tap pills to overlay</span></div>
+    <div class="cmp-pills" id="cmpPills" role="group" aria-label="Markets to compare"></div>
+    <div class="idx-chart" id="cmpChart"></div>
+    <div class="cmp-legend" id="cmpLegend"></div>
+    <p class="idx-src">Rebased to 100 at each market's first close on/after Jan 30, 2025 (Hang Seng Feb 3, Shanghai Feb 5), so markets on wildly different scales compare honestly. Data as of Oct 27–28, 2026 — a static snapshot: US indices from Dave's Schwab alert emails; Europe &amp; Asia from Yahoo Finance market data. Live quotes are a separate upgrade.</p>
   </section>
 
   <section class="block">
@@ -361,6 +382,74 @@
     drawIdx(b.getAttribute('data-k'));
   });
   drawIdx('spx');
+
+  // ---- Compare markets (Dave 2026-10-29): multi-select pills overlay
+  // several markets on one chart. Values are rebased to 100 at each
+  // market's first close (the IDX points are % changes, so the plotted
+  // value is 100 + pct) — indices on different scales compare honestly.
+  var CMP_COLORS = { spx:'#3b82f6', nasdaq:'#8b5cf6', dow:'#0ea5e9', schwab1000:'#10b981', ftse:'#d97706', dax:'#ec4899', cac:'#f43f5e', stoxx:'#65a30d', nikkei:'#dc2626', hsi:'#0d9488', sse:'#c026d3' };
+  var cmpSel = { spx:true, nasdaq:true, dow:true };
+  var cmpPills = document.getElementById('cmpPills');
+  var cmpChart = document.getElementById('cmpChart');
+  var cmpLegend = document.getElementById('cmpLegend');
+  var cmpHtml = '', cmpLastR = '';
+  IDX_ORDER.forEach(function(k){
+    var s = IDX[k];
+    if (s.region !== cmpLastR) { cmpHtml += '<span class="idx-region">' + s.region + '</span>'; cmpLastR = s.region; }
+    cmpHtml += '<button type="button" class="mpill" data-k="' + k + '" aria-pressed="' + (cmpSel[k] ? 'true' : 'false') + '" style="--mc:' + CMP_COLORS[k] + '"><span class="dot"></span>' + s.label + '</button>';
+  });
+  cmpPills.innerHTML = cmpHtml;
+  function cmpT(iso){ var p = iso.split('-'); return Date.UTC(+p[0], +p[1] - 1, +p[2]); }
+  var CMP_T0 = Infinity, CMP_T1 = -Infinity;
+  IDX_ORDER.forEach(function(k){ var pp = IDX[k].pts; var a = cmpT(pp[0][0]), b = cmpT(pp[pp.length - 1][0]); if (a < CMP_T0) CMP_T0 = a; if (b > CMP_T1) CMP_T1 = b; });
+  function drawCmp(){
+    var sel = IDX_ORDER.filter(function(k){ return cmpSel[k]; });
+    if (!sel.length) {
+      cmpChart.innerHTML = '<p class="cmp-empty">No markets selected — tap a pill above to add one.</p>';
+      cmpLegend.innerHTML = '';
+      return;
+    }
+    var Wd = 720, H = 264, PL = 40, PR = 10, PT = 12, PB = 24, i, j;
+    var lo = Infinity, hi = -Infinity;
+    sel.forEach(function(k){ IDX[k].pts.forEach(function(pt){ var v = 100 + pt[1]; if (v < lo) lo = v; if (v > hi) hi = v; }); });
+    var span = (hi - lo) || 1; lo -= span * 0.07; hi += span * 0.07; span = hi - lo;
+    function X(t){ return PL + (Wd - PL - PR) * ((t - CMP_T0) / (CMP_T1 - CMP_T0)); }
+    function Y(v){ return PT + (H - PT - PB) * (1 - (v - lo) / span); }
+    var out = '';
+    var baseIn = (lo < 100 && hi > 100);
+    for (i = 0; i <= 4; i++) {
+      var tv = lo + span * i / 4, y = Y(tv);
+      out += '<line x1="' + PL + '" x2="' + (Wd - PR) + '" y1="' + y.toFixed(1) + '" y2="' + y.toFixed(1) + '" stroke="var(--line)" stroke-opacity="0.55"/>';
+      if (!(baseIn && Math.abs(tv - 100) < span * 0.06))
+        out += '<text x="' + (PL - 6) + '" y="' + (y + 3.5).toFixed(1) + '" font-size="10.5" fill="var(--faint)" text-anchor="end">' + Math.round(tv) + '</text>';
+    }
+    if (baseIn) out += '<line x1="' + PL + '" x2="' + (Wd - PR) + '" y1="' + Y(100).toFixed(1) + '" y2="' + Y(100).toFixed(1) + '" stroke="var(--faint)" stroke-dasharray="4 4"/>'
+      + '<text x="' + (PL - 6) + '" y="' + (Y(100) + 3.5).toFixed(1) + '" font-size="10.5" font-weight="700" fill="var(--muted)" text-anchor="end">100</text>';
+    sel.forEach(function(k){
+      var pts = IDX[k].pts, d = '';
+      for (j = 0; j < pts.length; j++) d += (j ? 'L' : 'M') + X(cmpT(pts[j][0])).toFixed(1) + ' ' + Y(100 + pts[j][1]).toFixed(1) + ' ';
+      out += '<path d="' + d + '" fill="none" stroke="' + CMP_COLORS[k] + '" stroke-width="2" stroke-linejoin="round"/>';
+      var lp = pts[pts.length - 1];
+      out += '<circle cx="' + X(cmpT(lp[0])).toFixed(1) + '" cy="' + Y(100 + lp[1]).toFixed(1) + '" r="3.2" fill="' + CMP_COLORS[k] + '"/>';
+    });
+    out += '<text x="' + PL + '" y="' + (H - 6) + '" font-size="11" fill="var(--faint)">' + fmtD(new Date(CMP_T0).toISOString().slice(0, 10)) + '</text>'
+      + '<text x="' + (Wd - PR) + '" y="' + (H - 6) + '" font-size="11" fill="var(--faint)" text-anchor="end">' + fmtD(new Date(CMP_T1).toISOString().slice(0, 10)) + '</text>';
+    cmpChart.innerHTML = '<svg viewBox="0 0 ' + Wd + ' ' + H + '" role="img" aria-label="Market comparison chart, all series rebased to 100 at the start">' + out + '</svg>';
+    cmpLegend.innerHTML = sel.map(function(k){
+      var s = IDX[k];
+      return '<span class="cmp-leg" style="--mc:' + CMP_COLORS[k] + '"><span class="sw"></span><strong>' + s.label + '</strong> ' + s.region
+        + ' <span class="' + (s.chg >= 0 ? 'idx-up' : 'idx-dn') + '">' + (s.chg >= 0 ? '+' : '') + s.chg.toFixed(2) + '%</span>'
+        + ' <span class="meta">close ' + fmtN(s.lastClose) + ' · ' + fmtD(s.last) + '</span></span>';
+    }).join('');
+  }
+  cmpPills.addEventListener('click', function(e){
+    var b = e.target.closest('.mpill'); if (!b) return;
+    var k = b.getAttribute('data-k');
+    cmpSel[k] = !cmpSel[k];
+    b.setAttribute('aria-pressed', cmpSel[k] ? 'true' : 'false');
+    drawCmp();
+  });
+  drawCmp();
 
   // ideas grid
   var grid = document.getElementById('ideas');
