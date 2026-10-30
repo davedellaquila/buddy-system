@@ -178,3 +178,7 @@ DONE — Dave marked this done on the homepage: "Product brief review — the id
 
 On Thursday I took out the trash, which basically means loading the trash cans into the monkey, bringing them down to the street, waiting for the trash truck to come by, and then going back down and retrieving the empty trash cans. That's one of my chores. Can you update my roles and responsibilities on my personal buddy page, get a complete description of all the things that I do around the cabin and just in general as part of my being a human, and then report back to me?
 
+## 10/30/2026, 5:56:41 AM
+
+DONE — Dave marked this done on the homepage: "Job req ready for Dave's review — looks good, edits, or defer? First open question on the desk: what was the diagnosis or outcome of Zach's Oct 7 Hockaday visit? The dashboard request also left the purpose blank, so the scope is Dave's to confirm." (attention id: cabin-hvac-job-req-review). Please remove it from the attention list in buddies.json.
+
