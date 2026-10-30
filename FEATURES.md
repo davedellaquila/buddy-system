@@ -115,7 +115,7 @@ Build: `build.py` generates `index.html` from `buddies.json` + `plans.json`.
   Changelog; order is user-rearrangeable in settings (gear icon). Number
   keys 1–6 select views in that order; Up/Down arrow through views then
   buddies.
-- **Org Chart view zoom** — the Org Chart opens fitted to the whole staff;
+- **Org Chart view zoom** — the Org Chart opens fitted to the whole staff (on a phone-width viewport the fit fills the height instead and the width pans, with a compact title + one-line header that clears the rail cluster; Dave 2026-10-30);
   a cluster that starts at the top-right of the chart viewport zooms −/+
   (×1.25), Fit, and 100% with a live % readout. Its dot gripper drags the
   cluster anywhere inside the viewport (clamped fully inside; position

@@ -1081,6 +1081,7 @@ button.bp-markbtn{font-size:1.68rem;line-height:1;padding:0;width:32px;height:27
 #view-orgchart.view.active{display:flex;flex-direction:column;margin:-36px -32px -80px;height:100vh;height:100dvh;overflow:hidden}
 .oc-head{padding:20px 22px 0;flex:0 0 auto}
 .oc-head h2{margin:0 0 4px}
+.oc-sub-short{display:none}
 .oc-vp{position:relative;flex:1;min-height:0;min-width:0;display:flex}
 .oc-wrap{flex:1;min-width:0;min-height:0;overflow:auto;overscroll-behavior:contain;cursor:grab;touch-action:none;-webkit-overflow-scrolling:touch}
 .oc-wrap.panning{cursor:grabbing}
@@ -1093,7 +1094,15 @@ button.bp-markbtn{font-size:1.68rem;line-height:1;padding:0;width:32px;height:27
 .oc-zbtn:hover{background:var(--ghost);color:var(--accent)}
 .oc-zbtn:active{transform:scale(.94)}
 .oc-zpct{min-width:48px;text-align:center;font-size:.8125rem;color:var(--muted);font-variant-numeric:tabular-nums;user-select:none;-webkit-user-select:none}
-@media (max-width:639px){#view-orgchart.view.active{margin:-72px -12px -60px}}
+@media (max-width:639px){#view-orgchart.view.active{margin:-72px -12px -60px}
+  /* Dave 2026-10-30 phone pass: compact header - the desktop intro
+     paragraph ate ~a third of the phone screen and ran under the rail
+     cluster. Title + one short line only, padded left to clear the
+     66px rail column, so the chart viewport gets the rest of the screen. */
+  .oc-head{padding:16px 16px 6px 80px}
+  .oc-head .sub{display:none}
+  .oc-head .sub.oc-sub-short{display:block;font-size:.85rem;margin:0}
+  .oc-zoombar{top:10px;right:12px}}
 .oc-tree{display:flex;justify-content:center}
 .oc-tree ul{display:flex;justify-content:center;padding-top:22px;position:relative}
 .oc-tree ul::before{content:'';position:absolute;top:0;left:50%;height:22px;border-left:2px solid var(--border)}
@@ -3876,7 +3885,8 @@ function renderOrgChart(){
     + '<div class="oc-name">Dave</div><div class="oc-role">The boss</div></div>'
     + '<ul class="oc-kids">' + node('astro') + '</ul></li>';
   el.innerHTML = '<div class="oc-head"><h2>\U0001F3E2 Org Chart <span class="attn-count">(' + BUDDIES.length + ')</span></h2>'
-    + '<p class="sub">The whole staff, top-down by who reports to whom \u2014 everyone ultimately reports to Dave, through Astro. Click a box to open that buddy; the +/\u2212 chip folds a team away. Zoom with the cluster, Shift+scroll, a pinch, or the + / \u2212 / 0 keys; drag the background to pan.</p></div>'
+    + '<p class="sub">The whole staff, top-down by who reports to whom \u2014 everyone ultimately reports to Dave, through Astro. Click a box to open that buddy; the +/\u2212 chip folds a team away. Zoom with the cluster, Shift+scroll, a pinch, or the + / \u2212 / 0 keys; drag the background to pan.</p>'
+    + '<p class="sub oc-sub-short">Tap a box to open it \u00b7 drag to pan \u00b7 pinch to zoom.</p></div>'
     + '<div class="oc-vp"><div class="oc-zoombar" role="group" aria-label="Org chart zoom controls">'
     + '<span class="oc-zgrip" id="oc-zgrip" title="Drag to move the zoom controls — double-click to reset" aria-hidden="true"></span>'
     + '<button type="button" class="oc-zbtn" data-oczoom="out" title="Zoom out" aria-label="Zoom out">\u2212</button>'
@@ -3886,6 +3896,13 @@ function renderOrgChart(){
     + '<button type="button" class="oc-zbtn" data-oczoom="100" title="Actual size" aria-label="Zoom to 100 percent">100%</button>'
     + '</div>'
     + '<div class="oc-wrap" id="oc-wrap"><div class="oc-zoomsizer"><div class="oc-zoomcontent"><ul class="oc-tree">' + dave + '</ul></div></div></div></div>';
+  /* Dave 2026-10-30 phone pass, one-time per device: a phone that saved
+     the old width-crushed fit (and wherever Dave dragged the zoom bar
+     while fighting the old layout) gets one clean reset - re-fit with
+     the phone rule and the bar back in its corner. Desktop untouched. */
+  if (window.innerWidth < 640 && !S.ocPhoneV2) {
+    S.ocPhoneV2 = 1; S.ocZoom = null; S.ocZoomPos = null; save();
+  }
   wireOcZoom();
   wireOcZoombarGrip();
 }
@@ -3910,6 +3927,12 @@ function ocFitZoom(){
   const natW = e.content.scrollWidth, natH = e.content.scrollHeight;
   const vw = e.wrap.clientWidth, vh = e.wrap.clientHeight;
   if (!natW || !natH || !vw || !vh) return 100;
+  /* Dave 2026-10-30: on a phone-width viewport the min() fit crushes the
+     chart to a ribbon (the tree is far wider than tall, so the width term
+     wins and the height collapses). Phone fit instead fills the height
+     (capped at 100%) and lets him pan the width - readable boxes, every
+     row on screen. Desktop keeps the classic both-axes fit. */
+  if (vw < 640) return ocClampZoom(Math.floor(Math.min(Math.max(vw / natW, Math.min(vh / natH, 1)), 1) * 100));
   return ocClampZoom(Math.floor(Math.min(vw / natW, vh / natH) * 100));
 }
 function ocCurZoom(){ return (S.ocZoom == null) ? ocFitZoom() : ocClampZoom(S.ocZoom); }
@@ -3922,7 +3945,14 @@ function applyOcZoom(){
   e.sizer.style.width = Math.ceil(e.content.scrollWidth * f) + 'px';
   e.sizer.style.height = Math.ceil(e.content.scrollHeight * f) + 'px';
   if (e.pct) e.pct.textContent = Math.round(z) + '%';
-  const fits = e.sizer.offsetWidth <= e.wrap.clientWidth + 1 && e.sizer.offsetHeight <= e.wrap.clientHeight + 1;
+  const wFits = e.sizer.offsetWidth <= e.wrap.clientWidth + 1, hFits = e.sizer.offsetHeight <= e.wrap.clientHeight + 1;
+  /* Desktop: centered only when the whole chart fits (unchanged). Phone
+     (Dave 2026-10-30): center on whichever axis fits - at fit the chart
+     is wider than the phone but shorter than the now-full-height
+     viewport, and the old both-must-fit gate left that ribbon pinned to
+     the top of the viewport with dead space below it. Auto margins zero
+     out on the overflowing axis, so panning there is unaffected. */
+  const fits = (wFits && hFits) || (e.wrap.clientWidth < 640 && (wFits || hFits));
   e.wrap.classList.toggle('fit-centered', fits);
 }
 function ocSetZoom(nz, cx, cy, skipSave){
