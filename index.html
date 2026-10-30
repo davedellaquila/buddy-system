@@ -1504,6 +1504,15 @@ body.fw-footer #recents-pop{max-height:min(60vh,calc(100vh - 124px))}
 #dump-pop .dump-send{min-width:76px;min-height:38px;padding:6px 16px;border:none;border-radius:9px;background:var(--accent);color:#fff;font:inherit;font-weight:650;cursor:pointer;flex:0 0 auto}
 #dump-pop .dump-send:disabled{opacity:.55;cursor:default}
 #dump-pop .dump-status{font-size:.8125rem;color:var(--text2);line-height:1.35}
+#dump-pop .dump-attachrow{display:flex;align-items:center;gap:10px;margin-top:10px}
+#dump-pop .dump-attach{min-height:32px;padding:4px 12px;border:1px solid var(--border);border-radius:8px;background:none;color:var(--text);font:inherit;font-size:.8125rem;font-weight:600;cursor:pointer}
+#dump-pop .dump-attach:hover{background:var(--ghost)}
+#dump-pop .dump-hint{font-size:.75rem;color:var(--faint)}
+#dump-pop .dump-filelist{margin-top:8px;display:flex;flex-direction:column;gap:6px}
+#dump-pop .dump-file{display:flex;align-items:center;gap:8px;background:color-mix(in srgb, var(--text) 4%, var(--panel));border:1px solid var(--border);border-radius:8px;padding:6px 10px;font-size:.8125rem}
+#dump-pop .dump-file .df-name{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#dump-pop .dump-file .df-size{color:var(--faint);flex:0 0 auto}
+#dump-pop .dump-file .df-x{border:none;background:none;color:var(--text2);font:inherit;font-size:1rem;line-height:1;cursor:pointer;padding:2px 4px;flex:0 0 auto}
 body:has(#token-pill) #panel-open{right:148px}
 /* Update banner — Jonny verdict 2026-10-20, "The Banner Steps Aside".
    The banner is a threshold, not a task: when the buddy panel opens it
@@ -5437,7 +5446,7 @@ function renderDevelopSection(){
   const dev = document.getElementById('fset-develop');
   if (!dev) return;
   const simulating = !!devBackup;
-  const buildNum = '20261030.0620';
+  const buildNum = '20261030.0624';
   dev.innerHTML = ''
     + '<label class="fset-check"><input type="checkbox" id="dev-empty-toggle"' + (simulating ? ' checked' : '') + '> <span><strong>Simulate new user</strong> — empty data file, as if opening the shared link fresh</span></label>'
     + '<div class="fineprint" style="margin:8px 0 12px">Build <span style="font-family:monospace">' + escHtml(String(buildNum)) + '</span> · ' + BUDDIES.length + ' buddies in this file</div>'
@@ -6078,11 +6087,46 @@ function toggleRailViewPop(){
    next successful dump or at boot. The text is never silently dropped. */
 const DUMP_REPO = 'buddy-system', DUMP_PATH = 'docs/ingest.md';
 function dumpQueueRead(){ try { const q = JSON.parse(localStorage.getItem('buddyTree.dumpQueue') || '[]'); return Array.isArray(q) ? q : []; } catch (e) { return []; } }
-function dumpQueueWrite(q){ try { localStorage.setItem('buddyTree.dumpQueue', JSON.stringify(q)); } catch (e) {} }
-function dumpQueueAdd(text){ const q = dumpQueueRead(); q.push({ t: new Date().toLocaleString(), text: text }); dumpQueueWrite(q); return q.length; }
+function dumpQueueWrite(q){ try { localStorage.setItem('buddyTree.dumpQueue', JSON.stringify(q)); return true; } catch (e) { return false; } }
+function dumpQueueAdd(rec){ const q = dumpQueueRead(); q.push(rec); if (!dumpQueueWrite(q)) throw new Error('queue-full'); if (dumpQueueRead().length !== q.length) throw new Error('queue-full'); return q.length; }
+/* Attachments (Dave, 2026-10-30 addendum): a dump is optional text plus
+   optional files. Files ride the same token-gated Contents-API path, so
+   each is capped at 1 MB (that API's ceiling for a single-file write);
+   anything bigger is refused at pick time with the reason, never
+   silently. Uploaded files land in docs/ingest-files/<one folder per
+   dump>/ beside the ingest log, and the entry lists each with its
+   GitHub link so Astro triages text and files together. */
+const DUMP_FILE_MAX = 1024 * 1024;
+function fmtDumpSize(n){ return n >= 1048576 ? (n / 1048576).toFixed(1) + ' MB' : Math.max(1, Math.round(n / 1024)) + ' KB'; }
+function dumpFileSlug(name){ return String(name || 'file').replace(/[^A-Za-z0-9._-]+/g, '-').replace(/^-+|-+$/g, '') || 'file'; }
+function dumpFolder(t){ const d = new Date(t); const z = (n, w) => String(n).padStart(w || 2, '0'); return d.getFullYear() + z(d.getMonth() + 1) + z(d.getDate()) + '-' + z(d.getHours()) + z(d.getMinutes()) + z(d.getSeconds()); }
+async function dumpUploadFiles(rec){
+  const paths = [];
+  if (!rec.files || !rec.files.length) return paths;
+  const folder = 'docs/ingest-files/' + dumpFolder(rec.t) + '/';
+  for (const f of rec.files) {
+    const path = folder + dumpFileSlug(f.name);
+    await ghPutFile(DUMP_REPO, path, f.b64, 'Dashboard universal dump file -> Astro ingest');
+    paths.push(path);
+  }
+  return paths;
+}
+function dumpEntryText(rec, paths){
+  const NL = String.fromCharCode(10);
+  let body = rec.text || '';
+  if (paths && paths.length) {
+    if (body) body += NL + NL;
+    body += 'Files:' + paths.map(pp => NL + '- [' + pp.split('/').pop() + '](https://github.com/davedellaquila/' + DUMP_REPO + '/blob/master/' + pp + ')').join('');
+  }
+  return body;
+}
 async function dumpFlush(entries){
   const NL = String.fromCharCode(10);
-  const parts = entries.map(en => '## ' + en.t + NL + NL + en.text + NL + NL);
+  const parts = [];
+  for (const en of entries) {
+    const paths = await dumpUploadFiles(en);
+    parts.push('## ' + en.t + NL + NL + dumpEntryText(en, paths) + NL + NL);
+  }
   const cur = await ghGetFile(DUMP_REPO, DUMP_PATH);
   const base = cur || ('# Ingest log — Project Buddy' + NL + NL);
   await ghPutFile(DUMP_REPO, DUMP_PATH, b64encode(base + parts.join('')), 'Dashboard universal dump -> Astro ingest');
@@ -6094,27 +6138,48 @@ async function flushDumpQueue(){
 }
 async function sendDump(){
   const ta = document.getElementById('dump-text'), st = document.getElementById('dump-status'), btn = document.getElementById('dump-send');
-  if (!ta || !st || !btn) return;
+  const pop = document.getElementById('dump-pop');
+  if (!ta || !st || !btn || !pop) return;
   const text = ta.value.trim();
-  if (!text) { st.textContent = 'Type something first — even a fragment. Astro will route it.'; return; }
+  const pending = (pop._files || []).slice();
+  if (!text && !pending.length) { st.textContent = 'Type something or attach a file first — even a fragment. Astro will route it.'; return; }
+  btn.disabled = true; st.textContent = 'Dumping to Astro…';
+  /* Serialize the attachments up front: the queue stores base64, so a
+     queued dump carries its files with it. */
+  const files = [];
+  try {
+    for (const pf of pending) files.push({ name: pf.name, b64: await blobToB64(pf.file) });
+  } catch (err) {
+    st.textContent = '⚠ Could not read one of the attached files — nothing was sent or saved. Try attaching it again.';
+    btn.disabled = false; return;
+  }
+  const rec = { t: new Date().toLocaleString(), text: text, files: files };
+  const clearCard = () => { ta.value = ''; pop._files = []; const fl = document.getElementById('dump-filelist'); if (fl) fl.innerHTML = ''; };
   if (!ghToken()) {
-    const n = dumpQueueAdd(text); ta.value = '';
+    let n = 0;
+    try { n = dumpQueueAdd(rec); }
+    catch (err) { st.textContent = '⚠ That is more than this device can hold in the queue — nothing was saved. Add a GitHub token in Settings and dump it straight through.'; btn.disabled = false; return; }
+    clearCard();
     st.textContent = '✓ Saved on this device (' + n + ' waiting) — add a GitHub token in Settings and dumps sync to Astro. Nothing is lost.';
+    btn.disabled = false;
     return;
   }
-  btn.disabled = true; st.textContent = 'Dumping to Astro…';
   const backlog = dumpQueueRead();
   try {
-    await dumpFlush(backlog.concat([{ t: new Date().toLocaleString(), text: text }]));
+    await dumpFlush(backlog.concat([rec]));
     dumpQueueWrite([]);
-    ta.value = '';
-    st.textContent = '✓ With Astro now' + (backlog.length ? ' — plus ' + backlog.length + ' earlier ' + (backlog.length === 1 ? 'dump' : 'dumps') + ' synced.' : '.');
+    clearCard();
+    st.textContent = '✓ With Astro now' + (files.length ? ' (' + files.length + (files.length === 1 ? ' file' : ' files') + ' attached)' : '') + (backlog.length ? ' — plus ' + backlog.length + ' earlier ' + (backlog.length === 1 ? 'dump' : 'dumps') + ' synced.' : '.');
   } catch (err) {
-    const n = dumpQueueAdd(text); ta.value = '';
+    let n = 0, held = true;
+    try { n = dumpQueueAdd(rec); } catch (e2) { held = false; }
+    clearCard();
     const why = (err && err.message) || String(err);
-    st.textContent = (/404/.test(why)
-      ? '⚠ Saved on this device (' + n + ' waiting) — GitHub said 404 (usually a wrong/expired token, or no access to this private repo). Fix the token, then dump again to sync.'
-      : '⚠ Saved on this device (' + n + ' waiting) — GitHub said: ' + why + '. It syncs on the next successful dump.');
+    st.textContent = !held
+      ? '⚠ GitHub said: ' + why + ' — and the dump is too large for the on-device queue, so it was NOT saved. Fix the token and dump it again.'
+      : (/404/.test(why)
+        ? '⚠ Saved on this device (' + n + ' waiting) — GitHub said 404 (usually a wrong/expired token, or no access to this private repo). Fix the token, then dump again to sync.'
+        : '⚠ Saved on this device (' + n + ' waiting) — GitHub said: ' + why + '. It syncs on the next successful dump.');
   }
   btn.disabled = false;
 }
@@ -6148,11 +6213,43 @@ function toggleDumpPop(){
   const sub = document.createElement('p'); sub.className = 'dump-sub';
   sub.textContent = "Anything, from anywhere — it lands at the top level, in Astro's ingest, and gets routed from there. Not tied to the buddy or view you're looking at.";
   const ta = document.createElement('textarea'); ta.id = 'dump-text'; ta.placeholder = 'Dump it raw…'; ta.setAttribute('aria-label', 'Text to dump to Astro');
+  p._files = [];
+  const arow = document.createElement('div'); arow.className = 'dump-attachrow';
+  const abtn = document.createElement('button'); abtn.type = 'button'; abtn.className = 'dump-attach'; abtn.textContent = '📎 Attach files';
+  const ahint = document.createElement('span'); ahint.className = 'dump-hint'; ahint.textContent = 'Text, files, or both — 1 MB per file.';
+  const finput = document.createElement('input'); finput.type = 'file'; finput.multiple = true; finput.style.display = 'none'; finput.setAttribute('aria-label', 'Attach files to this dump');
+  const flist = document.createElement('div'); flist.className = 'dump-filelist'; flist.id = 'dump-filelist';
+  arow.appendChild(abtn); arow.appendChild(ahint);
+  const renderFiles = () => {
+    flist.innerHTML = '';
+    (p._files || []).forEach((pf, ix) => {
+      const chip = document.createElement('div'); chip.className = 'dump-file';
+      const nm = document.createElement('span'); nm.className = 'df-name'; nm.textContent = pf.name;
+      const sz = document.createElement('span'); sz.className = 'df-size'; sz.textContent = fmtDumpSize(pf.size);
+      const x = document.createElement('button'); x.type = 'button'; x.className = 'df-x'; x.textContent = '×'; x.title = 'Remove ' + pf.name; x.setAttribute('aria-label', 'Remove ' + pf.name);
+      x.addEventListener('click', () => { p._files.splice(ix, 1); renderFiles(); });
+      chip.appendChild(nm); chip.appendChild(sz); chip.appendChild(x);
+      flist.appendChild(chip);
+    });
+  };
+  abtn.addEventListener('click', () => finput.click());
+  finput.addEventListener('change', () => {
+    const stEl = document.getElementById('dump-status');
+    const picked = Array.from(finput.files || []);
+    let refused = '';
+    for (const f of picked) {
+      if (f.size > DUMP_FILE_MAX) { refused = f.name + ' is ' + fmtDumpSize(f.size) + ' — over the 1 MB per-file limit for this write path (the GitHub API ceiling). It was not attached.'; continue; }
+      p._files.push({ file: f, name: f.name, size: f.size });
+    }
+    finput.value = '';
+    renderFiles();
+    if (refused && stEl) stEl.textContent = '⚠ ' + refused;
+  });
   const row = document.createElement('div'); row.className = 'dump-row';
   const send = document.createElement('button'); send.type = 'button'; send.id = 'dump-send'; send.className = 'dump-send'; send.textContent = 'Dump it';
   const st = document.createElement('span'); st.id = 'dump-status'; st.className = 'dump-status'; st.setAttribute('role', 'status');
   row.appendChild(send); row.appendChild(st);
-  p.appendChild(head); p.appendChild(sub); p.appendChild(ta); p.appendChild(row);
+  p.appendChild(head); p.appendChild(sub); p.appendChild(ta); p.appendChild(arow); p.appendChild(flist); p.appendChild(finput); p.appendChild(row);
   document.body.appendChild(p);
   const q = dumpQueueRead();
   if (q.length) st.textContent = q.length + (q.length === 1 ? ' dump' : ' dumps') + ' on this device waiting to sync' + (ghToken() ? ' — your next dump flushes them too.' : ' — add a GitHub token in Settings to sync them.');
@@ -7545,7 +7642,7 @@ function renderBuddy(id){
     + attrHead('shared', 'SHARED NOTES', '<span class="attr-value" id="bp-shared-count">(0)</span>', '')
     + '<div class="attr-body">' + attrTipLine('Anybody with repo access can see this note. Saved to the buddy’s repo (docs/notes.md).') + '<textarea class="notes" id="bp-shared-notes" placeholder="Anybody with repo access can see this note."></textarea>'
     + '<p class="fineprint" id="shared-status"></p></div></div>'
-    + '<div class="bp-build">Build 20261030.0620</div>'
+    + '<div class="bp-build">Build 20261030.0624</div>'
     + '</div>';
   // Update every visible label for a buddy after a rename/re-icon, across all
   // Atlas lenses. A rename changes no structure, so labels are patched in place
@@ -10228,7 +10325,7 @@ function renderPlan(id){
     + '<p class="fineprint">Saved on this device. (For your eyes only)</p></div>'
     + '<div class="bp-sec"><h3>📝 Shared notes<span class="info-tip" data-tip="Visible to everyone with access to this project.">\u24d8</span></h3><textarea class="notes" id="bp-shared" placeholder="Shared notes\u2026 (visible to everyone with access)">'+escHtml((S.planShared||{})[id]||'')+'</textarea>'
     + '<p class="fineprint">Shared — visible to everyone with access.</p></div>'
-    + '<div class="bp-build">Build 20261030.0620</div>'
+    + '<div class="bp-build">Build 20261030.0624</div>'
     + '</div>';
   const nt = document.getElementById('bp-notes');
   let t = null;
@@ -14036,14 +14133,14 @@ function openWhatsNew(){
     .then(r => r.ok ? r.text() : '')
     .then(t => {
       const serverBuild = t.trim();
-      if (serverBuild && serverBuild !== '20261030.0620') {
+      if (serverBuild && serverBuild !== '20261030.0624') {
         updBtn.style.display = '';
         updBtn.title = 'Update to build ' + serverBuild;
       }
       // Show build numbers at the top of the sheet (Dave's request 2026-10-12)
-      const myBuild = '20261030.0620';
+      const myBuild = '20261030.0624';
       let buildLine = '<p class="fineprint" style="margin-top:0">You’re on build ' + escHtml(myBuild) + '.';
-      if (serverBuild && serverBuild !== '20261030.0620' && isNewerBuild(serverBuild, myBuild)) {
+      if (serverBuild && serverBuild !== '20261030.0624' && isNewerBuild(serverBuild, myBuild)) {
         buildLine += ' Build ' + escHtml(serverBuild) + ' is available.';
       }
       buildLine += '</p>';
@@ -14113,7 +14210,7 @@ function syncUpdateBanner(){
   if (b.dataset.state !== state) b.dataset.state = state;
 }
 function initVersionCheck(){
-  const myBuild = '20261030.0620';
+  const myBuild = '20261030.0624';
   function showUpdateBanner(serverBuild){
     if (document.getElementById('update-banner')) return;
     const b = document.createElement('div');

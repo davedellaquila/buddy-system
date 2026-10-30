@@ -290,9 +290,13 @@ Build: `build.py` generates `index.html` from `buddies.json` + `plans.json`.
   current-view icon, phone and desktop) opens a capture box that routes to
   the TOP LEVEL: entries append to Astro's ingest
   (buddy-system/docs/ingest.md) through the same token-gated write path as
-  the homepage dump boxes — no token or a failed write queues the text on
+  the homepage dump boxes — no token or a failed write queues the dump on
   the device (buddyTree.dumpQueue) and flushes it on the next successful
-  dump or at boot; the text is never silently dropped (Dave, 2026-10-30).
+  dump or at boot; nothing is ever silently dropped. A dump is optional
+  text plus optional files (1 MB per file — the Contents API ceiling,
+  enforced at pick time with the reason shown): files upload to
+  buddy-system/docs/ingest-files/<one folder per dump>/ and the entry
+  lists each with its GitHub link (Dave, 2026-10-30).
 - **Dump anywhere, it's routed** — the system's core capture promise: type a
   stream-of-consciousness thought into any buddy's homepage dump box or any
   thread, and it lands in a durable inbox (`docs/ingest.md`) and gets routed
