@@ -286,6 +286,13 @@ Build: `build.py` generates `index.html` from `buddies.json` + `plans.json`.
   "Dumps (n)" section (collapsed by default, state remembered per buddy);
   each dump tile has edit (✏️) and delete (🗑️) buttons in its upper-right
   corner.
+- **Universal Dump button** — a 📥 disc on the collapsed rail (below the
+  current-view icon, phone and desktop) opens a capture box that routes to
+  the TOP LEVEL: entries append to Astro's ingest
+  (buddy-system/docs/ingest.md) through the same token-gated write path as
+  the homepage dump boxes — no token or a failed write queues the text on
+  the device (buddyTree.dumpQueue) and flushes it on the next successful
+  dump or at boot; the text is never silently dropped (Dave, 2026-10-30).
 - **Dump anywhere, it's routed** — the system's core capture promise: type a
   stream-of-consciousness thought into any buddy's homepage dump box or any
   thread, and it lands in a durable inbox (`docs/ingest.md`) and gets routed

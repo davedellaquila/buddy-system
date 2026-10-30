@@ -1321,6 +1321,16 @@ body.standalone #panel-open{display:none}
 #recents-pop .rec-empty{padding:8px 10px;color:var(--text2);font-size:.875rem}
 #recents-pop button.rec-more{justify-content:center;color:var(--text2);font-weight:600}
 body.fw-footer #recents-pop{max-height:min(60vh,calc(100vh - 124px))}
+/* Universal Dump popover (Dave, 2026-10-30): the rail disc's capture card. */
+#dump-pop{position:fixed;z-index:10002;width:min(330px,calc(100vw - 16px));box-sizing:border-box;background:var(--panel);border:1px solid var(--border);border-radius:14px;box-shadow:0 14px 40px rgba(0,0,0,.28);padding:12px}
+#dump-pop .dump-head{font-weight:700;font-size:.9375rem;margin:0 0 2px}
+#dump-pop .dump-sub{color:var(--text2);font-size:.8125rem;line-height:1.4;margin:0 0 10px}
+#dump-pop textarea{width:100%;box-sizing:border-box;min-height:92px;resize:vertical;background:color-mix(in srgb, var(--text) 4%, var(--panel));border:1px solid var(--border);border-radius:10px;color:var(--text);font:inherit;font-size:.9375rem;padding:10px}
+#dump-pop textarea:focus{outline:2px solid var(--accent);border-color:transparent}
+#dump-pop .dump-row{display:flex;align-items:center;gap:10px;margin-top:10px}
+#dump-pop .dump-send{min-width:76px;min-height:38px;padding:6px 16px;border:none;border-radius:9px;background:var(--accent);color:#fff;font:inherit;font-weight:650;cursor:pointer;flex:0 0 auto}
+#dump-pop .dump-send:disabled{opacity:.55;cursor:default}
+#dump-pop .dump-status{font-size:.8125rem;color:var(--text2);line-height:1.35}
 body:has(#token-pill) #panel-open{right:148px}
 /* Update banner — Jonny verdict 2026-10-20, "The Banner Steps Aside".
    The banner is a threshold, not a task: when the buddy panel opens it
@@ -5689,6 +5699,114 @@ function toggleRailViewPop(){
    popover lists the most recently visited buddies from S.recentBuddies
    (recorded in selectBuddy) - the latest 15, flat, since 2026-10-29.
    Picking a row opens that buddy's panel. */
+/* Universal Dump (Dave, 2026-10-30): a disc on the collapsed rail,
+   below the current-view icon, opening a capture box that routes to the
+   TOP LEVEL - Astro's ingest (buddy-system/docs/ingest.md, the same
+   file Astro's own homepage dump box and the dashboard's attention
+   actions land in) - never to the currently selected buddy or view.
+   Same token-gated write path as the fleet's dump boxes: with a token
+   the entry appends through ghPutFile; without one (or on any failure)
+   it queues on this device under buddyTree.dumpQueue and flushes on the
+   next successful dump or at boot. The text is never silently dropped. */
+const DUMP_REPO = 'buddy-system', DUMP_PATH = 'docs/ingest.md';
+function dumpQueueRead(){ try { const q = JSON.parse(localStorage.getItem('buddyTree.dumpQueue') || '[]'); return Array.isArray(q) ? q : []; } catch (e) { return []; } }
+function dumpQueueWrite(q){ try { localStorage.setItem('buddyTree.dumpQueue', JSON.stringify(q)); } catch (e) {} }
+function dumpQueueAdd(text){ const q = dumpQueueRead(); q.push({ t: new Date().toLocaleString(), text: text }); dumpQueueWrite(q); return q.length; }
+async function dumpFlush(entries){
+  const NL = String.fromCharCode(10);
+  const parts = entries.map(en => '## ' + en.t + NL + NL + en.text + NL + NL);
+  const cur = await ghGetFile(DUMP_REPO, DUMP_PATH);
+  const base = cur || ('# Ingest log — Project Buddy' + NL + NL);
+  await ghPutFile(DUMP_REPO, DUMP_PATH, b64encode(base + parts.join('')), 'Dashboard universal dump -> Astro ingest');
+}
+async function flushDumpQueue(){
+  if (!ghToken()) return false;
+  const q = dumpQueueRead(); if (!q.length) return false;
+  try { await dumpFlush(q); dumpQueueWrite([]); return true; } catch (e) { return false; }
+}
+async function sendDump(){
+  const ta = document.getElementById('dump-text'), st = document.getElementById('dump-status'), btn = document.getElementById('dump-send');
+  if (!ta || !st || !btn) return;
+  const text = ta.value.trim();
+  if (!text) { st.textContent = 'Type something first — even a fragment. Astro will route it.'; return; }
+  if (!ghToken()) {
+    const n = dumpQueueAdd(text); ta.value = '';
+    st.textContent = '✓ Saved on this device (' + n + ' waiting) — add a GitHub token in Settings and dumps sync to Astro. Nothing is lost.';
+    return;
+  }
+  btn.disabled = true; st.textContent = 'Dumping to Astro…';
+  const backlog = dumpQueueRead();
+  try {
+    await dumpFlush(backlog.concat([{ t: new Date().toLocaleString(), text: text }]));
+    dumpQueueWrite([]);
+    ta.value = '';
+    st.textContent = '✓ With Astro now' + (backlog.length ? ' — plus ' + backlog.length + ' earlier ' + (backlog.length === 1 ? 'dump' : 'dumps') + ' synced.' : '.');
+  } catch (err) {
+    const n = dumpQueueAdd(text); ta.value = '';
+    const why = (err && err.message) || String(err);
+    st.textContent = (/404/.test(why)
+      ? '⚠ Saved on this device (' + n + ' waiting) — GitHub said 404 (usually a wrong/expired token, or no access to this private repo). Fix the token, then dump again to sync.'
+      : '⚠ Saved on this device (' + n + ' waiting) — GitHub said: ' + why + '. It syncs on the next successful dump.');
+  }
+  btn.disabled = false;
+}
+function dumpPopEsc(e){ if (e.key === 'Escape') { e.stopPropagation(); closeDumpPop(); } }
+function dumpPopOutside(e){ const p = document.getElementById('dump-pop'); if (p && !p.contains(e.target) && !e.target.closest('#rail-dump')) closeDumpPop(); }
+function dumpFrameTap(){ closeDumpPop(); }
+function dumpPopBlur(){ closeDumpPop(); }
+function dumpPopFrameAttach(){
+  const f = document.getElementById('homepage-frame'); if (!f) return;
+  try { const d = f.contentDocument; if (d) d.addEventListener('pointerdown', dumpFrameTap, true); } catch (e) {}
+}
+function dumpPopFrameLoad(){ if (document.getElementById('dump-pop')) dumpPopFrameAttach(); }
+function dumpPopFrameDetach(){
+  const f = document.getElementById('homepage-frame'); if (!f) return;
+  try { const d = f.contentDocument; if (d) d.removeEventListener('pointerdown', dumpFrameTap, true); } catch (e) {}
+  f.removeEventListener('load', dumpPopFrameLoad);
+}
+function closeDumpPop(){
+  const p = document.getElementById('dump-pop'); if (p) p.remove();
+  document.removeEventListener('pointerdown', dumpPopOutside, true);
+  document.removeEventListener('keydown', dumpPopEsc, true);
+  dumpPopFrameDetach();
+  window.removeEventListener('blur', dumpPopBlur);
+}
+function toggleDumpPop(){
+  if (document.getElementById('dump-pop')) { closeDumpPop(); return; }
+  closeRecentsPop(); closeRailViewPop();
+  const btn = document.getElementById('rail-dump'); if (!btn) return;
+  const p = document.createElement('div'); p.id = 'dump-pop'; p.setAttribute('role', 'dialog'); p.setAttribute('aria-label', 'Dump to Astro');
+  const head = document.createElement('div'); head.className = 'dump-head'; head.textContent = '📥 Dump to Astro';
+  const sub = document.createElement('p'); sub.className = 'dump-sub';
+  sub.textContent = "Anything, from anywhere — it lands at the top level, in Astro's ingest, and gets routed from there. Not tied to the buddy or view you're looking at.";
+  const ta = document.createElement('textarea'); ta.id = 'dump-text'; ta.placeholder = 'Dump it raw…'; ta.setAttribute('aria-label', 'Text to dump to Astro');
+  const row = document.createElement('div'); row.className = 'dump-row';
+  const send = document.createElement('button'); send.type = 'button'; send.id = 'dump-send'; send.className = 'dump-send'; send.textContent = 'Dump it';
+  const st = document.createElement('span'); st.id = 'dump-status'; st.className = 'dump-status'; st.setAttribute('role', 'status');
+  row.appendChild(send); row.appendChild(st);
+  p.appendChild(head); p.appendChild(sub); p.appendChild(ta); p.appendChild(row);
+  document.body.appendChild(p);
+  const q = dumpQueueRead();
+  if (q.length) st.textContent = q.length + (q.length === 1 ? ' dump' : ' dumps') + ' on this device waiting to sync' + (ghToken() ? ' — your next dump flushes them too.' : ' — add a GitHub token in Settings to sync them.');
+  send.addEventListener('click', sendDump);
+  ta.addEventListener('keydown', e => { if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') { e.preventDefault(); sendDump(); } });
+  const r = btn.getBoundingClientRect();
+  const vv = window.visualViewport;
+  const visH = vv ? vv.height : window.innerHeight;
+  const visW = vv ? vv.width : window.innerWidth;
+  let left = Math.min(r.right + 8, visW - 8 - p.offsetWidth);
+  if (left < 8) left = 8;
+  let top = r.top;
+  if (top + p.offsetHeight > visH - 8) top = visH - 8 - p.offsetHeight;
+  if (top < 8) top = 8;
+  p.style.left = left + 'px'; p.style.top = top + 'px';
+  document.addEventListener('pointerdown', dumpPopOutside, true);
+  document.addEventListener('keydown', dumpPopEsc, true);
+  dumpPopFrameAttach();
+  const f = document.getElementById('homepage-frame'); if (f) f.addEventListener('load', dumpPopFrameLoad);
+  window.addEventListener('blur', dumpPopBlur);
+  ta.focus();
+}
 function recentsPopEsc(e){ if (e.key === 'Escape') { e.stopPropagation(); closeRecentsPop(); } }
 function recentsPopOutside(e){ const p = document.getElementById('recents-pop'); if (p && !p.contains(e.target) && !e.target.closest('#sb-recents, #rail-recents')) closeRecentsPop(); }
 function recentsFrameTap(){ closeRecentsPop(); }
@@ -14179,7 +14297,7 @@ document.addEventListener('click', e => {
     return;
   }
   if (e.target.closest && e.target.closest('#sb-recents')) { toggleRecentsPop(document.getElementById('sb-recents')); return; }
-  if (e.target.closest && e.target.closest('#rail-expand')) { setSidebarOpen(true); return; }
+  if (e.target.closest && e.target.closest('#rail-expand')) { closeDumpPop(); setSidebarOpen(true); return; }
   if (e.target.closest && e.target.closest('#panel-open')) {
     /* Dave 2026-10-21 (regression fix): reopening from the collapsed
        state must un-collapse first — openBuddy alone left bp-collapsed
@@ -14189,8 +14307,9 @@ document.addEventListener('click', e => {
     openBuddy(id);
     return;
   }
-  if (e.target.closest && e.target.closest('#rail-curview')) { toggleRailViewPop(); return; }
-  if (e.target.closest && e.target.closest('#rail-recents')) { closeRailViewPop(); toggleRecentsPop(document.getElementById('rail-recents')); return; }
+  if (e.target.closest && e.target.closest('#rail-curview')) { closeDumpPop(); toggleRailViewPop(); return; }
+  if (e.target.closest && e.target.closest('#rail-recents')) { closeRailViewPop(); closeDumpPop(); toggleRecentsPop(document.getElementById('rail-recents')); return; }
+  if (e.target.closest && e.target.closest('#rail-dump')) { closeRailViewPop(); closeRecentsPop(); toggleDumpPop(); return; }
   if (e.target.closest && e.target.closest('#sb-close')) { setSidebarOpen(document.body.classList.contains('sb-closed')); return; }
   if (e.target.closest && e.target.closest('#hp-back')) { goBack(); return; }
   if (e.target.closest && e.target.closest('#hp-find')) { toggleFind(); return; }
@@ -14617,6 +14736,7 @@ initSbBrandSticky();
 initViewsResize();
 initCollectionsResize();
 syncRailCurView();
+flushDumpQueue();
 """
     js = js.replace("BUDDIES_JSON", buddies_js).replace("ORDER_JSON", order_js).replace("PLANS_JSON", plans_js).replace("PERSONA_ROSTER_JSON", roster_js).replace("VOICES_JSON", voices_js)
     js = js.replace("ICON_DOC", "'" + ICON_DOC.replace("'", "\\'") + "'")
@@ -14674,7 +14794,7 @@ syncRailCurView();
   <div id=\"collections-resize\" title=\"Drag to resize the Collections section\" aria-hidden=\"true\"></div>
   <h3 style="cursor:pointer" id="collections-toggle"><span class="nav-arrow" id="collections-arrow">\u203a</span> Collections</h3><div id="collection-nav"></div></div>
   <div class="sb-tipjar"><a href="https://ko-fi.com/davedellaquila" target="_blank" rel="noopener" title="Support the buddy system"><span class="jar">\U0001FAD9</span> <span class="tiptext">Tip the jar</span></a></div>
-  <div id="rail-mid"><button type="button" id="rail-recents" title="Recent buddies" aria-label="Recent buddies"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 8.5A9 9 0 1 1 3.2 13.6"/><path d="M3.2 3.8v4.8h4.8"/><path d="M12 7.5V12l3 2"/></svg></button><div class="rail-div" aria-hidden="true"></div><button type="button" id="rail-curview" title="Current view" aria-label="Current view - tap to switch views"></button></div>
+  <div id="rail-mid"><button type="button" id="rail-recents" title="Recent buddies" aria-label="Recent buddies"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 8.5A9 9 0 1 1 3.2 13.6"/><path d="M3.2 3.8v4.8h4.8"/><path d="M12 7.5V12l3 2"/></svg></button><div class="rail-div" aria-hidden="true"></div><button type="button" id="rail-curview" title="Current view" aria-label="Current view - tap to switch views"></button><button type="button" id="rail-dump" title="Dump to Astro - a universal inbox, from anywhere" aria-label="Dump to Astro"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v7"/><path d="m8.2 6.8 3.8 3.8 3.8-3.8"/><path d="M3.5 13.5h4l1.8 2.7h5.4l1.8-2.7h4"/><path d="M3.5 13.5V19a1.8 1.8 0 0 0 1.8 1.8h13.4a1.8 1.8 0 0 0 1.8-1.8v-5.5"/></svg></button></div>
 </aside>
 <div id="sb-resize" title="Drag left or right to resize the sidebar. Double-click to close."></div>
 <button type="button" id="sb-tab" title="Open sidebar" aria-label="Open sidebar"></button>
