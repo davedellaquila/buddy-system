@@ -2163,7 +2163,7 @@ body:has(#sidebar.sb-floating) #sb-resize{display:none}
        translucency or backdrop blur here, in Standard or Glass mode. */
     body:not(.sb-closed) #views-sec{position:sticky;bottom:42px;z-index:6;margin-left:-14px;margin-right:-14px;padding-left:14px;padding-right:14px;background:var(--hover);border-top:1px solid var(--border)}
     body.glass-panels #views-sec{background:var(--hover)}
-    #views-resize{height:12px;margin:0 -14px;cursor:ns-resize;touch-action:none;position:relative;z-index:6}
+    #views-resize,#collections-resize{height:12px;margin:0 -14px;cursor:ns-resize;touch-action:none;position:relative;z-index:6}
     /* Dave 2026-10-29: the visible strip is 12px tall (its dots 16px) - a
        thin, grip-dependent touch target. An invisible ::before extends
        the live zone above and below; layout and visuals unchanged.
@@ -2173,13 +2173,13 @@ body:has(#sidebar.sb-floating) #sb-resize{display:none}
        view row won below. So the strip sits at z-index 6 - above the h3
        and the nav - and the live zone reaches 12px past the strip on
        both sides, past the dots' 5px overhang. */
-    #views-resize::before{content:'';position:absolute;left:0;right:0;top:-12px;bottom:-12px}
-    #views-resize::after{content:"";position:absolute;left:50%;top:calc(50% + 3px);transform:translate(-50%,-50%);width:24px;height:16px;
+    #views-resize::before,#collections-resize::before{content:'';position:absolute;left:0;right:0;top:-12px;bottom:-12px}
+    #views-resize::after,#collections-resize::after{content:"";position:absolute;left:50%;top:calc(50% + 3px);transform:translate(-50%,-50%);width:24px;height:16px;
       background-image:var(--grip-dot);
       background-size:var(--grip-tile) var(--grip-tile);background-position:0 0;background-repeat:repeat}
-    #views-resize:hover::after{--gripdot:var(--text2)}
-    #views-resize:active::after{--gripdot:var(--accent)}
-    body.sb-closed #views-resize{display:none}
+    #views-resize:hover::after,#collections-resize:hover::after{--gripdot:var(--text2)}
+    #views-resize:active::after,#collections-resize:active::after{--gripdot:var(--accent)}
+    body.sb-closed #views-resize,body.sb-closed #collections-resize{display:none}
     /* Panel header v2: the name never yields; status is an annotation, not a pill. */
     .bp-topnav{flex-wrap:nowrap}
     .bp-topnav #bp-more{margin-left:auto}
@@ -5763,6 +5763,33 @@ function initViewsResize(){
     const maxH = Math.max(140, sb.clientHeight - 190);
     try { h.setPointerCapture(e.pointerId); } catch (err) {}
     const mv = ev => { S.viewsH = Math.round(Math.min(maxH, Math.max(56, startH + (startY - ev.clientY)))); applyViewsH(); };
+    const up = () => { h.removeEventListener('pointermove', mv); h.removeEventListener('pointerup', up); h.removeEventListener('pointercancel', up); save(); };
+    h.addEventListener('pointermove', mv); h.addEventListener('pointerup', up); h.addEventListener('pointercancel', up);
+  });
+}
+function applyCollectionsH(){
+  const nav = document.getElementById('collection-nav'); if (!nav) return;
+  if (S.collectionsH) { nav.style.maxHeight = S.collectionsH + 'px'; nav.style.overflowY = 'auto'; }
+}
+/* Dave 2026-10-29: "the collections section cannot be resized" - it shipped
+   with no handle at all. It gets the Views treatment: the same strip above
+   its header, the same drag math (drag up grows the list), the height
+   persisted per device (S.collectionsH). No default cap is imposed - the
+   list shows in full until the first drag, which starts from its natural
+   height. The drag cap is the scroll region's height, not the sidebar's:
+   Collections lives inside .sb-scroll (Views sits in the footer). */
+function initCollectionsResize(){
+  const h = document.getElementById('collections-resize'); if (!h || h.dataset.init) return;
+  h.dataset.init = '1';
+  applyCollectionsH();
+  h.addEventListener('pointerdown', e => {
+    e.preventDefault();
+    const nav = document.getElementById('collection-nav'); const sc = document.querySelector('#sidebar .sb-scroll');
+    if (!nav || !sc) return;
+    const startY = e.clientY; const startH = S.collectionsH || nav.offsetHeight;
+    const maxH = Math.max(140, sc.clientHeight - 120);
+    try { h.setPointerCapture(e.pointerId); } catch (err) {}
+    const mv = ev => { S.collectionsH = Math.round(Math.min(maxH, Math.max(56, startH + (startY - ev.clientY)))); applyCollectionsH(); };
     const up = () => { h.removeEventListener('pointermove', mv); h.removeEventListener('pointerup', up); h.removeEventListener('pointercancel', up); save(); };
     h.addEventListener('pointermove', mv); h.addEventListener('pointerup', up); h.addEventListener('pointercancel', up);
   });
@@ -14557,6 +14584,7 @@ initNavItemDnD();
 applyNavSecOrder();
 initSbBrandSticky();
 initViewsResize();
+initCollectionsResize();
 syncRailCurView();
 """
     js = js.replace("BUDDIES_JSON", buddies_js).replace("ORDER_JSON", order_js).replace("PLANS_JSON", plans_js).replace("PERSONA_ROSTER_JSON", roster_js).replace("VOICES_JSON", voices_js)
@@ -14612,6 +14640,7 @@ syncRailCurView();
   <div id="views-resize" title="Drag to resize the Views section" aria-hidden="true"></div>
   <h3 style="cursor:pointer" id="views-toggle"><span class="nav-arrow" id="views-arrow">\u203a</span> Views</h3><div id="view-nav"></div></div>
   <div class="nav-sec" id="collections-sec">
+  <div id=\"collections-resize\" title=\"Drag to resize the Collections section\" aria-hidden=\"true\"></div>
   <h3 style="cursor:pointer" id="collections-toggle"><span class="nav-arrow" id="collections-arrow">\u203a</span> Collections</h3><div id="collection-nav"></div></div>
   <div class="sb-tipjar"><a href="https://ko-fi.com/davedellaquila" target="_blank" rel="noopener" title="Support the buddy system"><span class="jar">\U0001FAD9</span> <span class="tiptext">Tip the jar</span></a></div>
   <div id="rail-mid"><button type="button" id="rail-recents" title="Recent buddies" aria-label="Recent buddies"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 8.5A9 9 0 1 1 3.2 13.6"/><path d="M3.2 3.8v4.8h4.8"/><path d="M12 7.5V12l3 2"/></svg></button><div class="rail-div" aria-hidden="true"></div><button type="button" id="rail-curview" title="Current view" aria-label="Current view - tap to switch views"></button></div>

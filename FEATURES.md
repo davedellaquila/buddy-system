@@ -128,7 +128,7 @@ Build: `build.py` generates `index.html` from `buddies.json` + `plans.json`.
   buddy list's `--panel`, in both themes. Views and the Tip Jar form the
   sidebar's pinned footer — anchored to the panel's bottom in every
   collapse state while the sections above scroll in their own region;
-  resizing Views is absorbed by that scroll region, never by the Tip Jar.
+  resizing Views is absorbed by that scroll region, never by the Tip Jar. Collections carries the same drag-resize strip above its header (Dave 2026-10-29 — it originally shipped with no handle), its height persisted per device.
   The panel's navigation splits in two (Dave 2026-10-28): **Views**
   (Homepage, Atlas, Org Chart, Projects, Manifest, Change Log, Release
   Notes) and a separate **Collections** section (Favorites, Flagged,
