@@ -2037,7 +2037,7 @@ html.light .status.st-dormant{background:rgba(139,148,158,.18);color:var(--muted
 }
 #view-buddy.panel.active,#view-buddy.sheet.active{display:block}
 /* Right panel collapsed to floating section pill (Dave, 2026-10-14) */
-body.bp-collapsed #view-buddy.panel.active, body.bp-collapsed #view-buddy.sheet.active{display:none}
+body.bp-collapsed #main #view-buddy.panel.active, body.bp-collapsed #main #view-buddy.sheet.active{display:none} /* the #main segment is load-bearing: the panel lives inside #main, whose own rules (#main #view-buddy.panel, two IDs) silently out-ranked the old body-scoped selector (one ID), so the collapsed panel kept display:block and never hid - the real cause of Dave's "Cmd-I doesn't reliably toggle" (2026-10-30). The button flipped (it reads the class) while the body stayed on screen. */
 #bp-rail{position:fixed;right:12px;top:50%;transform:translateY(-50%);z-index:64;display:none;flex-direction:column;gap:4px;
   padding:10px 8px;border-radius:18px;
   background:color-mix(in srgb, var(--panel) 82%, transparent);
@@ -13060,7 +13060,16 @@ function toggleFind(){ if (isFindOpen()) closeFind(); else openFind(); }
 function toggleInfoPanel(){
   const vb = document.getElementById('view-buddy');
   const panelActive = !!(vb && vb.classList.contains('active') && (vb.classList.contains('panel') || vb.classList.contains('sheet')));
-  if (panelActive) { setPanelCollapsed(!document.body.classList.contains('bp-collapsed')); return; }
+  if (panelActive) {
+    /* During the 360ms fold the class lags the intent (collapse applies
+       it on a timer), so a fast second press read the stale class and
+       repeated the collapse instead of expanding - a swallowed press.
+       setPanelCollapsed records its target synchronously; prefer it
+       while a fold is in flight. */
+    const vbNow = document.getElementById('view-buddy');
+    const cur = (vbNow && vbNow._bpTarget !== undefined) ? vbNow._bpTarget : document.body.classList.contains('bp-collapsed');
+    setPanelCollapsed(!cur); return;
+  }
   if (document.body.classList.contains('bp-collapsed')) setPanelCollapsed(false);
   const id = (S.projectId && byId[S.projectId]) ? S.projectId : ROOT_ID;
   openBuddy(id);
@@ -13252,11 +13261,13 @@ function setPanelCollapsed(collapsed) {
      the expand unfolds it — no more display:none snap. Persist panel
      state across refresh (Dave, 2026-10-19). */
   const gen = vb ? (vb._foldGen = (vb._foldGen || 0) + 1) : 0;
+  if (vb) vb._bpTarget = collapsed;
   if (collapsed) {
     if (vb) vb.classList.add('bp-folding');
     setTimeout(() => {
       if (vb && vb._foldGen !== gen) return;
       document.body.classList.add('bp-collapsed');
+      if (vb) delete vb._bpTarget;
       if (typeof syncCloseX === 'function') syncCloseX();
       if (vb) vb.classList.remove('bp-folding');
       S.bpCollapsed = true; save();
@@ -13266,6 +13277,7 @@ function setPanelCollapsed(collapsed) {
     return;
   }
   document.body.classList.remove('bp-collapsed');
+  if (vb) delete vb._bpTarget;
   if (typeof syncCloseX === 'function') syncCloseX();
   S.bpCollapsed = false; save();
   if (vb) {

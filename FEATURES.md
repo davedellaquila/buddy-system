@@ -446,7 +446,7 @@ Build: `build.py` generates `index.html` from `buddies.json` + `plans.json`.
   states; a bordered circle × at the end of its bar dismisses it — the
   smaller ghost × beside it only clears the typed text); **/** opens the buddy
   panel when needed and focuses its search field; **⌘I** toggles the info
-  panel — collapse/expand, or open it when no buddy panel is up. All work
+  panel — collapse/expand, or open it when no buddy panel is up. The toggle is exact: collapsed truly hides the panel, and a fast second ⌘I during the fold animation still counts. All work
   even when a buddy homepage iframe has focus (the iframe forwards the
   chords to the parent chrome).
 - **Panel search**: the buddy/info panel carries its own search field at
