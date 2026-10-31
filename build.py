@@ -2984,6 +2984,22 @@ html.light .wc-got{background:#007AFF}
      aside and the sheet drops back under the scrim, the drawer-over-
      sheet dimming that z 99 / z 100 split was built for. */
   body:not(.ph-left-open) #view-buddy.sheet{z-index:100}
+  /* Dave 2026-10-31 — the z-100 above was INERT, and this is the actual
+     fix. The sheet lives INSIDE #main, and #main{position:relative;
+     z-index:1} is a stacking context: the sheet's 100 only competes
+     inside #main, while the whole #main subtree paints at layer 1 —
+     below the body-level scrim at z 99. Comparing the raw numbers
+     (100 > 99) said "fixed" on 2026-10-28; hit-testing said otherwise
+     (elementFromPoint over the open sheet returned #sb-scrim first,
+     in Chrome as on Dave's iPhone: dimmed panel, every tap landing on
+     the scrim). The real fix removes the trap in the sheet-open state:
+     #main drops to z-index:auto — no context — so the sheet's z-100
+     competes at body level and wins over the scrim, while the scrim
+     still dims the rest of the canvas and the exposed-sliver tap still
+     closes the sheet. Scoped to the sheet-open state with the left
+     dock closed; when the drawer opens over the sheet, #main keeps
+     its context and the deliberate drawer-over-sheet dimming stands. */
+  body:not(.standalone):not(.ph-left-open).ph-right-open #main{z-index:auto}
   /* First-open invariant (Jonny's first-open crit, 2026-10-23): the
      resting geometry holds at first paint, in every state. boot-hold
      (set by the pre-app boot script on phone loads, released by the

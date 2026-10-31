@@ -3157,6 +3157,22 @@ html.light .wc-got{background:#007AFF}
      aside and the sheet drops back under the scrim, the drawer-over-
      sheet dimming that z 99 / z 100 split was built for. */
   body:not(.ph-left-open) #view-buddy.sheet{z-index:100}
+  /* Dave 2026-10-31 — the z-100 above was INERT, and this is the actual
+     fix. The sheet lives INSIDE #main, and #main{position:relative;
+     z-index:1} is a stacking context: the sheet's 100 only competes
+     inside #main, while the whole #main subtree paints at layer 1 —
+     below the body-level scrim at z 99. Comparing the raw numbers
+     (100 > 99) said "fixed" on 2026-10-28; hit-testing said otherwise
+     (elementFromPoint over the open sheet returned #sb-scrim first,
+     in Chrome as on Dave's iPhone: dimmed panel, every tap landing on
+     the scrim). The real fix removes the trap in the sheet-open state:
+     #main drops to z-index:auto — no context — so the sheet's z-100
+     competes at body level and wins over the scrim, while the scrim
+     still dims the rest of the canvas and the exposed-sliver tap still
+     closes the sheet. Scoped to the sheet-open state with the left
+     dock closed; when the drawer opens over the sheet, #main keeps
+     its context and the deliberate drawer-over-sheet dimming stands. */
+  body:not(.standalone):not(.ph-left-open).ph-right-open #main{z-index:auto}
   /* First-open invariant (Jonny's first-open crit, 2026-10-23): the
      resting geometry holds at first paint, in every state. boot-hold
      (set by the pre-app boot script on phone loads, released by the
@@ -5499,7 +5515,7 @@ function renderDevelopSection(){
   const dev = document.getElementById('fset-develop');
   if (!dev) return;
   const simulating = !!devBackup;
-  const buildNum = '20261031.0918';
+  const buildNum = '20261031.1627';
   dev.innerHTML = ''
     + '<label class="fset-check"><input type="checkbox" id="dev-empty-toggle"' + (simulating ? ' checked' : '') + '> <span><strong>Simulate new user</strong> — empty data file, as if opening the shared link fresh</span></label>'
     + '<div class="fineprint" style="margin:8px 0 12px">Build <span style="font-family:monospace">' + escHtml(String(buildNum)) + '</span> · ' + BUDDIES.length + ' buddies in this file</div>'
@@ -7717,7 +7733,7 @@ function renderBuddy(id){
     + attrHead('shared', 'SHARED NOTES', '<span class="attr-value" id="bp-shared-count">(0)</span>', '')
     + '<div class="attr-body">' + attrTipLine('Anybody with repo access can see this note. Saved to the buddy’s repo (docs/notes.md).') + '<textarea class="notes" id="bp-shared-notes" placeholder="Anybody with repo access can see this note."></textarea>'
     + '<p class="fineprint" id="shared-status"></p></div></div>'
-    + '<div class="bp-build">Build 20261031.0918</div>'
+    + '<div class="bp-build">Build 20261031.1627</div>'
     + '</div>';
   // Update every visible label for a buddy after a rename/re-icon, across all
   // Atlas lenses. A rename changes no structure, so labels are patched in place
@@ -10400,7 +10416,7 @@ function renderPlan(id){
     + '<p class="fineprint">Saved on this device. (For your eyes only)</p></div>'
     + '<div class="bp-sec"><h3>📝 Shared notes<span class="info-tip" data-tip="Visible to everyone with access to this project.">\u24d8</span></h3><textarea class="notes" id="bp-shared" placeholder="Shared notes\u2026 (visible to everyone with access)">'+escHtml((S.planShared||{})[id]||'')+'</textarea>'
     + '<p class="fineprint">Shared — visible to everyone with access.</p></div>'
-    + '<div class="bp-build">Build 20261031.0918</div>'
+    + '<div class="bp-build">Build 20261031.1627</div>'
     + '</div>';
   const nt = document.getElementById('bp-notes');
   let t = null;
@@ -14234,14 +14250,14 @@ function openWhatsNew(){
     .then(r => r.ok ? r.text() : '')
     .then(t => {
       const serverBuild = t.trim();
-      if (serverBuild && serverBuild !== '20261031.0918') {
+      if (serverBuild && serverBuild !== '20261031.1627') {
         updBtn.style.display = '';
         updBtn.title = 'Update to build ' + serverBuild;
       }
       // Show build numbers at the top of the sheet (Dave's request 2026-10-12)
-      const myBuild = '20261031.0918';
+      const myBuild = '20261031.1627';
       let buildLine = '<p class="fineprint" style="margin-top:0">You’re on build ' + escHtml(myBuild) + '.';
-      if (serverBuild && serverBuild !== '20261031.0918' && isNewerBuild(serverBuild, myBuild)) {
+      if (serverBuild && serverBuild !== '20261031.1627' && isNewerBuild(serverBuild, myBuild)) {
         buildLine += ' Build ' + escHtml(serverBuild) + ' is available.';
       }
       buildLine += '</p>';
@@ -14311,7 +14327,7 @@ function syncUpdateBanner(){
   if (b.dataset.state !== state) b.dataset.state = state;
 }
 function initVersionCheck(){
-  const myBuild = '20261031.0918';
+  const myBuild = '20261031.1627';
   function showUpdateBanner(serverBuild){
     if (document.getElementById('update-banner')) return;
     const b = document.createElement('div');
