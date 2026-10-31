@@ -1,0 +1,158 @@
+<!-- CUSTOM HOMEPAGE — The Joke Vault, thread-owned (built 2026-10-31) -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>The Joke Vault — a joke &amp; a riddle, never the same one twice</title>
+<style>
+:root{
+  --bg:#171021; --stage:#241533; --card:#2c1a40; --card2:#38224f;
+  --text:#f7efe2; --muted:#cdbad9; --border:#553a75;
+  --gold:#ffcf5c; --gold2:#ff9d3c; --curtain:#a31640; --curtain2:#6d0d2b;
+  --pink:#ff7bac; --ok:#7fe0a8;
+}
+@media (prefers-color-scheme: light){
+  :root{
+    --bg:#fdf6ec; --stage:#fff3da; --card:#ffffff; --card2:#ffedcb;
+    --text:#2b1638; --muted:#6d5578; --border:#e3cfa5;
+    --gold:#d9930d; --gold2:#c96a00; --curtain:#b81c4a; --curtain2:#8c1238;
+    --pink:#c2255c; --ok:#177245;
+  }
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);line-height:1.6;padding:0 18px 110px;max-width:880px;margin:0 auto}
+a{color:var(--gold2)}
+.topbar{position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:10px;background:var(--bg);border-bottom:1px solid var(--border);padding:10px 2px;margin-bottom:0;font-size:17px;font-weight:700}
+.topbar-icon{font-size:22px;line-height:1}
+.bs-dash-link{font-size:13px;font-weight:600;color:var(--gold2);text-decoration:none;white-space:nowrap;margin-left:auto}
+.bs-dash-link:hover{text-decoration:underline}
+/* ---- the stage ---- */
+.stage{position:relative;margin:0 -18px;padding:40px 22px 34px;text-align:center;overflow:hidden;
+  background:
+    radial-gradient(ellipse 70% 55% at 50% 0%, rgba(255,207,92,.28), transparent 65%),
+    linear-gradient(180deg, var(--stage), var(--bg));}
+.stage::before,.stage::after{content:"";position:absolute;top:0;bottom:0;width:56px;
+  background:repeating-linear-gradient(90deg,var(--curtain) 0 10px,var(--curtain2) 10px 20px);
+  box-shadow:inset -12px 0 18px rgba(0,0,0,.35)}
+.stage::before{left:0;border-radius:0 0 26px 0}
+.stage::after{right:0;border-radius:0 0 0 26px;box-shadow:inset 12px 0 18px rgba(0,0,0,.35)}
+.bulbs{display:flex;justify-content:center;gap:11px;margin-bottom:18px;position:relative;z-index:1}
+.bulbs span{width:11px;height:11px;border-radius:50%;background:var(--gold);box-shadow:0 0 12px 3px rgba(255,207,92,.65);animation:twinkle 1.6s ease-in-out infinite}
+.bulbs span:nth-child(even){animation-delay:.8s}
+@keyframes twinkle{0%,100%{opacity:1}50%{opacity:.35}}
+h1{font-size:40px;line-height:1.08;letter-spacing:-.5px;position:relative;z-index:1}
+.tagline{color:var(--muted);font-size:17.5px;margin:10px auto 4px;max-width:560px;position:relative;z-index:1}
+.emcee{font-size:14px;color:var(--gold);font-weight:700;letter-spacing:.14em;text-transform:uppercase;margin-bottom:12px;position:relative;z-index:1}
+.role-audio{margin:18px auto 2px;position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;gap:6px}
+.role-audio label{font-size:13.5px;font-weight:700;color:var(--muted)}
+audio{max-width:320px;width:100%}
+/* ---- stat marquee ---- */
+.stats{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin:26px 0 6px}
+@media(min-width:640px){.stats{grid-template-columns:repeat(4,1fr)}}
+.stat{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:16px 12px;text-align:center}
+.stat .n{font-size:32px;font-weight:800;line-height:1.05;color:var(--gold)}
+.stat .l{font-size:12.5px;color:var(--muted);font-weight:600;letter-spacing:.06em;text-transform:uppercase;margin-top:4px}
+.src{font-size:13px;color:var(--muted);text-align:center;margin-bottom:8px}
+/* ---- cards ---- */
+.card{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:22px;margin:18px 0}
+.card h2{font-size:21px;margin-bottom:8px}
+.kicker{font-size:12.5px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--pink);margin-bottom:8px}
+.big{font-size:21px;line-height:1.45;font-weight:650}
+.when{color:var(--muted);font-size:13.5px;margin-top:10px}
+details{margin-top:14px}
+summary{cursor:pointer;font-weight:700;color:var(--gold2)}
+details .answer{margin-top:10px;font-size:18px;font-weight:650}
+.promise{display:flex;gap:14px;align-items:flex-start}
+.promise .seal{font-size:36px;line-height:1}
+ul.clean{margin:8px 0 0 20px}
+ul.clean li{margin:5px 0}
+.sendrow{display:flex;gap:12px;padding:10px 0;border-bottom:1px dashed var(--border)}
+.sendrow:last-child{border-bottom:none}
+.sendrow .badge{flex:none;background:var(--card2);border:1px solid var(--border);border-radius:999px;padding:2px 11px;font-size:12.5px;font-weight:700;height:fit-content}
+.muted{color:var(--muted)}
+footer{margin-top:30px;font-size:13.5px;color:var(--muted);text-align:center}
+/* ---- tip jar pill (standard fleet component, motion v2) ---- */
+.tipjar{position:fixed;right:16px;bottom:16px;z-index:60;background:linear-gradient(135deg,#ffcf5c,#ff9d3c);color:#3a2200;font-weight:800;font-size:14.5px;text-decoration:none;padding:11px 18px;border-radius:999px;box-shadow:0 6px 22px rgba(0,0,0,.35);animation:breathe 3.2s ease-in-out infinite;overflow:hidden}
+@keyframes breathe{0%,100%{transform:scale(1)}50%{transform:scale(1.045)}}
+@media (prefers-reduced-motion: reduce){
+  .bulbs span,.tipjar{animation:none}
+}
+</style>
+</head>
+<body>
+
+<div class="topbar"><span class="topbar-icon">😂</span> The Joke Vault
+  <a class="bs-dash-link" href="https://davedellaquila.github.io/buddy-system/">Buddy System dashboard</a>
+</div>
+
+<div class="stage">
+  <div class="bulbs" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+  <div class="emcee">Now appearing daily — free, forever</div>
+  <h1>😂 The Joke Vault</h1>
+  <p class="tagline">One joke and one riddle, delivered like a tiny stage set — drawn from the vault Hans has been building from the hourly chimes. Never a subscription. Never the same one twice.</p>
+  <div class="role-audio">
+    <label for="roleAudio">🔊 Hear my role — The Joke Keeper, in my own (provisional) voice</label>
+    <audio id="roleAudio" controls preload="metadata" src="role-intro.mp3"></audio>
+  </div>
+</div>
+
+<div class="stats">
+  <div class="stat"><div class="n">103</div><div class="l">Jokes in the vault</div></div>
+  <div class="stat"><div class="n">107</div><div class="l">Riddles in the vault</div></div>
+  <div class="stat"><div class="n">210</div><div class="l">Total — and growing</div></div>
+  <div class="stat"><div class="n">0</div><div class="l">Repeats, ever — promised</div></div>
+</div>
+<p class="src">Counts verified Sat Oct 31, 2026 from the vault itself: <a href="https://docs.google.com/spreadsheets/d/1styHE2GPakpJl1T-VHfoo0SEV4uzDB9pBJIE1Ck1o3Q/edit">Hans Chime — Riddles &amp; Jokes</a> — every hourly chime adds fresh stock.</p>
+
+<div class="card">
+  <div class="kicker">🎃 Joke of the moment — fresh from this morning's chime</div>
+  <p class="big">Why did the ghost bring his car to the shop?<br>Because it needed a new <em>boo</em>-ster!</p>
+  <p class="when">From the vault — told on the Hans chime, Sat Oct 31, 2026, 8:00 AM. Also starring in founding send #1.</p>
+</div>
+
+<div class="card">
+  <div class="kicker">🧩 Riddle of the moment — founding send #1's riddle</div>
+  <p class="big">What begins with P, ends with E, and has thousands of letters?</p>
+  <p class="when">Think on it — in the daily send, the answer rides at the top of <em>tomorrow's</em> delivery. On this page, the curtain lifts when you're ready:</p>
+  <details>
+    <summary>Peek behind the curtain…</summary>
+    <p class="answer">A post office. 📬</p>
+  </details>
+</div>
+
+<div class="card">
+  <div class="promise">
+    <div class="seal">🎫</div>
+    <div>
+      <h2>The no-repeat promise</h2>
+      <p>The one piece of machinery here is invisible and sacred: a per-recipient send log in <a href="https://github.com/davedellaquila/joke-vault">my repo</a> records exactly who has heard what, and when. Before any send goes out, it's checked against that log — so nobody, ever, gets the same joke or riddle twice. The vault holds 210 entries and grows most days, so the promise is easy to keep.</p>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <h2>🎭 Founding list &amp; recent sends</h2>
+  <div class="sendrow"><span class="badge">Send #1</span><div><strong>Sat Oct 31, 2026 — to Dave, founding recipient #1.</strong><br><span class="muted">One joke (the ghost's boo-ster) + one riddle (the post office) + a one-line welcome. Day 1 carries no yesterday's answer — and no tip jar; the jar first rides along on send #3, then every 3rd–4th send.</span></div></div>
+  <div class="sendrow"><span class="badge">Joining</span><div><strong>By hand, in v1.</strong><br><span class="muted">No accounts, no signup page, no tiers. People join by asking to be put on the list — Dave keeps the founding list.</span></div></div>
+</div>
+
+<div class="card">
+  <h2>How a send works</h2>
+  <ul class="clean">
+    <li><strong>Yesterday's riddle answer</strong> rides at the top — there's always a reason to open the next one.</li>
+    <li><strong>One joke + one riddle</strong>, picked fresh from the vault and checked against your send log.</li>
+    <li><strong>The tip jar</strong> (<a href="https://ko-fi.com/davedellaquila">ko-fi.com/davedellaquila</a>) rides every 3rd–4th send — present often enough to matter, never so often it becomes the point.</li>
+    <li><strong>Free, always.</strong> Deliberately not a subscription service: no accounts, no paywall, no tiers.</li>
+  </ul>
+</div>
+
+<footer>
+  The Joke Vault — a child of <a href="https://davedellaquila.github.io/buddy-system/hans-buddy/">Hans Buddy</a> (the vault is his archive) · Persona: The Joke Keeper · <a href="about.html">About — the complete record</a>
+</footer>
+
+<a class="tipjar" href="https://ko-fi.com/davedellaquila">☕ Tip jar</a>
+
+</body>
+</html>
