@@ -3000,6 +3000,23 @@ html.light .wc-got{background:#007AFF}
      dock closed; when the drawer opens over the sheet, #main keeps
      its context and the deliberate drawer-over-sheet dimming stands. */
   body:not(.standalone):not(.ph-left-open).ph-right-open #main{z-index:auto}
+  /* Dave 2026-10-31 (11:25, annotated screenshot): the info-panel
+     header's action cluster — More (···), flag, favorite, section
+     index (☰) — was too small to tap on the phone. Measured on the
+     sheet at 390px: More was a 13x15px sliver, flag/fav 32x27 with
+     their glyphs silently overridden to 13px by the .linkbtn rule,
+     section index 32x32 with a 20px glyph. Everything at least
+     doubles: one uniform 54px row height, 64px targets, glyphs
+     28/44/44/40px. The strip wraps if the cluster needs a second
+     row; wrapped items right-align under the cluster, and the
+     strip keeps 56px of right padding so the widened cluster
+     never slides under the sheet's fixed close disc. Sheet
+     only — the desktop panel keeps its current sizes. */
+  #view-buddy.sheet .bp-topnav{flex-wrap:wrap;row-gap:8px;padding-right:56px}
+  #view-buddy.sheet .bp-topnav #bp-more{font-size:1.75rem;min-width:64px;height:54px;padding:0 8px;display:inline-flex;align-items:center;justify-content:center}
+  #view-buddy.sheet .bp-topnav button.bp-markbtn{width:64px;height:54px;font-size:2.75rem;border-radius:12px}
+  #view-buddy.sheet .bp-topnav #bp-fav{margin-left:auto}
+  #view-buddy.sheet .bp-topnav .bp-collapse-btn{width:64px;height:54px;font-size:2.5rem;border-radius:12px;margin-left:auto}
   /* First-open invariant (Jonny's first-open crit, 2026-10-23): the
      resting geometry holds at first paint, in every state. boot-hold
      (set by the pre-app boot script on phone loads, released by the

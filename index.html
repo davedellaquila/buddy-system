@@ -3173,6 +3173,23 @@ html.light .wc-got{background:#007AFF}
      dock closed; when the drawer opens over the sheet, #main keeps
      its context and the deliberate drawer-over-sheet dimming stands. */
   body:not(.standalone):not(.ph-left-open).ph-right-open #main{z-index:auto}
+  /* Dave 2026-10-31 (11:25, annotated screenshot): the info-panel
+     header's action cluster — More (···), flag, favorite, section
+     index (☰) — was too small to tap on the phone. Measured on the
+     sheet at 390px: More was a 13x15px sliver, flag/fav 32x27 with
+     their glyphs silently overridden to 13px by the .linkbtn rule,
+     section index 32x32 with a 20px glyph. Everything at least
+     doubles: one uniform 54px row height, 64px targets, glyphs
+     28/44/44/40px. The strip wraps if the cluster needs a second
+     row; wrapped items right-align under the cluster, and the
+     strip keeps 56px of right padding so the widened cluster
+     never slides under the sheet's fixed close disc. Sheet
+     only — the desktop panel keeps its current sizes. */
+  #view-buddy.sheet .bp-topnav{flex-wrap:wrap;row-gap:8px;padding-right:56px}
+  #view-buddy.sheet .bp-topnav #bp-more{font-size:1.75rem;min-width:64px;height:54px;padding:0 8px;display:inline-flex;align-items:center;justify-content:center}
+  #view-buddy.sheet .bp-topnav button.bp-markbtn{width:64px;height:54px;font-size:2.75rem;border-radius:12px}
+  #view-buddy.sheet .bp-topnav #bp-fav{margin-left:auto}
+  #view-buddy.sheet .bp-topnav .bp-collapse-btn{width:64px;height:54px;font-size:2.5rem;border-radius:12px;margin-left:auto}
   /* First-open invariant (Jonny's first-open crit, 2026-10-23): the
      resting geometry holds at first paint, in every state. boot-hold
      (set by the pre-app boot script on phone loads, released by the
@@ -5515,7 +5532,7 @@ function renderDevelopSection(){
   const dev = document.getElementById('fset-develop');
   if (!dev) return;
   const simulating = !!devBackup;
-  const buildNum = '20261031.1630';
+  const buildNum = '20261031.1128';
   dev.innerHTML = ''
     + '<label class="fset-check"><input type="checkbox" id="dev-empty-toggle"' + (simulating ? ' checked' : '') + '> <span><strong>Simulate new user</strong> — empty data file, as if opening the shared link fresh</span></label>'
     + '<div class="fineprint" style="margin:8px 0 12px">Build <span style="font-family:monospace">' + escHtml(String(buildNum)) + '</span> · ' + BUDDIES.length + ' buddies in this file</div>'
@@ -7733,7 +7750,7 @@ function renderBuddy(id){
     + attrHead('shared', 'SHARED NOTES', '<span class="attr-value" id="bp-shared-count">(0)</span>', '')
     + '<div class="attr-body">' + attrTipLine('Anybody with repo access can see this note. Saved to the buddy’s repo (docs/notes.md).') + '<textarea class="notes" id="bp-shared-notes" placeholder="Anybody with repo access can see this note."></textarea>'
     + '<p class="fineprint" id="shared-status"></p></div></div>'
-    + '<div class="bp-build">Build 20261031.1630</div>'
+    + '<div class="bp-build">Build 20261031.1128</div>'
     + '</div>';
   // Update every visible label for a buddy after a rename/re-icon, across all
   // Atlas lenses. A rename changes no structure, so labels are patched in place
@@ -10416,7 +10433,7 @@ function renderPlan(id){
     + '<p class="fineprint">Saved on this device. (For your eyes only)</p></div>'
     + '<div class="bp-sec"><h3>📝 Shared notes<span class="info-tip" data-tip="Visible to everyone with access to this project.">\u24d8</span></h3><textarea class="notes" id="bp-shared" placeholder="Shared notes\u2026 (visible to everyone with access)">'+escHtml((S.planShared||{})[id]||'')+'</textarea>'
     + '<p class="fineprint">Shared — visible to everyone with access.</p></div>'
-    + '<div class="bp-build">Build 20261031.1630</div>'
+    + '<div class="bp-build">Build 20261031.1128</div>'
     + '</div>';
   const nt = document.getElementById('bp-notes');
   let t = null;
@@ -14250,14 +14267,14 @@ function openWhatsNew(){
     .then(r => r.ok ? r.text() : '')
     .then(t => {
       const serverBuild = t.trim();
-      if (serverBuild && serverBuild !== '20261031.1630') {
+      if (serverBuild && serverBuild !== '20261031.1128') {
         updBtn.style.display = '';
         updBtn.title = 'Update to build ' + serverBuild;
       }
       // Show build numbers at the top of the sheet (Dave's request 2026-10-12)
-      const myBuild = '20261031.1630';
+      const myBuild = '20261031.1128';
       let buildLine = '<p class="fineprint" style="margin-top:0">You’re on build ' + escHtml(myBuild) + '.';
-      if (serverBuild && serverBuild !== '20261031.1630' && isNewerBuild(serverBuild, myBuild)) {
+      if (serverBuild && serverBuild !== '20261031.1128' && isNewerBuild(serverBuild, myBuild)) {
         buildLine += ' Build ' + escHtml(serverBuild) + ' is available.';
       }
       buildLine += '</p>';
@@ -14327,7 +14344,7 @@ function syncUpdateBanner(){
   if (b.dataset.state !== state) b.dataset.state = state;
 }
 function initVersionCheck(){
-  const myBuild = '20261031.1630';
+  const myBuild = '20261031.1128';
   function showUpdateBanner(serverBuild){
     if (document.getElementById('update-banner')) return;
     const b = document.createElement('div');
