@@ -2941,6 +2941,16 @@ html.light .wc-got{background:#007AFF}
   body:not(.standalone):not(.ph-left-open) #rail-top button,body:not(.standalone):not(.ph-left-open) #rail-mid button{pointer-events:auto;background:color-mix(in srgb, var(--panel) 78%, transparent);-webkit-backdrop-filter:blur(14px) saturate(1.6);backdrop-filter:blur(14px) saturate(1.6);border:1px solid color-mix(in srgb, var(--text) 24%, transparent);border-radius:50%;box-shadow:0 2px 14px var(--shadow)}
   body:not(.standalone):not(.ph-left-open) #rail-top{display:flex;flex-direction:column;align-items:center;gap:4px;padding:11px 0 0}
   body:not(.standalone):not(.ph-left-open) #rail-mid{display:flex;flex-direction:column;align-items:center;gap:12px;padding:0;border-top:none;margin-top:0;position:absolute;top:67px;left:0;right:0;transform:none} /* Dave 2026-10-30: same tight top cluster as desktop, footer-matched spacing - 67 = 11px rail-top pad + 44px disc + 12px gap (sidebar-relative; the disc itself sits at viewport 12..56, center y=34) */
+  /* Dave 2026-10-31: on phone the floating rail discs sat ON the framed
+     homepage's own text (Nancy's "Who Nan is" heading lost its W to the
+     home disc; card titles were covered too) — the desktop full-bleed
+     exemption (line ~127) leaves a phone page nowhere to hide. The
+     discs step aside in the two states where they cover content Dave
+     is reading: a framed homepage in project view, and the open info
+     sheet. Dashboard views keep the cluster. !important follows the
+     ph-left-open precedent above: the display:flex rule it overrides
+     is (1,2,1) and state rules have silently lost to it before. */
+  body.ph-right-open #rail-top,body.ph-right-open #rail-mid,body:has(#main.homepage-mode):has(#view-project.active) #rail-top,body:has(#main.homepage-mode):has(#view-project.active) #rail-mid{display:none!important}
   /* Dave 2026-10-29 (phone Atlas): no Quick Answers section, and a
      compact toolbar. Quick Answers lives only in the tree chrome, so
      hiding it here is Atlas-only by construction; other views and
