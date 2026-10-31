@@ -284,6 +284,132 @@ h2 { font-size: 22px; margin: 32px 0 16px; }
 
 
 
+
+<section class="whitelist-sec" id="whitelist">
+<h2>🗞️ The Contributor Whitelist</h2>
+<p class="wl-sub">The Fiddletown Gazette runs on a whitelist — only these eight people's email can change the paper, each publishing into their own section of it. Gazette Buddy is the maintainer of record; membership changes only on Dave's word. This page is public, so the roster shows names, sections, and status only — <strong>email addresses and editing live behind GitHub connect</strong>, in the private view below.</p>
+<div class="wl-roster">
+<div class="wl-row"><span class="wl-name">Carl Towne</span><span class="wl-sec">🚜 What's Carl Working On</span><span class="wl-status">Live</span></div>
+<div class="wl-row"><span class="wl-name">Kathleen “Kathy” Towne</span><span class="wl-sec">✉️ Kathy's Corner</span><span class="wl-status">Open — awaiting her first filing</span></div>
+<div class="wl-row"><span class="wl-name">Dave Swager</span><span class="wl-sec">🍺 Swager</span><span class="wl-status">Live</span></div>
+<div class="wl-row"><span class="wl-name">Marci Swager</span><span class="wl-sec">✉️ Marci's Corner</span><span class="wl-status">Open — awaiting her first filing</span></div>
+<div class="wl-row"><span class="wl-name">Joe Winstead</span><span class="wl-sec">🏆 The Winsteds' Bocce Court (shared)</span><span class="wl-status">Live</span></div>
+<div class="wl-row"><span class="wl-name">Carol Winstead</span><span class="wl-sec">🏆 The Winsteds' Bocce Court (shared)</span><span class="wl-status">Live</span></div>
+<div class="wl-row"><span class="wl-name">Nancy “Nan” Dell'Aquila</span><span class="wl-sec">✉️ Nan's Corner · 🍞 Nan's Recipe Corner</span><span class="wl-status">Live — first piece published Oct 31, 2026</span></div>
+<div class="wl-row"><span class="wl-name">Dave Dell'Aquila</span><span class="wl-sec">✒️ From the Editor's Desk</span><span class="wl-status">Publisher</span></div>
+</div>
+<div class="wl-locked" hidden>🔒 Connect GitHub in the 🧠 Brain dump box above to see the confirmed addresses and edit the record — the Gazette repos are private, so a token is needed. Then reload this page.</div>
+<div class="wl-main" hidden>
+<p class="wl-sub">🔓 <strong>Private view</strong> — the canonical record (<code>whitelist.json</code> in Gazette Buddy's private repo). Edit a section name or the confirmed addresses, then save: the write goes straight to the record, and Gazette Buddy's intake watch enforces exactly what's saved here. Adding or removing a person goes through Gazette Buddy (maintainer of record) on Dave's word.</p>
+<div class="wl-edit"></div>
+<div class="attn-actions"><button type="button" class="wl-save attn-btn primary">Save the record</button></div>
+<div class="wl-statusline attn-status" role="status"></div>
+</div>
+<style>
+.whitelist-sec{margin:26px 0}
+.wl-sub{color:var(--muted);font-size:14px;margin:6px 0 12px}
+.wl-roster{border:1px solid var(--border);border-radius:12px;overflow:hidden}
+.wl-row{display:flex;gap:12px;flex-wrap:wrap;align-items:baseline;background:var(--card);padding:10px 14px;border-top:1px solid var(--border)}
+.wl-row:first-child{border-top:none}
+.wl-name{font-weight:700;min-width:190px}
+.wl-sec{flex:1;min-width:200px}
+.wl-status{color:var(--muted);font-size:13px}
+.wl-locked{background:var(--card);border:1px dashed var(--border);border-radius:12px;padding:12px 16px;margin-top:12px;font-size:14px}
+.wl-main{margin-top:12px}
+.wl-person{border:1px solid var(--border);border-radius:12px;background:var(--card);padding:12px 14px;margin-bottom:10px}
+.wl-person h3{margin:0 0 8px;font-size:15px}
+.wl-person label{display:block;font-size:12px;font-weight:700;color:var(--muted);margin:8px 0 3px}
+.wl-person input{width:100%;box-sizing:border-box;padding:7px 10px;border:1px solid var(--border);border-radius:8px;background:var(--bg);color:var(--text);font-size:14px;margin-bottom:5px}
+</style>
+<script>
+(function(){
+  var sec = document.querySelector('.whitelist-sec'); if (!sec) return;
+  var locked = sec.querySelector('.wl-locked'), main = sec.querySelector('.wl-main');
+  function lsGet(){ try { return JSON.parse(localStorage.getItem('buddyTree.v3') || '{}'); } catch(e){ return {}; } }
+  var tok = lsGet().ghToken || '';
+  if (!tok) { locked.hidden = false; return; }
+  var status = sec.querySelector('.wl-statusline'), editBox = sec.querySelector('.wl-edit');
+  var record = null, fileSha = '';
+  function b64decode(b64){
+    var bin = atob((b64 || '').replace(/\n/g, '')), bytes = new Uint8Array(bin.length);
+    for (var i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+    return new TextDecoder().decode(bytes);
+  }
+  function b64encode(str){
+    var bytes = new TextEncoder().encode(str), bin = '';
+    bytes.forEach(function(b){ bin += String.fromCharCode(b); });
+    return btoa(bin);
+  }
+  async function gh(path, method, body){
+    var r = await fetch('https://api.github.com' + path, {
+      method: method || 'GET',
+      headers: {'Authorization': 'Bearer ' + tok, 'Accept': 'application/vnd.github+json', 'Content-Type': 'application/json'},
+      body: body ? JSON.stringify(body) : undefined
+    });
+    if (!r.ok) throw new Error('GitHub ' + r.status);
+    return r.status === 204 ? null : await r.json();
+  }
+  function esc(s){ return String(s == null ? '' : s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;'); }
+  function render(){
+    editBox.innerHTML = '';
+    (record.people || []).forEach(function(person, pi){
+      var card = document.createElement('div'); card.className = 'wl-person'; card.dataset.idx = pi;
+      var addrs = (person.confirmedAddresses || []).slice(); addrs.push('');
+      var addrInputs = addrs.map(function(a){
+        return '<input type="email" class="wl-addr" value="' + esc(a) + '" placeholder="add an address, or leave blank" autocomplete="off">';
+      }).join('');
+      card.innerHTML = '<h3>' + esc(person.name) + (person.nickname ? ' · “' + esc(person.nickname) + '”' : '') + '</h3>'
+        + '<label>Section name</label><input type="text" class="wl-section" value="' + esc(person.section || '') + '">'
+        + '<label>Confirmed email addresses</label>' + addrInputs
+        + '<label>Status (read-only)</label><div style="font-size:13.5px">' + esc(person.status || '') + '</div>';
+      editBox.appendChild(card);
+    });
+  }
+  async function load(){
+    try {
+      var j = await gh('/repos/davedellaquila/gazette-buddy/contents/whitelist.json');
+      fileSha = j.sha; record = JSON.parse(b64decode(j.content));
+      main.hidden = false; render();
+      status.textContent = 'Record loaded from the private repo — the watch enforces this version.';
+    } catch(e) {
+      locked.hidden = false;
+      locked.textContent = '🔒 GitHub is connected on this device, but the whitelist record could not be loaded (' + e.message + '). The token may not have access to the private gazette-buddy repo.';
+    }
+  }
+  sec.querySelector('.wl-save').addEventListener('click', async function(){
+    if (!record) return;
+    var cards = editBox.querySelectorAll('.wl-person'), bad = '';
+    cards.forEach(function(card){
+      var pi = +card.dataset.idx, person = record.people[pi];
+      person.section = card.querySelector('.wl-section').value.trim();
+      var vals = [];
+      card.querySelectorAll('.wl-addr').forEach(function(inp){
+        var v = inp.value.trim();
+        if (!v) return;
+        if (v.indexOf('@') < 0) bad = v;
+        if (vals.indexOf(v) < 0) vals.push(v);
+      });
+      person.confirmedAddresses = vals;
+    });
+    if (bad) { status.textContent = 'Not saved — “' + bad + '” does not look like an email address.'; return; }
+    status.textContent = 'Saving…';
+    try {
+      var res = await gh('/repos/davedellaquila/gazette-buddy/contents/whitelist.json', 'PUT', {
+        message: 'Whitelist update from the Gazette Buddy homepage',
+        content: b64encode(JSON.stringify(record, null, 2)),
+        sha: fileSha
+      });
+      fileSha = res.content.sha;
+      status.textContent = '✅ Saved — the record in the repo is updated, and the intake watch enforces it from here.';
+    } catch(e) {
+      status.textContent = 'Save failed (' + e.message + '). Nothing was changed in the record.';
+    }
+  });
+  load();
+})();
+</script>
+</section>
+
 <section class="repo-files" data-buddy-id="gazette-buddy">
 <h2>📄 Repo files</h2>
 <p class="rf-sub">The markdown files in <span data-buddy-name>Gazette Buddy</span>'s repo. Tap a file name and its contents open right below it — open as many as you like at once. Edit inside an opened file and the save goes straight back to GitHub. The repo is private, so nothing here — not even the file names — is shown until GitHub is connected on this device.</p>
