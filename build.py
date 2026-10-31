@@ -1724,6 +1724,18 @@ body.sb-closed #sidebar #sb-tools{display:none}
 #avatar-picker .av-imgstate{color:var(--muted);font-size:.75rem;margin:2px 0 6px}
 #avatar-picker .av-imgbtns{display:flex;gap:12px}
 #avatar-picker .av-or{font-size:.6875rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin:2px 0 6px}
+/* Avatar crop step (Dave 2026-10-31): after picking a photo, position it
+   in the avatar's frame before it saves — drag to re-center, slider (or
+   wheel) to zoom. While cropping, the rest of the sheet hides. */
+#avatar-picker.cropping .av-imgblock,#avatar-picker.cropping .av-or,#avatar-picker.cropping #avatar-grid,#avatar-picker.cropping #avatar-custom,#avatar-picker.cropping .fineprint{display:none}
+#avatar-picker .av-stage{position:relative;width:264px;height:264px;margin:0 auto;border-radius:16px;overflow:hidden;background:var(--ghost);touch-action:none;cursor:grab}
+#avatar-picker .av-stage:active{cursor:grabbing}
+#avatar-picker .av-stage img{position:absolute;left:0;top:0;max-width:none;user-select:none;-webkit-user-drag:none;pointer-events:none}
+#avatar-picker .av-ring{position:absolute;inset:0;border-radius:50%;box-shadow:inset 0 0 0 2px rgba(255,255,255,.85),0 0 0 400px rgba(0,0,0,.30);pointer-events:none}
+#avatar-picker .av-zoomrow{display:flex;align-items:center;gap:10px;margin:12px 2px 0}
+#avatar-picker .av-zoomrow input[type=range]{flex:1}
+#avatar-picker .av-crophint{color:var(--muted);font-size:.75rem;text-align:center;margin-top:8px}
+#avatar-picker .av-cropbtns{display:flex;gap:12px;justify-content:flex-end;margin-top:10px}
 .av-cat{font-size:.6875rem;color:var(--muted);margin:10px 0 4px;text-transform:uppercase;letter-spacing:.06em}
 .av-cat:first-of-type{margin-top:0}
 #avatar-grid{margin-bottom:10px}
@@ -3150,7 +3162,16 @@ const VOICE_CATALOG = VOICES_JSON; // full voice catalog from voice-catalog.json
 const byId = Object.fromEntries(BUDDIES.map(b => [b.id, b]));
 const ROOT_ID = 'astro'; // chief of staff sits at the root of the tree
 BUDDIES.forEach(b => { (b.links || []).forEach(lid => { const t = byId[lid]; if (t && lid !== b.id) { (t.linkedBy = t.linkedBy || []).push(b.id); } }); });
-function buddyImageUrl(b, prefix){ if(!b) return null; if(b.image) return b.image; return (prefix || '') + 'avatars/' + b.id + '.jpg'; }
+/* Dave 2026-10-31: avatar freshness. An upload writes avatars/<id>.jpg —
+   the SAME URL the panel already displays — so browsers and the Pages
+   CDN kept serving the old bytes, and the new photo "didn't take" until
+   some later navigation forced a refetch. The fix: keep the exact JPEG
+   we uploaded in a session map, and every surface rendering through
+   buddyImageUrl shows it immediately. On remove, a bust stamp forces
+   one fresh fetch of the (now deleted) file. */
+const avatarLocal = {};
+const avatarBust = {};
+function buddyImageUrl(b, prefix){ if(!b) return null; if(avatarLocal[b.id]) return avatarLocal[b.id]; if(b.image) return b.image; const u = (prefix || '') + 'avatars/' + b.id + '.jpg'; return avatarBust[b.id] ? u + '?v=' + avatarBust[b.id] : u; }
 function buddyDisplayIcon(b){ try { if (window.S && S.iconOverrides && S.iconOverrides[b.id]) return S.iconOverrides[b.id]; } catch(e){} return b.icon || ''; }
 function setBuddyFavicon(icon, imageUrl){
   function apply(url){
@@ -12457,6 +12478,10 @@ function openAvatarPicker(bid, anchorEl){
       + '<div class="av-imgstate" id="avatar-imgstate">Using the emoji</div>'
       + '<div class="av-imgbtns"><button class="linkbtn" id="avatar-upload">Upload image</button>'
       + '<button class="linkbtn" id="avatar-remove" hidden>Remove image</button></div></div></div>'
+      + '<div class="av-crop" id="avatar-crop" hidden><div class="av-stage" id="avatar-stage"><img id="avatar-cropimg" alt=""><div class="av-ring"></div></div>'
+      + '<div class="av-zoomrow"><span aria-hidden="true">\U0001f50d</span><input type="range" id="avatar-zoom" min="100" max="300" value="100" aria-label="Zoom"></div>'
+      + '<div class="av-crophint">Drag to position \u2014 the circle is the avatar frame</div>'
+      + '<div class="av-cropbtns"><button class="linkbtn" id="avatar-cropcancel" type="button">Cancel</button><button class="linkbtn" id="avatar-cropsave" type="button">Save avatar</button></div></div>'
       + '<div class="av-or">or pick an emoji</div><div id="avatar-grid"></div>'
       + '<input id="avatar-custom" placeholder="Or paste any emoji" maxlength="8">'
       + '<p class="fineprint" style="margin:8px 0 0">Uploaded images live in the dashboard repo (avatars/) and appear on the card, homepage, and favicon.</p>';
@@ -12469,10 +12494,32 @@ function openAvatarPicker(bid, anchorEl){
     document.getElementById('avatar-remove').addEventListener('click', async () => {
       const cur = document.getElementById('avatar-picker').dataset.bid;
       if(!ghToken()){ openTokenPopover(); toast('Add a GitHub token first.'); return; }
-      try{ await ghDeleteFile('buddy-system', 'avatars/' + cur + '.jpg', 'Remove avatar for ' + cur); toast('Avatar image removed.'); }
+      try{ await ghDeleteFile('buddy-system', 'avatars/' + cur + '.jpg', 'Remove avatar for ' + cur); delete avatarLocal[cur]; avatarBust[cur] = Date.now(); toast('Avatar image removed.'); }
       catch(e){ toast('No custom image to remove.'); }
       closeAvatarPicker(); if(cur) renderBuddy(cur);
     });
+    document.getElementById('avatar-cropcancel').addEventListener('click', () => exitAvatarCrop());
+    document.getElementById('avatar-cropsave').addEventListener('click', () => saveAvatarCrop());
+    const avStage = document.getElementById('avatar-stage');
+    let avDrag = null;
+    avStage.addEventListener('pointerdown', e => { if(!avCrop) return; avDrag = { px: e.clientX, py: e.clientY, x: avCrop.x, y: avCrop.y }; try{ avStage.setPointerCapture(e.pointerId); }catch(err){} });
+    avStage.addEventListener('pointermove', e => { if(!avDrag || !avCrop) return; avCrop.x = avDrag.x + (e.clientX - avDrag.px); avCrop.y = avDrag.y + (e.clientY - avDrag.py); layoutAvatarCrop(); });
+    avStage.addEventListener('pointerup', () => { avDrag = null; });
+    avStage.addEventListener('pointercancel', () => { avDrag = null; });
+    document.getElementById('avatar-zoom').addEventListener('input', e => {
+      if(!avCrop) return;
+      const W = avStage.clientWidth || 264;
+      const sOld = avCrop.cover * avCrop.zoom, z = (+e.target.value) / 100, sNew = avCrop.cover * z;
+      const cx = (W / 2 - avCrop.x) / sOld, cy = (W / 2 - avCrop.y) / sOld;
+      avCrop.zoom = z; avCrop.x = W / 2 - cx * sNew; avCrop.y = W / 2 - cy * sNew;
+      layoutAvatarCrop();
+    });
+    avStage.addEventListener('wheel', e => {
+      if(!avCrop) return; e.preventDefault();
+      const zi = document.getElementById('avatar-zoom');
+      zi.value = Math.max(100, Math.min(300, (+zi.value) + (e.deltaY < 0 ? 10 : -10)));
+      zi.dispatchEvent(new Event('input'));
+    }, { passive: false });
   }
   pk.dataset.bid = bid;
   // Dave 2026-10-20: the profile-image block leads the sheet (standard
@@ -12491,7 +12538,7 @@ function openAvatarPicker(bid, anchorEl){
     pimg.style.display = '';
     pimg.onload = () => { pimg.style.display = ''; if (pstate) pstate.textContent = 'Image set — it replaces the emoji'; if (prm) prm.hidden = false; if (pup) pup.textContent = 'Replace image'; };
     pimg.onerror = () => { pimg.style.display = 'none'; if (pstate) pstate.textContent = 'No image — using the emoji'; if (prm) prm.hidden = true; if (pup) pup.textContent = 'Upload image'; };
-    pimg.src = buddyImageUrl(pb) + '?v=' + Date.now();
+    const pu = buddyImageUrl(pb); pimg.src = pu.indexOf('data:') === 0 ? pu : pu + '?v=' + Date.now();
   }
   const grid = document.getElementById('avatar-grid');
   grid.innerHTML = AVATAR_CATS.map(cat =>
@@ -12519,6 +12566,7 @@ function openAvatarPicker(bid, anchorEl){
 function closeAvatarPicker(){
   const pk = document.getElementById('avatar-picker');
   if (!pk) return;
+  if (typeof avCrop !== 'undefined' && avCrop) exitAvatarCrop();
   pk.classList.remove('show');
   if (pk._closeListener) { document.removeEventListener('click', pk._closeListener); pk._closeListener = null; }
 }
@@ -12540,18 +12588,75 @@ async function uploadBuddyImage(bid){
   if(!bid) return;
   if(!ghToken()){ openTokenPopover(); toast('Add a GitHub token first.'); return; }
   const inp = document.createElement('input'); inp.type = 'file'; inp.accept = 'image/*';
-  inp.onchange = async () => {
+  inp.onchange = () => {
     const f = inp.files && inp.files[0]; if(!f) return;
-    const pk = document.getElementById('avatar-picker'); if(pk) pk.classList.remove('show');
-    toast('Uploading avatar…');
-    try{
-      const jpg = await downscaleToJpeg(await fileToDataUrl(f), 512);
-      await ghPutFile('buddy-system', 'avatars/' + bid + '.jpg', jpg.split(',')[1], 'Avatar image for ' + bid);
-      toast('Avatar image saved.');
-      renderBuddy(bid);
-    }catch(err){ toast('Upload failed: ' + (err && err.message || err)); }
+    openAvatarCrop(bid, f);
   };
   inp.click();
+}
+/* Avatar crop step (Dave 2026-10-31): a picked photo opens here to be
+   positioned in the avatar's frame before anything uploads — drag to
+   re-center, slider/wheel to zoom. Save renders exactly the framed
+   region to the same 512px JPEG the old flow produced, uploads it, and
+   applies it locally at once (see avatarLocal) so the panel, sidebar,
+   and favicon show the new photo immediately. */
+let avCrop = null;
+function openAvatarCrop(bid, file){
+  const pk = document.getElementById('avatar-picker'); if(!pk || !file) return;
+  const url = URL.createObjectURL(file);
+  const img = new Image();
+  img.onload = () => {
+    const stage = document.getElementById('avatar-stage');
+    const W = (stage && stage.clientWidth) || 264;
+    const cover = Math.max(W / img.naturalWidth, W / img.naturalHeight);
+    avCrop = { bid: bid, img: img, url: url, cover: cover, zoom: 1, x: (W - img.naturalWidth * cover) / 2, y: (W - img.naturalHeight * cover) / 2 };
+    document.getElementById('avatar-cropimg').src = url;
+    document.getElementById('avatar-zoom').value = 100;
+    const sv = document.getElementById('avatar-cropsave'); if(sv){ sv.disabled = false; sv.textContent = 'Save avatar'; }
+    document.getElementById('avatar-crop').hidden = false;
+    pk.classList.add('cropping'); pk.classList.add('show');
+    layoutAvatarCrop();
+  };
+  img.onerror = () => { URL.revokeObjectURL(url); toast('That image could not be loaded.'); };
+  img.src = url;
+}
+function layoutAvatarCrop(){
+  if(!avCrop) return;
+  const stage = document.getElementById('avatar-stage');
+  const W = (stage && stage.clientWidth) || 264;
+  const s = avCrop.cover * avCrop.zoom, dw = avCrop.img.naturalWidth * s, dh = avCrop.img.naturalHeight * s;
+  avCrop.x = Math.min(0, Math.max(W - dw, avCrop.x));
+  avCrop.y = Math.min(0, Math.max(W - dh, avCrop.y));
+  const cimg = document.getElementById('avatar-cropimg');
+  cimg.style.width = dw + 'px'; cimg.style.height = dh + 'px';
+  cimg.style.transform = 'translate(' + avCrop.x + 'px,' + avCrop.y + 'px)';
+}
+function exitAvatarCrop(){
+  if(avCrop){ try{ URL.revokeObjectURL(avCrop.url); }catch(e){} avCrop = null; }
+  const pk = document.getElementById('avatar-picker'); if(pk) pk.classList.remove('cropping');
+  const c = document.getElementById('avatar-crop'); if(c) c.hidden = true;
+}
+async function saveAvatarCrop(){
+  if(!avCrop) return;
+  const bid = avCrop.bid, img = avCrop.img;
+  const stage = document.getElementById('avatar-stage');
+  const W = (stage && stage.clientWidth) || 264;
+  const s = avCrop.cover * avCrop.zoom, k = 512 / W;
+  const c = document.createElement('canvas'); c.width = 512; c.height = 512;
+  c.getContext('2d').drawImage(img, avCrop.x * k, avCrop.y * k, img.naturalWidth * s * k, img.naturalHeight * s * k);
+  const jpg = c.toDataURL('image/jpeg', 0.85);
+  const btn = document.getElementById('avatar-cropsave');
+  if(btn){ btn.disabled = true; btn.textContent = 'Saving\u2026'; }
+  try{
+    await ghPutFile('buddy-system', 'avatars/' + bid + '.jpg', jpg.split(',')[1], 'Avatar image for ' + bid);
+    avatarLocal[bid] = jpg; avatarBust[bid] = Date.now();
+    toast('Avatar image saved.');
+    exitAvatarCrop(); closeAvatarPicker();
+    renderBuddy(bid); renderNav(); refreshViews();
+  }catch(err){
+    toast('Upload failed: ' + (err && err.message || err));
+    if(btn){ btn.disabled = false; btn.textContent = 'Save avatar'; }
+  }
 }
 function setBuddyIcon(bid, emoji){
   const b = byId[bid]; if (!b) return;

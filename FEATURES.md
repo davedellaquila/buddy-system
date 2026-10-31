@@ -383,8 +383,9 @@ Build: `build.py` generates `index.html` from `buddies.json` + `plans.json`.
   when the buddy is created. Custom homepages carry their own Connections
   section (first live link: Joel's Buddy ↔ James's Buddy).
 - **Buddy avatars** — every buddy can have an image, not just an emoji:
-  upload from the avatar picker (downscaled, stored in the dashboard repo
-  at `avatars/<buddy-id>.jpg`, shown on the card, homepage, and favicon;
+  upload from the avatar picker (position it first in the crop step —
+  drag to re-center, slider/wheel to zoom — then stored in the dashboard
+  repo at `avatars/<buddy-id>.jpg`, shown on the card, homepage, and favicon;
   removable). Tapping the avatar on a buddy's card *or* homepage opens a
   categorized emoji picker (~200 emojis across 8 categories, plus
   paste-any-emoji); homepage picks share the dashboard's override store,
