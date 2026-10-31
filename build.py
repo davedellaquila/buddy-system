@@ -4262,6 +4262,12 @@ function setPanelTab(tab){
   save(); syncPanelTabs(); renderNav();
 }
 function renderNav(){
+  /* Dave 2026-10-30 bug fix: selecting a buddy must not move the buddy
+     list. Capture .sb-scroll's live position before the rebuild below
+     replaces the list HTML (WebKit can clamp it while content swaps);
+     the tail of this function restores it. */
+  const _sbScrollEl = document.querySelector('.sb-scroll');
+  const _sbLiveTop = _sbScrollEl ? _sbScrollEl.scrollTop : 0;
   const views = getViewOrder().map(id => VIEW_DEFS.find(v => v[0] === id)).filter(Boolean).filter(([v]) => isViewVisible(v));
   /* Dave 2026-10-20: the expand chevron no longer leads this stack.
      Dave 2026-10-21 (Job 5): it lives only in the rail (#rail-expand) —
@@ -4351,6 +4357,11 @@ function renderNav(){
     + '<span class="bicon">'+escHtml(p.icon||'')+'</span><span class="bname pname">'+escHtml(p.name)+'</span></button>').join('');
   watchScrollPos('sidebar', document.getElementById('sidebar'));
   restoreScrollPos('sidebar', document.getElementById('sidebar'));
+  watchScrollPos('sbscroll', _sbScrollEl);
+  if (_sbScrollEl) {
+    if (_sbLiveTop > 0) { _sbScrollEl.scrollTop = _sbLiveTop; saveScrollPos('sbscroll', _sbScrollEl); }
+    else restoreScrollPos('sbscroll', _sbScrollEl);
+  }
   updateHpNav();
   renderStrip();
 }
@@ -13186,6 +13197,14 @@ function setSidebarOpen(open){
   const sb = document.getElementById('sidebar');
   const sc = document.getElementById('sb-scrim');
   if (!sb) return;
+  if (open) {
+    /* Dave 2026-10-30: reopening restores the buddy list's position
+       from the watched store (see renderNav) — on phone the closed
+       state hides .sb-scroll entirely, and Safari loses its scroll
+       position while it is hidden. */
+    const _rsb = () => { restoreScrollPos('sbscroll', document.querySelector('.sb-scroll')); restoreScrollPos('sidebar', sb); };
+    requestAnimationFrame(_rsb); setTimeout(_rsb, 90);
+  }
   if (isDrawerNav()) {
     document.body.classList.remove('sb-closed');
     /* iPhone Pass v2: one dock at a time, through closed — opening the

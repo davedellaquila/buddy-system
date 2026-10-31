@@ -297,6 +297,12 @@ Build: `build.py` generates `index.html` from `buddies.json` + `plans.json`.
   everywhere the rail renders, anchored included (Dave, 2026-10-30). The
   discs float bare — no container card, border, or divider in either
   panel style — in one top cluster spaced like the footer cluster (12px).
+- **Buddy list scroll memory** — the buddy list keeps its exact scroll
+  position when you select a buddy, across list re-renders and across
+  closing and reopening the panel/drawer: the list's scroller is
+  watched into the persistent scroll-position store, re-renders
+  restore the position they started with, and reopening restores the
+  stored one (Dave bug fix, 2026-10-30).
 - **Universal Dump button** — a 📥 disc on the collapsed rail (below the
   current-view icon, phone and desktop) opens a capture box that routes to
   the TOP LEVEL: entries append to Astro's ingest
