@@ -1189,5 +1189,13 @@
 
 
   <script src="s/buddy.js"></script>
+  <!-- Back to dashboard (Dave 2026-10-30): the dashboard's News Buddy
+       pop-out window has no dashboard chrome, so the paper itself offers
+       the way back — owner context only (the ?owner=1 load or a device
+       already owner-armed), and only top-level, never inside the
+       dashboard's embedded frame. Injected into future editions by
+       build-pages.py as well. -->
+  <a id="nb-dash-back" href="https://davedellaquila.github.io/buddy-system/" style="display:none;position:fixed;left:14px;bottom:14px;z-index:9999;background:#111;color:#fff;padding:11px 18px;border-radius:999px;font:600 14px/1 -apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;text-decoration:none;box-shadow:0 4px 18px rgba(0,0,0,.35)">\u2190 Back to dashboard</a>
+  <script>(function(){try{var topLevel = window.top === window.self;var owner = /[?&]owner=1(?:&|#|$)/.test(window.location.search || '') || localStorage.getItem('newsBuddyOwner') === '1';if(topLevel && owner) document.getElementById('nb-dash-back').style.display = 'block';}catch(e){}})();</script>
 </body>
 </html>

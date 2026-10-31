@@ -297,10 +297,12 @@ Build: `build.py` generates `index.html` from `buddies.json` + `plans.json`.
   everywhere the rail renders, anchored included (Dave, 2026-10-30). The
   discs float bare — no container card, border, or divider in either
   panel style — in one top cluster spaced like the footer cluster (12px).
-- **News Buddy opens embedded** — no buddy pops out of the dashboard
-  into its own window anymore; News Buddy loads its homepage in the
-  normal embedded view on every screen size, like all the others
-  (the wide-screen takeover was removed 2026-10-30).
+- **News Buddy pop-out, with a way back** — on wide screens News
+  Buddy still pops into its own owner window from the dashboard
+  (Dave kept the pop-out, 2026-10-30), and the paper itself now
+  carries a fixed "← Back to dashboard" pill (bottom-left, visible
+  on load) in that owner context — top-level loads only, so the
+  embedded phone view and public readers are unaffected.
 - **Buddy list scroll memory** — the buddy list keeps its exact scroll
   position when you select a buddy, across list re-renders and across
   closing and reopening the panel/drawer: the list's scroller is

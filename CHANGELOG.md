@@ -25,6 +25,21 @@
 - **Mail Buddy — evening edition (17:41 PT):** Dave's inbox since 6:41 AM — 210 messages, 198 spiked, 7 ranked items (Google Voice voicemail from (408) 782-8508; Rocket Mortgage $2,076.92 drafting Sun Nov 1; two Schwab sales settling Mon Nov 2 — 142 A and 38 TMO; Capital One $40 Cursor charge; Quest Diagnostics $44.61 payment submitted; Zappos order shipped, arriving Tue Nov 3; MoreBeer shipment delivered). Dispositions honoured: 6 closed records held out, 1 USPS follow-up suppressed as closed. Dad's mailbox: 3 messages, all spiked — nothing important this edition. Details: mail-buddy homepage "📬 Needs your attention".
 - **Mail Buddy — morning edition (06:41 PT):** Dave's inbox since Thu 5:41 PM — 117 messages, 111 spiked, 5 ranked items (Capital One $172.39 Zappos charge matching Wednesday's order; Capital One card added to Apple Pay + an X new-iPhone login — an overnight new-device cluster; Docusign Marshall Hospital ROI completed; USPS Stamps.com package due today by 9 PM). Dad's mailbox: 5 messages, 4 spiked, 1 item (Apple — a recovery contact was removed from Emil's account at 4:53 AM). Details: mail-buddy homepage "📬 Needs your attention".
 
+### 20261030.2034 — News Buddy keeps its pop-out; the paper gains a way back (Dave amendment, Oct 30)
+- This REVERSES the removal in build 20261030.2029 (same evening, at
+  Dave's clarification): the pop-out itself was never the problem —
+  the popped window simply had no visible way back to the dashboard.
+  The dashboard's wide-screen News Buddy pop-out is restored exactly
+  as it was.
+- What changed instead: the News Buddy page now carries a
+  "← Back to dashboard" pill — fixed at the bottom-left, visible the
+  moment the page loads, no scrolling — linking to the dashboard
+  root. It shows only in the owner context (the ?owner=1 pop-out
+  load, or a device already owner-armed) and only when the page is
+  top-level, so public readers never see it and the embedded
+  phone-width load is unchanged. The edition builder injects it into
+  future editions too, so it survives the daily refresh.
+
 ### 20261030.2029 — News Buddy takeover removed (Dave, Oct 30)
 - Selecting News Buddy no longer pops it into its own window on wide
   screens. The one buddy-specific pop-out in the dashboard is gone:
