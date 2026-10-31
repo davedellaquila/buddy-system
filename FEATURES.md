@@ -303,6 +303,10 @@ Build: `build.py` generates `index.html` from `buddies.json` + `plans.json`.
   carries a fixed "← Back to dashboard" pill (bottom-left, visible
   on load) in that owner context — top-level loads only, so the
   embedded phone view and public readers are unaffected.
+- **Readable floating discs** — the rail, footer, + and ⓘ discs carry
+  a 78%-strength panel fill with full-strength glyphs and a defined
+  edge, so they stay legible over any framed page, light or dark, in
+  either dashboard theme (contrast fix, 2026-10-31).
 - **Buddy list scroll memory** — the buddy list keeps its exact scroll
   position when you select a buddy, across list re-renders and across
   closing and reopening the panel/drawer: the list's scroller is

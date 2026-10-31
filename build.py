@@ -922,11 +922,11 @@ body.sb-closed #sb-resize{display:none}
 #bp-to-top.show{opacity:1;pointer-events:auto;transform:none}
 /* Floating + button — iOS frosted-glass translucency (Jonny-approved look, Dave 2026-10-13) */
 #new-buddy-fab{position:fixed;right:20px;bottom:20px;z-index:9000;width:56px;height:56px;border-radius:50%;
-  background:rgba(50,50,52,.16);color:#fff;border:.5px solid rgba(255,255,255,.25);cursor:pointer;
+  background:rgba(50,50,52,.55);color:#fff;border:.5px solid rgba(255,255,255,.38);cursor:pointer;
   display:flex;align-items:center;justify-content:center;
   -webkit-backdrop-filter:blur(20px) saturate(180%);backdrop-filter:blur(20px) saturate(180%);
   box-shadow:0 4px 16px rgba(0,0,0,.25);-webkit-tap-highlight-color:transparent}
-html.light #new-buddy-fab{background:rgba(255,255,255,.20);color:#1c1c1e;border-color:rgba(0,0,0,.08)}
+html.light #new-buddy-fab{background:rgba(255,255,255,.78);color:#1c1c1e;border-color:rgba(0,0,0,.18)}
 /* Hide the FAB while Settings is open — it overlapped the Done button */
 body:has(#field-settings.show) #new-buddy-fab{display:none}
 #new-buddy-fab:active{transform:scale(.94)}
@@ -961,12 +961,12 @@ body:has(#view-buddy.sheet.active) #hp-back{display:flex}
 body:has(#field-settings.show) #hp-nav,
 body:has(#field-settings.show) #hp-back{display:none !important}
 #hp-nav button, #hp-back{width:44px;height:44px;border-radius:50%;padding:0; /* Dave 2026-10-30: the footer discs shrink to the rail discs' 44px - one disc diameter across the chrome. (Was 56px. #hp-back shares this rule and the footer family, so it matches too.) Icons, gap (12px), glass, and the --kb-lift transform on the container are untouched. */
-  background:rgba(50,50,52,.16);color:#fff;border:.5px solid rgba(255,255,255,.25);cursor:pointer;
+  background:rgba(50,50,52,.55);color:#fff;border:.5px solid rgba(255,255,255,.38);cursor:pointer;
   align-items:center;justify-content:center;
   -webkit-backdrop-filter:blur(20px) saturate(180%);backdrop-filter:blur(20px) saturate(180%);
   box-shadow:0 4px 16px rgba(0,0,0,.25);-webkit-tap-highlight-color:transparent}
 #hp-nav button{display:flex}
-html.light #hp-nav button, html.light #hp-back{background:rgba(255,255,255,.20);color:#1c1c1e;border-color:rgba(0,0,0,.08)}
+html.light #hp-nav button, html.light #hp-back{background:rgba(255,255,255,.78);color:#1c1c1e;border-color:rgba(0,0,0,.18)}
 #hp-nav button:active, #hp-back:active{transform:scale(.94)}
 #hp-nav button:disabled{opacity:.35;cursor:default}
 #hp-nav button:disabled:active{transform:none}
@@ -1280,7 +1280,7 @@ textarea[disabled]{opacity:.5;cursor:not-allowed}
 #token-pop .saved-check.show{display:block}
 /* Reopen right detail panel when closed (Muse-ish fixed chrome) */
 #panel-open{position:fixed;top:12px;right:12px;z-index:85;width:44px;height:44px;border-radius:50%;
-  background:color-mix(in srgb, var(--panel) 16%, transparent);-webkit-backdrop-filter:blur(14px) saturate(1.6);backdrop-filter:blur(14px) saturate(1.6);border:1px solid var(--border);color:var(--muted);cursor:pointer;
+  background:color-mix(in srgb, var(--panel) 78%, transparent);-webkit-backdrop-filter:blur(14px) saturate(1.6);backdrop-filter:blur(14px) saturate(1.6);border:1px solid color-mix(in srgb, var(--text) 24%, transparent);color:var(--text);cursor:pointer;
   display:flex;align-items:center;justify-content:center;padding:0;
   box-shadow:0 2px 14px var(--shadow);-webkit-tap-highlight-color:transparent;transition:border-color .15s,color .15s,transform .15s}
 /* Dave 2026-10-20: the sidebar expand chevron, moved out of the collapsed
@@ -1293,7 +1293,7 @@ textarea[disabled]{opacity:.5;cursor:not-allowed}
    chevron (#rail-expand) and crowded the corner. Recents (#recents-btn)
    owns the first top-left slot now; the buddy panel never moves it —
    its only positional behavior is the sidebar expand/collapse shift. */
-#panel-open:hover{color:var(--accent);border-color:var(--accent);transform:scale(1.05);background:color-mix(in srgb, var(--panel) 34%, transparent)}
+#panel-open:hover{color:var(--accent);border-color:var(--accent);transform:scale(1.05);background:color-mix(in srgb, var(--panel) 88%, transparent)}
 #panel-open:active{transform:scale(.96)}
 #panel-open svg{display:block}
 /* Dave 2026-10-21 (Jobs 4+6): the info icon (#panel-open) and the panel's
@@ -1513,7 +1513,7 @@ body.ub-nomotion #update-banner{transition:none}
 .bp-close-x:active{opacity:.7}
 /* Open panel: the close button floats at the exact screen position of the
    #panel-open expand button, styled as the same control */
-#view-buddy.panel .bp-close-x,#view-buddy.sheet .bp-close-x{display:flex;position:fixed;top:12px;right:12px;z-index:65;margin:0;background:color-mix(in srgb, var(--panel) 16%, transparent);-webkit-backdrop-filter:blur(14px) saturate(1.6);backdrop-filter:blur(14px) saturate(1.6);
+#view-buddy.panel .bp-close-x,#view-buddy.sheet .bp-close-x{display:flex;position:fixed;top:12px;right:12px;z-index:65;margin:0;background:color-mix(in srgb, var(--panel) 78%, transparent);-webkit-backdrop-filter:blur(14px) saturate(1.6);backdrop-filter:blur(14px) saturate(1.6);border-color:color-mix(in srgb, var(--text) 24%, transparent);color:var(--text);
   background:var(--panel);border:1px solid var(--border);border-radius:50%;box-shadow:0 2px 14px var(--shadow)}
 #view-buddy.panel .bp-close-x:hover,#view-buddy.sheet .bp-close-x:hover{color:var(--accent);border-color:var(--accent);background:color-mix(in srgb, var(--panel) 58%, rgba(255,255,255,.16))}
 #view-buddy.panel .bp-close-x:active,#view-buddy.sheet .bp-close-x:active{transform:scale(.96)}
@@ -2176,7 +2176,7 @@ body:has(#sidebar.sb-floating) #sb-resize{display:none}
        rail showed three different styles at once. The line icons inside
        are one weight (24px, stroke 2); the current-view slot keeps the
        view's own icon, sized by the same font-size, inside the same disc. */
-    #rail-expand, #rail-recents, #rail-curview, #rail-dump{width:44px;height:44px;border-radius:50%;border:1px solid var(--border);background:color-mix(in srgb, var(--panel) 16%, transparent);-webkit-backdrop-filter:blur(14px) saturate(1.6);backdrop-filter:blur(14px) saturate(1.6);box-shadow:0 2px 14px var(--shadow);color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1.25rem;padding:0}
+    #rail-expand, #rail-recents, #rail-curview, #rail-dump{width:44px;height:44px;border-radius:50%;border:1px solid color-mix(in srgb, var(--text) 24%, transparent);background:color-mix(in srgb, var(--panel) 78%, transparent);-webkit-backdrop-filter:blur(14px) saturate(1.6);backdrop-filter:blur(14px) saturate(1.6);box-shadow:0 2px 14px var(--shadow);color:var(--text); /* Dave 2026-10-31 contrast fix: the floating discs' fill goes 16% -> 78% panel (the strength #sb-to-top and #bp-to-top already used), glyphs go full-strength var(--text), and the border picks up a text-tinted edge — at 16% the backdrop decided the disc's lightness, so a light framed page washed the discs and their glyphs out entirely (his TV Buddy screenshot: 9 of 10 discs illegible). The disc now reads as its own surface on any page, light or dark. */cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1.25rem;padding:0}
     #rail-expand:hover, #rail-recents:hover, #rail-curview:hover, #rail-dump:hover{color:var(--accent);border-color:var(--accent)}
     #rail-expand:active, #rail-recents:active, #rail-curview:active, #rail-dump:active{transform:scale(.96)}
     /* Rail split (Dave 2026-10-29): the collapsed rail is TWO glass cards,
@@ -2192,7 +2192,7 @@ body:has(#sidebar.sb-floating) #sb-resize{display:none}
     .rail-div{display:none}
     body.sb-closed:not(.sb-anchored) #sidebar{top:12px;bottom:12px;height:auto;max-height:none;transform:none;padding:0;background:none;border:none;box-shadow:none;-webkit-backdrop-filter:none;backdrop-filter:none;overflow:visible;pointer-events:none}
     body.sb-closed:not(.sb-anchored) #rail-top,body.sb-closed:not(.sb-anchored) #rail-mid{pointer-events:none}
-    body.sb-closed:not(.sb-anchored) #rail-top button,body.sb-closed:not(.sb-anchored) #rail-mid button{pointer-events:auto;background:color-mix(in srgb, var(--panel) 16%, transparent);-webkit-backdrop-filter:blur(14px) saturate(1.6);backdrop-filter:blur(14px) saturate(1.6);border:1px solid var(--border);border-radius:50%;box-shadow:0 2px 14px var(--shadow)}
+    body.sb-closed:not(.sb-anchored) #rail-top button,body.sb-closed:not(.sb-anchored) #rail-mid button{pointer-events:auto;background:color-mix(in srgb, var(--panel) 78%, transparent);-webkit-backdrop-filter:blur(14px) saturate(1.6);backdrop-filter:blur(14px) saturate(1.6);border:1px solid color-mix(in srgb, var(--text) 24%, transparent);border-radius:50%;box-shadow:0 2px 14px var(--shadow)}
     body.sb-closed:not(.sb-anchored) #rail-top{padding:0 8px}
     body.sb-closed #rail-mid{position:absolute;top:56px;left:0;right:0;transform:none;margin-top:0;border-top:none;padding:0 8px;gap:12px} /* Dave 2026-10-30: the mid cluster rides directly under the expand disc (44px disc + 12px gap = 56, the footer cluster's spacing) - one tight top cluster, no longer vertically centered. Scoped to both panel styles since the card-drop below: anchored collapsed uses this same geometry. */
     #rail-viewpop{position:fixed;z-index:120;min-width:196px;max-height:calc(100dvh - 16px);overflow-y:auto;background:var(--hover);border:1px solid var(--border);border-radius:12px;box-shadow:0 14px 40px rgba(0,0,0,.28);padding:6px}
@@ -2926,7 +2926,7 @@ html.light .wc-got{background:#007AFF}
      = 34px). The card still hugs its cluster; only the anchor moved. */
   body:not(.standalone):not(.ph-left-open) #sidebar{top:1px;bottom:0;height:auto;max-height:none;left:6px;width:60px;transform:none;border:none;border-radius:0;background:none;box-shadow:none;-webkit-backdrop-filter:none;backdrop-filter:none;overflow:visible;pointer-events:none}
   body:not(.standalone):not(.ph-left-open) #rail-top,body:not(.standalone):not(.ph-left-open) #rail-mid{pointer-events:none}
-  body:not(.standalone):not(.ph-left-open) #rail-top button,body:not(.standalone):not(.ph-left-open) #rail-mid button{pointer-events:auto;background:color-mix(in srgb, var(--panel) 16%, transparent);-webkit-backdrop-filter:blur(14px) saturate(1.6);backdrop-filter:blur(14px) saturate(1.6);border:1px solid var(--border);border-radius:50%;box-shadow:0 2px 14px var(--shadow)}
+  body:not(.standalone):not(.ph-left-open) #rail-top button,body:not(.standalone):not(.ph-left-open) #rail-mid button{pointer-events:auto;background:color-mix(in srgb, var(--panel) 78%, transparent);-webkit-backdrop-filter:blur(14px) saturate(1.6);backdrop-filter:blur(14px) saturate(1.6);border:1px solid color-mix(in srgb, var(--text) 24%, transparent);border-radius:50%;box-shadow:0 2px 14px var(--shadow)}
   body:not(.standalone):not(.ph-left-open) #rail-top{display:flex;flex-direction:column;align-items:center;gap:4px;padding:11px 0 0}
   body:not(.standalone):not(.ph-left-open) #rail-mid{display:flex;flex-direction:column;align-items:center;gap:12px;padding:0;border-top:none;margin-top:0;position:absolute;top:67px;left:0;right:0;transform:none} /* Dave 2026-10-30: same tight top cluster as desktop, footer-matched spacing - 67 = 11px rail-top pad + 44px disc + 12px gap (sidebar-relative; the disc itself sits at viewport 12..56, center y=34) */
   /* Dave 2026-10-29 (phone Atlas): no Quick Answers section, and a
