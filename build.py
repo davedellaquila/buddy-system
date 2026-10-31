@@ -1332,7 +1332,7 @@ body.standalone #panel-open{display:none}
 #recents-pop button.rec-more{justify-content:center;color:var(--text2);font-weight:600}
 body.fw-footer #recents-pop{max-height:min(60vh,calc(100vh - 124px))}
 /* Universal Dump popover (Dave, 2026-10-30): the rail disc's capture card. */
-#dump-pop{position:fixed;z-index:10002;width:min(330px,calc(100vw - 16px));box-sizing:border-box;background:var(--panel);border:1px solid var(--border);border-radius:14px;box-shadow:0 14px 40px rgba(0,0,0,.28);padding:12px}
+#dump-pop{position:fixed;z-index:10002;width:min(390px,calc(100vw - 16px)); /* Dave 2026-10-30: a little wider (was 330px); the viewport-minus-margin cap stays, so small screens can't overflow. */box-sizing:border-box;background:var(--panel);border:1px solid var(--border);border-radius:14px;box-shadow:0 14px 40px rgba(0,0,0,.28);padding:12px}
 #dump-pop .dump-head{font-weight:700;font-size:.9375rem;margin:0 0 2px}
 #dump-pop .dump-sub{color:var(--text2);font-size:.8125rem;line-height:1.4;margin:0 0 10px}
 #dump-pop textarea{width:100%;box-sizing:border-box;min-height:92px;resize:vertical;background:color-mix(in srgb, var(--text) 4%, var(--panel));border:1px solid var(--border);border-radius:10px;color:var(--text);font:inherit;font-size:.9375rem;padding:10px}
