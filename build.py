@@ -7633,7 +7633,11 @@ function renderBuddy(id){
   initPhotoDrop(id);
   loadDocs(id);
   initDocDrop(id);
-  try { if (id === 'news-buddy' && window.innerWidth >= 640) window.open('https://davedellaquila.github.io/buddy-system/news-buddy/?owner=1', 'nb-owner'); } catch(e){}
+  /* Dave 2026-10-30: the News Buddy takeover is removed — it opens
+     embedded like every other buddy, on every screen size. (The old
+     special case popped ?owner=1 into its own window on wide screens;
+     the owner voice unlock that URL armed persists per device once
+     set, so devices already armed keep it.) */
   initPanelResize(); applyPanelWidth(); initPanelFloat(); initSbFloat();
   refreshTokenUI(id);
   applyFieldOrder();
