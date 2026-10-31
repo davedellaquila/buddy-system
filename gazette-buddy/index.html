@@ -302,6 +302,7 @@ h2 { font-size: 22px; margin: 32px 0 16px; }
 <div class="wl-main" hidden>
 <p class="wl-sub">🔓 <strong>Private view</strong> — the canonical record (<code>whitelist.json</code> in Gazette Buddy's private repo). Edit a section name or the confirmed addresses, then save: the write goes straight to the record, and Gazette Buddy's intake watch enforces exactly what's saved here. Adding or removing a person goes through Gazette Buddy (maintainer of record) on Dave's word.</p>
 <div class="wl-edit"></div>
+<div class="wl-queued" hidden></div>
 <div class="attn-actions"><button type="button" class="wl-save attn-btn primary">Save the record</button></div>
 <div class="wl-statusline attn-status" role="status"></div>
 </div>
@@ -320,6 +321,8 @@ h2 { font-size: 22px; margin: 32px 0 16px; }
 .wl-person h3{margin:0 0 8px;font-size:15px}
 .wl-person label{display:block;font-size:12px;font-weight:700;color:var(--muted);margin:8px 0 3px}
 .wl-person input{width:100%;box-sizing:border-box;padding:7px 10px;border:1px solid var(--border);border-radius:8px;background:var(--bg);color:var(--text);font-size:14px;margin-bottom:5px}
+.wl-queued{background:var(--card);border:1px dashed var(--border);border-left:5px solid #f59e0b;border-radius:12px;padding:10px 14px;margin:10px 0;font-size:14px}
+.wl-queued button{font:inherit;cursor:pointer;border:1px solid var(--border);background:none;color:var(--text);border-radius:8px;padding:3px 10px;margin-left:10px}
 </style>
 <script>
 (function(){
@@ -330,6 +333,27 @@ h2 { font-size: 22px; margin: 32px 0 16px; }
   if (!tok) { locked.hidden = false; return; }
   var status = sec.querySelector('.wl-statusline'), editBox = sec.querySelector('.wl-edit');
   var record = null, fileSha = '';
+  /* Queue discipline (Developer Buddy patch, 2026-10-31): a refused save
+     queues the edited record on this device with its reason, shows it,
+     and flushes when the view next loads with a working token — the
+     fleet's token-gated rule: input is never silently dropped. */
+  var QKEY = 'gazetteWhitelist.queue';
+  var queueBox = sec.querySelector('.wl-queued');
+  function getQueue(){ try { var q = JSON.parse(localStorage.getItem(QKEY) || 'null'); return (q && q.record) ? q : null; } catch(e){ return null; } }
+  function setQueue(rec, reason){ try { localStorage.setItem(QKEY, JSON.stringify({ record: rec, reason: reason, when: new Date().toLocaleString() })); } catch(e){} }
+  function clearQueue(){ try { localStorage.removeItem(QKEY); } catch(e){} }
+  function renderQueued(){
+    var q = getQueue();
+    if (!q) { queueBox.hidden = true; queueBox.innerHTML = ''; return; }
+    queueBox.hidden = false;
+    queueBox.innerHTML = '';
+    var span = document.createElement('span');
+    span.textContent = '⏳ Queued edit waiting — made ' + q.when + ' (' + q.reason + '). It sends automatically when this view loads with a working token.';
+    var discard = document.createElement('button');
+    discard.type = 'button'; discard.textContent = 'Discard queued edit';
+    discard.addEventListener('click', function(){ clearQueue(); renderQueued(); status.textContent = 'Queued edit discarded.'; });
+    queueBox.appendChild(span); queueBox.appendChild(discard);
+  }
   function b64decode(b64){
     var bin = atob((b64 || '').replace(/\n/g, '')), bytes = new Uint8Array(bin.length);
     for (var i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
@@ -369,8 +393,24 @@ h2 { font-size: 22px; margin: 32px 0 16px; }
     try {
       var j = await gh('/repos/davedellaquila/gazette-buddy/contents/whitelist.json');
       fileSha = j.sha; record = JSON.parse(b64decode(j.content));
-      main.hidden = false; render();
-      status.textContent = 'Record loaded from the private repo — the watch enforces this version.';
+      main.hidden = false;
+      var flushNote = '';
+      var q = getQueue();
+      if (q) {
+        try {
+          var res0 = await gh('/repos/davedellaquila/gazette-buddy/contents/whitelist.json', 'PUT', {
+            message: 'Whitelist update from the Gazette Buddy homepage (queued edit synced)',
+            content: b64encode(JSON.stringify(q.record, null, 2)),
+            sha: fileSha
+          });
+          fileSha = res0.content.sha; record = q.record; clearQueue();
+          flushNote = '✅ Queued edit synced to the record. ';
+        } catch(e0) {
+          flushNote = '⏳ A queued edit is still waiting (' + e0.message + ') — showing the live record; the queued edit is kept. ';
+        }
+      }
+      render(); renderQueued();
+      status.textContent = flushNote + 'Record loaded from the private repo — the watch enforces this version.';
     } catch(e) {
       locked.hidden = false;
       locked.textContent = '🔒 GitHub is connected on this device, but the whitelist record could not be loaded (' + e.message + '). The token may not have access to the private gazette-buddy repo.';
@@ -402,7 +442,9 @@ h2 { font-size: 22px; margin: 32px 0 16px; }
       fileSha = res.content.sha;
       status.textContent = '✅ Saved — the record in the repo is updated, and the intake watch enforces it from here.';
     } catch(e) {
-      status.textContent = 'Save failed (' + e.message + '). Nothing was changed in the record.';
+      setQueue(record, e.message);
+      renderQueued();
+      status.textContent = 'Save failed (' + e.message + '). Nothing was changed in the record — and your edit is queued on this device (see above), so it is not lost: it sends when this view next loads with a working token.';
     }
   });
   load();
