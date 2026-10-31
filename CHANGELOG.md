@@ -1,3 +1,6 @@
+## 2026-10-31
+- **Mail Buddy — morning edition (06:41 PT):** Dave's inbox since Fri 5:41 PM — 73 messages, 70 spiked, 2 FYI items (Kay Korbel subscribed to Dave's Substack and liked the data-ownership post; Sports Car Adventures monitor found one candidate event needing review). No replies owed, no money moving. Dispositions: 6 closed records on file, none resurfaced. Dad's mailbox: 5 messages, all spiked — nothing important this edition. Details: mail-buddy homepage "📬 Needs your attention".
+
 ## 2026-10-30
 
 - 📈 **Investment Buddy homepage — "The manager's record — Sumitri" section added** (Dave flagged it missing): the Oct 30 post-trade audit now lives on the homepage — 434 of 472 equity trades (Schwab acct ending 096, Feb 2012 – Oct 2026) scored at +30/90/180/365 days and to present vs the S&P 500. Four cards: buys (64% one-year hit rate, +4.2 excess), sells (50% beat the index; strong 2023–26), the leak (mega-cap tech trims; MSFT sells 0-for-8), and recent form (2025–26 sells best in record; FISV Aug 2025 the worst buy). Links to the full audit, the per-trade table, and the decision log in the money-buddy repo. Section inserted into the current repo page so Developer Buddy's Compare-markets chart is untouched.
