@@ -303,6 +303,8 @@ Build: `build.py` generates `index.html` from `buddies.json` + `plans.json`.
   carries a fixed "← Back to dashboard" pill (bottom-left, visible
   on load) in that owner context — top-level loads only, so the
   embedded phone view and public readers are unaffected.
+- **One disc size** — every floating disc (rail, footer, ⓘ, and the
+  New Buddy +) is 44px across, one diameter across the whole chrome.
 - **Readable floating discs** — the rail, footer, + and ⓘ discs carry
   a 78%-strength panel fill with full-strength glyphs and a defined
   edge, so they stay legible over any framed page, light or dark, in

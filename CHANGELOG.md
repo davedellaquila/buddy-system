@@ -36,6 +36,12 @@
 - **Mail Buddy — evening edition (17:41 PT):** Dave's inbox since 6:41 AM — 210 messages, 198 spiked, 7 ranked items (Google Voice voicemail from (408) 782-8508; Rocket Mortgage $2,076.92 drafting Sun Nov 1; two Schwab sales settling Mon Nov 2 — 142 A and 38 TMO; Capital One $40 Cursor charge; Quest Diagnostics $44.61 payment submitted; Zappos order shipped, arriving Tue Nov 3; MoreBeer shipment delivered). Dispositions honoured: 6 closed records held out, 1 USPS follow-up suppressed as closed. Dad's mailbox: 3 messages, all spiked — nothing important this edition. Details: mail-buddy homepage "📬 Needs your attention".
 - **Mail Buddy — morning edition (06:41 PT):** Dave's inbox since Thu 5:41 PM — 117 messages, 111 spiked, 5 ranked items (Capital One $172.39 Zappos charge matching Wednesday's order; Capital One card added to Apple Pay + an X new-iPhone login — an overnight new-device cluster; Docusign Marshall Hospital ROI completed; USPS Stamps.com package due today by 9 PM). Dad's mailbox: 5 messages, 4 spiked, 1 item (Apple — a recovery contact was removed from Emil's account at 4:53 AM). Details: mail-buddy homepage "📬 Needs your attention".
 
+### 20261031.0811 — The + disc matches the rest at 44px (Dave, Oct 31)
+- The New Buddy + button was the last 56px holdout among the floating
+  discs; it now measures 44px like the rail and footer discs, with its
+  + glyph scaled to match (24px → 20px). Position (bottom-right,
+  20px in) and the frosted treatment are unchanged.
+
 ### 20261031.0509 — Floating discs readable on light pages (Dave bug, Oct 31)
 - The rail discs, the footer discs, the + button, and the info (ⓘ)
   disc no longer wash out over light pages. Their glass fill was only

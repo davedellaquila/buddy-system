@@ -921,7 +921,7 @@ body.sb-closed #sb-resize{display:none}
   -webkit-tap-highlight-color:transparent}
 #bp-to-top.show{opacity:1;pointer-events:auto;transform:none}
 /* Floating + button — iOS frosted-glass translucency (Jonny-approved look, Dave 2026-10-13) */
-#new-buddy-fab{position:fixed;right:20px;bottom:20px;z-index:9000;width:56px;height:56px;border-radius:50%;
+#new-buddy-fab{position:fixed;right:20px;bottom:20px;z-index:9000;width:44px;height:44px;border-radius:50%; /* Dave 2026-10-31: the + disc joins the family at 44px, the same diameter as every other floating disc (it was the last 56px holdout after the footer shrink). */
   background:rgba(50,50,52,.55);color:#fff;border:.5px solid rgba(255,255,255,.38);cursor:pointer;
   display:flex;align-items:center;justify-content:center;
   -webkit-backdrop-filter:blur(20px) saturate(180%);backdrop-filter:blur(20px) saturate(180%);
@@ -13555,8 +13555,8 @@ window.__bindEdgeSwipes = bindIframeEdgeSwipes;
 /* Tip Jar vs the floating + button (Dave, 2026-10-27 — iPad screenshot: the
    + button sat on top of Birthday Buddy's Tip Jar pill, cutting it in half).
    Root cause: #new-buddy-fab is position:fixed in the SHELL at the window's
-   bottom-right (right:20, bottom:20, 56px circle → it spans right 20–76,
-   bottom 20–76), while every buddy homepage's .tipjar pill is
+   bottom-right (right:20, bottom:20, 44px circle → it spans right 20–64,
+   bottom 20–64; it was 56px until the 2026-10-31 unification), while every buddy homepage's .tipjar pill is
    position:fixed inside the homepage IFRAME at right:18, bottom:18. When
    the frame fills the window — floating panels, or anchored with the info
    panel closed; the frame's bottom edge sits ~40px above the window's for
@@ -15003,7 +15003,7 @@ flushDumpQueue();
   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5"/><path d="M6 11l6-6 6 6"/></svg>
 </button>
 <button type="button" id="new-buddy-fab" title="New buddy" aria-label="New buddy">
-  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
 </button>
 <button type="button" id="hp-back" title="Back" aria-label="Back">
   <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><polyline points="9 14 4 9 9 4" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M20 20v-7a4 4 0 0 0-4-4H4" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
