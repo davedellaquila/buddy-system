@@ -320,6 +320,15 @@ Build: `build.py` generates `index.html` from `buddies.json` + `plans.json`.
   the new buddy's name, icon, and type, then writes the entry straight to
   `buddies.json` on GitHub (needs the GitHub token). New buddies are flagged
   `setup_pending` with an attention item so Astro runs the full onboarding.
+- **Gazette Buddy** (2026-10-30) — 🗞️ child of Neighborhood Buddy and
+  editor of The Fiddletown Gazette, Dave's public hyperlocal daily for
+  Fiddletown & the Shenandoah Valley: three editions a day plus an hourly
+  safety poll with out-of-cycle banners (Safety Wire / Lead / Today in
+  the Valley / Week Ahead / Around Town / Community Wire / Weather),
+  public sources and events only. Registry-wired with its side-thread
+  chat, a provisional voice, the job req doc (also linked from
+  Neighborhood Buddy's record), a generated homepage + About page, and
+  role audio beside the homepage.
 - **Route Buddy** (2026-10-30) — 🗺️ child of Sports Car Adventures, the
   route librarian: the route library (cataloged routes, master GPX,
   14-attribute records, Dave's notes) behind a US-map homepage, and the

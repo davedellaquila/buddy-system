@@ -25,6 +25,21 @@
 - **Mail Buddy — evening edition (17:41 PT):** Dave's inbox since 6:41 AM — 210 messages, 198 spiked, 7 ranked items (Google Voice voicemail from (408) 782-8508; Rocket Mortgage $2,076.92 drafting Sun Nov 1; two Schwab sales settling Mon Nov 2 — 142 A and 38 TMO; Capital One $40 Cursor charge; Quest Diagnostics $44.61 payment submitted; Zappos order shipped, arriving Tue Nov 3; MoreBeer shipment delivered). Dispositions honoured: 6 closed records held out, 1 USPS follow-up suppressed as closed. Dad's mailbox: 3 messages, all spiked — nothing important this edition. Details: mail-buddy homepage "📬 Needs your attention".
 - **Mail Buddy — morning edition (06:41 PT):** Dave's inbox since Thu 5:41 PM — 117 messages, 111 spiked, 5 ranked items (Capital One $172.39 Zappos charge matching Wednesday's order; Capital One card added to Apple Pay + an X new-iPhone login — an overnight new-device cluster; Docusign Marshall Hospital ROI completed; USPS Stamps.com package due today by 9 PM). Dad's mailbox: 5 messages, 4 spiked, 1 item (Apple — a recovery contact was removed from Emil's account at 4:53 AM). Details: mail-buddy homepage "📬 Needs your attention".
 
+### 20261030.1852 — 🗞️ Gazette Buddy wired into the registry (Dave hire, via relay)
+- New entry `gazette-buddy` (registry 169 → 170): 🗞️ Gazette Buddy, child of
+  Neighborhood Buddy, persona The Editor (default; alternates The Night
+  Editor and The Country Editor being presented in the main chat),
+  provisional voice `avocado_v2:magnus` (Boomy Mountain — Decision Buddy
+  casting asked; auditions in the buddy's own thread), chat wired to its
+  side thread, repo gazette-buddy (private). Editor of The Fiddletown
+  Gazette, Dave's public hyperlocal daily for Fiddletown & the Shenandoah
+  Valley — three editions a day plus an hourly safety poll, public sources
+  and events only. The job req doc is also linked on Neighborhood Buddy's
+  record (its first docs entry). Generated homepage + About page ship in
+  the same pass, with the role intro audio hosted beside the homepage;
+  the homepage footer carries its generation stamp and the "About · the
+  full record" link, as the template provides.
+
 ### 20261030.1624 — Cold start lands on Homepage (Dave, Oct 30)
 - Dave kept landing on Atlas when opening the app. Diagnosis: not a
   stored default and not the fresh-open path (a device with no stored
