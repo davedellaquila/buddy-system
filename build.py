@@ -2951,6 +2951,16 @@ html.light .wc-got{background:#007AFF}
      ph-left-open precedent above: the display:flex rule it overrides
      is (1,2,1) and state rules have silently lost to it before. */
   body.ph-right-open #rail-top,body.ph-right-open #rail-mid,body:has(#main.homepage-mode):has(#view-project.active) #rail-top,body:has(#main.homepage-mode):has(#view-project.active) #rail-mid{display:none!important}
+  /* Dave 2026-10-31 (issue 2, separate from the discs): the journal
+     bar ("What changed? / Revert (n)") rendered flush to #main's
+     top-left — at x=0/y=0 over a framed homepage (where #main's
+     padding is 0), so its top clipped against the viewport edge and
+     its left ran under the disc column; in Atlas its row was covered
+     by the tree chrome. Inset it on phone like the update banner:
+     68px left clears the discs, 12px top gives it air, and a local
+     stacking lift keeps its own row tappable. Desktop keeps the
+     base margins (its clearance comes from #main's padding). */
+  #journal-bar{margin:12px 68px 12px 68px;position:relative;z-index:5}
   /* Dave 2026-10-29 (phone Atlas): no Quick Answers section, and a
      compact toolbar. Quick Answers lives only in the tree chrome, so
      hiding it here is Atlas-only by construction; other views and
