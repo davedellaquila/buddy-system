@@ -165,6 +165,15 @@
   .lb-controls button { min-width: 52px; min-height: 48px; padding: 10px 18px; border-radius: 999px; border: 1px solid rgba(255,255,255,.28); background: rgba(30,24,18,.88); color: #f5efe6; font-size: 16px; cursor: pointer; backdrop-filter: blur(4px); }
   .lb-controls button:active { transform: scale(.96); }
   #lbClose { position: absolute; top: max(14px, env(safe-area-inset-top)); right: 14px; width: 48px; height: 48px; border-radius: 50%; border: 1px solid rgba(255,255,255,.28); background: rgba(30,24,18,.88); color: #f5efe6; font-size: 20px; cursor: pointer; z-index: 1; }
+  /* Collection navigation (Dave, 2026-10-31): step through the strip
+     from inside the viewer — big side targets, position pill up top. */
+  .lb-nav { position: absolute; top: 50%; transform: translateY(-50%); width: 56px; height: 56px; border-radius: 50%; border: 1px solid rgba(255,255,255,.28); background: rgba(30,24,18,.88); color: #f5efe6; font-size: 30px; line-height: 1; cursor: pointer; z-index: 1; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(4px); }
+  .lb-nav:active { transform: translateY(-50%) scale(.95); }
+  .lb-nav[hidden] { display: none; }
+  #lbPrev { left: 10px; }
+  #lbNext { right: 10px; }
+  .lb-pos { position: absolute; top: max(20px, env(safe-area-inset-top)); left: 50%; transform: translateX(-50%); color: rgba(245,239,230,.92); background: rgba(30,24,18,.66); border: 1px solid rgba(255,255,255,.18); padding: 4px 14px; border-radius: 999px; font-size: 14px; }
+  .lb-pos[hidden] { display: none; }
   .lb-hint { position: absolute; top: max(22px, env(safe-area-inset-top)); left: 18px; color: rgba(245,239,230,.55); font-size: 12px; }
   .photo-tools { display: flex; gap: 10px; margin-top: 14px; flex-wrap: wrap; align-items: center; }
   .btn.ghost { background: var(--card); color: var(--ink); border: 1px solid var(--line); }
@@ -481,6 +490,28 @@
   </footer>
 </div>
 
+<!-- Photo lightbox markup lives BEFORE the main script: the script wires
+     its controls (and the photo strip) by id at parse time. It sat after the
+     scripts from the Oct 11 ship until Oct 31, which silently killed the
+     wiring (TypeError on lbBackdrop) and the board renders. -->
+<div id="lightbox" role="dialog" aria-modal="true" aria-label="Photo viewer" hidden>
+  <div class="lb-backdrop" id="lbBackdrop"></div>
+  <span class="lb-hint">tap outside or ✕ to close</span>
+  <button id="lbClose" aria-label="Close photo viewer">✕</button>
+  <button id="lbPrev" class="lb-nav" aria-label="Previous photo" hidden>‹</button>
+  <button id="lbNext" class="lb-nav" aria-label="Next photo" hidden>›</button>
+  <div class="lb-pos" id="lbPos" hidden></div>
+  <figure class="lb-figure">
+    <img id="lbImg" alt="">
+    <figcaption id="lbCap"></figcaption>
+  </figure>
+  <div class="lb-controls">
+    <button id="lbEdit" aria-label="Edit caption">✏️ Edit</button>
+    <button id="lbShare" aria-label="Share photo">📤 Share</button>
+    <button id="lbDelete" aria-label="Delete photo">🗑️ Delete</button>
+  </div>
+</div>
+
 <script>
 const KEY = "nancy-buddy-v1";
 const esc = s => s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
@@ -667,7 +698,18 @@ function lbCaption(desc, fig) {
   const cap = fig ? fig.querySelector("figcaption") : null;
   return cap ? cap.textContent : "";
 }
-function openLightbox(fig) {
+function lbVisibleFigs() {
+  return [...document.querySelectorAll("#photostrip figure.photo")].filter(f => f.style.display !== "none");
+}
+function lbFigFor(desc) {
+  let fig = null;
+  document.querySelectorAll("#photostrip figure.photo").forEach(f => {
+    if (desc.kind === "custom" && f.dataset.pkind === "custom" && parseInt(f.dataset.pindex, 10) === desc.index) fig = f;
+    if (desc.kind === "baked" && f.dataset.pkind === "baked" && f.dataset.psrc === desc.src) fig = f;
+  });
+  return fig;
+}
+function showLbFigure(fig) {
   const kind = fig.dataset.pkind, img = fig.querySelector("img");
   if (!img) return;
   lbPhoto = kind === "custom"
@@ -676,9 +718,27 @@ function openLightbox(fig) {
   const lbImg = document.getElementById("lbImg");
   lbImg.src = img.src; lbImg.alt = img.alt || "Photo";
   document.getElementById("lbCap").textContent = lbCaption(lbPhoto, fig);
+  const figs = lbVisibleFigs();
+  const multi = figs.length > 1;
+  document.getElementById("lbPrev").hidden = !multi;
+  document.getElementById("lbNext").hidden = !multi;
+  const posEl = document.getElementById("lbPos");
+  posEl.hidden = !multi;
+  posEl.textContent = multi ? (figs.indexOf(fig) + 1) + " / " + figs.length : "";
+}
+function openLightbox(fig) {
+  showLbFigure(fig);
   document.getElementById("lightbox").hidden = false;
   document.body.style.overflow = "hidden";
   document.getElementById("lbClose").focus();
+}
+function stepLightbox(dir) {
+  if (!lbPhoto) return;
+  const figs = lbVisibleFigs();
+  if (figs.length < 2) return;
+  let i = figs.indexOf(lbFigFor(lbPhoto));
+  if (i < 0) i = dir > 0 ? -1 : 0;
+  showLbFigure(figs[(i + dir + figs.length) % figs.length]);
 }
 function closeLightbox() {
   document.getElementById("lightbox").hidden = true;
@@ -687,11 +747,7 @@ function closeLightbox() {
 }
 function refreshLightboxCaption() {
   if (!lbPhoto) return;
-  let fig = null;
-  document.querySelectorAll("#photostrip figure.photo").forEach(f => {
-    if (lbPhoto.kind === "custom" && f.dataset.pkind === "custom" && parseInt(f.dataset.pindex, 10) === lbPhoto.index) fig = f;
-    if (lbPhoto.kind === "baked" && f.dataset.pkind === "baked" && f.dataset.psrc === lbPhoto.src) fig = f;
-  });
+  const fig = lbFigFor(lbPhoto);
   document.getElementById("lbCap").textContent = lbCaption(lbPhoto, fig);
 }
 function editLbCaption() {
@@ -746,9 +802,25 @@ document.getElementById("lbClose").addEventListener("click", closeLightbox);
 document.getElementById("lbEdit").addEventListener("click", editLbCaption);
 document.getElementById("lbDelete").addEventListener("click", deleteLbPhoto);
 document.getElementById("lbShare").addEventListener("click", shareLbPhoto);
+document.getElementById("lbPrev").addEventListener("click", () => stepLightbox(-1));
+document.getElementById("lbNext").addEventListener("click", () => stepLightbox(1));
 document.addEventListener("keydown", function(ev) {
-  if (ev.key === "Escape" && !document.getElementById("lightbox").hidden) closeLightbox();
+  if (document.getElementById("lightbox").hidden) return;
+  if (ev.key === "Escape") closeLightbox();
+  if (ev.key === "ArrowLeft") stepLightbox(-1);
+  if (ev.key === "ArrowRight") stepLightbox(1);
 });
+let lbSwipeX = null;
+const lbImgEl = document.getElementById("lbImg");
+lbImgEl.addEventListener("touchstart", function(ev) {
+  lbSwipeX = ev.touches.length === 1 ? ev.touches[0].clientX : null;
+}, { passive: true });
+lbImgEl.addEventListener("touchend", function(ev) {
+  if (lbSwipeX === null) return;
+  const dx = ev.changedTouches[0].clientX - lbSwipeX;
+  lbSwipeX = null;
+  if (Math.abs(dx) > 40) stepLightbox(dx < 0 ? 1 : -1);
+}, { passive: true });
 
 renderNotes(); renderReminders(); renderDates(); renderGifts(); renderPhotos();
 
@@ -930,20 +1002,6 @@ async function dump(){
   resolveRepo().then(refreshUI);
 })();
 </script>
-<div id="lightbox" role="dialog" aria-modal="true" aria-label="Photo viewer" hidden>
-  <div class="lb-backdrop" id="lbBackdrop"></div>
-  <span class="lb-hint">tap outside or ✕ to close</span>
-  <button id="lbClose" aria-label="Close photo viewer">✕</button>
-  <figure class="lb-figure">
-    <img id="lbImg" alt="">
-    <figcaption id="lbCap"></figcaption>
-  </figure>
-  <div class="lb-controls">
-    <button id="lbEdit" aria-label="Edit caption">✏️ Edit</button>
-    <button id="lbShare" aria-label="Share photo">📤 Share</button>
-    <button id="lbDelete" aria-label="Delete photo">🗑️ Delete</button>
-  </div>
-</div>
 <!--
   TIP JAR — canonical snippet (Dave's standard, 2026-10-24; motion v2, 2026-10-26)
   Every buddy homepage and every page a buddy creates carries the tip jar.
