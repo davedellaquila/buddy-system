@@ -309,7 +309,9 @@ Build: `build.py` generates `index.html` from `buddies.json` + `plans.json`.
   text plus optional files (1 MB per file — the Contents API ceiling,
   enforced at pick time with the reason shown): files upload to
   buddy-system/docs/ingest-files/<one folder per dump>/ and the entry
-  lists each with its GitHub link (Dave, 2026-10-30).
+  lists each with its GitHub link (Dave, 2026-10-30). The card is
+  390px wide (was 330px; still capped at the viewport width minus a
+  small margin, Dave, 2026-10-30).
 - **Dump anywhere, it's routed** — the system's core capture promise: type a
   stream-of-consciousness thought into any buddy's homepage dump box or any
   thread, and it lands in a durable inbox (`docs/ingest.md`) and gets routed
