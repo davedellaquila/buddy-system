@@ -4426,8 +4426,15 @@ function renderNav(){
        plus the 8px flex gap the removed chevron used to carry — so
        every name in the subtree sits exactly 24px left with the depth
        steps between them unchanged. Other depth-0 trees keep the old
-       math. */
-    const padL = rootTree ? (depth === 0 ? 16 : (depth - 1) * 16) : (8 + depth * 16);
+       math.
+       Dave 2026-11-01: Family Buddy's tree re-anchors too — position
+       only; its root chevron stays live (the non-collapsible exception
+       is Astro's alone). A live chevron can't vacate its slot, so the
+       reclaimable space in that tree is the base pad: depth-0 pad 0
+       (chevron tight at the panel edge), deeper rows depth*16 — a
+       uniform 8px left shift with the depth steps exact. (The full
+       24px would push the family root's chevron off the panel.) */
+    const padL = rootTree ? (depth === 0 ? 16 : (depth - 1) * 16) : (depth === 0 ? 0 : depth * 16);
     h += '<button class="brow'+((S.projectId===id || S.sel==='buddy:'+id)?' sel':'')+(un?' has-unseen':'')+(isDormant(id)?' dormant':'')+'" data-buddy="'+id+'"'
       + ' draggable="'+(id===ROOT_ID?'false':'true')+'"'
       + ' style="padding-left:'+padL+'px" title="'+escHtml(b.tagline||'')+'">'
