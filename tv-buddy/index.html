@@ -465,7 +465,7 @@ document.getElementById("go").addEventListener("click", () => {
 });
 </script>
 <script>
-// ---- brain-dump box (dashboard ingest pattern; TV Buddy has no repo yet -> shows "No repo linked") ----
+// ---- brain-dump box (dashboard ingest pattern; repo resolved live from buddies.json, URL or bare name) ----
 (function(){
   var box = document.querySelector('.dumpbox');
   if (!box || box.dataset.dumpInit) return;
@@ -516,7 +516,7 @@ document.getElementById("go").addEventListener("click", () => {
       var d = await r.json();
       var buds = d.buddies || [];
       for (var i = 0; i < buds.length; i++) {
-        if (buds[i].id === bid && buds[i].repo) { repo = buds[i].repo; repoName = buds[i].name || bid; break; }
+        if (buds[i].id === bid && buds[i].repo) { repo = String(buds[i].repo).replace(/^https?:\/\/github\.com\/davedellaquila\//, '').replace(/\/$/, ''); repoName = buds[i].name || bid; break; }
       }
     } catch(e){}
   }
