@@ -7,9 +7,27 @@ Rows sort: scored pages by score descending, then unscored pages A–Z.
 Page type (custom vs auto-generated template) is detected from each buddy's
 served index.html using the generator's own markers.
 """
-import json, os, html, datetime
+import json, os, html, datetime, re
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
+
+# Privacy redaction (added 2026-11-01, Dave's strip ruling): scoring notes and
+# registry summaries are rendered on this public page, so identifiers must
+# never reach the HTML — precise coordinates, emails, phone numbers, and
+# house-number street addresses are generalized at render time. The source
+# data (homepage-scores.json, buddies.json) is not modified here.
+def redact(text):
+    if not text:
+        return text
+    text = re.sub(r"-?\d{1,3}\.\d{4,}\s*,\s*-?\d{1,3}\.\d{4,}", "[coordinates removed]", text)
+    text = re.sub(r"[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}", "[email removed]", text)
+    text = re.sub(r"\(?\d{3}\)?[ .-]\d{3}[ .-]\d{4}", "[phone removed]", text)
+    text = re.sub(r"\b\d{3,6}\s+([A-Z][A-Za-z]+ ){1,3}(Dr|Way|Ln|St|Ave|Rd|Ct|Blvd)\b", "[address removed]", text)
+    # Lenwood family rent figures (bucket C) where notes quote them
+    text = re.sub(r"\$1,000\s*(?:→|->|to)\s*\$2,000(?:/mo)?", "[rent figures removed]", text)
+    text = re.sub(r"\$[12],000/mo rent", "rent", text)
+    text = re.sub(r"rent \$[12],000", "rent", text)
+    return text
 
 def band_for(score):
     if score >= 90: return "Showcase"
@@ -41,11 +59,11 @@ def main():
         rows.append({
             "id": b["id"], "name": b["name"], "icon": b.get("icon", "•"),
             "persona": b.get("persona", ""), "parent": names.get(b.get("parent", ""), ""),
-            "summary": summary, "type": ptype,
+            "summary": redact(summary), "type": ptype,
             "score": s["score"] if s else None,
             "band": (s.get("band") or band_for(s["score"])) if s else None,
             "sdate": s.get("date", "") if s else "",
-            "notes": s.get("notes", "") if s else "",
+            "notes": redact(s.get("notes", "")) if s else "",
         })
     scored = sorted([r for r in rows if r["score"] is not None], key=lambda r: (-r["score"], r["name"]))
     unscored = sorted([r for r in rows if r["score"] is None], key=lambda r: r["name"])
