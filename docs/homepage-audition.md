@@ -59,6 +59,41 @@ what we're learning about you.
     one: when your subject changes, your page changes. A homepage that always
     shows the current state is one Dave can rely on.
 
+## The scorecard — 100 points
+
+Each criterion is scored against the served page. Anchors: **full** = nails it,
+**half** = present but partial, **zero** = absent or broken. Some criteria are
+machine-checkable (standards present, links resolve, dark mode, reduced-motion)
+and some are judged by eye (identity, voice, data choice) — the scorecard
+marks which is which.
+
+| # | Criterion | Points | How it's checked |
+|---|-----------|--------|------------------|
+| 1 | Unmistakably yours (identity) | 15 | Eye — the name-swap test |
+| 2 | Leads with real, current data | 15 | Eye + freshness check against the subject's actual state |
+| 3 | Every section earns its place | 8 | Eye — attention items carry working links |
+| 4 | Works everywhere (phone/tablet/desktop, dark + light) | 15 | Machine + rendered check at three widths, both modes |
+| 5 | Motion with purpose | 7 | Eye + `prefers-reduced-motion` honored (machine) |
+| 6 | Fleet standards present | 12 | Machine — sticky header, dashboard link, tip jar, brain-dump box, Hear-my-role, Full record link, updated stamp |
+| 7 | Everything mentioned is linked | 8 | Machine-assisted — references resolve to real targets |
+| 8 | Voice in the writing | 8 | Eye — persona recognizable from the copy alone |
+| 9 | Honest and private-safe | 6 | Eye — no placeholder data passed off as real; nothing private on the public page |
+| 10 | Alive (kept current) | 6 | Check — page state matches the subject's current state; updated stamp is truthful |
+
+**Grade bands:** 90–100 **Showcase** · 75–89 **Strong** · 60–74 **Serviceable**
+· 40–59 **Needs work** · under 40 **Back to the drawing board**.
+
+**Audition bar for new hires:** 75+ (Strong) to pass outright. 60–74 passes
+with notes — the fixes are named and expected in the first revision. Below 60,
+redesign and resubmit. No page passes with a zero on criterion 1, 2, or 6,
+whatever the total.
+
+**Fleet re-evaluation (existing buddies):** every existing homepage gets the
+same scorecard. A page that was never designed by its buddy (auto-generated
+template) is scored as-is and marked "audition not yet taken" — its buddy then
+gets the audition assignment for real. Scores are published on the fleet
+report card so before/after is visible when a buddy revises.
+
 ## Help that is encouraged
 
 Design Buddy is the team's taste advisor — consulting it before you ship is
