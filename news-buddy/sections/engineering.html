@@ -768,33 +768,62 @@
   .secpage .storyitem h3 a:hover{color:var(--accent)}
   .secpage .lede{font-size:16px;line-height:1.65;color:var(--ink);max-width:70ch;margin:10px 0 6px}
 
+  
+  .sec-head h2 a{color:inherit;text-decoration:none;border-bottom:2px solid transparent}
+  .sec-head h2 a:hover{color:var(--accent);border-bottom-color:var(--accent)}
+  .mini-mast{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 20px;border-bottom:3px double var(--ink);margin-bottom:8px;flex-wrap:wrap}
+  .mini-mast a.brand{font-family:Georgia,'Times New Roman',serif;font-weight:700;font-size:20px;color:var(--ink);text-decoration:none}
+  .mini-mast .ed{font-size:12px;color:var(--muted)}
+  .kicker{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:18px 0 4px}
+  .kicker a{color:var(--accent);text-decoration:none}
+  .detail h1{font-family:Georgia,'Times New Roman',serif;font-size:clamp(26px,5vw,40px);line-height:1.15;margin:6px 0 10px;letter-spacing:-.01em}
+  .detail h4.sec{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--accent);margin:22px 0 6px}
+  .detail p.body{font-size:16px;line-height:1.65;margin:0 0 12px;max-width:68ch}
+  .sourcebox{border:1px solid var(--rule);border-left:4px solid var(--accent);border-radius:8px;padding:12px 16px;margin:18px 0;max-width:68ch}
+  .sourcebox p{font-size:14px;line-height:1.6;margin:6px 0}
+  .sourcebox .flag{display:inline-block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;background:#fde68a;color:#7c2d12;border-radius:4px;padding:2px 8px;margin-bottom:4px}
+  .read-original{display:inline-block;margin:10px 0;padding:10px 20px;background:var(--accent);color:#fff !important;border-radius:8px;font-weight:700;text-decoration:none;font-size:15px}
+  .related{margin-top:28px;border-top:1px solid var(--rule);padding-top:14px}
+  .related h4.sec{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:0 0 10px}
+  .related ul{list-style:none;margin:0;padding:0}
+  .related li{margin:0 0 10px;font-size:15px;line-height:1.45}
+  .related a{color:var(--ink);text-decoration:none;border-bottom:1px solid var(--rule)}
+  .related a:hover{color:var(--accent);border-bottom-color:var(--accent)}
+  .backfoot{margin:30px 0 40px;font-size:14px}
+  .backfoot a{color:var(--accent);text-decoration:none;font-weight:600}
+  .secpage .storyitem{border-bottom:1px solid var(--rule);padding:16px 0}
+  .secpage .storyitem h3{font-size:20px;margin:0 0 6px;line-height:1.3}
+  .secpage .storyitem h3 a{color:var(--ink);text-decoration:none}
+  .secpage .storyitem h3 a:hover{color:var(--accent)}
+  .secpage .lede{font-size:16px;line-height:1.65;color:var(--ink);max-width:70ch;margin:10px 0 6px}
+
   </style>
 </head>
 <body>
 <header class="mini-mast">
   <a class="brand" href="../index.html">📰 The Morning Edition</a>
-  <span class="ed">Saturday, October 31, 2026</span>
+  <span class="ed">Sunday, November 01, 2026</span>
   <button id="themeBtn" class="voice-change" style="margin-left:0">Theme: Auto</button>
 </header>
 <main class="detail secpage" style="max-width:860px;margin:0 auto;padding:0 20px">
   <p class="kicker">Section</p>
   <h1>Engineering</h1>
-  <p class="lede">Deadline day: Fragnesia -- the Linux kernel half of the PHP2Shell chain -- is due today, Oct. 31, with forensic triage required before the patch; the KEV catalog added eight exploited flaws this week with three deadlines in three days (GitLab and Cisco follow tomorrow). And after the Binance heist, rival exchanges harden and issuers freeze what can be frozen -- $1.57 billion at Tether, $800 million at Circle -- while the stolen bitcoin, issuer-less, cannot be.</p>
+  <p class="lede">The agent-in-the-workflow week: DeepSeek open-sources its Super-agent prototype (GitHub requests in, pull requests out; median task 12.4 minutes in synthetic tests; workers run under the operator&#x27;s account, so the README&#x27;s dedicated-account prescription is the design). GitHub answers the supply-chain side with an npm firewall -- advisory blocks plus a minimum-age cooldown at install time -- and its Copilot security extension turns CodeQL alerts into reviewed local fixes that never leave the working copy unpushed.</p>
   <div class="storyitem">
-      <h3><a href="../articles/2026-10-31-fragnesia-deadline-day-the-kernel-half-of-the-php2shell.html">Fragnesia deadline day: the kernel half of the PHP2Shell chain is due TODAY, Oct. 31 — forensic triage first, then a fixed running kernel</a></h3>
-      <p class="byline">Safeguard.sh</p>
-      <p class="body">Safeguard’s KEV analysis: CVE-2026-46300, public since May, is a flaw in how socket buffers merge that lets the IPsec ESP code decrypt in place over page-cache memory — so a local user can alter files they may only read, and become root. CISA added it to KEV on Oct. 28 with today’s due date and forensic triage flagged, writing that it ’can be chained with CVE-2026-109618 and CVE-2026-109619 to implant PHP webshells and run commands as root.’ The PHP flaws give code execution as the web user; Fragnesia finishes the climb. Patching PHP alone — deadline Oct. 29, fixed builds 8.5.12 / 8.4.27 / 8.3.36 / 8.2.35 — leaves root on the table; the kernel closes only with a fixed kernel actually running.</p>
-      <p class="body"><em>Why it matters:</em> Today is the deadline, and the triage comes first: CISA wants evidence checks, not just patches. If you run PHP on Linux, this is the weekend&#x27;s one non-optional read.</p>
+      <h3><a href="../articles/2026-11-01-deepseek-open-sources-its-super-agent-an-mit-licensed-p.html">DeepSeek open-sources its Super-agent: an MIT-licensed prototype that takes work requests from GitHub and answers with pull requests</a></h3>
+      <p class="byline">Asia Daily</p>
+      <p class="body">DeepSeek’s Harness team published dsh-superagent-prototype on Oct. 31: a proactive coding agent for one GitHub repository that listens to GitHub (and optionally Feishu), opens a work item when an authorized person asks, works in its own session and directory, and replies in the original conversation — potentially with a pull request. In the team’s synthetic test (about 300 simulated messages, roughly 20 work requests), half the tasks finished within 12.4 minutes and 95% within 15.7, against 29.5 minutes at the 95th percentile for a single-session setup — at higher cached-token cost. The repo passed 4,100 stars by Sunday morning. The catch is in the design: workers execute commands under the operator’s account without per-action approval, so the README prescribes a dedicated agent GitHub account, a short authorized-people list and blocked commands. Research prototype, not production software — the public code differs from the internal system.</p>
+      <p class="body"><em>Why it matters:</em> The buddy system, productized by someone else: an open-source agent that takes GitHub requests and returns PRs -- with the README&#x27;s own security prescription (dedicated account, allowlist, blocked commands) as the real design document.</p>
     </div><div class="storyitem">
-      <h3><a href="../articles/2026-10-31-the-kev-weekend-eight-exploited-flaws-added-in-a-week-t.html">The KEV weekend: eight exploited flaws added in a week, three federal deadlines in three days</a></h3>
-      <p class="byline">DataWater</p>
-      <p class="body">DataWater’s threat desk, Oct. 30: CISA added eight exploited vulnerabilities to the KEV catalog between Oct. 24 and 30 — the PHP2Shell pair, Adobe Commerce/Magento (CVE-2026-48356), Google Brotli (CVE-2026-111497), the Linux kernel’s Fragnesia, VMware ESX (CVE-2026-41709), GitLab (CVE-2026-97229) and Cisco Secure Firewall ASA/FTD (CVE-2026-76418), two a day Monday through Thursday. All eight are confirmed exploited; ransomware use is listed unknown for every checkable entry. The deadlines bunch up: PHP was due Oct. 29, the kernel today, GitLab and Cisco tomorrow, Nov. 1; Adobe and Brotli land Nov. 10, VMware Nov. 11.</p>
-      <p class="body"><em>Why it matters:</em> Patch week&#x27;s full board: eight exploited flaws, three deadlines in three days. The bunching is the risk -- teams patch in sequence, attackers don&#x27;t.</p>
+      <h3><a href="../articles/2026-11-01-github-previews-an-npm-firewall-block-malicious-and-too.html">GitHub previews an npm firewall: block malicious and too-fresh packages at install time, before the agent or the CI runner pulls them</a></h3>
+      <p class="byline">The Hacker News</p>
+      <p class="body">The Hacker News, Oct. 29: GitHub’s package firewall, in public preview for Enterprise Cloud, sits between endpoints or internal registries and upstream repositories, inspecting metadata and downloads against the GitHub Advisory Database — blocking known malware, blocking by vulnerability severity, and enforcing a cooldown (minimum package age, 1-365 days, default 1) so brand-new releases can’t be installed until scanners have had their look. The timing is the point: AI agents and CI runners now install dependencies automatically to complete tasks. Rust 1.100, due Nov. 12, readies the same idea for crates.</p>
+      <p class="body"><em>Why it matters:</em> Install-time is the new perimeter: when agents and CI runners pull dependencies unattended, a minimum-age cooldown is cheap, structural defense. Anyone running agents on their repos should read the policy list.</p>
     </div><div class="storyitem">
-      <h3><a href="../articles/2026-10-31-after-the-heist-the-hardening-rival-exchanges-bolster-d.html">After the heist, the hardening: rival exchanges bolster defenses and push industry-wide information-sharing</a></h3>
-      <p class="byline">The Hindu BusinessLine</p>
-      <p class="body">Reuters via The Hindu BusinessLine, updated Oct. 31: rival exchanges moved Friday to shore up their own systems and reassure customers after the record $6.3 billion Binance hack exposed exchange vulnerability ’just as they become more embedded in mainstream finance.’ Binance co-CEO Richard Teng said the ’complex attack’ may have begun with a compromised software engineer’s laptop; the company later found additional breaches, and trace-erasing software hampered the investigation. Tether froze nearly $1.57 billion of the stolen funds and Circle $800 million; Bitcoin and Ether, with no issuer, cannot be frozen. Bitcoin fell more than 4% Thursday and Ether more than 5%, recovering some ground Friday.</p>
-      <p class="body"><em>Why it matters:</em> The industry&#x27;s immune response, and its limit: exchanges can share signals and issuers can freeze stablecoins, but issuer-less assets can&#x27;t be frozen. Architecture decides what recovery is possible.</p>
+      <h3><a href="../articles/2026-11-01-fix-the-codeql-alert-where-you-code-githubs-copilot-app.html">Fix the CodeQL alert where you code: GitHub’s Copilot app security extension turns scanning alerts into reviewed local fixes</a></h3>
+      <p class="byline">Medium</p>
+      <p class="body">In public preview since Oct. 28, the security extension puts open code-scanning alerts, sorted by severity, in a Security canvas beside the Copilot agent session; Explain and Fix run on the session’s own agent and model, and every fix stays in the local working copy until a human reviews and pushes — the alert closes only after a rescan. The design target is the unglamorous reason alerts pile up: the hop between github.com, the editor and rebuilt context. Enterprise controls and AI-credit costs are part of the write-up.</p>
+      <p class="body"><em>Why it matters:</em> The fix stays local until a human pushes -- that one design choice is the difference between an agent that helps and an agent that ships. The alert-pile problem it solves is every team&#x27;s problem now.</p>
     </div>
   <section class="suggestbox" data-buddy-id="news-buddy">
     <h2>Suggestions</h2>
