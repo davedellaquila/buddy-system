@@ -5116,7 +5116,7 @@ function applySidebarStyle(){
   if (document.body.classList.contains('sb-anchored')) {
     if (vb2 && vb2.classList.contains('floating')) clearPanelFloat();
   } else if (vb2 && vb2.classList.contains('active') && vb2.classList.contains('panel') && S.panelFloat && !vb2.classList.contains('floating')) {
-    applyPanelFloat(clampPanelPos(clampPanelSize({ x: S.panelFloat.x, y: S.panelFloat.y, w: S.panelFloat.w, h: S.panelFloat.h })));
+    applyPanelFloat(fitPanelRect({ x: S.panelFloat.x, y: S.panelFloat.y, w: S.panelFloat.w, h: S.panelFloat.h }));
   }
   if (typeof reconcileSbFloat === 'function') reconcileSbFloat();
   if (typeof syncPanelFrame === 'function') syncPanelFrame();
@@ -5721,6 +5721,24 @@ function clampPanelSize(r){
 function clampPanelPos(r){
   r.x = Math.min(Math.max(r.x, -(r.w - 140)), window.innerWidth - 90);
   r.y = Math.min(Math.max(r.y, 0), window.innerHeight - 54);
+  return r;
+}
+/* Restore-time fit (Dave's iPad, 2026-11-01): the clamps above are
+   deliberately permissive — a drag may park the panel mostly
+   off-screen, keeping a grabbable sliver. But a stored rect the app
+   itself re-applies (panel open, style restore, window resize /
+   rotation) must land FULLY on-screen: a rect saved in landscape
+   (x=310, w=1056) restored in portrait kept x=310 under the old
+   clamps and ran 310px off the right edge — content truncated, and
+   the panel's own close disc sits at its right edge, off-screen
+   with it. Fit caps the size to the viewport and clamps the
+   position so no edge leaves the screen. Drag-time calls keep the
+   permissive pair; only the restore sites use this. */
+function fitPanelRect(r){
+  r.w = Math.min(Math.max(r.w, 300), window.innerWidth);
+  r.h = Math.min(Math.max(r.h, 260), window.innerHeight);
+  r.x = Math.min(Math.max(r.x, 0), Math.max(0, window.innerWidth - r.w));
+  r.y = Math.min(Math.max(r.y, 0), Math.max(0, window.innerHeight - r.h));
   return r;
 }
 function applyPanelFloat(r){
@@ -6329,7 +6347,7 @@ function initPanelFloat(){
       }
       bpWasOpen = true;
       if (S.panelFloat && !vb.classList.contains('floating') && !document.body.classList.contains('sb-anchored')) {
-        applyPanelFloat(clampPanelPos(clampPanelSize({ x: S.panelFloat.x, y: S.panelFloat.y, w: S.panelFloat.w, h: S.panelFloat.h })));
+        applyPanelFloat(fitPanelRect({ x: S.panelFloat.x, y: S.panelFloat.y, w: S.panelFloat.w, h: S.panelFloat.h }));
       }
       setTimeout(syncPanelFrame, 60);
       setTimeout(syncPanelFrame, 580);
@@ -6341,7 +6359,7 @@ function initPanelFloat(){
   }).observe(vb, { attributes: true, attributeFilter: ['class'] });
   window.addEventListener('resize', () => {
     if (vb.classList.contains('floating') && S.panelFloat) {
-      applyPanelFloat(clampPanelPos(clampPanelSize({ x: S.panelFloat.x, y: S.panelFloat.y, w: S.panelFloat.w, h: S.panelFloat.h })));
+      applyPanelFloat(fitPanelRect({ x: S.panelFloat.x, y: S.panelFloat.y, w: S.panelFloat.w, h: S.panelFloat.h }));
     }
     syncPanelFrame();
   });
@@ -6364,6 +6382,15 @@ function clampSbSize(r){
 function clampSbPos(r){
   r.x = Math.min(Math.max(r.x, -(r.w - 140)), window.innerWidth - 90);
   r.y = Math.min(Math.max(r.y, 0), window.innerHeight - 54);
+  return r;
+}
+/* Sidebar twin of fitPanelRect (2026-11-01): restore sites fit the
+   stored rect fully on-screen; drag-time calls keep clampSbPos. */
+function fitSbRect(r){
+  r.w = Math.min(Math.max(r.w, 260), window.innerWidth);
+  r.h = Math.min(Math.max(r.h, 300), window.innerHeight);
+  r.x = Math.min(Math.max(r.x, 0), Math.max(0, window.innerWidth - r.w));
+  r.y = Math.min(Math.max(r.y, 0), Math.max(0, window.innerHeight - r.h));
   return r;
 }
 function applySbFloat(r){
@@ -6401,7 +6428,7 @@ function reconcileSbFloat(){
   const sb = document.getElementById('sidebar'); if (!sb) return;
   if (!sbFloatable()) { if (sb.classList.contains('sb-floating')) clearSbFloat(); else syncSbFrame(); return; }
   if (S.sbFloat && !sb.classList.contains('sb-floating')) {
-    applySbFloat(clampSbPos(clampSbSize({ x: S.sbFloat.x, y: S.sbFloat.y, w: S.sbFloat.w, h: S.sbFloat.h })));
+    applySbFloat(fitSbRect({ x: S.sbFloat.x, y: S.sbFloat.y, w: S.sbFloat.w, h: S.sbFloat.h }));
   } else syncSbFrame();
 }
 function initSbFloat(){
@@ -6472,7 +6499,7 @@ function initSbFloat(){
   new MutationObserver(() => { setTimeout(reconcileSbFloat, 60); }).observe(document.body, { attributes: true, attributeFilter: ['class'] });
   window.addEventListener('resize', () => {
     if (sb.classList.contains('sb-floating') && S.sbFloat) {
-      applySbFloat(clampSbPos(clampSbSize({ x: S.sbFloat.x, y: S.sbFloat.y, w: S.sbFloat.w, h: S.sbFloat.h })));
+      applySbFloat(fitSbRect({ x: S.sbFloat.x, y: S.sbFloat.y, w: S.sbFloat.w, h: S.sbFloat.h }));
     }
     syncSbFrame();
   });
