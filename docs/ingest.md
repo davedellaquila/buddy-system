@@ -222,3 +222,7 @@ My stomach is feeling a little uneasy this morning. It’s a little upset
 
 wednesday october 28th: journal has it wrong. it says patsy and andrew came back today. that's not true. nancy came back from san jose. she has been there since monday visiting with her girlfriends from high school at karen camarata's house in monte Sereno. apparently it had great views. she was able to see oakland.
 
+## 11/1/2026, 5:47:16 AM
+
+https://pca.st/episode/489f3fe3-ce34-4c25-9006-f1350c5b9d28
+
