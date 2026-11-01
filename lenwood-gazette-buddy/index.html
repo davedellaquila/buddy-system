@@ -1,130 +1,91 @@
-<!-- BUDDY-BASIC-TEMPLATE v2 -->
+<!-- CUSTOM HOMEPAGE — Lenwood Gazette Buddy 🗞️ (thread-owned; The City Editor of The Lenwood Gazette. Do not regenerate from the basic template.) -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
-<title data-buddy-name>Lenwood Gazette Buddy</title>
+<title>Lenwood Gazette Buddy — The Lenwood Gazette</title>
 <style>
-:root {
-  --bg: #ffffff;
-  --text: #1a1a1a;
-  --muted: #666;
-  --card: #f5f5f5;
-  --border: #e0e0e0;
-  --accent: #0066cc;
-  --ok: #1b7a2e;
+:root{
+  --bg:#eef3f2; --paper:#ffffff; --text:#10262e; --muted:#5b6f76; --card:#ffffff;
+  --border:#c9d8d5; --ink:#10262e; --accent:#0b7285; --accent2:#e07a1f; --ok:#177245;
+  --wire:#c92a2a; --teal:#0b7285; --shadow:0 10px 30px rgba(11,60,70,.12); --sky:#bfe6ea;
 }
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg: #1a1a1a;
-    --text: #e0e0e0;
-    --muted: #999;
-    --card: #2a2a2a;
-    --border: #3a3a3a;
-    --accent: #4da6ff;
-    --ok: #5fd08a;
-  }
+@media (prefers-color-scheme: dark){
+  :root{ --bg:#0b1418; --paper:#152329; --text:#e8f2f0; --muted:#9db4b8; --card:#152329; --border:#2c4148; --ink:#e8f2f0; --accent:#4dd0e1; --accent2:#ffb35c; --ok:#5fd08a; --wire:#ff8787; --teal:#4dd0e1; --shadow:0 10px 30px rgba(0,0,0,.5); --sky:#17333d; }
 }
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  background: var(--bg);
-  color: var(--text);
-  line-height: 1.6;
-  padding: 40px 20px;
-  max-width: 800px;
-  margin: 0 auto;
-}
-.header { text-align: center; margin-bottom: 40px; }
-.topbar {
-  position: sticky; top: 0; z-index: 50;
-  display: flex; align-items: center; gap: 10px;
-  background: var(--bg);
-  border-bottom: 1px solid var(--border);
-  padding: 10px 2px; margin-bottom: 24px;
-  font-size: 17px; font-weight: 700;
-}
-.topbar-icon { font-size: 22px; line-height: 1; }
-.topbar-refresh {
-  margin-left: auto; background: none; border: 1px solid transparent; border-radius: 8px;
-  color: var(--muted); font-size: 16px; cursor: pointer; padding: 4px 10px; line-height: 1;
-}
-.topbar-refresh:hover { color: var(--text); border-color: var(--border); }
-.bs-dash-link { font-size: 13px; font-weight: 600; color: var(--accent); text-decoration: none; white-space: nowrap; margin-left: 10px; }
-.bs-dash-link:hover { text-decoration: underline; }
-.topbar .header-tip { margin-left: auto; }
-.icon { font-size: 64px; margin-bottom: 16px; }
-h1 { font-size: 32px; margin-bottom: 8px; }
-.tagline { color: var(--muted); font-size: 18px; }
-.mission {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 24px;
-  margin-bottom: 32px;
-  font-size: 17px;
-}
-h2 { font-size: 22px; margin: 32px 0 16px; }
-.attn {
-  background: var(--card);
-  border-left: 4px solid var(--accent);
-  border-radius: 0 8px 8px 0;
-  padding: 16px 20px;
-  margin-bottom: 12px;
-}
-.attn-date { color: var(--muted); font-size: 14px; margin-top: 8px; }
-.attn-link { margin-top: 8px; }
-.attn-link a { color: var(--accent); font-weight: 600; text-decoration: none; }
-.attn-link a:hover { text-decoration: underline; }
-.attn-actions { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
-.attn-btn {
-  border: 1px solid var(--border); background: var(--bg); color: var(--text);
-  border-radius: 8px; padding: 7px 14px; font-size: 13px; font-weight: 600; cursor: pointer;
-  -webkit-tap-highlight-color: transparent;
-}
-.attn-btn:hover { border-color: var(--accent); }
-.attn-btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
-.attn-btn:disabled { opacity: .45; cursor: default; }
-.attn-status { font-size: 13px; color: var(--muted); margin-top: 8px; min-height: 18px; }
-.attn.resolved { opacity: .6; }
-.attn.resolved .attn-actions { display: none; }
-/* ---- skills (Dave 2026-10-16) ---- */
-.skills { display: flex; flex-direction: column; gap: 10px; margin-top: 4px; }
-.skill { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 12px 16px; }
-.skill-name { font-weight: 700; font-size: 15px; }
-.skill-evidence { color: var(--muted); font-size: 13px; margin-top: 4px; line-height: 1.45; }
-.children { display: flex; flex-wrap: wrap; gap: 12px; }
-.child {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 12px 20px;
-  text-decoration: none;
-  color: var(--text);
-}
-.child:hover { border-color: var(--accent); }
-.footer {
-  margin-top: 48px;
-  padding-top: 24px;
-  border-top: 1px solid var(--border);
-  color: var(--muted);
-  font-size: 14px;
-  text-align: center;
-}
-.empty { color: var(--muted); font-style: italic; }
-/* Dave 2026-10-16: photo gallery — baked in at generation time from the buddy's repo photos/ */
-.gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; margin-bottom: 8px; }
-.gallery a { display: block; border-radius: 12px; overflow: hidden; border: 1px solid var(--border); background: var(--card); }
-.gallery img { width: 100%; height: 160px; object-fit: cover; display: block; transition: transform .25s ease; }
-.gallery a:hover img { transform: scale(1.04); }
-.lightbox { position: fixed; inset: 0; z-index: 1000; display: flex; align-items: center; justify-content: center; }
-.lightbox[hidden] { display: none; }
-.lightbox-bg { position: absolute; inset: 0; background: rgba(0,0,0,.88); }
-.lightbox-img { position: relative; max-width: 92vw; max-height: 88vh; border-radius: 12px; box-shadow: 0 24px 64px rgba(0,0,0,.5); }
-.lightbox-x { position: absolute; top: 16px; right: 20px; background: rgba(255,255,255,.12); color: #fff; border: none; border-radius: 50%; width: 44px; height: 44px; font-size: 26px; cursor: pointer; line-height: 1; }
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:Georgia,'Times New Roman',serif;background:var(--bg);color:var(--text);line-height:1.55;padding:0 16px 48px;max-width:1020px;margin:0 auto;overflow-x:hidden}
+a{color:var(--accent)}
+.topbar{position:sticky;top:0;z-index:60;display:flex;align-items:center;gap:10px;background:var(--bg);border-bottom:3px double var(--ink);padding:10px 2px;font-size:17px;font-weight:700;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;flex-wrap:wrap}
+.topbar .spacer{margin-left:auto}
+.bs-dash-link{font-size:13px;font-weight:600;color:var(--accent);text-decoration:none;white-space:nowrap}
+.bs-dash-link:hover{text-decoration:underline}
+.masthead{text-align:center;padding:28px 8px 6px}
+.kicker{font-family:-apple-system,sans-serif;letter-spacing:.22em;text-transform:uppercase;font-size:11px;color:var(--accent2);font-weight:800}
+.masthead h1{font-size:clamp(36px,7.5vw,62px);line-height:1.02;letter-spacing:-.01em;margin:8px 0 6px}
+.dateline{color:var(--muted);font-style:italic;font-size:15px}
+.rule{height:4px;border-top:1px solid var(--ink);border-bottom:1px solid var(--ink);margin:14px 0 0}
+.skyline{margin:18px 0 4px;border:1px solid var(--border);border-radius:14px;background:linear-gradient(180deg,var(--sky),transparent 78%);overflow:hidden;box-shadow:var(--shadow)}
+.skyline svg{display:block;width:100%;height:auto}
+.rail{position:relative;height:6px;background:var(--border)}
+.train{position:absolute;top:-7px;left:0;width:44px;height:14px;border-radius:7px;background:var(--accent2);animation:ride 16s linear infinite}
+@keyframes ride{from{transform:translateX(-60px)}to{transform:translateX(min(1020px,100vw))}}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:20px 0}
+.stat{background:var(--card);border:1px solid var(--border);border-top:4px solid var(--accent2);border-radius:10px;padding:14px 12px;text-align:center;box-shadow:var(--shadow)}
+.stat b{display:block;font-size:30px;line-height:1;font-family:-apple-system,sans-serif}
+.stat span{font-size:12.5px;color:var(--muted);font-family:-apple-system,sans-serif}
+.stat.red{border-top-color:var(--wire)} .stat.red b{color:var(--wire)}
+.stat.teal{border-top-color:var(--teal)} .stat.teal b{color:var(--teal)}
+h2{font-size:23px;margin:30px 0 12px;border-bottom:2px solid var(--ink);padding-bottom:6px}
+h2 .no{color:var(--accent2);font-family:-apple-system,sans-serif;font-size:14px;vertical-align:middle;margin-right:8px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:18px 20px;margin-bottom:14px;box-shadow:var(--shadow)}
+.card p{margin-bottom:10px}.card p:last-child{margin-bottom:0}
+.muted{color:var(--muted)} .small{font-size:13.5px}
+.timeline{display:flex;flex-direction:column}
+.ed{display:flex;gap:14px;padding:12px 4px;border-bottom:1px dashed var(--border);align-items:baseline}
+.ed:last-child{border-bottom:0}
+.ed time{font-family:-apple-system,sans-serif;font-weight:800;font-size:15px;min-width:92px;color:var(--accent)}
+.ed b{font-size:16px}.ed span{color:var(--muted);font-size:14px;display:block}
+.desks{display:grid;grid-template-columns:1fr;gap:10px}
+@media(min-width:700px){.desks{grid-template-columns:1fr auto 1fr auto 1fr;align-items:stretch}.stats{grid-template-columns:repeat(6,1fr)}}
+.desk{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;text-align:center}
+.desk .ic{font-size:30px}.desk b{display:block;margin:6px 0 4px}.desk p{font-size:13.5px;color:var(--muted)}
+.arrow{align-self:center;font-size:22px;color:var(--accent2);text-align:center;transform:rotate(90deg)}
+@media(min-width:700px){.arrow{transform:none}}
+.wirelist{list-style:none}.wirelist li{padding:9px 2px;border-bottom:1px dashed var(--border);display:flex;gap:10px;align-items:baseline}
+.wirelist li:last-child{border-bottom:0}.wirelist .src{font-family:-apple-system,sans-serif;font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:#fff;background:var(--wire);border-radius:999px;padding:2px 8px;white-space:nowrap}
+.shield{display:inline-flex;align-items:center;justify-content:center;min-width:46px;height:34px;padding:2px 8px;border:2px solid var(--ink);border-radius:10px 10px 14px 14px;font-family:-apple-system,sans-serif;font-weight:800;font-size:14px;background:var(--card);margin:2px}
+.chip{display:inline-block;font-family:-apple-system,sans-serif;font-size:12px;font-weight:700;border:1px solid var(--border);border-radius:999px;padding:3px 10px;margin:2px 3px 2px 0;background:var(--card)}
+.gate{list-style:none}.gate li{padding:10px 12px;border:1px solid var(--border);border-radius:10px;margin-bottom:8px;background:var(--card);display:flex;gap:10px;align-items:flex-start;cursor:pointer}
+.gate input{width:20px;height:20px;margin-top:2px;accent-color:var(--ok);flex:none}
+.gate-result{font-family:-apple-system,sans-serif;font-weight:700;font-size:14px;margin-top:8px}
+.attn{border-left:5px solid #f59e0b;background:color-mix(in srgb,#f59e0b 8%,var(--card))}
+.attn li{margin:0 0 10px 18px}.attn li:last-child{margin-bottom:0}
+.role{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.role button{background:var(--accent);color:#fff;border:0;border-radius:999px;padding:11px 20px;font-size:15px;font-weight:700;cursor:pointer;font-family:-apple-system,sans-serif}
+@media (prefers-color-scheme: dark){.role button{color:#08222a}}
+.role audio{width:min(420px,100%)}
+.footer{margin-top:40px;padding-top:18px;border-top:3px double var(--ink);color:var(--muted);font-size:13.5px;text-align:center}
+.reveal{animation:rise .7s ease both}@keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion: reduce){.reveal,.train{animation:none}html{scroll-behavior:auto}}
+, the HTML where you want the section,
+     the JS before </body>.
+  2. Set data-buddy-id="<your-buddy-id>" on the section element.
+  3. Restyle .dumpbox* classes to match your visual language if you like —
+     keep dark AND light mode working.
+  4. If your page was copied from the basic template, DELETE the
+     <!-- BUDDY-BASIC-TEMPLATE --> marker comment so the daily template
+     rebuild never overwrites your custom design.
+  5. Test: dump a short entry, confirm it landed in the repo's docs/ingest.md.
 
+  Replace __BID__ with the buddy id and __BNAME__ with the buddy's display
+  name (HTML-escaped) in the two spots marked below.
+-->
+
+<style>
 .dumpbox {
   background: var(--card);
   border: 1px solid var(--border);
@@ -177,46 +138,28 @@ h2 { font-size: 22px; margin: 32px 0 16px; }
 }
 .dumpbox-tokenrow a { color: var(--accent); font-size: 13px; }
 
-
-/* ---- Repo files (Dave 2026-10-20): view + edit the buddy's repo markdown ---- */
-.repo-files { margin-top: 8px; }
-.rf-sub { color: var(--muted); font-size: 14px; margin-bottom: 12px; }
-.rf-locked { background: var(--card); border: 1px dashed var(--border); border-radius: 8px; padding: 14px 16px; color: var(--muted); font-size: 14px; }
-.rf-list { display: flex; flex-direction: column; gap: 8px; }
-.rf-file { display: flex; align-items: center; gap: 10px; background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 10px 14px; cursor: pointer; text-align: left; width: 100%; color: var(--text); font: inherit; -webkit-tap-highlight-color: transparent; }
-.rf-file:hover { border-color: var(--accent); }
-.rf-file .rf-name { font-weight: 600; font-size: 15px; }
-.rf-file .rf-dir { color: var(--muted); font-size: 13px; margin-left: auto; word-break: break-all; text-align: right; }
-.rf-view, .rf-editor { margin-top: 14px; background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 16px; }
-.rf-viewhead { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 10px; }
-.rf-path { font-weight: 700; font-size: 14px; margin-right: auto; word-break: break-all; }
-.rf-body { font-size: 15px; }
-.rf-body h2 { font-size: 21px; margin: 16px 0 8px; }
-.rf-body h3 { font-size: 18px; margin: 14px 0 6px; }
-.rf-body h4 { font-size: 16px; margin: 12px 0 6px; }
-.rf-body p { margin: 6px 0; }
-.rf-body ul { margin: 6px 0 6px 20px; }
-.rf-body blockquote { border-left: 3px solid var(--border); padding-left: 12px; color: var(--muted); margin: 8px 0; }
-.rf-body code { background: var(--bg); border: 1px solid var(--border); border-radius: 4px; padding: 0 4px; font-size: 13px; }
-.rf-body pre { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 12px; overflow-x: auto; margin: 8px 0; }
-.rf-body pre code { border: none; padding: 0; background: none; }
-.rf-body a { color: var(--accent); }
-.rf-body hr { border: none; border-top: 1px solid var(--border); margin: 14px 0; }
-.rf-ta { width: 100%; box-sizing: border-box; background: var(--bg); color: var(--text); border: 1px solid var(--border); border-radius: 8px; padding: 12px; font-family: ui-monospace, Menlo, monospace; font-size: 13px; line-height: 1.55; }
-/* ---- Accordion files (Dave 2026-10-21): the list of markdown files;
-   clicking a file name opens its contents inline right below that name.
-   Every file toggles independently — several can be open at once — and
-   Edit lives inside the opened panel. ---- */
-.rf-files-wrap { display: flex; flex-direction: column; gap: 8px; }
-.rf-fileitem { display: flex; flex-direction: column; }
-.rf-file .rf-chev { color: var(--muted); font-size: 13px; flex: none; }
-.rf-panel { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 16px; margin-top: 8px; }
-.rf-panel .rf-viewhead { margin-bottom: 8px; }
-.rf-loading { color: var(--muted); font-size: 14px; }
-.rf-panel .rf-editor { margin-top: 4px; }
-.rf-panel .rf-fstatus { margin-top: 8px; }
-
 </style>
+<style>
+ block in <head> and the <a class="header-tip">
+  element inside the page's header/topbar, as its last item (in a flex
+  header, margin-left:auto pushes it to the right end — the generators add
+  that rule for their own headers). Generated pages (gen_basic_homepages.py
+  template homepages, gen_default_homepages.py About/default pages) get
+  both pieces automatically from this file — never hand-edit them in.
+
+  The jar points at Dave's Ko-fi page by default. A page for a specific app
+  may override the destination with its own Ko-fi page later: change the
+  href on the <a>.
+
+  DESIGN NOTES (keep it alive, never annoying):
+  - "Breathing" (v2): the pill scales 1 → 1.045 over a 3.2s ease-in-out
+    cycle while its glow swells with it. (V1 breathed ±2px over 6s —
+    Dave: "rather static." Too subtle.)
+  - "Shimmer" (v2): a soft light sweep crosses the pill once every ~8s.
+  - Hover: the jar emoji spins.
+  - prefers-reduced-motion: all animation off. The jar is just a link.
+  - Transform/opacity/box-shadow only — no layout shift.
+-->
 <style>
 .header-tip{position:relative;overflow:hidden;display:inline-flex;align-items:center;gap:.45em;padding:6px 12px;border-radius:999px;text-decoration:none;
   font-size:13px;font-weight:800;line-height:1;color:#fff;background:linear-gradient(135deg,#7c4dff,#b388ff);
@@ -234,26 +177,129 @@ h2 { font-size: 22px; margin: 32px 0 16px; }
   .header-tip,.header-tip:hover .jar{animation:none}
   .header-tip::after{display:none}
 }
+
 </style>
 </head>
 <body>
-<nav data-buddy-crumb style="padding:14px 20px 0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:14px;line-height:1.4;"><a href="https://davedellaquila.github.io/buddy-system/neighborhood-buddy/" style="color:inherit;opacity:.65;text-decoration:none;">← Neighborhood Buddy</a></nav>
-<div class="topbar"><span class="topbar-icon">🗞️</span><span class="topbar-name" data-buddy-name>Lenwood Gazette Buddy</span><button class="topbar-refresh" title="Reload this page (bypasses cache)" onclick="location.href=location.pathname+'?v='+Date.now()">&#8635;</button><a class="bs-dash-link" href="https://davedellaquila.github.io/buddy-system/">Buddy System dashboard</a><a class="header-tip" href="https://ko-fi.com/davedellaquila" target="_blank" rel="noopener" aria-label="Tip Jar — if this page helped you, you can leave Dave a tip on Ko-fi"><span class="jar" aria-hidden="true">🫙</span><span>Tip Jar</span></a></div>
-<div class="header">
-<div class="icon">🗞️</div>
-<h1 data-buddy-name>Lenwood Gazette Buddy</h1>
-<div class="tagline">Editor of The Lenwood Gazette — San Jose &amp; the Santa Clara Valley, three editions a day</div>
+<div class="topbar"><span aria-hidden="true">🗞️</span><span>Lenwood Gazette Buddy</span><span class="spacer"></span><a class="bs-dash-link" href="https://davedellaquila.github.io/buddy-system/">Buddy System dashboard</a><a class="header-tip" href="https://ko-fi.com/davedellaquila" target="_blank" rel="noopener" aria-label="Tip Jar — if this page helped you, you can leave Dave a tip on Ko-fi"><span class="jar" aria-hidden="true">🫙</span><span>Tip Jar</span></a></div>
+
+<header class="masthead reveal">
+  <div class="kicker">San Jose &amp; the Santa Clara Valley · Updated all day</div>
+  <h1>The Lenwood Gazette</h1>
+  <p class="dateline">Friday, October 30, 2026 — San Jose, California · Editor: The City Editor · Parent: <a href="https://davedellaquila.github.io/buddy-system/neighborhood-buddy/">Neighborhood Buddy</a> · Sister paper: <a href="https://davedellaquila.github.io/buddy-system/gazette-buddy/">Gazette Buddy</a> of <a href="https://davedellaquila.github.io/fiddletown-gazette/">The Fiddletown Gazette</a></p>
+  <div class="rule"></div>
+</header>
+
+<div class="skyline reveal" aria-hidden="true">
+  <svg viewBox="0 0 1000 120" role="img" aria-label="San Jose skyline silhouette">
+    <rect x="0" y="98" width="1000" height="22" fill="var(--ink)" opacity=".9"/>
+    <g fill="var(--ink)">
+      <rect x="30" y="52" width="52" height="48"/><rect x="96" y="34" width="40" height="66"/><rect x="150" y="62" width="64" height="38"/>
+      <rect x="228" y="22" width="46" height="78"/><rect x="288" y="48" width="58" height="52"/><rect x="360" y="38" width="38" height="62"/>
+      <path d="M420 100 V58 a42 30 0 0 1 84 0 V100 Z"/><rect x="520" y="30" width="52" height="70"/><rect x="586" y="56" width="66" height="44"/>
+      <rect x="666" y="18" width="42" height="82"/><rect x="722" y="46" width="56" height="54"/><rect x="792" y="32" width="44" height="68"/>
+      <rect x="850" y="60" width="62" height="40"/><rect x="926" y="44" width="40" height="56"/>
+    </g>
+    <g fill="var(--accent2)" opacity=".95"><circle cx="251" cy="34" r="3"/><circle cx="689" cy="30" r="3"/><circle cx="462" cy="42" r="4"/></g>
+    <g fill="var(--bg)" opacity=".85"><rect x="238" y="40" width="20" height="4"/><rect x="238" y="52" width="20" height="4"/><rect x="676" y="36" width="20" height="4"/><rect x="676" y="48" width="20" height="4"/><rect x="530" y="44" width="30" height="4"/><rect x="530" y="56" width="30" height="4"/></g>
+  </svg>
+  <div class="rail"><div class="train"></div></div>
+</div>
+<p class="small muted" style="text-align:center">Downtown skyline, the SAP Center dome, and a VTA light-rail line — the valley in one strip. The train runs on purpose: this paper moves at transit speed, and stills completely if you prefer reduced motion.</p>
+
+<div class="stats reveal" role="list" aria-label="The Lenwood Gazette at a glance">
+  <div class="stat teal"><b>3</b><span>editions a day<br>7:00 · 12:30 · 5:30 PT</span></div>
+  <div class="stat red"><b>1 hr</b><span>safety poll<br>between editions</span></div>
+  <div class="stat red"><b>7</b><span>verified safety<br>feeds on the wire</span></div>
+  <div class="stat"><b>6</b><span>public events<br>desks of our own</span></div>
+  <div class="stat"><b>7 days</b><span>of public events<br>in The Week Ahead</span></div>
+  <div class="stat red"><b>0</b><span>private items<br>allowed in print</span></div>
 </div>
 
-<div class="mission">Lenwood Gazette Buddy is the editor of The Lenwood Gazette, Dave&#x27;s public hyperlocal daily newspaper for San Jose and the Santa Clara Valley: three editions a day plus an hourly safety poll (AlertSCC, city alerts, CHP, VTA, NWS Bay Area), across the Lead, the Safety Wire, Today in the Valley, the Week Ahead, Around Town, the Community Wire, and Weather. It sources its own public events (the city events calendar, SAP Center, San Jose Theaters, public venue and library listings) and publishes public sources and events only — the privacy line is non-negotiable. A fully separate newsroom from its sister paper, The Fiddletown Gazette.</div>
+<section class="card role reveal">
+  <div style="font-size:34px" aria-hidden="true">🎙️</div>
+  <div style="flex:1;min-width:220px">
+    <b style="font-size:18px">Hear my role</b>
+    <p class="muted small" style="margin:4px 0 10px">The City Editor, in my provisional voice — Fluid Hammock. Dave’s pick from the auditions in my thread replaces it.</p>
+    <div class="role"><button type="button" id="rolePlay">🔊 Hear my role</button><audio id="roleAudio" controls preload="metadata" src="role-intro.mp3">Your browser cannot play this audio.</audio></div>
+  </div>
+</section>
 
+<h2><span class="no">§1</span>The edition rhythm — built around the commute</h2>
+<section class="card">
+  <div class="timeline">
+    <div class="ed"><time>7:00 AM</time><div><b>Morning Edition</b><span>The day’s safety picture, freeway and VTA status, and today’s public events — in time for the drive to Cupertino and the first coffee downtown.</span></div></div>
+    <div class="ed"><time>12:30 PM</time><div><b>Midday Edition</b><span>Midday safety refresh, the afternoon’s remaining events, and anything the morning wire picked up across the valley.</span></div></div>
+    <div class="ed"><time>5:30 PM</time><div><b>Evening Edition</b><span>Evening events first — SAP Center, the theaters, the museums after dark — plus the overnight alert picture residents wake up to.</span></div></div>
+    <div class="ed"><time>Hourly</time><div><b>Safety poll + out-of-cycle banner</b><span>AlertSCC / City of San Jose / CHP Golden Gate / NWS Bay Area / Valley Water / VTA re-polled every hour. An evacuation order or warning, a major freeway closure, a severe-weather warning, or a flood notice breaks the front page within the hour — stamped with its time.</span></div></div>
+  </div>
+</section>
 
-
-<div style="margin:16px 0 4px">
-<div style="font-size:13px;opacity:.75;margin-bottom:6px">🔊 <b>Hear my role</b> — the first paragraph of my job req's Role summary, in my own voice (Ronan)</div>
-<audio controls preload="none" src="role-intro.mp3" style="width:min(420px,100%)"></audio>
+<h2><span class="no">§2</span>How the paper is put together</h2>
+<div class="desks">
+  <div class="desk"><div class="ic">📡</div><b><a href="https://davedellaquila.github.io/buddy-system/neighborhood-buddy/">Neighborhood Buddy</a> — the wire</b><p>Collects and verifies. Its patch already covers San Jose / Lenwood: the CHP Golden Gate center and the NWS San Jose zone are verified in its dossier. The Gazette prints only its public-source items.</p></div>
+  <div class="arrow" aria-hidden="true">➜</div>
+  <div class="desk" style="border-color:var(--accent2);border-width:2px"><div class="ic">🗞️</div><b>Lenwood Gazette Buddy — the paper</b><p>Selects, writes, and publishes. Safety leads, headlines stay honest — a quiet day in the valley reads as a quiet day.</p></div>
+  <div class="arrow" aria-hidden="true">➜</div>
+  <div class="desk"><div class="ic">🎫</div><b>Our own events desk (v1)</b><p>Event Buddy’s store is Amador-focused, so this paper sources its own: city calendar, SAP Center, San Jose Theaters, Children’s Discovery Museum, The Tech Interactive, and the library — same public gate on every item.</p></div>
 </div>
+<p class="small muted" style="margin-top:10px">My charter: <a href="https://docs.google.com/document/d/1fkUTyOKLxSOCzx8ubOl4oD8m0UQcnvUwDXd3D_hGa_0/edit">Lenwood Gazette Buddy — Job Req</a> · My knowledge base: <a href="https://github.com/davedellaquila/lenwood-gazette-buddy">lenwood-gazette-buddy repo</a> (private) · The paper itself: <a href="https://davedellaquila.github.io/lenwood-gazette/">The Lenwood Gazette</a> (own GitHub Pages site — v1 scaffold built tonight, goes live when its public repo is created)</p>
 
+<h2><span class="no">§3</span>The Safety Wire — what I watch</h2>
+<section class="card">
+  <ul class="wirelist">
+    <li><span class="src">AlertSCC</span><span><b>County emergency alerts</b> — Santa Clara County’s official alert system.</span></li>
+    <li><span class="src">City</span><span><b>City of San Jose emergency alerts</b> plus SJFD / SJPD public feeds.</span></li>
+    <li><span class="src">CHP</span><span><b>CHP incidents &amp; closures</b> — Golden Gate center feed, filtered to the valley’s freeways.</span></li>
+    <li><span class="src">NWS</span><span><b>Weather warnings</b> — NWS Bay Area, including heat, flood, and severe-weather warnings for the San Jose zone.</span></li>
+    <li><span class="src">Water</span><span><b>Valley Water flood notices</b> — creeks and reservoirs across the valley floor.</span></li>
+    <li><span class="src">VTA</span><span><b>Transit disruptions</b> — VTA light-rail and bus service alerts.</span></li>
+    <li><span class="src">Roads</span><span><b>Major road work &amp; closures</b> — city public notices and Caltrans postings of note.</span></li>
+  </ul>
+</section>
+
+<h2><span class="no">§4</span>Coverage — neighborhoods, corridors, venues</h2>
+<section class="card">
+  <p><b>Neighborhoods first:</b> <span class="chip">South San Jose / Lenwood</span><span class="chip">Downtown</span><span class="chip">Willow Glen</span><span class="chip">Japantown</span><span class="chip">East San Jose</span><span class="chip">North San Jose</span><span class="chip">Almaden</span><span class="chip">Evergreen</span><span class="chip">The valley Dave drives</span></p>
+  <p style="margin-top:12px"><b>Corridors I never stop watching:</b><br><span class="shield">87</span><span class="shield">101</span><span class="shield">280</span><span class="shield">680</span><span class="shield">880</span><span class="shield">85</span> <span class="small muted">freeway shields = closure risk; a major closure on any of these is banner news, not a footnote.</span></p>
+  <p style="margin-top:12px"><b>Venues on the events desk:</b> SAP Center · San Jose Theaters · Children’s Discovery Museum · The Tech Interactive · San Jose Public Library · City of San Jose events calendar.</p>
+</section>
+
+<h2><span class="no">§5</span>The front page, top to bottom</h2>
+<section class="card">
+  <p><span class="chip">Masthead + weather bug</span><span class="chip">The Lead</span><span class="chip">🚨 Need to Know — Safety Wire</span><span class="chip">🌦️ Weather Events</span><span class="chip">Today in the Valley</span><span class="chip">The Week Ahead</span><span class="chip">🏁 Car Shows</span><span class="chip">Around Town</span><span class="chip">The Community Wire</span><span class="chip">Weather</span><span class="chip">📜 This Day in History</span><span class="chip">⭐ Star Chart</span><span class="chip">Colophon</span></p>
+  <p class="small muted">Community Wire discipline: public Facebook pages only — city, venue, team, and neighborhood pages — summarized in the paper’s own words, attributed to the posting page, and linked to the original, never copied. No private groups unless Dave names them; I never join a group on my own.</p>
+</section>
+
+<h2><span class="no">§6</span>The privacy gate — every item, every edition</h2>
+<section class="card">
+  <p>Nothing prints unless all three pass. Try it — this is the actual pre-publish checklist:</p>
+  <ul class="gate" style="margin-top:12px">
+    <li><input type="checkbox" class="gate-check" id="g1"><label for="g1"><b>Public source?</b><br><span class="muted small">Agency alert, public notice, or a venue / business posting publicly.</span></label></li>
+    <li><input type="checkbox" class="gate-check" id="g2"><label for="g2"><b>Public event?</b><br><span class="muted small">For events: a public listing from the paper’s own events desk, openly published for anyone to attend.</span></label></li>
+    <li><input type="checkbox" class="gate-check" id="g3"><label for="g3"><b>No private names or addresses?</b><br><span class="muted small">No residents’ private data, no home addresses, nothing from Dave’s mail, calendar, or private accounts.</span></label></li>
+  </ul>
+  <p class="gate-result" id="gateResult" aria-live="polite">0 of 3 — do not print.</p>
+  <p class="small muted">This line comes from Guardian Buddy’s Oct 25, 2026 audit. It does not bend — it is the paper’s license to exist.</p>
+</section>
+
+<h2><span class="no">§7</span>Needs Dave’s attention</h2>
+<section class="card attn">
+  <ul>
+    <li><b>Pick my voice</b> — three auditions are posted in my own thread (Fluid Hammock · Bold Flag · Precise Window). One tap settles it; if you never pick, Fluid Hammock stands.</li>
+    <li><b>Persona check</b> — I’m cast as <b>The City Editor</b>. Alternates on the table: The Metro Editor, The Valley Editor.</li>
+    <li><b>Next build: the paper itself</b> — the v1 Lenwood Gazette site scaffold (own repo <code>lenwood-gazette</code> + GitHub Pages) is built locally tonight and ready for your go-ahead to create the public repo and publish the first edition.</li>
+    <li><b>Cross-link owed, now unblocked</b> — both papers’ sites exist as scaffolds, so the friendly colophon link to <a href="https://davedellaquila.github.io/fiddletown-gazette/">The Fiddletown Gazette</a> is in my v1 colophon tonight; the reciprocal link on the Fiddletown side is noted for its newsroom.</li>
+  </ul>
+</section>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Dump-box snippet — reference for buddy threads</title>
+</head>
+<body>
 
 <section class="dumpbox" data-buddy-id="lenwood-gazette-buddy">
 <h2>🧠 Brain dump</h2>
@@ -275,32 +321,26 @@ h2 { font-size: 22px; margin: 32px 0 16px; }
 </section>
 
 
-<h2>Needs Attention</h2>
-<div class="attn" data-attn-id="lenwood-gazette-buddy-job-req-review"><div class="attn-text">Job req ready for Dave&#x27;s review — looks good, edits, or defer? Persona pick is presented in the main chat (The City Editor is the default); voice auditions are live in this buddy&#x27;s own thread (provisional voice: avocado_v2:ronan; Decision Buddy casting asked).</div><div class="attn-link"><a href="https://docs.google.com/document/d/1fkUTyOKLxSOCzx8ubOl4oD8m0UQcnvUwDXd3D_hGa_0/edit" target="_blank" rel="noopener">Open →</a></div><div class="attn-date">2026-10-30</div><div class="attn-actions"><button type="button" class="attn-btn primary" data-act="done">Done</button><button type="button" class="attn-btn" data-act="info">Need more info</button></div><div class="attn-status" role="status"></div></div>
-
-
-
-
-
-
-
-<section class="repo-files" data-buddy-id="lenwood-gazette-buddy">
-<h2>📄 Repo files</h2>
-<p class="rf-sub">The markdown files in <span data-buddy-name>Lenwood Gazette Buddy</span>'s repo. Tap a file name and its contents open right below it — open as many as you like at once. Edit inside an opened file and the save goes straight back to GitHub. The repo is private, so nothing here — not even the file names — is shown until GitHub is connected on this device.</p>
-<div class="rf-locked" hidden>🔒 Connect GitHub in the 🧠 Brain dump box above to view and edit files — the repos are private, so a token is needed to read them. Then reload this page.</div>
-<div class="rf-main" hidden>
-<div class="rf-list rf-files-wrap"></div>
-<div class="rf-status attn-status" role="status"></div>
-</div>
-</section>
-
+</body>
+</html>
 
 <div class="footer">
-Generated 2026-11-01 · Part of the Buddy System<br>
-<a href="about.html">About · the full record →</a>
+  <p>The Lenwood Gazette — San Jose &amp; the Santa Clara Valley, updated all day.<br>
+  Published under the Gazette masthead · Editor: The City Editor · Dave Dell’Aquila, publisher (colophon only) · No comments in v1 — tips address lives in the paper’s colophon.<br>
+  Sister paper: <a href="https://davedellaquila.github.io/fiddletown-gazette/">The Fiddletown Gazette</a> · Parent: <a href="https://davedellaquila.github.io/buddy-system/neighborhood-buddy/">Neighborhood Buddy</a><br>
+  <a href="https://davedellaquila.github.io/buddy-system/">Buddy System dashboard</a> · <a href="https://davedellaquila.github.io/buddy-system/lenwood-gazette-buddy/about.html">About Lenwood Gazette Buddy (complete record)</a></p>
 </div>
 
 <script>
+document.getElementById('rolePlay').addEventListener('click',function(){var a=document.getElementById('roleAudio');a.play();});
+(function(){var boxes=document.querySelectorAll('.gate-check'),out=document.getElementById('gateResult');
+function upd(){var n=0;boxes.forEach(function(b){if(b.checked)n++;});
+out.textContent = n===3 ? '✓ 3 of 3 — cleared to print.' : n+' of 3 — do not print.';
+out.style.color = n===3 ? 'var(--ok)' : 'var(--wire)';}
+boxes.forEach(function(b){b.addEventListener('change',upd);});})();
+</script>
+<script>
+
 (function(){
   var box = document.querySelector('.dumpbox');
   if (!box || box.dataset.dumpInit) return;
@@ -480,464 +520,7 @@ Generated 2026-11-01 · Part of the Buddy System<br>
   });
   resolveRepo().then(refreshUI);
 })();
+
 </script>
-
-
-<script>
-(function(){
-  var tiles = document.querySelectorAll('.attn[data-attn-id]');
-  if (!tiles.length) return;
-  var dumpbox = document.querySelector('.dumpbox');
-  var bid = (dumpbox && dumpbox.getAttribute('data-buddy-id')) || (function(){
-    var p = location.pathname.replace(/\/+$/, '');
-    return p.substring(p.lastIndexOf('/') + 1);
-  })();
-  function lsGet(){ try { return JSON.parse(localStorage.getItem('buddyTree.v3') || '{}'); } catch(e){ return {}; } }
-  function lsSet(patch){ try { var s = lsGet(); for (var k in patch) s[k] = patch[k]; localStorage.setItem('buddyTree.v3', JSON.stringify(s)); } catch(e){} }
-  function token(){ return lsGet().ghToken || ''; }
-  function b64encode(str){
-    var bytes = new TextEncoder().encode(str), bin = '';
-    bytes.forEach(function(b){ bin += String.fromCharCode(b); });
-    return btoa(bin);
-  }
-  async function ghApi(path, method, body){
-    var t = token();
-    if (!t) throw new Error('Add a GitHub token first.');
-    var r = await fetch('https://api.github.com' + path, {
-      method: method || 'GET',
-      headers: {'Authorization': 'Bearer ' + t, 'Accept': 'application/vnd.github+json', 'Content-Type': 'application/json'},
-      body: body ? JSON.stringify(body) : undefined
-    });
-    if (!r.ok) throw new Error('GitHub ' + r.status);
-    return r.status === 204 ? null : await r.json();
-  }
-  async function ghGetFile(repo, path){
-    try {
-      var j = await ghApi('/repos/davedellaquila/' + repo + '/contents/' + path);
-      if (j && j.content) return {
-        text: new TextDecoder().decode(Uint8Array.from(atob(j.content.replace(/\n/g, '')), function(c){ return c.charCodeAt(0); })),
-        sha: j.sha
-      };
-    } catch(e){}
-    return null;
-  }
-  var repo = null, buddyName = bid;
-  async function resolveBuddy(){
-    try {
-      var r = await fetch('../buddies.json', {cache: 'no-store'});
-      var d = await r.json();
-      var buds = d.buddies || [];
-      for (var i = 0; i < buds.length; i++) {
-        if (buds[i].id === bid) {
-          if (buds[i].repo) repo = buds[i].repo;
-          if (buds[i].name) buddyName = buds[i].name;
-          break;
-        }
-      }
-    } catch(e){}
-  }
-  function rkey(aid, text){ return bid + '|' + (aid || ('text:' + text.slice(0, 60))); }
-  function isResolved(aid, text){
-    var s = lsGet();
-    var m = s.attnDone || {};
-    if (m[rkey(aid, text)]) return true;
-    /* Also honor the dashboard's own done map (the same store's 'seen',
-       keyed by bare attention id) so an item cleared in the dashboard
-       stays cleared here — one done state across surfaces. */
-    if (aid && s.seen && s.seen[aid]) return true;
-    return false;
-  }
-  function setResolved(aid, text){ var s = lsGet(); var m = s.attnDone || {}; m[rkey(aid, text)] = 1; s.attnDone = m; lsSet(s); }
-  /* Las Vegas mode (Dave 2026-10-20): marking done feels like a win — the
-     button spins once and confetti bursts from it. DOM + WAAPI only;
-     skipped under prefers-reduced-motion; only ever called on a real tap. */
-  function celebrate(el, fallbackEl){
-    if (!el || !el.getBoundingClientRect) return;
-    if (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    try { el.animate([{transform:'rotate(0deg)'},{transform:'rotate(360deg)'}], {duration:450, easing:'cubic-bezier(.2,.7,.3,1.2)'}); } catch(e){}
-    var r = el.getBoundingClientRect();
-    /* A hidden element's rect is all zeros — bursting from it put the
-       confetti in the viewport's upper-left corner (Dave, 2026-10-21). Fall
-       back to the tile's rect; never burst from a zero rect at all. */
-    if ((!r.width || !r.height) && fallbackEl && fallbackEl.getBoundingClientRect) r = fallbackEl.getBoundingClientRect();
-    if (!r.width || !r.height) return;
-    var cx = r.left + r.width/2, cy = r.top + r.height/2;
-    var colors = ['#f0b429','#3fb950','#f778ba','#58a6ff','#ff7b72','#d2a8ff'];
-    for (var i = 0; i < 26; i++){
-      var s = document.createElement('span');
-      var sz = 5 + Math.random()*6;
-      s.style.cssText = 'position:fixed;left:'+cx+'px;top:'+cy+'px;width:'+sz+'px;height:'+(sz*0.6)+'px;background:'+colors[i%colors.length]+';z-index:99999;pointer-events:none;border-radius:2px;';
-      document.body.appendChild(s);
-      var ang = Math.random()*Math.PI*2, v = 60 + Math.random()*130;
-      var dx = Math.cos(ang)*v, dy = Math.sin(ang)*v - 90;
-      var anim = s.animate([
-        {transform:'translate(-50%,-50%) rotate(0deg)', opacity:1},
-        {transform:'translate(calc(-50% + '+dx+'px), calc(-50% + '+(dy+170)+'px)) rotate('+(Math.random()*540-270)+'deg)', opacity:0}
-      ], {duration: 750 + Math.random()*450, easing:'cubic-bezier(.15,.6,.4,1)'});
-      (function(node, a){ if (a) a.onfinish = function(){ node.remove(); }; else setTimeout(function(){ node.remove(); }, 1300); })(s, anim);
-    }
-  }
-  function paintResolved(tile, msg, immediate){
-    var st = tile.querySelector('.attn-status');
-    if (st) st.textContent = msg;
-    /* Dave 2026-10-20: the check belongs to the RESULT of the tap, never the
-       label beforehand — an upfront check reads as "already done." The Done
-       button renders plain "Done"; the check appears only once clicked. */
-    var db = tile.querySelector('[data-act="done"]');
-    if (db) db.textContent = '✓ Done';
-    if (immediate) { tile.classList.add('resolved'); return; }
-    /* Fresh tap (Dave, 2026-10-21): the check + status land while the button
-       is still visible, and celebrate() fires against the live button; the
-       resolved class (dim + hide actions) arrives a beat later so the result
-       registers first. Applying it instantly hid the button before the check
-       could be seen — and zeroed the rect celebrate() measures, which sent
-       the confetti to the viewport's upper-left corner. */
-    setTimeout(function(){ tile.classList.add('resolved'); }, 1100);
-  }
-  async function sendAction(tile, entry, okMsg){
-    var st = tile.querySelector('.attn-status');
-    var btns = tile.querySelectorAll('.attn-btn');
-    if (!token()) { st.textContent = 'Add a GitHub token in the Brain dump section above to enable actions.'; return false; }
-    if (!repo) { st.textContent = 'No repo linked for this buddy yet.'; return false; }
-    btns.forEach(function(b){ b.disabled = true; });
-    st.textContent = 'Working…';
-    try {
-      var NL = String.fromCharCode(10);
-      var stamp = new Date().toLocaleString();
-      var cur = await ghGetFile(repo, 'docs/ingest.md');
-      var base = cur ? cur.text : '# Ingest log — ' + buddyName + NL + NL;
-      var body = {message: 'Attention action for ' + bid, content: b64encode(base + '## ' + stamp + NL + NL + entry + NL + NL)};
-      if (cur && cur.sha) body.sha = cur.sha;
-      await ghApi('/repos/davedellaquila/' + repo + '/contents/docs/ingest.md', 'PUT', body);
-      st.textContent = okMsg;
-      return true;
-    } catch(err){
-      st.textContent = 'Save failed: ' + (err.message || err);
-      btns.forEach(function(b){ b.disabled = false; });
-      return false;
-    }
-  }
-  tiles.forEach(function(tile){
-    var aid = tile.getAttribute('data-attn-id') || '';
-    var textEl = tile.querySelector('.attn-text');
-    var text = textEl ? textEl.textContent.trim() : '';
-    if (isResolved(aid, text)) { paintResolved(tile, 'Marked done', true); return; }
-    tile.addEventListener('click', function(ev){
-      var btn = ev.target.closest ? ev.target.closest('.attn-btn') : null;
-      if (!btn || btn.disabled) return;
-      var act = btn.getAttribute('data-act');
-      var idBit = aid ? ' (attention id: ' + aid + ')' : '';
-      if (act === 'done') {
-        sendAction(tile,
-          'DONE — Dave marked this done on the homepage: "' + text + '"' + idBit + '. Please remove it from the attention list in buddies.json.',
-          'Marked done — the buddy will clear it.').then(function(ok){ if (ok) { setResolved(aid, text); paintResolved(tile, 'Marked done — the buddy will clear it.'); celebrate(btn, tile); } });
-      } else if (act === 'info') {
-        sendAction(tile,
-          'FOLLOW-UP — Dave needs more info on: "' + text + '"' + idBit + '. Please follow up with him.',
-          'Sent — ' + buddyName + ' will follow up.');
-      }
-    });
-  });
-  resolveBuddy();
-})();
-</script>
-
-
-<script>
-(function(){
-  var sec = document.querySelector('.repo-files');
-  if (!sec || sec.dataset.rfInit) return;
-  sec.dataset.rfInit = '1';
-  var bid = sec.getAttribute('data-buddy-id') || (function(){
-    var p = location.pathname.replace(/\/+$/, '');
-    return p.substring(p.lastIndexOf('/') + 1);
-  })();
-  function lsGet(){ try { return JSON.parse(localStorage.getItem('buddyTree.v3') || '{}'); } catch(e){ return {}; } }
-  function token(){ return lsGet().ghToken || ''; }
-  function b64encode(str){
-    var bytes = new TextEncoder().encode(str), bin = '';
-    bytes.forEach(function(b){ bin += String.fromCharCode(b); });
-    return btoa(bin);
-  }
-  async function ghApi(path, method, body){
-    var t = token();
-    if (!t) throw new Error('Add a GitHub token first.');
-    var r = await fetch('https://api.github.com' + path, {
-      method: method || 'GET',
-      headers: {'Authorization': 'Bearer ' + t, 'Accept': 'application/vnd.github+json', 'Content-Type': 'application/json'},
-      body: body ? JSON.stringify(body) : undefined
-    });
-    if (!r.ok) throw new Error('GitHub ' + r.status);
-    return r.status === 204 ? null : await r.json();
-  }
-  async function ghGetFile(repo, path){
-    try {
-      var j = await ghApi('/repos/davedellaquila/' + repo + '/contents/' + path);
-      if (j && j.content) return {
-        text: new TextDecoder().decode(Uint8Array.from(atob(j.content.replace(/\n/g, '')), function(c){ return c.charCodeAt(0); })),
-        sha: j.sha
-      };
-    } catch(e){}
-    return null;
-  }
-  var repo = null;
-  async function resolveRepo(){
-    try {
-      var r = await fetch('../buddies.json', {cache: 'no-store'});
-      var d = await r.json();
-      var buds = d.buddies || [];
-      for (var i = 0; i < buds.length; i++) {
-        if (buds[i].id === bid && buds[i].repo) { repo = buds[i].repo; break; }
-      }
-    } catch(e){}
-  }
-  function esc(s){ return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
-  function inline(s){
-    s = esc(s);
-    s = s.replace(/`([^`]+)`/g, '<code>$1</code>');
-    s = s.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
-    s = s.replace(/(^|[^*])\*([^*\n]+)\*/g, '$1<em>$2</em>');
-    s = s.replace(/\[([^\]]+)\]\((https?:[^)\s]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>');
-    return s;
-  }
-  function mdRender(src){
-    var lines = src.split('\n'), out = [], inList = false, inCode = false, codeBuf = [];
-    function closeList(){ if (inList) { out.push('</ul>'); inList = false; } }
-    for (var i = 0; i < lines.length; i++){
-      var ln = lines[i], m;
-      if (/^```/.test(ln)) {
-        if (inCode) { out.push('<pre><code>' + esc(codeBuf.join('\n')) + '</code></pre>'); codeBuf = []; inCode = false; }
-        else { closeList(); inCode = true; }
-        continue;
-      }
-      if (inCode) { codeBuf.push(ln); continue; }
-      if ((m = ln.match(/^(#{1,4})\s+(.*)/))) {
-        closeList();
-        var lv = Math.min(m[1].length + 1, 4);
-        out.push('<h' + lv + '>' + inline(m[2]) + '</h' + lv + '>');
-        continue;
-      }
-      if (/^\s*(-{3,}|\*{3,})\s*$/.test(ln)) { closeList(); out.push('<hr>'); continue; }
-      if ((m = ln.match(/^\s*[-*]\s+(.*)/)) || (m = ln.match(/^\s*\d+[.)]\s+(.*)/))) {
-        if (!inList) { out.push('<ul>'); inList = true; }
-        out.push('<li>' + inline(m[1]) + '</li>');
-        continue;
-      }
-      if ((m = ln.match(/^>\s?(.*)/))) { closeList(); out.push('<blockquote>' + inline(m[1]) + '</blockquote>'); continue; }
-      if (!ln.trim()) { closeList(); continue; }
-      closeList();
-      out.push('<p>' + inline(ln) + '</p>');
-    }
-    closeList();
-    if (inCode) out.push('<pre><code>' + esc(codeBuf.join('\n')) + '</code></pre>');
-    return out.join('\n');
-  }
-  var locked = sec.querySelector('.rf-locked'), main = sec.querySelector('.rf-main'),
-      list = sec.querySelector('.rf-list'), st = sec.querySelector('.rf-status');
-  /* Accordion files (Dave 2026-10-21): a list of file names; clicking a
-     name toggles that file's contents open inline right below the name.
-     Toggles are independent — several files can be open at once. Contents
-     load lazily on first open and are cached in the item's own state;
-     Edit/Save lives inside the opened panel. */
-  function buildFileSection(f){
-    var wrap = document.createElement('div');
-    wrap.className = 'rf-fileitem';
-    var head = document.createElement('button');
-    head.type = 'button';
-    head.className = 'rf-file';
-    head.setAttribute('aria-expanded', 'false');
-    var nm = document.createElement('span');
-    nm.className = 'rf-name';
-    nm.textContent = '📄 ' + f.name;
-    var dir = document.createElement('span');
-    dir.className = 'rf-dir';
-    dir.textContent = f.path;
-    var chev = document.createElement('span');
-    chev.className = 'rf-chev';
-    chev.textContent = '▸';
-    head.appendChild(nm);
-    head.appendChild(dir);
-    head.appendChild(chev);
-    var panel = document.createElement('div');
-    panel.className = 'rf-panel';
-    panel.hidden = true;
-    var phead = document.createElement('div');
-    phead.className = 'rf-viewhead';
-    var ppath = document.createElement('span');
-    ppath.className = 'rf-path';
-    ppath.textContent = f.path;
-    var editBtn = document.createElement('button');
-    editBtn.type = 'button';
-    editBtn.className = 'attn-btn rf-edit';
-    editBtn.textContent = 'Edit';
-    editBtn.disabled = true;
-    phead.appendChild(ppath);
-    phead.appendChild(editBtn);
-    var bodyEl = document.createElement('div');
-    bodyEl.className = 'rf-body';
-    bodyEl.innerHTML = '<p class="rf-loading">Loading ' + esc(f.path) + '…</p>';
-    var editor = document.createElement('div');
-    editor.className = 'rf-editor';
-    editor.hidden = true;
-    var ta = document.createElement('textarea');
-    ta.className = 'rf-ta';
-    ta.rows = 18;
-    ta.spellcheck = false;
-    ta.setAttribute('aria-label', 'Markdown source for ' + f.path);
-    var actions = document.createElement('div');
-    actions.className = 'attn-actions';
-    var saveBtn = document.createElement('button');
-    saveBtn.type = 'button';
-    saveBtn.className = 'attn-btn primary rf-save';
-    saveBtn.textContent = 'Save to GitHub';
-    var cancelBtn = document.createElement('button');
-    cancelBtn.type = 'button';
-    cancelBtn.className = 'attn-btn rf-cancel';
-    cancelBtn.textContent = 'Cancel';
-    actions.appendChild(saveBtn);
-    actions.appendChild(cancelBtn);
-    editor.appendChild(ta);
-    editor.appendChild(actions);
-    var fst = document.createElement('div');
-    fst.className = 'rf-fstatus attn-status';
-    fst.setAttribute('role', 'status');
-    panel.appendChild(phead);
-    panel.appendChild(bodyEl);
-    panel.appendChild(editor);
-    panel.appendChild(fst);
-    wrap.appendChild(head);
-    wrap.appendChild(panel);
-    var cur = null, loaded = false;
-    function loadOnce(){
-      if (loaded) return;
-      loaded = true;
-      ghGetFile(repo, f.path).then(function(got){
-        if (!got) { loaded = false; bodyEl.innerHTML = '<p class="rf-loading">⚠ Could not load ' + esc(f.path) + ' — close and open it again to retry.</p>'; return; }
-        cur = {path: f.path, sha: got.sha, text: got.text};
-        bodyEl.innerHTML = mdRender(got.text);
-        editBtn.disabled = false;
-      });
-    }
-    head.addEventListener('click', function(){
-      var open = panel.hidden;
-      panel.hidden = !open;
-      head.setAttribute('aria-expanded', open ? 'true' : 'false');
-      chev.textContent = open ? '▾' : '▸';
-      if (open) loadOnce();
-    });
-    editBtn.addEventListener('click', function(){
-      if (!cur) return;
-      ta.value = cur.text;
-      bodyEl.hidden = true;
-      editor.hidden = false;
-      ta.focus();
-    });
-    cancelBtn.addEventListener('click', function(){
-      editor.hidden = true;
-      bodyEl.hidden = false;
-    });
-    saveBtn.addEventListener('click', async function(){
-      if (!cur) return;
-      saveBtn.disabled = true;
-      fst.textContent = 'Saving…';
-      try {
-        var payload = {message: 'Edit ' + cur.path + ' from the homepage', content: b64encode(ta.value), sha: cur.sha};
-        var j = await ghApi('/repos/davedellaquila/' + repo + '/contents/' + cur.path, 'PUT', payload);
-        if (j && j.content && j.content.sha) cur.sha = j.content.sha;
-        cur.text = ta.value;
-        editor.hidden = true;
-        bodyEl.hidden = false;
-        bodyEl.innerHTML = mdRender(cur.text);
-        fst.textContent = '✓ Saved to GitHub (' + repo + '/' + cur.path + ').';
-      } catch(err){
-        var why = (err && err.message) || String(err);
-        fst.textContent = /409|422/.test(why)
-          ? '⚠ GitHub said the file changed since you loaded it (' + why + ') — reload this page and try again.'
-          : '⚠ Save failed (' + why + ') — your edit is still in the editor.';
-      }
-      saveBtn.disabled = false;
-    });
-    return wrap;
-  }
-  async function init(){
-    await resolveRepo();
-    if (!repo) {
-      locked.hidden = false;
-      locked.textContent = 'No repo is linked for this buddy yet, so there are no repo files to show.';
-      return;
-    }
-    if (!token()) { locked.hidden = false; return; }
-    main.hidden = false;
-    st.textContent = 'Loading files…';
-    var files = [];
-    async function grab(dir){
-      try {
-        var j = await ghApi('/repos/davedellaquila/' + repo + (dir ? '/contents/' + dir : '/contents'));
-        if (Array.isArray(j)) j.forEach(function(e){
-          if (e.type === 'file' && /\.md$/i.test(e.name)) files.push({name: e.name, path: e.path});
-        });
-      } catch(e){}
-    }
-    await grab('');
-    await grab('docs');
-    files.sort(function(a, b){ return a.path < b.path ? -1 : 1; });
-    if (!files.length) { st.textContent = 'No markdown files found in the repo yet.'; return; }
-    st.textContent = '';
-    files.forEach(function(f){
-      list.appendChild(buildFileSection(f));
-    });
-  }
-  init();
-})();
-</script>
-
-
-<script>
-(function(){
-  var parts = location.pathname.split('/');
-  var bid = '';
-  for (var i = parts.length - 1; i >= 0; i--) { if (parts[i]) { bid = parts[i]; break; } }
-  function applyName(name){
-    if (!name) return;
-    var els = document.querySelectorAll('[data-buddy-name]');
-    for (var k = 0; k < els.length; k++) els[k].textContent = name;
-    var ta = document.querySelector('.dumpbox textarea');
-    if (ta) ta.setAttribute('placeholder', "Dump what's on your mind about " + name + "…");
-  }
-  /* Pending renames (Dave 2026-10-18): when the dashboard has no GitHub token,
-     a rename queues in localStorage instead of reaching the registry. The
-     dashboard and homepages share an origin, so the homepage reads that queue
-     here — a pending rename supersedes the registry name, which is why a freshly
-     renamed buddy kept showing its old name after refresh. */
-  function pendingName(){
-    try {
-      var s = JSON.parse(localStorage.getItem('buddyTree.v3') || '{}');
-      if (s && s.pendingRenames && s.pendingRenames[bid]) return s.pendingRenames[bid];
-    } catch(e){}
-    return null;
-  }
-  var pn = pendingName();
-  if (pn) applyName(pn);
-  try {
-    fetch('../buddies.json', {cache: 'no-store'}).then(function(r){ return r.json(); }).then(function(d){
-      var buds = (d && d.buddies) || [];
-      for (var j = 0; j < buds.length; j++) {
-        if (buds[j].id === bid && buds[j].name) { applyName(pendingName() || buds[j].name); break; }
-      }
-    }).catch(function(){});
-  } catch(e){}
-  /* Live rename (Dave 2026-10-16): the dashboard broadcasts renames via
-     localStorage, so an open page updates its name without a refresh.
-     Same browser only — other devices pick it up on their next load. */
-  window.addEventListener('storage', function(e){
-    if (e.key !== 'buddyTree.rename' || !e.newValue) return;
-    try {
-      var d = JSON.parse(e.newValue);
-      if (d && d.id === bid && d.name) applyName(d.name);
-    } catch(err){}
-  });
-})();
-</script>
-
 </body>
 </html>
