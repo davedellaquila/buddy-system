@@ -3046,9 +3046,18 @@ html.light .wc-got{background:#007AFF}
      only — the desktop panel keeps its current sizes. */
   #view-buddy.sheet .bp-topnav{flex-wrap:wrap;row-gap:8px;padding-right:56px}
   #view-buddy.sheet .bp-topnav #bp-more{font-size:1.75rem;min-width:64px;height:54px;padding:0 8px;display:inline-flex;align-items:center;justify-content:center}
-  #view-buddy.sheet .bp-topnav button.bp-markbtn{width:64px;height:54px;font-size:2.75rem;border-radius:12px}
+  #view-buddy.sheet .bp-topnav button.bp-markbtn{width:64px;height:54px;font-size:1.375rem;border-radius:12px}
+  /* Dave 2026-10-31 (design pass on 1128): the tap targets stay 64x54,
+     but filled glyphs at 44px read enormous next to the Back label and
+     the dots — and the .on state's full var(--active) fill turned the
+     whole target into a pale-blue block with a giant gold star in it.
+     Glyphs now sit at 22px, optically in the Back/··· family, and the
+     on state drops the filled block entirely — the gold star / amber
+     flag carry the state in their own color, the way the small
+     desktop buttons read. */
+  #view-buddy.sheet .bp-topnav button.bp-markbtn.on{background:transparent}
   #view-buddy.sheet .bp-topnav #bp-fav{margin-left:auto}
-  #view-buddy.sheet .bp-topnav .bp-collapse-btn{width:64px;height:54px;font-size:2.5rem;border-radius:12px;margin-left:auto}
+  #view-buddy.sheet .bp-topnav .bp-collapse-btn{width:64px;height:54px;font-size:1.75rem;border-radius:12px;margin-left:auto}
   /* First-open invariant (Jonny's first-open crit, 2026-10-23): the
      resting geometry holds at first paint, in every state. boot-hold
      (set by the pre-app boot script on phone loads, released by the
