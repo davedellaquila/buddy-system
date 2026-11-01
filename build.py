@@ -4408,30 +4408,39 @@ function renderNav(){
   }
   /* Dave 2026-10-15: per-branch ancestor chain — a buddy under two parents
      (a DAG diamond) renders under both; a true cycle can't loop the sidebar. */
-  function row(id, depth, chain){
+  function row(id, depth, chain, rootTree){
     const b = byId[id]; if(!b) return;
     const anc = chain ? new Set(chain) : new Set(); anc.add(id);
     if (!S.navCollapsed || typeof S.navCollapsed !== 'object') S.navCollapsed = {};
-    if (words.length && !matches(b)) { (kidsOf[id] || []).forEach(c => row(c.id, depth+1)); return; }
+    if (words.length && !matches(b)) { (kidsOf[id] || []).forEach(c => row(c.id, depth+1, null, rootTree)); return; }
     const un = descUnseen(id);
     const kind = b.kind === 'root' ? 'root' : (b.parent === ROOT_ID ? 'direct' : b.kind);
     const kids = kidsOf[id] || [];
     const kidIds = sortSiblingsByOrder(kids.map(k => k.id), id);
     const hasKids = kids.length > 0;
-    const collapsed = hasKids && !words.length && !!S.navCollapsed[id];
+    const collapsed = id !== ROOT_ID && hasKids && !words.length && !!S.navCollapsed[id];
+    /* Dave 2026-10-31: the root (Astro) is the ONLY non-collapsible
+       node — no chevron, ever — and its subtree re-anchors one chevron
+       slot (24px) further left into the dead space that slot reserved:
+       deeper rows use (depth-1)*16 and the root uses 16px — its old 8px
+       plus the 8px flex gap the removed chevron used to carry — so
+       every name in the subtree sits exactly 24px left with the depth
+       steps between them unchanged. Other depth-0 trees keep the old
+       math. */
+    const padL = rootTree ? (depth === 0 ? 16 : (depth - 1) * 16) : (8 + depth * 16);
     h += '<button class="brow'+((S.projectId===id || S.sel==='buddy:'+id)?' sel':'')+(un?' has-unseen':'')+(isDormant(id)?' dormant':'')+'" data-buddy="'+id+'"'
       + ' draggable="'+(id===ROOT_ID?'false':'true')+'"'
-      + ' style="padding-left:'+(8+depth*16)+'px" title="'+escHtml(b.tagline||'')+'">'
-      + (hasKids ? '<span class="ctog has-kids'+(collapsed?' collapsed':'')+'" data-ctog="'+id+'" title="'+(collapsed?'Expand':'Collapse')+' \u2014 Shift+click applies to the whole subtree"><i class="chev">\u203a</i></span>' : '')
+      + ' style="padding-left:'+padL+'px" title="'+escHtml(b.tagline||'')+'">'
+      + (hasKids && id !== ROOT_ID ? '<span class="ctog has-kids'+(collapsed?' collapsed':'')+'" data-ctog="'+id+'" title="'+(collapsed?'Expand':'Collapse')+' \u2014 Shift+click applies to the whole subtree"><i class="chev">\u203a</i></span>' : '')
       + '<span class="bdot"></span><span class="bicon">'+escHtml(b.icon||'')+'</span><span class="bname">'+escHtml(dispName(b))+'</span>'
       + '<span class="bkind">'+kind+'</span>'
       + '<span class="binfo" data-buddy-info="'+id+'" title="Open '+escHtml(dispName(b))+' details" style="margin-left:auto;padding:2px 6px;opacity:0;transition:opacity 0.15s;cursor:pointer" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0">\u24d8</span></button>';
-    if (!collapsed) kidIds.forEach(kid => { if (!anc.has(kid)) row(kid, depth+1, anc); });
+    if (!collapsed) kidIds.forEach(kid => { if (!anc.has(kid)) row(kid, depth+1, anc, rootTree); });
   }
   if (S.panelTab === 'recents') { h = recentsHtml(); }
   else {
     sortSiblingsByOrder(ROOT_ORDER.filter(id => { const b = byId[id]; return b && effParents(b).length === 0; }), '__root__')
-      .forEach(id => row(id, 0));
+      .forEach(id => row(id, 0, null, id === ROOT_ID));
   }
   document.getElementById('buddy-nav').innerHTML = h;
   syncPanelTabs();
@@ -14948,6 +14957,7 @@ document.addEventListener('click', e => {
   const ctog = e.target.closest && e.target.closest('[data-ctog]');
   if (ctog) {
     const cid = ctog.getAttribute('data-ctog');
+    if (cid === ROOT_ID) return; // Dave 2026-10-31: the root never collapses — the one exception in the tree.
     if (!S.navCollapsed || typeof S.navCollapsed !== 'object') S.navCollapsed = {};
     const willCollapse = !S.navCollapsed[cid];
     if (e.shiftKey) {
