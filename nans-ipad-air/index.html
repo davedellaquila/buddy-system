@@ -171,7 +171,7 @@ footer{margin-top:36px;padding-top:18px;border-top:1px solid var(--border);color
   if (!box || box.dataset.dumpInit) return;
   box.dataset.dumpInit = '1';
   var bid = box.getAttribute('data-buddy-id') || (function(){
-    var p = location.pathname.replace(/\\/+$/, '');
+    var p = location.pathname.replace(/\/+$/, '');
     return p.substring(p.lastIndexOf('/') + 1);
   })();
   var ta = box.querySelector('textarea'),
@@ -201,7 +201,7 @@ footer{margin-top:36px;padding-top:18px;border-top:1px solid var(--border);color
     try {
       var j = await ghApi('/repos/davedellaquila/' + repo + '/contents/' + path);
       if (j && j.content) return {
-        text: new TextDecoder().decode(Uint8Array.from(atob(j.content.replace(/\\n/g, '')), function(c){ return c.charCodeAt(0); })),
+        text: new TextDecoder().decode(Uint8Array.from(atob(j.content.replace(/\n/g, '')), function(c){ return c.charCodeAt(0); })),
         sha: j.sha
       };
     } catch(e){}
@@ -354,7 +354,7 @@ footer{margin-top:36px;padding-top:18px;border-top:1px solid var(--border);color
   if (!tiles.length) return;
   var dumpbox = document.querySelector('.dumpbox');
   var bid = (dumpbox && dumpbox.getAttribute('data-buddy-id')) || (function(){
-    var p = location.pathname.replace(/\\/+$/, '');
+    var p = location.pathname.replace(/\/+$/, '');
     return p.substring(p.lastIndexOf('/') + 1);
   })();
   function lsGet(){ try { return JSON.parse(localStorage.getItem('buddyTree.v3') || '{}'); } catch(e){ return {}; } }
@@ -380,7 +380,7 @@ footer{margin-top:36px;padding-top:18px;border-top:1px solid var(--border);color
     try {
       var j = await ghApi('/repos/davedellaquila/' + repo + '/contents/' + path);
       if (j && j.content) return {
-        text: new TextDecoder().decode(Uint8Array.from(atob(j.content.replace(/\\n/g, '')), function(c){ return c.charCodeAt(0); })),
+        text: new TextDecoder().decode(Uint8Array.from(atob(j.content.replace(/\n/g, '')), function(c){ return c.charCodeAt(0); })),
         sha: j.sha
       };
     } catch(e){}
