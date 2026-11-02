@@ -797,33 +797,62 @@
   .secpage .storyitem h3 a:hover{color:var(--accent)}
   .secpage .lede{font-size:16px;line-height:1.65;color:var(--ink);max-width:70ch;margin:10px 0 6px}
 
+  
+  .sec-head h2 a{color:inherit;text-decoration:none;border-bottom:2px solid transparent}
+  .sec-head h2 a:hover{color:var(--accent);border-bottom-color:var(--accent)}
+  .mini-mast{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 20px;border-bottom:3px double var(--ink);margin-bottom:8px;flex-wrap:wrap}
+  .mini-mast a.brand{font-family:Georgia,'Times New Roman',serif;font-weight:700;font-size:20px;color:var(--ink);text-decoration:none}
+  .mini-mast .ed{font-size:12px;color:var(--muted)}
+  .kicker{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:18px 0 4px}
+  .kicker a{color:var(--accent);text-decoration:none}
+  .detail h1{font-family:Georgia,'Times New Roman',serif;font-size:clamp(26px,5vw,40px);line-height:1.15;margin:6px 0 10px;letter-spacing:-.01em}
+  .detail h4.sec{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--accent);margin:22px 0 6px}
+  .detail p.body{font-size:16px;line-height:1.65;margin:0 0 12px;max-width:68ch}
+  .sourcebox{border:1px solid var(--rule);border-left:4px solid var(--accent);border-radius:8px;padding:12px 16px;margin:18px 0;max-width:68ch}
+  .sourcebox p{font-size:14px;line-height:1.6;margin:6px 0}
+  .sourcebox .flag{display:inline-block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;background:#fde68a;color:#7c2d12;border-radius:4px;padding:2px 8px;margin-bottom:4px}
+  .read-original{display:inline-block;margin:10px 0;padding:10px 20px;background:var(--accent);color:#fff !important;border-radius:8px;font-weight:700;text-decoration:none;font-size:15px}
+  .related{margin-top:28px;border-top:1px solid var(--rule);padding-top:14px}
+  .related h4.sec{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:0 0 10px}
+  .related ul{list-style:none;margin:0;padding:0}
+  .related li{margin:0 0 10px;font-size:15px;line-height:1.45}
+  .related a{color:var(--ink);text-decoration:none;border-bottom:1px solid var(--rule)}
+  .related a:hover{color:var(--accent);border-bottom-color:var(--accent)}
+  .backfoot{margin:30px 0 40px;font-size:14px}
+  .backfoot a{color:var(--accent);text-decoration:none;font-weight:600}
+  .secpage .storyitem{border-bottom:1px solid var(--rule);padding:16px 0}
+  .secpage .storyitem h3{font-size:20px;margin:0 0 6px;line-height:1.3}
+  .secpage .storyitem h3 a{color:var(--ink);text-decoration:none}
+  .secpage .storyitem h3 a:hover{color:var(--accent)}
+  .secpage .lede{font-size:16px;line-height:1.65;color:var(--ink);max-width:70ch;margin:10px 0 6px}
+
   </style>
 </head>
 <body>
 <header class="mini-mast">
   <a class="brand" href="../index.html">📰 The Morning Edition</a>
-  <span class="ed">Sunday, November 01, 2026</span>
+  <span class="ed">Monday, November 02, 2026</span>
   <button id="themeBtn" class="voice-change" style="margin-left:0">Theme: Auto</button>
 </header>
 <main class="detail secpage" style="max-width:860px;margin:0 auto;padding:0 20px">
   <p class="kicker">Section</p>
   <h1>Engineering</h1>
-  <p class="lede">The agent-in-the-workflow week: DeepSeek open-sources its Super-agent prototype (GitHub requests in, pull requests out; median task 12.4 minutes in synthetic tests; workers run under the operator&#x27;s account, so the README&#x27;s dedicated-account prescription is the design). GitHub answers the supply-chain side with an npm firewall -- advisory blocks plus a minimum-age cooldown at install time -- and its Copilot security extension turns CodeQL alerts into reviewed local fixes that never leave the working copy unpushed.</p>
+  <p class="lede">The supply-chain and platform-security week: Radware traces a 43-minute command-injection campaign against 61 GitHub repos aimed at CI/CD secrets; GitHub&#x27;s SSH brownout lands Wednesday (legacy ssh-rsa and an old DH method out, permanent removal Jan. 13); and a CVSS 10.0 GitLab/Ruby flaw (CVE-2026-97229, CISA-listed, exploited) survived Alpine&#x27;s update because the Ruby underneath never got fixed -- check pull dates, not just version numbers.</p>
   <div class="storyitem">
-      <h3><a href="../articles/2026-11-01-deepseek-open-sources-its-super-agent-an-mit-licensed-p.html">DeepSeek open-sources its Super-agent: an MIT-licensed prototype that takes work requests from GitHub and answers with pull requests</a></h3>
-      <p class="byline">Asia Daily</p>
-      <p class="body">DeepSeek’s Harness team published dsh-superagent-prototype on Oct. 31: a proactive coding agent for one GitHub repository that listens to GitHub (and optionally Feishu), opens a work item when an authorized person asks, works in its own session and directory, and replies in the original conversation — potentially with a pull request. In the team’s synthetic test (about 300 simulated messages, roughly 20 work requests), half the tasks finished within 12.4 minutes and 95% within 15.7, against 29.5 minutes at the 95th percentile for a single-session setup — at higher cached-token cost. The repo passed 4,100 stars by Sunday morning. The catch is in the design: workers execute commands under the operator’s account without per-action approval, so the README prescribes a dedicated agent GitHub account, a short authorized-people list and blocked commands. Research prototype, not production software — the public code differs from the internal system.</p>
-      <p class="body"><em>Why it matters:</em> The buddy system, productized by someone else: an open-source agent that takes GitHub requests and returns PRs -- with the README&#x27;s own security prescription (dedicated account, allowlist, blocked commands) as the real design document.</p>
+      <h3><a href="../articles/2026-11-02-hackers-target-61-github-repositories-with-command-inje.html">Hackers target 61 GitHub repositories with command-injection attacks to steal CI/CD secrets: 83 malicious issues and PRs in 43 minutes</a></h3>
+      <p class="byline">Cybersecurity News</p>
+      <p class="body">Cybersecurity News, Nov. 2, on Radware’s investigation: attackers posted 83 malicious issues, pull requests and comments on Sept. 1 — 77 within about 43 minutes — placing Bash $() command-substitution payloads in user-controlled text that workflows pasted directly into shell scripts. Targets included Google LangExtract, Trivy, Brave Browser, MLflow, ToolJet and PX4-Autopilot; every verified payload pointed to one server on port 8443, with a separate collection ID per attempt. Execution inside two workflows was confirmed; GitHub Actions secrets are not automatically available to every workflow, so execution alone does not prove credentials were stolen.</p>
+      <p class="body"><em>Why it matters:</em> User text pasted into shell scripts is the oldest injection sin, now at CI/CD scale: 61 repos, 43 minutes. Anyone with Actions workflows taking issue/PR text should audit today.</p>
     </div><div class="storyitem">
-      <h3><a href="../articles/2026-11-01-github-previews-an-npm-firewall-block-malicious-and-too.html">GitHub previews an npm firewall: block malicious and too-fresh packages at install time, before the agent or the CI runner pulls them</a></h3>
-      <p class="byline">The Hacker News</p>
-      <p class="body">The Hacker News, Oct. 29: GitHub’s package firewall, in public preview for Enterprise Cloud, sits between endpoints or internal registries and upstream repositories, inspecting metadata and downloads against the GitHub Advisory Database — blocking known malware, blocking by vulnerability severity, and enforcing a cooldown (minimum package age, 1-365 days, default 1) so brand-new releases can’t be installed until scanners have had their look. The timing is the point: AI agents and CI runners now install dependencies automatically to complete tasks. Rust 1.100, due Nov. 12, readies the same idea for crates.</p>
-      <p class="body"><em>Why it matters:</em> Install-time is the new perimeter: when agents and CI runners pull dependencies unattended, a minimum-age cooldown is cheap, structural defense. Anyone running agents on their repos should read the policy list.</p>
+      <h3><a href="../articles/2026-11-02-github-ssh-security-changes-first-brownout-nov-4-for-le.html">GitHub SSH security changes: first brownout Nov. 4 for legacy ssh-rsa (SHA-1) and an old Diffie-Hellman method, permanent removal Jan. 13, 2027</a></h3>
+      <p class="byline">TechnologyHQ</p>
+      <p class="body">TechnologyHQ’s checklist, Nov. 2: GitHub retires RSA signatures using SHA-1 and the diffie-hellman-group-exchange-sha256 key exchange, with brownouts Nov. 4 and Dec. 9 and permanent removal Jan. 13, 2027. Since Oct. 14, newly uploaded RSA keys must be at least 3,072 bits, and a hybrid post-quantum exchange (mlkem768x25519-sha256) is enabled in specified environments. Most modern clients already speak SHA-2 RSA and need no new key; HTTPS remotes are out of scope. Check CI runners and old automation before Wednesday’s brownout.</p>
+      <p class="body"><em>Why it matters:</em> Actionable Wednesday: GitHub&#x27;s Nov. 4 SSH brownout will surface every stale client and CI runner you forgot. The checklist is short -- modern SHA-2 clients need nothing.</p>
     </div><div class="storyitem">
-      <h3><a href="../articles/2026-11-01-fix-the-codeql-alert-where-you-code-githubs-copilot-app.html">Fix the CodeQL alert where you code: GitHub’s Copilot app security extension turns scanning alerts into reviewed local fixes</a></h3>
-      <p class="byline">Medium</p>
-      <p class="body">In public preview since Oct. 28, the security extension puts open code-scanning alerts, sorted by severity, in a Security canvas beside the Copilot agent session; Explain and Fix run on the session’s own agent and model, and every fix stays in the local working copy until a human reviews and pushes — the alert closes only after a rescan. The design target is the unglamorous reason alerts pile up: the hop between github.com, the editor and rebuilt context. Enterprise controls and AI-credit costs are part of the write-up.</p>
-      <p class="body"><em>Why it matters:</em> The fix stays local until a human pushes -- that one design choice is the difference between an agent that helps and an agent that ships. The alert-pile problem it solves is every team&#x27;s problem now.</p>
+      <h3><a href="../articles/2026-11-02-cve-2026-97229-alpines-gitlab-update-missed-the-ruby-fi.html">CVE-2026-97229: Alpine’s GitLab update missed the Ruby fix — a CVSS 10.0 Onigmo overflow, exploited in the wild, CISA-listed Oct. 29</a></h3>
+      <p class="byline">TrickyWorld</p>
+      <p class="body">TrickyWorld’s Nov. 2 write-up: Alpine’s GitLab 19.3.6 upgrade still shipped a vulnerable Ruby — CVE-2026-97229, an integer overflow in Ruby’s Onigmo regex engine enabling unauthenticated RCE, scored 10.0 by GitLab and in CISA’s Known Exploited Vulnerabilities catalog since Oct. 29, with FIRST estimating a 27% exploitation chance in the next 30 days. Official fixes are GitLab 19.2.8, 19.3.5 and 19.4.2, and custom images also need Ruby 3.3.13, 3.4.12 or 4.0.9 or later; Alpine 19.3.6 images pulled before Oct. 27 remain vulnerable and must be pulled again. Six public PoC repositories are explicitly unverified — some are fake or malicious.</p>
+      <p class="body"><em>Why it matters:</em> A CVSS 10.0, exploited, CISA-listed -- and a distro image that &#x27;updated&#x27; without fixing the Ruby underneath. Pull dates matter: pre-Oct. 27 Alpine 19.3.6 images are still vulnerable.</p>
     </div>
   <section class="suggestbox" data-buddy-id="news-buddy">
     <h2>Suggestions</h2>
