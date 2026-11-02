@@ -379,7 +379,7 @@ body.sb-closed #pane-toggles .ptoggle{padding:6px 4px}
 .brow.dragging{opacity:.35}
 .brow.drop-target{background:var(--active);box-shadow:inset 0 0 0 2px var(--accent)}
 .bp-icon{font-size:2.375rem;line-height:1;position:relative;overflow:hidden;display:inline-flex;align-items:center;justify-content:center}
-.bp-avatarimg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.bp-avatarimg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:1}
 .bp-avaemoji{position:relative}
 .toast{position:fixed;bottom:26px;left:50%;transform:translateX(-50%);background:var(--panel);
   border:1px solid var(--accent);color:var(--text);padding:10px 20px;border-radius:999px;
