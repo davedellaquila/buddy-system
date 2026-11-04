@@ -1181,6 +1181,30 @@ body:has(#token-pill) #journal-bar{margin-right:204px}
    column edge instead. Closed and floating-sheet states keep the 68px:
    the corner button really is over the bar then. */
 body:has(#view-buddy.panel.active:not(.floating)) #journal-bar{margin-right:0}
+/* Dave 2026-11-03: on iPad and desktop the framed-homepage view zeroes
+   #main's padding (the full-bleed exemption above), so in homepage mode
+   the bar's base margins leave it starting at the screen edge, under
+   the collapsed rail's disc column — "What changed?" and "Revert"
+   clipped and untappable. In homepage mode at tablet widths and up,
+   give the bar the phone treatment's clearances on the left and top:
+   76px clears the rail column with air, 12px lifts it off the top
+   edge. The right side stays with the base, token-pill, and
+   docked-panel rules above. */
+@media (min-width:640px){
+  body:has(#main.homepage-mode) #journal-bar{margin-left:76px;margin-top:12px}
+}
+/* Same gap on the right (Dave 2026-11-03): the docked-panel margin
+   reset above assumes the anchored dock, where #main yields the
+   panel's width. In the floating sidebar style there is no yield —
+   the fixed panel overlays #main and the bar's Dismiss end slides
+   under the panel. When the body is not anchored, the bar itself
+   steps in by the panel's width, using the dock rules' own measure. */
+@media (min-width:640px) and (max-width:1100px){
+  body:not(.sb-anchored):has(#view-buddy.panel.active:not(.floating)) #journal-bar{margin-right:calc(var(--bpw, min(416px, calc(100vw - 250px))) + 16px)}
+}
+@media (min-width:1101px){
+  body:not(.sb-anchored):has(#view-buddy.panel.active:not(.floating)) #journal-bar{margin-right:calc(var(--bpw, 440px) + 16px)}
+}
 #journal-bar.show{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 #journal-bar ul{margin:8px 0 4px;padding-left:18px;display:none}
 #journal-bar.open ul{display:block}
