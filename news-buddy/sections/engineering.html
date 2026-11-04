@@ -855,33 +855,62 @@
   .secpage .storyitem h3 a:hover{color:var(--accent)}
   .secpage .lede{font-size:16px;line-height:1.65;color:var(--ink);max-width:70ch;margin:10px 0 6px}
 
+  
+  .sec-head h2 a{color:inherit;text-decoration:none;border-bottom:2px solid transparent}
+  .sec-head h2 a:hover{color:var(--accent);border-bottom-color:var(--accent)}
+  .mini-mast{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 20px;border-bottom:3px double var(--ink);margin-bottom:8px;flex-wrap:wrap}
+  .mini-mast a.brand{font-family:Georgia,'Times New Roman',serif;font-weight:700;font-size:20px;color:var(--ink);text-decoration:none}
+  .mini-mast .ed{font-size:12px;color:var(--muted)}
+  .kicker{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:18px 0 4px}
+  .kicker a{color:var(--accent);text-decoration:none}
+  .detail h1{font-family:Georgia,'Times New Roman',serif;font-size:clamp(26px,5vw,40px);line-height:1.15;margin:6px 0 10px;letter-spacing:-.01em}
+  .detail h4.sec{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--accent);margin:22px 0 6px}
+  .detail p.body{font-size:16px;line-height:1.65;margin:0 0 12px;max-width:68ch}
+  .sourcebox{border:1px solid var(--rule);border-left:4px solid var(--accent);border-radius:8px;padding:12px 16px;margin:18px 0;max-width:68ch}
+  .sourcebox p{font-size:14px;line-height:1.6;margin:6px 0}
+  .sourcebox .flag{display:inline-block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;background:#fde68a;color:#7c2d12;border-radius:4px;padding:2px 8px;margin-bottom:4px}
+  .read-original{display:inline-block;margin:10px 0;padding:10px 20px;background:var(--accent);color:#fff !important;border-radius:8px;font-weight:700;text-decoration:none;font-size:15px}
+  .related{margin-top:28px;border-top:1px solid var(--rule);padding-top:14px}
+  .related h4.sec{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:0 0 10px}
+  .related ul{list-style:none;margin:0;padding:0}
+  .related li{margin:0 0 10px;font-size:15px;line-height:1.45}
+  .related a{color:var(--ink);text-decoration:none;border-bottom:1px solid var(--rule)}
+  .related a:hover{color:var(--accent);border-bottom-color:var(--accent)}
+  .backfoot{margin:30px 0 40px;font-size:14px}
+  .backfoot a{color:var(--accent);text-decoration:none;font-weight:600}
+  .secpage .storyitem{border-bottom:1px solid var(--rule);padding:16px 0}
+  .secpage .storyitem h3{font-size:20px;margin:0 0 6px;line-height:1.3}
+  .secpage .storyitem h3 a{color:var(--ink);text-decoration:none}
+  .secpage .storyitem h3 a:hover{color:var(--accent)}
+  .secpage .lede{font-size:16px;line-height:1.65;color:var(--ink);max-width:70ch;margin:10px 0 6px}
+
   </style>
 </head>
 <body>
 <header class="mini-mast">
   <a class="brand" href="../index.html">📰 The Morning Edition</a>
-  <span class="ed">Tuesday, November 03, 2026</span>
+  <span class="ed">Wednesday, November 04, 2026</span>
   <button id="themeBtn" class="voice-change" style="margin-left:0">Theme: Auto</button>
 </header>
 <main class="detail secpage" style="max-width:860px;margin:0 auto;padding:0 20px">
   <p class="kicker">Section</p>
   <h1>Engineering</h1>
-  <p class="lede">Patch week, in order: Canonical&#x27;s LXD flaw CVE-2026-112816 scores CVSS 10.0 (fixes out since Oct. 29) in the manager beneath MicroCloud; Node2Shell -- the Brotli flaw inside Node.js, CVE-2026-111497 -- is exploited and KEV-listed, fixed only on the 22/24/26 lines; and GitHub&#x27;s first SSH brownout lands tomorrow, Nov. 4, surfacing every stale ssh-rsa client before permanent removal on Jan. 13, 2027.</p>
+  <p class="lede">Action day on three fronts: GitHub&#x27;s first SSH brownout runs today (legacy ssh-rsa and the old DH exchange go dark briefly; permanent removal Jan. 13, 2027 -- today&#x27;s breakage is the free audit). F5 documents the PHP2Shell-plus-Fragnesia chain compromising 25 Palo Alto PAN-OS systems and tunneling into a government-affiliated network, with patch levels named. And WordPress&#x27;s upgrade-race CVE-2026-119977 is KEV-listed as actively exploited, due Nov. 6 -- block the upgrade folder before you patch, and preserve logs first.</p>
   <div class="storyitem">
-      <h3><a href="../articles/2026-11-03-critical-lxd-flaw-cve-2026-112816-scores-a-perfect-cvss.html">Critical LXD flaw CVE-2026-112816 scores a perfect CVSS 10.0: a certificate-validation hole in the HTTPS API of Canonical’s container and VM manager</a></h3>
-      <p class="byline">PBX Science</p>
-      <p class="body">PBX Science, Nov. 2: Canonical disclosed CVE-2026-112816, a certificate-validation flaw in the HTTPS API of LXD — its container and virtual-machine manager, and the foundation of MicroCloud — rated CVSS 4.0 10.0. Fixed releases have been available since Oct. 29; the CVE record published Oct. 30 (advisory GHSA-99jp-jwmc-65p4). The public records do not say who found the flaw; the earliest dated entry is the Oct. 19 CVE reservation. Anyone running LXD or MicroCloud with the API exposed should be on a fixed release already — this is the week’s patch-first item for homelab and infrastructure alike.</p>
-      <p class="body"><em>Why it matters:</em> A perfect 10.0 in the manager under MicroCloud: if LXD&#x27;s API is reachable in your stack, the fixed release (out since Oct. 29) is today&#x27;s first patch.</p>
+      <h3><a href="../articles/2026-11-04-today-is-githubs-first-ssh-brownout-legacy-ssh-rsa-sha.html">Today is GitHub’s first SSH brownout: legacy ssh-rsa (SHA-1) and diffie-hellman-group-exchange-sha256 go dark briefly — permanent removal Jan. 13, 2027</a></h3>
+      <p class="byline">GitHub Changelog</p>
+      <p class="body">GitHub’s changelog, action day: the Nov. 4 brownout temporarily removes the ssh-rsa signature type (RSA with SHA-1, including SHA-1 certificates) and the diffie-hellman-group-exchange-sha256 key exchange, ahead of a second brownout Dec. 9 and permanent removal Jan. 13, 2027 (GitHub Enterprise Server 3.25). Since Oct. 14, newly uploaded RSA keys must be at least 3,072 bits, and the post-quantum mlkem768x25519-sha256 exchange is supported on github.com and GHES Cloud with Data Residency (except the U.S. region). Most modern clients already sign with SHA-2 RSA and need no new key; HTTPS remotes are untouched. Today’s failures are the free audit: whatever breaks is what Jan. 13 would have broken permanently.</p>
+      <p class="body"><em>Why it matters:</em> Actionable today: whatever SSH automation breaks in the brownout is what Jan. 13 breaks permanently. GitHub&#x27;s own changelog is the checklist; HTTPS users can stand down.</p>
     </div><div class="storyitem">
-      <h3><a href="../articles/2026-11-03-node2shell-cve-2026-111497-the-brotli-flaw-inside-node.html">Node2Shell (CVE-2026-111497): the Brotli flaw inside Node.js is exploited in the wild — fixed in 22.23.4, 24.22.2 and 26.12.1; Node 20, 23 and 25 got no fix</a></h3>
-      <p class="byline">Sentilio</p>
-      <p class="body">Sentilio’s guide: a memory flaw in Brotli, the compression library built into Node.js, lets an attacker run code on a server by sending compressed data the app unpacks — no login needed. Affected: Node.js 22, 24 and 26 before the Oct. 21 releases, and Node 20, 23, 25 and older, for which no fix was released. Fix: update to 22.23.4, 24.22.2 or 26.12.1 or later, restart, and rebuild container images — a pinned Docker tag such as node:24.22.0 stays vulnerable, and blocking Brotli at a proxy does not protect fetch() calls. ELLIO reported exploit traffic aimed at Node 24.22.0 on Oct. 26; CISA added the flaw to the KEV catalog Oct. 27.</p>
-      <p class="body"><em>Why it matters:</em> Exploited, KEV-listed, and unpatched on three release lines: Node2Shell is the Brotli story with an action list -- update the supported lines, rebuild images, unpin the tags.</p>
+      <h3><a href="../articles/2026-11-04-f5s-nov-4-threat-bulletin-attackers-chained-php2shell-w.html">F5’s Nov. 4 threat bulletin: attackers chained PHP2Shell with the Fragnesia kernel flaw to compromise 25 Palo Alto PAN-OS systems and tunnel into a U.S. government-affiliated network</a></h3>
+      <p class="byline">F5 Labs</p>
+      <p class="body">F5 Labs’ Weekly Threat Bulletin, Nov. 4: threat actors compromised 25 Palo Alto Networks PAN-OS systems — 24 perimeter firewalls and one internal management server — by chaining the critical PHP2Shell RCE flaws (CVE-2026-109618 and CVE-2026-109619, CVSS 9.2, in PHP’s session-upload handling) with the Fragnesia Linux kernel privilege-escalation flaw (CVE-2026-46300) to reach root. The custom exploit was tailored to the uniform PHP 8.0.30 build of the PAN-OS appweb management server; from there the operators set a persistent reverse SSH tunnel into a U.S. government-affiliated environment and harvested directory-service credentials. Mitigation: apply PAN-OS remediations, update standalone PHP to 8.2.35, 8.3.36, 8.4.27 or 8.5.12, or disable session.upload_progress.enabled to close the upload-progress path. The PHP2Shell saga this paper has tracked since Oct. 23 now has a named victim class.</p>
+      <p class="body"><em>Why it matters:</em> The PHP2Shell chain reaches named infrastructure: 25 PAN-OS firewalls, root via Fragnesia, a tunnel into a government-affiliated network. Patch levels are printed in the card -- 8.5.12 closes the PHP half.</p>
     </div><div class="storyitem">
-      <h3><a href="../articles/2026-11-03-tomorrow-nov-4-githubs-first-ssh-brownout-legacy-ssh-rs.html">Tomorrow, Nov. 4: GitHub’s first SSH brownout — legacy ssh-rsa (SHA-1) and an old Diffie-Hellman method go dark briefly ahead of permanent removal Jan. 13, 2027</a></h3>
-      <p class="byline">TechnologyHQ</p>
-      <p class="body">TechnologyHQ’s checklist, carried to its action day: GitHub retires RSA signatures using SHA-1 and the diffie-hellman-group-exchange-sha256 key exchange, with brownouts Nov. 4 and Dec. 9 and permanent removal Jan. 13, 2027. Since Oct. 14, newly uploaded RSA keys must be at least 3,072 bits. Most modern clients already speak SHA-2 RSA and need no new key; HTTPS remotes are out of scope. Today is the day to check CI runners and old automation — tomorrow’s brownout will surface every stale client you forgot.</p>
-      <p class="body"><em>Why it matters:</em> Actionable tomorrow: the Nov. 4 brownout is a free audit of every stale SSH client and CI runner you own. Permanent removal is Jan. 13 -- fix what tomorrow surfaces.</p>
+      <h3><a href="../articles/2026-11-04-wordpress-cores-upgrade-race-cve-2026-119977-joins-cisa.html">WordPress Core’s upgrade race (CVE-2026-119977) joins CISA’s KEV catalog: 18,500-plus exploit requests in 21 hours, no confirmed compromises, federal due date Nov. 6</a></h3>
+      <p class="byline">XHack</p>
+      <p class="body">XHack’s Nov. 4 guide: CVE-2026-119977 is a time-of-check/time-of-use race in how WordPress Core unpacks its own complete-package updates — while an update extracts, an unauthenticated visitor may reach a staged copy of the installer and run code. Wordfence (the CNA) scores it CVSS 8.1 High with high attack complexity; WordPress’s own advisory says ’low’ with no score; CISA added it to the Known Exploited Vulnerabilities catalog Nov. 3 marked ’active,’ due Nov. 6, with the forensic-triage flag — preserve logs before cleaning. Fixed in 7.1.4 (Oct. 28) with backports to every branch from 4.7; 4.6 and earlier get nothing. The patch window is the exposed window: Patchstack advises blocking web access to wp-content/upgrade/ before updating. Wordfence saw 18,500+ requests at the staged paths in 21 hours and reports no successful compromise yet.</p>
+      <p class="body"><em>Why it matters:</em> A KEV listing with a twist: the fix&#x27;s own install window is the vulnerable window. Block wp-content/upgrade/ first, preserve logs, due Nov. 6 for federal systems.</p>
     </div>
   <section class="suggestbox" data-buddy-id="news-buddy">
     <h2>Suggestions</h2>
