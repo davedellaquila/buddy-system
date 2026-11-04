@@ -1,131 +1,110 @@
-<!-- BUDDY-BASIC-TEMPLATE v2 -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta charset="UTF-8">
 <meta name="robots" content="noindex, nofollow">
-<title data-buddy-name>Road Trip Buddy</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="dark light">
+<title>🛣️ Road Trip Buddy — The Road Trip Register</title>
 <style>
-:root {
-  --bg: #ffffff;
-  --text: #1a1a1a;
-  --muted: #666;
-  --card: #f5f5f5;
-  --border: #e0e0e0;
-  --accent: #0066cc;
-  --ok: #1b7a2e;
+:root{
+  --bg:#f4efe3; --panel:#fffdf6; --panel2:#e9e2cf; --border:#cfc4a3;
+  --text:#1d2419; --muted:#5d6650; --green:#006747; --green-d:#004d35;
+  --yellow:#b8860b; --center:#d9a400; --accent:#006747; --ok:#1a7f37;
+  --shield:#111; --road:#2b2f2a; --sky:#dcebf2;
+  --card:var(--panel);
 }
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg: #1a1a1a;
-    --text: #e0e0e0;
-    --muted: #999;
-    --card: #2a2a2a;
-    --border: #3a3a3a;
-    --accent: #4da6ff;
-    --ok: #5fd08a;
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#0e130f; --panel:#17211a; --panel2:#1d2a21; --border:#33473a;
+    --text:#edf3e9; --muted:#a7b8a3; --green:#0a7a55; --green-d:#065c40;
+    --yellow:#f7c948; --center:#f7c948; --accent:#3ec98f; --ok:#3fb950;
+    --shield:#f2f2f2; --road:#0a0d0a; --sky:#13202b;
   }
 }
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  background: var(--bg);
-  color: var(--text);
-  line-height: 1.6;
-  padding: 40px 20px;
-  max-width: 800px;
-  margin: 0 auto;
-}
-.header { text-align: center; margin-bottom: 40px; }
-.topbar {
-  position: sticky; top: 0; z-index: 50;
-  display: flex; flex-wrap: wrap; align-items: center; gap: 10px;
-  background: var(--bg);
-  border-bottom: 1px solid var(--border);
-  padding: 10px 2px; margin-bottom: 24px;
-  font-size: 17px; font-weight: 700;
-}
-.topbar-icon { font-size: 22px; line-height: 1; }
-.topbar-refresh {
-  margin-left: auto; background: none; border: 1px solid transparent; border-radius: 8px;
-  color: var(--muted); font-size: 16px; cursor: pointer; padding: 4px 10px; line-height: 1;
-}
-.topbar-refresh:hover { color: var(--text); border-color: var(--border); }
-.bs-dash-link { font-size: 13px; font-weight: 600; color: var(--accent); text-decoration: none; white-space: nowrap; margin-left: 10px; }
-.bs-dash-link:hover { text-decoration: underline; }
-.topbar .header-tip { margin-left: auto; flex: none; }
-.icon { font-size: 64px; margin-bottom: 16px; }
-h1 { font-size: 32px; margin-bottom: 8px; }
-.tagline { color: var(--muted); font-size: 18px; }
-.mission {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 24px;
-  margin-bottom: 32px;
-  font-size: 17px;
-}
-h2 { font-size: 22px; margin: 32px 0 16px; }
-.attn {
-  background: var(--card);
-  border-left: 4px solid var(--accent);
-  border-radius: 0 8px 8px 0;
-  padding: 16px 20px;
-  margin-bottom: 12px;
-}
-.attn-date { color: var(--muted); font-size: 14px; margin-top: 8px; }
-.attn-link { margin-top: 8px; }
-.attn-link a { color: var(--accent); font-weight: 600; text-decoration: none; }
-.attn-link a:hover { text-decoration: underline; }
-.attn-actions { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
-.attn-btn {
-  border: 1px solid var(--border); background: var(--bg); color: var(--text);
-  border-radius: 8px; padding: 7px 14px; font-size: 13px; font-weight: 600; cursor: pointer;
-  -webkit-tap-highlight-color: transparent;
-}
-.attn-btn:hover { border-color: var(--accent); }
-.attn-btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
-.attn-btn:disabled { opacity: .45; cursor: default; }
-.attn-status { font-size: 13px; color: var(--muted); margin-top: 8px; min-height: 18px; }
-.attn.resolved { opacity: .6; }
-.attn.resolved .attn-actions { display: none; }
-/* ---- skills (Dave 2026-10-16) ---- */
-.skills { display: flex; flex-direction: column; gap: 10px; margin-top: 4px; }
-.skill { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 12px 16px; }
-.skill-name { font-weight: 700; font-size: 15px; }
-.skill-evidence { color: var(--muted); font-size: 13px; margin-top: 4px; line-height: 1.45; }
-.children { display: flex; flex-wrap: wrap; gap: 12px; }
-.child {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 12px 20px;
-  text-decoration: none;
-  color: var(--text);
-}
-.child:hover { border-color: var(--accent); }
-.footer {
-  margin-top: 48px;
-  padding-top: 24px;
-  border-top: 1px solid var(--border);
-  color: var(--muted);
-  font-size: 14px;
-  text-align: center;
-}
-.empty { color: var(--muted); font-style: italic; }
-/* Dave 2026-10-16: photo gallery — baked in at generation time from the buddy's repo photos/ */
-.gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; margin-bottom: 8px; }
-.gallery a { display: block; border-radius: 12px; overflow: hidden; border: 1px solid var(--border); background: var(--card); }
-.gallery img { width: 100%; height: 160px; object-fit: cover; display: block; transition: transform .25s ease; }
-.gallery a:hover img { transform: scale(1.04); }
-.lightbox { position: fixed; inset: 0; z-index: 1000; display: flex; align-items: center; justify-content: center; }
-.lightbox[hidden] { display: none; }
-.lightbox-bg { position: absolute; inset: 0; background: rgba(0,0,0,.88); }
-.lightbox-img { position: relative; max-width: 92vw; max-height: 88vh; border-radius: 12px; box-shadow: 0 24px 64px rgba(0,0,0,.5); }
-.lightbox-x { position: absolute; top: 16px; right: 20px; background: rgba(255,255,255,.12); color: #fff; border: none; border-radius: 50%; width: 44px; height: 44px; font-size: 26px; cursor: pointer; line-height: 1; }
+*{box-sizing:border-box;margin:0;padding:0}
+html{overflow-x:hidden}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;line-height:1.6;min-height:100vh;overflow-x:hidden}
+a{color:var(--accent)}
+.wrap{max-width:960px;margin:0 auto;padding:22px 18px 72px;width:100%}
 
-.dumpbox {
+/* sticky header */
+.topbar{position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+  background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(10px);
+  border-bottom:3px solid var(--center);padding:10px 16px}
+.topbar .who{display:flex;align-items:center;gap:9px;font-weight:800;font-size:17px;color:var(--text);text-decoration:none}
+.topbar .who .ico{font-size:24px}
+.topbar .dash{font-size:13px;font-weight:700;color:var(--muted);text-decoration:none}
+.topbar .dash:hover{color:var(--accent)}
+.header-tip{margin-left:auto}
+
+/* hero — highway sign */
+.sign{background:linear-gradient(160deg,var(--green),var(--green-d));color:#fff;border:4px solid #fff;outline:2px solid var(--green-d);
+  border-radius:18px;padding:26px 24px 22px;margin:22px 0 18px;box-shadow:0 14px 34px rgba(0,0,0,.25);position:relative;overflow:hidden}
+.sign::after{content:"";position:absolute;left:0;right:0;bottom:14px;border-top:4px dashed rgba(255,255,255,.35)}
+.sign .kicker{font-size:12px;letter-spacing:.24em;font-weight:800;text-transform:uppercase;opacity:.9}
+.sign h1{font-size:clamp(32px,7vw,52px);line-height:1.05;font-weight:900;margin:8px 0 8px}
+.sign p{font-size:clamp(15px,3.6vw,18px);max-width:38em;opacity:.96}
+.shieldrow{display:flex;gap:16px;align-items:flex-start;flex-wrap:wrap}
+.shield{flex:0 0 auto;width:86px;height:86px;background:#fff;color:#111;border:3px solid #111;border-radius:14px 14px 44px 44px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;font-weight:900;line-height:1.05;text-align:center;box-shadow:0 6px 16px rgba(0,0,0,.3)}
+.shield small{font-size:10px;letter-spacing:.18em}
+.shield b{font-size:26px}
+.rolebtn{margin-top:16px;display:inline-flex;align-items:center;gap:8px;background:#fff;color:var(--green-d);border:none;border-radius:999px;
+  padding:10px 18px;font-size:15px;font-weight:800;cursor:pointer;box-shadow:0 4px 12px rgba(0,0,0,.25)}
+.rolebtn:active{transform:scale(.98)}
+
+/* animated centerline */
+.roadline{height:22px;border-radius:6px;background:var(--road);position:relative;overflow:hidden;margin:4px 0 18px}
+.roadline::before{content:"";position:absolute;top:50%;left:0;right:0;border-top:5px dashed var(--center);transform:translateY(-50%);
+  animation:dashmove 1.1s linear infinite}
+@keyframes dashmove{to{transform:translateY(-50%) translateX(28px)}}
+@media (prefers-reduced-motion: reduce){.roadline::before{animation:none}}
+
+/* stats — mileage markers */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(128px,1fr));gap:12px;margin:18px 0 8px}
+.stat{background:var(--panel);border:2px solid var(--border);border-top:8px solid var(--green);border-radius:12px;padding:16px 14px;text-align:center}
+.stat b{display:block;font-size:32px;line-height:1.1;font-weight:900}
+.stat span{display:block;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-top:4px;font-weight:700}
+
+h2{font-size:24px;margin:38px 0 4px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+h2 .exit{background:var(--green);color:#fff;font-size:12px;letter-spacing:.12em;font-weight:800;padding:4px 10px;border-radius:6px;text-transform:uppercase}
+.sub{color:var(--muted);font-size:14px;margin-bottom:16px}
+
+/* register cards */
+.roadcard{background:var(--panel);border:2px solid var(--green);border-radius:16px;padding:22px;margin-bottom:16px;box-shadow:0 8px 24px rgba(0,0,0,.12)}
+.roadcard h3{font-size:23px;line-height:1.25;margin-bottom:6px}
+.roadcard h3 a{color:var(--text);text-decoration:none;border-bottom:3px solid var(--center)}
+.meta{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}
+.pill{font-size:12px;font-weight:800;letter-spacing:.05em;padding:4px 11px;border-radius:999px;border:1px solid var(--border);background:var(--panel2);color:var(--text)}
+.pill.status{border-color:var(--yellow);color:var(--yellow);background:transparent;text-transform:uppercase}
+.pill.pass{border-color:var(--green);color:var(--green)}
+.src{font-size:13px;color:var(--muted);margin-top:10px;word-break:break-word}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+.stop{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:18px;position:relative}
+.stop::before{content:"";position:absolute;left:0;top:0;bottom:0;width:5px;border-radius:14px 0 0 14px;background:var(--center)}
+.stop h3{font-size:17px;line-height:1.3;margin-bottom:6px;padding-right:92px}
+.stop h3 a{color:var(--text)}
+.stop p{font-size:14px}
+.stop ul{margin:8px 0 0 18px;font-size:14px}
+.mile{position:absolute;top:14px;right:14px;background:var(--road);color:#fff;font-size:11px;font-weight:800;padding:3px 8px;border-radius:6px;letter-spacing:.06em}
+
+/* loops — route diagrams */
+.loop{background:var(--panel);border:1px solid var(--border);border-radius:16px;padding:20px;margin-bottom:16px}
+.loop h3{font-size:19px;margin-bottom:12px}
+.route{display:flex;flex-wrap:wrap;align-items:center;gap:6px;font-size:14px;font-weight:700}
+.route .node{background:var(--panel2);border:1px solid var(--border);border-radius:999px;padding:5px 12px}
+.route .node a{color:var(--text);text-decoration:none}
+.route .leg{flex:0 0 26px;border-top:3px dashed var(--center);position:relative}
+.route .leg::after{content:"›";position:absolute;right:-2px;top:-13px;color:var(--center);font-size:18px}
+.loop p{font-size:14px;color:var(--muted);margin-top:12px}
+
+.how{background:var(--panel2);border:1px dashed var(--border);border-radius:14px;padding:20px;font-size:15px}
+.how li{margin:6px 0 6px 20px}
+footer{margin-top:44px;border-top:3px solid var(--center);padding-top:18px;font-size:14px;color:var(--muted)}
+footer a{font-weight:700}
+.links{display:flex;gap:10px 18px;flex-wrap:wrap;margin-bottom:10px}
+.dumpbox {.dumpbox {
   background: var(--card);
   border: 1px solid var(--border);
   border-radius: 12px;
@@ -177,48 +156,7 @@ h2 { font-size: 22px; margin: 32px 0 16px; }
 }
 .dumpbox-tokenrow a { color: var(--accent); font-size: 13px; }
 
-
-/* ---- Repo files (Dave 2026-10-20): view + edit the buddy's repo markdown ---- */
-.repo-files { margin-top: 8px; }
-.rf-sub { color: var(--muted); font-size: 14px; margin-bottom: 12px; }
-.rf-locked { background: var(--card); border: 1px dashed var(--border); border-radius: 8px; padding: 14px 16px; color: var(--muted); font-size: 14px; }
-.rf-list { display: flex; flex-direction: column; gap: 8px; }
-.rf-file { display: flex; align-items: center; gap: 10px; background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 10px 14px; cursor: pointer; text-align: left; width: 100%; color: var(--text); font: inherit; -webkit-tap-highlight-color: transparent; }
-.rf-file:hover { border-color: var(--accent); }
-.rf-file .rf-name { font-weight: 600; font-size: 15px; }
-.rf-file .rf-dir { color: var(--muted); font-size: 13px; margin-left: auto; word-break: break-all; text-align: right; }
-.rf-view, .rf-editor { margin-top: 14px; background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 16px; }
-.rf-viewhead { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 10px; }
-.rf-path { font-weight: 700; font-size: 14px; margin-right: auto; word-break: break-all; }
-.rf-body { font-size: 15px; }
-.rf-body h2 { font-size: 21px; margin: 16px 0 8px; }
-.rf-body h3 { font-size: 18px; margin: 14px 0 6px; }
-.rf-body h4 { font-size: 16px; margin: 12px 0 6px; }
-.rf-body p { margin: 6px 0; }
-.rf-body ul { margin: 6px 0 6px 20px; }
-.rf-body blockquote { border-left: 3px solid var(--border); padding-left: 12px; color: var(--muted); margin: 8px 0; }
-.rf-body code { background: var(--bg); border: 1px solid var(--border); border-radius: 4px; padding: 0 4px; font-size: 13px; }
-.rf-body pre { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 12px; overflow-x: auto; margin: 8px 0; }
-.rf-body pre code { border: none; padding: 0; background: none; }
-.rf-body a { color: var(--accent); }
-.rf-body hr { border: none; border-top: 1px solid var(--border); margin: 14px 0; }
-.rf-ta { width: 100%; box-sizing: border-box; background: var(--bg); color: var(--text); border: 1px solid var(--border); border-radius: 8px; padding: 12px; font-family: ui-monospace, Menlo, monospace; font-size: 13px; line-height: 1.55; }
-/* ---- Accordion files (Dave 2026-10-21): the list of markdown files;
-   clicking a file name opens its contents inline right below that name.
-   Every file toggles independently — several can be open at once — and
-   Edit lives inside the opened panel. ---- */
-.rf-files-wrap { display: flex; flex-direction: column; gap: 8px; }
-.rf-fileitem { display: flex; flex-direction: column; }
-.rf-file .rf-chev { color: var(--muted); font-size: 13px; flex: none; }
-.rf-panel { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 16px; margin-top: 8px; }
-.rf-panel .rf-viewhead { margin-bottom: 8px; }
-.rf-loading { color: var(--muted); font-size: 14px; }
-.rf-panel .rf-editor { margin-top: 4px; }
-.rf-panel .rf-fstatus { margin-top: 8px; }
-
-</style>
-<style>
-.header-tip{position:relative;overflow:hidden;flex:none;display:inline-flex;align-items:center;gap:.45em;padding:6px 12px;border-radius:999px;text-decoration:none;
+.header-tip{.header-tip{position:relative;overflow:hidden;display:inline-flex;align-items:center;gap:.45em;padding:6px 12px;border-radius:999px;text-decoration:none;
   font-size:13px;font-weight:800;line-height:1;color:#fff;background:linear-gradient(135deg,#7c4dff,#b388ff);
   box-shadow:0 4px 14px rgba(124,77,255,.35);animation:tip-breathe 3.2s ease-in-out infinite;white-space:nowrap}
 .header-tip::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;
@@ -234,28 +172,199 @@ h2 { font-size: 22px; margin: 32px 0 16px; }
   .header-tip,.header-tip:hover .jar{animation:none}
   .header-tip::after{display:none}
 }
+
 </style>
 </head>
 <body>
-<nav data-buddy-crumb style="padding:14px 20px 0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:14px;line-height:1.4;"><a href="https://davedellaquila.github.io/buddy-system/travel-buddy/" style="color:inherit;opacity:.65;text-decoration:none;">← Travel Buddy</a></nav>
-<div class="topbar"><span class="topbar-icon">🛣️</span><span class="topbar-name" data-buddy-name>Road Trip Buddy</span><button class="topbar-refresh" title="Reload this page (bypasses cache)" onclick="location.href=location.pathname+'?v='+Date.now()">&#8635;</button><a class="bs-dash-link" href="https://davedellaquila.github.io/buddy-system/">Buddy System dashboard</a><a class="header-tip" href="https://ko-fi.com/davedellaquila" target="_blank" rel="noopener" aria-label="Tip Jar — if this page helped you, you can leave Dave a tip on Ko-fi"><span class="jar" aria-hidden="true">🫙</span><span>Tip Jar</span></a></div>
-<div class="header">
-<div class="icon">🛣️</div>
-<h1 data-buddy-name>Road Trip Buddy</h1>
-<div class="tagline">Great roads and worthy stops — the Road Trip Register</div>
-</div>
 
-<div class="mission">Road Trip Buddy keeps the Road Trip Register: the great roads and the stops worth making along them, recorded so any trip can draw on what the fleet already knows. The Register opens with two seeds — the Million Dollar Highway and the Ouray cluster, and Three Rivers / Gateway. It sits under Travel Buddy, so its roads and stops roll up into the wider travel picture while the Register itself stays the single, curated record.</div>
+<header class="topbar">
+  <a class="who" href="./"><span class="ico" aria-hidden="true">🛣️</span><span>Road Trip Buddy</span></a>
+  <a class="dash" href="https://davedellaquila.github.io/buddy-system/">Buddy System dashboard</a>
+  <a class="header-tip" href="https://ko-fi.com/davedellaquila" target="_blank" rel="noopener" aria-label="Tip Jar — if this page helped you, you can leave Dave a tip on Ko-fi"><span class="jar" aria-hidden="true">🫙</span><span>Tip Jar</span></a>
+</header>
 
+<div class="wrap">
 
+  <section class="sign" aria-label="Road Trip Buddy introduction">
+    <div class="shieldrow">
+      <div style="flex:1;min-width:230px">
+        <div class="kicker">The Route Scout · Keeper of the Register</div>
+        <h1>Great roads.<br>Worthy stops.</h1>
+        <p>Every road-trip idea Dave stumbles on — a reel, a link, a tip — gets captured here, checked just enough to be useful, and filed with its source, its season, and its distance from Fiddletown.</p>
+        <button class="rolebtn" id="roleBtn" type="button">🔊 Hear my role</button>
+        <audio id="roleAudio" src="role-intro.mp3" preload="none"></audio>
+      </div>
+      <div class="shield" aria-label="US Route 550 shield"><small>US</small><b>550</b><small>Colorado</small></div>
+    </div>
+  </section>
 
-<div style="margin:16px 0 4px">
-<div style="font-size:13px;opacity:.75;margin-bottom:6px">🔊 <b>Hear my role</b> — the first paragraph of my job req's Role summary, in my own voice (Atlas)</div>
-<audio controls preload="none" src="role-intro.mp3" style="width:min(420px,100%)"></audio>
-</div>
+  <div class="roadline" aria-hidden="true"></div>
 
+  <section class="stats" aria-label="Register at a glance">
+    <div class="stat"><b>2</b><span>Great roads filed</span></div>
+    <div class="stat"><b>9</b><span>Worthy stops</span></div>
+    <div class="stat"><b>4</b><span>Candidate loops</span></div>
+    <div class="stat"><b>11,018 ft</b><span>Highest pass</span></div>
+    <div class="stat"><b>~950 mi</b><span>Fiddletown → flagship road</span></div>
+    <div class="stat"><b>Late spr–fall</b><span>Best window open</span></div>
+  </section>
 
-<section class="dumpbox" data-buddy-id="road-trip-buddy">
+  <h2><span class="exit">Exit 1</span> The Register — Roads</h2>
+  <p class="sub">Status key: idea → shortlisted → routed → done. Everything below is at <strong>idea</strong> — captured, not yet routed.</p>
+
+  <article class="roadcard">
+    <h3><a href="https://maps.apple.com/?q=Million%20Dollar%20Highway%2C%20Colorado">Million Dollar Highway (US 550)</a></h3>
+    <p><a href="https://maps.apple.com/?q=Ouray%2C%20CO">Ouray</a> → <a href="https://maps.apple.com/?q=Silverton%2C%20CO">Silverton</a> → <a href="https://maps.apple.com/?q=Durango%2C%20CO">Durango</a>, over <strong>Red Mountain Pass (11,018 ft)</strong>. A shelf road with no guardrails in stretches — one of the great American drives.</p>
+    <div class="meta">
+      <span class="pill pass">⛰️ Pass 11,018 ft</span>
+      <span class="pill">🗓️ Late spring – fall</span>
+      <span class="pill">📍 ~950 mi from Fiddletown</span>
+      <span class="pill status">Status · Idea</span>
+    </div>
+    <p>Winter on this road is serious mountain driving — the window above is the honest one. This is a Colorado-loop trip, not a weekend run.</p>
+    <p class="src">Source: <a href="https://www.facebook.com/reel/4265069620303960/">This World Traveled reel, Sep 23, 2026</a> — flagged by Dave, Oct 30.</p>
+  </article>
+
+  <article class="roadcard">
+    <h3><a href="https://maps.apple.com/?q=U.S.%20Route%2089%2C%20Arizona">US Route 89 — “The National Park Highway”</a></h3>
+    <p><a href="https://maps.apple.com/?q=Flagstaff%2C%20AZ">Flagstaff, AZ</a> to the Canadian border in Montana — the backbone for <strong>10 national parks</strong>: <a href="https://maps.apple.com/?q=Grand%20Canyon%20National%20Park">Grand Canyon</a>, <a href="https://maps.apple.com/?q=Petrified%20Forest%20National%20Park">Petrified Forest</a>, <a href="https://maps.apple.com/?q=Zion%20National%20Park">Zion</a>, <a href="https://maps.apple.com/?q=Bryce%20Canyon%20National%20Park">Bryce</a>, <a href="https://maps.apple.com/?q=Capitol%20Reef%20National%20Park">Capitol Reef</a>, <a href="https://maps.apple.com/?q=Canyonlands%20National%20Park">Canyonlands</a>, <a href="https://maps.apple.com/?q=Arches%20National%20Park">Arches</a>, <a href="https://maps.apple.com/?q=Grand%20Teton%20National%20Park">Grand Teton</a>, <a href="https://maps.apple.com/?q=Yellowstone%20National%20Park">Yellowstone</a>, <a href="https://maps.apple.com/?q=Glacier%20National%20Park">Glacier</a>. A NatGeo Traveler Top 10 drivers' drive.</p>
+    <div class="meta">
+      <span class="pill">🏞️ 10 national parks</span>
+      <span class="pill">🗓️ Early fall — or in stretches</span>
+      <span class="pill status">Status · Idea</span>
+    </div>
+    <p>The reel's own advice: early fall or 2027 — or don't do it end-to-end at all, drive it in stretches.</p>
+    <p class="src">Source: <a href="https://www.facebook.com/reel/1043514015336263/">Luke Kelly reel</a> — sent by Dave, Nov 4, 2026.</p>
+  </article>
+
+  <h2><span class="exit">Exit 2</span> The Register — Stops</h2>
+  <p class="sub">Places worth the detour, filed with the road that earns them.</p>
+
+  <div class="grid">
+    <article class="stop"><span class="mile">CO · MP 0</span>
+      <h3><a href="https://maps.apple.com/?q=Ouray%2C%20CO">Ouray — “Switzerland of America”</a></h3>
+      <p>South end of the <a href="https://maps.apple.com/?q=Million%20Dollar%20Highway%2C%20Colorado">Million Dollar Highway</a>, in the San Juan Mountains.</p>
+      <ul>
+        <li><a href="https://maps.apple.com/?q=Box%20Canyon%20Falls%2C%20Ouray%2C%20CO">Box Canyon Falls</a></li>
+        <li><a href="https://maps.apple.com/?q=Ouray%20Hot%20Springs%2C%20Ouray%2C%20CO">Ouray Hot Springs</a></li>
+        <li><a href="https://maps.apple.com/?q=Cascade%20Falls%2C%20Ouray%2C%20CO">Cascade Falls</a></li>
+        <li><a href="https://maps.apple.com/?q=Ouray%20Brewery%2C%20Ouray%2C%20CO">Ouray Brewery</a></li>
+        <li>Switzerland of America lookout</li>
+        <li><a href="https://maps.apple.com/?q=Ouray%20Ice%20Park%2C%20Ouray%2C%20CO">Ouray Ice Park</a> — the winter exception</li>
+      </ul>
+      <div class="meta"><span class="pill">🗓️ Late spring – fall</span><span class="pill status">Idea</span></div>
+      <p class="src">Source: <a href="https://www.facebook.com/reel/4265069620303960/">This World Traveled reel</a></p>
+    </article>
+
+    <article class="stop"><span class="mile">CO · +1 hr</span>
+      <h3><a href="https://maps.apple.com/?q=Black%20Canyon%20of%20the%20Gunnison%20National%20Park">Black Canyon of the Gunnison</a></h3>
+      <p>National park about an hour from <a href="https://maps.apple.com/?q=Ouray%2C%20CO">Ouray</a> — a natural loop partner for the Colorado run.</p>
+      <div class="meta"><span class="pill">🗓️ Late spring – fall</span><span class="pill status">Idea</span></div>
+    </article>
+
+    <article class="stop"><span class="mile">CO · US 550</span>
+      <h3><a href="https://maps.apple.com/?q=Silverton%2C%20CO">Silverton</a> &amp; <a href="https://maps.apple.com/?q=Durango%2C%20CO">Durango</a></h3>
+      <p>The far end of the <a href="https://maps.apple.com/?q=Million%20Dollar%20Highway%2C%20Colorado">Million Dollar Highway</a> — the road delivers you to both.</p>
+      <div class="meta"><span class="pill">🗓️ Late spring – fall</span><span class="pill status">Idea</span></div>
+    </article>
+
+    <article class="stop"><span class="mile">CO · Loop</span>
+      <h3><a href="https://maps.apple.com/?q=Telluride%2C%20CO">Telluride</a> &amp; <a href="https://maps.apple.com/?q=Mesa%20Verde%20National%20Park">Mesa Verde</a></h3>
+      <p><a href="https://maps.apple.com/?q=Telluride%2C%20CO">Telluride</a> via Ridgway, and the cliff dwellings at <a href="https://maps.apple.com/?q=Mesa%20Verde%20National%20Park">Mesa Verde</a> — Colorado-loop partners.</p>
+      <div class="meta"><span class="pill">🗓️ Late spring – fall</span><span class="pill status">Idea</span></div>
+    </article>
+
+    <article class="stop"><span class="mile">CA · Sequoia</span>
+      <h3><a href="https://maps.apple.com/?q=The%20Gateway%20Restaurant%20%26%20Lodge%2C%20Three%20Rivers%2C%20CA">The Gateway Restaurant &amp; Lodge, Three Rivers</a></h3>
+      <p>Riverside restaurant with lodging, ~10 minutes from the <a href="https://maps.apple.com/?q=Sequoia%20National%20Park">Sequoia National Park</a> entrance. Dinner on the river after a sequoia day — a natural overnight.</p>
+      <div class="meta"><span class="pill">🗓️ Sequoia season</span><span class="pill status">Idea</span></div>
+      <p class="src">Source: <a href="https://www.facebook.com/reel/1636938344435534/">Crystal Wanderlust reel, Sep 11, 2026</a> — sent by Dave, Oct 29.</p>
+    </article>
+
+    <article class="stop"><span class="mile">CA · Shasta</span>
+      <h3><a href="https://maps.apple.com/?q=Burney%20Falls%2C%20McArthur-Burney%20Falls%20Memorial%20State%20Park">Burney Falls</a></h3>
+      <p>A 129-foot spring-fed falls in <a href="https://maps.apple.com/?q=McArthur-Burney%20Falls%20Memorial%20State%20Park">McArthur-Burney Falls Memorial State Park</a>, near Burney — ~100 million gallons a day, year-round. Theodore Roosevelt called it the “Eighth Wonder of the World.” ~1.3-mile loop trail to the pool.</p>
+      <div class="meta"><span class="pill">🗓️ Year-round flow</span><span class="pill status">Idea</span></div>
+      <p class="src">Source: <a href="https://www.facebook.com/reel/1761934814848980/">Mike Herrera reel</a> — sent by Dave, Nov 4, 2026.</p>
+    </article>
+
+    <article class="stop"><span class="mile">CA · I-80 Exit 145</span>
+      <h3><a href="https://maps.apple.com/?q=The%20Dutch%20Flat%20Hotel%2C%20Dutch%20Flat%2C%20CA">The Dutch Flat Hotel</a></h3>
+      <p>Historic Gold Country hotel in <a href="https://maps.apple.com/?q=Dutch%20Flat%2C%20CA">Dutch Flat</a>, 1 mile off I-80 at exit 145 — on the Tahoe run. A detour stop, not a destination: the pitch is the food (burger, loaded baked potato, beer) as a reason to pull off.</p>
+      <div class="meta"><span class="pill">🍔 Detour for the food</span><span class="pill status">Idea</span></div>
+      <p class="src">Source: <a href="https://www.facebook.com/reel/3475187862659738/">the hotel's own reel</a> — sent by Dave, Nov 4, 2026.</p>
+    </article>
+  </div>
+
+  <h2><span class="exit">Exit 3</span> Candidate Loops</h2>
+  <p class="sub">Sketches, not itineraries. When one firms up, I hand a ready route skeleton to my parent, <a href="https://davedellaquila.github.io/buddy-system/travel-buddy/">✈️ Travel Buddy</a> — bookings and itineraries are theirs.</p>
+
+  <section class="loop">
+    <h3>🔁 The Colorado Loop</h3>
+    <div class="route">
+      <span class="node">Fiddletown</span><span class="leg"></span>
+      <span class="node"><a href="https://maps.apple.com/?q=Ouray%2C%20CO">Ouray</a></span><span class="leg"></span>
+      <span class="node"><a href="https://maps.apple.com/?q=Million%20Dollar%20Highway%2C%20Colorado">Million Dollar Hwy</a></span><span class="leg"></span>
+      <span class="node"><a href="https://maps.apple.com/?q=Durango%2C%20CO">Durango</a></span><span class="leg"></span>
+      <span class="node"><a href="https://maps.apple.com/?q=Mesa%20Verde%20National%20Park">Mesa Verde</a></span><span class="leg"></span>
+      <span class="node"><a href="https://maps.apple.com/?q=Telluride%2C%20CO">Telluride</a></span><span class="leg"></span>
+      <span class="node"><a href="https://maps.apple.com/?q=Black%20Canyon%20of%20the%20Gunnison%20National%20Park">Black Canyon</a></span><span class="leg"></span>
+      <span class="node">Home</span>
+    </div>
+    <p>Season: late spring – fall. Anchor distance: ~950 miles from Fiddletown to Ouray, one way.</p>
+    <p>🗺️ Waypoint route skeleton: <a href="https://github.com/davedellaquila/road-trip-buddy/blob/master/routes/colorado-loop.gpx">colorado-loop.gpx</a> — waypoints only, not turn-by-turn navigation.</p>
+  </section>
+
+  <section class="loop">
+    <h3>🌲 The Sequoia Overnight</h3>
+    <div class="route">
+      <span class="node">Fiddletown</span><span class="leg"></span>
+      <span class="node"><a href="https://maps.apple.com/?q=Sequoia%20National%20Park">Sequoia National Park</a></span><span class="leg"></span>
+      <span class="node"><a href="https://maps.apple.com/?q=The%20Gateway%20Restaurant%20%26%20Lodge%2C%20Three%20Rivers%2C%20CA">The Gateway — dinner + lodge</a></span>
+    </div>
+    <p>The short one: a sequoia day, a river dinner, a bed ten minutes from the park gate.</p>
+  </section>
+
+  <section class="loop">
+    <h3>🌉 The California 14-Day <span style="font-size:13px;color:var(--muted)">(The Traveling Dans — filed as inspiration)</span></h3>
+    <div class="route">
+      <span class="node"><a href="https://maps.apple.com/?q=Redwood%20National%20Park">Redwood NP</a></span><span class="leg"></span>
+      <span class="node"><a href="https://maps.apple.com/?q=Mendocino%2C%20CA">Mendocino</a></span><span class="leg"></span>
+      <span class="node"><a href="https://maps.apple.com/?q=Monterey%2C%20CA">Monterey</a></span><span class="leg"></span>
+      <span class="node"><a href="https://maps.apple.com/?q=Big%20Sur%2C%20CA">Big Sur</a></span><span class="leg"></span>
+      <span class="node"><a href="https://maps.apple.com/?q=Morro%20Bay%2C%20CA">Morro Bay</a></span><span class="leg"></span>
+      <span class="node"><a href="https://maps.apple.com/?q=Sequoia%20National%20Park">Sequoia</a></span><span class="leg"></span>
+      <span class="node"><a href="https://maps.apple.com/?q=Kings%20Canyon%20National%20Park">Kings Canyon</a></span><span class="leg"></span>
+      <span class="node"><a href="https://maps.apple.com/?q=Yosemite%20National%20Park">Yosemite</a></span><span class="leg"></span>
+      <span class="node"><a href="https://maps.apple.com/?q=Lake%20Tahoe">Lake Tahoe</a></span>
+    </div>
+    <p>Best window: May–September. Their routing flies into Medford, OR and out of Reno, NV. Source: <a href="https://www.facebook.com/reel/1311978457481310/">The Traveling Dans reel</a> — sent by Dave, Nov 4, 2026. No itinerary built — inspiration only, per Dave's instruction.</p>
+  </section>
+
+  <section class="loop">
+    <h3>🏔️ The Washington State Loop <span style="font-size:13px;color:var(--muted)">(Ruby Tawes — filed as inspiration)</span></h3>
+    <div class="route">
+      <span class="node"><a href="https://maps.apple.com/?q=Artist%20Point%2C%20Mount%20Baker%2C%20WA">Mount Baker — Artist Point</a></span><span class="leg"></span>
+      <span class="node"><a href="https://maps.apple.com/?q=North%20Cascades%20National%20Park">North Cascades NP</a></span><span class="leg"></span>
+      <span class="node"><a href="https://maps.apple.com/?q=Franklin%20Falls%2C%20WA">Baker-Snoqualmie NF</a></span><span class="leg"></span>
+      <span class="node"><a href="https://maps.apple.com/?q=Mount%20Rainier%20National%20Park">Mount Rainier NP</a></span><span class="leg"></span>
+      <span class="node"><a href="https://maps.apple.com/?q=Lake%20Crescent%2C%20Olympic%20National%20Park">Olympic Peninsula — Lake Crescent</a></span>
+    </div>
+    <p>Inside those stops: Chain Lakes Loop · Ross Lake, Maple Pass, Diablo Lake · Franklin Falls, Barclay Lake · Fremont Lookout sunrise, Sunrise &amp; Paradise · Forks, Neah Bay. Add-ons filed with it: Leavenworth, Columbia River Gorge (WA side), Mount St. Helens, Lake Chelan/Stehekin, Lake Wenatchee. Source: <a href="https://www.facebook.com/reel/1141856518523065/">Ruby Tawes reel</a> — sent by Dave, Nov 4, 2026.</p>
+  </section>
+
+  <h2><span class="exit">Exit 4</span> How I Work</h2>
+  <section class="how">
+    <ul>
+      <li><strong>Capture:</strong> send me any reel, link, or tip — I file it in the Register with its source.</li>
+      <li><strong>Check:</strong> season, rough distance from Fiddletown, and why it earns a stop — no invented facts; unknown means unknown.</li>
+      <li><strong>Curate:</strong> ideas move idea → shortlisted → routed → done as Dave weighs in.</li>
+      <li><strong>Hand off:</strong> a firmed-up trip goes to <a href="https://davedellaquila.github.io/buddy-system/travel-buddy/">✈️ Travel Buddy</a> as a route skeleton.</li>
+    </ul>
+  </section>
+
+  <div style="height:26px"></div>
+  <section class="dumpbox" data-buddy-id="road-trip-buddy">
 <h2>🧠 Brain dump</h2>
 <p class="dumpbox-sub">Dump what's on your mind about <span data-buddy-name>Road Trip Buddy</span> — raw and unfiltered. Each dump lands in the buddy's repo (docs/ingest.md) as a timestamped entry — or saves on this device until a repo is linked and a token is connected.</p>
 <div class="dumpbox-token" hidden>
@@ -274,32 +383,31 @@ h2 { font-size: 22px; margin: 32px 0 16px; }
 <p class="dumpbox-hint">Enter dumps it &middot; Shift+Enter for a new line</p>
 </section>
 
+  <footer>
+    <div class="links">
+      <a href="https://davedellaquila.github.io/buddy-system/">Buddy System dashboard</a>
+      <a href="https://davedellaquila.github.io/buddy-system/travel-buddy/">✈️ Travel Buddy (parent)</a>
+      <a href="https://docs.google.com/document/d/1q5ooSsN8HpugztKlQR3hvpm2TE6d6HTEwi7w-SiEQRs/edit">📄 Job req</a>
+      <a href="https://github.com/davedellaquila/road-trip-buddy">💻 Repo (private)</a>
+      <a href="https://ko-fi.com/davedellaquila">🫙 Tip Jar on Ko-fi</a>
+    </div>
+    <p>🛣️ Road Trip Buddy · The Route Scout · Hired Oct 30, 2026. The register on this page matches my KNOWLEDGE.md — when the register grows, this page grows with it.</p>
+  </footer>
 
-<h2>Needs Attention</h2>
-<div class="attn" data-attn-id="road-trip-buddy-job-req-review"><div class="attn-text">Job req ready for Dave&#x27;s review — looks good, edits, or defer? Persona pick is presented in the main chat (The Route Scout is the default); voice auditions are live in this buddy&#x27;s own thread.</div><div class="attn-link"><a href="https://docs.google.com/document/d/1q5ooSsN8HpugztKlQR3hvpm2TE6d6HTEwi7w-SiEQRs/edit" target="_blank" rel="noopener">Open →</a></div><div class="attn-date">2026-10-30</div><div class="attn-actions"><button type="button" class="attn-btn primary" data-act="done">Done</button><button type="button" class="attn-btn" data-act="info">Need more info</button></div><div class="attn-status" role="status"></div></div>
-
-
-
-
-
-
-
-<section class="repo-files" data-buddy-id="road-trip-buddy">
-<h2>📄 Repo files</h2>
-<p class="rf-sub">The markdown files in <span data-buddy-name>Road Trip Buddy</span>'s repo. Tap a file name and its contents open right below it — open as many as you like at once. Edit inside an opened file and the save goes straight back to GitHub. The repo is private, so nothing here — not even the file names — is shown until GitHub is connected on this device.</p>
-<div class="rf-locked" hidden>🔒 Connect GitHub in the 🧠 Brain dump box above to view and edit files — the repos are private, so a token is needed to read them. Then reload this page.</div>
-<div class="rf-main" hidden>
-<div class="rf-list rf-files-wrap"></div>
-<div class="rf-status attn-status" role="status"></div>
-</div>
-</section>
-
-
-<div class="footer">
-Generated 2026-11-04 · Part of the Buddy System<br>
-<a href="about.html">About · the full record →</a>
 </div>
 
+<script>
+(function(){
+  var btn=document.getElementById('roleBtn'), au=document.getElementById('roleAudio');
+  if(!btn||!au) return;
+  btn.addEventListener('click',function(){
+    if(au.paused){ au.play(); btn.textContent='⏸️ Playing my role… tap to pause'; }
+    else { au.pause(); btn.textContent='🔊 Hear my role'; }
+  });
+  au.addEventListener('ended',function(){ btn.textContent='🔊 Hear my role'; });
+  au.addEventListener('pause',function(){ if(au.ended) return; btn.textContent='🔊 Hear my role'; });
+})();
+</script>
 <script>
 (function(){
   var box = document.querySelector('.dumpbox');
@@ -480,464 +588,7 @@ Generated 2026-11-04 · Part of the Buddy System<br>
   });
   resolveRepo().then(refreshUI);
 })();
+
 </script>
-
-
-<script>
-(function(){
-  var tiles = document.querySelectorAll('.attn[data-attn-id]');
-  if (!tiles.length) return;
-  var dumpbox = document.querySelector('.dumpbox');
-  var bid = (dumpbox && dumpbox.getAttribute('data-buddy-id')) || (function(){
-    var p = location.pathname.replace(/\/+$/, '');
-    return p.substring(p.lastIndexOf('/') + 1);
-  })();
-  function lsGet(){ try { return JSON.parse(localStorage.getItem('buddyTree.v3') || '{}'); } catch(e){ return {}; } }
-  function lsSet(patch){ try { var s = lsGet(); for (var k in patch) s[k] = patch[k]; localStorage.setItem('buddyTree.v3', JSON.stringify(s)); } catch(e){} }
-  function token(){ return lsGet().ghToken || ''; }
-  function b64encode(str){
-    var bytes = new TextEncoder().encode(str), bin = '';
-    bytes.forEach(function(b){ bin += String.fromCharCode(b); });
-    return btoa(bin);
-  }
-  async function ghApi(path, method, body){
-    var t = token();
-    if (!t) throw new Error('Add a GitHub token first.');
-    var r = await fetch('https://api.github.com' + path, {
-      method: method || 'GET',
-      headers: {'Authorization': 'Bearer ' + t, 'Accept': 'application/vnd.github+json', 'Content-Type': 'application/json'},
-      body: body ? JSON.stringify(body) : undefined
-    });
-    if (!r.ok) throw new Error('GitHub ' + r.status);
-    return r.status === 204 ? null : await r.json();
-  }
-  async function ghGetFile(repo, path){
-    try {
-      var j = await ghApi('/repos/davedellaquila/' + repo + '/contents/' + path);
-      if (j && j.content) return {
-        text: new TextDecoder().decode(Uint8Array.from(atob(j.content.replace(/\n/g, '')), function(c){ return c.charCodeAt(0); })),
-        sha: j.sha
-      };
-    } catch(e){}
-    return null;
-  }
-  var repo = null, buddyName = bid;
-  async function resolveBuddy(){
-    try {
-      var r = await fetch('../buddies.json', {cache: 'no-store'});
-      var d = await r.json();
-      var buds = d.buddies || [];
-      for (var i = 0; i < buds.length; i++) {
-        if (buds[i].id === bid) {
-          if (buds[i].repo) repo = buds[i].repo;
-          if (buds[i].name) buddyName = buds[i].name;
-          break;
-        }
-      }
-    } catch(e){}
-  }
-  function rkey(aid, text){ return bid + '|' + (aid || ('text:' + text.slice(0, 60))); }
-  function isResolved(aid, text){
-    var s = lsGet();
-    var m = s.attnDone || {};
-    if (m[rkey(aid, text)]) return true;
-    /* Also honor the dashboard's own done map (the same store's 'seen',
-       keyed by bare attention id) so an item cleared in the dashboard
-       stays cleared here — one done state across surfaces. */
-    if (aid && s.seen && s.seen[aid]) return true;
-    return false;
-  }
-  function setResolved(aid, text){ var s = lsGet(); var m = s.attnDone || {}; m[rkey(aid, text)] = 1; s.attnDone = m; lsSet(s); }
-  /* Las Vegas mode (Dave 2026-10-20): marking done feels like a win — the
-     button spins once and confetti bursts from it. DOM + WAAPI only;
-     skipped under prefers-reduced-motion; only ever called on a real tap. */
-  function celebrate(el, fallbackEl){
-    if (!el || !el.getBoundingClientRect) return;
-    if (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    try { el.animate([{transform:'rotate(0deg)'},{transform:'rotate(360deg)'}], {duration:450, easing:'cubic-bezier(.2,.7,.3,1.2)'}); } catch(e){}
-    var r = el.getBoundingClientRect();
-    /* A hidden element's rect is all zeros — bursting from it put the
-       confetti in the viewport's upper-left corner (Dave, 2026-10-21). Fall
-       back to the tile's rect; never burst from a zero rect at all. */
-    if ((!r.width || !r.height) && fallbackEl && fallbackEl.getBoundingClientRect) r = fallbackEl.getBoundingClientRect();
-    if (!r.width || !r.height) return;
-    var cx = r.left + r.width/2, cy = r.top + r.height/2;
-    var colors = ['#f0b429','#3fb950','#f778ba','#58a6ff','#ff7b72','#d2a8ff'];
-    for (var i = 0; i < 26; i++){
-      var s = document.createElement('span');
-      var sz = 5 + Math.random()*6;
-      s.style.cssText = 'position:fixed;left:'+cx+'px;top:'+cy+'px;width:'+sz+'px;height:'+(sz*0.6)+'px;background:'+colors[i%colors.length]+';z-index:99999;pointer-events:none;border-radius:2px;';
-      document.body.appendChild(s);
-      var ang = Math.random()*Math.PI*2, v = 60 + Math.random()*130;
-      var dx = Math.cos(ang)*v, dy = Math.sin(ang)*v - 90;
-      var anim = s.animate([
-        {transform:'translate(-50%,-50%) rotate(0deg)', opacity:1},
-        {transform:'translate(calc(-50% + '+dx+'px), calc(-50% + '+(dy+170)+'px)) rotate('+(Math.random()*540-270)+'deg)', opacity:0}
-      ], {duration: 750 + Math.random()*450, easing:'cubic-bezier(.15,.6,.4,1)'});
-      (function(node, a){ if (a) a.onfinish = function(){ node.remove(); }; else setTimeout(function(){ node.remove(); }, 1300); })(s, anim);
-    }
-  }
-  function paintResolved(tile, msg, immediate){
-    var st = tile.querySelector('.attn-status');
-    if (st) st.textContent = msg;
-    /* Dave 2026-10-20: the check belongs to the RESULT of the tap, never the
-       label beforehand — an upfront check reads as "already done." The Done
-       button renders plain "Done"; the check appears only once clicked. */
-    var db = tile.querySelector('[data-act="done"]');
-    if (db) db.textContent = '✓ Done';
-    if (immediate) { tile.classList.add('resolved'); return; }
-    /* Fresh tap (Dave, 2026-10-21): the check + status land while the button
-       is still visible, and celebrate() fires against the live button; the
-       resolved class (dim + hide actions) arrives a beat later so the result
-       registers first. Applying it instantly hid the button before the check
-       could be seen — and zeroed the rect celebrate() measures, which sent
-       the confetti to the viewport's upper-left corner. */
-    setTimeout(function(){ tile.classList.add('resolved'); }, 1100);
-  }
-  async function sendAction(tile, entry, okMsg){
-    var st = tile.querySelector('.attn-status');
-    var btns = tile.querySelectorAll('.attn-btn');
-    if (!token()) { st.textContent = 'Add a GitHub token in the Brain dump section above to enable actions.'; return false; }
-    if (!repo) { st.textContent = 'No repo linked for this buddy yet.'; return false; }
-    btns.forEach(function(b){ b.disabled = true; });
-    st.textContent = 'Working…';
-    try {
-      var NL = String.fromCharCode(10);
-      var stamp = new Date().toLocaleString();
-      var cur = await ghGetFile(repo, 'docs/ingest.md');
-      var base = cur ? cur.text : '# Ingest log — ' + buddyName + NL + NL;
-      var body = {message: 'Attention action for ' + bid, content: b64encode(base + '## ' + stamp + NL + NL + entry + NL + NL)};
-      if (cur && cur.sha) body.sha = cur.sha;
-      await ghApi('/repos/davedellaquila/' + repo + '/contents/docs/ingest.md', 'PUT', body);
-      st.textContent = okMsg;
-      return true;
-    } catch(err){
-      st.textContent = 'Save failed: ' + (err.message || err);
-      btns.forEach(function(b){ b.disabled = false; });
-      return false;
-    }
-  }
-  tiles.forEach(function(tile){
-    var aid = tile.getAttribute('data-attn-id') || '';
-    var textEl = tile.querySelector('.attn-text');
-    var text = textEl ? textEl.textContent.trim() : '';
-    if (isResolved(aid, text)) { paintResolved(tile, 'Marked done', true); return; }
-    tile.addEventListener('click', function(ev){
-      var btn = ev.target.closest ? ev.target.closest('.attn-btn') : null;
-      if (!btn || btn.disabled) return;
-      var act = btn.getAttribute('data-act');
-      var idBit = aid ? ' (attention id: ' + aid + ')' : '';
-      if (act === 'done') {
-        sendAction(tile,
-          'DONE — Dave marked this done on the homepage: "' + text + '"' + idBit + '. Please remove it from the attention list in buddies.json.',
-          'Marked done — the buddy will clear it.').then(function(ok){ if (ok) { setResolved(aid, text); paintResolved(tile, 'Marked done — the buddy will clear it.'); celebrate(btn, tile); } });
-      } else if (act === 'info') {
-        sendAction(tile,
-          'FOLLOW-UP — Dave needs more info on: "' + text + '"' + idBit + '. Please follow up with him.',
-          'Sent — ' + buddyName + ' will follow up.');
-      }
-    });
-  });
-  resolveBuddy();
-})();
-</script>
-
-
-<script>
-(function(){
-  var sec = document.querySelector('.repo-files');
-  if (!sec || sec.dataset.rfInit) return;
-  sec.dataset.rfInit = '1';
-  var bid = sec.getAttribute('data-buddy-id') || (function(){
-    var p = location.pathname.replace(/\/+$/, '');
-    return p.substring(p.lastIndexOf('/') + 1);
-  })();
-  function lsGet(){ try { return JSON.parse(localStorage.getItem('buddyTree.v3') || '{}'); } catch(e){ return {}; } }
-  function token(){ return lsGet().ghToken || ''; }
-  function b64encode(str){
-    var bytes = new TextEncoder().encode(str), bin = '';
-    bytes.forEach(function(b){ bin += String.fromCharCode(b); });
-    return btoa(bin);
-  }
-  async function ghApi(path, method, body){
-    var t = token();
-    if (!t) throw new Error('Add a GitHub token first.');
-    var r = await fetch('https://api.github.com' + path, {
-      method: method || 'GET',
-      headers: {'Authorization': 'Bearer ' + t, 'Accept': 'application/vnd.github+json', 'Content-Type': 'application/json'},
-      body: body ? JSON.stringify(body) : undefined
-    });
-    if (!r.ok) throw new Error('GitHub ' + r.status);
-    return r.status === 204 ? null : await r.json();
-  }
-  async function ghGetFile(repo, path){
-    try {
-      var j = await ghApi('/repos/davedellaquila/' + repo + '/contents/' + path);
-      if (j && j.content) return {
-        text: new TextDecoder().decode(Uint8Array.from(atob(j.content.replace(/\n/g, '')), function(c){ return c.charCodeAt(0); })),
-        sha: j.sha
-      };
-    } catch(e){}
-    return null;
-  }
-  var repo = null;
-  async function resolveRepo(){
-    try {
-      var r = await fetch('../buddies.json', {cache: 'no-store'});
-      var d = await r.json();
-      var buds = d.buddies || [];
-      for (var i = 0; i < buds.length; i++) {
-        if (buds[i].id === bid && buds[i].repo) { repo = buds[i].repo; break; }
-      }
-    } catch(e){}
-  }
-  function esc(s){ return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
-  function inline(s){
-    s = esc(s);
-    s = s.replace(/`([^`]+)`/g, '<code>$1</code>');
-    s = s.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
-    s = s.replace(/(^|[^*])\*([^*\n]+)\*/g, '$1<em>$2</em>');
-    s = s.replace(/\[([^\]]+)\]\((https?:[^)\s]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>');
-    return s;
-  }
-  function mdRender(src){
-    var lines = src.split('\n'), out = [], inList = false, inCode = false, codeBuf = [];
-    function closeList(){ if (inList) { out.push('</ul>'); inList = false; } }
-    for (var i = 0; i < lines.length; i++){
-      var ln = lines[i], m;
-      if (/^```/.test(ln)) {
-        if (inCode) { out.push('<pre><code>' + esc(codeBuf.join('\n')) + '</code></pre>'); codeBuf = []; inCode = false; }
-        else { closeList(); inCode = true; }
-        continue;
-      }
-      if (inCode) { codeBuf.push(ln); continue; }
-      if ((m = ln.match(/^(#{1,4})\s+(.*)/))) {
-        closeList();
-        var lv = Math.min(m[1].length + 1, 4);
-        out.push('<h' + lv + '>' + inline(m[2]) + '</h' + lv + '>');
-        continue;
-      }
-      if (/^\s*(-{3,}|\*{3,})\s*$/.test(ln)) { closeList(); out.push('<hr>'); continue; }
-      if ((m = ln.match(/^\s*[-*]\s+(.*)/)) || (m = ln.match(/^\s*\d+[.)]\s+(.*)/))) {
-        if (!inList) { out.push('<ul>'); inList = true; }
-        out.push('<li>' + inline(m[1]) + '</li>');
-        continue;
-      }
-      if ((m = ln.match(/^>\s?(.*)/))) { closeList(); out.push('<blockquote>' + inline(m[1]) + '</blockquote>'); continue; }
-      if (!ln.trim()) { closeList(); continue; }
-      closeList();
-      out.push('<p>' + inline(ln) + '</p>');
-    }
-    closeList();
-    if (inCode) out.push('<pre><code>' + esc(codeBuf.join('\n')) + '</code></pre>');
-    return out.join('\n');
-  }
-  var locked = sec.querySelector('.rf-locked'), main = sec.querySelector('.rf-main'),
-      list = sec.querySelector('.rf-list'), st = sec.querySelector('.rf-status');
-  /* Accordion files (Dave 2026-10-21): a list of file names; clicking a
-     name toggles that file's contents open inline right below the name.
-     Toggles are independent — several files can be open at once. Contents
-     load lazily on first open and are cached in the item's own state;
-     Edit/Save lives inside the opened panel. */
-  function buildFileSection(f){
-    var wrap = document.createElement('div');
-    wrap.className = 'rf-fileitem';
-    var head = document.createElement('button');
-    head.type = 'button';
-    head.className = 'rf-file';
-    head.setAttribute('aria-expanded', 'false');
-    var nm = document.createElement('span');
-    nm.className = 'rf-name';
-    nm.textContent = '📄 ' + f.name;
-    var dir = document.createElement('span');
-    dir.className = 'rf-dir';
-    dir.textContent = f.path;
-    var chev = document.createElement('span');
-    chev.className = 'rf-chev';
-    chev.textContent = '▸';
-    head.appendChild(nm);
-    head.appendChild(dir);
-    head.appendChild(chev);
-    var panel = document.createElement('div');
-    panel.className = 'rf-panel';
-    panel.hidden = true;
-    var phead = document.createElement('div');
-    phead.className = 'rf-viewhead';
-    var ppath = document.createElement('span');
-    ppath.className = 'rf-path';
-    ppath.textContent = f.path;
-    var editBtn = document.createElement('button');
-    editBtn.type = 'button';
-    editBtn.className = 'attn-btn rf-edit';
-    editBtn.textContent = 'Edit';
-    editBtn.disabled = true;
-    phead.appendChild(ppath);
-    phead.appendChild(editBtn);
-    var bodyEl = document.createElement('div');
-    bodyEl.className = 'rf-body';
-    bodyEl.innerHTML = '<p class="rf-loading">Loading ' + esc(f.path) + '…</p>';
-    var editor = document.createElement('div');
-    editor.className = 'rf-editor';
-    editor.hidden = true;
-    var ta = document.createElement('textarea');
-    ta.className = 'rf-ta';
-    ta.rows = 18;
-    ta.spellcheck = false;
-    ta.setAttribute('aria-label', 'Markdown source for ' + f.path);
-    var actions = document.createElement('div');
-    actions.className = 'attn-actions';
-    var saveBtn = document.createElement('button');
-    saveBtn.type = 'button';
-    saveBtn.className = 'attn-btn primary rf-save';
-    saveBtn.textContent = 'Save to GitHub';
-    var cancelBtn = document.createElement('button');
-    cancelBtn.type = 'button';
-    cancelBtn.className = 'attn-btn rf-cancel';
-    cancelBtn.textContent = 'Cancel';
-    actions.appendChild(saveBtn);
-    actions.appendChild(cancelBtn);
-    editor.appendChild(ta);
-    editor.appendChild(actions);
-    var fst = document.createElement('div');
-    fst.className = 'rf-fstatus attn-status';
-    fst.setAttribute('role', 'status');
-    panel.appendChild(phead);
-    panel.appendChild(bodyEl);
-    panel.appendChild(editor);
-    panel.appendChild(fst);
-    wrap.appendChild(head);
-    wrap.appendChild(panel);
-    var cur = null, loaded = false;
-    function loadOnce(){
-      if (loaded) return;
-      loaded = true;
-      ghGetFile(repo, f.path).then(function(got){
-        if (!got) { loaded = false; bodyEl.innerHTML = '<p class="rf-loading">⚠ Could not load ' + esc(f.path) + ' — close and open it again to retry.</p>'; return; }
-        cur = {path: f.path, sha: got.sha, text: got.text};
-        bodyEl.innerHTML = mdRender(got.text);
-        editBtn.disabled = false;
-      });
-    }
-    head.addEventListener('click', function(){
-      var open = panel.hidden;
-      panel.hidden = !open;
-      head.setAttribute('aria-expanded', open ? 'true' : 'false');
-      chev.textContent = open ? '▾' : '▸';
-      if (open) loadOnce();
-    });
-    editBtn.addEventListener('click', function(){
-      if (!cur) return;
-      ta.value = cur.text;
-      bodyEl.hidden = true;
-      editor.hidden = false;
-      ta.focus();
-    });
-    cancelBtn.addEventListener('click', function(){
-      editor.hidden = true;
-      bodyEl.hidden = false;
-    });
-    saveBtn.addEventListener('click', async function(){
-      if (!cur) return;
-      saveBtn.disabled = true;
-      fst.textContent = 'Saving…';
-      try {
-        var payload = {message: 'Edit ' + cur.path + ' from the homepage', content: b64encode(ta.value), sha: cur.sha};
-        var j = await ghApi('/repos/davedellaquila/' + repo + '/contents/' + cur.path, 'PUT', payload);
-        if (j && j.content && j.content.sha) cur.sha = j.content.sha;
-        cur.text = ta.value;
-        editor.hidden = true;
-        bodyEl.hidden = false;
-        bodyEl.innerHTML = mdRender(cur.text);
-        fst.textContent = '✓ Saved to GitHub (' + repo + '/' + cur.path + ').';
-      } catch(err){
-        var why = (err && err.message) || String(err);
-        fst.textContent = /409|422/.test(why)
-          ? '⚠ GitHub said the file changed since you loaded it (' + why + ') — reload this page and try again.'
-          : '⚠ Save failed (' + why + ') — your edit is still in the editor.';
-      }
-      saveBtn.disabled = false;
-    });
-    return wrap;
-  }
-  async function init(){
-    await resolveRepo();
-    if (!repo) {
-      locked.hidden = false;
-      locked.textContent = 'No repo is linked for this buddy yet, so there are no repo files to show.';
-      return;
-    }
-    if (!token()) { locked.hidden = false; return; }
-    main.hidden = false;
-    st.textContent = 'Loading files…';
-    var files = [];
-    async function grab(dir){
-      try {
-        var j = await ghApi('/repos/davedellaquila/' + repo + (dir ? '/contents/' + dir : '/contents'));
-        if (Array.isArray(j)) j.forEach(function(e){
-          if (e.type === 'file' && /\.md$/i.test(e.name)) files.push({name: e.name, path: e.path});
-        });
-      } catch(e){}
-    }
-    await grab('');
-    await grab('docs');
-    files.sort(function(a, b){ return a.path < b.path ? -1 : 1; });
-    if (!files.length) { st.textContent = 'No markdown files found in the repo yet.'; return; }
-    st.textContent = '';
-    files.forEach(function(f){
-      list.appendChild(buildFileSection(f));
-    });
-  }
-  init();
-})();
-</script>
-
-
-<script>
-(function(){
-  var parts = location.pathname.split('/');
-  var bid = '';
-  for (var i = parts.length - 1; i >= 0; i--) { if (parts[i]) { bid = parts[i]; break; } }
-  function applyName(name){
-    if (!name) return;
-    var els = document.querySelectorAll('[data-buddy-name]');
-    for (var k = 0; k < els.length; k++) els[k].textContent = name;
-    var ta = document.querySelector('.dumpbox textarea');
-    if (ta) ta.setAttribute('placeholder', "Dump what's on your mind about " + name + "…");
-  }
-  /* Pending renames (Dave 2026-10-18): when the dashboard has no GitHub token,
-     a rename queues in localStorage instead of reaching the registry. The
-     dashboard and homepages share an origin, so the homepage reads that queue
-     here — a pending rename supersedes the registry name, which is why a freshly
-     renamed buddy kept showing its old name after refresh. */
-  function pendingName(){
-    try {
-      var s = JSON.parse(localStorage.getItem('buddyTree.v3') || '{}');
-      if (s && s.pendingRenames && s.pendingRenames[bid]) return s.pendingRenames[bid];
-    } catch(e){}
-    return null;
-  }
-  var pn = pendingName();
-  if (pn) applyName(pn);
-  try {
-    fetch('../buddies.json', {cache: 'no-store'}).then(function(r){ return r.json(); }).then(function(d){
-      var buds = (d && d.buddies) || [];
-      for (var j = 0; j < buds.length; j++) {
-        if (buds[j].id === bid && buds[j].name) { applyName(pendingName() || buds[j].name); break; }
-      }
-    }).catch(function(){});
-  } catch(e){}
-  /* Live rename (Dave 2026-10-16): the dashboard broadcasts renames via
-     localStorage, so an open page updates its name without a refresh.
-     Same browser only — other devices pick it up on their next load. */
-  window.addEventListener('storage', function(e){
-    if (e.key !== 'buddyTree.rename' || !e.newValue) return;
-    try {
-      var d = JSON.parse(e.newValue);
-      if (d && d.id === bid && d.name) applyName(d.name);
-    } catch(err){}
-  });
-})();
-</script>
-
 </body>
 </html>
