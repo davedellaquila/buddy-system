@@ -935,7 +935,7 @@ body {{
 .header {{ text-align: center; margin-bottom: 40px; }}
 .topbar {{
   position: sticky; top: 0; z-index: 50;
-  display: flex; align-items: center; gap: 10px;
+  display: flex; flex-wrap: wrap; align-items: center; gap: 10px;
   background: var(--bg);
   border-bottom: 1px solid var(--border);
   padding: 10px 2px; margin-bottom: 24px;
@@ -949,7 +949,7 @@ body {{
 .topbar-refresh:hover {{ color: var(--text); border-color: var(--border); }}
 .bs-dash-link {{ font-size: 13px; font-weight: 600; color: var(--accent); text-decoration: none; white-space: nowrap; margin-left: 10px; }}
 .bs-dash-link:hover {{ text-decoration: underline; }}
-.topbar .header-tip {{ margin-left: auto; }}
+.topbar .header-tip {{ margin-left: auto; flex: none; }}
 .icon {{ font-size: 64px; margin-bottom: 16px; }}
 h1 {{ font-size: 32px; margin-bottom: 8px; }}
 .tagline {{ color: var(--muted); font-size: 18px; }}

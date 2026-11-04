@@ -2974,7 +2974,15 @@ html.light .wc-got{background:#007AFF}
      sheet. Dashboard views keep the cluster. !important follows the
      ph-left-open precedent above: the display:flex rule it overrides
      is (1,2,1) and state rules have silently lost to it before. */
-  body.ph-right-open #rail-top,body.ph-right-open #rail-mid,body:has(#main.homepage-mode):has(#view-project.active) #rail-top,body:has(#main.homepage-mode):has(#view-project.active) #rail-mid{display:none!important}
+  body.ph-right-open #rail-top,body.ph-right-open #rail-mid{display:none!important}
+  /* Dave 2026-11-04: the framed-homepage state above used to hide the
+     whole rail — but #rail-top's only child is the expand disc, the
+     drawer's only opener, so collapsing the sidebar over a homepage
+     stranded him with no way back. The opener stays over homepages
+     (one 44px disc in the corner the framed pages leave empty);
+     the rest of the rail (Recents / current view / Dump) still
+     steps aside. The open-sheet state keeps hiding both. */
+  body:has(#main.homepage-mode):has(#view-project.active) #rail-mid{display:none!important}
   /* Dave 2026-10-31 (issue 2, separate from the discs): the journal
      bar ("What changed? / Revert (n)") rendered flush to #main's
      top-left — at x=0/y=0 over a framed homepage (where #main's

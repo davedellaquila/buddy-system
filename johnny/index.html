@@ -40,7 +40,7 @@ body {
 .header { text-align: center; margin-bottom: 40px; }
 .topbar {
   position: sticky; top: 0; z-index: 50;
-  display: flex; align-items: center; gap: 10px;
+  display: flex; flex-wrap: wrap; align-items: center; gap: 10px;
   background: var(--bg);
   border-bottom: 1px solid var(--border);
   padding: 10px 2px; margin-bottom: 24px;
@@ -54,7 +54,7 @@ body {
 .topbar-refresh:hover { color: var(--text); border-color: var(--border); }
 .bs-dash-link { font-size: 13px; font-weight: 600; color: var(--accent); text-decoration: none; white-space: nowrap; margin-left: 10px; }
 .bs-dash-link:hover { text-decoration: underline; }
-.topbar .header-tip { margin-left: auto; }
+.topbar .header-tip { margin-left: auto; flex: none; }
 .icon { font-size: 64px; margin-bottom: 16px; }
 h1 { font-size: 32px; margin-bottom: 8px; }
 .tagline { color: var(--muted); font-size: 18px; }
@@ -218,7 +218,7 @@ h2 { font-size: 22px; margin: 32px 0 16px; }
 
 </style>
 <style>
-.header-tip{position:relative;overflow:hidden;display:inline-flex;align-items:center;gap:.45em;padding:6px 12px;border-radius:999px;text-decoration:none;
+.header-tip{position:relative;overflow:hidden;flex:none;display:inline-flex;align-items:center;gap:.45em;padding:6px 12px;border-radius:999px;text-decoration:none;
   font-size:13px;font-weight:800;line-height:1;color:#fff;background:linear-gradient(135deg,#7c4dff,#b388ff);
   box-shadow:0 4px 14px rgba(124,77,255,.35);animation:tip-breathe 3.2s ease-in-out infinite;white-space:nowrap}
 .header-tip::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;
