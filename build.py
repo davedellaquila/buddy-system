@@ -1485,6 +1485,13 @@ body.ub-nomotion #update-banner{transition:none}
   border:1px solid var(--border2);border-radius:10px;background:var(--bg)}
 .fset-choice select{background:var(--panel);color:var(--text);border:1px solid var(--border);border-radius:8px;
   padding:6px 10px;font-size:.8125rem;font-family:inherit}
+.fset-choice input[type=password]{background:var(--panel);color:var(--text);border:1px solid var(--border);border-radius:8px;
+  padding:6px 10px;font-size:.8125rem;font-family:inherit;min-width:0}
+.fset-filterbar{position:sticky;top:0;z-index:5;background:var(--panel);padding:2px 0 10px}
+.fset-filterbar input{width:100%;box-sizing:border-box;background:var(--bg);color:var(--text);border:1px solid var(--border);border-radius:10px;
+  padding:10px 12px;font-size:.875rem;font-family:inherit}
+.fset-filterbar input:focus{outline:2px solid var(--accent);border-color:var(--accent)}
+.fset-nomatch{padding:14px 12px;border:1px dashed var(--border);border-radius:10px;font-size:.84375rem;margin-top:8px}
 /* Attention-effect live preview (Advanced settings): a mini attention header running the selected fx */
 .attnfx-preview{margin:10px 2px 4px;padding:12px;border:1px dashed var(--border);border-radius:10px;background:var(--panel)}
 .attnfx-preview .bp-sec{margin:0}
@@ -5193,7 +5200,7 @@ function updateFactory(){
 function renderSettingChecks(){
   const sdiv = document.getElementById('fset-settings');
   if (!sdiv) return;
-  sdiv.innerHTML = '<div style="margin-bottom:12px"><div style="font-size:.8125rem;margin-bottom:6px">Theme</div>'
+  sdiv.innerHTML = '<div class="fset-theme" style="margin-bottom:12px"><div style="font-size:.8125rem;margin-bottom:6px">Theme</div>'
     + '<div class="theme-pick" role="group" aria-label="Theme" style="margin:0"><button data-theme-pick="light" title="Light theme">Light</button><button data-theme-pick="dark" title="Dark theme">Dark</button><button data-theme-pick="system" title="Follow system theme">System</button></div></div>'
     + SETTING_DEFS.filter(s => !s.advanced).map(s => {
     const val = getSetting(s.id);
@@ -5201,7 +5208,7 @@ function renderSettingChecks(){
     if (s.type === 'choice') return '<label class="fset-choice"><span>' + s.label + (s.tip ? ' <span class="info-tip" data-tip="' + escHtml(s.tip) + '">\\u24d8</span>' : '') + '</span><select data-setting="' + s.id + '">'
       + s.options.map(o => '<option value="' + o + '"' + (val === o ? ' selected' : '') + '>' + o.charAt(0).toUpperCase() + o.slice(1) + '</option>').join('') + '</select></label>';
     return '';
-  }).join('');
+  }).join('') + fsetTokenRowHtml();
   wireThemePicks(sdiv);
   sdiv.querySelectorAll('[data-setting]').forEach(el => {
     el.addEventListener('change', () => {
@@ -5261,6 +5268,8 @@ function renderSettingChecks(){
       });
     });
   }
+  wireFsetToken();
+  applySettingsFilter();
 }
 // ---- Develop tab: new-user simulation and pre-launch tools ----
 let devBackup = null; // {buddies, byId, S} stashed while simulating a new user
@@ -5412,6 +5421,70 @@ function fsetReorderBefore(order, fromId, beforeId){
   }
   return next;
 }
+/* Settings filter (Dave, Nov 5 2026): a keyword box at the top of the settings sheet narrows the
+   panel to the settings whose text contains ANY of the typed keywords; sections left empty by the
+   filter hide too, and a no-match note offers to clear. */
+function applySettingsFilter(){
+  const m = document.getElementById('field-settings'); if (!m) return;
+  const inp = document.getElementById('fset-filter');
+  const body = m.querySelector('.fset-body'); if (!body) return;
+  const keys = (inp ? inp.value : '').toLowerCase().split(/[\s,;]+/).filter(Boolean);
+  const ROWSEL = '.fset-check, .fset-choice, .fset-row, .fset-theme';
+  body.querySelectorAll(ROWSEL).forEach(r => {
+    if (!keys.length) { r.style.display = ''; return; }
+    const txt = (r.textContent || '').toLowerCase();
+    r.style.display = keys.some(k => txt.indexOf(k) >= 0) ? '' : 'none';
+  });
+  body.querySelectorAll('.attnfx-preview').forEach(p => {
+    const prev = p.previousElementSibling;
+    p.style.display = (prev && prev.style.display === 'none') ? 'none' : '';
+  });
+  let anyVisible = false;
+  body.querySelectorAll('.fset-sec').forEach(sec => {
+    const rows = sec.querySelectorAll(ROWSEL);
+    let show;
+    if (!keys.length) show = true;
+    else if (rows.length) show = [...rows].some(r => r.style.display !== 'none');
+    else show = keys.some(k => (sec.textContent || '').toLowerCase().indexOf(k) >= 0);
+    sec.style.display = show ? '' : 'none';
+    if (show) anyVisible = true;
+  });
+  const cols = body.querySelector('.fset-cols');
+  if (cols) cols.style.display = [...cols.querySelectorAll('.fset-sec')].some(s => s.style.display !== 'none') ? '' : 'none';
+  const nm = document.getElementById('fset-nomatch');
+  if (nm) { nm.hidden = anyVisible || !keys.length; const q = document.getElementById('fset-nomatch-q'); if (q) q.textContent = inp ? inp.value : ''; }
+}
+/* GitHub token setting (Dave, Nov 5 2026): the token the dashboard needs to save data back to the
+   repo, settable right in Settings (several flows already told users to add it here). Stored on this
+   device only (S.ghToken via save()); the saved value is never echoed back into the field. */
+function fsetTokenRowHtml(){
+  const has = !!ghToken();
+  return '<div class="fset-choice fset-token"><span>GitHub token'
+    + '<br><span class="fineprint" id="fset-ghtok-status">' + (has ? '✓ A token is saved on this device.' : 'No token saved yet — reading works without one; saving data to the repo needs one.') + '</span></span>'
+    + '<span style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:flex-end">'
+    + '<input type="password" id="fset-ghtok" placeholder="' + (has ? 'Paste a new token to replace it' : 'GitHub token (repo scope)') + '" aria-label="GitHub token" autocomplete="off" style="flex:1;min-width:170px">'
+    + '<button class="linkbtn" id="fset-ghtok-save" type="button">Save token</button>'
+    + (has ? '<button class="linkbtn" id="fset-ghtok-remove" type="button">Remove</button>' : '')
+    + '<a href="https://github.com/settings/tokens" target="_blank" rel="noopener" class="linkbtn" style="text-decoration:none" title="Open GitHub token settings in a new tab">Get a token</a></span></div>';
+}
+function wireFsetToken(){
+  const saveBtn = document.getElementById('fset-ghtok-save');
+  if (saveBtn) saveBtn.addEventListener('click', () => {
+    const inp = document.getElementById('fset-ghtok');
+    const v = inp ? inp.value.trim() : '';
+    if (!v) { toast('Paste a token first.'); return; }
+    S.ghToken = v; save();
+    toast('GitHub token saved on this device.');
+    renderSettingChecks();
+  });
+  const rmBtn = document.getElementById('fset-ghtok-remove');
+  if (rmBtn) rmBtn.addEventListener('click', () => {
+    if (!confirm('Remove the GitHub token from this device? Saving to the repo will pause until you add one again.')) return;
+    S.ghToken = ''; save();
+    toast('GitHub token removed from this device.');
+    renderSettingChecks();
+  });
+}
 function openFieldSettings(){
   let m = document.getElementById('field-settings');
   if (!m) {
@@ -5419,6 +5492,8 @@ function openFieldSettings(){
     m.innerHTML = '<button class="fset-close-x" id="fset-x" title="Close">' + plainX(22) + '</button>'
       + '<div class="fset-head" id="fset-drag"><div class="fset-grip" title="Drag to move"></div><h3>Settings</h3></div>'
       + '<div class="fset-body">'
+      + '<div class="fset-filterbar"><input type="search" id="fset-filter" placeholder="Filter settings — type a keyword…" aria-label="Filter settings"></div>'
+      + '<div class="fset-nomatch" id="fset-nomatch" hidden>No settings match <strong id="fset-nomatch-q"></strong>. <button class="linkbtn" id="fset-clearfilter" type="button">Clear filter</button></div>'
       + '<section class="fset-sec"><h3 class="fset-sec-h">Preferences</h3><div id="fset-settings"></div></section>'
       + '<div class="fset-cols">'
       + '<section class="fset-sec"><h3 class="fset-sec-h">Main views</h3><p class="fineprint">Drag to reorder. Number keys 1–9 follow this order.</p><div id="vset-list"></div></section>'
@@ -5438,6 +5513,10 @@ function openFieldSettings(){
     m.querySelector('#fset-close').addEventListener('click', () => m.classList.remove('show'));
     m.querySelector('#fset-x').addEventListener('click', () => m.classList.remove('show'));
     renderSettingChecks();
+    const fsInp = m.querySelector('#fset-filter');
+    if (fsInp) fsInp.addEventListener('input', () => applySettingsFilter());
+    const fsClr = m.querySelector('#fset-clearfilter');
+    if (fsClr) fsClr.addEventListener('click', () => { if (fsInp) fsInp.value = ''; applySettingsFilter(); if (fsInp) fsInp.focus(); });
     renderDevelopSection();
     m.querySelector('#fset-reset').addEventListener('click', () => {
       if (!confirm('Reset all settings to factory defaults?')) return;
