@@ -1502,6 +1502,10 @@ body.ub-nomotion #update-banner{transition:none}
 .fset-filterbar input{width:100%;box-sizing:border-box;background:var(--bg);color:var(--text);border:1px solid var(--border);border-radius:10px;
   padding:10px 12px;font-size:.875rem;font-family:inherit}
 .fset-filterbar input:focus{outline:2px solid var(--accent);border-color:var(--accent)}
+/* The filter takes focus the moment Settings opens (see openFieldSettings);
+   below 16px iOS zooms the page on any input focus, so on touch devices
+   the filter sits at 16px and focusing it never rescales the sheet. */
+@media (pointer:coarse){.fset-filterbar input{font-size:1rem}}
 .fset-nomatch{padding:14px 12px;border:1px dashed var(--border);border-radius:10px;font-size:.84375rem;margin-top:8px}
 /* Attention-effect live preview (Advanced settings): a mini attention header running the selected fx */
 .attnfx-preview{margin:10px 2px 4px;padding:12px;border:1px dashed var(--border);border-radius:10px;background:var(--panel)}
@@ -5744,6 +5748,16 @@ function openFieldSettings(){
   }
   m.classList.add('show');
   if (m._applyGeom) m._applyGeom();
+  /* Dave 2026-11-05: Settings opens ready to type — keyboard focus lands
+     in the filter box on every open. This function is the single open
+     funnel (gear button, Cmd/Ctrl+comma, the reset re-open), so the
+     focus lives here and nowhere else. It waits a frame so the sheet is
+     laid out (same idiom as the '/' buddy-search focus), and
+     preventScroll keeps the sheet and the page behind it from jumping;
+     the input is sized 16px on touch devices (see .fset-filterbar) so
+     iOS does not zoom the sheet on focus. */
+  const fsFocus = m.querySelector('#fset-filter');
+  if (fsFocus) requestAnimationFrame(() => { try { fsFocus.focus({ preventScroll: true }); } catch (e) { fsFocus.focus(); } });
 }
 function applyPanelWidth(){
   const vb = document.getElementById('view-buddy');
