@@ -506,6 +506,17 @@ body.sb-closed #main .zoombar{left:calc(50% + 38px)}
    Recents (every visit, most recent first). A segmented control under the
    Buddies header; the choice persists per device (S.panelTab). */
 #sb-tabs{display:flex;gap:4px;padding:0 0 8px}
+/* Dave 2026-11-05: the Buddies/Recents pills stick too. They dock directly
+   beneath the section's sticky eyebrow, extending the iOS Contacts stack
+   (brand + search + eyebrow) by one more bar, so the outline scrolls
+   under them instead of carrying them away. Full-bleed with an opaque
+   background like the other sidebar stickies; z-index one below the
+   eyebrow's so the header always paints on top. --sb-h3-h is the
+   eyebrow's measured height + its bottom margin, kept in sync by
+   syncSbBrandStickyHeight alongside the brand/search measures. */
+#sidebar #sb-tabs{position:sticky;top:calc(var(--sb-brand-h,96px) + var(--sb-search-h,56px) + var(--sb-h3-h,36px));z-index:4;
+  background:var(--panel);margin:0 -14px;padding:6px 14px 8px;
+  box-shadow:0 8px 14px -10px rgba(0,0,0,.55)}
 .sb-tab{flex:1;padding:6px 10px;border-radius:999px;border:1px solid var(--border);background:transparent;color:var(--text2);font:inherit;font-size:.8125rem;font-weight:600;cursor:pointer}
 .sb-tab:hover{color:var(--text);border-color:var(--accent)}
 .sb-tab.sel{background:var(--wash);color:var(--text);border-color:var(--accent)}
@@ -5645,7 +5656,7 @@ function renderDevelopSection(){
   const dev = document.getElementById('fset-develop');
   if (!dev) return;
   const simulating = !!devBackup;
-  const buildNum = '20261105.1812';
+  const buildNum = '20261105.1014';
   dev.innerHTML = ''
     + '<label class="fset-check"><input type="checkbox" id="dev-empty-toggle"' + (simulating ? ' checked' : '') + '> <span><strong>Simulate new user</strong> — empty data file, as if opening the shared link fresh</span></label>'
     + '<div class="fineprint" style="margin:8px 0 12px">Build <span style="font-family:monospace">' + escHtml(String(buildNum)) + '</span> · ' + BUDDIES.length + ' buddies in this file</div>'
@@ -7967,7 +7978,7 @@ function renderBuddy(id){
     + attrHead('shared', 'SHARED NOTES', '<span class="attr-value" id="bp-shared-count">(0)</span>', '')
     + '<div class="attr-body">' + attrTipLine('Anybody with repo access can see this note. Saved to the buddy’s repo (docs/notes.md).') + '<textarea class="notes" id="bp-shared-notes" placeholder="Anybody with repo access can see this note."></textarea>'
     + '<p class="fineprint" id="shared-status"></p></div></div>'
-    + '<div class="bp-build">Build 20261105.1812</div>'
+    + '<div class="bp-build">Build 20261105.1014</div>'
     + '</div>';
   // Update every visible label for a buddy after a rename/re-icon, across all
   // Atlas lenses. A rename changes no structure, so labels are patched in place
@@ -10771,7 +10782,7 @@ function renderPlan(id){
     + '<p class="fineprint">Saved on this device. (For your eyes only)</p></div>'
     + '<div class="bp-sec"><h3>📝 Shared notes<span class="info-tip" data-tip="Visible to everyone with access to this project.">\u24d8</span></h3><textarea class="notes" id="bp-shared" placeholder="Shared notes\u2026 (visible to everyone with access)">'+escHtml((S.planShared||{})[id]||'')+'</textarea>'
     + '<p class="fineprint">Shared — visible to everyone with access.</p></div>'
-    + '<div class="bp-build">Build 20261105.1812</div>'
+    + '<div class="bp-build">Build 20261105.1014</div>'
     + '</div>';
   const nt = document.getElementById('bp-notes');
   let t = null;
@@ -13585,6 +13596,13 @@ function syncSbBrandStickyHeight(){
     const sh = Math.ceil(search.getBoundingClientRect().height);
     if (sh > 0) sb.style.setProperty('--sb-search-h', sh + 'px');
   }
+  /* The pills' dock offset includes the section eyebrow: its height plus
+     its 8px bottom margin (from the .nav-sec>h3 rule). */
+  const h3 = document.querySelector('#buddies-sec>h3') || document.querySelector('#sidebar .nav-sec>h3');
+  if (h3) {
+    const hh = Math.ceil(h3.getBoundingClientRect().height);
+    if (hh > 0) sb.style.setProperty('--sb-h3-h', (hh + 8) + 'px');
+  }
 }
 function initSbBrandSticky(){
   syncSbBrandStickyHeight();
@@ -13595,6 +13613,10 @@ function initSbBrandSticky(){
   const search = document.querySelector('.sb-search-sticky');
   if (search && typeof ResizeObserver !== 'undefined') {
     new ResizeObserver(() => syncSbBrandStickyHeight()).observe(search);
+  }
+  const h3 = document.querySelector('#buddies-sec>h3');
+  if (h3 && typeof ResizeObserver !== 'undefined') {
+    new ResizeObserver(() => syncSbBrandStickyHeight()).observe(h3);
   }
   window.addEventListener('resize', syncSbBrandStickyHeight);
 }
@@ -14695,14 +14717,14 @@ function openWhatsNew(){
     .then(r => r.ok ? r.text() : '')
     .then(t => {
       const serverBuild = t.trim();
-      if (serverBuild && serverBuild !== '20261105.1812') {
+      if (serverBuild && serverBuild !== '20261105.1014') {
         updBtn.style.display = '';
         updBtn.title = 'Update to build ' + serverBuild;
       }
       // Show build numbers at the top of the sheet (Dave's request 2026-10-12)
-      const myBuild = '20261105.1812';
+      const myBuild = '20261105.1014';
       let buildLine = '<p class="fineprint" style="margin-top:0">You’re on build ' + escHtml(myBuild) + '.';
-      if (serverBuild && serverBuild !== '20261105.1812' && isNewerBuild(serverBuild, myBuild)) {
+      if (serverBuild && serverBuild !== '20261105.1014' && isNewerBuild(serverBuild, myBuild)) {
         buildLine += ' Build ' + escHtml(serverBuild) + ' is available.';
       }
       buildLine += '</p>';
@@ -14772,7 +14794,7 @@ function syncUpdateBanner(){
   if (b.dataset.state !== state) b.dataset.state = state;
 }
 function initVersionCheck(){
-  const myBuild = '20261105.1812';
+  const myBuild = '20261105.1014';
   function showUpdateBanner(serverBuild){
     if (document.getElementById('update-banner')) return;
     const b = document.createElement('div');
