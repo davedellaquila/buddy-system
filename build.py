@@ -6857,7 +6857,14 @@ function renderProjectView(){
       frame.style.opacity = '1';
       try {
         frame.contentWindow.addEventListener('keydown', e => {
-          if (['ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(e.key)) {
+          /* Dave 2026-11-05: arrows belong to the field being edited. When
+             the key lands in an input / textarea / select / contenteditable
+             inside the homepage (its Brain dump box above all), leave it
+             entirely alone — no forwarding to the parent's navigation and
+             no preventDefault, so the text cursor moves as expected. */
+          const ed = e.target;
+          const editing = !!(ed && ((ed.closest && ed.closest('input, textarea, select, [contenteditable]')) || ed.isContentEditable));
+          if (!editing && ['ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(e.key)) {
             document.dispatchEvent(new KeyboardEvent('keydown', {key: e.key, bubbles: true, cancelable: true}));
             e.preventDefault();
           }
@@ -10444,7 +10451,7 @@ function replaceNavState(){
 document.addEventListener('keydown', e => {
   // / focuses buddy search, N creates new buddy (when not typing in a field)
   const tag = (document.activeElement && document.activeElement.tagName) || '';
-  const typing = tag === 'INPUT' || tag === 'TEXTAREA' || (document.activeElement && document.activeElement.isContentEditable);
+  const typing = tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || (document.activeElement && document.activeElement.isContentEditable);
   if (!typing && !e.metaKey && !e.ctrlKey && !e.altKey) {
     if (e.key === '/') {
       e.preventDefault();
@@ -10677,7 +10684,13 @@ document.addEventListener('keydown', e => {
       }
     }
   }
-  if (e.target && e.target.matches && e.target.matches('input, textarea, [contenteditable="true"]')) return;
+  /* Dave 2026-11-05: global shortcuts stand down while a field is being
+     edited — any input, textarea, select, or contenteditable (including
+     a target nested inside a contenteditable). The old matches() check
+     missed selects and contenteditable children, so arrows in a field
+     still stepped the buddy selection. */
+  if (e.target && e.target.closest && e.target.closest('input, textarea, select, [contenteditable]')) return;
+  if (e.target && e.target.isContentEditable) return;
   /* Job H: if the main cascade already consumed this ESC (a transient
      popover or the settings sheet), it preventDefaulted — do not also
      close the panel on the same keypress. */
