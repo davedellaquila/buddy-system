@@ -946,6 +946,19 @@ body.sb-closed #sb-resize{display:none}
 html.light #new-buddy-fab{background:rgba(255,255,255,.78);color:#1c1c1e;border-color:rgba(0,0,0,.18)}
 /* Hide the FAB while Settings is open — it overlapped the Done button */
 body:has(#field-settings.show) #new-buddy-fab{display:none}
+/* Framed homepages: the FAB yields the corner (Dave 2026-11-05, replacing
+   the 2026-10-27 frame injection). Every buddy homepage's Tip Jar pill
+   sits fixed at its frame's bottom-right (bottom:18, ~32px tall), and in
+   project view the frame's corner meets the window's, where this FAB
+   lives (bottom:20, 44px). The 2026-10-27 fix injected a lift rule into
+   the frame's document — but any state where that sync doesn't run (a
+   cross-origin frame, a missed re-sync) put the FAB back on the pill,
+   which is how Dave hit it again. The FAB is the shell's own chrome, so
+   the shell moves it: in project view it stacks above the pill's corner
+   (bottom:76 = pill top edge 50 + 26px of air), still one tap away,
+   while the pill keeps its canonical corner, fully visible and tappable.
+   Pure CSS — no frame access, so it holds for cross-origin frames too. */
+body:has(#view-project.active) #new-buddy-fab{bottom:76px;transition:bottom .25s ease-out}
 #new-buddy-fab:active{transform:scale(.94)}
 /* Homepage navigation (Dave 2026-10-20): the three buttons are distributed
    along the bottom. Back sits in the lower-left corner, the mirror image of
@@ -6950,9 +6963,6 @@ function renderProjectView(){
         // silently and keeps parent-only behavior).
         if (window.__bindPullToRefresh && frame.contentDocument) window.__bindPullToRefresh(frame.contentDocument);
         if (window.__bindEdgeSwipes && frame.contentDocument){ try { window.__bindEdgeSwipes(frame.contentDocument, frame, b.id); } catch (err2) {} }
-        // Keep the homepage's Tip Jar clear of the floating + button (below).
-        if (window.__syncFabTipjar) window.__syncFabTipjar(frame);
-        if (window.__observeFabTipjar) window.__observeFabTipjar(frame);
       } catch (err) {}
     });
     frame.src = hp;
@@ -14112,67 +14122,10 @@ function bindIframeEdgeSwipes(iframeDoc, frameEl, buddyId){
 }
 window.__bindEdgeSwipes = bindIframeEdgeSwipes;
 
-/* Tip Jar vs the floating + button (Dave, 2026-10-27 — iPad screenshot: the
-   + button sat on top of Birthday Buddy's Tip Jar pill, cutting it in half).
-   Root cause: #new-buddy-fab is position:fixed in the SHELL at the window's
-   bottom-right (right:20, bottom:20, 44px circle → it spans right 20–64,
-   bottom 20–64; it was 56px until the 2026-10-31 unification), while every buddy homepage's .tipjar pill is
-   position:fixed inside the homepage IFRAME at right:18, bottom:18. When
-   the frame fills the window — floating panels, or anchored with the info
-   panel closed; the frame's bottom edge sits ~40px above the window's for
-   the Refresh row, still inside the collision band — the iframe's
-   bottom-right corner IS the window's bottom-right corner, so the shell's
-   FAB paints over the pill's right half. Standalone homepages have no FAB
-   and were never affected.
-   Fix: the shell owns the FAB, so the shell reserves the corner. When the
-   frame's bottom-right corner is at the window's (gaps ≤56px; collision
-   starts under 58px), inject one rule into the frame's document lifting the
-   jar to bottom:88px — its bottom edge then sits 12px above the FAB's top
-   edge (76), stacked in the same corner column, fully visible and tappable.
-   Anchored mode with the info panel open pushes the frame ~456px off the
-   window's right edge, the gaps exceed the threshold, and the jar keeps its
-   canonical corner spot. The jar's own CSS/motion (snippet v2: breathing +
-   shimmer, off under prefers-reduced-motion) is untouched — this only
-   overrides its bottom offset, only inside the dashboard.
-   Re-synced on frame load, on window resize, and via a ResizeObserver on
-   the frame (the anchored panel opening/closing resizes the frame without
-   a window resize). Cross-origin frames fail silently, like the other
-   iframe bindings. */
-function syncFabTipjarClearance(frame){
-  try {
-    const doc = frame && frame.contentDocument;
-    if (!doc || !doc.documentElement) return;
-    const r = frame.getBoundingClientRect();
-    const atCorner = (window.innerWidth - r.right) <= 56 && (window.innerHeight - r.bottom) <= 56;
-    let st = doc.getElementById('fab-tipjar-clearance');
-    if (atCorner) {
-      if (!st) {
-        st = doc.createElement('style');
-        st.id = 'fab-tipjar-clearance';
-        (doc.head || doc.documentElement).appendChild(st);
-      }
-      st.textContent = '.tipjar{bottom:88px !important}';
-    } else if (st) {
-      st.textContent = '';
-    }
-  } catch (e) {}
-}
-window.__syncFabTipjar = syncFabTipjarClearance;
-let __fabTipjarRO = null;
-function observeFabTipjar(frame){
-  try {
-    if (__fabTipjarRO) __fabTipjarRO.disconnect();
-    __fabTipjarRO = null;
-    if (!('ResizeObserver' in window) || !frame) return;
-    __fabTipjarRO = new ResizeObserver(() => syncFabTipjarClearance(frame));
-    __fabTipjarRO.observe(frame);
-  } catch (e) {}
-}
-window.__observeFabTipjar = observeFabTipjar;
-window.addEventListener('resize', () => {
-  const f = document.getElementById('homepage-frame');
-  if (f && f.tagName === 'IFRAME') syncFabTipjarClearance(f);
-});
+/* Tip Jar vs the floating + button: the shell-side fix (a project-view
+   bottom offset on #new-buddy-fab) lives with the FAB's CSS above; the
+   2026-10-27 frame-injection machinery that used to sit here was retired
+   2026-11-05 — it could not cover cross-origin frames or missed syncs. */
 
 // Checks for a newer deployed version; shows an update banner if the server
 // has a newer build than the one currently loaded (helps Safari web apps
