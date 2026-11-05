@@ -341,7 +341,7 @@ body.sb-closed #main .zoombar{left:calc(50% + 38px)}
    eyebrow's so the header always paints on top. --sb-h3-h is the
    eyebrow's measured height + its bottom margin, kept in sync by
    syncSbBrandStickyHeight alongside the brand/search measures. */
-#sidebar #sb-tabs{position:sticky;top:calc(var(--sb-brand-h,96px) + var(--sb-search-h,56px) + var(--sb-h3-h,36px));z-index:4;
+#sidebar #sb-tabs{position:sticky;top:calc(var(--sb-brand-h,96px) + var(--sb-search-h,56px) + var(--sb-h3-h,28px));z-index:4;
   background:var(--panel);margin:0 -14px;padding:6px 14px 8px;
   box-shadow:0 8px 14px -10px rgba(0,0,0,.55)}
 .sb-tab{flex:1;padding:6px 10px;border-radius:999px;border:1px solid var(--border);background:transparent;color:var(--text2);font:inherit;font-size:.8125rem;font-weight:600;cursor:pointer}
@@ -13228,12 +13228,16 @@ function syncSbBrandStickyHeight(){
     const sh = Math.ceil(search.getBoundingClientRect().height);
     if (sh > 0) sb.style.setProperty('--sb-search-h', sh + 'px');
   }
-  /* The pills' dock offset includes the section eyebrow: its height plus
-     its 8px bottom margin (from the .nav-sec>h3 rule). */
+  /* The pills dock flush at the section eyebrow's bottom border, so the
+     pinned stack (brand + search + eyebrow + pills) is one solid panel
+     with no see-through strip for rows to scroll through (Dave,
+     2026-11-05). The eyebrow's 8px bottom margin therefore stays OUT of
+     this measure: it still spaces the pills in the unscrolled flow,
+     but while stuck the opaque pills bar covers that strip. */
   const h3 = document.querySelector('#buddies-sec>h3') || document.querySelector('#sidebar .nav-sec>h3');
   if (h3) {
     const hh = Math.ceil(h3.getBoundingClientRect().height);
-    if (hh > 0) sb.style.setProperty('--sb-h3-h', (hh + 8) + 'px');
+    if (hh > 0) sb.style.setProperty('--sb-h3-h', hh + 'px');
   }
 }
 function initSbBrandSticky(){
