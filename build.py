@@ -3176,6 +3176,18 @@ def build():
     # builds on this file format (pinned 2026-10-12).
     _voices = json.load(open(f"{HERE}/voice-catalog.json", encoding="utf-8"))
     voices_js = json.dumps(_voices)
+    # Sampled voices (Dave 2026-11-05): the set is whatever actually sits
+    # in voices/samples/ at build time — bake a sample there and the
+    # picker + info panel offer its preview automatically; no hand-kept
+    # list to drift. Filenames are the voice id with ':'/'/' as '_';
+    # every catalog id starts 'avocado_v2:', so the prefix swap is exact.
+    import glob as _glob
+    _sampled = {}
+    for _f in _glob.glob(f"{HERE}/voices/samples/*.mp3"):
+        _base = _f.rsplit('/', 1)[-1][:-4]
+        if _base.startswith('avocado_v2_'):
+            _sampled['avocado_v2:' + _base[len('avocado_v2_'):]] = 1
+    sampled_js = json.dumps(_sampled)
     # Persona roster (~/workspace/persona-roster.md) -> baked into the dashboard
     # so the info-panel persona picker offers the full 116-entry list.
     import re as _re
@@ -3248,6 +3260,7 @@ def build():
 const ROOT_ORDER = ORDER_JSON;
 const PERSONA_ROSTER = PERSONA_ROSTER_JSON;
 const VOICE_CATALOG = VOICES_JSON; // full voice catalog from voice-catalog.json, baked at build time
+const SAMPLED_VOICES = BAKED_SAMPLES_JSON; // voice ids with a baked preview sample in voices/samples/, computed at build time
 const byId = Object.fromEntries(BUDDIES.map(b => [b.id, b]));
 const ROOT_ID = 'astro'; // chief of staff sits at the root of the tree
 BUDDIES.forEach(b => { (b.links || []).forEach(lid => { const t = byId[lid]; if (t && lid !== b.id) { (t.linkedBy = t.linkedBy || []).push(b.id); } }); });
@@ -3859,6 +3872,7 @@ function selectBuddy(id){
 }
 function openBuddy(id){
   if (!byId[id]) return;
+  stopVoiceSample(); /* a sample from the previous buddy never follows you */
   selectBuddy(id);
   /* iPhone Pass v2: opening the right dock closes the left one. */
   if (isDrawerNav()) setSidebarOpen(false);
@@ -4538,7 +4552,38 @@ function artRow(icon, label, sub, url){
     + '<span><span class="art-label">'+escHtml(label)+'</span><div class="art-sub">'+escHtml(sub)+'</div></span>'
     + '<span class="art-go">→</span></a>';
 }
+/* Voice-sample playback (Dave 2026-11-05): ONE tracked player for the
+   info panel's Preview button. Starting a sample stops the previous
+   one; tapping Preview while its sample plays stops it; the player is
+   stopped when the panel closes or switches buddies, so a sample never
+   keeps talking over a closed panel. A voice with no baked sample says
+   so in the section's status line instead of failing silently. */
+let bpSampleAudio = null, bpSampleBtn = null, bpSampleVoice = '';
+function stopVoiceSample(){
+  if (bpSampleAudio){ try { bpSampleAudio.pause(); } catch (e) {} bpSampleAudio = null; }
+  if (bpSampleBtn){ bpSampleBtn.innerHTML = '\u25b6\ufe0e Preview'; bpSampleBtn = null; }
+  bpSampleVoice = '';
+}
+function playVoiceSample(voiceId, btn){
+  const status = document.getElementById('bp-voice-status');
+  if (!voiceId){ if (status) status.textContent = 'No voice selected.'; return; }
+  if (bpSampleVoice === voiceId && bpSampleAudio){ stopVoiceSample(); return; }
+  stopVoiceSample();
+  if (!(typeof SAMPLED_VOICES !== 'undefined' && SAMPLED_VOICES[voiceId])){
+    if (status) status.textContent = 'No preview sample has been baked for this voice yet.';
+    return;
+  }
+  const fname = voiceId.replace(/:/g, '_').replace(/\//g, '_') + '.mp3';
+  const audio = new Audio('voices/samples/' + fname);
+  bpSampleAudio = audio; bpSampleVoice = voiceId; bpSampleBtn = btn || null;
+  if (bpSampleBtn) bpSampleBtn.innerHTML = '\u23f8\ufe0e Playing\u2026';
+  if (status) status.textContent = '';
+  audio.onended = () => { if (bpSampleAudio === audio) stopVoiceSample(); };
+  audio.onerror = () => { if (bpSampleAudio === audio){ stopVoiceSample(); const st = document.getElementById('bp-voice-status'); if (st) st.textContent = 'The preview sample could not be loaded.'; } };
+  audio.play().catch(() => { if (bpSampleAudio === audio){ stopVoiceSample(); const st = document.getElementById('bp-voice-status'); if (st) st.textContent = 'Could not play the preview.'; } });
+}
 function closeDetail(){
+  stopVoiceSample();
   const vb = document.getElementById('view-buddy');
   setTimeout(() => { if (typeof syncUpdateBanner === 'function') syncUpdateBanner(); }, 60);
   if (vb && (vb.classList.contains('panel') || vb.classList.contains('sheet'))) {
@@ -7204,7 +7249,18 @@ function openVoicePicker(id){
   document.body.appendChild(m);
   const grid = m.querySelector('#pp-grid');
   const filter = m.querySelector('#pp-filter');
-  const close = () => m.remove();
+  /* Playback state lives at picker scope (Dave 2026-11-05): it used to be
+     re-created inside renderGrid, so filtering while a sample played
+     orphaned the audio — it kept playing with nothing able to stop it.
+     Closing the picker now stops any sample, and only one plays at a
+     time; tapping the playing voice's button again stops it. */
+  let curAudio = null, curPlayBtn = null, curPlayVoice = '';
+  const stopSample = () => {
+    if (curAudio){ try { curAudio.pause(); } catch (e) {} curAudio = null; }
+    if (curPlayBtn){ curPlayBtn.textContent = '\u25b6\ufe0e'; curPlayBtn = null; }
+    curPlayVoice = '';
+  };
+  const close = () => { stopSample(); m.remove(); };
   const TONE_COLORS = ['#e0653a','#d9a13b','#7ba23f','#3f9e7a','#3a8fb7','#5b7fd4','#8a63c9','#c9548c','#b0523c','#4f9da6','#96833a','#6a8f3c'];
   function toneColor(t){ let h = 0; for (let i = 0; i < t.length; i++) h = (h * 31 + t.charCodeAt(i)) >>> 0; return TONE_COLORS[h % TONE_COLORS.length]; }
   let activeTone = '';
@@ -7224,9 +7280,9 @@ function openVoicePicker(id){
     const list = catalog.filter(v => (!activeTone || v.tone === activeTone) && (!q || (v.name || '').toLowerCase().indexOf(q) >= 0 || (v.desc || '').toLowerCase().indexOf(q) >= 0 || (v.accent || '').toLowerCase().indexOf(q) >= 0 || (v.tone || '').toLowerCase().indexOf(q) >= 0));
     const countEl = m.querySelector('#pp-count');
     if (countEl) countEl.textContent = list.length + ' of ' + catalog.length;
-    // Voices with audio samples (Dave 2026-10-12) — baked list of the 30 sampled voices
-    const sampledVoices = {'avocado_v2:MAI_01':1,'avocado_v2:MAI_03':1,'avocado_v2:Karen':1,'avocado_v2:nova':1,'avocado_v2:bud':1,'avocado_v2:isabella':1,'avocado_v2:rumi':1,'avocado_v2:mudiwa':1,'avocado_v2:myrtle':1,'avocado_v2:hubert':1,'avocado_v2:conor':1,'avocado_v2:miles':1,'avocado_v2:briggs':1,'avocado_v2:chip':1,'avocado_v2:lady_macbeth':1,'avocado_v2:melody':1,'avocado_v2:marisol':1,'avocado_v2:atlas':1,'avocado_v2:casper':1,'avocado_v2:ElvenWizard':1,'avocado_v2:TruthTeller':1,'avocado_v2:Vanessa':1,'avocado_v2:Lily':1,'avocado_v2:Twenty':1,'avocado_v2:Caitlin':1,'avocado_v2:paloma':1,'avocado_v2:ronan':1,'avocado_v2:lumi':1,'avocado_v2:magnus':1,'avocado_v2:vincent':1};
-    let curAudio = null;
+    // Voices with audio samples — the build-time set from voices/samples/
+    // (SAMPLED_VOICES), so it always matches the files that actually ship.
+    const sampledVoices = (typeof SAMPLED_VOICES !== 'undefined' ? SAMPLED_VOICES : {});
     const MAXR = 400; // render cap (Dave 2026-10-20): all 1,066 voices are in the catalog and searchable; only the first matches render so the sheet stays responsive
     const shown = list.slice(0, MAXR);
     grid.innerHTML = shown.map(v =>
@@ -7241,19 +7297,23 @@ function openVoicePicker(id){
     grid.querySelectorAll('[data-play]').forEach(pb => {
       const playIt = (ev) => {
         ev.stopPropagation(); ev.preventDefault();
-        if (curAudio){ curAudio.pause(); curAudio = null; }
         const vid = pb.getAttribute('data-play');
+        if (curPlayVoice === vid && curAudio){ stopSample(); return; }
+        stopSample();
         const fname = vid.replace(/:/g, '_').replace(/\//g, '_') + '.mp3';
         curAudio = new Audio('voices/samples/' + fname);
+        curPlayBtn = pb; curPlayVoice = vid;
         pb.textContent = '\u23f8\ufe0e';
-        curAudio.onended = () => { pb.textContent = '\u25b6\ufe0e'; curAudio = null; };
-        curAudio.play().catch(() => { pb.textContent = '\u25b6\ufe0e'; toast('Could not play the preview.'); });
+        const mine = curAudio;
+        curAudio.onended = () => { if (curAudio === mine) stopSample(); };
+        curAudio.onerror = () => { if (curAudio === mine){ stopSample(); toast('Could not play the preview.'); } };
+        curAudio.play().catch(() => { if (curAudio === mine){ stopSample(); toast('Could not play the preview.'); } });
       };
       pb.addEventListener('click', playIt);
       pb.addEventListener('keydown', (ev) => { if (ev.key === 'Enter' || ev.key === ' ') playIt(ev); });
     });
     grid.querySelectorAll('.pp-card').forEach(c => c.addEventListener('click', () => {
-      if (curAudio){ curAudio.pause(); curAudio = null; }
+      stopSample();
       const vid = c.getAttribute('data-voice'); close(); setBuddyVoice(id, vid);
     }));
   }
@@ -7773,15 +7833,6 @@ function renderBuddy(id){
     const changeBtn = document.getElementById('bp-voice-change');
     const notesCb = document.getElementById('bp-voice-notes');
     if (changeBtn) changeBtn.addEventListener('click', e => { e.stopPropagation(); openVoicePicker(id); });
-    const previewBtn = document.getElementById('bp-voice-preview');
-    if (previewBtn) previewBtn.addEventListener('click', e => {
-      e.stopPropagation();
-      const voiceId = (byId[id] && byId[id].voice) || '';
-      if (!voiceId) { toast('No voice selected.'); return; }
-      const fname = voiceId.replace(/:/g, '_').replace(/\//g, '_') + '.mp3';
-      const audio = new Audio('voices/samples/' + fname);
-      audio.play().catch(() => toast('Could not play the preview.'));
-    });
     if (notesCb) notesCb.addEventListener('change', e => {
       e.stopPropagation();
       setBuddyVoiceNotes(id, notesCb.checked);
@@ -14989,10 +15040,7 @@ document.addEventListener('click', e => {
   if (e.target.closest && e.target.closest('[data-oc-toggle]')) { toggleOcTeam(e.target.closest('[data-oc-toggle]').getAttribute('data-oc-toggle')); return; }
   if (e.target.closest && e.target.closest('#bp-voice-preview')) {
     const voiceId = (S.projectId && byId[S.projectId] && byId[S.projectId].voice) || '';
-    if (!voiceId) { toast('No voice selected.'); return; }
-    const fname = voiceId.replace(/:/g, '_').replace(/\//g, '_') + '.mp3';
-    const audio = new Audio('voices/samples/' + fname);
-    audio.play().catch(() => toast('Could not play the preview.'));
+    playVoiceSample(voiceId, e.target.closest('#bp-voice-preview'));
     return;
   }
   if (e.target.closest && e.target.closest('#sb-recents')) { toggleRecentsPop(document.getElementById('sb-recents')); return; }
@@ -15446,7 +15494,7 @@ initCollectionsResize();
 syncRailCurView();
 flushDumpQueue();
 """
-    js = js.replace("BUDDIES_JSON", buddies_js).replace("ORDER_JSON", order_js).replace("PLANS_JSON", plans_js).replace("PERSONA_ROSTER_JSON", roster_js).replace("VOICES_JSON", voices_js)
+    js = js.replace("BUDDIES_JSON", buddies_js).replace("ORDER_JSON", order_js).replace("PLANS_JSON", plans_js).replace("PERSONA_ROSTER_JSON", roster_js).replace("VOICES_JSON", voices_js).replace("BAKED_SAMPLES_JSON", sampled_js)
     js = js.replace("ICON_DOC", "'" + ICON_DOC.replace("'", "\\'") + "'")
     js = js.replace("ICON_REPO", "'" + ICON_REPO.replace("'", "\\'") + "'")
     js = js.replace("ICON_LINK", "'" + ICON_LINK.replace("'", "\\'") + "'")

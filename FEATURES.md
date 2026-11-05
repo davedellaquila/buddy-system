@@ -58,8 +58,14 @@ Build: `build.py` generates `index.html` from `buddies.json` + `plans.json`.
   with keyboard support.
 - **Voice setting** — per-buddy spoken voice: searchable picker with 1,066
   TTS voices (extensible via voice-catalog.json), "Voice notes in threads"
-  toggle defaulting to off (Dave's token-concern call), preview samples for
-  30 curated voices. Persists to buddies.json.
+  toggle defaulting to off (Dave's token-concern call), and preview samples
+  baked per voice in voices/samples/ (56 voices: every voice assigned to a
+  buddy, plus the original curated set). The sampled set is computed at
+  build time from the files on disk, so dropping in a new sample lights up
+  its preview automatically. Panel Preview is a single tracked player —
+  it toggles, and stops when the panel closes or switches buddies; the
+  picker's playback likewise stops on close and never orphans across
+  filter re-renders. Persists to buddies.json.
 - **Persona audio previews** — the Persona panel shows the selected persona's
   voice-sample quote with a "Hear it" button (87 personas have audio); the
   collapsed header reads "PERSONA: [name]".
