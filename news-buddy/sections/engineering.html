@@ -884,33 +884,62 @@
   .secpage .storyitem h3 a:hover{color:var(--accent)}
   .secpage .lede{font-size:16px;line-height:1.65;color:var(--ink);max-width:70ch;margin:10px 0 6px}
 
+  
+  .sec-head h2 a{color:inherit;text-decoration:none;border-bottom:2px solid transparent}
+  .sec-head h2 a:hover{color:var(--accent);border-bottom-color:var(--accent)}
+  .mini-mast{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 20px;border-bottom:3px double var(--ink);margin-bottom:8px;flex-wrap:wrap}
+  .mini-mast a.brand{font-family:Georgia,'Times New Roman',serif;font-weight:700;font-size:20px;color:var(--ink);text-decoration:none}
+  .mini-mast .ed{font-size:12px;color:var(--muted)}
+  .kicker{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:18px 0 4px}
+  .kicker a{color:var(--accent);text-decoration:none}
+  .detail h1{font-family:Georgia,'Times New Roman',serif;font-size:clamp(26px,5vw,40px);line-height:1.15;margin:6px 0 10px;letter-spacing:-.01em}
+  .detail h4.sec{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--accent);margin:22px 0 6px}
+  .detail p.body{font-size:16px;line-height:1.65;margin:0 0 12px;max-width:68ch}
+  .sourcebox{border:1px solid var(--rule);border-left:4px solid var(--accent);border-radius:8px;padding:12px 16px;margin:18px 0;max-width:68ch}
+  .sourcebox p{font-size:14px;line-height:1.6;margin:6px 0}
+  .sourcebox .flag{display:inline-block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;background:#fde68a;color:#7c2d12;border-radius:4px;padding:2px 8px;margin-bottom:4px}
+  .read-original{display:inline-block;margin:10px 0;padding:10px 20px;background:var(--accent);color:#fff !important;border-radius:8px;font-weight:700;text-decoration:none;font-size:15px}
+  .related{margin-top:28px;border-top:1px solid var(--rule);padding-top:14px}
+  .related h4.sec{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:0 0 10px}
+  .related ul{list-style:none;margin:0;padding:0}
+  .related li{margin:0 0 10px;font-size:15px;line-height:1.45}
+  .related a{color:var(--ink);text-decoration:none;border-bottom:1px solid var(--rule)}
+  .related a:hover{color:var(--accent);border-bottom-color:var(--accent)}
+  .backfoot{margin:30px 0 40px;font-size:14px}
+  .backfoot a{color:var(--accent);text-decoration:none;font-weight:600}
+  .secpage .storyitem{border-bottom:1px solid var(--rule);padding:16px 0}
+  .secpage .storyitem h3{font-size:20px;margin:0 0 6px;line-height:1.3}
+  .secpage .storyitem h3 a{color:var(--ink);text-decoration:none}
+  .secpage .storyitem h3 a:hover{color:var(--accent)}
+  .secpage .lede{font-size:16px;line-height:1.65;color:var(--ink);max-width:70ch;margin:10px 0 6px}
+
   </style>
 </head>
 <body>
 <header class="mini-mast">
   <a class="brand" href="../index.html">📰 The Morning Edition</a>
-  <span class="ed">Wednesday, November 04, 2026</span>
+  <span class="ed">Thursday, November 05, 2026</span>
   <button id="themeBtn" class="voice-change" style="margin-left:0">Theme: Auto</button>
 </header>
 <main class="detail secpage" style="max-width:860px;margin:0 auto;padding:0 20px">
   <p class="kicker">Section</p>
   <h1>Engineering</h1>
-  <p class="lede">Action day on three fronts: GitHub&#x27;s first SSH brownout runs today (legacy ssh-rsa and the old DH exchange go dark briefly; permanent removal Jan. 13, 2027 -- today&#x27;s breakage is the free audit). F5 documents the PHP2Shell-plus-Fragnesia chain compromising 25 Palo Alto PAN-OS systems and tunneling into a government-affiliated network, with patch levels named. And WordPress&#x27;s upgrade-race CVE-2026-119977 is KEV-listed as actively exploited, due Nov. 6 -- block the upgrade folder before you patch, and preserve logs first.</p>
+  <p class="lede">Deadlines and post-mortems: CISA&#x27;s KEV due date for the WordPress upgrade-race CVE-2026-119977 lands tomorrow (Nov. 6) -- forensic triage required, a public PoC has been out since Nov. 4, and exploit requests run into five figures. The PHP2Shell-plus-Fragnesia account is now complete: 25 PAN-OS systems, ~40 scripts, a sub-90-minute tunnel into a government-affiliated network, fixed PHP versions printed in the card. And GitHub&#x27;s first SSH brownout passed with no reported fallout in this morning&#x27;s check (a relay&#x27;s read, flagged thin) -- second brownout Dec. 9, permanent removal Jan. 13.</p>
   <div class="storyitem">
-      <h3><a href="../articles/2026-11-04-today-is-githubs-first-ssh-brownout-legacy-ssh-rsa-sha.html">Today is GitHub’s first SSH brownout: legacy ssh-rsa (SHA-1) and diffie-hellman-group-exchange-sha256 go dark briefly — permanent removal Jan. 13, 2027</a></h3>
-      <p class="byline">GitHub Changelog</p>
-      <p class="body">GitHub’s changelog, action day: the Nov. 4 brownout temporarily removes the ssh-rsa signature type (RSA with SHA-1, including SHA-1 certificates) and the diffie-hellman-group-exchange-sha256 key exchange, ahead of a second brownout Dec. 9 and permanent removal Jan. 13, 2027 (GitHub Enterprise Server 3.25). Since Oct. 14, newly uploaded RSA keys must be at least 3,072 bits, and the post-quantum mlkem768x25519-sha256 exchange is supported on github.com and GHES Cloud with Data Residency (except the U.S. region). Most modern clients already sign with SHA-2 RSA and need no new key; HTTPS remotes are untouched. Today’s failures are the free audit: whatever breaks is what Jan. 13 would have broken permanently.</p>
-      <p class="body"><em>Why it matters:</em> Actionable today: whatever SSH automation breaks in the brownout is what Jan. 13 breaks permanently. GitHub&#x27;s own changelog is the checklist; HTTPS users can stand down.</p>
+      <h3><a href="../articles/2026-11-05-wordpresss-upgrade-race-flaw-is-due-tomorrow-cisas-kev.html">WordPress’s upgrade-race flaw is due tomorrow: CISA’s KEV listing for CVE-2026-119977 sets a Nov. 6 federal deadline, a public proof of concept landed Nov. 4, and Wordfence counts 12,000-18,500 attack requests</a></h3>
+      <p class="byline">CISA</p>
+      <p class="body">CISA added CVE-2026-119977 to the Known Exploited Vulnerabilities catalog on Nov. 3, citing active exploitation, with a federal remediation due date of Nov. 6 under Binding Operational Directive BOD 26-04 — which requires forensic triage, not patch-only remediation; ransomware use is listed as unknown. The flaw is a time-of-check/time-of-use race (CWE-367, CVSS 3.1 8.1 High) in how WordPress Core unpacks full-package upgrades: during the upgrade window, an unauthenticated visitor may reach a staged copy of the installer at predictable web-accessible paths and run code. It affects WordPress Core 4.7 through 7.1.3; the fix landed in 7.1.4 (Oct. 28) with backports to every affected branch. A working public proof of concept was published on GitHub Nov. 4, and exploit counts differ by source and window — Wordfence blocked 12,289 attacks in the 24 hours before Nov. 4 in one account, and recorded 18,500-plus requests at the staged paths in the first 21 hours in another. One rating discrepancy worth knowing: WordPress’s own advisory calls the issue ’low’ and lists no CVE, while Wordfence, the CNA, scores it 8.1. The patch window is the exposed window: block web access to wp-content/upgrade/ first, and preserve logs.</p>
+      <p class="body"><em>Why it matters:</em> Tomorrow is the deadline and the PoC is public: the WordPress item graduates from catalog entry to action item. The CNA-versus-vendor rating split (8.1 vs &#x27;low&#x27;) is worth knowing before you triage your own sites.</p>
     </div><div class="storyitem">
-      <h3><a href="../articles/2026-11-04-f5s-nov-4-threat-bulletin-attackers-chained-php2shell-w.html">F5’s Nov. 4 threat bulletin: attackers chained PHP2Shell with the Fragnesia kernel flaw to compromise 25 Palo Alto PAN-OS systems and tunnel into a U.S. government-affiliated network</a></h3>
+      <h3><a href="../articles/2026-11-05-the-php2shell-chain-in-full-f5s-bulletin-plus-the-resea.html">The PHP2Shell chain, in full: F5’s bulletin plus the researchers’ account — 25 PAN-OS systems rooted, ~40 post-exploitation scripts, a reverse tunnel into a government-affiliated network in under 90 minutes</a></h3>
       <p class="byline">F5 Labs</p>
-      <p class="body">F5 Labs’ Weekly Threat Bulletin, Nov. 4: threat actors compromised 25 Palo Alto Networks PAN-OS systems — 24 perimeter firewalls and one internal management server — by chaining the critical PHP2Shell RCE flaws (CVE-2026-109618 and CVE-2026-109619, CVSS 9.2, in PHP’s session-upload handling) with the Fragnesia Linux kernel privilege-escalation flaw (CVE-2026-46300) to reach root. The custom exploit was tailored to the uniform PHP 8.0.30 build of the PAN-OS appweb management server; from there the operators set a persistent reverse SSH tunnel into a U.S. government-affiliated environment and harvested directory-service credentials. Mitigation: apply PAN-OS remediations, update standalone PHP to 8.2.35, 8.3.36, 8.4.27 or 8.5.12, or disable session.upload_progress.enabled to close the upload-progress path. The PHP2Shell saga this paper has tracked since Oct. 23 now has a named victim class.</p>
-      <p class="body"><em>Why it matters:</em> The PHP2Shell chain reaches named infrastructure: 25 PAN-OS firewalls, root via Fragnesia, a tunnel into a government-affiliated network. Patch levels are printed in the card -- 8.5.12 closes the PHP half.</p>
+      <p class="body">F5 Labs’ Nov. 4 bulletin, deepened by Dream Research’s fuller account (discovered Oct. 25, updated Oct. 29): attackers compromised 25 Palo Alto Networks PAN-OS systems — 24 perimeter firewalls and one internal management server — by chaining the PHP2Shell RCE flaws (CVE-2026-109618 and CVE-2026-109619, CVSS 9.2, in PHP’s session-upload handling, with a custom exploit tailored to the uniform PHP 8.0.30 build of the PAN-OS appweb server) with the Fragnesia kernel flaw (CVE-2026-46300) to reach root. Dream describes roughly 40 custom post-exploitation scripts and exploitation across the U.S., Japan, Taiwan and South Korea; Palo Alto/Unit 42 independently verified the tooling (tracked as CL-UNK-1280, exploit maturity ’ATTACKED’). From the firewalls, the operators set a persistent reverse SSH tunnel into a U.S. government-affiliated environment — in under 90 minutes, per Dream — compromised the internal management server and attacked Active Directory. Singapore’s CSA notes the PHP flaws also affect selected Cisco, Citrix, F5 and Siemens products. Fixed PHP: 8.2.35, 8.3.36, 8.4.27, 8.5.12, or disable session.upload_progress.enabled. Attribution to a suspected Chinese actor is the researchers’ assessment, not a settled finding.</p>
+      <p class="body"><em>Why it matters:</em> The saga&#x27;s fullest account yet: 40 scripts, a sub-90-minute tunnel, four countries. If you run anything PHP-adjacent, the fixed-version list in this card is the checklist.</p>
     </div><div class="storyitem">
-      <h3><a href="../articles/2026-11-04-wordpress-cores-upgrade-race-cve-2026-119977-joins-cisa.html">WordPress Core’s upgrade race (CVE-2026-119977) joins CISA’s KEV catalog: 18,500-plus exploit requests in 21 hours, no confirmed compromises, federal due date Nov. 6</a></h3>
-      <p class="byline">XHack</p>
-      <p class="body">XHack’s Nov. 4 guide: CVE-2026-119977 is a time-of-check/time-of-use race in how WordPress Core unpacks its own complete-package updates — while an update extracts, an unauthenticated visitor may reach a staged copy of the installer and run code. Wordfence (the CNA) scores it CVSS 8.1 High with high attack complexity; WordPress’s own advisory says ’low’ with no score; CISA added it to the Known Exploited Vulnerabilities catalog Nov. 3 marked ’active,’ due Nov. 6, with the forensic-triage flag — preserve logs before cleaning. Fixed in 7.1.4 (Oct. 28) with backports to every branch from 4.7; 4.6 and earlier get nothing. The patch window is the exposed window: Patchstack advises blocking web access to wp-content/upgrade/ before updating. Wordfence saw 18,500+ requests at the staged paths in 21 hours and reports no successful compromise yet.</p>
-      <p class="body"><em>Why it matters:</em> A KEV listing with a twist: the fix&#x27;s own install window is the vulnerable window. Block wp-content/upgrade/ first, preserve logs, due Nov. 6 for federal systems.</p>
+      <h3><a href="../articles/2026-11-05-githubs-first-ssh-brownout-passed-quietly-no-fallout-re.html">GitHub’s first SSH brownout passed quietly: no fallout reports by Thursday morning, systems operational — the legacy ssh-rsa and DH-exchange removal returns Dec. 9, permanently on Jan. 13</a></h3>
+      <p class="byline">TechnologyHQ</p>
+      <p class="body">The day after: GitHub’s Nov. 4 brownout — a controlled, temporary removal of RSA signatures using SHA-1 (ssh-rsa, including SHA-1 certificates) and the diffie-hellman-group-exchange-sha256 key exchange — has produced no reported fallout in this morning’s check: no breakage counts, no incident report tied to the brownout, and a status aggregator at 5:15 a.m. Nov. 5 showed GitHub ’All Systems Operational.’ That is a relay’s read, not GitHub’s own post-mortem, hence the thin flag. The schedule ahead: a second brownout Dec. 9, 2026, and permanent removal Jan. 13, 2027. No key replacement is required for modern clients — RSA keys signing with SHA-2 (rsa-sha2-256/512) keep working with the same key, HTTPS remotes are untouched, and since Oct. 14 newly uploaded RSA keys must be at least 3,072 bits, with the post-quantum mlkem768x25519-sha256 exchange enabled outside the U.S. region initially. The risk pocket remains old SSH clients embedded in CI servers, Jenkins agents, Java SSH libraries and appliances, where failures surface as ’Permission denied (publickey)’ or ’no matching key exchange method found.’</p>
+      <p class="body"><em>Why it matters:</em> A quiet brownout is the best outcome and still not proof: no GitHub post-mortem exists, so the Dec. 9 brownout remains the real test for whatever legacy clients stayed silent yesterday.</p>
     </div>
   <section class="suggestbox" data-buddy-id="news-buddy">
     <h2>Suggestions</h2>
