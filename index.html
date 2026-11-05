@@ -907,7 +907,13 @@ body.sb-closed #pane-toggles .ptoggle{padding:6px 4px}
 .halo-arc{fill:var(--panel);stroke:var(--border);stroke-width:1;cursor:pointer}
 .halo-arc:hover{fill:var(--wash)}
 .halo-center{fill:var(--accent);opacity:.9;cursor:pointer}
-.halo-label{font-size:.6875rem;fill:var(--text);pointer-events:none;font-family:-apple-system,sans-serif}
+.halo-label{font-size:.6875rem;fill:var(--text);pointer-events:none;font-family:-apple-system,sans-serif;transition:opacity .15s ease}
+/* Dave 2026-11-04: labels the declutter pass suppressed (dense wedges) —
+   they return when their arc is hovered, and the selection's label is
+   never suppressed. */
+.halo-label-off{opacity:0}
+.halo-label-on{opacity:1}
+.halo-label-sel{font-weight:700}
 .halo-center-label{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
   font-weight:700;font-size:.9375rem;pointer-events:none;text-align:center;max-width:140px;color:#fff}
 .chart-constellation .constellation-wrap{position:relative;min-height:60vh}
@@ -5630,7 +5636,7 @@ function renderDevelopSection(){
   const dev = document.getElementById('fset-develop');
   if (!dev) return;
   const simulating = !!devBackup;
-  const buildNum = '20261104.0823';
+  const buildNum = '20261104.2105';
   dev.innerHTML = ''
     + '<label class="fset-check"><input type="checkbox" id="dev-empty-toggle"' + (simulating ? ' checked' : '') + '> <span><strong>Simulate new user</strong> — empty data file, as if opening the shared link fresh</span></label>'
     + '<div class="fineprint" style="margin:8px 0 12px">Build <span style="font-family:monospace">' + escHtml(String(buildNum)) + '</span> · ' + BUDDIES.length + ' buddies in this file</div>'
@@ -7875,7 +7881,7 @@ function renderBuddy(id){
     + attrHead('shared', 'SHARED NOTES', '<span class="attr-value" id="bp-shared-count">(0)</span>', '')
     + '<div class="attr-body">' + attrTipLine('Anybody with repo access can see this note. Saved to the buddy’s repo (docs/notes.md).') + '<textarea class="notes" id="bp-shared-notes" placeholder="Anybody with repo access can see this note."></textarea>'
     + '<p class="fineprint" id="shared-status"></p></div></div>'
-    + '<div class="bp-build">Build 20261104.0823</div>'
+    + '<div class="bp-build">Build 20261104.2105</div>'
     + '</div>';
   // Update every visible label for a buddy after a rename/re-icon, across all
   // Atlas lenses. A rename changes no structure, so labels are patched in place
@@ -9325,6 +9331,11 @@ function initHalo(){
   const NS = 'http://www.w3.org/2000/svg';
   const cx = 300, cy = 300;
   svg.innerHTML = '';
+  const labels = [];
+  /* Labels paint in their own layer above every arc: interleaved with the
+     arcs, a wide label in a narrow wedge got painted over by the next
+     sibling subtree's arcs and read as clipped. */
+  const labelLayer = document.createElementNS(NS, 'g');
   // Rings: center, children, grandchildren
   function ring(b, r0, r1, a0, a1, depth){
     if (depth > 2) return;
@@ -9345,6 +9356,9 @@ function initHalo(){
         + ' A' + r0 + ',' + r0 + ' 0 ' + large + ' 0 ' + x0 + ',' + y0 + ' Z');
       path.setAttribute('class', 'halo-arc');
       path.dataset.buddy = k.id;
+      const tt = document.createElementNS(NS, 'title');
+      tt.textContent = dispName(k);
+      path.appendChild(tt);
       // Label
       const mid = (sa + ea) / 2, lr = (r0 + r1) / 2;
       const tx = cx + lr * Math.cos(mid), ty = cy + lr * Math.sin(mid);
@@ -9354,7 +9368,10 @@ function initHalo(){
       text.setAttribute('text-anchor', 'middle');
       text.textContent = (k.icon ? k.icon + ' ' : '') + dispName(k);
       text.dataset.buddy = k.id;
-      svg.appendChild(path); svg.appendChild(text);
+      svg.appendChild(path); labelLayer.appendChild(text);
+      path.addEventListener('mouseenter', () => { const t = labelLayer.querySelector('text[data-buddy="' + k.id + '"]'); if (t) t.classList.add('halo-label-on'); });
+      path.addEventListener('mouseleave', () => { const t = labelLayer.querySelector('text[data-buddy="' + k.id + '"]'); if (t) t.classList.remove('halo-label-on'); });
+      labels.push({el: text, id: k.id, depth, mid, x: tx, y: ty, sel: (S.sel === 'buddy:' + k.id) ? 1 : 0});
       ring(k, r1 + 8, r1 + 68, sa, ea, depth + 1);
     });
   }
@@ -9365,6 +9382,116 @@ function initHalo(){
   c.dataset.buddy = center.id;
   svg.appendChild(c);
   ring(center, 78, 148, 0, Math.PI * 2, 0);
+  svg.appendChild(labelLayer);
+  /* Dave 2026-11-04: declutter. At fleet scale the dense wedges (Project
+     Buddy's subtree above all) stacked dozens of labels into an unreadable
+     wall. Per ring, measure every label's real rendered width, clamp it
+     inside the viewBox, then greedily keep the ones that don't overlap an
+     already-kept neighbour (the selection is placed first, so its label
+     always survives). The rest are suppressed, not removed: hovering
+     their arc brings them back, and recentering on a branch gives its
+     labels room. Sparse branches fit as they are, so they keep every
+     label, exactly as before. Overlap-freeness is scale-invariant, so
+     this holds at every zoom. */
+  const byDepth = {};
+  labels.forEach(L => { (byDepth[L.depth] = byDepth[L.depth] || []).push(L); });
+  Object.keys(byDepth).forEach(d => {
+    const arr = byDepth[d];
+    const mctx = document.createElement('canvas').getContext('2d');
+    arr.forEach(L => {
+      /* Measure on a canvas, not via the SVG: the halo is often built
+         while its pane is hidden, where getComputedTextLength reads 0
+         and the old char-count fallback overestimates emoji names. */
+      let w = 0;
+      try {
+        const cs = getComputedStyle(L.el);
+        mctx.font = (cs.fontWeight || '400') + ' ' + cs.fontSize + ' ' + (cs.fontFamily || 'sans-serif');
+        w = mctx.measureText(L.el.textContent).width;
+      } catch (e) {}
+      if (!w) { try { w = L.el.getComputedTextLength(); } catch (e) {} }
+      if (!w) w = L.el.textContent.length * 6.4;
+      L.w = w;
+      const hw = w / 2;
+      const nx = Math.min(597 - hw, Math.max(3 + hw, L.x));
+      const ny = Math.min(592, Math.max(10, L.y));
+      if (nx !== L.x) { L.el.setAttribute('x', nx); L.x = nx; }
+      if (ny !== L.y) { L.el.setAttribute('y', ny); L.y = ny; }
+      if (L.sel) L.el.classList.add('halo-label-sel');
+    });
+    /* One unified pass per ring, in angular order: each label first
+       tries to sit horizontally (its full measured width); where the
+       ring is too crowded for that it rotates to run radially — the
+       sunburst way — where its along-ring footprint is just its height
+       (~11 units), so most of a dense wedge's names come back. Only a
+       label that fits neither way is suppressed (hover reveals it).
+       Sparse stretches never trigger the fallback, so they render
+       exactly as before. Occupied space is tracked as angular
+       intervals at each label's own radius. */
+    const TAU = Math.PI * 2;
+    const norm = a => ((a % TAU) + TAU) % TAU;
+    arr.forEach(L => {
+      L.rad = Math.hypot(L.x - cx, L.y - cy) || 1;
+      L.ang = norm(Math.atan2(L.y - cy, L.x - cx));
+    });
+    const intervals = [];
+    const fits = (ang, half) => !intervals.some(iv => {
+      let dd = Math.abs(ang - iv.a);
+      dd = Math.min(dd, TAU - dd);
+      return dd < half + iv.h;
+    });
+    arr.sort((a, b) => (b.sel - a.sel) || (a.mid - b.mid));
+    arr.forEach(L => {
+      const hh = (L.w / 2 + 3) / L.rad;
+      if (fits(L.ang, hh)) { intervals.push({a: L.ang, h: hh}); L.kept = true; return; }
+      if (L.w > 118) return;
+      const rh = 7.5 / L.rad;
+      if (!fits(L.ang, rh)) return;
+      let r = L.rad;
+      if (r + L.w / 2 > 296) r = 296 - L.w / 2;
+      if (r - L.w / 2 < 76) r = 76 + L.w / 2;
+      const nx = cx + r * Math.cos(L.mid), ny = cy + r * Math.sin(L.mid);
+      L.el.setAttribute('x', nx); L.el.setAttribute('y', ny);
+      let deg = L.mid * 180 / Math.PI;
+      if (Math.cos(L.mid) < 0) deg += 180;
+      L.el.setAttribute('transform', 'rotate(' + deg.toFixed(1) + ' ' + nx.toFixed(1) + ' ' + ny.toFixed(1) + ')');
+      L.el.classList.add('halo-label-rot');
+      L.x = nx; L.y = ny;
+      intervals.push({a: L.ang, h: rh});
+      L.kept = true;
+    });
+    arr.forEach(L => { if (!L.kept) L.el.classList.add('halo-label-off'); });
+  });
+  /* Pass 3 — safety net across rings: the per-ring passes can't see a
+     long horizontal label in one ring grazing another in the next ring
+     out (near the horizontal axis their boxes meet). Test every kept
+     pair with true oriented boxes (separating axes); on overlap the
+     deeper label yields (and the selection never yields). */
+  const keptAll = labels.filter(L => L.kept);
+  const obb = L => {
+    const rot = L.el.classList.contains('halo-label-rot');
+    const a = rot ? Math.atan2(L.y - cy, L.x - cx) : 0;
+    return { x: L.x, y: L.y, hw: L.w / 2, hh: 5.5, ux: Math.cos(a), uy: Math.sin(a), depth: L.depth, sel: L.sel, L };
+  };
+  const boxes = keptAll.map(obb);
+  const overlaps = (A, B) => {
+    const axes = [[A.ux, A.uy], [-A.uy, A.ux], [B.ux, B.uy], [-B.uy, B.ux]];
+    const dx = B.x - A.x, dy = B.y - A.y;
+    for (const [ax, ay] of axes) {
+      const dist = Math.abs(dx * ax + dy * ay);
+      const ra = A.hw * Math.abs((A.ux * ax + A.uy * ay)) + A.hh * Math.abs((-A.uy * ax + A.ux * ay));
+      const rb = B.hw * Math.abs((B.ux * ax + B.uy * ay)) + B.hh * Math.abs((-B.uy * ax + B.ux * ay));
+      if (dist > ra + rb + 1) return false;
+    }
+    return true;
+  };
+  for (let i = 0; i < boxes.length; i++) for (let j = i + 1; j < boxes.length; j++) {
+    const A = boxes[i], B = boxes[j];
+    if (!A.L.kept || !B.L.kept) continue;
+    if (!overlaps(A, B)) continue;
+    const drop = A.sel ? B : (B.sel ? A : (A.depth > B.depth ? A : (B.depth > A.depth ? B : (A.L.w > B.L.w ? B : A))));
+    drop.L.kept = false;
+    drop.L.el.classList.add('halo-label-off');
+  }
 }
 /* Constellation — force-directed star map. Relationships as gravity. */
 /* Dave 2026-10-19: Constellation spacing settings. Defaults reproduce the
@@ -10558,7 +10685,7 @@ function renderPlan(id){
     + '<p class="fineprint">Saved on this device. (For your eyes only)</p></div>'
     + '<div class="bp-sec"><h3>📝 Shared notes<span class="info-tip" data-tip="Visible to everyone with access to this project.">\u24d8</span></h3><textarea class="notes" id="bp-shared" placeholder="Shared notes\u2026 (visible to everyone with access)">'+escHtml((S.planShared||{})[id]||'')+'</textarea>'
     + '<p class="fineprint">Shared — visible to everyone with access.</p></div>'
-    + '<div class="bp-build">Build 20261104.0823</div>'
+    + '<div class="bp-build">Build 20261104.2105</div>'
     + '</div>';
   const nt = document.getElementById('bp-notes');
   let t = null;
@@ -14476,14 +14603,14 @@ function openWhatsNew(){
     .then(r => r.ok ? r.text() : '')
     .then(t => {
       const serverBuild = t.trim();
-      if (serverBuild && serverBuild !== '20261104.0823') {
+      if (serverBuild && serverBuild !== '20261104.2105') {
         updBtn.style.display = '';
         updBtn.title = 'Update to build ' + serverBuild;
       }
       // Show build numbers at the top of the sheet (Dave's request 2026-10-12)
-      const myBuild = '20261104.0823';
+      const myBuild = '20261104.2105';
       let buildLine = '<p class="fineprint" style="margin-top:0">You’re on build ' + escHtml(myBuild) + '.';
-      if (serverBuild && serverBuild !== '20261104.0823' && isNewerBuild(serverBuild, myBuild)) {
+      if (serverBuild && serverBuild !== '20261104.2105' && isNewerBuild(serverBuild, myBuild)) {
         buildLine += ' Build ' + escHtml(serverBuild) + ' is available.';
       }
       buildLine += '</p>';
@@ -14553,7 +14680,7 @@ function syncUpdateBanner(){
   if (b.dataset.state !== state) b.dataset.state = state;
 }
 function initVersionCheck(){
-  const myBuild = '20261104.0823';
+  const myBuild = '20261104.2105';
   function showUpdateBanner(serverBuild){
     if (document.getElementById('update-banner')) return;
     const b = document.createElement('div');
