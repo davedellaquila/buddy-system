@@ -226,3 +226,7 @@ wednesday october 28th: journal has it wrong. it says patsy and andrew came back
 
 https://pca.st/episode/489f3fe3-ce34-4c25-9006-f1350c5b9d28
 
+## 11/6/2026, 11:52:40 AM
+
+DONE — Dave marked this done on the homepage: "Voice picked by Dave Nov 1, 2026: Decisive Hammer (avocado_v2:vdc_24027), superseding the provisional Smooth Handshake default. Persona The Gatekeeper is the default; job req ready for Dave's review." (attention id: analytics-buddy-voice-auditions). Please remove it from the attention list in buddies.json.
+
