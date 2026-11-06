@@ -230,3 +230,7 @@ https://pca.st/episode/489f3fe3-ce34-4c25-9006-f1350c5b9d28
 
 DONE — Dave marked this done on the homepage: "Voice picked by Dave Nov 1, 2026: Decisive Hammer (avocado_v2:vdc_24027), superseding the provisional Smooth Handshake default. Persona The Gatekeeper is the default; job req ready for Dave's review." (attention id: analytics-buddy-voice-auditions). Please remove it from the attention list in buddies.json.
 
+## 11/6/2026, 11:53:03 AM
+
+DONE — Dave marked this done on the homepage: "Job req ready for Dave's review — looks good, edits, or defer? The Homepage & Route Attribute Brief is also open for his review. Persona pick is presented in the main chat (The Cartographer is the default); voice auditions are live in this buddy's own thread." (attention id: route-buddy-job-req-review). Please remove it from the attention list in buddies.json.
+
