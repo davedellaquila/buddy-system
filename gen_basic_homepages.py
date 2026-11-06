@@ -1096,6 +1096,7 @@ def get_buddy_photos(b):
         return _photo_cache[bid]
     urls = list(b.get('photos') or [])
     seen = set(urls)
+    pubnames = set()
     # Dave 2026-10-16: prefer the PUBLIC buddy-system/photos/<id>/ copies — the
     # buddy repo is often private, and its API download_urls carry expiring
     # ?token= params that 404 for page viewers. Public raw URLs just work.
@@ -1109,11 +1110,16 @@ def get_buddy_photos(b):
                 if fl.get('type') == 'file':
                     # Build a clean public raw URL (no token params)
                     u = f"https://raw.githubusercontent.com/davedellaquila/buddy-system/master/photos/{bid}/{fl.get('name')}"
+                    pubnames.add(fl.get('name'))
                     if u not in seen:
                         urls.append(u); seen.add(u)
     except Exception:
         pass
-    # Fall back to the buddy's own repo photos/ (may be private — URLs can 404)
+    # Fall back to the buddy's own repo photos/ (may be private — URLs can 404).
+    # A file already vendored into the public buddy-system tree supersedes
+    # its private-repo twin (Dave's MGA photo, 2026-11-05: the private raw
+    # URL 404s for every viewer, so the fallback copy must not reappear
+    # alongside the public one on regeneration).
     repo = b.get('repo')
     if repo:
         try:
@@ -1124,6 +1130,8 @@ def get_buddy_photos(b):
                 files = _json.loads(out.stdout)
                 for fl in files if isinstance(files, list) else []:
                     if fl.get('type') == 'file':
+                        if fl.get('name') in pubnames:
+                            continue
                         u = fl.get('download_url', '').split('?')[0]
                         if u and u not in seen:
                             urls.append(u); seen.add(u)
