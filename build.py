@@ -15616,6 +15616,15 @@ initNavSecDnD();
 initNavItemDnD();
 applyNavSecOrder();
 initSbBrandSticky();
+/* Floating-panel drag (2026-11-06): the frame inits used to run ONLY
+   inside renderBuddy, so on a cold boot neither panel had a gripper —
+   and no way to drag — until some buddy's info panel was opened once.
+   Both panels are static markup, so init at boot; reconcile positions
+   the sidebar frame (and restores a persisted float) immediately.
+   The renderBuddy calls stay as guarded no-op backstops. */
+initPanelFloat();
+initSbFloat();
+reconcileSbFloat();
 initViewsResize();
 initCollectionsResize();
 syncRailCurView();
