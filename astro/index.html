@@ -114,6 +114,12 @@
   .bar-track{height:10px;background:#0a0d12;border-radius:6px;overflow:hidden}
   .bar-fill{height:100%;border-radius:6px;background:linear-gradient(90deg,var(--accent),var(--pink));min-width:2px}
   .bar-n{text-align:right;font-family:var(--mono);color:var(--text)}
+  /* Most-used board: ranked names in full text color, wider name column. */
+  #mostused .bar-row{grid-template-columns:210px 1fr 44px}
+  #mostused .bar-name{color:var(--text)}
+  .mu-rank{display:inline-block;min-width:26px;color:var(--dim);font-family:var(--mono);font-size:13px}
+  .mu-more{color:var(--muted);font-size:13px;margin-top:10px}
+  @media (max-width:560px){ #mostused .bar-row{grid-template-columns:150px 1fr 38px} }
   /* ---------- rules ---------- */
   .rule{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:14px 18px;margin:10px 0;display:flex;gap:14px;align-items:flex-start}
   .rule-icon{font-size:22px;flex-shrink:0}
@@ -375,6 +381,10 @@
     <div class="stat" style="--tint:#f778ba" data-stat-action="prds" role="button" tabindex="0" title="Jump to PRDs in the attention feed"><div class="stat-num" id="st-prd">–</div><div class="stat-label">PRDs in review</div></div>
     <div class="stat" style="--tint:#3fb950" data-stat-action="live" role="button" tabindex="0" title="Open the Projects view"><div class="stat-num" id="st-live">–</div><div class="stat-label">Live &amp; piloting</div></div>
   </div>
+
+  <h2>🔥 Most used buddies</h2>
+  <div class="feed-hint">Visits on <strong style="color:var(--text)">this device</strong> — each time a buddy is opened in the dashboard it counts once per arrival, the same “visit” the Recents list records. Counting started <span id="mu-since">Nov 6, 2026</span>, with no backfilled history. Side-chat and message activity are not counted — nothing feeds them into the dashboard yet — and each device keeps its own board.</div>
+  <div class="bars" id="mostused"><p style="color:var(--muted);font-size:14px">Loading…</p></div>
 
   <h2>🏆 Homepage leaderboard</h2>
   <div class="feed-hint">Every buddy homepage, scored against the <a href="https://github.com/davedellaquila/buddy-system/blob/master/docs/homepage-audition.md">published audition criteria</a> and ranked — all 173 pages (80 custom-designed, 93 still on the auto-generated template). Scores land as the fleet scoring pass runs; when a buddy revises its page, its new score replaces the old.</div>
@@ -707,6 +717,58 @@
       var bars=document.getElementById("bars");
       if(bars)bars.innerHTML='<p style="color:var(--muted);font-size:14px">Status breakdown unavailable offline.</p>';
     });
+})();
+</script>
+
+<script>
+/* Most used buddies (Dave 2026-11-06): reads the dashboard's own store
+   (same origin — this page and the dashboard share localStorage) for
+   S.buddyOpens, the per-device visit counter recordRecent maintains.
+   Names/icons come from the registry file beside the dashboard.
+   Re-renders when the dashboard writes the store (storage event) and
+   when the page becomes visible again, so a framed view stays live. */
+(function(){
+  var host = document.getElementById('mostused');
+  if (!host) return;
+  function esc(s){ return String(s == null ? '' : s).replace(/&/g,'&amp;').replace(/</g,'&lt;'); }
+  function fmtDate(iso){
+    var m = /^(\d{4})-(\d{2})-(\d{2})/.exec(iso || '');
+    if (!m) return iso || '';
+    var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    return months[parseInt(m[2], 10) - 1] + ' ' + parseInt(m[3], 10) + ', ' + m[1];
+  }
+  function render(){
+    var S = {};
+    try { S = JSON.parse(localStorage.getItem('buddyTree.v3') || '{}') || {}; } catch (e) {}
+    var opens = (S.buddyOpens && typeof S.buddyOpens === 'object') ? S.buddyOpens : {};
+    var sinceEl = document.getElementById('mu-since');
+    if (sinceEl && S.buddyOpensSince) sinceEl.textContent = fmtDate(S.buddyOpensSince);
+    var ids = Object.keys(opens).filter(function(id){ return opens[id] > 0; });
+    if (!ids.length) {
+      host.innerHTML = '<p style="color:var(--muted);font-size:14px">No visits counted yet on this device. Open a few buddies in the dashboard and this board fills in — counting is new (it started Nov 6, 2026), so there is no backfilled history.</p>';
+      return;
+    }
+    fetch('../buddies.json', {cache:'no-store'}).then(function(r){ return r.json(); }).then(function(reg){
+      var byId = {};
+      ((reg && reg.buddies) || []).forEach(function(b){ byId[b.id] = b; });
+      function nameOf(id){ var b = byId[id]; return b ? (b.name || id) : id; }
+      ids.sort(function(a, b){ return (opens[b] - opens[a]) || (nameOf(a) < nameOf(b) ? -1 : 1); });
+      var top = ids.slice(0, 12);
+      var max = opens[top[0]] || 1;
+      host.innerHTML = top.map(function(id, i){
+        var b = byId[id] || {};
+        var label = (b.icon ? b.icon + ' ' : '') + nameOf(id);
+        return '<div class="bar-row"><div class="bar-name"><span class="mu-rank">' + (i + 1) + '.</span>' + esc(label) + '</div>'
+          + '<div class="bar-track"><div class="bar-fill" style="width:' + Math.max(2, Math.round(opens[id] / max * 100)) + '%"></div></div>'
+          + '<div class="bar-n">' + opens[id] + '</div></div>';
+      }).join('') + (ids.length > 12 ? '<p class="mu-more">…and ' + (ids.length - 12) + ' more buddies visited on this device</p>' : '');
+    }).catch(function(){
+      host.innerHTML = '<p style="color:var(--muted);font-size:14px">Could not load the buddy registry to label the board.</p>';
+    });
+  }
+  render();
+  window.addEventListener('storage', function(e){ if (!e.key || e.key === 'buddyTree.v3') render(); });
+  document.addEventListener('visibilitychange', function(){ if (!document.hidden) render(); });
 })();
 </script>
 

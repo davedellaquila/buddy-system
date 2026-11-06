@@ -1,4 +1,13 @@
 ## 2026-11-06
+- Most used buddies leaderboard (build 20261106.1148): the dashboard now counts
+  buddy visits — recordRecent increments S.buddyOpens on each arrival
+  (the same "visit" Recents records; re-selecting the buddy already on
+  top does not count) — and Astro's homepage gains a "🔥 Most used
+  buddies" bar chart (top 12) reading that counter live from the shared
+  store. Honest scope, stated on the chart: per-device dashboard visits
+  only, counting from Nov 6, 2026 with no backfilled history; side-chat
+  and message activity are not counted (no feed exists into the
+  dashboard yet).
 - Floating panels are draggable from a cold boot (build 20261106.1135):
   the drag-frame inits for the sidebar and the info panel previously ran
   only inside renderBuddy, so until some buddy's info panel was opened

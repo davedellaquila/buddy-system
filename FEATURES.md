@@ -154,7 +154,11 @@ Build: `build.py` generates `index.html` from `buddies.json` + `plans.json`.
   **Buddies** (the hierarchy) and **Recents** — every buddy visit on
   record, most recent first, as flat rows with the tree rows' behavior;
   the visit record keeps the last 200 visits, and the search field filters
-  whichever tab is showing.
+  whichever tab is showing. Each arrival also increments a per-device
+  visit counter (S.buddyOpens), which Astro's homepage renders as a
+  "Most used buddies" leaderboard (top 12 bars, live from the store);
+  the counter starts fresh — no backfilled history — and counts
+  dashboard visits only, not side-chat activity.
 - **Escape closes the panels** — ESC dismisses transient UI first
   (popovers, menus, the field-settings sheet — one per press), then closes
   the info panel and the buddy panel together, from any focus location,

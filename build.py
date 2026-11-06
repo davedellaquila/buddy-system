@@ -3845,7 +3845,17 @@ function kbCycleSelect(bid, wantPanel){
 function recordRecent(id){
   if (!id || !byId[id]) return;
   if (!Array.isArray(S.recentBuddies)) S.recentBuddies = [];
-  if (S.recentBuddies[0] !== id) S.recentBuddies = [id].concat(S.recentBuddies.filter(x => x !== id)).slice(0, 200);
+  if (S.recentBuddies[0] !== id) {
+    S.recentBuddies = [id].concat(S.recentBuddies.filter(x => x !== id)).slice(0, 200);
+    /* Most-used leaderboard (Dave 2026-11-06): count the arrival — the
+       same "visit" Recents records — in S.buddyOpens, for the chart on
+       Astro's homepage. Per-device (it lives in this device's store),
+       dashboard visits only; a re-select of the buddy already on top
+       is not a new visit and does not count. Counting starts with the
+       build that ships this: no backfilled history, by design. */
+    if (!S.buddyOpens || typeof S.buddyOpens !== 'object') { S.buddyOpens = {}; S.buddyOpensSince = '2026-11-06'; }
+    S.buddyOpens[id] = (S.buddyOpens[id] || 0) + 1;
+  }
 }
 function selectBuddy(id){
   if (!byId[id]) return;
