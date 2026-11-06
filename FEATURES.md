@@ -17,6 +17,13 @@ Build: `build.py` generates `index.html` from `buddies.json` + `plans.json`.
 
 - **Classic tree layout** — the canonical design. (A card-based redesign was
   tried and reverted; preserved on branch `card-tree-redesign` for reference.)
+- **Compact lens (Atlas)** — an icicle layout that fits the WHOLE tree on
+  one screen: generations are bands, each buddy a segment sized by its
+  subtree's leaf count, drawn as one SVG fitted to the pane in both
+  dimensions (columns instead of bands on narrow phone panes). Labels
+  degrade by segment size (full name → first word → icon → bare segment
+  with tooltip); tapping a segment selects that buddy. Chosen from the
+  Atlas lens pill like the other lenses; the Tree lens stays the default.
 - **Split panes** — the tree view is two stacked panes with a draggable
   splitter: the buddy tree on top, orphaned buddies below. Each pane has its
   own zoom slider + zoom-to-fit; split position and both zooms persist per

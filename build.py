@@ -754,6 +754,17 @@ body.sb-closed #pane-toggles .ptoggle{padding:6px 4px}
 .halo-label-sel{font-weight:700}
 .halo-center-label{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
   font-weight:700;font-size:.9375rem;pointer-events:none;text-align:center;max-width:140px;color:#fff}
+.chart-icicle #icicle-svg{display:block}
+.ic-seg{cursor:pointer}
+.ic-seg rect{stroke:var(--border);stroke-width:1}
+.ic-d0 rect{fill:color-mix(in srgb, var(--accent) 34%, var(--panel))}
+.ic-d1 rect{fill:color-mix(in srgb, var(--accent) 24%, var(--panel))}
+.ic-d2 rect{fill:color-mix(in srgb, var(--accent) 16%, var(--panel))}
+.ic-d3 rect{fill:color-mix(in srgb, var(--accent) 10%, var(--panel))}
+.ic-d4 rect{fill:color-mix(in srgb, var(--accent) 6%, var(--panel))}
+.ic-seg:hover rect{fill:var(--wash)}
+.ic-seg text{fill:var(--text);font-size:12px;pointer-events:none}
+.ic-seg.sel rect{stroke:var(--accent);stroke-width:2.5}
 .chart-constellation .constellation-wrap{position:relative;min-height:60vh}
 .chart-constellation #constellation-canvas{display:block;cursor:pointer}
 /* Dave 2026-10-19: Constellation spacing control panel — a quiet Kin card;
@@ -8517,12 +8528,14 @@ function renderOrgTree(){
   restoreScrollPos('tree:orph', document.getElementById('treezoom-orph'));
   if (chartType === 'constellation') initConstellation();
   if (chartType === 'halo') initHalo();
+  if (chartType === 'icicle') initIcicle();
 }
 /* ============ Atlas chart types ============
    Seven visualizations of the same hierarchy. chartType persists in S.
    Each renderer returns the main-pane HTML; the orphan section is shared. */
 const CHART_TYPES = [
   {id:'org', label:'Tree'},
+  {id:'icicle', label:'Compact'},
   {id:'lineage', label:'Lineage'},
   {id:'ledger', label:'Ledger'},
   {id:'colonnade', label:'Colonnade'},
@@ -8544,6 +8557,7 @@ function closeLensPicker(){
 // Thumbnails are stylized inline SVGs (icons with ambition, not live renders).
 const CHART_BLURBS = {
   org: 'The classic. Top-down tree.',
+  icicle: 'The whole tree on one screen — generations as bands, each buddy a segment sized by its subtree. Tap a segment to select that buddy.',
   halo: 'Radial sunburst — generations as rings.',
   constellation: 'Force-directed — relationships as gravity.',
   terrain: 'Treemap — the family as landscape.',
@@ -8555,6 +8569,7 @@ function chartThumbSvg(id){
   const s = 'width="64" height="40" viewBox="0 0 64 40" fill="none" stroke="currentColor" stroke-width="1.5"';
   switch(id){
     case 'org': return '<svg ' + s + '><circle cx="32" cy="8" r="4"/><circle cx="16" cy="28" r="4"/><circle cx="48" cy="28" r="4"/><path d="M32 12v6m0 0l-14 6m14-6l14 6"/></svg>';
+    case 'icicle': return '<svg ' + s + '><rect x="6" y="6" width="52" height="7"/><rect x="6" y="16" width="30" height="7"/><rect x="39" y="16" width="19" height="7"/><rect x="6" y="26" width="14" height="7"/><rect x="23" y="26" width="16" height="7"/><rect x="42" y="26" width="16" height="7"/></svg>';
     case 'halo': return '<svg ' + s + '><circle cx="32" cy="20" r="4"/><circle cx="32" cy="20" r="10"/><circle cx="32" cy="20" r="16"/></svg>';
     case 'constellation': return '<svg ' + s + '><circle cx="14" cy="12" r="3"/><circle cx="34" cy="8" r="3"/><circle cx="50" cy="20" r="3"/><circle cx="28" cy="28" r="3"/><circle cx="46" cy="32" r="3"/><path d="M14 12l20-4m0 0l16 12m-36 8l14-16m18 4l-2 12"/></svg>';
     case 'terrain': return '<svg ' + s + '><rect x="6" y="6" width="52" height="28"/><path d="M6 20h30m-12-14v28m32-28v28m-20-14h20"/></svg>';
@@ -9038,9 +9053,168 @@ function renderChartMain(type, root, kids){
     case 'colonnade': return colonnadeHtml(root);
     case 'terrain': return terrainHtml(root);
     case 'halo': return haloHtml(root);
+    case 'icicle': return icicleHtml(root);
     case 'constellation': return constellationHtml(root);
     default: return '';
   }
+}
+/* Compact (icicle) — Dave 2026-11-05: the Atlas tree spreads too wide to
+   take in at once, so this lens draws the whole hierarchy as an icicle:
+   generations are bands, every buddy is a segment whose span is
+   proportional to its leaf count, and the single SVG scales to the pane —
+   the full tree is always entirely on screen, no horizontal spread.
+   Wide panes get horizontal bands; narrow panes (phone portrait)
+   transpose to columns so the leaf axis runs down the screen instead.
+   Labels degrade by segment size: full name, first word, icon, then the
+   bare segment (its tooltip and tap still carry the name). A subtree
+   collapsed in the Tree lens counts as a single leaf here too. */
+function icicleHtml(root){
+  const pane = document.getElementById('treezoom-main');
+  const narrow = !!(pane && pane.clientWidth > 0 && pane.clientWidth < 640);
+  const kids = (id) => (S.collapsedNodes && S.collapsedNodes[id]) ? [] : visibleKids(id);
+  const weight = (b) => { const ks = kids(b.id); return ks.length ? ks.reduce((a, k) => a + weight(k), 0) : 1; };
+  const leaves = [];
+  (function collect(b){ const ks = kids(b.id); if (!ks.length) { leaves.push(b); return; } ks.forEach(collect); })(root);
+  const AXIS = narrow ? 1150 : 1680, MIN = 12, totalW = weight(root);
+  let widths = leaves.map(l => Math.max(MIN, weight(l) / totalW * AXIS));
+  for (let round = 0; round < 4; round++) {
+    const sum = widths.reduce((a, w) => a + w, 0);
+    widths = widths.map(w => Math.max(MIN, w * AXIS / sum));
+  }
+  const leafW = {}; leaves.forEach((l, i) => { leafW[l.id] = widths[i]; });
+  const nodeW = (b) => { const ks = kids(b.id); return ks.length ? ks.reduce((a, k) => a + nodeW(k), 0) : leafW[b.id]; };
+  const BAND = 30, ROOTBAND = 36, GAP = 3, COLW = 168;
+  let maxDepth = 0;
+  const segs = [];
+  (function place(b, a0, depth){
+    if (depth > maxDepth) maxDepth = depth;
+    segs.push({ b, a: a0, w: nodeW(b), depth });
+    let a = a0;
+    kids(b.id).forEach(k => { place(k, a, depth + 1); a += nodeW(k); });
+  })(root, 0, 0);
+  const bandOff = (d) => d === 0 ? 0 : (narrow ? COLW : ROOTBAND) + GAP + (d - 1) * ((narrow ? COLW : BAND) + GAP);
+  const bandSize = (d) => narrow ? COLW : (d === 0 ? ROOTBAND : BAND);
+  const totalB = bandOff(maxDepth) + bandSize(maxDepth);
+  const selId = (S.sel && S.sel.indexOf('buddy:') === 0) ? S.sel.slice(7) : null;
+  const parts = segs.map(({ b, a, w, depth }) => {
+    const bs = bandSize(depth), ba = bandOff(depth);
+    const x = narrow ? ba : a, y = narrow ? a : ba;
+    const sw = narrow ? bs : w, sh = narrow ? w : bs;
+    const name = dispName(b);
+    let label = '';
+    if (narrow) {
+      if (w >= 26) label = (b.icon ? b.icon + ' ' : '') + (name.length > 22 ? name.slice(0, 21) + '\u2026' : name);
+      else if (w >= 13) label = b.icon || '';
+    } else {
+      if (w >= 118) label = (b.icon ? b.icon + ' ' : '') + name;
+      else if (w >= 56) label = (b.icon ? b.icon + ' ' : '') + name.split(' ')[0];
+      else if (w >= 15) label = b.icon || '';
+    }
+    const tx = narrow ? x + bs / 2 : x + 6;
+    const ty = narrow ? y + 5 : y + bs / 2;
+    const tattrs = narrow
+      ? 'text-anchor="middle" dominant-baseline="hanging"'
+      : 'dominant-baseline="central"';
+    const title = name + (b.tagline ? ' — ' + b.tagline : '');
+    return '<g class="ic-seg ic-d' + depth + (b.id === selId ? ' sel' : '') + '" data-buddy="' + b.id + '">'
+      + '<title>' + escHtml(title) + '</title>'
+      + '<rect x="' + x.toFixed(1) + '" y="' + y.toFixed(1) + '" width="' + Math.max(1, sw).toFixed(1) + '" height="' + Math.max(1, sh).toFixed(1) + '" rx="3"></rect>'
+      + (label ? '<text x="' + tx.toFixed(1) + '" y="' + ty.toFixed(1) + '" ' + tattrs + '>' + escHtml(label) + '</text>' : '')
+      + '</g>';
+  });
+  const vb = narrow ? '0 0 ' + totalB + ' ' + AXIS : '0 0 ' + AXIS + ' ' + totalB;
+  /* The pane sizes its zoom sizer from the content's intrinsic size, and a
+     percentage-width SVG has none (it collapses to 0) — so the svg carries
+     definite pixel dimensions fitted to the pane: exactly the pane's width,
+     height from the viewBox aspect. The whole tree is therefore on screen
+     at the default zoom, and the pane zoom enlarges from that fitted base.
+     initIcicle re-renders once if the pane's width has changed since the
+     bake (first paint can happen while the Atlas is still hidden). */
+  const dispW = (pane && pane.clientWidth > 0) ? pane.clientWidth : (narrow ? 390 : AXIS);
+  const dispH = Math.round(dispW * (narrow ? AXIS / totalB : totalB / AXIS));
+  return '<div class="icicle-wrap"><svg id="icicle-svg" viewBox="' + vb + '" width="' + dispW + '" height="' + dispH + '" role="img" aria-label="Compact tree: the whole buddy hierarchy on one screen">' + parts.join('') + '</svg></div>';
+}
+function icicleFitPass(){
+  const pane = document.getElementById('treezoom-main');
+  const el = document.getElementById('icicle-svg');
+  if (!pane || !el || !pane.clientWidth) return;
+  const vb = (el.getAttribute('viewBox') || '').split(/\s+/).map(Number);
+  if (vb.length !== 4 || !vb[2]) return;
+  const bakedNarrow = vb[3] > vb[2];
+  const wantNarrow = pane.clientWidth < 640;
+  if (bakedNarrow !== wantNarrow) { renderOrgTree(); return; }
+  if (!pane.clientHeight) return;
+  const content = paneContentEl('treezoom-main');
+  const sizer = content && content.parentElement;
+  if (!sizer) return;
+  const z = (S.zoom || 100) / 100;
+  /* Fit BOTH dimensions: the whole tree inside the pane's visible box —
+     on a short phone pane the transposed tree fits by height and renders
+     narrower than the pane rather than running below the fold. The 36px
+     height allowance covers the chart wrapper's own padding/margins, so
+     the svg plus its chrome lands inside the pane, not just the svg. */
+  const fitScale = Math.min(pane.clientWidth / vb[2], Math.max(60, pane.clientHeight - 36) / vb[3]);
+  const fitW = Math.max(50, Math.floor(vb[2] * fitScale));
+  const fitH = Math.round(vb[3] * fitScale);
+  const svgOff = Math.abs((+el.getAttribute('width') || 0) - fitW) > 2;
+  if (svgOff) {
+    el.setAttribute('width', fitW);
+    el.setAttribute('height', fitH);
+  }
+  const wantSW = Math.ceil(fitW * z);
+  const wantSH = Math.ceil(fitH * z);
+  const sizerOff = Math.abs((parseInt(sizer.style.width) || 0) - wantSW) > 2
+    || Math.abs((parseInt(sizer.style.height) || 0) - wantSH) > 2;
+  if (svgOff || sizerOff) {
+    /* Size the pane's zoom sizer directly. applyZoom cannot be used here:
+       it measures the content's scrollWidth, but the zoom content is a
+       block that fills the sizer, so its scrollWidth never reads below
+       the sizer's current (possibly stale, larger) explicit width — a
+       fitted lens could never shrink it. Setting the sizer to the fitted
+       size (times the current zoom) makes later applyZoom measurements
+       read it back unchanged at the default zoom. */
+    sizer.style.width = wantSW + 'px';
+    sizer.style.height = wantSH + 'px';
+    /* The pane gives its first child 50vw/50vh margins (standing viewport
+       padding so panels never obscure chart content), which parks a
+       fitted chart in the middle of the scroll field, out of the visible
+       window. Scroll so the fitted chart sits centered in the window.
+       Only done when something actually had to change size, so a
+       position the user panned to at this same size is never yanked. */
+    /* Center by measurement instead: scroll by the gap between the svg's
+       own box and the pane's box, which is exact whatever padding the
+       chart wrapper puts around the svg. */
+    const pr = pane.getBoundingClientRect();
+    const er = el.getBoundingClientRect();
+    pane.scrollLeft += Math.round((er.left + er.width / 2) - (pr.left + pr.width / 2));
+    pane.scrollTop += Math.round((er.top + er.height / 2) - (pr.top + pr.height / 2));
+  }
+}
+let __icObserved = false;
+function initIcicle(){
+  const svg = document.getElementById('icicle-svg');
+  if (!svg) return;
+  /* The render can happen while the Atlas is still hidden (width baked at
+     the viewBox fallback then), and merely revealing the view does not
+     re-render — so the fit pass rides a ResizeObserver on the pane: it
+     fires when the pane gains or changes width, rescales the svg to
+     exactly the pane's width, and re-renders only if the baked
+     orientation (bands vs columns) is wrong for the new width. Rescaling
+     the svg does not resize the pane, so the observer cannot loop. */
+  if (!__icObserved) {
+    __icObserved = true;
+    const pane = document.getElementById('treezoom-main');
+    if (pane && typeof ResizeObserver !== 'undefined') new ResizeObserver(icicleFitPass).observe(pane);
+  }
+  if (svg._icInit) return;
+  svg._icInit = true;
+  requestAnimationFrame(icicleFitPass);
+  svg.addEventListener('click', e => {
+    const g = e.target && e.target.closest ? e.target.closest('[data-buddy]') : null;
+    if (!g) return;
+    const id = g.getAttribute('data-buddy');
+    if (byId[id]) selectBuddy(id);
+  });
 }
 /* Ledger — indented list, the hierarchy as a perfected outline */
 function ledgerHtml(root){
