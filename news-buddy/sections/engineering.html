@@ -913,33 +913,62 @@
   .secpage .storyitem h3 a:hover{color:var(--accent)}
   .secpage .lede{font-size:16px;line-height:1.65;color:var(--ink);max-width:70ch;margin:10px 0 6px}
 
+  
+  .sec-head h2 a{color:inherit;text-decoration:none;border-bottom:2px solid transparent}
+  .sec-head h2 a:hover{color:var(--accent);border-bottom-color:var(--accent)}
+  .mini-mast{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 20px;border-bottom:3px double var(--ink);margin-bottom:8px;flex-wrap:wrap}
+  .mini-mast a.brand{font-family:Georgia,'Times New Roman',serif;font-weight:700;font-size:20px;color:var(--ink);text-decoration:none}
+  .mini-mast .ed{font-size:12px;color:var(--muted)}
+  .kicker{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:18px 0 4px}
+  .kicker a{color:var(--accent);text-decoration:none}
+  .detail h1{font-family:Georgia,'Times New Roman',serif;font-size:clamp(26px,5vw,40px);line-height:1.15;margin:6px 0 10px;letter-spacing:-.01em}
+  .detail h4.sec{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--accent);margin:22px 0 6px}
+  .detail p.body{font-size:16px;line-height:1.65;margin:0 0 12px;max-width:68ch}
+  .sourcebox{border:1px solid var(--rule);border-left:4px solid var(--accent);border-radius:8px;padding:12px 16px;margin:18px 0;max-width:68ch}
+  .sourcebox p{font-size:14px;line-height:1.6;margin:6px 0}
+  .sourcebox .flag{display:inline-block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;background:#fde68a;color:#7c2d12;border-radius:4px;padding:2px 8px;margin-bottom:4px}
+  .read-original{display:inline-block;margin:10px 0;padding:10px 20px;background:var(--accent);color:#fff !important;border-radius:8px;font-weight:700;text-decoration:none;font-size:15px}
+  .related{margin-top:28px;border-top:1px solid var(--rule);padding-top:14px}
+  .related h4.sec{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:0 0 10px}
+  .related ul{list-style:none;margin:0;padding:0}
+  .related li{margin:0 0 10px;font-size:15px;line-height:1.45}
+  .related a{color:var(--ink);text-decoration:none;border-bottom:1px solid var(--rule)}
+  .related a:hover{color:var(--accent);border-bottom-color:var(--accent)}
+  .backfoot{margin:30px 0 40px;font-size:14px}
+  .backfoot a{color:var(--accent);text-decoration:none;font-weight:600}
+  .secpage .storyitem{border-bottom:1px solid var(--rule);padding:16px 0}
+  .secpage .storyitem h3{font-size:20px;margin:0 0 6px;line-height:1.3}
+  .secpage .storyitem h3 a{color:var(--ink);text-decoration:none}
+  .secpage .storyitem h3 a:hover{color:var(--accent)}
+  .secpage .lede{font-size:16px;line-height:1.65;color:var(--ink);max-width:70ch;margin:10px 0 6px}
+
   </style>
 </head>
 <body>
 <header class="mini-mast">
   <a class="brand" href="../index.html">📰 The Morning Edition</a>
-  <span class="ed">Thursday, November 05, 2026</span>
+  <span class="ed">Friday, November 06, 2026</span>
   <button id="themeBtn" class="voice-change" style="margin-left:0">Theme: Auto</button>
 </header>
 <main class="detail secpage" style="max-width:860px;margin:0 auto;padding:0 20px">
   <p class="kicker">Section</p>
   <h1>Engineering</h1>
-  <p class="lede">Deadlines and post-mortems: CISA&#x27;s KEV due date for the WordPress upgrade-race CVE-2026-119977 lands tomorrow (Nov. 6) -- forensic triage required, a public PoC has been out since Nov. 4, and exploit requests run into five figures. The PHP2Shell-plus-Fragnesia account is now complete: 25 PAN-OS systems, ~40 scripts, a sub-90-minute tunnel into a government-affiliated network, fixed PHP versions printed in the card. And GitHub&#x27;s first SSH brownout passed with no reported fallout in this morning&#x27;s check (a relay&#x27;s read, flagged thin) -- second brownout Dec. 9, permanent removal Jan. 13.</p>
+  <p class="lede">Deadline day and two fresh clocks: CISA&#x27;s BOD 26-04 remediation date for the WordPress upgrade-race CVE-2026-119977 is today -- Wordfence has blocked 240,000+ attempts and forensic triage, not patch-only, is the requirement. OpenSSH&#x27;s &#x27;sshole&#x27; (CVE-2026-123158) was exploited within 9 hours of disclosure, Alpine/musl systems only; Binarly counts 996 Zyxel GS1900 switches compromised since August via zero-day CVE-2026-107441, including patched units. And Cursor ships prompt-to-hosted live apps, gated by security checks and explicit publish (changelog relay, flagged).</p>
   <div class="storyitem">
-      <h3><a href="../articles/2026-11-05-wordpresss-upgrade-race-flaw-is-due-tomorrow-cisas-kev.html">WordPress’s upgrade-race flaw is due tomorrow: CISA’s KEV listing for CVE-2026-119977 sets a Nov. 6 federal deadline, a public proof of concept landed Nov. 4, and Wordfence counts 12,000-18,500 attack requests</a></h3>
-      <p class="byline">CISA</p>
-      <p class="body">CISA added CVE-2026-119977 to the Known Exploited Vulnerabilities catalog on Nov. 3, citing active exploitation, with a federal remediation due date of Nov. 6 under Binding Operational Directive BOD 26-04 — which requires forensic triage, not patch-only remediation; ransomware use is listed as unknown. The flaw is a time-of-check/time-of-use race (CWE-367, CVSS 3.1 8.1 High) in how WordPress Core unpacks full-package upgrades: during the upgrade window, an unauthenticated visitor may reach a staged copy of the installer at predictable web-accessible paths and run code. It affects WordPress Core 4.7 through 7.1.3; the fix landed in 7.1.4 (Oct. 28) with backports to every affected branch. A working public proof of concept was published on GitHub Nov. 4, and exploit counts differ by source and window — Wordfence blocked 12,289 attacks in the 24 hours before Nov. 4 in one account, and recorded 18,500-plus requests at the staged paths in the first 21 hours in another. One rating discrepancy worth knowing: WordPress’s own advisory calls the issue ’low’ and lists no CVE, while Wordfence, the CNA, scores it 8.1. The patch window is the exposed window: block web access to wp-content/upgrade/ first, and preserve logs.</p>
-      <p class="body"><em>Why it matters:</em> Tomorrow is the deadline and the PoC is public: the WordPress item graduates from catalog entry to action item. The CNA-versus-vendor rating split (8.1 vs &#x27;low&#x27;) is worth knowing before you triage your own sites.</p>
+      <h3><a href="../articles/2026-11-06-deadline-day-for-wordpress-cve-2026-119977-cisas-federa.html">Deadline day for WordPress CVE-2026-119977: CISA’s federal remediation date is today, Wordfence has blocked 240,000+ attempts, and the first try came 9 minutes after its rule went live</a></h3>
+      <p class="byline">Moatline</p>
+      <p class="body">Today, Nov. 6, is CISA’s federal remediation deadline under BOD 26-04 for CVE-2026-119977, CVSS 8.1, a time-of-check/time-of-use race (CWE-367) in WordPress Core 4.7 through 7.1.3: during the seconds a full core update unpacks into the predictable, web-accessible wp-content/upgrade staging folder containing the installer, an unauthenticated attacker can execute code. WordPress 7.1.4 (Oct. 28) fixes it plus 22 flaws in total, with backports to 4.7. CISA added it to the KEV catalog Nov. 2-3 on evidence of active exploitation, with forensic triage required, not patch-only. Wordfence saw its first attempt 9 minutes after its rule went live and had blocked more than 240,000 attempts by Nov. 5, peaking above 74,000 on Oct. 30. No confirmed site-takeover details have been published by CISA or Wordfence as of Nov. 5. Beyond patching: deny web access to wp-content/upgrade/. Researcher credit: Umut Bayram, Picus Security.</p>
+      <p class="body"><em>Why it matters:</em> Deadline day is the story: 240,000+ blocked attempts, a first try in 9 minutes, and a BOD that demands forensic triage rather than a patch checkbox. If you run WordPress anywhere, wp-content/upgrade/ access is today&#x27;s check.</p>
     </div><div class="storyitem">
-      <h3><a href="../articles/2026-11-05-the-php2shell-chain-in-full-f5s-bulletin-plus-the-resea.html">The PHP2Shell chain, in full: F5’s bulletin plus the researchers’ account — 25 PAN-OS systems rooted, ~40 post-exploitation scripts, a reverse tunnel into a government-affiliated network in under 90 minutes</a></h3>
-      <p class="byline">F5 Labs</p>
-      <p class="body">F5 Labs’ Nov. 4 bulletin, deepened by Dream Research’s fuller account (discovered Oct. 25, updated Oct. 29): attackers compromised 25 Palo Alto Networks PAN-OS systems — 24 perimeter firewalls and one internal management server — by chaining the PHP2Shell RCE flaws (CVE-2026-109618 and CVE-2026-109619, CVSS 9.2, in PHP’s session-upload handling, with a custom exploit tailored to the uniform PHP 8.0.30 build of the PAN-OS appweb server) with the Fragnesia kernel flaw (CVE-2026-46300) to reach root. Dream describes roughly 40 custom post-exploitation scripts and exploitation across the U.S., Japan, Taiwan and South Korea; Palo Alto/Unit 42 independently verified the tooling (tracked as CL-UNK-1280, exploit maturity ’ATTACKED’). From the firewalls, the operators set a persistent reverse SSH tunnel into a U.S. government-affiliated environment — in under 90 minutes, per Dream — compromised the internal management server and attacked Active Directory. Singapore’s CSA notes the PHP flaws also affect selected Cisco, Citrix, F5 and Siemens products. Fixed PHP: 8.2.35, 8.3.36, 8.4.27, 8.5.12, or disable session.upload_progress.enabled. Attribution to a suspected Chinese actor is the researchers’ assessment, not a settled finding.</p>
-      <p class="body"><em>Why it matters:</em> The saga&#x27;s fullest account yet: 40 scripts, a sub-90-minute tunnel, four countries. If you run anything PHP-adjacent, the fixed-version list in this card is the checklist.</p>
+      <h3><a href="../articles/2026-11-06-two-fresh-exploited-flaws-opensshs-sshole-cve-2026-1231.html">Two fresh exploited flaws: OpenSSH’s ’sshole’ (CVE-2026-123158) hit honeypots within 9 hours, and 996 Zyxel GS1900 switches were compromised through a zero-day since August</a></h3>
+      <p class="byline">Help Net Security</p>
+      <p class="body">Help Net Security, Nov. 6: OpenSSH CVE-2026-123158, CVSS 8.1, disclosed and fixed Nov. 5 in OpenSSH 10.6p2, lets a remote attacker log into passwordless (’*’) accounts on musl-libc systems without PAM — notably Alpine Linux — by sending a password longer than 256 bytes, due to musl crypt() misinterpretation; glibc systems (Debian, Ubuntu, Fedora) and UsePAM yes are not affected. Previdian’s sensors saw a first attempt under 9 hours after publication — 8 attempts from a single Japan IP, with confirmed root access on an Alpine honeypot. Alpine shipped fixes for 3.16 through edge on Nov. 5; CISA has not added it to the KEV yet. Separately, Binarly disclosed Nov. 5 that 996 Zyxel GS1900 switches across 48 countries were compromised since about Aug. 17 via a previously unknown zero-day, CVE-2026-107441, CVSS 8.8, an out-of-bounds write in the web-management CGI allowing unauthenticated OS command execution — working even on switches patched for the earlier CVE-2026-7273. Zyxel’s Patch 3 firmware was released Oct. 22, advisory Nov. 3, covering 10 GS1900 models on firmware 2.90 Patch 2 and earlier.</p>
+      <p class="body"><em>Why it matters:</em> Two clocks: OpenSSH&#x27;s sshole was exploited in under 9 hours on Alpine/musl only -- check your base images, not your glibc fleet -- and 996 Zyxel switches were owned for months through a zero-day that survived earlier patching. Patch-level is not the same as safe.</p>
     </div><div class="storyitem">
-      <h3><a href="../articles/2026-11-05-githubs-first-ssh-brownout-passed-quietly-no-fallout-re.html">GitHub’s first SSH brownout passed quietly: no fallout reports by Thursday morning, systems operational — the legacy ssh-rsa and DH-exchange removal returns Dec. 9, permanently on Jan. 13</a></h3>
-      <p class="byline">TechnologyHQ</p>
-      <p class="body">The day after: GitHub’s Nov. 4 brownout — a controlled, temporary removal of RSA signatures using SHA-1 (ssh-rsa, including SHA-1 certificates) and the diffie-hellman-group-exchange-sha256 key exchange — has produced no reported fallout in this morning’s check: no breakage counts, no incident report tied to the brownout, and a status aggregator at 5:15 a.m. Nov. 5 showed GitHub ’All Systems Operational.’ That is a relay’s read, not GitHub’s own post-mortem, hence the thin flag. The schedule ahead: a second brownout Dec. 9, 2026, and permanent removal Jan. 13, 2027. No key replacement is required for modern clients — RSA keys signing with SHA-2 (rsa-sha2-256/512) keep working with the same key, HTTPS remotes are untouched, and since Oct. 14 newly uploaded RSA keys must be at least 3,072 bits, with the post-quantum mlkem768x25519-sha256 exchange enabled outside the U.S. region initially. The risk pocket remains old SSH clients embedded in CI servers, Jenkins agents, Java SSH libraries and appliances, where failures surface as ’Permission denied (publickey)’ or ’no matching key exchange method found.’</p>
-      <p class="body"><em>Why it matters:</em> A quiet brownout is the best outcome and still not proof: no GitHub post-mortem exists, so the Dec. 9 brownout remains the real test for whatever legacy clients stayed silent yesterday.</p>
+      <h3><a href="../articles/2026-11-06-cursor-can-now-build-and-host-live-apps-prompt-to-postg.html">Cursor can now build and host live apps: prompt to Postgres, auth and a shareable domain, gated by security checks and an explicit publish step</a></h3>
+      <p class="byline">Frontmatter</p>
+      <p class="body">Cursor announced Nov. 5 ’Build Live Apps’: a cloud agent scaffolds a web app from a prompt or an existing repo, provisions a Postgres database if needed, configures auth behind Cursor SSO, provisions hosting, and returns a shareable link at a user-picked domain. Publishing is gated by deterministic and agentic security checks; nothing goes live until the checks pass and the user explicitly publishes, and team admins can review, approve and unpublish. Available on all paid plans with cloud agents enabled, deploying from Cursor Origin and GitHub, with GitLab coming soon. Also Nov. 5: Microsoft Research described its Proof-Driven Development (PDD) Kit, turning plain-language intent into a formal Verus specification and proving agent-written code for every input, trialed on the login logic of a Rust ’Pet Store’ app. Both items reach the desk via changelog relays without independent hands-on testing — flagged.</p>
+      <p class="body"><em>Why it matters:</em> Cursor crosses from editor to platform: prompt-to-hosted-app with Postgres and SSO auth, gated by checks and an explicit publish. The gating design is the responsible part; the desk has changelog relays only, flagged.</p>
     </div>
   <section class="suggestbox" data-buddy-id="news-buddy">
     <h2>Suggestions</h2>
