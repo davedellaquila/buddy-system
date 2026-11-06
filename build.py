@@ -2210,6 +2210,14 @@ body:has(#sidebar.sb-floating) #sb-resize{display:none}
 .bp-rsz::before{content:'';position:absolute;inset:-4px} /* Dave 2026-10-29: invisible hit margin - the strips are 12px wide */
 .bp-rsz[data-dir="n"]{top:-6px;left:16px;right:16px;height:12px;cursor:ns-resize}
 .bp-rsz[data-dir="s"]{bottom:-6px;left:16px;right:16px;height:12px;cursor:ns-resize}
+/* Sidebar frame only (Dave 2026-11-06): the floated-panel 28px inside
+   south zone (Jonny, "The Edge Is the Handle") lands exactly on the
+   sidebar's tip jar strip once the footer is flush — the pill would be
+   unclickable, its clicks starting a resize drag instead. Notch the
+   handle's bottom-center out (clip-path also clips the hit area): the
+   south resize still grabs from either flank, the tip jar stays live.
+   The info panel's frame keeps its full zone — no tip jar down there. */
+#sb-frame .bp-rsz[data-dir="s"]{clip-path:polygon(0 0, calc(50% - 78px) 0, calc(50% - 78px) 100%, calc(50% + 78px) 100%, calc(50% + 78px) 0, 100% 0, 100% 100%, 0 100%)}
 .bp-rsz[data-dir="e"]{right:-6px;top:16px;bottom:16px;width:12px;cursor:ew-resize}
 .bp-rsz[data-dir="w"]{left:-6px;top:16px;bottom:16px;width:12px;cursor:ew-resize}
 .bp-rsz[data-dir="ne"]{top:-8px;right:-8px;width:22px;height:22px;cursor:nesw-resize}
@@ -2545,11 +2553,12 @@ a.plan-card-name:hover{text-decoration:underline}
    hosted app's own bottom tab bar (the expense tracker's) now sits
    under the footer discs, and a buddy page's own bottom Tip Jar line
    can sit under the footer cluster / + disc when scrolled to the
-   very bottom. The sidebar's own 48px bottom packing (the open
-   panel's internal clearance) is NOT part of this reversal and
-   stays. */
+   very bottom. The sidebar once carried 48px of bottom packing under
+   the tip jar ("internal clearance"); Dave retired it 2026-11-06 —
+   the footer is just the tip jar strip, flush with the panel's
+   bottom edge, as the tip jar's own design note always said. */
 @media (min-width:640px){
-  body:not(.sb-closed):not(.standalone) #sidebar{padding-bottom:48px}
+  body:not(.sb-closed):not(.standalone) #sidebar{padding-bottom:0}
 }
 @media (max-width:760px){#main #view-project.active{min-height:calc(100vh - 88px)}
 #main.homepage-mode{padding:0}
@@ -6638,12 +6647,58 @@ function syncSbFrame(){
   const fr = document.getElementById('sb-frame');
   const sb = document.getElementById('sidebar');
   if (!fr || !sb) return;
-  if (!sbFloatable()) { fr.classList.remove('on'); fr.classList.remove('free'); return; }
+  const tt = document.getElementById('sb-to-top');
+  if (!sbFloatable()) {
+    fr.classList.remove('on'); fr.classList.remove('free');
+    if (tt) { tt.style.left = ''; tt.style.top = ''; tt.style.bottom = ''; }
+    return;
+  }
   const r = sb.getBoundingClientRect();
   fr.style.left = r.left + 'px'; fr.style.top = r.top + 'px';
   fr.style.width = r.width + 'px'; fr.style.height = r.height + 'px';
   fr.classList.add('on');
   fr.classList.toggle('free', sb.classList.contains('sb-floating'));
+  /* Scroll-to-top disc (Dave 2026-11-06): it is viewport-fixed at the
+     DOCKED sidebar's geometry, so a floated sidebar could park its tip
+     jar right under the disc and hide the pill. While the sidebar
+     floats, ride the disc just above the tip jar, centered on the
+     sidebar; docked, the CSS placement takes over again. */
+  if (tt) {
+    if (sb.classList.contains('sb-floating')) {
+      const tj = sb.querySelector('.sb-tipjar');
+      const th = tj ? tj.offsetHeight : 41;
+      tt.style.left = Math.round(r.left + r.width / 2 - 22) + 'px';
+      tt.style.top = Math.round(r.bottom - th - 52) + 'px';
+      tt.style.bottom = 'auto';
+    } else { tt.style.left = ''; tt.style.top = ''; tt.style.bottom = ''; }
+  }
+  /* Homepage nav cluster (Dave 2026-11-06): #hp-nav is viewport-fixed
+     at bottom-center (z-9000), so a sidebar floated low and wide parks
+     its tip jar right under the cluster's discs. Same yield pattern as
+     the + FAB vs the framed Tip Jar pill (build 20261105.1345): the
+     shell chrome steps aside — the cluster slides sideways, clear of
+     the sidebar, whenever the tip jar's band intersects the cluster's
+     natural (unshifted) span; otherwise its transform is left alone. */
+  const hn = document.getElementById('hp-nav');
+  if (hn) {
+    let shift = 0;
+    if (sb.classList.contains('sb-floating')) {
+      const hr = hn.getBoundingClientRect();
+      if (hr.width > 0) {
+        const tj2 = sb.querySelector('.sb-tipjar');
+        const th2 = tj2 ? tj2.offsetHeight : 41;
+        const cTop = window.innerHeight - 20 - hr.height, cBot = window.innerHeight - 20;
+        const natL = window.innerWidth / 2 - hr.width / 2, natR = natL + hr.width;
+        if (r.bottom - th2 < cBot && r.bottom > cTop && r.left < natR && r.right > natL) {
+          if (r.right + 12 + hr.width <= window.innerWidth) shift = (r.right + 12) - natL;
+          else shift = (r.left - 12) - natR;
+        }
+      }
+    }
+    hn.style.transform = shift
+      ? 'translate(calc(-50% + ' + Math.round(shift) + 'px), calc(-1 * var(--kb-lift, 0px)))'
+      : '';
+  }
 }
 function reconcileSbFloat(){
   const sb = document.getElementById('sidebar'); if (!sb) return;

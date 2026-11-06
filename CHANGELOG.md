@@ -1,4 +1,16 @@
 ## 2026-11-06
+- Sidebar footer is just the tip jar again (build 20261106.1328): the open
+  sidebar carried 48px of bottom packing under the tip jar strip, so
+  the footer measured ~90px for an 18px pill. The packing is retired
+  (padding-bottom:0 at >=640px) and the strip sits flush with the
+  panel's bottom edge — footer height 42px, verified rendered. Two
+  collisions the flush move would have created are handled in the same
+  build: the frame's 28px south resize zone is notched at bottom-center
+  on the sidebar frame only, so the pill stays clickable (south resize
+  still grabs from either flank; the info panel's frame is untouched),
+  and while the sidebar floats, the scroll-to-top disc rides just above
+  the tip jar and the homepage nav cluster slides sideways clear of a
+  low, wide float instead of covering the pill.
 - Most used buddies leaderboard (build 20261106.1148): the dashboard now counts
   buddy visits — recordRecent increments S.buddyOpens on each arrival
   (the same "visit" Recents records; re-selecting the buddy already on
