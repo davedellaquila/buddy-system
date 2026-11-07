@@ -2218,6 +2218,20 @@ body:has(#sidebar.sb-floating) #sb-resize{display:none}
    south resize still grabs from either flank, the tip jar stays live.
    The info panel's frame keeps its full zone — no tip jar down there. */
 #sb-frame .bp-rsz[data-dir="s"]{clip-path:polygon(0 0, calc(50% - 78px) 0, calc(50% - 78px) 100%, calc(50% + 78px) 100%, calc(50% + 78px) 0, 100% 0, 100% 100%, 0 100%)}
+/* Info-panel frame only (Dave 2026-11-07): the same 0909 inside
+   placement puts the north resize band across the panel's top strip,
+   where the sticky head's control row (Back / More / flag / favorite /
+   Section index) starts ~30px down. The band's hit area (28px tall +
+   the 4px ::before margin) ends only ~4px above the buttons' top
+   edge — close enough that Dave's tap on the Section index button
+   landed on the resize strip instead: a press-and-hold resize that
+   goes nowhere reads as a dead button. The panel frame's top handles
+   (north + its two corners) keep the outside-the-edge base geometry:
+   the resize still grabs from the edge, and the head's row is never
+   under a resize band. The sidebar frame is untouched. */
+#bp-frame .bp-rsz[data-dir="n"]{top:-6px;height:12px}
+#bp-frame .bp-rsz[data-dir="ne"]{top:-8px;right:-8px;width:22px;height:22px}
+#bp-frame .bp-rsz[data-dir="nw"]{top:-8px;left:-8px;width:22px;height:22px}
 .bp-rsz[data-dir="e"]{right:-6px;top:16px;bottom:16px;width:12px;cursor:ew-resize}
 .bp-rsz[data-dir="w"]{left:-6px;top:16px;bottom:16px;width:12px;cursor:ew-resize}
 .bp-rsz[data-dir="ne"]{top:-8px;right:-8px;width:22px;height:22px;cursor:nesw-resize}
@@ -7539,6 +7553,21 @@ function renderBuddy(id){
         const _vb2 = document.getElementById('view-buddy');
         const _bid = _vb2 && _vb2.dataset.buddy;
         if (_bid) openAvatarPicker(_bid, _icon);
+      });
+    }
+    /* Direct click binding for the Section index button (Dave
+       2026-11-07): its only path used to be the document-level
+       delegated branch, which sits under that listener's global
+       drag/swipe swallow guards and any hit-test surprise in the
+       sticky head. Bound directly — same pattern as the icon above —
+       the button answers for itself; stopPropagation keeps the
+       delegated branch from toggling a second time. */
+    const _cb = document.getElementById('bp-collapse-btn');
+    if (_cb && !_cb.dataset.bound) {
+      _cb.dataset.bound = '1';
+      _cb.addEventListener('click', (ev) => {
+        ev.stopPropagation();
+        togglePanelCollapsed();
       });
     }
   }, 50);
@@ -14106,6 +14135,16 @@ function getSectionToggleContent(fid){
     default: return secIcon || '\u203a';
   }
 }
+/* The Section index toggle (Dave 2026-11-07): reads the fold's
+   synchronous target while a fold is in flight — the same read the
+   Cmd-I handler was fixed to make on 2026-10-30 — so a second tap
+   inside the 360ms fold window reverses the fold instead of repeating
+   it off the not-yet-applied body class. */
+function togglePanelCollapsed(){
+  const vb = document.getElementById('view-buddy');
+  const cur = (vb && vb._bpTarget !== undefined) ? vb._bpTarget : document.body.classList.contains('bp-collapsed');
+  setPanelCollapsed(!cur);
+}
 function setPanelCollapsed(collapsed) {
   const vb = document.getElementById('view-buddy');
   setTimeout(() => { if (typeof syncUpdateBanner === 'function') syncUpdateBanner(); }, 430);
@@ -14147,7 +14186,14 @@ function renderBpRail() {
   }
   const vb = document.getElementById('view-buddy');
   if (!vb) return;
-  const secs = Array.from(vb.querySelectorAll('.bp-sec[data-field]')).filter(s => s.offsetParent !== null);
+  /* Layout-independent hidden check (Dave 2026-11-07): this runs when
+     the panel is display:none (mid-collapse, or restored collapsed at
+     boot), where offsetParent is null for EVERY section — the old
+     offsetParent filter therefore emptied the rail on every collapse,
+     leaving no way back but reselecting a buddy. Computed display
+     reflects the section's own rules, not the ancestor's state, so
+     genuinely hidden sections still skip and the rest always list. */
+  const secs = Array.from(vb.querySelectorAll('.bp-sec[data-field]')).filter(s => !s.hidden && getComputedStyle(s).display !== 'none');
   const curB = vb.dataset.buddy ? byId[vb.dataset.buddy] : null;
   rail.innerHTML = secs.map(s => {
     const f = s.dataset.field;
@@ -15160,7 +15206,7 @@ document.addEventListener('click', e => {
     closeDetail(); return;
   }
   if (e.target.closest && e.target.closest('#bp-takeover-back')) { closeDetail(); return; }
-  if (e.target.closest && e.target.closest('#bp-collapse-btn')) { setPanelCollapsed(!document.body.classList.contains('bp-collapsed')); return; }
+  if (e.target.closest && e.target.closest('#bp-collapse-btn')) { togglePanelCollapsed(); return; }
   // Dave 2026-10-18: hide/show fields right from the info panel.
   if (e.target.closest && e.target.closest('.bp-hide-btn')) {
     const fid = e.target.closest('.bp-hide-btn').dataset.hideField;
