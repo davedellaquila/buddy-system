@@ -1684,10 +1684,8 @@ body:has(#token-pill) #view-buddy.sheet .bp-close-x{right:148px}
 .bp-sec[data-icon-behavior="spin"] .secarrow{transition:transform .5s cubic-bezier(.34,1.3,.64,1)}
 .bp-sec[data-icon-behavior="spin"]:not(.collapsed) .secarrow{transform:rotate(360deg)}
 .bp-sec[data-icon-behavior="spin"].collapsed .secarrow{transform:rotate(0deg)}
-/* Dave 2026-10-18: per-field hide affordance + hidden-fields tray, right in the panel. */
-.bp-hide-btn{margin-left:auto;font-size:.6875rem;font-weight:600;color:var(--faint);background:none;border:0;
-  cursor:pointer;padding:4px 8px;border-radius:6px;flex:none}
-.bp-hide-btn:hover{color:var(--danger);background:var(--danger-soft)}
+/* Hidden-fields tray (the restore path for fields hidden before the
+   per-section hide link was removed at Dave's word, 2026-11-07). */
 .bp-hiddenbar{margin:18px 0 6px;border:1px dashed var(--border);border-radius:12px;padding:4px 6px}
 .bp-hiddenbar-toggle{width:100%;display:flex;align-items:center;justify-content:space-between;
   background:none;border:0;cursor:pointer;font-size:.78125rem;font-weight:600;color:var(--muted);padding:8px 10px;border-radius:8px}
@@ -1857,9 +1855,6 @@ body.sb-closed #sidebar #sb-tools{display:none}
    the header's old tip sentence as the body's first quiet line — and the
    machinery's own utility line beneath every header. */
 .attr-tip{color:var(--muted);font-size:.8125rem;line-height:1.5;margin:0 0 8px}
-.sec-util{display:flex;justify-content:space-between;align-items:center;font-size:.6875rem;color:var(--faint);letter-spacing:.04em;padding:2px 2px 0}
-.attr-head + .sec-util{margin-left:44px}
-.bp-sec > h3 + .sec-util{margin-left:38px}
 .pill-btn{flex:none;font-size:.8125rem;font-weight:600;color:var(--accent);background:none;border:1.5px solid var(--accent);border-radius:20px;padding:5px 14px;cursor:pointer;white-space:nowrap}
 .pill-btn:hover{background:color-mix(in srgb,var(--accent) 12%,transparent)}
 .pill-btn:active{transform:scale(.96)}
@@ -2708,8 +2703,8 @@ input.bp-name{background:transparent;border-top:none;border-right:none;border-le
   padding-bottom: 0 !important;
   overflow: hidden;
 }
-.bp-sec{margin-top:30px}
-.bp-sec>h3{font-size:.8125rem;letter-spacing:1.2px;text-transform:uppercase;color:var(--muted);margin:0 0 12px}
+.bp-sec{margin-top:18px} /* tightened from 30px at Dave's word (2026-11-07): the attribute stack breathed too much */
+.bp-sec>h3{font-size:.8125rem;letter-spacing:1.2px;text-transform:uppercase;color:var(--muted);margin:0 0 8px}
 .bp-sec>h3 .bp-add{float:right;font-size:.75rem;letter-spacing:0;text-transform:none;font-weight:600;color:var(--accent);background:none;border:1px solid var(--accent);border-radius:20px;padding:2px 10px;cursor:pointer}
 .art-row.sib-compact{padding:6px 10px}.art-row.sib-compact .art-ic{font-size:1.125rem}
 .bp-sec>h3 .bp-circle-add{float:right;font-size:1.125rem;line-height:1;color:var(--accent);background:none;border:none;cursor:pointer;min-width:44px;min-height:44px;display:inline-flex;align-items:center;justify-content:center}
@@ -4806,20 +4801,15 @@ function applySectionCollapse(bid){
     h3.insertBefore(arrow, h3.firstChild);
     // Reorder-by-name (Dave, 2026-10-21): no grip is created here anymore —
     // the section drags by this header itself (see applySectionDrag). The
-    // utility line stays: decorateBpHeaders puts the hide link on it.
-    let util = sec.querySelector(':scope > .sec-util');
-    if (!util) {
-      util = document.createElement('div');
-      util.className = 'sec-util';
-      h3.after(util);
-    }
+    // old .sec-util line went with the hide link (removed 2026-11-07): it
+    // had no other tenant, and an empty line under every header was air
+    // Dave asked to take out of the stack.
     if (S.secCollapsed[fid]) sec.classList.add('collapsed');
     h3.title = 'Click to collapse/expand — Shift+click applies to all sections';
     h3.addEventListener('click', e => {
       if (e.target.closest('.info-tip')) return;
       if (e.target.closest('[data-addbuddy], [data-addparent]')) return; // add buttons route to the document-level delegation (openAddBuddyDialog / openChangeParentDialog) \u2014 stopping them here only toggled the section (Dave 2026-10-21)
       if (secDrag.justDragged) { secDrag.justDragged = false; e.stopPropagation(); return; } // a header drag just ended; never toggles collapse
-      if (e.target.closest('.bp-hide-btn')) return; // hide button has its own handler (document level)
       e.stopPropagation(); // block the document-level [data-buddy] handler (Dave 2026-10-15: it re-rendered the panel on every section click)
       // Hold the header's viewport position across the toggle (Dave 2026-10-21)
       holdHeaderPosition(h3, () => {
@@ -5026,11 +5016,13 @@ function applyFieldOrder(){
     if (!order.includes(fid) && !el.parentNode) place(el);
   });
 }
-/* Dave 2026-10-18: hide/show + reorder fields right from the info panel — no Settings detour.
-   decorateBpHeaders puts a quiet "hide" link on every section header. Every
-   field is reorderable from the panel too — by dragging the section's own
+/* Reorder fields right from the info panel — by dragging the section's own
    header (reorder-by-name, Dave 2026-10-21; see applySectionDrag).
-   renderBpHiddenBar adds the "Hidden fields (n)" tray at the bottom of the field list. */
+   The per-section "hide" link (Dave 2026-10-18) was REMOVED at Dave's word
+   on 2026-11-07 — no control in the panel hides a field anymore. Fields
+   hidden before the removal stay hidden in S.fieldHidden (data untouched)
+   and remain restorable: renderBpHiddenBar adds the "Hidden fields (n)"
+   tray at the bottom of the field list whenever any are hidden. */
 /* Sticky section headers (Dave, 2026-10-26): measure the rendered sticky
    identity head and publish its stuck bottom edge as --bp-sec-stick on the
    wrap, so .bp-sec headers stick directly beneath it (CSS beside .bp-sec>h3).
@@ -5053,33 +5045,6 @@ function fitBpStickySections(){
       window.addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(fitBpStickySections, 150); });
     }
   } catch (e) {}
-}
-function decorateBpHeaders(){
-  const home = document.getElementById('buddy-home');
-  if (!home) return;
-  home.querySelectorAll('.bp-sec[data-field]').forEach(sec => {
-    const fid = sec.dataset.field;
-    const head = sec.querySelector(':scope > h3, :scope > .attr-head');
-    if (!head) return;
-    // Jonny verdict 2026-10-21: the machinery (grip + hide) lives on a quiet
-    // utility line of its own beneath the header — never on the name's line.
-    let util = sec.querySelector(':scope > .sec-util');
-    if (!util) {
-      util = document.createElement('div');
-      util.className = 'sec-util';
-      head.after(util);
-    }
-    // Reorder-by-name (Dave, 2026-10-21): attr-head sections get no drag
-    // grip here — the header itself is the drag surface (applySectionDrag).
-    if (util.querySelector('.bp-hide-btn')) return;
-    const btn = document.createElement('button');
-    btn.type = 'button';
-    btn.className = 'bp-hide-btn';
-    btn.dataset.hideField = fid;
-    btn.title = 'Hide this field — bring it back from Hidden fields below';
-    btn.textContent = 'hide';
-    util.appendChild(btn);
-  });
 }
 function renderBpHiddenBar(){
   const home = document.getElementById('buddy-home');
@@ -7980,7 +7945,6 @@ function renderBuddy(id){
   refreshTokenUI(id);
   applyFieldOrder();
   applySectionCollapse(id);
-  decorateBpHeaders();
   renderBpHiddenBar();
   applySectionDrag();
   fitBpStickySections();
@@ -15100,15 +15064,8 @@ document.addEventListener('click', e => {
   }
   if (e.target.closest && e.target.closest('#bp-takeover-back')) { closeDetail(); return; }
   if (e.target.closest && e.target.closest('#bp-collapse-btn')) { togglePanelCollapsed(); return; }
-  // Dave 2026-10-18: hide/show fields right from the info panel.
-  if (e.target.closest && e.target.closest('.bp-hide-btn')) {
-    const fid = e.target.closest('.bp-hide-btn').dataset.hideField;
-    if (!S.fieldHidden) S.fieldHidden = {};
-    S.fieldHidden[fid] = true;
-    save();
-    if (S.projectId && byId[S.projectId]) renderBuddy(S.projectId);
-    return;
-  }
+  // Restore a hidden field from the Hidden fields tray (the per-section
+  // hide link itself was removed 2026-11-07 — nothing in the panel hides).
   if (e.target.closest && e.target.closest('[data-show-field]')) {
     const fid = e.target.closest('[data-show-field]').dataset.showField;
     if (S.fieldHidden) delete S.fieldHidden[fid];
