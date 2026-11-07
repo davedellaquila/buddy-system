@@ -10,6 +10,7 @@
 <style>
 :root{color-scheme:dark light;--bg:#0d1117;--card:#161b22;--border:#30363d;--text:#e6edf3;--muted:#8b949e;--accent:#58a6ff;--amber:#f0b429;--amber-bd:#7d5e00}
 @media (prefers-color-scheme:light){:root{--bg:#ffffff;--card:#f6f8fa;--border:#d0d7de;--text:#1f2328;--muted:#57606a;--accent:#0969da}}
+html{scrollbar-gutter:stable}
 body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;margin:0;line-height:1.6}
 .wrap{max-width:860px;margin:0 auto;padding:40px 22px 60px}
 header.hero{display:flex;gap:18px;align-items:center;margin-bottom:8px}
@@ -22,14 +23,14 @@ h1{margin:0;font-size:30px;letter-spacing:-.02em}
 .status{font-size:12.5px;font-weight:700;border-radius:999px;padding:4px 12px;background:var(--card);border:1px solid var(--border)}
 .card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px 22px;margin-bottom:20px}
 .kicker{margin:0 0 10px;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:var(--muted)}
-.mission{font-size:16px;margin:0 0 10px}
-.brief{color:var(--muted);font-size:14px}
+.mission{font-size:16px;margin:0 0 10px;overflow-wrap:anywhere}
+.brief{color:var(--muted);font-size:14px;overflow-wrap:anywhere}
 .persona{font-size:14px;margin:8px 0 0}
 .facts{margin:0;display:grid;gap:2px}
 .fact{display:grid;grid-template-columns:150px 1fr;gap:12px;padding:7px 0;border-top:1px solid var(--border);font-size:14px}
 .fact:first-child{border-top:0}
 .fact dt{color:var(--muted);font-weight:600}
-.fact dd{margin:0;overflow-wrap:break-word}
+.fact dd{margin:0;min-width:0;overflow-wrap:anywhere}
 code{background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:1px 6px;font-size:13px}
 a{color:var(--accent);text-decoration:none}
 a:hover{text-decoration:underline}
@@ -51,14 +52,14 @@ a:hover{text-decoration:underline}
 .kid:hover{text-decoration:none;border-color:var(--accent)}
 .kidicon{font-size:22px}
 .kidname{font-size:14px;font-weight:600}
-.connrow{display:flex;gap:12px;padding:8px 0;font-size:14px;align-items:baseline}
+.connrow{display:flex;flex-wrap:wrap;gap:12px;padding:8px 0;font-size:14px;align-items:baseline}
 .connrow+.connrow{border-top:1px solid var(--border)}
 .connlabel{flex:none;width:110px;color:var(--muted);font-weight:600;font-size:13px}
 .pinrow{padding:6px 0;font-size:14px}
 .muted{color:var(--muted);font-size:13px}
 .empty{color:var(--muted);font-style:italic;margin:4px 0}
 footer{margin-top:36px;padding-top:18px;border-top:1px solid var(--border);color:var(--muted);font-size:12.5px;text-align:center}
-.aboutnav{display:flex;gap:14px;flex-wrap:wrap;align-items:baseline;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px 16px;margin-bottom:22px;font-size:14px}.unset{color:var(--muted);font-style:italic}.recjson{margin:0;font-size:12px;white-space:pre-wrap;overflow-wrap:break-word}.mdfile{border-top:1px solid var(--border);padding:14px 0}.mdfile-head{display:flex;gap:12px;align-items:baseline;margin-bottom:8px}details.mdfile summary{cursor:pointer;font-size:14px}.md-body{font-size:14.5px}.md-body h1{font-size:21px;margin:14px 0 8px}.md-body h2{font-size:18px;margin:14px 0 6px}.md-body h3{font-size:15.5px;margin:12px 0 4px}.md-body p{margin:8px 0}.md-body ul,.md-body ol{margin:8px 0 8px 22px}.md-body li{margin:3px 0}.md-body pre{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:10px 12px;overflow-x:auto;font-size:12.5px}.md-body table{border-collapse:collapse;margin:10px 0;font-size:13.5px}.md-body th,.md-body td{border:1px solid var(--border);padding:5px 9px;text-align:left}.md-body blockquote{border-left:3px solid var(--border);margin:10px 0;padding:2px 14px;color:var(--muted)}.mdfallback{white-space:pre-wrap;font-size:12.5px}.mdinv{margin:6px 0 12px 20px;font-size:14px}.mdinv li{margin:3px 0}.repo-files h2{font-size:17px;margin:0 0 4px;color:var(--text)}.attn-btn{background:var(--bg);color:var(--text);border:1px solid var(--border);border-radius:8px;padding:6px 14px;font-size:13px;font-weight:600;cursor:pointer}.attn-btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}.attn-actions{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}.attn-status{font-size:13px;color:var(--muted);margin-top:8px}
+.aboutnav{display:flex;gap:14px;flex-wrap:wrap;align-items:baseline;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px 16px;margin-bottom:22px;font-size:14px}.aboutnav .header-tip{margin-left:auto}header.hero .header-tip{margin-left:auto;flex:none}.unset{color:var(--muted);font-style:italic}.recjson{margin:0;font-size:12px;white-space:pre-wrap;overflow-wrap:break-word}.mdfile{border-top:1px solid var(--border);padding:14px 0}.mdfile-head{display:flex;gap:12px;align-items:baseline;margin-bottom:8px}details.mdfile summary{cursor:pointer;font-size:14px}.md-body{font-size:14.5px}.md-body h1{font-size:21px;margin:14px 0 8px}.md-body h2{font-size:18px;margin:14px 0 6px}.md-body h3{font-size:15.5px;margin:12px 0 4px}.md-body p{margin:8px 0}.md-body ul,.md-body ol{margin:8px 0 8px 22px}.md-body li{margin:3px 0}.md-body pre{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:10px 12px;overflow-x:auto;font-size:12.5px}.md-body table{border-collapse:collapse;margin:10px 0;font-size:13.5px}.md-body th,.md-body td{border:1px solid var(--border);padding:5px 9px;text-align:left}.md-body blockquote{border-left:3px solid var(--border);margin:10px 0;padding:2px 14px;color:var(--muted)}.mdfallback{white-space:pre-wrap;font-size:12.5px}.mdinv{margin:6px 0 12px 20px;font-size:14px}.mdinv li{margin:3px 0}.repo-files h2{font-size:17px;margin:0 0 4px;color:var(--text)}.attn-btn{background:var(--bg);color:var(--text);border:1px solid var(--border);border-radius:8px;padding:6px 14px;font-size:13px;font-weight:600;cursor:pointer}.attn-btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}.attn-actions{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}.attn-status{font-size:13px;color:var(--muted);margin-top:8px}
 
 .dumpbox {
   background: var(--card);
@@ -154,7 +155,7 @@ footer{margin-top:36px;padding-top:18px;border-top:1px solid var(--border);color
 @media (max-width:640px){.fact{grid-template-columns:1fr;gap:2px}.connlabel{width:88px}.wrap{padding:28px 16px 48px}h1{font-size:24px}}
 </style>
 <style>
-.header-tip{position:relative;overflow:hidden;display:inline-flex;align-items:center;gap:.45em;padding:6px 12px;border-radius:999px;text-decoration:none;
+.header-tip{position:relative;overflow:hidden;flex:none;display:inline-flex;align-items:center;gap:.45em;padding:6px 12px;border-radius:999px;text-decoration:none;
   font-size:13px;font-weight:800;line-height:1;color:#fff;background:linear-gradient(135deg,#7c4dff,#b388ff);
   box-shadow:0 4px 14px rgba(124,77,255,.35);animation:tip-breathe 3.2s ease-in-out infinite;white-space:nowrap}
 .header-tip::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;
@@ -171,15 +172,14 @@ footer{margin-top:36px;padding-top:18px;border-top:1px solid var(--border);color
   .header-tip::after{display:none}
 }
 </style>
-<style>header.hero .header-tip{margin-left:auto;flex:none}</style>
 </head>
 <body>
 <div class="wrap">
-<div class="aboutnav"><a href="./">← 📋 Service Advisor — homepage</a><span class="muted">This About page is the full record: every registry field and every markdown file in the buddy's repo.</span></div>
+<div class="aboutnav"><a href="./">← 📋 Service Advisor — homepage</a><span class="muted">This About page is the full record: every registry field and every markdown file in the buddy's repo.</span><a class="header-tip" href="https://ko-fi.com/davedellaquila" target="_blank" rel="noopener" aria-label="Tip Jar — if this page helped you, you can leave Dave a tip on Ko-fi"><span class="jar" aria-hidden="true">🫙</span><span>Tip Jar</span></a></div>
 <header class="hero">
 <div class="heroicon">📋</div>
 <div><h1>Service Advisor</h1><p class="tagline">Fleet service front door — and Miata Tech&#x27;s service manager</p></div>
-<a class="header-tip" href="https://ko-fi.com/davedellaquila" target="_blank" rel="noopener" aria-label="Tip Jar — if this page helped you, you can leave Dave a tip on Ko-fi"><span class="jar" aria-hidden="true">🫙</span><span>Tip Jar</span></a></header>
+</header>
 <nav data-buddy-crumb style="margin-bottom:14px;font-size:14px;"><a href="https://davedellaquila.github.io/buddy-system/car-buddy/" style="color:var(--muted);text-decoration:none;">← Car Buddy</a></nav>
 <div class="stats"><span class="status st-active">Active</span><span class="stat"><b>1</b> need attention</span><span class="stat"><b>1</b> documents</span></div>
 <section class="card"><h2 class="kicker">About</h2><p class="mission">Dave&#x27;s single front door for everything vehicle-service: repair plans, parts pricing, scheduling, cost tracking, and follow-up across the fleet (flow: Dave → Service Advisor → Hans). Extended 2026-10-21 to also serve as Miata Tech&#x27;s service manager — Miata intake questions, scheduling, job cards, owner-comms drafts, and follow-up for Miata Tech&#x27;s vetted jobs (Dave/friend → Service Advisor → Miata Tech). First Miata job: Shanon Essex&#x27;s NA shock replacement, Thu Oct 22, 2026.</p><p class="brief">https://docs.google.com/document/d/17SGRxiVu0OyuGXDvJ9ayrPqbQ6KaWIkAQpNQ6T9uxRQ/edit</p><p class="persona">🎭 Persona: Service Advisor</p></section>
@@ -189,7 +189,7 @@ footer{margin-top:36px;padding-top:18px;border-top:1px solid var(--border);color
 
 <section class="card"><h2 class="kicker">Documents (1)</h2><div class="docrow"><a href="https://docs.google.com/document/d/17SGRxiVu0OyuGXDvJ9ayrPqbQ6KaWIkAQpNQ6T9uxRQ/edit" target="_blank" rel="noopener">Service Advisor — Mission Statement</a></div></section>
 <section class="card"><h2 class="kicker">Sub-buddies (0)</h2><p class="empty">No sub-buddies.</p></section>
-<section class="card"><h2 class="kicker">Connections</h2><div class="connrow"><span class="connlabel">Parent</span><a href="../car-buddy/">🚗 Car Buddy</a></div><div class="connrow"><span class="connlabel">Siblings</span><a href="../model-a-buddy/">🚗 1931 Ford Model A</a>, <a href="../mga-buddy/">🏎️ 1959 MGA roadster</a>, <a href="../1968-mgb-gt/">🏎️ 1968 MGB-GT</a>, <a href="../4-post-lift/">🏗️ 4 post lift</a>, <a href="../bmw-buddy/">🚗 BMW</a>, <a href="../hans-buddy/">👨‍🔧 Hans</a>, <a href="../ml500-buddy/">🚙 ML500 Buddy</a>, <a href="../miata-tech/">🛞 Miata Tech</a>, <a href="../rachel-buddy/">🔧 Rachel</a></div><div class="connrow"><span class="connlabel">Linked to</span><a href="../miata-tech/">🛞 Miata Tech</a></div></section>
+<section class="card"><h2 class="kicker">Connections</h2><div class="connrow"><span class="connlabel">Parent</span><a href="../car-buddy/">🚗 Car Buddy</a></div><div class="connrow"><span class="connlabel">Siblings</span><a href="../model-a-buddy/">🚗 1931 Ford Model A</a>, <a href="../1968-mgb-gt/">🏎️ 1968 MGB-GT</a>, <a href="../2006-mazda-mx-5/">🤖 2006 Mazda MX-5</a>, <a href="../4-post-lift/">🏗️ 4 post lift</a>, <a href="../bmw-buddy/">🚗 BMW E61</a>, <a href="../hans-buddy/">👨‍🔧 Hans</a>, <a href="../mga-buddy/">🏎️ MGA Buddy</a>, <a href="../ml500-buddy/">🚙 ML500 Buddy</a>, <a href="../miata-tech/">🛞 Miata Tech</a>, <a href="../rachel-buddy/">🔧 Rachel</a>, <a href="../w163-mastertech-buddy/">⭐ W163 Mastertech Buddy</a></div><div class="connrow"><span class="connlabel">Linked to</span><a href="../miata-tech/">🛞 Miata Tech</a></div></section>
 <section class="card"><h2 class="kicker">Repository &amp; memory</h2><div class="connrow"><span class="connlabel">Repo</span><a href="https://github.com/davedellaquila/service-advisor-buddy" target="_blank" rel="noopener">davedellaquila/service-advisor-buddy</a> <span class="muted">— brain dumps land in docs/ingest.md</span></div></section>
 <section class="card"><h2 class="kicker">From the repo — markdown files (5)</h2><p class="muted">In the local clone of davedellaquila/service-advisor-buddy — the reader below loads the live files from the repo itself:</p><ul class="mdinv"><li><code>KNOWLEDGE.md</code> <span class="muted">2,457 chars</span></li><li><code>CONFIG.md</code> <span class="muted">2,563 chars</span></li><li><code>README.md</code> <span class="muted">1,399 chars</span></li><li><code>docs/brief.md</code> <span class="muted">3,538 chars</span></li><li><code>docs/ingest.md</code> <span class="muted">128 chars</span></li></ul>
 <section class="repo-files" data-buddy-id="service-advisor">
@@ -222,7 +222,7 @@ footer{margin-top:36px;padding-top:18px;border-top:1px solid var(--border);color
 <p class="dumpbox-hint">Enter dumps it &middot; Shift+Enter for a new line</p>
 </section>
 
-<footer>Default Homepage v3 — "The Dossier" · Generated 2026-10-21 · Part of the Buddy System<br>
+<footer>Default Homepage v3 — "The Dossier" · Generated 2026-11-07 · Part of the Buddy System &middot; <a href="https://davedellaquila.github.io/buddy-system/">Buddy System dashboard</a><br>
 <span class="muted">Archived PDF snapshots live in the buddy-system archive folder.</span></footer>
 </div>
 
@@ -232,7 +232,7 @@ footer{margin-top:36px;padding-top:18px;border-top:1px solid var(--border);color
   if (!box || box.dataset.dumpInit) return;
   box.dataset.dumpInit = '1';
   var bid = box.getAttribute('data-buddy-id') || (function(){
-    var p = location.pathname.replace(/\/+$/, '');
+    var p = location.pathname.replace(/\\/+$/, '');
     return p.substring(p.lastIndexOf('/') + 1);
   })();
   var ta = box.querySelector('textarea'),
@@ -262,7 +262,7 @@ footer{margin-top:36px;padding-top:18px;border-top:1px solid var(--border);color
     try {
       var j = await ghApi('/repos/davedellaquila/' + repo + '/contents/' + path);
       if (j && j.content) return {
-        text: new TextDecoder().decode(Uint8Array.from(atob(j.content.replace(/\n/g, '')), function(c){ return c.charCodeAt(0); })),
+        text: new TextDecoder().decode(Uint8Array.from(atob(j.content.replace(/\\n/g, '')), function(c){ return c.charCodeAt(0); })),
         sha: j.sha
       };
     } catch(e){}
@@ -415,7 +415,7 @@ footer{margin-top:36px;padding-top:18px;border-top:1px solid var(--border);color
   if (!sec || sec.dataset.rfInit) return;
   sec.dataset.rfInit = '1';
   var bid = sec.getAttribute('data-buddy-id') || (function(){
-    var p = location.pathname.replace(/\/+$/, '');
+    var p = location.pathname.replace(/\\/+$/, '');
     return p.substring(p.lastIndexOf('/') + 1);
   })();
   function lsGet(){ try { return JSON.parse(localStorage.getItem('buddyTree.v3') || '{}'); } catch(e){ return {}; } }
@@ -440,7 +440,7 @@ footer{margin-top:36px;padding-top:18px;border-top:1px solid var(--border);color
     try {
       var j = await ghApi('/repos/davedellaquila/' + repo + '/contents/' + path);
       if (j && j.content) return {
-        text: new TextDecoder().decode(Uint8Array.from(atob(j.content.replace(/\n/g, '')), function(c){ return c.charCodeAt(0); })),
+        text: new TextDecoder().decode(Uint8Array.from(atob(j.content.replace(/\\n/g, '')), function(c){ return c.charCodeAt(0); })),
         sha: j.sha
       };
     } catch(e){}
@@ -461,42 +461,42 @@ footer{margin-top:36px;padding-top:18px;border-top:1px solid var(--border);color
   function inline(s){
     s = esc(s);
     s = s.replace(/`([^`]+)`/g, '<code>$1</code>');
-    s = s.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
-    s = s.replace(/(^|[^*])\*([^*\n]+)\*/g, '$1<em>$2</em>');
-    s = s.replace(/\[([^\]]+)\]\((https?:[^)\s]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>');
+    s = s.replace(/\\*\\*([^*]+)\\*\\*/g, '<strong>$1</strong>');
+    s = s.replace(/(^|[^*])\\*([^*\\n]+)\\*/g, '$1<em>$2</em>');
+    s = s.replace(/\\[([^\\]]+)\\]\\((https?:[^)\\s]+)\\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>');
     return s;
   }
   function mdRender(src){
-    var lines = src.split('\n'), out = [], inList = false, inCode = false, codeBuf = [];
+    var lines = src.split('\\n'), out = [], inList = false, inCode = false, codeBuf = [];
     function closeList(){ if (inList) { out.push('</ul>'); inList = false; } }
     for (var i = 0; i < lines.length; i++){
       var ln = lines[i], m;
       if (/^```/.test(ln)) {
-        if (inCode) { out.push('<pre><code>' + esc(codeBuf.join('\n')) + '</code></pre>'); codeBuf = []; inCode = false; }
+        if (inCode) { out.push('<pre><code>' + esc(codeBuf.join('\\n')) + '</code></pre>'); codeBuf = []; inCode = false; }
         else { closeList(); inCode = true; }
         continue;
       }
       if (inCode) { codeBuf.push(ln); continue; }
-      if ((m = ln.match(/^(#{1,4})\s+(.*)/))) {
+      if ((m = ln.match(/^(#{1,4})\\s+(.*)/))) {
         closeList();
         var lv = Math.min(m[1].length + 1, 4);
         out.push('<h' + lv + '>' + inline(m[2]) + '</h' + lv + '>');
         continue;
       }
-      if (/^\s*(-{3,}|\*{3,})\s*$/.test(ln)) { closeList(); out.push('<hr>'); continue; }
-      if ((m = ln.match(/^\s*[-*]\s+(.*)/)) || (m = ln.match(/^\s*\d+[.)]\s+(.*)/))) {
+      if (/^\\s*(-{3,}|\\*{3,})\\s*$/.test(ln)) { closeList(); out.push('<hr>'); continue; }
+      if ((m = ln.match(/^\\s*[-*]\\s+(.*)/)) || (m = ln.match(/^\\s*\\d+[.)]\\s+(.*)/))) {
         if (!inList) { out.push('<ul>'); inList = true; }
         out.push('<li>' + inline(m[1]) + '</li>');
         continue;
       }
-      if ((m = ln.match(/^>\s?(.*)/))) { closeList(); out.push('<blockquote>' + inline(m[1]) + '</blockquote>'); continue; }
+      if ((m = ln.match(/^>\\s?(.*)/))) { closeList(); out.push('<blockquote>' + inline(m[1]) + '</blockquote>'); continue; }
       if (!ln.trim()) { closeList(); continue; }
       closeList();
       out.push('<p>' + inline(ln) + '</p>');
     }
     closeList();
-    if (inCode) out.push('<pre><code>' + esc(codeBuf.join('\n')) + '</code></pre>');
-    return out.join('\n');
+    if (inCode) out.push('<pre><code>' + esc(codeBuf.join('\\n')) + '</code></pre>');
+    return out.join('\\n');
   }
   var locked = sec.querySelector('.rf-locked'), main = sec.querySelector('.rf-main'),
       list = sec.querySelector('.rf-list'), st = sec.querySelector('.rf-status');
@@ -640,7 +640,7 @@ footer{margin-top:36px;padding-top:18px;border-top:1px solid var(--border);color
       try {
         var j = await ghApi('/repos/davedellaquila/' + repo + (dir ? '/contents/' + dir : '/contents'));
         if (Array.isArray(j)) j.forEach(function(e){
-          if (e.type === 'file' && /\.md$/i.test(e.name)) files.push({name: e.name, path: e.path});
+          if (e.type === 'file' && /\\.md$/i.test(e.name)) files.push({name: e.name, path: e.path});
         });
       } catch(e){}
     }
@@ -664,7 +664,7 @@ footer{margin-top:36px;padding-top:18px;border-top:1px solid var(--border);color
   if (!tiles.length) return;
   var dumpbox = document.querySelector('.dumpbox');
   var bid = (dumpbox && dumpbox.getAttribute('data-buddy-id')) || (function(){
-    var p = location.pathname.replace(/\/+$/, '');
+    var p = location.pathname.replace(/\\/+$/, '');
     return p.substring(p.lastIndexOf('/') + 1);
   })();
   function lsGet(){ try { return JSON.parse(localStorage.getItem('buddyTree.v3') || '{}'); } catch(e){ return {}; } }
@@ -690,7 +690,7 @@ footer{margin-top:36px;padding-top:18px;border-top:1px solid var(--border);color
     try {
       var j = await ghApi('/repos/davedellaquila/' + repo + '/contents/' + path);
       if (j && j.content) return {
-        text: new TextDecoder().decode(Uint8Array.from(atob(j.content.replace(/\n/g, '')), function(c){ return c.charCodeAt(0); })),
+        text: new TextDecoder().decode(Uint8Array.from(atob(j.content.replace(/\\n/g, '')), function(c){ return c.charCodeAt(0); })),
         sha: j.sha
       };
     } catch(e){}

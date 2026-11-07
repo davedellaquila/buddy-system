@@ -10,6 +10,7 @@
 <style>
 :root{color-scheme:dark light;--bg:#0d1117;--card:#161b22;--border:#30363d;--text:#e6edf3;--muted:#8b949e;--accent:#58a6ff;--amber:#f0b429;--amber-bd:#7d5e00}
 @media (prefers-color-scheme:light){:root{--bg:#ffffff;--card:#f6f8fa;--border:#d0d7de;--text:#1f2328;--muted:#57606a;--accent:#0969da}}
+html{scrollbar-gutter:stable}
 body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;margin:0;line-height:1.6}
 .wrap{max-width:860px;margin:0 auto;padding:40px 22px 60px}
 header.hero{display:flex;gap:18px;align-items:center;margin-bottom:8px}
@@ -22,14 +23,14 @@ h1{margin:0;font-size:30px;letter-spacing:-.02em}
 .status{font-size:12.5px;font-weight:700;border-radius:999px;padding:4px 12px;background:var(--card);border:1px solid var(--border)}
 .card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px 22px;margin-bottom:20px}
 .kicker{margin:0 0 10px;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:var(--muted)}
-.mission{font-size:16px;margin:0 0 10px}
-.brief{color:var(--muted);font-size:14px}
+.mission{font-size:16px;margin:0 0 10px;overflow-wrap:anywhere}
+.brief{color:var(--muted);font-size:14px;overflow-wrap:anywhere}
 .persona{font-size:14px;margin:8px 0 0}
 .facts{margin:0;display:grid;gap:2px}
 .fact{display:grid;grid-template-columns:150px 1fr;gap:12px;padding:7px 0;border-top:1px solid var(--border);font-size:14px}
 .fact:first-child{border-top:0}
 .fact dt{color:var(--muted);font-weight:600}
-.fact dd{margin:0;overflow-wrap:break-word}
+.fact dd{margin:0;min-width:0;overflow-wrap:anywhere}
 code{background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:1px 6px;font-size:13px}
 a{color:var(--accent);text-decoration:none}
 a:hover{text-decoration:underline}
@@ -51,14 +52,14 @@ a:hover{text-decoration:underline}
 .kid:hover{text-decoration:none;border-color:var(--accent)}
 .kidicon{font-size:22px}
 .kidname{font-size:14px;font-weight:600}
-.connrow{display:flex;gap:12px;padding:8px 0;font-size:14px;align-items:baseline}
+.connrow{display:flex;flex-wrap:wrap;gap:12px;padding:8px 0;font-size:14px;align-items:baseline}
 .connrow+.connrow{border-top:1px solid var(--border)}
 .connlabel{flex:none;width:110px;color:var(--muted);font-weight:600;font-size:13px}
 .pinrow{padding:6px 0;font-size:14px}
 .muted{color:var(--muted);font-size:13px}
 .empty{color:var(--muted);font-style:italic;margin:4px 0}
 footer{margin-top:36px;padding-top:18px;border-top:1px solid var(--border);color:var(--muted);font-size:12.5px;text-align:center}
-.aboutnav{display:flex;gap:14px;flex-wrap:wrap;align-items:baseline;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px 16px;margin-bottom:22px;font-size:14px}.unset{color:var(--muted);font-style:italic}.recjson{margin:0;font-size:12px;white-space:pre-wrap;overflow-wrap:break-word}.mdfile{border-top:1px solid var(--border);padding:14px 0}.mdfile-head{display:flex;gap:12px;align-items:baseline;margin-bottom:8px}details.mdfile summary{cursor:pointer;font-size:14px}.md-body{font-size:14.5px}.md-body h1{font-size:21px;margin:14px 0 8px}.md-body h2{font-size:18px;margin:14px 0 6px}.md-body h3{font-size:15.5px;margin:12px 0 4px}.md-body p{margin:8px 0}.md-body ul,.md-body ol{margin:8px 0 8px 22px}.md-body li{margin:3px 0}.md-body pre{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:10px 12px;overflow-x:auto;font-size:12.5px}.md-body table{border-collapse:collapse;margin:10px 0;font-size:13.5px}.md-body th,.md-body td{border:1px solid var(--border);padding:5px 9px;text-align:left}.md-body blockquote{border-left:3px solid var(--border);margin:10px 0;padding:2px 14px;color:var(--muted)}.mdfallback{white-space:pre-wrap;font-size:12.5px}.mdinv{margin:6px 0 12px 20px;font-size:14px}.mdinv li{margin:3px 0}.repo-files h2{font-size:17px;margin:0 0 4px;color:var(--text)}.attn-btn{background:var(--bg);color:var(--text);border:1px solid var(--border);border-radius:8px;padding:6px 14px;font-size:13px;font-weight:600;cursor:pointer}.attn-btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}.attn-actions{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}.attn-status{font-size:13px;color:var(--muted);margin-top:8px}
+.aboutnav{display:flex;gap:14px;flex-wrap:wrap;align-items:baseline;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px 16px;margin-bottom:22px;font-size:14px}.aboutnav .header-tip{margin-left:auto}header.hero .header-tip{margin-left:auto;flex:none}.unset{color:var(--muted);font-style:italic}.recjson{margin:0;font-size:12px;white-space:pre-wrap;overflow-wrap:break-word}.mdfile{border-top:1px solid var(--border);padding:14px 0}.mdfile-head{display:flex;gap:12px;align-items:baseline;margin-bottom:8px}details.mdfile summary{cursor:pointer;font-size:14px}.md-body{font-size:14.5px}.md-body h1{font-size:21px;margin:14px 0 8px}.md-body h2{font-size:18px;margin:14px 0 6px}.md-body h3{font-size:15.5px;margin:12px 0 4px}.md-body p{margin:8px 0}.md-body ul,.md-body ol{margin:8px 0 8px 22px}.md-body li{margin:3px 0}.md-body pre{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:10px 12px;overflow-x:auto;font-size:12.5px}.md-body table{border-collapse:collapse;margin:10px 0;font-size:13.5px}.md-body th,.md-body td{border:1px solid var(--border);padding:5px 9px;text-align:left}.md-body blockquote{border-left:3px solid var(--border);margin:10px 0;padding:2px 14px;color:var(--muted)}.mdfallback{white-space:pre-wrap;font-size:12.5px}.mdinv{margin:6px 0 12px 20px;font-size:14px}.mdinv li{margin:3px 0}.repo-files h2{font-size:17px;margin:0 0 4px;color:var(--text)}.attn-btn{background:var(--bg);color:var(--text);border:1px solid var(--border);border-radius:8px;padding:6px 14px;font-size:13px;font-weight:600;cursor:pointer}.attn-btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}.attn-actions{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}.attn-status{font-size:13px;color:var(--muted);margin-top:8px}
 
 .dumpbox {
   background: var(--card);
@@ -154,7 +155,7 @@ footer{margin-top:36px;padding-top:18px;border-top:1px solid var(--border);color
 @media (max-width:640px){.fact{grid-template-columns:1fr;gap:2px}.connlabel{width:88px}.wrap{padding:28px 16px 48px}h1{font-size:24px}}
 </style>
 <style>
-.header-tip{position:relative;overflow:hidden;display:inline-flex;align-items:center;gap:.45em;padding:6px 12px;border-radius:999px;text-decoration:none;
+.header-tip{position:relative;overflow:hidden;flex:none;display:inline-flex;align-items:center;gap:.45em;padding:6px 12px;border-radius:999px;text-decoration:none;
   font-size:13px;font-weight:800;line-height:1;color:#fff;background:linear-gradient(135deg,#7c4dff,#b388ff);
   box-shadow:0 4px 14px rgba(124,77,255,.35);animation:tip-breathe 3.2s ease-in-out infinite;white-space:nowrap}
 .header-tip::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;
@@ -171,26 +172,25 @@ footer{margin-top:36px;padding-top:18px;border-top:1px solid var(--border);color
   .header-tip::after{display:none}
 }
 </style>
-<style>header.hero .header-tip{margin-left:auto;flex:none}</style>
 </head>
 <body>
 <div class="wrap">
-<div class="aboutnav"><a href="./">← 🔩 Miata Parts Specialist — homepage</a><span class="muted">This About page is the full record: every registry field and every markdown file in the buddy's repo.</span></div>
+<div class="aboutnav"><a href="./">← 🔩 Miata Parts Specialist — homepage</a><span class="muted">This About page is the full record: every registry field and every markdown file in the buddy's repo.</span><a class="header-tip" href="https://ko-fi.com/davedellaquila" target="_blank" rel="noopener" aria-label="Tip Jar — if this page helped you, you can leave Dave a tip on Ko-fi"><span class="jar" aria-hidden="true">🫙</span><span>Tip Jar</span></a></div>
 <header class="hero">
 <div class="heroicon">🔩</div>
 <div><h1>Miata Parts Specialist</h1><p class="tagline">Miata parts desk — part numbers, NLA tracking, parts lists before garage day</p></div>
-<a class="header-tip" href="https://ko-fi.com/davedellaquila" target="_blank" rel="noopener" aria-label="Tip Jar — if this page helped you, you can leave Dave a tip on Ko-fi"><span class="jar" aria-hidden="true">🫙</span><span>Tip Jar</span></a></header>
+</header>
 <nav data-buddy-crumb style="margin-bottom:14px;font-size:14px;"><a href="https://davedellaquila.github.io/buddy-system/miata-tech/" style="color:var(--muted);text-decoration:none;">← Miata Tech</a></nav>
 <div class="stats"><span class="status st-new">New</span><span class="stat"><b>1</b> need attention</span><span class="stat"><b>1</b> documents</span></div>
 <section class="card"><h2 class="kicker">About</h2><p class="mission">NA/NB Miata parts desk on Miata Tech&#x27;s staff — Mazda part numbers &amp; supersessions, discontinued/NLA tracking with proven alternatives, trusted sourcing (Mazda, Mazda Motorsports, Flyin&#x27; Miata, Moss, vetted used), garage consumables stock (hardware kits, bump stops, boots, crush washers), and a sourced parts list before garage day for every vetted Miata Tech job. Never orders without Dave&#x27;s approval. First job: parts confirmation list for Shanon Essex&#x27;s NA shock replacement, Thu Oct 22, 2026.</p><p class="brief">https://docs.google.com/document/d/1VCdO8W243a8LRHiq1_sgWtejV5k481DWSokgrZzRmSQ/edit</p><p class="persona">🎭 Persona: Parts Veteran</p></section>
-<section class="card"><h2 class="kicker">Fact sheet — the data chain</h2><dl class="facts"><div class="fact"><dt>Buddy ID</dt><dd><code>miata-parts-specialist</code></dd></div><div class="fact"><dt>Kind</dt><dd>standalone</dd></div><div class="fact"><dt>Parent chain</dt><dd><a href="../astro/">🚀 Astro</a> › <a href="../car-buddy/">🚗 Car Buddy</a> › <a href="../miata-tech/">🛞 Miata Tech</a></dd></div><div class="fact"><dt>Repository</dt><dd><a href="https://github.com/davedellaquila/miata-parts-specialist" target="_blank" rel="noopener">davedellaquila/miata-parts-specialist</a></dd></div><div class="fact"><dt>Homepage URL</dt><dd><code>miata-parts-specialist/</code></dd></div></dl></section>
-<section class="card"><h2 class="kicker">Complete registry record (16 fields)</h2><dl class="facts"><div class="fact"><dt>id</dt><dd>miata-parts-specialist</dd></div><div class="fact"><dt>name</dt><dd>Miata Parts Specialist</dd></div><div class="fact"><dt>icon</dt><dd>🔩</dd></div><div class="fact"><dt>tagline</dt><dd>Miata parts desk — part numbers, NLA tracking, parts lists before garage day</dd></div><div class="fact"><dt>kind</dt><dd>standalone</dd></div><div class="fact"><dt>status</dt><dd>New</dd></div><div class="fact"><dt>statusClass</dt><dd>st-new</dd></div><div class="fact"><dt>parent</dt><dd>miata-tech</dd></div><div class="fact"><dt>mission</dt><dd>NA/NB Miata parts desk on Miata Tech&#x27;s staff — Mazda part numbers &amp; supersessions, discontinued/NLA tracking with proven alternatives, trusted sourcing (Mazda, Mazda Motorsports, Flyin&#x27; Miata, Moss, vetted used), garage consumables stock (hardware kits, bump stops, boots, crush washers), and a sourced parts list before garage day for every vetted Miata Tech job. Never orders without Dave&#x27;s approval. First job: parts confirmation list for Shanon Essex&#x27;s NA shock replacement, Thu Oct 22, 2026.</dd></div><div class="fact"><dt>brief</dt><dd><a href="https://docs.google.com/document/d/1VCdO8W243a8LRHiq1_sgWtejV5k481DWSokgrZzRmSQ/edit" target="_blank" rel="noopener">https://docs.google.com/document/d/1VCdO8W243a8LRHiq1_sgWtejV5k481DWSokgrZzRmSQ/edit</a></dd></div><div class="fact"><dt>persona</dt><dd>Parts Veteran</dd></div><div class="fact"><dt>repo</dt><dd>miata-parts-specialist</dd></div><div class="fact"><dt>homepage</dt><dd>miata-parts-specialist/</dd></div><div class="fact"><dt>docs</dt><dd><a href="https://docs.google.com/document/d/1VCdO8W243a8LRHiq1_sgWtejV5k481DWSokgrZzRmSQ/edit" target="_blank" rel="noopener">Miata Parts Specialist — Job Req</a></dd></div><div class="fact"><dt>attention</dt><dd><a href="https://docs.google.com/document/d/1VCdO8W243a8LRHiq1_sgWtejV5k481DWSokgrZzRmSQ/edit" target="_blank" rel="noopener">Job req ready for review — looks good, edits, or defer?</a></dd></div><div class="fact"><dt>photos</dt><dd><span class="unset">— not set —</span></dd></div></dl></section>
+<section class="card"><h2 class="kicker">Fact sheet — the data chain</h2><dl class="facts"><div class="fact"><dt>Buddy ID</dt><dd><code>miata-parts-specialist</code></dd></div><div class="fact"><dt>Kind</dt><dd>standalone</dd></div><div class="fact"><dt>Parent chain</dt><dd><a href="../astro/">🚀 Astro</a> › <a href="../car-buddy/">🚗 Car Buddy</a> › <a href="../miata-tech/">🛞 Miata Tech</a></dd></div><div class="fact"><dt>Repository</dt><dd><a href="https://github.com/davedellaquila/miata-parts-specialist" target="_blank" rel="noopener">davedellaquila/miata-parts-specialist</a></dd></div><div class="fact"><dt>Side thread</dt><dd><a href="https://muse.ai/chat/f60c639e-e812-4810-a344-8dd6a7482b8d" target="_blank" rel="noopener">open thread</a></dd></div><div class="fact"><dt>Homepage URL</dt><dd><code>miata-parts-specialist/</code></dd></div></dl></section>
+<section class="card"><h2 class="kicker">Complete registry record (18 fields)</h2><dl class="facts"><div class="fact"><dt>id</dt><dd>miata-parts-specialist</dd></div><div class="fact"><dt>name</dt><dd>Miata Parts Specialist</dd></div><div class="fact"><dt>icon</dt><dd>🔩</dd></div><div class="fact"><dt>tagline</dt><dd>Miata parts desk — part numbers, NLA tracking, parts lists before garage day</dd></div><div class="fact"><dt>kind</dt><dd>standalone</dd></div><div class="fact"><dt>status</dt><dd>New</dd></div><div class="fact"><dt>statusClass</dt><dd>st-new</dd></div><div class="fact"><dt>parent</dt><dd>miata-tech</dd></div><div class="fact"><dt>mission</dt><dd>NA/NB Miata parts desk on Miata Tech&#x27;s staff — Mazda part numbers &amp; supersessions, discontinued/NLA tracking with proven alternatives, trusted sourcing (Mazda, Mazda Motorsports, Flyin&#x27; Miata, Moss, vetted used), garage consumables stock (hardware kits, bump stops, boots, crush washers), and a sourced parts list before garage day for every vetted Miata Tech job. Never orders without Dave&#x27;s approval. First job: parts confirmation list for Shanon Essex&#x27;s NA shock replacement, Thu Oct 22, 2026.</dd></div><div class="fact"><dt>brief</dt><dd><a href="https://docs.google.com/document/d/1VCdO8W243a8LRHiq1_sgWtejV5k481DWSokgrZzRmSQ/edit" target="_blank" rel="noopener">https://docs.google.com/document/d/1VCdO8W243a8LRHiq1_sgWtejV5k481DWSokgrZzRmSQ/edit</a></dd></div><div class="fact"><dt>persona</dt><dd>Parts Veteran</dd></div><div class="fact"><dt>repo</dt><dd>miata-parts-specialist</dd></div><div class="fact"><dt>homepage</dt><dd>miata-parts-specialist/</dd></div><div class="fact"><dt>chat</dt><dd>f60c639e-e812-4810-a344-8dd6a7482b8d</dd></div><div class="fact"><dt>docs</dt><dd><a href="https://docs.google.com/document/d/1VCdO8W243a8LRHiq1_sgWtejV5k481DWSokgrZzRmSQ/edit" target="_blank" rel="noopener">Miata Parts Specialist — Job Req</a></dd></div><div class="fact"><dt>attention</dt><dd><a href="https://docs.google.com/document/d/1VCdO8W243a8LRHiq1_sgWtejV5k481DWSokgrZzRmSQ/edit" target="_blank" rel="noopener">Job req ready for review — looks good, edits, or defer?</a></dd></div><div class="fact"><dt>links</dt><dd>miata-nc-parts-specialist</dd></div><div class="fact"><dt>photos</dt><dd><span class="unset">— not set —</span></dd></div></dl></section>
 <section class="card"><h2 class="kicker">Needs attention (1)</h2><div class="attn"><div class="aitem"><span class="adot">●</span><div><div><a href="https://docs.google.com/document/d/1VCdO8W243a8LRHiq1_sgWtejV5k481DWSokgrZzRmSQ/edit" target="_blank" rel="noopener">Job req ready for review — looks good, edits, or defer? ↗</a></div><div class="adate">2026-10-21</div></div></div></div></section>
 
 <section class="card"><h2 class="kicker">Documents (1)</h2><div class="docrow"><a href="https://docs.google.com/document/d/1VCdO8W243a8LRHiq1_sgWtejV5k481DWSokgrZzRmSQ/edit" target="_blank" rel="noopener">Miata Parts Specialist — Job Req</a></div></section>
 <section class="card"><h2 class="kicker">Sub-buddies (0)</h2><p class="empty">No sub-buddies.</p></section>
-<section class="card"><h2 class="kicker">Connections</h2><div class="connrow"><span class="connlabel">Parent</span><a href="../miata-tech/">🛞 Miata Tech</a></div><div class="connrow"><span class="connlabel">Siblings</span><a href="../miata-apprentice/">🧰 Miata Apprentice</a></div></section>
-<section class="card"><h2 class="kicker">Repository &amp; memory</h2><div class="connrow"><span class="connlabel">Repo</span><a href="https://github.com/davedellaquila/miata-parts-specialist" target="_blank" rel="noopener">davedellaquila/miata-parts-specialist</a> <span class="muted">— brain dumps land in docs/ingest.md</span></div></section>
+<section class="card"><h2 class="kicker">Connections</h2><div class="connrow"><span class="connlabel">Parent</span><a href="../miata-tech/">🛞 Miata Tech</a></div><div class="connrow"><span class="connlabel">Siblings</span><a href="../miata-apprentice/">🧰 Miata Apprentice</a>, <a href="../miata-nc-parts-specialist/">📦 Miata NC Parts Specialist</a></div><div class="connrow"><span class="connlabel">Linked to</span><a href="../miata-nc-parts-specialist/">📦 Miata NC Parts Specialist</a></div><div class="connrow"><span class="connlabel">Linked from</span><a href="../miata-nc-parts-specialist/">📦 Miata NC Parts Specialist</a></div></section>
+<section class="card"><h2 class="kicker">Repository &amp; memory</h2><div class="connrow"><span class="connlabel">Repo</span><a href="https://github.com/davedellaquila/miata-parts-specialist" target="_blank" rel="noopener">davedellaquila/miata-parts-specialist</a> <span class="muted">— brain dumps land in docs/ingest.md</span></div><div class="connrow"><span class="connlabel">Memory</span><code>ali.md</code></div></section>
 <section class="card"><h2 class="kicker">From the repo — markdown files (10)</h2><p class="muted">In the local clone of davedellaquila/miata-parts-specialist — the reader below loads the live files from the repo itself:</p><ul class="mdinv"><li><code>KNOWLEDGE.md</code> <span class="muted">1,762 chars</span></li><li><code>CONFIG.md</code> <span class="muted">2,334 chars</span></li><li><code>STUDY.md</code> <span class="muted">1,127 chars</span></li><li><code>SOUL.md</code> <span class="muted">714 chars</span></li><li><code>DECISIONS.md</code> <span class="muted">67 chars</span></li><li><code>ACCOMPLISHMENTS.md</code> <span class="muted">123 chars</span></li><li><code>README.md</code> <span class="muted">500 chars</span></li><li><code>docs/brief.md</code> <span class="muted">3,931 chars</span></li><li><code>docs/ingest.md</code> <span class="muted">135 chars</span></li><li><code>docs/job-req.md</code> <span class="muted">3,931 chars</span></li></ul>
 <section class="repo-files" data-buddy-id="miata-parts-specialist">
 <h2>📄 Repo files</h2>
@@ -222,7 +222,7 @@ footer{margin-top:36px;padding-top:18px;border-top:1px solid var(--border);color
 <p class="dumpbox-hint">Enter dumps it &middot; Shift+Enter for a new line</p>
 </section>
 
-<footer>Default Homepage v3 — "The Dossier" · Generated 2026-10-21 · Part of the Buddy System<br>
+<footer>Default Homepage v3 — "The Dossier" · Generated 2026-11-07 · Part of the Buddy System &middot; <a href="https://davedellaquila.github.io/buddy-system/">Buddy System dashboard</a><br>
 <span class="muted">Archived PDF snapshots live in the buddy-system archive folder.</span></footer>
 </div>
 
@@ -232,7 +232,7 @@ footer{margin-top:36px;padding-top:18px;border-top:1px solid var(--border);color
   if (!box || box.dataset.dumpInit) return;
   box.dataset.dumpInit = '1';
   var bid = box.getAttribute('data-buddy-id') || (function(){
-    var p = location.pathname.replace(/\/+$/, '');
+    var p = location.pathname.replace(/\\/+$/, '');
     return p.substring(p.lastIndexOf('/') + 1);
   })();
   var ta = box.querySelector('textarea'),
@@ -262,7 +262,7 @@ footer{margin-top:36px;padding-top:18px;border-top:1px solid var(--border);color
     try {
       var j = await ghApi('/repos/davedellaquila/' + repo + '/contents/' + path);
       if (j && j.content) return {
-        text: new TextDecoder().decode(Uint8Array.from(atob(j.content.replace(/\n/g, '')), function(c){ return c.charCodeAt(0); })),
+        text: new TextDecoder().decode(Uint8Array.from(atob(j.content.replace(/\\n/g, '')), function(c){ return c.charCodeAt(0); })),
         sha: j.sha
       };
     } catch(e){}
@@ -415,7 +415,7 @@ footer{margin-top:36px;padding-top:18px;border-top:1px solid var(--border);color
   if (!sec || sec.dataset.rfInit) return;
   sec.dataset.rfInit = '1';
   var bid = sec.getAttribute('data-buddy-id') || (function(){
-    var p = location.pathname.replace(/\/+$/, '');
+    var p = location.pathname.replace(/\\/+$/, '');
     return p.substring(p.lastIndexOf('/') + 1);
   })();
   function lsGet(){ try { return JSON.parse(localStorage.getItem('buddyTree.v3') || '{}'); } catch(e){ return {}; } }
@@ -440,7 +440,7 @@ footer{margin-top:36px;padding-top:18px;border-top:1px solid var(--border);color
     try {
       var j = await ghApi('/repos/davedellaquila/' + repo + '/contents/' + path);
       if (j && j.content) return {
-        text: new TextDecoder().decode(Uint8Array.from(atob(j.content.replace(/\n/g, '')), function(c){ return c.charCodeAt(0); })),
+        text: new TextDecoder().decode(Uint8Array.from(atob(j.content.replace(/\\n/g, '')), function(c){ return c.charCodeAt(0); })),
         sha: j.sha
       };
     } catch(e){}
@@ -461,42 +461,42 @@ footer{margin-top:36px;padding-top:18px;border-top:1px solid var(--border);color
   function inline(s){
     s = esc(s);
     s = s.replace(/`([^`]+)`/g, '<code>$1</code>');
-    s = s.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
-    s = s.replace(/(^|[^*])\*([^*\n]+)\*/g, '$1<em>$2</em>');
-    s = s.replace(/\[([^\]]+)\]\((https?:[^)\s]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>');
+    s = s.replace(/\\*\\*([^*]+)\\*\\*/g, '<strong>$1</strong>');
+    s = s.replace(/(^|[^*])\\*([^*\\n]+)\\*/g, '$1<em>$2</em>');
+    s = s.replace(/\\[([^\\]]+)\\]\\((https?:[^)\\s]+)\\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>');
     return s;
   }
   function mdRender(src){
-    var lines = src.split('\n'), out = [], inList = false, inCode = false, codeBuf = [];
+    var lines = src.split('\\n'), out = [], inList = false, inCode = false, codeBuf = [];
     function closeList(){ if (inList) { out.push('</ul>'); inList = false; } }
     for (var i = 0; i < lines.length; i++){
       var ln = lines[i], m;
       if (/^```/.test(ln)) {
-        if (inCode) { out.push('<pre><code>' + esc(codeBuf.join('\n')) + '</code></pre>'); codeBuf = []; inCode = false; }
+        if (inCode) { out.push('<pre><code>' + esc(codeBuf.join('\\n')) + '</code></pre>'); codeBuf = []; inCode = false; }
         else { closeList(); inCode = true; }
         continue;
       }
       if (inCode) { codeBuf.push(ln); continue; }
-      if ((m = ln.match(/^(#{1,4})\s+(.*)/))) {
+      if ((m = ln.match(/^(#{1,4})\\s+(.*)/))) {
         closeList();
         var lv = Math.min(m[1].length + 1, 4);
         out.push('<h' + lv + '>' + inline(m[2]) + '</h' + lv + '>');
         continue;
       }
-      if (/^\s*(-{3,}|\*{3,})\s*$/.test(ln)) { closeList(); out.push('<hr>'); continue; }
-      if ((m = ln.match(/^\s*[-*]\s+(.*)/)) || (m = ln.match(/^\s*\d+[.)]\s+(.*)/))) {
+      if (/^\\s*(-{3,}|\\*{3,})\\s*$/.test(ln)) { closeList(); out.push('<hr>'); continue; }
+      if ((m = ln.match(/^\\s*[-*]\\s+(.*)/)) || (m = ln.match(/^\\s*\\d+[.)]\\s+(.*)/))) {
         if (!inList) { out.push('<ul>'); inList = true; }
         out.push('<li>' + inline(m[1]) + '</li>');
         continue;
       }
-      if ((m = ln.match(/^>\s?(.*)/))) { closeList(); out.push('<blockquote>' + inline(m[1]) + '</blockquote>'); continue; }
+      if ((m = ln.match(/^>\\s?(.*)/))) { closeList(); out.push('<blockquote>' + inline(m[1]) + '</blockquote>'); continue; }
       if (!ln.trim()) { closeList(); continue; }
       closeList();
       out.push('<p>' + inline(ln) + '</p>');
     }
     closeList();
-    if (inCode) out.push('<pre><code>' + esc(codeBuf.join('\n')) + '</code></pre>');
-    return out.join('\n');
+    if (inCode) out.push('<pre><code>' + esc(codeBuf.join('\\n')) + '</code></pre>');
+    return out.join('\\n');
   }
   var locked = sec.querySelector('.rf-locked'), main = sec.querySelector('.rf-main'),
       list = sec.querySelector('.rf-list'), st = sec.querySelector('.rf-status');
@@ -640,7 +640,7 @@ footer{margin-top:36px;padding-top:18px;border-top:1px solid var(--border);color
       try {
         var j = await ghApi('/repos/davedellaquila/' + repo + (dir ? '/contents/' + dir : '/contents'));
         if (Array.isArray(j)) j.forEach(function(e){
-          if (e.type === 'file' && /\.md$/i.test(e.name)) files.push({name: e.name, path: e.path});
+          if (e.type === 'file' && /\\.md$/i.test(e.name)) files.push({name: e.name, path: e.path});
         });
       } catch(e){}
     }
@@ -664,7 +664,7 @@ footer{margin-top:36px;padding-top:18px;border-top:1px solid var(--border);color
   if (!tiles.length) return;
   var dumpbox = document.querySelector('.dumpbox');
   var bid = (dumpbox && dumpbox.getAttribute('data-buddy-id')) || (function(){
-    var p = location.pathname.replace(/\/+$/, '');
+    var p = location.pathname.replace(/\\/+$/, '');
     return p.substring(p.lastIndexOf('/') + 1);
   })();
   function lsGet(){ try { return JSON.parse(localStorage.getItem('buddyTree.v3') || '{}'); } catch(e){ return {}; } }
@@ -690,7 +690,7 @@ footer{margin-top:36px;padding-top:18px;border-top:1px solid var(--border);color
     try {
       var j = await ghApi('/repos/davedellaquila/' + repo + '/contents/' + path);
       if (j && j.content) return {
-        text: new TextDecoder().decode(Uint8Array.from(atob(j.content.replace(/\n/g, '')), function(c){ return c.charCodeAt(0); })),
+        text: new TextDecoder().decode(Uint8Array.from(atob(j.content.replace(/\\n/g, '')), function(c){ return c.charCodeAt(0); })),
         sha: j.sha
       };
     } catch(e){}

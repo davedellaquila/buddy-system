@@ -10,6 +10,7 @@
 <style>
 :root{color-scheme:dark light;--bg:#0d1117;--card:#161b22;--border:#30363d;--text:#e6edf3;--muted:#8b949e;--accent:#58a6ff;--amber:#f0b429;--amber-bd:#7d5e00}
 @media (prefers-color-scheme:light){:root{--bg:#ffffff;--card:#f6f8fa;--border:#d0d7de;--text:#1f2328;--muted:#57606a;--accent:#0969da}}
+html{scrollbar-gutter:stable}
 body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;margin:0;line-height:1.6}
 .wrap{max-width:860px;margin:0 auto;padding:40px 22px 60px}
 header.hero{display:flex;gap:18px;align-items:center;margin-bottom:8px}
@@ -22,14 +23,14 @@ h1{margin:0;font-size:30px;letter-spacing:-.02em}
 .status{font-size:12.5px;font-weight:700;border-radius:999px;padding:4px 12px;background:var(--card);border:1px solid var(--border)}
 .card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px 22px;margin-bottom:20px}
 .kicker{margin:0 0 10px;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:var(--muted)}
-.mission{font-size:16px;margin:0 0 10px}
-.brief{color:var(--muted);font-size:14px}
+.mission{font-size:16px;margin:0 0 10px;overflow-wrap:anywhere}
+.brief{color:var(--muted);font-size:14px;overflow-wrap:anywhere}
 .persona{font-size:14px;margin:8px 0 0}
 .facts{margin:0;display:grid;gap:2px}
 .fact{display:grid;grid-template-columns:150px 1fr;gap:12px;padding:7px 0;border-top:1px solid var(--border);font-size:14px}
 .fact:first-child{border-top:0}
 .fact dt{color:var(--muted);font-weight:600}
-.fact dd{margin:0;overflow-wrap:break-word}
+.fact dd{margin:0;min-width:0;overflow-wrap:anywhere}
 code{background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:1px 6px;font-size:13px}
 a{color:var(--accent);text-decoration:none}
 a:hover{text-decoration:underline}
@@ -51,7 +52,7 @@ a:hover{text-decoration:underline}
 .kid:hover{text-decoration:none;border-color:var(--accent)}
 .kidicon{font-size:22px}
 .kidname{font-size:14px;font-weight:600}
-.connrow{display:flex;gap:12px;padding:8px 0;font-size:14px;align-items:baseline}
+.connrow{display:flex;flex-wrap:wrap;gap:12px;padding:8px 0;font-size:14px;align-items:baseline}
 .connrow+.connrow{border-top:1px solid var(--border)}
 .connlabel{flex:none;width:110px;color:var(--muted);font-weight:600;font-size:13px}
 .pinrow{padding:6px 0;font-size:14px}
@@ -154,7 +155,7 @@ footer{margin-top:36px;padding-top:18px;border-top:1px solid var(--border);color
 @media (max-width:640px){.fact{grid-template-columns:1fr;gap:2px}.connlabel{width:88px}.wrap{padding:28px 16px 48px}h1{font-size:24px}}
 </style>
 <style>
-.header-tip{position:relative;overflow:hidden;display:inline-flex;align-items:center;gap:.45em;padding:6px 12px;border-radius:999px;text-decoration:none;
+.header-tip{position:relative;overflow:hidden;flex:none;display:inline-flex;align-items:center;gap:.45em;padding:6px 12px;border-radius:999px;text-decoration:none;
   font-size:13px;font-weight:800;line-height:1;color:#fff;background:linear-gradient(135deg,#7c4dff,#b388ff);
   box-shadow:0 4px 14px rgba(124,77,255,.35);animation:tip-breathe 3.2s ease-in-out infinite;white-space:nowrap}
 .header-tip::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;
@@ -182,15 +183,15 @@ footer{margin-top:36px;padding-top:18px;border-top:1px solid var(--border);color
 <nav data-buddy-crumb style="margin-bottom:14px;font-size:14px;"><a href="https://davedellaquila.github.io/buddy-system/tech-buddy/" style="color:var(--muted);text-decoration:none;">← Tech Buddy</a></nav><nav data-buddy-kids style="margin-bottom:18px;font-size:14px;line-height:1.9;"><span style="color:var(--muted);">Children:</span> <a href="https://davedellaquila.github.io/buddy-system/nans-apple-watch/" style="margin-right:14px;white-space:nowrap;">⌚ Nan&#x27;s Apple Watch</a> <a href="https://davedellaquila.github.io/buddy-system/nans-ipad-air/" style="margin-right:14px;white-space:nowrap;">🖥️ Nan&#x27;s iPad Air</a> <a href="https://davedellaquila.github.io/buddy-system/nans-iphone-17-pro-max/" style="margin-right:14px;white-space:nowrap;">📱 Nan&#x27;s iPhone 17 Pro Max</a></nav>
 <div class="stats"><span class="status st-brief">Mission review</span><span class="stat"><b>1</b> need attention</span><span class="stat"><b>3</b> sub-buddies</span><span class="stat"><b>1</b> documents</span></div>
 <section class="card"><h2 class="kicker">About</h2><p class="mission">Nan&#x27;s Tech is the grouping buddy for Nancy Dell&#x27;Aquila&#x27;s devices — the folder that is itself a buddy. It sits under Tech Buddy and gathers Nan&#x27;s iPhone 17 Pro Max, iPad Air, and Apple Watch under one node: the roll-up of their status and attention, the shared facts of Nan&#x27;s setup (her Apple ID / iCloud context, AppleCare posture, update cadence), and one consolidated attention view — while the three device buddies keep the device-level records. It keeps Nan&#x27;s tech distinct from Dave&#x27;s in the tree and in every roll-up Tech Buddy publishes upward.</p><p class="brief">https://docs.google.com/document/d/13fI8SWKlPJjBXJe697LkEXvtVH3YYYlp15JFp0VlwGo/edit</p><p class="persona">🎭 Persona: The Family Tech Steward</p><p class="persona">🔊 Voice: avocado_v2:MAI_01</p></section>
-<section class="card"><h2 class="kicker">Fact sheet — the data chain</h2><dl class="facts"><div class="fact"><dt>Buddy ID</dt><dd><code>nans-tech</code></dd></div><div class="fact"><dt>Kind</dt><dd>standalone</dd></div><div class="fact"><dt>Parent chain</dt><dd><a href="../astro/">🚀 Astro</a> › <a href="../project-buddy/">🧭 Project Buddy</a> › <a href="../tech-buddy/">📱 Tech Buddy</a></dd></div><div class="fact"><dt>Repository</dt><dd><a href="https://github.com/davedellaquila/nans-tech" target="_blank" rel="noopener">davedellaquila/nans-tech</a></dd></div><div class="fact"><dt>Homepage URL</dt><dd><code>nans-tech/</code></dd></div><div class="fact"><dt>Alt personas</dt><dd>The Device Concierge, The Household Tech Keeper</dd></div></dl></section>
-<section class="card"><h2 class="kicker">Complete registry record (20 fields)</h2><dl class="facts"><div class="fact"><dt>id</dt><dd>nans-tech</dd></div><div class="fact"><dt>name</dt><dd>Nan&#x27;s Tech</dd></div><div class="fact"><dt>icon</dt><dd>🗂️</dd></div><div class="fact"><dt>tagline</dt><dd>The roll-up for Nan&#x27;s iPhone, iPad, and Watch</dd></div><div class="fact"><dt>type</dt><dd>assistant</dd></div><div class="fact"><dt>kind</dt><dd>standalone</dd></div><div class="fact"><dt>status</dt><dd>Mission review</dd></div><div class="fact"><dt>statusClass</dt><dd>st-brief</dd></div><div class="fact"><dt>parent</dt><dd>tech-buddy</dd></div><div class="fact"><dt>mission</dt><dd>Nan&#x27;s Tech is the grouping buddy for Nancy Dell&#x27;Aquila&#x27;s devices — the folder that is itself a buddy. It sits under Tech Buddy and gathers Nan&#x27;s iPhone 17 Pro Max, iPad Air, and Apple Watch under one node: the roll-up of their status and attention, the shared facts of Nan&#x27;s setup (her Apple ID / iCloud context, AppleCare posture, update cadence), and one consolidated attention view — while the three device buddies keep the device-level records. It keeps Nan&#x27;s tech distinct from Dave&#x27;s in the tree and in every roll-up Tech Buddy publishes upward.</dd></div><div class="fact"><dt>brief</dt><dd><a href="https://docs.google.com/document/d/13fI8SWKlPJjBXJe697LkEXvtVH3YYYlp15JFp0VlwGo/edit" target="_blank" rel="noopener">https://docs.google.com/document/d/13fI8SWKlPJjBXJe697LkEXvtVH3YYYlp15JFp0VlwGo/edit</a></dd></div><div class="fact"><dt>persona</dt><dd>The Family Tech Steward</dd></div><div class="fact"><dt>voice</dt><dd>avocado_v2:MAI_01</dd></div><div class="fact"><dt>repo</dt><dd>nans-tech</dd></div><div class="fact"><dt>homepage</dt><dd>nans-tech/</dd></div><div class="fact"><dt>docs</dt><dd><a href="https://docs.google.com/document/d/13fI8SWKlPJjBXJe697LkEXvtVH3YYYlp15JFp0VlwGo/edit" target="_blank" rel="noopener">Nan&#x27;s Tech — Job Req</a></dd></div><div class="fact"><dt>attention</dt><dd><a href="https://docs.google.com/document/d/13fI8SWKlPJjBXJe697LkEXvtVH3YYYlp15JFp0VlwGo/edit" target="_blank" rel="noopener">Job req ready for review — looks good, edits, or defer?</a></dd></div><div class="fact"><dt>links</dt><dd>tech-buddy<br>nancy-buddy</dd></div><div class="fact"><dt>photos</dt><dd><span class="unset">— not set —</span></dd></div><div class="fact"><dt>alt_personas</dt><dd>The Device Concierge<br>The Household Tech Keeper</dd></div></dl></section>
+<section class="card"><h2 class="kicker">Fact sheet — the data chain</h2><dl class="facts"><div class="fact"><dt>Buddy ID</dt><dd><code>nans-tech</code></dd></div><div class="fact"><dt>Kind</dt><dd>standalone</dd></div><div class="fact"><dt>Parent chain</dt><dd><a href="../astro/">🚀 Astro</a> › <a href="../project-buddy/">🧭 Projects Buddy</a> › <a href="../tech-buddy/">📱 Tech Buddy</a></dd></div><div class="fact"><dt>Repository</dt><dd><a href="https://github.com/davedellaquila/nans-tech" target="_blank" rel="noopener">davedellaquila/nans-tech</a></dd></div><div class="fact"><dt>Side thread</dt><dd><a href="https://muse.ai/chat/ac88b8da-c47c-4efb-b0ed-ff5f27570611" target="_blank" rel="noopener">open thread</a></dd></div><div class="fact"><dt>Homepage URL</dt><dd><code>nans-tech/</code></dd></div><div class="fact"><dt>Alt personas</dt><dd>The Device Concierge, The Household Tech Keeper</dd></div></dl></section>
+<section class="card"><h2 class="kicker">Complete registry record (21 fields)</h2><dl class="facts"><div class="fact"><dt>id</dt><dd>nans-tech</dd></div><div class="fact"><dt>name</dt><dd>Nan&#x27;s Tech</dd></div><div class="fact"><dt>icon</dt><dd>🗂️</dd></div><div class="fact"><dt>tagline</dt><dd>The roll-up for Nan&#x27;s iPhone, iPad, and Watch</dd></div><div class="fact"><dt>type</dt><dd>assistant</dd></div><div class="fact"><dt>kind</dt><dd>standalone</dd></div><div class="fact"><dt>status</dt><dd>Mission review</dd></div><div class="fact"><dt>statusClass</dt><dd>st-brief</dd></div><div class="fact"><dt>parent</dt><dd>tech-buddy</dd></div><div class="fact"><dt>mission</dt><dd>Nan&#x27;s Tech is the grouping buddy for Nancy Dell&#x27;Aquila&#x27;s devices — the folder that is itself a buddy. It sits under Tech Buddy and gathers Nan&#x27;s iPhone 17 Pro Max, iPad Air, and Apple Watch under one node: the roll-up of their status and attention, the shared facts of Nan&#x27;s setup (her Apple ID / iCloud context, AppleCare posture, update cadence), and one consolidated attention view — while the three device buddies keep the device-level records. It keeps Nan&#x27;s tech distinct from Dave&#x27;s in the tree and in every roll-up Tech Buddy publishes upward.</dd></div><div class="fact"><dt>brief</dt><dd><a href="https://docs.google.com/document/d/13fI8SWKlPJjBXJe697LkEXvtVH3YYYlp15JFp0VlwGo/edit" target="_blank" rel="noopener">https://docs.google.com/document/d/13fI8SWKlPJjBXJe697LkEXvtVH3YYYlp15JFp0VlwGo/edit</a></dd></div><div class="fact"><dt>persona</dt><dd>The Family Tech Steward</dd></div><div class="fact"><dt>voice</dt><dd>avocado_v2:MAI_01</dd></div><div class="fact"><dt>repo</dt><dd>nans-tech</dd></div><div class="fact"><dt>homepage</dt><dd>nans-tech/</dd></div><div class="fact"><dt>chat</dt><dd>ac88b8da-c47c-4efb-b0ed-ff5f27570611</dd></div><div class="fact"><dt>docs</dt><dd><a href="https://docs.google.com/document/d/13fI8SWKlPJjBXJe697LkEXvtVH3YYYlp15JFp0VlwGo/edit" target="_blank" rel="noopener">Nan&#x27;s Tech — Job Req</a></dd></div><div class="fact"><dt>attention</dt><dd><a href="https://docs.google.com/document/d/13fI8SWKlPJjBXJe697LkEXvtVH3YYYlp15JFp0VlwGo/edit" target="_blank" rel="noopener">Job req ready for review — looks good, edits, or defer?</a></dd></div><div class="fact"><dt>links</dt><dd>tech-buddy<br>nancy-buddy</dd></div><div class="fact"><dt>photos</dt><dd><span class="unset">— not set —</span></dd></div><div class="fact"><dt>alt_personas</dt><dd>The Device Concierge<br>The Household Tech Keeper</dd></div></dl></section>
 <section class="card"><h2 class="kicker">Needs attention (1)</h2><div class="attn"><div class="aitem"><span class="adot">●</span><div><div><a href="https://docs.google.com/document/d/13fI8SWKlPJjBXJe697LkEXvtVH3YYYlp15JFp0VlwGo/edit" target="_blank" rel="noopener">Job req ready for review — looks good, edits, or defer? ↗</a></div><div class="adate">2026-10-28</div></div></div></div></section>
 
 <section class="card"><h2 class="kicker">Documents (1)</h2><div class="docrow"><a href="https://docs.google.com/document/d/13fI8SWKlPJjBXJe697LkEXvtVH3YYYlp15JFp0VlwGo/edit" target="_blank" rel="noopener">Nan&#x27;s Tech — Job Req</a></div></section>
 <section class="card"><h2 class="kicker">Sub-buddies (3)</h2><div class="kids"><a class="kid" href="../nans-apple-watch/"><span class="kidicon">⌚</span><span class="kidname">Nan&#x27;s Apple Watch</span></a><a class="kid" href="../nans-ipad-air/"><span class="kidicon">🖥️</span><span class="kidname">Nan&#x27;s iPad Air</span></a><a class="kid" href="../nans-iphone-17-pro-max/"><span class="kidicon">📱</span><span class="kidname">Nan&#x27;s iPhone 17 Pro Max</span></a></div></section>
-<section class="card"><h2 class="kicker">Connections</h2><div class="connrow"><span class="connlabel">Parent</span><a href="../tech-buddy/">📱 Tech Buddy</a></div><div class="connrow"><span class="connlabel">Siblings</span><a href="../daves-apple-watch/">⌚ Dave&#x27;s Apple Watch</a>, <a href="../daves-tech/">🤖 Dave&#x27;s Tech</a>, <a href="../daves-ipad-pro/">🖥️ Dave&#x27;s iPad Pro</a>, <a href="../macbook-air-m2/">💻 MacBook Air M2</a>, <a href="../iphone-16e/">📱 iPhone 16e</a>, <a href="../iphone-18-pro/">📱 iPhone 18 Pro</a></div><div class="connrow"><span class="connlabel">Linked to</span><a href="../tech-buddy/">📱 Tech Buddy</a>, <a href="../nancy-buddy/">👩‍🍳 Nancy Dell&#x27;Aquila</a></div><div class="connrow"><span class="connlabel">Linked from</span><a href="../nancy-buddy/">👩‍🍳 Nancy Dell&#x27;Aquila</a></div></section>
+<section class="card"><h2 class="kicker">Connections</h2><div class="connrow"><span class="connlabel">Parent</span><a href="../tech-buddy/">📱 Tech Buddy</a></div><div class="connrow"><span class="connlabel">Siblings</span><a href="../daves-apple-watch/">⌚ Dave&#x27;s Apple Watch</a>, <a href="../daves-tech/">🤖 Dave&#x27;s Tech</a>, <a href="../daves-ipad-pro/">🖥️ Dave&#x27;s iPad Pro</a>, <a href="../macbook-air-m2/">💻 MacBook Air M2</a>, <a href="../iphone-16e/">📱 iPhone 16e</a>, <a href="../iphone-18-pro/">📱 iPhone 18 Pro</a></div><div class="connrow"><span class="connlabel">Linked to</span><a href="../tech-buddy/">📱 Tech Buddy</a>, <a href="../nancy-buddy/">👩‍🍳 Nancy Dell&#x27;Aquila</a></div><div class="connrow"><span class="connlabel">Linked from</span><a href="../nancy-buddy/">👩‍🍳 Nancy Dell&#x27;Aquila</a>, <a href="../tech-buddy/">📱 Tech Buddy</a></div></section>
 <section class="card"><h2 class="kicker">Repository &amp; memory</h2><div class="connrow"><span class="connlabel">Repo</span><a href="https://github.com/davedellaquila/nans-tech" target="_blank" rel="noopener">davedellaquila/nans-tech</a> <span class="muted">— brain dumps land in docs/ingest.md</span></div></section>
-<section class="card"><h2 class="kicker">From the repo — markdown files (9)</h2><p class="muted">In the local clone of davedellaquila/nans-tech — the reader below loads the live files from the repo itself:</p><ul class="mdinv"><li><code>KNOWLEDGE.md</code> <span class="muted">85 chars</span></li><li><code>CONFIG.md</code> <span class="muted">1,125 chars</span></li><li><code>SOUL.md</code> <span class="muted">654 chars</span></li><li><code>DECISIONS.md</code> <span class="muted">55 chars</span></li><li><code>ACCOMPLISHMENTS.md</code> <span class="muted">111 chars</span></li><li><code>README.md</code> <span class="muted">510 chars</span></li><li><code>docs/brief.md</code> <span class="muted">3,979 chars</span></li><li><code>docs/ingest.md</code> <span class="muted">123 chars</span></li><li><code>docs/job-req.md</code> <span class="muted">3,979 chars</span></li></ul>
+<section class="card"><h2 class="kicker">From the repo — markdown files (9)</h2><p class="muted">In the local clone of davedellaquila/nans-tech — the reader below loads the live files from the repo itself:</p><ul class="mdinv"><li><code>KNOWLEDGE.md</code> <span class="muted">85 chars</span></li><li><code>CONFIG.md</code> <span class="muted">1,226 chars</span></li><li><code>SOUL.md</code> <span class="muted">654 chars</span></li><li><code>DECISIONS.md</code> <span class="muted">506 chars</span></li><li><code>ACCOMPLISHMENTS.md</code> <span class="muted">111 chars</span></li><li><code>README.md</code> <span class="muted">510 chars</span></li><li><code>docs/brief.md</code> <span class="muted">3,979 chars</span></li><li><code>docs/ingest.md</code> <span class="muted">123 chars</span></li><li><code>docs/job-req.md</code> <span class="muted">3,979 chars</span></li></ul>
 <section class="repo-files" data-buddy-id="nans-tech">
 <h2>📄 Repo files</h2>
 <p class="rf-sub">The markdown files in <span data-buddy-name>Nan&#x27;s Tech</span>'s repo. Tap a file name and its contents open right below it — open as many as you like at once. Edit inside an opened file and the save goes straight back to GitHub. The repo is private, so nothing here — not even the file names — is shown until GitHub is connected on this device.</p>
@@ -221,7 +222,7 @@ footer{margin-top:36px;padding-top:18px;border-top:1px solid var(--border);color
 <p class="dumpbox-hint">Enter dumps it &middot; Shift+Enter for a new line</p>
 </section>
 
-<footer>Default Homepage v3 — "The Dossier" · Generated 2026-10-29 · Part of the Buddy System &middot; <a href="https://davedellaquila.github.io/buddy-system/">Buddy System dashboard</a><br>
+<footer>Default Homepage v3 — "The Dossier" · Generated 2026-11-07 · Part of the Buddy System &middot; <a href="https://davedellaquila.github.io/buddy-system/">Buddy System dashboard</a><br>
 <span class="muted">Archived PDF snapshots live in the buddy-system archive folder.</span></footer>
 </div>
 
@@ -231,7 +232,7 @@ footer{margin-top:36px;padding-top:18px;border-top:1px solid var(--border);color
   if (!box || box.dataset.dumpInit) return;
   box.dataset.dumpInit = '1';
   var bid = box.getAttribute('data-buddy-id') || (function(){
-    var p = location.pathname.replace(/\/+$/, '');
+    var p = location.pathname.replace(/\\/+$/, '');
     return p.substring(p.lastIndexOf('/') + 1);
   })();
   var ta = box.querySelector('textarea'),
@@ -261,7 +262,7 @@ footer{margin-top:36px;padding-top:18px;border-top:1px solid var(--border);color
     try {
       var j = await ghApi('/repos/davedellaquila/' + repo + '/contents/' + path);
       if (j && j.content) return {
-        text: new TextDecoder().decode(Uint8Array.from(atob(j.content.replace(/\n/g, '')), function(c){ return c.charCodeAt(0); })),
+        text: new TextDecoder().decode(Uint8Array.from(atob(j.content.replace(/\\n/g, '')), function(c){ return c.charCodeAt(0); })),
         sha: j.sha
       };
     } catch(e){}
@@ -414,7 +415,7 @@ footer{margin-top:36px;padding-top:18px;border-top:1px solid var(--border);color
   if (!sec || sec.dataset.rfInit) return;
   sec.dataset.rfInit = '1';
   var bid = sec.getAttribute('data-buddy-id') || (function(){
-    var p = location.pathname.replace(/\/+$/, '');
+    var p = location.pathname.replace(/\\/+$/, '');
     return p.substring(p.lastIndexOf('/') + 1);
   })();
   function lsGet(){ try { return JSON.parse(localStorage.getItem('buddyTree.v3') || '{}'); } catch(e){ return {}; } }
@@ -439,7 +440,7 @@ footer{margin-top:36px;padding-top:18px;border-top:1px solid var(--border);color
     try {
       var j = await ghApi('/repos/davedellaquila/' + repo + '/contents/' + path);
       if (j && j.content) return {
-        text: new TextDecoder().decode(Uint8Array.from(atob(j.content.replace(/\n/g, '')), function(c){ return c.charCodeAt(0); })),
+        text: new TextDecoder().decode(Uint8Array.from(atob(j.content.replace(/\\n/g, '')), function(c){ return c.charCodeAt(0); })),
         sha: j.sha
       };
     } catch(e){}
@@ -460,42 +461,42 @@ footer{margin-top:36px;padding-top:18px;border-top:1px solid var(--border);color
   function inline(s){
     s = esc(s);
     s = s.replace(/`([^`]+)`/g, '<code>$1</code>');
-    s = s.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
-    s = s.replace(/(^|[^*])\*([^*\n]+)\*/g, '$1<em>$2</em>');
-    s = s.replace(/\[([^\]]+)\]\((https?:[^)\s]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>');
+    s = s.replace(/\\*\\*([^*]+)\\*\\*/g, '<strong>$1</strong>');
+    s = s.replace(/(^|[^*])\\*([^*\\n]+)\\*/g, '$1<em>$2</em>');
+    s = s.replace(/\\[([^\\]]+)\\]\\((https?:[^)\\s]+)\\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>');
     return s;
   }
   function mdRender(src){
-    var lines = src.split('\n'), out = [], inList = false, inCode = false, codeBuf = [];
+    var lines = src.split('\\n'), out = [], inList = false, inCode = false, codeBuf = [];
     function closeList(){ if (inList) { out.push('</ul>'); inList = false; } }
     for (var i = 0; i < lines.length; i++){
       var ln = lines[i], m;
       if (/^```/.test(ln)) {
-        if (inCode) { out.push('<pre><code>' + esc(codeBuf.join('\n')) + '</code></pre>'); codeBuf = []; inCode = false; }
+        if (inCode) { out.push('<pre><code>' + esc(codeBuf.join('\\n')) + '</code></pre>'); codeBuf = []; inCode = false; }
         else { closeList(); inCode = true; }
         continue;
       }
       if (inCode) { codeBuf.push(ln); continue; }
-      if ((m = ln.match(/^(#{1,4})\s+(.*)/))) {
+      if ((m = ln.match(/^(#{1,4})\\s+(.*)/))) {
         closeList();
         var lv = Math.min(m[1].length + 1, 4);
         out.push('<h' + lv + '>' + inline(m[2]) + '</h' + lv + '>');
         continue;
       }
-      if (/^\s*(-{3,}|\*{3,})\s*$/.test(ln)) { closeList(); out.push('<hr>'); continue; }
-      if ((m = ln.match(/^\s*[-*]\s+(.*)/)) || (m = ln.match(/^\s*\d+[.)]\s+(.*)/))) {
+      if (/^\\s*(-{3,}|\\*{3,})\\s*$/.test(ln)) { closeList(); out.push('<hr>'); continue; }
+      if ((m = ln.match(/^\\s*[-*]\\s+(.*)/)) || (m = ln.match(/^\\s*\\d+[.)]\\s+(.*)/))) {
         if (!inList) { out.push('<ul>'); inList = true; }
         out.push('<li>' + inline(m[1]) + '</li>');
         continue;
       }
-      if ((m = ln.match(/^>\s?(.*)/))) { closeList(); out.push('<blockquote>' + inline(m[1]) + '</blockquote>'); continue; }
+      if ((m = ln.match(/^>\\s?(.*)/))) { closeList(); out.push('<blockquote>' + inline(m[1]) + '</blockquote>'); continue; }
       if (!ln.trim()) { closeList(); continue; }
       closeList();
       out.push('<p>' + inline(ln) + '</p>');
     }
     closeList();
-    if (inCode) out.push('<pre><code>' + esc(codeBuf.join('\n')) + '</code></pre>');
-    return out.join('\n');
+    if (inCode) out.push('<pre><code>' + esc(codeBuf.join('\\n')) + '</code></pre>');
+    return out.join('\\n');
   }
   var locked = sec.querySelector('.rf-locked'), main = sec.querySelector('.rf-main'),
       list = sec.querySelector('.rf-list'), st = sec.querySelector('.rf-status');
@@ -639,7 +640,7 @@ footer{margin-top:36px;padding-top:18px;border-top:1px solid var(--border);color
       try {
         var j = await ghApi('/repos/davedellaquila/' + repo + (dir ? '/contents/' + dir : '/contents'));
         if (Array.isArray(j)) j.forEach(function(e){
-          if (e.type === 'file' && /\.md$/i.test(e.name)) files.push({name: e.name, path: e.path});
+          if (e.type === 'file' && /\\.md$/i.test(e.name)) files.push({name: e.name, path: e.path});
         });
       } catch(e){}
     }
@@ -663,7 +664,7 @@ footer{margin-top:36px;padding-top:18px;border-top:1px solid var(--border);color
   if (!tiles.length) return;
   var dumpbox = document.querySelector('.dumpbox');
   var bid = (dumpbox && dumpbox.getAttribute('data-buddy-id')) || (function(){
-    var p = location.pathname.replace(/\/+$/, '');
+    var p = location.pathname.replace(/\\/+$/, '');
     return p.substring(p.lastIndexOf('/') + 1);
   })();
   function lsGet(){ try { return JSON.parse(localStorage.getItem('buddyTree.v3') || '{}'); } catch(e){ return {}; } }
@@ -689,7 +690,7 @@ footer{margin-top:36px;padding-top:18px;border-top:1px solid var(--border);color
     try {
       var j = await ghApi('/repos/davedellaquila/' + repo + '/contents/' + path);
       if (j && j.content) return {
-        text: new TextDecoder().decode(Uint8Array.from(atob(j.content.replace(/\n/g, '')), function(c){ return c.charCodeAt(0); })),
+        text: new TextDecoder().decode(Uint8Array.from(atob(j.content.replace(/\\n/g, '')), function(c){ return c.charCodeAt(0); })),
         sha: j.sha
       };
     } catch(e){}

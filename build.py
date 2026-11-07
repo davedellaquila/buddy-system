@@ -2028,7 +2028,7 @@ html.light .status.st-dormant{background:rgba(139,148,158,.18);color:var(--muted
   #view-project.active{min-height:calc(100dvh - 140px)}
   #homepage-frame{min-height:60vh}
   /* Detail panel content */
-  .bp-wrap{padding:4px 2px}
+  .bp-wrap{padding:4px 12px 4px 2px}
   .bp-name{font-size:1.375rem}
   /* Ensure buttons are tappable */
   button{cursor:pointer;-webkit-tap-highlight-color:transparent}
@@ -2631,7 +2631,8 @@ body.proj-dragging,body.proj-dragging *{cursor:grabbing !important}
 .proj-mode-toggle button.sel{background:var(--active);color:var(--text)}
 .proj-mode-toggle button+button{border-left:1px solid var(--border)}
 /* ---- buddy homepage ---- */
-.bp-wrap{max-width:880px;margin:0 auto;padding:6px 4px}
+#view-buddy{scrollbar-gutter:stable} /* Dave 2026-11-07: reserve the scrollbar's gutter inside the panel so its bar never overlays/clips content at the panel's right edge (same treatment the sidebar's .sb-scroll already carries) */
+.bp-wrap{max-width:880px;margin:0 auto;padding:6px 12px 6px 4px} /* right padding 4px -> 12px (Dave 2026-11-07): breathing room under an overlay scrollbar on touch platforms */
 .bp-crumb{font-size:.78125rem;color:var(--muted);margin-bottom:10px}
 .bp-crumb .reposlug{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-weight:600}
 .bp-crumb b{color:var(--text);font-weight:600}
