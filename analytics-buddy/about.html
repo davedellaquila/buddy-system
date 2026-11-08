@@ -10,6 +10,7 @@
 <style>
 :root{color-scheme:dark light;--bg:#0d1117;--card:#161b22;--border:#30363d;--text:#e6edf3;--muted:#8b949e;--accent:#58a6ff;--amber:#f0b429;--amber-bd:#7d5e00}
 @media (prefers-color-scheme:light){:root{--bg:#ffffff;--card:#f6f8fa;--border:#d0d7de;--text:#1f2328;--muted:#57606a;--accent:#0969da}}
+html{scrollbar-gutter:stable}
 body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;margin:0;line-height:1.6}
 .wrap{max-width:860px;margin:0 auto;padding:40px 22px 60px}
 header.hero{display:flex;gap:18px;align-items:center;margin-bottom:8px}
@@ -22,14 +23,14 @@ h1{margin:0;font-size:30px;letter-spacing:-.02em}
 .status{font-size:12.5px;font-weight:700;border-radius:999px;padding:4px 12px;background:var(--card);border:1px solid var(--border)}
 .card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px 22px;margin-bottom:20px}
 .kicker{margin:0 0 10px;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:var(--muted)}
-.mission{font-size:16px;margin:0 0 10px}
-.brief{color:var(--muted);font-size:14px}
+.mission{font-size:16px;margin:0 0 10px;overflow-wrap:anywhere}
+.brief{color:var(--muted);font-size:14px;overflow-wrap:anywhere}
 .persona{font-size:14px;margin:8px 0 0}
 .facts{margin:0;display:grid;gap:2px}
 .fact{display:grid;grid-template-columns:150px 1fr;gap:12px;padding:7px 0;border-top:1px solid var(--border);font-size:14px}
 .fact:first-child{border-top:0}
 .fact dt{color:var(--muted);font-weight:600}
-.fact dd{margin:0;overflow-wrap:break-word}
+.fact dd{margin:0;min-width:0;overflow-wrap:anywhere}
 code{background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:1px 6px;font-size:13px}
 a{color:var(--accent);text-decoration:none}
 a:hover{text-decoration:underline}
@@ -51,7 +52,7 @@ a:hover{text-decoration:underline}
 .kid:hover{text-decoration:none;border-color:var(--accent)}
 .kidicon{font-size:22px}
 .kidname{font-size:14px;font-weight:600}
-.connrow{display:flex;gap:12px;padding:8px 0;font-size:14px;align-items:baseline}
+.connrow{display:flex;flex-wrap:wrap;gap:12px;padding:8px 0;font-size:14px;align-items:baseline}
 .connrow+.connrow{border-top:1px solid var(--border)}
 .connlabel{flex:none;width:110px;color:var(--muted);font-weight:600;font-size:13px}
 .pinrow{padding:6px 0;font-size:14px}
@@ -190,7 +191,7 @@ footer{margin-top:36px;padding-top:18px;border-top:1px solid var(--border);color
 <section class="card"><h2 class="kicker">Sub-buddies (0)</h2><p class="empty">No sub-buddies.</p></section>
 <section class="card"><h2 class="kicker">Connections</h2><div class="connrow"><span class="connlabel">Parent</span><a href="../project-buddy/">🧭 Projects Buddy</a></div><div class="connrow"><span class="connlabel">Siblings</span><a href="../architect-buddy/">📐 Architect Buddy</a>, <a href="../astronomy-buddy/">🔭 Astronomy Buddy</a>, <a href="../birthday-buddy/">🎂 Birthday Buddy</a>, <a href="../briefing-buddy/">📋 Briefing Buddy</a>, <a href="../buddy-types/">🧬 Buddy Buddy</a>, <a href="../buddy-suite/">🧩 Buddy Suite</a>, <a href="../charts-buddy/">📊 Charts Buddy</a>, <a href="../dpg-shop-software/">🔧 DPG Shop Software</a>, <a href="../decision-buddy/">🎯 Decision Buddy</a>, <a href="../dellaquila-com/">💼 Dellaquila.com</a>, <a href="../design-buddy/">🎨 Designer</a>, <a href="../developer-buddy/">🧑‍💻 Developer Buddy</a>, <a href="../dream-buddy/">💭 Dream Buddy</a>, <a href="../events-buddy/">🎟️ Events Buddy</a>, <a href="../feedback-buddy/">📣 Feedback Buddy</a>, <a href="../finance-buddy/">💰 Finance Buddy</a>, <a href="../game-buddy/">🎮 Game Buddy</a>, <a href="../guardian-buddy/">🛡️ Guardian Buddy</a>, <a href="../idea-buddy/">💡 Idea Buddy</a>, <a href="../jev-buddy/">⚡ Jev Buddy</a>, <a href="../job-buddy/">🔎 Job Buddy</a>, <a href="../journal-buddy/">📓 Journal Buddy</a>, <a href="../school-buddy/">🎓 Learning Buddy</a>, <a href="../locations-buddy/">📍 Locations Buddy</a>, <a href="../marketing-buddy/">🥃 Marketing Buddy</a>, <a href="../music-buddy/">🎵 Music Buddy</a>, <a href="../news-buddy/">📰 News Buddy</a>, <a href="../onboarding-buddy/">👋 Onboarding Buddy</a>, <a href="../persona-buddy/">🎭 Persona Buddy</a>, <a href="../portfolio-buddy/">📸 Portfolio Buddy</a>, <a href="../reminder-buddy/">⏰ Reminder Buddy</a>, <a href="../research-buddy/">🔍 Research Buddy</a>, <a href="../scaffold-buddy/">🏗️ Scaffold Buddy</a>, <a href="../sharing-buddy/">🔗 Sharing Buddy</a>, <a href="../sports-car-adventures/">🏎️ Sports Car Adventures</a>, <a href="../tv-buddy/">📺 TV Buddy</a>, <a href="../tech-buddy/">📱 Tech Buddy</a>, <a href="../tester-relations-buddy/">🤝 Tester Relations Buddy</a>, <a href="../wine-buddy/">🍷 Wine Buddy</a>, <a href="../wisdom-buddy/">🦉 Wisdom Buddy</a>, <a href="../work-buddy/">💻 Work Buddy</a>, <a href="../zen-buddy/">🧘 Zen Buddy</a></div></section>
 <section class="card"><h2 class="kicker">Repository &amp; memory</h2><div class="connrow"><span class="connlabel">Repo</span><a href="https://github.com/davedellaquila/https://github.com/davedellaquila/analytics-buddy" target="_blank" rel="noopener">davedellaquila/https://github.com/davedellaquila/analytics-buddy</a> <span class="muted">— brain dumps land in docs/ingest.md</span></div></section>
-<section class="card"><h2 class="kicker">From the repo — markdown files (9)</h2><p class="muted">In the local clone of davedellaquila/https://github.com/davedellaquila/analytics-buddy — the reader below loads the live files from the repo itself:</p><ul class="mdinv"><li><code>KNOWLEDGE.md</code> <span class="muted">1,625 chars</span></li><li><code>CONFIG.md</code> <span class="muted">1,407 chars</span></li><li><code>SOUL.md</code> <span class="muted">501 chars</span></li><li><code>DECISIONS.md</code> <span class="muted">1,544 chars</span></li><li><code>ACCOMPLISHMENTS.md</code> <span class="muted">116 chars</span></li><li><code>README.md</code> <span class="muted">332 chars</span></li><li><code>docs/brief.md</code> <span class="muted">3,765 chars</span></li><li><code>docs/ingest.md</code> <span class="muted">128 chars</span></li><li><code>docs/job-req.md</code> <span class="muted">3,765 chars</span></li></ul>
+<section class="card"><h2 class="kicker">From the repo — markdown files (9)</h2><p class="muted">In the local clone of davedellaquila/https://github.com/davedellaquila/analytics-buddy — the reader below loads the live files from the repo itself:</p><ul class="mdinv"><li><code>KNOWLEDGE.md</code> <span class="muted">1,625 chars</span></li><li><code>CONFIG.md</code> <span class="muted">1,407 chars</span></li><li><code>SOUL.md</code> <span class="muted">501 chars</span></li><li><code>DECISIONS.md</code> <span class="muted">2,393 chars</span></li><li><code>ACCOMPLISHMENTS.md</code> <span class="muted">116 chars</span></li><li><code>README.md</code> <span class="muted">332 chars</span></li><li><code>docs/brief.md</code> <span class="muted">3,765 chars</span></li><li><code>docs/ingest.md</code> <span class="muted">128 chars</span></li><li><code>docs/job-req.md</code> <span class="muted">3,765 chars</span></li></ul>
 <section class="repo-files" data-buddy-id="analytics-buddy">
 <h2>📄 Repo files</h2>
 <p class="rf-sub">The markdown files in <span data-buddy-name>Analytics Buddy</span>'s repo. Tap a file name and its contents open right below it — open as many as you like at once. Edit inside an opened file and the save goes straight back to GitHub. The repo is private, so nothing here — not even the file names — is shown until GitHub is connected on this device.</p>
@@ -221,7 +222,7 @@ footer{margin-top:36px;padding-top:18px;border-top:1px solid var(--border);color
 <p class="dumpbox-hint">Enter dumps it &middot; Shift+Enter for a new line</p>
 </section>
 
-<footer>Default Homepage v3 — "The Dossier" · Generated 2026-11-07 · Part of the Buddy System &middot; <a href="https://davedellaquila.github.io/buddy-system/">Buddy System dashboard</a><br>
+<footer>Default Homepage v3 — "The Dossier" · Generated 2026-11-08 · Part of the Buddy System &middot; <a href="https://davedellaquila.github.io/buddy-system/">Buddy System dashboard</a><br>
 <span class="muted">Archived PDF snapshots live in the buddy-system archive folder.</span></footer>
 </div>
 
