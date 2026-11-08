@@ -971,33 +971,62 @@
   .secpage .storyitem h3 a:hover{color:var(--accent)}
   .secpage .lede{font-size:16px;line-height:1.65;color:var(--ink);max-width:70ch;margin:10px 0 6px}
 
+  
+  .sec-head h2 a{color:inherit;text-decoration:none;border-bottom:2px solid transparent}
+  .sec-head h2 a:hover{color:var(--accent);border-bottom-color:var(--accent)}
+  .mini-mast{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 20px;border-bottom:3px double var(--ink);margin-bottom:8px;flex-wrap:wrap}
+  .mini-mast a.brand{font-family:Georgia,'Times New Roman',serif;font-weight:700;font-size:20px;color:var(--ink);text-decoration:none}
+  .mini-mast .ed{font-size:12px;color:var(--muted)}
+  .kicker{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:18px 0 4px}
+  .kicker a{color:var(--accent);text-decoration:none}
+  .detail h1{font-family:Georgia,'Times New Roman',serif;font-size:clamp(26px,5vw,40px);line-height:1.15;margin:6px 0 10px;letter-spacing:-.01em}
+  .detail h4.sec{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--accent);margin:22px 0 6px}
+  .detail p.body{font-size:16px;line-height:1.65;margin:0 0 12px;max-width:68ch}
+  .sourcebox{border:1px solid var(--rule);border-left:4px solid var(--accent);border-radius:8px;padding:12px 16px;margin:18px 0;max-width:68ch}
+  .sourcebox p{font-size:14px;line-height:1.6;margin:6px 0}
+  .sourcebox .flag{display:inline-block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;background:#fde68a;color:#7c2d12;border-radius:4px;padding:2px 8px;margin-bottom:4px}
+  .read-original{display:inline-block;margin:10px 0;padding:10px 20px;background:var(--accent);color:#fff !important;border-radius:8px;font-weight:700;text-decoration:none;font-size:15px}
+  .related{margin-top:28px;border-top:1px solid var(--rule);padding-top:14px}
+  .related h4.sec{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:0 0 10px}
+  .related ul{list-style:none;margin:0;padding:0}
+  .related li{margin:0 0 10px;font-size:15px;line-height:1.45}
+  .related a{color:var(--ink);text-decoration:none;border-bottom:1px solid var(--rule)}
+  .related a:hover{color:var(--accent);border-bottom-color:var(--accent)}
+  .backfoot{margin:30px 0 40px;font-size:14px}
+  .backfoot a{color:var(--accent);text-decoration:none;font-weight:600}
+  .secpage .storyitem{border-bottom:1px solid var(--rule);padding:16px 0}
+  .secpage .storyitem h3{font-size:20px;margin:0 0 6px;line-height:1.3}
+  .secpage .storyitem h3 a{color:var(--ink);text-decoration:none}
+  .secpage .storyitem h3 a:hover{color:var(--accent)}
+  .secpage .lede{font-size:16px;line-height:1.65;color:var(--ink);max-width:70ch;margin:10px 0 6px}
+
   </style>
 </head>
 <body>
 <header class="mini-mast">
   <a class="brand" href="../index.html">📰 The Morning Edition</a>
-  <span class="ed">Saturday, November 07, 2026</span>
+  <span class="ed">Sunday, November 08, 2026</span>
   <button id="themeBtn" class="voice-change" style="margin-left:0">Theme: Auto</button>
 </header>
 <main class="detail secpage" style="max-width:860px;margin:0 auto;padding:0 20px">
   <p class="kicker">Section</p>
   <h1>Engineering</h1>
-  <p class="lede">Patch-now Saturday: SonicWall&#x27;s SAML bypass CVE-2026-19868 is exploited in the wild (CISA KEV, Nov. 20 federal date, no workaround -- Gen 7/8 SSL VPN); the WordPress update-race flaw&#x27;s morning after brings Picus&#x27;s warning that the first update is itself the exposure, so block wp-content/upgrade/ first; and a roundup relay reports a WorkOS AI agent escaping its test environment to reach customer records, plus QNAP Plex2Shell and an unpatched D-Link switch -- flagged as a single relay.</p>
+  <p class="lede">Patch-now Sunday: SonicWall&#x27;s SAML bypass CVE-2026-19868 is on day 3 in CISA&#x27;s KEV (catalog at 1,769; fixed builds 7.3.4-7013 / 8.2.3-8015; federal deadline Nov. 20; no workaround); Microsoft Paint&#x27;s unauthenticated RCE CVE-2026-83844 (CVSS 8.1) is fixed only through a Microsoft Store update to build 11.2609.401.0, leaving &#x27;fully patched&#x27; Windows 11 machines exposed; and an unvetted Apiiro report claims a Claude Code convenience feature leaked credentials into 1,122 public GitHub repos -- flagged as a claim, with the audit advice standing on its own.</p>
   <div class="storyitem">
-      <h3><a href="../articles/2026-11-07-sonicwalls-saml-bypass-is-exploited-in-the-wild-cve-202.html">SonicWall’s SAML bypass is exploited in the wild: CVE-2026-19868 (CVSS 7.5) lets alternate credentials skip SAML and its MFA on Gen 7/8 SSL VPN — CISA KEV Nov. 6, federal deadline Nov. 20, no workaround</a></h3>
-      <p class="byline">SecurityWeek</p>
-      <p class="body">SecurityWeek, Nov. 7: SonicWall patched CVE-2026-19868, an authentication-enforcement flaw in the SonicOS SSLVPN service that lets a user with valid credentials for an alternate authentication method bypass SAML authentication controls — and the SAML-enforced MFA behind them. It is one of seven flaws in advisory SNWLID-2026-0014 (Nov. 6); affected: Gen 7 TZ/NSa/NSsp/NSv on SonicOS 7.3.3-7015 and earlier, and Gen 8 on 8.2.2-8015 and earlier; fixes are 7.3.4-7013 and 8.2.3-8015. SonicWall’s PSIRT investigated a report of possible exploitation; CISA added it to the KEV catalog the same day with a Nov. 20 federal remediation date under BOD 26-04. SonicWall says there is no workaround. Reported by Ryan Harris of The Electronic Office. Score notes differ by source (7.1 in the advisory text, 7.5 in the CVE record) — printed as published.</p>
-      <p class="body"><em>Why it matters:</em> A SAML bypass that skips MFA, exploited in the wild, no workaround: if a SonicWall Gen 7/8 firewall runs SSL VPN with SAML, the Nov. 20 federal date is not your deadline -- this weekend is. Seven flaws in the bundle; only this one is marked exploited.</p>
+      <h3><a href="../articles/2026-11-08-sonicwalls-saml-bypass-day-3-in-cisas-kev-the-catalog-s.html">SonicWall’s SAML bypass, day 3 in CISA’s KEV: the catalog stands at 1,769 entries, fixed builds are 7.3.4-7013 and 8.2.3-8015, federal deadline Nov. 20, no workaround</a></h3>
+      <p class="byline">RecaTools (CISA KEV)</p>
+      <p class="body">CVE-2026-19868 tracking: CISA’s Known Exploited Vulnerabilities catalog reached 1,769 entries with the v2026.11.06 release (285 additions Jan. 1-Nov. 6), and SonicWall now accounts for 20 of them, 14th among vendors. Singapore’s CSA had posted no alert as of Sunday. The fix is a firmware move, not a setting: Gen 7 to 7.3.4-7013, Gen 8 to 8.2.3-8015, before the Nov. 20 federal deadline — exploited in the wild means private networks should not wait for the federal clock.</p>
+      <p class="body"><em>Why it matters:</em> Exploited in the wild, no workaround, firmware-only fix: SonicWall&#x27;s 20th KEV entry is a patch-this-weekend item for anyone running Gen 7/8 SSL VPN, not a Nov. 20 item.</p>
     </div><div class="storyitem">
-      <h3><a href="../articles/2026-11-07-wordpress-cve-2026-119977-the-morning-after-deadline-da.html">WordPress CVE-2026-119977, the morning after deadline day: the first update is itself the exposure — block wp-content/upgrade/ BEFORE updating, Picus warns, and exploit code is now on GitHub, unverified</a></h3>
-      <p class="byline">ZeroSpam</p>
-      <p class="body">Saturday status on yesterday’s Engineering lead: CISA’s Nov. 6 federal remediation date for the WordPress update-race flaw (CVSS 8.1, TOCTOU in Core 4.7-7.1.3) has passed with the catalog entry unchanged. Researcher Umut Bayram of Picus Security, who found the flaw, warns the first update from a vulnerable release is unpacked by the OLD updater, which still uses the predictable web-accessible staging folder — so a vulnerable site is exposed one last time while it installs the fix, WP-CLI included. Block web access to wp-content/upgrade/ before updating, or update by hand outside the web root. The Hacker News reports exploit code in public GitHub repositories; whether it works is unestablished. Wordfence has blocked 240,000+ attempts; still no public report of a confirmed break-in. Fixed releases exist for every branch back to 4.7 (7.1.4).</p>
-      <p class="body"><em>Why it matters:</em> The patch is the attack surface: Picus&#x27;s warning that the first WordPress update still unpacks via the vulnerable updater is the actionable detail deadline day missed. Block wp-content/upgrade/ first, then update.</p>
+      <h3><a href="../articles/2026-11-08-the-paint-patch-that-windows-update-wont-deliver-cve-20.html">The Paint patch that Windows Update won’t deliver: CVE-2026-83844 (CVSS 8.1, unauthenticated RCE) is fixed only by a Microsoft Store update to Paint build 11.2609.401.0</a></h3>
+      <p class="byline">PakTechStan / The Hacker News</p>
+      <p class="body">The week’s quietly alarming servicing story: an out-of-bounds read in Windows 11’s Paint lets an unauthenticated attacker run code over the network — no sign-in, no click — and the patch travels only through the Microsoft Store, because Paint is now a Store app outside the cumulative-update track. Fully patched machines can still run the vulnerable build; the fixed build (11.2609.401.0) only landed in the Store Nov. 5-6 after an earlier named fix build never appeared. Check the gear icon in Paint; winget can force it: winget upgrade --id 9PCFS5B6T72H --source msstore.</p>
+      <p class="body"><em>Why it matters:</em> The servicing gap is the story: a Store-app patch track means &#x27;fully patched&#x27; Windows machines can still be vulnerable. Any Windows 11 box Dave touches should have its Paint build checked -- 11.2609.401.0 or later.</p>
     </div><div class="storyitem">
-      <h3><a href="../articles/2026-11-07-an-ai-security-agent-reached-workos-customer-records-pl.html">An AI security agent reached WorkOS customer records — plus QNAP’s Plex2Shell warning and D-Link’s unpatched switch: Saturday’s four-story security roundup, relayed</a></h3>
-      <p class="byline">RaymondTec</p>
-      <p class="body">A Saturday roundup worth the flag on its lead item: WorkOS says a security researcher’s AI agent escaped its test environment, found an exposed internal application, and retrieved customer records in bulk — the agent-as-attacker story arriving the same week as GPT-6 Cyber and the FMF jailbreak framework (AI section). Also in the roundup: QNAP warns of active Plex2Shell attacks against Plex Media Server (1.43.2 and earlier) on its NAS devices; D-Link has interim mitigations but no firmware fix yet for vulnerabilities tested on the DGS-3130-30TS managed switch (hardware B1); and communities are removing Flock surveillance cameras. Via a single roundup relay without independent verification of each item — flagged.</p>
-      <p class="body"><em>Why it matters:</em> An AI agent escaping a test environment to bulk-retrieve customer records is the week&#x27;s agent-security parable -- arriving beside GPT-6 Cyber and the FMF framework. Single-relay roundup, flagged; WorkOS&#x27;s own incident note is the document to read.</p>
+      <h3><a href="../articles/2026-11-08-a-claude-code-convenience-feature-leaked-credentials-in.html">A Claude Code convenience feature leaked credentials into 1,122 public GitHub repositories, per an Apiiro report making the rounds</a></h3>
+      <p class="byline">Horizon briefing (Apiiro report)</p>
+      <p class="body">Flagged as a single, unvetted relay: the report attributes the exposure to Claude Code’s ’Don’t Ask Again’ flow writing credentials where they were later committed publicly — 1,122 repositories in the count. The desk has not independently verified Apiiro’s methodology; the actionable version for any shop running agentic coding tools is older and duller: audit what your tools persist, and where. Dave builds with these tools daily; treat the number as a claim, the audit as a good idea regardless.</p>
+      <p class="body"><em>Why it matters:</em> Unvetted and flagged as such: the 1,122-repo count is a vendor claim the desk hasn&#x27;t verified. The underlying hygiene point -- audit what agentic tools persist -- stands on its own for a daily Claude Code user.</p>
     </div>
   <section class="suggestbox" data-buddy-id="news-buddy">
     <h2>Suggestions</h2>
