@@ -133,6 +133,15 @@
   .attn.resolved { opacity: .6; }
   .attn.resolved .attn-actions { display: none; }
 
+  .origin { display: flex; gap: 18px; align-items: flex-start;
+            background: var(--amber-soft); border: 1px solid #E4CFA0; border-radius: 12px;
+            padding: 20px 22px; margin-top: 14px; }
+  .origin-e { font-size: 34px; line-height: 1.2; }
+  .origin-t { font-size: 19px; font-style: italic; line-height: 1.45; }
+  .origin-d { color: var(--dim); font-size: 14px; margin-top: 8px; }
+  @media (prefers-color-scheme: dark) { .origin { border-color: #6b5426; } }
+  @media (max-width: 640px) { .origin { flex-direction: column; gap: 8px; } }
+
   .facts { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 14px; margin-top: 14px; }
   .fact { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 16px 18px; }
   .fact .e { font-size: 24px; margin-bottom: 6px; }
@@ -213,8 +222,8 @@
     <div class="kicker">Family Buddy · child</div>
     <h1 class="serif"><span class="ico" id="catboop" title="boop the snoot">🐱</span>Little Guy Buddy</h1>
     <div id="meowline" aria-live="polite"></div>
-    <div class="tagline serif">Living dossier for Little Guy — one of Dave's three cats.</div>
-    <p class="mission">Little Guy Buddy is the one place for everything Dave needs to <b>remember, track, and do</b> regarding Little Guy — key facts, vet visits and medical notes, and reminders like flea treatment and vet appointments. The file is brand new, so it's mostly honest blank space for now: <b>unknowns stay unknown</b> until Dave fills them in.</p>
+    <div class="tagline serif">Living dossier for Little Guy — the street cat who adopted Dave and Nan.</div>
+    <p class="mission">Little Guy Buddy is the one place for everything Dave needs to <b>remember, track, and do</b> regarding Little Guy — key facts, vet visits and medical notes, and reminders like flea treatment and vet appointments. He wasn't picked from a litter or brought home from a shelter: he's a <b>street cat, born on Dave and Nan's deck, who adopted them</b>. The dossier starts there.</p>
     <div class="meta">
       <span class="pill st">📝 Brief review</span>
       <a class="pill" href="https://docs.google.com/document/d/1DsPDePEL2FooO-foNZcENbhl63F2DTaYw3V6e3WaSXg/edit" target="_blank" rel="noopener">📄 Product brief</a>
@@ -241,7 +250,7 @@
     <div class="mind-row">
       <div class="dot">❓</div>
       <div class="attn-text"><div class="t">Still getting to know him</div>
-      <div class="d">Age, breed, vet history, and which house he lives at are all <b>flagged, not guessed</b>. One chat with Dave fills in <a href="https://github.com/davedellaquila/little-guy-buddy" target="_blank" rel="noopener">the file</a> — the most important one being where the little guy sleeps at night.</div></div>
+      <div class="d">The founding fact landed Nov 8 — the origin story, below. Age, breed, vet history, and which house he lives at remain open — all <b>flagged, not guessed</b>. One chat with Dave fills in <a href="https://github.com/davedellaquila/little-guy-buddy" target="_blank" rel="noopener">the file</a> — the most important one being where the little guy sleeps at night.</div></div>
     </div>
     <div class="attn-actions"><button type="button" class="attn-btn primary" data-act="done">✓ Done</button><button type="button" class="attn-btn" data-act="info">Need more info</button></div>
     <div class="attn-status" role="status"></div>
@@ -257,7 +266,16 @@
   </div>
 
   <h2 class="serif">Who Little Guy is <span class="sub">Only what's known — unknowns stay unknown</span></h2>
+  <div class="origin">
+    <div class="origin-e">🏡</div>
+    <div>
+      <div class="origin-t serif">"Our street-cat born on our deck who adopted us."</div>
+      <div class="origin-d">Dave's words, Nov 8, 2026 — the founding fact of this dossier. Little Guy wasn't chosen; he did the choosing. Born on the deck, and when the time came to pick a household, he picked Dave and Nan's. Everything else in this file flows from that.</div>
+    </div>
+  </div>
   <div class="facts">
+    <div class="fact"><div class="e">🏡</div><div class="t">Born on the deck</div><div class="d">A street cat by birth — the deck is where it all started. (Which deck, Fiddletown or Lenwood, Dave hasn't said yet.)</div></div>
+    <div class="fact"><div class="e">🐾</div><div class="t">He adopted them</div><div class="d">How he joined the household: his call, not theirs. Dave's framing, and the dossier keeps it that way.</div></div>
     <div class="fact"><div class="e">🐱</div><div class="t">One of three cats</div><div class="d">Dave's trio: Marley (Mars), Rocky, and Little Guy.</div></div>
     <div class="fact"><div class="e">🐈</div><div class="t">Siblings: Marley &amp; Rocky</div><div class="d">Each has their own dossier — <a href="https://github.com/davedellaquila/marley-buddy" target="_blank" rel="noopener">Marley (Mars)</a> and <a href="https://github.com/davedellaquila/rocky-buddy" target="_blank" rel="noopener">Rocky</a> live in their own repos.</div></div>
     <div class="fact unknown"><div class="e">❓</div><div class="t">Age &amp; breed unknown</div><div class="d">Not on record yet. Flagged, not guessed.</div></div>
@@ -319,6 +337,7 @@
   (function () {
     var lines = [
       "Little Guy has entered the chat.",
+      "Born on the deck. Chose the humans.",
       "Boop acknowledged. Purring intensifies.",
       "Current status: napping on the unknown-which-house couch.",
       "Fact-check in progress… still a cat.",
