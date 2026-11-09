@@ -4620,11 +4620,15 @@ function stopVoiceSample(){
 }
 function playVoiceSample(voiceId, btn){
   const status = document.getElementById('bp-voice-status');
-  if (!voiceId){ if (status) status.textContent = 'No voice selected.'; return; }
+  if (!voiceId){ if (status) status.textContent = 'No voice selected.'; toast('No voice selected.'); return; }
   if (bpSampleVoice === voiceId && bpSampleAudio){ stopVoiceSample(); return; }
   stopVoiceSample();
   if (!(typeof SAMPLED_VOICES !== 'undefined' && SAMPLED_VOICES[voiceId])){
+    /* Dave 2026-11-09: the status line alone read as a dead button (he
+       hit it on the brand-new Polaris Ranger, whose voice had no baked
+       sample yet) \u2014 say it in a toast too, where it can't be missed. */
     if (status) status.textContent = 'No preview sample has been baked for this voice yet.';
+    toast('No preview sample has been baked for this voice yet.');
     return;
   }
   const fname = voiceId.replace(/:/g, '_').replace(/\//g, '_') + '.mp3';
