@@ -1714,6 +1714,18 @@ body:has(#token-pill) #view-buddy.sheet .bp-close-x{right:148px}
 .dump-act[data-dump-del]{color:#e0533d}
 .dump-act[data-dump-del]:hover{color:#ff6b5b}
 .dump-act svg{width:14px;height:14px;display:block}
+/* Dump-box image attachments (Dave 2026-11-08): picked photos shrink on the
+   device (<=1600px JPEG), ride the dump into the buddy's repo under
+   docs/ingest-files/<timestamp>/ and are listed with links in the entry. */
+.dump-addimg{background:none;border:1px solid var(--border);color:var(--text);border-radius:8px;padding:7px 12px;font-size:.8125rem;font-weight:600;cursor:pointer}
+.dump-addimg:hover{border-color:var(--accent);color:var(--accent)}
+.dump-chips{display:flex;flex-wrap:wrap;gap:8px}
+.dump-chips:empty{display:none}
+.dump-chip{display:inline-flex;align-items:center;gap:7px;background:var(--ghost);border:1px solid var(--border);border-radius:8px;padding:4px 6px 4px 4px;font-size:.75rem;max-width:100%}
+.dump-chip img{width:32px;height:32px;object-fit:cover;border-radius:5px;flex:none}
+.dump-chip .dc-name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:140px}
+.dump-chip .dc-x{background:none;border:0;color:var(--muted);cursor:pointer;font-size:.875rem;line-height:1;padding:4px}
+.dump-chip .dc-x:hover{color:var(--danger)}
 body.no-write .pdel,body.no-write [data-dump-del],body.no-write [data-dump-edit]{display:none!important}
 .dumps-body .attn-body{padding-right:64px}
 .dumps-body .attn{overflow:hidden;transition:max-height .3s ease,opacity .25s ease,margin .3s ease,padding .3s ease,border-width .3s ease}
@@ -6033,6 +6045,68 @@ function dumpEntryText(rec, paths){
   }
   return body;
 }
+/* Dump-box image attachments (Dave 2026-11-08, option 1: shrink in the
+   browser): a picked photo is resized to at most 1600px wide as JPEG on the
+   device before upload - the repo copy is a working copy; the full original
+   stays in the Photos library. Mirrors the Universal Dump's file mechanics
+   (docs/ingest-files/<timestamp>/ beside the ingest log, links listed in the
+   entry), generalized from the central repo to the buddy's own repo. */
+async function dumpShrinkImage(file){
+  let blob = file;
+  if (/\.hei[cf]$/i.test(file.name || '') || file.type === 'image/heic' || file.type === 'image/heif') {
+    await loadHeicLib();
+    blob = await window.heic2any({blob: file, toType: 'image/jpeg', quality: 0.92});
+  }
+  const bmp = await createImageBitmap(blob);
+  const scale = Math.min(1, 1600 / Math.max(bmp.width, bmp.height));
+  let out = blob, outName = file.name || 'image.jpg';
+  if (scale < 1 || !/jpe?g$/i.test(blob.type || '')) {
+    const c = document.createElement('canvas');
+    c.width = Math.max(1, Math.round(bmp.width * scale));
+    c.height = Math.max(1, Math.round(bmp.height * scale));
+    c.getContext('2d').drawImage(bmp, 0, 0, c.width, c.height);
+    const jb = await new Promise(res => c.toBlob(res, 'image/jpeg', 0.85));
+    if (jb) { out = jb; outName = outName.replace(/\.[^.]+$/, '') + '.jpg'; }
+  }
+  bmp.close && bmp.close();
+  return { name: outName, type: 'image/jpeg', b64: await blobToB64(out), size: out.size };
+}
+async function dumpPrepareImages(fileList, onNote){
+  const list = Array.from(fileList || []).filter(f => /^image\//.test(f.type) || /\.hei[cf]$/i.test(f.name || ''));
+  const out = [];
+  for (const f of list) {
+    try {
+      const rec = await dumpShrinkImage(f);
+      if (rec.size > DUMP_FILE_MAX) { if (onNote) onNote('“' + rec.name + '” is still ' + fmtDumpSize(rec.size) + ' after shrinking — over the 1 MB upload limit, so it was not attached.'); continue; }
+      out.push(rec);
+    } catch (e) { if (onNote) onNote('“' + (f.name || 'image') + '” could not be prepared (' + ((e && e.message) || e) + ') — not attached.'); }
+  }
+  return out;
+}
+function dumpRenderChips(box, files){
+  if (!box) return;
+  box.innerHTML = files.map((f, i) => '<span class="dump-chip"><img alt="" src="data:' + (f.type || 'image/jpeg') + ';base64,' + f.b64 + '"><span class="dc-name">' + escHtml(f.name) + '</span><button type="button" class="dc-x" data-dc-x="' + i + '" aria-label="Remove ' + escHtml(f.name) + '">\u00d7</button></span>').join('');
+}
+async function dumpUploadFilesTo(repo, stampStr, files){
+  const paths = [];
+  if (!files || !files.length) return paths;
+  const folder = 'docs/ingest-files/' + dumpFolder(new Date(stampStr).getTime() || Date.now()) + '/';
+  for (const f of files) {
+    const path = folder + dumpFileSlug(f.name);
+    await ghPutFile(repo, path, f.b64, 'Dump image for ingest');
+    paths.push(path);
+  }
+  return paths;
+}
+function dumpEntryBody(repo, text, paths){
+  const NL = String.fromCharCode(10);
+  let body = text || '';
+  if (paths && paths.length) {
+    if (body) body += NL + NL;
+    body += 'Files:' + paths.map(pp => NL + '- [' + pp.split('/').pop() + '](https://github.com/davedellaquila/' + repo + '/blob/master/' + pp + ')').join('');
+  }
+  return body;
+}
 async function dumpFlush(entries){
   const NL = String.fromCharCode(10);
   const parts = [];
@@ -6710,6 +6784,7 @@ function buddyHomepageHtml(b){
     + '.hp-dump-btn:hover{filter:brightness(1.08)}'
     + '.hp-dump-status{font-size:.8125rem;color:var(--muted)}'
     + '.hp-dump-status a{color:var(--accent)}'
+    + '.hp-dump-addimg{background:none;border:1px solid var(--border);color:var(--text);border-radius:10px;padding:9px 16px;font:inherit;font-size:.875rem;font-weight:600;cursor:pointer}'
     + '.hp-note{text-align:center;color:var(--muted);font-size:.75rem;margin:34px auto;max-width:1080px}'
     + '.hp-locked{margin-top:10px;background:var(--bg);border:1px dashed var(--border);border-radius:10px;padding:14px 16px}'
     + '</style>';
@@ -6728,7 +6803,8 @@ function homepageDumpSectionHtml(b){
       + '<button type="button" class="hp-dump-btn" data-hp-connect>Connect GitHub</button></div>';
     inner = locked
       + '<textarea data-hp-dump placeholder="Dump a thought, link, or half-formed idea — it lands in this buddy\\u2019s docs/ingest.md" aria-label="Brain dump"></textarea>'
-      + '<div class="hp-dump-row"><button type="button" class="hp-dump-btn" data-hp-dump-btn>Dump it</button><span class="hp-dump-status" data-hp-dump-status></span></div>'
+      + '<div class="dump-chips" data-hp-dump-chips style="margin-top:10px"></div>'
+      + '<div class="hp-dump-row"><button type="button" class="hp-dump-btn" data-hp-dump-btn>Dump it</button><button type="button" class="hp-dump-addimg" data-hp-addimg>\U0001f5bc\ufe0f Add image</button><span class="hp-dump-status" data-hp-dump-status></span></div>'
       + '<div data-hp-dump-feed style="margin-top:12px"></div>';
   }
   return '<section class="hp-card hp-dumpsec" data-hp-dumpsec><div class="hp-dump"><h3 class="hp-kicker">🧠 Brain dump</h3>' + inner + '</div></section>';
@@ -6778,9 +6854,15 @@ async function homepageDumpSubmit(root, id){
   const b = byId[id];
   if (!ta || !b) return;
   const text = ta.value.trim();
-  if (!text) return;
+  const files = (window._hpDumpFiles && window._hpDumpFiles[id]) ? window._hpDumpFiles[id].slice() : [];
+  if (!text && !files.length) return;
   const stamp = new Date().toLocaleString();
   if (!b.repo) { if (st) st.textContent = 'No repo linked for this buddy yet.'; return; }
+  const chips = root.querySelector('[data-hp-dump-chips]');
+  const clearFiles = function(){
+    if (window._hpDumpFiles) window._hpDumpFiles[id] = [];
+    if (chips) chips.innerHTML = '';
+  };
   // Re-check the token fresh from storage — it may have been added in another tab.
   if (!ghToken()) {
     const freshTok = lsToken();
@@ -6790,19 +6872,22 @@ async function homepageDumpSubmit(root, id){
   // this device instead of dropping it. The textarea is cleared because the
   // text is safely stored in localStorage.
   const queueIt = function(){
-    queuePendingDump(id, stamp, text);
+    queuePendingDump(id, stamp, text, files);
     ta.value = '';
+    clearFiles();
     const n = getPendingDumps().filter(function(p){ return p.buddyId === id; }).length;
     if (st) st.innerHTML = 'Queued on this device — will sync when GitHub is connected (' + n + ' queued). <a href="https://github.com/settings/tokens" target="_blank" rel="noopener">Get a token</a>.';
     renderHpDumpFeed(root, id);
   };
   if (!ghToken()) { queueIt(); return; }
-  const entry = '## ' + stamp + String.fromCharCode(10,10) + text + String.fromCharCode(10,10);
-  if (st) st.textContent = 'Dumping…';
+  if (st) st.textContent = 'Dumping\u2026';
   try {
+    const paths = await dumpUploadFilesTo(b.repo, stamp, files);
+    const entry = '## ' + stamp + String.fromCharCode(10,10) + dumpEntryBody(b.repo, text, paths) + String.fromCharCode(10,10);
     const cur = await ghGetFile(b.repo, 'docs/ingest.md') || '# Ingest log — ' + b.name + String.fromCharCode(10,10);
     await ghPutFile(b.repo, 'docs/ingest.md', b64encode(cur + entry), 'Ingest dump for ' + id);
     ta.value = '';
+    clearFiles();
     if (st) st.textContent = 'Dumped to ' + b.repo + '/docs/ingest.md';
     // Now that we know the token works, flush anything queued earlier
     flushPendingDumps().then(function(){ renderHpDumpFeed(root, id); });
@@ -6824,6 +6909,35 @@ function initHomepageDumpbox(root, b){
         e.preventDefault();
         homepageDumpSubmit(root, b.id);
       }
+    });
+  }
+  const addImg = root.querySelector('[data-hp-addimg]');
+  if (addImg && !addImg._hpWired) {
+    addImg._hpWired = true;
+    if (!window._hpDumpFiles) window._hpDumpFiles = {};
+    if (!window._hpDumpFiles[b.id]) window._hpDumpFiles[b.id] = [];
+    const hpChips = root.querySelector('[data-hp-dump-chips]');
+    const hpSt = root.querySelector('[data-hp-dump-status]');
+    dumpRenderChips(hpChips, window._hpDumpFiles[b.id]);
+    addImg.addEventListener('click', function(){
+      const inp = document.createElement('input'); inp.type = 'file'; inp.accept = 'image/*,.heic,.heif'; inp.multiple = true;
+      inp.addEventListener('change', async function(){
+        if (!inp.files || !inp.files.length) return;
+        if (hpSt) hpSt.textContent = 'Preparing image\u2026';
+        const notes = [];
+        const recs = await dumpPrepareImages(inp.files, function(m){ notes.push(m); });
+        window._hpDumpFiles[b.id] = window._hpDumpFiles[b.id].concat(recs);
+        dumpRenderChips(hpChips, window._hpDumpFiles[b.id]);
+        if (hpSt) hpSt.textContent = notes.join(' ') || (recs.length ? recs.length + ' image' + (recs.length === 1 ? '' : 's') + ' attached — they ride your next dump.' : '');
+        const ta2 = root.querySelector('[data-hp-dump]');
+        if (recs.length && !(ta2 && ta2.value.trim())) homepageDumpSubmit(root, b.id);
+      });
+      inp.click();
+    });
+    if (hpChips) hpChips.addEventListener('click', function(e){
+      const x = e.target.closest('[data-dc-x]'); if (!x) return;
+      window._hpDumpFiles[b.id].splice(parseInt(x.getAttribute('data-dc-x'), 10), 1);
+      dumpRenderChips(hpChips, window._hpDumpFiles[b.id]);
     });
   }
   const connectBtn = root.querySelector('[data-hp-connect]');
@@ -7619,7 +7733,8 @@ function renderBuddy(id){
     + standingOrdersHtml()
     + '<div class="bp-sec" data-field="ingest"><h3>Dump box<span class="info-tip" data-tip="Brain-dump anything about this buddy \u2014 raw and unfiltered. Each dump lands in the buddy\u2019s repo (docs/ingest.md) as a timestamped entry.">\u24d8</span></h3>'
     + '<textarea class="notes" id="bp-ingest" placeholder="Dump what\u2019s in your head about '+escHtml(dispName(b))+'\u2026"></textarea>'
-    + '<div style="margin-top:8px"><span class="fineprint" id="ingest-status"></span></div>'
+    + '<div class="dump-chips" id="ingest-chips" style="margin-top:8px"></div>'
+    + '<div style="margin-top:8px;display:flex;gap:10px;align-items:center;flex-wrap:wrap"><button type="button" class="dump-addimg" id="ingest-addimg">\U0001f5bc\ufe0f Add image</button><span class="fineprint" id="ingest-status"></span></div>'
     + '<div id="ingest-feed" style="margin-top:8px"></div></div>'
     + '<div class="bp-sec" data-field="mission">'
     + attrHead('mission', 'ABOUT', '<span class="attr-value">(' + wordCount(b.mission) + ')</span>', '')
@@ -7905,6 +8020,37 @@ function renderBuddy(id){
     if (notesBefore !== null && notesBefore !== nt.value) logChange('notes', id, 'Edited notes for \u201c' + dispName(byId[id]) + '\u201d', notesBefore, nt.value);
     notesBefore = null;
   });
+  (function initIngestImages(bid){
+    const addBtn = document.getElementById('ingest-addimg'), chips = document.getElementById('ingest-chips'), st = document.getElementById('ingest-status');
+    if (!addBtn || addBtn.dataset.wired) return;
+    addBtn.dataset.wired = '1';
+    if (!window._dumpFiles) window._dumpFiles = {};
+    if (!window._dumpFiles[bid]) window._dumpFiles[bid] = [];
+    dumpRenderChips(chips, window._dumpFiles[bid]);
+    addBtn.addEventListener('click', () => {
+      const inp = document.createElement('input'); inp.type = 'file'; inp.accept = 'image/*,.heic,.heif'; inp.multiple = true;
+      inp.addEventListener('change', async () => {
+        if (!inp.files || !inp.files.length) return;
+        if (st) st.textContent = 'Preparing image\u2026';
+        const notes = [];
+        const recs = await dumpPrepareImages(inp.files, m => notes.push(m));
+        window._dumpFiles[bid] = window._dumpFiles[bid].concat(recs);
+        dumpRenderChips(chips, window._dumpFiles[bid]);
+        if (st) st.textContent = notes.join(' ') || (recs.length ? recs.length + ' image' + (recs.length === 1 ? '' : 's') + ' attached \u2014 they ride your next dump.' : '');
+        /* An image picked with no text dumps on its own right away through
+           the same path the debouncer uses (Dave 2026-11-08: image-only
+           dumps are allowed). With text present it just attaches and waits. */
+        const ta = document.getElementById('bp-ingest');
+        if (recs.length && !(ta && ta.value.trim())) dumpIngest(bid, false);
+      });
+      inp.click();
+    });
+    if (chips) chips.addEventListener('click', e => {
+      const x = e.target.closest('[data-dc-x]'); if (!x) return;
+      window._dumpFiles[bid].splice(parseInt(x.getAttribute('data-dc-x'), 10), 1);
+      dumpRenderChips(chips, window._dumpFiles[bid]);
+    });
+  })(id);
   (function initIngestAuto(bid){
     const ta = document.getElementById('bp-ingest'), st = document.getElementById('ingest-status');
     if (!ta || ta.dataset.auto) return;
@@ -11145,9 +11291,11 @@ function getPendingDumps(){
 function savePendingDumps(q){
   try { localStorage.setItem('pendingDumps', JSON.stringify(q)); } catch(e){}
 }
-function queuePendingDump(id, stamp, text){
+function queuePendingDump(id, stamp, text, files){
   const q = getPendingDumps();
-  q.push({buddyId: id, stamp: stamp, body: text, queuedAt: Date.now()});
+  const rec = {buddyId: id, stamp: stamp, body: text, queuedAt: Date.now()};
+  if (files && files.length) rec.files = files;
+  q.push(rec);
   savePendingDumps(q);
 }
 async function flushPendingDumps(){
@@ -11158,7 +11306,8 @@ async function flushPendingDumps(){
     const b = byId[p.buddyId];
     if (!b || !b.repo){ remaining.push(p); continue; }
     try {
-      const entry = '## ' + p.stamp + String.fromCharCode(10,10) + p.body + String.fromCharCode(10,10);
+      const paths = await dumpUploadFilesTo(b.repo, p.stamp, p.files);
+      const entry = '## ' + p.stamp + String.fromCharCode(10,10) + dumpEntryBody(b.repo, p.body, paths) + String.fromCharCode(10,10);
       const cur = await ghGetFile(b.repo, 'docs/ingest.md') || '# Ingest log \u2014 ' + b.name + String.fromCharCode(10,10);
       await ghPutFile(b.repo, 'docs/ingest.md', b64encode(cur + entry), 'Ingest dump for ' + p.buddyId);
     } catch(err){ remaining.push(p); }
@@ -11175,28 +11324,37 @@ async function flushPendingDumps(){
 }
 async function dumpIngest(id, keepText){
   const ta = document.getElementById('bp-ingest'), st = document.getElementById('ingest-status');
-  const text = ta.value.trim();
-  if (!text) return;
+  const text = ta ? ta.value.trim() : '';
+  const files = (window._dumpFiles && window._dumpFiles[id]) ? window._dumpFiles[id].slice() : [];
+  if (!text && !files.length) return;
   const b = byId[id];
   const stamp = new Date().toLocaleString();
-  const entry = '## ' + stamp + String.fromCharCode(10,10) + text + String.fromCharCode(10,10);
+  const clearFiles = () => {
+    if (window._dumpFiles) window._dumpFiles[id] = [];
+    const chips = document.getElementById('ingest-chips');
+    if (chips) chips.innerHTML = '';
+  };
   const fallBackToQueue = (why) => {
-    queuePendingDump(id, stamp, text);
-    if (!keepText) ta.value = '';
+    queuePendingDump(id, stamp, text, files);
+    if (!keepText && ta) ta.value = '';
+    clearFiles();
     if (st) st.innerHTML = 'Saved on this device — will sync to GitHub when a token is available. <a href="https://github.com/settings/tokens" target="_blank" rel="noopener">Get a token</a>';
-    prependDumpEntry(id, {stamp: stamp, body: text, pending: true});
+    prependDumpEntry(id, {stamp: stamp, body: dumpEntryBody(b.repo || '', text, files.map(f => 'docs/ingest-files/x/' + f.name)), pending: true});
   };
   if (!ghToken() || !b.repo) { fallBackToQueue('no-token'); return; }
   if (st) st.textContent = 'Dumping\u2026';
   try {
+    const paths = await dumpUploadFilesTo(b.repo, stamp, files);
+    const entry = '## ' + stamp + String.fromCharCode(10,10) + dumpEntryBody(b.repo, text, paths) + String.fromCharCode(10,10);
     const cur = await ghGetFile(b.repo, 'docs/ingest.md') || '# Ingest log \u2014 ' + b.name + String.fromCharCode(10,10);
     await ghPutFile(b.repo, 'docs/ingest.md', b64encode(cur + entry), 'Ingest dump for ' + id);
-    if (!keepText) ta.value = '';
+    if (!keepText && ta) ta.value = '';
+    clearFiles();
     if (st) st.textContent = 'Dumped to ' + b.repo + '/docs/ingest.md';
     // Flush any queued dumps now that we know the token works
     flushPendingDumps();
     // Optimistically show the new dump — GitHub API may return stale data right after push
-    prependDumpEntry(id, {stamp: stamp, body: text});
+    prependDumpEntry(id, {stamp: stamp, body: dumpEntryBody(b.repo, text, paths)});
   } catch (err) { fallBackToQueue(err.message || err); }
 }
 function prependDumpEntry(id, e){

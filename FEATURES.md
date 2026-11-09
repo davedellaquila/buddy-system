@@ -302,6 +302,12 @@ Build: `build.py` generates `index.html` from `buddies.json` + `plans.json`.
   GitHub Contents API (needs a token; falls back to device-local).
 - **Ingest box** — brain-dump raw thoughts about the buddy; each dump is
   appended as a timestamped entry to the buddy's repo `docs/ingest.md`.
+  Images attach too (2026-11-08): the "🖼️ Add image" control in the panel
+  Dump Box, the built-in homepage view, and every template homepage's
+  Brain dump box opens the device picker; photos shrink on-device to at
+  most 1600px wide JPEG, ride the dump into the buddy's repo under
+  `docs/ingest-files/<timestamp>/`, and are listed with links in the
+  entry. No token queues the images on-device with the text.
   On template homepages, the "Connect GitHub" token card inside the brain
   dump wears a solid amber border + amber wash (Jonny, 2026-10-19) so the
   one step that unlocks repo sync can't be skimmed past.
