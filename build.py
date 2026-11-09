@@ -1777,7 +1777,13 @@ body.sb-closed #sidebar #sb-tools{display:none}
 #plans-sec #plans-arrow{transform:rotate(90deg);display:inline-block}
 #plans-sec.collapsed #plans-arrow{transform:rotate(0deg)}
 /* Collapsible sidebar sections (Views, Buddies) — same pattern as Business Plans */
-.nav-sec.collapsed > div:last-child{display:none}
+#views-sec.collapsed #view-nav, #collections-sec.collapsed #collection-nav, #buddies-sec.collapsed .sb-listwrap{display:none}
+/* Dave 2026-11-09: the generic rule this replaces (.nav-sec.collapsed >
+   div:last-child, specificity 0,2,1) silently lost to the ID display
+   rules (#view-nav{display:flex} et al., 1,0,0) \u2014 the toggle handler
+   fired, the class flipped, the state saved, and the list never hid.
+   Views read as a dead control. Named per-section rules (1,2,1) win,
+   and Plans keeps its own working rule above. */
 .nav-sec .nav-arrow{transform:rotate(90deg);display:inline-block}
 .nav-sec.collapsed .nav-arrow{transform:rotate(0deg)}
 
