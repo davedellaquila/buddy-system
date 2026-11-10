@@ -1058,33 +1058,62 @@
   .secpage .storyitem h3 a:hover{color:var(--accent)}
   .secpage .lede{font-size:16px;line-height:1.65;color:var(--ink);max-width:70ch;margin:10px 0 6px}
 
+  
+  .sec-head h2 a{color:inherit;text-decoration:none;border-bottom:2px solid transparent}
+  .sec-head h2 a:hover{color:var(--accent);border-bottom-color:var(--accent)}
+  .mini-mast{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 20px;border-bottom:3px double var(--ink);margin-bottom:8px;flex-wrap:wrap}
+  .mini-mast a.brand{font-family:Georgia,'Times New Roman',serif;font-weight:700;font-size:20px;color:var(--ink);text-decoration:none}
+  .mini-mast .ed{font-size:12px;color:var(--muted)}
+  .kicker{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:18px 0 4px}
+  .kicker a{color:var(--accent);text-decoration:none}
+  .detail h1{font-family:Georgia,'Times New Roman',serif;font-size:clamp(26px,5vw,40px);line-height:1.15;margin:6px 0 10px;letter-spacing:-.01em}
+  .detail h4.sec{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--accent);margin:22px 0 6px}
+  .detail p.body{font-size:16px;line-height:1.65;margin:0 0 12px;max-width:68ch}
+  .sourcebox{border:1px solid var(--rule);border-left:4px solid var(--accent);border-radius:8px;padding:12px 16px;margin:18px 0;max-width:68ch}
+  .sourcebox p{font-size:14px;line-height:1.6;margin:6px 0}
+  .sourcebox .flag{display:inline-block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;background:#fde68a;color:#7c2d12;border-radius:4px;padding:2px 8px;margin-bottom:4px}
+  .read-original{display:inline-block;margin:10px 0;padding:10px 20px;background:var(--accent);color:#fff !important;border-radius:8px;font-weight:700;text-decoration:none;font-size:15px}
+  .related{margin-top:28px;border-top:1px solid var(--rule);padding-top:14px}
+  .related h4.sec{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:0 0 10px}
+  .related ul{list-style:none;margin:0;padding:0}
+  .related li{margin:0 0 10px;font-size:15px;line-height:1.45}
+  .related a{color:var(--ink);text-decoration:none;border-bottom:1px solid var(--rule)}
+  .related a:hover{color:var(--accent);border-bottom-color:var(--accent)}
+  .backfoot{margin:30px 0 40px;font-size:14px}
+  .backfoot a{color:var(--accent);text-decoration:none;font-weight:600}
+  .secpage .storyitem{border-bottom:1px solid var(--rule);padding:16px 0}
+  .secpage .storyitem h3{font-size:20px;margin:0 0 6px;line-height:1.3}
+  .secpage .storyitem h3 a{color:var(--ink);text-decoration:none}
+  .secpage .storyitem h3 a:hover{color:var(--accent)}
+  .secpage .lede{font-size:16px;line-height:1.65;color:var(--ink);max-width:70ch;margin:10px 0 6px}
+
   </style>
 </head>
 <body>
 <header class="mini-mast">
   <a class="brand" href="../index.html">📰 The Morning Edition</a>
-  <span class="ed">Monday, November 09, 2026</span>
+  <span class="ed">Tuesday, November 10, 2026</span>
   <button id="themeBtn" class="voice-change" style="margin-left:0">Theme: Auto</button>
 </header>
 <main class="detail secpage" style="max-width:860px;margin:0 auto;padding:0 20px">
   <p class="kicker">Section</p>
   <h1>Engineering</h1>
-  <p class="lede">Patch-and-verify Monday: The Hacker News consolidates SonicWall&#x27;s CVE-2026-19868 (SAML MFA bypass, seven flaws in the fixing release, no workaround, KEV deadline Nov. 20, catalog at 1,769); OpenSSH&#x27;s &#x27;sshole&#x27; CVE-2026-123158 gains GreyNoise sensor-exploitation evidence from Nov. 7 and leads SANS&#x27; Monday Stormcast -- applicability turns on musl builds plus password auth; and the Claude Code secrets-leak claim circulates into Monday&#x27;s roundups still without primary verification of its 1,122-repository count (flagged).</p>
+  <p class="lede">Deadline week: OpenSSH&#x27;s sshole (CVE-2026-123158) hits its CISA federal deadline Thursday, Nov. 12 -- patch to 10.6p2 or disable password auth, then hunt asterisk-account logins and rogue keys; SonicWall&#x27;s SAML bypass (CVE-2026-19868, deadline Nov. 20) gets its hunt half -- patch plus a VPN-login review and credential resets, because a patch alone is not a remediation. The third card is process: a DEV Community critique argues Nvidia&#x27;s board cleared its CEO in the same statement that opened his probe (flagged as analysis).</p>
   <div class="storyitem">
-      <h3><a href="../articles/2026-11-09-sonicwall-the-monday-read-the-hacker-news-kev-writeup-l.html">SonicWall, the Monday read: The Hacker News’ KEV writeup lands — CVSS 7.5, SAML-enforced MFA bypassed via alternate auth, seven flaws fixed in the release, no workaround, Nov. 20 deadline</a></h3>
-      <p class="byline">The Hacker News</p>
-      <p class="body">The trade press’ full account of CVE-2026-19868: a user with valid credentials for an alternate authentication method can bypass SAML authentication controls — and with them, SAML-enforced MFA — on SonicOS SSL-VPN (Gen 7 through 7.3.3-7015, Gen 8 through 8.2.2-8015 affected). SonicWall investigated a report of potential exploitation and lists no workarounds; the fixing release closed seven vulnerabilities in total. CISA’s federal deadline is Nov. 20; the catalog stands at 1,769 entries, unchanged over the weekend. If a SonicWall guards anything you touch, the firmware move (7.3.4-7013 / 8.2.3-8015) is this week’s job, not the 20th’s.</p>
-      <p class="body"><em>Why it matters:</em> The Monday consolidation of Friday&#x27;s KEV add: seven flaws in one release, no workaround, and a bypass that negates the MFA organizations bought the appliance for. Patch before Nov. 20 is the floor, not the goal.</p>
+      <h3><a href="../articles/2026-11-10-openssh-sshole-cve-2026-123158-the-federal-deadline-is.html">OpenSSH ’sshole’ (CVE-2026-123158): the federal deadline is Thursday, Nov. 12 — update to 10.6p2 or kill password auth, then hunt for asterisk-account logins</a></h3>
+      <p class="byline">CVETodo (CISA KEV)</p>
+      <p class="body">Tuesday’s action list, from the daily KEV briefing: the musl password bypass — an oversized password makes musl’s hashing return an asterisk that OpenSSH treats as a match against asterisk-hash (password-disabled) accounts, up to root where such accounts carry passwordless admin rights — carries a CISA federal remediation deadline of Nov. 12, two days out. Exploitation attempts began Nov. 5, the day a proof of concept appeared. The prescribed sequence: update to OpenSSH 10.6p2 (or the distro backport) or set PasswordAuthentication no; then audit for unexpected password logins to asterisk accounts in /etc/shadow, unauthorized SSH keys, and persistence (agent files, startup services). Affected scope stays narrow — musl builds (Alpine, OpenWrt, Buildroot) without PAM — which is exactly why the check is cheap.</p>
+      <p class="body"><em>Why it matters:</em> Two days to the federal deadline on a flaw already exploited: the audit half (asterisk-account logins, rogue keys) matters as much as the patch, because exploitation began the day the PoC appeared.</p>
     </div><div class="storyitem">
-      <h3><a href="../articles/2026-11-09-openssh-sshole-cve-2026-123158-greynoise-records-succes.html">OpenSSH ’sshole’ (CVE-2026-123158): GreyNoise records successful sensor exploitation on Nov. 7, SANS Stormcast leads Monday with the scans — check whether your auth config is actually exposed</a></h3>
-      <p class="byline">The Disruption Continuum (GreyNoise / SANS)</p>
-      <p class="body">The Nov. 9 vulnerability briefing: the OpenSSH-on-musl password-authentication bypass, fixed Nov. 5, now has direct sensor-exploitation evidence — GreyNoise’s first successful vulnerable-gridpoint hit at 00:46 UTC on Nov. 7, with scanning leading SANS’ Monday Stormcast. EPSS sits near 1.0% (63rd percentile) — a model signal, not a victim count. The applicability question is configuration-specific: the flaw bites where musl builds and password authentication meet; match your actual SSH auth setup before treating it as either emergency or non-event.</p>
-      <p class="body"><em>Why it matters:</em> Sensor-confirmed exploitation changes sshole from theoretical to scanned-for. The configuration question -- musl build plus password auth -- decides whether this is your emergency; check before you either panic or shrug.</p>
+      <h3><a href="../articles/2026-11-10-sonicwall-cve-2026-19868-the-hunt-half-patching-by-nov.html">SonicWall (CVE-2026-19868), the hunt half: patching by Nov. 20 is the floor — the remediation is incomplete without a VPN-login review and credential resets</a></h3>
+      <p class="byline">The Disruption Continuum (CISA / SonicWall)</p>
+      <p class="body">The vulnerability briefing’s remediation detail, carried into Tuesday: the SAML-enforcement bypass is exploitable only where SAML guards SSL-VPN logins, and a password from an alternate method can succeed alone — so the post-patch work is forensic: review SSL-VPN logins lacking a matching identity-provider sign-in, and reset credentials on accounts that show them. Fixes stand at Gen 7 7.3.4-7013 / Gen 8 8.2.3-8015, no workaround, KEV deadline Nov. 20, catalog at 1,769 entries. A completed patch, the briefing notes, is not proof earlier compromise did not occur.</p>
+      <p class="body"><em>Why it matters:</em> The SonicWall lesson generalizes: a patch without a login review is a hope, not a remediation. Nov. 20 is the deadline; the log review is this week&#x27;s work.</p>
     </div><div class="storyitem">
-      <h3><a href="../articles/2026-11-09-the-claude-code-secrets-leak-claim-day-2-sans-stormcast.html">The Claude Code secrets-leak claim, day 2: SANS Stormcast carries it as a Monday item, but no primary verification of the 1,122-repository count has surfaced</a></h3>
-      <p class="byline">SecurityTabs (SANS Stormcast)</p>
-      <p class="body">Follow-through on yesterday’s flagged card: the claim that a Claude Code convenience feature leaked credentials into 1,122 public GitHub repositories is now circulating in the Monday security roundups (SANS Stormcast lists ’Claude Code Secrets Leak’ among its Nov. 9 items) — circulation, not verification. The desk still has no primary source for the count or the mechanism. The standing advice is unchanged and stands on its own: audit what agentic coding tools persist on disk, and where those files can be committed from.</p>
-      <p class="body"><em>Why it matters:</em> Day 2 and still no primary verification: repetition in roundups is not corroboration. The audit-what-your-tools-persist advice remains right regardless of the count.</p>
+      <h3><a href="../articles/2026-11-10-nvidia-cleared-its-ceo-before-the-probe-even-started-a.html">’Nvidia cleared its CEO before the probe even started’: a governance critique argues the board’s confidence statement arrived ahead of its own inquiry</a></h3>
+      <p class="byline">DEV Community</p>
+      <p class="body">An engineering-community critique (DEV, Frank Chu) makes the process argument: the Nov. 8 board statement opened an independent investigation and, in the same breath, declared ’no reason to believe’ secrets were compromised and full confidence in Huang — with no committee members named, no outside counsel named, no timetable. The checkable spine: the board statement and Huang’s memo are both primary documents on Nvidia’s newsroom; three House chairs wrote Nov. 4 requesting the Nov. 18 briefing with a reply due Nov. 11; the Megaspeed-linked $4.8 billion hardware trail (June 2024-February 2026) is the one verified number in the affair file. Flagged as analysis: the verdict is the author’s; the dates and documents are not.</p>
+      <p class="body"><em>Why it matters:</em> Process is the story: a board that pre-clears its CEO in the same statement that opens his investigation has told investigators, Congress and shareholders what answer it expects. Read as argument, filed as a marker.</p>
     </div>
   <section class="suggestbox" data-buddy-id="news-buddy">
     <h2>Suggestions</h2>
