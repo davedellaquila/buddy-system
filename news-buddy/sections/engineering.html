@@ -1145,33 +1145,62 @@
   .secpage .storyitem h3 a:hover{color:var(--accent)}
   .secpage .lede{font-size:16px;line-height:1.65;color:var(--ink);max-width:70ch;margin:10px 0 6px}
 
+  
+  .sec-head h2 a{color:inherit;text-decoration:none;border-bottom:2px solid transparent}
+  .sec-head h2 a:hover{color:var(--accent);border-bottom-color:var(--accent)}
+  .mini-mast{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 20px;border-bottom:3px double var(--ink);margin-bottom:8px;flex-wrap:wrap}
+  .mini-mast a.brand{font-family:Georgia,'Times New Roman',serif;font-weight:700;font-size:20px;color:var(--ink);text-decoration:none}
+  .mini-mast .ed{font-size:12px;color:var(--muted)}
+  .kicker{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:18px 0 4px}
+  .kicker a{color:var(--accent);text-decoration:none}
+  .detail h1{font-family:Georgia,'Times New Roman',serif;font-size:clamp(26px,5vw,40px);line-height:1.15;margin:6px 0 10px;letter-spacing:-.01em}
+  .detail h4.sec{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--accent);margin:22px 0 6px}
+  .detail p.body{font-size:16px;line-height:1.65;margin:0 0 12px;max-width:68ch}
+  .sourcebox{border:1px solid var(--rule);border-left:4px solid var(--accent);border-radius:8px;padding:12px 16px;margin:18px 0;max-width:68ch}
+  .sourcebox p{font-size:14px;line-height:1.6;margin:6px 0}
+  .sourcebox .flag{display:inline-block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;background:#fde68a;color:#7c2d12;border-radius:4px;padding:2px 8px;margin-bottom:4px}
+  .read-original{display:inline-block;margin:10px 0;padding:10px 20px;background:var(--accent);color:#fff !important;border-radius:8px;font-weight:700;text-decoration:none;font-size:15px}
+  .related{margin-top:28px;border-top:1px solid var(--rule);padding-top:14px}
+  .related h4.sec{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:0 0 10px}
+  .related ul{list-style:none;margin:0;padding:0}
+  .related li{margin:0 0 10px;font-size:15px;line-height:1.45}
+  .related a{color:var(--ink);text-decoration:none;border-bottom:1px solid var(--rule)}
+  .related a:hover{color:var(--accent);border-bottom-color:var(--accent)}
+  .backfoot{margin:30px 0 40px;font-size:14px}
+  .backfoot a{color:var(--accent);text-decoration:none;font-weight:600}
+  .secpage .storyitem{border-bottom:1px solid var(--rule);padding:16px 0}
+  .secpage .storyitem h3{font-size:20px;margin:0 0 6px;line-height:1.3}
+  .secpage .storyitem h3 a{color:var(--ink);text-decoration:none}
+  .secpage .storyitem h3 a:hover{color:var(--accent)}
+  .secpage .lede{font-size:16px;line-height:1.65;color:var(--ink);max-width:70ch;margin:10px 0 6px}
+
   </style>
 </head>
 <body>
 <header class="mini-mast">
   <a class="brand" href="../index.html">📰 The Morning Edition</a>
-  <span class="ed">Thursday, November 12, 2026</span>
+  <span class="ed">Friday, November 13, 2026</span>
   <button id="themeBtn" class="voice-change" style="margin-left:0">Theme: Auto</button>
 </header>
 <main class="detail secpage" style="max-width:860px;margin:0 auto;padding:0 20px">
   <p class="kicker">Section</p>
   <h1>Engineering</h1>
-  <p class="lede">Deadline day: CISA&#x27;s Nov. 12 remediation date for the OpenSSH &#x27;sshole&#x27; (CVE-2026-123158) arrives -- patch to 10.6p2 or disable password auth, then audit asterisk-account logins back to the Nov. 5 exploitation start. The rest of the Nov. 9 KEV quartet falls due the same day (GPUStack 9.8, SignalWire FreeSwitch, IBM Aspera Faspex); SonicWall&#x27;s two-part remediation follows Nov. 20 and the Outlook zero-day Nov. 24. And thousands of European schools were emptied Wednesday by emailed bomb hoaxes -- an infrastructure story about protocols that must assume the threat is real.</p>
+  <p class="lede">The outage, engineered: two incidents (EX1550543, MO1550821), one control plane, load-shift cascade, restored servers re-failing on a secure-connection process, a sign-in/routing patch steadying things by Friday morning, root cause still unpublished. Plus the succession as a security event -- six months known in Washington, three oversight tracks now open.</p>
   <div class="storyitem">
-      <h3><a href="../articles/2026-11-12-deadline-day-the-openssh-sshole-federal-remediation-dat.html">Deadline day: the OpenSSH ’sshole’ federal remediation date is TODAY, Thursday Nov. 12 — unpatched musl builds (Alpine, OpenWrt, Buildroot) are now a known-exploited finding, not a backlog item</a></h3>
-      <p class="byline">Apprised (CISA KEV)</p>
-      <p class="body">The date this section has counted down since Monday arrives: CISA’s Nov. 12 deadline for CVE-2026-123158, the password bypass on no-PAM OpenSSH builds where an over-long password can match asterisk-hash accounts. The standing sequence is now an audit, not a warning: update to 10.6p2 or set PasswordAuthentication no, then hunt — exploitation attempts began Nov. 5, so asterisk-account logins, unexpected authorized_keys and persistence since then are the real homework. Three more Nov. 9 KEV additions share today’s date (next card). The Outlook zero-day from Patch Tuesday (CVE-2026-124194) follows on Nov. 24; SonicWall’s two-part remediation on Nov. 20.</p>
-      <p class="body"><em>Why it matters:</em> Deadline day converts advice into evidence: any musl-SSH endpoint still unpatched is now a known-exploited exposure, and the Nov. 5 exploitation start means the audit (asterisk logins since then) outranks the patch itself.</p>
+      <h3><a href="../articles/2026-11-13-anatomy-of-the-outage-two-incidents-one-control-plane-e.html">Anatomy of the outage: two incidents, one control plane — EX1550543 (Exchange, 11:17 a.m. ET) and MO1550821 (everything else, 1:26 p.m.)</a></h3>
+      <p class="byline">SmartTech (Microsoft status)</p>
+      <p class="body">A detailed incident log: Exchange Online failed first, then Teams calendars, SharePoint, Copilot and Defender XDR followed as load shifted onto surviving infrastructure; a patch to the sign-in and routing layer steadied servers Friday morning, with delayed mail protected by a 48-hour timeout extension. Microsoft has promised a full report after resolution and has not confirmed a root cause. Twenty hours in at the 7:59 a.m. ET Friday update, recovery was real but incomplete across all three regions.</p>
+      <p class="body"><em>Why it matters:</em> Two incident numbers, one control plane: the log shows how Exchange failed first and everything else followed the load. The 48-hour mail timeout is the detail that saved the week&#x27;s email.</p>
     </div><div class="storyitem">
-      <h3><a href="../articles/2026-11-12-the-rest-of-todays-kev-quartet-falls-due-with-it-gpusta.html">The rest of today’s KEV quartet falls due with it: GPUStack (CVE-2026-102895, CVSS 9.8), SignalWire FreeSwitch and IBM Aspera Faspex — ransomware use still flagged ’unknown’ on each</a></h3>
-      <p class="byline">CVETodo (CISA KEV)</p>
-      <p class="body">Four federal deadlines on one Thursday: the Nov. 9 additions all come due Nov. 12, and ’unknown’ ransomware status is a statement about confirmation, not safety. GPUStack’s 9.8 remains the severity peak of the set — an AI-serving stack flaw due the same week the AI trade reprices around a CEO crisis, which is a coincidence of calendars, not of causes. Federal deadlines bind agencies; for everyone else they remain the best public triage clock available, and today it reads zero.</p>
-      <p class="body"><em>Why it matters:</em> Four clocks hit zero together; GPUStack&#x27;s 9.8 in an AI-serving stack is the one with Dave&#x27;s world in it. The federal calendar remains the cleanest public triage signal his own systems work can borrow.</p>
+      <h3><a href="../articles/2026-11-13-restored-servers-kept-failing-a-secure-connection-proce.html">Restored servers kept failing: a secure-connection process overwhelmed under shifted load — the cascade mechanics, documented</a></h3>
+      <p class="byline">Acorn Technology (Microsoft 365 Status)</p>
+      <p class="body">A cybersecurity desk’s advisory reconstructs the cascade: a significant number of servers became unexpectedly unavailable without a traffic spike; the extra load on the remainder overwhelmed the process that establishes secure connections, so freshly restored servers stopped processing requests and fell over again. 120,000+ peak Outlook reports, 74 countries, 13+ hours and counting at Friday morning. Microsoft’s own words: fixes ’not taking as expected,’ no malicious activity.</p>
+      <p class="body"><em>Why it matters:</em> The cascade mechanism, named: restored servers re-failing under a secure-connection process. This is the engineering read of the outage to keep.</p>
     </div><div class="storyitem">
-      <h3><a href="../articles/2026-11-12-thousands-of-european-schools-targeted-by-bomb-hoaxes-t.html">Thousands of European schools targeted by bomb hoaxes: threatening emails across Italy, Scotland and Northern Ireland prompt evacuations, then an all-clear — the warnings were not credible</a></h3>
-      <p class="byline">10 Things (NYT / DW)</p>
-      <p class="body">Via the 10 Things global brief (sourcing the Times and DW): a coordinated wave of emailed threats emptied schools across three countries on Wednesday before authorities determined the warnings were hoaxes. No devices, no injuries — and a full day of disruption anyway, which is the point of the tactic. Filed in Engineering as an infrastructure story: email-borne hoax waves are a denial-of-service attack on institutions that cannot afford to ignore them, and the response protocol (evacuate first, verify second) is the vulnerability by design.</p>
-      <p class="body"><em>Why it matters:</em> Hoax emails as institutional denial-of-service: schools must evacuate on unverifiable threats, so the attack&#x27;s cost is guaranteed by the safety protocol itself. The fix is authentication and triage upstream, not braver head teachers.</p>
+      <h3><a href="../articles/2026-11-13-the-succession-as-a-security-event-senators-demand-nvid.html">The succession as a security event: senators demand Nvidia records, the FBI investigates, Congress summons the ex-CEO</a></h3>
+      <p class="byline">Le Monde</p>
+      <p class="body">Le Monde’s fall-of-Huang account supplies the security timeline: the affair was known for at least six months in Washington intelligence circles before the Times revealed it in late October; the board’s Wachtell Lipton investigation asked whether Huang was ’the target of a foreign intelligence effort’; the board initially said it saw no evidence secrets were compromised. Now the oversight machinery engages — a congressional summons, an FBI investigation per the president, and a records demand — while the export-control debate reopens ahead of the Shenzhen summit.</p>
+      <p class="body"><em>Why it matters:</em> Six months known in Washington, one week public, three oversight tracks open: the timeline is the security story. Oversight now runs on its own clock, into the Shenzhen summit.</p>
     </div>
   <section class="suggestbox" data-buddy-id="news-buddy">
     <h2>Suggestions</h2>
