@@ -1174,33 +1174,62 @@
   .secpage .storyitem h3 a:hover{color:var(--accent)}
   .secpage .lede{font-size:16px;line-height:1.65;color:var(--ink);max-width:70ch;margin:10px 0 6px}
 
+  
+  .sec-head h2 a{color:inherit;text-decoration:none;border-bottom:2px solid transparent}
+  .sec-head h2 a:hover{color:var(--accent);border-bottom-color:var(--accent)}
+  .mini-mast{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 20px;border-bottom:3px double var(--ink);margin-bottom:8px;flex-wrap:wrap}
+  .mini-mast a.brand{font-family:Georgia,'Times New Roman',serif;font-weight:700;font-size:20px;color:var(--ink);text-decoration:none}
+  .mini-mast .ed{font-size:12px;color:var(--muted)}
+  .kicker{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:18px 0 4px}
+  .kicker a{color:var(--accent);text-decoration:none}
+  .detail h1{font-family:Georgia,'Times New Roman',serif;font-size:clamp(26px,5vw,40px);line-height:1.15;margin:6px 0 10px;letter-spacing:-.01em}
+  .detail h4.sec{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--accent);margin:22px 0 6px}
+  .detail p.body{font-size:16px;line-height:1.65;margin:0 0 12px;max-width:68ch}
+  .sourcebox{border:1px solid var(--rule);border-left:4px solid var(--accent);border-radius:8px;padding:12px 16px;margin:18px 0;max-width:68ch}
+  .sourcebox p{font-size:14px;line-height:1.6;margin:6px 0}
+  .sourcebox .flag{display:inline-block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;background:#fde68a;color:#7c2d12;border-radius:4px;padding:2px 8px;margin-bottom:4px}
+  .read-original{display:inline-block;margin:10px 0;padding:10px 20px;background:var(--accent);color:#fff !important;border-radius:8px;font-weight:700;text-decoration:none;font-size:15px}
+  .related{margin-top:28px;border-top:1px solid var(--rule);padding-top:14px}
+  .related h4.sec{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:0 0 10px}
+  .related ul{list-style:none;margin:0;padding:0}
+  .related li{margin:0 0 10px;font-size:15px;line-height:1.45}
+  .related a{color:var(--ink);text-decoration:none;border-bottom:1px solid var(--rule)}
+  .related a:hover{color:var(--accent);border-bottom-color:var(--accent)}
+  .backfoot{margin:30px 0 40px;font-size:14px}
+  .backfoot a{color:var(--accent);text-decoration:none;font-weight:600}
+  .secpage .storyitem{border-bottom:1px solid var(--rule);padding:16px 0}
+  .secpage .storyitem h3{font-size:20px;margin:0 0 6px;line-height:1.3}
+  .secpage .storyitem h3 a{color:var(--ink);text-decoration:none}
+  .secpage .storyitem h3 a:hover{color:var(--accent)}
+  .secpage .lede{font-size:16px;line-height:1.65;color:var(--ink);max-width:70ch;margin:10px 0 6px}
+
   </style>
 </head>
 <body>
 <header class="mini-mast">
   <a class="brand" href="../index.html">📰 The Morning Edition</a>
-  <span class="ed">Friday, November 13, 2026</span>
+  <span class="ed">Saturday, November 14, 2026</span>
   <button id="themeBtn" class="voice-change" style="margin-left:0">Theme: Auto</button>
 </header>
 <main class="detail secpage" style="max-width:860px;margin:0 auto;padding:0 20px">
   <p class="kicker">Section</p>
   <h1>Engineering</h1>
-  <p class="lede">The outage, engineered: two incidents (EX1550543, MO1550821), one control plane, load-shift cascade, restored servers re-failing on a secure-connection process, a sign-in/routing patch steadying things by Friday morning, root cause still unpublished. Plus the succession as a security event -- six months known in Washington, three oversight tracks now open.</p>
+  <p class="lede">Deadline weekend: CISA&#x27;s KEV adds the UnrealIRCd command-injection flaw with a Monday Nov. 16 federal remediation date and exploitation already under way; Apache ships 2.4.71 for a CVSS 9.8 mod_http2 race reported by Anthropic&#x27;s automated scanner and Google Cloud researchers; and N-able&#x27;s N-central zero-days were exploited within five hours of their proofs of concept, with no fix yet (flagged thin -- researchers&#x27; counts, not the vendor&#x27;s).</p>
   <div class="storyitem">
-      <h3><a href="../articles/2026-11-13-anatomy-of-the-outage-two-incidents-one-control-plane-e.html">Anatomy of the outage: two incidents, one control plane — EX1550543 (Exchange, 11:17 a.m. ET) and MO1550821 (everything else, 1:26 p.m.)</a></h3>
-      <p class="byline">SmartTech (Microsoft status)</p>
-      <p class="body">A detailed incident log: Exchange Online failed first, then Teams calendars, SharePoint, Copilot and Defender XDR followed as load shifted onto surviving infrastructure; a patch to the sign-in and routing layer steadied servers Friday morning, with delayed mail protected by a 48-hour timeout extension. Microsoft has promised a full report after resolution and has not confirmed a root cause. Twenty hours in at the 7:59 a.m. ET Friday update, recovery was real but incomplete across all three regions.</p>
-      <p class="body"><em>Why it matters:</em> Two incident numbers, one control plane: the log shows how Exchange failed first and everything else followed the load. The 48-hour mail timeout is the detail that saved the week&#x27;s email.</p>
+      <h3><a href="../articles/2026-11-14-cisa-adds-the-unrealircd-flaw-to-the-kev-server-level-c.html">CISA adds the UnrealIRCd flaw to the KEV: server-level command injection, exploitation under way, federal deadline Monday Nov. 16</a></h3>
+      <p class="byline">The Hacker News</p>
+      <p class="body">CVE-2026-114713 hit the Known Exploited Vulnerabilities catalog Friday: a labeled-response flaw in UnrealIRCd 6.0.0 before 6.2.7.1 lets an attacker inject server-to-server commands with server or IRC-operator privileges. Maintainer Bram Matthys shipped 6.2.7.1; exploitation began Nov. 7, a day after the hotfix. Federal agencies must remediate by Nov. 16 under BOD 26-04. Sources disagree on severity — The Hacker News lists CVSS 8.6, another brief 9.8; patch first, argue later.</p>
+      <p class="body"><em>Why it matters:</em> A federal patch deadline that lands Monday: any IRC-linked or UnrealIRCd endpoint is a known-exploited exposure after Nov. 16, and exploitation began a day after the fix -- the audit question (who connected since Nov. 7) outranks the patch itself.</p>
     </div><div class="storyitem">
-      <h3><a href="../articles/2026-11-13-restored-servers-kept-failing-a-secure-connection-proce.html">Restored servers kept failing: a secure-connection process overwhelmed under shifted load — the cascade mechanics, documented</a></h3>
-      <p class="byline">Acorn Technology (Microsoft 365 Status)</p>
-      <p class="body">A cybersecurity desk’s advisory reconstructs the cascade: a significant number of servers became unexpectedly unavailable without a traffic spike; the extra load on the remainder overwhelmed the process that establishes secure connections, so freshly restored servers stopped processing requests and fell over again. 120,000+ peak Outlook reports, 74 countries, 13+ hours and counting at Friday morning. Microsoft’s own words: fixes ’not taking as expected,’ no malicious activity.</p>
-      <p class="body"><em>Why it matters:</em> The cascade mechanism, named: restored servers re-failing under a secure-connection process. This is the engineering read of the outage to keep.</p>
+      <h3><a href="../articles/2026-11-14-apache-patches-a-critical-http-2-race-cve-2026-119618-c.html">Apache patches a critical HTTP/2 race: CVE-2026-119618 (CVSS 9.8) in mod_http2, fixed in 2.4.71 — found by Anthropic’s OSS scanner and Google Cloud</a></h3>
+      <p class="byline">Reef Sentinel</p>
+      <p class="body">A race in assign_headers() can corrupt memory and run code with no login, in Apache HTTP Server 2.4.55 through 2.4.70 with mod_http2 loaded and h2 or h2c in Protocols. Version 2.4.71, released Nov. 11, carries three security fixes. The reporters are a sign of the times: Anthropic’s automated OSS Scanner (Oct. 26) and Anthony Weems and Simon Scannell of Google Cloud Vulnerability Research (Nov. 3). Red Hat says public research showed a reliable exploit; no confirmed in-the-wild exploitation yet, and CISA has not listed it.</p>
+      <p class="body"><em>Why it matters:</em> The finders are the story: Anthropic&#x27;s automated scanner and Google Cloud&#x27;s team caught a 9.8 in the world&#x27;s most common web server. AI-assisted vulnerability research is now producing the criticals Dave&#x27;s engineering section exists to track.</p>
     </div><div class="storyitem">
-      <h3><a href="../articles/2026-11-13-the-succession-as-a-security-event-senators-demand-nvid.html">The succession as a security event: senators demand Nvidia records, the FBI investigates, Congress summons the ex-CEO</a></h3>
-      <p class="byline">Le Monde</p>
-      <p class="body">Le Monde’s fall-of-Huang account supplies the security timeline: the affair was known for at least six months in Washington intelligence circles before the Times revealed it in late October; the board’s Wachtell Lipton investigation asked whether Huang was ’the target of a foreign intelligence effort’; the board initially said it saw no evidence secrets were compromised. Now the oversight machinery engages — a congressional summons, an FBI investigation per the president, and a records demand — while the export-control debate reopens ahead of the Shenzhen summit.</p>
-      <p class="body"><em>Why it matters:</em> Six months known in Washington, one week public, three oversight tracks open: the timeline is the security story. Oversight now runs on its own clock, into the Shenzhen summit.</p>
+      <h3><a href="../articles/2026-11-14-n-able-n-central-zero-days-exploited-within-hours-of-th.html">N-able N-central zero-days exploited within hours of the proof of concept: at least 21 servers reportedly compromised, no fix yet</a></h3>
+      <p class="byline">AI Agent Update</p>
+      <p class="body">Researcher Sean Bales published proofs of concept Nov. 12 for flaws in N-central 2026.4 HF2 — the hotfix N-able shipped Nov. 10. The 4EverAble2Shell chain pairs an Apache Axis flaw (CVE-2026-90436, CVSS 9.8) with an N-central hole where the Legacy API is enabled. Probing began about 08:30 UTC Nov. 12 and full exploitation by 09:16, roughly five hours after publication. Researchers count at least 21 compromised servers across seven countries, reportedly running an XMRig miner — a detail N-able has not confirmed. The flaws are not yet in the KEV.</p>
+      <p class="body"><em>Why it matters:</em> Five hours from proof-of-concept to exploitation is the MSP software supply chain in one number -- and the count is researchers&#x27;, not the vendor&#x27;s, which is why this carries the flag. N-able&#x27;s silence is part of the story.</p>
     </div>
   <section class="suggestbox" data-buddy-id="news-buddy">
     <h2>Suggestions</h2>
