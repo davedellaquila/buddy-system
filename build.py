@@ -16202,6 +16202,8 @@ flushDumpQueue();
 <script>
 """ + js + """
 </script>
+<!-- Analytics Buddy fleet visitor collector - PRESERVED ELEMENT, owned by Analytics Buddy (Dave's pick, 2026-11-06). Do not drop in template passes: counts unique visitors per page via Dave's Cloudflare Worker (hashes only, no cookies, no raw IPs). Endpoint wired 2026-11-15, the day the Worker went live. -->
+<script async src="https://visitor-counter.dave-5d7.workers.dev/beacon.js" data-site="dashboard"></script>
 </body>
 </html>
 """
