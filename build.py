@@ -318,23 +318,6 @@ body.sb-closed #main .zoombar{left:calc(50% + 38px)}
 .brand .bcount{font-size:.78125rem;color:var(--muted);margin-top:4px;white-space:nowrap}
 #bv-pill{font:inherit;color:inherit;background:none;border:1px solid var(--border);border-radius:999px;padding:0 8px;cursor:pointer}
 #bv-pill:hover{border-color:var(--accent)}
-#visitor-report{margin:0 68px 12px 0;background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:9px 13px;font-size:.8125rem}
-.vrep-head{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-.vrep-title{font-weight:600}
-.vrep-badge{color:var(--muted);font-size:.75rem;border:1px solid var(--border);border-radius:999px;padding:0 7px}
-.vrep-actions{margin-left:auto;display:flex;gap:6px}
-.vrep-btn{font:inherit;font-size:.75rem;color:inherit;background:none;border:1px solid var(--border);border-radius:999px;padding:1px 9px;cursor:pointer}
-.vrep-btn:hover{border-color:var(--accent)}
-.vrep-all{margin-top:6px}
-.vrep-site{margin-top:8px;border-top:1px solid var(--border);padding-top:8px}
-.vrep-siterow{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
-.vrep-sitename{font-weight:600;color:inherit}
-.vrep-nums{color:var(--muted)}
-.vrep-api{margin-left:auto;font-size:.75rem}
-.vrep-pages{margin-top:4px;color:var(--muted);font-size:.75rem}
-.vrep-pages summary{cursor:pointer}
-.vrep-pages ul{margin:4px 0 0;padding-left:16px;max-height:180px;overflow:auto}
-.vrep-note{margin-top:8px;color:var(--muted);font-size:.75rem}
 .nav-sec{margin-top:18px}
 .nav-sec>h3{font-size:.6875rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);
   margin:0 8px 8px;display:flex;align-items:center;gap:8px}
@@ -389,8 +372,6 @@ body.sb-closed #main .zoombar{left:calc(50% + 38px)}
 @media (min-width:640px){
   body:not(.standalone):not(.sb-anchored):not(.sb-closed) #canvas-bar{margin-left:324px}
   body:not(.standalone).sb-closed:has(#main.homepage-mode) #canvas-bar{margin-left:56px}
-  body:not(.standalone):not(.sb-anchored):not(.sb-closed) #visitor-report{margin-left:324px}
-  body:not(.standalone).sb-closed:has(#main.homepage-mode) #visitor-report{margin-left:56px}
 }
 .cb-crumb{display:flex;align-items:center;gap:8px;font-size:.9375rem;color:var(--text);min-width:0;flex-wrap:wrap}
 .cb-crumb b{font-weight:700}
@@ -1302,9 +1283,6 @@ body:has(#view-buddy.panel.active:not(.floating)) #journal-bar{margin-right:0}
    docked-panel rules above. */
 @media (min-width:640px){
   body:has(#main.homepage-mode) #journal-bar{margin-left:76px;margin-top:12px}
-}
-@media (max-width:639px){
-  body:has(#main.homepage-mode) #visitor-report{margin-left:76px}
 }
 /* Same gap on the right (Dave 2026-11-03): the docked-panel margin
    reset above assumes the anchored dock, where #main yields the
@@ -16170,7 +16148,7 @@ flushDumpQueue();
   <div class="sb-scroll">
   <div class="sb-brand-sticky">
     <div id="sb-tools"><button id="sb-gear" title="Settings (⌘,)" aria-label="Settings"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button><button type="button" id="sb-recents" title="Recent buddies" aria-label="Recent buddies"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 8.5A9 9 0 1 1 3.2 13.6"/><path d="M3.2 3.8v4.8h4.8"/><path d="M12 7.5V12l3 2"/></svg></button><button id="sb-close" title="Collapse sidebar" aria-label="Collapse sidebar"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.5 5.5L8 12l6.5 6.5"/></svg></button></div>
-    <div class="brand"><div class="eyebrow">Project Buddy</div><h1 id="brand-name" title="Click to rename">Buddies</h1><div class="bcount">NBUD buddies &middot; one family &middot; <button type="button" id="bv-pill" title="Visitor count report">👁️ <span data-visitor-count data-count-path="/buddy-system">–</span> visitors · <span id="bv-today">–</span> today</button></div></div>
+    <div class="brand"><div class="eyebrow">Project Buddy</div><h1 id="brand-name" title="Click to rename">Buddies</h1><div class="bcount">NBUD buddies &middot; one family &middot; <button type="button" id="bv-pill" title="Visitor counts \u2014 full report on Analytics Buddy\u2019s page">👁️ <span data-visitor-count data-count-path="/buddy-system">–</span> visitors · <span id="bv-today">–</span> today</button></div></div>
   </div>
   <div class="sb-search-sticky">
     <div class="sb-search-wrap">
@@ -16215,7 +16193,6 @@ flushDumpQueue();
 <main id="main">
 <div id="canvas-bar"></div>
 <div id="journal-bar"></div>
-<div id="visitor-report"></div>
 """ + vt + vp + vpl + vm + """
 <section id="view-buddy" class="view"><div id="bp-resize" title="Drag left or right to resize the buddy detail panel. Double-click to reset to default width."></div><div id="buddy-home"></div></section>
 <section id="view-project" class="view"></section>
@@ -16228,97 +16205,35 @@ flushDumpQueue();
 """ + js + """
 </script>
 <script>
-/* Visitor count report (Developer Buddy, 2026-11-15, at Dave's request) --
-   the traffic report the project-buddy mirror improvised, built into the
-   real dashboard. Per-site unique-visitor counts from Analytics Buddy's
-   Worker, with a baked snapshot fallback so the panel never renders blank.
-   Lookups tolerate both key forms: the Worker stores normalized paths
-   today and echoes the caller's own path string once the pending Worker
-   update is deployed. */
+/* Brand visitor pill (Developer Buddy, 2026-11-15) -- the sidebar brand
+   line's count + today, filled from Analytics Buddy's Worker. The full
+   traffic report lives on Analytics Buddy's homepage (Dave's call,
+   2026-11-15: page analytics belong on the Analytics page, not on every
+   dashboard page); tapping the pill opens that homepage. */
 (function(){
   var API = 'https://visitor-counter.dave-5d7.workers.dev';
-  var SITES = [{"id":"dashboard","name":"Dashboard","paths":["/buddy-system/"]},{"id":"fiddletown-gazette","name":"Fiddletown Gazette","paths":["/fiddletown-gazette/","/fiddletown-gazette/archive.html","/fiddletown-gazette/editions/2026-10-31-evening.html","/fiddletown-gazette/editions/2026-10-31-midday.html","/fiddletown-gazette/editions/2026-10-31-morning.html","/fiddletown-gazette/editions/2026-11-01-evening.html","/fiddletown-gazette/editions/2026-11-01-midday.html","/fiddletown-gazette/editions/2026-11-01-morning.html","/fiddletown-gazette/editions/2026-11-02-evening.html","/fiddletown-gazette/editions/2026-11-02-midday.html","/fiddletown-gazette/editions/2026-11-02-morning.html","/fiddletown-gazette/editions/2026-11-03-evening.html","/fiddletown-gazette/editions/2026-11-03-midday.html","/fiddletown-gazette/editions/2026-11-03-morning.html","/fiddletown-gazette/editions/2026-11-04-evening.html","/fiddletown-gazette/editions/2026-11-04-midday.html","/fiddletown-gazette/editions/2026-11-04-morning.html","/fiddletown-gazette/editions/2026-11-05-evening.html","/fiddletown-gazette/editions/2026-11-05-midday.html","/fiddletown-gazette/editions/2026-11-05-morning.html","/fiddletown-gazette/editions/2026-11-06-evening.html","/fiddletown-gazette/editions/2026-11-06-midday.html","/fiddletown-gazette/editions/2026-11-06-morning.html","/fiddletown-gazette/editions/2026-11-07-evening.html","/fiddletown-gazette/editions/2026-11-07-midday.html","/fiddletown-gazette/editions/2026-11-07-morning.html","/fiddletown-gazette/editions/2026-11-08-evening.html","/fiddletown-gazette/editions/2026-11-08-midday.html","/fiddletown-gazette/editions/2026-11-08-morning.html","/fiddletown-gazette/editions/2026-11-09-evening.html","/fiddletown-gazette/editions/2026-11-09-midday.html","/fiddletown-gazette/editions/2026-11-09-morning.html","/fiddletown-gazette/editions/2026-11-10-evening.html","/fiddletown-gazette/editions/2026-11-10-midday.html","/fiddletown-gazette/editions/2026-11-10-morning.html","/fiddletown-gazette/editions/2026-11-11-evening.html","/fiddletown-gazette/editions/2026-11-11-midday.html","/fiddletown-gazette/editions/2026-11-11-morning.html","/fiddletown-gazette/editions/2026-11-12-evening.html","/fiddletown-gazette/editions/2026-11-12-midday.html","/fiddletown-gazette/editions/2026-11-12-morning.html","/fiddletown-gazette/editions/2026-11-13-evening.html","/fiddletown-gazette/editions/2026-11-13-midday.html","/fiddletown-gazette/editions/2026-11-13-morning.html","/fiddletown-gazette/editions/2026-11-14-evening.html","/fiddletown-gazette/editions/2026-11-14-midday.html","/fiddletown-gazette/editions/2026-11-14-morning.html","/fiddletown-gazette/editions/2026-11-15-midday.html","/fiddletown-gazette/editions/2026-11-15-morning.html"]},{"id":"lenwood-gazette","name":"Lenwood Gazette","paths":["/lenwood-gazette/","/lenwood-gazette/archive.html","/lenwood-gazette/editions/2026-11-01-evening.html","/lenwood-gazette/editions/2026-11-01-midday.html","/lenwood-gazette/editions/2026-11-01-morning.html","/lenwood-gazette/editions/2026-11-02-evening.html","/lenwood-gazette/editions/2026-11-02-midday.html","/lenwood-gazette/editions/2026-11-02-morning.html","/lenwood-gazette/editions/2026-11-03-evening.html","/lenwood-gazette/editions/2026-11-03-midday.html","/lenwood-gazette/editions/2026-11-03-morning.html","/lenwood-gazette/editions/2026-11-04-evening.html","/lenwood-gazette/editions/2026-11-04-midday.html","/lenwood-gazette/editions/2026-11-04-morning.html","/lenwood-gazette/editions/2026-11-05-evening.html","/lenwood-gazette/editions/2026-11-05-midday.html","/lenwood-gazette/editions/2026-11-05-morning.html","/lenwood-gazette/editions/2026-11-06-evening.html","/lenwood-gazette/editions/2026-11-06-midday.html","/lenwood-gazette/editions/2026-11-06-morning.html","/lenwood-gazette/editions/2026-11-07-evening.html","/lenwood-gazette/editions/2026-11-07-midday.html","/lenwood-gazette/editions/2026-11-07-morning.html","/lenwood-gazette/editions/2026-11-08-evening.html","/lenwood-gazette/editions/2026-11-08-midday.html","/lenwood-gazette/editions/2026-11-08-morning.html","/lenwood-gazette/editions/2026-11-09-evening.html","/lenwood-gazette/editions/2026-11-09-midday.html","/lenwood-gazette/editions/2026-11-09-morning.html","/lenwood-gazette/editions/2026-11-10-evening.html","/lenwood-gazette/editions/2026-11-10-midday.html","/lenwood-gazette/editions/2026-11-10-morning.html","/lenwood-gazette/editions/2026-11-11-evening.html","/lenwood-gazette/editions/2026-11-11-midday.html","/lenwood-gazette/editions/2026-11-11-morning.html","/lenwood-gazette/editions/2026-11-12-evening.html","/lenwood-gazette/editions/2026-11-12-midday.html","/lenwood-gazette/editions/2026-11-12-morning.html","/lenwood-gazette/editions/2026-11-13-evening.html","/lenwood-gazette/editions/2026-11-13-midday.html","/lenwood-gazette/editions/2026-11-13-morning.html","/lenwood-gazette/editions/2026-11-14-evening.html","/lenwood-gazette/editions/2026-11-14-midday.html","/lenwood-gazette/editions/2026-11-14-morning.html","/lenwood-gazette/editions/2026-11-15-midday.html","/lenwood-gazette/editions/2026-11-15-morning.html"]}];
-  var SNAPSHOT = {"asOf":"Nov 15, 2026 \u00b7 2:18 PM PT","data":{"dashboard":{"/buddy-system/":{"total":1,"today":1}},"fiddletown-gazette":{"/fiddletown-gazette/":{"total":1,"today":1},"/fiddletown-gazette/archive.html":{"total":0,"today":0},"/fiddletown-gazette/editions/2026-10-31-evening.html":{"total":0,"today":0},"/fiddletown-gazette/editions/2026-10-31-midday.html":{"total":0,"today":0},"/fiddletown-gazette/editions/2026-10-31-morning.html":{"total":0,"today":0},"/fiddletown-gazette/editions/2026-11-01-evening.html":{"total":0,"today":0},"/fiddletown-gazette/editions/2026-11-01-midday.html":{"total":0,"today":0},"/fiddletown-gazette/editions/2026-11-01-morning.html":{"total":0,"today":0},"/fiddletown-gazette/editions/2026-11-02-evening.html":{"total":0,"today":0},"/fiddletown-gazette/editions/2026-11-02-midday.html":{"total":0,"today":0},"/fiddletown-gazette/editions/2026-11-02-morning.html":{"total":0,"today":0},"/fiddletown-gazette/editions/2026-11-03-evening.html":{"total":0,"today":0},"/fiddletown-gazette/editions/2026-11-03-midday.html":{"total":0,"today":0},"/fiddletown-gazette/editions/2026-11-03-morning.html":{"total":0,"today":0},"/fiddletown-gazette/editions/2026-11-04-evening.html":{"total":0,"today":0},"/fiddletown-gazette/editions/2026-11-04-midday.html":{"total":0,"today":0},"/fiddletown-gazette/editions/2026-11-04-morning.html":{"total":0,"today":0},"/fiddletown-gazette/editions/2026-11-05-evening.html":{"total":0,"today":0},"/fiddletown-gazette/editions/2026-11-05-midday.html":{"total":0,"today":0},"/fiddletown-gazette/editions/2026-11-05-morning.html":{"total":0,"today":0},"/fiddletown-gazette/editions/2026-11-06-evening.html":{"total":0,"today":0},"/fiddletown-gazette/editions/2026-11-06-midday.html":{"total":0,"today":0},"/fiddletown-gazette/editions/2026-11-06-morning.html":{"total":0,"today":0},"/fiddletown-gazette/editions/2026-11-07-evening.html":{"total":0,"today":0},"/fiddletown-gazette/editions/2026-11-07-midday.html":{"total":0,"today":0},"/fiddletown-gazette/editions/2026-11-07-morning.html":{"total":0,"today":0},"/fiddletown-gazette/editions/2026-11-08-evening.html":{"total":0,"today":0},"/fiddletown-gazette/editions/2026-11-08-midday.html":{"total":0,"today":0},"/fiddletown-gazette/editions/2026-11-08-morning.html":{"total":0,"today":0},"/fiddletown-gazette/editions/2026-11-09-evening.html":{"total":0,"today":0},"/fiddletown-gazette/editions/2026-11-09-midday.html":{"total":0,"today":0},"/fiddletown-gazette/editions/2026-11-09-morning.html":{"total":0,"today":0},"/fiddletown-gazette/editions/2026-11-10-evening.html":{"total":0,"today":0},"/fiddletown-gazette/editions/2026-11-10-midday.html":{"total":0,"today":0},"/fiddletown-gazette/editions/2026-11-10-morning.html":{"total":0,"today":0},"/fiddletown-gazette/editions/2026-11-11-evening.html":{"total":0,"today":0},"/fiddletown-gazette/editions/2026-11-11-midday.html":{"total":0,"today":0},"/fiddletown-gazette/editions/2026-11-11-morning.html":{"total":0,"today":0},"/fiddletown-gazette/editions/2026-11-12-evening.html":{"total":0,"today":0},"/fiddletown-gazette/editions/2026-11-12-midday.html":{"total":0,"today":0},"/fiddletown-gazette/editions/2026-11-12-morning.html":{"total":0,"today":0},"/fiddletown-gazette/editions/2026-11-13-evening.html":{"total":0,"today":0},"/fiddletown-gazette/editions/2026-11-13-midday.html":{"total":0,"today":0},"/fiddletown-gazette/editions/2026-11-13-morning.html":{"total":0,"today":0},"/fiddletown-gazette/editions/2026-11-14-evening.html":{"total":0,"today":0},"/fiddletown-gazette/editions/2026-11-14-midday.html":{"total":0,"today":0},"/fiddletown-gazette/editions/2026-11-14-morning.html":{"total":0,"today":0},"/fiddletown-gazette/editions/2026-11-15-midday.html":{"total":0,"today":0},"/fiddletown-gazette/editions/2026-11-15-morning.html":{"total":0,"today":0}},"lenwood-gazette":{"/lenwood-gazette/":{"total":0,"today":0},"/lenwood-gazette/archive.html":{"total":0,"today":0},"/lenwood-gazette/editions/2026-11-01-evening.html":{"total":0,"today":0},"/lenwood-gazette/editions/2026-11-01-midday.html":{"total":0,"today":0},"/lenwood-gazette/editions/2026-11-01-morning.html":{"total":0,"today":0},"/lenwood-gazette/editions/2026-11-02-evening.html":{"total":0,"today":0},"/lenwood-gazette/editions/2026-11-02-midday.html":{"total":0,"today":0},"/lenwood-gazette/editions/2026-11-02-morning.html":{"total":0,"today":0},"/lenwood-gazette/editions/2026-11-03-evening.html":{"total":0,"today":0},"/lenwood-gazette/editions/2026-11-03-midday.html":{"total":0,"today":0},"/lenwood-gazette/editions/2026-11-03-morning.html":{"total":0,"today":0},"/lenwood-gazette/editions/2026-11-04-evening.html":{"total":0,"today":0},"/lenwood-gazette/editions/2026-11-04-midday.html":{"total":0,"today":0},"/lenwood-gazette/editions/2026-11-04-morning.html":{"total":0,"today":0},"/lenwood-gazette/editions/2026-11-05-evening.html":{"total":0,"today":0},"/lenwood-gazette/editions/2026-11-05-midday.html":{"total":0,"today":0},"/lenwood-gazette/editions/2026-11-05-morning.html":{"total":0,"today":0},"/lenwood-gazette/editions/2026-11-06-evening.html":{"total":0,"today":0},"/lenwood-gazette/editions/2026-11-06-midday.html":{"total":0,"today":0},"/lenwood-gazette/editions/2026-11-06-morning.html":{"total":0,"today":0},"/lenwood-gazette/editions/2026-11-07-evening.html":{"total":0,"today":0},"/lenwood-gazette/editions/2026-11-07-midday.html":{"total":0,"today":0},"/lenwood-gazette/editions/2026-11-07-morning.html":{"total":0,"today":0},"/lenwood-gazette/editions/2026-11-08-evening.html":{"total":0,"today":0},"/lenwood-gazette/editions/2026-11-08-midday.html":{"total":0,"today":0},"/lenwood-gazette/editions/2026-11-08-morning.html":{"total":0,"today":0},"/lenwood-gazette/editions/2026-11-09-evening.html":{"total":0,"today":0},"/lenwood-gazette/editions/2026-11-09-midday.html":{"total":0,"today":0},"/lenwood-gazette/editions/2026-11-09-morning.html":{"total":0,"today":0},"/lenwood-gazette/editions/2026-11-10-evening.html":{"total":0,"today":0},"/lenwood-gazette/editions/2026-11-10-midday.html":{"total":0,"today":0},"/lenwood-gazette/editions/2026-11-10-morning.html":{"total":0,"today":0},"/lenwood-gazette/editions/2026-11-11-evening.html":{"total":0,"today":0},"/lenwood-gazette/editions/2026-11-11-midday.html":{"total":0,"today":0},"/lenwood-gazette/editions/2026-11-11-morning.html":{"total":0,"today":0},"/lenwood-gazette/editions/2026-11-12-evening.html":{"total":0,"today":0},"/lenwood-gazette/editions/2026-11-12-midday.html":{"total":0,"today":0},"/lenwood-gazette/editions/2026-11-12-morning.html":{"total":0,"today":0},"/lenwood-gazette/editions/2026-11-13-evening.html":{"total":0,"today":0},"/lenwood-gazette/editions/2026-11-13-midday.html":{"total":0,"today":0},"/lenwood-gazette/editions/2026-11-13-morning.html":{"total":0,"today":0},"/lenwood-gazette/editions/2026-11-14-evening.html":{"total":0,"today":0},"/lenwood-gazette/editions/2026-11-14-midday.html":{"total":0,"today":0},"/lenwood-gazette/editions/2026-11-14-morning.html":{"total":0,"today":0},"/lenwood-gazette/editions/2026-11-15-midday.html":{"total":0,"today":0},"/lenwood-gazette/editions/2026-11-15-morning.html":{"total":0,"today":0}}}};
-  var LSKEY = 'buddyTree.visitorReport';
   function norm(p){ p = p.replace(/\/index\.html$/, ''); if (p.length > 1) p = p.replace(/\/$/, ''); return p; }
-  function lookup(counts, p){ return counts[p] || counts[norm(p)] || {total:0, today:0}; }
-  function pageLabel(p){
-    if (/\/archive\.html$/.test(p)) return 'Archive';
-    var last = p.split('/').pop();
-    if (!last) return 'Front page';
-    return last.replace(/\.html$/, '');
-  }
-  function siteUrl(id){ return id === 'dashboard' ? 'https://davedellaquila.github.io/buddy-system/' : 'https://davedellaquila.github.io/' + id + '/'; }
-  function countsUrl(s){ return API + '/counts?site=' + encodeURIComponent(s.id) + '&paths=' + encodeURIComponent(s.paths.join(',')); }
-  function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;'); }
-  function render(data, live){
-    var allT = 0, allD = 0, html = '';
-    SITES.forEach(function(s){
-      var counts = data[s.id] || {}, st = 0, sd = 0, rows = '';
-      s.paths.forEach(function(p){
-        var c = lookup(counts, p); st += c.total; sd += c.today;
-        rows += '<li>' + esc(pageLabel(p)) + ' \u2014 ' + c.total + ' total \u00b7 ' + c.today + ' today</li>';
-      });
-      allT += st; allD += sd;
-      html += '<div class="vrep-site"><div class="vrep-siterow"><a class="vrep-sitename" href="' + siteUrl(s.id) + '" target="_blank" rel="noopener">' + esc(s.name) + '</a>'
-        + '<span class="vrep-nums">' + st + ' total \u00b7 ' + sd + ' today</span>'
-        + '<a class="vrep-api" href="' + countsUrl(s) + '" target="_blank" rel="noopener">raw counts</a></div>'
-        + (s.paths.length > 1 ? '<details class="vrep-pages"><summary>Pages (' + s.paths.length + ')</summary><ul>' + rows + '</ul></details>' : '<div class="vrep-pages">' + rows.replace(/<\/?li>/g, '') + '</div>')
-        + '</div>';
-    });
-    var body = document.getElementById('vrep-body');
-    if (body) body.innerHTML = '<div class="vrep-all">All sites: <strong>' + allT + ' total \u00b7 ' + allD + ' today</strong></div>' + html
-      + '<div class="vrep-note">Unique visitors per day \u2014 hashes only, no cookies, no stored IPs. Until the updated counter code is deployed, a same-day repeat visit can count twice, and a Gazette page\u2019s own number may lag the record shown here; both clear with the same pending deploy.</div>';
-    var badge = document.getElementById('vrep-badge');
-    if (badge) badge.textContent = live ? 'Live' : 'Snapshot \u00b7 ' + SNAPSHOT.asOf;
-    var dash = lookup(data['dashboard'] || {}, '/buddy-system/');
-    var todayEl = document.getElementById('bv-today'); if (todayEl) todayEl.textContent = dash.today;
-    var span = document.querySelector('[data-visitor-count][data-count-path="/buddy-system"]');
-    if (span) span.textContent = dash.total;
-  }
-  function load(){
-    var badge = document.getElementById('vrep-badge'); if (badge) badge.textContent = 'Refreshing\u2026';
-    var data = {}, ok = 0, done = 0;
-    SITES.forEach(function(s){
-      fetch(countsUrl(s)).then(function(r){ return r.json(); }).then(function(j){
-        if (j && j.ok && j.counts){ data[s.id] = j.counts; ok++; }
-      }).catch(function(){}).then(function(){
-        done++;
-        if (done === SITES.length){
-          SITES.forEach(function(s){ if (!data[s.id]) data[s.id] = SNAPSHOT.data[s.id] || {}; });
-          render(data, ok === SITES.length);
-        }
-      });
-    });
+  function fill(){
+    fetch(API + '/counts?site=dashboard&paths=' + encodeURIComponent('/buddy-system/')).then(function(r){ return r.json(); }).then(function(j){
+      if (!j || !j.ok || !j.counts) return;
+      var c = j.counts['/buddy-system/'] || j.counts[norm('/buddy-system/')] || {total:0, today:0};
+      var span = document.querySelector('[data-visitor-count][data-count-path="/buddy-system"]');
+      if (span) span.textContent = c.total;
+      var t = document.getElementById('bv-today'); if (t) t.textContent = c.today;
+    }).catch(function(){});
   }
   function init(){
-    var host = document.getElementById('visitor-report'); if (!host) return;
-    host.innerHTML = '<div class="vrep-head"><span class="vrep-title">👁️ Visitor count</span>'
-      + '<span class="vrep-badge" id="vrep-badge">Snapshot</span>'
-      + '<span class="vrep-actions"><button type="button" class="vrep-btn" id="vrep-refresh">Refresh</button>'
-      + '<button type="button" class="vrep-btn" id="vrep-toggle">Hide</button></span></div>'
-      + '<div id="vrep-body"></div>';
-    var hidden = false;
-    try { hidden = !!JSON.parse(localStorage.getItem(LSKEY) || '{}').hidden; } catch (e) {}
-    var body = document.getElementById('vrep-body'), tgl = document.getElementById('vrep-toggle');
-    function applyHidden(){
-      body.style.display = hidden ? 'none' : '';
-      tgl.textContent = hidden ? 'Show report' : 'Hide';
-    }
-    function setHidden(v){
-      hidden = v; applyHidden();
-      try { localStorage.setItem(LSKEY, JSON.stringify({hidden: hidden})); } catch (e) {}
-    }
-    tgl.addEventListener('click', function(){ setHidden(!hidden); });
-    document.getElementById('vrep-refresh').addEventListener('click', load);
     var pill = document.getElementById('bv-pill');
     if (pill) pill.addEventListener('click', function(){
-      if (hidden) setHidden(false);
-      host.scrollIntoView({behavior:'smooth', block:'start'});
+      try {
+        if (typeof S !== 'undefined' && typeof setCompView === 'function' && S.view !== 'project') setCompView('project');
+        if (typeof S !== 'undefined'){ S.homeFromGallery = S.scope || 'all'; S.homeMode = 'single'; }
+        if (typeof selectProject === 'function') selectProject('analytics-buddy');
+        if (typeof renderCanvasHeader === 'function') renderCanvasHeader();
+        if (typeof setSidebarOpen === 'function') setSidebarOpen(false);
+      } catch (e) {}
     });
-    applyHidden();
-    render(SNAPSHOT.data, false);
-    load();
+    fill();
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
 })();

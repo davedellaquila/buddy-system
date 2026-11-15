@@ -124,16 +124,13 @@ Build: `build.py` generates `index.html` from `buddies.json` + `plans.json`.
 
 ## Sidebar
 
-- **Visitor count report (Dave 2026-11-15)** — a panel at the top of
-  the dashboard reports unique visitors per wired site (Dashboard,
-  Fiddletown Gazette, Lenwood Gazette) from Analytics Buddy's
-  visitor-counter Worker: all-sites and per-site totals + today, a
-  per-page breakdown, and a raw-counts API link per site. It renders
-  from a snapshot baked at build time, then re-fetches live (badge
-  flips Snapshot → Live; Refresh re-fetches). Hide collapses it,
-  persisted per device; the brand line's visitor pill ("N visitors ·
-  M today") reopens it. Lookups tolerate both Worker path-key forms
-  (normalized, and caller-echoed after the pending Worker deploy).
+- **Visitor count pill (Dave 2026-11-15)** — the sidebar brand line
+  carries a one-line pill, "N visitors · M today", filled live from
+  Analytics Buddy's visitor-counter Worker (the total also rides the
+  beacon's own span). Page analytics proper — the per-site, per-page
+  traffic report — live on Analytics Buddy's homepage, not on the
+  dashboard (Dave's placement call, 2026-11-15); tapping the pill
+  opens that homepage.
 - **Scope × View (Dave 2026-11-15, from Jonny's crit)** — the canvas is a
   composition of two independent values: a **Scope** (All buddies ·
   Recents · Favorites · Flagged · Business Plans · the current search)
