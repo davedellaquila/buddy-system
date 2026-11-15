@@ -2999,8 +2999,11 @@ html.light .wc-got{background:#007AFF}
   /* ---- Resting state: the strip. The sidebar is the left dock; closed it
      is 66px wide and shows only #ph-strip. ---- */
   body:not(.standalone) #sidebar{position:fixed;left:0;top:0;bottom:0;height:100dvh;width:66px;max-width:none;transform:none;visibility:visible;pointer-events:auto;margin:0;padding:0;border-radius:0;border-left:none;border-right:1px solid var(--border);background:var(--panel);z-index:96;overflow:hidden;flex:none;transition:width .28s cubic-bezier(.32,.72,.35,1)}
-  body:not(.standalone).ph-left-open #sidebar{width:min(85vw,320px);box-shadow:inset -26px 0 30px -16px rgba(0,0,0,.38)}
+  body:not(.standalone).ph-left-open #sidebar{width:min(85vw,320px);border-radius:0 20px 20px 0;box-shadow:16px 0 32px -10px rgba(0,0,0,.32)} /* Dave 2026-11-15 (iPhone shot): the open drawer carries rounded right corners and its elevation OUTSIDE its right edge — an outset shadow falling over the scrim / slid canvas, the anchored desktop dock's own pattern (border-radius:0 18px 18px 0, 8px 0 28px outset). The old inset shade (inset -26px …) painted a wide grey gradient INSIDE the panel that washed out the rows' right ends (ROOT / DIRECT / PROJECT labels, the Recents pill's right end). The base phone rule's overflow:hidden clips the scroll content to the new radius. */
   body:not(.standalone).ph-left-open #sidebar{z-index:100} /* Dave 2026-10-30 bug fix: the open drawer must paint ABOVE its scrim. The z-100 for #sidebar.open (in the small ≤639 block near the top of this stylesheet) LOSES on specificity to the phone base rule above (body:not(.standalone) #sidebar = (1,1,1) beats #sidebar.open = (1,1,0)), so the drawer sat at z-96 while the shown scrim (#sb-scrim.show, z-99) covered it: dimmed panel, every tap landing on the scrim. ph-left-open is the drawer's true phone open state (syncPhoneDocks derives it from .open), so the z-100 lives here, where it wins. */
+  body.ph-left-open #hp-nav,body.ph-left-open #hp-back{display:none !important} /* Dave 2026-11-15: while the phone drawer is open, the viewport footer cluster (back / up / find / down discs, z-9000) steps aside — it painted over the drawer's own Collections rows and left the tip jar half-hidden behind it. !important follows the field-settings precedent (the display:none !important rule near #hp-nav's base rules): the cluster's display is gated by body:has(…) rules that outrank a plain state rule. The discs return the moment the drawer closes. */
+  body:not(.standalone).ph-left-open .sb-brand-sticky #sb-tools{top:34px} /* Dave 2026-11-15: on the open drawer the brand tools (gear / recents / collapse) drop to the title row — on the eyebrow row they crowded it into 'PROJECT B…'. The title ('Buddies') is short and its row has room; the tools are absolute, so the sticky brand height (and --sb-brand-h) is unchanged. */
+  body:not(.standalone).ph-left-open .brand .eyebrow{padding-right:0} /* Dave 2026-11-15: with the tools off its row, the eyebrow no longer needs the 96px reserve the base rule keeps for the desktop tools — 'Project Buddy' gets the full row width. */
   body:not(.standalone):not(.ph-left-open) #sidebar .sb-scroll,
   body:not(.standalone):not(.ph-left-open) #sidebar #views-sec,
   body:not(.standalone):not(.ph-left-open) #sidebar #collections-sec,
@@ -3095,8 +3098,10 @@ html.light .wc-got{background:#007AFF}
      corners and its own background, clipped so framed pages round with
      it. The elevation shadow cannot live on #main (the drawer at z-100
      and the scrim at z-99 both paint above it, exactly where the shadow
-     would land), so the shadow is drawn as an inset shade on the
-     drawer's own right edge — same pixels, visible layer. ---- */
+     would land), so the shadow rides the drawer itself as an OUTSET
+     shadow on its right edge, painting over the scrim and the slid
+     canvas (Dave 2026-11-15: the first cut drew it as an inset shade
+     inside the drawer, which washed out the panel's own rows). ---- */
   body:not(.standalone) #main{margin-left:0;position:relative;left:0;transition:left .28s cubic-bezier(.32,.72,.35,1),border-radius .28s cubic-bezier(.32,.72,.35,1)}
   body:not(.standalone).ph-left-open #main{left:min(85vw,320px);background:var(--bg);border-radius:28px 0 0 28px;overflow:hidden}
   body:not(.standalone).ph-right-open #main{left:calc(-1 * min(88vw,360px));box-shadow:18px 0 36px rgba(0,0,0,.28)}
