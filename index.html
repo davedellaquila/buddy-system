@@ -285,6 +285,7 @@ body.sb-closed #sidebar #views-sec h3{display:none}
 body.sb-closed #sidebar .sb-brand-sticky{display:none} /* Dave 2026-10-15: empty bar serves no purpose on the collapsed rail */
 body.sb-closed #sidebar #views-sec{display:none}
 body.sb-closed #sidebar #collections-sec{display:none} /* Dave 2026-10-28: no Views stack in the rail — the current-view icon + its popover (rail-mid) carry view switching when collapsed */
+body.sb-closed #sidebar #scope-sec{display:none} /* Scope x View (2026-11-15): the scope block lives in the scroll region and stays out of the rail, same as Buddies/Plans */
 body.sb-closed #sidebar #sb-tools{position:static;display:flex;justify-content:center;margin:0 auto}
 /* Dave 2026-10-14: round selection indicator on the mini rail (not a rounded rect) */
 body.sb-closed #view-nav .navbtn.sel{border-radius:50%;box-shadow:none}
@@ -531,6 +532,53 @@ body.sb-closed #main .zoombar{left:calc(50% + 38px)}
 #collection-nav{display:flex;flex-direction:column;gap:2px}
 #view-nav .navbtn{flex:none;width:100%}
 #collection-nav .navbtn{flex:none;width:100%}
+/* Scope x View (Dave approved Jonny's crit, 2026-11-15): the sidebar
+   chooses the set (scope), the canvas header states the composition
+   (breadcrumb + view switch). The canvas always renders view(scope). */
+#scope-nav{display:flex;flex-direction:column;gap:2px}
+#scope-nav .navbtn{flex:none;width:100%}
+#scope-nav .scope-div{border-top:1px solid var(--border);margin:6px 4px}
+#canvas-bar{position:sticky;top:0;z-index:40;display:flex;align-items:center;gap:12px;flex-wrap:wrap;transition:margin-left .28s ease;
+  padding:10px 16px;background:var(--bg);border-bottom:1px solid var(--border)}
+@media (min-width:640px){
+  body:not(.standalone):not(.sb-anchored):not(.sb-closed) #canvas-bar{margin-left:324px}
+  body:not(.standalone).sb-closed:has(#main.homepage-mode) #canvas-bar{margin-left:56px}
+}
+.cb-crumb{display:flex;align-items:center;gap:8px;font-size:.9375rem;color:var(--text);min-width:0;flex-wrap:wrap}
+.cb-crumb b{font-weight:700}
+.cb-crumb .cb-dot{color:var(--muted)}
+.cb-count{color:var(--muted);font-size:.875rem;white-space:nowrap}
+.cb-clear{border:1px solid var(--border);background:var(--panel);color:var(--muted);width:22px;height:22px;border-radius:50%;cursor:pointer;font-size:.8125rem;line-height:1;display:inline-flex;align-items:center;justify-content:center;flex:none;padding:0}
+.cb-clear:hover{color:var(--text);border-color:var(--accent)}
+.cb-galback{border:1px solid var(--border);background:var(--panel);color:var(--text);border-radius:999px;padding:3px 10px;font:inherit;font-size:.8125rem;cursor:pointer}
+.cb-galback:hover{border-color:var(--accent)}
+.cb-switch{margin-left:auto;display:flex;background:var(--panel);border:1px solid var(--border);border-radius:10px;overflow:hidden;flex:none}
+.cb-switch button{border:0;background:transparent;color:var(--text2);font:inherit;font-size:.875rem;font-weight:600;padding:7px 14px;cursor:pointer}
+.cb-switch button + button{border-left:1px solid var(--border)}
+.cb-switch button.sel{background:var(--text);color:var(--bg)}
+.cb-switch button:hover:not(.sel){color:var(--text)}
+@media (max-width:639px){
+  #canvas-bar{padding:8px 12px;gap:8px}
+  .cb-switch{margin-left:0;background:transparent;border:0;gap:6px;flex-wrap:wrap;overflow:visible}
+  .cb-switch button{border:1px solid var(--border);border-radius:999px;background:var(--panel);padding:6px 12px}
+  .cb-switch button.sel{background:var(--text);color:var(--bg);border-color:var(--text)}
+}
+/* Homepage gallery (Scope x View): one card per record in the scope;
+   the card is the homepage's own face - icon, name, current state. */
+.gal-head{padding:22px 22px 4px}
+.gal-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px;padding:16px 22px 26px}
+.gal-card{position:relative;text-align:left;background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:16px;cursor:pointer;font:inherit;color:var(--text);display:flex;flex-direction:column;gap:4px;min-height:104px}
+.gal-card:hover{border-color:var(--accent)}
+.gal-card .gal-ic{font-size:1.75rem;line-height:1.2}
+.gal-card .gal-name{font-weight:700;font-size:1rem}
+.gal-card .gal-sub{color:var(--muted);font-size:.8125rem;line-height:1.35}
+.gal-card .binfo{position:absolute;top:8px;right:8px;margin-left:0}
+/* Scoped Org Chart context nodes + Atlas context ghosts (Scope x View) */
+.oc-box.oc-context{opacity:.55;border-style:dashed}
+.scope-ghost{opacity:.16 !important}
+#tree-chrome-main .tree-opts{display:flex;gap:14px;align-items:center;padding:6px 10px;flex-wrap:wrap}
+.rv-scopehead{display:block;width:100%;text-align:left;background:none;border:0;border-bottom:1px solid var(--border);color:var(--text);font:inherit;font-weight:700;padding:8px 10px;cursor:pointer}
+.rv-scopehead:hover{color:var(--accent)}
 /* Pane toggles (Dave 2026-10-16): show/hide the Atlas chart and orphan subviews.
    Lives in the view nav (icon strip); only visible when the Atlas view is active. */
 #pane-toggles{display:flex;flex-direction:column;gap:6px;padding:8px 4px 4px;margin-top:4px;
@@ -3384,16 +3432,11 @@ html.light .wc-got{background:#007AFF}
     <button type="button" id="buddy-search-clear" aria-label="Clear search" title="Clear search" hidden>×</button>
     </div>
   </div>
+  <div class="nav-sec" id="scope-sec"><h3>Scope</h3><div id="scope-nav"></div></div>
   <div class="nav-sec" id="buddies-sec">
-  <h3 style="cursor:pointer" id="buddies-toggle"><span class="nav-arrow" id="buddies-arrow">›</span> Buddies <span id="attn-pill" class="zero">0</span></h3><div class="sb-listwrap"><div id="sb-tabs" role="tablist" aria-label="Buddy list mode"><button type="button" class="sb-tab sel" data-ptab="buddies" role="tab" aria-selected="true">Buddies</button><button type="button" class="sb-tab" data-ptab="recents" role="tab" aria-selected="false">Recents</button></div><div id="buddy-nav"></div></div></div>
+  <h3 style="cursor:pointer" id="buddies-toggle"><span class="nav-arrow" id="buddies-arrow">›</span> <span id="roster-label">Buddies</span> <span id="attn-pill" class="zero">0</span></h3><div class="sb-listwrap"><div id="buddy-nav"></div></div></div>
   <div class="nav-sec" id="plans-sec"><h3 style="cursor:pointer" id="plans-toggle"><span id="plans-arrow">›</span> Business Plans</h3><div id="plan-nav"></div></div>
   </div>
-  <div class="nav-sec" id="views-sec">
-  <div id="views-resize" title="Drag to resize the Views section" aria-hidden="true"></div>
-  <h3 style="cursor:pointer" id="views-toggle"><span class="nav-arrow" id="views-arrow">›</span> Views</h3><div id="view-nav"></div></div>
-  <div class="nav-sec" id="collections-sec">
-  <div id="collections-resize" title="Drag to resize the Collections section" aria-hidden="true"></div>
-  <h3 style="cursor:pointer" id="collections-toggle"><span class="nav-arrow" id="collections-arrow">›</span> Collections</h3><div id="collection-nav"></div></div>
   <div class="sb-tipjar"><a href="https://ko-fi.com/davedellaquila" target="_blank" rel="noopener" title="Support the buddy system"><span class="jar">🫙</span> <span class="tiptext">Tip the jar</span></a></div>
   <div id="rail-mid"><button type="button" id="rail-recents" title="Recent buddies" aria-label="Recent buddies"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 8.5A9 9 0 1 1 3.2 13.6"/><path d="M3.2 3.8v4.8h4.8"/><path d="M12 7.5V12l3 2"/></svg></button><div class="rail-div" aria-hidden="true"></div><button type="button" id="rail-curview" title="Current view" aria-label="Current view - tap to switch views"></button><button type="button" id="rail-dump" title="Dump to Astro - a universal inbox, from anywhere" aria-label="Dump to Astro"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v7"/><path d="m8.2 6.8 3.8 3.8 3.8-3.8"/><path d="M3.5 13.5h4l1.8 2.7h5.4l1.8-2.7h4"/><path d="M3.5 13.5V19a1.8 1.8 0 0 0 1.8 1.8h13.4a1.8 1.8 0 0 0 1.8-1.8v-5.5"/></svg></button></div>
 </aside>
@@ -3423,6 +3466,7 @@ html.light .wc-got{background:#007AFF}
 </button>
 </div>
 <main id="main">
+<div id="canvas-bar"></div>
 <div id="journal-bar"></div>
 <div id="view-tree" class="view">
     <div class="chart">
@@ -3662,8 +3706,6 @@ html.light .wc-got{background:#007AFF}
 <section id="view-project" class="view"></section>
 <section id="view-changelog" class="view"></section>
 <section id="view-releases" class="view"></section>
-<section id="view-flagged" class="view"></section>
-<section id="view-favorites" class="view"></section>
 <section id="view-orgchart" class="view"></section>
 </main>
 </div>
@@ -4107,7 +4149,7 @@ const VIEW_DEFS = [
   ['project','Homepage','🏠'],
   ['changelog','Change Log','🕘'],
   ['releases','Release Notes','🎁'],
-  ['projects','Projects','☰'],
+  ['projects','List','☰'],
 ];
 /* Dave 2026-10-28: Views vs Collections. A view is a way of looking at the
    whole tree; a collection is a gathered set of specific objects. Favorites,
@@ -4128,6 +4170,16 @@ const VIEW_DEFS = [
    leads with, since every buddy is a project here. */
 const COLLECTION_VIEWS = ['favorites', 'flagged', 'plans', 'manifest', 'changelog', 'releases', 'projects'];
 function isCollectionView(v){ return COLLECTION_VIEWS.indexOf(v) >= 0; }
+/* Scope x View (Dave approved Jonny's crit, 2026-11-15): the canvas view
+   switch composes exactly four presentations - Homepage, Atlas, Org
+   Chart, List. Manifest / Change Log / Release Notes are system
+   documents: they leave the switch for the Settings/info orbit. The old
+   collection views (Favorites / Flagged / Business Plans) are no longer
+   views at all - they are scopes (see SCOPE_DEFS below). */
+const COMP_VIEWS = ['project', 'tree', 'orgchart', 'projects'];
+const SYS_VIEWS = ['manifest', 'changelog', 'releases'];
+function isCompView(v){ return COMP_VIEWS.indexOf(v) >= 0; }
+function isSysView(v){ return SYS_VIEWS.indexOf(v) >= 0; }
 const VIEW_TIPS = {
   tree: 'Atlas — seven lenses on your buddy hierarchy. Tap the pill to switch views. Click a node to open its details. Drag the background to pan, scroll to zoom. Drag a node onto another node to reparent it.',
   projects: 'Projects list — every buddy in hierarchy order with status. Click a tile to filter by attention status. Click the chevron to expand/collapse sections.',
@@ -4210,12 +4262,22 @@ function buddySiblingIds(id){
 // The views-list selection changes ONLY on view interaction (view-menu clicks,
 // number-key shortcuts, initial load). Buddy/plan selection never touches it.
 if (!S.view || VIEW_DEFS.every(v => v[0] !== S.view)) S.view = (typeof S.sel === 'string' && S.sel.indexOf('view:') === 0) ? S.sel.slice(5) : 'tree';
+/* Scope x View migration (2026-11-15): saved state from the single-state
+   era is translated in place - an old collection "view" becomes the
+   scope it always named, with the List as its presentation; the old
+   Recents tab becomes the Recents scope. */
+if (!S.scope) S.scope = (S.panelTab === 'recents') ? 'recents' : 'all';
+if (S.view === 'flagged' || S.view === 'favorites') { const _ov = S.view; S.scope = _ov; S.view = 'projects'; if (S.sel === 'view:' + _ov) S.sel = 'view:projects'; }
+if (S.view === 'plans') { S.scope = 'plans'; S.view = 'projects'; if (S.sel === 'view:plans') S.sel = 'view:projects'; }
+if (S.homeMode !== 'gallery') S.homeMode = 'single';
+if (!S.lastCompView || !isCompView(S.lastCompView)) S.lastCompView = isCompView(S.view) ? S.view : 'tree';
 function projectId(){
   const id = S.projectId;
   return (id && byId[id]) ? id : ROOT_ID;
 }
 function selectProject(id){
   if (!byId[id]) return;
+  S.homeMode = 'single';
   S.projectId = id; save();
   show('view:project');
 }
@@ -4260,6 +4322,7 @@ function selectBuddy(id){
   const vb = document.getElementById('view-buddy');
   const panelOpen = vb && vb.classList.contains('active');
   if (S.view === 'project') {
+    S.homeMode = 'single';
     S.projectId = id; save();
     renderProjectView();
     renderNav();
@@ -4363,14 +4426,135 @@ function isFlagged(id){ return !!(S.flags && S.flags[id]); }
 function isFavorite(id){ return !!(S.favorites && S.favorites[id]); }
 function flaggedIds(){ return BUDDIES.filter(b => b && isFlagged(b.id)).map(b => b.id); }
 function favoriteIds(){ return BUDDIES.filter(b => b && isFavorite(b.id)).map(b => b.id); }
+/* ---------- Scope x View core (2026-11-15) ----------
+   S.scope: 'all' | 'recents' | 'favorites' | 'flagged' | 'plans' |
+   'search'. scopeIds() returns the scope's record ids, or null for the
+   universe (All). Counts on scope rows are live: they recompute from
+   the same functions the roster renders from. */
+const SCOPE_DEFS = [
+  ['all', 'All buddies', ''],
+  ['recents', 'Recents', ''],
+  ['favorites', 'Favorites', '⭐'],
+  ['flagged', 'Flagged', '🚩'],
+  ['plans', 'Business Plans', '💼'],
+];
+function planBuddyIds(){
+  const set = {};
+  PLANS.forEach(p => (p.buddies || []).forEach(id => { if (byId[id]) set[id] = true; }));
+  return BUDDIES.filter(b => set[b.id]).map(b => b.id);
+}
+function recentsIds(){ return (Array.isArray(S.recentBuddies) ? S.recentBuddies : []).filter(id => byId[id]).slice(0, 15); }
+function scopeIds(){
+  switch (S.scope) {
+    case 'recents': return recentsIds();
+    case 'favorites': return favoriteIds();
+    case 'flagged': return flaggedIds();
+    case 'plans': return planBuddyIds();
+    case 'search': {
+      const w = (S.scopeQuery || '').toLowerCase().split(/\s+/).filter(Boolean);
+      if (!w.length) return [];
+      return BUDDIES.filter(b => buddyMatchesSearch(b, w)).map(b => b.id);
+    }
+    default: return null;
+  }
+}
+function scopeCount(){ const ids = scopeIds(); return ids ? ids.length : BUDDIES.length; }
+function scopeLabel(){
+  if (S.scope === 'search') return 'Search “' + (S.scopeQuery || '') + '”';
+  const d = SCOPE_DEFS.find(s => s[0] === S.scope);
+  return d ? d[1] : 'All buddies';
+}
+function scopeEmptyText(){
+  switch (S.scope) {
+    case 'recents': return 'No buddies visited yet.';
+    case 'favorites': return 'No favorites yet. Star a buddy from its panel and it will live here.';
+    case 'flagged': return 'No flagged buddies yet. Open a buddy and tap the flag toggle in its panel - flagged buddies collect here until you clear them.';
+    case 'plans': return 'No buddies are linked to a business plan yet.';
+    case 'search': return 'No buddies match your search.';
+    default: return '';
+  }
+}
+function setScope(sc){
+  if (!sc) return;
+  if (sc !== 'search') {
+    const bs = document.getElementById('buddy-search');
+    if (bs && bs.value) { bs.value = ''; const cb = document.getElementById('buddy-search-clear'); if (cb) cb.hidden = true; }
+    S.scopeQuery = '';
+  }
+  S.scope = sc;
+  save();
+  renderNav();
+  refreshScopedView();
+  try { replaceNavState(); } catch (e) {}
+}
+function refreshScopedView(){
+  if (S.view === 'tree') renderOrgTree();
+  else if (S.view === 'orgchart') renderOrgChart();
+  else if (S.view === 'projects') renderProjects();
+  else if (S.view === 'project' && S.homeMode === 'gallery') renderProjectView();
+}
+function setCompView(v){
+  if (v === 'project') { S.homeMode = 'gallery'; S.homeFromGallery = null; }
+  S.lastCompView = v;
+  save();
+  show('view:' + v);
+}
+function viewLabel(v){ const d = VIEW_DEFS.find(x => x[0] === v); return d ? d[1] : v; }
+function cbSwitchHtml(){
+  const cur = S.view || 'tree';
+  return '<div class="cb-switch" role="tablist" aria-label="View">'
+    + COMP_VIEWS.filter(id => isViewVisible(id)).map(id => {
+      const d = VIEW_DEFS.find(x => x[0] === id);
+      return '<button type="button" role="tab" data-cview="' + id + '"' + (cur === id ? ' class="sel"' : '') + ' aria-selected="' + (cur === id) + '">' + d[1] + '</button>';
+    }).join('') + '</div>';
+}
+function renderCanvasHeader(){
+  const bar = document.getElementById('canvas-bar');
+  if (!bar) return;
+  const v = S.view || 'tree';
+  if (isSysView(v) || v === 'plans') {
+    bar.innerHTML = '<div class="cb-crumb"><b>' + escHtml(viewLabel(v)) + '</b><span class="cb-dot">·</span><span class="cb-count">System</span>'
+      + '<button type="button" class="cb-clear" data-cb-back title="Back to ' + escHtml(viewLabel(S.lastCompView || 'tree')) + '" aria-label="Back">×</button></div>'
+      + cbSwitchHtml();
+    return;
+  }
+  let h = '<div class="cb-crumb"><b>' + escHtml(scopeLabel()) + '</b><span class="cb-dot">·</span><span>' + escHtml(viewLabel(v)) + '</span>';
+  if (S.scope && S.scope !== 'all') h += '<button type="button" class="cb-clear" data-clear-scope title="Clear scope (back to All buddies)" aria-label="Clear scope">×</button>';
+  h += '<span class="cb-count">— ' + scopeCount() + (scopeCount() === 1 ? ' buddy' : ' buddies') + '</span>';
+  if (v === 'project' && S.homeMode !== 'gallery') {
+    const b = byId[projectId()];
+    if (b) h += '<span class="cb-count">— ' + escHtml(dispName(b)) + '</span>';
+    if (S.homeFromGallery) h += '<button type="button" class="cb-galback" data-gal-back>‹ Gallery</button>';
+  }
+  bar.innerHTML = h + '</div>' + cbSwitchHtml();
+}
+function galleryStatusLine(b){
+  const un = unseenItems(b);
+  if (un.length && un[0].text) return un[0].text;
+  return b.tagline || '';
+}
+function renderGallery(pv){
+  const ids = scopeIds();
+  const list = ids ? ids.map(id => byId[id]).filter(Boolean) : BUDDIES.slice();
+  let h = '<div class="gal-head"><h2>' + escHtml(scopeLabel()) + ' <span class="attn-count">(' + list.length + ')</span></h2>'
+    + '<p class="sub">Homepages in this scope - tap a card to open the full homepage; Back returns here, scope intact.</p></div>';
+  if (!list.length) h += '<p class="bp-empty" style="padding:0 22px">' + escHtml(scopeEmptyText()) + '</p>';
+  else h += '<div class="gal-grid">' + list.map(b =>
+    '<button type="button" class="gal-card" data-gal="' + escHtml(b.id) + '">'
+    + '<span class="binfo" data-buddy-info="' + escHtml(b.id) + '" title="Open ' + escHtml(dispName(b)) + ' details" style="padding:2px 6px;opacity:0;transition:opacity 0.15s;cursor:pointer" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0">ⓘ</span>'
+    + '<span class="gal-ic">' + escHtml(buddyDisplayIcon(b)) + '</span>'
+    + '<span class="gal-name">' + escHtml(dispName(b)) + '</span>'
+    + '<span class="gal-sub">' + escHtml(galleryStatusLine(b).slice(0, 110)) + '</span>'
+    + '</button>').join('') + '</div>';
+  pv.innerHTML = h;
+}
 function afterMarkChange(id){
   if (S.projectId === id) {
     const vb = document.getElementById('view-buddy');
     if (vb && vb.classList.contains('active')) renderBuddy(id);
   }
   renderNav();
-  if (S.view === 'flagged') renderFlagged();
-  if (S.view === 'favorites') renderFavorites();
+  if (S.scope === 'favorites' || S.scope === 'flagged') refreshScopedView();
 }
 function setFlagged(id, on){
   if (!id || !byId[id]) return;
@@ -4503,9 +4687,16 @@ function toggleOcTeam(id){
 function renderOrgChart(){
   const el = document.getElementById('view-orgchart');
   if (!el || !byId['astro']) return;
+  /* Scope x View: the chart renders the scope's hierarchy - members
+     plus their ancestors, the ancestors as muted context nodes so the
+     fragment stays connected to the root. */
+  const ocScope = (S.scope && S.scope !== 'all') ? new Set(scopeIds() || []) : null;
+  const ocVis = ocScope ? new Set(ocScope) : null;
+  if (ocVis) ocScope.forEach(id => { let p = byId[id] ? byId[id].parent : null; while (p && byId[p]) { if (ocVis.has(p)) break; ocVis.add(p); p = byId[p].parent; } });
   const kidsMap = {};
   BUDDIES.forEach(b => {
     if (!b || b.id === 'astro') return;
+    if (ocVis && !ocVis.has(b.id)) return;
     const pk = (b.parent && byId[b.parent]) ? b.parent : 'astro';
     (kidsMap[pk] = kidsMap[pk] || []).push(b.id);
   });
@@ -4517,7 +4708,7 @@ function renderOrgChart(){
     kids.forEach(k => { seen[k] = true; });
     const closed = !!(S.ocClosed && S.ocClosed[id]);
     let h = '<li class="oc-node">'
-      + '<div class="oc-box" data-buddy="' + escHtml(id) + '">'
+      + '<div class="oc-box' + (ocScope && !ocScope.has(id) ? ' oc-context' : '') + '" data-buddy="' + escHtml(id) + '">'
       + (kids.length ? '<button type="button" class="oc-toggle" data-oc-toggle="' + escHtml(id) + '" title="' + (closed ? 'Expand' : 'Collapse') + ' this team" aria-label="' + (closed ? 'Expand' : 'Collapse') + ' this team">' + (closed ? '+' : '−') + '</button>' : '')
       + '<div class="oc-ic">' + escHtml(buddyDisplayIcon(b)) + '</div>'
       + '<div class="oc-name">' + escHtml(dispName(b)) + '</div>'
@@ -4530,7 +4721,7 @@ function renderOrgChart(){
   const dave = '<li class="oc-node"><div class="oc-box oc-root"><div class="oc-ic">👤</div>'
     + '<div class="oc-name">Dave</div><div class="oc-role">The boss</div></div>'
     + '<ul class="oc-kids">' + node('astro') + '</ul></li>';
-  el.innerHTML = '<div class="oc-head"><h2>🏢 Org Chart <span class="attn-count">(' + BUDDIES.length + ')</span></h2>'
+  el.innerHTML = '<div class="oc-head"><h2>🏢 Org Chart <span class="attn-count">(' + (ocScope ? ocScope.size : BUDDIES.length) + ')</span></h2>'
     + '<p class="sub">The whole staff, top-down by who reports to whom — everyone ultimately reports to Dave, through Astro. Click a box to open that buddy; the +/− chip folds a team away. Zoom with the cluster, Shift+scroll, a pinch, or the + / − / 0 keys; drag the background to pan.</p>'
     + '<p class="sub oc-sub-short">Tap a box to open it · drag to pan · pinch to zoom.</p></div>'
     + '<div class="oc-vp"><div class="oc-zoombar" role="group" aria-label="Org chart zoom controls">'
@@ -4861,29 +5052,24 @@ function renderNav(){
      the tail of this function restores it. */
   const _sbScrollEl = document.querySelector('.sb-scroll');
   const _sbLiveTop = _sbScrollEl ? _sbScrollEl.scrollTop : 0;
-  const views = getViewOrder().map(id => VIEW_DEFS.find(v => v[0] === id)).filter(Boolean).filter(([v]) => isViewVisible(v));
-  /* Dave 2026-10-20: the expand chevron no longer leads this stack.
-     Dave 2026-10-21 (Job 5): it lives only in the rail (#rail-expand) —
-     the short-lived corner button is gone; Recents owns the corner. */
-  const viewRow = ([v,l,ic]) => {
-    const cnt = v === 'flagged' ? flaggedIds().length : v === 'favorites' ? favoriteIds().length : v === 'manifest' ? BUDDIES.length : v === 'projects' ? BUDDIES.length : null;
-    return '<button class="navbtn'+(S.view===v?' sel':'')+'" data-view="'+v+'" title="'+(VIEW_TIPS[v]||l)+'"><span class="nic">'+ic+'</span><span class="nlab">'+l+(cnt !== null ? ' <span class="attn-count">('+cnt+')</span>' : '')+'</span></button>'; };
-  document.getElementById('view-nav').innerHTML = views.filter(([v]) => !isCollectionView(v)).map(viewRow).join('');
-  const collNavEl = document.getElementById('collection-nav');
-  if (collNavEl) collNavEl.innerHTML = views.filter(([v]) => isCollectionView(v)).map(viewRow).join('');
-  /* Dave 2026-10-16: pane toggles for the Atlas view — show/hide the chart (top)
-     and orphaned (bottom) subviews. Only rendered when Atlas is the active view. */
-  if (S.view === 'tree') {
-    if (!S.treePanes || typeof S.treePanes !== 'object') S.treePanes = {main: true, orph: true};
-    document.getElementById('view-nav').insertAdjacentHTML('beforeend',
-      '<div id="pane-toggles">'
-      + '<label class="ptoggle" title="Show/hide the chart pane"><input type="checkbox" data-pane="main"'+(S.treePanes.main!==false?' checked':'')+'><span class="plab">Chart</span></label>'
-      + '<label class="ptoggle" title="Show/hide the orphaned pane"><input type="checkbox" data-pane="orph"'+(S.treePanes.orph!==false?' checked':'')+'><span class="plab">Orphaned</span></label>'
-      + '</div>');
-    document.querySelectorAll('#pane-toggles input[data-pane]').forEach(function(inp){
-      inp.addEventListener('change', function(){ setTreePane(inp.getAttribute('data-pane'), inp.checked); });
-    });
+  /* Scope x View (2026-11-15): the sidebar's one job is choosing the
+     set. Scope rows render here with live counts; the roster below
+     lists the scope's records; the view switch lives in the canvas
+     header (renderCanvasHeader, called at this function's tail). The
+     Atlas pane toggles moved to the Atlas chrome (renderOrgTree). */
+  const scopeNavEl = document.getElementById('scope-nav');
+  if (scopeNavEl) {
+    const counts = { all: BUDDIES.length, recents: recentsIds().length, favorites: favoriteIds().length, flagged: flaggedIds().length, plans: planBuddyIds().length };
+    const srow = ([sid, lab, ic]) => '<button class="navbtn' + (S.scope === sid ? ' sel' : '') + '" data-scope="' + sid + '" title="' + (sid === 'all' ? 'Every buddy in the tree' : sid === 'recents' ? 'The buddies you visited most recently' : lab + ' - tap to make this the scope') + '">'
+      + '<span class="nic">' + ic + '</span>'
+      + '<span class="nlab">' + lab + ' <span class="attn-count">(' + counts[sid] + ')</span></span></button>';
+    let sh = '';
+    if (S.scope === 'search') sh += '<button class="navbtn sel" data-scope="search"><span class="nic">' + '🔍' + '</span><span class="nlab">' + escHtml(scopeLabel()) + ' <span class="attn-count">(' + scopeCount() + ')</span></span></button>';
+    sh += SCOPE_DEFS.slice(0, 2).map(srow).join('') + '<div class="scope-div"></div>' + SCOPE_DEFS.slice(2).map(srow).join('');
+    scopeNavEl.innerHTML = sh;
   }
+  const rl = document.getElementById('roster-label');
+  if (rl) rl.textContent = (!S.scope || S.scope === 'all') ? 'Buddies' : scopeLabel();
   const q = (document.getElementById('buddy-search').value || '').toLowerCase().trim();
   const words = q.split(/\s+/).filter(Boolean);
   let h = '';
@@ -4905,6 +5091,21 @@ function renderNav(){
         + '<span class="bdot"></span><span class="bicon">'+escHtml(b.icon||'')+'</span><span class="bname">'+escHtml(dispName(b))+'</span>'
         + '<span class="bkind">'+kind+'</span>'
         + '<span class="binfo" data-buddy-info="'+id+'" title="Open '+escHtml(dispName(b))+' details" style="margin-left:auto;padding:2px 6px;opacity:0;transition:opacity 0.15s;cursor:pointer" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0">\u24d8</span></button>';
+    }).join('');
+  }
+  /* Scope x View: a collection/search scope's roster is a flat list of
+     its records - same row markup as Recents, so clicks, selection and
+     the info affordance behave identically. */
+  function flatScopeHtml(ids){
+    if (!ids.length) return '<p class="fineprint" style="padding:10px">' + escHtml(scopeEmptyText()) + '</p>';
+    return ids.map(id => {
+      const b = byId[id]; if (!b) return '';
+      const kind = b.kind === 'root' ? 'root' : (b.parent === ROOT_ID ? 'direct' : b.kind);
+      const un = unseenItems(b).length;
+      return '<button class="brow' + ((S.projectId===id || S.sel==='buddy:'+id) ? ' sel' : '') + (un ? ' has-unseen' : '') + (isDormant(id) ? ' dormant' : '') + '" data-buddy="' + id + '" style="padding-left:8px" title="' + escHtml(b.tagline || '') + '">'
+        + '<span class="bdot"></span><span class="bicon">' + escHtml(b.icon || '') + '</span><span class="bname">' + escHtml(dispName(b)) + '</span>'
+        + '<span class="bkind">' + kind + '</span>'
+        + '<span class="binfo" data-buddy-info="' + id + '" title="Open ' + escHtml(dispName(b)) + ' details" style="margin-left:auto;padding:2px 6px;opacity:0;transition:opacity 0.15s;cursor:pointer" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0">' + 'ⓘ' + '</span></button>';
     }).join('');
   }
   /* Dave 2026-10-15: per-branch ancestor chain — a buddy under two parents
@@ -4945,14 +5146,15 @@ function renderNav(){
       + '<span class="binfo" data-buddy-info="'+id+'" title="Open '+escHtml(dispName(b))+' details" style="margin-left:auto;padding:2px 6px;opacity:0;transition:opacity 0.15s;cursor:pointer" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0">ⓘ</span></button>';
     if (!collapsed) kidIds.forEach(kid => { if (!anc.has(kid)) row(kid, depth+1, anc, rootTree); });
   }
-  if (S.panelTab === 'recents') { h = recentsHtml(); }
+  if (S.scope === 'recents') { h = recentsHtml(); }
+  else if (S.scope && S.scope !== 'all') { h = flatScopeHtml(scopeIds() || []); }
   else {
     sortSiblingsByOrder(ROOT_ORDER.filter(id => { const b = byId[id]; return b && effParents(b).length === 0; }), '__root__')
       .forEach(id => row(id, 0, null, id === ROOT_ID));
   }
   document.getElementById('buddy-nav').innerHTML = h;
   syncPanelTabs();
-  if (S.panelTab !== 'recents' && Object.keys(S.parents).length) {
+  if ((!S.scope || S.scope === 'all') && Object.keys(S.parents).length) {
     document.getElementById('buddy-nav').insertAdjacentHTML('beforeend',
       '<div style="padding:10px 10px 0"><button class="linkbtn" id="reset-parents">Reset moved buddies</button></div>'
       + '<div class="fineprint" style="padding:2px 10px 0">Hierarchy moves save on this device.</div>');
@@ -4972,6 +5174,7 @@ function renderNav(){
   }
   updateHpNav();
   renderStrip();
+  renderCanvasHeader();
 }
 function artRow(icon, label, sub, url){
   return '<a class="art-row" href="'+url+'" target="_blank" rel="noopener">'
@@ -5642,7 +5845,7 @@ function renderDevelopSection(){
   const dev = document.getElementById('fset-develop');
   if (!dev) return;
   const simulating = !!devBackup;
-  const buildNum = '20261115.0729';
+  const buildNum = '20261115.1147';
   dev.innerHTML = ''
     + '<label class="fset-check"><input type="checkbox" id="dev-empty-toggle"' + (simulating ? ' checked' : '') + '> <span><strong>Simulate new user</strong> — empty data file, as if opening the shared link fresh</span></label>'
     + '<div class="fineprint" style="margin:8px 0 12px">Build <span style="font-family:monospace">' + escHtml(String(buildNum)) + '</span> · ' + BUDDIES.length + ' buddies in this file</div>'
@@ -5861,7 +6064,8 @@ function openFieldSettings(){
       + '<div class="fset-nomatch" id="fset-nomatch" hidden>No settings match <strong id="fset-nomatch-q"></strong>. <button class="linkbtn" id="fset-clearfilter" type="button">Clear filter</button></div>'
       + '<section class="fset-sec"><h3 class="fset-sec-h">Preferences</h3><div id="fset-settings"></div></section>'
       + '<div class="fset-cols">'
-      + '<section class="fset-sec"><h3 class="fset-sec-h">Main views</h3><p class="fineprint">Drag to reorder. Number keys 1–9 follow this order.</p><div id="vset-list"></div></section>'
+      + '<section class="fset-sec"><h3 class="fset-sec-h">Main views</h3><p class="fineprint">Uncheck to hide a view from the canvas switch. Number keys 1-4 follow the switch order.</p><div id="vset-list"></div></section>'
+      + '<section class="fset-sec"><h3 class="fset-sec-h">System documents</h3><p class="fineprint">Documents about the system itself - not scopes or views of buddies.</p><div style="display:flex;flex-direction:column;gap:6px;align-items:flex-start"><button type="button" class="linkbtn" data-view="manifest">✓ New-Project Manifest</button><button type="button" class="linkbtn" data-view="changelog">🕘 Change Log</button><button type="button" class="linkbtn" data-view="releases">🎁 Release Notes</button></div></section>'
       + '<section class="fset-sec"><h3 class="fset-sec-h">Buddy fields</h3><p class="fineprint">Drag to reorder. Uncheck to hide.</p><p class="fineprint">Power-user tip: in the info panel, drag a section by its name to rearrange the panel.</p><div id="fset-list"></div></section>'
       + '</div>'
       + '<section class="fset-sec"><h3 class="fset-sec-h">Advanced</h3><div id="fset-advanced"></div></section>'
@@ -6067,26 +6271,14 @@ function openFieldSettings(){
   }
   const vlist = document.getElementById('vset-list');
   if (vlist) {
-    vlist.innerHTML = getViewOrder().map(vid => {
+    vlist.innerHTML = COMP_VIEWS.map(vid => {
       const def = VIEW_DEFS.find(v => v[0] === vid);
       if (!def) return '';
       const vvis = isViewVisible(vid);
-      return '<div class="fset-row" draggable="true" data-vid="' + vid + '">'
+      return '<div class="fset-row" data-vid="' + vid + '">'
         + '<input type="checkbox" ' + (vvis ? 'checked' : '') + ' data-vvis="' + vid + '" title="Show/hide">'
-        + '<span class="fl">' + def[1] + '</span>'
-        + '<span class="fh" style="margin-left:auto">⋮⋮</span></div>';
+        + '<span class="fl">' + def[1] + '</span></div>';
     }).join('');
-    bindFsetListDnD(vlist, r => r.dataset.vid, (fromId, beforeId) => {
-      S.viewOrder = fsetReorderBefore(getViewOrder(), fromId, beforeId);
-      save();
-      renderNav();
-      openFieldSettings();
-      // Dave 2026-10-18: keep the dropped view in view after the re-render.
-      try {
-        const movedV = document.querySelector('#vset-list .fset-row[data-vid="' + fromId + '"]');
-        if (movedV && movedV.scrollIntoView) movedV.scrollIntoView({block:'nearest'});
-      } catch (e) {}
-    });
     vlist.querySelectorAll('[data-vvis]').forEach(cb => {
       cb.addEventListener('change', () => {
         if (!S.viewHidden) S.viewHidden = {};
@@ -6320,7 +6512,7 @@ function syncRailCurView(){
   const btn = document.getElementById('rail-curview'); if (!btn) return;
   const def = VIEW_DEFS.find(v => v[0] === S.view) || VIEW_DEFS[0];
   btn.innerHTML = '<span aria-hidden="true">' + def[2] + '</span><span class="view-caret" aria-hidden="true">▾</span>';
-  btn.title = 'Current view: ' + def[1] + ' - tap to switch views';
+  btn.title = 'Current view: ' + def[1] + ' · Scope: ' + scopeLabel() + ' - tap to switch views';
   btn.setAttribute('aria-label', 'Current view: ' + def[1] + '. Tap to switch views.');
 }
 function railPopEsc(e){ if (e.key === 'Escape') { e.stopPropagation(); closeRailViewPop(); } }
@@ -6332,19 +6524,16 @@ function closeRailViewPop(){
   document.removeEventListener('keydown', railPopEsc, true);
 }
 function viewPopHtml(){
-  const row = v => '<button type="button" data-view="' + v[0] + '"' + (S.view === v[0] ? ' class="sel"' : '') + '><span class="rv-ic" aria-hidden="true">' + v[2] + '</span>' + v[1] + (v[0] === 'flagged' ? ' (' + flaggedIds().length + ')' : v[0] === 'favorites' ? ' (' + favoriteIds().length + ')' : v[0] === 'manifest' ? ' (' + BUDDIES.length + ')' : v[0] === 'projects' ? ' (' + BUDDIES.length + ')' : '') + '</button>';
-  /* Dave 2026-10-30: the Settings order (S.viewOrder, one mixed
-     sequence) is the single source of truth - this popover used to
-     iterate raw VIEW_DEFS order and ignored it, so the minimized
-     panel's menu never matched Settings. The popover keeps its
-     Views / Collections grouping (a grouped menu cannot express the
-     mixed sequence literally), but the order WITHIN each group now
-     follows the Settings sequence exactly. */
-  const ordered = getViewOrder().map(id => VIEW_DEFS.find(v => v[0] === id)).filter(Boolean);
-  const vs = ordered.filter(v => !isCollectionView(v[0]));
-  const cs = ordered.filter(v => isCollectionView(v[0]));
-  return (vs.length ? '<div class="rv-head">Views</div>' + vs.map(row).join('') : '')
-       + (cs.length ? '<div class="rv-head">Collections</div>' + cs.map(row).join('') : '');
+  /* Scope x View (2026-11-15): the popover header names the current
+     scope - tapping it opens the sidebar to change it. Below: the four
+     composition views, then the system documents. */
+  const vrow = v => '<button type="button" data-cview="' + v[0] + '"' + (S.view === v[0] ? ' class="sel"' : '') + '><span class="rv-ic" aria-hidden="true">' + v[2] + '</span>' + v[1] + '</button>';
+  const srow = v => '<button type="button" data-view="' + v[0] + '"' + (S.view === v[0] ? ' class="sel"' : '') + '><span class="rv-ic" aria-hidden="true">' + v[2] + '</span>' + v[1] + '</button>';
+  const vs = COMP_VIEWS.map(id => VIEW_DEFS.find(v => v[0] === id)).filter(Boolean);
+  const ss = SYS_VIEWS.map(id => VIEW_DEFS.find(v => v[0] === id)).filter(Boolean);
+  return '<button type="button" class="rv-scopehead" id="rv-scopehead">' + escHtml(scopeLabel()) + ' — tap to change</button>'
+       + (vs.length ? '<div class="rv-head">Views</div>' + vs.map(vrow).join('') : '')
+       + (ss.length ? '<div class="rv-head">System</div>' + ss.map(srow).join('') : '');
 }
 function toggleRailViewPop(){
   if (document.getElementById('rail-viewpop')) { closeRailViewPop(); return; }
@@ -6370,7 +6559,7 @@ function toggleRailViewPop(){
     p.style.top = '8px';
     p.style.maxHeight = Math.max(140, Math.round(visHPop) - 16) + 'px';
   }
-  p.addEventListener('click', e => { if (e.target.closest('[data-view]')) closeRailViewPop(); });
+  p.addEventListener('click', e => { if (e.target.closest('[data-view]') || e.target.closest('[data-cview]')) closeRailViewPop(); });
   document.addEventListener('pointerdown', railPopOutside, true);
   document.addEventListener('keydown', railPopEsc, true);
 }
@@ -7361,6 +7550,14 @@ function renderProjectView(){
   if (!pv) return;
   const b = byId[projectId()] || {};
   pv.innerHTML = '';
+  /* Scope x View: the Homepage view is the scope's gallery; a single
+     homepage is a drill-in from a card (or the roster), and Back
+     returns to the gallery with the scope intact. */
+  if (S.homeMode === 'gallery') {
+    document.getElementById('main').classList.remove('homepage-mode');
+    renderGallery(pv);
+    return;
+  }
   const hp = getHomepage(b);
   document.getElementById('main').classList.add('homepage-mode');
   const bar2 = document.getElementById('journal-bar');
@@ -8150,7 +8347,7 @@ function renderBuddy(id){
     + attrHead('shared', 'SHARED NOTES', '<span class="attr-value" id="bp-shared-count">(0)</span>', '')
     + '<div class="attr-body">' + attrTipLine('Anybody with repo access can see this note. Saved to the buddy’s repo (docs/notes.md).') + '<textarea class="notes" id="bp-shared-notes" placeholder="Anybody with repo access can see this note."></textarea>'
     + '<p class="fineprint" id="shared-status"></p></div></div>'
-    + '<div class="bp-build">Build 20261115.0729</div>'
+    + '<div class="bp-build">Build 20261115.1147</div>'
     + '</div>';
   // Update every visible label for a buddy after a rename/re-icon, across all
   // Atlas lenses. A rename changes no structure, so labels are patched in place
@@ -8913,7 +9110,7 @@ function buddyMatchesSearch(b, words){
 }
 // Returns Set of visible buddy IDs under the current search filter, or null if no filter.
 // Visible = matching buddies + their ancestors (for hierarchy context) + their descendants.
-function getVisibleBuddyIds(){
+function searchVisibleSet(){
   const words = getSearchWords();
   if (!words.length) return null;
   const visible = new Set();
@@ -8948,6 +9145,31 @@ function getVisibleBuddyIds(){
   });
   toAdd.forEach(id => visible.add(id));
   return visible;
+}
+/* Scope x View: the scope's Atlas set - the members, their descendants
+   (a member's subtree comes with it), and their ancestors (context, so
+   the fragment stays connected to the root). */
+function scopeVisibleSet(){
+  const ids = scopeIds();
+  if (!ids) return null;
+  const set = new Set(ids);
+  ids.forEach(id => {
+    (function addDesc(pid){ (kidsOf[pid] || []).forEach(k => { if (!set.has(k.id)) { set.add(k.id); addDesc(k.id); } }); })(id);
+    let pid = byId[id] ? effParent(byId[id]) : null;
+    while (pid) { if (set.has(pid)) break; set.add(pid); const pb = byId[pid]; pid = pb ? effParent(pb) : null; }
+  });
+  return set;
+}
+// The Atlas visibility set: scope and search compose (intersection).
+// With "Show context" on, the scope stops hiding and the render ghosts
+// out-of-scope nodes instead (see renderOrgTree).
+function getVisibleBuddyIds(){
+  const sv = scopeVisibleSet();
+  const qv = searchVisibleSet();
+  if (S.scopeGhost && sv) return qv;
+  if (!sv) return qv;
+  if (!qv) return sv;
+  return new Set([...sv].filter(id => qv.has(id)));
 }
 // Filtered children accessor — respects the search filter for Atlas lenses
 function visibleKids(id){
@@ -8992,6 +9214,26 @@ function renderOrgTree(){
   // so the zoom control only scales the chart itself.
   document.getElementById('tree-chrome-main').innerHTML = quickAnswersHtml() + chartSwitcherHtml();
   wireAtlasRow();
+  /* Scope x View: the Atlas pane toggles live in the Atlas chrome now
+     (they left the sidebar with the Views section), joined by the
+     scope's "Show context" ghost toggle. */
+  (function(){
+    const chrome = document.getElementById('tree-chrome-main');
+    if (!chrome) return;
+    if (!S.treePanes || typeof S.treePanes !== 'object') S.treePanes = {main: true, orph: true};
+    let oh = '<div class="tree-opts"><div id="pane-toggles">'
+      + '<label class="ptoggle" title="Show/hide the chart pane"><input type="checkbox" data-pane="main"' + (S.treePanes.main !== false ? ' checked' : '') + '><span class="plab">Chart</span></label>'
+      + '<label class="ptoggle" title="Show/hide the orphaned pane"><input type="checkbox" data-pane="orph"' + (S.treePanes.orph !== false ? ' checked' : '') + '><span class="plab">Orphaned</span></label>'
+      + '</div>';
+    if (S.scope && S.scope !== 'all') oh += '<label class="ptoggle" title="Show out-of-scope buddies as faint context instead of hiding them"><input type="checkbox" id="scope-ghost-tgl"' + (S.scopeGhost ? ' checked' : '') + '><span class="plab">Show context</span></label>';
+    oh += '</div>';
+    chrome.insertAdjacentHTML('beforeend', oh);
+    chrome.querySelectorAll('#pane-toggles input[data-pane]').forEach(function(inp){
+      inp.addEventListener('change', function(){ setTreePane(inp.getAttribute('data-pane'), inp.checked); });
+    });
+    const gt = document.getElementById('scope-ghost-tgl');
+    if (gt) gt.addEventListener('change', function(){ S.scopeGhost = gt.checked; save(); renderOrgTree(); });
+  })();
   // Constellation controls are pane-mounted (see wireConstelPanel) — clear
   // any from the previous render so they never linger over another lens.
   document.querySelectorAll('#treepane-main > .constel-panel, #treepane-main > .constel-pill').forEach(n => n.remove());
@@ -9004,6 +9246,14 @@ function renderOrgTree(){
   if (chartType === 'constellation') initConstellation();
   if (chartType === 'halo') initHalo();
   if (chartType === 'icicle') initIcicle();
+  /* Scope x View ghost pass: with "Show context" on, everything
+     rendered and every non-member fades to context. */
+  if (S.scope && S.scope !== 'all' && S.scopeGhost) {
+    const members = new Set(scopeIds() || []);
+    document.querySelectorAll('#view-tree [data-buddy]').forEach(el => {
+      if (!members.has(el.getAttribute('data-buddy'))) el.classList.add('scope-ghost');
+    });
+  }
 }
 /* ============ Atlas chart types ============
    Seven visualizations of the same hierarchy. chartType persists in S.
@@ -10237,6 +10487,11 @@ function highlightProjectRow(id){
 function renderProjects(){
   if (!S.projCollapsed || typeof S.projCollapsed !== 'object') S.projCollapsed = {};
   const weekAgo = Date.now() - 7 * 864e5;
+  /* Scope x View: the List renders the scope - tile counts, filters
+     and rows all draw from the scoped set; ancestors ride along for
+     hierarchy context, exactly like the view's own filters. */
+  const scopeSetP = (S.scope && S.scope !== 'all') ? new Set(scopeIds() || []) : null;
+  const inScopeP = b => !scopeSetP || scopeSetP.has(b.id);
   // Compute the exact set of buddy IDs a filter shows (matching buddies +
   // their ancestors, for hierarchy context). Tile counts use this so the
   // number on the tile always matches the filtered row count.
@@ -10254,9 +10509,9 @@ function renderProjects(){
         const t = Date.parse(a.date || '');
         return t && t >= weekAgo;
       });
-      Object.values(byId).forEach(b => { if (matches(b)) addWithAncestors(b); });
+      Object.values(byId).forEach(b => { if (inScopeP(b) && matches(b)) addWithAncestors(b); });
     } else if (kind === 'status') {
-      Object.values(byId).forEach(b => { if ((b.status || 'Unknown') === val) addWithAncestors(b); });
+      Object.values(byId).forEach(b => { if (inScopeP(b) && (b.status || 'Unknown') === val) addWithAncestors(b); });
     }
     return ids;
   }
@@ -10266,6 +10521,7 @@ function renderProjects(){
   const statusCounts = {};
   const statusIds = {};
   Object.values(byId).forEach(b => {
+    if (!inScopeP(b)) return;
     const st = b.status || 'Unknown';
     (statusIds[st] = statusIds[st] || {});
     let x = b;
@@ -10289,7 +10545,7 @@ function renderProjects(){
     ['unseen', tileHtml('TO REVIEW', Object.keys(unseenIds).length, '#a371f7', revSub, 'unseen', projFilter === 'unseen')],
     ['fresh', tileHtml('FRESH', Object.keys(freshIds).length, '#d97a1f', 'Added in the last 7 days', 'fresh', projFilter === 'fresh')],
     ['cleared', tileHtml('CLEARED', Object.keys(clearedIds).length, '#2f9e44', 'Reviewed & cleared', 'cleared', projFilter === 'cleared')],
-    ['total', tileHtml('TOTAL', Object.keys(byId).length, '#8b949e', 'All buddies', 'total', !projFilter && !statusFilter, 'Click to clear all filters.')]
+    ['total', tileHtml('TOTAL', (scopeSetP ? scopeSetP.size : Object.keys(byId).length), '#8b949e', (scopeSetP ? scopeLabel() : 'All buddies'), 'total', !projFilter && !statusFilter, 'Click to clear all filters.')]
   ];
   const statusTiles = statusOrder.map(st => ['status:' + st,
     tileHtml(st.replace(/^Live · /i, '').toUpperCase(), statusCounts[st], statusTints[st] || '#8b949e', '', 'status:' + st, statusFilter === st, 'Click to filter by ' + st + ' status. Click again to clear.')]);
@@ -10301,7 +10557,7 @@ function renderProjects(){
     + '<div id="project-status-tiles" style="margin-top:12px">'
     + statusTiles.map(t => t[1]).join('')
     + '</div>'
-    + '<div class="proj-column"><h2>Projects by Buddy</h2>'
+    + '<div class="proj-column"><h2>' + (scopeSetP ? escHtml(scopeLabel()) : 'Projects by Buddy') + '</h2>'
     + '<div class="proj-search-sentinel" aria-hidden="true"></div>'
     + '<div class="proj-search-sticky"><div class="proj-controls">'
     + '<div class="sb-search-wrap" style="flex:1;min-width:0">'
@@ -10312,7 +10568,7 @@ function renderProjects(){
     + '<button type="button" data-proj-mode="hier" class="'+(projViewMode==='hier'?'sel':'')+'" title="Hierarchical listing">☰</button>'
     + '<button type="button" data-proj-mode="alpha" class="'+(projViewMode==='alpha'?'sel':'')+'" title="Alphabetical listing">A–Z</button>'
     + '</div></div></div>'
-    + '<p class="sub">'+(projViewMode==='alpha'?'Every buddy, A to Z, with its current status.':'Every buddy, in hierarchy order, with its current status.')+'</p><div class="proj-list">';
+    + '<p class="sub">'+(projViewMode==='alpha'?'Every buddy' + (scopeSetP ? ' in ' + scopeLabel() : '') + ', A to Z, with its current status.':'Every buddy' + (scopeSetP ? ' in ' + scopeLabel() : '') + ', in hierarchy order, with its current status.')+'</p><div class="proj-list">';
   // When a tile filter is active, show matching buddies plus their ancestors.
   // Uses idsForFilter so the row count always matches the tile count.
   let showIds = null;
@@ -10333,6 +10589,12 @@ function renderProjects(){
     });
     showIds = showIds ? Object.keys(showIds).filter(id => sm[id]).reduce((o, id) => (o[id] = true, o), {}) : sm;
   }
+  // Scope bound: the scoped set (members + ancestors) limits every row.
+  if (scopeSetP) {
+    const ss = {};
+    scopeSetP.forEach(id => { let x = byId[id]; while (x) { ss[x.id] = true; const p = effParent(x); x = p ? byId[p] : null; } });
+    showIds = showIds ? Object.keys(showIds).filter(id => ss[id]).reduce((o, id) => (o[id] = true, o), {}) : ss;
+  }
   const projRowHtml = b => '<div class="proj-row" data-buddy="' + b.id + '">'
       + '<div class="proj-row-head">'
       + '<span class="parrow leaf" aria-hidden="true"></span>'
@@ -10344,7 +10606,7 @@ function renderProjects(){
   if (projViewMode === 'alpha') {
     // Flat A-Z listing; search/tile filters narrow the set
     Object.values(byId)
-      .filter(b => !showIds || showIds[b.id])
+      .filter(b => inScopeP(b) && (!showIds || showIds[b.id]))
       .sort((a, b) => dispName(a).toLowerCase().localeCompare(dispName(b).toLowerCase()))
       .forEach(b => { s += projRowHtml(b); });
   } else {
@@ -11138,7 +11400,7 @@ function renderPlan(id){
     + '<p class="fineprint">Saved on this device. (For your eyes only)</p></div>'
     + '<div class="bp-sec"><h3>📝 Shared notes<span class="info-tip" data-tip="Visible to everyone with access to this project.">\u24d8</span></h3><textarea class="notes" id="bp-shared" placeholder="Shared notes\u2026 (visible to everyone with access)">'+escHtml((S.planShared||{})[id]||'')+'</textarea>'
     + '<p class="fineprint">Shared — visible to everyone with access.</p></div>'
-    + '<div class="bp-build">Build 20261115.0729</div>'
+    + '<div class="bp-build">Build 20261115.1147</div>'
     + '</div>';
   const nt = document.getElementById('bp-notes');
   let t = null;
@@ -11163,25 +11425,40 @@ function navState(){
   const vb = (typeof document !== 'undefined') ? document.getElementById('view-buddy') : null;
   return {
     sel: S.sel, projectId: S.projectId, view: S.view,
+    scope: S.scope || 'all', homeMode: S.homeMode || 'single',
     chartType: S.chartType || null,
     panel: !!(vb && vb.classList.contains('active'))
   };
 }
 function sameNavState(a, b){
   return !!(a && b && a.sel === b.sel && a.projectId === b.projectId &&
-    a.view === b.view && (a.chartType || null) === (b.chartType || null) &&
+    a.view === b.view && (a.scope || 'all') === (b.scope || 'all') &&
+    (a.homeMode || 'single') === (b.homeMode || 'single') &&
+    (a.chartType || null) === (b.chartType || null) &&
     !!a.panel === !!b.panel);
 }
+/* Scope x View: deep links carry both values (?scope=favorites&view=atlas)
+   alongside the hash route, so a composed state is shareable + restorable. */
+function stateQuery(){
+  const p = new URLSearchParams();
+  if (S.scope && S.scope !== 'all') p.set('scope', S.scope);
+  if (S.scope === 'search' && S.scopeQuery) p.set('q', S.scopeQuery);
+  const vm = {project: 'homepage', tree: 'atlas', orgchart: 'orgchart', projects: 'list'}[S.view];
+  if (vm) p.set('view', vm);
+  const q = p.toString();
+  return q ? '?' + q : '';
+}
+function navUrl(sel){ try { return location.pathname + stateQuery() + hashFor(sel); } catch (e) { return hashFor(sel); } }
 function pushNavState(){
   if (suppressHist) return;
   try {
     const st = navState();
     if (sameNavState(history.state, st)) return; // no duplicate consecutive entries
-    history.pushState(st, '', hashFor(S.sel));
+    history.pushState(st, '', navUrl(S.sel));
   } catch (e) {}
 }
 function replaceNavState(){
-  try { history.replaceState(navState(), '', hashFor(S.sel)); } catch (e) {}
+  try { history.replaceState(navState(), '', navUrl(S.sel)); } catch (e) {}
 }
 document.addEventListener('keydown', e => {
   // / focuses buddy search, N creates new buddy (when not typing in a field)
@@ -11264,9 +11541,9 @@ document.addEventListener('keydown', e => {
   }
   if (e.key >= '1' && e.key <= '9') {
     const idx = parseInt(e.key, 10) - 1;
-    const btns = Array.from(document.querySelectorAll('#sidebar .navbtn[data-view]'));
+    const btns = Array.from(document.querySelectorAll('#canvas-bar [data-cview]'));
     const btn = btns[idx];
-    if (btn && btn.dataset.view) { show('view:' + btn.dataset.view); e.preventDefault(); }
+    if (btn && btn.dataset.cview) { setCompView(btn.dataset.cview); e.preventDefault(); }
   }
   // I or Return toggles the right-side detail panel for the selected buddy
   if (e.key === 'i' || e.key === 'I' || e.key === 'Enter') {
@@ -11284,8 +11561,12 @@ function show(sel, push){
   /* Center-on-buddy (Dave 2026-10-15): remember the buddy we're coming from so
      switching to the Atlas view can center on it. */
   const prevBuddy = (S.sel && typeof S.sel === 'string' && S.sel.indexOf('buddy:') === 0) ? S.sel.slice(6) : null;
+  /* Scope x View: legacy collection-view destinations (old links,
+     saved state) land on their scope with the List presentation. */
+  if (sel === 'view:flagged' || sel === 'view:favorites') { S.scope = sel.slice(5); sel = 'view:projects'; }
   S.sel = sel;
   if (sel.indexOf('view:') === 0) S.view = sel.slice(5);
+  if (sel.indexOf('view:') === 0 && isCompView(sel.slice(5))) S.lastCompView = sel.slice(5);
   syncRailCurView();
   // Selecting a buddy (by any means) also makes it the homepage buddy, so the
   // homepage/project view follows the selection (Dave 2026-10-14).
@@ -11323,10 +11604,9 @@ function show(sel, push){
       if (ev) ev.classList.add('active');
       if (sel === 'view:changelog') renderChangelog();
       if (sel === 'view:releases') renderReleases();
-      if (sel === 'view:flagged') renderFlagged();
-      if (sel === 'view:favorites') renderFavorites();
       if (sel === 'view:orgchart') renderOrgChart();
-      if (sel === 'view:tree') requestAnimationFrame(() => {
+      if (sel === 'view:projects') renderProjects();
+      if (sel === 'view:tree') { renderOrgTree(); requestAnimationFrame(() => {
         // Init renders the tree while display:none (scrollWidth reads 0), so
         // re-measure once visible. Coming from a buddy: center on it
         // (Dave 2026-10-15). Otherwise restore the persisted scroll position.
@@ -11335,7 +11615,7 @@ function show(sel, push){
         if (!(prevBuddy && byId[prevBuddy] && centerOnBuddy(prevBuddy)))
           restoreScrollPos('tree:main', document.getElementById('treezoom-main'));
         restoreScrollPos('tree:orph', document.getElementById('treezoom-orph'));
-      });
+      }); }
     } else if (sel.startsWith('plan:')) {
       closeDetail();
       vb.style.width = '';
@@ -11443,9 +11723,9 @@ document.addEventListener('keydown', e => {
   if (e.key === '-' || e.key === '_') { S.zoom = Math.max(5, (S.zoom || 100) - 5); save(); applyZoom(); return; }
   if (e.key === '0') { zoomToFit(); return; }
   if (/^[1-9]$/.test(e.key)) {
-    const vbtns = Array.from(document.querySelectorAll('#view-nav .navbtn[data-view]'));
+    const vbtns = Array.from(document.querySelectorAll('#canvas-bar [data-cview]'));
     const vi = parseInt(e.key, 10) - 1;
-    if (vi < vbtns.length) { e.preventDefault(); show('view:' + vbtns[vi].dataset.view); }
+    if (vi < vbtns.length) { e.preventDefault(); setCompView(vbtns[vi].dataset.cview); }
     return;
   }
   // Homepage Prev/Next (Dave 2026-10-19): on a buddy homepage, Left/Right
@@ -13790,13 +14070,14 @@ function normalizeSbSections(){
   order.forEach(id => {
     const s = document.getElementById(id);
     if (!s) return;
+    if (id === 'scope-sec') return; /* Scope x View: pinned above the roster - never reordered */
     if (id === 'views-sec') { if (jar) sb.insertBefore(s, jar); else sb.appendChild(s); }
     else if (scroller) scroller.appendChild(s);
   });
   if (views && jar && views.parentElement === sb) sb.insertBefore(views, jar);
 }
 function saveNavSecOrder(){
-  S.navSecOrder = [...document.querySelectorAll('#sidebar .nav-sec')].map(s => s.id);
+  S.navSecOrder = [...document.querySelectorAll('#sidebar .nav-sec')].map(s => s.id).filter(id => id !== 'scope-sec');
   save();
 }
 function initNavSecDnD(){
@@ -13807,6 +14088,7 @@ function initNavSecDnD(){
   const clearHints = () => sb.querySelectorAll('.nav-sec').forEach(s => s.classList.remove('sec-drop-before', 'sec-drop-after'));
   const finePointer = !(window.matchMedia && window.matchMedia('(pointer:coarse)').matches);
   sb.querySelectorAll('.nav-sec > h3').forEach(h => {
+    if (h.closest('#scope-sec')) return;
     /* Drag-reorder is a mouse idiom. On touch devices the headers stay
        plain tap targets: an HTML5-draggable header lets iOS route the
        touch into drag/callout handling instead of the click, which is
@@ -15049,14 +15331,14 @@ function openWhatsNew(){
     .then(r => r.ok ? r.text() : '')
     .then(t => {
       const serverBuild = t.trim();
-      if (serverBuild && serverBuild !== '20261115.0729') {
+      if (serverBuild && serverBuild !== '20261115.1147') {
         updBtn.style.display = '';
         updBtn.title = 'Update to build ' + serverBuild;
       }
       // Show build numbers at the top of the sheet (Dave's request 2026-10-12)
-      const myBuild = '20261115.0729';
+      const myBuild = '20261115.1147';
       let buildLine = '<p class="fineprint" style="margin-top:0">You’re on build ' + escHtml(myBuild) + '.';
-      if (serverBuild && serverBuild !== '20261115.0729' && isNewerBuild(serverBuild, myBuild)) {
+      if (serverBuild && serverBuild !== '20261115.1147' && isNewerBuild(serverBuild, myBuild)) {
         buildLine += ' Build ' + escHtml(serverBuild) + ' is available.';
       }
       buildLine += '</p>';
@@ -15126,7 +15408,7 @@ function syncUpdateBanner(){
   if (b.dataset.state !== state) b.dataset.state = state;
 }
 function initVersionCheck(){
-  const myBuild = '20261115.0729';
+  const myBuild = '20261115.1147';
   function showUpdateBanner(serverBuild){
     if (document.getElementById('update-banner')) return;
     const b = document.createElement('div');
@@ -15405,12 +15687,19 @@ function initSearch(){
       rows[acHot].scrollIntoView({block: 'nearest'});
     };
     bs.addEventListener('input', () => {
+      /* Scope x View: typing makes the search the scope (a temporary
+         one); clearing it restores the scope it replaced. */
+      if (bs.value.trim()) { if (S.scope !== 'search') S.prevScope = S.scope || 'all'; S.scope = 'search'; S.scopeQuery = bs.value; }
+      else if (S.scope === 'search') { S.scope = S.prevScope || 'all'; S.scopeQuery = ''; }
       S.buddySearch = bs.value; save(); // Dave 2026-10-15: retain filter across refresh
       renderNav();
       acRender();
       // Atlas view follows the buddy-list filter (Dave's request 2026-10-12)
       if (S.view === 'tree' || S.sel === 'view:tree') renderOrgTree();
       if (S.sel === 'view:tree') { const m = firstSearchMatch(); if (m) centerOnBuddy(m, true); }
+      if (S.view === 'orgchart') renderOrgChart();
+      if (S.view === 'projects') renderProjects();
+      if (S.view === 'project' && S.homeMode === 'gallery') renderProjectView();
     });
     bs.addEventListener('keydown', (e) => {
       if (!ac || ac.hidden) return;
@@ -15739,12 +16028,38 @@ document.addEventListener('click', e => {
   // Dave 2026-10-18: tap a document card to view the PDF inside the dashboard.
   const dc = e.target.closest('.doc-card');
   if (dc && dc.dataset.pdf) { openPdfViewer(dc.dataset.pdf, dc.dataset.pdfname, dc.dataset.api); return; }
+  /* Scope x View branches (2026-11-15): scope rows, the canvas view
+     switch, the breadcrumb clear/back chips, gallery cards, and the
+     rail popover's scope header. */
+  const scb = e.target.closest('[data-scope]');
+  if (scb) { setScope(scb.dataset.scope); return; }
+  const cvb = e.target.closest('[data-cview]');
+  if (cvb) { setCompView(cvb.dataset.cview); return; }
+  const csb = e.target.closest('[data-clear-scope]');
+  if (csb) {
+    if (S.scope === 'search') { const bsEl = document.getElementById('buddy-search'); if (bsEl) { bsEl.value = ''; bsEl.dispatchEvent(new Event('input', {bubbles: true})); } }
+    else setScope('all');
+    return;
+  }
+  const cbb = e.target.closest('[data-cb-back]');
+  if (cbb) { show('view:' + (S.lastCompView || 'tree')); return; }
+  const gbk = e.target.closest('[data-gal-back]');
+  if (gbk) { S.homeMode = 'gallery'; save(); renderProjectView(); renderCanvasHeader(); return; }
+  const gal = e.target.closest('[data-gal]');
+  if (gal && !e.target.closest('[data-buddy-info]')) { S.homeFromGallery = S.scope || 'all'; S.homeMode = 'single'; selectProject(gal.dataset.gal); renderCanvasHeader(); return; }
+  const rsh = e.target.closest('#rv-scopehead');
+  if (rsh) { closeRailViewPop(); setSidebarOpen(true); return; }
   const vb = e.target.closest('[data-view]');
   if (vb) {
     // "All buddies" from the info panel: remember the buddy so the projects
     // view can scroll to and highlight it — you don't lose your place.
     const fromPanel = vb.id === 'bp-allbuddies' || (vb.dataset.view === 'projects' && S.sel && S.sel.startsWith('buddy:'));
     if (fromPanel && S.sel && S.sel.startsWith('buddy:')) pendingHighlight = S.sel.slice(6);
+    /* Scope x View: the panel's "All buddies" clears the scope rather
+       than navigating - the List then shows the whole tree. */
+    if (fromPanel) setScope('all');
+    const fsv = document.getElementById('field-settings');
+    if (fsv && vb.closest('#field-settings')) fsv.classList.remove('show');
     show('view:' + vb.dataset.view);
     // Dave 2026-10-14: rail icons only switch the main view — the top
     // rail control (‹/›) is the expand/collapse affordance.
@@ -16019,6 +16334,22 @@ refreshViews();
   // Dave 2026-10-15: seed the initial history.state so the first back/forward
   // traversal carries a state object (replaceState = no extra entry).
   const incomingHash = locHash();
+  /* Scope x View deep links: ?scope=<scope>&view=<view> (plus &q= for a
+     search scope) restore a composed state directly, ahead of the
+     cold-start Homepage landing. */
+  let deepComp = false, deepGallery = false;
+  try {
+    const qp = new URLSearchParams(location.search || '');
+    const qScope = qp.get('scope'), qView = qp.get('view'), qQ = qp.get('q');
+    const vmap = {homepage: 'project', atlas: 'tree', orgchart: 'orgchart', list: 'projects', project: 'project', tree: 'tree', projects: 'projects'};
+    if (qScope && ['all', 'recents', 'favorites', 'flagged', 'plans', 'search'].indexOf(qScope) >= 0) {
+      S.scope = qScope; deepComp = true;
+      if (qScope === 'search') { S.scopeQuery = qQ || ''; const bs0 = document.getElementById('buddy-search'); if (bs0 && qQ) bs0.value = qQ; }
+    }
+    if (qView && vmap[qView]) { S.view = vmap[qView]; if (qView === 'homepage') deepGallery = true; deepComp = true; }
+    if (deepComp && !isCompView(S.view)) S.view = 'tree';
+  } catch (e) {}
+  if (!deepGallery) S.homeMode = 'single';
   try { history.replaceState(navState(), '', incomingHash || hashFor(S.sel || 'view:tree')); } catch (e) {}
   const m = locHash().match(/^#\/(buddy:[^\/]+|view:[^\/]+|plan:[^\/]+)(\/standalone)?$/);
   // Dave 2026-10-30: a cold start lands on the Homepage view, wherever he
@@ -16028,10 +16359,11 @@ refreshViews();
   // object selections, standalone links, and the phone buddy landing
   // still route as before; in-session navigation (hashchange, popstate,
   // view clicks) is untouched.
-  if (m) { document.body.classList.toggle('standalone', !!m[2]); if (!m[2] && m[1].indexOf('view:') === 0) firstOpenLanding(); else if (m[1].indexOf('buddy:') === 0 && !m[2] && isDrawerNav()) phoneBuddyLanding(m[1].slice(6)); else show(m[1], false); }
+  if (m) { document.body.classList.toggle('standalone', !!m[2]); if (!m[2] && m[1].indexOf('view:') === 0) { if (deepComp) show('view:' + S.view, false); else firstOpenLanding(); } else if (m[1].indexOf('buddy:') === 0 && !m[2] && isDrawerNav()) phoneBuddyLanding(m[1].slice(6)); else show(m[1], false); }
   else if (isDrawerNav() && S.sel && S.sel.indexOf('buddy:') === 0 && !document.body.classList.contains('standalone')) phoneBuddyLanding(S.sel.slice(6));
-  else if (document.body.classList.contains('first-open')) firstOpenLanding();
+  else if (document.body.classList.contains('first-open')) { if (deepComp) show('view:' + S.view, false); else firstOpenLanding(); }
   else if (S.sel && S.sel.indexOf('view:') !== 0) show(S.sel, false);
+  else if (deepComp) show('view:' + S.view, false);
   else firstOpenLanding();
   window.addEventListener('hashchange', () => {
     const mm = locHash().match(/^#\/(buddy:[^\/]+|view:[^\/]+|plan:[^\/]+)(\/standalone)?$/);
@@ -16050,6 +16382,8 @@ refreshViews();
       try {
         if (st.projectId && byId[st.projectId]) S.projectId = st.projectId;
         if (st.view) S.view = st.view;
+        if (st.scope) S.scope = st.scope;
+        if (st.homeMode) S.homeMode = st.homeMode;
         if (st.chartType) S.chartType = st.chartType;
         save();
         show(st.sel, false);

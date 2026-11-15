@@ -124,10 +124,28 @@ Build: `build.py` generates `index.html` from `buddies.json` + `plans.json`.
 
 ## Sidebar
 
-- **Main views** — Tree, Projects, Business Plans, Manifest, Project,
-  Changelog; order is user-rearrangeable in settings (gear icon) and is the single source of truth — the sidebar sections and the collapsed rail's current-view popover both render in that order (within their Views / Collections grouping). Number
-  keys 1–6 select views in that order; Up/Down arrow through views then
-  buddies.
+- **Scope × View (Dave 2026-11-15, from Jonny's crit)** — the canvas is a
+  composition of two independent values: a **Scope** (All buddies ·
+  Recents · Favorites · Flagged · Business Plans · the current search)
+  and a **View** (Homepage · Atlas · Org Chart · List). The canvas
+  always renders view(scope); either can change without disturbing the
+  other, and the scope persists across view changes and panel visits.
+  The sidebar is scope-only: search first (typing makes the search the
+  scope; clearing restores the previous one), then the scope rows with
+  live counts, then the scope's roster (the hierarchy for All, flat rows
+  for a collection). The canvas header carries the composition as a
+  breadcrumb ("Favorites · Homepage — 2 buddies", × clears the scope)
+  plus the segmented view switch; number keys 1–4 follow the switch
+  order. "Projects" is rehoused as the **List** view; the Homepage view
+  opens as a gallery of the scope's homepage cards (tap → full
+  homepage, Back returns to the gallery, scope intact); Atlas hides
+  out-of-scope records (a "Show context" toggle ghosts them); the Org
+  Chart shows out-of-scope ancestors as muted context nodes. Manifest,
+  Change Log and Release Notes are system documents — they live in the
+  Settings sheet and the rail popover's System group, not in the
+  sidebar. Deep links carry both values (`?scope=favorites&view=atlas`),
+  and the buddy panel's "All buddies" clears the scope instead of
+  navigating. The rail popover's header names the current scope.
 - **Org Chart view zoom** — the Org Chart opens fitted to the whole staff (on a phone-width viewport the fit fills the height instead and the width pans, with a compact title + one-line header that clears the rail cluster; Dave 2026-10-30);
   a cluster that starts at the top-right of the chart viewport zooms −/+
   (×1.25), Fit, and 100% with a live % readout. Its dot gripper drags the
@@ -136,29 +154,14 @@ Build: `build.py` generates `index.html` from `buddies.json` + `plans.json`.
   its own. Shift+scroll and pinch zoom on the pointer, background drags
   pan, + / − / 0 work on the keyboard while the view is active, and
   zoom/pan persist per device (10–300%).
-- **Views surface** — the sidebar's Views section (and the rail's
-  view-picker popover) sit on solid `--hover`, one surface step off the
-  buddy list's `--panel`, in both themes. Views and the Tip Jar form the
-  sidebar's pinned footer — anchored to the panel's bottom in every
-  collapse state while the sections above scroll in their own region;
-  resizing Views is absorbed by that scroll region, never by the Tip Jar. Collections carries the same drag-resize strip above its header (Dave 2026-10-29 — it originally shipped with no handle), its height persisted per device. Both drags start from the section's rendered height, so a stored cap left over from a taller-content era never leaves a dead zone (Dave's dead-grip fix, 2026-10-30). Section headers are tap targets first: on touch devices they are not HTML5-draggable (drag-reorder arms only with a fine pointer), suppress the touch callout/selection, and the resize strips' invisible hit zone reaches only 3px above the strip so it can never sit over a neighboring header (Dave's untappable-Buddies-header fix, 2026-10-30).
-  The panel's navigation splits in two (Dave 2026-10-28): **Views**
-  (Homepage, Atlas, Org Chart, Projects, Manifest, Change Log, Release
-  Notes) and a separate **Collections** section (Favorites, Flagged,
-  Business Plans — gathered sets of specific objects, not ways of looking
-  at the tree), each collapsible and grip-reorderable within its own group;
-  the rail's view popover groups its list under the
-  same two headings. Picking a buddy from the Recents popover only selects
-  it — an open info panel follows the selection; a closed one stays closed
-  until opened. The buddy panel's list is two tabs (Dave 2026-10-28):
-  **Buddies** (the hierarchy) and **Recents** — every buddy visit on
-  record, most recent first, as flat rows with the tree rows' behavior;
-  the visit record keeps the last 200 visits, and the search field filters
-  whichever tab is showing. Each arrival also increments a per-device
-  visit counter (S.buddyOpens), which Astro's homepage renders as a
-  "Most used buddies" leaderboard (top 12 bars, live from the store);
-  the counter starts fresh — no backfilled history — and counts
-  dashboard visits only, not side-chat activity.
+- **Recents + visit counter** — picking a buddy from the Recents popover
+  only selects it — an open info panel follows the selection; a closed
+  one stays closed until opened. Every buddy visit is recorded (the
+  store keeps the last 200 visits), and each arrival increments a
+  per-device visit counter (S.buddyOpens), which Astro's homepage
+  renders as a "Most used buddies" leaderboard (top 12 bars, live from
+  the store); the counter counts dashboard visits only, not side-chat
+  activity.
 - **Escape closes the panels** — ESC dismisses transient UI first
   (popovers, menus, the field-settings sheet — one per press), then closes
   the info panel and the buddy panel together, from any focus location,
@@ -167,9 +170,9 @@ Build: `build.py` generates `index.html` from `buddies.json` + `plans.json`.
   its contents: exactly five controls, top to bottom — the expand
   chevron, Recents (the same recent-buddies popover the panel header's
   Recents button opens), Settings, Find, then the rail's single divider,
-  then the current-view icon (a view picker; its popover's Collections
-  group is where Business Plans lives — the rail's own 💼 shortcut was
-  retired as redundant, Dave 2026-10-28). (Dave's reorder, 2026-10-28: in the expanded
+  then the current-view icon (a view picker; its popover opens with the
+  current scope's name and lists the four views plus the system
+  documents). (Dave's reorder, 2026-10-28: in the expanded
   panel's header tools the order is Settings, Recents, collapse chevron.)
   Every icon visible, no trailing void below the
   last one. On a viewport too short for the stack, the rail caps at the
