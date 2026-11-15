@@ -565,8 +565,14 @@ window.NBVoice = (function(){
     NBVoice.openPicker(fn);
   }
   function storyControls(h3){
-    var c = h3.querySelector('.story-controls');
-    if (!c) { c = document.createElement('span'); c.className = 'story-controls'; h3.appendChild(c); }
+    /* Controls live in the card's .card-top row above the headline, NOT in
+       the h3 (Dave fix, 2026-11-15: controls inside the flex h3 squeezed
+       headlines into a narrow column on phone-width cards). */
+    var card = h3.closest('article.story, .storyitem') || h3.parentNode;
+    var row = card ? card.querySelector('.card-top') : null;
+    if (!row) { row = document.createElement('div'); row.className = 'card-top'; h3.parentNode.insertBefore(row, h3); }
+    var c = row.querySelector('.story-controls');
+    if (!c) { c = document.createElement('span'); c.className = 'story-controls'; row.appendChild(c); }
     return c;
   }
   function playStory(el, btn){
@@ -785,8 +791,10 @@ window.NBVoice = (function(){
       });
       return b;
     }
-    var vc = h3.querySelector('.story-controls');
-    if (!vc) { vc = document.createElement('span'); vc.className = 'story-controls'; h3.appendChild(vc); }
+    var row = article.querySelector('.card-top');
+    if (!row) { row = document.createElement('div'); row.className = 'card-top'; article.insertBefore(row, h3); }
+    var vc = row.querySelector('.story-controls');
+    if (!vc) { vc = document.createElement('span'); vc.className = 'story-controls'; row.appendChild(vc); }
     vc.appendChild(mk('up', 'More like this', '\uD83D\uDC4D', 1));
     vc.appendChild(mk('dn', 'Less like this', '\uD83D\uDC4E', -1));
     paint(article);

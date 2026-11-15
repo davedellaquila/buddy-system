@@ -178,12 +178,10 @@
   .voice-change{background:transparent;color:var(--muted);border:1px solid var(--rule);border-radius:8px;padding:7px 10px;font-size:13px;cursor:pointer;-webkit-tap-highlight-color:transparent;margin-left:8px}
   .voice-change:hover{border-color:var(--accent);color:var(--accent)}
   article.story.clickable{cursor:pointer}
-  /* ---------- story controls row: headline wraps, controls pinned top-right ---------- */
-  article.story h3{display:flex;align-items:flex-start;gap:8px}
-  article.story h3>a:first-child{flex:1 1 auto;min-width:0}
-  article.story h3>span.h{flex:1 1 auto;min-width:0}
-  article.story h3 .thin{flex:none;align-self:center}
-  .story-controls{flex:none;display:flex;align-items:center;gap:6px;margin-left:auto;padding-top:1px}
+  /* ---------- story controls row: badge + listen/vote controls on their own slim row ABOVE the headline (Dave fix, 2026-11-15 — the old flex h3 squeezed headlines into a narrow column on phone-width cards; the headline now spans the full card width on its own) ---------- */
+  .card-top{display:flex;align-items:center;justify-content:flex-end;gap:6px;margin:0 0 5px;min-height:26px}
+  .card-top .thin{flex:none}
+  .story-controls{flex:none;display:flex;align-items:center;gap:6px}
   .story-controls .story-listen,.story-controls .story-vote{margin-left:0}
   .story-thumb{float:right;width:132px;height:96px;object-fit:cover;border-radius:8px;margin:2px 0 8px 12px;background:var(--rule)}
   .no-thumbs .story-thumb{display:none}
@@ -246,992 +244,6 @@
   .secpage .storyitem h3 a:hover{color:var(--accent)}
   .secpage .lede{font-size:16px;line-height:1.65;color:var(--ink);max-width:70ch;margin:10px 0 6px}
 
-  
-  .sec-head h2 a{color:inherit;text-decoration:none;border-bottom:2px solid transparent}
-  .sec-head h2 a:hover{color:var(--accent);border-bottom-color:var(--accent)}
-  .mini-mast{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 20px;border-bottom:3px double var(--ink);margin-bottom:8px;flex-wrap:wrap}
-  .mini-mast a.brand{font-family:Georgia,'Times New Roman',serif;font-weight:700;font-size:20px;color:var(--ink);text-decoration:none}
-  .mini-mast .ed{font-size:12px;color:var(--muted)}
-  .kicker{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:18px 0 4px}
-  .kicker a{color:var(--accent);text-decoration:none}
-  .detail h1{font-family:Georgia,'Times New Roman',serif;font-size:clamp(26px,5vw,40px);line-height:1.15;margin:6px 0 10px;letter-spacing:-.01em}
-  .detail h4.sec{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--accent);margin:22px 0 6px}
-  .detail p.body{font-size:16px;line-height:1.65;margin:0 0 12px;max-width:68ch}
-  .sourcebox{border:1px solid var(--rule);border-left:4px solid var(--accent);border-radius:8px;padding:12px 16px;margin:18px 0;max-width:68ch}
-  .sourcebox p{font-size:14px;line-height:1.6;margin:6px 0}
-  .sourcebox .flag{display:inline-block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;background:#fde68a;color:#7c2d12;border-radius:4px;padding:2px 8px;margin-bottom:4px}
-  .read-original{display:inline-block;margin:10px 0;padding:10px 20px;background:var(--accent);color:#fff !important;border-radius:8px;font-weight:700;text-decoration:none;font-size:15px}
-  .related{margin-top:28px;border-top:1px solid var(--rule);padding-top:14px}
-  .related h4.sec{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:0 0 10px}
-  .related ul{list-style:none;margin:0;padding:0}
-  .related li{margin:0 0 10px;font-size:15px;line-height:1.45}
-  .related a{color:var(--ink);text-decoration:none;border-bottom:1px solid var(--rule)}
-  .related a:hover{color:var(--accent);border-bottom-color:var(--accent)}
-  .backfoot{margin:30px 0 40px;font-size:14px}
-  .backfoot a{color:var(--accent);text-decoration:none;font-weight:600}
-  .secpage .storyitem{border-bottom:1px solid var(--rule);padding:16px 0}
-  .secpage .storyitem h3{font-size:20px;margin:0 0 6px;line-height:1.3}
-  .secpage .storyitem h3 a{color:var(--ink);text-decoration:none}
-  .secpage .storyitem h3 a:hover{color:var(--accent)}
-  .secpage .lede{font-size:16px;line-height:1.65;color:var(--ink);max-width:70ch;margin:10px 0 6px}
-
-  
-  .sec-head h2 a{color:inherit;text-decoration:none;border-bottom:2px solid transparent}
-  .sec-head h2 a:hover{color:var(--accent);border-bottom-color:var(--accent)}
-  .mini-mast{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 20px;border-bottom:3px double var(--ink);margin-bottom:8px;flex-wrap:wrap}
-  .mini-mast a.brand{font-family:Georgia,'Times New Roman',serif;font-weight:700;font-size:20px;color:var(--ink);text-decoration:none}
-  .mini-mast .ed{font-size:12px;color:var(--muted)}
-  .kicker{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:18px 0 4px}
-  .kicker a{color:var(--accent);text-decoration:none}
-  .detail h1{font-family:Georgia,'Times New Roman',serif;font-size:clamp(26px,5vw,40px);line-height:1.15;margin:6px 0 10px;letter-spacing:-.01em}
-  .detail h4.sec{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--accent);margin:22px 0 6px}
-  .detail p.body{font-size:16px;line-height:1.65;margin:0 0 12px;max-width:68ch}
-  .sourcebox{border:1px solid var(--rule);border-left:4px solid var(--accent);border-radius:8px;padding:12px 16px;margin:18px 0;max-width:68ch}
-  .sourcebox p{font-size:14px;line-height:1.6;margin:6px 0}
-  .sourcebox .flag{display:inline-block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;background:#fde68a;color:#7c2d12;border-radius:4px;padding:2px 8px;margin-bottom:4px}
-  .read-original{display:inline-block;margin:10px 0;padding:10px 20px;background:var(--accent);color:#fff !important;border-radius:8px;font-weight:700;text-decoration:none;font-size:15px}
-  .related{margin-top:28px;border-top:1px solid var(--rule);padding-top:14px}
-  .related h4.sec{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:0 0 10px}
-  .related ul{list-style:none;margin:0;padding:0}
-  .related li{margin:0 0 10px;font-size:15px;line-height:1.45}
-  .related a{color:var(--ink);text-decoration:none;border-bottom:1px solid var(--rule)}
-  .related a:hover{color:var(--accent);border-bottom-color:var(--accent)}
-  .backfoot{margin:30px 0 40px;font-size:14px}
-  .backfoot a{color:var(--accent);text-decoration:none;font-weight:600}
-  .secpage .storyitem{border-bottom:1px solid var(--rule);padding:16px 0}
-  .secpage .storyitem h3{font-size:20px;margin:0 0 6px;line-height:1.3}
-  .secpage .storyitem h3 a{color:var(--ink);text-decoration:none}
-  .secpage .storyitem h3 a:hover{color:var(--accent)}
-  .secpage .lede{font-size:16px;line-height:1.65;color:var(--ink);max-width:70ch;margin:10px 0 6px}
-
-  
-  .sec-head h2 a{color:inherit;text-decoration:none;border-bottom:2px solid transparent}
-  .sec-head h2 a:hover{color:var(--accent);border-bottom-color:var(--accent)}
-  .mini-mast{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 20px;border-bottom:3px double var(--ink);margin-bottom:8px;flex-wrap:wrap}
-  .mini-mast a.brand{font-family:Georgia,'Times New Roman',serif;font-weight:700;font-size:20px;color:var(--ink);text-decoration:none}
-  .mini-mast .ed{font-size:12px;color:var(--muted)}
-  .kicker{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:18px 0 4px}
-  .kicker a{color:var(--accent);text-decoration:none}
-  .detail h1{font-family:Georgia,'Times New Roman',serif;font-size:clamp(26px,5vw,40px);line-height:1.15;margin:6px 0 10px;letter-spacing:-.01em}
-  .detail h4.sec{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--accent);margin:22px 0 6px}
-  .detail p.body{font-size:16px;line-height:1.65;margin:0 0 12px;max-width:68ch}
-  .sourcebox{border:1px solid var(--rule);border-left:4px solid var(--accent);border-radius:8px;padding:12px 16px;margin:18px 0;max-width:68ch}
-  .sourcebox p{font-size:14px;line-height:1.6;margin:6px 0}
-  .sourcebox .flag{display:inline-block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;background:#fde68a;color:#7c2d12;border-radius:4px;padding:2px 8px;margin-bottom:4px}
-  .read-original{display:inline-block;margin:10px 0;padding:10px 20px;background:var(--accent);color:#fff !important;border-radius:8px;font-weight:700;text-decoration:none;font-size:15px}
-  .related{margin-top:28px;border-top:1px solid var(--rule);padding-top:14px}
-  .related h4.sec{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:0 0 10px}
-  .related ul{list-style:none;margin:0;padding:0}
-  .related li{margin:0 0 10px;font-size:15px;line-height:1.45}
-  .related a{color:var(--ink);text-decoration:none;border-bottom:1px solid var(--rule)}
-  .related a:hover{color:var(--accent);border-bottom-color:var(--accent)}
-  .backfoot{margin:30px 0 40px;font-size:14px}
-  .backfoot a{color:var(--accent);text-decoration:none;font-weight:600}
-  .secpage .storyitem{border-bottom:1px solid var(--rule);padding:16px 0}
-  .secpage .storyitem h3{font-size:20px;margin:0 0 6px;line-height:1.3}
-  .secpage .storyitem h3 a{color:var(--ink);text-decoration:none}
-  .secpage .storyitem h3 a:hover{color:var(--accent)}
-  .secpage .lede{font-size:16px;line-height:1.65;color:var(--ink);max-width:70ch;margin:10px 0 6px}
-
-  
-  .sec-head h2 a{color:inherit;text-decoration:none;border-bottom:2px solid transparent}
-  .sec-head h2 a:hover{color:var(--accent);border-bottom-color:var(--accent)}
-  .mini-mast{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 20px;border-bottom:3px double var(--ink);margin-bottom:8px;flex-wrap:wrap}
-  .mini-mast a.brand{font-family:Georgia,'Times New Roman',serif;font-weight:700;font-size:20px;color:var(--ink);text-decoration:none}
-  .mini-mast .ed{font-size:12px;color:var(--muted)}
-  .kicker{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:18px 0 4px}
-  .kicker a{color:var(--accent);text-decoration:none}
-  .detail h1{font-family:Georgia,'Times New Roman',serif;font-size:clamp(26px,5vw,40px);line-height:1.15;margin:6px 0 10px;letter-spacing:-.01em}
-  .detail h4.sec{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--accent);margin:22px 0 6px}
-  .detail p.body{font-size:16px;line-height:1.65;margin:0 0 12px;max-width:68ch}
-  .sourcebox{border:1px solid var(--rule);border-left:4px solid var(--accent);border-radius:8px;padding:12px 16px;margin:18px 0;max-width:68ch}
-  .sourcebox p{font-size:14px;line-height:1.6;margin:6px 0}
-  .sourcebox .flag{display:inline-block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;background:#fde68a;color:#7c2d12;border-radius:4px;padding:2px 8px;margin-bottom:4px}
-  .read-original{display:inline-block;margin:10px 0;padding:10px 20px;background:var(--accent);color:#fff !important;border-radius:8px;font-weight:700;text-decoration:none;font-size:15px}
-  .related{margin-top:28px;border-top:1px solid var(--rule);padding-top:14px}
-  .related h4.sec{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:0 0 10px}
-  .related ul{list-style:none;margin:0;padding:0}
-  .related li{margin:0 0 10px;font-size:15px;line-height:1.45}
-  .related a{color:var(--ink);text-decoration:none;border-bottom:1px solid var(--rule)}
-  .related a:hover{color:var(--accent);border-bottom-color:var(--accent)}
-  .backfoot{margin:30px 0 40px;font-size:14px}
-  .backfoot a{color:var(--accent);text-decoration:none;font-weight:600}
-  .secpage .storyitem{border-bottom:1px solid var(--rule);padding:16px 0}
-  .secpage .storyitem h3{font-size:20px;margin:0 0 6px;line-height:1.3}
-  .secpage .storyitem h3 a{color:var(--ink);text-decoration:none}
-  .secpage .storyitem h3 a:hover{color:var(--accent)}
-  .secpage .lede{font-size:16px;line-height:1.65;color:var(--ink);max-width:70ch;margin:10px 0 6px}
-
-  
-  .sec-head h2 a{color:inherit;text-decoration:none;border-bottom:2px solid transparent}
-  .sec-head h2 a:hover{color:var(--accent);border-bottom-color:var(--accent)}
-  .mini-mast{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 20px;border-bottom:3px double var(--ink);margin-bottom:8px;flex-wrap:wrap}
-  .mini-mast a.brand{font-family:Georgia,'Times New Roman',serif;font-weight:700;font-size:20px;color:var(--ink);text-decoration:none}
-  .mini-mast .ed{font-size:12px;color:var(--muted)}
-  .kicker{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:18px 0 4px}
-  .kicker a{color:var(--accent);text-decoration:none}
-  .detail h1{font-family:Georgia,'Times New Roman',serif;font-size:clamp(26px,5vw,40px);line-height:1.15;margin:6px 0 10px;letter-spacing:-.01em}
-  .detail h4.sec{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--accent);margin:22px 0 6px}
-  .detail p.body{font-size:16px;line-height:1.65;margin:0 0 12px;max-width:68ch}
-  .sourcebox{border:1px solid var(--rule);border-left:4px solid var(--accent);border-radius:8px;padding:12px 16px;margin:18px 0;max-width:68ch}
-  .sourcebox p{font-size:14px;line-height:1.6;margin:6px 0}
-  .sourcebox .flag{display:inline-block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;background:#fde68a;color:#7c2d12;border-radius:4px;padding:2px 8px;margin-bottom:4px}
-  .read-original{display:inline-block;margin:10px 0;padding:10px 20px;background:var(--accent);color:#fff !important;border-radius:8px;font-weight:700;text-decoration:none;font-size:15px}
-  .related{margin-top:28px;border-top:1px solid var(--rule);padding-top:14px}
-  .related h4.sec{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:0 0 10px}
-  .related ul{list-style:none;margin:0;padding:0}
-  .related li{margin:0 0 10px;font-size:15px;line-height:1.45}
-  .related a{color:var(--ink);text-decoration:none;border-bottom:1px solid var(--rule)}
-  .related a:hover{color:var(--accent);border-bottom-color:var(--accent)}
-  .backfoot{margin:30px 0 40px;font-size:14px}
-  .backfoot a{color:var(--accent);text-decoration:none;font-weight:600}
-  .secpage .storyitem{border-bottom:1px solid var(--rule);padding:16px 0}
-  .secpage .storyitem h3{font-size:20px;margin:0 0 6px;line-height:1.3}
-  .secpage .storyitem h3 a{color:var(--ink);text-decoration:none}
-  .secpage .storyitem h3 a:hover{color:var(--accent)}
-  .secpage .lede{font-size:16px;line-height:1.65;color:var(--ink);max-width:70ch;margin:10px 0 6px}
-
-  
-  .sec-head h2 a{color:inherit;text-decoration:none;border-bottom:2px solid transparent}
-  .sec-head h2 a:hover{color:var(--accent);border-bottom-color:var(--accent)}
-  .mini-mast{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 20px;border-bottom:3px double var(--ink);margin-bottom:8px;flex-wrap:wrap}
-  .mini-mast a.brand{font-family:Georgia,'Times New Roman',serif;font-weight:700;font-size:20px;color:var(--ink);text-decoration:none}
-  .mini-mast .ed{font-size:12px;color:var(--muted)}
-  .kicker{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:18px 0 4px}
-  .kicker a{color:var(--accent);text-decoration:none}
-  .detail h1{font-family:Georgia,'Times New Roman',serif;font-size:clamp(26px,5vw,40px);line-height:1.15;margin:6px 0 10px;letter-spacing:-.01em}
-  .detail h4.sec{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--accent);margin:22px 0 6px}
-  .detail p.body{font-size:16px;line-height:1.65;margin:0 0 12px;max-width:68ch}
-  .sourcebox{border:1px solid var(--rule);border-left:4px solid var(--accent);border-radius:8px;padding:12px 16px;margin:18px 0;max-width:68ch}
-  .sourcebox p{font-size:14px;line-height:1.6;margin:6px 0}
-  .sourcebox .flag{display:inline-block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;background:#fde68a;color:#7c2d12;border-radius:4px;padding:2px 8px;margin-bottom:4px}
-  .read-original{display:inline-block;margin:10px 0;padding:10px 20px;background:var(--accent);color:#fff !important;border-radius:8px;font-weight:700;text-decoration:none;font-size:15px}
-  .related{margin-top:28px;border-top:1px solid var(--rule);padding-top:14px}
-  .related h4.sec{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:0 0 10px}
-  .related ul{list-style:none;margin:0;padding:0}
-  .related li{margin:0 0 10px;font-size:15px;line-height:1.45}
-  .related a{color:var(--ink);text-decoration:none;border-bottom:1px solid var(--rule)}
-  .related a:hover{color:var(--accent);border-bottom-color:var(--accent)}
-  .backfoot{margin:30px 0 40px;font-size:14px}
-  .backfoot a{color:var(--accent);text-decoration:none;font-weight:600}
-  .secpage .storyitem{border-bottom:1px solid var(--rule);padding:16px 0}
-  .secpage .storyitem h3{font-size:20px;margin:0 0 6px;line-height:1.3}
-  .secpage .storyitem h3 a{color:var(--ink);text-decoration:none}
-  .secpage .storyitem h3 a:hover{color:var(--accent)}
-  .secpage .lede{font-size:16px;line-height:1.65;color:var(--ink);max-width:70ch;margin:10px 0 6px}
-
-  
-  .sec-head h2 a{color:inherit;text-decoration:none;border-bottom:2px solid transparent}
-  .sec-head h2 a:hover{color:var(--accent);border-bottom-color:var(--accent)}
-  .mini-mast{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 20px;border-bottom:3px double var(--ink);margin-bottom:8px;flex-wrap:wrap}
-  .mini-mast a.brand{font-family:Georgia,'Times New Roman',serif;font-weight:700;font-size:20px;color:var(--ink);text-decoration:none}
-  .mini-mast .ed{font-size:12px;color:var(--muted)}
-  .kicker{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:18px 0 4px}
-  .kicker a{color:var(--accent);text-decoration:none}
-  .detail h1{font-family:Georgia,'Times New Roman',serif;font-size:clamp(26px,5vw,40px);line-height:1.15;margin:6px 0 10px;letter-spacing:-.01em}
-  .detail h4.sec{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--accent);margin:22px 0 6px}
-  .detail p.body{font-size:16px;line-height:1.65;margin:0 0 12px;max-width:68ch}
-  .sourcebox{border:1px solid var(--rule);border-left:4px solid var(--accent);border-radius:8px;padding:12px 16px;margin:18px 0;max-width:68ch}
-  .sourcebox p{font-size:14px;line-height:1.6;margin:6px 0}
-  .sourcebox .flag{display:inline-block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;background:#fde68a;color:#7c2d12;border-radius:4px;padding:2px 8px;margin-bottom:4px}
-  .read-original{display:inline-block;margin:10px 0;padding:10px 20px;background:var(--accent);color:#fff !important;border-radius:8px;font-weight:700;text-decoration:none;font-size:15px}
-  .related{margin-top:28px;border-top:1px solid var(--rule);padding-top:14px}
-  .related h4.sec{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:0 0 10px}
-  .related ul{list-style:none;margin:0;padding:0}
-  .related li{margin:0 0 10px;font-size:15px;line-height:1.45}
-  .related a{color:var(--ink);text-decoration:none;border-bottom:1px solid var(--rule)}
-  .related a:hover{color:var(--accent);border-bottom-color:var(--accent)}
-  .backfoot{margin:30px 0 40px;font-size:14px}
-  .backfoot a{color:var(--accent);text-decoration:none;font-weight:600}
-  .secpage .storyitem{border-bottom:1px solid var(--rule);padding:16px 0}
-  .secpage .storyitem h3{font-size:20px;margin:0 0 6px;line-height:1.3}
-  .secpage .storyitem h3 a{color:var(--ink);text-decoration:none}
-  .secpage .storyitem h3 a:hover{color:var(--accent)}
-  .secpage .lede{font-size:16px;line-height:1.65;color:var(--ink);max-width:70ch;margin:10px 0 6px}
-
-  
-  .sec-head h2 a{color:inherit;text-decoration:none;border-bottom:2px solid transparent}
-  .sec-head h2 a:hover{color:var(--accent);border-bottom-color:var(--accent)}
-  .mini-mast{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 20px;border-bottom:3px double var(--ink);margin-bottom:8px;flex-wrap:wrap}
-  .mini-mast a.brand{font-family:Georgia,'Times New Roman',serif;font-weight:700;font-size:20px;color:var(--ink);text-decoration:none}
-  .mini-mast .ed{font-size:12px;color:var(--muted)}
-  .kicker{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:18px 0 4px}
-  .kicker a{color:var(--accent);text-decoration:none}
-  .detail h1{font-family:Georgia,'Times New Roman',serif;font-size:clamp(26px,5vw,40px);line-height:1.15;margin:6px 0 10px;letter-spacing:-.01em}
-  .detail h4.sec{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--accent);margin:22px 0 6px}
-  .detail p.body{font-size:16px;line-height:1.65;margin:0 0 12px;max-width:68ch}
-  .sourcebox{border:1px solid var(--rule);border-left:4px solid var(--accent);border-radius:8px;padding:12px 16px;margin:18px 0;max-width:68ch}
-  .sourcebox p{font-size:14px;line-height:1.6;margin:6px 0}
-  .sourcebox .flag{display:inline-block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;background:#fde68a;color:#7c2d12;border-radius:4px;padding:2px 8px;margin-bottom:4px}
-  .read-original{display:inline-block;margin:10px 0;padding:10px 20px;background:var(--accent);color:#fff !important;border-radius:8px;font-weight:700;text-decoration:none;font-size:15px}
-  .related{margin-top:28px;border-top:1px solid var(--rule);padding-top:14px}
-  .related h4.sec{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:0 0 10px}
-  .related ul{list-style:none;margin:0;padding:0}
-  .related li{margin:0 0 10px;font-size:15px;line-height:1.45}
-  .related a{color:var(--ink);text-decoration:none;border-bottom:1px solid var(--rule)}
-  .related a:hover{color:var(--accent);border-bottom-color:var(--accent)}
-  .backfoot{margin:30px 0 40px;font-size:14px}
-  .backfoot a{color:var(--accent);text-decoration:none;font-weight:600}
-  .secpage .storyitem{border-bottom:1px solid var(--rule);padding:16px 0}
-  .secpage .storyitem h3{font-size:20px;margin:0 0 6px;line-height:1.3}
-  .secpage .storyitem h3 a{color:var(--ink);text-decoration:none}
-  .secpage .storyitem h3 a:hover{color:var(--accent)}
-  .secpage .lede{font-size:16px;line-height:1.65;color:var(--ink);max-width:70ch;margin:10px 0 6px}
-
-  
-  .sec-head h2 a{color:inherit;text-decoration:none;border-bottom:2px solid transparent}
-  .sec-head h2 a:hover{color:var(--accent);border-bottom-color:var(--accent)}
-  .mini-mast{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 20px;border-bottom:3px double var(--ink);margin-bottom:8px;flex-wrap:wrap}
-  .mini-mast a.brand{font-family:Georgia,'Times New Roman',serif;font-weight:700;font-size:20px;color:var(--ink);text-decoration:none}
-  .mini-mast .ed{font-size:12px;color:var(--muted)}
-  .kicker{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:18px 0 4px}
-  .kicker a{color:var(--accent);text-decoration:none}
-  .detail h1{font-family:Georgia,'Times New Roman',serif;font-size:clamp(26px,5vw,40px);line-height:1.15;margin:6px 0 10px;letter-spacing:-.01em}
-  .detail h4.sec{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--accent);margin:22px 0 6px}
-  .detail p.body{font-size:16px;line-height:1.65;margin:0 0 12px;max-width:68ch}
-  .sourcebox{border:1px solid var(--rule);border-left:4px solid var(--accent);border-radius:8px;padding:12px 16px;margin:18px 0;max-width:68ch}
-  .sourcebox p{font-size:14px;line-height:1.6;margin:6px 0}
-  .sourcebox .flag{display:inline-block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;background:#fde68a;color:#7c2d12;border-radius:4px;padding:2px 8px;margin-bottom:4px}
-  .read-original{display:inline-block;margin:10px 0;padding:10px 20px;background:var(--accent);color:#fff !important;border-radius:8px;font-weight:700;text-decoration:none;font-size:15px}
-  .related{margin-top:28px;border-top:1px solid var(--rule);padding-top:14px}
-  .related h4.sec{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:0 0 10px}
-  .related ul{list-style:none;margin:0;padding:0}
-  .related li{margin:0 0 10px;font-size:15px;line-height:1.45}
-  .related a{color:var(--ink);text-decoration:none;border-bottom:1px solid var(--rule)}
-  .related a:hover{color:var(--accent);border-bottom-color:var(--accent)}
-  .backfoot{margin:30px 0 40px;font-size:14px}
-  .backfoot a{color:var(--accent);text-decoration:none;font-weight:600}
-  .secpage .storyitem{border-bottom:1px solid var(--rule);padding:16px 0}
-  .secpage .storyitem h3{font-size:20px;margin:0 0 6px;line-height:1.3}
-  .secpage .storyitem h3 a{color:var(--ink);text-decoration:none}
-  .secpage .storyitem h3 a:hover{color:var(--accent)}
-  .secpage .lede{font-size:16px;line-height:1.65;color:var(--ink);max-width:70ch;margin:10px 0 6px}
-
-  
-  .sec-head h2 a{color:inherit;text-decoration:none;border-bottom:2px solid transparent}
-  .sec-head h2 a:hover{color:var(--accent);border-bottom-color:var(--accent)}
-  .mini-mast{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 20px;border-bottom:3px double var(--ink);margin-bottom:8px;flex-wrap:wrap}
-  .mini-mast a.brand{font-family:Georgia,'Times New Roman',serif;font-weight:700;font-size:20px;color:var(--ink);text-decoration:none}
-  .mini-mast .ed{font-size:12px;color:var(--muted)}
-  .kicker{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:18px 0 4px}
-  .kicker a{color:var(--accent);text-decoration:none}
-  .detail h1{font-family:Georgia,'Times New Roman',serif;font-size:clamp(26px,5vw,40px);line-height:1.15;margin:6px 0 10px;letter-spacing:-.01em}
-  .detail h4.sec{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--accent);margin:22px 0 6px}
-  .detail p.body{font-size:16px;line-height:1.65;margin:0 0 12px;max-width:68ch}
-  .sourcebox{border:1px solid var(--rule);border-left:4px solid var(--accent);border-radius:8px;padding:12px 16px;margin:18px 0;max-width:68ch}
-  .sourcebox p{font-size:14px;line-height:1.6;margin:6px 0}
-  .sourcebox .flag{display:inline-block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;background:#fde68a;color:#7c2d12;border-radius:4px;padding:2px 8px;margin-bottom:4px}
-  .read-original{display:inline-block;margin:10px 0;padding:10px 20px;background:var(--accent);color:#fff !important;border-radius:8px;font-weight:700;text-decoration:none;font-size:15px}
-  .related{margin-top:28px;border-top:1px solid var(--rule);padding-top:14px}
-  .related h4.sec{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:0 0 10px}
-  .related ul{list-style:none;margin:0;padding:0}
-  .related li{margin:0 0 10px;font-size:15px;line-height:1.45}
-  .related a{color:var(--ink);text-decoration:none;border-bottom:1px solid var(--rule)}
-  .related a:hover{color:var(--accent);border-bottom-color:var(--accent)}
-  .backfoot{margin:30px 0 40px;font-size:14px}
-  .backfoot a{color:var(--accent);text-decoration:none;font-weight:600}
-  .secpage .storyitem{border-bottom:1px solid var(--rule);padding:16px 0}
-  .secpage .storyitem h3{font-size:20px;margin:0 0 6px;line-height:1.3}
-  .secpage .storyitem h3 a{color:var(--ink);text-decoration:none}
-  .secpage .storyitem h3 a:hover{color:var(--accent)}
-  .secpage .lede{font-size:16px;line-height:1.65;color:var(--ink);max-width:70ch;margin:10px 0 6px}
-
-  
-  .sec-head h2 a{color:inherit;text-decoration:none;border-bottom:2px solid transparent}
-  .sec-head h2 a:hover{color:var(--accent);border-bottom-color:var(--accent)}
-  .mini-mast{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 20px;border-bottom:3px double var(--ink);margin-bottom:8px;flex-wrap:wrap}
-  .mini-mast a.brand{font-family:Georgia,'Times New Roman',serif;font-weight:700;font-size:20px;color:var(--ink);text-decoration:none}
-  .mini-mast .ed{font-size:12px;color:var(--muted)}
-  .kicker{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:18px 0 4px}
-  .kicker a{color:var(--accent);text-decoration:none}
-  .detail h1{font-family:Georgia,'Times New Roman',serif;font-size:clamp(26px,5vw,40px);line-height:1.15;margin:6px 0 10px;letter-spacing:-.01em}
-  .detail h4.sec{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--accent);margin:22px 0 6px}
-  .detail p.body{font-size:16px;line-height:1.65;margin:0 0 12px;max-width:68ch}
-  .sourcebox{border:1px solid var(--rule);border-left:4px solid var(--accent);border-radius:8px;padding:12px 16px;margin:18px 0;max-width:68ch}
-  .sourcebox p{font-size:14px;line-height:1.6;margin:6px 0}
-  .sourcebox .flag{display:inline-block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;background:#fde68a;color:#7c2d12;border-radius:4px;padding:2px 8px;margin-bottom:4px}
-  .read-original{display:inline-block;margin:10px 0;padding:10px 20px;background:var(--accent);color:#fff !important;border-radius:8px;font-weight:700;text-decoration:none;font-size:15px}
-  .related{margin-top:28px;border-top:1px solid var(--rule);padding-top:14px}
-  .related h4.sec{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:0 0 10px}
-  .related ul{list-style:none;margin:0;padding:0}
-  .related li{margin:0 0 10px;font-size:15px;line-height:1.45}
-  .related a{color:var(--ink);text-decoration:none;border-bottom:1px solid var(--rule)}
-  .related a:hover{color:var(--accent);border-bottom-color:var(--accent)}
-  .backfoot{margin:30px 0 40px;font-size:14px}
-  .backfoot a{color:var(--accent);text-decoration:none;font-weight:600}
-  .secpage .storyitem{border-bottom:1px solid var(--rule);padding:16px 0}
-  .secpage .storyitem h3{font-size:20px;margin:0 0 6px;line-height:1.3}
-  .secpage .storyitem h3 a{color:var(--ink);text-decoration:none}
-  .secpage .storyitem h3 a:hover{color:var(--accent)}
-  .secpage .lede{font-size:16px;line-height:1.65;color:var(--ink);max-width:70ch;margin:10px 0 6px}
-
-  
-  .sec-head h2 a{color:inherit;text-decoration:none;border-bottom:2px solid transparent}
-  .sec-head h2 a:hover{color:var(--accent);border-bottom-color:var(--accent)}
-  .mini-mast{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 20px;border-bottom:3px double var(--ink);margin-bottom:8px;flex-wrap:wrap}
-  .mini-mast a.brand{font-family:Georgia,'Times New Roman',serif;font-weight:700;font-size:20px;color:var(--ink);text-decoration:none}
-  .mini-mast .ed{font-size:12px;color:var(--muted)}
-  .kicker{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:18px 0 4px}
-  .kicker a{color:var(--accent);text-decoration:none}
-  .detail h1{font-family:Georgia,'Times New Roman',serif;font-size:clamp(26px,5vw,40px);line-height:1.15;margin:6px 0 10px;letter-spacing:-.01em}
-  .detail h4.sec{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--accent);margin:22px 0 6px}
-  .detail p.body{font-size:16px;line-height:1.65;margin:0 0 12px;max-width:68ch}
-  .sourcebox{border:1px solid var(--rule);border-left:4px solid var(--accent);border-radius:8px;padding:12px 16px;margin:18px 0;max-width:68ch}
-  .sourcebox p{font-size:14px;line-height:1.6;margin:6px 0}
-  .sourcebox .flag{display:inline-block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;background:#fde68a;color:#7c2d12;border-radius:4px;padding:2px 8px;margin-bottom:4px}
-  .read-original{display:inline-block;margin:10px 0;padding:10px 20px;background:var(--accent);color:#fff !important;border-radius:8px;font-weight:700;text-decoration:none;font-size:15px}
-  .related{margin-top:28px;border-top:1px solid var(--rule);padding-top:14px}
-  .related h4.sec{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:0 0 10px}
-  .related ul{list-style:none;margin:0;padding:0}
-  .related li{margin:0 0 10px;font-size:15px;line-height:1.45}
-  .related a{color:var(--ink);text-decoration:none;border-bottom:1px solid var(--rule)}
-  .related a:hover{color:var(--accent);border-bottom-color:var(--accent)}
-  .backfoot{margin:30px 0 40px;font-size:14px}
-  .backfoot a{color:var(--accent);text-decoration:none;font-weight:600}
-  .secpage .storyitem{border-bottom:1px solid var(--rule);padding:16px 0}
-  .secpage .storyitem h3{font-size:20px;margin:0 0 6px;line-height:1.3}
-  .secpage .storyitem h3 a{color:var(--ink);text-decoration:none}
-  .secpage .storyitem h3 a:hover{color:var(--accent)}
-  .secpage .lede{font-size:16px;line-height:1.65;color:var(--ink);max-width:70ch;margin:10px 0 6px}
-
-  
-  .sec-head h2 a{color:inherit;text-decoration:none;border-bottom:2px solid transparent}
-  .sec-head h2 a:hover{color:var(--accent);border-bottom-color:var(--accent)}
-  .mini-mast{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 20px;border-bottom:3px double var(--ink);margin-bottom:8px;flex-wrap:wrap}
-  .mini-mast a.brand{font-family:Georgia,'Times New Roman',serif;font-weight:700;font-size:20px;color:var(--ink);text-decoration:none}
-  .mini-mast .ed{font-size:12px;color:var(--muted)}
-  .kicker{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:18px 0 4px}
-  .kicker a{color:var(--accent);text-decoration:none}
-  .detail h1{font-family:Georgia,'Times New Roman',serif;font-size:clamp(26px,5vw,40px);line-height:1.15;margin:6px 0 10px;letter-spacing:-.01em}
-  .detail h4.sec{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--accent);margin:22px 0 6px}
-  .detail p.body{font-size:16px;line-height:1.65;margin:0 0 12px;max-width:68ch}
-  .sourcebox{border:1px solid var(--rule);border-left:4px solid var(--accent);border-radius:8px;padding:12px 16px;margin:18px 0;max-width:68ch}
-  .sourcebox p{font-size:14px;line-height:1.6;margin:6px 0}
-  .sourcebox .flag{display:inline-block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;background:#fde68a;color:#7c2d12;border-radius:4px;padding:2px 8px;margin-bottom:4px}
-  .read-original{display:inline-block;margin:10px 0;padding:10px 20px;background:var(--accent);color:#fff !important;border-radius:8px;font-weight:700;text-decoration:none;font-size:15px}
-  .related{margin-top:28px;border-top:1px solid var(--rule);padding-top:14px}
-  .related h4.sec{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:0 0 10px}
-  .related ul{list-style:none;margin:0;padding:0}
-  .related li{margin:0 0 10px;font-size:15px;line-height:1.45}
-  .related a{color:var(--ink);text-decoration:none;border-bottom:1px solid var(--rule)}
-  .related a:hover{color:var(--accent);border-bottom-color:var(--accent)}
-  .backfoot{margin:30px 0 40px;font-size:14px}
-  .backfoot a{color:var(--accent);text-decoration:none;font-weight:600}
-  .secpage .storyitem{border-bottom:1px solid var(--rule);padding:16px 0}
-  .secpage .storyitem h3{font-size:20px;margin:0 0 6px;line-height:1.3}
-  .secpage .storyitem h3 a{color:var(--ink);text-decoration:none}
-  .secpage .storyitem h3 a:hover{color:var(--accent)}
-  .secpage .lede{font-size:16px;line-height:1.65;color:var(--ink);max-width:70ch;margin:10px 0 6px}
-
-  
-  .sec-head h2 a{color:inherit;text-decoration:none;border-bottom:2px solid transparent}
-  .sec-head h2 a:hover{color:var(--accent);border-bottom-color:var(--accent)}
-  .mini-mast{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 20px;border-bottom:3px double var(--ink);margin-bottom:8px;flex-wrap:wrap}
-  .mini-mast a.brand{font-family:Georgia,'Times New Roman',serif;font-weight:700;font-size:20px;color:var(--ink);text-decoration:none}
-  .mini-mast .ed{font-size:12px;color:var(--muted)}
-  .kicker{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:18px 0 4px}
-  .kicker a{color:var(--accent);text-decoration:none}
-  .detail h1{font-family:Georgia,'Times New Roman',serif;font-size:clamp(26px,5vw,40px);line-height:1.15;margin:6px 0 10px;letter-spacing:-.01em}
-  .detail h4.sec{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--accent);margin:22px 0 6px}
-  .detail p.body{font-size:16px;line-height:1.65;margin:0 0 12px;max-width:68ch}
-  .sourcebox{border:1px solid var(--rule);border-left:4px solid var(--accent);border-radius:8px;padding:12px 16px;margin:18px 0;max-width:68ch}
-  .sourcebox p{font-size:14px;line-height:1.6;margin:6px 0}
-  .sourcebox .flag{display:inline-block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;background:#fde68a;color:#7c2d12;border-radius:4px;padding:2px 8px;margin-bottom:4px}
-  .read-original{display:inline-block;margin:10px 0;padding:10px 20px;background:var(--accent);color:#fff !important;border-radius:8px;font-weight:700;text-decoration:none;font-size:15px}
-  .related{margin-top:28px;border-top:1px solid var(--rule);padding-top:14px}
-  .related h4.sec{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:0 0 10px}
-  .related ul{list-style:none;margin:0;padding:0}
-  .related li{margin:0 0 10px;font-size:15px;line-height:1.45}
-  .related a{color:var(--ink);text-decoration:none;border-bottom:1px solid var(--rule)}
-  .related a:hover{color:var(--accent);border-bottom-color:var(--accent)}
-  .backfoot{margin:30px 0 40px;font-size:14px}
-  .backfoot a{color:var(--accent);text-decoration:none;font-weight:600}
-  .secpage .storyitem{border-bottom:1px solid var(--rule);padding:16px 0}
-  .secpage .storyitem h3{font-size:20px;margin:0 0 6px;line-height:1.3}
-  .secpage .storyitem h3 a{color:var(--ink);text-decoration:none}
-  .secpage .storyitem h3 a:hover{color:var(--accent)}
-  .secpage .lede{font-size:16px;line-height:1.65;color:var(--ink);max-width:70ch;margin:10px 0 6px}
-
-  
-  .sec-head h2 a{color:inherit;text-decoration:none;border-bottom:2px solid transparent}
-  .sec-head h2 a:hover{color:var(--accent);border-bottom-color:var(--accent)}
-  .mini-mast{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 20px;border-bottom:3px double var(--ink);margin-bottom:8px;flex-wrap:wrap}
-  .mini-mast a.brand{font-family:Georgia,'Times New Roman',serif;font-weight:700;font-size:20px;color:var(--ink);text-decoration:none}
-  .mini-mast .ed{font-size:12px;color:var(--muted)}
-  .kicker{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:18px 0 4px}
-  .kicker a{color:var(--accent);text-decoration:none}
-  .detail h1{font-family:Georgia,'Times New Roman',serif;font-size:clamp(26px,5vw,40px);line-height:1.15;margin:6px 0 10px;letter-spacing:-.01em}
-  .detail h4.sec{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--accent);margin:22px 0 6px}
-  .detail p.body{font-size:16px;line-height:1.65;margin:0 0 12px;max-width:68ch}
-  .sourcebox{border:1px solid var(--rule);border-left:4px solid var(--accent);border-radius:8px;padding:12px 16px;margin:18px 0;max-width:68ch}
-  .sourcebox p{font-size:14px;line-height:1.6;margin:6px 0}
-  .sourcebox .flag{display:inline-block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;background:#fde68a;color:#7c2d12;border-radius:4px;padding:2px 8px;margin-bottom:4px}
-  .read-original{display:inline-block;margin:10px 0;padding:10px 20px;background:var(--accent);color:#fff !important;border-radius:8px;font-weight:700;text-decoration:none;font-size:15px}
-  .related{margin-top:28px;border-top:1px solid var(--rule);padding-top:14px}
-  .related h4.sec{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:0 0 10px}
-  .related ul{list-style:none;margin:0;padding:0}
-  .related li{margin:0 0 10px;font-size:15px;line-height:1.45}
-  .related a{color:var(--ink);text-decoration:none;border-bottom:1px solid var(--rule)}
-  .related a:hover{color:var(--accent);border-bottom-color:var(--accent)}
-  .backfoot{margin:30px 0 40px;font-size:14px}
-  .backfoot a{color:var(--accent);text-decoration:none;font-weight:600}
-  .secpage .storyitem{border-bottom:1px solid var(--rule);padding:16px 0}
-  .secpage .storyitem h3{font-size:20px;margin:0 0 6px;line-height:1.3}
-  .secpage .storyitem h3 a{color:var(--ink);text-decoration:none}
-  .secpage .storyitem h3 a:hover{color:var(--accent)}
-  .secpage .lede{font-size:16px;line-height:1.65;color:var(--ink);max-width:70ch;margin:10px 0 6px}
-
-  
-  .sec-head h2 a{color:inherit;text-decoration:none;border-bottom:2px solid transparent}
-  .sec-head h2 a:hover{color:var(--accent);border-bottom-color:var(--accent)}
-  .mini-mast{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 20px;border-bottom:3px double var(--ink);margin-bottom:8px;flex-wrap:wrap}
-  .mini-mast a.brand{font-family:Georgia,'Times New Roman',serif;font-weight:700;font-size:20px;color:var(--ink);text-decoration:none}
-  .mini-mast .ed{font-size:12px;color:var(--muted)}
-  .kicker{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:18px 0 4px}
-  .kicker a{color:var(--accent);text-decoration:none}
-  .detail h1{font-family:Georgia,'Times New Roman',serif;font-size:clamp(26px,5vw,40px);line-height:1.15;margin:6px 0 10px;letter-spacing:-.01em}
-  .detail h4.sec{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--accent);margin:22px 0 6px}
-  .detail p.body{font-size:16px;line-height:1.65;margin:0 0 12px;max-width:68ch}
-  .sourcebox{border:1px solid var(--rule);border-left:4px solid var(--accent);border-radius:8px;padding:12px 16px;margin:18px 0;max-width:68ch}
-  .sourcebox p{font-size:14px;line-height:1.6;margin:6px 0}
-  .sourcebox .flag{display:inline-block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;background:#fde68a;color:#7c2d12;border-radius:4px;padding:2px 8px;margin-bottom:4px}
-  .read-original{display:inline-block;margin:10px 0;padding:10px 20px;background:var(--accent);color:#fff !important;border-radius:8px;font-weight:700;text-decoration:none;font-size:15px}
-  .related{margin-top:28px;border-top:1px solid var(--rule);padding-top:14px}
-  .related h4.sec{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:0 0 10px}
-  .related ul{list-style:none;margin:0;padding:0}
-  .related li{margin:0 0 10px;font-size:15px;line-height:1.45}
-  .related a{color:var(--ink);text-decoration:none;border-bottom:1px solid var(--rule)}
-  .related a:hover{color:var(--accent);border-bottom-color:var(--accent)}
-  .backfoot{margin:30px 0 40px;font-size:14px}
-  .backfoot a{color:var(--accent);text-decoration:none;font-weight:600}
-  .secpage .storyitem{border-bottom:1px solid var(--rule);padding:16px 0}
-  .secpage .storyitem h3{font-size:20px;margin:0 0 6px;line-height:1.3}
-  .secpage .storyitem h3 a{color:var(--ink);text-decoration:none}
-  .secpage .storyitem h3 a:hover{color:var(--accent)}
-  .secpage .lede{font-size:16px;line-height:1.65;color:var(--ink);max-width:70ch;margin:10px 0 6px}
-
-  
-  .sec-head h2 a{color:inherit;text-decoration:none;border-bottom:2px solid transparent}
-  .sec-head h2 a:hover{color:var(--accent);border-bottom-color:var(--accent)}
-  .mini-mast{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 20px;border-bottom:3px double var(--ink);margin-bottom:8px;flex-wrap:wrap}
-  .mini-mast a.brand{font-family:Georgia,'Times New Roman',serif;font-weight:700;font-size:20px;color:var(--ink);text-decoration:none}
-  .mini-mast .ed{font-size:12px;color:var(--muted)}
-  .kicker{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:18px 0 4px}
-  .kicker a{color:var(--accent);text-decoration:none}
-  .detail h1{font-family:Georgia,'Times New Roman',serif;font-size:clamp(26px,5vw,40px);line-height:1.15;margin:6px 0 10px;letter-spacing:-.01em}
-  .detail h4.sec{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--accent);margin:22px 0 6px}
-  .detail p.body{font-size:16px;line-height:1.65;margin:0 0 12px;max-width:68ch}
-  .sourcebox{border:1px solid var(--rule);border-left:4px solid var(--accent);border-radius:8px;padding:12px 16px;margin:18px 0;max-width:68ch}
-  .sourcebox p{font-size:14px;line-height:1.6;margin:6px 0}
-  .sourcebox .flag{display:inline-block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;background:#fde68a;color:#7c2d12;border-radius:4px;padding:2px 8px;margin-bottom:4px}
-  .read-original{display:inline-block;margin:10px 0;padding:10px 20px;background:var(--accent);color:#fff !important;border-radius:8px;font-weight:700;text-decoration:none;font-size:15px}
-  .related{margin-top:28px;border-top:1px solid var(--rule);padding-top:14px}
-  .related h4.sec{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:0 0 10px}
-  .related ul{list-style:none;margin:0;padding:0}
-  .related li{margin:0 0 10px;font-size:15px;line-height:1.45}
-  .related a{color:var(--ink);text-decoration:none;border-bottom:1px solid var(--rule)}
-  .related a:hover{color:var(--accent);border-bottom-color:var(--accent)}
-  .backfoot{margin:30px 0 40px;font-size:14px}
-  .backfoot a{color:var(--accent);text-decoration:none;font-weight:600}
-  .secpage .storyitem{border-bottom:1px solid var(--rule);padding:16px 0}
-  .secpage .storyitem h3{font-size:20px;margin:0 0 6px;line-height:1.3}
-  .secpage .storyitem h3 a{color:var(--ink);text-decoration:none}
-  .secpage .storyitem h3 a:hover{color:var(--accent)}
-  .secpage .lede{font-size:16px;line-height:1.65;color:var(--ink);max-width:70ch;margin:10px 0 6px}
-
-  
-  .sec-head h2 a{color:inherit;text-decoration:none;border-bottom:2px solid transparent}
-  .sec-head h2 a:hover{color:var(--accent);border-bottom-color:var(--accent)}
-  .mini-mast{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 20px;border-bottom:3px double var(--ink);margin-bottom:8px;flex-wrap:wrap}
-  .mini-mast a.brand{font-family:Georgia,'Times New Roman',serif;font-weight:700;font-size:20px;color:var(--ink);text-decoration:none}
-  .mini-mast .ed{font-size:12px;color:var(--muted)}
-  .kicker{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:18px 0 4px}
-  .kicker a{color:var(--accent);text-decoration:none}
-  .detail h1{font-family:Georgia,'Times New Roman',serif;font-size:clamp(26px,5vw,40px);line-height:1.15;margin:6px 0 10px;letter-spacing:-.01em}
-  .detail h4.sec{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--accent);margin:22px 0 6px}
-  .detail p.body{font-size:16px;line-height:1.65;margin:0 0 12px;max-width:68ch}
-  .sourcebox{border:1px solid var(--rule);border-left:4px solid var(--accent);border-radius:8px;padding:12px 16px;margin:18px 0;max-width:68ch}
-  .sourcebox p{font-size:14px;line-height:1.6;margin:6px 0}
-  .sourcebox .flag{display:inline-block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;background:#fde68a;color:#7c2d12;border-radius:4px;padding:2px 8px;margin-bottom:4px}
-  .read-original{display:inline-block;margin:10px 0;padding:10px 20px;background:var(--accent);color:#fff !important;border-radius:8px;font-weight:700;text-decoration:none;font-size:15px}
-  .related{margin-top:28px;border-top:1px solid var(--rule);padding-top:14px}
-  .related h4.sec{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:0 0 10px}
-  .related ul{list-style:none;margin:0;padding:0}
-  .related li{margin:0 0 10px;font-size:15px;line-height:1.45}
-  .related a{color:var(--ink);text-decoration:none;border-bottom:1px solid var(--rule)}
-  .related a:hover{color:var(--accent);border-bottom-color:var(--accent)}
-  .backfoot{margin:30px 0 40px;font-size:14px}
-  .backfoot a{color:var(--accent);text-decoration:none;font-weight:600}
-  .secpage .storyitem{border-bottom:1px solid var(--rule);padding:16px 0}
-  .secpage .storyitem h3{font-size:20px;margin:0 0 6px;line-height:1.3}
-  .secpage .storyitem h3 a{color:var(--ink);text-decoration:none}
-  .secpage .storyitem h3 a:hover{color:var(--accent)}
-  .secpage .lede{font-size:16px;line-height:1.65;color:var(--ink);max-width:70ch;margin:10px 0 6px}
-
-  
-  .sec-head h2 a{color:inherit;text-decoration:none;border-bottom:2px solid transparent}
-  .sec-head h2 a:hover{color:var(--accent);border-bottom-color:var(--accent)}
-  .mini-mast{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 20px;border-bottom:3px double var(--ink);margin-bottom:8px;flex-wrap:wrap}
-  .mini-mast a.brand{font-family:Georgia,'Times New Roman',serif;font-weight:700;font-size:20px;color:var(--ink);text-decoration:none}
-  .mini-mast .ed{font-size:12px;color:var(--muted)}
-  .kicker{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:18px 0 4px}
-  .kicker a{color:var(--accent);text-decoration:none}
-  .detail h1{font-family:Georgia,'Times New Roman',serif;font-size:clamp(26px,5vw,40px);line-height:1.15;margin:6px 0 10px;letter-spacing:-.01em}
-  .detail h4.sec{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--accent);margin:22px 0 6px}
-  .detail p.body{font-size:16px;line-height:1.65;margin:0 0 12px;max-width:68ch}
-  .sourcebox{border:1px solid var(--rule);border-left:4px solid var(--accent);border-radius:8px;padding:12px 16px;margin:18px 0;max-width:68ch}
-  .sourcebox p{font-size:14px;line-height:1.6;margin:6px 0}
-  .sourcebox .flag{display:inline-block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;background:#fde68a;color:#7c2d12;border-radius:4px;padding:2px 8px;margin-bottom:4px}
-  .read-original{display:inline-block;margin:10px 0;padding:10px 20px;background:var(--accent);color:#fff !important;border-radius:8px;font-weight:700;text-decoration:none;font-size:15px}
-  .related{margin-top:28px;border-top:1px solid var(--rule);padding-top:14px}
-  .related h4.sec{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:0 0 10px}
-  .related ul{list-style:none;margin:0;padding:0}
-  .related li{margin:0 0 10px;font-size:15px;line-height:1.45}
-  .related a{color:var(--ink);text-decoration:none;border-bottom:1px solid var(--rule)}
-  .related a:hover{color:var(--accent);border-bottom-color:var(--accent)}
-  .backfoot{margin:30px 0 40px;font-size:14px}
-  .backfoot a{color:var(--accent);text-decoration:none;font-weight:600}
-  .secpage .storyitem{border-bottom:1px solid var(--rule);padding:16px 0}
-  .secpage .storyitem h3{font-size:20px;margin:0 0 6px;line-height:1.3}
-  .secpage .storyitem h3 a{color:var(--ink);text-decoration:none}
-  .secpage .storyitem h3 a:hover{color:var(--accent)}
-  .secpage .lede{font-size:16px;line-height:1.65;color:var(--ink);max-width:70ch;margin:10px 0 6px}
-
-  
-  .sec-head h2 a{color:inherit;text-decoration:none;border-bottom:2px solid transparent}
-  .sec-head h2 a:hover{color:var(--accent);border-bottom-color:var(--accent)}
-  .mini-mast{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 20px;border-bottom:3px double var(--ink);margin-bottom:8px;flex-wrap:wrap}
-  .mini-mast a.brand{font-family:Georgia,'Times New Roman',serif;font-weight:700;font-size:20px;color:var(--ink);text-decoration:none}
-  .mini-mast .ed{font-size:12px;color:var(--muted)}
-  .kicker{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:18px 0 4px}
-  .kicker a{color:var(--accent);text-decoration:none}
-  .detail h1{font-family:Georgia,'Times New Roman',serif;font-size:clamp(26px,5vw,40px);line-height:1.15;margin:6px 0 10px;letter-spacing:-.01em}
-  .detail h4.sec{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--accent);margin:22px 0 6px}
-  .detail p.body{font-size:16px;line-height:1.65;margin:0 0 12px;max-width:68ch}
-  .sourcebox{border:1px solid var(--rule);border-left:4px solid var(--accent);border-radius:8px;padding:12px 16px;margin:18px 0;max-width:68ch}
-  .sourcebox p{font-size:14px;line-height:1.6;margin:6px 0}
-  .sourcebox .flag{display:inline-block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;background:#fde68a;color:#7c2d12;border-radius:4px;padding:2px 8px;margin-bottom:4px}
-  .read-original{display:inline-block;margin:10px 0;padding:10px 20px;background:var(--accent);color:#fff !important;border-radius:8px;font-weight:700;text-decoration:none;font-size:15px}
-  .related{margin-top:28px;border-top:1px solid var(--rule);padding-top:14px}
-  .related h4.sec{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:0 0 10px}
-  .related ul{list-style:none;margin:0;padding:0}
-  .related li{margin:0 0 10px;font-size:15px;line-height:1.45}
-  .related a{color:var(--ink);text-decoration:none;border-bottom:1px solid var(--rule)}
-  .related a:hover{color:var(--accent);border-bottom-color:var(--accent)}
-  .backfoot{margin:30px 0 40px;font-size:14px}
-  .backfoot a{color:var(--accent);text-decoration:none;font-weight:600}
-  .secpage .storyitem{border-bottom:1px solid var(--rule);padding:16px 0}
-  .secpage .storyitem h3{font-size:20px;margin:0 0 6px;line-height:1.3}
-  .secpage .storyitem h3 a{color:var(--ink);text-decoration:none}
-  .secpage .storyitem h3 a:hover{color:var(--accent)}
-  .secpage .lede{font-size:16px;line-height:1.65;color:var(--ink);max-width:70ch;margin:10px 0 6px}
-
-  
-  .sec-head h2 a{color:inherit;text-decoration:none;border-bottom:2px solid transparent}
-  .sec-head h2 a:hover{color:var(--accent);border-bottom-color:var(--accent)}
-  .mini-mast{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 20px;border-bottom:3px double var(--ink);margin-bottom:8px;flex-wrap:wrap}
-  .mini-mast a.brand{font-family:Georgia,'Times New Roman',serif;font-weight:700;font-size:20px;color:var(--ink);text-decoration:none}
-  .mini-mast .ed{font-size:12px;color:var(--muted)}
-  .kicker{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:18px 0 4px}
-  .kicker a{color:var(--accent);text-decoration:none}
-  .detail h1{font-family:Georgia,'Times New Roman',serif;font-size:clamp(26px,5vw,40px);line-height:1.15;margin:6px 0 10px;letter-spacing:-.01em}
-  .detail h4.sec{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--accent);margin:22px 0 6px}
-  .detail p.body{font-size:16px;line-height:1.65;margin:0 0 12px;max-width:68ch}
-  .sourcebox{border:1px solid var(--rule);border-left:4px solid var(--accent);border-radius:8px;padding:12px 16px;margin:18px 0;max-width:68ch}
-  .sourcebox p{font-size:14px;line-height:1.6;margin:6px 0}
-  .sourcebox .flag{display:inline-block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;background:#fde68a;color:#7c2d12;border-radius:4px;padding:2px 8px;margin-bottom:4px}
-  .read-original{display:inline-block;margin:10px 0;padding:10px 20px;background:var(--accent);color:#fff !important;border-radius:8px;font-weight:700;text-decoration:none;font-size:15px}
-  .related{margin-top:28px;border-top:1px solid var(--rule);padding-top:14px}
-  .related h4.sec{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:0 0 10px}
-  .related ul{list-style:none;margin:0;padding:0}
-  .related li{margin:0 0 10px;font-size:15px;line-height:1.45}
-  .related a{color:var(--ink);text-decoration:none;border-bottom:1px solid var(--rule)}
-  .related a:hover{color:var(--accent);border-bottom-color:var(--accent)}
-  .backfoot{margin:30px 0 40px;font-size:14px}
-  .backfoot a{color:var(--accent);text-decoration:none;font-weight:600}
-  .secpage .storyitem{border-bottom:1px solid var(--rule);padding:16px 0}
-  .secpage .storyitem h3{font-size:20px;margin:0 0 6px;line-height:1.3}
-  .secpage .storyitem h3 a{color:var(--ink);text-decoration:none}
-  .secpage .storyitem h3 a:hover{color:var(--accent)}
-  .secpage .lede{font-size:16px;line-height:1.65;color:var(--ink);max-width:70ch;margin:10px 0 6px}
-
-  
-  .sec-head h2 a{color:inherit;text-decoration:none;border-bottom:2px solid transparent}
-  .sec-head h2 a:hover{color:var(--accent);border-bottom-color:var(--accent)}
-  .mini-mast{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 20px;border-bottom:3px double var(--ink);margin-bottom:8px;flex-wrap:wrap}
-  .mini-mast a.brand{font-family:Georgia,'Times New Roman',serif;font-weight:700;font-size:20px;color:var(--ink);text-decoration:none}
-  .mini-mast .ed{font-size:12px;color:var(--muted)}
-  .kicker{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:18px 0 4px}
-  .kicker a{color:var(--accent);text-decoration:none}
-  .detail h1{font-family:Georgia,'Times New Roman',serif;font-size:clamp(26px,5vw,40px);line-height:1.15;margin:6px 0 10px;letter-spacing:-.01em}
-  .detail h4.sec{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--accent);margin:22px 0 6px}
-  .detail p.body{font-size:16px;line-height:1.65;margin:0 0 12px;max-width:68ch}
-  .sourcebox{border:1px solid var(--rule);border-left:4px solid var(--accent);border-radius:8px;padding:12px 16px;margin:18px 0;max-width:68ch}
-  .sourcebox p{font-size:14px;line-height:1.6;margin:6px 0}
-  .sourcebox .flag{display:inline-block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;background:#fde68a;color:#7c2d12;border-radius:4px;padding:2px 8px;margin-bottom:4px}
-  .read-original{display:inline-block;margin:10px 0;padding:10px 20px;background:var(--accent);color:#fff !important;border-radius:8px;font-weight:700;text-decoration:none;font-size:15px}
-  .related{margin-top:28px;border-top:1px solid var(--rule);padding-top:14px}
-  .related h4.sec{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:0 0 10px}
-  .related ul{list-style:none;margin:0;padding:0}
-  .related li{margin:0 0 10px;font-size:15px;line-height:1.45}
-  .related a{color:var(--ink);text-decoration:none;border-bottom:1px solid var(--rule)}
-  .related a:hover{color:var(--accent);border-bottom-color:var(--accent)}
-  .backfoot{margin:30px 0 40px;font-size:14px}
-  .backfoot a{color:var(--accent);text-decoration:none;font-weight:600}
-  .secpage .storyitem{border-bottom:1px solid var(--rule);padding:16px 0}
-  .secpage .storyitem h3{font-size:20px;margin:0 0 6px;line-height:1.3}
-  .secpage .storyitem h3 a{color:var(--ink);text-decoration:none}
-  .secpage .storyitem h3 a:hover{color:var(--accent)}
-  .secpage .lede{font-size:16px;line-height:1.65;color:var(--ink);max-width:70ch;margin:10px 0 6px}
-
-  
-  .sec-head h2 a{color:inherit;text-decoration:none;border-bottom:2px solid transparent}
-  .sec-head h2 a:hover{color:var(--accent);border-bottom-color:var(--accent)}
-  .mini-mast{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 20px;border-bottom:3px double var(--ink);margin-bottom:8px;flex-wrap:wrap}
-  .mini-mast a.brand{font-family:Georgia,'Times New Roman',serif;font-weight:700;font-size:20px;color:var(--ink);text-decoration:none}
-  .mini-mast .ed{font-size:12px;color:var(--muted)}
-  .kicker{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:18px 0 4px}
-  .kicker a{color:var(--accent);text-decoration:none}
-  .detail h1{font-family:Georgia,'Times New Roman',serif;font-size:clamp(26px,5vw,40px);line-height:1.15;margin:6px 0 10px;letter-spacing:-.01em}
-  .detail h4.sec{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--accent);margin:22px 0 6px}
-  .detail p.body{font-size:16px;line-height:1.65;margin:0 0 12px;max-width:68ch}
-  .sourcebox{border:1px solid var(--rule);border-left:4px solid var(--accent);border-radius:8px;padding:12px 16px;margin:18px 0;max-width:68ch}
-  .sourcebox p{font-size:14px;line-height:1.6;margin:6px 0}
-  .sourcebox .flag{display:inline-block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;background:#fde68a;color:#7c2d12;border-radius:4px;padding:2px 8px;margin-bottom:4px}
-  .read-original{display:inline-block;margin:10px 0;padding:10px 20px;background:var(--accent);color:#fff !important;border-radius:8px;font-weight:700;text-decoration:none;font-size:15px}
-  .related{margin-top:28px;border-top:1px solid var(--rule);padding-top:14px}
-  .related h4.sec{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:0 0 10px}
-  .related ul{list-style:none;margin:0;padding:0}
-  .related li{margin:0 0 10px;font-size:15px;line-height:1.45}
-  .related a{color:var(--ink);text-decoration:none;border-bottom:1px solid var(--rule)}
-  .related a:hover{color:var(--accent);border-bottom-color:var(--accent)}
-  .backfoot{margin:30px 0 40px;font-size:14px}
-  .backfoot a{color:var(--accent);text-decoration:none;font-weight:600}
-  .secpage .storyitem{border-bottom:1px solid var(--rule);padding:16px 0}
-  .secpage .storyitem h3{font-size:20px;margin:0 0 6px;line-height:1.3}
-  .secpage .storyitem h3 a{color:var(--ink);text-decoration:none}
-  .secpage .storyitem h3 a:hover{color:var(--accent)}
-  .secpage .lede{font-size:16px;line-height:1.65;color:var(--ink);max-width:70ch;margin:10px 0 6px}
-
-  
-  .sec-head h2 a{color:inherit;text-decoration:none;border-bottom:2px solid transparent}
-  .sec-head h2 a:hover{color:var(--accent);border-bottom-color:var(--accent)}
-  .mini-mast{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 20px;border-bottom:3px double var(--ink);margin-bottom:8px;flex-wrap:wrap}
-  .mini-mast a.brand{font-family:Georgia,'Times New Roman',serif;font-weight:700;font-size:20px;color:var(--ink);text-decoration:none}
-  .mini-mast .ed{font-size:12px;color:var(--muted)}
-  .kicker{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:18px 0 4px}
-  .kicker a{color:var(--accent);text-decoration:none}
-  .detail h1{font-family:Georgia,'Times New Roman',serif;font-size:clamp(26px,5vw,40px);line-height:1.15;margin:6px 0 10px;letter-spacing:-.01em}
-  .detail h4.sec{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--accent);margin:22px 0 6px}
-  .detail p.body{font-size:16px;line-height:1.65;margin:0 0 12px;max-width:68ch}
-  .sourcebox{border:1px solid var(--rule);border-left:4px solid var(--accent);border-radius:8px;padding:12px 16px;margin:18px 0;max-width:68ch}
-  .sourcebox p{font-size:14px;line-height:1.6;margin:6px 0}
-  .sourcebox .flag{display:inline-block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;background:#fde68a;color:#7c2d12;border-radius:4px;padding:2px 8px;margin-bottom:4px}
-  .read-original{display:inline-block;margin:10px 0;padding:10px 20px;background:var(--accent);color:#fff !important;border-radius:8px;font-weight:700;text-decoration:none;font-size:15px}
-  .related{margin-top:28px;border-top:1px solid var(--rule);padding-top:14px}
-  .related h4.sec{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:0 0 10px}
-  .related ul{list-style:none;margin:0;padding:0}
-  .related li{margin:0 0 10px;font-size:15px;line-height:1.45}
-  .related a{color:var(--ink);text-decoration:none;border-bottom:1px solid var(--rule)}
-  .related a:hover{color:var(--accent);border-bottom-color:var(--accent)}
-  .backfoot{margin:30px 0 40px;font-size:14px}
-  .backfoot a{color:var(--accent);text-decoration:none;font-weight:600}
-  .secpage .storyitem{border-bottom:1px solid var(--rule);padding:16px 0}
-  .secpage .storyitem h3{font-size:20px;margin:0 0 6px;line-height:1.3}
-  .secpage .storyitem h3 a{color:var(--ink);text-decoration:none}
-  .secpage .storyitem h3 a:hover{color:var(--accent)}
-  .secpage .lede{font-size:16px;line-height:1.65;color:var(--ink);max-width:70ch;margin:10px 0 6px}
-
-  
-  .sec-head h2 a{color:inherit;text-decoration:none;border-bottom:2px solid transparent}
-  .sec-head h2 a:hover{color:var(--accent);border-bottom-color:var(--accent)}
-  .mini-mast{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 20px;border-bottom:3px double var(--ink);margin-bottom:8px;flex-wrap:wrap}
-  .mini-mast a.brand{font-family:Georgia,'Times New Roman',serif;font-weight:700;font-size:20px;color:var(--ink);text-decoration:none}
-  .mini-mast .ed{font-size:12px;color:var(--muted)}
-  .kicker{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:18px 0 4px}
-  .kicker a{color:var(--accent);text-decoration:none}
-  .detail h1{font-family:Georgia,'Times New Roman',serif;font-size:clamp(26px,5vw,40px);line-height:1.15;margin:6px 0 10px;letter-spacing:-.01em}
-  .detail h4.sec{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--accent);margin:22px 0 6px}
-  .detail p.body{font-size:16px;line-height:1.65;margin:0 0 12px;max-width:68ch}
-  .sourcebox{border:1px solid var(--rule);border-left:4px solid var(--accent);border-radius:8px;padding:12px 16px;margin:18px 0;max-width:68ch}
-  .sourcebox p{font-size:14px;line-height:1.6;margin:6px 0}
-  .sourcebox .flag{display:inline-block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;background:#fde68a;color:#7c2d12;border-radius:4px;padding:2px 8px;margin-bottom:4px}
-  .read-original{display:inline-block;margin:10px 0;padding:10px 20px;background:var(--accent);color:#fff !important;border-radius:8px;font-weight:700;text-decoration:none;font-size:15px}
-  .related{margin-top:28px;border-top:1px solid var(--rule);padding-top:14px}
-  .related h4.sec{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:0 0 10px}
-  .related ul{list-style:none;margin:0;padding:0}
-  .related li{margin:0 0 10px;font-size:15px;line-height:1.45}
-  .related a{color:var(--ink);text-decoration:none;border-bottom:1px solid var(--rule)}
-  .related a:hover{color:var(--accent);border-bottom-color:var(--accent)}
-  .backfoot{margin:30px 0 40px;font-size:14px}
-  .backfoot a{color:var(--accent);text-decoration:none;font-weight:600}
-  .secpage .storyitem{border-bottom:1px solid var(--rule);padding:16px 0}
-  .secpage .storyitem h3{font-size:20px;margin:0 0 6px;line-height:1.3}
-  .secpage .storyitem h3 a{color:var(--ink);text-decoration:none}
-  .secpage .storyitem h3 a:hover{color:var(--accent)}
-  .secpage .lede{font-size:16px;line-height:1.65;color:var(--ink);max-width:70ch;margin:10px 0 6px}
-
-  
-  .sec-head h2 a{color:inherit;text-decoration:none;border-bottom:2px solid transparent}
-  .sec-head h2 a:hover{color:var(--accent);border-bottom-color:var(--accent)}
-  .mini-mast{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 20px;border-bottom:3px double var(--ink);margin-bottom:8px;flex-wrap:wrap}
-  .mini-mast a.brand{font-family:Georgia,'Times New Roman',serif;font-weight:700;font-size:20px;color:var(--ink);text-decoration:none}
-  .mini-mast .ed{font-size:12px;color:var(--muted)}
-  .kicker{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:18px 0 4px}
-  .kicker a{color:var(--accent);text-decoration:none}
-  .detail h1{font-family:Georgia,'Times New Roman',serif;font-size:clamp(26px,5vw,40px);line-height:1.15;margin:6px 0 10px;letter-spacing:-.01em}
-  .detail h4.sec{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--accent);margin:22px 0 6px}
-  .detail p.body{font-size:16px;line-height:1.65;margin:0 0 12px;max-width:68ch}
-  .sourcebox{border:1px solid var(--rule);border-left:4px solid var(--accent);border-radius:8px;padding:12px 16px;margin:18px 0;max-width:68ch}
-  .sourcebox p{font-size:14px;line-height:1.6;margin:6px 0}
-  .sourcebox .flag{display:inline-block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;background:#fde68a;color:#7c2d12;border-radius:4px;padding:2px 8px;margin-bottom:4px}
-  .read-original{display:inline-block;margin:10px 0;padding:10px 20px;background:var(--accent);color:#fff !important;border-radius:8px;font-weight:700;text-decoration:none;font-size:15px}
-  .related{margin-top:28px;border-top:1px solid var(--rule);padding-top:14px}
-  .related h4.sec{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:0 0 10px}
-  .related ul{list-style:none;margin:0;padding:0}
-  .related li{margin:0 0 10px;font-size:15px;line-height:1.45}
-  .related a{color:var(--ink);text-decoration:none;border-bottom:1px solid var(--rule)}
-  .related a:hover{color:var(--accent);border-bottom-color:var(--accent)}
-  .backfoot{margin:30px 0 40px;font-size:14px}
-  .backfoot a{color:var(--accent);text-decoration:none;font-weight:600}
-  .secpage .storyitem{border-bottom:1px solid var(--rule);padding:16px 0}
-  .secpage .storyitem h3{font-size:20px;margin:0 0 6px;line-height:1.3}
-  .secpage .storyitem h3 a{color:var(--ink);text-decoration:none}
-  .secpage .storyitem h3 a:hover{color:var(--accent)}
-  .secpage .lede{font-size:16px;line-height:1.65;color:var(--ink);max-width:70ch;margin:10px 0 6px}
-
-  
-  .sec-head h2 a{color:inherit;text-decoration:none;border-bottom:2px solid transparent}
-  .sec-head h2 a:hover{color:var(--accent);border-bottom-color:var(--accent)}
-  .mini-mast{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 20px;border-bottom:3px double var(--ink);margin-bottom:8px;flex-wrap:wrap}
-  .mini-mast a.brand{font-family:Georgia,'Times New Roman',serif;font-weight:700;font-size:20px;color:var(--ink);text-decoration:none}
-  .mini-mast .ed{font-size:12px;color:var(--muted)}
-  .kicker{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:18px 0 4px}
-  .kicker a{color:var(--accent);text-decoration:none}
-  .detail h1{font-family:Georgia,'Times New Roman',serif;font-size:clamp(26px,5vw,40px);line-height:1.15;margin:6px 0 10px;letter-spacing:-.01em}
-  .detail h4.sec{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--accent);margin:22px 0 6px}
-  .detail p.body{font-size:16px;line-height:1.65;margin:0 0 12px;max-width:68ch}
-  .sourcebox{border:1px solid var(--rule);border-left:4px solid var(--accent);border-radius:8px;padding:12px 16px;margin:18px 0;max-width:68ch}
-  .sourcebox p{font-size:14px;line-height:1.6;margin:6px 0}
-  .sourcebox .flag{display:inline-block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;background:#fde68a;color:#7c2d12;border-radius:4px;padding:2px 8px;margin-bottom:4px}
-  .read-original{display:inline-block;margin:10px 0;padding:10px 20px;background:var(--accent);color:#fff !important;border-radius:8px;font-weight:700;text-decoration:none;font-size:15px}
-  .related{margin-top:28px;border-top:1px solid var(--rule);padding-top:14px}
-  .related h4.sec{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:0 0 10px}
-  .related ul{list-style:none;margin:0;padding:0}
-  .related li{margin:0 0 10px;font-size:15px;line-height:1.45}
-  .related a{color:var(--ink);text-decoration:none;border-bottom:1px solid var(--rule)}
-  .related a:hover{color:var(--accent);border-bottom-color:var(--accent)}
-  .backfoot{margin:30px 0 40px;font-size:14px}
-  .backfoot a{color:var(--accent);text-decoration:none;font-weight:600}
-  .secpage .storyitem{border-bottom:1px solid var(--rule);padding:16px 0}
-  .secpage .storyitem h3{font-size:20px;margin:0 0 6px;line-height:1.3}
-  .secpage .storyitem h3 a{color:var(--ink);text-decoration:none}
-  .secpage .storyitem h3 a:hover{color:var(--accent)}
-  .secpage .lede{font-size:16px;line-height:1.65;color:var(--ink);max-width:70ch;margin:10px 0 6px}
-
-  
-  .sec-head h2 a{color:inherit;text-decoration:none;border-bottom:2px solid transparent}
-  .sec-head h2 a:hover{color:var(--accent);border-bottom-color:var(--accent)}
-  .mini-mast{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 20px;border-bottom:3px double var(--ink);margin-bottom:8px;flex-wrap:wrap}
-  .mini-mast a.brand{font-family:Georgia,'Times New Roman',serif;font-weight:700;font-size:20px;color:var(--ink);text-decoration:none}
-  .mini-mast .ed{font-size:12px;color:var(--muted)}
-  .kicker{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:18px 0 4px}
-  .kicker a{color:var(--accent);text-decoration:none}
-  .detail h1{font-family:Georgia,'Times New Roman',serif;font-size:clamp(26px,5vw,40px);line-height:1.15;margin:6px 0 10px;letter-spacing:-.01em}
-  .detail h4.sec{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--accent);margin:22px 0 6px}
-  .detail p.body{font-size:16px;line-height:1.65;margin:0 0 12px;max-width:68ch}
-  .sourcebox{border:1px solid var(--rule);border-left:4px solid var(--accent);border-radius:8px;padding:12px 16px;margin:18px 0;max-width:68ch}
-  .sourcebox p{font-size:14px;line-height:1.6;margin:6px 0}
-  .sourcebox .flag{display:inline-block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;background:#fde68a;color:#7c2d12;border-radius:4px;padding:2px 8px;margin-bottom:4px}
-  .read-original{display:inline-block;margin:10px 0;padding:10px 20px;background:var(--accent);color:#fff !important;border-radius:8px;font-weight:700;text-decoration:none;font-size:15px}
-  .related{margin-top:28px;border-top:1px solid var(--rule);padding-top:14px}
-  .related h4.sec{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:0 0 10px}
-  .related ul{list-style:none;margin:0;padding:0}
-  .related li{margin:0 0 10px;font-size:15px;line-height:1.45}
-  .related a{color:var(--ink);text-decoration:none;border-bottom:1px solid var(--rule)}
-  .related a:hover{color:var(--accent);border-bottom-color:var(--accent)}
-  .backfoot{margin:30px 0 40px;font-size:14px}
-  .backfoot a{color:var(--accent);text-decoration:none;font-weight:600}
-  .secpage .storyitem{border-bottom:1px solid var(--rule);padding:16px 0}
-  .secpage .storyitem h3{font-size:20px;margin:0 0 6px;line-height:1.3}
-  .secpage .storyitem h3 a{color:var(--ink);text-decoration:none}
-  .secpage .storyitem h3 a:hover{color:var(--accent)}
-  .secpage .lede{font-size:16px;line-height:1.65;color:var(--ink);max-width:70ch;margin:10px 0 6px}
-
-  
-  .sec-head h2 a{color:inherit;text-decoration:none;border-bottom:2px solid transparent}
-  .sec-head h2 a:hover{color:var(--accent);border-bottom-color:var(--accent)}
-  .mini-mast{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 20px;border-bottom:3px double var(--ink);margin-bottom:8px;flex-wrap:wrap}
-  .mini-mast a.brand{font-family:Georgia,'Times New Roman',serif;font-weight:700;font-size:20px;color:var(--ink);text-decoration:none}
-  .mini-mast .ed{font-size:12px;color:var(--muted)}
-  .kicker{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:18px 0 4px}
-  .kicker a{color:var(--accent);text-decoration:none}
-  .detail h1{font-family:Georgia,'Times New Roman',serif;font-size:clamp(26px,5vw,40px);line-height:1.15;margin:6px 0 10px;letter-spacing:-.01em}
-  .detail h4.sec{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--accent);margin:22px 0 6px}
-  .detail p.body{font-size:16px;line-height:1.65;margin:0 0 12px;max-width:68ch}
-  .sourcebox{border:1px solid var(--rule);border-left:4px solid var(--accent);border-radius:8px;padding:12px 16px;margin:18px 0;max-width:68ch}
-  .sourcebox p{font-size:14px;line-height:1.6;margin:6px 0}
-  .sourcebox .flag{display:inline-block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;background:#fde68a;color:#7c2d12;border-radius:4px;padding:2px 8px;margin-bottom:4px}
-  .read-original{display:inline-block;margin:10px 0;padding:10px 20px;background:var(--accent);color:#fff !important;border-radius:8px;font-weight:700;text-decoration:none;font-size:15px}
-  .related{margin-top:28px;border-top:1px solid var(--rule);padding-top:14px}
-  .related h4.sec{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:0 0 10px}
-  .related ul{list-style:none;margin:0;padding:0}
-  .related li{margin:0 0 10px;font-size:15px;line-height:1.45}
-  .related a{color:var(--ink);text-decoration:none;border-bottom:1px solid var(--rule)}
-  .related a:hover{color:var(--accent);border-bottom-color:var(--accent)}
-  .backfoot{margin:30px 0 40px;font-size:14px}
-  .backfoot a{color:var(--accent);text-decoration:none;font-weight:600}
-  .secpage .storyitem{border-bottom:1px solid var(--rule);padding:16px 0}
-  .secpage .storyitem h3{font-size:20px;margin:0 0 6px;line-height:1.3}
-  .secpage .storyitem h3 a{color:var(--ink);text-decoration:none}
-  .secpage .storyitem h3 a:hover{color:var(--accent)}
-  .secpage .lede{font-size:16px;line-height:1.65;color:var(--ink);max-width:70ch;margin:10px 0 6px}
-
-  
-  .sec-head h2 a{color:inherit;text-decoration:none;border-bottom:2px solid transparent}
-  .sec-head h2 a:hover{color:var(--accent);border-bottom-color:var(--accent)}
-  .mini-mast{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 20px;border-bottom:3px double var(--ink);margin-bottom:8px;flex-wrap:wrap}
-  .mini-mast a.brand{font-family:Georgia,'Times New Roman',serif;font-weight:700;font-size:20px;color:var(--ink);text-decoration:none}
-  .mini-mast .ed{font-size:12px;color:var(--muted)}
-  .kicker{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:18px 0 4px}
-  .kicker a{color:var(--accent);text-decoration:none}
-  .detail h1{font-family:Georgia,'Times New Roman',serif;font-size:clamp(26px,5vw,40px);line-height:1.15;margin:6px 0 10px;letter-spacing:-.01em}
-  .detail h4.sec{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--accent);margin:22px 0 6px}
-  .detail p.body{font-size:16px;line-height:1.65;margin:0 0 12px;max-width:68ch}
-  .sourcebox{border:1px solid var(--rule);border-left:4px solid var(--accent);border-radius:8px;padding:12px 16px;margin:18px 0;max-width:68ch}
-  .sourcebox p{font-size:14px;line-height:1.6;margin:6px 0}
-  .sourcebox .flag{display:inline-block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;background:#fde68a;color:#7c2d12;border-radius:4px;padding:2px 8px;margin-bottom:4px}
-  .read-original{display:inline-block;margin:10px 0;padding:10px 20px;background:var(--accent);color:#fff !important;border-radius:8px;font-weight:700;text-decoration:none;font-size:15px}
-  .related{margin-top:28px;border-top:1px solid var(--rule);padding-top:14px}
-  .related h4.sec{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:0 0 10px}
-  .related ul{list-style:none;margin:0;padding:0}
-  .related li{margin:0 0 10px;font-size:15px;line-height:1.45}
-  .related a{color:var(--ink);text-decoration:none;border-bottom:1px solid var(--rule)}
-  .related a:hover{color:var(--accent);border-bottom-color:var(--accent)}
-  .backfoot{margin:30px 0 40px;font-size:14px}
-  .backfoot a{color:var(--accent);text-decoration:none;font-weight:600}
-  .secpage .storyitem{border-bottom:1px solid var(--rule);padding:16px 0}
-  .secpage .storyitem h3{font-size:20px;margin:0 0 6px;line-height:1.3}
-  .secpage .storyitem h3 a{color:var(--ink);text-decoration:none}
-  .secpage .storyitem h3 a:hover{color:var(--accent)}
-  .secpage .lede{font-size:16px;line-height:1.65;color:var(--ink);max-width:70ch;margin:10px 0 6px}
-
-  
-  .sec-head h2 a{color:inherit;text-decoration:none;border-bottom:2px solid transparent}
-  .sec-head h2 a:hover{color:var(--accent);border-bottom-color:var(--accent)}
-  .mini-mast{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 20px;border-bottom:3px double var(--ink);margin-bottom:8px;flex-wrap:wrap}
-  .mini-mast a.brand{font-family:Georgia,'Times New Roman',serif;font-weight:700;font-size:20px;color:var(--ink);text-decoration:none}
-  .mini-mast .ed{font-size:12px;color:var(--muted)}
-  .kicker{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:18px 0 4px}
-  .kicker a{color:var(--accent);text-decoration:none}
-  .detail h1{font-family:Georgia,'Times New Roman',serif;font-size:clamp(26px,5vw,40px);line-height:1.15;margin:6px 0 10px;letter-spacing:-.01em}
-  .detail h4.sec{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--accent);margin:22px 0 6px}
-  .detail p.body{font-size:16px;line-height:1.65;margin:0 0 12px;max-width:68ch}
-  .sourcebox{border:1px solid var(--rule);border-left:4px solid var(--accent);border-radius:8px;padding:12px 16px;margin:18px 0;max-width:68ch}
-  .sourcebox p{font-size:14px;line-height:1.6;margin:6px 0}
-  .sourcebox .flag{display:inline-block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;background:#fde68a;color:#7c2d12;border-radius:4px;padding:2px 8px;margin-bottom:4px}
-  .read-original{display:inline-block;margin:10px 0;padding:10px 20px;background:var(--accent);color:#fff !important;border-radius:8px;font-weight:700;text-decoration:none;font-size:15px}
-  .related{margin-top:28px;border-top:1px solid var(--rule);padding-top:14px}
-  .related h4.sec{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:0 0 10px}
-  .related ul{list-style:none;margin:0;padding:0}
-  .related li{margin:0 0 10px;font-size:15px;line-height:1.45}
-  .related a{color:var(--ink);text-decoration:none;border-bottom:1px solid var(--rule)}
-  .related a:hover{color:var(--accent);border-bottom-color:var(--accent)}
-  .backfoot{margin:30px 0 40px;font-size:14px}
-  .backfoot a{color:var(--accent);text-decoration:none;font-weight:600}
-  .secpage .storyitem{border-bottom:1px solid var(--rule);padding:16px 0}
-  .secpage .storyitem h3{font-size:20px;margin:0 0 6px;line-height:1.3}
-  .secpage .storyitem h3 a{color:var(--ink);text-decoration:none}
-  .secpage .storyitem h3 a:hover{color:var(--accent)}
-  .secpage .lede{font-size:16px;line-height:1.65;color:var(--ink);max-width:70ch;margin:10px 0 6px}
-
-  
-  .sec-head h2 a{color:inherit;text-decoration:none;border-bottom:2px solid transparent}
-  .sec-head h2 a:hover{color:var(--accent);border-bottom-color:var(--accent)}
-  .mini-mast{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 20px;border-bottom:3px double var(--ink);margin-bottom:8px;flex-wrap:wrap}
-  .mini-mast a.brand{font-family:Georgia,'Times New Roman',serif;font-weight:700;font-size:20px;color:var(--ink);text-decoration:none}
-  .mini-mast .ed{font-size:12px;color:var(--muted)}
-  .kicker{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:18px 0 4px}
-  .kicker a{color:var(--accent);text-decoration:none}
-  .detail h1{font-family:Georgia,'Times New Roman',serif;font-size:clamp(26px,5vw,40px);line-height:1.15;margin:6px 0 10px;letter-spacing:-.01em}
-  .detail h4.sec{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--accent);margin:22px 0 6px}
-  .detail p.body{font-size:16px;line-height:1.65;margin:0 0 12px;max-width:68ch}
-  .sourcebox{border:1px solid var(--rule);border-left:4px solid var(--accent);border-radius:8px;padding:12px 16px;margin:18px 0;max-width:68ch}
-  .sourcebox p{font-size:14px;line-height:1.6;margin:6px 0}
-  .sourcebox .flag{display:inline-block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;background:#fde68a;color:#7c2d12;border-radius:4px;padding:2px 8px;margin-bottom:4px}
-  .read-original{display:inline-block;margin:10px 0;padding:10px 20px;background:var(--accent);color:#fff !important;border-radius:8px;font-weight:700;text-decoration:none;font-size:15px}
-  .related{margin-top:28px;border-top:1px solid var(--rule);padding-top:14px}
-  .related h4.sec{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:0 0 10px}
-  .related ul{list-style:none;margin:0;padding:0}
-  .related li{margin:0 0 10px;font-size:15px;line-height:1.45}
-  .related a{color:var(--ink);text-decoration:none;border-bottom:1px solid var(--rule)}
-  .related a:hover{color:var(--accent);border-bottom-color:var(--accent)}
-  .backfoot{margin:30px 0 40px;font-size:14px}
-  .backfoot a{color:var(--accent);text-decoration:none;font-weight:600}
-  .secpage .storyitem{border-bottom:1px solid var(--rule);padding:16px 0}
-  .secpage .storyitem h3{font-size:20px;margin:0 0 6px;line-height:1.3}
-  .secpage .storyitem h3 a{color:var(--ink);text-decoration:none}
-  .secpage .storyitem h3 a:hover{color:var(--accent)}
-  .secpage .lede{font-size:16px;line-height:1.65;color:var(--ink);max-width:70ch;margin:10px 0 6px}
-
-  
-  .sec-head h2 a{color:inherit;text-decoration:none;border-bottom:2px solid transparent}
-  .sec-head h2 a:hover{color:var(--accent);border-bottom-color:var(--accent)}
-  .mini-mast{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 20px;border-bottom:3px double var(--ink);margin-bottom:8px;flex-wrap:wrap}
-  .mini-mast a.brand{font-family:Georgia,'Times New Roman',serif;font-weight:700;font-size:20px;color:var(--ink);text-decoration:none}
-  .mini-mast .ed{font-size:12px;color:var(--muted)}
-  .kicker{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:18px 0 4px}
-  .kicker a{color:var(--accent);text-decoration:none}
-  .detail h1{font-family:Georgia,'Times New Roman',serif;font-size:clamp(26px,5vw,40px);line-height:1.15;margin:6px 0 10px;letter-spacing:-.01em}
-  .detail h4.sec{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--accent);margin:22px 0 6px}
-  .detail p.body{font-size:16px;line-height:1.65;margin:0 0 12px;max-width:68ch}
-  .sourcebox{border:1px solid var(--rule);border-left:4px solid var(--accent);border-radius:8px;padding:12px 16px;margin:18px 0;max-width:68ch}
-  .sourcebox p{font-size:14px;line-height:1.6;margin:6px 0}
-  .sourcebox .flag{display:inline-block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;background:#fde68a;color:#7c2d12;border-radius:4px;padding:2px 8px;margin-bottom:4px}
-  .read-original{display:inline-block;margin:10px 0;padding:10px 20px;background:var(--accent);color:#fff !important;border-radius:8px;font-weight:700;text-decoration:none;font-size:15px}
-  .related{margin-top:28px;border-top:1px solid var(--rule);padding-top:14px}
-  .related h4.sec{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:0 0 10px}
-  .related ul{list-style:none;margin:0;padding:0}
-  .related li{margin:0 0 10px;font-size:15px;line-height:1.45}
-  .related a{color:var(--ink);text-decoration:none;border-bottom:1px solid var(--rule)}
-  .related a:hover{color:var(--accent);border-bottom-color:var(--accent)}
-  .backfoot{margin:30px 0 40px;font-size:14px}
-  .backfoot a{color:var(--accent);text-decoration:none;font-weight:600}
-  .secpage .storyitem{border-bottom:1px solid var(--rule);padding:16px 0}
-  .secpage .storyitem h3{font-size:20px;margin:0 0 6px;line-height:1.3}
-  .secpage .storyitem h3 a{color:var(--ink);text-decoration:none}
-  .secpage .storyitem h3 a:hover{color:var(--accent)}
-  .secpage .lede{font-size:16px;line-height:1.65;color:var(--ink);max-width:70ch;margin:10px 0 6px}
-
-  
-  .sec-head h2 a{color:inherit;text-decoration:none;border-bottom:2px solid transparent}
-  .sec-head h2 a:hover{color:var(--accent);border-bottom-color:var(--accent)}
-  .mini-mast{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 20px;border-bottom:3px double var(--ink);margin-bottom:8px;flex-wrap:wrap}
-  .mini-mast a.brand{font-family:Georgia,'Times New Roman',serif;font-weight:700;font-size:20px;color:var(--ink);text-decoration:none}
-  .mini-mast .ed{font-size:12px;color:var(--muted)}
-  .kicker{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:18px 0 4px}
-  .kicker a{color:var(--accent);text-decoration:none}
-  .detail h1{font-family:Georgia,'Times New Roman',serif;font-size:clamp(26px,5vw,40px);line-height:1.15;margin:6px 0 10px;letter-spacing:-.01em}
-  .detail h4.sec{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--accent);margin:22px 0 6px}
-  .detail p.body{font-size:16px;line-height:1.65;margin:0 0 12px;max-width:68ch}
-  .sourcebox{border:1px solid var(--rule);border-left:4px solid var(--accent);border-radius:8px;padding:12px 16px;margin:18px 0;max-width:68ch}
-  .sourcebox p{font-size:14px;line-height:1.6;margin:6px 0}
-  .sourcebox .flag{display:inline-block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;background:#fde68a;color:#7c2d12;border-radius:4px;padding:2px 8px;margin-bottom:4px}
-  .read-original{display:inline-block;margin:10px 0;padding:10px 20px;background:var(--accent);color:#fff !important;border-radius:8px;font-weight:700;text-decoration:none;font-size:15px}
-  .related{margin-top:28px;border-top:1px solid var(--rule);padding-top:14px}
-  .related h4.sec{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:0 0 10px}
-  .related ul{list-style:none;margin:0;padding:0}
-  .related li{margin:0 0 10px;font-size:15px;line-height:1.45}
-  .related a{color:var(--ink);text-decoration:none;border-bottom:1px solid var(--rule)}
-  .related a:hover{color:var(--accent);border-bottom-color:var(--accent)}
-  .backfoot{margin:30px 0 40px;font-size:14px}
-  .backfoot a{color:var(--accent);text-decoration:none;font-weight:600}
-  .secpage .storyitem{border-bottom:1px solid var(--rule);padding:16px 0}
-  .secpage .storyitem h3{font-size:20px;margin:0 0 6px;line-height:1.3}
-  .secpage .storyitem h3 a{color:var(--ink);text-decoration:none}
-  .secpage .storyitem h3 a:hover{color:var(--accent)}
-  .secpage .lede{font-size:16px;line-height:1.65;color:var(--ink);max-width:70ch;margin:10px 0 6px}
-
   </style>
 </head>
 <body>
@@ -1255,17 +267,20 @@
   <div class="sec-head"><span class="sec-num">Front page</span><h2><a href="sections/top-stories.html">Top Stories</a></h2><span class="line"></span></div>
   <div class="stack">
     <article class="card story lead" data-article="articles/2026-11-15-ground-stop-ripples-into-a-third-day-of-scrapped-flight.html">
+      <div class="card-top"></div>
       <h3><a href="https://www.wsj.com/business/airlines/groundstop-ripples-into-third-day-of-scrapped-flights-003cba99" target="_blank" rel="noopener">Ground stop ripples into a third day of scrapped flights: 9,000 canceled Friday, 6,600 Saturday, 1,300 more by Sunday morning</a></h3>
       <p class="dek">The disruption from Friday's more-than-four-hour nationwide FAA ground stop stretched into a third day Sunday. The Journal counts more than 9,000 flights canceled Friday, 6,600 Saturday and another 1,300 by Sunday morning. The FAA traced the failure to a newly installed router at an Arkansas site that pinged and overloaded the network — part of the L3Harris FTI system, whose copper-to-fiber upgrade runs to the end of 2028.</p>
       <p class="byline">The Wall Street Journal</p>
     </article>
     <article class="card story" data-article="articles/2026-11-15-u-s-floated-ukraine-ceding-the-donbas-for-nato-membersh.html">
+      <div class="card-top"></div>
       <h3><a href="https://www.cnn.com/2026/11/14/europe/us-ukraine-zelensky-nato-intl?cid=external-feeds_iluminar_meta" target="_blank" rel="noopener">U.S. floated Ukraine ceding the Donbas for NATO membership, Zelensky says — Kyiv would put any real proposal to a referendum</a></h3>
       <p class="dek">U.S. negotiators raised the idea directly, President Volodymyr Zelensky said Saturday: what if Ukraine joins NATO and withdraws from the Donbas? It was the first time the trade had been raised, he said; the U.S. has not confirmed it, telling the BBC that many ideas continue to be discussed. Zelensky said a specific proposal carrying security guarantees, no limits on Ukraine's military and reconstruction funds would go to a referendum. Envoys Kushner and Witkoff met Putin in Moscow, then Zelensky in Dublin on Thursday.</p>
       <p class="byline">CNN</p>
     </article>
     <article class="card story" data-article="articles/2026-11-15-movement-to-sidestep-the-electoral-college-gains-ground.html">
-      <h3><a href="https://zarknews.com/electoral-college-popular-vote-compact-democratic-wins/" target="_blank" rel="noopener">Movement to sidestep the Electoral College gains ground after Democratic state wins: the popular-vote compact could cross 270 in time for 2028</a><span class="thin" title="Captured via a relay/listing of the front page; the desk could not verify the paper&#x27;s own front page directly this morning.">thin sourcing</span></h3>
+      <div class="card-top"><span class="thin" title="Captured via a relay/listing of the front page; the desk could not verify the paper&#x27;s own front page directly this morning.">thin sourcing</span></div>
+      <h3><a href="https://zarknews.com/electoral-college-popular-vote-compact-democratic-wins/" target="_blank" rel="noopener">Movement to sidestep the Electoral College gains ground after Democratic state wins: the popular-vote compact could cross 270 in time for 2028</a></h3>
       <p class="dek">The National Popular Vote Interstate Compact has new momentum after Democrats swept state races, the Post reports. Eighteen states plus D.C. have joined, totaling 222 electoral votes; if Arizona, Michigan, Nevada, Pennsylvania and Wisconsin — all now fully Democratic-controlled — joined, the compact would cross the 270 threshold and take effect for 2028. Legislative and court hurdles remain.</p>
       <p class="byline">The Washington Post (via relay)</p>
     </article>
@@ -1277,82 +292,97 @@
   <div class="stack">
   <h4 class="outlet-sub">The Wall Street Journal</h4>
     <article class="card story" data-article="articles/2026-11-15-ground-stop-ripples-into-third-day-of-scrapped-flights.html">
-      <h3><a href="https://www.wsj.com/business/airlines/groundstop-ripples-into-third-day-of-scrapped-flights-003cba99" target="_blank" rel="noopener">Ground Stop Ripples Into Third Day of Scrapped Flights</a><span class="thin" title="Front-page headline and dek only; full text paywalled.">thin sourcing</span></h3>
+      <div class="card-top"><span class="thin" title="Front-page headline and dek only; full text paywalled.">thin sourcing</span></div>
+      <h3><a href="https://www.wsj.com/business/airlines/groundstop-ripples-into-third-day-of-scrapped-flights-003cba99" target="_blank" rel="noopener">Ground Stop Ripples Into Third Day of Scrapped Flights</a></h3>
       <p class="dek">Travel disruption stretched into a third day Sunday as the effects of a more-than-four-hour ground stop reverberated: 9,000-plus flights canceled Friday, 6,600 Saturday, another 1,300 by Sunday morning. The FAA traced the issue to a newly installed router at an Arkansas site overloading the network.</p>
       <p class="byline">The Wall Street Journal</p>
     </article>
     <article class="card story" data-article="articles/2026-11-15-behind-the-nvidia-affair-sits-a-vast-chinese-spying-mac.html">
-      <h3><a href="https://www.wsj.com/world/nvidia-china-espionage-spy-hacking-ai-174c366b" target="_blank" rel="noopener">Behind the Nvidia Affair Sits a Vast Chinese Spying Machine</a><span class="thin" title="Front-page headline and dek only; full text paywalled.">thin sourcing</span></h3>
+      <div class="card-top"><span class="thin" title="Front-page headline and dek only; full text paywalled.">thin sourcing</span></div>
+      <h3><a href="https://www.wsj.com/world/nvidia-china-espionage-spy-hacking-ai-174c366b" target="_blank" rel="noopener">Behind the Nvidia Affair Sits a Vast Chinese Spying Machine</a></h3>
       <p class="dek">The Journal's lead investigation: behind Jensen Huang's fall sits a vast Chinese spying operation targeting Western tech and AI — the network U.S. officials say ensnared the now-former Nvidia CEO at the center of the AI boom.</p>
       <p class="byline">The Wall Street Journal</p>
     </article>
     <article class="card story" data-article="articles/2026-11-15-in-jensen-huang-s-ouster-tech-billionaires-see-a-mistak.html">
-      <h3><a href="https://www.wsj.com/tech/in-jensen-huangs-ouster-tech-billionaires-see-a-mistakeand-a-lesson-2bea613c" target="_blank" rel="noopener">In Jensen Huang's Ouster, Tech Billionaires See a Mistake — and a Lesson</a><span class="thin" title="Front-page headline and dek only; full text paywalled.">thin sourcing</span></h3>
+      <div class="card-top"><span class="thin" title="Front-page headline and dek only; full text paywalled.">thin sourcing</span></div>
+      <h3><a href="https://www.wsj.com/tech/in-jensen-huangs-ouster-tech-billionaires-see-a-mistakeand-a-lesson-2bea613c" target="_blank" rel="noopener">In Jensen Huang's Ouster, Tech Billionaires See a Mistake — and a Lesson</a></h3>
       <p class="dek">Musk, Luckey, Kalanick and Gebbia defend Huang after his Thursday ouster. Musk said he would sign a reinstatement petition; Epic's Tim Sweeney called it 'Apple firing Steve Jobs level of idiocy.' Huang's stake is roughly $140 billion, about 3.6% of Nvidia.</p>
       <p class="byline">The Wall Street Journal</p>
     </article>
   <h4 class="outlet-sub">The New York Times</h4>
     <article class="card story" data-article="articles/2026-11-15-thousands-remain-stranded-after-nearly-5-hour-stoppage.html">
-      <h3><a href="https://intellicurious.com/2026/11/14/the-new-york-times-saturday-november-14-2026/" target="_blank" rel="noopener">Thousands Remain Stranded After Nearly 5-Hour Stoppage</a><span class="thin" title="Captured via a relay/listing of the front page; the desk could not verify the paper&#x27;s own front page directly this morning.">thin sourcing</span></h3>
+      <div class="card-top"><span class="thin" title="Captured via a relay/listing of the front page; the desk could not verify the paper&#x27;s own front page directly this morning.">thin sourcing</span></div>
+      <h3><a href="https://intellicurious.com/2026/11/14/the-new-york-times-saturday-november-14-2026/" target="_blank" rel="noopener">Thousands Remain Stranded After Nearly 5-Hour Stoppage</a></h3>
       <p class="dek">The Times' splash: U.S. air traffic stayed snarled after the ground stop ended Friday night, and it could take days to recover. Officials blamed an aging air-traffic control system. (Saturday front page, via the Intellicurious listing; Sunday's page had not been captured when the desk swept.)</p>
       <p class="byline">The New York Times</p>
     </article>
     <article class="card story" data-article="articles/2026-11-15-trump-kept-out-of-sight-as-f-a-a-issued-flight-ground-s.html">
-      <h3><a href="https://politicalwire.com/2026/11/14/trump-kept-out-of-sight-as-faa-issued-flight-ground-stop/" target="_blank" rel="noopener">Trump Kept Out of Sight as F.A.A. Issued Flight Ground Stop</a><span class="thin" title="Captured via a relay/listing of the front page; the desk could not verify the paper&#x27;s own front page directly this morning.">thin sourcing</span></h3>
+      <div class="card-top"><span class="thin" title="Captured via a relay/listing of the front page; the desk could not verify the paper&#x27;s own front page directly this morning.">thin sourcing</span></div>
+      <h3><a href="https://politicalwire.com/2026/11/14/trump-kept-out-of-sight-as-faa-issued-flight-ground-stop/" target="_blank" rel="noopener">Trump Kept Out of Sight as F.A.A. Issued Flight Ground Stop</a></h3>
       <p class="dek">With flights grounded nearly five hours Friday, Americans heard from DHS Secretary Mullin and Transportation Secretary Duffy — not President Trump, who posted on other topics. The halt grounded or delayed roughly 10,000 flights, the first major crisis since the midterms.</p>
       <p class="byline">The New York Times (via Political Wire)</p>
     </article>
     <article class="card story" data-article="articles/2026-11-15-russia-demands-nato-pullback-to-1997-positions-the-time.html">
-      <h3><a href="https://www.ajupress.com/view/20261114083053991" target="_blank" rel="noopener">Russia Demands NATO Pullback to 1997 Positions, the Times Reports</a><span class="thin" title="Captured via a relay/listing of the front page; the desk could not verify the paper&#x27;s own front page directly this morning.">thin sourcing</span></h3>
+      <div class="card-top"><span class="thin" title="Captured via a relay/listing of the front page; the desk could not verify the paper&#x27;s own front page directly this morning.">thin sourcing</span></div>
+      <h3><a href="https://www.ajupress.com/view/20261114083053991" target="_blank" rel="noopener">Russia Demands NATO Pullback to 1997 Positions, the Times Reports</a></h3>
       <p class="dek">A Russian document dated Nov. 10, circulated in the Abu Dhabi talks and obtained by the Times, revives the December 2021 demands: NATO withdraws to its 1997 positions and halts enlargement and military activity in Eastern Europe, the South Caucasus and Central Asia. Two sources confirmed the document's authenticity in the relays; treat the detail as single-sourced until corroborated.</p>
       <p class="byline">The New York Times (via Aju Press)</p>
     </article>
   <h4 class="outlet-sub">The Washington Post</h4>
     <article class="card story" data-article="articles/2026-11-15-movement-to-sidestep-the-electoral-college-gains-ground.html">
-      <h3><a href="https://zarknews.com/electoral-college-popular-vote-compact-democratic-wins/" target="_blank" rel="noopener">Movement to Sidestep the Electoral College Gains Ground After Democratic State Wins</a><span class="thin" title="Captured via a relay/listing of the front page; the desk could not verify the paper&#x27;s own front page directly this morning.">thin sourcing</span></h3>
+      <div class="card-top"><span class="thin" title="Captured via a relay/listing of the front page; the desk could not verify the paper&#x27;s own front page directly this morning.">thin sourcing</span></div>
+      <h3><a href="https://zarknews.com/electoral-college-popular-vote-compact-democratic-wins/" target="_blank" rel="noopener">Movement to Sidestep the Electoral College Gains Ground After Democratic State Wins</a></h3>
       <p class="dek">The Post fronts the popular-vote compact's new momentum: 222 electoral votes committed, with five newly Democratic-controlled states able to carry it past 270 for 2028 — if legislatures act and courts allow.</p>
       <p class="byline">The Washington Post (via relay)</p>
     </article>
     <article class="card story" data-article="articles/2026-11-15-rubio-set-in-motion-jensen-huang-s-fall-the-post-report.html">
-      <h3><a href="https://dealroom.co/news/172740-rubio-recast-a-cia-report-in-the-memo-that-set-off-huang-s-fall-wapo-rep/" target="_blank" rel="noopener">Rubio 'Set in Motion' Jensen Huang's Fall, the Post Reports</a><span class="thin" title="Captured via a relay/listing of the front page; the desk could not verify the paper&#x27;s own front page directly this morning.">thin sourcing</span></h3>
+      <div class="card-top"><span class="thin" title="Captured via a relay/listing of the front page; the desk could not verify the paper&#x27;s own front page directly this morning.">thin sourcing</span></div>
+      <h3><a href="https://dealroom.co/news/172740-rubio-recast-a-cia-report-in-the-memo-that-set-off-huang-s-fall-wapo-rep/" target="_blank" rel="noopener">Rubio 'Set in Motion' Jensen Huang's Fall, the Post Reports</a></h3>
       <p class="dek">The Post reported Nov. 13 that Secretary of State Marco Rubio recast a CIA report 'in his own more assertive terms' in a memo warning Trump about Huang's relationship with Alice Huang, a suspected Chinese asset. The CIA is reportedly 'not yet convinced' she knowingly passed information; the memo's leak set off the chain that ended in Huang's resignation.</p>
       <p class="byline">The Washington Post (via relay)</p>
     </article>
     <article class="card story" data-article="articles/2026-11-15-jd-vance-still-likely-to-run-for-president.html">
-      <h3><a href="https://politicalwire.com/2026/11/13/jd-vance-still-likely-to-run-for-president/" target="_blank" rel="noopener">JD Vance Still Likely to Run for President</a><span class="thin" title="Captured via a relay/listing of the front page; the desk could not verify the paper&#x27;s own front page directly this morning.">thin sourcing</span></h3>
+      <div class="card-top"><span class="thin" title="Captured via a relay/listing of the front page; the desk could not verify the paper&#x27;s own front page directly this morning.">thin sourcing</span></div>
+      <h3><a href="https://politicalwire.com/2026/11/13/jd-vance-still-likely-to-run-for-president/" target="_blank" rel="noopener">JD Vance Still Likely to Run for President</a></h3>
       <p class="dek">'Vice President JD Vance isn't out of the 2028 presidential race — at least not yet,' the Post reports. Detractors wrote his obituary after the Republicans' midterm drubbing, but several close allies say he is still more likely to run than not.</p>
       <p class="byline">The Washington Post (via Political Wire)</p>
     </article>
   <h4 class="outlet-sub">BBC News</h4>
     <article class="card story" data-article="articles/2026-11-15-us-has-floated-ukraine-ceding-donbas-for-nato-membershi.html">
-      <h3><a href="https://sokonnect.com/us-floated-donbas-withdrawal-in-exchange-for-nato-membership-zelensky-says/" target="_blank" rel="noopener">US Has Floated Ukraine Ceding Donbas for NATO Membership, Zelensky Says</a><span class="thin" title="Captured via a relay/listing of the front page; the desk could not verify the paper&#x27;s own front page directly this morning.">thin sourcing</span></h3>
+      <div class="card-top"><span class="thin" title="Captured via a relay/listing of the front page; the desk could not verify the paper&#x27;s own front page directly this morning.">thin sourcing</span></div>
+      <h3><a href="https://sokonnect.com/us-floated-donbas-withdrawal-in-exchange-for-nato-membership-zelensky-says/" target="_blank" rel="noopener">US Has Floated Ukraine Ceding Donbas for NATO Membership, Zelensky Says</a></h3>
       <p class="dek">The BBC's lead: U.S. negotiators raised the Donbas-for-NATO trade directly, Zelensky said Saturday — the first time it had been raised. A U.S. official told the BBC 'many ideas continue to be discussed.'</p>
       <p class="byline">BBC News (via relay)</p>
     </article>
     <article class="card story" data-article="articles/2026-11-15-three-men-sentenced-to-death-in-jordan-over-fatal-churc.html">
-      <h3><a href="https://news.jeepney.io/2026/11/three-men-sentenced-to-death-in-jordan-over-fatal-church-mass-shooting/" target="_blank" rel="noopener">Three Men Sentenced to Death in Jordan Over Fatal Church Mass Shooting</a><span class="thin" title="Captured via a relay/listing of the front page; the desk could not verify the paper&#x27;s own front page directly this morning.">thin sourcing</span></h3>
+      <div class="card-top"><span class="thin" title="Captured via a relay/listing of the front page; the desk could not verify the paper&#x27;s own front page directly this morning.">thin sourcing</span></div>
+      <h3><a href="https://news.jeepney.io/2026/11/three-men-sentenced-to-death-in-jordan-over-fatal-church-mass-shooting/" target="_blank" rel="noopener">Three Men Sentenced to Death in Jordan Over Fatal Church Mass Shooting</a></h3>
       <p class="dek">Three men were sentenced to death in Jordan over last month's attack on a funeral at a Greek Orthodox church in the Karak area, which killed nine people and injured 34.</p>
       <p class="byline">BBC News (via relay)</p>
     </article>
   <h4 class="outlet-sub">The Guardian</h4>
     <article class="card story" data-article="articles/2026-11-15-ukraine-offered-stark-choice-donbas-for-nato-membership.html">
-      <h3><a href="https://observer.co.uk/news/international/article/ukraine-offered-stark-choice-donbas-for-nato-membership" target="_blank" rel="noopener">Ukraine Offered Stark Choice: Donbas for NATO Membership</a><span class="thin" title="Captured via a relay/listing of the front page; the desk could not verify the paper&#x27;s own front page directly this morning.">thin sourcing</span></h3>
+      <div class="card-top"><span class="thin" title="Captured via a relay/listing of the front page; the desk could not verify the paper&#x27;s own front page directly this morning.">thin sourcing</span></div>
+      <h3><a href="https://observer.co.uk/news/international/article/ukraine-offered-stark-choice-donbas-for-nato-membership" target="_blank" rel="noopener">Ukraine Offered Stark Choice: Donbas for NATO Membership</a></h3>
       <p class="dek">The Observer — the Guardian's Sunday sister paper — leads with the same stark trade: surrender the rest of the eastern Donbas for NATO membership. Ukraine has repeatedly rejected giving up territory; Zelensky would put an initiative carrying guarantees to a referendum.</p>
       <p class="byline">The Guardian / The Observer</p>
     </article>
     <article class="card story" data-article="articles/2026-11-15-democrat-wins-alaska-governor-s-seat-for-first-time-in.html">
-      <h3><a href="https://worldrightnowlive.com/story/democrat-wins-alaska-governor-s-seat-for-first-time-in-nearly-30-years" target="_blank" rel="noopener">Democrat Wins Alaska Governor's Seat for First Time in Nearly 30 Years</a><span class="thin" title="Captured via a relay/listing of the front page; the desk could not verify the paper&#x27;s own front page directly this morning.">thin sourcing</span></h3>
+      <div class="card-top"><span class="thin" title="Captured via a relay/listing of the front page; the desk could not verify the paper&#x27;s own front page directly this morning.">thin sourcing</span></div>
+      <h3><a href="https://worldrightnowlive.com/story/democrat-wins-alaska-governor-s-seat-for-first-time-in-nearly-30-years" target="_blank" rel="noopener">Democrat Wins Alaska Governor's Seat for First Time in Nearly 30 Years</a></h3>
       <p class="dek">Jonathan Kreiss-Tomkins' victory means Democrats will hold 30 U.S. governorships after the midterm blowout. The former state legislator defeated three Republicans, including the Trump-backed candidate — the first Democrat elected Alaska governor since 1998, called by AP ten days after polls closed with more than 50% of first-choice votes.</p>
       <p class="byline">The Guardian (via relay)</p>
     </article>
   <h4 class="outlet-sub">Nikkei Asia</h4>
     <article class="card story" data-article="articles/2026-11-15-trump-xi-and-putin-trilateral-summit-expected-at-apec-s.html">
-      <h3><a href="https://intelligencereport.org/2026/11/10/trump-xi-putin-summit-shenzhen-apec/" target="_blank" rel="noopener">Trump, Xi and Putin Trilateral Summit Expected at APEC Shenzhen</a><span class="thin" title="Captured via a relay/listing of the front page; the desk could not verify the paper&#x27;s own front page directly this morning.">thin sourcing</span></h3>
+      <div class="card-top"><span class="thin" title="Captured via a relay/listing of the front page; the desk could not verify the paper&#x27;s own front page directly this morning.">thin sourcing</span></div>
+      <h3><a href="https://intelligencereport.org/2026/11/10/trump-xi-putin-summit-shenzhen-apec/" target="_blank" rel="noopener">Trump, Xi and Putin Trilateral Summit Expected at APEC Shenzhen</a></h3>
       <p class="dek">Trump said Nov. 8 he expects to meet Xi Jinping and Vladimir Putin on the sidelines of the APEC summit in Shenzhen Nov. 18–19, with denuclearization and the Iran war named as topics, per Nikkei Asia reporting relayed via Reuters copy. Confirmation status conflicts across relays — the White House reportedly announced a Nov. 19 meeting on Nov. 13; Beijing and Moscow have not all formally confirmed.</p>
       <p class="byline">Nikkei Asia (via relay)</p>
     </article>
     <article class="card story" data-article="articles/2026-11-15-nikkei-surges-6-46-in-best-week-since-june-as-chip-stoc.html">
-      <h3><a href="https://qncnews.com/2026/11/15/nikkei-surges-6-46-per-cent-in-best-week-since-june-as-chip-stocks-lead-rebound/" target="_blank" rel="noopener">Nikkei Surges 6.46% in Best Week Since June as Chip Stocks Lead Rebound</a><span class="thin" title="Captured via a relay/listing of the front page; the desk could not verify the paper&#x27;s own front page directly this morning.">thin sourcing</span></h3>
+      <div class="card-top"><span class="thin" title="Captured via a relay/listing of the front page; the desk could not verify the paper&#x27;s own front page directly this morning.">thin sourcing</span></div>
+      <h3><a href="https://qncnews.com/2026/11/15/nikkei-surges-6-46-per-cent-in-best-week-since-june-as-chip-stocks-lead-rebound/" target="_blank" rel="noopener">Nikkei Surges 6.46% in Best Week Since June as Chip Stocks Lead Rebound</a></h3>
       <p class="dek">The Nikkei closed Friday at 61,142.35, up 0.53% on the day and 6.46% on the week — its strongest since the week ended June 15; the Topix gained 6.3% on the week, with Advantest leading Friday. Ahead: Japan Q3 GDP Monday, Nvidia earnings Nov. 17, Anthropic's Nasdaq listing Nov. 19.</p>
       <p class="byline">Nikkei Asia (via relay)</p>
     </article>
@@ -1363,21 +393,25 @@
   <div class="sec-head"><span class="sec-num">The labs</span><h2><a href="sections/ai-technology.html">AI & Technology</a></h2><span class="line"></span></div>
   <div class="stack">
     <article class="card story" data-article="articles/2026-11-15-mr-ipo-flags-the-risk-in-anthropic-s-1-33-trillion-valu.html">
+      <div class="card-top"></div>
       <h3><a href="https://www.thestreet.com/investing/anthropic-ipo-valuation-risk-1-trillion-ceiling-jay-ritter" target="_blank" rel="noopener">'Mr. IPO' flags the risk in Anthropic's $1.33 trillion valuation: Jay Ritter warns the $70–$78 range leaves little upside</a></h3>
       <p class="dek">Anthropic set its IPO range at $70–$78 a share in an amended S-1 filed Nov. 10, implying roughly $1.26–$1.41 trillion fully diluted, $1.33 trillion at the midpoint. Annualized revenue rose from $9 billion at the end of 2025 to about $81 billion by Oct. 31, 2026, with first-half revenue of $16.3 billion, up 1,300% year over year. IPO scholar Jay Ritter warns the valuation leaves little upside. Pricing is expected Wednesday Nov. 18; trading begins Nov. 19 as ANT on Nasdaq.</p>
       <p class="byline">TheStreet</p>
     </article>
     <article class="card story" data-article="articles/2026-11-15-claude-projects-rebuilt-from-file-folders-to-coordinate.html">
-      <h3><a href="https://dev.to/paullovelace/claude-projects-rebuilt-from-file-folders-to-coordinated-agent-sessions-5fmm" target="_blank" rel="noopener">Claude Projects rebuilt: from file folders to coordinated agent sessions</a><span class="thin" title="A community write-up based solely on Anthropic&#x27;s product post via a news summary; the author has not used the feature. Treat as a pointer to Anthropic&#x27;s announcement.">thin sourcing</span></h3>
+      <div class="card-top"><span class="thin" title="A community write-up based solely on Anthropic&#x27;s product post via a news summary; the author has not used the feature. Treat as a pointer to Anthropic&#x27;s announcement.">thin sourcing</span></div>
+      <h3><a href="https://dev.to/paullovelace/claude-projects-rebuilt-from-file-folders-to-coordinated-agent-sessions-5fmm" target="_blank" rel="noopener">Claude Projects rebuilt: from file folders to coordinated agent sessions</a></h3>
       <p class="dek">Anthropic on Nov. 14 rebuilt Claude Projects into coordinated agent sessions: a coordinator scopes the work, delegates to parallel Claude Code cloud threads on separate branches and repos, then reviews and assembles the results. The beta is narrow — select Claude Pro and Max cloud-session users with no existing web or desktop projects; local threads are 'coming very soon,' and parallel threads burn plan limits faster.</p>
       <p class="byline">DEV Community</p>
     </article>
     <article class="card story" data-article="articles/2026-11-15-nvidia-q3-earnings-preview-consensus-108-8b-revenue-and.html">
+      <div class="card-top"></div>
       <h3><a href="https://www.oanda.com/eu-en/newsfeed/nvidia-nvda-q3-earnings-preview-ai-spending-risks-and-governance-concerns-threaten-major-uptrend" target="_blank" rel="noopener">Nvidia Q3 earnings preview: consensus $108.8B revenue, and the options market is pricing a ±10.6% move</a></h3>
       <p class="dek">Nvidia reports Q3 FY2027 Tuesday Nov. 17 at about 4:20 p.m. ET, call at 5 p.m. Consensus sits near $108.84 billion revenue (up 90.9% year over year) and $2.47 EPS, against company guidance of about $108 billion ±2% at roughly 74% gross margin, assuming no China data-center compute revenue. The stock fell 4.3% on Monday Nov. 9 — about $190 billion of market cap — on governance and AI-capex concerns; Q4 guidance is the real test.</p>
       <p class="byline">OANDA</p>
     </article>
     <article class="card story" data-article="articles/2026-11-15-macrumors-week-in-apple-a-new-software-approach-for-ios.html">
+      <div class="card-top"></div>
       <h3><a href="https://www.macrumors.com/2026/11/14/top-stories-apple-new-software-approach/" target="_blank" rel="noopener">MacRumors' week in Apple: a new software approach for iOS 28, 100,000 apps optimized for iPhone Duo, support forums close Nov. 20</a></h3>
       <p class="dek">MacRumors' Nov. 14 roundup: Bloomberg's Mark Gurman reports Apple has changed how iOS 28 and macOS 28 are being developed; Apple says more than 100,000 apps are optimized for the iPhone Duo's inner and outer displays; the Apple Support Community forums close permanently Nov. 20; iOS 27.2.1 shipped this week with security and bug fixes, and tvOS 27.2.1 brought Siri AI to second- and third-generation Apple TV 4K on Friday.</p>
       <p class="byline">MacRumors</p>
@@ -1389,16 +423,19 @@
   <div class="sec-head"><span class="sec-num">The tape</span><h2><a href="sections/markets.html">Markets</a></h2><span class="line"></span></div>
   <div class="stack">
     <article class="card story" data-article="articles/2026-11-15-friday-s-tape-s-p-500-0-4-nasdaq-0-9-dow-0-1-a-second-d.html">
+      <div class="card-top"></div>
       <h3><a href="https://www.investopedia.com/stock-market-today-dow-jones-today-s-and-p-500-nasdaq-11132026-12252143" target="_blank" rel="noopener">Friday's tape: S&amp;P 500 −0.4%, Nasdaq −0.9%, Dow +0.1% — a second down day on tech selling, but weekly gains held</a></h3>
       <p class="dek">Friday closed mixed for a second straight day as Nvidia and tech selling weighed, yet both the S&amp;P 500 and Nasdaq posted weekly gains. Apple added about 0.4% to a new record closing high, and Microsoft inched higher after progress resolving its major product outage.</p>
       <p class="byline">Investopedia</p>
     </article>
     <article class="card story" data-article="articles/2026-11-15-apple-closes-at-a-record-356-27-and-the-0-27-dividend-i.html">
+      <div class="card-top"></div>
       <h3><a href="https://www.apple.com/sg/newsroom/2026/11/apple-reports-fourth-quarter-results/" target="_blank" rel="noopener">Apple closes at a record $356.27 — and the $0.27 dividend is payable Monday Nov. 16</a></h3>
       <p class="dek">AAPL closed Friday at a record $356.27, up 0.39% after an intraday record of $360.83 — about $5.18 trillion of market value — as investors rotated toward AI-light safety: AAPL gained 4.1% in the Nov. 6–13 week while Nvidia fell 12.7%. Apple's board declared a $0.27-a-share cash dividend payable Monday Nov. 16 to shareholders of record at the close Nov. 12, declared with Q4 results (revenue $114.5 billion, up 12%; EPS $2.10, up 14%).</p>
       <p class="byline">Apple Newsroom</p>
     </article>
     <article class="card story" data-article="articles/2026-11-15-the-week-ahead-retail-sales-and-nvidia-tuesday-fomc-min.html">
+      <div class="card-top"></div>
       <h3><a href="https://www.tradingview.com/news/moodys:bcbf512b8334a:0-the-week-ahead-in-numbers-wholesale-inflation-fed-minutes-anthropic-ipo/" target="_blank" rel="noopener">The week ahead: retail sales and Nvidia Tuesday, FOMC minutes and Anthropic pricing Wednesday</a></h3>
       <p class="dek">The week of Nov. 16–20 stacks up: U.S. retail sales Tuesday Nov. 17, Nvidia earnings after Tuesday's close, FOMC minutes and Anthropic's pricing Wednesday Nov. 18. The minutes cover the Oct. 27–28 meeting where the Fed held at 3.75%–4.00% after September's 25bp hike, with two dissenters favoring a hike; Governor Waller has since backed a December hike. The backdrop is Friday's PPI: +0.3% on the month against 0.4% expected, but +6.5% year over year — the hottest annual wholesale read since Nov. 2022.</p>
       <p class="byline">TradingView</p>
@@ -1410,21 +447,25 @@
   <div class="sec-head"><span class="sec-num">Objects</span><h2><a href="sections/product-design.html">Product Design</a></h2><span class="line"></span></div>
   <div class="stack">
     <article class="card story" data-article="articles/2026-11-15-sony-revives-the-1979-walkman-headphones-as-the-mdr-3r.html">
+      <div class="card-top"></div>
       <h3><a href="https://www.dezeen.com/2026/11/09/sony-walkman-headphones-mdr-3r/" target="_blank" rel="noopener">Sony revives the 1979 Walkman headphones as the MDR-3R — €59, foam pads and all</a></h3>
       <p class="dek">Sony remade its 1979 Walkman MDR-3 as the MDR-3R: slim metal headband, sliding arms, interchangeable blue and orange foam pads, recycled-plastic details, replicated 1979 packaging, and the same 23mm drivers with subtle modern tuning. The updates are USB-C, a built-in mic and an inline remote; a limited Stranger Things edition adds red pads and a black headband. Sony EU lists €59/£49 standard, €69/£59 for the Stranger Things edition, from November.</p>
       <p class="byline">Dezeen</p>
     </article>
     <article class="card story" data-article="articles/2026-11-15-dezeen-awards-2026-overall-winners-land-monday-nov-16-a.html">
+      <div class="card-top"></div>
       <h3><a href="https://www.dezeen.com/2026/10/28/dezeen-awards-public-vote-winner-design-2026/" target="_blank" rel="noopener">Dezeen Awards 2026: overall winners land Monday Nov. 16 at the Royal Opera House — the public-vote design winners are already out</a></h3>
       <p class="dek">A preview for Monday: the judged overall Dezeen Awards 2026 winners are announced at the party Monday Nov. 16 at the Royal Opera House, London. The separate public vote (Sept. 28–Oct. 16) already named 16 design winners, including Furniture: the Dado Series by Allen Kaufmann Objects; Seating: Lijn Seating by Carole Baijings for Geiger; Collectible: The Inverted Earth: Fugue for Windows by Aya Kawabata; and Bespoke: Freeze Frame 82.2 by Unfold.</p>
       <p class="byline">Dezeen</p>
     </article>
     <article class="card story" data-article="articles/2026-11-15-apple-homeview-is-on-sale-the-299-smart-home-hub-tablet.html">
+      <div class="card-top"></div>
       <h3><a href="https://www.apple.com/newsroom/2026/11/apple-homeview-available-today/" target="_blank" rel="noopener">Apple HomeView is on sale: the $299 smart-home hub, tabletop or wall-mounted, with Siri AI in beta</a></h3>
       <p class="dek">Apple's first smart display went on sale Friday Nov. 13 for $299 in the U.S., UK, Canada, Australia, India, New Zealand and Singapore — tabletop in silver, starlight, rose pink and space gray, or wall-mounted in space gray and silver. It is positioned as the center of the home, powered by Apple Intelligence with Siri AI (beta, in HomeView software 27.2), for entertainment, FaceTime and home control. It is not sold in the EU, where Siri AI is not offered.</p>
       <p class="byline">Apple Newsroom</p>
     </article>
     <article class="card story" data-article="articles/2026-11-15-gustaf-westman-s-disney-collection-launches-today-donal.html">
+      <div class="card-top"></div>
       <h3><a href="https://www.dezeen.com/2026/11/10/gustaf-westman-full-disney-collection-donald-duck-bookstand/" target="_blank" rel="noopener">Gustaf Westman's Disney collection launches today: Donald bookstand, Goofy coffee table, Pluto mirror</a></h3>
       <p class="dek">Swedish designer Gustaf Westman's full Disney collaboration launches today, Nov. 15: homeware, accessories, glassware and made-to-order furniture reimagining Mickey &amp; Friends through his chunky design language — a Donald Duck bookstand, Goofy coffee table, Mickey dresser, Pluto mirror, Mickey-trousers vase, Minnie glass and Donald candelabra. Launch pop-ups in Tokyo, New York and Paris precede the online release.</p>
       <p class="byline">Dezeen</p>
@@ -1436,16 +477,19 @@
   <div class="sec-head"><span class="sec-num">Systems</span><h2><a href="sections/engineering.html">Engineering</a></h2><span class="line"></span></div>
   <div class="stack">
     <article class="card story" data-article="articles/2026-11-15-unrealircd-s-label-tag-flaw-is-in-cisa-s-kev-with-a-mon.html">
+      <div class="card-top"></div>
       <h3><a href="https://www.hackerposts.org/en/blog/unrealircd-cve-2026-114713-label-tag-rce" target="_blank" rel="noopener">UnrealIRCd's label-tag flaw is in CISA's KEV with a Monday Nov. 16 federal deadline — exploitation is live</a></h3>
       <p class="dek">CISA added CVE-2026-114713 (CVSS 8.6) to the Known Exploited Vulnerabilities catalog Nov. 13 with a Nov. 16 federal remediation deadline. An IRCv3 label-tag escaping flaw in the labeled-response module lets any ordinary user on a network with two or more linked servers inject server-to-server commands with server authority. It affects 6.0.0–6.2.7 (and end-of-life 5.x) and is fixed in 6.2.7.1, released Nov. 7, which closed nine flaws in total. Maintainer Bram Matthys called it the most critical UnrealIRCd issue in 15 years.</p>
       <p class="byline">Hacker Posts</p>
     </article>
     <article class="card story" data-article="articles/2026-11-15-apache-2-4-71-patches-the-critical-mod-http2-race-cve-2.html">
+      <div class="card-top"></div>
       <h3><a href="https://www.hackerposts.org/en/blog/apache-httpd-cve-2026-119618-mod-http2-rce" target="_blank" rel="noopener">Apache 2.4.71 patches the critical mod_http2 race (CVE-2026-119618) — found by Anthropic's scanner and Google Cloud researchers</a></h3>
       <p class="dek">Apache released HTTP Server 2.4.71 on Nov. 11 fixing CVE-2026-119618, a race and heap-corruption flaw in mod_http2's assign_headers() that Apache rates critical and Red Hat scores 9.8; unauthenticated remote code execution is possible only where HTTP/2 is enabled. It affects 2.4.55–2.4.70 and standalone mod_h2 2.0.8–2.0.42; HTTP/1.1-only servers are unaffected. The flaw was reported by Anthropic's OSS Scanner (Oct. 26) and Google Cloud Vulnerability Research (Nov. 3); no confirmed in-the-wild exploitation as of Nov. 14, and scoring differs by source (Red Hat 9.8 vs CISA enrichment 8.1).</p>
       <p class="byline">Hacker Posts</p>
     </article>
     <article class="card story" data-article="articles/2026-11-15-n-able-n-central-a-second-able2shell-round-bypasses-hot.html">
+      <div class="card-top"></div>
       <h3><a href="https://blog.ostorlab.co/n-able-n-central-rce-33-zero-days-able2shell.html" target="_blank" rel="noopener">N-able N-central: a second Able2Shell round bypasses Hotfix 2 — 21 servers found mining Monero, no full patch yet</a></h3>
       <p class="dek">Follow-up to the Nov. 9 Able2Shell disclosure of 33 N-central zero-days: new chains 4EverAble2Shell and Agent2Shell work against the Nov. 10 Hotfix 2 build (2026.4.1.26) when the non-default Legacy API is enabled and internet-reachable, running commands as the nable user via the bundled Apache Axis, then escalating to root. Huntback counted 21 N-central servers mining Monero on Nov. 12, 19 of them on Hotfix 2. Mitigation: apply 2026.4.1.26, upgrade Agents and Probes, disable the Legacy API; a further Hotfix 3 was still in validation Nov. 14.</p>
       <p class="byline">Ostorlab Blog</p>
@@ -1457,21 +501,25 @@
   <div class="sec-head"><span class="sec-num">Speed</span><h2><a href="sections/motorsport.html">Motorsport</a></h2><span class="line"></span></div>
   <div class="stack">
     <article class="card story" data-article="articles/2026-11-15-las-vegas-race-week-opens-thursday-practice-thu-4-30-p.html">
+      <div class="card-top"></div>
       <h3><a href="https://www.thingsvegas.com/guides/las-vegas-grand-prix-2026-spectator-guide/" target="_blank" rel="noopener">Las Vegas race week opens Thursday: practice Thu 4:30 p.m. PT, qualifying Fri 8 p.m., the Grand Prix Sat Nov. 21 at 8 p.m. PT on Apple TV</a></h3>
       <p class="dek">The Formula 1 Heineken Las Vegas Grand Prix runs Thu Nov. 19–Sat Nov. 21 on the 3.8-mile, 17-turn Las Vegas Strip Circuit: Practice 1 Thursday 4:30–5:30 p.m. PT, qualifying Friday 8 p.m. PT, and the 50-lap Grand Prix Saturday Nov. 21 at 8 p.m. PT. The spectator guide, checked Nov. 14, says general admission and the Grand Prix Trio are sold out; Apple TV carries every session in the U.S. this year.</p>
       <p class="byline">ThingsVegas</p>
     </article>
     <article class="card story" data-article="articles/2026-11-15-the-fight-for-second-verstappen-279-russell-262-hamilto.html">
+      <div class="card-top"></div>
       <h3><a href="https://grandepremio.com/en/f1/mercedes-considers-helping-russell-beat-verstappen-to-f1-runner-up-spot-after-90-point-collapse/" target="_blank" rel="noopener">The fight for second: Verstappen 279, Russell 262, Hamilton 261 — and Mercedes may help Russell</a></h3>
       <p class="dek">With Kimi Antonelli champion on 390 points and Mercedes constructors' champions after São Paulo on Nov. 8, second place is the open fight, with 75 points left across Las Vegas, Qatar and Abu Dhabi. Verstappen has scored 116 points in the last five Grands Prix against Russell's 26 — a 90-point swing — and now leads Russell by 17 and Hamilton by 18. Mercedes boss Toto Wolff says the team could consider measures to help Russell; no team-order policy is confirmed.</p>
       <p class="byline">Grande Premio</p>
     </article>
     <article class="card story" data-article="articles/2026-11-15-motogp-rests-today-at-portimao-next-weekend-two-sprint.html">
+      <div class="card-top"></div>
       <h3><a href="https://www.motogpnews.com/2026/11/15/marc-marquezs-motogp-title-permutations-as-ducati-rider-can-win-2026-crown-at-portuguese-grand-prix/" target="_blank" rel="noopener">MotoGP rests today; at Portimão next weekend, two Sprint points end the title fight for Márquez</a></h3>
       <p class="dek">No MotoGP race today — the championship returns Nov. 20–22 at the Algarve International Circuit, Portimão, the penultimate round before Valencia Nov. 27–29. Marc Márquez (Ducati) leads on 431 points from Jorge Martín (Aprilia) on 371 and Marco Bezzecchi on 357, with 74 points maximum remaining. Márquez clinches in Saturday's Sprint if he outscores Martín by two points or more, or wins the Sprint outright; 14 points across the Portugal weekend clinch regardless. Martín is managing the wrist injury from Australia.</p>
       <p class="byline">MotoGP News</p>
     </article>
     <article class="card story" data-article="articles/2026-11-15-nascar-s-off-season-the-fun-version-hamlin-and-hocevar.html">
+      <div class="card-top"></div>
       <h3><a href="https://heavy.com/sports/nascar/lemullets-2026-results-hamlin-hocevar/" target="_blank" rel="noopener">NASCAR's off-season, the fun version: Hamlin and Hocevar race battered Crown Vics in the 2.4 Hours of LeMullets</a></h3>
       <p class="dek">Five days after the Cup finale at Homestead-Miami (Nov. 8, Kyle Larson champion), Denny Hamlin and Carson Hocevar raced battered Ford Crown Victorias Friday night Nov. 13 in Cleetus McFarland's 2.4 Hours of LeMullets at the Freedom Factory in Bradenton, Florida. Hocevar and McFarland won for a second straight year, beating Ryan Preece and Ty Dillon after a late Preece spin; Hamlin and Alex Presley finished third.</p>
       <p class="byline">Heavy</p>
@@ -1483,22 +531,26 @@
   <div class="sec-head"><span class="sec-num">Tonight</span><h2><a href="sections/live-music.html">Live Music</a></h2><span class="line"></span></div>
   <div class="stack">
     <article class="card story" data-article="articles/2026-11-15-tonight-state-champs-at-ace-of-spades-sacramento-sun-no.html">
-      <h3><a href="https://concerts.consequence.net/events/state-champs-at-ace-of-spades-on-2026-11-15-18-00" target="_blank" rel="noopener">TONIGHT: State Champs at Ace of Spades, Sacramento — Sun Nov. 15, doors 6 p.m., show 7 p.m., 1417 R St</a><span class="thin" title="Ticket-listing data, not reporting.">listing only</span></h3>
+      <div class="card-top"><span class="thin" title="Ticket-listing data, not reporting.">listing only</span></div>
+      <h3><a href="https://concerts.consequence.net/events/state-champs-at-ace-of-spades-on-2026-11-15-18-00" target="_blank" rel="noopener">TONIGHT: State Champs at Ace of Spades, Sacramento — Sun Nov. 15, doors 6 p.m., show 7 p.m., 1417 R St</a></h3>
       <p class="dek">Tonight's Sacramento headliner: State Champs — 10 Years of 'Around the World and Back' — with Cartel and Taylor Acorn / Like Roses at Ace of Spades, 1417 R St. Doors 6 p.m., show 7 p.m., all ages, no re-entry, per the listing.</p>
       <p class="byline">Consequence Live</p>
     </article>
     <article class="card story" data-article="articles/2026-11-15-tonight-nick-shoulders-at-goldfield-trading-post-rosevi.html">
-      <h3><a href="https://www.bandsintown.com/e/108201496-nick-shoulders-at-goldfield-trading-post-roseville?came_from=253&utm_medium=web&utm_source=artist_event_page&utm_campaign=similar_events" target="_blank" rel="noopener">TONIGHT: Nick Shoulders at Goldfield Trading Post, Roseville — Sun Nov. 15, 7 p.m., 238 Vernon St</a><span class="thin" title="Ticket-listing data, not reporting.">listing only</span></h3>
+      <div class="card-top"><span class="thin" title="Ticket-listing data, not reporting.">listing only</span></div>
+      <h3><a href="https://www.bandsintown.com/e/108201496-nick-shoulders-at-goldfield-trading-post-roseville?came_from=253&utm_medium=web&utm_source=artist_event_page&utm_campaign=similar_events" target="_blank" rel="noopener">TONIGHT: Nick Shoulders at Goldfield Trading Post, Roseville — Sun Nov. 15, 7 p.m., 238 Vernon St</a></h3>
       <p class="dek">The country option: Nick Shoulders plays Goldfield Trading Post's Roseville room tonight at 7 p.m., 238 Vernon St — the same room that hosted Decrepit Birth on Saturday. Also carried in the Sacramento-area roundups for Nov. 15.</p>
       <p class="byline">Bandsintown</p>
     </article>
     <article class="card story" data-article="articles/2026-11-15-today-ridin-n-rhythm-at-thee-collective-space-sacrament.html">
-      <h3><a href="https://www.eventbrite.com/e/ridin-n-rhythm-tickets-2003777880581?aff=ebdssbcitybrowse" target="_blank" rel="noopener">TODAY: Ridin N Rhythm at Thee Collective Space, Sacramento — Sun Nov. 15, 2–8 p.m., 1107 Firehouse Alley</a><span class="thin" title="Ticket-listing data, not reporting.">listing only</span></h3>
+      <div class="card-top"><span class="thin" title="Ticket-listing data, not reporting.">listing only</span></div>
+      <h3><a href="https://www.eventbrite.com/e/ridin-n-rhythm-tickets-2003777880581?aff=ebdssbcitybrowse" target="_blank" rel="noopener">TODAY: Ridin N Rhythm at Thee Collective Space, Sacramento — Sun Nov. 15, 2–8 p.m., 1107 Firehouse Alley</a></h3>
       <p class="dek">The afternoon option: an R&amp;B trailride at Thee Collective Space, 1107 Firehouse Alley, Sacramento, 2–8 p.m. — Usher, Tank and Mary J. hits, food and mimosas, presented by 916PartyGuys and Sheye T. Tickets $12.51–$193.92 per Eventbrite.</p>
       <p class="byline">Eventbrite</p>
     </article>
     <article class="card story" data-article="articles/2026-11-15-dark-tonight-at-sutter-creek-theatre-and-at-channel-24.html">
-      <h3><a href="https://www.bandsintown.com/v/10059285-sutter-creek-theatre" target="_blank" rel="noopener">Dark tonight at Sutter Creek Theatre — and at Channel 24 and Hard Rock Wheatland</a><span class="thin" title="Absence inferred from the venues&#x27; published schedules, not a cancellation notice.">listing only</span></h3>
+      <div class="card-top"><span class="thin" title="Absence inferred from the venues&#x27; published schedules, not a cancellation notice.">listing only</span></div>
+      <h3><a href="https://www.bandsintown.com/v/10059285-sutter-creek-theatre" target="_blank" rel="noopener">Dark tonight at Sutter Creek Theatre — and at Channel 24 and Hard Rock Wheatland</a></h3>
       <p class="dek">A dark-night check, so nobody drives for nothing: Sutter Creek Theatre has no Sunday Nov. 15 show — American Made played Saturday, and the next show is Lacy J. Dalton on Sat Nov. 28 at 7 p.m. Channel 24 (Frankie Quiñones Saturday; Clara La San next, Sat Nov. 21) and Hard Rock Live Wheatland (Sabaton Saturday; Silverstein next, Thu Nov. 19) likewise list no Sunday concert.</p>
       <p class="byline">Bandsintown</p>
     </article>
@@ -1509,17 +561,20 @@
   <div class="sec-head"><span class="sec-num">Home ground</span><h2><a href="sections/amador-county.html">Amador County</a></h2><span class="line"></span></div>
   <div class="stack">
     <article class="card story lead" data-article="articles/2026-11-15-fiddletown-sunday-the-dry-day-then-the-rain-high-61f-sh.html">
+      <div class="card-top"></div>
       <h3><a href="https://weather.com/us/ca/city/fiddletown/hourbyhour" target="_blank" rel="noopener">Fiddletown Sunday: the dry day, then the rain — high 61F, showers from 8 p.m., about an inch overnight into Monday</a></h3>
       <p class="dek">The Weather Channel's Sunday for Fiddletown: partly cloudy at 44F early, cloudy to 60–61F by midday, rain chances near zero until 4 p.m., then showers from 8 p.m. (38%) building to rain by 10–11 p.m. (74–79%). The 24-hour total is about 0.97 inches, most of it after midnight into Monday — not the daytime washout earlier forecasts suggested. No weather alerts are in effect for Fiddletown; NWS Sacramento separately flags a storm bringing widespread rain Sunday–Monday and a Winter Weather Advisory above 6,000 feet, Sunday 4 p.m. to Monday 10 p.m.</p>
       <p class="byline">The Weather Channel</p>
     </article>
     <article class="card story" data-article="articles/2026-11-15-the-burn-file-one-week-on-nine-escaped-debris-burns-sin.html">
+      <div class="card-top"></div>
       <h3><a href="https://inedc.com/26/news/nine-escaped-debris-burns-prompt-cal-fire-warning/" target="_blank" rel="noopener">The burn file, one week on: nine escaped debris burns since the Nov. 6 lift — permits and the daily burn-day call still govern</a></h3>
       <p class="dek">CAL FIRE's Amador-El Dorado Unit lifted the seasonal burn-permit suspension at 8 a.m. Friday Nov. 6 across the State Responsibility Areas of Amador, El Dorado, Alpine, Sacramento and San Joaquin counties. By Monday Nov. 9, crews had answered nine escaped debris burns, two of them that morning — the caution that has carried this section since. The rules stand: a valid CAL FIRE permit, the daily burn-day check, dry natural vegetation from your own property only, and burn barrels remain illegal. BLM and U.S. Wildland Fire Service prescribed-burn season in Amador and neighboring counties opened as early as Nov. 10, conditions permitting.</p>
       <p class="byline">InEDC</p>
     </article>
     <article class="card story" data-article="articles/2026-11-15-sutter-creek-votes-monday-nov-16-on-its-city-manager-hi.html">
-      <h3><a href="https://www.lodedown.com/p/early-harvest-olive-oil-weekend-events-nov-13-2026" target="_blank" rel="noopener">Sutter Creek votes Monday Nov. 16 on its city-manager hire — Kuhlemier would start Dec. 1, DuBois retires Dec. 31</a><span class="thin" title="A regional roundup relaying Ledger Dispatch items second-hand; the desk did not retrieve the council agenda itself.">thin sourcing</span></h3>
+      <div class="card-top"><span class="thin" title="A regional roundup relaying Ledger Dispatch items second-hand; the desk did not retrieve the council agenda itself.">thin sourcing</span></div>
+      <h3><a href="https://www.lodedown.com/p/early-harvest-olive-oil-weekend-events-nov-13-2026" target="_blank" rel="noopener">Sutter Creek votes Monday Nov. 16 on its city-manager hire — Kuhlemier would start Dec. 1, DuBois retires Dec. 31</a></h3>
       <p class="dek">Sutter Creek's City Council meets Monday Nov. 16 at 6 p.m. to vote on an employment agreement for Shanna Kuhlemier, the city's pick for city manager. If approved, she starts Dec. 1 and overlaps Tom DuBois for a month; DuBois retires Dec. 31. The council also takes up a law-enforcement agreement with Amador City, per LodeDown's Nov. 13 roundup of Ledger Dispatch items.</p>
       <p class="byline">LodeDown</p>
     </article>
@@ -1559,7 +614,7 @@
 </section>
 
 <div class="footer">
-  <p class="stamp">Last refreshed Sunday, November 15, 2026 &middot; 5:47 AM PT</p>
+  <p class="stamp">Last refreshed Sunday, November 15, 2026 &middot; 6:59 AM PT</p>
   <p>Part of the <a href="https://davedellaquila.github.io/buddy-system/">Buddy System</a> &middot; News Buddy &middot; Morning Edition</p>
 </div>
 
