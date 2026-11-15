@@ -1203,33 +1203,62 @@
   .secpage .storyitem h3 a:hover{color:var(--accent)}
   .secpage .lede{font-size:16px;line-height:1.65;color:var(--ink);max-width:70ch;margin:10px 0 6px}
 
+  
+  .sec-head h2 a{color:inherit;text-decoration:none;border-bottom:2px solid transparent}
+  .sec-head h2 a:hover{color:var(--accent);border-bottom-color:var(--accent)}
+  .mini-mast{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 20px;border-bottom:3px double var(--ink);margin-bottom:8px;flex-wrap:wrap}
+  .mini-mast a.brand{font-family:Georgia,'Times New Roman',serif;font-weight:700;font-size:20px;color:var(--ink);text-decoration:none}
+  .mini-mast .ed{font-size:12px;color:var(--muted)}
+  .kicker{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:18px 0 4px}
+  .kicker a{color:var(--accent);text-decoration:none}
+  .detail h1{font-family:Georgia,'Times New Roman',serif;font-size:clamp(26px,5vw,40px);line-height:1.15;margin:6px 0 10px;letter-spacing:-.01em}
+  .detail h4.sec{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--accent);margin:22px 0 6px}
+  .detail p.body{font-size:16px;line-height:1.65;margin:0 0 12px;max-width:68ch}
+  .sourcebox{border:1px solid var(--rule);border-left:4px solid var(--accent);border-radius:8px;padding:12px 16px;margin:18px 0;max-width:68ch}
+  .sourcebox p{font-size:14px;line-height:1.6;margin:6px 0}
+  .sourcebox .flag{display:inline-block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;background:#fde68a;color:#7c2d12;border-radius:4px;padding:2px 8px;margin-bottom:4px}
+  .read-original{display:inline-block;margin:10px 0;padding:10px 20px;background:var(--accent);color:#fff !important;border-radius:8px;font-weight:700;text-decoration:none;font-size:15px}
+  .related{margin-top:28px;border-top:1px solid var(--rule);padding-top:14px}
+  .related h4.sec{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:0 0 10px}
+  .related ul{list-style:none;margin:0;padding:0}
+  .related li{margin:0 0 10px;font-size:15px;line-height:1.45}
+  .related a{color:var(--ink);text-decoration:none;border-bottom:1px solid var(--rule)}
+  .related a:hover{color:var(--accent);border-bottom-color:var(--accent)}
+  .backfoot{margin:30px 0 40px;font-size:14px}
+  .backfoot a{color:var(--accent);text-decoration:none;font-weight:600}
+  .secpage .storyitem{border-bottom:1px solid var(--rule);padding:16px 0}
+  .secpage .storyitem h3{font-size:20px;margin:0 0 6px;line-height:1.3}
+  .secpage .storyitem h3 a{color:var(--ink);text-decoration:none}
+  .secpage .storyitem h3 a:hover{color:var(--accent)}
+  .secpage .lede{font-size:16px;line-height:1.65;color:var(--ink);max-width:70ch;margin:10px 0 6px}
+
   </style>
 </head>
 <body>
 <header class="mini-mast">
   <a class="brand" href="../index.html">📰 The Morning Edition</a>
-  <span class="ed">Saturday, November 14, 2026</span>
+  <span class="ed">Sunday, November 15, 2026</span>
   <button id="themeBtn" class="voice-change" style="margin-left:0">Theme: Auto</button>
 </header>
 <main class="detail secpage" style="max-width:860px;margin:0 auto;padding:0 20px">
   <p class="kicker">Section</p>
   <h1>Engineering</h1>
-  <p class="lede">Deadline weekend: CISA&#x27;s KEV adds the UnrealIRCd command-injection flaw with a Monday Nov. 16 federal remediation date and exploitation already under way; Apache ships 2.4.71 for a CVSS 9.8 mod_http2 race reported by Anthropic&#x27;s automated scanner and Google Cloud researchers; and N-able&#x27;s N-central zero-days were exploited within five hours of their proofs of concept, with no fix yet (flagged thin -- researchers&#x27; counts, not the vendor&#x27;s).</p>
+  <p class="lede">Deadline eve: CISA&#x27;s KEV carries the UnrealIRCd label-tag flaw with a Monday Nov. 16 federal remediation date and live exploitation; Apache 2.4.71 patches the mod_http2 race found by Anthropic&#x27;s scanner and Google Cloud researchers (scoring disputed, 9.8 vs 8.1); and N-able&#x27;s N-central faces a second Able2Shell round that bypasses Hotfix 2, with 21 servers found mining Monero and Hotfix 3 still in validation.</p>
   <div class="storyitem">
-      <h3><a href="../articles/2026-11-14-cisa-adds-the-unrealircd-flaw-to-the-kev-server-level-c.html">CISA adds the UnrealIRCd flaw to the KEV: server-level command injection, exploitation under way, federal deadline Monday Nov. 16</a></h3>
-      <p class="byline">The Hacker News</p>
-      <p class="body">CVE-2026-114713 hit the Known Exploited Vulnerabilities catalog Friday: a labeled-response flaw in UnrealIRCd 6.0.0 before 6.2.7.1 lets an attacker inject server-to-server commands with server or IRC-operator privileges. Maintainer Bram Matthys shipped 6.2.7.1; exploitation began Nov. 7, a day after the hotfix. Federal agencies must remediate by Nov. 16 under BOD 26-04. Sources disagree on severity — The Hacker News lists CVSS 8.6, another brief 9.8; patch first, argue later.</p>
-      <p class="body"><em>Why it matters:</em> A federal patch deadline that lands Monday: any IRC-linked or UnrealIRCd endpoint is a known-exploited exposure after Nov. 16, and exploitation began a day after the fix -- the audit question (who connected since Nov. 7) outranks the patch itself.</p>
+      <h3><a href="../articles/2026-11-15-unrealircd-s-label-tag-flaw-is-in-cisa-s-kev-with-a-mon.html">UnrealIRCd&#x27;s label-tag flaw is in CISA&#x27;s KEV with a Monday Nov. 16 federal deadline — exploitation is live</a></h3>
+      <p class="byline">Hacker Posts</p>
+      <p class="body">CISA added CVE-2026-114713 (CVSS 8.6) to the Known Exploited Vulnerabilities catalog Nov. 13 with a Nov. 16 federal remediation deadline. An IRCv3 label-tag escaping flaw in the labeled-response module lets any ordinary user on a network with two or more linked servers inject server-to-server commands with server authority. It affects 6.0.0–6.2.7 (and end-of-life 5.x) and is fixed in 6.2.7.1, released Nov. 7, which closed nine flaws in total. Maintainer Bram Matthys called it the most critical UnrealIRCd issue in 15 years.</p>
+      <p class="body"><em>Why it matters:</em> A federal deadline that lands tomorrow: any UnrealIRCd-linked network is a known-exploited exposure after Nov. 16, and the audit question — who connected since Nov. 7 — outranks the patch.</p>
     </div><div class="storyitem">
-      <h3><a href="../articles/2026-11-14-apache-patches-a-critical-http-2-race-cve-2026-119618-c.html">Apache patches a critical HTTP/2 race: CVE-2026-119618 (CVSS 9.8) in mod_http2, fixed in 2.4.71 — found by Anthropic’s OSS scanner and Google Cloud</a></h3>
-      <p class="byline">Reef Sentinel</p>
-      <p class="body">A race in assign_headers() can corrupt memory and run code with no login, in Apache HTTP Server 2.4.55 through 2.4.70 with mod_http2 loaded and h2 or h2c in Protocols. Version 2.4.71, released Nov. 11, carries three security fixes. The reporters are a sign of the times: Anthropic’s automated OSS Scanner (Oct. 26) and Anthony Weems and Simon Scannell of Google Cloud Vulnerability Research (Nov. 3). Red Hat says public research showed a reliable exploit; no confirmed in-the-wild exploitation yet, and CISA has not listed it.</p>
-      <p class="body"><em>Why it matters:</em> The finders are the story: Anthropic&#x27;s automated scanner and Google Cloud&#x27;s team caught a 9.8 in the world&#x27;s most common web server. AI-assisted vulnerability research is now producing the criticals Dave&#x27;s engineering section exists to track.</p>
+      <h3><a href="../articles/2026-11-15-apache-2-4-71-patches-the-critical-mod-http2-race-cve-2.html">Apache 2.4.71 patches the critical mod_http2 race (CVE-2026-119618) — found by Anthropic&#x27;s scanner and Google Cloud researchers</a></h3>
+      <p class="byline">Hacker Posts</p>
+      <p class="body">Apache released HTTP Server 2.4.71 on Nov. 11 fixing CVE-2026-119618, a race and heap-corruption flaw in mod_http2&#x27;s assign_headers() that Apache rates critical and Red Hat scores 9.8; unauthenticated remote code execution is possible only where HTTP/2 is enabled. It affects 2.4.55–2.4.70 and standalone mod_h2 2.0.8–2.0.42; HTTP/1.1-only servers are unaffected. The flaw was reported by Anthropic&#x27;s OSS Scanner (Oct. 26) and Google Cloud Vulnerability Research (Nov. 3); no confirmed in-the-wild exploitation as of Nov. 14, and scoring differs by source (Red Hat 9.8 vs CISA enrichment 8.1).</p>
+      <p class="body"><em>Why it matters:</em> The finders are the story again: Anthropic&#x27;s scanner and Google Cloud caught a 9.8-class race in the world&#x27;s most common web server. The scoring disagreement (9.8 vs 8.1) is printed, not smoothed.</p>
     </div><div class="storyitem">
-      <h3><a href="../articles/2026-11-14-n-able-n-central-zero-days-exploited-within-hours-of-th.html">N-able N-central zero-days exploited within hours of the proof of concept: at least 21 servers reportedly compromised, no fix yet</a></h3>
-      <p class="byline">AI Agent Update</p>
-      <p class="body">Researcher Sean Bales published proofs of concept Nov. 12 for flaws in N-central 2026.4 HF2 — the hotfix N-able shipped Nov. 10. The 4EverAble2Shell chain pairs an Apache Axis flaw (CVE-2026-90436, CVSS 9.8) with an N-central hole where the Legacy API is enabled. Probing began about 08:30 UTC Nov. 12 and full exploitation by 09:16, roughly five hours after publication. Researchers count at least 21 compromised servers across seven countries, reportedly running an XMRig miner — a detail N-able has not confirmed. The flaws are not yet in the KEV.</p>
-      <p class="body"><em>Why it matters:</em> Five hours from proof-of-concept to exploitation is the MSP software supply chain in one number -- and the count is researchers&#x27;, not the vendor&#x27;s, which is why this carries the flag. N-able&#x27;s silence is part of the story.</p>
+      <h3><a href="../articles/2026-11-15-n-able-n-central-a-second-able2shell-round-bypasses-hot.html">N-able N-central: a second Able2Shell round bypasses Hotfix 2 — 21 servers found mining Monero, no full patch yet</a></h3>
+      <p class="byline">Ostorlab Blog</p>
+      <p class="body">Follow-up to the Nov. 9 Able2Shell disclosure of 33 N-central zero-days: new chains 4EverAble2Shell and Agent2Shell work against the Nov. 10 Hotfix 2 build (2026.4.1.26) when the non-default Legacy API is enabled and internet-reachable, running commands as the nable user via the bundled Apache Axis, then escalating to root. Huntback counted 21 N-central servers mining Monero on Nov. 12, 19 of them on Hotfix 2. Mitigation: apply 2026.4.1.26, upgrade Agents and Probes, disable the Legacy API; a further Hotfix 3 was still in validation Nov. 14.</p>
+      <p class="body"><em>Why it matters:</em> Five days from disclosure to bypassed hotfix is the MSP supply chain in one timeline — and the counts are researchers&#x27;, which is why the mitigation list, not the vendor&#x27;s silence, leads.</p>
     </div>
   <section class="suggestbox" data-buddy-id="news-buddy">
     <h2>Suggestions</h2>
