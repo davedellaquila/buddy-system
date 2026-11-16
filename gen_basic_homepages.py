@@ -1215,6 +1215,8 @@ h2 {{ font-size: 22px; margin: 32px 0 16px; }}
 
 {children_section}
 
+{docs_section}
+
 {repo_files_section}
 
 <div class="footer">
@@ -1477,6 +1479,28 @@ for b in d['buddies']:
     dumpbox_html = DUMPBOX_HTML.replace('__BID__', bid).replace('__BNAME__', name)
     repo_files_html = FILES_HTML.replace('__BID__', bid).replace('__BNAME__', name)
 
+    # Documents -- the registry docs list (label/url, optional note),
+    # rendered on the standalone homepage so a buddy's reports are
+    # findable where Dave looks for them (Developer Buddy, 2026-11-15:
+    # the ML500 tire report sat in the registry with no surface on the
+    # basic homepage -- the template never rendered docs at all).
+    docs_items = [x for x in (b.get('docs') or [])
+                  if isinstance(x, dict) and x.get('label') and x.get('url')]
+    if docs_items:
+        docs_html = '<h2>\U0001F4DA Documents</h2>\n<div class="docs">\n'
+        for x in docs_items:
+            docs_html += ('<p style="margin:6px 0"><a href="'
+                          + html.escape(x['url'], quote=True) + '">'
+                          + html.escape(x['label']) + '</a>')
+            if x.get('note'):
+                docs_html += ('<br><span style="color:var(--muted);font-size:14px">'
+                              + html.escape(x['note']) + '</span>')
+            docs_html += '</p>\n'
+        docs_html += '</div>'
+        docs_section = docs_html
+    else:
+        docs_section = ''
+
     gallery_section = build_gallery(b)
 
     page = TEMPLATE.format(
@@ -1496,6 +1520,7 @@ for b in d['buddies']:
         dumpbox_js=DUMPBOX_JS,
         attn_js=ATTN_JS,
         files_css=FILES_CSS,
+        docs_section=docs_section,
         repo_files_section=repo_files_html,
         files_js=FILES_JS,
         namesync_js=NAMESYNC_JS,
