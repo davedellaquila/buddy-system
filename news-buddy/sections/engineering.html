@@ -244,36 +244,65 @@
   .secpage .storyitem h3 a:hover{color:var(--accent)}
   .secpage .lede{font-size:16px;line-height:1.65;color:var(--ink);max-width:70ch;margin:10px 0 6px}
 
+  
+  .sec-head h2 a{color:inherit;text-decoration:none;border-bottom:2px solid transparent}
+  .sec-head h2 a:hover{color:var(--accent);border-bottom-color:var(--accent)}
+  .mini-mast{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 20px;border-bottom:3px double var(--ink);margin-bottom:8px;flex-wrap:wrap}
+  .mini-mast a.brand{font-family:Georgia,'Times New Roman',serif;font-weight:700;font-size:20px;color:var(--ink);text-decoration:none}
+  .mini-mast .ed{font-size:12px;color:var(--muted)}
+  .kicker{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:18px 0 4px}
+  .kicker a{color:var(--accent);text-decoration:none}
+  .detail h1{font-family:Georgia,'Times New Roman',serif;font-size:clamp(26px,5vw,40px);line-height:1.15;margin:6px 0 10px;letter-spacing:-.01em}
+  .detail h4.sec{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--accent);margin:22px 0 6px}
+  .detail p.body{font-size:16px;line-height:1.65;margin:0 0 12px;max-width:68ch}
+  .sourcebox{border:1px solid var(--rule);border-left:4px solid var(--accent);border-radius:8px;padding:12px 16px;margin:18px 0;max-width:68ch}
+  .sourcebox p{font-size:14px;line-height:1.6;margin:6px 0}
+  .sourcebox .flag{display:inline-block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;background:#fde68a;color:#7c2d12;border-radius:4px;padding:2px 8px;margin-bottom:4px}
+  .read-original{display:inline-block;margin:10px 0;padding:10px 20px;background:var(--accent);color:#fff !important;border-radius:8px;font-weight:700;text-decoration:none;font-size:15px}
+  .related{margin-top:28px;border-top:1px solid var(--rule);padding-top:14px}
+  .related h4.sec{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:0 0 10px}
+  .related ul{list-style:none;margin:0;padding:0}
+  .related li{margin:0 0 10px;font-size:15px;line-height:1.45}
+  .related a{color:var(--ink);text-decoration:none;border-bottom:1px solid var(--rule)}
+  .related a:hover{color:var(--accent);border-bottom-color:var(--accent)}
+  .backfoot{margin:30px 0 40px;font-size:14px}
+  .backfoot a{color:var(--accent);text-decoration:none;font-weight:600}
+  .secpage .storyitem{border-bottom:1px solid var(--rule);padding:16px 0}
+  .secpage .storyitem h3{font-size:20px;margin:0 0 6px;line-height:1.3}
+  .secpage .storyitem h3 a{color:var(--ink);text-decoration:none}
+  .secpage .storyitem h3 a:hover{color:var(--accent)}
+  .secpage .lede{font-size:16px;line-height:1.65;color:var(--ink);max-width:70ch;margin:10px 0 6px}
+
   </style>
 </head>
 <body>
 <header class="mini-mast">
   <a class="brand" href="../index.html">📰 The Morning Edition</a>
-  <span class="ed">Sunday, November 15, 2026</span>
+  <span class="ed">Monday, November 16, 2026</span>
   <button id="themeBtn" class="voice-change" style="margin-left:0">Theme: Auto</button>
 </header>
 <main class="detail secpage" style="max-width:860px;margin:0 auto;padding:0 20px">
   <p class="kicker">Section</p>
   <h1>Engineering</h1>
-  <p class="lede">Deadline eve: CISA&#x27;s KEV carries the UnrealIRCd label-tag flaw with a Monday Nov. 16 federal remediation date and live exploitation; Apache 2.4.71 patches the mod_http2 race found by Anthropic&#x27;s scanner and Google Cloud researchers (scoring disputed, 9.8 vs 8.1); and N-able&#x27;s N-central faces a second Able2Shell round that bypasses Hotfix 2, with 21 servers found mining Monero and Hotfix 3 still in validation.</p>
+  <p class="lede">Deadline Monday: both of CISA&#x27;s Nov. 13 KEV additions come due today -- the UnrealIRCd labeled-response command injection (patch to 6.2.7.1) and Check Point&#x27;s Gaia OS root escalation chained with wiper attacks, both exploited before their deadlines. And the FAA&#x27;s router post-mortem completes: El Dorado and Amarillo identified, 1,000 attempts every four to five seconds, both routers in a Florida lab, the broadcast function disabled fleet-wide.</p>
   <div class="storyitem">
       <div class="card-top"></div>
-      <h3><a href="../articles/2026-11-15-unrealircd-s-label-tag-flaw-is-in-cisa-s-kev-with-a-mon.html">UnrealIRCd&#x27;s label-tag flaw is in CISA&#x27;s KEV with a Monday Nov. 16 federal deadline — exploitation is live</a></h3>
-      <p class="byline">Hacker Posts</p>
-      <p class="body">CISA added CVE-2026-114713 (CVSS 8.6) to the Known Exploited Vulnerabilities catalog Nov. 13 with a Nov. 16 federal remediation deadline. An IRCv3 label-tag escaping flaw in the labeled-response module lets any ordinary user on a network with two or more linked servers inject server-to-server commands with server authority. It affects 6.0.0–6.2.7 (and end-of-life 5.x) and is fixed in 6.2.7.1, released Nov. 7, which closed nine flaws in total. Maintainer Bram Matthys called it the most critical UnrealIRCd issue in 15 years.</p>
-      <p class="body"><em>Why it matters:</em> A federal deadline that lands tomorrow: any UnrealIRCd-linked network is a known-exploited exposure after Nov. 16, and the audit question — who connected since Nov. 7 — outranks the patch.</p>
+      <h3><a href="../articles/2026-11-16-deadline-day-cisas-kev-remediation-date-for-the-unreali.html">Deadline day: CISA’s KEV remediation date for the UnrealIRCd command-injection flaw (CVE-2026-114713, CVSS 8.6) is today, Nov. 16 — patch to 6.2.7.1 or disconnect</a></h3>
+      <p class="byline">CISA / TechWhoKnows</p>
+      <p class="body">The flaw the desk has tracked since the weekend reaches its federal deadline today: in UnrealIRCd 6.0.0 through 6.2.7.0, the IRCv3 labeled-response module echoes the label tag without neutralizing delimiters, so any user on a network of two or more linked servers can inject server-to-server commands that execute with full server authority — network-wide GLINE bans, KILLs, routing changes. The maintainers found it in an internal audit, called it the most severe issue in the daemon in 15 years, and shipped 6.2.7.1 with an emergency hot-patch on Nov. 7; CISA added it to the KEV on Nov. 13 under BOD 26-04 with today’s date. Exploitation is confirmed, not theoretical. Any linked IRC endpoint still on 6.2.7.0 or earlier is, as of this morning, past a federal deadline and inside an active campaign window.</p>
+      <p class="body"><em>Why it matters:</em> Deadline day for a flaw already exploited: any linked UnrealIRCd network on 6.2.7.0 or earlier is past a federal deadline this morning. The audit question -- who connected since Nov. 7 -- outranks the patch.</p>
     </div><div class="storyitem">
       <div class="card-top"></div>
-      <h3><a href="../articles/2026-11-15-apache-2-4-71-patches-the-critical-mod-http2-race-cve-2.html">Apache 2.4.71 patches the critical mod_http2 race (CVE-2026-119618) — found by Anthropic&#x27;s scanner and Google Cloud researchers</a></h3>
-      <p class="byline">Hacker Posts</p>
-      <p class="body">Apache released HTTP Server 2.4.71 on Nov. 11 fixing CVE-2026-119618, a race and heap-corruption flaw in mod_http2&#x27;s assign_headers() that Apache rates critical and Red Hat scores 9.8; unauthenticated remote code execution is possible only where HTTP/2 is enabled. It affects 2.4.55–2.4.70 and standalone mod_h2 2.0.8–2.0.42; HTTP/1.1-only servers are unaffected. The flaw was reported by Anthropic&#x27;s OSS Scanner (Oct. 26) and Google Cloud Vulnerability Research (Nov. 3); no confirmed in-the-wild exploitation as of Nov. 14, and scoring differs by source (Red Hat 9.8 vs CISA enrichment 8.1).</p>
-      <p class="body"><em>Why it matters:</em> The finders are the story again: Anthropic&#x27;s scanner and Google Cloud caught a 9.8-class race in the world&#x27;s most common web server. The scoring disagreement (9.8 vs 8.1) is printed, not smoothed.</p>
+      <h3><a href="../articles/2026-11-16-the-kevs-second-deadline-today-check-point-gaia-os-priv.html">The KEV’s second deadline today: Check Point Gaia OS privilege escalation (CVE-2026-123039, CVSS 8.8) — a DynamicCLI socket flaw chained with wiper attacks on perimeter appliances</a></h3>
+      <p class="byline">CISA / TechWhoKnows</p>
+      <p class="body">Also added Nov. 13, also due today: an incorrect permission assignment on an internal UNIX domain socket in the DynamicCLI daemon of Check Point’s Gaia OS — the system under its Quantum gateways, management servers and scalable platforms — lets an authenticated local user execute commands as root. Incident responders report the flaw being chained with separate initial-access vectors to deploy destructive wiper malware inside perimeter appliances, and folded into automated post-exploitation toolkits by both financially motivated and state-sponsored groups. Check Point shipped hotfixes for all supported releases late Friday via SmartUpdate. The pattern is the week’s engineering lesson in one pair of CVEs: the perimeter device and the chat daemon, both past deadline on the same Monday, both exploited before the deadline arrived.</p>
+      <p class="body"><em>Why it matters:</em> Root on the firewall itself, chained to wipers: the perimeter-appliance pattern in its purest form, sharing a deadline with the IRC flaw. Two CVEs, one Monday, both exploited first.</p>
     </div><div class="storyitem">
       <div class="card-top"></div>
-      <h3><a href="../articles/2026-11-15-n-able-n-central-a-second-able2shell-round-bypasses-hot.html">N-able N-central: a second Able2Shell round bypasses Hotfix 2 — 21 servers found mining Monero, no full patch yet</a></h3>
-      <p class="byline">Ostorlab Blog</p>
-      <p class="body">Follow-up to the Nov. 9 Able2Shell disclosure of 33 N-central zero-days: new chains 4EverAble2Shell and Agent2Shell work against the Nov. 10 Hotfix 2 build (2026.4.1.26) when the non-default Legacy API is enabled and internet-reachable, running commands as the nable user via the bundled Apache Axis, then escalating to root. Huntback counted 21 N-central servers mining Monero on Nov. 12, 19 of them on Hotfix 2. Mitigation: apply 2026.4.1.26, upgrade Agents and Probes, disable the Legacy API; a further Hotfix 3 was still in validation Nov. 14.</p>
-      <p class="body"><em>Why it matters:</em> Five days from disclosure to bypassed hotfix is the MSP supply chain in one timeline — and the counts are researchers&#x27;, which is why the mitigation list, not the vendor&#x27;s silence, leads.</p>
+      <h3><a href="../articles/2026-11-16-how-one-router-stopped-a-country-el-dorado-and-amarillo.html">How one router stopped a country: El Dorado and Amarillo identified, 1,000 connection attempts every four to five seconds, both routers now in a Florida test lab</a></h3>
+      <p class="byline">USA Today / FAA</p>
+      <p class="body">USA Today’s Sunday follow on Friday’s ground stop, from the FAA’s own FAQ: the flood — roughly 1,000 connection attempts every four to five seconds — is traced to two potential sources, the El Dorado, Arkansas radio communications site where L3Harris was replacing copper with fiber and deploying a new router, and an Amarillo, Texas radar site. When L3Harris blocked both locations, the network stabilized; the stop ran about 3:30 to 8:15 p.m. ET, with 9,159 cancellations counted for the day. Open questions, stated as such: whether Amarillo malfunctioned independently or echoed El Dorado, and whether the root cause was a faulty router or an installation/configuration error. The mitigations are already systemic — the broadcast function is disabled on all new routers — and auditors note the FTI network underneath has been flagged as an outage risk for over 15 years. The system was 69-70% converted; the failure lived exactly at the seam between old and new.</p>
+      <p class="body"><em>Why it matters:</em> The mechanism, completed: two sites, a flood rate, routers in a lab, and a mitigation already pushed to every new router. Fifteen years of auditor warnings underneath -- the seam between old and new is where systems fail.</p>
     </div>
   <section class="suggestbox" data-buddy-id="news-buddy">
     <h2>Suggestions</h2>
