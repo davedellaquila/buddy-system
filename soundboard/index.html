@@ -126,6 +126,31 @@
   footer .credits li{margin:3px 0}
   footer .credits a{color:var(--gold-2)}
   canvas#confetti{position:fixed;inset:0;pointer-events:none;z-index:50}
+  /* Filter bar (2026-11-16) */
+  .filterbar{margin:14px auto 0;max-width:760px}
+  .fsearch{
+    background:var(--panel);border:1px solid var(--line);border-radius:999px;
+    padding:8px 16px;display:flex;align-items:center;gap:10px;
+  }
+  .fsearch label{font-size:12px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+  .fsearch input{
+    flex:1;min-width:0;background:none;border:none;outline:none;color:var(--cream);
+    font:600 15px "Archivo",sans-serif;height:30px;
+  }
+  .fsearch input::placeholder{color:var(--muted)}
+  .fpills{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:12px}
+  .fpill{
+    appearance:none;cursor:pointer;border-radius:999px;padding:8px 14px;
+    border:1px solid var(--line);background:var(--panel);color:var(--muted);
+    font:700 13px "Archivo",sans-serif;letter-spacing:.02em;
+  }
+  .fpill:active{transform:scale(.97)}
+  .fpill.on{background:var(--gold);border-color:var(--gold);color:var(--bg)}
+  .fcount{text-align:center;color:var(--muted);font-size:13px;font-weight:600;margin:10px 0 0;min-height:18px}
+  /* Filtering: .pad is display:flex (0,1,0) -- a bare .hidden would lose.
+     These compound rules win on specificity. */
+  .pad.hidden{display:none}
+  section.sb-off{display:none}
 </style>
 <style data-bs-dash>.bs-dash-link{font-size:13px;font-weight:600;color:var(--accent,#0066cc);text-decoration:none;white-space:nowrap;margin-left:10px}.bs-dash-link:hover{text-decoration:underline}</style>
 </head>
@@ -148,6 +173,15 @@
   </div>
 
   <div class="now" id="nowPlaying" aria-live="polite"><span>♪ Now playing…</span></div>
+
+  <div class="filterbar">
+    <div class="fsearch">
+      <label for="sbSearch">Search</label>
+      <input id="sbSearch" type="search" placeholder="Search sounds…" aria-label="Search sounds" autocomplete="off">
+    </div>
+    <div class="fpills" id="sbPills" role="group" aria-label="Filter by category"></div>
+    <p class="fcount" id="sbCount" aria-live="polite"></p>
+  </div>
 
   <section aria-label="Ceremony sounds">
     <div class="sec-head"><h2>🏆 The Ceremony</h2></div>
@@ -853,6 +887,63 @@
     document.querySelectorAll(".pad.playing").forEach(function(b){ b.classList.remove("playing"); });
     nowEl.classList.remove("on");
   });
+})();
+</script>
+<script>
+/* Soundboard filter (2026-11-16): category pills + text search, modeled on
+   the Gold Country Markers list pages. The pills are built from the
+   sections themselves, so the categories can never drift from the page. */
+(function(){
+  var input = document.getElementById('sbSearch');
+  var pillsBox = document.getElementById('sbPills');
+  var countEl = document.getElementById('sbCount');
+  if(!input || !pillsBox || !countEl) return;
+  var cats = Array.prototype.map.call(document.querySelectorAll('section'), function(sec, i){
+    var h = sec.querySelector('h2');
+    return { id: 'cat' + i, label: h ? h.textContent.trim() : ('Section ' + (i + 1)), sec: sec };
+  });
+  var active = 'all';
+  function makePill(id, label){
+    var b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'fpill' + (id === active ? ' on' : '');
+    b.textContent = label;
+    b.setAttribute('data-cat', id);
+    b.setAttribute('aria-pressed', id === active ? 'true' : 'false');
+    b.addEventListener('click', function(){
+      active = id;
+      Array.prototype.forEach.call(pillsBox.children, function(p){
+        var on = p.getAttribute('data-cat') === active;
+        p.classList.toggle('on', on);
+        p.setAttribute('aria-pressed', on ? 'true' : 'false');
+      });
+      apply();
+    });
+    return b;
+  }
+  pillsBox.appendChild(makePill('all', 'All'));
+  cats.forEach(function(c){ pillsBox.appendChild(makePill(c.id, c.label)); });
+  var total = document.querySelectorAll('.pad').length;
+  function apply(){
+    var q = input.value.trim().toLowerCase();
+    var shown = 0;
+    cats.forEach(function(c){
+      var secShown = 0;
+      Array.prototype.forEach.call(c.sec.querySelectorAll('.pad'), function(pad){
+        var inCat = (active === 'all' || active === c.id);
+        var nameEl = pad.querySelector('.name');
+        var name = nameEl ? nameEl.textContent.toLowerCase() : '';
+        var hit = inCat && (q === '' || name.indexOf(q) >= 0);
+        pad.classList.toggle('hidden', !hit);
+        if(hit) secShown++;
+      });
+      c.sec.classList.toggle('sb-off', secShown === 0);
+      shown += secShown;
+    });
+    countEl.textContent = 'Showing ' + shown + ' of ' + total + ' sounds';
+  }
+  input.addEventListener('input', apply);
+  apply();
 })();
 </script>
 
