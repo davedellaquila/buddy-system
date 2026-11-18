@@ -246,12 +246,18 @@ h2 { font-size: 22px; margin: 32px 0 16px; }
 body { max-width: 860px; }
 .mb-hero { text-align: center; margin: 10px 0 28px; }
 .vinyl {
+  position: relative;
   width: 132px; height: 132px; margin: 0 auto 14px; border-radius: 50%;
   background:
     radial-gradient(circle at center, var(--accent) 0 17%, #191410 17.5% 19%, transparent 19.5%),
     repeating-radial-gradient(circle at center, #171219 0 2px, #241b2e 2px 4px);
   box-shadow: 0 8px 28px rgba(0,0,0,.35), inset 0 0 0 2px rgba(255,255,255,.05);
   animation: mb-spin 16s linear infinite;
+}
+.vinyl::after {
+  content: ""; position: absolute; width: 9px; height: 9px; border-radius: 50%;
+  background: rgba(255,255,255,.8); top: 13%; left: calc(50% - 4px);
+  box-shadow: 0 0 4px rgba(0,0,0,.4);
 }
 @keyframes mb-spin { to { transform: rotate(360deg); } }
 @media (prefers-reduced-motion: reduce) { .vinyl { animation: none; } }
@@ -302,14 +308,14 @@ a { color: var(--accent); }
 <div class="mb-tag">Your musical life, with memory</div>
 <p class="mb-mission">Dave’s personal music companion — keeper of his taste, builder of his playlists, guide into classical music, and coach for the day he picks up an instrument. My taste map is drawn from his real rotation, not an algorithm’s guess.</p>
 <div class="mb-hear"><h2>🔊 Hear my role</h2>
-<audio controls preload="none" src="role-intro.mp3">Your browser doesn’t support audio playback.</audio></div>
+<audio controls preload="metadata" src="role-intro.mp3">Your browser doesn’t support audio playback.</audio></div>
 </div>
 
 <div class="mb-stats">
 <div class="mb-stat"><b>13 albums</b><span>recommended &amp; logged since Nov 7, every link verified</span></div>
 <div class="mb-stat"><b>1 pick daily</b><span>in the morning standup, logged so none repeat</span></div>
 <div class="mb-stat"><b>Apple Music</b><span>Dave’s service — links open right in the app</span></div>
-<div class="mb-stat"><b>Satiny Moon</b><span>my voice, official since Nov 3</span></div>
+<div class="mb-stat"><b>Satiny Moon</b><span>my official voice since Nov 3</span></div>
 </div>
 
 <section class="mb">
