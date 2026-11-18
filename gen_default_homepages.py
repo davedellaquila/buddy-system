@@ -25,7 +25,7 @@ files reader (gen_basic's FILES_* widget, shipped on template homepages
 the same day), so private repo markdown is read from GitHub on Dave's
 devices and never published raw.
 """
-import json, os, re, sys, html, datetime, glob
+import json, os, re, sys, html, datetime, glob, subprocess
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 
@@ -124,10 +124,130 @@ def repo_markdown_section(b):
     parts.append(_C['FILES_HTML'].replace('__BID__', esc(b['id'])).replace('__BNAME__', esc(b.get('name', b['id']))))
     return section('From the repo — markdown files (%d)' % len(files), ''.join(parts))
 
+# --- Managed Files section (Dave's homepage standard, 2026-11-18) ---------
+# The same section gen_basic_homepages.py bakes into template homepages:
+# registry-registered records first, then the buddy repo's documents
+# (tracked files, root + docs/ + files/), always rendered -- "No files yet."
+# when a buddy manages nothing. Keep in step with gen_basic_homepages.py.
+_MF_DOC_EXTS = ('.md', '.txt', '.pdf', '.csv')
+_MF_REPO_ORDER = ['KNOWLEDGE.md', 'CONFIG.md', 'STUDY.md', 'SOUL.md', 'DECISIONS.md',
+                  'ACCOMPLISHMENTS.md', 'README.md']
+_MF_TRACKED = {}
+
+def _mf_tracked(root):
+    if root in _MF_TRACKED:
+        return _MF_TRACKED[root]
+    tracked, branch = [], 'master'
+    try:
+        tracked = subprocess.run(['git', '-C', root, 'ls-files'],
+                                 capture_output=True, text=True, timeout=30).stdout.splitlines()
+        rbranches = set()
+        for line in subprocess.run(['git', '-C', root, 'branch', '-r'],
+                                   capture_output=True, text=True, timeout=10).stdout.splitlines():
+            line = line.strip()
+            if ' -> ' in line:
+                rbranches.add('HEAD:' + line.split(' -> ')[1].strip().replace('origin/', '', 1))
+            elif line.startswith('origin/'):
+                rbranches.add(line[len('origin/'):])
+        head_target = next((x[5:] for x in rbranches if x.startswith('HEAD:')), None)
+        if head_target:
+            branch = head_target
+        elif 'master' in rbranches:
+            branch = 'master'
+        elif 'main' in rbranches:
+            branch = 'main'
+        else:
+            branch = subprocess.run(['git', '-C', root, 'rev-parse', '--abbrev-ref', 'HEAD'],
+                                    capture_output=True, text=True, timeout=10).stdout.strip() or 'master'
+    except Exception:
+        pass
+    _MF_TRACKED[root] = (tracked, branch)
+    return tracked, branch
+
+def _mf_repo_docs(b, exclude_urls=frozenset()):
+    """(rows, total): rows are (relpath, blob url) for tracked document files
+    in the buddy's repo -- root level plus docs/ and files/ only."""
+    repo = (b.get('repo') or '').replace('https://github.com/davedellaquila/', '').strip('/') or b['id']
+    if repo == 'buddy-system':
+        root, prefix = HERE, b['id'] + '/'
+    else:
+        prefix = ''
+        root = None
+        for cand in (repo, b['id']):
+            c = os.path.expanduser('~/workspace/projects/' + cand)
+            if os.path.isdir(os.path.join(c, '.git')):
+                root = c
+                break
+        if root is None:
+            return [], 0
+    tracked, branch = _mf_tracked(root)
+    rows = []
+    for rel in tracked:
+        rel = rel.strip()
+        if prefix:
+            if not rel.startswith(prefix):
+                continue
+            r = rel[len(prefix):]
+        else:
+            r = rel
+        if os.path.splitext(r)[1].lower() not in _MF_DOC_EXTS:
+            continue
+        parts = r.split('/')
+        if len(parts) > 1 and parts[0] not in ('docs', 'files'):
+            continue
+        if any(p in ('node_modules', 'vendor', '__pycache__') for p in parts[:-1]):
+            continue
+        url = 'https://github.com/davedellaquila/' + repo + '/blob/' + branch + '/' + rel
+        if url in exclude_urls:
+            continue
+        rows.append((r, url))
+    def _key(row):
+        base = row[0].split('/')[-1]
+        if '/' not in row[0] and base in _MF_REPO_ORDER:
+            return (0, _MF_REPO_ORDER.index(base), row[0])
+        return (1, 0, row[0])
+    rows.sort(key=_key)
+    return rows[:50], len(rows)
+
+def managed_files_section(b):
+    reg = [x for x in (b.get('files') or [])
+           if isinstance(x, dict) and x.get('title') and (x.get('url') or x.get('path'))]
+    repo_rows, repo_total = _mf_repo_docs(
+        b, exclude_urls=frozenset(x['url'] for x in reg if x.get('url')))
+    total = len(reg) + repo_total
+    if not total:
+        return section('Files', '<p class="empty">No files yet.</p>')
+    parts = []
+    both = bool(reg) and bool(repo_rows)
+    if reg:
+        if both:
+            parts.append('<p class="muted">Registered files</p>')
+        for x in reg:
+            row = '<div class="docrow">'
+            row += ('<a href="' + esc(x['url']) + '">' + esc(x['title']) + '</a>') if x.get('url') else esc(x['title'])
+            for sub in (x.get('note'), x.get('path')):
+                if sub:
+                    row += '<br><span class="muted">' + esc(sub) + '</span>'
+            parts.append(row + '</div>')
+    if repo_rows:
+        if both:
+            parts.append('<p class="muted">In the repo</p>')
+        for r, url in repo_rows:
+            nm = r.split('/')[-1]
+            dr = r.rsplit('/', 1)[0] if '/' in r else ''
+            row = '<div class="docrow"><a href="' + esc(url) + '">' + esc(nm) + '</a>'
+            if dr:
+                row += ' <span class="muted">' + esc(dr) + '/</span>'
+            parts.append(row + '</div>')
+        if repo_total > len(repo_rows):
+            parts.append('<p class="muted">\u2026and %d more in the repo \u2014 the repo files reader below lists everything.</p>'
+                         % (repo_total - len(repo_rows)))
+    return section('Files (%d)' % total, ''.join(parts))
+
 # --- Complete registry record (v3.1) -----------------------------------------
 _RECORD_ORDER = ['id', 'name', 'icon', 'tagline', 'type', 'kind', 'status', 'statusClass',
                  'parent', 'parents', 'mission', 'brief', 'persona', 'voice', 'repo',
-                 'homepage', 'homepageSource', 'chat', 'docs', 'attention', 'links',
+                 'homepage', 'homepageSource', 'chat', 'docs', 'files', 'attention', 'links',
                  'aka', 'tags', 'photos', 'alt_personas', 'setup_pending']
 
 def _rec_val(v):
@@ -357,6 +477,7 @@ def build_page(buddies, plans, b, about=False):
         '<div class="docrow"><a href="%s" target="_blank" rel="noopener">%s</a></div>' % (esc(d.get('url', '#')), esc(d.get('label', d.get('url', 'Document'))))
         for d in docs)
     docs_sec = section('Documents (%d)' % len(docs), docs_html)
+    files_sec = managed_files_section(b)
 
     # Sub-buddies
     kids_html = ''.join(
@@ -409,7 +530,7 @@ def build_page(buddies, plans, b, about=False):
         'tagline': '<p class="tagline">%s</p>' % esc(b['tagline']) if b.get('tagline') else '',
         'stats': '<div class="stats">' + ''.join(stats) + '</div>' if stats else '',
         'about_sec': about_sec, 'fact_sec': fact_sec, 'attn_sec': attn_sec,
-        'plans_sec': plans_sec, 'docs_sec': docs_sec, 'kids_sec': kids_sec,
+        'plans_sec': plans_sec, 'docs_sec': docs_sec, 'files_sec': files_sec, 'kids_sec': kids_sec,
         'conn_sec': conn_sec, 'rm_sec': rm_sec, 'record_sec': record_sec,
         'repo_sec': repo_sec, 'aboutnav': aboutnav,
         'files_css': _C['FILES_CSS'], 'files_js': _C['FILES_JS'],
@@ -436,7 +557,7 @@ def build_page(buddies, plans, b, about=False):
                 page = page.replace('</div>\n</header>', '</div>' + _tanchor + '</header>', 1)
     return page
 
-PAGE = '<!-- DEFAULT-HOMEPAGE v3 — "The Dossier" -->\n<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<meta name="viewport" content="width=device-width, initial-scale=1">\n<meta name="robots" content="noindex, nofollow">\n<meta name="color-scheme" content="dark light">\n<title>{title} — Buddy Dossier</title>\n<style>\n:root{color-scheme:dark light;--bg:#0d1117;--card:#161b22;--border:#30363d;--text:#e6edf3;--muted:#8b949e;--accent:#58a6ff;--amber:#f0b429;--amber-bd:#7d5e00}\n@media (prefers-color-scheme:light){:root{--bg:#ffffff;--card:#f6f8fa;--border:#d0d7de;--text:#1f2328;--muted:#57606a;--accent:#0969da}}\nhtml{scrollbar-gutter:stable}\nbody{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;margin:0;line-height:1.6}\n.wrap{max-width:860px;margin:0 auto;padding:40px 22px 60px}\nheader.hero{display:flex;gap:18px;align-items:center;margin-bottom:8px}\n.heroicon{width:72px;height:72px;flex:none;border-radius:20px;background:var(--card);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:38px}\nh1{margin:0;font-size:30px;letter-spacing:-.02em}\n.tagline{color:var(--muted);margin:6px 0 0;font-size:15px}\n.stats{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0 28px}\n.stat{font-size:12.5px;color:var(--muted);background:var(--card);border:1px solid var(--border);border-radius:999px;padding:4px 12px}\n.stat b{color:var(--text)}\n.status{font-size:12.5px;font-weight:700;border-radius:999px;padding:4px 12px;background:var(--card);border:1px solid var(--border)}\n.card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px 22px;margin-bottom:20px}\n.kicker{margin:0 0 10px;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:var(--muted)}\n.mission{font-size:16px;margin:0 0 10px;overflow-wrap:anywhere}\n.brief{color:var(--muted);font-size:14px;overflow-wrap:anywhere}\n.persona{font-size:14px;margin:8px 0 0}\n.facts{margin:0;display:grid;gap:2px}\n.fact{display:grid;grid-template-columns:150px 1fr;gap:12px;padding:7px 0;border-top:1px solid var(--border);font-size:14px}\n.fact:first-child{border-top:0}\n.fact dt{color:var(--muted);font-weight:600}\n.fact dd{margin:0;min-width:0;overflow-wrap:anywhere}\ncode{background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:1px 6px;font-size:13px}\na{color:var(--accent);text-decoration:none}\na:hover{text-decoration:underline}\n.aitem{display:flex;gap:10px;padding:10px 0;font-size:14px}\n.aitem+.aitem{border-top:1px solid var(--border)}\n.adot{color:var(--amber);font-size:11px;line-height:2;flex:none}\n.adate{color:var(--muted);font-size:12px;margin-top:2px}\n.plan{display:flex;gap:12px;padding:12px 0}\n.plan+.plan{border-top:1px solid var(--border)}\n.picon{font-size:24px;flex:none}\n.pname{font-weight:650;font-size:15px}\n.pill{display:inline-block;font-size:11px;font-weight:700;background:var(--bg);border:1px solid var(--border);color:var(--accent);border-radius:999px;padding:2px 10px;margin-left:8px}\n.pdesc{margin:6px 0 0;color:var(--muted);font-size:13.5px}\n.pdoc{display:inline-block;margin-top:6px;font-size:13px}\n.docrow{padding:8px 0;font-size:14.5px}\n.docrow+.docrow{border-top:1px solid var(--border)}\n.kids{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px}\n.kid{display:flex;align-items:center;gap:10px;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:10px 12px;color:var(--text)}\n.kid:hover{text-decoration:none;border-color:var(--accent)}\n.kidicon{font-size:22px}\n.kidname{font-size:14px;font-weight:600}\n.connrow{display:flex;flex-wrap:wrap;gap:12px;padding:8px 0;font-size:14px;align-items:baseline}\n.connrow+.connrow{border-top:1px solid var(--border)}\n.connlabel{flex:none;width:110px;color:var(--muted);font-weight:600;font-size:13px}\n.pinrow{padding:6px 0;font-size:14px}\n.muted{color:var(--muted);font-size:13px}\n.empty{color:var(--muted);font-style:italic;margin:4px 0}\nfooter{margin-top:36px;padding-top:18px;border-top:1px solid var(--border);color:var(--muted);font-size:12.5px;text-align:center}\n.aboutnav{display:flex;gap:14px;flex-wrap:wrap;align-items:baseline;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px 16px;margin-bottom:22px;font-size:14px}.aboutnav .header-tip{margin-left:auto}header.hero .header-tip{margin-left:auto;flex:none}.unset{color:var(--muted);font-style:italic}.recjson{margin:0;font-size:12px;white-space:pre-wrap;overflow-wrap:break-word}.mdfile{border-top:1px solid var(--border);padding:14px 0}.mdfile-head{display:flex;gap:12px;align-items:baseline;margin-bottom:8px}details.mdfile summary{cursor:pointer;font-size:14px}.md-body{font-size:14.5px}.md-body h1{font-size:21px;margin:14px 0 8px}.md-body h2{font-size:18px;margin:14px 0 6px}.md-body h3{font-size:15.5px;margin:12px 0 4px}.md-body p{margin:8px 0}.md-body ul,.md-body ol{margin:8px 0 8px 22px}.md-body li{margin:3px 0}.md-body pre{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:10px 12px;overflow-x:auto;font-size:12.5px}.md-body table{border-collapse:collapse;margin:10px 0;font-size:13.5px}.md-body th,.md-body td{border:1px solid var(--border);padding:5px 9px;text-align:left}.md-body blockquote{border-left:3px solid var(--border);margin:10px 0;padding:2px 14px;color:var(--muted)}.mdfallback{white-space:pre-wrap;font-size:12.5px}.mdinv{margin:6px 0 12px 20px;font-size:14px}.mdinv li{margin:3px 0}.repo-files h2{font-size:17px;margin:0 0 4px;color:var(--text)}.attn-btn{background:var(--bg);color:var(--text);border:1px solid var(--border);border-radius:8px;padding:6px 14px;font-size:13px;font-weight:600;cursor:pointer}.attn-btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}.attn-actions{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}.attn-status{font-size:13px;color:var(--muted);margin-top:8px}\n{dumpbox_css}\n{files_css}\n@media (max-width:640px){.fact{grid-template-columns:1fr;gap:2px}.connlabel{width:88px}.wrap{padding:28px 16px 48px}h1{font-size:24px}}\n</style>\n</head>\n<body>\n<div class="wrap">\n{aboutnav}\n<header class="hero">\n<div class="heroicon">{icon}</div>\n<div><h1>{name}</h1>{tagline}</div>\n</header>\n{family_nav}\n{stats}\n{about_sec}\n{fact_sec}\n{record_sec}\n{attn_sec}\n{plans_sec}\n{docs_sec}\n{kids_sec}\n{conn_sec}\n{rm_sec}\n{repo_sec}\n{dumpbox_html}\n<footer>Default Homepage v3 — "The Dossier" · Generated {date} · Part of the Buddy System &middot; <a href="https://davedellaquila.github.io/buddy-system/">Buddy System dashboard</a><br>\n<span class="muted">Archived PDF snapshots live in the buddy-system archive folder.</span></footer>\n</div>\n{dumpbox_js}\n{files_js}\n{attn_js}\n</body>\n</html>\n'
+PAGE = '<!-- DEFAULT-HOMEPAGE v3 — "The Dossier" -->\n<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<meta name="viewport" content="width=device-width, initial-scale=1">\n<meta name="robots" content="noindex, nofollow">\n<meta name="color-scheme" content="dark light">\n<title>{title} — Buddy Dossier</title>\n<style>\n:root{color-scheme:dark light;--bg:#0d1117;--card:#161b22;--border:#30363d;--text:#e6edf3;--muted:#8b949e;--accent:#58a6ff;--amber:#f0b429;--amber-bd:#7d5e00}\n@media (prefers-color-scheme:light){:root{--bg:#ffffff;--card:#f6f8fa;--border:#d0d7de;--text:#1f2328;--muted:#57606a;--accent:#0969da}}\nhtml{scrollbar-gutter:stable}\nbody{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;margin:0;line-height:1.6}\n.wrap{max-width:860px;margin:0 auto;padding:40px 22px 60px}\nheader.hero{display:flex;gap:18px;align-items:center;margin-bottom:8px}\n.heroicon{width:72px;height:72px;flex:none;border-radius:20px;background:var(--card);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:38px}\nh1{margin:0;font-size:30px;letter-spacing:-.02em}\n.tagline{color:var(--muted);margin:6px 0 0;font-size:15px}\n.stats{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0 28px}\n.stat{font-size:12.5px;color:var(--muted);background:var(--card);border:1px solid var(--border);border-radius:999px;padding:4px 12px}\n.stat b{color:var(--text)}\n.status{font-size:12.5px;font-weight:700;border-radius:999px;padding:4px 12px;background:var(--card);border:1px solid var(--border)}\n.card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px 22px;margin-bottom:20px}\n.kicker{margin:0 0 10px;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:var(--muted)}\n.mission{font-size:16px;margin:0 0 10px;overflow-wrap:anywhere}\n.brief{color:var(--muted);font-size:14px;overflow-wrap:anywhere}\n.persona{font-size:14px;margin:8px 0 0}\n.facts{margin:0;display:grid;gap:2px}\n.fact{display:grid;grid-template-columns:150px 1fr;gap:12px;padding:7px 0;border-top:1px solid var(--border);font-size:14px}\n.fact:first-child{border-top:0}\n.fact dt{color:var(--muted);font-weight:600}\n.fact dd{margin:0;min-width:0;overflow-wrap:anywhere}\ncode{background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:1px 6px;font-size:13px}\na{color:var(--accent);text-decoration:none}\na:hover{text-decoration:underline}\n.aitem{display:flex;gap:10px;padding:10px 0;font-size:14px}\n.aitem+.aitem{border-top:1px solid var(--border)}\n.adot{color:var(--amber);font-size:11px;line-height:2;flex:none}\n.adate{color:var(--muted);font-size:12px;margin-top:2px}\n.plan{display:flex;gap:12px;padding:12px 0}\n.plan+.plan{border-top:1px solid var(--border)}\n.picon{font-size:24px;flex:none}\n.pname{font-weight:650;font-size:15px}\n.pill{display:inline-block;font-size:11px;font-weight:700;background:var(--bg);border:1px solid var(--border);color:var(--accent);border-radius:999px;padding:2px 10px;margin-left:8px}\n.pdesc{margin:6px 0 0;color:var(--muted);font-size:13.5px}\n.pdoc{display:inline-block;margin-top:6px;font-size:13px}\n.docrow{padding:8px 0;font-size:14.5px}\n.docrow+.docrow{border-top:1px solid var(--border)}\n.kids{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px}\n.kid{display:flex;align-items:center;gap:10px;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:10px 12px;color:var(--text)}\n.kid:hover{text-decoration:none;border-color:var(--accent)}\n.kidicon{font-size:22px}\n.kidname{font-size:14px;font-weight:600}\n.connrow{display:flex;flex-wrap:wrap;gap:12px;padding:8px 0;font-size:14px;align-items:baseline}\n.connrow+.connrow{border-top:1px solid var(--border)}\n.connlabel{flex:none;width:110px;color:var(--muted);font-weight:600;font-size:13px}\n.pinrow{padding:6px 0;font-size:14px}\n.muted{color:var(--muted);font-size:13px}\n.empty{color:var(--muted);font-style:italic;margin:4px 0}\nfooter{margin-top:36px;padding-top:18px;border-top:1px solid var(--border);color:var(--muted);font-size:12.5px;text-align:center}\n.aboutnav{display:flex;gap:14px;flex-wrap:wrap;align-items:baseline;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px 16px;margin-bottom:22px;font-size:14px}.aboutnav .header-tip{margin-left:auto}header.hero .header-tip{margin-left:auto;flex:none}.unset{color:var(--muted);font-style:italic}.recjson{margin:0;font-size:12px;white-space:pre-wrap;overflow-wrap:break-word}.mdfile{border-top:1px solid var(--border);padding:14px 0}.mdfile-head{display:flex;gap:12px;align-items:baseline;margin-bottom:8px}details.mdfile summary{cursor:pointer;font-size:14px}.md-body{font-size:14.5px}.md-body h1{font-size:21px;margin:14px 0 8px}.md-body h2{font-size:18px;margin:14px 0 6px}.md-body h3{font-size:15.5px;margin:12px 0 4px}.md-body p{margin:8px 0}.md-body ul,.md-body ol{margin:8px 0 8px 22px}.md-body li{margin:3px 0}.md-body pre{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:10px 12px;overflow-x:auto;font-size:12.5px}.md-body table{border-collapse:collapse;margin:10px 0;font-size:13.5px}.md-body th,.md-body td{border:1px solid var(--border);padding:5px 9px;text-align:left}.md-body blockquote{border-left:3px solid var(--border);margin:10px 0;padding:2px 14px;color:var(--muted)}.mdfallback{white-space:pre-wrap;font-size:12.5px}.mdinv{margin:6px 0 12px 20px;font-size:14px}.mdinv li{margin:3px 0}.repo-files h2{font-size:17px;margin:0 0 4px;color:var(--text)}.attn-btn{background:var(--bg);color:var(--text);border:1px solid var(--border);border-radius:8px;padding:6px 14px;font-size:13px;font-weight:600;cursor:pointer}.attn-btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}.attn-actions{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}.attn-status{font-size:13px;color:var(--muted);margin-top:8px}\n{dumpbox_css}\n{files_css}\n@media (max-width:640px){.fact{grid-template-columns:1fr;gap:2px}.connlabel{width:88px}.wrap{padding:28px 16px 48px}h1{font-size:24px}}\n</style>\n</head>\n<body>\n<div class="wrap">\n{aboutnav}\n<header class="hero">\n<div class="heroicon">{icon}</div>\n<div><h1>{name}</h1>{tagline}</div>\n</header>\n{family_nav}\n{stats}\n{about_sec}\n{fact_sec}\n{record_sec}\n{attn_sec}\n{plans_sec}\n{docs_sec}\n{files_sec}\n{kids_sec}\n{conn_sec}\n{rm_sec}\n{repo_sec}\n{dumpbox_html}\n<footer>Default Homepage v3 — "The Dossier" · Generated {date} · Part of the Buddy System &middot; <a href="https://davedellaquila.github.io/buddy-system/">Buddy System dashboard</a><br>\n<span class="muted">Archived PDF snapshots live in the buddy-system archive folder.</span></footer>\n</div>\n{dumpbox_js}\n{files_js}\n{attn_js}\n</body>\n</html>\n'
 
 
 def main():

@@ -17,6 +17,7 @@ import os
 import html
 import re
 import sys
+import subprocess
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 
@@ -1217,6 +1218,8 @@ h2 {{ font-size: 22px; margin: 32px 0 16px; }}
 
 {docs_section}
 
+{files_section}
+
 {repo_files_section}
 
 <div class="footer">
@@ -1384,6 +1387,142 @@ def build_gallery(b):
         + '</scr' + 'ipt>'
     )
 
+# --- Managed Files section (Dave's homepage standard, 2026-11-18) ---------
+# Every homepage lists the files its buddy manages: registry-registered
+# records first (they can live outside the repo -- goal files and records a
+# buddy or Astro registers in the buddies.json `files` list), then the
+# documents in the buddy's own repo, inventoried from the local clone's
+# tracked files. The section always renders; a buddy with nothing yet gets
+# "No files yet." Keep in step with gen_default_homepages.py.
+_MF_DOC_EXTS = ('.md', '.txt', '.pdf', '.csv')
+_MF_REPO_ORDER = ['KNOWLEDGE.md', 'CONFIG.md', 'STUDY.md', 'SOUL.md', 'DECISIONS.md',
+                  'ACCOMPLISHMENTS.md', 'README.md']
+_MF_TRACKED = {}
+
+def _mf_tracked(root):
+    if root in _MF_TRACKED:
+        return _MF_TRACKED[root]
+    tracked, branch = [], 'master'
+    try:
+        tracked = subprocess.run(['git', '-C', root, 'ls-files'],
+                                 capture_output=True, text=True, timeout=30).stdout.splitlines()
+        # Blob links must name the REMOTE's default branch -- a local clone
+        # can sit on a differently-named working branch (emil-estate's clone
+        # is on `main` while the repo's default is `master`, and its clone
+        # has no origin/HEAD symref at all). Resolution: the origin/HEAD
+        # target when the clone records one, else master when the remote
+        # has it, else main, else the local HEAD branch.
+        rbranches = set()
+        for line in subprocess.run(['git', '-C', root, 'branch', '-r'],
+                                   capture_output=True, text=True, timeout=10).stdout.splitlines():
+            line = line.strip()
+            if ' -> ' in line:
+                rbranches.add('HEAD:' + line.split(' -> ')[1].strip().replace('origin/', '', 1))
+            elif line.startswith('origin/'):
+                rbranches.add(line[len('origin/'):])
+        head_target = next((x[5:] for x in rbranches if x.startswith('HEAD:')), None)
+        if head_target:
+            branch = head_target
+        elif 'master' in rbranches:
+            branch = 'master'
+        elif 'main' in rbranches:
+            branch = 'main'
+        else:
+            branch = subprocess.run(['git', '-C', root, 'rev-parse', '--abbrev-ref', 'HEAD'],
+                                    capture_output=True, text=True, timeout=10).stdout.strip() or 'master'
+    except Exception:
+        pass
+    _MF_TRACKED[root] = (tracked, branch)
+    return tracked, branch
+
+def _mf_repo_docs(b, exclude_urls=frozenset()):
+    """(rows, total): rows are (relpath, blob url) for tracked document files
+    in the buddy's repo -- root level plus docs/ and files/ only, so records
+    and docs surface while code and build plumbing never do."""
+    repo = (b.get('repo') or '').replace('https://github.com/davedellaquila/', '').strip('/') or b['id']
+    if repo == 'buddy-system':
+        root, prefix = HERE, b['id'] + '/'
+    else:
+        root = os.path.expanduser('~/workspace/projects/' + repo)
+        prefix = ''
+        if not os.path.isdir(os.path.join(root, '.git')):
+            return [], 0
+    tracked, branch = _mf_tracked(root)
+    rows = []
+    for rel in tracked:
+        rel = rel.strip()
+        if prefix:
+            if not rel.startswith(prefix):
+                continue
+            r = rel[len(prefix):]
+        else:
+            r = rel
+        if os.path.splitext(r)[1].lower() not in _MF_DOC_EXTS:
+            continue
+        parts = r.split('/')
+        if len(parts) > 1 and parts[0] not in ('docs', 'files'):
+            continue
+        if any(p in ('node_modules', 'vendor', '__pycache__') for p in parts[:-1]):
+            continue
+        url = 'https://github.com/davedellaquila/' + repo + '/blob/' + branch + '/' + rel
+        if url in exclude_urls:
+            continue  # already listed as a registered file with a human title
+        rows.append((r, url))
+    def _key(row):
+        base = row[0].split('/')[-1]
+        if '/' not in row[0] and base in _MF_REPO_ORDER:
+            return (0, _MF_REPO_ORDER.index(base), row[0])
+        return (1, 0, row[0])
+    rows.sort(key=_key)
+    return rows[:50], len(rows)
+
+def managed_files_section(b):
+    reg = [x for x in (b.get('files') or [])
+           if isinstance(x, dict) and x.get('title') and (x.get('url') or x.get('path'))]
+    repo_rows, repo_total = _mf_repo_docs(
+        b, exclude_urls=frozenset(x['url'] for x in reg if x.get('url')))
+    if not reg and not repo_rows:
+        return '<h2>\U0001F4C1 Files</h2>\n<p style="color:var(--muted)">No files yet.</p>'
+    out = ['<h2>\U0001F4C1 Files</h2>']
+    both = bool(reg) and bool(repo_rows)
+    grp = ('<div style="font-size:13px;color:var(--muted);text-transform:uppercase;'
+           'letter-spacing:.06em;margin:12px 0 4px">%s</div>')
+    if reg:
+        if both:
+            out.append(grp % 'Registered files')
+        out.append('<div class="docs">')
+        for x in reg:
+            if x.get('url'):
+                row = ('<p style="margin:6px 0"><a href="' + html.escape(x['url'], quote=True)
+                       + '">' + html.escape(x['title']) + '</a>')
+            else:
+                row = '<p style="margin:6px 0">' + html.escape(x['title'])
+            for sub in (x.get('note'), x.get('path')):
+                if sub:
+                    row += ('<br><span style="color:var(--muted);font-size:14px">'
+                            + html.escape(sub) + '</span>')
+            out.append(row + '</p>')
+        out.append('</div>')
+    if repo_rows:
+        if both:
+            out.append(grp % 'In the repo')
+        out.append('<div class="docs">')
+        for r, url in repo_rows:
+            nm = r.split('/')[-1]
+            dr = r.rsplit('/', 1)[0] if '/' in r else ''
+            row = ('<p style="margin:6px 0"><a href="' + html.escape(url, quote=True)
+                   + '">' + html.escape(nm) + '</a>')
+            if dr:
+                row += (' <span style="color:var(--muted);font-size:14px">'
+                        + html.escape(dr) + '/</span>')
+            out.append(row + '</p>')
+        if repo_total > len(repo_rows):
+            out.append('<p style="margin:6px 0;color:var(--muted);font-size:14px">'
+                       + '\u2026and %d more in the repo \u2014 the Repo files section below lists everything.</p>'
+                       % (repo_total - len(repo_rows)))
+        out.append('</div>')
+    return '\n'.join(out)
+
 generated = []
 for b in d['buddies']:
     bid = b['id']
@@ -1501,6 +1640,8 @@ for b in d['buddies']:
     else:
         docs_section = ''
 
+    files_section = managed_files_section(b)
+
     gallery_section = build_gallery(b)
 
     page = TEMPLATE.format(
@@ -1521,6 +1662,7 @@ for b in d['buddies']:
         attn_js=ATTN_JS,
         files_css=FILES_CSS,
         docs_section=docs_section,
+        files_section=files_section,
         repo_files_section=repo_files_html,
         files_js=FILES_JS,
         namesync_js=NAMESYNC_JS,
