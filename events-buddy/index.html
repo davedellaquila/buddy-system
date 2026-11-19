@@ -1,4 +1,4 @@
-<!-- BUDDY-BASIC-TEMPLATE v2 -->
+<!-- CUSTOM HOMEPAGE — Events Buddy (thread-owned): generated-template base plus the events viewer section. The homepage generators must not overwrite this page. -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -250,6 +250,28 @@ h2 { font-size: 22px; margin: 32px 0 16px; }
   .header-tip::after{display:none}
 }
 </style>
+<style>
+/* Events viewer (Events Buddy, thread-owned section) */
+.evwrap{margin:28px 0}
+.evsub{color:var(--muted);margin:4px 0 12px}
+.evcontrols{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 14px}
+.evcontrols input[type=search]{flex:1 1 200px;padding:9px 12px;border:1px solid var(--border);border-radius:8px;background:var(--bg);color:var(--text);font-size:15px}
+.evcontrols select{padding:9px 10px;border:1px solid var(--border);border-radius:8px;background:var(--bg);color:var(--text);font-size:15px}
+.evlist{display:flex;flex-direction:column;gap:10px}
+.evcard{display:flex;gap:14px;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px 14px}
+.evcard.past{opacity:.62}
+.evimg{width:84px;height:84px;flex:none;border-radius:8px;object-fit:contain;background:var(--bg);border:1px solid var(--border)}
+.evmain{min-width:0}
+.evname{font-weight:650;font-size:16px;margin:0}
+.evname a{color:inherit;text-decoration:none}
+.evname a:hover{text-decoration:underline}
+.evmeta{color:var(--muted);font-size:14px;margin-top:2px}
+.evdesc{font-size:14px;margin-top:4px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.evchip{display:inline-block;font-size:11px;font-weight:700;border:1px solid var(--border);border-radius:999px;padding:1px 8px;margin-left:8px;color:var(--muted);vertical-align:2px}
+.evmsg{color:var(--muted)}
+.evmore{margin-top:6px;padding:9px 14px;border:1px solid var(--border);border-radius:8px;background:var(--card);color:var(--text);font-size:14px;cursor:pointer}
+@media (max-width:560px){.evimg{width:64px;height:64px}}
+</style>
 </head>
 <body>
 <nav data-buddy-crumb style="padding:14px 20px 0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:14px;line-height:1.4;"><a href="https://davedellaquila.github.io/buddy-system/project-buddy/" style="color:inherit;opacity:.65;text-decoration:none;">← Projects Buddy</a></nav>
@@ -270,6 +292,17 @@ h2 { font-size: 22px; margin: 32px 0 16px; }
 <audio controls preload="none" src="role-intro.mp3" style="width:min(420px,100%)"></audio>
 </div>
 
+
+<section class="evwrap" id="events-viewer">
+<h2>📅 Events in the database</h2>
+<p class="evsub">Every published event in the events database, upcoming first — the same store the Gazette and the briefings draw from. <span id="ev-count"></span></p>
+<div class="evcontrols">
+<input id="ev-q" type="search" placeholder="Search name, place, or host…" aria-label="Search events">
+<select id="ev-town" aria-label="Filter by town"><option value="">All towns</option></select>
+<select id="ev-when" aria-label="Filter by date"><option value="upcoming">Upcoming</option><option value="next30">Next 30 days</option><option value="all">All dates</option><option value="past">Past events</option></select>
+</div>
+<div id="ev-list" class="evlist"><p class="evmsg">Loading events…</p></div>
+</section>
 
 <section class="dumpbox" data-buddy-id="events-buddy">
 <h2>🧠 Brain dump</h2>
@@ -1131,6 +1164,183 @@ Generated 2026-11-19 · Part of the Buddy System<br>
       if (d && d.id === bid && d.name) applyName(d.name);
     } catch(err){}
   });
+})();
+</script>
+
+<script>
+(function () {
+  // ===== Events data layer (swappable) =====
+  // Today the viewer reads the legacy Supabase events database with its
+  // public anon key (read-only; the query asks for published rows only).
+  // When the Firebase migration lands, swap this one fetch for the new
+  // feed and keep the normalized row shape used below.
+  var FEED_URL = 'https://ydftcebaftngcdjvxrgl.supabase.co/rest/v1/events'
+    + '?select=name,slug,start_date,start_time,end_date,end_time,location,host_org,website_url,image_url,short_description'
+    + '&status=eq.published&order=start_date.asc&limit=1000';
+  var ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlkZnRjZWJhZnRuZ2NkanZ4cmdsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjA1NDA5NDcsImV4cCI6MjA3NjExNjk0N30.8AlcsUMJSxBlua-ehaGLAn69bbORoMBdjM--MSxxXF0';
+  var TOWNS = ['Fiddletown', 'Plymouth', 'Volcano', 'Sutter Creek', 'Jackson',
+    'Pine Grove', 'Drytown', 'Amador City', 'Ione', 'Shenandoah Valley',
+    'Sacramento', 'San Jose', 'Napa', 'Danville', 'Santa Cruz', 'Monterey',
+    'Morgan Hill', 'Stockton', 'Placerville', 'Auburn', 'Grass Valley',
+    'Sonora', 'Angels Camp', 'Murphys', 'Pleasanton'];
+  var LIMIT = 120;
+
+  var listEl = document.getElementById('ev-list');
+  var countEl = document.getElementById('ev-count');
+  var qEl = document.getElementById('ev-q');
+  var townEl = document.getElementById('ev-town');
+  var whenEl = document.getElementById('ev-when');
+  if (!listEl) return;
+
+  var rows = [];
+  var showAll = false;
+
+  function esc(s) {
+    return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+  function parseDate(s) {
+    if (!s) return null;
+    var p = s.split('-');
+    return new Date(+p[0], +p[1] - 1, +p[2]);
+  }
+  function todayStart() { var d = new Date(); d.setHours(0, 0, 0, 0); return d; }
+  function fmtDate(d) {
+    return d.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' });
+  }
+  function fmtTime(t) {
+    if (!t) return '';
+    var p = t.split(':');
+    var h = +p[0], m = p[1] || '00';
+    var suf = h >= 12 ? 'PM' : 'AM';
+    h = h % 12; if (h === 0) h = 12;
+    return h + (m === '00' ? '' : ':' + m) + ' ' + suf;
+  }
+  function townOf(loc) {
+    if (!loc) return '';
+    var m = loc.match(/,\s*([A-Za-z .']+?),\s*CA\b/);
+    if (m) return m[1].trim();
+    for (var i = 0; i < TOWNS.length; i++) if (loc.indexOf(TOWNS[i]) !== -1) return TOWNS[i];
+    return '';
+  }
+  function normalize(r) {
+    var start = parseDate(r.start_date);
+    var end = parseDate(r.end_date) || start;
+    return {
+      name: r.name || 'Untitled event',
+      start: start, end: end,
+      time: fmtTime(r.start_time),
+      location: r.location || '',
+      town: townOf(r.location),
+      host: r.host_org || '',
+      url: r.website_url || '',
+      img: r.image_url || '',
+      desc: r.short_description || ''
+    };
+  }
+  function isUpcoming(e) { return e.end && e.end >= todayStart(); }
+
+  function filtered() {
+    var q = qEl.value.trim().toLowerCase();
+    var town = townEl.value;
+    var when = whenEl.value;
+    var now = todayStart();
+    var in30 = new Date(now.getTime() + 30 * 864e5);
+    var out = rows.filter(function (e) {
+      if (town && e.town !== town) return false;
+      if (q) {
+        var hay = (e.name + ' ' + e.location + ' ' + e.host + ' ' + e.town).toLowerCase();
+        if (hay.indexOf(q) === -1) return false;
+      }
+      if (!e.start) return when === 'all';
+      if (when === 'upcoming') return isUpcoming(e);
+      if (when === 'next30') return isUpcoming(e) && e.start <= in30;
+      if (when === 'past') return !isUpcoming(e);
+      return true; // all
+    });
+    if (when === 'past') {
+      out.sort(function (a, b) { return b.start - a.start; });
+    } else if (when === 'all') {
+      var up = out.filter(isUpcoming).sort(function (a, b) { return a.start - b.start; });
+      var past = out.filter(function (e) { return !isUpcoming(e); }).sort(function (a, b) { return b.start - a.start; });
+      var undated = out.filter(function (e) { return !e.start; });
+      out = up.concat(past, undated);
+    } else {
+      out.sort(function (a, b) { return a.start - b.start; });
+    }
+    return out;
+  }
+
+  function card(e) {
+    var dateLine;
+    if (!e.start) dateLine = 'Date to be announced';
+    else if (e.end && e.end.getTime() !== e.start.getTime()) dateLine = fmtDate(e.start) + ' – ' + fmtDate(e.end);
+    else dateLine = fmtDate(e.start);
+    if (e.time) dateLine += ' · ' + e.time;
+    var past = e.start && !isUpcoming(e);
+    var nameHtml = e.url
+      ? '<a href="' + esc(e.url) + '" target="_blank" rel="noopener">' + esc(e.name) + '</a>'
+      : esc(e.name);
+    var meta = [dateLine, e.location, e.host ? 'Hosted by ' + e.host : ''].filter(Boolean).join(' · ');
+    return '<div class="evcard' + (past ? ' past' : '') + '">'
+      + (e.img ? '<img class="evimg" loading="lazy" alt="" src="' + esc(e.img) + '" onerror="this.style.display=\'none\'">' : '')
+      + '<div class="evmain"><p class="evname">' + nameHtml + (past ? '<span class="evchip">Past</span>' : '') + '</p>'
+      + '<div class="evmeta">' + esc(meta) + '</div>'
+      + (e.desc ? '<div class="evdesc">' + esc(e.desc) + '</div>' : '')
+      + '</div></div>';
+  }
+
+  function render() {
+    var out = filtered();
+    var upcomingTotal = rows.filter(isUpcoming).length;
+    countEl.textContent = 'Showing ' + out.length + ' of ' + rows.length + ' published events (' + upcomingTotal + ' upcoming).';
+    if (!out.length) {
+      listEl.innerHTML = '<p class="evmsg">No events match — try a different search, town, or date range.</p>';
+      return;
+    }
+    var shown = showAll ? out : out.slice(0, LIMIT);
+    var html = shown.map(card).join('');
+    if (out.length > shown.length) {
+      html += '<button type="button" class="evmore" id="ev-more">Show all ' + out.length + ' events</button>';
+    }
+    listEl.innerHTML = html;
+    var more = document.getElementById('ev-more');
+    if (more) more.addEventListener('click', function () { showAll = true; render(); });
+  }
+
+  function fillTowns() {
+    var counts = {};
+    rows.forEach(function (e) { if (e.town) counts[e.town] = (counts[e.town] || 0) + 1; });
+    Object.keys(counts).sort().forEach(function (t) {
+      var opt = document.createElement('option');
+      opt.value = t;
+      opt.textContent = t + ' (' + counts[t] + ')';
+      townEl.appendChild(opt);
+    });
+  }
+
+  function load() {
+    listEl.innerHTML = '<p class="evmsg">Loading events…</p>';
+    fetch(FEED_URL, { headers: { 'apikey': ANON_KEY, 'Authorization': 'Bearer ' + ANON_KEY } })
+      .then(function (res) { if (!res.ok) throw new Error('feed ' + res.status); return res.json(); })
+      .then(function (data) {
+        rows = data.map(normalize);
+        fillTowns();
+        render();
+      })
+      .catch(function () {
+        countEl.textContent = '';
+        listEl.innerHTML = '<p class="evmsg">Couldn\'t reach the events database just now. <button type="button" class="evmore" id="ev-retry">Try again</button></p>';
+        document.getElementById('ev-retry').addEventListener('click', load);
+      });
+  }
+
+  [qEl, townEl, whenEl].forEach(function (el) {
+    el.addEventListener('input', function () { showAll = false; render(); });
+    el.addEventListener('change', function () { showAll = false; render(); });
+  });
+  load();
 })();
 </script>
 
