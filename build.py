@@ -424,15 +424,20 @@ body:has(#token-pill) #canvas-bar{padding-right:204px}
 /* Scoped Org Chart context nodes + Atlas context ghosts (Scope x View) */
 .oc-box.oc-context{opacity:.55;border-style:dashed}
 .scope-ghost{opacity:.16 !important}
-#tree-chrome-main .tree-opts{display:flex;gap:14px;align-items:center;padding:6px 10px;flex-wrap:wrap}
+#tree-chrome-main .tree-opts{display:flex;gap:14px;align-items:center;padding:2px 10px;flex-wrap:wrap}
 .rv-scopehead{display:block;width:100%;text-align:left;background:none;border:0;border-bottom:1px solid var(--border);color:var(--text);font:inherit;font-weight:700;padding:8px 10px;cursor:pointer}
 .rv-scopehead:hover{color:var(--accent)}
 /* Pane toggles (Dave 2026-10-16): show/hide the Atlas chart and orphan subviews.
    Lives in the view nav (icon strip); only visible when the Atlas view is active. */
-#pane-toggles{display:flex;flex-direction:column;gap:6px;padding:8px 4px 4px;margin-top:4px;
-  border-top:1px solid var(--border)}
+/* Dave 2026-11-19: the pair used to stack vertically in their own
+   bordered band under the answers strip -- a tall strip of mostly
+   empty canvas. They now sit as one slim inline pair. (Not folded
+   into the floating .atlas-controls pill: it is a fixed-height 44px
+   Jonny toolbar that already wraps on phone; the inline pair gets
+   the same footprint win without crowding the zoom row.) */
+#pane-toggles{display:flex;flex-direction:row;gap:4px;padding:0;margin:0;align-items:center}
 #pane-toggles .ptoggle{display:flex;align-items:center;gap:8px;cursor:pointer;
-  padding:6px 8px;border-radius:8px;font-size:.78125rem;color:var(--muted)}
+  padding:4px 8px;border-radius:8px;font-size:.78125rem;color:var(--muted)}
 #pane-toggles .ptoggle:hover{background:var(--hover);color:var(--text)}
 #pane-toggles .ptoggle input{appearance:none;-webkit-appearance:none;flex:0 0 auto;
   width:34px;height:20px;border-radius:10px;background:var(--faint);position:relative;
@@ -442,9 +447,6 @@ body:has(#token-pill) #canvas-bar{padding-right:204px}
   width:16px;height:16px;border-radius:50%;background:#fff;transition:left .2s;
   box-shadow:0 1px 3px rgba(0,0,0,.3)}
 #pane-toggles .ptoggle input:checked::after{left:16px}
-body.sb-closed #pane-toggles{align-items:center;padding:8px 0 4px}
-body.sb-closed #pane-toggles .ptoggle span.plab{display:none}
-body.sb-closed #pane-toggles .ptoggle{padding:6px 4px}
 .brow{display:flex;align-items:center;gap:8px;width:100%;text-align:left;background:none;border:0;
   color:var(--text);font:inherit;font-size:.84375rem;padding:6px 10px 6px 8px;border-radius:8px;cursor:pointer}
 .brow:hover{background:var(--hover)}
