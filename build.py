@@ -3673,6 +3673,9 @@ try { Object.assign(S, JSON.parse(localStorage.getItem(LS_KEY) || '{}')); } catc
 /* Apply queued global renames to this device's registry (Dave 2026-10-16) --
    the write-through flush happens at boot via flushPendingRenames(). */
 try { Object.entries(S.pendingRenames || {}).forEach(([pid, nm]) => { const b = byId[pid]; if (b) { b.name = nm; delete S.names[pid]; } }); } catch(e) {}
+/* Apply queued buddy links to this device's registry (Dave 2026-11-19) --
+   the write-through flush happens at boot via flushPendingLinks(). */
+try { Object.entries(S.pendingLinks || {}).forEach(([fid, tos]) => { (tos || []).forEach(tid => applyLinkToMemory(fid, tid)); }); } catch(e) {}
 S.parents = S.parents || {};
 S.tileClicks = S.tileClicks || {};
 S.zoom = S.zoom || 100;
@@ -7738,6 +7741,67 @@ async function flushPendingRenames(){
   const first = Object.keys(p)[0];
   await writeGlobalName(first, p[first]);
 }
+/* ---------- Link-a-buddy write-through (Dave 2026-11-19) ----------
+   The info panel's Linked Buddies section adds a link by appending the
+   target to this buddy's registry `links` array (rendering is already
+   bidirectional via linkedBy). Same token route as rename/persona:
+   ghGetFile the fresh buddies.json, apply every queued pair, ghPutFile.
+   Without a token (or on failure) the pair stays queued in
+   S.pendingLinks and flushes on the next sync; the in-memory registry
+   updates immediately either way, so the link shows on this device. */
+function applyLinkToMemory(fromId, toId){
+  const fb = byId[fromId], tb = byId[toId];
+  if (!fb || !tb) return;
+  fb.links = fb.links || [];
+  if (fb.links.indexOf(toId) < 0) fb.links.push(toId);
+  tb.linkedBy = tb.linkedBy || [];
+  if (tb.linkedBy.indexOf(fromId) < 0) tb.linkedBy.push(fromId);
+}
+function refreshPanelIfShowing(id){
+  const vb = document.getElementById('view-buddy');
+  if (vb && vb.dataset.buddy === id) renderBuddy(id);
+}
+async function writeBuddyLink(fromId, toId){
+  if (!byId[fromId] || !byId[toId] || fromId === toId) return;
+  applyLinkToMemory(fromId, toId);
+  if (!S.pendingLinks || typeof S.pendingLinks !== 'object') S.pendingLinks = {};
+  const q = S.pendingLinks[fromId] = S.pendingLinks[fromId] || [];
+  if (q.indexOf(toId) < 0) q.push(toId);
+  if (!ghToken()) {
+    save();
+    refreshPanelIfShowing(fromId);
+    toast('Linked on this device - will sync to the registry when a GitHub token is connected.');
+    return;
+  }
+  try {
+    const raw = await ghGetFile('buddy-system', 'buddies.json');
+    if (!raw) throw new Error('Could not read buddies.json from GitHub.');
+    const data = JSON.parse(raw);
+    const arr = data.buddies || data;
+    Object.keys(S.pendingLinks).forEach(fid => {
+      const e = arr.find(x => x.id === fid);
+      if (!e) return;
+      e.links = e.links || [];
+      (S.pendingLinks[fid] || []).forEach(tid => { if (e.links.indexOf(tid) < 0) e.links.push(tid); });
+    });
+    await ghPutFile('buddy-system', 'buddies.json', b64encode(JSON.stringify(data, null, 1)), 'Link ' + toId + ' to ' + fromId + ' (dashboard info panel)');
+    delete S.pendingLinks;
+    save();
+    refreshPanelIfShowing(fromId);
+    toast('Linked - registry updated.');
+  } catch (err) {
+    save();
+    refreshPanelIfShowing(fromId);
+    toast('Linked on this device - sync failed (' + (err.message || err) + '); will retry when a token is connected.');
+  }
+}
+async function flushPendingLinks(){
+  const p = S.pendingLinks;
+  if (!p || !Object.keys(p).length || !ghToken()) return;
+  const first = Object.keys(p)[0];
+  const tos = p[first] || [];
+  if (tos.length) await writeBuddyLink(first, tos[0]);
+}
 function renderBuddy(id){
   const b = byId[id]; if(!b) return;
   const _sp = document.getElementById('sec-hold-spacer'); if (_sp) _sp.remove(); // stale scroll-hold spacer never survives a re-render (Dave 2026-10-21)
@@ -7752,6 +7816,23 @@ function renderBuddy(id){
         const _vb2 = document.getElementById('view-buddy');
         const _bid = _vb2 && _vb2.dataset.buddy;
         if (_bid) openAvatarPicker(_bid, _icon);
+      });
+    }
+    /* Direct click binding for the Link-a-buddy control (Dave
+       2026-11-19), same pattern as the icon above. */
+    const _lo = document.getElementById('bp-link-open');
+    if (_lo && !_lo.dataset.bound) {
+      _lo.dataset.bound = '1';
+      const _lf = document.getElementById('bp-link-form');
+      _lo.addEventListener('click', () => { if (_lf) _lf.hidden = false; _lo.hidden = true; });
+      const _lc = document.getElementById('bp-link-cancel');
+      if (_lc) _lc.addEventListener('click', () => { if (_lf) _lf.hidden = true; _lo.hidden = false; });
+      const _lg = document.getElementById('bp-link-go');
+      if (_lg) _lg.addEventListener('click', () => {
+        const _sel = document.getElementById('bp-link-sel');
+        const _vb3 = document.getElementById('view-buddy');
+        const _from = _vb3 && _vb3.dataset.buddy;
+        if (_from && _sel && _sel.value) writeBuddyLink(_from, _sel.value);
       });
     }
     /* Direct click binding for the Section index button (Dave
@@ -7864,9 +7945,8 @@ function renderBuddy(id){
     const out = (b.links || []).filter(lid => lid !== id);
     const inc = (b.linkedBy || []).filter(lid => lid !== id && out.indexOf(lid) < 0);
     const all = out.concat(inc);
-    if (!all.length) return;
     function prettyId(s){ return s.replace(/-buddy$/, "'s Buddy").replace(/(^|-)([a-z])/g, function(m, p, c){ return (p === '-' ? ' ' : '') + c.toUpperCase(); }); }
-    linkSec = '<div class="bp-sec" data-field="links"><h3>Linked buddies <span class="attn-count">('+all.length+')</span></h3>' + all.map(lid => {
+    const rows = all.map(lid => {
       const lb = byId[lid];
       if (lb) return '<a class="art-row" data-buddy="' + escHtml(lid) + '">'
         + '<span class="art-ic">' + escHtml(lb.icon || '') + '</span>'
@@ -7875,7 +7955,23 @@ function renderBuddy(id){
       return '<div class="art-row" style="opacity:.55">'
         + '<span class="art-ic">\u23f3</span>'
         + '<span><span class="art-label">' + escHtml(prettyId(lid)) + '</span><div class="art-sub">Buddy being set up</div></span></div>';
-    }).join('') + '</div>';
+    }).join('');
+    /* Link-a-buddy control (Dave 2026-11-19): the section renders even
+       when empty so a link can always be added from here. Candidates =
+       every buddy except this one and those already in the union above. */
+    const taken = {}; all.forEach(lid => { taken[lid] = 1; });
+    const cands = BUDDIES.filter(x => x.id !== id && !taken[x.id])
+      .sort((x, y) => dispName(x).toLowerCase() < dispName(y).toLowerCase() ? -1 : 1);
+    const opts = cands.map(x => '<option value="' + escHtml(x.id) + '">' + escHtml(((x.icon || '') + ' ' + dispName(x)).trim()) + '</option>').join('');
+    const addHtml = '<div style="margin-top:8px">'
+      + '<button class="linkbtn" id="bp-link-open" type="button">+ Link a buddy</button>'
+      + '<div id="bp-link-form" hidden>'
+      + '<select id="bp-link-sel" style="width:100%;box-sizing:border-box;font-size:.9375rem;padding:10px 12px;border-radius:10px;border:1px solid var(--border);background:var(--bg);color:var(--text)">' + opts + '</select>'
+      + '<div style="display:flex;gap:10px;margin-top:8px;align-items:center"><button class="btn small" id="bp-link-go" type="button">Link</button>'
+      + '<button class="linkbtn" id="bp-link-cancel" type="button">Cancel</button></div>'
+      + '</div></div>';
+    linkSec = '<div class="bp-sec" data-field="links"><h3>Linked buddies <span class="attn-count">('+all.length+')</span></h3>'
+      + (rows || '<p class="bp-empty">No buddy linked yet.</p>') + addHtml + '</div>';
   })();
   let attn = '';
   const fmtSeenTime = ts => {
@@ -16070,6 +16166,8 @@ initSearch();
 flushPendingDumps();
 // Flush any global renames queued while offline or token-less (Dave 2026-10-16)
 flushPendingRenames();
+// Flush any buddy links queued while offline or token-less (Dave 2026-11-19)
+flushPendingLinks();
 // Flush any new-buddy requests queued while offline or token-less
 flushNbQueue();
 // Pull the global flags + favorites and merge (Job C, Dave 2026-10-21)
