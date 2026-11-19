@@ -368,7 +368,17 @@ body.sb-closed #main .zoombar{left:calc(50% + 38px)}
 #scope-nav .navbtn{flex:none;width:100%}
 #scope-nav .scope-div{border-top:1px solid var(--border);margin:6px 4px}
 #canvas-bar{position:sticky;top:0;z-index:40;display:flex;align-items:center;gap:12px;flex-wrap:wrap;transition:margin-left .28s ease;
-  padding:10px 16px;background:var(--bg);border-bottom:1px solid var(--border)}
+  padding:10px 68px 10px 16px;background:var(--bg);border-bottom:1px solid var(--border)}
+/* Dave 2026-11-19: the view switch (.cb-switch, margin-left:auto) ran
+   right under the fixed (i) button (#panel-open, top:12px right:12px,
+   44px, z-85 over this bar's z-40) and the button clipped the last tab.
+   The bar now reserves the button's footprint as right padding -- the
+   codebase's standard 68px clearance (12 offset + 44 button + 12 gap,
+   same figure the update banner uses) -- so the tab row stops clear of
+   the corner at every width and wraps inside its own box when tight.
+   With the token pill present the button shifts to right:148px, so the
+   reserve grows to clear its left edge there too (148 + 44 + 12). */
+body:has(#token-pill) #canvas-bar{padding-right:204px}
 @media (min-width:640px){
   body:not(.standalone):not(.sb-anchored):not(.sb-closed) #canvas-bar{margin-left:324px}
   body:not(.standalone).sb-closed:has(#main.homepage-mode) #canvas-bar{margin-left:56px}
@@ -387,7 +397,7 @@ body.sb-closed #main .zoombar{left:calc(50% + 38px)}
 .cb-switch button.sel{background:var(--text);color:var(--bg)}
 .cb-switch button:hover:not(.sel){color:var(--text)}
 @media (max-width:639px){
-  #canvas-bar{padding:8px 12px;gap:8px}
+  #canvas-bar{padding:8px 68px 8px 12px;gap:8px}
   .cb-switch{margin-left:0;background:transparent;border:0;gap:6px;flex-wrap:wrap;overflow:visible}
   .cb-switch button{border:1px solid var(--border);border-radius:999px;background:var(--panel);padding:6px 12px}
   .cb-switch button.sel{background:var(--text);color:var(--bg);border-color:var(--text)}
