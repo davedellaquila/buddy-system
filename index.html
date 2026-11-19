@@ -575,6 +575,15 @@ body:has(#token-pill) #canvas-bar{padding-right:204px}
   .cb-switch button{border:1px solid var(--border);border-radius:999px;background:var(--panel);padding:6px 12px}
   .cb-switch button.sel{background:var(--text);color:var(--bg);border-color:var(--text)}
 }
+/* Link-a-buddy type-ahead (Dave 2026-11-19): the picker is a text input
+   with a suggestion list, not a <select> -- a dropdown menu does not
+   scale to thousands of buddies. Only the top handful of matches ever
+   render. */
+.bp-link-sugg{display:flex;flex-direction:column;gap:2px;margin-top:6px}
+.bp-link-sugg button{display:flex;align-items:center;gap:8px;width:100%;text-align:left;border:1px solid var(--border);background:var(--panel);color:var(--text);border-radius:8px;padding:7px 10px;font:inherit;font-size:.875rem;cursor:pointer}
+.bp-link-sugg button.sel{border-color:var(--accent);background:var(--ghost)}
+.bp-link-sugg .bls-ic{flex:none}
+.bp-link-sugg .bls-name{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 /* Homepage gallery (Scope x View): one card per record in the scope;
    the card is the homepage's own face - icon, name, current state. */
 .gal-head{padding:22px 22px 4px}
@@ -5860,7 +5869,7 @@ function renderDevelopSection(){
   const dev = document.getElementById('fset-develop');
   if (!dev) return;
   const simulating = !!devBackup;
-  const buildNum = '20261119.1540';
+  const buildNum = '20261119.1543';
   dev.innerHTML = ''
     + '<label class="fset-check"><input type="checkbox" id="dev-empty-toggle"' + (simulating ? ' checked' : '') + '> <span><strong>Simulate new user</strong> — empty data file, as if opening the shared link fresh</span></label>'
     + '<div class="fineprint" style="margin:8px 0 12px">Build <span style="font-family:monospace">' + escHtml(String(buildNum)) + '</span> · ' + BUDDIES.length + ' buddies in this file</div>'
@@ -8109,6 +8118,29 @@ async function flushPendingRenames(){
    Without a token (or on failure) the pair stays queued in
    S.pendingLinks and flushes on the next sync; the in-memory registry
    updates immediately either way, so the link shows on this device. */
+/* Type-ahead matching for the link picker (Dave 2026-11-19): name
+   prefix matches first, then name substring, then id substring; the
+   buddy itself and anyone already in its linked union never appear.
+   Capped at 8 -- only the top handful ever render. */
+function linkMatches(fromId, q){
+  const b = byId[fromId]; if (!b) return [];
+  q = (q || '').trim().toLowerCase();
+  if (!q) return [];
+  const taken = {};
+  (b.links || []).forEach(lid => { taken[lid] = 1; });
+  (b.linkedBy || []).forEach(lid => { taken[lid] = 1; });
+  const starts = [], contains = [], idhits = [];
+  BUDDIES.forEach(x => {
+    if (x.id === fromId || taken[x.id]) return;
+    const nm = dispName(x).toLowerCase();
+    if (nm.startsWith(q)) starts.push(x);
+    else if (nm.indexOf(q) >= 0) contains.push(x);
+    else if (x.id.indexOf(q) >= 0) idhits.push(x);
+  });
+  const byName = (a, c) => dispName(a).toLowerCase() < dispName(c).toLowerCase() ? -1 : 1;
+  starts.sort(byName); contains.sort(byName); idhits.sort(byName);
+  return starts.concat(contains, idhits).slice(0, 8);
+}
 function applyLinkToMemory(fromId, toId){
   const fb = byId[fromId], tb = byId[toId];
   if (!fb || !tb) return;
@@ -8178,22 +8210,42 @@ function renderBuddy(id){
         if (_bid) openAvatarPicker(_bid, _icon);
       });
     }
-    /* Direct click binding for the Link-a-buddy control (Dave
-       2026-11-19), same pattern as the icon above. */
+    /* Direct binding for the Link-a-buddy type-ahead (Dave 2026-11-19),
+       same pattern as the icon above. Mouse (mousedown on a suggestion)
+       and keyboard (arrows + Enter, Esc backs out) both choose; choosing
+       runs writeBuddyLink, the same token-gated write as before. */
     const _lo = document.getElementById('bp-link-open');
     if (_lo && !_lo.dataset.bound) {
       _lo.dataset.bound = '1';
       const _lf = document.getElementById('bp-link-form');
-      _lo.addEventListener('click', () => { if (_lf) _lf.hidden = false; _lo.hidden = true; });
+      const _inp = document.getElementById('bp-link-input');
+      const _sugg = document.getElementById('bp-link-sugg');
+      let _act = -1, _matches = [];
+      const _fromId = () => { const v = document.getElementById('view-buddy'); return v && v.dataset.buddy; };
+      const _closeForm = () => { if (_lf) _lf.hidden = true; _lo.hidden = false; if (_inp) _inp.value = ''; if (_sugg) _sugg.innerHTML = ''; _act = -1; _matches = []; };
+      const _paint = () => { if (_sugg) [..._sugg.children].forEach((el, i) => el.classList.toggle('sel', i === _act)); };
+      const _choose = i => { const pick = _matches[i]; const f = _fromId(); if (f && pick) writeBuddyLink(f, pick.id); };
+      const _renderSugg = () => {
+        const f = _fromId();
+        _matches = (f && _inp) ? linkMatches(f, _inp.value) : [];
+        _act = _matches.length ? 0 : -1;
+        if (!_sugg) return;
+        _sugg.innerHTML = _matches.map((x, i) => '<button type="button" data-bls="' + i + '"><span class="bls-ic">' + escHtml(x.icon || '') + '</span><span class="bls-name">' + escHtml(dispName(x)) + '</span></button>').join('');
+        [..._sugg.querySelectorAll('[data-bls]')].forEach(btn => btn.addEventListener('mousedown', ev => { ev.preventDefault(); _choose(+btn.getAttribute('data-bls')); }));
+        _paint();
+      };
+      _lo.addEventListener('click', () => { if (_lf) _lf.hidden = false; _lo.hidden = true; if (_inp) _inp.focus(); });
       const _lc = document.getElementById('bp-link-cancel');
-      if (_lc) _lc.addEventListener('click', () => { if (_lf) _lf.hidden = true; _lo.hidden = false; });
-      const _lg = document.getElementById('bp-link-go');
-      if (_lg) _lg.addEventListener('click', () => {
-        const _sel = document.getElementById('bp-link-sel');
-        const _vb3 = document.getElementById('view-buddy');
-        const _from = _vb3 && _vb3.dataset.buddy;
-        if (_from && _sel && _sel.value) writeBuddyLink(_from, _sel.value);
-      });
+      if (_lc) _lc.addEventListener('click', _closeForm);
+      if (_inp) {
+        _inp.addEventListener('input', _renderSugg);
+        _inp.addEventListener('keydown', ev => {
+          if (ev.key === 'ArrowDown') { ev.preventDefault(); ev.stopPropagation(); if (_matches.length) { _act = Math.min(_act + 1, _matches.length - 1); _paint(); } }
+          else if (ev.key === 'ArrowUp') { ev.preventDefault(); ev.stopPropagation(); if (_matches.length) { _act = Math.max(_act - 1, 0); _paint(); } }
+          else if (ev.key === 'Enter') { ev.preventDefault(); ev.stopPropagation(); if (_act >= 0) _choose(_act); }
+          else if (ev.key === 'Escape') { ev.preventDefault(); ev.stopPropagation(); _closeForm(); }
+        });
+      }
     }
     /* Direct click binding for the Section index button (Dave
        2026-11-07): its only path used to be the document-level
@@ -8317,18 +8369,17 @@ function renderBuddy(id){
         + '<span><span class="art-label">' + escHtml(prettyId(lid)) + '</span><div class="art-sub">Buddy being set up</div></span></div>';
     }).join('');
     /* Link-a-buddy control (Dave 2026-11-19): the section renders even
-       when empty so a link can always be added from here. Candidates =
-       every buddy except this one and those already in the union above. */
-    const taken = {}; all.forEach(lid => { taken[lid] = 1; });
-    const cands = BUDDIES.filter(x => x.id !== id && !taken[x.id])
-      .sort((x, y) => dispName(x).toLowerCase() < dispName(y).toLowerCase() ? -1 : 1);
-    const opts = cands.map(x => '<option value="' + escHtml(x.id) + '">' + escHtml(((x.icon || '') + ' ' + dispName(x)).trim()) + '</option>').join('');
+       when empty so a link can always be added from here. The control is
+       a type-ahead (Dave's rework the same day): click it and it becomes
+       a text input; suggestions are computed live by linkMatches() --
+       the registry is never rendered wholesale into the DOM. */
     const addHtml = '<div style="margin-top:8px">'
       + '<button class="linkbtn" id="bp-link-open" type="button">+ Link a buddy</button>'
       + '<div id="bp-link-form" hidden>'
-      + '<select id="bp-link-sel" style="width:100%;box-sizing:border-box;font-size:.9375rem;padding:10px 12px;border-radius:10px;border:1px solid var(--border);background:var(--bg);color:var(--text)">' + opts + '</select>'
-      + '<div style="display:flex;gap:10px;margin-top:8px;align-items:center"><button class="btn small" id="bp-link-go" type="button">Link</button>'
-      + '<button class="linkbtn" id="bp-link-cancel" type="button">Cancel</button></div>'
+      + '<input type="text" id="bp-link-input" placeholder="Type a buddy name…" autocomplete="off" style="width:100%;box-sizing:border-box;font-size:.9375rem;padding:10px 12px;border-radius:10px;border:1px solid var(--border);background:var(--bg);color:var(--text)">'
+      + '<div class="bp-link-sugg" id="bp-link-sugg"></div>'
+      + '<div style="display:flex;gap:10px;margin-top:8px;align-items:center"><button class="linkbtn" id="bp-link-cancel" type="button">Cancel</button>'
+      + '<span class="bp-empty" style="margin:0">Pick a suggestion to link.</span></div>'
       + '</div></div>';
     linkSec = '<div class="bp-sec" data-field="links"><h3>Linked buddies <span class="attn-count">('+all.length+')</span></h3>'
       + (rows || '<p class="bp-empty">No buddy linked yet.</p>') + addHtml + '</div>';
@@ -8455,7 +8506,7 @@ function renderBuddy(id){
     + attrHead('shared', 'SHARED NOTES', '<span class="attr-value" id="bp-shared-count">(0)</span>', '')
     + '<div class="attr-body">' + attrTipLine('Anybody with repo access can see this note. Saved to the buddy’s repo (docs/notes.md).') + '<textarea class="notes" id="bp-shared-notes" placeholder="Anybody with repo access can see this note."></textarea>'
     + '<p class="fineprint" id="shared-status"></p></div></div>'
-    + '<div class="bp-build">Build 20261119.1540</div>'
+    + '<div class="bp-build">Build 20261119.1543</div>'
     + '</div>';
   // Update every visible label for a buddy after a rename/re-icon, across all
   // Atlas lenses. A rename changes no structure, so labels are patched in place
@@ -11508,7 +11559,7 @@ function renderPlan(id){
     + '<p class="fineprint">Saved on this device. (For your eyes only)</p></div>'
     + '<div class="bp-sec"><h3>📝 Shared notes<span class="info-tip" data-tip="Visible to everyone with access to this project.">\u24d8</span></h3><textarea class="notes" id="bp-shared" placeholder="Shared notes\u2026 (visible to everyone with access)">'+escHtml((S.planShared||{})[id]||'')+'</textarea>'
     + '<p class="fineprint">Shared — visible to everyone with access.</p></div>'
-    + '<div class="bp-build">Build 20261119.1540</div>'
+    + '<div class="bp-build">Build 20261119.1543</div>'
     + '</div>';
   const nt = document.getElementById('bp-notes');
   let t = null;
@@ -15439,14 +15490,14 @@ function openWhatsNew(){
     .then(r => r.ok ? r.text() : '')
     .then(t => {
       const serverBuild = t.trim();
-      if (serverBuild && serverBuild !== '20261119.1540') {
+      if (serverBuild && serverBuild !== '20261119.1543') {
         updBtn.style.display = '';
         updBtn.title = 'Update to build ' + serverBuild;
       }
       // Show build numbers at the top of the sheet (Dave's request 2026-10-12)
-      const myBuild = '20261119.1540';
+      const myBuild = '20261119.1543';
       let buildLine = '<p class="fineprint" style="margin-top:0">You’re on build ' + escHtml(myBuild) + '.';
-      if (serverBuild && serverBuild !== '20261119.1540' && isNewerBuild(serverBuild, myBuild)) {
+      if (serverBuild && serverBuild !== '20261119.1543' && isNewerBuild(serverBuild, myBuild)) {
         buildLine += ' Build ' + escHtml(serverBuild) + ' is available.';
       }
       buildLine += '</p>';
@@ -15516,7 +15567,7 @@ function syncUpdateBanner(){
   if (b.dataset.state !== state) b.dataset.state = state;
 }
 function initVersionCheck(){
-  const myBuild = '20261119.1540';
+  const myBuild = '20261119.1543';
   function showUpdateBanner(serverBuild){
     if (document.getElementById('update-banner')) return;
     const b = document.createElement('div');
