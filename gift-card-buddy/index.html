@@ -1,173 +1,208 @@
-<!-- DEFAULT-HOMEPAGE v3 — "The Dossier" -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta charset="UTF-8">
 <meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="color-scheme" content="dark light">
-<title>About Gift Card Buddy — Buddy Dossier</title>
+<title>Gift Card Buddy — The Register</title>
 <style>
-:root{color-scheme:dark light;--bg:#0d1117;--card:#161b22;--border:#30363d;--text:#e6edf3;--muted:#8b949e;--accent:#58a6ff;--amber:#f0b429;--amber-bd:#7d5e00}
-@media (prefers-color-scheme:light){:root{--bg:#ffffff;--card:#f6f8fa;--border:#d0d7de;--text:#1f2328;--muted:#57606a;--accent:#0969da}}
-html{scrollbar-gutter:stable}
-body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;margin:0;line-height:1.6}
-.wrap{max-width:860px;margin:0 auto;padding:40px 22px 60px}
-header.hero{display:flex;gap:18px;align-items:center;margin-bottom:8px}
-.heroicon{width:72px;height:72px;flex:none;border-radius:20px;background:var(--card);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:38px}
-h1{margin:0;font-size:30px;letter-spacing:-.02em}
-.tagline{color:var(--muted);margin:6px 0 0;font-size:15px}
-.stats{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0 28px}
-.stat{font-size:12.5px;color:var(--muted);background:var(--card);border:1px solid var(--border);border-radius:999px;padding:4px 12px}
-.stat b{color:var(--text)}
-.status{font-size:12.5px;font-weight:700;border-radius:999px;padding:4px 12px;background:var(--card);border:1px solid var(--border)}
-.card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px 22px;margin-bottom:20px}
-.kicker{margin:0 0 10px;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:var(--muted)}
-.mission{font-size:16px;margin:0 0 10px;overflow-wrap:anywhere}
-.brief{color:var(--muted);font-size:14px;overflow-wrap:anywhere}
-.persona{font-size:14px;margin:8px 0 0}
-.facts{margin:0;display:grid;gap:2px}
-.fact{display:grid;grid-template-columns:150px 1fr;gap:12px;padding:7px 0;border-top:1px solid var(--border);font-size:14px}
-.fact:first-child{border-top:0}
-.fact dt{color:var(--muted);font-weight:600}
-.fact dd{margin:0;min-width:0;overflow-wrap:anywhere}
-code{background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:1px 6px;font-size:13px}
-a{color:var(--accent);text-decoration:none}
-a:hover{text-decoration:underline}
-.aitem{display:flex;gap:10px;padding:10px 0;font-size:14px}
-.aitem+.aitem{border-top:1px solid var(--border)}
-.adot{color:var(--amber);font-size:11px;line-height:2;flex:none}
-.adate{color:var(--muted);font-size:12px;margin-top:2px}
-.plan{display:flex;gap:12px;padding:12px 0}
-.plan+.plan{border-top:1px solid var(--border)}
-.picon{font-size:24px;flex:none}
-.pname{font-weight:650;font-size:15px}
-.pill{display:inline-block;font-size:11px;font-weight:700;background:var(--bg);border:1px solid var(--border);color:var(--accent);border-radius:999px;padding:2px 10px;margin-left:8px}
-.pdesc{margin:6px 0 0;color:var(--muted);font-size:13.5px}
-.pdoc{display:inline-block;margin-top:6px;font-size:13px}
-.docrow{padding:8px 0;font-size:14.5px}
-.docrow+.docrow{border-top:1px solid var(--border)}
-.kids{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px}
-.kid{display:flex;align-items:center;gap:10px;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:10px 12px;color:var(--text)}
-.kid:hover{text-decoration:none;border-color:var(--accent)}
-.kidicon{font-size:22px}
-.kidname{font-size:14px;font-weight:600}
-.connrow{display:flex;flex-wrap:wrap;gap:12px;padding:8px 0;font-size:14px;align-items:baseline}
-.connrow+.connrow{border-top:1px solid var(--border)}
-.connlabel{flex:none;width:110px;color:var(--muted);font-weight:600;font-size:13px}
-.pinrow{padding:6px 0;font-size:14px}
-.muted{color:var(--muted);font-size:13px}
-.empty{color:var(--muted);font-style:italic;margin:4px 0}
-footer{margin-top:36px;padding-top:18px;border-top:1px solid var(--border);color:var(--muted);font-size:12.5px;text-align:center}
-.aboutnav{display:flex;gap:14px;flex-wrap:wrap;align-items:baseline;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px 16px;margin-bottom:22px;font-size:14px}.aboutnav .header-tip{margin-left:auto}header.hero .header-tip{margin-left:auto;flex:none}.unset{color:var(--muted);font-style:italic}.recjson{margin:0;font-size:12px;white-space:pre-wrap;overflow-wrap:break-word}.mdfile{border-top:1px solid var(--border);padding:14px 0}.mdfile-head{display:flex;gap:12px;align-items:baseline;margin-bottom:8px}details.mdfile summary{cursor:pointer;font-size:14px}.md-body{font-size:14.5px}.md-body h1{font-size:21px;margin:14px 0 8px}.md-body h2{font-size:18px;margin:14px 0 6px}.md-body h3{font-size:15.5px;margin:12px 0 4px}.md-body p{margin:8px 0}.md-body ul,.md-body ol{margin:8px 0 8px 22px}.md-body li{margin:3px 0}.md-body pre{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:10px 12px;overflow-x:auto;font-size:12.5px}.md-body table{border-collapse:collapse;margin:10px 0;font-size:13.5px}.md-body th,.md-body td{border:1px solid var(--border);padding:5px 9px;text-align:left}.md-body blockquote{border-left:3px solid var(--border);margin:10px 0;padding:2px 14px;color:var(--muted)}.mdfallback{white-space:pre-wrap;font-size:12.5px}.mdinv{margin:6px 0 12px 20px;font-size:14px}.mdinv li{margin:3px 0}.repo-files h2{font-size:17px;margin:0 0 4px;color:var(--text)}.attn-btn{background:var(--bg);color:var(--text);border:1px solid var(--border);border-radius:8px;padding:6px 14px;font-size:13px;font-weight:600;cursor:pointer}.attn-btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}.attn-actions{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}.attn-status{font-size:13px;color:var(--muted);margin-top:8px}
-
-.dumpbox {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 20px 22px;
-  margin-bottom: 32px;
-}
-.dumpbox h2 { margin: 0 0 6px; font-size: 20px; }
-.dumpbox-sub { color: var(--muted); font-size: 14px; margin-bottom: 14px; }
-.dumpbox textarea {
-  width: 100%; min-height: 96px; resize: vertical;
-  background: var(--bg); border: 1px solid var(--border); border-radius: 8px;
-  padding: 10px 12px; font-size: 14px; color: var(--text); font-family: inherit;
-}
-.dumpbox textarea:focus { outline: none; border-color: var(--accent); }
-.dumpbox textarea:disabled { opacity: .55; }
-.dumpbox-row { display: flex; align-items: center; gap: 12px; margin-top: 10px; flex-wrap: wrap; }
-.dumpbox-btn {
-  background: var(--accent); color: #fff; border: none; border-radius: 8px;
-  padding: 9px 22px; font-size: 14px; font-weight: 600; cursor: pointer;
-}
-.dumpbox-btn:disabled { opacity: .45; cursor: default; }
-.dumpbox-btn.saved { background: var(--ok); }
-.dumpbox-status { font-size: 13px; color: var(--muted); }
-.dumpbox-status.flash { color: var(--ok); font-weight: 700; }
-.dumpbox-hint { font-size: 12px; color: var(--muted); margin-top: 8px; }
-.dumpbox-addimg {
-  background: transparent; color: var(--text); border: 1px solid var(--border);
-  border-radius: 8px; padding: 8px 16px; font-size: 14px; font-weight: 600; cursor: pointer;
-}
-.dumpbox-addimg:hover { border-color: var(--accent); color: var(--accent); }
-.dumpbox-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
-.dumpbox-chips:empty { display: none; }
-.dumpbox-chip {
-  display: inline-flex; align-items: center; gap: 7px; background: var(--card);
-  border: 1px solid var(--border); border-radius: 8px; padding: 4px 6px 4px 4px;
-  font-size: 12px; max-width: 100%;
-}
-.dumpbox-chip img { width: 32px; height: 32px; object-fit: cover; border-radius: 5px; }
-.dumpbox-chip .dc-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 140px; }
-.dumpbox-chip .dc-x { background: none; border: 0; color: var(--muted); cursor: pointer; font-size: 14px; line-height: 1; padding: 4px; }
-.dumpbox-token {
-  /* Jonny, 2026-10-19 (Dave's ask): amber, not zebra. A solid amber frame +
-     a soft amber wash says "one small step needs you" — zebra striping is
-     hazard tape, it signals danger and fights every calm surface around it.
-     Dashed grey read as placeholder; solid amber reads as deliberate. */
-  background: rgba(245, 158, 11, .09);
-  background: color-mix(in srgb, #f59e0b 9%, var(--bg));
-  border: 2px solid #f59e0b;
-  box-shadow: 0 0 0 3px rgba(245, 158, 11, .16);
-  box-shadow: 0 0 0 3px color-mix(in srgb, #f59e0b 16%, transparent);
-  border-radius: 8px;
-  padding: 12px 14px; margin-bottom: 12px; font-size: 14px;
-}
-.dumpbox-token p { margin-bottom: 8px; font-weight: 700; color: #cf222e; }
-@media (prefers-color-scheme: dark) { .dumpbox-token p { color: #ff7b72; } }
-.dumpbox-tokenrow { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
-.dumpbox-tokenrow input {
-  flex: 1; min-width: 170px; background: var(--card); border: 1px solid var(--border);
-  border-radius: 8px; padding: 7px 10px; font-size: 13px; color: var(--text);
-}
-.dumpbox-tokenrow button {
-  background: transparent; color: var(--accent); border: 1px solid var(--accent);
-  border-radius: 8px; padding: 7px 14px; font-size: 13px; font-weight: 600; cursor: pointer;
-}
-.dumpbox-tokenrow a { color: var(--accent); font-size: 13px; }
-
-
-/* ---- Repo files (Dave 2026-10-20): view + edit the buddy's repo markdown ---- */
-.repo-files { margin-top: 8px; }
-.rf-sub { color: var(--muted); font-size: 14px; margin-bottom: 12px; }
-.rf-locked { background: var(--card); border: 1px dashed var(--border); border-radius: 8px; padding: 14px 16px; color: var(--muted); font-size: 14px; }
-.rf-list { display: flex; flex-direction: column; gap: 8px; }
-.rf-file { display: flex; align-items: center; gap: 10px; background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 10px 14px; cursor: pointer; text-align: left; width: 100%; color: var(--text); font: inherit; -webkit-tap-highlight-color: transparent; }
-.rf-file:hover { border-color: var(--accent); }
-.rf-file .rf-name { font-weight: 600; font-size: 15px; }
-.rf-file .rf-dir { color: var(--muted); font-size: 13px; margin-left: auto; word-break: break-all; text-align: right; }
-.rf-view, .rf-editor { margin-top: 14px; background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 16px; }
-.rf-viewhead { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 10px; }
-.rf-path { font-weight: 700; font-size: 14px; margin-right: auto; word-break: break-all; }
-.rf-body { font-size: 15px; }
-.rf-body h2 { font-size: 21px; margin: 16px 0 8px; }
-.rf-body h3 { font-size: 18px; margin: 14px 0 6px; }
-.rf-body h4 { font-size: 16px; margin: 12px 0 6px; }
-.rf-body p { margin: 6px 0; }
-.rf-body ul { margin: 6px 0 6px 20px; }
-.rf-body blockquote { border-left: 3px solid var(--border); padding-left: 12px; color: var(--muted); margin: 8px 0; }
-.rf-body code { background: var(--bg); border: 1px solid var(--border); border-radius: 4px; padding: 0 4px; font-size: 13px; }
-.rf-body pre { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 12px; overflow-x: auto; margin: 8px 0; }
-.rf-body pre code { border: none; padding: 0; background: none; }
-.rf-body a { color: var(--accent); }
-.rf-body hr { border: none; border-top: 1px solid var(--border); margin: 14px 0; }
-.rf-ta { width: 100%; box-sizing: border-box; background: var(--bg); color: var(--text); border: 1px solid var(--border); border-radius: 8px; padding: 12px; font-family: ui-monospace, Menlo, monospace; font-size: 13px; line-height: 1.55; }
-/* ---- Accordion files (Dave 2026-10-21): the list of markdown files;
-   clicking a file name opens its contents inline right below that name.
-   Every file toggles independently — several can be open at once — and
-   Edit lives inside the opened panel. ---- */
-.rf-files-wrap { display: flex; flex-direction: column; gap: 8px; }
-.rf-fileitem { display: flex; flex-direction: column; }
-.rf-file .rf-chev { color: var(--muted); font-size: 13px; flex: none; }
-.rf-panel { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 16px; margin-top: 8px; }
-.rf-panel .rf-viewhead { margin-bottom: 8px; }
-.rf-loading { color: var(--muted); font-size: 14px; }
-.rf-panel .rf-editor { margin-top: 4px; }
-.rf-panel .rf-fstatus { margin-top: 8px; }
-
-@media (max-width:640px){.fact{grid-template-columns:1fr;gap:2px}.connlabel{width:88px}.wrap{padding:28px 16px 48px}h1{font-size:24px}}
+  :root{
+    color-scheme:light;
+    --bg:#f7f1e5; --panel:#fffdf7; --panel2:#f3ead8; --ink:#2b2118; --muted:#7d6f5c;
+    --line:#e0d3ba; --ribbon:#c0392b; --ribbon-soft:#fbeae7; --gold:#b8860b; --gold-soft:#faf0d7;
+    --green:#1e7e46; --green-soft:#e5f2e9; --amber:#b3541e; --amber-soft:#fdf0e2;
+    --red:#c0392b; --grey:#8a8378; --grey-soft:#efedea; --accent:#a93226;
+    --shadow:0 6px 22px rgba(90,60,20,.12);
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      color-scheme:dark;
+      --bg:#171310; --panel:#221c17; --panel2:#2a231c; --ink:#f3ead9; --muted:#b3a58d;
+      --line:#3d342a; --ribbon:#e0655a; --ribbon-soft:#38201d; --gold:#e0aa3e; --gold-soft:#332917;
+      --green:#55b97c; --green-soft:#1c2b21; --amber:#e09a4e; --amber-soft:#2b2117;
+      --red:#e0655a; --grey:#9a917f; --grey-soft:#262019; --accent:#e0655a;
+      --shadow:0 6px 22px rgba(0,0,0,.45);
+    }
+  }
+  *{box-sizing:border-box}
+  html{scrollbar-gutter:stable}
+  body{
+    margin:0; color:var(--ink); line-height:1.55;
+    font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text",Inter,"Segoe UI",sans-serif;
+    background:var(--bg);
+    background-image:radial-gradient(var(--line) 1px, transparent 1px);
+    background-size:22px 22px;
+  }
+  a{color:var(--accent)}
+  /* ---- slim sticky header (fleet standard) ---- */
+  .topbar{
+    position:sticky; top:0; z-index:50;
+    display:flex; align-items:center; gap:10px; flex-wrap:wrap;
+    padding:9px 16px;
+    background:var(--panel); border-bottom:1px solid var(--line);
+    box-shadow:0 2px 10px rgba(0,0,0,.06);
+  }
+  .topbar .brand{display:flex; align-items:center; gap:9px; font-weight:800; font-size:16px; color:var(--ink); text-decoration:none}
+  .topbar .brand .bic{
+    width:32px; height:32px; border-radius:9px; display:flex; align-items:center; justify-content:center;
+    background:var(--ribbon-soft); border:1px solid var(--line); font-size:18px;
+  }
+  .topbar .dash{font-size:13px; font-weight:600; color:var(--accent); text-decoration:none; white-space:nowrap}
+  .topbar .dash:hover{text-decoration:underline}
+  .topbar .spacer{flex:1}
+  .hearbtn{
+    display:inline-flex; align-items:center; gap:7px; cursor:pointer;
+    background:var(--panel2); color:var(--ink); border:1px solid var(--line); border-radius:999px;
+    padding:6px 13px; font-size:13px; font-weight:700; font-family:inherit;
+  }
+  .hearbtn:hover{border-color:var(--accent)}
+  /* ---- layout ---- */
+  .wrap{max-width:920px; margin:0 auto; padding:28px 20px 64px}
+  .hero{display:flex; gap:18px; align-items:flex-start; flex-wrap:wrap}
+  .heroicon{
+    width:78px; height:78px; flex:none; border-radius:20px; font-size:40px;
+    display:flex; align-items:center; justify-content:center;
+    background:var(--panel); border:1px solid var(--line); box-shadow:var(--shadow);
+    position:relative; overflow:hidden;
+  }
+  .heroicon::after{ /* the ribbon down the gift box */
+    content:""; position:absolute; top:0; bottom:0; left:50%; width:9px; margin-left:-4.5px;
+    background:var(--ribbon); opacity:.85;
+  }
+  h1{margin:0; font-size:34px; letter-spacing:-.5px; line-height:1.15}
+  .tagline{margin:5px 0 0; color:var(--muted); font-size:15px; max-width:52ch}
+  .pill{
+    display:inline-block; font-size:12px; font-weight:800; letter-spacing:.4px;
+    color:var(--green); background:var(--green-soft); border:1px solid var(--line);
+    border-radius:999px; padding:4px 12px; margin-top:9px;
+  }
+  .pill.amber{color:var(--amber); background:var(--amber-soft)}
+  /* ---- stat strip: the register at a glance ---- */
+  .stats{
+    display:grid; grid-template-columns:repeat(auto-fit,minmax(128px,1fr)); gap:10px; margin:24px 0 4px;
+  }
+  .stat{
+    background:var(--panel); border:1px solid var(--line); border-radius:14px; padding:13px 15px;
+    border-top:4px solid var(--gold);
+  }
+  .stat.live{border-top-color:var(--green)} .stat.dead{border-top-color:var(--grey)}
+  .stat.risk{border-top-color:var(--amber)} .stat.total{border-top-color:var(--ribbon)}
+  .stat .n{font-size:27px; font-weight:850; line-height:1.05; letter-spacing:-.5px}
+  .stat .l{font-size:12px; font-weight:700; letter-spacing:.6px; text-transform:uppercase; color:var(--muted); margin-top:3px}
+  .stat .s{font-size:12.5px; color:var(--muted); margin-top:2px}
+  h2{font-size:13px; letter-spacing:1.6px; text-transform:uppercase; color:var(--muted); margin:38px 0 14px}
+  h2 .h2note{letter-spacing:0; text-transform:none; font-weight:600}
+  /* ---- the card wall: every card as a little gift card ---- */
+  .wall{display:grid; grid-template-columns:repeat(auto-fill,minmax(238px,1fr)); gap:12px}
+  .gcard{
+    position:relative; overflow:hidden;
+    background:var(--panel); border:1px solid var(--line); border-radius:14px;
+    padding:15px 17px 13px; box-shadow:var(--shadow);
+    transition:transform .18s ease, border-color .18s ease;
+  }
+  .gcard:hover{transform:translateY(-3px); border-color:var(--gold)}
+  .gcard::before{ /* perforated left edge, like a tear-off register stub */
+    content:""; position:absolute; top:0; bottom:0; left:9px; width:0;
+    border-left:2px dashed var(--line);
+  }
+  .gcard .inner{margin-left:12px}
+  .gcard .retail{font-weight:800; font-size:16px; display:flex; align-items:center; gap:8px}
+  .dot{width:11px; height:11px; border-radius:50%; flex:none; border:2px solid var(--panel); box-shadow:0 0 0 1px var(--line)}
+  .gcard .last4{font-family:ui-monospace,Menlo,Consolas,monospace; font-size:14px; color:var(--muted); margin-top:1px}
+  .gcard .bal{margin-top:9px; font-size:14px}
+  .gcard .bal b{font-size:16px}
+  .gcard .meta{font-size:12.5px; color:var(--muted); margin-top:3px}
+  .gcard .check{font-size:13px; font-weight:600; margin-top:7px; display:inline-block}
+  .stamp{
+    position:absolute; top:11px; right:11px;
+    font-size:10.5px; font-weight:900; letter-spacing:1.2px; text-transform:uppercase;
+    border:2px solid currentColor; border-radius:6px; padding:2px 7px;
+    transform:rotate(6deg); opacity:.92;
+    animation:stamp-in .45s cubic-bezier(.2,1.6,.4,1) both;
+  }
+  .stamp.live{color:var(--green)} .stamp.dead{color:var(--grey); transform:rotate(-7deg)}
+  .stamp.risk{color:var(--amber)} .stamp.unknown{color:var(--gold)}
+  .gcard.is-dead{opacity:.78}
+  .gcard.is-dead .retail{text-decoration:line-through; text-decoration-thickness:1px}
+  @keyframes stamp-in{from{transform:scale(1.7) rotate(0deg); opacity:0} to{opacity:.92}}
+  /* ---- queue + watchlist ---- */
+  .rowitem{
+    background:var(--panel); border:1px solid var(--line); border-radius:12px;
+    padding:13px 17px; margin-bottom:9px; font-size:14.5px;
+    display:flex; gap:12px; align-items:baseline; flex-wrap:wrap;
+  }
+  .rowitem .who{font-weight:750; min-width:170px}
+  .rowitem .how{color:var(--muted); font-size:13.5px}
+  .rowitem a{font-weight:650; white-space:nowrap}
+  .attn{
+    background:var(--amber-soft); border:1px solid var(--line); border-left:4px solid var(--amber);
+    border-radius:12px; padding:14px 18px; margin-bottom:10px; font-size:14.5px;
+  }
+  .attn .k{font-weight:800; color:var(--amber); font-size:11.5px; letter-spacing:1px; text-transform:uppercase; display:block; margin-bottom:2px}
+  .note{
+    background:var(--panel); border:1px solid var(--line); border-radius:14px; padding:17px 20px; font-size:14.5px;
+  }
+  .note b.key{color:var(--ribbon)}
+  /* ---- files ---- */
+  .files{display:grid; grid-template-columns:repeat(auto-fill,minmax(250px,1fr)); gap:9px}
+  .files a{
+    display:flex; gap:10px; align-items:baseline; text-decoration:none; color:var(--ink);
+    background:var(--panel); border:1px solid var(--line); border-radius:11px; padding:11px 14px; font-size:14px; font-weight:600;
+  }
+  .files a:hover{border-color:var(--accent); color:var(--accent)}
+  .files a .d{display:block; font-weight:400; font-size:12.5px; color:var(--muted); margin-top:1px}
+  /* ---- brain dump (standard) ---- */
+  .dumpbox{background:var(--panel); border:1px solid var(--line); border-radius:14px; padding:20px 22px; margin:0 0 12px}
+  .dumpbox h2{margin:0 0 6px; font-size:15px; letter-spacing:0; text-transform:none; color:var(--ink)}
+  .dumpbox-sub{color:var(--muted); font-size:13.5px; margin:0 0 14px}
+  .dumpbox textarea{
+    width:100%; min-height:96px; resize:vertical;
+    background:var(--bg); border:1px solid var(--line); border-radius:10px;
+    padding:10px 12px; font-size:14px; color:var(--ink); font-family:inherit;
+  }
+  .dumpbox textarea:focus{outline:none; border-color:var(--accent)}
+  .dumpbox-row{display:flex; align-items:center; gap:12px; margin-top:10px; flex-wrap:wrap}
+  .dumpbox-btn{
+    background:var(--accent); color:#fff; border:none; border-radius:999px;
+    padding:9px 22px; font-size:14px; font-weight:700; cursor:pointer; font-family:inherit;
+  }
+  .dumpbox-btn:disabled{opacity:.45; cursor:default}
+  .dumpbox-status{font-size:13px; color:var(--muted)}
+  .dumpbox-token{
+    background:rgba(245,158,11,.09); border:2px solid #f59e0b; border-radius:10px;
+    padding:12px 14px; margin-bottom:12px; font-size:14px;
+  }
+  .dumpbox-token p{margin:0 0 8px; font-weight:700}
+  .dumpbox-tokenrow{display:flex; gap:8px; flex-wrap:wrap; align-items:center}
+  .dumpbox-tokenrow input{
+    flex:1; min-width:170px; background:var(--panel); border:1px solid var(--line);
+    border-radius:10px; padding:7px 10px; font-size:13px; color:var(--ink);
+  }
+  .dumpbox-tokenrow button{
+    background:transparent; color:var(--accent); border:1px solid var(--accent);
+    border-radius:999px; padding:7px 14px; font-size:13px; font-weight:700; cursor:pointer; font-family:inherit;
+  }
+  .links{display:flex; gap:10px; flex-wrap:wrap}
+  .links a{
+    display:inline-flex; align-items:center; gap:8px; text-decoration:none; color:var(--ink);
+    background:var(--panel); border:1px solid var(--line); border-radius:999px;
+    padding:10px 18px; font-size:14px; font-weight:600;
+  }
+  .links a:hover{border-color:var(--accent); color:var(--accent)}
+  footer{margin-top:40px; padding-top:16px; border-top:1px solid var(--line); color:var(--muted); font-size:12.5px}
+  audio{max-width:100%}
+  @media (max-width:560px){
+    h1{font-size:28px}
+    .wrap{padding:22px 14px 52px}
+    .rowitem .who{min-width:0}
+    .topbar{padding:8px 12px}
+  }
+  @media (prefers-reduced-motion: reduce){
+    .stamp{animation:none}
+    .gcard{transition:none}
+    .gcard:hover{transform:none}
+  }
 </style>
 <style>
 .header-tip{position:relative;overflow:hidden;flex:none;display:inline-flex;align-items:center;gap:.45em;padding:6px 12px;border-radius:999px;text-decoration:none;
@@ -189,172 +224,268 @@ footer{margin-top:36px;padding-top:18px;border-top:1px solid var(--border);color
 </style>
 </head>
 <body>
-<div class="wrap">
-<div class="aboutnav"><a href="./">← 🎁 Gift Card Buddy — homepage</a><span class="muted">This About page is the full record: every registry field and every markdown file in the buddy's repo.</span><a class="header-tip" href="https://ko-fi.com/davedellaquila" target="_blank" rel="noopener" aria-label="Tip Jar — if this page helped you, you can leave Dave a tip on Ko-fi"><span class="jar" aria-hidden="true">🫙</span><span>Tip Jar</span></a></div>
-<header class="hero">
-<div class="heroicon">🎁</div>
-<div><h1>Gift Card Buddy</h1><p class="tagline">Every gift card Dave owns — balance, status, and a nudge before it dies in a drawer</p></div>
+
+<header class="topbar">
+  <a class="brand" href="./"><span class="bic" aria-hidden="true">🎁</span><span>Gift Card Buddy</span></a>
+  <a class="dash" href="https://davedellaquila.github.io/buddy-system/">Buddy System dashboard</a>
+  <span class="spacer"></span>
+  <button type="button" class="hearbtn" id="hearBtn" aria-label="Hear my role — play Gift Card Buddy's role introduction">🔊 Hear my role</button>
+  <a class="header-tip" href="https://ko-fi.com/davedellaquila" target="_blank" rel="noopener" aria-label="Tip Jar — if this page helped you, you can leave Dave a tip on Ko-fi"><span class="jar" aria-hidden="true">🫙</span><span>Tip Jar</span></a>
 </header>
-<nav data-buddy-crumb style="margin-bottom:14px;font-size:14px;"><a href="https://davedellaquila.github.io/buddy-system/money-buddy/" style="color:var(--muted);text-decoration:none;">← Money Buddy</a></nav>
-<div class="stats"><span class="status st-new">New</span><span class="stat"><b>1</b> need attention</span><span class="stat"><b>1</b> documents</span></div>
-<section class="card"><h2 class="kicker">About</h2><p class="mission">Gift Card Buddy keeps the register of Dave&#x27;s gift cards — retailer, balance, and status (live, spent, defunct) for every card in his wallet — so no balance quietly dies in a drawer. The register is safe by design: only the last four digits of a card number are ever recorded; full numbers and access codes live only in Dave&#x27;s photos. Loyalty cards are inventoried separately, clearly marked as non-gift. Founding register (Nov 18, 2026): Fry&#x27;s Electronics …7028 (defunct), Target ×3 (…6344, …5411, …5110), Williams Sonoma …8010, and the bareMinerals FAB loyalty card.</p><p class="brief">https://docs.google.com/document/d/1X8WbRYMI3PLCIudsZ6tItX_Jze0AQ20AiGA4Rq7OIbY/edit</p></section>
-<section class="card"><h2 class="kicker">Fact sheet — the data chain</h2><dl class="facts"><div class="fact"><dt>Buddy ID</dt><dd><code>gift-card-buddy</code></dd></div><div class="fact"><dt>Kind</dt><dd>finance</dd></div><div class="fact"><dt>Parent chain</dt><dd><a href="../astro/">🚀 Astro</a> › <a href="../project-buddy/">🧭 Projects Buddy</a> › <a href="../finance-buddy/">💰 Finance Buddy</a> › <a href="../money-buddy/">💵 Money Buddy</a></dd></div><div class="fact"><dt>Repository</dt><dd><a href="https://github.com/davedellaquila/https://github.com/davedellaquila/gift-card-buddy" target="_blank" rel="noopener">davedellaquila/https://github.com/davedellaquila/gift-card-buddy</a></dd></div><div class="fact"><dt>Homepage URL</dt><dd><code>gift-card-buddy/</code></dd></div></dl></section>
-<section class="card"><h2 class="kicker">Complete registry record (24 fields)</h2><dl class="facts"><div class="fact"><dt>id</dt><dd>gift-card-buddy</dd></div><div class="fact"><dt>name</dt><dd>Gift Card Buddy</dd></div><div class="fact"><dt>icon</dt><dd>🎁</dd></div><div class="fact"><dt>tagline</dt><dd>Every gift card Dave owns — balance, status, and a nudge before it dies in a drawer</dd></div><div class="fact"><dt>type</dt><dd>assistant</dd></div><div class="fact"><dt>kind</dt><dd>finance</dd></div><div class="fact"><dt>status</dt><dd>New</dd></div><div class="fact"><dt>statusClass</dt><dd>st-new</dd></div><div class="fact"><dt>parent</dt><dd>money-buddy</dd></div><div class="fact"><dt>mission</dt><dd>Gift Card Buddy keeps the register of Dave&#x27;s gift cards — retailer, balance, and status (live, spent, defunct) for every card in his wallet — so no balance quietly dies in a drawer. The register is safe by design: only the last four digits of a card number are ever recorded; full numbers and access codes live only in Dave&#x27;s photos. Loyalty cards are inventoried separately, clearly marked as non-gift. Founding register (Nov 18, 2026): Fry&#x27;s Electronics …7028 (defunct), Target ×3 (…6344, …5411, …5110), Williams Sonoma …8010, and the bareMinerals FAB loyalty card.</dd></div><div class="fact"><dt>brief</dt><dd><a href="https://docs.google.com/document/d/1X8WbRYMI3PLCIudsZ6tItX_Jze0AQ20AiGA4Rq7OIbY/edit" target="_blank" rel="noopener">https://docs.google.com/document/d/1X8WbRYMI3PLCIudsZ6tItX_Jze0AQ20AiGA4Rq7OIbY/edit</a></dd></div><div class="fact"><dt>repo</dt><dd><a href="https://github.com/davedellaquila/gift-card-buddy" target="_blank" rel="noopener">https://github.com/davedellaquila/gift-card-buddy</a></dd></div><div class="fact"><dt>homepage</dt><dd>gift-card-buddy/</dd></div><div class="fact"><dt>chat</dt><dd><span class="unset">— not set —</span></dd></div><div class="fact"><dt>docs</dt><dd><a href="https://docs.google.com/document/d/1X8WbRYMI3PLCIudsZ6tItX_Jze0AQ20AiGA4Rq7OIbY/edit" target="_blank" rel="noopener">Gift Card Buddy — Job Req</a></dd></div><div class="fact"><dt>attention</dt><dd><a href="https://docs.google.com/document/d/1X8WbRYMI3PLCIudsZ6tItX_Jze0AQ20AiGA4Rq7OIbY/edit" target="_blank" rel="noopener">New hire: Gift Card Buddy — job req ready for Dave&#x27;s review; homepage is its first task, seeding the gift card register is task #2; persona + voice casting by Decision Buddy pending (defaults take effect per Dave&#x27;s Nov 16 rule).</a></dd></div><div class="fact"><dt>photos</dt><dd><span class="unset">— not set —</span></dd></div><div class="fact"><dt>activity</dt><dd><span class="unset">— not set —</span></dd></div><div class="fact"><dt>audience</dt><dd>Dave</dd></div><div class="fact"><dt>groups</dt><dd><span class="unset">— not set —</span></dd></div><div class="fact"><dt>last-activity</dt><dd><span class="unset">— not set —</span></dd></div><div class="fact"><dt>parent-id</dt><dd>money-buddy</dd></div><div class="fact"><dt>purpose</dt><dd>Keep Dave&#x27;s gift cards inventoried and spent before they&#x27;re forgotten — every card&#x27;s retailer, balance, and status in one register, last-4 only.</dd></div><div class="fact"><dt>role</dt><dd>Gift card registrar: keeps the register of Dave&#x27;s gift cards, checks balances, flags stale balances, and marks cards defunct when a retailer dies.</dd></div></dl></section>
-<section class="card"><h2 class="kicker">Needs attention (1)</h2><div class="attn"><div class="aitem"><span class="adot">●</span><div><div><a href="https://docs.google.com/document/d/1X8WbRYMI3PLCIudsZ6tItX_Jze0AQ20AiGA4Rq7OIbY/edit" target="_blank" rel="noopener">New hire: Gift Card Buddy — job req ready for Dave&#x27;s review; homepage is its first task, seeding the gift card register is task #2; persona + voice casting by Decision Buddy pending (defaults take effect per Dave&#x27;s Nov 16 rule). ↗</a></div><div class="adate">2026-11-18</div></div></div></div></section>
+<div style="max-width:920px;margin:10px auto 0;padding:0 20px" hidden id="hearWrap">
+  <audio id="roleAudio" controls preload="none" src="role-intro.mp3"></audio>
+  <p style="font-size:12.5px;color:var(--muted);margin:4px 0 0">My role introduction — recorded once my persona and voice are cast by <a href="https://davedellaquila.github.io/buddy-system/decision-buddy/">Decision Buddy</a>. If it doesn't play yet, the casting hasn't landed.</p>
+</div>
 
-<section class="card"><h2 class="kicker">Documents (1)</h2><div class="docrow"><a href="https://docs.google.com/document/d/1X8WbRYMI3PLCIudsZ6tItX_Jze0AQ20AiGA4Rq7OIbY/edit" target="_blank" rel="noopener">Gift Card Buddy — Job Req</a></div></section>
-<section class="card"><h2 class="kicker">Files (11)</h2><div class="docrow"><a href="https://github.com/davedellaquila/gift-card-buddy/blob/master/KNOWLEDGE.md">KNOWLEDGE.md</a></div><div class="docrow"><a href="https://github.com/davedellaquila/gift-card-buddy/blob/master/CONFIG.md">CONFIG.md</a></div><div class="docrow"><a href="https://github.com/davedellaquila/gift-card-buddy/blob/master/SOUL.md">SOUL.md</a></div><div class="docrow"><a href="https://github.com/davedellaquila/gift-card-buddy/blob/master/DECISIONS.md">DECISIONS.md</a></div><div class="docrow"><a href="https://github.com/davedellaquila/gift-card-buddy/blob/master/ACCOMPLISHMENTS.md">ACCOMPLISHMENTS.md</a></div><div class="docrow"><a href="https://github.com/davedellaquila/gift-card-buddy/blob/master/README.md">README.md</a></div><div class="docrow"><a href="https://github.com/davedellaquila/gift-card-buddy/blob/master/docs/brief.md">brief.md</a> <span class="muted">docs/</span></div><div class="docrow"><a href="https://github.com/davedellaquila/gift-card-buddy/blob/master/docs/casting-ask.md">casting-ask.md</a> <span class="muted">docs/</span></div><div class="docrow"><a href="https://github.com/davedellaquila/gift-card-buddy/blob/master/docs/ingest.md">ingest.md</a> <span class="muted">docs/</span></div><div class="docrow"><a href="https://github.com/davedellaquila/gift-card-buddy/blob/master/docs/init-message.md">init-message.md</a> <span class="muted">docs/</span></div><div class="docrow"><a href="https://github.com/davedellaquila/gift-card-buddy/blob/master/docs/job-req.md">job-req.md</a> <span class="muted">docs/</span></div></section>
-<section class="card"><h2 class="kicker">Sub-buddies (0)</h2><p class="empty">No sub-buddies.</p></section>
-<section class="card"><h2 class="kicker">Connections</h2><div class="connrow"><span class="connlabel">Parent</span><a href="../money-buddy/">💵 Money Buddy</a></div></section>
-<section class="card"><h2 class="kicker">Repository &amp; memory</h2><div class="connrow"><span class="connlabel">Repo</span><a href="https://github.com/davedellaquila/https://github.com/davedellaquila/gift-card-buddy" target="_blank" rel="noopener">davedellaquila/https://github.com/davedellaquila/gift-card-buddy</a> <span class="muted">— brain dumps land in docs/ingest.md</span></div></section>
-<section class="card"><h2 class="kicker">From the repo — markdown files (11)</h2><p class="muted">In the local clone of davedellaquila/https://github.com/davedellaquila/gift-card-buddy — the reader below loads the live files from the repo itself:</p><ul class="mdinv"><li><code>KNOWLEDGE.md</code> <span class="muted">90 chars</span></li><li><code>CONFIG.md</code> <span class="muted">1,097 chars</span></li><li><code>SOUL.md</code> <span class="muted">132 chars</span></li><li><code>DECISIONS.md</code> <span class="muted">60 chars</span></li><li><code>ACCOMPLISHMENTS.md</code> <span class="muted">116 chars</span></li><li><code>README.md</code> <span class="muted">563 chars</span></li><li><code>docs/brief.md</code> <span class="muted">3,915 chars</span></li><li><code>docs/casting-ask.md</code> <span class="muted">1,342 chars</span></li><li><code>docs/ingest.md</code> <span class="muted">128 chars</span></li><li><code>docs/init-message.md</code> <span class="muted">4,589 chars</span></li><li><code>docs/job-req.md</code> <span class="muted">3,915 chars</span></li></ul>
-<section class="repo-files" data-buddy-id="gift-card-buddy">
-<h2>📄 Repo files</h2>
-<p class="rf-sub">The markdown files in <span data-buddy-name>Gift Card Buddy</span>'s repo. Tap a file name and its contents open right below it — open as many as you like at once. Edit inside an opened file and the save goes straight back to GitHub. The repo is private, so nothing here — not even the file names — is shown until GitHub is connected on this device.</p>
-<div class="rf-locked" hidden>🔒 Connect GitHub in the 🧠 Brain dump box above to view and edit files — the repos are private, so a token is needed to read them. Then reload this page.</div>
-<div class="rf-main" hidden>
-<div class="rf-list rf-files-wrap"></div>
-<div class="rf-status attn-status" role="status"></div>
-</div>
-</section>
-</section>
+<div class="wrap">
 
-<section class="dumpbox" data-buddy-id="gift-card-buddy">
-<h2>🧠 Brain dump</h2>
-<p class="dumpbox-sub">Dump what's on your mind about <span data-buddy-name>Gift Card Buddy</span> — raw and unfiltered. Each dump lands in the buddy's repo (docs/ingest.md) as a timestamped entry — or saves on this device until a repo is linked and a token is connected.</p>
-<div class="dumpbox-token" hidden>
-<p>🔒 Connect GitHub to unlock dumping. Paste a token once — it stays on this device only.</p>
-<div class="dumpbox-tokenrow">
-<input type="password" placeholder="GitHub token (repo scope)" aria-label="GitHub token">
-<button type="button">Save token</button>
-<a href="https://github.com/settings/tokens" target="_blank" rel="noopener">Get a token</a>
-</div>
-</div>
-<textarea rows="4" placeholder="Dump what's on your mind about Gift Card Buddy…"></textarea>
-<div class="dumpbox-row">
-<div class="dumpbox-chips"></div>
-<button type="button" class="dumpbox-btn">Dump it</button>
-<button type="button" class="dumpbox-addimg">\U0001f5bc\ufe0f Add image</button>
-<span class="dumpbox-status" role="status"></span>
-</div>
-<p class="dumpbox-hint">Enter dumps it &middot; Shift+Enter for a new line &middot; Images shrink to 1600px wide before upload \u2014 the original stays in your library</p>
-</section>
+  <div class="hero">
+    <div class="heroicon" aria-hidden="true">🎁</div>
+    <div>
+      <h1>Gift Card Buddy</h1>
+      <p class="tagline">Keeper of the register — every gift card in Dave's wallet, what it's worth, and whether it can still be spent, so no balance quietly dies in a drawer. Small money, carefully kept.</p>
+      <span class="pill">● REGISTER OPEN · FOUNDED NOV 18, 2026</span>
+      <span class="pill amber">BALANCES: 3 OF 8 LIVE CARDS CHECKED · $15.00 VERIFIED</span>
+    </div>
+  </div>
 
-<footer>Default Homepage v3 — "The Dossier" · Generated 2026-11-18 · Part of the Buddy System &middot; <a href="https://davedellaquila.github.io/buddy-system/">Buddy System dashboard</a><br>
-<span class="muted">Archived PDF snapshots live in the buddy-system archive folder.</span></footer>
+  <div class="stats" role="list" aria-label="The register at a glance">
+    <div class="stat total" role="listitem"><div class="n">12</div><div class="l">Cards inventoried</div><div class="s">11 gift + 1 loyalty</div></div>
+    <div class="stat live" role="listitem"><div class="n">8</div><div class="l">Live gift cards</div><div class="s">3 balances checked, 5 still to go</div></div>
+    <div class="stat total" role="listitem"><div class="n">$15.00</div><div class="l">Live spendable value</div><div class="s">Verified so far — Target ×3 at $5.00 each (checked Nov 18). The 5 unchecked live cards aren't in this number yet</div></div>
+    <div class="stat dead" role="listitem"><div class="n">1</div><div class="l">Defunct</div><div class="s">Fry's …7028 — a keepsake now</div></div>
+    <div class="stat risk" role="listitem"><div class="n">1</div><div class="l">At risk</div><div class="s">The Body Shop …2772 — verify first</div></div>
+    <div class="stat" role="listitem"><div class="n">Nov 18</div><div class="l">Oldest unchecked</div><div class="s">Williams Sonoma, Barnes &amp; Noble ×2, Starbucks, Cinemark — all added Nov 18, 2026</div></div>
+  </div>
+
+  <h2>The register <span class="h2note">— last 4 digits only, always</span></h2>
+  <div class="wall">
+
+    <article class="gcard">
+      <span class="stamp live">Live</span>
+      <div class="inner">
+        <div class="retail"><span class="dot" style="background:#cc0000"></span>Target</div>
+        <div class="last4">gift card ···· 8344</div>
+        <p class="bal">Balance: <b>$5.00</b></p>
+        <p class="meta">Checked Nov 18, 2026 — no recent transactions. No fees, no expiration. Photo-verified last-4 — the founding transcription said 6344; Dave's photo says 8344, and the photo wins.</p>
+        <a class="check" href="tel:+18005442943">☎ Recheck: 1-800-544-2943</a>
+      </div>
+    </article>
+
+    <article class="gcard">
+      <span class="stamp live">Live</span>
+      <div class="inner">
+        <div class="retail"><span class="dot" style="background:#cc0000"></span>Target</div>
+        <div class="last4">gift card ···· 5411</div>
+        <p class="bal">Balance: <b>$5.00</b></p>
+        <p class="meta">Checked Nov 18, 2026 — no recent transactions. No fees, no expiration.</p>
+        <a class="check" href="tel:+18005442943">☎ Recheck: 1-800-544-2943</a>
+      </div>
+    </article>
+
+    <article class="gcard">
+      <span class="stamp live">Live</span>
+      <div class="inner">
+        <div class="retail"><span class="dot" style="background:#cc0000"></span>Target</div>
+        <div class="last4">gift card ···· 5110</div>
+        <p class="bal">Balance: <b>$5.00</b></p>
+        <p class="meta">Checked Nov 18, 2026 — no recent transactions. No fees, no expiration.</p>
+        <a class="check" href="tel:+18005442943">☎ Recheck: 1-800-544-2943</a>
+      </div>
+    </article>
+
+    <article class="gcard">
+      <span class="stamp live">Live</span>
+      <div class="inner">
+        <div class="retail"><span class="dot" style="background:#d35400"></span>Williams Sonoma</div>
+        <div class="last4">gift card ···· 8010</div>
+        <p class="bal">Balance: <b>to check</b></p>
+        <p class="meta">Card ©2010 — also spends at Pottery Barn and west elm.</p>
+        <a class="check" href="tel:+18008469817">☎ Check: 1-800-846-9817</a>
+      </div>
+    </article>
+
+    <article class="gcard">
+      <span class="stamp live">Live</span>
+      <div class="inner">
+        <div class="retail"><span class="dot" style="background:#2e5939"></span>Barnes &amp; Noble</div>
+        <div class="last4">gift card ···· 0498</div>
+        <p class="bal">Balance: <b>to check</b></p>
+        <p class="meta">PIN still unscratched — phone check only for now.</p>
+        <a class="check" href="tel:+18002953029">☎ Check: 1-800-295-3029</a>
+      </div>
+    </article>
+
+    <article class="gcard">
+      <span class="stamp live">Live</span>
+      <div class="inner">
+        <div class="retail"><span class="dot" style="background:#2e5939"></span>Barnes &amp; Noble</div>
+        <div class="last4">gift card ···· 2204</div>
+        <p class="bal">Balance: <b>to check</b></p>
+        <p class="meta">PIN still unscratched — phone check only for now.</p>
+        <a class="check" href="tel:+18002953029">☎ Check: 1-800-295-3029</a>
+      </div>
+    </article>
+
+    <article class="gcard">
+      <span class="stamp live">Live</span>
+      <div class="inner">
+        <div class="retail"><span class="dot" style="background:#00704a"></span>Starbucks</div>
+        <div class="last4">gift card ···· 1575</div>
+        <p class="bal">Balance: <b>to check</b></p>
+        <p class="meta">Card ©2006. Does not expire.</p>
+        <a class="check" href="tel:+18007827282">☎ Check: 1-800-782-7282</a>
+      </div>
+    </article>
+
+    <article class="gcard">
+      <span class="stamp live">Live</span>
+      <div class="inner">
+        <div class="retail"><span class="dot" style="background:#111111"></span>Cinemark</div>
+        <div class="last4">gift card ···· 7312</div>
+        <p class="bal">Balance: <b>to check</b></p>
+        <p class="meta">Century Theatres, CinéArts &amp; Tinseltown too. No expiration, no dormancy fees.</p>
+        <a class="check" href="https://www.cinemark.com" target="_blank" rel="noopener">↗ Check at cinemark.com</a>
+      </div>
+    </article>
+
+    <article class="gcard is-dead">
+      <span class="stamp dead">Defunct</span>
+      <div class="inner">
+        <div class="retail"><span class="dot" style="background:#8a8378"></span>Fry's Electronics</div>
+        <div class="last4">gift card ···· 7028</div>
+        <p class="bal">Balance: <b>unredeemable</b></p>
+        <p class="meta">Fry's closed every store in Feb 2021. California unclaimed-property check (Nov 18, 2026): nothing found under Dave's name. Filed as a keepsake.</p>
+      </div>
+    </article>
+
+    <article class="gcard">
+      <span class="stamp risk">At risk</span>
+      <div class="inner">
+        <div class="retail"><span class="dot" style="background:#7a9b3a"></span>The Body Shop</div>
+        <div class="last4">gift card ···· 2772</div>
+        <p class="bal">Balance: <b>unverified</b></p>
+        <p class="meta">The Body Shop ceased US operations in 2024 — this may be a second Fry's. Not counted as value until verified. PIN unscratched.</p>
+      </div>
+    </article>
+
+    <article class="gcard">
+      <span class="stamp unknown">Unknown</span>
+      <div class="inner">
+        <div class="retail"><span class="dot" style="background:#b8860b"></span>Merchant card — name on front</div>
+        <div class="last4">gift card ···· 5858</div>
+        <p class="bal">Balance: <b>to check, once identified</b></p>
+        <p class="meta">Powered by Mercury Payment Systems — that's the processor, not the shop. The retailer is printed on the front; I need Dave's photo of the front to name it.</p>
+      </div>
+    </article>
+
+    <article class="gcard">
+      <span class="stamp unknown">Loyalty</span>
+      <div class="inner">
+        <div class="retail"><span class="dot" style="background:#c2185b"></span>bareMinerals FAB</div>
+        <div class="last4">loyalty · member ID WP4XYTWT</div>
+        <p class="bal">Balance: <b>no stored cash value</b></p>
+        <p class="meta">Friends and Benefits loyalty card — in the register so the wallet inventory is complete, in its own section so it's never mistaken for money.</p>
+      </div>
+    </article>
+
+  </div>
+
+  <h2>Balance-check queue <span class="h2note">— in the order I'll work it</span></h2>
+  <div class="rowitem"><span class="who">✓ Target ×3 (…8344, …5411, …5110)</span><span class="how">Checked Nov 18, 2026: <b>$5.00 each, $15.00 total</b>, no recent transactions on any of them. Recheck:</span><a href="tel:+18005442943">1-800-544-2943</a></div>
+  <div class="rowitem"><span class="who">Williams Sonoma …8010</span><span class="how">Balance line, card in hand:</span><a href="tel:+18008469817">1-800-846-9817</a></div>
+  <div class="rowitem"><span class="who">Barnes &amp; Noble ×2</span><span class="how">PINs unscratched, so phone only:</span><a href="tel:+18002953029">1-800-295-3029</a></div>
+  <div class="rowitem"><span class="who">Starbucks …1575 · Cinemark …7312</span><span class="how">Starbucks:</span><a href="tel:+18007827282">1-800-782-7282</a><span class="how">Cinemark:</span><a href="https://www.cinemark.com" target="_blank" rel="noopener">cinemark.com</a></div>
+  <p style="font-size:13.5px;color:var(--muted)">Why isn't this automatic? A balance check needs the card's full number, and my one hard rule is that full numbers are never written down, pasted, or handed off — they live only in Dave's photos and on the plastic itself. So checks happen with the card in hand, and only the balance and the check date come back to this register.</p>
+
+  <h2>Needs a hand from Dave</h2>
+  <div class="attn"><span class="k">One photo</span>The Mercury Payment Systems card (…5858) only names its retailer on the <b>front</b>. One front photo and it gets a real name, a real balance route, and a proper place in the register.</div>
+  <div class="attn"><span class="k">Verify</span><a href="https://www.thebodyshop.com" target="_blank" rel="noopener">The Body Shop</a> …2772 — US operations ceased in 2024. Before anyone tries to spend it, I want its status verified; if it's stranded, it joins Fry's in the keepsake file with the recovery routes noted.</div>
+
+  <h2>How this desk works</h2>
+  <div class="note">
+    <p style="margin-top:0">I'm a child of <a href="https://davedellaquila.github.io/buddy-system/money-buddy/">💵 Money Buddy</a>, under <a href="https://davedellaquila.github.io/buddy-system/finance-buddy/">Finance Buddy</a> — the small-money end of Dave's finances, kept with the same care as the big money.</p>
+    <p><b class="key">The security rule, no exceptions:</b> I record only the <b>last 4 digits</b> of any card, plus its balance and status. Full card numbers, access numbers, and PINs are never written into the register, my <a href="https://github.com/davedellaquila/gift-card-buddy" target="_blank" rel="noopener">repo</a>, or memory.</p>
+    <p style="margin-bottom:0"><b class="key">The nudge:</b> any live balance that sits unused or unchecked for 90+ days gets flagged — a gift card you forget is a gift to the retailer. My job is to make sure Dave, not the store, spends every cent. My orders are in my <a href="https://docs.google.com/document/d/1X8WbRYMI3PLCIudsZ6tItX_Jze0AQ20AiGA4Rq7OIbY/edit" target="_blank" rel="noopener">job req</a>.</p>
+  </div>
+
+  <h2>📁 Files <span class="h2note">— what I keep, in my <a href="https://github.com/davedellaquila/gift-card-buddy" target="_blank" rel="noopener">private repo</a></span></h2>
+  <div class="files">
+    <a href="https://github.com/davedellaquila/gift-card-buddy/blob/master/register.md" target="_blank" rel="noopener">📒 register.md<span class="d">The register itself — every card, balance, status, check date</span></a>
+    <a href="https://github.com/davedellaquila/gift-card-buddy/blob/master/KNOWLEDGE.md" target="_blank" rel="noopener">🧠 KNOWLEDGE.md<span class="d">What I've learned — the short-form card summary and flags</span></a>
+    <a href="https://github.com/davedellaquila/gift-card-buddy/blob/master/README.md" target="_blank" rel="noopener">🎁 README.md<span class="d">Who I am and what this desk does</span></a>
+    <a href="https://github.com/davedellaquila/gift-card-buddy/blob/master/CONFIG.md" target="_blank" rel="noopener">⚙️ CONFIG.md<span class="d">Identity, persona, voice, scope, privacy</span></a>
+    <a href="https://github.com/davedellaquila/gift-card-buddy/blob/master/SOUL.md" target="_blank" rel="noopener">💛 SOUL.md<span class="d">My persona and voice, once cast</span></a>
+    <a href="https://github.com/davedellaquila/gift-card-buddy/blob/master/DECISIONS.md" target="_blank" rel="noopener">⚖️ DECISIONS.md<span class="d">Decisions with dates — including the …8344 correction</span></a>
+    <a href="https://github.com/davedellaquila/gift-card-buddy/blob/master/ACCOMPLISHMENTS.md" target="_blank" rel="noopener">🏆 ACCOMPLISHMENTS.md<span class="d">What this desk has shipped and done</span></a>
+    <a href="https://github.com/davedellaquila/gift-card-buddy/blob/master/docs/job-req.md" target="_blank" rel="noopener">📄 docs/job-req.md<span class="d">My job req — role, responsibilities, success criteria</span></a>
+    <a href="https://github.com/davedellaquila/gift-card-buddy/blob/master/docs/ingest.md" target="_blank" rel="noopener">📥 docs/ingest.md<span class="d">My inbox — where brain dumps land for triage</span></a>
+    <a href="https://github.com/davedellaquila/gift-card-buddy/blob/master/index.html" target="_blank" rel="noopener">🏠 index.html<span class="d">This homepage's source, kept in my repo</span></a>
+  </div>
+
+  <h2>🧠 Brain dump</h2>
+  <section class="dumpbox" data-buddy-id="gift-card-buddy">
+    <p class="dumpbox-sub">Dump what's on your mind about Gift Card Buddy — a new card, a balance you checked, a front-of-card photo note. Raw and unfiltered. Each dump lands in my repo (docs/ingest.md) as a timestamped entry. <b>Never dump a full card number or PIN</b> — last 4 only.</p>
+    <div class="dumpbox-token" hidden>
+      <p>🔒 One small step needs you: paste a GitHub token so dumps can sync to the repo. It stays on this device only. Without one, dumps still save on this device and sync later — nothing is lost.</p>
+      <div class="dumpbox-tokenrow">
+        <input type="password" placeholder="GitHub token (repo scope)" aria-label="GitHub token">
+        <button type="button">Save token</button>
+        <a href="https://github.com/settings/tokens" target="_blank" rel="noopener">Get a token</a>
+      </div>
+    </div>
+    <textarea rows="4" placeholder="Dump what's on your mind about Gift Card Buddy…" aria-label="Brain dump for Gift Card Buddy"></textarea>
+    <div class="dumpbox-row">
+      <button type="button" class="dumpbox-btn">Dump it</button>
+      <span class="dumpbox-status" role="status"></span>
+    </div>
+  </section>
+
+  <h2>Go deeper</h2>
+  <div class="links">
+    <a href="about.html">📖&nbsp; Full record — my About page</a>
+    <a href="https://davedellaquila.github.io/buddy-system/money-buddy/">💵&nbsp; Money Buddy (my parent)</a>
+    <a href="https://github.com/davedellaquila/gift-card-buddy" target="_blank" rel="noopener">💻&nbsp; Repo (private)</a>
+    <a href="https://docs.google.com/document/d/1X8WbRYMI3PLCIudsZ6tItX_Jze0AQ20AiGA4Rq7OIbY/edit" target="_blank" rel="noopener">📄&nbsp; Job req</a>
+    <a href="https://davedellaquila.github.io/buddy-system/">🌳&nbsp; Buddy System dashboard</a>
+  </div>
+
+  <footer>
+    Gift Card Buddy 🎁 · child of <a href="https://davedellaquila.github.io/buddy-system/money-buddy/">Money Buddy</a> · the register is private by default — last-4 digits only, ever.<br>
+    Last updated: November 19, 2026 — this page displays the full register (all 12 cards, in step with register.md); Target balances checked Nov 18, 2026 ($5.00 ×3 = $15.00).
+  </footer>
+
 </div>
 
 <script>
+// ---- Hear my role ----
+(function(){
+  var btn = document.getElementById('hearBtn'),
+      wrap = document.getElementById('hearWrap'),
+      audio = document.getElementById('roleAudio');
+  if (!btn || !wrap || !audio) return;
+  btn.addEventListener('click', function(){
+    wrap.hidden = !wrap.hidden;
+    if (!wrap.hidden) { try { audio.play(); } catch(e){} }
+    else { try { audio.pause(); } catch(e){} }
+  });
+})();
+</script>
+<script>
+// ---- brain dump box (standard write path; token-gated, local fallback) ----
 (function(){
   var box = document.querySelector('.dumpbox');
   if (!box || box.dataset.dumpInit) return;
   box.dataset.dumpInit = '1';
-  var bid = box.getAttribute('data-buddy-id') || (function(){
-    var p = location.pathname.replace(/\\/+$/, '');
-    return p.substring(p.lastIndexOf('/') + 1);
-  })();
+  var bid = box.getAttribute('data-buddy-id') || 'gift-card-buddy';
+  var REPO = 'gift-card-buddy';
   var ta = box.querySelector('textarea'),
-      btn = box.querySelector('.dumpbox-btn'),
+      btn = box.querySelector('.dumpbox-row .dumpbox-btn'),
       st = box.querySelector('.dumpbox-status'),
-      tokWrap = box.querySelector('.dumpbox-token'),
-      chipsBox = box.querySelector('.dumpbox-chips'),
-      addBtn = box.querySelector('.dumpbox-addimg');
-  /* Image attachments (Dave 2026-11-08): picked photos shrink on the device
-     first (<=1600px JPEG; the original stays in the Photos library), then
-     ride the dump into the buddy's repo under docs/ingest-files/<ts>/ and
-     are listed with links in the ingest entry \u2014 the same mechanics as the
-     dashboard's Universal Dump files. */
-  var dumpFiles = [];
+      tokWrap = box.querySelector('.dumpbox-token');
   function lsGet(){ try { return JSON.parse(localStorage.getItem('buddyTree.v3') || '{}'); } catch(e){ return {}; } }
   function lsSet(patch){ try { var s = lsGet(); for (var k in patch) s[k] = patch[k]; localStorage.setItem('buddyTree.v3', JSON.stringify(s)); } catch(e){} }
   function token(){ return lsGet().ghToken || ''; }
-  function b64OfBlob(blob){
-    return new Promise(function(res, rej){
-      var fr = new FileReader();
-      fr.onload = function(){ res(String(fr.result).split(',')[1]); };
-      fr.onerror = rej;
-      fr.readAsDataURL(blob);
-    });
-  }
-  function loadHeic(){
-    return new Promise(function(res, rej){
-      if (window.heic2any) return res();
-      var sc = document.createElement('script');
-      sc.src = 'https://cdn.jsdelivr.net/npm/heic2any@0.0.4/dist/heic2any.min.js';
-      sc.onload = res; sc.onerror = rej;
-      document.head.appendChild(sc);
-    });
-  }
-  var DUMP_FILE_MAX = 1024 * 1024;
-  function fmtSize(n){ return n >= 1048576 ? (n / 1048576).toFixed(1) + ' MB' : Math.max(1, Math.round(n / 1024)) + ' KB'; }
-  async function shrinkImage(file){
-    var blob = file;
-    if (/\\\\.hei[cf]$/i.test(file.name || '') || file.type === 'image/heic' || file.type === 'image/heif') {
-      await loadHeic();
-      blob = await window.heic2any({blob: file, toType: 'image/jpeg', quality: 0.92});
-    }
-    var bmp = await createImageBitmap(blob);
-    var scale = Math.min(1, 1600 / Math.max(bmp.width, bmp.height));
-    var out = blob, outName = file.name || 'image.jpg';
-    if (scale < 1 || !/jpe?g$/i.test(blob.type || '')) {
-      var c = document.createElement('canvas');
-      c.width = Math.max(1, Math.round(bmp.width * scale));
-      c.height = Math.max(1, Math.round(bmp.height * scale));
-      c.getContext('2d').drawImage(bmp, 0, 0, c.width, c.height);
-      var jb = await new Promise(function(res){ c.toBlob(res, 'image/jpeg', 0.85); });
-      if (jb) { out = jb; outName = outName.replace(/\\\\.[^.]+$/, '') + '.jpg'; }
-    }
-    if (bmp.close) bmp.close();
-    return { name: outName, type: 'image/jpeg', b64: await b64OfBlob(out), size: out.size };
-  }
-  async function prepareImages(fileList, notes){
-    var list = Array.prototype.slice.call(fileList || []).filter(function(f){ return f.type.indexOf('image/') === 0 || /\\\\.hei[cf]$/i.test(f.name || ''); });
-    var out = [];
-    for (var i = 0; i < list.length; i++) {
-      var f = list[i];
-      try {
-        var rec = await shrinkImage(f);
-        if (rec.size > DUMP_FILE_MAX) { notes.push('\u201c' + rec.name + '\u201d is still ' + fmtSize(rec.size) + ' after shrinking \u2014 over the 1 MB upload limit, so it was not attached.'); continue; }
-        out.push(rec);
-      } catch(e) { notes.push('\u201c' + (f.name || 'image') + '\u201d could not be prepared \u2014 not attached.'); }
-    }
-    return out;
-  }
-  function fileSlug(name){ return String(name || 'file').replace(/[^A-Za-z0-9._-]+/g, '-').replace(/^-+|-+$/g, '') || 'file'; }
-  function folderOf(t){
-    var d = new Date(t), z = function(n){ return String(n).padStart(2, '0'); };
-    return d.getFullYear() + z(d.getMonth() + 1) + z(d.getDate()) + '-' + z(d.getHours()) + z(d.getMinutes()) + z(d.getSeconds());
-  }
-  function entryBody(text, paths){
-    var NL = String.fromCharCode(10);
-    var body = text || '';
-    if (paths && paths.length) {
-      if (body) body += NL + NL;
-      body += 'Files:' + paths.map(function(pp){ return NL + '- [' + pp.split('/').pop() + '](https://github.com/davedellaquila/' + repo + '/blob/master/' + pp + ')'; }).join('');
-    }
-    return body;
-  }
-  async function uploadFiles(files, whenMs){
-    var paths = [];
-    if (!files || !files.length) return paths;
-    var folder = 'docs/ingest-files/' + folderOf(whenMs) + '/';
-    for (var i = 0; i < files.length; i++) {
-      var path = folder + fileSlug(files[i].name);
-      await ghApi('/repos/davedellaquila/' + repo + '/contents/' + path, 'PUT',
-        {message: 'Dump image for ' + bid, content: files[i].b64});
-      paths.push(path);
-    }
-    return paths;
-  }
-  function escChip(t){
-    return String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-  }
-  function renderChips(){
-    if (!chipsBox) return;
-    chipsBox.innerHTML = dumpFiles.map(function(f, i){
-      return '<span class="dumpbox-chip"><img alt="" src="data:' + (f.type || 'image/jpeg') + ';base64,' + f.b64 + '"><span class="dc-name">' + escChip(f.name) + '</span><button type="button" class="dc-x" data-dc-x="' + i + '" aria-label="Remove ' + escChip(f.name) + '">\u00d7</button></span>';
-    }).join('');
-  }
   function b64encode(str){
     var bytes = new TextEncoder().encode(str), bin = '';
     bytes.forEach(function(b){ bin += String.fromCharCode(b); });
@@ -371,32 +502,16 @@ footer{margin-top:36px;padding-top:18px;border-top:1px solid var(--border);color
     if (!r.ok) throw new Error('GitHub ' + r.status);
     return r.status === 204 ? null : await r.json();
   }
-  async function ghGetFile(repo, path){
+  async function ghGetFile(path){
     try {
-      var j = await ghApi('/repos/davedellaquila/' + repo + '/contents/' + path);
+      var j = await ghApi('/repos/davedellaquila/' + REPO + '/contents/' + path);
       if (j && j.content) return {
-        text: new TextDecoder().decode(Uint8Array.from(atob(j.content.replace(/\\n/g, '')), function(c){ return c.charCodeAt(0); })),
+        text: new TextDecoder().decode(Uint8Array.from(atob(j.content.replace(/\n/g, '')), function(c){ return c.charCodeAt(0); })),
         sha: j.sha
       };
     } catch(e){}
     return null;
   }
-  var repo = null, repoName = bid;
-  async function resolveRepo(){
-    try {
-      var r = await fetch('../buddies.json', {cache: 'no-store'});
-      var d = await r.json();
-      var buds = d.buddies || [];
-      for (var i = 0; i < buds.length; i++) {
-        if (buds[i].id === bid && buds[i].repo) { repo = buds[i].repo; repoName = buds[i].name || bid; break; }
-      }
-    } catch(e){}
-  }
-  /* Local fallback (Dave 2026-10-15, widened 2026-10-16): dumping always works,
-     even with no GitHub token AND no repo linked — entries are saved in this
-     device's localStorage until the GitHub write path can take them. The backlog
-     flushes into the repo on the next successful GitHub dump (once a repo is
-     linked and a token is present). */
   function localKey(){ return 'buddyTree.ingest.' + bid; }
   function localBacklog(){
     try { var a = JSON.parse(localStorage.getItem(localKey()) || '[]'); return Array.isArray(a) ? a : []; }
@@ -404,589 +519,80 @@ footer{margin-top:36px;padding-top:18px;border-top:1px solid var(--border);color
   }
   function localSave(entry){
     var a = localBacklog(); a.push(entry);
-    try { localStorage.setItem(localKey(), JSON.stringify(a)); } catch(e){
-      /* Oversize local state (queued photos can exceed the storage quota):
-         keep the text, drop the image bytes, and SAY so on the status line -
-         a queued dump must never vanish silently. */
-      try {
-        var lite = {t: entry.t, text: entry.text};
-        if (entry.files && entry.files.length) lite.filesDropped = entry.files.length;
-        var a2 = localBacklog(); a2.push(lite);
-        localStorage.setItem(localKey(), JSON.stringify(a2));
-        st.textContent = '\u26a0\ufe0f Saved on this device, but the image was too large for this device\u2019s storage \u2014 the text is queued and will sync; re-attach the image after connecting GitHub.';
-      } catch(e2){}
-    }
+    try { localStorage.setItem(localKey(), JSON.stringify(a)); } catch(e){}
   }
   function localClear(){ try { localStorage.removeItem(localKey()); } catch(e){} }
-  /* Split a local backlog entry into (text, file paths) ready for the ingest
-     body: its own already-uploaded paths (first sync attempt), plus a note
-     for any image that could not be kept on this device. */
-  function splitEntry(b){
-    var body = b.text || '';
-    if (b.filesDropped) {
-      var NL = String.fromCharCode(10);
-      body += (body ? NL + NL : '') + '_(' + b.filesDropped + ' image' + (b.filesDropped === 1 ? '' : 's') + ' could not be kept on the device while queued \u2014 re-attach from the Photos library.)_';
-    }
-    return body;
-  }
   function refreshUI(){
     var has = !!token();
-    tokWrap.hidden = has;
-    /* The box always works: no token and/or no repo just means local saves. */
-    ta.disabled = false;
-    btn.disabled = false;
+    if (tokWrap) tokWrap.hidden = has;
     var n = localBacklog().length;
-    if (!repo) {
-      st.textContent = n
-        ? n + ' local ' + (n === 1 ? 'dump' : 'dumps') + ' saved on this device — will sync when a repo is linked.'
-        : 'No repo linked yet — dumps save on this device and will sync when one is linked.';
-      return;
-    }
     st.textContent = has
       ? (n ? n + ' local ' + (n === 1 ? 'dump' : 'dumps') + ' will sync on next dump.' : '')
-      : 'No GitHub token — dumps save on this device for now.';
+      : (n ? n + ' local ' + (n === 1 ? 'dump' : 'dumps') + ' saved on this device — add a token to sync.'
+           : 'No GitHub token — dumps save on this device for now.');
   }
-  var tokInput = tokWrap.querySelector('input'),
-      tokSave = tokWrap.querySelector('button');
-  /* Visual save confirmation (Dave 2026-10-16): the button flashes green
-     with a ✓ for ~2s on every successful save, so the save is unmissable. */
-  function flashSaved(){
-    var label = btn.textContent;
-    btn.classList.add('saved');
-    btn.textContent = '✓ Saved';
-    st.classList.add('flash');
-    setTimeout(function(){
-      btn.classList.remove('saved');
-      if (btn.textContent === '✓ Saved') btn.textContent = label;
-      st.classList.remove('flash');
-    }, 1800);
+  if (tokWrap) {
+    var tokInput = tokWrap.querySelector('input'),
+        tokSave = tokWrap.querySelector('button');
+    tokSave.addEventListener('click', async function(){
+      var v = tokInput.value.trim();
+      if (!v) return;
+      lsSet({ghToken: v});
+      tokInput.value = '';
+      st.textContent = 'Checking token…';
+      try {
+        await ghApi('/user');
+        refreshUI();
+        st.textContent = '✓ Token verified — dumps will sync to GitHub.';
+      } catch(e) {
+        refreshUI();
+        st.textContent = '⚠ GitHub rejected that token — dumps stay on this device until a working token is added.';
+      }
+    });
   }
-  /* Dave 2026-10-18: verify the token against GitHub when pasted, so a
-     bad token is caught here instead of surfacing as a mysterious 404 on
-     the next dump. The token is kept either way; dumps queue locally until
-     a working token is in place. */
-  tokSave.addEventListener('click', async function(){
-    var v = tokInput.value.trim();
-    if (!v) return;
-    lsSet({ghToken: v});
-    tokInput.value = '';
-    st.textContent = 'Checking token…';
-    try {
-      await ghApi('/user');
-      refreshUI();
-      st.textContent = '✓ Token verified — dumps will sync to GitHub.';
-    } catch(e) {
-      refreshUI();
-      st.textContent = '⚠ GitHub rejected that token (' + ((e && e.message) || e) + ') — dumps stay on this device until a working token is added.';
-    }
-  });
   async function dump(){
     var text = ta.value.trim();
-    var files = dumpFiles.slice();
-    if (!text && !files.length) return;
+    if (!text) return;
     var stamp = new Date().toLocaleString();
-    var whenMs = Date.now();
     var NL = String.fromCharCode(10);
-    function clearBox(){
-      ta.value = '';
-      dumpFiles = [];
-      renderChips();
-    }
-    if (!repo) {
-      /* No repo linked yet — save on this device; syncs once one is linked. */
-      localSave({t: stamp, text: text, files: files, when: whenMs});
-      clearBox();
-      refreshUI();
-      if (!/too large/.test(st.textContent)) st.textContent = '\u2713 Saved on this device — will sync to the repo once one is linked.';
-      flashSaved();
-      return;
-    }
     if (!token()) {
-      /* Temporary workaround: no token → save on this device. */
-      localSave({t: stamp, text: text, files: files, when: whenMs});
-      clearBox();
-      if (!/too large/.test(st.textContent)) st.textContent = '\u2713 Saved on this device — add a GitHub token to sync it to the repo.';
-      flashSaved();
+      localSave({t: stamp, text: text});
+      ta.value = '';
+      st.textContent = '✓ Saved on this device — add a GitHub token to sync it to the repo.';
+      refreshUI();
       return;
     }
-    st.textContent = 'Dumping\u2026';
+    st.textContent = 'Dumping…';
     btn.disabled = true;
     try {
-      /* This dump's own paths, then the backlog with each entry's uploads. */
-      var myPaths = await uploadFiles(files, whenMs);
       var backlog = localBacklog();
-      var parts = [];
-      for (var bi = 0; bi < backlog.length; bi++) {
-        var b = backlog[bi];
-        var bPaths = b.paths ? b.paths.slice() : await uploadFiles(b.files || [], b.when || whenMs);
-        b.paths = bPaths;
-        try { localStorage.setItem(localKey(), JSON.stringify(backlog)); } catch(e){}
-        parts.push('## ' + b.t + NL + NL + entryBody(splitEntry(b), bPaths) + NL + NL);
-      }
-      parts.push('## ' + stamp + NL + NL + entryBody(text, myPaths) + NL + NL);
-      var cur = await ghGetFile(repo, 'docs/ingest.md');
-      var base = cur ? cur.text : '# Ingest log \u2014 ' + repoName + NL + NL;
+      var parts = backlog.map(function(b){ return '## ' + b.t + NL + NL + b.text + NL + NL; });
+      parts.push('## ' + stamp + NL + NL + text + NL + NL);
+      var cur = await ghGetFile('docs/ingest.md');
+      var base = cur ? cur.text : '# Ingest log — Gift Card Buddy' + NL + NL;
       var body = {message: 'Ingest dump for ' + bid, content: b64encode(base + parts.join(''))};
       if (cur && cur.sha) body.sha = cur.sha;
-      await ghApi('/repos/davedellaquila/' + repo + '/contents/docs/ingest.md', 'PUT', body);
+      await ghApi('/repos/davedellaquila/' + REPO + '/contents/docs/ingest.md', 'PUT', body);
       localClear();
-      clearBox();
-      st.textContent = '\u2713 Dumped to ' + repo + '/docs/ingest.md' + (backlog.length ? ' (' + backlog.length + ' local synced)' : '');
-      flashSaved();
+      ta.value = '';
+      st.textContent = '✓ Dumped to ' + REPO + '/docs/ingest.md' + (backlog.length ? ' (' + backlog.length + ' local synced)' : '');
     } catch(err){
-      /* Dave 2026-10-18: a failed GitHub write must never drop the dump.
-         Keep it on this device and say so plainly, with the backlog count —
-         it syncs on the next successful dump. */
-      try { localSave({t: stamp, text: text, files: files, when: whenMs}); } catch(e2){}
-      clearBox();
+      try { localSave({t: stamp, text: text}); } catch(e2){}
+      ta.value = '';
       refreshUI();
       var why = (err && err.message) || String(err);
-      var nq = 0; try { nq = localBacklog().length; } catch(e2){}
-      var tail = nq > 1 ? ' (' + nq + ' on this device waiting to sync)' : '';
-      st.textContent = (/404/.test(why)
-        ? '\u26a0 Saved on this device — GitHub said 404 (usually a wrong/expired token, or no access to this private repo). Fix the token, then dump again to sync.'
-        : '\u26a0 Saved on this device — GitHub said: ' + why + '. It will sync on your next successful dump.') + tail;
+      st.textContent = /404/.test(why)
+        ? '⚠ Saved on this device — GitHub said 404 (usually a wrong/expired token, or no access to this private repo). Fix the token, then dump again to sync.'
+        : '⚠ Saved on this device — GitHub said: ' + why + '. It will sync on your next successful dump.';
     }
     btn.disabled = false;
   }
   btn.addEventListener('click', dump);
   ta.addEventListener('keydown', function(ev){
-    /* Dave 2026-10-16: plain Return dumps, like the button. Shift+Return for a newline. */
-    if (ev.key === 'Enter' && !ev.shiftKey && !ev.altKey) { ev.preventDefault(); dump(); }
+    if ((ev.metaKey || ev.ctrlKey) && ev.key === 'Enter') { ev.preventDefault(); dump(); }
   });
-  if (addBtn) addBtn.addEventListener('click', function(){
-    var inp = document.createElement('input');
-    inp.type = 'file'; inp.accept = 'image/*,.heic,.heif'; inp.multiple = true;
-    inp.addEventListener('change', async function(){
-      if (!inp.files || !inp.files.length) return;
-      st.textContent = 'Preparing image\u2026';
-      var notes = [];
-      var recs = await prepareImages(inp.files, notes);
-      dumpFiles = dumpFiles.concat(recs);
-      renderChips();
-      st.textContent = notes.join(' ') || (recs.length ? recs.length + ' image' + (recs.length === 1 ? '' : 's') + ' attached — they ride your next dump.' : '');
-      if (recs.length && !ta.value.trim()) dump();
-    });
-    inp.click();
-  });
-  if (chipsBox) chipsBox.addEventListener('click', function(ev){
-    var x = ev.target.closest('[data-dc-x]');
-    if (!x) return;
-    dumpFiles.splice(parseInt(x.getAttribute('data-dc-x'), 10), 1);
-    renderChips();
-  });
-  resolveRepo().then(refreshUI);
+  refreshUI();
 })();
 </script>
-
-
-<script>
-(function(){
-  var sec = document.querySelector('.repo-files');
-  if (!sec || sec.dataset.rfInit) return;
-  sec.dataset.rfInit = '1';
-  var bid = sec.getAttribute('data-buddy-id') || (function(){
-    var p = location.pathname.replace(/\\/+$/, '');
-    return p.substring(p.lastIndexOf('/') + 1);
-  })();
-  function lsGet(){ try { return JSON.parse(localStorage.getItem('buddyTree.v3') || '{}'); } catch(e){ return {}; } }
-  function token(){ return lsGet().ghToken || ''; }
-  function b64encode(str){
-    var bytes = new TextEncoder().encode(str), bin = '';
-    bytes.forEach(function(b){ bin += String.fromCharCode(b); });
-    return btoa(bin);
-  }
-  async function ghApi(path, method, body){
-    var t = token();
-    if (!t) throw new Error('Add a GitHub token first.');
-    var r = await fetch('https://api.github.com' + path, {
-      method: method || 'GET',
-      headers: {'Authorization': 'Bearer ' + t, 'Accept': 'application/vnd.github+json', 'Content-Type': 'application/json'},
-      body: body ? JSON.stringify(body) : undefined
-    });
-    if (!r.ok) throw new Error('GitHub ' + r.status);
-    return r.status === 204 ? null : await r.json();
-  }
-  async function ghGetFile(repo, path){
-    try {
-      var j = await ghApi('/repos/davedellaquila/' + repo + '/contents/' + path);
-      if (j && j.content) return {
-        text: new TextDecoder().decode(Uint8Array.from(atob(j.content.replace(/\\n/g, '')), function(c){ return c.charCodeAt(0); })),
-        sha: j.sha
-      };
-    } catch(e){}
-    return null;
-  }
-  var repo = null;
-  async function resolveRepo(){
-    try {
-      var r = await fetch('../buddies.json', {cache: 'no-store'});
-      var d = await r.json();
-      var buds = d.buddies || [];
-      for (var i = 0; i < buds.length; i++) {
-        if (buds[i].id === bid && buds[i].repo) { repo = buds[i].repo; break; }
-      }
-    } catch(e){}
-  }
-  function esc(s){ return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
-  function inline(s){
-    s = esc(s);
-    s = s.replace(/`([^`]+)`/g, '<code>$1</code>');
-    s = s.replace(/\\*\\*([^*]+)\\*\\*/g, '<strong>$1</strong>');
-    s = s.replace(/(^|[^*])\\*([^*\\n]+)\\*/g, '$1<em>$2</em>');
-    s = s.replace(/\\[([^\\]]+)\\]\\((https?:[^)\\s]+)\\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>');
-    return s;
-  }
-  function mdRender(src){
-    var lines = src.split('\\n'), out = [], inList = false, inCode = false, codeBuf = [];
-    function closeList(){ if (inList) { out.push('</ul>'); inList = false; } }
-    for (var i = 0; i < lines.length; i++){
-      var ln = lines[i], m;
-      if (/^```/.test(ln)) {
-        if (inCode) { out.push('<pre><code>' + esc(codeBuf.join('\\n')) + '</code></pre>'); codeBuf = []; inCode = false; }
-        else { closeList(); inCode = true; }
-        continue;
-      }
-      if (inCode) { codeBuf.push(ln); continue; }
-      if ((m = ln.match(/^(#{1,4})\\s+(.*)/))) {
-        closeList();
-        var lv = Math.min(m[1].length + 1, 4);
-        out.push('<h' + lv + '>' + inline(m[2]) + '</h' + lv + '>');
-        continue;
-      }
-      if (/^\\s*(-{3,}|\\*{3,})\\s*$/.test(ln)) { closeList(); out.push('<hr>'); continue; }
-      if ((m = ln.match(/^\\s*[-*]\\s+(.*)/)) || (m = ln.match(/^\\s*\\d+[.)]\\s+(.*)/))) {
-        if (!inList) { out.push('<ul>'); inList = true; }
-        out.push('<li>' + inline(m[1]) + '</li>');
-        continue;
-      }
-      if ((m = ln.match(/^>\\s?(.*)/))) { closeList(); out.push('<blockquote>' + inline(m[1]) + '</blockquote>'); continue; }
-      if (!ln.trim()) { closeList(); continue; }
-      closeList();
-      out.push('<p>' + inline(ln) + '</p>');
-    }
-    closeList();
-    if (inCode) out.push('<pre><code>' + esc(codeBuf.join('\\n')) + '</code></pre>');
-    return out.join('\\n');
-  }
-  var locked = sec.querySelector('.rf-locked'), main = sec.querySelector('.rf-main'),
-      list = sec.querySelector('.rf-list'), st = sec.querySelector('.rf-status');
-  /* Accordion files (Dave 2026-10-21): a list of file names; clicking a
-     name toggles that file's contents open inline right below the name.
-     Toggles are independent — several files can be open at once. Contents
-     load lazily on first open and are cached in the item's own state;
-     Edit/Save lives inside the opened panel. */
-  function buildFileSection(f){
-    var wrap = document.createElement('div');
-    wrap.className = 'rf-fileitem';
-    var head = document.createElement('button');
-    head.type = 'button';
-    head.className = 'rf-file';
-    head.setAttribute('aria-expanded', 'false');
-    var nm = document.createElement('span');
-    nm.className = 'rf-name';
-    nm.textContent = '📄 ' + f.name;
-    var dir = document.createElement('span');
-    dir.className = 'rf-dir';
-    dir.textContent = f.path;
-    var chev = document.createElement('span');
-    chev.className = 'rf-chev';
-    chev.textContent = '▸';
-    head.appendChild(nm);
-    head.appendChild(dir);
-    head.appendChild(chev);
-    var panel = document.createElement('div');
-    panel.className = 'rf-panel';
-    panel.hidden = true;
-    var phead = document.createElement('div');
-    phead.className = 'rf-viewhead';
-    var ppath = document.createElement('span');
-    ppath.className = 'rf-path';
-    ppath.textContent = f.path;
-    var editBtn = document.createElement('button');
-    editBtn.type = 'button';
-    editBtn.className = 'attn-btn rf-edit';
-    editBtn.textContent = 'Edit';
-    editBtn.disabled = true;
-    phead.appendChild(ppath);
-    phead.appendChild(editBtn);
-    var bodyEl = document.createElement('div');
-    bodyEl.className = 'rf-body';
-    bodyEl.innerHTML = '<p class="rf-loading">Loading ' + esc(f.path) + '…</p>';
-    var editor = document.createElement('div');
-    editor.className = 'rf-editor';
-    editor.hidden = true;
-    var ta = document.createElement('textarea');
-    ta.className = 'rf-ta';
-    ta.rows = 18;
-    ta.spellcheck = false;
-    ta.setAttribute('aria-label', 'Markdown source for ' + f.path);
-    var actions = document.createElement('div');
-    actions.className = 'attn-actions';
-    var saveBtn = document.createElement('button');
-    saveBtn.type = 'button';
-    saveBtn.className = 'attn-btn primary rf-save';
-    saveBtn.textContent = 'Save to GitHub';
-    var cancelBtn = document.createElement('button');
-    cancelBtn.type = 'button';
-    cancelBtn.className = 'attn-btn rf-cancel';
-    cancelBtn.textContent = 'Cancel';
-    actions.appendChild(saveBtn);
-    actions.appendChild(cancelBtn);
-    editor.appendChild(ta);
-    editor.appendChild(actions);
-    var fst = document.createElement('div');
-    fst.className = 'rf-fstatus attn-status';
-    fst.setAttribute('role', 'status');
-    panel.appendChild(phead);
-    panel.appendChild(bodyEl);
-    panel.appendChild(editor);
-    panel.appendChild(fst);
-    wrap.appendChild(head);
-    wrap.appendChild(panel);
-    var cur = null, loaded = false;
-    function loadOnce(){
-      if (loaded) return;
-      loaded = true;
-      ghGetFile(repo, f.path).then(function(got){
-        if (!got) { loaded = false; bodyEl.innerHTML = '<p class="rf-loading">⚠ Could not load ' + esc(f.path) + ' — close and open it again to retry.</p>'; return; }
-        cur = {path: f.path, sha: got.sha, text: got.text};
-        bodyEl.innerHTML = mdRender(got.text);
-        editBtn.disabled = false;
-      });
-    }
-    head.addEventListener('click', function(){
-      var open = panel.hidden;
-      panel.hidden = !open;
-      head.setAttribute('aria-expanded', open ? 'true' : 'false');
-      chev.textContent = open ? '▾' : '▸';
-      if (open) loadOnce();
-    });
-    editBtn.addEventListener('click', function(){
-      if (!cur) return;
-      ta.value = cur.text;
-      bodyEl.hidden = true;
-      editor.hidden = false;
-      ta.focus();
-    });
-    cancelBtn.addEventListener('click', function(){
-      editor.hidden = true;
-      bodyEl.hidden = false;
-    });
-    saveBtn.addEventListener('click', async function(){
-      if (!cur) return;
-      saveBtn.disabled = true;
-      fst.textContent = 'Saving…';
-      try {
-        var payload = {message: 'Edit ' + cur.path + ' from the homepage', content: b64encode(ta.value), sha: cur.sha};
-        var j = await ghApi('/repos/davedellaquila/' + repo + '/contents/' + cur.path, 'PUT', payload);
-        if (j && j.content && j.content.sha) cur.sha = j.content.sha;
-        cur.text = ta.value;
-        editor.hidden = true;
-        bodyEl.hidden = false;
-        bodyEl.innerHTML = mdRender(cur.text);
-        fst.textContent = '✓ Saved to GitHub (' + repo + '/' + cur.path + ').';
-      } catch(err){
-        var why = (err && err.message) || String(err);
-        fst.textContent = /409|422/.test(why)
-          ? '⚠ GitHub said the file changed since you loaded it (' + why + ') — reload this page and try again.'
-          : '⚠ Save failed (' + why + ') — your edit is still in the editor.';
-      }
-      saveBtn.disabled = false;
-    });
-    return wrap;
-  }
-  async function init(){
-    await resolveRepo();
-    if (!repo) {
-      locked.hidden = false;
-      locked.textContent = 'No repo is linked for this buddy yet, so there are no repo files to show.';
-      return;
-    }
-    if (!token()) { locked.hidden = false; return; }
-    main.hidden = false;
-    st.textContent = 'Loading files…';
-    var files = [];
-    async function grab(dir){
-      try {
-        var j = await ghApi('/repos/davedellaquila/' + repo + (dir ? '/contents/' + dir : '/contents'));
-        if (Array.isArray(j)) j.forEach(function(e){
-          if (e.type === 'file' && /\\.md$/i.test(e.name)) files.push({name: e.name, path: e.path});
-        });
-      } catch(e){}
-    }
-    await grab('');
-    await grab('docs');
-    files.sort(function(a, b){ return a.path < b.path ? -1 : 1; });
-    if (!files.length) { st.textContent = 'No markdown files found in the repo yet.'; return; }
-    st.textContent = '';
-    files.forEach(function(f){
-      list.appendChild(buildFileSection(f));
-    });
-  }
-  init();
-})();
-</script>
-
-
-<script>
-(function(){
-  var tiles = document.querySelectorAll('.attn[data-attn-id]');
-  if (!tiles.length) return;
-  var dumpbox = document.querySelector('.dumpbox');
-  var bid = (dumpbox && dumpbox.getAttribute('data-buddy-id')) || (function(){
-    var p = location.pathname.replace(/\\/+$/, '');
-    return p.substring(p.lastIndexOf('/') + 1);
-  })();
-  function lsGet(){ try { return JSON.parse(localStorage.getItem('buddyTree.v3') || '{}'); } catch(e){ return {}; } }
-  function lsSet(patch){ try { var s = lsGet(); for (var k in patch) s[k] = patch[k]; localStorage.setItem('buddyTree.v3', JSON.stringify(s)); } catch(e){} }
-  function token(){ return lsGet().ghToken || ''; }
-  function b64encode(str){
-    var bytes = new TextEncoder().encode(str), bin = '';
-    bytes.forEach(function(b){ bin += String.fromCharCode(b); });
-    return btoa(bin);
-  }
-  async function ghApi(path, method, body){
-    var t = token();
-    if (!t) throw new Error('Add a GitHub token first.');
-    var r = await fetch('https://api.github.com' + path, {
-      method: method || 'GET',
-      headers: {'Authorization': 'Bearer ' + t, 'Accept': 'application/vnd.github+json', 'Content-Type': 'application/json'},
-      body: body ? JSON.stringify(body) : undefined
-    });
-    if (!r.ok) throw new Error('GitHub ' + r.status);
-    return r.status === 204 ? null : await r.json();
-  }
-  async function ghGetFile(repo, path){
-    try {
-      var j = await ghApi('/repos/davedellaquila/' + repo + '/contents/' + path);
-      if (j && j.content) return {
-        text: new TextDecoder().decode(Uint8Array.from(atob(j.content.replace(/\\n/g, '')), function(c){ return c.charCodeAt(0); })),
-        sha: j.sha
-      };
-    } catch(e){}
-    return null;
-  }
-  var repo = null, buddyName = bid;
-  async function resolveBuddy(){
-    try {
-      var r = await fetch('../buddies.json', {cache: 'no-store'});
-      var d = await r.json();
-      var buds = d.buddies || [];
-      for (var i = 0; i < buds.length; i++) {
-        if (buds[i].id === bid) {
-          if (buds[i].repo) repo = buds[i].repo;
-          if (buds[i].name) buddyName = buds[i].name;
-          break;
-        }
-      }
-    } catch(e){}
-  }
-  function rkey(aid, text){ return bid + '|' + (aid || ('text:' + text.slice(0, 60))); }
-  function isResolved(aid, text){
-    var s = lsGet();
-    var m = s.attnDone || {};
-    if (m[rkey(aid, text)]) return true;
-    /* Also honor the dashboard's own done map (the same store's 'seen',
-       keyed by bare attention id) so an item cleared in the dashboard
-       stays cleared here — one done state across surfaces. */
-    if (aid && s.seen && s.seen[aid]) return true;
-    return false;
-  }
-  function setResolved(aid, text){ var s = lsGet(); var m = s.attnDone || {}; m[rkey(aid, text)] = 1; s.attnDone = m; lsSet(s); }
-  /* Las Vegas mode (Dave 2026-10-20): marking done feels like a win — the
-     button spins once and confetti bursts from it. DOM + WAAPI only;
-     skipped under prefers-reduced-motion; only ever called on a real tap. */
-  function celebrate(el, fallbackEl){
-    if (!el || !el.getBoundingClientRect) return;
-    if (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    try { el.animate([{transform:'rotate(0deg)'},{transform:'rotate(360deg)'}], {duration:450, easing:'cubic-bezier(.2,.7,.3,1.2)'}); } catch(e){}
-    var r = el.getBoundingClientRect();
-    /* A hidden element's rect is all zeros — bursting from it put the
-       confetti in the viewport's upper-left corner (Dave, 2026-10-21). Fall
-       back to the tile's rect; never burst from a zero rect at all. */
-    if ((!r.width || !r.height) && fallbackEl && fallbackEl.getBoundingClientRect) r = fallbackEl.getBoundingClientRect();
-    if (!r.width || !r.height) return;
-    var cx = r.left + r.width/2, cy = r.top + r.height/2;
-    var colors = ['#f0b429','#3fb950','#f778ba','#58a6ff','#ff7b72','#d2a8ff'];
-    for (var i = 0; i < 26; i++){
-      var s = document.createElement('span');
-      var sz = 5 + Math.random()*6;
-      s.style.cssText = 'position:fixed;left:'+cx+'px;top:'+cy+'px;width:'+sz+'px;height:'+(sz*0.6)+'px;background:'+colors[i%colors.length]+';z-index:99999;pointer-events:none;border-radius:2px;';
-      document.body.appendChild(s);
-      var ang = Math.random()*Math.PI*2, v = 60 + Math.random()*130;
-      var dx = Math.cos(ang)*v, dy = Math.sin(ang)*v - 90;
-      var anim = s.animate([
-        {transform:'translate(-50%,-50%) rotate(0deg)', opacity:1},
-        {transform:'translate(calc(-50% + '+dx+'px), calc(-50% + '+(dy+170)+'px)) rotate('+(Math.random()*540-270)+'deg)', opacity:0}
-      ], {duration: 750 + Math.random()*450, easing:'cubic-bezier(.15,.6,.4,1)'});
-      (function(node, a){ if (a) a.onfinish = function(){ node.remove(); }; else setTimeout(function(){ node.remove(); }, 1300); })(s, anim);
-    }
-  }
-  function paintResolved(tile, msg, immediate){
-    var st = tile.querySelector('.attn-status');
-    if (st) st.textContent = msg;
-    /* Dave 2026-10-20: the check belongs to the RESULT of the tap, never the
-       label beforehand — an upfront check reads as "already done." The Done
-       button renders plain "Done"; the check appears only once clicked. */
-    var db = tile.querySelector('[data-act="done"]');
-    if (db) db.textContent = '✓ Done';
-    if (immediate) { tile.classList.add('resolved'); return; }
-    /* Fresh tap (Dave, 2026-10-21): the check + status land while the button
-       is still visible, and celebrate() fires against the live button; the
-       resolved class (dim + hide actions) arrives a beat later so the result
-       registers first. Applying it instantly hid the button before the check
-       could be seen — and zeroed the rect celebrate() measures, which sent
-       the confetti to the viewport's upper-left corner. */
-    setTimeout(function(){ tile.classList.add('resolved'); }, 1100);
-  }
-  async function sendAction(tile, entry, okMsg){
-    var st = tile.querySelector('.attn-status');
-    var btns = tile.querySelectorAll('.attn-btn');
-    if (!token()) { st.textContent = 'Add a GitHub token in the Brain dump section above to enable actions.'; return false; }
-    if (!repo) { st.textContent = 'No repo linked for this buddy yet.'; return false; }
-    btns.forEach(function(b){ b.disabled = true; });
-    st.textContent = 'Working…';
-    try {
-      var NL = String.fromCharCode(10);
-      var stamp = new Date().toLocaleString();
-      var cur = await ghGetFile(repo, 'docs/ingest.md');
-      var base = cur ? cur.text : '# Ingest log — ' + buddyName + NL + NL;
-      var body = {message: 'Attention action for ' + bid, content: b64encode(base + '## ' + stamp + NL + NL + entry + NL + NL)};
-      if (cur && cur.sha) body.sha = cur.sha;
-      await ghApi('/repos/davedellaquila/' + repo + '/contents/docs/ingest.md', 'PUT', body);
-      st.textContent = okMsg;
-      return true;
-    } catch(err){
-      st.textContent = 'Save failed: ' + (err.message || err);
-      btns.forEach(function(b){ b.disabled = false; });
-      return false;
-    }
-  }
-  tiles.forEach(function(tile){
-    var aid = tile.getAttribute('data-attn-id') || '';
-    var textEl = tile.querySelector('.attn-text');
-    var text = textEl ? textEl.textContent.trim() : '';
-    if (isResolved(aid, text)) { paintResolved(tile, 'Marked done', true); return; }
-    tile.addEventListener('click', function(ev){
-      var btn = ev.target.closest ? ev.target.closest('.attn-btn') : null;
-      if (!btn || btn.disabled) return;
-      var act = btn.getAttribute('data-act');
-      var idBit = aid ? ' (attention id: ' + aid + ')' : '';
-      if (act === 'done') {
-        sendAction(tile,
-          'DONE — Dave marked this done on the homepage: "' + text + '"' + idBit + '. Please remove it from the attention list in buddies.json.',
-          'Marked done — the buddy will clear it.').then(function(ok){ if (ok) { setResolved(aid, text); paintResolved(tile, 'Marked done — the buddy will clear it.'); celebrate(btn, tile); } });
-      } else if (act === 'info') {
-        sendAction(tile,
-          'FOLLOW-UP — Dave needs more info on: "' + text + '"' + idBit + '. Please follow up with him.',
-          'Sent — ' + buddyName + ' will follow up.');
-      }
-    });
-  });
-  resolveBuddy();
-})();
-</script>
-
 </body>
 </html>
