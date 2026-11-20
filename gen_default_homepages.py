@@ -102,10 +102,25 @@ try:
 except Exception:
     _markdown = None
 
-def _baked_items(files):
+def _baked_items(files, private=False):
     """Accordion items with each file's markdown rendered in place
     (Dave 2026-11-19: baked at generation time — no token, no fetch;
-    a file that fails to render gets a panel that says why)."""
+    a file that fails to render gets a panel that says why).
+    private=True (registry private_files flag, Dave 2026-11-19): names
+    only — no contents are baked into the public page."""
+    if private:
+        rows = []
+        for rel, path in files:
+            nm = rel.split('/')[-1]
+            dl = rel.rsplit('/', 1)[0] if '/' in rel else 'repo root'
+            rows.append('<div class="rf-fileitem"><div class="rf-file">'
+                        '<span class="rf-name">' + esc(nm) + '</span>'
+                        '<span class="rf-dir">' + esc(dl) + '</span></div></div>')
+        if not rows:
+            return ('<div class="rf-locked">This buddy&#8217;s repo held no markdown '
+                    'files when this page was generated.</div>')
+        return ('<p class="rf-loading">File contents are not published on this '
+                'public page.</p>' + ''.join(rows))
     items = []
     for rel, path in files:
         name = rel.split('/')[-1]
@@ -156,9 +171,15 @@ def repo_markdown_section(b):
             except Exception:
                 n = 0
             items.append('<li><code>%s</code> <span class="muted">%s chars</span></li>' % (esc(rel), format(n, ',')))
-        parts.append('<p class="muted">In the local clone of davedellaquila/%s — the reader below '
-                     'baked into the reader below from that clone:</p><ul class="mdinv">%s</ul>'
-                     % (esc(b.get('repo') or b['id']), ''.join(items)))
+        if b.get('private_files'):
+            parts.append('<p class="muted">In the local clone of davedellaquila/%s — '
+                         'file contents are not published on this public page; '
+                         'the files are:</p><ul class="mdinv">%s</ul>'
+                         % (esc(b.get('repo') or b['id']), ''.join(items)))
+        else:
+            parts.append('<p class="muted">In the local clone of davedellaquila/%s — the reader below '
+                         'baked into the reader below from that clone:</p><ul class="mdinv">%s</ul>'
+                         % (esc(b.get('repo') or b['id']), ''.join(items)))
     if tree_files:
         items = ''.join('<li><code>%s</code></li>' % esc(rel) for rel, _ in tree_files)
         parts.append('<p class="muted">Also kept in the dashboard folder %s/:</p>'
@@ -166,7 +187,7 @@ def repo_markdown_section(b):
     if not files and not tree_files:
         parts.append('<p class="empty">No local clone of this buddy\'s repo is kept here yet — '
                      'so there is nothing to bake into the reader below yet.</p>')
-    parts.append(_C['FILES_HTML'].replace('__BID__', esc(b['id'])).replace('__BNAME__', esc(b.get('name', b['id']))).replace('__RFFILES__', _baked_items(files)))
+    parts.append(_C['FILES_HTML'].replace('__BID__', esc(b['id'])).replace('__BNAME__', esc(b.get('name', b['id']))).replace('__RFFILES__', _baked_items(files, private=bool(b.get('private_files')))))
     return section('From the repo — markdown files (%d)' % len(files), ''.join(parts))
 
 # --- Managed Files section (Dave's homepage standard, 2026-11-18) ---------

@@ -594,6 +594,22 @@ def baked_repo_files_html(b):
         return ('<div class="rf-locked">No local copy of this buddy&#8217;s repo was '
                 'available when this page was generated, so there are no files '
                 'to bake in yet.</div>')
+    if b.get('private_files'):
+        # Privacy pull-back (Dave 2026-11-19, Hiking Buddy first): buddies
+        # flagged private_files list file NAMES only on their public pages —
+        # no baked contents, no reader panels.
+        rows = []
+        for rel, path in _rf_md_files(clone):
+            nm = rel.split('/')[-1]
+            dl = rel.rsplit('/', 1)[0] if '/' in rel else 'repo root'
+            rows.append('<div class="rf-fileitem"><div class="rf-file">'
+                        '<span class="rf-name">' + html.escape(nm) + '</span>'
+                        '<span class="rf-dir">' + html.escape(dl) + '</span></div></div>')
+        if not rows:
+            return ('<div class="rf-locked">This buddy&#8217;s repo held no markdown '
+                    'files when this page was generated.</div>')
+        return ('<p class="rf-loading">File contents are not published on this '
+                'public page.</p>' + ''.join(rows))
     items = []
     for rel, path in _rf_md_files(clone):
         name = rel.split('/')[-1]
