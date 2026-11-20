@@ -1237,6 +1237,11 @@ async function dump(){
   .mind-done-btn { font: inherit; font-size: 12.5px; font-weight: 600; color: inherit; background: transparent; border: 1px solid var(--line); border-radius: 999px; padding: 4px 12px; cursor: pointer; white-space: nowrap; }
   .mind-stamp { font-size: 12.5px; color: var(--dim); }
   .mind.done .dot, .mind.done .t, .mind.done .d { opacity: .5; }
+  .mind-note { font-size: 13px; margin-top: 8px; border-left: 3px solid var(--line); padding: 6px 10px; white-space: pre-wrap; }
+  .mind-note-edit { margin-top: 10px; }
+  .mind-note-edit textarea { width: 100%; box-sizing: border-box; border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px; font: inherit; font-size: 14px; background: transparent; color: inherit; min-height: 56px; }
+  .mind-note-btns { display: flex; gap: 8px; margin-top: 8px; }
+  .mind-note-msg { font-size: 12.5px; color: var(--dim); margin-top: 6px; }
 </style>
 <script>
 (function () {
@@ -1279,6 +1284,21 @@ async function dump(){
       return p.ok;
     } catch (e) { return false; }
   }
+  async function noteText(title, text) {
+    var tok = token(); if (!tok) return false;
+    try {
+      var url = 'https://api.github.com/repos/davedellaquila/' + bid + '/contents/docs/ingest.md';
+      var hdr = { 'Authorization': 'Bearer ' + tok, 'Accept': 'application/vnd.github+json' };
+      var base = '# Ingest log \u2014 ' + bid + '\n\n', sha = null;
+      var g = await fetch(url, { headers: hdr });
+      if (g.ok) { var cur = await g.json(); sha = cur.sha; base = decodeURIComponent(escape(atob((cur.content || '').replace(/\n/g, '')))); }
+      var entry = '## ' + todayLocal() + ' \u2014 \u270e Note on "On my mind" item (homepage)\n\nDave\u2019s note on "' + title + '":\n\n' + text + '\n\n';
+      var body = { message: '"On my mind" note (homepage): ' + title, content: b64(base + entry) };
+      if (sha) body.sha = sha;
+      var p = await fetch(url, { method: 'PUT', headers: hdr, body: JSON.stringify(body) });
+      return p.ok;
+    } catch (e) { return false; }
+  }
   document.querySelectorAll('.mind').forEach(function (card) {
     var tEl = card.querySelector('.t');
     var title = tEl ? tEl.textContent.trim() : 'Item';
@@ -1290,15 +1310,46 @@ async function dump(){
     var undo = document.createElement('button'); undo.type = 'button'; undo.className = 'mind-done-btn'; undo.textContent = '\u21a9 Undo'; undo.setAttribute('data-mind-act', 'undo');
     var stamp = document.createElement('span'); stamp.className = 'mind-stamp';
     foot.appendChild(actions); foot.appendChild(undo); foot.appendChild(stamp);
+    var noteBtn = document.createElement('button'); noteBtn.type = 'button'; noteBtn.className = 'mind-done-btn'; noteBtn.textContent = '\u270e Add a note\u2026'; noteBtn.setAttribute('data-mind-act', 'note');
+    foot.appendChild(noteBtn);
     (tEl ? tEl.parentElement : card).appendChild(foot);
-    function kind() { var d = store[key]; if (!d) return null; return d.kind || 'done'; }
+    var noteLine = document.createElement('div'); noteLine.className = 'mind-note'; noteLine.style.display = 'none';
+    (tEl ? tEl.parentElement : card).appendChild(noteLine);
+    var noteHost = document.createElement('div');
+    (tEl ? tEl.parentElement : card).appendChild(noteHost);
+    function kind() { var d = store[key]; if (!d || !d.kind) return null; return d.kind; }
     function paint() {
       var d = store[key]; var k = kind();
-      card.classList.toggle('done', !!d);
-      actions.style.display = d ? 'none' : 'inline-flex';
-      undo.style.display = d ? '' : 'none';
-      stamp.textContent = d ? (ACT[k].stamp(d.date) + (d.noted ? '' : ' \u00b7 on this device')) : '';
+      card.classList.toggle('done', !!k);
+      actions.style.display = k ? 'none' : 'inline-flex';
+      undo.style.display = k ? '' : 'none';
+      stamp.textContent = k ? (ACT[k].stamp(d.date) + (d.noted ? '' : ' \u00b7 on this device')) : '';
+      var n = d && d.note;
+      noteLine.style.display = n ? '' : 'none';
+      noteLine.textContent = n ? ('\u270e ' + n.text + ' \u00b7 ' + fmt(n.date)) : '';
     }
+    noteBtn.addEventListener('click', function () {
+      if (noteHost.firstChild) { var t0 = noteHost.querySelector('textarea'); if (t0) t0.focus(); return; }
+      var wrap = document.createElement('div'); wrap.className = 'mind-note-edit';
+      var ta = document.createElement('textarea'); ta.placeholder = 'Type your note\u2026'; ta.setAttribute('aria-label', 'Note for this item');
+      var cur = store[key] && store[key].note; if (cur) ta.value = cur.text;
+      var btns = document.createElement('div'); btns.className = 'mind-note-btns';
+      var sv = document.createElement('button'); sv.type = 'button'; sv.className = 'mind-done-btn'; sv.textContent = 'Save note';
+      var cx = document.createElement('button'); cx.type = 'button'; cx.className = 'mind-done-btn'; cx.textContent = 'Cancel';
+      var msg = document.createElement('div'); msg.className = 'mind-note-msg';
+      btns.appendChild(sv); btns.appendChild(cx); wrap.appendChild(ta); wrap.appendChild(btns); wrap.appendChild(msg);
+      noteHost.appendChild(wrap); ta.focus();
+      cx.addEventListener('click', function () { wrap.remove(); });
+      sv.addEventListener('click', async function () {
+        var val = ta.value.trim();
+        if (!val) { msg.textContent = 'Write a note first, or Cancel.'; return; }
+        if (!store[key]) store[key] = {};
+        store[key].note = { text: val, date: todayLocal() }; save(); paint();
+        msg.textContent = 'Saving\u2026';
+        var ok = await noteText(title, val);
+        msg.textContent = ok ? 'Note saved \u2014 sent and shown on this card.' : 'Note saved on this device and shown here \u2014 add a GitHub token (Brain dump above) to send it.';
+      });
+    });
     actions.addEventListener('click', async function (ev) {
       var b = ev.target.closest ? ev.target.closest('[data-mind-act]') : null; if (!b) return;
       var act = b.getAttribute('data-mind-act');
@@ -1308,11 +1359,11 @@ async function dump(){
         stamp.textContent = okI ? 'Sent \u2014 more info requested.' : 'Add a GitHub token (Brain dump above) to send this.';
         return;
       }
-      store[key] = { kind: act, date: todayLocal(), noted: false }; save(); paint();
+      var pn = store[key] && store[key].note; store[key] = { kind: act, date: todayLocal(), noted: false }; if (pn) store[key].note = pn; save(); paint();
       var ok = await note(title, act);
       if (ok && store[key]) { store[key].noted = true; save(); paint(); }
     });
-    undo.addEventListener('click', function () { delete store[key]; save(); paint(); note(title, 'reopened'); });
+    undo.addEventListener('click', function () { var n = store[key] && store[key].note; delete store[key]; if (n) store[key] = { note: n }; save(); paint(); note(title, 'reopened'); });
     paint();
   });
 })();

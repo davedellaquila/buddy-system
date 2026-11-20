@@ -90,6 +90,11 @@ h2 { font-size: 22px; margin: 32px 0 16px; }
 .attn-status { font-size: 13px; color: var(--muted); margin-top: 8px; min-height: 18px; }
 .attn.resolved { opacity: .6; }
 .attn-undo { margin-top: 8px; }
+.attn-note { font-size: 13px; color: var(--text); margin-top: 8px; background: var(--card); border-left: 3px solid var(--accent); padding: 6px 10px; border-radius: 0 6px 6px 0; white-space: pre-wrap; }
+.attn-note-edit { margin-top: 10px; }
+.attn-note-edit textarea { width: 100%; box-sizing: border-box; border: 1px solid var(--border); border-radius: 8px; padding: 8px 10px; font: inherit; font-size: 14px; background: var(--bg); color: var(--text); min-height: 56px; }
+.attn-note-btns { display: flex; gap: 8px; margin-top: 8px; }
+.attn-note-msg { font-size: 12.5px; color: var(--muted); margin-top: 6px; }
 .attn.resolved .attn-actions { display: none; }
 /* ---- skills (Dave 2026-10-16) ---- */
 .skills { display: flex; flex-direction: column; gap: 10px; margin-top: 4px; }
@@ -780,6 +785,57 @@ Generated 2026-11-20 · Part of the Buddy System<br>
     delete m[k]; delete st[k]; s.attnDone = m; s.attnState = st;
     if (aid && s.seen) delete s.seen[aid]; lsSet(s);
   }
+  /* Free-text notes (Dave 2026-11-20 amendment): the fifth action. A note
+     lives on the device in attnNotes (same store, same keying as the
+     dispositions, so the dashboard shows it too), renders on the card with
+     its date, and is delivered to the owning buddy as a NOTE entry in
+     docs/ingest.md through the same token-gated path as Need more info.
+     A registry entry may also carry note {text, date}; the generator bakes
+     it as data-note attrs and the tile paints it when no local note exists. */
+  function localNote(aid, text){ var s = lsGet(); return (s.attnNotes || {})[rkey(aid, text)] || null; }
+  function setLocalNote(aid, text, noteText, date){ var s = lsGet(); var n = s.attnNotes || {}; n[rkey(aid, text)] = {text: noteText, date: date}; s.attnNotes = n; lsSet(s); }
+  function paintNote(tile, note){
+    var el = tile.querySelector('.attn-note');
+    if (!note) { if (el) el.remove(); return; }
+    if (!el) {
+      el = document.createElement('div'); el.className = 'attn-note';
+      var st = tile.querySelector('.attn-status');
+      if (st && st.parentNode) st.parentNode.insertBefore(el, st.nextSibling); else tile.appendChild(el);
+    }
+    el.textContent = '✎ ' + note.text + (note.date ? ' · ' + note.date : '');
+  }
+  async function sendNote(aid, text, noteText, msgEl){
+    if (!token()) { msgEl.textContent = 'Note saved on this device and shown here — connect GitHub (Brain dump box above) to send it to ' + buddyName + '.'; return; }
+    if (!repo) { msgEl.textContent = 'Note saved on this device and shown here — no repo linked for this buddy yet, so it could not be sent.'; return; }
+    msgEl.textContent = 'Sending…';
+    try {
+      var NL = String.fromCharCode(10);
+      var stamp = new Date().toLocaleString();
+      var cur = await ghGetFile(repo, 'docs/ingest.md');
+      var base = cur ? cur.text : '# Ingest log — ' + buddyName + NL + NL;
+      var idBit = aid ? ' (attention id: ' + aid + ')' : '';
+      var entry = 'NOTE — Dave’s note on: "' + text + '"' + idBit + ':' + NL + NL + noteText;
+      var body = {message: 'Attention note for ' + bid, content: b64encode(base + '## ' + stamp + NL + NL + entry + NL + NL)};
+      if (cur && cur.sha) body.sha = cur.sha;
+      await ghApi('/repos/davedellaquila/' + repo + '/contents/docs/ingest.md', 'PUT', body);
+      msgEl.textContent = 'Note saved — sent to ' + buddyName + ' and shown on this card.';
+    } catch(err){ msgEl.textContent = 'Note saved on this device and shown here — sending failed (' + (err.message || err) + '), so ' + buddyName + ' has not seen it yet.'; }
+  }
+  function openNoteEditor(tile, aid, text){
+    var existing = tile.querySelector('.attn-note-edit');
+    if (existing) { var ta0 = existing.querySelector('textarea'); if (ta0) ta0.focus(); return; }
+    var wrap = document.createElement('div'); wrap.className = 'attn-note-edit';
+    var ta = document.createElement('textarea'); ta.placeholder = 'Type your note…'; ta.setAttribute('aria-label', 'Note for this item');
+    var cur = localNote(aid, text); if (cur) ta.value = cur.text;
+    var btns = document.createElement('div'); btns.className = 'attn-note-btns';
+    var save = document.createElement('button'); save.type = 'button'; save.className = 'attn-btn primary'; save.setAttribute('data-note-act', 'save'); save.textContent = 'Save note';
+    var cancel = document.createElement('button'); cancel.type = 'button'; cancel.className = 'attn-btn'; cancel.setAttribute('data-note-act', 'cancel'); cancel.textContent = 'Cancel';
+    var msg = document.createElement('div'); msg.className = 'attn-note-msg'; msg.setAttribute('role', 'status');
+    btns.appendChild(save); btns.appendChild(cancel); wrap.appendChild(ta); wrap.appendChild(btns); wrap.appendChild(msg);
+    var acts = tile.querySelector('.attn-actions');
+    if (acts && acts.parentNode) acts.parentNode.insertBefore(wrap, acts.nextSibling); else tile.appendChild(wrap);
+    ta.focus();
+  }
   function stateMsg(kind, date){
     if (kind === 'later') return 'Later · ' + date;
     if (kind === 'dropped') return 'Dropped by Dave · ' + date;
@@ -866,6 +922,11 @@ Generated 2026-11-20 · Part of the Buddy System<br>
       ub.type = 'button'; ub.className = 'attn-btn attn-undo'; ub.setAttribute('data-act', 'undo'); ub.textContent = 'Undo';
       stEl.parentNode.insertBefore(ub, stEl.nextSibling);
     }
+    /* The resolved class hides .attn-actions; the note button moves beside
+       Undo so a dispositioned item can still be noted (Dave 2026-11-20). */
+    var nb2 = tile.querySelector('[data-act="note"]');
+    var ub2 = tile.querySelector('[data-act="undo"]');
+    if (nb2 && ub2 && nb2.parentNode !== ub2.parentNode) ub2.parentNode.insertBefore(nb2, ub2.nextSibling);
     if (immediate) { tile.classList.add('resolved'); return; }
     /* Fresh tap (Dave, 2026-10-21): the check + status land while the button
        is still visible, and celebrate() fires against the live button; the
@@ -909,6 +970,9 @@ Generated 2026-11-20 · Part of the Buddy System<br>
     if (db) db.textContent = 'Done';
     var ub = tile.querySelector('[data-act="undo"]');
     if (ub) ub.remove();
+    var acts2 = tile.querySelector('.attn-actions');
+    var nb3 = tile.querySelector('[data-act="note"]');
+    if (acts2 && nb3 && nb3.parentNode !== acts2) acts2.appendChild(nb3);
   }
   tiles.forEach(function(tile){
     var aid = tile.getAttribute('data-attn-id') || '';
@@ -918,7 +982,24 @@ Generated 2026-11-20 · Part of the Buddy System<br>
     var bakedDate = tile.getAttribute('data-cleared') || tile.getAttribute('data-later') || tile.getAttribute('data-dropped') || '';
     var lk = bakedKind || localState(aid, text);
     if (lk) paintResolved(tile, bakedKind ? stateMsg(lk, bakedDate) : (lk === 'done' ? 'Marked done' : (lk === 'later' ? 'Marked later — on this device' : 'Dropped — on this device')), true);
+    var bakedNote = tile.getAttribute('data-note') ? {text: tile.getAttribute('data-note'), date: tile.getAttribute('data-note-date') || ''} : null;
+    var ln = localNote(aid, text);
+    if (ln) paintNote(tile, ln); else if (bakedNote) paintNote(tile, bakedNote);
     tile.addEventListener('click', function(ev){
+      var nb = ev.target.closest ? ev.target.closest('[data-note-act]') : null;
+      if (nb) {
+        var wrap = nb.closest('.attn-note-edit');
+        var msg = wrap ? wrap.querySelector('.attn-note-msg') : null;
+        if (nb.getAttribute('data-note-act') === 'cancel') { if (wrap) wrap.remove(); return; }
+        var ta = wrap ? wrap.querySelector('textarea') : null;
+        var val = ta ? ta.value.trim() : '';
+        if (!val) { if (msg) msg.textContent = 'Write a note first, or Cancel.'; return; }
+        var ndate = todayStr();
+        setLocalNote(aid, text, val, ndate);
+        paintNote(tile, {text: val, date: ndate});
+        if (msg) sendNote(aid, text, val, msg);
+        return;
+      }
       var btn = ev.target.closest ? ev.target.closest('.attn-btn') : null;
       if (!btn || btn.disabled) return;
       var act = btn.getAttribute('data-act');
@@ -957,6 +1038,8 @@ Generated 2026-11-20 · Part of the Buddy System<br>
         var st3 = tile.querySelector('.attn-status');
         if (st3) st3.textContent = 'Reopened — it needs attention again.';
         if (token()) regWrite(aid, text, null, null);
+      } else if (act === 'note') {
+        openNoteEditor(tile, aid, text);
       } else if (act === 'info') {
         sendAction(tile,
           'FOLLOW-UP — Dave needs more info on: "' + text + '"' + idBit + '. Please follow up with him.',

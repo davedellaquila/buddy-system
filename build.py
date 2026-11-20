@@ -2943,6 +2943,11 @@ input.bp-name{background:transparent;border-top:none;border-right:none;border-le
 .attn-all{margin-top:6px}
 .attn.cleared{opacity:.62}
 .attn-cleared-note{color:var(--muted);font-size:.75rem;margin-top:2px}
+.attn-note-line{font-size:.8125rem;color:var(--text);margin-top:8px;background:var(--panel);border:1px solid var(--border);border-left:3px solid var(--accent);padding:6px 10px;border-radius:0 6px 6px 0;white-space:pre-wrap}
+.attn-note-edit{margin-top:10px}
+.attn-note-edit textarea{width:100%;box-sizing:border-box;border:1px solid var(--border);border-radius:8px;padding:8px 10px;font:inherit;font-size:.875rem;background:var(--panel);color:var(--text);min-height:56px}
+.attn-note-btns{display:flex;gap:8px;margin-top:8px}
+.attn-note-msg{font-size:.75rem;color:var(--muted);margin-top:6px}
 .attn-unclear{margin-left:auto;flex:0 0 auto}
 /* Standing orders — broadcast to every buddy detail (agents + Dave) */
 .standing-order{margin:10px 0 4px;padding:10px 12px;border-radius:10px;border:1px solid var(--amber-bd);
@@ -7908,6 +7913,49 @@ function writeAttnState(bid, aid, field, obj){
   refreshPanelIfShowing(bid);
 }
 function writeAttnClear(bid, aid, obj){ writeAttnState(bid, aid, 'cleared', obj); }
+/* Free-text note on an attention item (Dave 2026-11-20, fifth action of the
+   fleet standard): stored in S.attnNotes under the same bid|aid key the
+   homepages use (one shared buddyTree.v3 store, so a note shows on every
+   surface on this device), and delivered to the buddy as a NOTE entry in
+   its repo's docs/ingest.md through the token-gated path. No token or no
+   repo: the note still saves locally and the card says what didn't sync. */
+function openAttnNoteEditor(itemEl, bid, aid){
+  if (!itemEl) return;
+  const old = itemEl.querySelector('.attn-note-edit');
+  if (old) { const t0 = old.querySelector('textarea'); if (t0) t0.focus(); return; }
+  const cur = (S.attnNotes || {})[bid + '|' + aid];
+  const wrap = document.createElement('div'); wrap.className = 'attn-note-edit';
+  const ta = document.createElement('textarea'); ta.placeholder = 'Type your note\u2026'; ta.setAttribute('aria-label', 'Note for this item');
+  if (cur && cur.text) ta.value = cur.text;
+  const btns = document.createElement('div'); btns.className = 'attn-note-btns';
+  const sv = document.createElement('button'); sv.type = 'button'; sv.className = 'attn-act'; sv.dataset.noteSave = aid; sv.textContent = 'Save note';
+  const cx = document.createElement('button'); cx.type = 'button'; cx.className = 'attn-act'; cx.dataset.noteCancel = aid; cx.textContent = 'Cancel';
+  const msg = document.createElement('div'); msg.className = 'attn-note-msg'; msg.setAttribute('role', 'status');
+  btns.appendChild(sv); btns.appendChild(cx); wrap.appendChild(ta); wrap.appendChild(btns); wrap.appendChild(msg);
+  const host = itemEl.querySelector('.attn-body') || itemEl;
+  host.appendChild(wrap); ta.focus();
+}
+async function saveAttnNote(bid, aid, wrap){
+  const ta = wrap.querySelector('textarea'); const msg = wrap.querySelector('.attn-note-msg');
+  const val = (ta && ta.value || '').trim();
+  if (!val) { if (msg) msg.textContent = 'Write a note first, or Cancel.'; return; }
+  if (!S.attnNotes) S.attnNotes = {};
+  S.attnNotes[bid + '|' + aid] = {text: val, date: todayLocal()}; save();
+  const b = byId[bid];
+  const item = ((b && b.attention) || []).find(x => x && typeof x === 'object' && x.id === aid);
+  const bname = (b && b.name) || bid;
+  if (!S.ghToken) { if (msg) msg.textContent = 'Note saved on this device and shown here \u2014 connect GitHub to send it to ' + bname + '.'; setTimeout(() => refreshPanelIfShowing(bid), 1200); return; }
+  if (!b || !b.repo) { if (msg) msg.textContent = 'Note saved on this device and shown here \u2014 no repo linked for this buddy yet, so it could not be sent.'; setTimeout(() => refreshPanelIfShowing(bid), 1200); return; }
+  if (msg) msg.textContent = 'Sending\u2026';
+  try {
+    const cur = await ghGetFile(b.repo, 'docs/ingest.md');
+    const base = cur || ('# Ingest log \u2014 ' + bname + '\\n\\n');
+    const entry = '## ' + new Date().toLocaleString() + '\\n\\nNOTE \u2014 Dave\u2019s note on: "' + ((item && item.text) || '') + '" (attention id: ' + aid + '):\\n\\n' + val + '\\n\\n';
+    await ghPutFile(b.repo, 'docs/ingest.md', b64encode(base + entry), 'Attention note for ' + bid + ' (dashboard)');
+    toast('Note sent to ' + bname + ' \u2014 and saved on the card.');
+  } catch (e) { toast('Note saved on this device \u2014 sending failed (' + (e.message || e) + '), so ' + bname + ' has not seen it yet.'); }
+  refreshPanelIfShowing(bid);
+}
 async function flushAttnClear(){
   const q = S.pendingAttnClear || {};
   const bids = Object.keys(q).filter(bid => q[bid] && Object.keys(q[bid]).length);
@@ -8145,10 +8193,13 @@ function renderBuddy(id){
   let unseenCount = 0;
   const resolvedItems = (b.attention || []).filter(x => x && typeof x === 'object' && (x.cleared || x.later || x.dropped));
   const resolvedNote = a => a.cleared ? '\u2713 Done \u00b7 ' + escHtml((a.cleared && a.cleared.date) || '') : (a.later ? 'Later \u00b7 ' + escHtml((a.later && a.later.date) || '') : 'Dropped \u00b7 ' + escHtml((a.dropped && a.dropped.date) || ''));
+  const noteFor = a => { const ln = (S.attnNotes || {})[id + '|' + a.id]; if (ln && ln.text) return ln; if (a.note && a.note.text) return a.note; return null; };
+  const noteLine = a => { const n = noteFor(a); return n ? '<div class="attn-note-line">\u270e ' + escHtml(n.text) + (n.date ? ' \u00b7 ' + escHtml(n.date) : '') + '</div>' : ''; };
+  const noteBtn = a => a.id ? '<button type="button" class="attn-act" data-note="' + a.id + '">\u270e Add a note\u2026</button>' : '';
   const clearedHtml = resolvedItems.map(a => '<div class="attn cleared" data-attn="' + a.id + '"><span class="adot"></span>'
     + '<div class="attn-body"><div class="attn-text">' + escHtml(a.text || '') + '</div>'
-    + '<div class="attn-cleared-note">' + resolvedNote(a) + '</div></div>'
-    + '<button type="button" class="attn-act attn-unclear" data-unclear="' + a.id + '">Undo</button></div>').join('');
+    + '<div class="attn-cleared-note">' + resolvedNote(a) + '</div>' + noteLine(a) + '</div>'
+    + '<button type="button" class="attn-act attn-unclear" data-unclear="' + a.id + '">Undo</button>' + noteBtn(a) + '</div>').join('');
   if (!items.length) attn = clearedHtml;
   else {
     attn = items.map(a => {
@@ -8165,7 +8216,8 @@ function renderBuddy(id){
       }).join('');
       return '<div class="attn unseen" data-attn="'+a.id+'"><span class="adot"></span>'
         + '<div class="attn-body">'+body
-        + (acts || a.id ? '<div class="attn-actions">'+acts+(a.id ? '<button type="button" class="attn-act attn-clear" data-clear="'+a.id+'">\u2713 Done</button><button type="button" class="attn-act" data-later="'+a.id+'">Later</button><button type="button" class="attn-act" data-drop="'+a.id+'">Drop it</button>' : '')+'</div>' : '')
+        + (acts || a.id ? '<div class="attn-actions">'+acts+(a.id ? '<button type="button" class="attn-act attn-clear" data-clear="'+a.id+'">\u2713 Done</button><button type="button" class="attn-act" data-later="'+a.id+'">Later</button><button type="button" class="attn-act" data-drop="'+a.id+'">Drop it</button>' + noteBtn(a) : '')+'</div>' : '')
+        + noteLine(a)
         + (a.date ? '<div class="attn-date">Asked '+escHtml(a.date)+'</div>' : '')+'</div>'
         + '<button class="seenbtn" data-done="'+a.id+'" title="Mark done" aria-label="Mark done" role="checkbox" aria-checked="false">\u25cb</button></div>';
     }).join('');
@@ -16243,6 +16295,12 @@ document.addEventListener('click', e => {
   if (db2) { const bidD = (S.sel || '').startsWith('buddy:') ? S.sel.slice(6) : null; if (bidD) writeAttnState(bidD, db2.dataset.drop, 'dropped', {date: todayLocal(), by: 'Dave'}); return; }
   const ub2 = e.target.closest('[data-unclear]');
   if (ub2) { const bidU = (S.sel || '').startsWith('buddy:') ? S.sel.slice(6) : null; if (bidU) writeAttnState(bidU, ub2.dataset.unclear, null, null); return; }
+  const ntb = e.target.closest('[data-note]');
+  if (ntb) { const bidN = (S.sel || '').startsWith('buddy:') ? S.sel.slice(6) : null; const itemEl = ntb.closest('.attn'); if (bidN && itemEl) openAttnNoteEditor(itemEl, bidN, ntb.dataset.note); return; }
+  const nsv = e.target.closest('[data-note-save]');
+  if (nsv) { const bidS = (S.sel || '').startsWith('buddy:') ? S.sel.slice(6) : null; const wrapS = nsv.closest('.attn-note-edit'); if (bidS && wrapS) saveAttnNote(bidS, nsv.dataset.noteSave, wrapS); return; }
+  const ncx = e.target.closest('[data-note-cancel]');
+  if (ncx) { const wrapC = ncx.closest('.attn-note-edit'); if (wrapC) wrapC.remove(); return; }
   const ab = e.target.closest('[data-act-buddy]');
   if (ab) { selectBuddy(ab.dataset.actBuddy); return; }
   const nb = e.target.closest('[data-navbtn]');
