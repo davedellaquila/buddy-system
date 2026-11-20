@@ -3,6 +3,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Angels Hotel — Calaveras County · Marker Buddy</title>
 <meta name="description" content="Angels Hotel — historical marker in Calaveras County, California. Plaque text, location, and catalog record from Marker Buddy.">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <style>
 :root{--bg:#f7f2e9;--ink:#2b2118;--mut:#6d5b44;--card:#fffdf7;--line:#d8c9a8;
 --bronze:#8a6a2f;--bronze2:#b08d3e;--chip:#efe6cf;--accent:#7c4a12}
@@ -39,6 +40,8 @@ background:radial-gradient(circle at 35% 35%,#e8cf8a,#6d5016);top:10px}
 .mphoto img{display:block;width:100%;height:auto}
 .mphoto figcaption{padding:.5rem .75rem;font-size:.82rem;color:var(--mut)}
 .mphoto figcaption a{color:var(--accent)}
+#minimap{height:280px;border:1px solid var(--line);border-radius:10px;margin:.4rem 0 0;z-index:0;background:var(--card)}
+@media (prefers-color-scheme:dark){.leaflet-container{background:#221c16}}
 .note{font-size:.85rem;color:var(--mut);font-style:italic;margin:.4rem 0 0}
 .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:1rem 1.1rem;margin:1rem 0}
 .card h2{font-size:.95rem;margin:.1rem 0 .6rem;letter-spacing:.05em;text-transform:uppercase;color:var(--bronze)}
@@ -78,9 +81,10 @@ background:var(--card);color:var(--ink);font-size:1rem;margin:.6rem 0 1rem}
 <div class="plaque"><div class="pk">What the marker says</div><p>C.C. Lake erected here a canvas hotel in 1851. It was replaced by a one-story wooden structure, and then by one of stone in 1855, with second story being added in 1857. Here, Samuel Clemens first heard the yarn, which was later to bring him fame as author of &quot;The Jumping Frog of Calaveras&quot;. California Registered Historical Landmark No. 734. Plaque placed by the California State Park Commission in cooperation with Princess Parlor No. 84, Native Daughters of the Golden West, July 31, 1960.</p></div>
 
 <div class="card"><h2>The record</h2><table class="facts"><tr><td class="k">Marker family</td><td>State Landmark</td></tr><tr><td class="k">Landmark number</td><td>No. 734</td></tr><tr><td class="k">County</td><td>Calaveras County</td></tr><tr><td class="k">Place</td><td>Angels Camp</td></tr><tr><td class="k">Location</td><td>Intersection of Main Street and Bird Way, Angels Camp</td></tr><tr><td class="k">Coordinates</td><td>38.068617, -120.539300</td></tr></table></div>
+<div class="card"><h2>Where it stands</h2><div id="minimap"></div></div>
 <div class="btns"><a class="btn" href="https://maps.apple.com/?ll=38.068617,-120.539300&q=Angels Hotel">📍 Open in Apple Maps</a><a class="btn ghost" href="https://www.hmdb.org/m.asp?m=17664">Historical Marker Database record ↗</a><a class="btn ghost" href="./">🪧 Full catalog</a></div>
 <div class="pn"><span>← <a href="angels-camp.html">Angels Camp</a></span><span><a href="archie-d-stevenot.html">Archie D. Stevenot</a> →</span></div>
-<footer>Catalogued by <a href="../">🪧 Marker Buddy</a> from the marker's <a href="https://www.hmdb.org/m.asp?m=17664">Historical Marker Database</a> record — plaque text and coordinates as listed there; nothing added, nothing guessed. Page generated November 16, 2026 from the catalog record; the record also lives in the events locations database. <a href="../about.html">Full record</a> · <a href="https://davedellaquila.github.io/buddy-system/">Buddy System dashboard</a></footer>
+<footer>Catalogued by <a href="../">🪧 Marker Buddy</a> from the marker's <a href="https://www.hmdb.org/m.asp?m=17664">Historical Marker Database</a> record — plaque text and coordinates as listed there; nothing added, nothing guessed. Page generated November 19, 2026 from the catalog record; the record also lives in the events locations database. <a href="../about.html">Full record</a> · <a href="https://davedellaquila.github.io/buddy-system/">Buddy System dashboard</a></footer>
 </main>
 <style>
 #tipjar-btn{position:fixed;top:64px;bottom:auto;right:14px;z-index:9998;background:#b8860b;color:#fff;border:none;border-radius:999px;padding:9px 15px;font:600 13px/1 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.28)}
@@ -125,5 +129,11 @@ p.addEventListener('click',function(e){if(e.target===p)p.classList.remove('open'
 document.addEventListener('keydown',function(e){if(e.key==='Escape')p.classList.remove('open')});
 p.querySelectorAll('#tipjar-amts button').forEach(function(x){x.addEventListener('click',function(){window.open('https://ko-fi.com/davedellaquila/'+x.getAttribute('data-amt'),'_blank','noopener')})});
 })();
+</script>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+var m = L.map('minimap', {scrollWheelZoom: false}).setView([38.068617, -120.5393], 13);
+L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {attribution: '&copy; OpenStreetMap contributors'}).addTo(m);
+L.circleMarker([38.068617, -120.5393], {radius: 7, weight: 2, color: '#2b2620', fillColor: '#b8860b', fillOpacity: 0.9}).addTo(m);
 </script>
 </body></html>
