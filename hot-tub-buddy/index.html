@@ -220,6 +220,7 @@
     .attn.resolved { opacity: .6; }
     .attn.resolved .attn-actions { display: none; }
     .attn-undo { margin-top: 8px; }
+    .attn-note-shown { font-size: 13px; color: var(--muted); margin-top: 6px; font-style: italic; }
     .attn-notebox { margin-top: 10px; display: none; }
     .attn-notebox.open { display: block; }
     .attn-notebox textarea { width: 100%; box-sizing: border-box; min-height: 54px; border: 1px solid var(--line); border-radius: 10px; padding: 8px 10px; font: inherit; font-size: 14px; background: var(--surface-soft); color: inherit; }
@@ -634,6 +635,25 @@ async function dump(){
     var ub = tile.querySelector('[data-act="undo"]');
     if (ub) ub.remove();
   }
+  /* Saved notes show on the card itself (Dave 2026-11-20 amendment), not
+     just in the ingest: the latest note per item renders under the status
+     and persists in localStorage (attnNotes) across reloads. */
+  function paintNote(tile, aid, text){
+    var m = lsGet().attnNotes || {}; var n = m[rkey(aid, text)];
+    var el = tile.querySelector('.attn-note-shown');
+    if (!n) { if (el) el.remove(); return; }
+    if (!el) {
+      el = document.createElement('div'); el.className = 'attn-note-shown';
+      var st = tile.querySelector('.attn-status');
+      if (st) st.parentNode.insertBefore(el, st.nextSibling); else tile.appendChild(el);
+    }
+    el.textContent = '📝 “' + n.text + '” — Dave' + (n.date ? ' · ' + n.date : '');
+  }
+  function saveNote(aid, text, note){
+    var s = lsGet(); var m = s.attnNotes || {};
+    m[rkey(aid, text)] = {text: note, date: todayStr()};
+    s.attnNotes = m; lsSet(s);
+  }
   async function sendAction(tile, entry, okMsg){
     var st = tile.querySelector('.attn-status');
     var btns = tile.querySelectorAll('.attn-btn');
@@ -666,6 +686,7 @@ async function dump(){
     var st0 = getState(aid, text);
     if (st0.kind) paintResolved(tile, stampText(st0.kind, st0.date));
     else if (isResolved(aid, text)) paintResolved(tile, '✓ Cleared by Dave');
+    paintNote(tile, aid, text);
     tile.addEventListener('click', function(ev){
       var btn = ev.target.closest ? ev.target.closest('.attn-btn') : null;
       if (!btn || btn.disabled) return;
@@ -720,7 +741,10 @@ async function dump(){
           'NOTE — Dave added a note on: "' + text + '"' + idBit + ': "' + note + '"',
           'Note saved — ' + buddyName + ' has it.').then(function(ok){
             enableAll(tile);
-            if (ok && nb3) { nb3.classList.remove('open'); ta3.value = ''; }
+            if (ok) {
+              saveNote(aid, text, note); paintNote(tile, aid, text);
+              if (nb3) { nb3.classList.remove('open'); ta3.value = ''; }
+            }
           });
       }
     });
