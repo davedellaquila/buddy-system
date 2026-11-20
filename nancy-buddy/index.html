@@ -1251,7 +1251,19 @@ async function dump(){
   function fmt(iso) { var p = (iso || '').split('-'); if (p.length !== 3) return iso; return new Date(+p[0], +p[1] - 1, +p[2]).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }); }
   function token() { try { var s = JSON.parse(localStorage.getItem('buddyTree.v3') || '{}'); return s.ghToken || ''; } catch (e) { return ''; } }
   function b64(t) { return btoa(unescape(encodeURIComponent(t))); }
-  async function note(title, done) {
+  /* Action options on every task (Dave's fleet standard, 2026-11-20): the
+     "On my mind" cards are hand-written, not registry items, so their
+     dispositions live on this device and are ALSO noted in the buddy's
+     docs/ingest.md (token permitting) for the owning thread to act on —
+     the same pattern the Nov 19 completion button used. */
+  var ACT = {
+    done:    { mark: '\u2705', verb: 'completed', stamp: function (d) { return '\u2713 Completed \u00b7 ' + fmt(d); } },
+    later:   { mark: '\u{1F550}', verb: 'marked Later', stamp: function (d) { return 'Later \u00b7 ' + fmt(d); } },
+    dropped: { mark: '\u{1F5D1}\uFE0F', verb: 'dropped', stamp: function (d) { return 'Dropped \u00b7 ' + fmt(d); } },
+    info:    { mark: '\u2753', verb: 'asked for more info on' },
+    reopened:{ mark: '\u21a9\uFE0F', verb: 'reopened' }
+  };
+  async function note(title, act) {
     var tok = token(); if (!tok) return false;
     try {
       var url = 'https://api.github.com/repos/davedellaquila/' + bid + '/contents/docs/ingest.md';
@@ -1259,8 +1271,9 @@ async function dump(){
       var base = '# Ingest log \u2014 ' + bid + '\n\n', sha = null;
       var g = await fetch(url, { headers: hdr });
       if (g.ok) { var cur = await g.json(); sha = cur.sha; base = decodeURIComponent(escape(atob((cur.content || '').replace(/\n/g, '')))); }
-      var entry = '## ' + todayLocal() + ' \u2014 ' + (done ? '\u2705' : '\u21a9\ufe0f') + ' \"On my mind\" item ' + (done ? 'completed' : 'reopened') + ' (homepage)\n\nDave marked \"' + title + '\" as ' + (done ? 'completed' : 'reopened') + ' on the ' + bid + ' homepage.' + (done ? ' The card can be retired or updated.' : '') + '\n\n';
-      var body = { message: (done ? 'Completed' : 'Reopened') + ' \"On my mind\" item (homepage): ' + title, content: b64(base + entry) };
+      var a = ACT[act];
+      var entry = '## ' + todayLocal() + ' \u2014 ' + a.mark + ' "On my mind" item ' + a.verb + ' (homepage)\n\nDave ' + a.verb + ' "' + title + '" on the ' + bid + ' homepage.' + (act === 'done' || act === 'dropped' ? ' The card can be retired or updated.' : '') + (act === 'info' ? ' Please follow up with him.' : '') + '\n\n';
+      var body = { message: '"On my mind" ' + act + ' (homepage): ' + title, content: b64(base + entry) };
       if (sha) body.sha = sha;
       var p = await fetch(url, { method: 'PUT', headers: hdr, body: JSON.stringify(body) });
       return p.ok;
@@ -1271,20 +1284,35 @@ async function dump(){
     var title = tEl ? tEl.textContent.trim() : 'Item';
     var key = title.toLowerCase().replace(/[^a-z0-9]+/g, '-').slice(0, 60);
     var foot = document.createElement('div'); foot.className = 'mind-foot';
-    var btn = document.createElement('button'); btn.type = 'button'; btn.className = 'mind-done-btn';
+    var actions = document.createElement('span'); actions.style.cssText = 'display:inline-flex;gap:6px;flex-wrap:wrap;';
+    function mkBtn(label, act) { var b = document.createElement('button'); b.type = 'button'; b.className = 'mind-done-btn'; b.textContent = label; b.setAttribute('data-mind-act', act); actions.appendChild(b); return b; }
+    mkBtn('\u2713 Done', 'done'); mkBtn('Need more info', 'info'); mkBtn('Later', 'later'); mkBtn('Drop it', 'dropped');
+    var undo = document.createElement('button'); undo.type = 'button'; undo.className = 'mind-done-btn'; undo.textContent = '\u21a9 Undo'; undo.setAttribute('data-mind-act', 'undo');
     var stamp = document.createElement('span'); stamp.className = 'mind-stamp';
-    foot.appendChild(btn); foot.appendChild(stamp);
+    foot.appendChild(actions); foot.appendChild(undo); foot.appendChild(stamp);
     (tEl ? tEl.parentElement : card).appendChild(foot);
+    function kind() { var d = store[key]; if (!d) return null; return d.kind || 'done'; }
     function paint() {
-      var d = store[key];
+      var d = store[key]; var k = kind();
       card.classList.toggle('done', !!d);
-      btn.textContent = d ? '\u21a9 Undo' : '\u2713 Mark completed';
-      stamp.textContent = d ? ('\u2713 Completed \u00b7 ' + fmt(d.date) + (d.noted ? '' : ' \u00b7 on this device')) : '';
+      actions.style.display = d ? 'none' : 'inline-flex';
+      undo.style.display = d ? '' : 'none';
+      stamp.textContent = d ? (ACT[k].stamp(d.date) + (d.noted ? '' : ' \u00b7 on this device')) : '';
     }
-    btn.addEventListener('click', async function () {
-      if (store[key]) { delete store[key]; save(); paint(); note(title, false); }
-      else { store[key] = { date: todayLocal(), noted: false }; save(); paint(); var ok = await note(title, true); if (ok) { store[key].noted = true; save(); paint(); } }
+    actions.addEventListener('click', async function (ev) {
+      var b = ev.target.closest ? ev.target.closest('[data-mind-act]') : null; if (!b) return;
+      var act = b.getAttribute('data-mind-act');
+      if (act === 'info') {
+        stamp.textContent = 'Working\u2026';
+        var okI = await note(title, 'info');
+        stamp.textContent = okI ? 'Sent \u2014 more info requested.' : 'Add a GitHub token (Brain dump above) to send this.';
+        return;
+      }
+      store[key] = { kind: act, date: todayLocal(), noted: false }; save(); paint();
+      var ok = await note(title, act);
+      if (ok && store[key]) { store[key].noted = true; save(); paint(); }
     });
+    undo.addEventListener('click', function () { delete store[key]; save(); paint(); note(title, 'reopened'); });
     paint();
   });
 })();
