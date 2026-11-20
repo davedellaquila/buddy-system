@@ -171,18 +171,25 @@
     .attn-item span { color: var(--muted); font-size: 12px; line-height: 1.5; }
     .attn-item .due { color: var(--paprika); font-weight: 800; }
     .attn-item a { color: var(--paprika); font-weight: 700; }
-    .attn-item.resolved { opacity: .55; }
+    .attn-item.resolved { opacity: .6; }
+    .attn-item.resolved .attn-actions { display: none; }
     .attn-actions { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
-    .attn-actions button {
+    .attn-btn {
       border-radius: 999px; padding: 6px 14px; font-size: 12px; font-weight: 800;
       cursor: pointer; font-family: inherit;
+      background: transparent; color: var(--paprika); border: 1px solid var(--paprika);
     }
-    .attn-actions button[data-act="done"] { background: var(--green-soft); color: var(--green); border: 1px solid transparent; }
-    .attn-actions button[data-act="info"] { background: transparent; color: var(--paprika); border: 1px solid var(--paprika); }
-    .attn-actions button:disabled { opacity: .45; cursor: default; }
-    .attn-actions button:not(:disabled):hover { filter: brightness(1.06); }
+    .attn-btn.primary { background: var(--green-soft); color: var(--green); border: 1px solid transparent; }
+    .attn-btn:disabled { opacity: .45; cursor: default; }
+    .attn-btn:not(:disabled):hover { filter: brightness(1.06); }
+    .attn-undo { margin-top: 8px; }
     .attn-status { margin-top: 8px; font-size: 12px; color: var(--muted); }
     .attn-status:empty { display: none; }
+    .attn-note { margin-top: 8px; font-size: 12px; line-height: 1.5; color: var(--ink); background: var(--paprika-soft); border-radius: 8px; padding: 7px 10px; }
+    .attn-notebox { margin-top: 10px; display: none; }
+    .attn-notebox.open { display: block; }
+    .attn-notebox textarea { width: 100%; box-sizing: border-box; min-height: 54px; border: 1px solid var(--line-strong); border-radius: 10px; padding: 8px 10px; font: inherit; font-size: 13px; background: var(--surface); color: var(--ink); }
+    .attn-notebox .attn-actions { margin-top: 8px; }
     .links { padding: 22px; }
     .link-row { display: flex; align-items: center; gap: 12px; padding: 11px 2px; border-bottom: 1px solid var(--line); text-decoration: none; color: inherit; }
     .link-row:last-child { border-bottom: 0; }
@@ -406,10 +413,10 @@
 
         <aside class="rail" aria-label="Party overview">
           <section class="rail-card milestone" aria-labelledby="attn-title">
-            <div class="milestone-top"><h2 class="rail-title" id="attn-title">Needs Dave</h2><span class="flag">2 open</span></div>
+            <div class="milestone-top"><h2 class="rail-title" id="attn-title">Needs Dave</h2><span class="flag" id="attn-open-count">2 open</span></div>
             <div class="attn">
-              <div class="attn-item" data-attn-id="party-buddy-brief"><strong><a href="https://docs.google.com/document/d/1Y44Cs9JD9uj2O2UIdKXd28F0mdhyXT7nevVIoMOc5AU/edit" target="_blank" rel="noopener">Review the brief</a></strong><span>Product brief + the new neighbor-hosting spec — <span class="due">looks good, edits, or defer?</span></span><div class="attn-actions"><button type="button" data-act="done">✓ Done</button><button type="button" data-act="info">Need more info</button></div><div class="attn-status" role="status"></div></div>
-              <div class="attn-item" data-attn-id="party-buddy-prd"><strong>Then: PRD or not?</strong><span>After <a href="https://docs.google.com/document/d/1Y44Cs9JD9uj2O2UIdKXd28F0mdhyXT7nevVIoMOc5AU/edit" target="_blank" rel="noopener">the brief</a> lands, decide whether Party Buddy goes to a full PRD.</span><div class="attn-actions"><button type="button" data-act="done">✓ Done</button><button type="button" data-act="info">Need more info</button></div><div class="attn-status" role="status"></div></div>
+              <div class="attn-item" data-attn-id="party-buddy-brief"><div class="attn-text"><strong><a href="https://docs.google.com/document/d/1Y44Cs9JD9uj2O2UIdKXd28F0mdhyXT7nevVIoMOc5AU/edit" target="_blank" rel="noopener">Review the brief</a></strong><span>Product brief + the new neighbor-hosting spec — <span class="due">looks good, edits, or defer?</span></span></div><div class="attn-actions"><button type="button" class="attn-btn primary" data-act="done">✓ Done</button><button type="button" class="attn-btn" data-act="info">Need more info</button><button type="button" class="attn-btn" data-act="later">Later</button><button type="button" class="attn-btn" data-act="drop">Drop it</button><button type="button" class="attn-btn" data-act="note">✎ Add a note…</button></div><div class="attn-status" role="status"></div><div class="attn-note" hidden></div><div class="attn-notebox"><textarea placeholder="Add a note for Party Buddy…"></textarea><div class="attn-actions"><button type="button" class="attn-btn primary" data-act="note-save">Save note</button><button type="button" class="attn-btn" data-act="note-cancel">Cancel</button></div></div></div>
+              <div class="attn-item" data-attn-id="party-buddy-prd"><div class="attn-text"><strong>Then: PRD or not?</strong><span>After <a href="https://docs.google.com/document/d/1Y44Cs9JD9uj2O2UIdKXd28F0mdhyXT7nevVIoMOc5AU/edit" target="_blank" rel="noopener">the brief</a> lands, decide whether Party Buddy goes to a full PRD.</span></div><div class="attn-actions"><button type="button" class="attn-btn primary" data-act="done">✓ Done</button><button type="button" class="attn-btn" data-act="info">Need more info</button><button type="button" class="attn-btn" data-act="later">Later</button><button type="button" class="attn-btn" data-act="drop">Drop it</button><button type="button" class="attn-btn" data-act="note">✎ Add a note…</button></div><div class="attn-status" role="status"></div><div class="attn-note" hidden></div><div class="attn-notebox"><textarea placeholder="Add a note for Party Buddy…"></textarea><div class="attn-actions"><button type="button" class="attn-btn primary" data-act="note-save">Save note</button><button type="button" class="attn-btn" data-act="note-cancel">Cancel</button></div></div></div>
             </div>
           </section>
 
@@ -624,13 +631,15 @@ async function dump(){
 })();
 </script>
 <script>
-// ---- attention actions: per-tile "Done" / "Need more info" buttons ----
-// Same GitHub write path as the brain-dump box: the shared token from
-// localStorage ('buddyTree.v3' / 'ghToken') appends a timestamped entry to
-// this buddy's docs/ingest.md, which the buddy triages. "Done" asks the
-// buddy to clear the item from the attention list; "Need more info" asks
-// for a follow-up. Tiles resolve locally immediately and the state persists
-// in localStorage so they stay resolved on reload.
+// ---- attention actions: full disposition set (Dave's fleet standard, 2026-11-20) ----
+// Every attention tile carries ✓ Done / Need more info / Later / Drop it on
+// the item itself, plus Undo and a free-text ✎ Add a note… action. Same
+// GitHub write path as the brain-dump box: the shared token from localStorage
+// ('buddyTree.v3' / 'ghToken') appends a timestamped entry to this buddy's
+// docs/ingest.md, which the buddy triages. Done / Later / Drop it record a
+// disposition stamp (kind + date + Dave) that persists in localStorage: the
+// tile stays visible in place with its stamp, leaves the open count, and can
+// be reopened with Undo. A saved note shows on the card.
 (function(){
   var tiles = document.querySelectorAll('.attn-item[data-attn-id]');
   if (!tiles.length) return;
@@ -678,21 +687,69 @@ async function dump(){
       }
     }).catch(function(){});
   }
-  function tileText(tile){ return tile.textContent.replace(/\s+/g, ' ').trim(); }
   function rkey(aid){ return bid + '|' + aid; }
-  function isResolved(aid){ var m = lsGet().attnDone || {}; return !!m[rkey(aid)]; }
-  function setResolved(aid){ var s = lsGet(); var m = s.attnDone || {}; m[rkey(aid)] = 1; s.attnDone = m; lsSet(s); }
+  /* Legacy resolved map (Oct 2026 build): a Done tap from before the stamp
+     system still counts as dispositioned. */
+  function isLegacyResolved(aid){ var m = lsGet().attnDone || {}; return !!m[rkey(aid)]; }
+  function setLegacyResolved(aid){ var s = lsGet(); var m = s.attnDone || {}; m[rkey(aid)] = 1; s.attnDone = m; lsSet(s); }
+  function unsetLegacyResolved(aid){ var s = lsGet(); var m = s.attnDone || {}; delete m[rkey(aid)]; s.attnDone = m; lsSet(s); }
+  /* Disposition stamps: kind + date, remembered per item so a reload paints
+     the state Dave chose; every tap also leaves a matching ingest entry
+     through the same token-gated write. */
+  function getState(aid){ var m = lsGet().attnState || {}; var v = m[rkey(aid)] || ''; var p = v.split('|'); return {kind: p[0] || '', date: p[1] || ''}; }
+  function setState(aid, kind, date){ var s = lsGet(); var m = s.attnState || {}; if (kind) m[rkey(aid)] = kind + '|' + (date || ''); else delete m[rkey(aid)]; s.attnState = m; lsSet(s); }
+  function todayStr(){ var d = new Date(); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); }
+  function stampText(kind, date){
+    var tail = date ? ' · ' + date : '';
+    if (kind === 'later') return 'Later — snoozed by Dave' + tail;
+    if (kind === 'drop') return 'Dropped by Dave' + tail;
+    return '✓ Cleared by Dave' + tail;
+  }
+  function isOpen(tile){
+    var aid = tile.getAttribute('data-attn-id');
+    return !getState(aid).kind && !isLegacyResolved(aid);
+  }
+  function updateOpenCount(){
+    var el = document.getElementById('attn-open-count');
+    if (!el) return;
+    var n = 0;
+    tiles.forEach(function(t){ if (isOpen(t)) n++; });
+    el.textContent = n + ' open';
+  }
   function paintResolved(tile, msg){
     tile.classList.add('resolved');
-    tile.querySelectorAll('.attn-actions button').forEach(function(b){ b.disabled = true; });
     var st = tile.querySelector('.attn-status');
     if (st) st.textContent = msg;
+    if (st && !tile.querySelector('[data-act="undo"]')) {
+      var ub = document.createElement('button');
+      ub.type = 'button'; ub.className = 'attn-btn attn-undo'; ub.setAttribute('data-act', 'undo'); ub.textContent = 'Undo';
+      st.parentNode.insertBefore(ub, st.nextSibling);
+    }
+    updateOpenCount();
   }
-  async function sendAction(tile, aid, entry, okMsg){
+  function paintOpen(tile){
+    tile.classList.remove('resolved');
     var st = tile.querySelector('.attn-status');
-    var btns = tile.querySelectorAll('.attn-actions button');
-    if (!token()) { st.textContent = 'Add a GitHub token in the Brain dump section above to enable actions.'; return; }
-    if (!repo) { st.textContent = 'No repo linked for this buddy yet.'; return; }
+    if (st) st.textContent = '';
+    var ub = tile.querySelector('[data-act="undo"]');
+    if (ub) ub.remove();
+    updateOpenCount();
+  }
+  /* Saved notes show on the card and persist on this device. */
+  function getNote(aid){ var m = lsGet().attnNotes || {}; return m[rkey(aid)] || null; }
+  function setNote(aid, note){ var s = lsGet(); var m = s.attnNotes || {}; m[rkey(aid)] = note; s.attnNotes = m; lsSet(s); }
+  function paintNote(tile, aid){
+    var box = tile.querySelector('.attn-note');
+    if (!box) return;
+    var n = getNote(aid);
+    if (n && n.text) { box.textContent = '✎ Dave · ' + (n.date || '') + ' — “' + n.text + '”'; box.hidden = false; }
+    else { box.textContent = ''; box.hidden = true; }
+  }
+  async function sendAction(tile, entry, okMsg){
+    var st = tile.querySelector('.attn-status');
+    var btns = tile.querySelectorAll('.attn-btn');
+    if (!token()) { st.textContent = 'Add a GitHub token in the Brain dump section above to enable actions.'; return false; }
+    if (!repo) { st.textContent = 'No repo linked for this buddy yet.'; return false; }
     btns.forEach(function(b){ b.disabled = true; });
     st.textContent = 'Working…';
     try {
@@ -703,35 +760,84 @@ async function dump(){
       var body = {message: 'Attention action for ' + bid, content: b64encode(base + '## ' + stamp + NL + NL + entry + NL + NL)};
       if (cur && cur.sha) body.sha = cur.sha;
       await ghApi('/repos/davedellaquila/' + repo + '/contents/docs/ingest.md', 'PUT', body);
-      setResolved(aid);
-      paintResolved(tile, okMsg);
+      st.textContent = okMsg;
+      return true;
     } catch(err){
       st.textContent = 'Save failed: ' + (err.message || err);
-      if (!isResolved(aid)) btns.forEach(function(b){ b.disabled = false; });
+      btns.forEach(function(b){ b.disabled = false; });
+      return false;
     }
   }
+  function enableUndo(tile){ var ub = tile.querySelector('[data-act="undo"]'); if (ub) ub.disabled = false; }
+  function enableAll(tile){ tile.querySelectorAll('.attn-btn').forEach(function(b){ b.disabled = false; }); }
   tiles.forEach(function(tile){
-    var aid = tile.getAttribute('data-attn-id');
-    var text = tileText(tile);
-    if (isResolved(aid)) {
-      paintResolved(tile, '✓ Marked done');
-      return;
-    }
-    tile.querySelectorAll('.attn-actions button').forEach(function(btn){
-      btn.addEventListener('click', function(){
-        var act = btn.getAttribute('data-act');
-        if (act === 'done') {
-          sendAction(tile, aid,
-            'DONE — Dave marked this done on the homepage: \'' + text + '\' (attention id: ' + aid + '). Please remove it from the attention list in buddies.json.',
-            '✓ Marked done');
-        } else {
-          sendAction(tile, aid,
-            'FOLLOW-UP — Dave needs more info on: \'' + text + '\' (attention id: ' + aid + '). Please follow up with him.',
-            'Sent — will follow up.');
-        }
-      });
+    var aid = tile.getAttribute('data-attn-id') || '';
+    var textEl = tile.querySelector('.attn-text');
+    var text = textEl ? textEl.textContent.trim().replace(/\s+/g, ' ') : '';
+    var st0 = getState(aid);
+    if (st0.kind) paintResolved(tile, stampText(st0.kind, st0.date));
+    else if (isLegacyResolved(aid)) paintResolved(tile, '✓ Cleared by Dave');
+    paintNote(tile, aid);
+    tile.addEventListener('click', function(ev){
+      var btn = ev.target.closest ? ev.target.closest('.attn-btn') : null;
+      if (!btn || btn.disabled) return;
+      var act = btn.getAttribute('data-act');
+      var idBit = aid ? ' (attention id: ' + aid + ')' : '';
+      if (act === 'done') {
+        var d1 = todayStr();
+        setLegacyResolved(aid); setState(aid, 'done', d1);
+        paintResolved(tile, stampText('done', d1));
+        sendAction(tile,
+          'DONE — Dave marked this done on the homepage: "' + text + '"' + idBit + '. Stamp: cleared · ' + d1 + ' · Dave. Please remove it from the attention list in buddies.json.',
+          stampText('done', d1)).then(function(){ enableUndo(tile); });
+      } else if (act === 'later') {
+        var d2 = todayStr();
+        setState(aid, 'later', d2);
+        paintResolved(tile, stampText('later', d2));
+        sendAction(tile,
+          'LATER — Dave snoozed this item on the homepage: "' + text + '"' + idBit + '. Stamp: later · ' + d2 + ' · Dave. Resurface it later.',
+          stampText('later', d2)).then(function(){ enableUndo(tile); });
+      } else if (act === 'drop') {
+        var d3 = todayStr();
+        setLegacyResolved(aid); setState(aid, 'drop', d3);
+        paintResolved(tile, stampText('drop', d3));
+        sendAction(tile,
+          'DROPPED — Dave dropped this item on the homepage: "' + text + '"' + idBit + '. Stamp: dropped · ' + d3 + ' · Dave. Remove it from the open list.',
+          stampText('drop', d3)).then(function(){ enableUndo(tile); });
+      } else if (act === 'undo') {
+        unsetLegacyResolved(aid); setState(aid, '');
+        paintOpen(tile);
+        var st = tile.querySelector('.attn-status');
+        if (st) st.textContent = 'Reopened — it needs attention again.';
+        sendAction(tile,
+          'REOPENED — Dave undid the disposition on: "' + text + '"' + idBit + '. It needs attention again.',
+          'Reopened — it needs attention again.').then(function(){ enableAll(tile); });
+      } else if (act === 'info') {
+        sendAction(tile,
+          'FOLLOW-UP — Dave needs more info on: "' + text + '"' + idBit + '. Please follow up with him.',
+          'Sent — will follow up.').then(function(){ enableAll(tile); });
+      } else if (act === 'note') {
+        var nb = tile.querySelector('.attn-notebox');
+        if (nb) { nb.classList.toggle('open'); var ta = nb.querySelector('textarea'); if (ta && nb.classList.contains('open')) ta.focus(); }
+      } else if (act === 'note-cancel') {
+        var nb2 = tile.querySelector('.attn-notebox');
+        if (nb2) nb2.classList.remove('open');
+      } else if (act === 'note-save') {
+        var nb3 = tile.querySelector('.attn-notebox');
+        var ta3 = nb3 ? nb3.querySelector('textarea') : null;
+        var note = ta3 ? ta3.value.trim() : '';
+        var st4 = tile.querySelector('.attn-status');
+        if (!note) { if (st4) st4.textContent = 'Write the note first, then save.'; return; }
+        sendAction(tile,
+          'NOTE — Dave added a note on: "' + text + '"' + idBit + ': "' + note + '"',
+          'Note saved — ' + buddyName + ' has it.').then(function(ok){
+            enableAll(tile);
+            if (ok && nb3) { setNote(aid, {text: note, date: todayStr()}); paintNote(tile, aid); nb3.classList.remove('open'); ta3.value = ''; }
+          });
+      }
     });
   });
+  updateOpenCount();
   resolveRepo();
 })();
 </script>
