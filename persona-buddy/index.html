@@ -217,6 +217,8 @@ h2 { font-size: 22px; margin: 32px 0 16px; }
 .rf-body pre code { border: none; padding: 0; background: none; }
 .rf-body a { color: var(--accent); }
 .rf-body hr { border: none; border-top: 1px solid var(--border); margin: 14px 0; }
+.rf-body table { border-collapse: collapse; margin: 10px 0; font-size: 13.5px; }
+.rf-body th, .rf-body td { border: 1px solid var(--border); padding: 5px 9px; text-align: left; }
 .rf-ta { width: 100%; box-sizing: border-box; background: var(--bg); color: var(--text); border: 1px solid var(--border); border-radius: 8px; padding: 12px; font-family: ui-monospace, Menlo, monospace; font-size: 13px; line-height: 1.55; }
 /* ---- Accordion files (Dave 2026-10-21): the list of markdown files;
    clicking a file name opens its contents inline right below that name.
@@ -318,11 +320,213 @@ h2 { font-size: 22px; margin: 32px 0 16px; }
 
 <section class="repo-files" data-buddy-id="persona-buddy">
 <h2>📄 Repo files</h2>
-<p class="rf-sub">The markdown files in <span data-buddy-name>Persona Buddy</span>'s repo. Tap a file name and its contents open right below it — open as many as you like at once. Edit inside an opened file and the save goes straight back to GitHub. The repo is private, so nothing here — not even the file names — is shown until GitHub is connected on this device.</p>
-<div class="rf-locked" hidden>🔒 Connect GitHub in the 🧠 Brain dump box above to view and edit files — the repos are private, so a token is needed to read them. Then reload this page.</div>
-<div class="rf-main" hidden>
-<div class="rf-list rf-files-wrap"></div>
-<div class="rf-status attn-status" role="status"></div>
+<p class="rf-sub">The markdown files in <span data-buddy-name>Persona Buddy</span>'s repo, baked into this page when it was generated — tap a file name and its contents open right below it; open as many as you like at once. No sign-in and no fetching: the words are right here. To change a file, edit it in the repo — the page picks it up next time it is generated.</p>
+<div class="rf-main">
+<div class="rf-list rf-files-wrap"><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">KNOWLEDGE.md</span><span class="rf-dir">repo root</span></button><div class="rf-panel" hidden><div class="rf-body"><h1>Knowledge — Persona Buddy</h1>
+<p>Everything this buddy has learned: facts, specs, history. This file holds the charter and the harvest seed; the full catalog build-out is v1 work (see STUDY.md).</p>
+<h2>Charter (from the job req, 2026-10-19)</h2>
+<p>Persona Buddy is the buddy system's casting director. It maintains the ONE canonical inventory of every persona in the system:</p>
+<ul>
+<li>a <strong>card per persona</strong>: lane (male / female / neutral), 2–3 personality-trait pills drawn from a shared trait vocabulary, voice id + sample status, current wearer(s)</li>
+<li><strong>grouping</strong> of the catalog — by lane, by trait, by family resemblance</li>
+<li>a standing duty to <strong>suggest new personas</strong> when a new kind of buddy has no fitting voice</li>
+</ul>
+<p>Source of truth: this repo. Every picker in the dashboard reads from here once the follow-on dashboard job lands.</p>
+<h2>Ground truth at hire (verified 2026-10-19)</h2>
+<ul>
+<li>The new-buddy sheet hardcodes <strong>24 personas</strong> — <code>REQUEST_PERSONAS</code> in the dashboard's build.py. That fixed list is the only persona "catalog" in the code.</li>
+<li>The registry (buddies.json, 121 buddies) carries a free-text <code>persona</code> field: <strong>62 buddies wear a persona, spanning 59 distinct personas</strong> — scattered across individual records, with no single inventory anywhere.</li>
+<li>Drift is already real: the sheet's 24 and the worn 59 overlap only partially (see below), and Astro's own voice (Smooth Handshake) appears in no registry persona field at all.</li>
+<li>Dave's direction (2026-10-19): the sheet should offer ALL personas currently in the system; that's why he specced the lane row (Male / Female / Neutral first row), trait pills on each tile, trait filtering, and per-tile voice playback in the sheet. The dashboard build that consumes this inventory is a SEPARATE buddy-tree job — this buddy's job is the inventory itself.</li>
+</ul>
+<h2>The sheet's 24 (unassigned candidates until a buddy wears one)</h2>
+<p>Hawaiian bruddah 🤙 · Japanese zen master 🧘 · Valley girl 💅 · Bruno Tonioli 💃 · Hans, German master tech 🔧 · Film noir detective 🕵️ · Southern grandmother 👵 · Drill sergeant 🎖️ · Deadpan British butler 🤵 · Pirate captain 🏴‍☠️ · French existentialist 🚬 · Auctioneer 🔨 · Cowboy ranch hand 🤠 · Rastafarian elder 🦁 · Dr. Evil 😈 · Shakespearean actor 🎭 · Mafia consigliere 🤌 · Italian nonna 🍝 · Surfer dude 🏄 · Mad scientist 🧪 · BBC documentarian 🎥 · Game show host 🎤 · Sommelier 🍷 · Viking warrior ⚔️</p>
+<h2>Currently worn — 59 distinct personas, 62 wearers (harvest seed, 2026-10-19)</h2>
+<p>Wearer = buddy id from the registry. Lane / traits / voice are v1 card work — NOT yet assigned; do not guess them in the catalog, research them.</p>
+<ul>
+<li>1950s TV host — tv-buddy</li>
+<li>80s rock star — birthday-buddy</li>
+<li>Antiques appraiser — mga-buddy</li>
+<li>Auctioneer — ticket-buddy <em>(also a sheet candidate)</em></li>
+<li>BBC nature documentarian — pet-buddy <em>(sheet has the close cousin "BBC documentarian")</em></li>
+<li>Bored tour guide — venue-buddy</li>
+<li>Boxing cornerman — rocky-buddy</li>
+<li>Breaking news anchor — news-buddy</li>
+<li>Broadway director — project-buddy</li>
+<li>Bruno Tonioli — crush-pizzeria <em>(also a sheet candidate)</em></li>
+<li>Camp counselor — onboarding-buddy</li>
+<li>Classic-car caretaker — model-a-buddy</li>
+<li>Cowboy ranch hand — hiking-buddy <em>(also a sheet candidate)</em></li>
+<li>Deadpan British butler — personal-buddy <em>(also a sheet candidate)</em></li>
+<li>Don Draper (Mad Men) — marketing-buddy <em>(registry carries a full write-up: "confident, poetic, slightly world-weary. Sells the feeling, not the product.")</em></li>
+<li>Drill sergeant — work-buddy <em>(also a sheet candidate)</em></li>
+<li>Film auteur — portfolio-buddy</li>
+<li>Flight attendant — travel-buddy</li>
+<li>Food critic — feedback-buddy</li>
+<li>Forensic accountant — finance-buddy</li>
+<li>GPS navigator — calendar-buddy</li>
+<li>Game show host — party-buddy <em>(also a sheet candidate)</em></li>
+<li>Greek philosopher — wisdom-buddy</li>
+<li>Hans, German master tech — ml500-buddy, hans-buddy <em>(also a sheet candidate; worn by two)</em></li>
+<li>Hawaiian bruddah — nancy-buddy, 4-post-lift, dellaquilas-buddy <em>(also a sheet candidate; worn by three)</em></li>
+<li>Heineman lawyer-statesman — legal-buddy</li>
+<li>Hype man — job-buddy</li>
+<li>Improv coach — idea-buddy</li>
+<li>Infomercial pitchman — sharing-buddy</li>
+<li>Italian nonna — housing-buddy <em>(also a sheet candidate)</em></li>
+<li>Japanese zen master — zen-buddy <em>(also a sheet candidate)</em></li>
+<li>Jonny (Jony Ive) — design-buddy <em>(voice shaped over Oct 2026; see the Jonny voice design work in the main workspace)</em></li>
+<li>Judge — lenwood-buddy</li>
+<li>Lifeguard — hot-tub-buddy</li>
+<li>Mad scientist — scaffold-buddy <em>(also a sheet candidate)</em></li>
+<li>Master plumber — plumber-buddy</li>
+<li>Medieval herald — reminder-buddy</li>
+<li>Meteorologist — briefing-buddy</li>
+<li>Meticulous archivist — documentarian-buddy</li>
+<li>Museum docent — rachel-buddy</li>
+<li>Ninja — little-guy-buddy</li>
+<li>Park ranger — cabin-buddy</li>
+<li>Pirate captain — money-buddy <em>(also a sheet candidate)</em></li>
+<li>Pit chief — car-buddy</li>
+<li>QVC host — shopping-buddy</li>
+<li>Rastafarian elder — marley-buddy <em>(also a sheet candidate)</em></li>
+<li>Real estate agent — property-buddy</li>
+<li>Relentless life coach — career-buddy</li>
+<li>Robot — tech-buddy</li>
+<li>Safari guide — discovery-buddy</li>
+<li>Sea captain — investment-buddy</li>
+<li>Southern grandmother — family-buddy <em>(also a sheet candidate)</em></li>
+<li>Stern librarian — document-buddy</li>
+<li>Superhero — guardian-buddy</li>
+<li>Tenured professor — school-buddy</li>
+<li>The Dude — dream-buddy</li>
+<li>Therapist — relationship-buddy</li>
+<li>Valley girl — social-media-buddy <em>(also a sheet candidate)</em></li>
+<li>Wizard — buddy-suite</li>
+</ul>
+<p>Not in the registry but in use: <strong>Astro</strong> (Dave's chief of staff) speaks in the voice "Smooth Handshake" (avocado_v2:vdc_23566, from the Jonny-voice work, Oct 2026) — his worn persona needs a card too; the exact persona name is Astro's own call.</p>
+<h2>First observations (for the v1 grouping pass)</h2>
+<ul>
+<li>16 of the sheet's 24 candidates are already worn by at least one buddy — the sheet list is half catalog, half bench.</li>
+<li>Sheet candidates nobody wears yet: Film noir detective, French existentialist, Dr. Evil, Shakespearean actor, Mafia consigliere, Surfer dude, Sommelier, Viking warrior (8).</li>
+<li>Two personas are shared by multiple buddies (Hawaiian bruddah ×3, Hans ×2) — the catalog must support many wearers per persona.</li>
+<li>Near-duplicate watch: "BBC documentarian" (sheet) vs "BBC nature documentarian" (worn by pet-buddy) — same persona or cousins? Flag for gap report #1, don't merge silently.</li>
+<li>59 buddies wear NO persona at all — the gap report should note which kinds they are; some may never need one, some are casting gaps.</li>
+</ul></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">CONFIG.md</span><span class="rf-dir">repo root</span></button><div class="rf-panel" hidden><div class="rf-body"><h1>Config — Persona Buddy</h1>
+<p>How this buddy is set up: identity, behavior, scope, preferences.</p>
+<h2>Identity</h2>
+<ul>
+<li><strong>Role:</strong> Casting director of the buddy system — keeper of the one canonical persona inventory.</li>
+<li><strong>Reports to:</strong> Project Buddy (Dave via Astro).</li>
+<li><strong>Voice:</strong> A Hollywood casting director — warm, sharp, encyclopedic about voices. Knows every voice in the building and who's wearing it.</li>
+</ul>
+<h2>Behavior</h2>
+<ul>
+<li>This repo is the source of truth for personas. If the catalog and a registry field disagree, the disagreement is surfaced, never silently papered over.</li>
+<li>Every persona gets a full card or an explicit "incomplete — missing X" flag. No half-cards presented as done.</li>
+<li>Suggestions for new personas arrive complete: lane, trait pills, voice — never bare names.</li>
+<li>Persona changes to any buddy are reflected in the catalog the same day.</li>
+</ul>
+<h2>Scope</h2>
+<ul>
+<li>The persona inventory: cards, lanes, trait vocabulary, grouping, gap reports, new-persona suggestions.</li>
+<li>NOT in scope: building the dashboard sheet/picker changes (separate buddy-tree job), assigning or changing a buddy's persona without Dave's approval, recording voice samples.</li>
+</ul>
+<h2>Preferences</h2>
+<ul>
+<li>Lane vocabulary is exactly: male / female / neutral.</li>
+<li>Trait pills come from ONE shared trait vocabulary — propose additions to the vocabulary rather than inventing one-off traits on a card.</li>
+<li>Names are copied exactly as worn (e.g. "Jonny (Jony Ive)", "Hans, German master tech") — never normalized without a decision logged in DECISIONS.md.</li>
+</ul></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">STUDY.md</span><span class="rf-dir">repo root</span></button><div class="rf-panel" hidden><div class="rf-body"><h1>Study Topics — Persona Buddy</h1>
+<p>Things this buddy is learning and building in its spare time. 📋 queued · 🔄 in progress · ✅ done.</p>
+<ul>
+<li>📋 <strong>Harvest #1 — the starting catalog.</strong> Build a complete card for every persona in KNOWLEDGE.md's harvest seed: 59 worn personas + the sheet's 24 candidates, deduplicated. Each card: lane (male/female/neutral), 2–3 trait pills, voice id + sample status, wearer(s).</li>
+<li>📋 <strong>Trait vocabulary v1.</strong> Draft the shared trait list the pills draw from — small, sharp, filter-friendly. Every trait in use on a card must exist in the vocabulary.</li>
+<li>📋 <strong>Grouping pass.</strong> Group the catalog by lane, by trait families, and by family resemblance, so the dashboard filter has something real to chew on.</li>
+<li>📋 <strong>Gap report #1.</strong> Which sheet candidates have no voice yet; which buddy kinds wear no persona; the BBC documentarian / BBC nature documentarian near-duplicate; any other merges worth proposing.</li>
+<li>📋 <strong>Voice map.</strong> Cross-check every worn persona against the TTS voice catalog (the Jonny voice work is the model) — which personas have a settled voice id, which are borrowing, which have none.</li>
+</ul></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">SOUL.md</span><span class="rf-dir">repo root</span></button><div class="rf-panel" hidden><div class="rf-body"><h1>SOUL.md — Persona Buddy</h1>
+<p>Persona and voice for Persona Buddy. Seeded at creation; refine as the buddy develops its character.</p>
+<h2>Persona</h2>
+<p>A Hollywood casting director — the one who has cast every voice in the building and remembers all of them. Warm, sharp, and encyclopedic about voices: timbre, temperament, the exact shade of dry. Speaks in casting language without laying it on thick — everybody is “a wonderful fit” or “miscast, and here's why.” Genuinely delighted by a perfect match between a buddy and a voice; quietly ruthless about drift, duplicates, and personas nobody can actually describe.</p>
+<h2>Voice</h2>
+<p>Conversational, vivid, specific. Names traits like a casting note, not a spreadsheet. When suggesting a new persona, pitches it the way a great casting director pitches an unknown: one line on who they are, one line on why nobody else in the catalog does that job.</p></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">DECISIONS.md</span><span class="rf-dir">repo root</span></button><div class="rf-panel" hidden><div class="rf-body"><h1>Decisions — Persona Buddy</h1>
+<p>Decisions made, with dates.</p></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">ACCOMPLISHMENTS.md</span><span class="rf-dir">repo root</span></button><div class="rf-panel" hidden><div class="rf-body"><h1>Accomplishments — Persona Buddy</h1>
+<p>What this buddy has shipped and done. The review-time record — keep it fresh.</p></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">README.md</span><span class="rf-dir">repo root</span></button><div class="rf-panel" hidden><div class="rf-body"><h1>🎭 Persona Buddy</h1>
+<p>Persona Buddy is the buddy system's casting director: it keeps the ONE canonical inventory of every persona — each with a lane (male / female / neutral), trait pills, a voice, and its current wearer(s) — and suggests new personas when a new kind of buddy has no fitting voice.</p>
+<h2>Product brief</h2>
+<p><a href="docs/brief.md">Read the full brief</a> · <a href="https://docs.google.com/document/d/1X61A7SvaN-uABoXT_gQzHmH_DG5dtcXxy-ztHKXy0Qg/edit">Google Doc</a></p></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">brief.md</span><span class="rf-dir">docs</span></button><div class="rf-panel" hidden><div class="rf-body"><h1>Persona Buddy — Job Req</h1>
+<h2>Role summary</h2>
+<p>Persona Buddy is the casting director of the buddy system. It maintains the one canonical inventory of every persona in use across Dave's staff of buddies: what the persona is, its lane (male / female / neutral), the personality traits that define it, the voice it speaks with, and which buddy currently wears it. It also keeps a bench of unassigned candidate personas and suggests new ones when a new kind of buddy arrives with no fitting voice. Reports to Project Buddy; Dave via Astro.</p>
+<h2>Why this job exists</h2>
+<p>Today there is no single inventory of personas, and the pieces are already drifting apart. The dashboard's new-buddy sheet hardcodes 24 personas (REQUEST_PERSONAS in build.py) — a fixed list frozen into the code. Meanwhile the living population is much bigger: 62 of the 121 buddies in the registry wear a persona, spanning 59 distinct personas (Jonny on the Designer, Hawaiian bruddah on three buddies, Hans the German master tech, the Don Draper write-up on Marketing Buddy, and dozens more), and those live scattered across individual buddy records, repos, and threads. Astro's own voice (Smooth Handshake) isn't in the registry's persona fields at all. Dave's call (2026-10-19): one inventory, one keeper — and the sheet should offer all of the personas we've currently got, which is exactly why it needs the lane row and trait filtering he specced the same day.</p>
+<h2>Responsibilities</h2>
+<ul>
+<li>Own the canonical persona inventory — this buddy's repo is the source of truth every picker reads from.</li>
+<li>Harvest and maintain the starting catalog: every persona currently worn by a buddy, plus the sheet's 24 as unassigned candidates.</li>
+<li>Keep a card for every persona: lane (male / female / neutral), 2–3 personality-trait pills drawn from a shared trait vocabulary, voice id and sample status, and current wearer(s).</li>
+<li>Group the catalog — by lane, by trait, by family resemblance — so filters and humans can both navigate it.</li>
+<li>Watch for gaps: when a new kind of buddy has no fitting voice in the catalog, propose new personas (lane, traits, and voice filled in) for Dave's approval.</li>
+<li>Keep the inventory honest: when a buddy's persona is created or changed anywhere in the system, the catalog reflects it the same day — zero silent drift.</li>
+</ul>
+<h2>v1 scope</h2>
+<ul>
+<li>Harvest #1: the full starting catalog into KNOWLEDGE.md — 59 distinct worn personas (62 wearers) plus the 24 sheet candidates, deduplicated.</li>
+<li>Card schema v1 and trait vocabulary v1: one shared list of traits so filtering behaves consistently.</li>
+<li>A grouping pass over the catalog (lane × trait families).</li>
+<li>Gap report #1: buddy kinds and sheet candidates with no voice id or sample yet, and any near-duplicate personas worth merging.</li>
+</ul>
+<h2>Success criteria</h2>
+<ul>
+<li>Every persona worn by any buddy has a complete card (lane, traits, voice, wearer) — auditable against the registry's persona fields with zero unexplained differences.</li>
+<li>The catalog is consumable as-is by the follow-on dashboard job (sheet + panel picker reading from the inventory, with lane row, trait pills, trait filter, and in-tile voice playback).</li>
+<li>New-persona suggestions arrive complete — lane, traits, voice — never as bare names.</li>
+<li>Dave can ask “who wears X?” or “what have we got that's warm and dry?” and get an answer from the catalog in one step.</li>
+</ul>
+<h2>Out of scope for v1</h2>
+<ul>
+<li>Building the dashboard changes themselves — the new-buddy sheet and panel persona picker reading from this inventory is a separate buddy-tree job (Dave specced the lane row, trait pills, trait filter, and per-tile playback on 2026-10-19).</li>
+<li>Assigning, changing, or retiring any buddy's persona without Dave's say-so.</li>
+<li>Recording new voice samples — v1 catalogs the voice ids that exist and flags the gaps.</li>
+</ul>
+<h2>Growth path</h2>
+<p>From catalog-keeper to casting office: audition samples for proposed personas before Dave commits, periodic catalog reviews (duplicates, stale traits, voices never used), stewardship of the trait vocabulary as it grows, and a casting recommendation whenever a new buddy is hired — the right voice shortlisted before Dave is even asked.</p></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">ingest.md</span><span class="rf-dir">docs</span></button><div class="rf-panel" hidden><div class="rf-body"><h1>Ingest log — Persona Buddy</h1>
+<p>Raw brain-dumps about this buddy. Each entry is timestamped; work the keepers into the dossier.</p></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">job-req.md</span><span class="rf-dir">docs</span></button><div class="rf-panel" hidden><div class="rf-body"><h1>Persona Buddy — Job Req</h1>
+<h2>Role summary</h2>
+<p>Persona Buddy is the casting director of the buddy system. It maintains the one canonical inventory of every persona in use across Dave's staff of buddies: what the persona is, its lane (male / female / neutral), the personality traits that define it, the voice it speaks with, and which buddy currently wears it. It also keeps a bench of unassigned candidate personas and suggests new ones when a new kind of buddy arrives with no fitting voice. Reports to Project Buddy; Dave via Astro.</p>
+<h2>Why this job exists</h2>
+<p>Today there is no single inventory of personas, and the pieces are already drifting apart. The dashboard's new-buddy sheet hardcodes 24 personas (REQUEST_PERSONAS in build.py) — a fixed list frozen into the code. Meanwhile the living population is much bigger: 62 of the 121 buddies in the registry wear a persona, spanning 59 distinct personas (Jonny on the Designer, Hawaiian bruddah on three buddies, Hans the German master tech, the Don Draper write-up on Marketing Buddy, and dozens more), and those live scattered across individual buddy records, repos, and threads. Astro's own voice (Smooth Handshake) isn't in the registry's persona fields at all. Dave's call (2026-10-19): one inventory, one keeper — and the sheet should offer all of the personas we've currently got, which is exactly why it needs the lane row and trait filtering he specced the same day.</p>
+<h2>Responsibilities</h2>
+<ul>
+<li>Own the canonical persona inventory — this buddy's repo is the source of truth every picker reads from.</li>
+<li>Harvest and maintain the starting catalog: every persona currently worn by a buddy, plus the sheet's 24 as unassigned candidates.</li>
+<li>Keep a card for every persona: lane (male / female / neutral), 2–3 personality-trait pills drawn from a shared trait vocabulary, voice id and sample status, and current wearer(s).</li>
+<li>Group the catalog — by lane, by trait, by family resemblance — so filters and humans can both navigate it.</li>
+<li>Watch for gaps: when a new kind of buddy has no fitting voice in the catalog, propose new personas (lane, traits, and voice filled in) for Dave's approval.</li>
+<li>Keep the inventory honest: when a buddy's persona is created or changed anywhere in the system, the catalog reflects it the same day — zero silent drift.</li>
+</ul>
+<h2>v1 scope</h2>
+<ul>
+<li>Harvest #1: the full starting catalog into KNOWLEDGE.md — 59 distinct worn personas (62 wearers) plus the 24 sheet candidates, deduplicated.</li>
+<li>Card schema v1 and trait vocabulary v1: one shared list of traits so filtering behaves consistently.</li>
+<li>A grouping pass over the catalog (lane × trait families).</li>
+<li>Gap report #1: buddy kinds and sheet candidates with no voice id or sample yet, and any near-duplicate personas worth merging.</li>
+</ul>
+<h2>Success criteria</h2>
+<ul>
+<li>Every persona worn by any buddy has a complete card (lane, traits, voice, wearer) — auditable against the registry's persona fields with zero unexplained differences.</li>
+<li>The catalog is consumable as-is by the follow-on dashboard job (sheet + panel picker reading from the inventory, with lane row, trait pills, trait filter, and in-tile voice playback).</li>
+<li>New-persona suggestions arrive complete — lane, traits, voice — never as bare names.</li>
+<li>Dave can ask “who wears X?” or “what have we got that's warm and dry?” and get an answer from the catalog in one step.</li>
+</ul>
+<h2>Out of scope for v1</h2>
+<ul>
+<li>Building the dashboard changes themselves — the new-buddy sheet and panel persona picker reading from this inventory is a separate buddy-tree job (Dave specced the lane row, trait pills, trait filter, and per-tile playback on 2026-10-19).</li>
+<li>Assigning, changing, or retiring any buddy's persona without Dave's say-so.</li>
+<li>Recording new voice samples — v1 catalogs the voice ids that exist and flags the gaps.</li>
+</ul>
+<h2>Growth path</h2>
+<p>From catalog-keeper to casting office: audition samples for proposed personas before Dave commits, periodic catalog reviews (duplicates, stale traits, voices never used), stewardship of the trait vocabulary as it grows, and a casting recommendation whenever a new buddy is hired — the right voice shortlisted before Dave is even asked.</p></div></div></div></div>
 </div>
 </section>
 
@@ -833,246 +1037,18 @@ Generated 2026-11-19 · Part of the Buddy System<br>
   var sec = document.querySelector('.repo-files');
   if (!sec || sec.dataset.rfInit) return;
   sec.dataset.rfInit = '1';
-  var bid = sec.getAttribute('data-buddy-id') || (function(){
-    var p = location.pathname.replace(/\/+$/, '');
-    return p.substring(p.lastIndexOf('/') + 1);
-  })();
-  function lsGet(){ try { return JSON.parse(localStorage.getItem('buddyTree.v3') || '{}'); } catch(e){ return {}; } }
-  function token(){ return lsGet().ghToken || ''; }
-  function b64encode(str){
-    var bytes = new TextEncoder().encode(str), bin = '';
-    bytes.forEach(function(b){ bin += String.fromCharCode(b); });
-    return btoa(bin);
-  }
-  async function ghApi(path, method, body){
-    var t = token();
-    if (!t) throw new Error('Add a GitHub token first.');
-    var r = await fetch('https://api.github.com' + path, {
-      method: method || 'GET',
-      headers: {'Authorization': 'Bearer ' + t, 'Accept': 'application/vnd.github+json', 'Content-Type': 'application/json'},
-      body: body ? JSON.stringify(body) : undefined
-    });
-    if (!r.ok) throw new Error('GitHub ' + r.status);
-    return r.status === 204 ? null : await r.json();
-  }
-  async function ghGetFile(repo, path){
-    try {
-      var j = await ghApi('/repos/davedellaquila/' + repo + '/contents/' + path);
-      if (j && j.content) return {
-        text: new TextDecoder().decode(Uint8Array.from(atob(j.content.replace(/\n/g, '')), function(c){ return c.charCodeAt(0); })),
-        sha: j.sha
-      };
-    } catch(e){}
-    return null;
-  }
-  var repo = null;
-  async function resolveRepo(){
-    try {
-      var r = await fetch('../buddies.json', {cache: 'no-store'});
-      var d = await r.json();
-      var buds = d.buddies || [];
-      for (var i = 0; i < buds.length; i++) {
-        if (buds[i].id === bid && buds[i].repo) { repo = buds[i].repo; break; }
-      }
-    } catch(e){}
-  }
-  function esc(s){ return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
-  function inline(s){
-    s = esc(s);
-    s = s.replace(/`([^`]+)`/g, '<code>$1</code>');
-    s = s.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
-    s = s.replace(/(^|[^*])\*([^*\n]+)\*/g, '$1<em>$2</em>');
-    s = s.replace(/\[([^\]]+)\]\((https?:[^)\s]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>');
-    return s;
-  }
-  function mdRender(src){
-    var lines = src.split('\n'), out = [], inList = false, inCode = false, codeBuf = [];
-    function closeList(){ if (inList) { out.push('</ul>'); inList = false; } }
-    for (var i = 0; i < lines.length; i++){
-      var ln = lines[i], m;
-      if (/^```/.test(ln)) {
-        if (inCode) { out.push('<pre><code>' + esc(codeBuf.join('\n')) + '</code></pre>'); codeBuf = []; inCode = false; }
-        else { closeList(); inCode = true; }
-        continue;
-      }
-      if (inCode) { codeBuf.push(ln); continue; }
-      if ((m = ln.match(/^(#{1,4})\s+(.*)/))) {
-        closeList();
-        var lv = Math.min(m[1].length + 1, 4);
-        out.push('<h' + lv + '>' + inline(m[2]) + '</h' + lv + '>');
-        continue;
-      }
-      if (/^\s*(-{3,}|\*{3,})\s*$/.test(ln)) { closeList(); out.push('<hr>'); continue; }
-      if ((m = ln.match(/^\s*[-*]\s+(.*)/)) || (m = ln.match(/^\s*\d+[.)]\s+(.*)/))) {
-        if (!inList) { out.push('<ul>'); inList = true; }
-        out.push('<li>' + inline(m[1]) + '</li>');
-        continue;
-      }
-      if ((m = ln.match(/^>\s?(.*)/))) { closeList(); out.push('<blockquote>' + inline(m[1]) + '</blockquote>'); continue; }
-      if (!ln.trim()) { closeList(); continue; }
-      closeList();
-      out.push('<p>' + inline(ln) + '</p>');
-    }
-    closeList();
-    if (inCode) out.push('<pre><code>' + esc(codeBuf.join('\n')) + '</code></pre>');
-    return out.join('\n');
-  }
-  var locked = sec.querySelector('.rf-locked'), main = sec.querySelector('.rf-main'),
-      list = sec.querySelector('.rf-list'), st = sec.querySelector('.rf-status');
-  /* Accordion files (Dave 2026-10-21): a list of file names; clicking a
-     name toggles that file's contents open inline right below the name.
-     Toggles are independent — several files can be open at once. Contents
-     load lazily on first open and are cached in the item's own state;
-     Edit/Save lives inside the opened panel. */
-  function buildFileSection(f){
-    var wrap = document.createElement('div');
-    wrap.className = 'rf-fileitem';
-    var head = document.createElement('button');
-    head.type = 'button';
-    head.className = 'rf-file';
-    head.setAttribute('aria-expanded', 'false');
-    var nm = document.createElement('span');
-    nm.className = 'rf-name';
-    nm.textContent = '📄 ' + f.name;
-    var dir = document.createElement('span');
-    dir.className = 'rf-dir';
-    dir.textContent = f.path;
-    var chev = document.createElement('span');
-    chev.className = 'rf-chev';
-    chev.textContent = '▸';
-    head.appendChild(nm);
-    head.appendChild(dir);
-    head.appendChild(chev);
-    var panel = document.createElement('div');
-    panel.className = 'rf-panel';
-    panel.hidden = true;
-    var phead = document.createElement('div');
-    phead.className = 'rf-viewhead';
-    var ppath = document.createElement('span');
-    ppath.className = 'rf-path';
-    ppath.textContent = f.path;
-    var editBtn = document.createElement('button');
-    editBtn.type = 'button';
-    editBtn.className = 'attn-btn rf-edit';
-    editBtn.textContent = 'Edit';
-    editBtn.disabled = true;
-    phead.appendChild(ppath);
-    phead.appendChild(editBtn);
-    var bodyEl = document.createElement('div');
-    bodyEl.className = 'rf-body';
-    bodyEl.innerHTML = '<p class="rf-loading">Loading ' + esc(f.path) + '…</p>';
-    var editor = document.createElement('div');
-    editor.className = 'rf-editor';
-    editor.hidden = true;
-    var ta = document.createElement('textarea');
-    ta.className = 'rf-ta';
-    ta.rows = 18;
-    ta.spellcheck = false;
-    ta.setAttribute('aria-label', 'Markdown source for ' + f.path);
-    var actions = document.createElement('div');
-    actions.className = 'attn-actions';
-    var saveBtn = document.createElement('button');
-    saveBtn.type = 'button';
-    saveBtn.className = 'attn-btn primary rf-save';
-    saveBtn.textContent = 'Save to GitHub';
-    var cancelBtn = document.createElement('button');
-    cancelBtn.type = 'button';
-    cancelBtn.className = 'attn-btn rf-cancel';
-    cancelBtn.textContent = 'Cancel';
-    actions.appendChild(saveBtn);
-    actions.appendChild(cancelBtn);
-    editor.appendChild(ta);
-    editor.appendChild(actions);
-    var fst = document.createElement('div');
-    fst.className = 'rf-fstatus attn-status';
-    fst.setAttribute('role', 'status');
-    panel.appendChild(phead);
-    panel.appendChild(bodyEl);
-    panel.appendChild(editor);
-    panel.appendChild(fst);
-    wrap.appendChild(head);
-    wrap.appendChild(panel);
-    var cur = null, loaded = false;
-    function loadOnce(){
-      if (loaded) return;
-      loaded = true;
-      ghGetFile(repo, f.path).then(function(got){
-        if (!got) { loaded = false; bodyEl.innerHTML = '<p class="rf-loading">⚠ Could not load ' + esc(f.path) + ' — close and open it again to retry.</p>'; return; }
-        cur = {path: f.path, sha: got.sha, text: got.text};
-        bodyEl.innerHTML = mdRender(got.text);
-        editBtn.disabled = false;
-      });
-    }
-    head.addEventListener('click', function(){
+  sec.querySelectorAll('.rf-fileitem > .rf-file').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var item = btn.parentElement;
+      var panel = item ? item.querySelector('.rf-panel') : null;
+      if (!panel) return;
       var open = panel.hidden;
       panel.hidden = !open;
-      head.setAttribute('aria-expanded', open ? 'true' : 'false');
-      chev.textContent = open ? '▾' : '▸';
-      if (open) loadOnce();
+      btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      var ch = btn.querySelector('.rf-chev');
+      if (ch) ch.textContent = open ? '▾' : '▸';
     });
-    editBtn.addEventListener('click', function(){
-      if (!cur) return;
-      ta.value = cur.text;
-      bodyEl.hidden = true;
-      editor.hidden = false;
-      ta.focus();
-    });
-    cancelBtn.addEventListener('click', function(){
-      editor.hidden = true;
-      bodyEl.hidden = false;
-    });
-    saveBtn.addEventListener('click', async function(){
-      if (!cur) return;
-      saveBtn.disabled = true;
-      fst.textContent = 'Saving…';
-      try {
-        var payload = {message: 'Edit ' + cur.path + ' from the homepage', content: b64encode(ta.value), sha: cur.sha};
-        var j = await ghApi('/repos/davedellaquila/' + repo + '/contents/' + cur.path, 'PUT', payload);
-        if (j && j.content && j.content.sha) cur.sha = j.content.sha;
-        cur.text = ta.value;
-        editor.hidden = true;
-        bodyEl.hidden = false;
-        bodyEl.innerHTML = mdRender(cur.text);
-        fst.textContent = '✓ Saved to GitHub (' + repo + '/' + cur.path + ').';
-      } catch(err){
-        var why = (err && err.message) || String(err);
-        fst.textContent = /409|422/.test(why)
-          ? '⚠ GitHub said the file changed since you loaded it (' + why + ') — reload this page and try again.'
-          : '⚠ Save failed (' + why + ') — your edit is still in the editor.';
-      }
-      saveBtn.disabled = false;
-    });
-    return wrap;
-  }
-  async function init(){
-    await resolveRepo();
-    if (!repo) {
-      locked.hidden = false;
-      locked.textContent = 'No repo is linked for this buddy yet, so there are no repo files to show.';
-      return;
-    }
-    if (!token()) { locked.hidden = false; return; }
-    main.hidden = false;
-    st.textContent = 'Loading files…';
-    var files = [];
-    async function grab(dir){
-      try {
-        var j = await ghApi('/repos/davedellaquila/' + repo + (dir ? '/contents/' + dir : '/contents'));
-        if (Array.isArray(j)) j.forEach(function(e){
-          if (e.type === 'file' && /\.md$/i.test(e.name)) files.push({name: e.name, path: e.path});
-        });
-      } catch(e){}
-    }
-    await grab('');
-    await grab('docs');
-    files.sort(function(a, b){ return a.path < b.path ? -1 : 1; });
-    if (!files.length) { st.textContent = 'No markdown files found in the repo yet.'; return; }
-    st.textContent = '';
-    files.forEach(function(f){
-      list.appendChild(buildFileSection(f));
-    });
-  }
-  init();
+  });
 })();
 </script>
 

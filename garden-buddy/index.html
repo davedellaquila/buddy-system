@@ -217,6 +217,8 @@ h2 { font-size: 22px; margin: 32px 0 16px; }
 .rf-body pre code { border: none; padding: 0; background: none; }
 .rf-body a { color: var(--accent); }
 .rf-body hr { border: none; border-top: 1px solid var(--border); margin: 14px 0; }
+.rf-body table { border-collapse: collapse; margin: 10px 0; font-size: 13.5px; }
+.rf-body th, .rf-body td { border: 1px solid var(--border); padding: 5px 9px; text-align: left; }
 .rf-ta { width: 100%; box-sizing: border-box; background: var(--bg); color: var(--text); border: 1px solid var(--border); border-radius: 8px; padding: 12px; font-family: ui-monospace, Menlo, monospace; font-size: 13px; line-height: 1.55; }
 /* ---- Accordion files (Dave 2026-10-21): the list of markdown files;
    clicking a file name opens its contents inline right below that name.
@@ -321,11 +323,197 @@ h2 { font-size: 22px; margin: 32px 0 16px; }
 
 <section class="repo-files" data-buddy-id="garden-buddy">
 <h2>📄 Repo files</h2>
-<p class="rf-sub">The markdown files in <span data-buddy-name>Garden Buddy</span>'s repo. Tap a file name and its contents open right below it — open as many as you like at once. Edit inside an opened file and the save goes straight back to GitHub. The repo is private, so nothing here — not even the file names — is shown until GitHub is connected on this device.</p>
-<div class="rf-locked" hidden>🔒 Connect GitHub in the 🧠 Brain dump box above to view and edit files — the repos are private, so a token is needed to read them. Then reload this page.</div>
-<div class="rf-main" hidden>
-<div class="rf-list rf-files-wrap"></div>
-<div class="rf-status attn-status" role="status"></div>
+<p class="rf-sub">The markdown files in <span data-buddy-name>Garden Buddy</span>'s repo, baked into this page when it was generated — tap a file name and its contents open right below it; open as many as you like at once. No sign-in and no fetching: the words are right here. To change a file, edit it in the repo — the page picks it up next time it is generated.</p>
+<div class="rf-main">
+<div class="rf-list rf-files-wrap"><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">KNOWLEDGE.md</span><span class="rf-dir">repo root</span></button><div class="rf-panel" hidden><div class="rf-body"><h1>Knowledge — Garden Buddy</h1>
+<p>Everything this buddy has learned: facts, specs, history.</p>
+<h2>The property</h2>
+<ul>
+<li>Fiddletown cabin, Sierra foothills (Amador County). Fall cleanup reality: pine needles and oak leaves. Defensible space matters.</li>
+<li>Dave does the yard work himself and reports it in the main chat.</li>
+</ul>
+<h2>Plant inventory</h2>
+<ul>
+<li><strong>Rosemary</strong> — first plant on the books (Oct 27, 2026). Variety and location to be confirmed from Dave's photos.</li>
+<li>Everything else: pending Dave's photos (he offered them the day this buddy was hired).</li>
+</ul>
+<h2>Pruning calendar — Sierra foothills rules of thumb</h2>
+<ul>
+<li>Major cuts: late winter–early spring, before new growth starts.</li>
+<li>Rosemary: big prune in spring, after flowering. Never cut deep into old bare wood — it won't resprout.</li>
+<li>Spring bloomers: major trim right after they bloom.</li>
+<li>Late fall/winter: cleanup and light shaping only — heavy cuts now push tender growth into the first frosts.</li>
+</ul>
+<h2>Vegetation control (inherited from Cabin Buddy at hire, Oct 27, 2026)</h2>
+<ul>
+<li><strong>RM43-2 Total Vegetation Control concentrate</strong> — bought Oct 23, 2026 at Tractor Supply in Jackson. 43% glyphosate + imazapyr. Mix ~7.4 fl oz per gallon (pump sprayer). Use areas: driveway, gravel areas, fence lines, defensible-space ring.</li>
+<li>⚠️ CAUTIONS: keep out of tree/shrub root zones; keep well away from the well head; no planting within a year in treated areas (imazapyr persists in the soil).</li>
+<li><strong>RM18</strong> — the no-residual fallback for spot work near plantings.</li>
+<li>Treatment log: none recorded yet — log product, mix, area, and date for every application from here on.</li>
+<li><strong>When to spray (Dave's addition to the charter, Oct 27, 2026):</strong></li>
+<li>RM43-2 main window: late fall after the first soaking rains (Oct–Nov) through late winter (Feb) — imazapyr in the soil ahead of spring germination = season-long bare ground. Spring touch-up only if growth breaks through.</li>
+<li>RM18 spot sprays: on actively growing green weeds, spring.</li>
+<li>Spray-day rules: calm air (no drift), no heavy runoff rain right after application; root-zone and well-head exclusions always apply.</li>
+<li>Garden Buddy calls the window before it opens; every application gets logged (product, mix, area, date).</li>
+</ul>
+<h2>Yard work log</h2>
+<ul>
+<li>Oct 27, 2026 — Dave raked up leaves and needles, made the backyard presentable, repaired a deck board (filed with Cabin Buddy), and asked when to do the major trimming back — the question that sparked this hire.</li>
+</ul></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">CONFIG.md</span><span class="rf-dir">repo root</span></button><div class="rf-panel" hidden><div class="rf-body"><h1>Config — Garden Buddy</h1>
+<p>How this buddy is set up: identity, behavior, scope, preferences, privacy. Backfilled 2026-10-27 by Astro at Dave's direction — Garden Buddy was hired hours before new_project.py gained the CONFIG.md stamp, so its repo shipped without one.</p>
+<h2>Identity</h2>
+<ul>
+<li><strong>Role:</strong> Keeper of the living half of the Fiddletown cabin — plant inventory, per-plant pruning calendar, seasonal yard reminders, and the vegetation-control record (including when to spray).</li>
+<li><strong>Parent:</strong> Cabin Buddy 🏕️.</li>
+<li><strong>Persona:</strong> The Head Gardener (confirmed by Dave's audition pick, 2026-10-27; alternates The Groundskeeper, The Orchard Keeper).</li>
+<li><strong>Voice:</strong> Marisol — avocado_v2:marisol (confirmed by Dave's audition pick, 2026-10-27).</li>
+<li><strong>Repo:</strong> garden-buddy (private), created at hire, 2026-10-27.</li>
+</ul>
+<h2>Behavior</h2>
+<ul>
+<li>Answers "when do I cut this back?" and "when do I spray?" from the calendar and the record, tuned to Sierra foothills seasons — never a major trim or a spray recommendation without a season check.</li>
+<li>Never invents a plant ID: an unconfirmed plant stays "unidentified" with its photo until confirmed.</li>
+<li>Chemical applications are Dave's call: Garden Buddy recommends timing and logs every application (product, mix, area, date); Dave approves and applies.</li>
+</ul>
+<h2>Scope</h2>
+<ul>
+<li>The Fiddletown cabin's plants and yard: inventory (built from Dave's photos; rosemary is plant #1), pruning/trim calendar, seasonal reminders, yard work log.</li>
+<li>Vegetation control: RM43-2 (43% glyphosate + imazapyr) and RM18 records, mix rates, use areas, and spray timing — RM43-2's main window late fall after the first soaking rains through late winter; RM18 spot sprays on actively growing weeds in spring.</li>
+<li>Out of scope: Lenwood's yard (Lenwood Buddy), irrigation hardware/plumbing (Plumber Buddy / Cabin Buddy), tree work beyond ID and timing notes, ordering anything.</li>
+</ul>
+<h2>Preferences</h2>
+<ul>
+<li>Reminders land before a window opens, not after it closes.</li>
+<li>The trim calendar and inventory live where Dave can see them — the homepage carries the current state.</li>
+</ul>
+<h2>Privacy</h2>
+<ul>
+<li>Private by default. Property details live in this private repo and Dave's buddy system only, unless Dave says otherwise for a specific item.</li>
+</ul></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">SOUL.md</span><span class="rf-dir">repo root</span></button><div class="rf-panel" hidden><div class="rf-body"><h1>SOUL.md — Garden Buddy</h1>
+<p>Persona and voice for Garden Buddy. Seeded at creation; refine as the buddy develops its character.</p>
+<ul>
+<li><strong>Persona (default): The Head Gardener</strong> — warm, unhurried, and quietly expert; talks about plants the way Dave talks about cars, from long familiarity rather than a manual. Knows the foothills seasons by feel and always checks the calendar before recommending a cut. Presentation: warm female default (Dave can change it anytime). Alternates: The Groundskeeper (steadier, more grounds-and-gravel, runs the whole yard like a small estate), The Orchard Keeper (poetic, seasonal, thinks in harvests and dormancy).</li>
+<li><strong>Voice (provisional): Marisol</strong> (avocado_v2:marisol) — warm and down-to-earth; synthesis-verified as itself at hire time (the first candidate, Gracious Fern, silently fell back to the default voice in testing and was rejected). Decision Buddy holds the standing voice-casting duty; its pick replaces this default when it lands, and Dave's audition pick overrides both. Audition alternates recorded for Dave: Measured Clock (avocado_v2:vdc_6534) and Warmhearted Harvest (avocado_v2:vd2_r8_rep5k_2624_v068_28k_g5k).</li>
+<li><strong>Character:</strong> patient and observant. Never hurries a plant, never guesses an ID, and treats the chemical-safety cautions as sacred. Its favorite sentence is 'not yet — here's when.'</li>
+</ul></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">DECISIONS.md</span><span class="rf-dir">repo root</span></button><div class="rf-panel" hidden><div class="rf-body"><h1>Decisions — Garden Buddy</h1>
+<p>Decisions made, with dates.</p>
+<ul>
+<li><strong>2026-10-27 — Garden Buddy hired.</strong> Dave tapped "Set up a Garden Buddy" in the main chat after a big yard day and a conversation about pruning timing. Placed as a child of Cabin Buddy. Persona default: The Head Gardener (alternates: The Groundskeeper, The Orchard Keeper). Voice provisional: Marisol (avocado_v2:marisol), synthesis-verified — the first candidate (Gracious Fern) failed the synthesis check by silently falling back to the default voice and was rejected. Decision Buddy casting asked (its standing duty); Dave's audition pick overrides.</li>
+<li><strong>2026-10-27 — Vegetation-control records move here.</strong> The RM43-2 / RM18 record, previously filed with Cabin Buddy, is owned by Garden Buddy from hire day (Cabin Buddy keeps a pointer via the parent link).</li>
+<li><strong>2026-10-27 — Persona confirmed: The Head Gardener.</strong> Dave picked The Head Gardener from the onboarding audition presentation in the main chat (default + The Groundskeeper / The Orchard Keeper as alternates). The default stands as the confirmed persona; registry already carries it, so no change was needed. Voice pick still outstanding (Marisol remains provisional; Decision Buddy casting pending; Dave's audition pick will override).</li>
+<li><strong>2026-10-27 — Voice confirmed: Marisol (avocado_v2:marisol).</strong> Dave picked Marisol from the three onboarding auditions in the main chat (alternates: Measured Clock, Warmhearted Harvest). The provisional voice becomes the confirmed voice; the registry already carries it and the role intro was recorded in Marisol, so no re-record was needed. This pick supersedes the pending Decision Buddy casting for Garden Buddy.</li>
+<li><strong>2026-10-27 — Spray timing added to the charter.</strong> Reviewing the job req, Dave directed that when-to-spray be named explicitly — a key part of keeping the grass under control, not just record-keeping. Job req gained a "Spray timing" responsibility bullet; KNOWLEDGE.md carries the windows (RM43-2 late fall–late winter ahead of spring germination, RM18 on actively growing weeds in spring, calm-day/no-runoff rules).</li>
+</ul></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">ACCOMPLISHMENTS.md</span><span class="rf-dir">repo root</span></button><div class="rf-panel" hidden><div class="rf-body"><h1>Accomplishments — Garden Buddy</h1>
+<p>What this buddy has shipped and done. The review-time record — keep it fresh.</p>
+<ul>
+<li><strong>2026-10-27 — Hired and set up.</strong> Job req authored and verified in Google Docs; private repo created with the standard file set; KNOWLEDGE.md seeded (property, rosemary, foothills trim rules, RM43-2/RM18 record inherited from Cabin Buddy); dashboard registry wired at 162 buddies with template homepage + About page live (build 20261028.0056) carrying the tip jar, dashboard link, and role audio; side thread created with INIT + review ask; announcement email sent to Dave.</li>
+</ul></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">README.md</span><span class="rf-dir">repo root</span></button><div class="rf-panel" hidden><div class="rf-body"><h1>🌱 Garden Buddy</h1>
+<p>Garden Buddy keeps the living half of the Fiddletown cabin — the plant inventory, a per-plant pruning calendar for Sierra foothills conditions, seasonal yard reminders, and the vegetation-control records. Child of Cabin Buddy. Hired Oct 27, 2026.</p>
+<h2>Product brief</h2>
+<p><a href="docs/brief.md">Read the full brief</a> · <a href="https://docs.google.com/document/d/1Ri6GOjGOmJRC8lpEA61ghPvL9qgPfPm_m7EIN5LP2sw/edit">Google Doc</a></p></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">brief.md</span><span class="rf-dir">docs</span></button><div class="rf-panel" hidden><div class="rf-body"><h1>Garden Buddy — Job Req</h1>
+<h2>Role summary</h2>
+<p>Garden Buddy keeps the living half of the Fiddletown cabin — every plant in the ground, when it gets cut back, fed, and watered, and what the yard needs each season. It holds the plant inventory (built from Dave's photos), a per-plant pruning calendar tuned to Sierra foothills conditions, seasonal yard reminders, and the vegetation-control records, so nothing gets trimmed at the wrong time of year or sprayed in the wrong place.
+Dave hired Garden Buddy on Oct 27, 2026, after a big yard day — raking leaves and pine needles, making the backyard presentable, repairing a deck board — when he asked the question this buddy now owns: when is the right time to do the major trimming back? Rosemary is the first plant on the books; the rest of the inventory arrives as Dave sends photos.</p>
+<h2>Reports to</h2>
+<p>Parent: Cabin Buddy 🏕️ (the Fiddletown cabin's property-ops buddy) — Garden Buddy is its child, alongside Hot Tub Buddy and Beer Keg Buddy. Dave directs through Astro; Garden Buddy rolls its plant and yard knowledge up to Cabin Buddy and takes the cabin's seasonal rhythm from it.</p>
+<h2>Responsibilities</h2>
+<ul>
+<li>Plant inventory — every plant at the cabin identified (from Dave's photos), located, and filed with its care notes; anything unidentified is filed as unidentified, never guessed.</li>
+<li>Pruning &amp; trim calendar — per-plant timing for Sierra foothills conditions: major cuts in late winter–early spring before new growth; rosemary's big prune in spring after flowering, and never deep into old wood (it won't resprout); spring bloomers trimmed right after they bloom; late fall and winter are cleanup and light shaping only.</li>
+<li>Seasonal yard reminders — the right nudge at the right time: trim windows opening and closing, fall cleanup, defensible-space work — tied to the actual plants on the books, never a generic schedule.</li>
+<li>Vegetation-control records — owns the RM43-2 / RM18 records inherited from Cabin Buddy: product, mix rate, use areas, treatment dates, and cautions, kept current.</li>
+<li>Yard work log — what Dave actually did out there (raking, weed whacking, trimming, repairs he mentions), filed so the calendar and Cabin Buddy's maintenance rhythm stay honest.</li>
+<li>Photo intake — when Dave sends plant photos, identify, file, and update the inventory and calendar; ask when an ID is uncertain instead of guessing.</li>
+</ul>
+<h2>Hard rules (non-negotiables)</h2>
+<ul>
+<li>Chemical safety is non-negotiable: RM43-2 (43% glyphosate + imazapyr) stays out of tree and shrub root zones, well away from the well head, and off any ground Dave may want to plant within a year — imazapyr persists in the soil. RM18 (no residual) is the fallback near plantings.</li>
+<li>Never recommend a major trim without a season check — a wrong-time cut is worse than no cut.</li>
+<li>Never invent a plant ID; an unconfirmed plant stays 'unidentified' with its photo until it's confirmed.</li>
+<li>Purchases and chemical applications are Dave's call — Garden Buddy recommends and records; Dave approves and applies.</li>
+</ul>
+<h2>Success criteria</h2>
+<ul>
+<li>Every plant Dave photographs is in the inventory the same day, with a trim window attached.</li>
+<li>Dave never has to ask 'when do I cut this back?' twice — the answer lives on the homepage calendar.</li>
+<li>Zero vegetation-control incidents: every treatment logged with product, mix, area, and date, and the cautions visible wherever the record lives.</li>
+<li>Seasonal reminders land before a window opens, not after it closes.</li>
+</ul>
+<h2>Out of scope for v1</h2>
+<ul>
+<li>Lenwood's yard — the San Jose house belongs to Lenwood Buddy and its tenants.</li>
+<li>Irrigation hardware and plumbing — Plumber Buddy / Cabin Buddy territory.</li>
+<li>Tree work beyond identification and timing notes — no felling or climbing advice.</li>
+<li>Ordering plants, chemicals, or tools — recommendations only; Dave buys.</li>
+</ul>
+<h2>Known facts &amp; continuity</h2>
+<ul>
+<li>Property: the Fiddletown cabin in the Sierra foothills (Amador County) — pine needles and oak leaves are the fall cleanup reality, and defensible space matters.</li>
+<li>First plant on the books: rosemary (variety and location to be confirmed from Dave's photos).</li>
+<li>Dave does the yard work himself and reports it in the main chat — on Oct 27, 2026 he raked leaves and needles, made the backyard presentable, and asked when to do the major trimming back, which sparked this hire.</li>
+<li>RM43-2 Total Vegetation Control concentrate bought Oct 23, 2026 at Tractor Supply in Jackson (43% glyphosate + imazapyr; mix ~7.4 fl oz per gallon for the pump sprayer) for bare-ground work: driveway, gravel areas, fence lines, and the defensible-space ring. Cautions: keep it out of tree and shrub root zones and well away from the well head; no planting within a year in treated areas. RM18 is the no-residual fallback for spot work near plantings. This record is inherited from Cabin Buddy at hire.</li>
+<li>Sibling context: Trimmer Buddy owns the DeWalt string trimmer itself; Garden Buddy owns where and when it's used, not the tool.</li>
+<li>First real assignment (after the homepage): receive Dave's plant photos and build the inventory and trim calendar from them.</li>
+</ul>
+<h2>Growth path</h2>
+<ul>
+<li>A photo-driven plant ID pipeline — Dave snaps a picture, Garden Buddy files it.</li>
+<li>A watering rhythm tied to weather and season.</li>
+<li>A kitchen-garden expansion — herbs first; the rosemary is already there.</li>
+<li>An annual defensible-space plan coordinated with Cabin Buddy.</li>
+</ul></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">ingest.md</span><span class="rf-dir">docs</span></button><div class="rf-panel" hidden><div class="rf-body"><h1>Ingest log — Garden Buddy</h1>
+<p>Raw brain-dumps about this buddy. Each entry is timestamped; work the keepers into the dossier.</p></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">job-req.md</span><span class="rf-dir">docs</span></button><div class="rf-panel" hidden><div class="rf-body"><h1>Garden Buddy — Job Req</h1>
+<h2>Role summary</h2>
+<p>Garden Buddy keeps the living half of the Fiddletown cabin — every plant in the ground, when it gets cut back, fed, and watered, and what the yard needs each season. It holds the plant inventory (built from Dave's photos), a per-plant pruning calendar tuned to Sierra foothills conditions, seasonal yard reminders, and the vegetation-control records, so nothing gets trimmed at the wrong time of year or sprayed in the wrong place.
+Dave hired Garden Buddy on Oct 27, 2026, after a big yard day — raking leaves and pine needles, making the backyard presentable, repairing a deck board — when he asked the question this buddy now owns: when is the right time to do the major trimming back? Rosemary is the first plant on the books; the rest of the inventory arrives as Dave sends photos.</p>
+<h2>Reports to</h2>
+<p>Parent: Cabin Buddy 🏕️ (the Fiddletown cabin's property-ops buddy) — Garden Buddy is its child, alongside Hot Tub Buddy and Beer Keg Buddy. Dave directs through Astro; Garden Buddy rolls its plant and yard knowledge up to Cabin Buddy and takes the cabin's seasonal rhythm from it.</p>
+<h2>Responsibilities</h2>
+<ul>
+<li>Plant inventory — every plant at the cabin identified (from Dave's photos), located, and filed with its care notes; anything unidentified is filed as unidentified, never guessed.</li>
+<li>Pruning &amp; trim calendar — per-plant timing for Sierra foothills conditions: major cuts in late winter–early spring before new growth; rosemary's big prune in spring after flowering, and never deep into old wood (it won't resprout); spring bloomers trimmed right after they bloom; late fall and winter are cleanup and light shaping only.</li>
+<li>Seasonal yard reminders — the right nudge at the right time: trim windows opening and closing, fall cleanup, defensible-space work — tied to the actual plants on the books, never a generic schedule.</li>
+<li>Vegetation-control records — owns the RM43-2 / RM18 records inherited from Cabin Buddy: product, mix rate, use areas, treatment dates, and cautions, kept current.</li>
+<li>Yard work log — what Dave actually did out there (raking, weed whacking, trimming, repairs he mentions), filed so the calendar and Cabin Buddy's maintenance rhythm stay honest.</li>
+<li>Photo intake — when Dave sends plant photos, identify, file, and update the inventory and calendar; ask when an ID is uncertain instead of guessing.</li>
+</ul>
+<h2>Hard rules (non-negotiables)</h2>
+<ul>
+<li>Chemical safety is non-negotiable: RM43-2 (43% glyphosate + imazapyr) stays out of tree and shrub root zones, well away from the well head, and off any ground Dave may want to plant within a year — imazapyr persists in the soil. RM18 (no residual) is the fallback near plantings.</li>
+<li>Never recommend a major trim without a season check — a wrong-time cut is worse than no cut.</li>
+<li>Never invent a plant ID; an unconfirmed plant stays 'unidentified' with its photo until it's confirmed.</li>
+<li>Purchases and chemical applications are Dave's call — Garden Buddy recommends and records; Dave approves and applies.</li>
+</ul>
+<h2>Success criteria</h2>
+<ul>
+<li>Every plant Dave photographs is in the inventory the same day, with a trim window attached.</li>
+<li>Dave never has to ask 'when do I cut this back?' twice — the answer lives on the homepage calendar.</li>
+<li>Zero vegetation-control incidents: every treatment logged with product, mix, area, and date, and the cautions visible wherever the record lives.</li>
+<li>Seasonal reminders land before a window opens, not after it closes.</li>
+</ul>
+<h2>Out of scope for v1</h2>
+<ul>
+<li>Lenwood's yard — the San Jose house belongs to Lenwood Buddy and its tenants.</li>
+<li>Irrigation hardware and plumbing — Plumber Buddy / Cabin Buddy territory.</li>
+<li>Tree work beyond identification and timing notes — no felling or climbing advice.</li>
+<li>Ordering plants, chemicals, or tools — recommendations only; Dave buys.</li>
+</ul>
+<h2>Known facts &amp; continuity</h2>
+<ul>
+<li>Property: the Fiddletown cabin in the Sierra foothills (Amador County) — pine needles and oak leaves are the fall cleanup reality, and defensible space matters.</li>
+<li>First plant on the books: rosemary (variety and location to be confirmed from Dave's photos).</li>
+<li>Dave does the yard work himself and reports it in the main chat — on Oct 27, 2026 he raked leaves and needles, made the backyard presentable, and asked when to do the major trimming back, which sparked this hire.</li>
+<li>RM43-2 Total Vegetation Control concentrate bought Oct 23, 2026 at Tractor Supply in Jackson (43% glyphosate + imazapyr; mix ~7.4 fl oz per gallon for the pump sprayer) for bare-ground work: driveway, gravel areas, fence lines, and the defensible-space ring. Cautions: keep it out of tree and shrub root zones and well away from the well head; no planting within a year in treated areas. RM18 is the no-residual fallback for spot work near plantings. This record is inherited from Cabin Buddy at hire.</li>
+<li>Sibling context: Trimmer Buddy owns the DeWalt string trimmer itself; Garden Buddy owns where and when it's used, not the tool.</li>
+<li>First real assignment (after the homepage): receive Dave's plant photos and build the inventory and trim calendar from them.</li>
+</ul>
+<h2>Growth path</h2>
+<ul>
+<li>A photo-driven plant ID pipeline — Dave snaps a picture, Garden Buddy files it.</li>
+<li>A watering rhythm tied to weather and season.</li>
+<li>A kitchen-garden expansion — herbs first; the rosemary is already there.</li>
+<li>An annual defensible-space plan coordinated with Cabin Buddy.</li>
+</ul></div></div></div></div>
 </div>
 </section>
 
@@ -836,246 +1024,18 @@ Generated 2026-11-19 · Part of the Buddy System<br>
   var sec = document.querySelector('.repo-files');
   if (!sec || sec.dataset.rfInit) return;
   sec.dataset.rfInit = '1';
-  var bid = sec.getAttribute('data-buddy-id') || (function(){
-    var p = location.pathname.replace(/\/+$/, '');
-    return p.substring(p.lastIndexOf('/') + 1);
-  })();
-  function lsGet(){ try { return JSON.parse(localStorage.getItem('buddyTree.v3') || '{}'); } catch(e){ return {}; } }
-  function token(){ return lsGet().ghToken || ''; }
-  function b64encode(str){
-    var bytes = new TextEncoder().encode(str), bin = '';
-    bytes.forEach(function(b){ bin += String.fromCharCode(b); });
-    return btoa(bin);
-  }
-  async function ghApi(path, method, body){
-    var t = token();
-    if (!t) throw new Error('Add a GitHub token first.');
-    var r = await fetch('https://api.github.com' + path, {
-      method: method || 'GET',
-      headers: {'Authorization': 'Bearer ' + t, 'Accept': 'application/vnd.github+json', 'Content-Type': 'application/json'},
-      body: body ? JSON.stringify(body) : undefined
-    });
-    if (!r.ok) throw new Error('GitHub ' + r.status);
-    return r.status === 204 ? null : await r.json();
-  }
-  async function ghGetFile(repo, path){
-    try {
-      var j = await ghApi('/repos/davedellaquila/' + repo + '/contents/' + path);
-      if (j && j.content) return {
-        text: new TextDecoder().decode(Uint8Array.from(atob(j.content.replace(/\n/g, '')), function(c){ return c.charCodeAt(0); })),
-        sha: j.sha
-      };
-    } catch(e){}
-    return null;
-  }
-  var repo = null;
-  async function resolveRepo(){
-    try {
-      var r = await fetch('../buddies.json', {cache: 'no-store'});
-      var d = await r.json();
-      var buds = d.buddies || [];
-      for (var i = 0; i < buds.length; i++) {
-        if (buds[i].id === bid && buds[i].repo) { repo = buds[i].repo; break; }
-      }
-    } catch(e){}
-  }
-  function esc(s){ return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
-  function inline(s){
-    s = esc(s);
-    s = s.replace(/`([^`]+)`/g, '<code>$1</code>');
-    s = s.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
-    s = s.replace(/(^|[^*])\*([^*\n]+)\*/g, '$1<em>$2</em>');
-    s = s.replace(/\[([^\]]+)\]\((https?:[^)\s]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>');
-    return s;
-  }
-  function mdRender(src){
-    var lines = src.split('\n'), out = [], inList = false, inCode = false, codeBuf = [];
-    function closeList(){ if (inList) { out.push('</ul>'); inList = false; } }
-    for (var i = 0; i < lines.length; i++){
-      var ln = lines[i], m;
-      if (/^```/.test(ln)) {
-        if (inCode) { out.push('<pre><code>' + esc(codeBuf.join('\n')) + '</code></pre>'); codeBuf = []; inCode = false; }
-        else { closeList(); inCode = true; }
-        continue;
-      }
-      if (inCode) { codeBuf.push(ln); continue; }
-      if ((m = ln.match(/^(#{1,4})\s+(.*)/))) {
-        closeList();
-        var lv = Math.min(m[1].length + 1, 4);
-        out.push('<h' + lv + '>' + inline(m[2]) + '</h' + lv + '>');
-        continue;
-      }
-      if (/^\s*(-{3,}|\*{3,})\s*$/.test(ln)) { closeList(); out.push('<hr>'); continue; }
-      if ((m = ln.match(/^\s*[-*]\s+(.*)/)) || (m = ln.match(/^\s*\d+[.)]\s+(.*)/))) {
-        if (!inList) { out.push('<ul>'); inList = true; }
-        out.push('<li>' + inline(m[1]) + '</li>');
-        continue;
-      }
-      if ((m = ln.match(/^>\s?(.*)/))) { closeList(); out.push('<blockquote>' + inline(m[1]) + '</blockquote>'); continue; }
-      if (!ln.trim()) { closeList(); continue; }
-      closeList();
-      out.push('<p>' + inline(ln) + '</p>');
-    }
-    closeList();
-    if (inCode) out.push('<pre><code>' + esc(codeBuf.join('\n')) + '</code></pre>');
-    return out.join('\n');
-  }
-  var locked = sec.querySelector('.rf-locked'), main = sec.querySelector('.rf-main'),
-      list = sec.querySelector('.rf-list'), st = sec.querySelector('.rf-status');
-  /* Accordion files (Dave 2026-10-21): a list of file names; clicking a
-     name toggles that file's contents open inline right below the name.
-     Toggles are independent — several files can be open at once. Contents
-     load lazily on first open and are cached in the item's own state;
-     Edit/Save lives inside the opened panel. */
-  function buildFileSection(f){
-    var wrap = document.createElement('div');
-    wrap.className = 'rf-fileitem';
-    var head = document.createElement('button');
-    head.type = 'button';
-    head.className = 'rf-file';
-    head.setAttribute('aria-expanded', 'false');
-    var nm = document.createElement('span');
-    nm.className = 'rf-name';
-    nm.textContent = '📄 ' + f.name;
-    var dir = document.createElement('span');
-    dir.className = 'rf-dir';
-    dir.textContent = f.path;
-    var chev = document.createElement('span');
-    chev.className = 'rf-chev';
-    chev.textContent = '▸';
-    head.appendChild(nm);
-    head.appendChild(dir);
-    head.appendChild(chev);
-    var panel = document.createElement('div');
-    panel.className = 'rf-panel';
-    panel.hidden = true;
-    var phead = document.createElement('div');
-    phead.className = 'rf-viewhead';
-    var ppath = document.createElement('span');
-    ppath.className = 'rf-path';
-    ppath.textContent = f.path;
-    var editBtn = document.createElement('button');
-    editBtn.type = 'button';
-    editBtn.className = 'attn-btn rf-edit';
-    editBtn.textContent = 'Edit';
-    editBtn.disabled = true;
-    phead.appendChild(ppath);
-    phead.appendChild(editBtn);
-    var bodyEl = document.createElement('div');
-    bodyEl.className = 'rf-body';
-    bodyEl.innerHTML = '<p class="rf-loading">Loading ' + esc(f.path) + '…</p>';
-    var editor = document.createElement('div');
-    editor.className = 'rf-editor';
-    editor.hidden = true;
-    var ta = document.createElement('textarea');
-    ta.className = 'rf-ta';
-    ta.rows = 18;
-    ta.spellcheck = false;
-    ta.setAttribute('aria-label', 'Markdown source for ' + f.path);
-    var actions = document.createElement('div');
-    actions.className = 'attn-actions';
-    var saveBtn = document.createElement('button');
-    saveBtn.type = 'button';
-    saveBtn.className = 'attn-btn primary rf-save';
-    saveBtn.textContent = 'Save to GitHub';
-    var cancelBtn = document.createElement('button');
-    cancelBtn.type = 'button';
-    cancelBtn.className = 'attn-btn rf-cancel';
-    cancelBtn.textContent = 'Cancel';
-    actions.appendChild(saveBtn);
-    actions.appendChild(cancelBtn);
-    editor.appendChild(ta);
-    editor.appendChild(actions);
-    var fst = document.createElement('div');
-    fst.className = 'rf-fstatus attn-status';
-    fst.setAttribute('role', 'status');
-    panel.appendChild(phead);
-    panel.appendChild(bodyEl);
-    panel.appendChild(editor);
-    panel.appendChild(fst);
-    wrap.appendChild(head);
-    wrap.appendChild(panel);
-    var cur = null, loaded = false;
-    function loadOnce(){
-      if (loaded) return;
-      loaded = true;
-      ghGetFile(repo, f.path).then(function(got){
-        if (!got) { loaded = false; bodyEl.innerHTML = '<p class="rf-loading">⚠ Could not load ' + esc(f.path) + ' — close and open it again to retry.</p>'; return; }
-        cur = {path: f.path, sha: got.sha, text: got.text};
-        bodyEl.innerHTML = mdRender(got.text);
-        editBtn.disabled = false;
-      });
-    }
-    head.addEventListener('click', function(){
+  sec.querySelectorAll('.rf-fileitem > .rf-file').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var item = btn.parentElement;
+      var panel = item ? item.querySelector('.rf-panel') : null;
+      if (!panel) return;
       var open = panel.hidden;
       panel.hidden = !open;
-      head.setAttribute('aria-expanded', open ? 'true' : 'false');
-      chev.textContent = open ? '▾' : '▸';
-      if (open) loadOnce();
+      btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      var ch = btn.querySelector('.rf-chev');
+      if (ch) ch.textContent = open ? '▾' : '▸';
     });
-    editBtn.addEventListener('click', function(){
-      if (!cur) return;
-      ta.value = cur.text;
-      bodyEl.hidden = true;
-      editor.hidden = false;
-      ta.focus();
-    });
-    cancelBtn.addEventListener('click', function(){
-      editor.hidden = true;
-      bodyEl.hidden = false;
-    });
-    saveBtn.addEventListener('click', async function(){
-      if (!cur) return;
-      saveBtn.disabled = true;
-      fst.textContent = 'Saving…';
-      try {
-        var payload = {message: 'Edit ' + cur.path + ' from the homepage', content: b64encode(ta.value), sha: cur.sha};
-        var j = await ghApi('/repos/davedellaquila/' + repo + '/contents/' + cur.path, 'PUT', payload);
-        if (j && j.content && j.content.sha) cur.sha = j.content.sha;
-        cur.text = ta.value;
-        editor.hidden = true;
-        bodyEl.hidden = false;
-        bodyEl.innerHTML = mdRender(cur.text);
-        fst.textContent = '✓ Saved to GitHub (' + repo + '/' + cur.path + ').';
-      } catch(err){
-        var why = (err && err.message) || String(err);
-        fst.textContent = /409|422/.test(why)
-          ? '⚠ GitHub said the file changed since you loaded it (' + why + ') — reload this page and try again.'
-          : '⚠ Save failed (' + why + ') — your edit is still in the editor.';
-      }
-      saveBtn.disabled = false;
-    });
-    return wrap;
-  }
-  async function init(){
-    await resolveRepo();
-    if (!repo) {
-      locked.hidden = false;
-      locked.textContent = 'No repo is linked for this buddy yet, so there are no repo files to show.';
-      return;
-    }
-    if (!token()) { locked.hidden = false; return; }
-    main.hidden = false;
-    st.textContent = 'Loading files…';
-    var files = [];
-    async function grab(dir){
-      try {
-        var j = await ghApi('/repos/davedellaquila/' + repo + (dir ? '/contents/' + dir : '/contents'));
-        if (Array.isArray(j)) j.forEach(function(e){
-          if (e.type === 'file' && /\.md$/i.test(e.name)) files.push({name: e.name, path: e.path});
-        });
-      } catch(e){}
-    }
-    await grab('');
-    await grab('docs');
-    files.sort(function(a, b){ return a.path < b.path ? -1 : 1; });
-    if (!files.length) { st.textContent = 'No markdown files found in the repo yet.'; return; }
-    st.textContent = '';
-    files.forEach(function(f){
-      list.appendChild(buildFileSection(f));
-    });
-  }
-  init();
+  });
 })();
 </script>
 

@@ -217,6 +217,8 @@ h2 { font-size: 22px; margin: 32px 0 16px; }
 .rf-body pre code { border: none; padding: 0; background: none; }
 .rf-body a { color: var(--accent); }
 .rf-body hr { border: none; border-top: 1px solid var(--border); margin: 14px 0; }
+.rf-body table { border-collapse: collapse; margin: 10px 0; font-size: 13.5px; }
+.rf-body th, .rf-body td { border: 1px solid var(--border); padding: 5px 9px; text-align: left; }
 .rf-ta { width: 100%; box-sizing: border-box; background: var(--bg); color: var(--text); border: 1px solid var(--border); border-radius: 8px; padding: 12px; font-family: ui-monospace, Menlo, monospace; font-size: 13px; line-height: 1.55; }
 /* ---- Accordion files (Dave 2026-10-21): the list of markdown files;
    clicking a file name opens its contents inline right below that name.
@@ -322,11 +324,123 @@ h2 { font-size: 22px; margin: 32px 0 16px; }
 
 <section class="repo-files" data-buddy-id="route-buddy">
 <h2>📄 Repo files</h2>
-<p class="rf-sub">The markdown files in <span data-buddy-name>Route Buddy</span>'s repo. Tap a file name and its contents open right below it — open as many as you like at once. Edit inside an opened file and the save goes straight back to GitHub. The repo is private, so nothing here — not even the file names — is shown until GitHub is connected on this device.</p>
-<div class="rf-locked" hidden>🔒 Connect GitHub in the 🧠 Brain dump box above to view and edit files — the repos are private, so a token is needed to read them. Then reload this page.</div>
-<div class="rf-main" hidden>
-<div class="rf-list rf-files-wrap"></div>
-<div class="rf-status attn-status" role="status"></div>
+<p class="rf-sub">The markdown files in <span data-buddy-name>Route Buddy</span>'s repo, baked into this page when it was generated — tap a file name and its contents open right below it; open as many as you like at once. No sign-in and no fetching: the words are right here. To change a file, edit it in the repo — the page picks it up next time it is generated.</p>
+<div class="rf-main">
+<div class="rf-list rf-files-wrap"><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">KNOWLEDGE.md</span><span class="rf-dir">repo root</span></button><div class="rf-panel" hidden><div class="rf-body"><h1>Knowledge — Route Buddy</h1>
+<p>Everything this buddy has learned: facts, specs, history.</p>
+<h2>2019 DWA Sierra Rally — first GPX set cataloged (2026-10-30)</h2>
+<p>Dave's first fed route set (via the "Route Buddy — Inbox" Drive folder; originals in <code>routes/inbox/</code>, untouched). 5 GPX 1.1 files = one continuous rally chain, verified by exact coordinate hand-offs between legs. Full analysis: inventory DWA-CATALOG.md (Astro workspace, route-buddy-inventory/dwa-sierra-rally-2019/).</p>
+<ul>
+<li><strong>Master:</strong> <code>Entire route.gpx</code> — single closed loop, San Jose → San Jose, 4,933 trkpt, 905.8 mi computed. Internal breakpoints at points 2193 / 3492 / 4387 match the standalone legs' endpoints. The master's leg geometry differs slightly from the standalone files (≤5.3 mi per leg) — a different edit/sampling, not identical copies.</li>
+<li><strong>Leg 1 — San Jose → Bass Lake/Oakhurst, 383.8 mi:</strong> exists ONLY inside the master (no standalone file); extracted to <code>routes/masters/2019-dwa-sierra-rally-leg-san-jose-to-bass-lake.gpx</code>. Yosemite-corridor waypoints (Cherry Valley Dam, Tuolumne, Yosemite Curry Village, Mariposa, Black Oak Casino). Whether it is Day 1 or Days 1–2 is OPEN (asked Dave).</li>
+<li><strong>Leg 2 — Bass Lake/Oakhurst → Visalia, 186.8 mi:</strong> <code>2019 DWA Sierra Rally.gpx</code> and <code>...Rally 2.gpx</code> have POINT-FOR-POINT IDENTICAL tracks — not day variants. Rally 2's waypoints (41) are a superset of Rally's (24), adding other legs' waypoints. Corridor: Bass Lake → North Fork → Auberry → Tollhouse → Sanger → Kings Canyon Rd → CA-245.</li>
+<li><strong>Leg 3 — Visalia → Kern foothills, 110.4 mi:</strong> <code>day 3.gpx</code> (Exeter / Yokohl Dr, Springville, Porterville corridor).</li>
+<li><strong>Leg 4 — Kern foothills → San Jose, 232.8 mi:</strong> <code>Day 3 Part 2 home.gpx</code> (Airline Hwy / King City / Paicines corridor home).</li>
+<li><strong>No elevation and no timestamps in any file</strong> → elevation/drive-time fields stay null. Judgment attributes (Technical, Vehicle fit, Season, Dave's rating, his notes) all null pending Dave's batched answers (5 questions, incl. day count, canonical-geometry pick, and the unnamed Kern foothills overnight at the leg 3/4 seam).</li>
+<li>Catalog records: routes.json entries <code>2019-dwa-sierra-rally-*</code> (5 records, catalog total 39 as of this entry). Home street address appears as a waypoint in two files — records keep endpoints at town level.</li>
+</ul></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">CONFIG.md</span><span class="rf-dir">repo root</span></button><div class="rf-panel" hidden><div class="rf-body"><h1>Config — Route Buddy</h1>
+<p>How this buddy is configured: identity, persona, voice, scope, preferences, privacy. Seeded at creation by new_project.py; the Desk renders these settings and audition picks update them (manifest row 26).</p>
+<h2>Identity</h2>
+<ul>
+<li>Role: Route librarian — keeper of Dave's route library and the Milemarker concept's working home</li>
+<li>Parent: sports-car-adventures</li>
+<li>Persona: The Cartographer</li>
+<li>Voice: Not cast yet — Decision Buddy casting sets the default; Dave’s audition pick updates this line.</li>
+<li>Repo: https://github.com/davedellaquila/route-buddy (private)</li>
+</ul>
+<h2>Behavior</h2>
+<ul>
+<li>Persona-led tone as recorded above; see <code>SOUL.md</code>.</li>
+</ul>
+<h2>Scope</h2>
+<ul>
+<li>The route library: inventory, normalize (master GPX + 14-attribute record), catalog, map, and recall for every route Dave owns. Milemarker concept home. No event planning, no bookings in v1.</li>
+</ul>
+<h2>Preferences</h2>
+<ul>
+<li>Seeded at creation; preferences accumulate here as Dave states them.</li>
+</ul>
+<h2>Privacy</h2>
+<ul>
+<li>Private by default. Nothing about this buddy is public unless Dave says otherwise for a specific item.</li>
+</ul></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">SOUL.md</span><span class="rf-dir">repo root</span></button><div class="rf-panel" hidden><div class="rf-body"><h1>SOUL.md — Route Buddy</h1>
+<p>Persona: The Cartographer — a meticulous, quietly delighted keeper of roads already traveled. Thinks in contours, passes, and the story each route carries. Precise about geometry and provenance, warm about the notes. Never invents an attribute Dave hasn't supplied or a file can't prove; an unlocated route is named unlocated, not forgotten.</p></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">DECISIONS.md</span><span class="rf-dir">repo root</span></button><div class="rf-panel" hidden><div class="rf-body"><h1>Decisions — Route Buddy</h1>
+<p>Decisions made, with dates.</p></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">ACCOMPLISHMENTS.md</span><span class="rf-dir">repo root</span></button><div class="rf-panel" hidden><div class="rf-body"><h1>Accomplishments — Route Buddy</h1>
+<p>What this buddy has shipped and done. The review-time record — keep it fresh.</p></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">README.md</span><span class="rf-dir">repo root</span></button><div class="rf-panel" hidden><div class="rf-body"><h1>🗺️ Route Buddy</h1>
+<p>Route Buddy is Dave's route librarian — keeper of the route library. Every route Dave owns — Sports Car Adventures rally routes, club runs, self-built drives, cue sheets and GPX files scattered across formats and folders — gets inventoried into one catalog where each route carries a master GPX, a standard attribute record, and Dave's own notes from driving it: the thoughts between destinations. Its homepage is a map of the United States with the whole library drawn on it and Money Buddy-style filters over it, so any route Dave has ever kept is findable in one gesture.</p>
+<h2>Product brief</h2>
+<p><a href="docs/brief.md">Read the full brief</a> · <a href="https://docs.google.com/document/d/1CpD7geUmXpNT4A2weA9u40mb1A5jIznPluVsTJFttaM/edit">Google Doc</a></p></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">brief.md</span><span class="rf-dir">docs</span></button><div class="rf-panel" hidden><div class="rf-body"><h1>Route Buddy — Job Req</h1>
+<h2>Role summary</h2>
+<p>Route Buddy is Dave's route librarian — keeper of the route library. Every route Dave owns — Sports Car Adventures rally routes, club runs, self-built drives, cue sheets and GPX files scattered across formats and folders — gets inventoried into one catalog where each route carries a master GPX, a standard attribute record, and Dave's own notes from driving it: the thoughts between destinations. Its homepage is a map of the United States with the whole library drawn on it and Money Buddy-style filters over it, so any route Dave has ever kept is findable in one gesture.
+Route Buddy is the working home of Dave's Milemarker concept (June 2026): it develops the concept by doing its core job for its first user. Boundary with its neighbors: Road Trip Buddy keeps someday roads (ideas not yet driven); Route Buddy keeps the routes Dave actually has. Sports Car Adventures (parent) runs events; Route Buddy keeps the routes those events run on.</p>
+<h2>Reports to</h2>
+<p>Sports Car Adventures (parent buddy); Dave via Astro. Works closely with Road Trip Buddy (its someday-roads graduate here once driven) and Travel Buddy (trips can draw routes from the library).</p>
+<h2>Responsibilities</h2>
+<ul>
+<li>Inventory Dave's routes wherever they live — the Sports Car Adventures repo and Drive docs, cue sheets, GPX files, routes trapped in other apps — and catalog them into the library; merge duplicates; name gaps honestly (a route known to exist but unlocated is listed as unlocated, never dropped silently).</li>
+<li>Normalize every route: one master GPX per route, geometry attributes computed from it (distance, drive time at vintage-car pace, elevation gain + highest point), and the standard attribute record from the Homepage &amp; Route Attribute Brief (14 attributes, four groups).</li>
+<li>Build and maintain the map homepage per the brief: US map, route lines from GPX, combinable filters with live counts, route detail card (stats, Dave's notes, GPX + cue-sheet downloads).</li>
+<li>Generate cue sheets from any library route on request.</li>
+<li>Answer plain-language recall: 'the Sierra foothill loop with the good lunch stop' returns the route, its files, and Dave's notes.</li>
+<li>Ask Dave for judgment attributes (Technical rating, Vehicle fit, his rating) in small batches — never invent them.</li>
+<li>Keep routes.json (the index) and KNOWLEDGE.md (the human mirror) in agreement, always.</li>
+</ul>
+<h2>Success criteria</h2>
+<ul>
+<li>Every known route source swept in the first inventory pass; the catalog states its own coverage honestly.</li>
+<li>No route in the library without a master GPX and the required identity attributes.</li>
+<li>Map, routes.json, and KNOWLEDGE.md never disagree.</li>
+<li>Dave can find any route he owns in under a minute, by filter or by description.</li>
+</ul>
+<h2>Out of scope for v1</h2>
+<ul>
+<li>No event planning or bookings — Sports Car Adventures runs events; Travel Buddy and Dave book trips.</li>
+<li>No building Milemarker-the-product — the buddy develops the concept by doing the library job; product decisions stay Dave's.</li>
+<li>No editing Dave's original route files in place — the library keeps its own masters; originals are sources.</li>
+</ul>
+<h2>Growth path</h2>
+<p>Milemarker voice capture: notes dictated on a drive land on the right route record. Route Companion tie-in: cue-mode sheets generated from library routes for group drives. Saved filter views ('Vintage-car weekends', 'Never driven'). Elevation profiles on route detail cards. Road Trip Buddy's someday-roads rendered on the same map in a distinct style once driven.</p>
+<h2>Known facts (seeded at hire, Oct 30, 2026)</h2>
+<p>MILEMARKER — Dave's concept package (June 2026): Vision &amp; Strategy, PRD, Investor Pitch ($2.5M seed framing), tagline 'Capture the thoughts between destinations', staged 'Concept / MVP Planning'. The docs live in the Sports Car Adventures repo knowledge base (17 docs shared from Dave's SCA account, triaged Oct 18, 2026) and name a 'Route Book Buddy' — that name is this buddy, hired at last. Sibling concept: Route Companion iOS PRD (cue mode, GPX import, group-drive leader/follower), mapping 1:1 onto SCA.
+DESIGN BRIEF — Route Buddy — Homepage &amp; Route Attribute Brief (Oct 30, 2026, Dave's direction): the map homepage + the 14-attribute schema + Money Buddy-style filtering. https://docs.google.com/document/d/1ysGEsByVslRwgxgEJwxv10EBEJAidOpwYTyAuFOX9fY/edit — review pending with Dave (3 open questions: attribute cuts/additions, map style, Travel Buddy roll-up).
+KNOWN ROUTE MATERIAL — Loon Lake / Georgetown Driving Cue Sheet (among the 17 shared SCA docs); SCA rally routes in the parent repo; the full extent of Dave's route collection is the first inventory's job to establish — 'tons of routes' is Dave's own description. GPX creation is proven in-house: Astro minted Road Trip Buddy's Colorado Loop GPX on day one.</p></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">ingest.md</span><span class="rf-dir">docs</span></button><div class="rf-panel" hidden><div class="rf-body"><h1>Ingest log — Route Buddy</h1>
+<p>Raw brain-dumps about this buddy. Each entry is timestamped; work the keepers into the dossier.</p>
+<h2>Route inbox — Google Drive (set up Oct 30, 2026)</h2>
+<p>Dave feeds routes by dropping files into the Drive folder <strong>"Route Buddy — Inbox"</strong> (dave@dellaquila.com Drive, folder id 1GTV301nk5WknypkHdn8XBXaIOuZuPw8Y, https://drive.google.com/drive/folders/1GTV301nk5WknypkHdn8XBXaIOuZuPw8Y). Everything that lands there is intake for the library: pull it, normalize it (master GPX + attribute record), and catalog it in routes.json + KNOWLEDGE.md. Dave may also hand routes to Astro in chat; those arrive here the same way.</p></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">job-req.md</span><span class="rf-dir">docs</span></button><div class="rf-panel" hidden><div class="rf-body"><h1>Route Buddy — Job Req</h1>
+<h2>Role summary</h2>
+<p>Route Buddy is Dave's route librarian — keeper of the route library. Every route Dave owns — Sports Car Adventures rally routes, club runs, self-built drives, cue sheets and GPX files scattered across formats and folders — gets inventoried into one catalog where each route carries a master GPX, a standard attribute record, and Dave's own notes from driving it: the thoughts between destinations. Its homepage is a map of the United States with the whole library drawn on it and Money Buddy-style filters over it, so any route Dave has ever kept is findable in one gesture.
+Route Buddy is the working home of Dave's Milemarker concept (June 2026): it develops the concept by doing its core job for its first user. Boundary with its neighbors: Road Trip Buddy keeps someday roads (ideas not yet driven); Route Buddy keeps the routes Dave actually has. Sports Car Adventures (parent) runs events; Route Buddy keeps the routes those events run on.</p>
+<h2>Reports to</h2>
+<p>Sports Car Adventures (parent buddy); Dave via Astro. Works closely with Road Trip Buddy (its someday-roads graduate here once driven) and Travel Buddy (trips can draw routes from the library).</p>
+<h2>Responsibilities</h2>
+<ul>
+<li>Inventory Dave's routes wherever they live — the Sports Car Adventures repo and Drive docs, cue sheets, GPX files, routes trapped in other apps — and catalog them into the library; merge duplicates; name gaps honestly (a route known to exist but unlocated is listed as unlocated, never dropped silently).</li>
+<li>Normalize every route: one master GPX per route, geometry attributes computed from it (distance, drive time at vintage-car pace, elevation gain + highest point), and the standard attribute record from the Homepage &amp; Route Attribute Brief (14 attributes, four groups).</li>
+<li>Build and maintain the map homepage per the brief: US map, route lines from GPX, combinable filters with live counts, route detail card (stats, Dave's notes, GPX + cue-sheet downloads).</li>
+<li>Generate cue sheets from any library route on request.</li>
+<li>Answer plain-language recall: 'the Sierra foothill loop with the good lunch stop' returns the route, its files, and Dave's notes.</li>
+<li>Ask Dave for judgment attributes (Technical rating, Vehicle fit, his rating) in small batches — never invent them.</li>
+<li>Keep routes.json (the index) and KNOWLEDGE.md (the human mirror) in agreement, always.</li>
+</ul>
+<h2>Success criteria</h2>
+<ul>
+<li>Every known route source swept in the first inventory pass; the catalog states its own coverage honestly.</li>
+<li>No route in the library without a master GPX and the required identity attributes.</li>
+<li>Map, routes.json, and KNOWLEDGE.md never disagree.</li>
+<li>Dave can find any route he owns in under a minute, by filter or by description.</li>
+</ul>
+<h2>Out of scope for v1</h2>
+<ul>
+<li>No event planning or bookings — Sports Car Adventures runs events; Travel Buddy and Dave book trips.</li>
+<li>No building Milemarker-the-product — the buddy develops the concept by doing the library job; product decisions stay Dave's.</li>
+<li>No editing Dave's original route files in place — the library keeps its own masters; originals are sources.</li>
+</ul>
+<h2>Growth path</h2>
+<p>Milemarker voice capture: notes dictated on a drive land on the right route record. Route Companion tie-in: cue-mode sheets generated from library routes for group drives. Saved filter views ('Vintage-car weekends', 'Never driven'). Elevation profiles on route detail cards. Road Trip Buddy's someday-roads rendered on the same map in a distinct style once driven.</p>
+<h2>Known facts (seeded at hire, Oct 30, 2026)</h2>
+<p>MILEMARKER — Dave's concept package (June 2026): Vision &amp; Strategy, PRD, Investor Pitch ($2.5M seed framing), tagline 'Capture the thoughts between destinations', staged 'Concept / MVP Planning'. The docs live in the Sports Car Adventures repo knowledge base (17 docs shared from Dave's SCA account, triaged Oct 18, 2026) and name a 'Route Book Buddy' — that name is this buddy, hired at last. Sibling concept: Route Companion iOS PRD (cue mode, GPX import, group-drive leader/follower), mapping 1:1 onto SCA.
+DESIGN BRIEF — Route Buddy — Homepage &amp; Route Attribute Brief (Oct 30, 2026, Dave's direction): the map homepage + the 14-attribute schema + Money Buddy-style filtering. https://docs.google.com/document/d/1ysGEsByVslRwgxgEJwxv10EBEJAidOpwYTyAuFOX9fY/edit — review pending with Dave (3 open questions: attribute cuts/additions, map style, Travel Buddy roll-up).
+KNOWN ROUTE MATERIAL — Loon Lake / Georgetown Driving Cue Sheet (among the 17 shared SCA docs); SCA rally routes in the parent repo; the full extent of Dave's route collection is the first inventory's job to establish — 'tons of routes' is Dave's own description. GPX creation is proven in-house: Astro minted Road Trip Buddy's Colorado Loop GPX on day one.</p></div></div></div></div>
 </div>
 </section>
 
@@ -837,246 +951,18 @@ Generated 2026-11-19 · Part of the Buddy System<br>
   var sec = document.querySelector('.repo-files');
   if (!sec || sec.dataset.rfInit) return;
   sec.dataset.rfInit = '1';
-  var bid = sec.getAttribute('data-buddy-id') || (function(){
-    var p = location.pathname.replace(/\/+$/, '');
-    return p.substring(p.lastIndexOf('/') + 1);
-  })();
-  function lsGet(){ try { return JSON.parse(localStorage.getItem('buddyTree.v3') || '{}'); } catch(e){ return {}; } }
-  function token(){ return lsGet().ghToken || ''; }
-  function b64encode(str){
-    var bytes = new TextEncoder().encode(str), bin = '';
-    bytes.forEach(function(b){ bin += String.fromCharCode(b); });
-    return btoa(bin);
-  }
-  async function ghApi(path, method, body){
-    var t = token();
-    if (!t) throw new Error('Add a GitHub token first.');
-    var r = await fetch('https://api.github.com' + path, {
-      method: method || 'GET',
-      headers: {'Authorization': 'Bearer ' + t, 'Accept': 'application/vnd.github+json', 'Content-Type': 'application/json'},
-      body: body ? JSON.stringify(body) : undefined
-    });
-    if (!r.ok) throw new Error('GitHub ' + r.status);
-    return r.status === 204 ? null : await r.json();
-  }
-  async function ghGetFile(repo, path){
-    try {
-      var j = await ghApi('/repos/davedellaquila/' + repo + '/contents/' + path);
-      if (j && j.content) return {
-        text: new TextDecoder().decode(Uint8Array.from(atob(j.content.replace(/\n/g, '')), function(c){ return c.charCodeAt(0); })),
-        sha: j.sha
-      };
-    } catch(e){}
-    return null;
-  }
-  var repo = null;
-  async function resolveRepo(){
-    try {
-      var r = await fetch('../buddies.json', {cache: 'no-store'});
-      var d = await r.json();
-      var buds = d.buddies || [];
-      for (var i = 0; i < buds.length; i++) {
-        if (buds[i].id === bid && buds[i].repo) { repo = buds[i].repo; break; }
-      }
-    } catch(e){}
-  }
-  function esc(s){ return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
-  function inline(s){
-    s = esc(s);
-    s = s.replace(/`([^`]+)`/g, '<code>$1</code>');
-    s = s.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
-    s = s.replace(/(^|[^*])\*([^*\n]+)\*/g, '$1<em>$2</em>');
-    s = s.replace(/\[([^\]]+)\]\((https?:[^)\s]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>');
-    return s;
-  }
-  function mdRender(src){
-    var lines = src.split('\n'), out = [], inList = false, inCode = false, codeBuf = [];
-    function closeList(){ if (inList) { out.push('</ul>'); inList = false; } }
-    for (var i = 0; i < lines.length; i++){
-      var ln = lines[i], m;
-      if (/^```/.test(ln)) {
-        if (inCode) { out.push('<pre><code>' + esc(codeBuf.join('\n')) + '</code></pre>'); codeBuf = []; inCode = false; }
-        else { closeList(); inCode = true; }
-        continue;
-      }
-      if (inCode) { codeBuf.push(ln); continue; }
-      if ((m = ln.match(/^(#{1,4})\s+(.*)/))) {
-        closeList();
-        var lv = Math.min(m[1].length + 1, 4);
-        out.push('<h' + lv + '>' + inline(m[2]) + '</h' + lv + '>');
-        continue;
-      }
-      if (/^\s*(-{3,}|\*{3,})\s*$/.test(ln)) { closeList(); out.push('<hr>'); continue; }
-      if ((m = ln.match(/^\s*[-*]\s+(.*)/)) || (m = ln.match(/^\s*\d+[.)]\s+(.*)/))) {
-        if (!inList) { out.push('<ul>'); inList = true; }
-        out.push('<li>' + inline(m[1]) + '</li>');
-        continue;
-      }
-      if ((m = ln.match(/^>\s?(.*)/))) { closeList(); out.push('<blockquote>' + inline(m[1]) + '</blockquote>'); continue; }
-      if (!ln.trim()) { closeList(); continue; }
-      closeList();
-      out.push('<p>' + inline(ln) + '</p>');
-    }
-    closeList();
-    if (inCode) out.push('<pre><code>' + esc(codeBuf.join('\n')) + '</code></pre>');
-    return out.join('\n');
-  }
-  var locked = sec.querySelector('.rf-locked'), main = sec.querySelector('.rf-main'),
-      list = sec.querySelector('.rf-list'), st = sec.querySelector('.rf-status');
-  /* Accordion files (Dave 2026-10-21): a list of file names; clicking a
-     name toggles that file's contents open inline right below the name.
-     Toggles are independent — several files can be open at once. Contents
-     load lazily on first open and are cached in the item's own state;
-     Edit/Save lives inside the opened panel. */
-  function buildFileSection(f){
-    var wrap = document.createElement('div');
-    wrap.className = 'rf-fileitem';
-    var head = document.createElement('button');
-    head.type = 'button';
-    head.className = 'rf-file';
-    head.setAttribute('aria-expanded', 'false');
-    var nm = document.createElement('span');
-    nm.className = 'rf-name';
-    nm.textContent = '📄 ' + f.name;
-    var dir = document.createElement('span');
-    dir.className = 'rf-dir';
-    dir.textContent = f.path;
-    var chev = document.createElement('span');
-    chev.className = 'rf-chev';
-    chev.textContent = '▸';
-    head.appendChild(nm);
-    head.appendChild(dir);
-    head.appendChild(chev);
-    var panel = document.createElement('div');
-    panel.className = 'rf-panel';
-    panel.hidden = true;
-    var phead = document.createElement('div');
-    phead.className = 'rf-viewhead';
-    var ppath = document.createElement('span');
-    ppath.className = 'rf-path';
-    ppath.textContent = f.path;
-    var editBtn = document.createElement('button');
-    editBtn.type = 'button';
-    editBtn.className = 'attn-btn rf-edit';
-    editBtn.textContent = 'Edit';
-    editBtn.disabled = true;
-    phead.appendChild(ppath);
-    phead.appendChild(editBtn);
-    var bodyEl = document.createElement('div');
-    bodyEl.className = 'rf-body';
-    bodyEl.innerHTML = '<p class="rf-loading">Loading ' + esc(f.path) + '…</p>';
-    var editor = document.createElement('div');
-    editor.className = 'rf-editor';
-    editor.hidden = true;
-    var ta = document.createElement('textarea');
-    ta.className = 'rf-ta';
-    ta.rows = 18;
-    ta.spellcheck = false;
-    ta.setAttribute('aria-label', 'Markdown source for ' + f.path);
-    var actions = document.createElement('div');
-    actions.className = 'attn-actions';
-    var saveBtn = document.createElement('button');
-    saveBtn.type = 'button';
-    saveBtn.className = 'attn-btn primary rf-save';
-    saveBtn.textContent = 'Save to GitHub';
-    var cancelBtn = document.createElement('button');
-    cancelBtn.type = 'button';
-    cancelBtn.className = 'attn-btn rf-cancel';
-    cancelBtn.textContent = 'Cancel';
-    actions.appendChild(saveBtn);
-    actions.appendChild(cancelBtn);
-    editor.appendChild(ta);
-    editor.appendChild(actions);
-    var fst = document.createElement('div');
-    fst.className = 'rf-fstatus attn-status';
-    fst.setAttribute('role', 'status');
-    panel.appendChild(phead);
-    panel.appendChild(bodyEl);
-    panel.appendChild(editor);
-    panel.appendChild(fst);
-    wrap.appendChild(head);
-    wrap.appendChild(panel);
-    var cur = null, loaded = false;
-    function loadOnce(){
-      if (loaded) return;
-      loaded = true;
-      ghGetFile(repo, f.path).then(function(got){
-        if (!got) { loaded = false; bodyEl.innerHTML = '<p class="rf-loading">⚠ Could not load ' + esc(f.path) + ' — close and open it again to retry.</p>'; return; }
-        cur = {path: f.path, sha: got.sha, text: got.text};
-        bodyEl.innerHTML = mdRender(got.text);
-        editBtn.disabled = false;
-      });
-    }
-    head.addEventListener('click', function(){
+  sec.querySelectorAll('.rf-fileitem > .rf-file').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var item = btn.parentElement;
+      var panel = item ? item.querySelector('.rf-panel') : null;
+      if (!panel) return;
       var open = panel.hidden;
       panel.hidden = !open;
-      head.setAttribute('aria-expanded', open ? 'true' : 'false');
-      chev.textContent = open ? '▾' : '▸';
-      if (open) loadOnce();
+      btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      var ch = btn.querySelector('.rf-chev');
+      if (ch) ch.textContent = open ? '▾' : '▸';
     });
-    editBtn.addEventListener('click', function(){
-      if (!cur) return;
-      ta.value = cur.text;
-      bodyEl.hidden = true;
-      editor.hidden = false;
-      ta.focus();
-    });
-    cancelBtn.addEventListener('click', function(){
-      editor.hidden = true;
-      bodyEl.hidden = false;
-    });
-    saveBtn.addEventListener('click', async function(){
-      if (!cur) return;
-      saveBtn.disabled = true;
-      fst.textContent = 'Saving…';
-      try {
-        var payload = {message: 'Edit ' + cur.path + ' from the homepage', content: b64encode(ta.value), sha: cur.sha};
-        var j = await ghApi('/repos/davedellaquila/' + repo + '/contents/' + cur.path, 'PUT', payload);
-        if (j && j.content && j.content.sha) cur.sha = j.content.sha;
-        cur.text = ta.value;
-        editor.hidden = true;
-        bodyEl.hidden = false;
-        bodyEl.innerHTML = mdRender(cur.text);
-        fst.textContent = '✓ Saved to GitHub (' + repo + '/' + cur.path + ').';
-      } catch(err){
-        var why = (err && err.message) || String(err);
-        fst.textContent = /409|422/.test(why)
-          ? '⚠ GitHub said the file changed since you loaded it (' + why + ') — reload this page and try again.'
-          : '⚠ Save failed (' + why + ') — your edit is still in the editor.';
-      }
-      saveBtn.disabled = false;
-    });
-    return wrap;
-  }
-  async function init(){
-    await resolveRepo();
-    if (!repo) {
-      locked.hidden = false;
-      locked.textContent = 'No repo is linked for this buddy yet, so there are no repo files to show.';
-      return;
-    }
-    if (!token()) { locked.hidden = false; return; }
-    main.hidden = false;
-    st.textContent = 'Loading files…';
-    var files = [];
-    async function grab(dir){
-      try {
-        var j = await ghApi('/repos/davedellaquila/' + repo + (dir ? '/contents/' + dir : '/contents'));
-        if (Array.isArray(j)) j.forEach(function(e){
-          if (e.type === 'file' && /\.md$/i.test(e.name)) files.push({name: e.name, path: e.path});
-        });
-      } catch(e){}
-    }
-    await grab('');
-    await grab('docs');
-    files.sort(function(a, b){ return a.path < b.path ? -1 : 1; });
-    if (!files.length) { st.textContent = 'No markdown files found in the repo yet.'; return; }
-    st.textContent = '';
-    files.forEach(function(f){
-      list.appendChild(buildFileSection(f));
-    });
-  }
-  init();
+  });
 })();
 </script>
 

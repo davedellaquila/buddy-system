@@ -88,12 +88,49 @@ def _md_files_in(root, sub=''):
         out.append((rel, f))
     return out
 
+try:
+    import markdown as _markdown
+except Exception:
+    _markdown = None
+
+def _baked_items(files):
+    """Accordion items with each file's markdown rendered in place
+    (Dave 2026-11-19: baked at generation time — no token, no fetch;
+    a file that fails to render gets a panel that says why)."""
+    items = []
+    for rel, path in files:
+        name = rel.split('/')[-1]
+        dlabel = rel.rsplit('/', 1)[0] if '/' in rel else 'repo root'
+        try:
+            src = open(path, encoding='utf-8', errors='replace').read()
+            if _markdown is not None:
+                body = _markdown.markdown(src, extensions=['tables', 'fenced_code', 'sane_lists'])
+            else:
+                body = '<pre class="mdfallback">' + esc(src) + '</pre>'
+            panel = '<div class="rf-body">' + body + '</div>'
+        except Exception as e:
+            panel = ('<p class="rf-loading">This file could not be baked in when '
+                     'the page was generated: ' + esc(str(e)) + '</p>')
+        items.append(
+            '<div class="rf-fileitem">'
+            '<button type="button" class="rf-file" aria-expanded="false">'
+            '<span class="rf-chev">\u25b8</span>'
+            '<span class="rf-name">' + esc(name) + '</span>'
+            '<span class="rf-dir">' + esc(dlabel) + '</span></button>'
+            '<div class="rf-panel" hidden>' + panel + '</div></div>')
+    if not items:
+        return ('<div class="rf-locked">This buddy&#8217;s repo held no markdown '
+                'files when this page was generated.</div>')
+    return ''.join(items)
+
 def repo_markdown_section(b):
     """The buddy's repo markdown, on the page (Dave 2026-10-20): a baked
-    inventory of what the local clone holds, plus the live Repo files reader
-    (the same widget the template homepages use) which loads the actual
-    files from GitHub with Dave's token — always current, never published
-    raw to this public page."""
+    inventory of what the local clone holds, plus the Repo files reader
+    (the same widget the template homepages use). Since 2026-11-19 the
+    reader's contents are BAKED IN at generation time (Dave's call,
+    reversing the v3.2 token-loaded design): the token reader sat dead
+    on any device without a token, so the files now render into the
+    page itself — no token, no sign-in, no fetch."""
     files = []
     clone = repo_clone_dir(b)
     if clone:
@@ -111,7 +148,7 @@ def repo_markdown_section(b):
                 n = 0
             items.append('<li><code>%s</code> <span class="muted">%s chars</span></li>' % (esc(rel), format(n, ',')))
         parts.append('<p class="muted">In the local clone of davedellaquila/%s — the reader below '
-                     'loads the live files from the repo itself:</p><ul class="mdinv">%s</ul>'
+                     'baked into the reader below from that clone:</p><ul class="mdinv">%s</ul>'
                      % (esc(b.get('repo') or b['id']), ''.join(items)))
     if tree_files:
         items = ''.join('<li><code>%s</code></li>' % esc(rel) for rel, _ in tree_files)
@@ -119,9 +156,8 @@ def repo_markdown_section(b):
                      '<ul class="mdinv">%s</ul>' % (esc(b['id']), items))
     if not files and not tree_files:
         parts.append('<p class="empty">No local clone of this buddy\'s repo is kept here yet — '
-                     'the reader below still loads the live files from GitHub once a token '
-                     'is connected.</p>')
-    parts.append(_C['FILES_HTML'].replace('__BID__', esc(b['id'])).replace('__BNAME__', esc(b.get('name', b['id']))))
+                     'so there is nothing to bake into the reader below yet.</p>')
+    parts.append(_C['FILES_HTML'].replace('__BID__', esc(b['id'])).replace('__BNAME__', esc(b.get('name', b['id']))).replace('__RFFILES__', _baked_items(files)))
     return section('From the repo — markdown files (%d)' % len(files), ''.join(parts))
 
 # --- Managed Files section (Dave's homepage standard, 2026-11-18) ---------

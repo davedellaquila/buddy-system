@@ -217,6 +217,8 @@ h2 { font-size: 22px; margin: 32px 0 16px; }
 .rf-body pre code { border: none; padding: 0; background: none; }
 .rf-body a { color: var(--accent); }
 .rf-body hr { border: none; border-top: 1px solid var(--border); margin: 14px 0; }
+.rf-body table { border-collapse: collapse; margin: 10px 0; font-size: 13.5px; }
+.rf-body th, .rf-body td { border: 1px solid var(--border); padding: 5px 9px; text-align: left; }
 .rf-ta { width: 100%; box-sizing: border-box; background: var(--bg); color: var(--text); border: 1px solid var(--border); border-radius: 8px; padding: 12px; font-family: ui-monospace, Menlo, monospace; font-size: 13px; line-height: 1.55; }
 /* ---- Accordion files (Dave 2026-10-21): the list of markdown files;
    clicking a file name opens its contents inline right below that name.
@@ -362,11 +364,301 @@ h2 { font-size: 22px; margin: 32px 0 16px; }
 
 <section class="repo-files" data-buddy-id="project-buddy">
 <h2>📄 Repo files</h2>
-<p class="rf-sub">The markdown files in <span data-buddy-name>Projects Buddy</span>'s repo. Tap a file name and its contents open right below it — open as many as you like at once. Edit inside an opened file and the save goes straight back to GitHub. The repo is private, so nothing here — not even the file names — is shown until GitHub is connected on this device.</p>
-<div class="rf-locked" hidden>🔒 Connect GitHub in the 🧠 Brain dump box above to view and edit files — the repos are private, so a token is needed to read them. Then reload this page.</div>
-<div class="rf-main" hidden>
-<div class="rf-list rf-files-wrap"></div>
-<div class="rf-status attn-status" role="status"></div>
+<p class="rf-sub">The markdown files in <span data-buddy-name>Projects Buddy</span>'s repo, baked into this page when it was generated — tap a file name and its contents open right below it; open as many as you like at once. No sign-in and no fetching: the words are right here. To change a file, edit it in the repo — the page picks it up next time it is generated.</p>
+<div class="rf-main">
+<div class="rf-list rf-files-wrap"><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">CONFIG.md</span><span class="rf-dir">repo root</span></button><div class="rf-panel" hidden><div class="rf-body"><h1>CONFIG — Project Buddy</h1>
+<p>How this buddy is configured: identity, persona, voice, scope, preferences, privacy. (Project Buddy predates the new_project.py seeding, so this file was created Nov 3, 2026 to bring its records in line with the fleet convention.)</p>
+<h2>Identity</h2>
+<ul>
+<li>Name: Project Buddy</li>
+<li>ID: project-buddy</li>
+<li>Icon: 🧭</li>
+<li>Persona: Default male</li>
+<li>Voice: Lofty Throne — avocado_v2:vdc_NOID102 (Dave's pick, Nov 3, 2026 voice auditions — "pilot-adjacent, steady, confident." Supersedes the Paternal Toolbox casting default; the registry voice had in fact been unset, which is why the Nov 3 standup used a fallback. Registry: buddies.json commit c9741eef. This voice is used for "Hear my role" audio, standup lines, and voice notes.)</li>
+<li>Repo: https://github.com/davedellaquila/project-buddy (private)</li>
+<li>Homepage: https://davedellaquila.github.io/buddy-system/project-buddy/</li>
+<li>Brief: https://docs.google.com/document/d/1yBcOP8Usbw6CaIj_Ufn7pLVX6AaKVjP1AP7ZvkM_O6c/edit</li>
+<li>Parent: astro</li>
+</ul>
+<h2>Scope</h2>
+<ul>
+<li>The one place for all of Dave's ideas and projects: fast capture, an idea bank with statuses (New → Considering → Active → Parked → Done/Dropped), promote-to-project with next actions, and lightweight review nudges.</li>
+<li>Owns the new-project drill (side thread, mission statement, private repo, review ask) and top-level system design work commissioned by Dave (e.g., the Buddy Artifacts spec, the LinkedIn teaser campaigns).</li>
+<li>Its dashboard is the macro view: status and next-action items for every buddy.</li>
+</ul>
+<h2>Privacy</h2>
+<ul>
+<li>Repo is private; homepage follows the fleet rule (private by default unless Dave makes a page public).</li>
+</ul></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">README.md</span><span class="rf-dir">repo root</span></button><div class="rf-panel" hidden><div class="rf-body"><h1>🧭 Project Buddy</h1>
+<p>One place for all of Dave's ideas and projects — fast capture, an idea bank with statuses (New → Considering → Active → Parked → Done/Dropped), promote-to-project with next actions, and lightweight review nudges.</p>
+<h2>Product brief</h2>
+<p><a href="docs/brief.md">Read the full brief</a> · <a href="https://docs.google.com/document/d/1yBcOP8Usbw6CaIj_Ufn7pLVX6AaKVjP1AP7ZvkM_O6c/edit">Google Doc</a> · <a href="https://docs.google.com/document/d/1VIn8HJvR5ft3sGcQ0haLsEQj1w8zGALbm6wHlP5aHyA/edit">PRD Draft v1</a></p>
+<h2>Dashboard</h2>
+<p>The macro view: <a href="https://davedellaquila.github.io/buddy-system/">davedellaquila.github.io/buddy-system</a> — built from <a href="https://github.com/davedellaquila/buddy-system">davedellaquila/buddy-system</a>.</p></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">ARCHITECTURE.md</span><span class="rf-dir">docs</span></button><div class="rf-panel" hidden><div class="rf-body"><h1>Buddy System — Architecture</h1>
+<p><em>Draft v1 — 2026-10-09. For Dave's review. This document describes how the
+Buddy system fits together as of October 2026. It is descriptive, not
+aspirational: where the plan outruns reality, that's called out.</em></p>
+<h2>1. Overview</h2>
+<p>The Buddy system is Dave's personal operating system for ideas and projects.
+One buddy = one problem domain (a person, a property, a project, a workflow).
+Each buddy is a small, consistent package: a conversation, a brief, a repo,
+and a home page. ~40 buddies exist as of 2026-10-09, growing by the day.</p>
+<p><a href="https://docs.google.com/document/d/1LbFR4bTkRMsul84cM762-tvbpmAencxC0-Vu7fIZ-60/edit">Buddy Suite</a>
+is the shared layer: common branding, design language, monetization, and
+marketing across the family. Individual buddies (Money Buddy, Cabin Buddy,
+Party Buddy, …) are the products; Buddy Suite is what makes them feel like
+one family.</p>
+<h2>2. Components</h2>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Component</th>
+<th>What it is</th>
+<th>Where it lives</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><strong>Chat thread</strong></td>
+<td>The buddy's conversational home. All discussion, decisions, and reviews happen here. First message is always the INIT summary (executive summary + links to brief, repo, related docs, parent/children).</td>
+<td>Muse side chats (private 1:1)</td>
+</tr>
+<tr>
+<td>2</td>
+<td><strong>Product brief</strong></td>
+<td>Canonical description: the idea, the problem, revenue potential, room for growth, v1 scope, open questions. Dave reviews every brief before anything else is built.</td>
+<td>Google Docs in the Zuki Docs Drive folder</td>
+</tr>
+<tr>
+<td>3</td>
+<td><strong>GitHub repo</strong></td>
+<td>One private repo per buddy (<code>davedellaquila/&lt;slug&gt;</code>). Holds code today; will hold the knowledge base (<code>KNOWLEDGE.md</code>, <code>DECISIONS.md</code>) once the Scaffold Buddy template lands. The drill currently stamps <code>README.md</code> + <code>docs/brief.md</code> on creation.</td>
+<td>github.com/davedellaquila</td>
+</tr>
+<tr>
+<td>4</td>
+<td><strong>Dashboard</strong></td>
+<td>The macro view of the whole system: every buddy's status, next actions, and home page. Views: Tree, Org chart, Outline, Projects, Plans, Manifest.</td>
+<td><code>buddy-tree</code> repo → static site at davedellaquila.github.io/buddy-tree</td>
+</tr>
+<tr>
+<td>5</td>
+<td><strong>The drill</strong></td>
+<td>The automation that creates components 1–3 (+ registry/memory entries) from a project name + idea. Codified as the <code>project-buddy</code> skill; implemented by <code>new_project.py</code>.</td>
+<td><code>~/workspace/skills/project-buddy/</code></td>
+</tr>
+<tr>
+<td>6</td>
+<td><strong>Scaffold Buddy</strong> (planned)</td>
+<td>The repo template: <code>README.md</code>, <code>KNOWLEDGE.md</code>, <code>DECISIONS.md</code>, stamped into every new repo. Brief exists; not yet wired into the drill.</td>
+<td>Brief in Zuki Docs</td>
+</tr>
+</tbody>
+</table>
+<h2>3. The registry</h2>
+<p><code>buddies.json</code> in the <code>buddy-tree</code> repo is the source of truth for the
+dashboard. <code>build.py</code> generates the static <code>index.html</code> from <code>buddies.json</code>
+(+ <code>plans.json</code> for the Plans view, + <code>buddy-tree.html</code> for style/fragments).
+A build stamp (<code>YYYYMMDD.HHMM</code>) is baked into every generated page.</p>
+<p>Registry schema per buddy:</p>
+<pre><code>id, name, parent, kind, tagline, mission, status, statusClass,
+brief (Google Doc URL), repo (repo slug), docs[], icon (emoji),
+photos[], attention[] (review/action items with dates)
+</code></pre>
+<ul>
+<li><code>parent</code> is a buddy id or <code>null</code> (only Project Buddy has <code>null</code>). 41 of 42
+  buddies have a parent.</li>
+<li><code>kind</code> is one of: <code>root</code>, <code>personal</code>, <code>family</code>, <code>property</code>, <code>finance</code>,
+  <code>work</code>, <code>standalone</code>, <code>meta</code>.</li>
+<li><code>attention[]</code> is the review queue — items Dave needs to look at, each with
+  an id, date, and text.</li>
+</ul>
+<p>Rebuild + push after every registry change:
+<code>python3 build.py &amp;&amp; git add -A &amp;&amp; git commit -m "…" &amp;&amp; git push origin master</code>.</p>
+<h2>4. State &amp; sync model</h2>
+<p>The dashboard is a <strong>static page</strong> — it resets on reload. State lives in
+three tiers:</p>
+<ol>
+<li><strong>Built-in (static).</strong> Everything in <code>buddies.json</code>/<code>plans.json</code>, baked
+   into <code>index.html</code> at build time. Changing it means editing the registry
+   and rebuilding.</li>
+<li><strong>Device-local.</strong> localStorage on Dave's device: the GitHub token,
+   scratch-pad notes (400ms debounced autosave), UI state (sidebar width,
+   seen flags, icon overrides, renames), the ingest fallback queue.
+   Never leaves the device.</li>
+<li><strong>Repo-backed shared.</strong> Content that must be visible to anyone with repo
+   access, written from the browser via the GitHub API:
+   - Shared notes → <code>&lt;buddy-repo&gt;/docs/notes.md</code> (debounced ~900ms autosave
+     on input; whole-file replace via the contents API)
+   - Brain-dump ingest → <code>&lt;buddy-repo&gt;/docs/ingest.md</code> (appended as
+     timestamped entries; 2s debounce, Enter dumps immediately)
+   - Photos → <code>&lt;buddy-repo&gt;/photos/&lt;buddy-id&gt;/</code> (HEIC auto-converted to
+     JPEG client-side)</li>
+</ol>
+<p>Write flow: <code>textarea input → debounce → base64 encode → PUT
+/repos/davedellaquila/&lt;repo&gt;/contents/&lt;path&gt;</code> with the device token.
+Without a token, repo-backed fields are disabled with an explicit warning —
+nothing silently fails.</p>
+<h2>5. Auth model</h2>
+<p>Two tokens, two trust domains. <strong>Never commingle them.</strong></p>
+<ul>
+<li><strong>Dave's device token</strong> — a <em>classic</em> GitHub personal access token with the
+  <code>repo</code> scope, created at github.com/settings/tokens/new. Entered <strong>once,
+  globally</strong> (not per buddy) in the dashboard; stored only in the device's
+  localStorage; sent only to <code>api.github.com</code>. Powers all repo-backed writes
+  from the page (notes, ingest, photos).</li>
+<li><strong>The assistant's token</strong> — the <code>gh</code> CLI credential on the assistant's
+  machine. Used server-side by the drill: create/clone/push/rename repos.
+  Notably lacks the <code>delete_repo</code> scope (repo deletion stays manual).
+  This token must never be handed to the page, pasted into chat, or stored
+  anywhere Dave's browser can read.</li>
+</ul>
+<h2>6. Hierarchy &amp; knowledge flow</h2>
+<p>Buddies nest: one parent, many children. Examples (2026-10-09):</p>
+<ul>
+<li>Hot Tub Buddy ⊂ Cabin Buddy ⊂ Property Buddy ⊂ Project Buddy</li>
+<li>Party Buddy ⊂ Cabin Buddy; Lenwood Buddy ⊂ Property Buddy</li>
+<li>Money Buddy, Investment Buddy ⊂ Finance Buddy ⊂ Project Buddy</li>
+<li>Travel, Relationship, Career Buddy ⊂ Personal Buddy ⊂ Project Buddy</li>
+<li>Jessica, Amanda, Quentin, Pops, Emile, Nancy, Sawyer ⊂ Family Buddy ⊂ Project Buddy</li>
+</ul>
+<p>The model: <strong>knowledge flows both directions</strong> — children inherit the
+parent's knowledge base; parents see rollups from their children. Moves are
+made by telling the assistant ("move X under Y"), which updates the
+registry, dashboard, INIT summaries, and memory together.</p>
+<p><em>Reality check:</em> today the hierarchy is real in the registry and the
+dashboard views. The two-way <em>knowledge</em> flow (shared KNOWLEDGE.md /
+DECISIONS.md across parent and child) is the intent, pending the Scaffold
+Buddy template rollout.</p>
+<h2>7. Key architectural decisions</h2>
+<p><strong>ADR-1 — Static-first dashboard.</strong> The dashboard is a generated static site
+on GitHub Pages, not a web app. Rationale: zero hosting cost, trivially
+shareable via link, no backend to operate. Cost: no server-side persistence;
+everything dynamic happens in the browser or not at all.</p>
+<p><strong>ADR-2 — Repo as source of truth for shared content.</strong> Anything another
+human should see (shared notes, ingest log, photos) is written into the
+buddy's Git repo as plain files, not into a database. Rationale: durable,
+auditable, visible with repo access, no new infrastructure.</p>
+<p><strong>ADR-3 — Device-held credentials.</strong> The user's GitHub token lives only on
+their device (localStorage), entered once. Rationale: the static site has no
+backend to hold secrets; this keeps the credential out of every server log.</p>
+<p><strong>ADR-4 — Drill automation over manual setup.</strong> Every buddy is created by
+the same codified drill (thread + brief + repo + review + memory), not by
+hand. Rationale: Dave creates buddies constantly; consistency compounds.</p>
+<p><strong>ADR-5 — Briefs as Google Docs, not markdown.</strong> Product briefs and PRDs
+live only as Google Docs in Zuki Docs. Dave doesn't use Word; <code>.docx</code> is
+never created, not even as staging. Rationale: his rule, non-negotiable.</p>
+<p><strong>ADR-6 — Hierarchy with two-way knowledge flow.</strong> Parent/child nesting with
+knowledge flowing both directions (see §6). Status: model adopted; knowledge
+layer pending Scaffold Buddy.</p>
+<h2>8. What's next</h2>
+<ul>
+<li><strong>The real buddy web app</strong> — the dashboard is the macro <em>view</em>; the PRD
+  Draft v1 (Project Buddy thread, Zuki Docs) sketches the actual application
+  with persistence, auth, and collaboration. <em>(Note: the PRD doc couldn't be
+  fetched while drafting this — section to be tightened after a direct read.)</em></li>
+<li><strong>Sharing / collaborative buddies</strong> — Sharing Buddy is scoping per-buddy
+  shareable links, access levels, and privacy. Constraint: the static Pages
+  site can't enforce access; sharing lives in the real app.</li>
+<li><strong>Scaffold Buddy rollout</strong> — stamp <code>README.md</code> / <code>KNOWLEDGE.md</code> /
+  <code>DECISIONS.md</code> into every repo via the drill; backfill existing repos.</li>
+<li><strong>Registry automation</strong> — dashboard entries are still added by hand;
+  the drill should do it (tracked as an open drill item).</li>
+</ul>
+<h2>9. Open questions</h2>
+<ol>
+<li><strong>Alias field</strong> — an alias display name per buddy ("Project Buddy" →
+   "Dave's projects") was discussed 2026-10-09, but no <code>alias</code> field exists
+   in <code>buddies.json</code> today. Decide: add to the schema, or drop the idea.</li>
+<li><strong>Plans vs buddies</strong> — <code>plans.json</code> holds non-buddy plans (e.g. Amador
+   County Transport) with a looser schema. Should plans graduate into
+   buddies, or stay a separate concept?</li>
+<li><strong>Muse artifact vs GitHub Pages</strong> — an earlier Muse-hosted dashboard
+   artifact coexists with the Pages site. Which is canonical going forward?</li>
+<li><strong>Ingest without token</strong> — brain dumps currently queue in localStorage
+   when no token is present. Should they auto-flush to the repo once a
+   token is entered, or stay device-local until re-dumped?</li>
+<li><strong>Pops Buddy</strong> — premise corrected (Pops is Dave's own nickname);
+   retirement pending Dave's decision. Remove from the registry when decided.</li>
+</ol></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">PRD.md</span><span class="rf-dir">docs</span></button><div class="rf-panel" hidden><div class="rf-body"><!-- 
+  Canonical source: Google Docs (Zuki Docs)
+  https://docs.google.com/document/d/1VIn8HJvR5ft3sGcQ0haLsEQj1w8zGALbm6wHlP5aHyA/edit
+  This is a mirror. Edit the Google Doc, then re-sync.
+-->
+
+<h1>Project Buddy — PRD Draft v1</h1>
+<h1>Overview</h1>
+<p>Project Buddy is the one place for every idea: fast capture, an idea bank with statuses, and lightweight project tracking for the keepers. It exists because ideas currently die in Muse chat transcripts — not searchable, no status, no nudges. V1 is for Dave, designed around how he works: bursts of building, side threads per topic, quick capture usually from the iPhone. This PRD turns the approved product brief into buildable requirements.</p>
+<h1>Goals</h1>
+<p>• Dave stops losing ideas: every idea lands in the bank within seconds of occurring to him.</p>
+<p>• The bank earns a quick weekly glance (the review habit).</p>
+<p>• At least one shipped thing traces back to “I put it in Project Buddy.”</p>
+<h1>Functional requirements</h1>
+<p>FR-1 · Instant capture. Saving an idea takes seconds: a title plus optional notes. iPhone-first and dictation-friendly — capture happens on the go, often by voice.</p>
+<p>FR-2 · The bank. Every idea in one searchable list, taggable. Each idea carries a status: New → Considering → Active → Parked → Done / Dropped. Nothing disappears silently; dropping an idea is a deliberate state, not deletion.</p>
+<p>FR-3 · Promote to project. An idea graduates into a project with a simple next-action list — next actions, not Gantt charts.</p>
+<p>FR-4 · Review nudge. A lightweight periodic prompt to revisit the bank and work the statuses. The habit without the nagging. (Exact cadence: see open questions.)</p>
+<h1>Non-functional requirements</h1>
+<p>• Capture must feel instant (a few seconds, iPhone-first).</p>
+<p>• Single user; no sharing or collaboration in v1.</p>
+<p>• Simple, boring tech that Dave can maintain.</p>
+<h1>Out of scope for v1</h1>
+<p>• Team collaboration or sharing.</p>
+<p>• Time tracking, estimates, Gantt charts.</p>
+<p>• Integrations with other apps (standalone until it earns them).</p>
+<h1>Open questions (decisions to lock before build)</h1>
+<ol>
+<li>
+<p>Form factor: standalone web app on the Finance Buddy pattern (Firebase backend, iPhone-first), or something else?</p>
+</li>
+<li>
+<p>Buddy links: should ideas link into the other buddies (e.g. an idea becomes a Job Buddy lead or a task for another buddy)?</p>
+</li>
+<li>
+<p>Nudge cadence: how pushy should the review nudge be — weekly? opt-in only?</p>
+</li>
+<li>
+<p>Backfill: what happens to the ideas already living in Muse threads — manual import, assisted sweep, or fresh start?</p>
+</li>
+</ol>
+<h1>Success criteria / acceptance</h1>
+<p>• An idea can be captured from the iPhone in under 10 seconds.</p>
+<p>• Every idea is findable by search; statuses are visible at a glance.</p>
+<p>• Dropping an idea requires an explicit action; deleted-by-accident is impossible.</p>
+<p>• The review nudge fires on schedule and is dismissible without guilt.</p>
+<p>• At least one shipped project traces its origin to the bank.</p>
+<h1>Milestones</h1>
+<p>M1: PRD approved; form factor decided.</p>
+<p>M2: Capture + bank working for Dave on iPhone.</p>
+<p>M3: Statuses, promote-to-project, review nudge live.</p>
+<p>M4: First shipped thing traced back to the bank.</p></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">PRODUCT_BRIEF.md</span><span class="rf-dir">docs</span></button><div class="rf-panel" hidden><div class="rf-body"><!-- 
+  Canonical source: Google Docs (Zuki Docs)
+  https://docs.google.com/document/d/1yBcOP8Usbw6CaIj_Ufn7pLVX6AaKVjP1AP7ZvkM_O6c/edit
+  This is a mirror. Edit the Google Doc, then re-sync.
+-->
+
+<h1>Project Buddy — Product Brief</h1>
+<h1>The problem</h1>
+<p>Dave generates ideas constantly — product ideas, business ideas, project ideas, “someday” ideas. Right now they go into Muse chat threads, which is a bad idea bank: conversations scroll away, ideas can’t be searched or sorted, there’s no sense of status (is this live? parked? dead?), and nothing ever nudges a good idea back into attention. Ideas die in the transcript.</p>
+<h1>The idea</h1>
+<p>One place to put every idea, then work the keepers into real projects. Fast capture (an idea should take seconds to save), a bank where ideas live with a status, and lightweight project tracking for the ones that graduate — next actions, not Gantt charts. Not Jira, not a second job: the smallest tool that keeps ideas alive until they’re done or deliberately dropped.</p>
+<h1>Who it’s for</h1>
+<p>V1 is for Dave, designed around how he works: bursts of building, side threads per topic, quick capture usually from the iPhone.</p>
+<h1>V1: what it does</h1>
+<p>• Instant capture: title + notes in seconds, iPhone-first, dictation-friendly.• The bank: every idea in one searchable list, taggable.• Statuses: New → Considering → Active → Parked → Done / Dropped. Nothing disappears silently; dropping is a deliberate state.• Promote to project: an idea becomes a project with a simple next-action list.• Review nudge: a lightweight periodic prompt to revisit the bank — the “idea review” habit, without nagging.</p>
+<h1>Out of scope for v1</h1>
+<p>• Team collaboration or sharing• Time tracking, estimates, Gantt charts• Integrations with other apps (standalone until it earns them)</p>
+<h1>Open questions</h1>
+<p>• Standalone web app on the Finance Buddy pattern (Firebase backend, iPhone-first), or something else?• Should ideas link into the other buddies (e.g. an idea becomes a Job Buddy lead or a Service Buddy task)?• How pushy should the review nudge be — weekly? opt-in only?• What happens to the ideas already living in Muse threads — manual import, assisted sweep, or fresh start?</p>
+<h1>What success looks like</h1>
+<p>Dave stops losing ideas. The bank gets a quick weekly glance. At least one shipped thing traces back to “I put it in Project Buddy.”</p>
+<h1>Priority</h1>
+<p>High — Dave asked for this to jump the queue (2026-10-09).</p></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">brief.md</span><span class="rf-dir">docs</span></button><div class="rf-panel" hidden><div class="rf-body"><h1>Project Buddy — Brief</h1>
+<p>Canonical brief: <a href="https://docs.google.com/document/d/1yBcOP8Usbw6CaIj_Ufn7pLVX6AaKVjP1AP7ZvkM_O6c/edit">Project Buddy — Product Brief</a> (Google Doc, Zuki Docs).</p>
+<p>A full mirror lives in this repo at <a href="PRODUCT_BRIEF.md">PRODUCT_BRIEF.md</a>; the PRD draft is mirrored at <a href="PRD.md">PRD.md</a>.</p></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">ingest.md</span><span class="rf-dir">docs</span></button><div class="rf-panel" hidden><div class="rf-body"><h1>Ingest log — Project Buddy</h1>
+<p>Raw brain-dumps about this buddy. Each entry is timestamped; work the keepers into the dossier.</p></div></div></div></div>
 </div>
 </section>
 
@@ -877,246 +1169,18 @@ Generated 2026-11-19 · Part of the Buddy System<br>
   var sec = document.querySelector('.repo-files');
   if (!sec || sec.dataset.rfInit) return;
   sec.dataset.rfInit = '1';
-  var bid = sec.getAttribute('data-buddy-id') || (function(){
-    var p = location.pathname.replace(/\/+$/, '');
-    return p.substring(p.lastIndexOf('/') + 1);
-  })();
-  function lsGet(){ try { return JSON.parse(localStorage.getItem('buddyTree.v3') || '{}'); } catch(e){ return {}; } }
-  function token(){ return lsGet().ghToken || ''; }
-  function b64encode(str){
-    var bytes = new TextEncoder().encode(str), bin = '';
-    bytes.forEach(function(b){ bin += String.fromCharCode(b); });
-    return btoa(bin);
-  }
-  async function ghApi(path, method, body){
-    var t = token();
-    if (!t) throw new Error('Add a GitHub token first.');
-    var r = await fetch('https://api.github.com' + path, {
-      method: method || 'GET',
-      headers: {'Authorization': 'Bearer ' + t, 'Accept': 'application/vnd.github+json', 'Content-Type': 'application/json'},
-      body: body ? JSON.stringify(body) : undefined
-    });
-    if (!r.ok) throw new Error('GitHub ' + r.status);
-    return r.status === 204 ? null : await r.json();
-  }
-  async function ghGetFile(repo, path){
-    try {
-      var j = await ghApi('/repos/davedellaquila/' + repo + '/contents/' + path);
-      if (j && j.content) return {
-        text: new TextDecoder().decode(Uint8Array.from(atob(j.content.replace(/\n/g, '')), function(c){ return c.charCodeAt(0); })),
-        sha: j.sha
-      };
-    } catch(e){}
-    return null;
-  }
-  var repo = null;
-  async function resolveRepo(){
-    try {
-      var r = await fetch('../buddies.json', {cache: 'no-store'});
-      var d = await r.json();
-      var buds = d.buddies || [];
-      for (var i = 0; i < buds.length; i++) {
-        if (buds[i].id === bid && buds[i].repo) { repo = buds[i].repo; break; }
-      }
-    } catch(e){}
-  }
-  function esc(s){ return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
-  function inline(s){
-    s = esc(s);
-    s = s.replace(/`([^`]+)`/g, '<code>$1</code>');
-    s = s.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
-    s = s.replace(/(^|[^*])\*([^*\n]+)\*/g, '$1<em>$2</em>');
-    s = s.replace(/\[([^\]]+)\]\((https?:[^)\s]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>');
-    return s;
-  }
-  function mdRender(src){
-    var lines = src.split('\n'), out = [], inList = false, inCode = false, codeBuf = [];
-    function closeList(){ if (inList) { out.push('</ul>'); inList = false; } }
-    for (var i = 0; i < lines.length; i++){
-      var ln = lines[i], m;
-      if (/^```/.test(ln)) {
-        if (inCode) { out.push('<pre><code>' + esc(codeBuf.join('\n')) + '</code></pre>'); codeBuf = []; inCode = false; }
-        else { closeList(); inCode = true; }
-        continue;
-      }
-      if (inCode) { codeBuf.push(ln); continue; }
-      if ((m = ln.match(/^(#{1,4})\s+(.*)/))) {
-        closeList();
-        var lv = Math.min(m[1].length + 1, 4);
-        out.push('<h' + lv + '>' + inline(m[2]) + '</h' + lv + '>');
-        continue;
-      }
-      if (/^\s*(-{3,}|\*{3,})\s*$/.test(ln)) { closeList(); out.push('<hr>'); continue; }
-      if ((m = ln.match(/^\s*[-*]\s+(.*)/)) || (m = ln.match(/^\s*\d+[.)]\s+(.*)/))) {
-        if (!inList) { out.push('<ul>'); inList = true; }
-        out.push('<li>' + inline(m[1]) + '</li>');
-        continue;
-      }
-      if ((m = ln.match(/^>\s?(.*)/))) { closeList(); out.push('<blockquote>' + inline(m[1]) + '</blockquote>'); continue; }
-      if (!ln.trim()) { closeList(); continue; }
-      closeList();
-      out.push('<p>' + inline(ln) + '</p>');
-    }
-    closeList();
-    if (inCode) out.push('<pre><code>' + esc(codeBuf.join('\n')) + '</code></pre>');
-    return out.join('\n');
-  }
-  var locked = sec.querySelector('.rf-locked'), main = sec.querySelector('.rf-main'),
-      list = sec.querySelector('.rf-list'), st = sec.querySelector('.rf-status');
-  /* Accordion files (Dave 2026-10-21): a list of file names; clicking a
-     name toggles that file's contents open inline right below the name.
-     Toggles are independent — several files can be open at once. Contents
-     load lazily on first open and are cached in the item's own state;
-     Edit/Save lives inside the opened panel. */
-  function buildFileSection(f){
-    var wrap = document.createElement('div');
-    wrap.className = 'rf-fileitem';
-    var head = document.createElement('button');
-    head.type = 'button';
-    head.className = 'rf-file';
-    head.setAttribute('aria-expanded', 'false');
-    var nm = document.createElement('span');
-    nm.className = 'rf-name';
-    nm.textContent = '📄 ' + f.name;
-    var dir = document.createElement('span');
-    dir.className = 'rf-dir';
-    dir.textContent = f.path;
-    var chev = document.createElement('span');
-    chev.className = 'rf-chev';
-    chev.textContent = '▸';
-    head.appendChild(nm);
-    head.appendChild(dir);
-    head.appendChild(chev);
-    var panel = document.createElement('div');
-    panel.className = 'rf-panel';
-    panel.hidden = true;
-    var phead = document.createElement('div');
-    phead.className = 'rf-viewhead';
-    var ppath = document.createElement('span');
-    ppath.className = 'rf-path';
-    ppath.textContent = f.path;
-    var editBtn = document.createElement('button');
-    editBtn.type = 'button';
-    editBtn.className = 'attn-btn rf-edit';
-    editBtn.textContent = 'Edit';
-    editBtn.disabled = true;
-    phead.appendChild(ppath);
-    phead.appendChild(editBtn);
-    var bodyEl = document.createElement('div');
-    bodyEl.className = 'rf-body';
-    bodyEl.innerHTML = '<p class="rf-loading">Loading ' + esc(f.path) + '…</p>';
-    var editor = document.createElement('div');
-    editor.className = 'rf-editor';
-    editor.hidden = true;
-    var ta = document.createElement('textarea');
-    ta.className = 'rf-ta';
-    ta.rows = 18;
-    ta.spellcheck = false;
-    ta.setAttribute('aria-label', 'Markdown source for ' + f.path);
-    var actions = document.createElement('div');
-    actions.className = 'attn-actions';
-    var saveBtn = document.createElement('button');
-    saveBtn.type = 'button';
-    saveBtn.className = 'attn-btn primary rf-save';
-    saveBtn.textContent = 'Save to GitHub';
-    var cancelBtn = document.createElement('button');
-    cancelBtn.type = 'button';
-    cancelBtn.className = 'attn-btn rf-cancel';
-    cancelBtn.textContent = 'Cancel';
-    actions.appendChild(saveBtn);
-    actions.appendChild(cancelBtn);
-    editor.appendChild(ta);
-    editor.appendChild(actions);
-    var fst = document.createElement('div');
-    fst.className = 'rf-fstatus attn-status';
-    fst.setAttribute('role', 'status');
-    panel.appendChild(phead);
-    panel.appendChild(bodyEl);
-    panel.appendChild(editor);
-    panel.appendChild(fst);
-    wrap.appendChild(head);
-    wrap.appendChild(panel);
-    var cur = null, loaded = false;
-    function loadOnce(){
-      if (loaded) return;
-      loaded = true;
-      ghGetFile(repo, f.path).then(function(got){
-        if (!got) { loaded = false; bodyEl.innerHTML = '<p class="rf-loading">⚠ Could not load ' + esc(f.path) + ' — close and open it again to retry.</p>'; return; }
-        cur = {path: f.path, sha: got.sha, text: got.text};
-        bodyEl.innerHTML = mdRender(got.text);
-        editBtn.disabled = false;
-      });
-    }
-    head.addEventListener('click', function(){
+  sec.querySelectorAll('.rf-fileitem > .rf-file').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var item = btn.parentElement;
+      var panel = item ? item.querySelector('.rf-panel') : null;
+      if (!panel) return;
       var open = panel.hidden;
       panel.hidden = !open;
-      head.setAttribute('aria-expanded', open ? 'true' : 'false');
-      chev.textContent = open ? '▾' : '▸';
-      if (open) loadOnce();
+      btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      var ch = btn.querySelector('.rf-chev');
+      if (ch) ch.textContent = open ? '▾' : '▸';
     });
-    editBtn.addEventListener('click', function(){
-      if (!cur) return;
-      ta.value = cur.text;
-      bodyEl.hidden = true;
-      editor.hidden = false;
-      ta.focus();
-    });
-    cancelBtn.addEventListener('click', function(){
-      editor.hidden = true;
-      bodyEl.hidden = false;
-    });
-    saveBtn.addEventListener('click', async function(){
-      if (!cur) return;
-      saveBtn.disabled = true;
-      fst.textContent = 'Saving…';
-      try {
-        var payload = {message: 'Edit ' + cur.path + ' from the homepage', content: b64encode(ta.value), sha: cur.sha};
-        var j = await ghApi('/repos/davedellaquila/' + repo + '/contents/' + cur.path, 'PUT', payload);
-        if (j && j.content && j.content.sha) cur.sha = j.content.sha;
-        cur.text = ta.value;
-        editor.hidden = true;
-        bodyEl.hidden = false;
-        bodyEl.innerHTML = mdRender(cur.text);
-        fst.textContent = '✓ Saved to GitHub (' + repo + '/' + cur.path + ').';
-      } catch(err){
-        var why = (err && err.message) || String(err);
-        fst.textContent = /409|422/.test(why)
-          ? '⚠ GitHub said the file changed since you loaded it (' + why + ') — reload this page and try again.'
-          : '⚠ Save failed (' + why + ') — your edit is still in the editor.';
-      }
-      saveBtn.disabled = false;
-    });
-    return wrap;
-  }
-  async function init(){
-    await resolveRepo();
-    if (!repo) {
-      locked.hidden = false;
-      locked.textContent = 'No repo is linked for this buddy yet, so there are no repo files to show.';
-      return;
-    }
-    if (!token()) { locked.hidden = false; return; }
-    main.hidden = false;
-    st.textContent = 'Loading files…';
-    var files = [];
-    async function grab(dir){
-      try {
-        var j = await ghApi('/repos/davedellaquila/' + repo + (dir ? '/contents/' + dir : '/contents'));
-        if (Array.isArray(j)) j.forEach(function(e){
-          if (e.type === 'file' && /\.md$/i.test(e.name)) files.push({name: e.name, path: e.path});
-        });
-      } catch(e){}
-    }
-    await grab('');
-    await grab('docs');
-    files.sort(function(a, b){ return a.path < b.path ? -1 : 1; });
-    if (!files.length) { st.textContent = 'No markdown files found in the repo yet.'; return; }
-    st.textContent = '';
-    files.forEach(function(f){
-      list.appendChild(buildFileSection(f));
-    });
-  }
-  init();
+  });
 })();
 </script>
 

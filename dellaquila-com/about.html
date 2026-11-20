@@ -153,6 +153,8 @@ footer{margin-top:36px;padding-top:18px;border-top:1px solid var(--border);color
 .rf-body pre code { border: none; padding: 0; background: none; }
 .rf-body a { color: var(--accent); }
 .rf-body hr { border: none; border-top: 1px solid var(--border); margin: 14px 0; }
+.rf-body table { border-collapse: collapse; margin: 10px 0; font-size: 13.5px; }
+.rf-body th, .rf-body td { border: 1px solid var(--border); padding: 5px 9px; text-align: left; }
 .rf-ta { width: 100%; box-sizing: border-box; background: var(--bg); color: var(--text); border: 1px solid var(--border); border-radius: 8px; padding: 12px; font-family: ui-monospace, Menlo, monospace; font-size: 13px; line-height: 1.55; }
 /* ---- Accordion files (Dave 2026-10-21): the list of markdown files;
    clicking a file name opens its contents inline right below that name.
@@ -207,14 +209,138 @@ footer{margin-top:36px;padding-top:18px;border-top:1px solid var(--border);color
 <section class="card"><h2 class="kicker">Sub-buddies (0)</h2><p class="empty">No sub-buddies.</p></section>
 <section class="card"><h2 class="kicker">Connections</h2><div class="connrow"><span class="connlabel">Parent</span><a href="../project-buddy/">🧭 Projects Buddy</a></div><div class="connrow"><span class="connlabel">Siblings</span><a href="../analytics-buddy/">📊 Analytics Buddy</a>, <a href="../architect-buddy/">📐 Architect Buddy</a>, <a href="../astronomy-buddy/">🔭 Astronomy Buddy</a>, <a href="../birthday-buddy/">🎂 Birthday Buddy</a>, <a href="../briefing-buddy/">📋 Briefing Buddy</a>, <a href="../buddy-types/">🧬 Buddy Buddy</a>, <a href="../buddy-suite/">🧩 Buddy Suite</a>, <a href="../charts-buddy/">📊 Charts Buddy</a>, <a href="../dpg-shop-software/">🔧 DPG Shop Software</a>, <a href="../decision-buddy/">🎯 Decision Buddy</a>, <a href="../design-buddy/">🎨 Designer</a>, <a href="../developer-buddy/">🧑‍💻 Developer Buddy</a>, <a href="../dream-buddy/">💭 Dream Buddy</a>, <a href="../events-buddy/">🎟️ Events Buddy</a>, <a href="../feedback-buddy/">📣 Feedback Buddy</a>, <a href="../finance-buddy/">💰 Finance Buddy</a>, <a href="../game-buddy/">🎮 Game Buddy</a>, <a href="../guardian-buddy/">🛡️ Guardian Buddy</a>, <a href="../idea-buddy/">💡 Idea Buddy</a>, <a href="../jev-buddy/">⚡ Jev Buddy</a>, <a href="../job-buddy/">🔎 Job Buddy</a>, <a href="../journal-buddy/">📓 Journal Buddy</a>, <a href="../school-buddy/">🎓 Learning Buddy</a>, <a href="../locations-buddy/">📍 Locations Buddy</a>, <a href="../marketing-buddy/">🥃 Marketing Buddy</a>, <a href="../music-buddy/">🎵 Music Buddy</a>, <a href="../news-buddy/">📰 News Buddy</a>, <a href="../onboarding-buddy/">👋 Onboarding Buddy</a>, <a href="../persona-buddy/">🎭 Persona Buddy</a>, <a href="../portfolio-buddy/">📸 Portfolio Buddy</a>, <a href="../reminder-buddy/">⏰ Reminder Buddy</a>, <a href="../research-buddy/">🔍 Research Buddy</a>, <a href="../scaffold-buddy/">🏗️ Scaffold Buddy</a>, <a href="../sharing-buddy/">🔗 Sharing Buddy</a>, <a href="../sierra-oak-farms/">🌻 Sierra Oak Farms</a>, <a href="../sports-car-adventures/">🏎️ Sports Car Adventures</a>, <a href="../tv-buddy/">📺 TV Buddy</a>, <a href="../tech-buddy/">📱 Tech Buddy</a>, <a href="../tester-relations-buddy/">🤝 Tester Relations Buddy</a>, <a href="../triton-museum/">🖼️ Triton Museum of Art</a>, <a href="../wine-buddy/">🍷 Wine Buddy</a>, <a href="../wisdom-buddy/">🦉 Wisdom Buddy</a>, <a href="../work-buddy/">💻 Work Buddy</a>, <a href="../zen-buddy/">🧘 Zen Buddy</a></div><div class="connrow"><span class="connlabel">Linked to</span><a href="../sports-car-adventures/">🏎️ Sports Car Adventures</a></div><div class="connrow"><span class="connlabel">Linked from</span><a href="../sports-car-adventures/">🏎️ Sports Car Adventures</a></div></section>
 <section class="card"><h2 class="kicker">Repository &amp; memory</h2><div class="connrow"><span class="connlabel">Repo</span><a href="https://github.com/davedellaquila/dellaquila-com" target="_blank" rel="noopener">davedellaquila/dellaquila-com</a> <span class="muted">— brain dumps land in docs/ingest.md</span></div></section>
-<section class="card"><h2 class="kicker">From the repo — markdown files (9)</h2><p class="muted">In the local clone of davedellaquila/dellaquila-com — the reader below loads the live files from the repo itself:</p><ul class="mdinv"><li><code>KNOWLEDGE.md</code> <span class="muted">1,820 chars</span></li><li><code>CONFIG.md</code> <span class="muted">532 chars</span></li><li><code>SOUL.md</code> <span class="muted">351 chars</span></li><li><code>DECISIONS.md</code> <span class="muted">644 chars</span></li><li><code>ACCOMPLISHMENTS.md</code> <span class="muted">498 chars</span></li><li><code>README.md</code> <span class="muted">302 chars</span></li><li><code>docs/brief.md</code> <span class="muted">3,302 chars</span></li><li><code>docs/ingest.md</code> <span class="muted">127 chars</span></li><li><code>docs/mission-statement.md</code> <span class="muted">3,302 chars</span></li></ul>
+<section class="card"><h2 class="kicker">From the repo — markdown files (9)</h2><p class="muted">In the local clone of davedellaquila/dellaquila-com — the reader below baked into the reader below from that clone:</p><ul class="mdinv"><li><code>KNOWLEDGE.md</code> <span class="muted">1,820 chars</span></li><li><code>CONFIG.md</code> <span class="muted">532 chars</span></li><li><code>SOUL.md</code> <span class="muted">351 chars</span></li><li><code>DECISIONS.md</code> <span class="muted">644 chars</span></li><li><code>ACCOMPLISHMENTS.md</code> <span class="muted">498 chars</span></li><li><code>README.md</code> <span class="muted">302 chars</span></li><li><code>docs/brief.md</code> <span class="muted">3,302 chars</span></li><li><code>docs/ingest.md</code> <span class="muted">127 chars</span></li><li><code>docs/mission-statement.md</code> <span class="muted">3,302 chars</span></li></ul>
 <section class="repo-files" data-buddy-id="dellaquila-com">
 <h2>📄 Repo files</h2>
-<p class="rf-sub">The markdown files in <span data-buddy-name>Dellaquila.com</span>'s repo. Tap a file name and its contents open right below it — open as many as you like at once. Edit inside an opened file and the save goes straight back to GitHub. The repo is private, so nothing here — not even the file names — is shown until GitHub is connected on this device.</p>
-<div class="rf-locked" hidden>🔒 Connect GitHub in the 🧠 Brain dump box above to view and edit files — the repos are private, so a token is needed to read them. Then reload this page.</div>
-<div class="rf-main" hidden>
-<div class="rf-list rf-files-wrap"></div>
-<div class="rf-status attn-status" role="status"></div>
+<p class="rf-sub">The markdown files in <span data-buddy-name>Dellaquila.com</span>'s repo, baked into this page when it was generated — tap a file name and its contents open right below it; open as many as you like at once. No sign-in and no fetching: the words are right here. To change a file, edit it in the repo — the page picks it up next time it is generated.</p>
+<div class="rf-main">
+<div class="rf-list rf-files-wrap"><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">KNOWLEDGE.md</span><span class="rf-dir">repo root</span></button><div class="rf-panel" hidden><div class="rf-body"><h1>Knowledge — Dellaquila.com</h1>
+<p>Everything this buddy has learned: facts, specs, history.</p>
+<h2>The business</h2>
+<ul>
+<li><strong>Dellaquila.com</strong> is Dave's official business — the name he files his taxes under.</li>
+<li>Legal form: <strong>unconfirmed</strong> (sole proprietorship assumed — Dave to confirm).</li>
+</ul>
+<h2>Tax posture (known facts — human CPA confirms specifics)</h2>
+<ul>
+<li>CA FTB minimum franchise tax <strong>$800/yr</strong>: deductible business expense, category <strong>Taxes and licenses</strong> (Schedule C line 23); <strong>not</strong> subject to the SALT cap.</li>
+<li>Books → preparer pipeline: <strong>Money Buddy</strong> Tax page → <strong>CPA report PDF</strong> (polished summary Dave chose for the CPA: business income, Schedule C business deductions, personal income, personal deductions, section totals, income/deductions/net box, business-meals 50% note) + <strong>CSV downloads</strong> per card (transaction detail). Dave's rule: PDF summary for the CPA, CSVs for detail.</li>
+</ul>
+<h2>Brands near the business</h2>
+<ul>
+<li><strong>Sports Car Adventures</strong> (🏎️): a BRAND, not a separately registered business (Dave, Oct 2026). Curated sports-car driving experiences; concept from Dave's 2026 business plan (Turo + DriveShare sourcing, owner/client relationships, matchmaking/routing/operating layer). The plan still needs Dave to share it with dave@dellaquila.com. Open: DBA under dellaquila.com at launch, or stay a brand.</li>
+</ul>
+<h2>The desk</h2>
+<ul>
+<li>This buddy's homepage IS the desk: <strong>KNOWLEDGE.md</strong> and <strong>CONFIG.md</strong> rendered live from this repo, editable in place with Dave's GitHub token (token stays on-device; repo is private, so nothing leaks).</li>
+<li>This buddy never gives tax or legal advice — it records posture, flags questions, points at the human CPA.</li>
+</ul>
+<h2>Related</h2>
+<ul>
+<li><strong>Sports Car Adventures</strong> (🏎️) — the brand; homepage: https://davedellaquila.github.io/buddy-system/sports-car-adventures/</li>
+<li><strong>Money Buddy</strong> — owns the books; this buddy owns the facts.</li>
+</ul></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">CONFIG.md</span><span class="rf-dir">repo root</span></button><div class="rf-panel" hidden><div class="rf-body"><h1>Configuration — Dellaquila.com</h1>
+<p>How this buddy is configured to behave. Edit via the desk on the homepage.</p>
+<ul>
+<li>Entity name: Dellaquila.com</li>
+<li>Legal form: unconfirmed (assumed sole proprietorship — Dave to confirm)</li>
+<li>Tax preparer handoff: Money Buddy CPA report (PDF summary + CSV detail)</li>
+<li>Brands tracked: Sports Car Adventures (brand, not a registered entity)</li>
+<li>Tax/legal advice: never — record posture, flag questions, point at the human CPA</li>
+<li>Desk files: KNOWLEDGE.md, CONFIG.md (rendered live on the homepage, token-gated edit)</li>
+</ul></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">SOUL.md</span><span class="rf-dir">repo root</span></button><div class="rf-panel" hidden><div class="rf-body"><h1>SOUL.md — Dellaquila.com</h1>
+<p>The business manager's voice: precise, calm, allergic to surprises. Speaks in facts and filings, not adjectives. When something is unknown it says so plainly. Never gives tax or legal advice — records the posture, flags the question, points at the human CPA.</p>
+<p>Seeded at creation; refine as the buddy develops its character.</p></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">DECISIONS.md</span><span class="rf-dir">repo root</span></button><div class="rf-panel" hidden><div class="rf-body"><h1>Decisions — Dellaquila.com</h1>
+<p>Decisions made, with dates.</p>
+<ul>
+<li>2026-10-17: This buddy is the business's <strong>desk</strong> — KNOWLEDGE.md + CONFIG.md rendered live on its homepage, editable in place (token-gated, token stays on-device; repo private).</li>
+<li>2026-10-17: The desk tracks <strong>both</strong> entities: the dellaquila.com tax/legal entity and the Sports Car Adventures brand (a brand, not a separately registered business — Dave).</li>
+<li>2026-10-17: This buddy never gives tax or legal advice — it records posture and points at the human CPA.</li>
+<li>2026-10-17: Buddy created via the standard new-buddy drill (mission statement, private repo, side thread, review ask).</li>
+</ul></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">ACCOMPLISHMENTS.md</span><span class="rf-dir">repo root</span></button><div class="rf-panel" hidden><div class="rf-body"><h1>Accomplishments — Dellaquila.com</h1>
+<p>What this buddy has shipped and done. The review-time record — keep it fresh.</p>
+<ul>
+<li>2026-10-17: Buddy hired — mission statement (<a href="https://docs.google.com/document/d/1w06yHbTUVkfVBASvGibzYumCvLwLdQHPPE5QimmjqO4/edit">Google Doc</a>), private repo, knowledge base seeded (tax posture, Money Buddy handoff, SCA brand relationship).</li>
+<li>2026-10-17: Desk treatment live on the homepage — KNOWLEDGE.md + CONFIG.md rendered live from the repo, editable in place (token-gated).</li>
+</ul></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">README.md</span><span class="rf-dir">repo root</span></button><div class="rf-panel" hidden><div class="rf-body"><h1>💼 Dellaquila.com</h1>
+<p>Dave's official business — the name he files his taxes under. The business's desk: knowledge + config, live on its homepage.</p>
+<h2>Product brief</h2>
+<p><a href="docs/brief.md">Read the full brief</a> · <a href="https://docs.google.com/document/d/1w06yHbTUVkfVBASvGibzYumCvLwLdQHPPE5QimmjqO4/edit">Google Doc</a></p></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">brief.md</span><span class="rf-dir">docs</span></button><div class="rf-panel" hidden><div class="rf-body"><h1>Dellaquila.com</h1>
+<h2>Executive summary</h2>
+<p>Dellaquila.com is Dave's official business — the name he files his taxes under. This buddy is the business's desk: everything the business knows (KNOWLEDGE.md) and how it's configured (CONFIG.md), visible and editable right on its homepage. It tracks both of Dave's commercial identities: the dellaquila.com tax/legal entity itself, and Sports Car Adventures, the sports-car driving experience brand that lives under/near it — a brand, not a separately registered business.</p>
+<h2>The idea</h2>
+<p>Dave files taxes as dellaquila.com. The business needs one place where its facts live: what it is, what it costs to run, how its books flow to the tax preparer, and what brands operate near it. The homepage IS the desk: KNOWLEDGE.md and CONFIG.md rendered live from the private repo, editable in place with Dave's GitHub token (the token stays on this device; repos are private, so nothing leaks through the public page).</p>
+<h2>How it works</h2>
+<ul>
+<li>The desk reads KNOWLEDGE.md and CONFIG.md live from the private dellaquila-com GitHub repo via the GitHub API, token-gated. No token, no desk contents.</li>
+<li>KNOWLEDGE.md holds the facts: entity status, tax posture, the SCA brand relationship, financial handoffs.</li>
+<li>Sports Car Adventures is tracked as a brand under the business umbrella — not a separate legal entity (Dave's words, Oct 2026).</li>
+<li>Money Buddy feeds it: CPA report PDFs plus CSV exports are the business's books-to-tax-preparer pipeline (Dave chose a polished PDF summary with category totals for the CPA; CSVs carry transaction detail).</li>
+</ul>
+<h2>Tax posture (known facts)</h2>
+<ul>
+<li>The $800/yr California FTB minimum franchise tax is a deductible business expense — category Taxes and licenses, Schedule C line 23 — and is not subject to the SALT cap. (CPA confirms specifics.)</li>
+<li>Money Buddy's Tax page produces the handoff package: CPA report PDF (business income, Schedule C deductions, personal income/deductions, section totals, income/deductions/net box, business-meals 50% note) plus per-card CSV downloads.</li>
+<li>Exact legal form of the dellaquila.com entity is unconfirmed (sole proprietorship assumed) — marked unknown until Dave confirms.</li>
+</ul>
+<h2>Revenue potential</h2>
+<p>Dellaquila.com is the entity through which Dave's business income flows; any future Sports Car Adventures revenue would flow through it. The revenue lens here is accuracy, not growth: clean books, clean handoffs to the tax preparer, no surprises at filing time. The SCA business plan (pending Dave sharing it) carries the growth-side numbers.</p>
+<h2>Room for growth</h2>
+<ul>
+<li>Load the desk with the SCA business plan once Dave shares it from the Sports Car Adventures Drive.</li>
+<li>Wire in an annual tax-prep checklist: Money Buddy CPA export → preparer.</li>
+<li>Track entity costs (FTB $800/yr) and filing deadlines.</li>
+<li>Decide whether SCA becomes a DBA under dellaquila.com at launch.</li>
+</ul>
+<h2>Out of scope for v1</h2>
+<ul>
+<li>No bookkeeping automation — Money Buddy owns the books; this buddy owns the facts.</li>
+<li>No legal or tax advice — the buddy records posture, it doesn't advise. (The human CPA confirms.)</li>
+</ul>
+<h2>Open questions</h2>
+<ul>
+<li>Exact legal form of the dellaquila.com entity (sole proprietorship assumed — confirm).</li>
+<li>Does SCA register as a DBA under dellaquila.com when it launches, or stay a brand?</li>
+<li>What should CONFIG.md hold beyond the basics?</li>
+</ul></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">ingest.md</span><span class="rf-dir">docs</span></button><div class="rf-panel" hidden><div class="rf-body"><h1>Ingest log — Dellaquila.com</h1>
+<p>Raw brain-dumps about this buddy. Each entry is timestamped; work the keepers into the dossier.</p></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">mission-statement.md</span><span class="rf-dir">docs</span></button><div class="rf-panel" hidden><div class="rf-body"><h1>Dellaquila.com</h1>
+<h2>Executive summary</h2>
+<p>Dellaquila.com is Dave's official business — the name he files his taxes under. This buddy is the business's desk: everything the business knows (KNOWLEDGE.md) and how it's configured (CONFIG.md), visible and editable right on its homepage. It tracks both of Dave's commercial identities: the dellaquila.com tax/legal entity itself, and Sports Car Adventures, the sports-car driving experience brand that lives under/near it — a brand, not a separately registered business.</p>
+<h2>The idea</h2>
+<p>Dave files taxes as dellaquila.com. The business needs one place where its facts live: what it is, what it costs to run, how its books flow to the tax preparer, and what brands operate near it. The homepage IS the desk: KNOWLEDGE.md and CONFIG.md rendered live from the private repo, editable in place with Dave's GitHub token (the token stays on this device; repos are private, so nothing leaks through the public page).</p>
+<h2>How it works</h2>
+<ul>
+<li>The desk reads KNOWLEDGE.md and CONFIG.md live from the private dellaquila-com GitHub repo via the GitHub API, token-gated. No token, no desk contents.</li>
+<li>KNOWLEDGE.md holds the facts: entity status, tax posture, the SCA brand relationship, financial handoffs.</li>
+<li>Sports Car Adventures is tracked as a brand under the business umbrella — not a separate legal entity (Dave's words, Oct 2026).</li>
+<li>Money Buddy feeds it: CPA report PDFs plus CSV exports are the business's books-to-tax-preparer pipeline (Dave chose a polished PDF summary with category totals for the CPA; CSVs carry transaction detail).</li>
+</ul>
+<h2>Tax posture (known facts)</h2>
+<ul>
+<li>The $800/yr California FTB minimum franchise tax is a deductible business expense — category Taxes and licenses, Schedule C line 23 — and is not subject to the SALT cap. (CPA confirms specifics.)</li>
+<li>Money Buddy's Tax page produces the handoff package: CPA report PDF (business income, Schedule C deductions, personal income/deductions, section totals, income/deductions/net box, business-meals 50% note) plus per-card CSV downloads.</li>
+<li>Exact legal form of the dellaquila.com entity is unconfirmed (sole proprietorship assumed) — marked unknown until Dave confirms.</li>
+</ul>
+<h2>Revenue potential</h2>
+<p>Dellaquila.com is the entity through which Dave's business income flows; any future Sports Car Adventures revenue would flow through it. The revenue lens here is accuracy, not growth: clean books, clean handoffs to the tax preparer, no surprises at filing time. The SCA business plan (pending Dave sharing it) carries the growth-side numbers.</p>
+<h2>Room for growth</h2>
+<ul>
+<li>Load the desk with the SCA business plan once Dave shares it from the Sports Car Adventures Drive.</li>
+<li>Wire in an annual tax-prep checklist: Money Buddy CPA export → preparer.</li>
+<li>Track entity costs (FTB $800/yr) and filing deadlines.</li>
+<li>Decide whether SCA becomes a DBA under dellaquila.com at launch.</li>
+</ul>
+<h2>Out of scope for v1</h2>
+<ul>
+<li>No bookkeeping automation — Money Buddy owns the books; this buddy owns the facts.</li>
+<li>No legal or tax advice — the buddy records posture, it doesn't advise. (The human CPA confirms.)</li>
+</ul>
+<h2>Open questions</h2>
+<ul>
+<li>Exact legal form of the dellaquila.com entity (sole proprietorship assumed — confirm).</li>
+<li>Does SCA register as a DBA under dellaquila.com when it launches, or stay a brand?</li>
+<li>What should CONFIG.md hold beyond the basics?</li>
+</ul></div></div></div></div>
 </div>
 </section>
 </section>
@@ -585,246 +711,18 @@ footer{margin-top:36px;padding-top:18px;border-top:1px solid var(--border);color
   var sec = document.querySelector('.repo-files');
   if (!sec || sec.dataset.rfInit) return;
   sec.dataset.rfInit = '1';
-  var bid = sec.getAttribute('data-buddy-id') || (function(){
-    var p = location.pathname.replace(/\\/+$/, '');
-    return p.substring(p.lastIndexOf('/') + 1);
-  })();
-  function lsGet(){ try { return JSON.parse(localStorage.getItem('buddyTree.v3') || '{}'); } catch(e){ return {}; } }
-  function token(){ return lsGet().ghToken || ''; }
-  function b64encode(str){
-    var bytes = new TextEncoder().encode(str), bin = '';
-    bytes.forEach(function(b){ bin += String.fromCharCode(b); });
-    return btoa(bin);
-  }
-  async function ghApi(path, method, body){
-    var t = token();
-    if (!t) throw new Error('Add a GitHub token first.');
-    var r = await fetch('https://api.github.com' + path, {
-      method: method || 'GET',
-      headers: {'Authorization': 'Bearer ' + t, 'Accept': 'application/vnd.github+json', 'Content-Type': 'application/json'},
-      body: body ? JSON.stringify(body) : undefined
-    });
-    if (!r.ok) throw new Error('GitHub ' + r.status);
-    return r.status === 204 ? null : await r.json();
-  }
-  async function ghGetFile(repo, path){
-    try {
-      var j = await ghApi('/repos/davedellaquila/' + repo + '/contents/' + path);
-      if (j && j.content) return {
-        text: new TextDecoder().decode(Uint8Array.from(atob(j.content.replace(/\\n/g, '')), function(c){ return c.charCodeAt(0); })),
-        sha: j.sha
-      };
-    } catch(e){}
-    return null;
-  }
-  var repo = null;
-  async function resolveRepo(){
-    try {
-      var r = await fetch('../buddies.json', {cache: 'no-store'});
-      var d = await r.json();
-      var buds = d.buddies || [];
-      for (var i = 0; i < buds.length; i++) {
-        if (buds[i].id === bid && buds[i].repo) { repo = buds[i].repo; break; }
-      }
-    } catch(e){}
-  }
-  function esc(s){ return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
-  function inline(s){
-    s = esc(s);
-    s = s.replace(/`([^`]+)`/g, '<code>$1</code>');
-    s = s.replace(/\\*\\*([^*]+)\\*\\*/g, '<strong>$1</strong>');
-    s = s.replace(/(^|[^*])\\*([^*\\n]+)\\*/g, '$1<em>$2</em>');
-    s = s.replace(/\\[([^\\]]+)\\]\\((https?:[^)\\s]+)\\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>');
-    return s;
-  }
-  function mdRender(src){
-    var lines = src.split('\\n'), out = [], inList = false, inCode = false, codeBuf = [];
-    function closeList(){ if (inList) { out.push('</ul>'); inList = false; } }
-    for (var i = 0; i < lines.length; i++){
-      var ln = lines[i], m;
-      if (/^```/.test(ln)) {
-        if (inCode) { out.push('<pre><code>' + esc(codeBuf.join('\\n')) + '</code></pre>'); codeBuf = []; inCode = false; }
-        else { closeList(); inCode = true; }
-        continue;
-      }
-      if (inCode) { codeBuf.push(ln); continue; }
-      if ((m = ln.match(/^(#{1,4})\\s+(.*)/))) {
-        closeList();
-        var lv = Math.min(m[1].length + 1, 4);
-        out.push('<h' + lv + '>' + inline(m[2]) + '</h' + lv + '>');
-        continue;
-      }
-      if (/^\\s*(-{3,}|\\*{3,})\\s*$/.test(ln)) { closeList(); out.push('<hr>'); continue; }
-      if ((m = ln.match(/^\\s*[-*]\\s+(.*)/)) || (m = ln.match(/^\\s*\\d+[.)]\\s+(.*)/))) {
-        if (!inList) { out.push('<ul>'); inList = true; }
-        out.push('<li>' + inline(m[1]) + '</li>');
-        continue;
-      }
-      if ((m = ln.match(/^>\\s?(.*)/))) { closeList(); out.push('<blockquote>' + inline(m[1]) + '</blockquote>'); continue; }
-      if (!ln.trim()) { closeList(); continue; }
-      closeList();
-      out.push('<p>' + inline(ln) + '</p>');
-    }
-    closeList();
-    if (inCode) out.push('<pre><code>' + esc(codeBuf.join('\\n')) + '</code></pre>');
-    return out.join('\\n');
-  }
-  var locked = sec.querySelector('.rf-locked'), main = sec.querySelector('.rf-main'),
-      list = sec.querySelector('.rf-list'), st = sec.querySelector('.rf-status');
-  /* Accordion files (Dave 2026-10-21): a list of file names; clicking a
-     name toggles that file's contents open inline right below the name.
-     Toggles are independent — several files can be open at once. Contents
-     load lazily on first open and are cached in the item's own state;
-     Edit/Save lives inside the opened panel. */
-  function buildFileSection(f){
-    var wrap = document.createElement('div');
-    wrap.className = 'rf-fileitem';
-    var head = document.createElement('button');
-    head.type = 'button';
-    head.className = 'rf-file';
-    head.setAttribute('aria-expanded', 'false');
-    var nm = document.createElement('span');
-    nm.className = 'rf-name';
-    nm.textContent = '📄 ' + f.name;
-    var dir = document.createElement('span');
-    dir.className = 'rf-dir';
-    dir.textContent = f.path;
-    var chev = document.createElement('span');
-    chev.className = 'rf-chev';
-    chev.textContent = '▸';
-    head.appendChild(nm);
-    head.appendChild(dir);
-    head.appendChild(chev);
-    var panel = document.createElement('div');
-    panel.className = 'rf-panel';
-    panel.hidden = true;
-    var phead = document.createElement('div');
-    phead.className = 'rf-viewhead';
-    var ppath = document.createElement('span');
-    ppath.className = 'rf-path';
-    ppath.textContent = f.path;
-    var editBtn = document.createElement('button');
-    editBtn.type = 'button';
-    editBtn.className = 'attn-btn rf-edit';
-    editBtn.textContent = 'Edit';
-    editBtn.disabled = true;
-    phead.appendChild(ppath);
-    phead.appendChild(editBtn);
-    var bodyEl = document.createElement('div');
-    bodyEl.className = 'rf-body';
-    bodyEl.innerHTML = '<p class="rf-loading">Loading ' + esc(f.path) + '…</p>';
-    var editor = document.createElement('div');
-    editor.className = 'rf-editor';
-    editor.hidden = true;
-    var ta = document.createElement('textarea');
-    ta.className = 'rf-ta';
-    ta.rows = 18;
-    ta.spellcheck = false;
-    ta.setAttribute('aria-label', 'Markdown source for ' + f.path);
-    var actions = document.createElement('div');
-    actions.className = 'attn-actions';
-    var saveBtn = document.createElement('button');
-    saveBtn.type = 'button';
-    saveBtn.className = 'attn-btn primary rf-save';
-    saveBtn.textContent = 'Save to GitHub';
-    var cancelBtn = document.createElement('button');
-    cancelBtn.type = 'button';
-    cancelBtn.className = 'attn-btn rf-cancel';
-    cancelBtn.textContent = 'Cancel';
-    actions.appendChild(saveBtn);
-    actions.appendChild(cancelBtn);
-    editor.appendChild(ta);
-    editor.appendChild(actions);
-    var fst = document.createElement('div');
-    fst.className = 'rf-fstatus attn-status';
-    fst.setAttribute('role', 'status');
-    panel.appendChild(phead);
-    panel.appendChild(bodyEl);
-    panel.appendChild(editor);
-    panel.appendChild(fst);
-    wrap.appendChild(head);
-    wrap.appendChild(panel);
-    var cur = null, loaded = false;
-    function loadOnce(){
-      if (loaded) return;
-      loaded = true;
-      ghGetFile(repo, f.path).then(function(got){
-        if (!got) { loaded = false; bodyEl.innerHTML = '<p class="rf-loading">⚠ Could not load ' + esc(f.path) + ' — close and open it again to retry.</p>'; return; }
-        cur = {path: f.path, sha: got.sha, text: got.text};
-        bodyEl.innerHTML = mdRender(got.text);
-        editBtn.disabled = false;
-      });
-    }
-    head.addEventListener('click', function(){
+  sec.querySelectorAll('.rf-fileitem > .rf-file').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var item = btn.parentElement;
+      var panel = item ? item.querySelector('.rf-panel') : null;
+      if (!panel) return;
       var open = panel.hidden;
       panel.hidden = !open;
-      head.setAttribute('aria-expanded', open ? 'true' : 'false');
-      chev.textContent = open ? '▾' : '▸';
-      if (open) loadOnce();
+      btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      var ch = btn.querySelector('.rf-chev');
+      if (ch) ch.textContent = open ? '▾' : '▸';
     });
-    editBtn.addEventListener('click', function(){
-      if (!cur) return;
-      ta.value = cur.text;
-      bodyEl.hidden = true;
-      editor.hidden = false;
-      ta.focus();
-    });
-    cancelBtn.addEventListener('click', function(){
-      editor.hidden = true;
-      bodyEl.hidden = false;
-    });
-    saveBtn.addEventListener('click', async function(){
-      if (!cur) return;
-      saveBtn.disabled = true;
-      fst.textContent = 'Saving…';
-      try {
-        var payload = {message: 'Edit ' + cur.path + ' from the homepage', content: b64encode(ta.value), sha: cur.sha};
-        var j = await ghApi('/repos/davedellaquila/' + repo + '/contents/' + cur.path, 'PUT', payload);
-        if (j && j.content && j.content.sha) cur.sha = j.content.sha;
-        cur.text = ta.value;
-        editor.hidden = true;
-        bodyEl.hidden = false;
-        bodyEl.innerHTML = mdRender(cur.text);
-        fst.textContent = '✓ Saved to GitHub (' + repo + '/' + cur.path + ').';
-      } catch(err){
-        var why = (err && err.message) || String(err);
-        fst.textContent = /409|422/.test(why)
-          ? '⚠ GitHub said the file changed since you loaded it (' + why + ') — reload this page and try again.'
-          : '⚠ Save failed (' + why + ') — your edit is still in the editor.';
-      }
-      saveBtn.disabled = false;
-    });
-    return wrap;
-  }
-  async function init(){
-    await resolveRepo();
-    if (!repo) {
-      locked.hidden = false;
-      locked.textContent = 'No repo is linked for this buddy yet, so there are no repo files to show.';
-      return;
-    }
-    if (!token()) { locked.hidden = false; return; }
-    main.hidden = false;
-    st.textContent = 'Loading files…';
-    var files = [];
-    async function grab(dir){
-      try {
-        var j = await ghApi('/repos/davedellaquila/' + repo + (dir ? '/contents/' + dir : '/contents'));
-        if (Array.isArray(j)) j.forEach(function(e){
-          if (e.type === 'file' && /\\.md$/i.test(e.name)) files.push({name: e.name, path: e.path});
-        });
-      } catch(e){}
-    }
-    await grab('');
-    await grab('docs');
-    files.sort(function(a, b){ return a.path < b.path ? -1 : 1; });
-    if (!files.length) { st.textContent = 'No markdown files found in the repo yet.'; return; }
-    st.textContent = '';
-    files.forEach(function(f){
-      list.appendChild(buildFileSection(f));
-    });
-  }
-  init();
+  });
 })();
 </script>
 

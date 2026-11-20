@@ -217,6 +217,8 @@ h2 { font-size: 22px; margin: 32px 0 16px; }
 .rf-body pre code { border: none; padding: 0; background: none; }
 .rf-body a { color: var(--accent); }
 .rf-body hr { border: none; border-top: 1px solid var(--border); margin: 14px 0; }
+.rf-body table { border-collapse: collapse; margin: 10px 0; font-size: 13.5px; }
+.rf-body th, .rf-body td { border: 1px solid var(--border); padding: 5px 9px; text-align: left; }
 .rf-ta { width: 100%; box-sizing: border-box; background: var(--bg); color: var(--text); border: 1px solid var(--border); border-radius: 8px; padding: 12px; font-family: ui-monospace, Menlo, monospace; font-size: 13px; line-height: 1.55; }
 /* ---- Accordion files (Dave 2026-10-21): the list of markdown files;
    clicking a file name opens its contents inline right below that name.
@@ -324,11 +326,285 @@ h2 { font-size: 22px; margin: 32px 0 16px; }
 
 <section class="repo-files" data-buddy-id="emil-estate">
 <h2>📄 Repo files</h2>
-<p class="rf-sub">The markdown files in <span data-buddy-name>Emil&#x27;s Estate</span>'s repo. Tap a file name and its contents open right below it — open as many as you like at once. Edit inside an opened file and the save goes straight back to GitHub. The repo is private, so nothing here — not even the file names — is shown until GitHub is connected on this device.</p>
-<div class="rf-locked" hidden>🔒 Connect GitHub in the 🧠 Brain dump box above to view and edit files — the repos are private, so a token is needed to read them. Then reload this page.</div>
-<div class="rf-main" hidden>
-<div class="rf-list rf-files-wrap"></div>
-<div class="rf-status attn-status" role="status"></div>
+<p class="rf-sub">The markdown files in <span data-buddy-name>Emil&#x27;s Estate</span>'s repo, baked into this page when it was generated — tap a file name and its contents open right below it; open as many as you like at once. No sign-in and no fetching: the words are right here. To change a file, edit it in the repo — the page picks it up next time it is generated.</p>
+<div class="rf-main">
+<div class="rf-list rf-files-wrap"><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">KNOWLEDGE.md</span><span class="rf-dir">repo root</span></button><div class="rf-panel" hidden><div class="rf-body"><h1>Knowledge — Emil's Estate</h1>
+<p>Everything this desk has verified about the estate of Emil Dell'Aquila.
+<strong>Rule of the desk: never invent a document, date, or name that isn't in the file.</strong>
+Unknowns are marked UNKNOWN — not guessed.</p>
+<h2>The estate</h2>
+<ul>
+<li>Emil Dell'Aquila — Dave's dad (no final e; Emile is Dave's middle brother). Died <strong>July 1, 2026</strong> (per Dave).</li>
+<li>Dave is managing the estate. Day-to-day inheritance/disbursement details UNKNOWN.</li>
+<li>Inheritance disbursement timing and channel: UNKNOWN — open question, estate's top financial item.</li>
+</ul>
+<h2>Assets</h2>
+<h3>Emil's house (active sale)</h3>
+<ul>
+<li>Actively marketed. Realtor is on the ball, sending lots of documents via text and email.</li>
+<li><strong>Realtor: Kay Korbel</strong> (per Dave, Nov 18, 2026) — the same Kay Korbel who is listing agent on the Morgan Hill house. Emails on file: kaykorbel@icloud.com, info@kaykorbel.com. This supersedes the Oct 15 intake drill's assumption of a "different realtor" for this house — that was never Dave-confirmed.</li>
+<li>House address: UNKNOWN. Listing status, asking price, offers, timeline: UNKNOWN.</li>
+<li>Tracked by child buddy: 🏷️ Emil's House Sale (thread https://muse.ai/chat/458dda1d-1f9c-410c-a4c9-401233a24ce6).</li>
+<li>NOT the Morgan Hill house (18231 Llagas Creek Dr — co-sold by Dave, Emile, and Ron with agent Kay Korbel; different house, different realtor).</li>
+</ul>
+<h3>Melody Lane rental</h3>
+<ul>
+<li>The house Dave grew up in, on Melody Lane. Now a rental; tenant is <strong>Larry Osana</strong>.</li>
+<li>Address: UNVERIFIED — lead is <strong>3848 Melody Ln, Santa Clara</strong> (per Larry Osana drill worker; Dave must confirm before it's treated as fact).</li>
+<li>Lease terms, rent amount, maintenance history: UNKNOWN.</li>
+<li>Near-term priority: new lease/contract naming the estate as landlord (the landlord died).</li>
+<li>Tracked by child buddy: 🏠 Melody Lane (thread https://muse.ai/chat/1b8498db-de28-49fa-8e47-f0e2f9c4ef96); tenant buddy 🔑 Larry Osana (thread https://muse.ai/chat/008cf9cd-a506-47cd-9a31-aa95269aa3eb).</li>
+<li><strong>Lease drafting (Nov 18, 2026):</strong> Dave asked this desk to draft Larry's new lease. Gating item: the landlord entity (estate vs. trust vs. the brothers) is still unsettled — Dave flagged Oct 23, 2026 that legal needs to weigh in first, and the Oct 23 brothers call did not decide it. Terms/rent still unknown; nobody has produced the current lease (Dave asked Ron Oct 16, 2026 to look for rental documentation in his office — outcome unknown). One clue: Larry replaced the water heater Jun 24, 2026 ($2,800) and deducted it from the next two months' rent under their standing arrangement (Emil's inbox scan, Oct 28, 2026) — if that covered two full months, rent ≈ $1,400/mo; UNVERIFIED.</li>
+</ul>
+<h3>Vehicles</h3>
+<ul>
+<li><strong>MG TD</strong>: moved to the <strong>San Andreas warehouse</strong> (780 Industrial Way, Unit A, San Andreas) — Dave, Nov 18, 2026. Previously with Rachel at On the Road Again Classics (Morgan Hill/Gilroy) since Oct 10, 2026.</li>
+<li><strong>1931 Ford Model A</strong>: <strong>reported sold — UNCONFIRMED</strong> (Dave, Nov 18, 2026: "appears to have been sold but haven't got confirmation on that yet"). Buyer, price, date unknown. Do NOT treat as sold until Dave confirms. Last known location: Rachel's.</li>
+<li>REG 5 title transfer was in progress for the cars (40-day wait elapsed; vehicles excluded from the $208,850 small-estate threshold; DMV clerk confirmation of the threshold figure on the older printed form was pending — intake drill, 2026-10-15). If the Model A sale is confirmed, its title path needs reconciling with the REG 5 process.</li>
+</ul>
+<h3>Emil's IRA (J.P. Morgan)</h3>
+<ul>
+<li>Custodian IDENTIFIED Nov 18, 2026: <strong>J.P. Morgan Securities LLC</strong> — Traditional IRA ending <strong>7719</strong>.</li>
+<li>Balance <strong>$144,151.93</strong> (Oct 23, 2026), split three ways among Dave, Ron, Emile (Dave's share ≈ $48,050). <strong>Each brother files his own form.</strong></li>
+<li>Dave's copy of the JPMS "Internal Transfer or Distribution of Funds from Decedent's IRA" form (41080_BEM v12.6) photographed Nov 18, 2026: §1–§3 filled (Dave = non-spouse beneficiary, proportionate-share election); §4 shows 4A/4B/4E all marked though only one is allowed, receiving accounts blank; §5 blank; unsigned (§6 must be dated within 60 days of submission); §7 identity verification not done. <strong>Not yet submitted. Dave signs and submits himself.</strong></li>
+<li>Full record: ~/workspace/goals/digitize-paper-records/files/estate/jpmorgan-decedent-ira-form-emil-7719.md · Desk walkthrough: docs/jpmorgan-ira-form-walkthrough.md</li>
+<li><strong>Open:</strong> §4 route decision (4A inherited IRA vs taxable distribution — Daniel to bless); <strong>year-of-death RMD</strong>: if Emil's 2026 RMD wasn't fully satisfied before July 1, 2026, remainder must be distributed by <strong>Dec 31, 2026</strong> (question already on Daniel's list, Nov 18).</li>
+</ul>
+<h3>HomePod Minis</h3>
+<ul>
+<li>HomePod Minis from Dad's place: whereabouts and disposition UNKNOWN.</li>
+<li>Dave was to ask Emile and Ron where they ended up (reminder from main chat, 2026-10-11).</li>
+</ul>
+<h2>Document flow</h2>
+<ul>
+<li>Email documents: auto-watched by Astro.</li>
+<li>Texts (realtor's texts, etc.): must be forwarded by Dave into this desk's ingest log (<code>docs/ingest.md</code>).</li>
+<li><strong>Never promise text automation.</strong> Dave forwards manually.</li>
+</ul>
+<h2>Open questions</h2>
+<ol>
+<li>Inheritance disbursement — timing, channel, amount flow.</li>
+<li>Emil's house — address, listing status, price, timeline (realtor identified Nov 18, 2026: Kay Korbel).</li>
+<li>Melody Lane address confirmation + lease terms/rent.</li>
+<li>Executor / attorney / family participants in the estate process.</li>
+<li>HomePod Minis — whereabouts, disposition.</li>
+</ol>
+<h2>Family / links</h2>
+<ul>
+<li>Child of Family Buddy. Linked: Emil Buddy (living dossier of Emil the man) and Finance Buddy (the money).</li>
+<li>Mission statement (under Dave's review): https://docs.google.com/document/d/18oyr177HgtrWsWtStp783D_Qm9dVeMk9BHoAczW-A04/edit</li>
+</ul></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">SOUL.md</span><span class="rf-dir">repo root</span></button><div class="rf-panel" hidden><div class="rf-body"><h1>SOUL.md — Emil's Estate</h1>
+<p>The estate administrator's desk: calm, meticulous, unhurried. Everything has its place — assets, documents, deadlines — and nothing slips through the cracks. Speaks plainly about money and paperwork; never invents a document, a date, or a name that isn't in the file. Knows Dave's dad was Emil (no final e — Emile is Dave's brother), and treats the estate with the quiet care of settling someone's life in order.</p></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">DECISIONS.md</span><span class="rf-dir">repo root</span></button><div class="rf-panel" hidden><div class="rf-body"><h1>Decisions — Emil's Estate</h1>
+<p>Decisions made, with dates.</p></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">ACCOMPLISHMENTS.md</span><span class="rf-dir">repo root</span></button><div class="rf-panel" hidden><div class="rf-body"><h1>Accomplishments — Emil's Estate</h1>
+<p>What this buddy has shipped and done. The review-time record — keep it fresh.</p></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">README.md</span><span class="rf-dir">repo root</span></button><div class="rf-panel" hidden><div class="rf-body"><h1>🏛️ Emil's Estate</h1>
+<p>Emil Dell'Aquila — Dave's dad — died July 1, 2026, and Dave is managing the estate. Emil's Estate is the one desk where everything about the estate lands: the asset inventory (Emil's house for sale, the Melody Lane rental with tenant Larry Osana, Emil's 1931 Ford Model A and MG TD, the HomePod Minis from Dad's place), the document flow from the realtor (text and email), and the deadlines that matter — title transfers, the sale, and the eventual inheritance disbursement. It sits under Family Buddy, linked to Emil Buddy (the man) and Finance Buddy (the money).</p>
+<h2>Product brief</h2>
+<p><a href="docs/brief.md">Read the full brief</a> · <a href="https://docs.google.com/document/d/18oyr177HgtrWsWtStp783D_Qm9dVeMk9BHoAczW-A04/edit">Google Doc</a></p></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">brief.md</span><span class="rf-dir">docs</span></button><div class="rf-panel" hidden><div class="rf-body"><h1>Emil's Estate</h1>
+<h2>Executive summary</h2>
+<p>Emil Dell'Aquila — Dave's dad — died July 1, 2026, and Dave is managing the estate. Emil's Estate is the one desk where everything about the estate lands: the asset inventory (Emil's house for sale, the Melody Lane rental with tenant Larry Osana, Emil's 1931 Ford Model A and MG TD, the HomePod Minis from Dad's place), the document flow from the realtor (text and email), and the deadlines that matter — title transfers, the sale, and the eventual inheritance disbursement.
+It sits under Family Buddy, linked to Emil Buddy (the man) and Finance Buddy (the money).</p>
+<h2>The idea</h2>
+<p>Keep the estate as one living file instead of scattered across texts, emails, and memory. Emil's Estate tracks what the estate owns, what paperwork has arrived, what's still outstanding, and who's involved (executor, attorney, family, the realtor, the tenant).
+It separates the man from the administration: Emil Buddy is the living dossier of Dave's dad — the person. Emil's Estate is the paperwork of settling his life — the administration. People live on; paperwork settles.</p>
+<h2>The problem</h2>
+<p>Estates die in inboxes. The realtor sends documents by text and by email; title-transfer rules (REG 5, probate thresholds) carry eligibility windows and deadlines; a rental property needs rent tracked and a tenant managed; and the inheritance disbursement timing is still unknown — with questions hanging in text messages instead of one place. Without a single desk, things slip: a 40-day window, a lease term, a document that arrived by text and never got filed. Emil's Estate is the single desk.</p>
+<h2>Estate assets</h2>
+<ul>
+<li>Emil's house — actively being sold by a realtor (realtor's name and email still unknown; house address unknown). The realtor sends a high volume of documents by text and email.</li>
+<li>The Melody Lane rental — the house Dave grew up in; tenant: Larry Osana. Address and lease terms still unknown.</li>
+<li>Emil's cars — a 1931 Ford Model A and an MG TD, moved October 10 from Emil's house to Rachel's (On the Road Again Classics, Morgan Hill/Gilroy) for storage. Title transfer is in progress via California REG 5 transfer-without-probate filings (one per vehicle). The 40-day post-death wait has elapsed and the vehicles are excluded from the $208,850 small-estate threshold (deaths after April 1, 2025). One remaining check: the DMV's printed REG 5 still shows older threshold figures, so clerk acceptance of the current threshold needs confirmation.</li>
+<li>HomePod Minis from Dad's place — inventoried; disposition undecided.</li>
+</ul>
+<h2>Documents and paper trail</h2>
+<p>Documents arrive two ways. Email: Astro auto-watches Dave's inbox and files what matters. Text: Dave forwards realtor texts into the buddy's ingest log — texts cannot be auto-collected, so anything important that arrived by text needs forwarding to be tracked. Nothing here promises text automation.
+Every estate document gets filed against the asset it belongs to — house-sale docs under Emil's house sale, lease docs under Melody Lane — with dates and what's still outstanding.</p>
+<h2>Revenue potential</h2>
+<p>None — this is personal infrastructure, not a product. The only money that moves through this buddy is Dave's own: the house-sale proceeds, rental income, and the eventual inheritance disbursement. Per the standing rule, the section stays and says so plainly.</p>
+<h2>Room for growth</h2>
+<ul>
+<li>Child buddies: the house sale and the Melody Lane rental each get their own buddy under Emil's Estate as the volume grows — being stood up alongside this one.</li>
+<li>A disbursement tracker once the inheritance timeline firms up.</li>
+<li>A document checklist with deadlines — what the estate still owes the court, the DMV, the realtor.</li>
+<li>Links outward: Property Buddy conventions for the rental's upkeep records, Car Buddy for the vehicles once titles settle.</li>
+</ul>
+<h2>Out of scope for v1</h2>
+<ul>
+<li>Legal advice — the buddy tracks paperwork and deadlines; it doesn't interpret probate law or replace the attorney.</li>
+<li>Active property management beyond recording what happens — the rental's day-to-day stays with Dave and the tenant.</li>
+<li>Chasing the realtor — the buddy records documents and follow-ups; it doesn't message the realtor.</li>
+<li>Family decisions about the inheritance — who gets what and when is Dave and the family's call; the buddy keeps the record straight.</li>
+</ul>
+<h2>Open questions</h2>
+<ul>
+<li>When will the inheritance be disbursed — and through whom?</li>
+<li>Realtor's name and email; Emil's house address and sale terms.</li>
+<li>Who is the executor? Is there an attorney involved, and who? Which family members are participants in the estate?</li>
+<li>Melody Lane: address, lease terms for Larry Osana, rent amount and collection cadence.</li>
+<li>HomePod Minis: keep, distribute, or sell?</li>
+<li>REG 5: confirm the DMV clerk accepts the current $208,850 threshold against the older printed form.</li>
+</ul></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">ingest.md</span><span class="rf-dir">docs</span></button><div class="rf-panel" hidden><div class="rf-body"><h1>Ingest log — Emil's Estate</h1>
+<p>Raw brain-dumps about this buddy. Each entry is timestamped; work the keepers into the dossier.</p></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">jpmorgan-ira-form-walkthrough.md</span><span class="rf-dir">docs</span></button><div class="rf-panel" hidden><div class="rf-body"><h1>Walkthrough — J.P. Morgan "Internal Transfer or Distribution of Funds from Decedent's IRA"</h1>
+<p>Prepared 2026-11-18 by Emil's Estate desk. Source record (from Dave's Nov 18 photos):
+<code>~/workspace/goals/digitize-paper-records/files/estate/jpmorgan-decedent-ira-form-emil-7719.md</code></p>
+<p><strong>Nothing here is tax advice.</strong> The §4 route and the RMD question interact with Dave's wider tax
+picture (margin-loan interest, a possible AAPL sale) — Daniel (tax adviser) should bless the
+route before Dave signs. The desk's job is to lay out the choices plainly.</p>
+<h2>The account</h2>
+<ul>
+<li>Custodian: <strong>J.P. Morgan Securities LLC (JPMS)</strong></li>
+<li>Decedent: Emil Dellaquila — Traditional/SEP IRA ending <strong>7719</strong></li>
+<li>Balance: <strong>$144,151.93</strong> (Oct 23, 2026; will have moved with the market since)</li>
+<li>Split three ways among Dave, Ron, Emile → Dave's proportionate share ≈ <strong>$48,050</strong></li>
+<li><strong>Each brother files his own form.</strong> Dave's elections bind only Dave.</li>
+</ul>
+<h2>Already done (§1–§3) — no action needed</h2>
+<ul>
+<li><strong>§1</strong> Account type: Traditional/SEP IRA ✔</li>
+<li><strong>§2</strong> Beneficiary identity: David Dell'Aquila, non-spouse, DOB 11/3/1964, 6929 Lenwood Way, San Jose ✔</li>
+<li><strong>§3</strong> Election: "Transfer or distribute my proportionate amount" — his designated percentage
+  share of cash + divisible securities; indivisible securities are liquidated to cash once all
+  authorized parties agree ✔</li>
+</ul>
+<h2>DECISION 1 — §4: how Dave receives his share (pick exactly ONE)</h2>
+<p><strong>Problem on the photographed copy:</strong> 4A, 4B, and 4E are all marked, but the form says
+<em>"Fill out only one section (A, B, C, D or E)"</em> — and the receiving-account fields are blank in
+all three. As photographed, the form would likely be rejected. Cleanest fix: start from a fresh
+copy of the form (v12.6) and complete only the chosen section, rather than crossing things out.</p>
+<h3>4A — Transfer to a JPMS Beneficiary IRA (inherited IRA)</h3>
+<ul>
+<li><strong>What happens:</strong> Dave opens a Beneficiary IRA at JPMS; his ~$48k share moves into it
+  trustee-to-trustee. Nothing is cashed out.</li>
+<li><strong>Tax:</strong> No tax now. <strong>Not</strong> reported on Form 1099-R. Money stays invested and tax-deferred.</li>
+<li><strong>The catch — the SECURE Act 10-year rule:</strong> Dave is a non-spouse beneficiary, so the entire
+  inherited IRA must be emptied by <strong>Dec 31, 2036</strong> (end of the 10th year after the year of
+  death). And because Emil died after his required beginning date (he had a 2026 RMD), annual
+  distributions are also required in years 1–9 (2027–2035) under the final IRS regulations —
+  Daniel to confirm the yearly amounts. Every dollar that comes out is taxed as ordinary income
+  in the year it comes out — but Dave controls the timing and can spread it across up to ten
+  tax years and lower-income years.</li>
+<li><strong>Flexibility:</strong> A JPMS Beneficiary IRA is not a life sentence — it can later be moved to
+  another custodian's inherited IRA by trustee-to-trustee transfer (it must stay titled as an
+  inherited IRA).</li>
+<li><strong>Step zero:</strong> the receiving Beneficiary IRA account number goes in §4A — if Dave doesn't
+  already have one at JPMS, opening it comes first (Beneficiary Services: (800) 648-4782).</li>
+<li><strong>§5 is skipped entirely</strong> on this route (no distribution, no withholding).</li>
+</ul>
+<h3>4B — Distribution to a Chase checking/savings account (ACH)</h3>
+<ul>
+<li><strong>What happens:</strong> His whole share is paid out to a Chase account (account number blank on the
+  photographed copy — Dave would need to supply one; whether he holds a Chase account is not
+  in the estate file).</li>
+<li><strong>Tax:</strong> Fully taxable as ordinary income <strong>in 2026</strong> — roughly $48k stacked on top of his
+  other 2026 income. Reported on Form 1099-R in Dave's name. No 10-year rule to manage
+  afterwards; the money is simply out.</li>
+<li><strong>Requires §5</strong> withholding elections (below).</li>
+</ul>
+<h3>4E — Distribution by Fed Funds wire ($25 fee)</h3>
+<ul>
+<li>Same as 4B in every way that matters — taxable 2026 distribution, 1099-R, §5 applies — just
+  a different rail (wire instead of ACH) and a <strong>$25 fee</strong>. Wire instructions blank on the copy.</li>
+</ul>
+<h3>4C / 4D</h3>
+<ul>
+<li>The remaining distribution methods on the form (the filed photo record doesn't detail them).
+  Any of B–E is a taxable distribution; only A is a transfer.</li>
+</ul>
+<h3>The trade-off in one line</h3>
+<p><strong>4A</strong> = no tax now, income spread over up to 10 years with required annual distributions, one
+more account to keep. <strong>4B/4E</strong> = one clean payout, but the full ~$48k lands in 2026 income at
+Dave's 2026 marginal rate. Given everything else in Dave's 2026 tax picture, this is exactly the
+kind of choice Daniel should bless before signing.</p>
+<h2>DECISION 2 — §5: withholding (ONLY if a distribution route B–E is chosen)</h2>
+<ul>
+<li><strong>5A Federal:</strong> election via Form W-4R (line 2) — blank on the copy. If no election is made,
+  the IRS default withholding for a nonperiodic IRA distribution applies. Dave picks a rate (or
+  elects out) based on whether he wants tax prepaid out of the payout or settled later via
+  estimates/payment with his return — Daniel's call territory again.</li>
+<li><strong>5B State:</strong> California election — no option visibly selected on the copy.</li>
+<li><strong>If 4A is chosen, skip §5 entirely.</strong></li>
+</ul>
+<h2>§6 — Signature</h2>
+<ul>
+<li>Unsigned on the photographed copy. The signature must be <strong>dated within 60 days of
+  submission</strong> — so sign last, once §4 is corrected and the form is ready to go, not before.</li>
+</ul>
+<h2>DECISION 3 — §7: identity verification (pick one)</h2>
+<ul>
+<li><strong>7A</strong> — a Registered Representative at a <strong>Chase branch</strong> verifies Dave's identity, or</li>
+<li><strong>7B</strong> — a <strong>J.P. Morgan Advisor</strong> does it, or</li>
+<li><strong>7C</strong> — a <strong>notary public</strong> does it.
+All three are equivalent; it's whichever is easiest to get to.</li>
+</ul>
+<h2>⏰ Deadline watch — year-of-death RMD (Dec 31, 2026)</h2>
+<p>Separate from the §4 choice: if Emil's <strong>2026 RMD was not fully satisfied before his death on
+July 1, 2026</strong>, the beneficiaries must distribute the remainder by <strong>Dec 31, 2026</strong> — about six
+weeks from Nov 18. Miss it and the penalty is 25% of the shortfall (potentially 10% if corrected
+within the 2-year window). This remainder would be a taxable distribution to the beneficiaries
+regardless of which §4 route each brother picks for the rest.</p>
+<p><strong>Already on Daniel's list (added Nov 18 at Dave's direction):</strong> Was Emil's 2026 RMD fully
+satisfied before July 1? If not, how is the remainder split among the three brothers before
+Dec 31, 2026, and does taking it change the §4 route each should elect? — This one is
+time-sensitive; it shouldn't wait in a queue behind non-urgent questions.</p>
+<h2>Submission (once signed + verified)</h2>
+<ul>
+<li>Advisor Upload Tool, or email <strong>cwm.estates.smartforms@chase.com</strong>, or mail to
+  J.P. Morgan Securities LLC, Attn: Estate Services, Mail Code IL1-0817,
+  10 S. Dearborn St., Chicago, IL 60603</li>
+<li>Questions: Beneficiary Services Team <strong>(800) 648-4782</strong></li>
+<li><strong>Dave signs and submits himself</strong> — the desk does not submit anything.</li>
+</ul>
+<h2>Decisions Dave needs to make (summary)</h2>
+<ol>
+<li><strong>§4 route:</strong> 4A inherited-IRA transfer (defer, 10-year rule) vs. distribution now
+   (4B ACH / 4E wire, taxed in 2026). Desk recommendation: get Daniel's blessing first, given
+   Dave's 2026 tax picture — unless the RMD deadline forces partial action sooner.</li>
+<li><strong>If distribution:</strong> §5 federal (W-4R) and state withholding elections.</li>
+<li><strong>§7:</strong> Chase branch, JP Morgan advisor, or notary.</li>
+<li><strong>RMD:</strong> chase Daniel's answer on the 2026 year-of-death RMD before Dec 31, 2026.</li>
+</ol></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">mission-statement.md</span><span class="rf-dir">docs</span></button><div class="rf-panel" hidden><div class="rf-body"><h1>Emil's Estate</h1>
+<h2>Executive summary</h2>
+<p>Emil Dell'Aquila — Dave's dad — died July 1, 2026, and Dave is managing the estate. Emil's Estate is the one desk where everything about the estate lands: the asset inventory (Emil's house for sale, the Melody Lane rental with tenant Larry Osana, Emil's 1931 Ford Model A and MG TD, the HomePod Minis from Dad's place), the document flow from the realtor (text and email), and the deadlines that matter — title transfers, the sale, and the eventual inheritance disbursement.
+It sits under Family Buddy, linked to Emil Buddy (the man) and Finance Buddy (the money).</p>
+<h2>The idea</h2>
+<p>Keep the estate as one living file instead of scattered across texts, emails, and memory. Emil's Estate tracks what the estate owns, what paperwork has arrived, what's still outstanding, and who's involved (executor, attorney, family, the realtor, the tenant).
+It separates the man from the administration: Emil Buddy is the living dossier of Dave's dad — the person. Emil's Estate is the paperwork of settling his life — the administration. People live on; paperwork settles.</p>
+<h2>The problem</h2>
+<p>Estates die in inboxes. The realtor sends documents by text and by email; title-transfer rules (REG 5, probate thresholds) carry eligibility windows and deadlines; a rental property needs rent tracked and a tenant managed; and the inheritance disbursement timing is still unknown — with questions hanging in text messages instead of one place. Without a single desk, things slip: a 40-day window, a lease term, a document that arrived by text and never got filed. Emil's Estate is the single desk.</p>
+<h2>Estate assets</h2>
+<ul>
+<li>Emil's house — actively being sold by a realtor (realtor's name and email still unknown; house address unknown). The realtor sends a high volume of documents by text and email.</li>
+<li>The Melody Lane rental — the house Dave grew up in; tenant: Larry Osana. Address and lease terms still unknown.</li>
+<li>Emil's cars — a 1931 Ford Model A and an MG TD, moved October 10 from Emil's house to Rachel's (On the Road Again Classics, Morgan Hill/Gilroy) for storage. Title transfer is in progress via California REG 5 transfer-without-probate filings (one per vehicle). The 40-day post-death wait has elapsed and the vehicles are excluded from the $208,850 small-estate threshold (deaths after April 1, 2025). One remaining check: the DMV's printed REG 5 still shows older threshold figures, so clerk acceptance of the current threshold needs confirmation.</li>
+<li>HomePod Minis from Dad's place — inventoried; disposition undecided.</li>
+</ul>
+<h2>Documents and paper trail</h2>
+<p>Documents arrive two ways. Email: Astro auto-watches Dave's inbox and files what matters. Text: Dave forwards realtor texts into the buddy's ingest log — texts cannot be auto-collected, so anything important that arrived by text needs forwarding to be tracked. Nothing here promises text automation.
+Every estate document gets filed against the asset it belongs to — house-sale docs under Emil's house sale, lease docs under Melody Lane — with dates and what's still outstanding.</p>
+<h2>Revenue potential</h2>
+<p>None — this is personal infrastructure, not a product. The only money that moves through this buddy is Dave's own: the house-sale proceeds, rental income, and the eventual inheritance disbursement. Per the standing rule, the section stays and says so plainly.</p>
+<h2>Room for growth</h2>
+<ul>
+<li>Child buddies: the house sale and the Melody Lane rental each get their own buddy under Emil's Estate as the volume grows — being stood up alongside this one.</li>
+<li>A disbursement tracker once the inheritance timeline firms up.</li>
+<li>A document checklist with deadlines — what the estate still owes the court, the DMV, the realtor.</li>
+<li>Links outward: Property Buddy conventions for the rental's upkeep records, Car Buddy for the vehicles once titles settle.</li>
+</ul>
+<h2>Out of scope for v1</h2>
+<ul>
+<li>Legal advice — the buddy tracks paperwork and deadlines; it doesn't interpret probate law or replace the attorney.</li>
+<li>Active property management beyond recording what happens — the rental's day-to-day stays with Dave and the tenant.</li>
+<li>Chasing the realtor — the buddy records documents and follow-ups; it doesn't message the realtor.</li>
+<li>Family decisions about the inheritance — who gets what and when is Dave and the family's call; the buddy keeps the record straight.</li>
+</ul>
+<h2>Open questions</h2>
+<ul>
+<li>When will the inheritance be disbursed — and through whom?</li>
+<li>Realtor's name and email; Emil's house address and sale terms.</li>
+<li>Who is the executor? Is there an attorney involved, and who? Which family members are participants in the estate?</li>
+<li>Melody Lane: address, lease terms for Larry Osana, rent amount and collection cadence.</li>
+<li>HomePod Minis: keep, distribute, or sell?</li>
+<li>REG 5: confirm the DMV clerk accepts the current $208,850 threshold against the older printed form.</li>
+</ul></div></div></div></div>
 </div>
 </section>
 
@@ -839,246 +1115,18 @@ Generated 2026-11-19 · Part of the Buddy System<br>
   var sec = document.querySelector('.repo-files');
   if (!sec || sec.dataset.rfInit) return;
   sec.dataset.rfInit = '1';
-  var bid = sec.getAttribute('data-buddy-id') || (function(){
-    var p = location.pathname.replace(/\/+$/, '');
-    return p.substring(p.lastIndexOf('/') + 1);
-  })();
-  function lsGet(){ try { return JSON.parse(localStorage.getItem('buddyTree.v3') || '{}'); } catch(e){ return {}; } }
-  function token(){ return lsGet().ghToken || ''; }
-  function b64encode(str){
-    var bytes = new TextEncoder().encode(str), bin = '';
-    bytes.forEach(function(b){ bin += String.fromCharCode(b); });
-    return btoa(bin);
-  }
-  async function ghApi(path, method, body){
-    var t = token();
-    if (!t) throw new Error('Add a GitHub token first.');
-    var r = await fetch('https://api.github.com' + path, {
-      method: method || 'GET',
-      headers: {'Authorization': 'Bearer ' + t, 'Accept': 'application/vnd.github+json', 'Content-Type': 'application/json'},
-      body: body ? JSON.stringify(body) : undefined
-    });
-    if (!r.ok) throw new Error('GitHub ' + r.status);
-    return r.status === 204 ? null : await r.json();
-  }
-  async function ghGetFile(repo, path){
-    try {
-      var j = await ghApi('/repos/davedellaquila/' + repo + '/contents/' + path);
-      if (j && j.content) return {
-        text: new TextDecoder().decode(Uint8Array.from(atob(j.content.replace(/\n/g, '')), function(c){ return c.charCodeAt(0); })),
-        sha: j.sha
-      };
-    } catch(e){}
-    return null;
-  }
-  var repo = null;
-  async function resolveRepo(){
-    try {
-      var r = await fetch('../buddies.json', {cache: 'no-store'});
-      var d = await r.json();
-      var buds = d.buddies || [];
-      for (var i = 0; i < buds.length; i++) {
-        if (buds[i].id === bid && buds[i].repo) { repo = buds[i].repo; break; }
-      }
-    } catch(e){}
-  }
-  function esc(s){ return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
-  function inline(s){
-    s = esc(s);
-    s = s.replace(/`([^`]+)`/g, '<code>$1</code>');
-    s = s.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
-    s = s.replace(/(^|[^*])\*([^*\n]+)\*/g, '$1<em>$2</em>');
-    s = s.replace(/\[([^\]]+)\]\((https?:[^)\s]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>');
-    return s;
-  }
-  function mdRender(src){
-    var lines = src.split('\n'), out = [], inList = false, inCode = false, codeBuf = [];
-    function closeList(){ if (inList) { out.push('</ul>'); inList = false; } }
-    for (var i = 0; i < lines.length; i++){
-      var ln = lines[i], m;
-      if (/^```/.test(ln)) {
-        if (inCode) { out.push('<pre><code>' + esc(codeBuf.join('\n')) + '</code></pre>'); codeBuf = []; inCode = false; }
-        else { closeList(); inCode = true; }
-        continue;
-      }
-      if (inCode) { codeBuf.push(ln); continue; }
-      if ((m = ln.match(/^(#{1,4})\s+(.*)/))) {
-        closeList();
-        var lv = Math.min(m[1].length + 1, 4);
-        out.push('<h' + lv + '>' + inline(m[2]) + '</h' + lv + '>');
-        continue;
-      }
-      if (/^\s*(-{3,}|\*{3,})\s*$/.test(ln)) { closeList(); out.push('<hr>'); continue; }
-      if ((m = ln.match(/^\s*[-*]\s+(.*)/)) || (m = ln.match(/^\s*\d+[.)]\s+(.*)/))) {
-        if (!inList) { out.push('<ul>'); inList = true; }
-        out.push('<li>' + inline(m[1]) + '</li>');
-        continue;
-      }
-      if ((m = ln.match(/^>\s?(.*)/))) { closeList(); out.push('<blockquote>' + inline(m[1]) + '</blockquote>'); continue; }
-      if (!ln.trim()) { closeList(); continue; }
-      closeList();
-      out.push('<p>' + inline(ln) + '</p>');
-    }
-    closeList();
-    if (inCode) out.push('<pre><code>' + esc(codeBuf.join('\n')) + '</code></pre>');
-    return out.join('\n');
-  }
-  var locked = sec.querySelector('.rf-locked'), main = sec.querySelector('.rf-main'),
-      list = sec.querySelector('.rf-list'), st = sec.querySelector('.rf-status');
-  /* Accordion files (Dave 2026-10-21): a list of file names; clicking a
-     name toggles that file's contents open inline right below the name.
-     Toggles are independent — several files can be open at once. Contents
-     load lazily on first open and are cached in the item's own state;
-     Edit/Save lives inside the opened panel. */
-  function buildFileSection(f){
-    var wrap = document.createElement('div');
-    wrap.className = 'rf-fileitem';
-    var head = document.createElement('button');
-    head.type = 'button';
-    head.className = 'rf-file';
-    head.setAttribute('aria-expanded', 'false');
-    var nm = document.createElement('span');
-    nm.className = 'rf-name';
-    nm.textContent = '📄 ' + f.name;
-    var dir = document.createElement('span');
-    dir.className = 'rf-dir';
-    dir.textContent = f.path;
-    var chev = document.createElement('span');
-    chev.className = 'rf-chev';
-    chev.textContent = '▸';
-    head.appendChild(nm);
-    head.appendChild(dir);
-    head.appendChild(chev);
-    var panel = document.createElement('div');
-    panel.className = 'rf-panel';
-    panel.hidden = true;
-    var phead = document.createElement('div');
-    phead.className = 'rf-viewhead';
-    var ppath = document.createElement('span');
-    ppath.className = 'rf-path';
-    ppath.textContent = f.path;
-    var editBtn = document.createElement('button');
-    editBtn.type = 'button';
-    editBtn.className = 'attn-btn rf-edit';
-    editBtn.textContent = 'Edit';
-    editBtn.disabled = true;
-    phead.appendChild(ppath);
-    phead.appendChild(editBtn);
-    var bodyEl = document.createElement('div');
-    bodyEl.className = 'rf-body';
-    bodyEl.innerHTML = '<p class="rf-loading">Loading ' + esc(f.path) + '…</p>';
-    var editor = document.createElement('div');
-    editor.className = 'rf-editor';
-    editor.hidden = true;
-    var ta = document.createElement('textarea');
-    ta.className = 'rf-ta';
-    ta.rows = 18;
-    ta.spellcheck = false;
-    ta.setAttribute('aria-label', 'Markdown source for ' + f.path);
-    var actions = document.createElement('div');
-    actions.className = 'attn-actions';
-    var saveBtn = document.createElement('button');
-    saveBtn.type = 'button';
-    saveBtn.className = 'attn-btn primary rf-save';
-    saveBtn.textContent = 'Save to GitHub';
-    var cancelBtn = document.createElement('button');
-    cancelBtn.type = 'button';
-    cancelBtn.className = 'attn-btn rf-cancel';
-    cancelBtn.textContent = 'Cancel';
-    actions.appendChild(saveBtn);
-    actions.appendChild(cancelBtn);
-    editor.appendChild(ta);
-    editor.appendChild(actions);
-    var fst = document.createElement('div');
-    fst.className = 'rf-fstatus attn-status';
-    fst.setAttribute('role', 'status');
-    panel.appendChild(phead);
-    panel.appendChild(bodyEl);
-    panel.appendChild(editor);
-    panel.appendChild(fst);
-    wrap.appendChild(head);
-    wrap.appendChild(panel);
-    var cur = null, loaded = false;
-    function loadOnce(){
-      if (loaded) return;
-      loaded = true;
-      ghGetFile(repo, f.path).then(function(got){
-        if (!got) { loaded = false; bodyEl.innerHTML = '<p class="rf-loading">⚠ Could not load ' + esc(f.path) + ' — close and open it again to retry.</p>'; return; }
-        cur = {path: f.path, sha: got.sha, text: got.text};
-        bodyEl.innerHTML = mdRender(got.text);
-        editBtn.disabled = false;
-      });
-    }
-    head.addEventListener('click', function(){
+  sec.querySelectorAll('.rf-fileitem > .rf-file').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var item = btn.parentElement;
+      var panel = item ? item.querySelector('.rf-panel') : null;
+      if (!panel) return;
       var open = panel.hidden;
       panel.hidden = !open;
-      head.setAttribute('aria-expanded', open ? 'true' : 'false');
-      chev.textContent = open ? '▾' : '▸';
-      if (open) loadOnce();
+      btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      var ch = btn.querySelector('.rf-chev');
+      if (ch) ch.textContent = open ? '▾' : '▸';
     });
-    editBtn.addEventListener('click', function(){
-      if (!cur) return;
-      ta.value = cur.text;
-      bodyEl.hidden = true;
-      editor.hidden = false;
-      ta.focus();
-    });
-    cancelBtn.addEventListener('click', function(){
-      editor.hidden = true;
-      bodyEl.hidden = false;
-    });
-    saveBtn.addEventListener('click', async function(){
-      if (!cur) return;
-      saveBtn.disabled = true;
-      fst.textContent = 'Saving…';
-      try {
-        var payload = {message: 'Edit ' + cur.path + ' from the homepage', content: b64encode(ta.value), sha: cur.sha};
-        var j = await ghApi('/repos/davedellaquila/' + repo + '/contents/' + cur.path, 'PUT', payload);
-        if (j && j.content && j.content.sha) cur.sha = j.content.sha;
-        cur.text = ta.value;
-        editor.hidden = true;
-        bodyEl.hidden = false;
-        bodyEl.innerHTML = mdRender(cur.text);
-        fst.textContent = '✓ Saved to GitHub (' + repo + '/' + cur.path + ').';
-      } catch(err){
-        var why = (err && err.message) || String(err);
-        fst.textContent = /409|422/.test(why)
-          ? '⚠ GitHub said the file changed since you loaded it (' + why + ') — reload this page and try again.'
-          : '⚠ Save failed (' + why + ') — your edit is still in the editor.';
-      }
-      saveBtn.disabled = false;
-    });
-    return wrap;
-  }
-  async function init(){
-    await resolveRepo();
-    if (!repo) {
-      locked.hidden = false;
-      locked.textContent = 'No repo is linked for this buddy yet, so there are no repo files to show.';
-      return;
-    }
-    if (!token()) { locked.hidden = false; return; }
-    main.hidden = false;
-    st.textContent = 'Loading files…';
-    var files = [];
-    async function grab(dir){
-      try {
-        var j = await ghApi('/repos/davedellaquila/' + repo + (dir ? '/contents/' + dir : '/contents'));
-        if (Array.isArray(j)) j.forEach(function(e){
-          if (e.type === 'file' && /\.md$/i.test(e.name)) files.push({name: e.name, path: e.path});
-        });
-      } catch(e){}
-    }
-    await grab('');
-    await grab('docs');
-    files.sort(function(a, b){ return a.path < b.path ? -1 : 1; });
-    if (!files.length) { st.textContent = 'No markdown files found in the repo yet.'; return; }
-    st.textContent = '';
-    files.forEach(function(f){
-      list.appendChild(buildFileSection(f));
-    });
-  }
-  init();
+  });
 })();
 </script>
 

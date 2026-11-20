@@ -153,6 +153,8 @@ footer{margin-top:36px;padding-top:18px;border-top:1px solid var(--border);color
 .rf-body pre code { border: none; padding: 0; background: none; }
 .rf-body a { color: var(--accent); }
 .rf-body hr { border: none; border-top: 1px solid var(--border); margin: 14px 0; }
+.rf-body table { border-collapse: collapse; margin: 10px 0; font-size: 13.5px; }
+.rf-body th, .rf-body td { border: 1px solid var(--border); padding: 5px 9px; text-align: left; }
 .rf-ta { width: 100%; box-sizing: border-box; background: var(--bg); color: var(--text); border: 1px solid var(--border); border-radius: 8px; padding: 12px; font-family: ui-monospace, Menlo, monospace; font-size: 13px; line-height: 1.55; }
 /* ---- Accordion files (Dave 2026-10-21): the list of markdown files;
    clicking a file name opens its contents inline right below that name.
@@ -169,28 +171,10 @@ footer{margin-top:36px;padding-top:18px;border-top:1px solid var(--border);color
 
 @media (max-width:640px){.fact{grid-template-columns:1fr;gap:2px}.connlabel{width:88px}.wrap{padding:28px 16px 48px}h1{font-size:24px}}
 </style>
-<style>
-.header-tip{position:relative;overflow:hidden;flex:none;display:inline-flex;align-items:center;gap:.45em;padding:6px 12px;border-radius:999px;text-decoration:none;
-  font-size:13px;font-weight:800;line-height:1;color:#fff;background:linear-gradient(135deg,#7c4dff,#b388ff);
-  box-shadow:0 4px 14px rgba(124,77,255,.35);animation:tip-breathe 3.2s ease-in-out infinite;white-space:nowrap}
-.header-tip::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;
-  background:linear-gradient(105deg,rgba(255,255,255,0) 35%,rgba(255,255,255,.45) 50%,rgba(255,255,255,0) 65%);
-  transform:translateX(-110%);animation:tip-sheen 8s ease-in-out infinite}
-.header-tip .jar{display:inline-block;font-size:1.1em}
-.header-tip:hover .jar{animation:tip-spin .7s cubic-bezier(.34,1.56,.64,1)}
-.header-tip:focus-visible{outline:3px solid #ffd54f;outline-offset:3px}
-@keyframes tip-breathe{0%,100%{transform:scale(1)}50%{transform:scale(1.045)}}
-@keyframes tip-sheen{0%{transform:translateX(-110%)}16%{transform:translateX(110%)}100%{transform:translateX(110%)}}
-@keyframes tip-spin{to{transform:rotate(360deg)}}
-@media (prefers-reduced-motion: reduce){
-  .header-tip,.header-tip:hover .jar{animation:none}
-  .header-tip::after{display:none}
-}
-</style>
 </head>
 <body>
 <div class="wrap">
-<div class="aboutnav"><a href="./">← 🧑‍💻 Developer Buddy — homepage</a><span class="muted">This About page is the full record: every registry field and every markdown file in the buddy's repo.</span><a class="header-tip" href="https://ko-fi.com/davedellaquila" target="_blank" rel="noopener" aria-label="Tip Jar — if this page helped you, you can leave Dave a tip on Ko-fi"><span class="jar" aria-hidden="true">🫙</span><span>Tip Jar</span></a></div>
+<div class="aboutnav"><a href="./">← 🧑‍💻 Developer Buddy — homepage</a><span class="muted">This About page is the full record: every registry field and every markdown file in the buddy's repo.</span></div>
 <header class="hero">
 <div class="heroicon">🧑‍💻</div>
 <div><h1>Developer Buddy</h1><p class="tagline">Dave&#x27;s software engineer for the BuddyOS codebase</p></div>
@@ -207,14 +191,284 @@ footer{margin-top:36px;padding-top:18px;border-top:1px solid var(--border);color
 <section class="card"><h2 class="kicker">Sub-buddies (0)</h2><p class="empty">No sub-buddies.</p></section>
 <section class="card"><h2 class="kicker">Connections</h2><div class="connrow"><span class="connlabel">Parent</span><a href="../project-buddy/">🧭 Projects Buddy</a></div><div class="connrow"><span class="connlabel">Siblings</span><a href="../analytics-buddy/">📊 Analytics Buddy</a>, <a href="../architect-buddy/">📐 Architect Buddy</a>, <a href="../astronomy-buddy/">🔭 Astronomy Buddy</a>, <a href="../birthday-buddy/">🎂 Birthday Buddy</a>, <a href="../briefing-buddy/">📋 Briefing Buddy</a>, <a href="../buddy-types/">🧬 Buddy Buddy</a>, <a href="../buddy-suite/">🧩 Buddy Suite</a>, <a href="../charts-buddy/">📊 Charts Buddy</a>, <a href="../dpg-shop-software/">🔧 DPG Shop Software</a>, <a href="../decision-buddy/">🎯 Decision Buddy</a>, <a href="../dellaquila-com/">💼 Dellaquila.com</a>, <a href="../design-buddy/">🎨 Designer</a>, <a href="../dream-buddy/">💭 Dream Buddy</a>, <a href="../events-buddy/">🎟️ Events Buddy</a>, <a href="../feedback-buddy/">📣 Feedback Buddy</a>, <a href="../finance-buddy/">💰 Finance Buddy</a>, <a href="../game-buddy/">🎮 Game Buddy</a>, <a href="../guardian-buddy/">🛡️ Guardian Buddy</a>, <a href="../idea-buddy/">💡 Idea Buddy</a>, <a href="../jev-buddy/">⚡ Jev Buddy</a>, <a href="../job-buddy/">🔎 Job Buddy</a>, <a href="../journal-buddy/">📓 Journal Buddy</a>, <a href="../school-buddy/">🎓 Learning Buddy</a>, <a href="../locations-buddy/">📍 Locations Buddy</a>, <a href="../marketing-buddy/">🥃 Marketing Buddy</a>, <a href="../music-buddy/">🎵 Music Buddy</a>, <a href="../news-buddy/">📰 News Buddy</a>, <a href="../onboarding-buddy/">👋 Onboarding Buddy</a>, <a href="../persona-buddy/">🎭 Persona Buddy</a>, <a href="../portfolio-buddy/">📸 Portfolio Buddy</a>, <a href="../reminder-buddy/">⏰ Reminder Buddy</a>, <a href="../research-buddy/">🔍 Research Buddy</a>, <a href="../scaffold-buddy/">🏗️ Scaffold Buddy</a>, <a href="../sharing-buddy/">🔗 Sharing Buddy</a>, <a href="../sierra-oak-farms/">🌻 Sierra Oak Farms</a>, <a href="../sports-car-adventures/">🏎️ Sports Car Adventures</a>, <a href="../tv-buddy/">📺 TV Buddy</a>, <a href="../tech-buddy/">📱 Tech Buddy</a>, <a href="../tester-relations-buddy/">🤝 Tester Relations Buddy</a>, <a href="../triton-museum/">🖼️ Triton Museum of Art</a>, <a href="../wine-buddy/">🍷 Wine Buddy</a>, <a href="../wisdom-buddy/">🦉 Wisdom Buddy</a>, <a href="../work-buddy/">💻 Work Buddy</a>, <a href="../zen-buddy/">🧘 Zen Buddy</a></div><div class="connrow"><span class="connlabel">Linked to</span><a href="../project-buddy/">🧭 Projects Buddy</a></div></section>
 <section class="card"><h2 class="kicker">Repository &amp; memory</h2><div class="connrow"><span class="connlabel">Repo</span><a href="https://github.com/davedellaquila/developer-buddy" target="_blank" rel="noopener">davedellaquila/developer-buddy</a> <span class="muted">— brain dumps land in docs/ingest.md</span></div></section>
-<section class="card"><h2 class="kicker">From the repo — markdown files (10)</h2><p class="muted">In the local clone of davedellaquila/developer-buddy — the reader below loads the live files from the repo itself:</p><ul class="mdinv"><li><code>KNOWLEDGE.md</code> <span class="muted">3,820 chars</span></li><li><code>CONFIG.md</code> <span class="muted">1,055 chars</span></li><li><code>SOUL.md</code> <span class="muted">132 chars</span></li><li><code>DECISIONS.md</code> <span class="muted">1,755 chars</span></li><li><code>ACCOMPLISHMENTS.md</code> <span class="muted">4,997 chars</span></li><li><code>README.md</code> <span class="muted">712 chars</span></li><li><code>docs-tipjar-custom-plan.md</code> <span class="muted">3,932 chars</span></li><li><code>docs/brief.md</code> <span class="muted">3,764 chars</span></li><li><code>docs/ingest.md</code> <span class="muted">558 chars</span></li><li><code>docs/job-req.md</code> <span class="muted">3,764 chars</span></li></ul>
+<section class="card"><h2 class="kicker">From the repo — markdown files (10)</h2><p class="muted">In the local clone of davedellaquila/developer-buddy — the reader below baked into the reader below from that clone:</p><ul class="mdinv"><li><code>KNOWLEDGE.md</code> <span class="muted">3,820 chars</span></li><li><code>CONFIG.md</code> <span class="muted">1,055 chars</span></li><li><code>SOUL.md</code> <span class="muted">132 chars</span></li><li><code>DECISIONS.md</code> <span class="muted">1,755 chars</span></li><li><code>ACCOMPLISHMENTS.md</code> <span class="muted">4,997 chars</span></li><li><code>README.md</code> <span class="muted">712 chars</span></li><li><code>docs-tipjar-custom-plan.md</code> <span class="muted">3,932 chars</span></li><li><code>docs/brief.md</code> <span class="muted">3,764 chars</span></li><li><code>docs/ingest.md</code> <span class="muted">558 chars</span></li><li><code>docs/job-req.md</code> <span class="muted">3,764 chars</span></li></ul>
 <section class="repo-files" data-buddy-id="developer-buddy">
 <h2>📄 Repo files</h2>
-<p class="rf-sub">The markdown files in <span data-buddy-name>Developer Buddy</span>'s repo. Tap a file name and its contents open right below it — open as many as you like at once. Edit inside an opened file and the save goes straight back to GitHub. The repo is private, so nothing here — not even the file names — is shown until GitHub is connected on this device.</p>
-<div class="rf-locked" hidden>🔒 Connect GitHub in the 🧠 Brain dump box above to view and edit files — the repos are private, so a token is needed to read them. Then reload this page.</div>
-<div class="rf-main" hidden>
-<div class="rf-list rf-files-wrap"></div>
-<div class="rf-status attn-status" role="status"></div>
+<p class="rf-sub">The markdown files in <span data-buddy-name>Developer Buddy</span>'s repo, baked into this page when it was generated — tap a file name and its contents open right below it; open as many as you like at once. No sign-in and no fetching: the words are right here. To change a file, edit it in the repo — the page picks it up next time it is generated.</p>
+<div class="rf-main">
+<div class="rf-list rf-files-wrap"><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">KNOWLEDGE.md</span><span class="rf-dir">repo root</span></button><div class="rf-panel" hidden><div class="rf-body"><h1>Knowledge — Developer Buddy</h1>
+<p>Everything this buddy has learned: facts, specs, history.</p>
+<h2>Codebase at hire (verified 2026-10-28, parent-supplied + spot-checked in the repo)</h2>
+<ul>
+<li>Repo: buddy-system (local clone <code>~/workspace/projects/buddy-tree</code>); <code>build.py</code> generates the dashboard.</li>
+<li>Registry (<code>buddies.json</code>): <strong>163 buddies, 163 with homepages</strong>; 93 buddies carry attention items, <strong>114 attention items</strong> total.</li>
+<li>Git history: <strong>1,497 commits all-time; 333 in the last 7 days; 30 on 2026-10-28</strong> alone.</li>
+<li>Build tooling, by line count: <code>build.py</code> <strong>14,300</strong>, <code>gen_basic_homepages.py</code> <strong>1,329</strong>, <code>gen_default_homepages.py</code> <strong>445</strong> — 16,074 lines total.</li>
+<li>Fleet surface: <strong>885 HTML files</strong>; 181 homepage <code>index.html</code> files; 72 pages still carry the basic-template marker; 167 <code>index.html</code> files still carry the old floating tip-jar pill.</li>
+<li>Build at hire: <strong>20261028.0821</strong>, commit <code>c375899</code> (this buddy hired &amp; wired). Prior build the same morning: 20261028.0815, commit <code>649794e</code> (Find palette + Recents floater + inboard grippers).</li>
+</ul>
+<h2>Homepage (first task, 2026-10-28)</h2>
+<ul>
+<li>Custom homepage lives at <code>buddy-tree/developer-buddy/index.html</code> (58,741 bytes at build) — sources for its live-stats strip: <code>buddies.json</code> counts, <code>git log</code> counts, and <code>wc -l</code> on the build tooling, all as of 2026-10-28. When those numbers change, the page should change.</li>
+<li>The template page's four inline scripts (brain dump, attention actions, repo files, name sync — 28,187 bytes total) were carried over <strong>byte-identical</strong>; only the CSS around their markup was restyled. Verify with a diff of extracted <code>&lt;script&gt;</code> blocks after any future edit.</li>
+<li>Role audio: <code>role-intro.mp3</code> sits beside the homepage, but the template page at hire contained <strong>no</strong> “Hear my role” block (the generator emits one only when the mp3 exists at generation time) — the custom page adds the canonical block by hand: <code>&lt;audio controls preload="none" src="role-intro.mp3"&gt;</code>.</li>
+<li>Tip Jar placement (Dave's call, 2026-10-28): header, not floating pill. This homepage is the reference implementation — a <code>.header-tip</code> link in the sticky header pointing at https://ko-fi.com/davedellaquila ; it must never carry <code>class="tipjar"</code> or the floating <code>.tipjar</code> CSS, so fleet greps for the old pill stay meaningful.</li>
+</ul>
+<h2>Traps (standing)</h2>
+<ul>
+<li>Never include the literal phrase “Part of the Buddy System” or the <code>BUDDY-BASIC-TEMPLATE</code> marker in a custom page — <code>gen_basic_homepages.py</code> treats either as template-managed and will regenerate/wipe it (see buddy-tree <code>AGENTS.md</code>).</li>
+<li>Every buddy page ships dark + light mode (<code>prefers-color-scheme</code>) — buddy-tree <code>AGENTS.md</code> standing rule.</li>
+<li>Extract inline scripts and <code>node --check</code> them before any push; verify on the served copy, never announce from a local build.</li>
+</ul>
+<h2>Traps learned 2026-10-28</h2>
+<ul>
+<li>verify-build.sh RE-RUNS build.py without TZ — the shipped stamp came out UTC (20261028.1540) while the changelog draft said 0840 (PT). Run generators/verify with TZ='America/Los_Angeles' when the stamp matters, and always read the stamp from the served version.txt.</li>
+<li>Snippet extraction: docs/tipjar-snippet.html's own usage prose mentions <code>&lt;style&gt;</code> and <code>&lt;a&gt;</code> — generators must strip HTML comments before extracting parts, or the prose poisons generated pages (caught mid-run, fixed in both generators).</li>
+<li>gen_default_homepages.py takes explicit buddy ids (<code>--about</code> for About pages); running it on v2-era index pages jumps them a template generation — for jar-only changes, swap surgically instead.</li>
+<li>The buddy panel (info panel) must never grow its own search field — Dave's rule (2026-10-28): one filter for the whole dashboard, the main-view Find.</li>
+<li>Panel style (sidebarStyle) persists per origin/device; the default is 'floating'. Dave's Anchored choice on one surface does not carry to others — known confusion source, not a code flip.</li>
+</ul></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">CONFIG.md</span><span class="rf-dir">repo root</span></button><div class="rf-panel" hidden><div class="rf-body"><h1>Config — Developer Buddy</h1>
+<p>How this buddy is configured: identity, persona, voice, scope, preferences, privacy. Seeded at creation by new_project.py; the Desk renders these settings and audition picks update them (manifest row 26).</p>
+<h2>Identity</h2>
+<ul>
+<li>Role: Owns the BuddyOS codebase day-to-day: takes Dave's decisions (via Astro) and the Designer's specs, and turns them into shipped, verified builds.</li>
+<li>Parent: project-buddy</li>
+<li>Persona: The Lead Engineer</li>
+<li>Pronouns: she/her (Dave, 2026-10-28: "i think developer buddy is a girl")</li>
+<li>Voice: avocado_v2:vdc_NOID65</li>
+<li>Repo: https://github.com/davedellaquila/developer-buddy (private)</li>
+</ul>
+<h2>Behavior</h2>
+<ul>
+<li>Persona-led tone as recorded above; see <code>SOUL.md</code>.</li>
+</ul>
+<h2>Scope</h2>
+<ul>
+<li>Dashboard build (build.py), homepage generators, canonical snippets, buddy-server codebase, build queue. Firebase deploys stay on Dave's machine.</li>
+</ul>
+<h2>Preferences</h2>
+<ul>
+<li>Seeded at creation; preferences accumulate here as Dave states them.</li>
+</ul>
+<h2>Privacy</h2>
+<ul>
+<li>Private by default. Nothing about this buddy is public unless Dave says otherwise for a specific item.</li>
+</ul></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">SOUL.md</span><span class="rf-dir">repo root</span></button><div class="rf-panel" hidden><div class="rf-body"><h1>SOUL.md — Developer Buddy</h1>
+<p>Persona and voice for Developer Buddy. Seeded at creation; refine as the buddy develops its character.</p></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">DECISIONS.md</span><span class="rf-dir">repo root</span></button><div class="rf-panel" hidden><div class="rf-body"><h1>Decisions — Developer Buddy</h1>
+<p>Decisions made, with dates.</p>
+<h2>2026-10-28 — Persona confirmed: The Lead Engineer</h2>
+<p>Dave's pick from the onboarding auditions (main chat, 2026-10-28): keep the default persona, <strong>The Lead Engineer</strong>. Alternates were The Principal Engineer and The Shipwright. The pick stands in CONFIG.md and the registry; no change needed — the default was already in effect. Voice auditions moved to this buddy's own thread the same day at Dave's direction (auditions live in the buddy's side chat from now on).</p>
+<h2>2026-10-28 — Voice confirmed: Precise Window</h2>
+<p>Dave's pick from the onboarding auditions (main chat, 2026-10-28, minutes before auditions moved to the buddy's own thread): <strong>Precise Window</strong> (avocado_v2:vdc_NOID65) — the default already in effect, so CONFIG.md and the registry already carry it and the role audio needs no re-record. Alternates auditioned: Wise Lighthouse, Polished Coin.</p>
+<h2>2026-10-28 — Pronouns: she/her</h2>
+<p>Dave's remark in the main chat ("i think developer buddy is a girl"), relayed the same evening: Developer Buddy is a girl — <strong>she/her</strong> from here on, fleet-wide. Astro had referred to this buddy as "he" when relaying Dave's iPhone screenshot earlier that evening; this entry is the correction. Recorded in CONFIG.md (Identity) so the Desk and future threads pick it up.</p>
+<h2>Dashboard rail placement principle (Dave, 2026-10-30)</h2>
+<p>Cluster at the top, keep the middle empty. The collapsed rail's furniture (expand, Recents, current-view) groups in one tight cluster at the top of the left edge so the middle band of the screen stays clear — the point of the 20261030.0559 move was screen real estate, not tidiness. Any future rail proposal that puts furniture mid-edge contradicts Dave's stated principle.</p></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">ACCOMPLISHMENTS.md</span><span class="rf-dir">repo root</span></button><div class="rf-panel" hidden><div class="rf-body"><h1>Accomplishments — Developer Buddy</h1>
+<p>What this buddy has shipped and done. The review-time record — keep it fresh.</p>
+<h2>2026-10-28 — Custom homepage SHIPPED (first task / audition) — build 20261028.0826, commit <code>120baf9</code>, served-verified</h2>
+<ul>
+<li>Replaced the template homepage at <code>buddy-tree/developer-buddy/index.html</code> (46,425 bytes template → <strong>58,741 bytes custom</strong>) with a terminal / ship-log design that could only be this buddy's: a code-window hero (<code>$ whoami --role</code>, blinking cursor), a build-pipeline strip (Decision → Spec → Build → Verify → Push → Served copy), a monospace ship log, and proportional codebase-anatomy bars.</li>
+<li><strong>Leads with live stats</strong> (real numbers, sources in KNOWLEDGE.md): 163 buddies in the registry (163/163 with homepages) · 30 commits today · 333 commits in the last 7 days / 1,497 all-time · 114 attention items across 93 buddies · 16,074 lines of build tooling · current build 20261028.0821 (commit <code>c375899</code>).</li>
+<li><strong>Ship log</strong> lists: <code>c375899</code> hired &amp; wired (20261028.0821), <code>649794e</code> Find/Recents/grippers (20261028.0815), <code>0d1df5b</code> Find overlay, <code>cb48b67</code> framework buttons, <code>5a6ee53</code> Doc/Drive links in a new tab.</li>
+<li><strong>Tip Jar migration modelled:</strong> 🫙 Tip Jar lives in the sticky header as a compact breathing/shimmer bug linking Dave's Ko-fi; the floating pill is gone from this page (zero <code>class="tipjar"</code> / <code>.tipjar</code> CSS).</li>
+<li><strong>Standing requirements kept:</strong> dark + light mode, responsive with no horizontal scroll, sticky header with icon + name, dashboard link, 🔊 “Hear my role” playing <code>role-intro.mp3</code>, Needs-your-attention item (job req) linked to its Google Doc, and links on every buddy/doc/repo mentioned (Project Buddy, job req, private repo, About).</li>
+<li><strong>Brain-dump box preserved:</strong> all four template inline scripts (dump, attention actions, repo files, name sync) carried over byte-identical — dumping still token-gates and writes to this repo's <code>docs/ingest.md</code>, with the local-device fallback intact.</li>
+<li><strong>Validation at build time:</strong> all 4 inline scripts pass <code>node --check</code>; HTML tag balance clean (no errors, nothing left open); greps confirm no forbidden generator phrases/markers and no floating tip jar.</li>
+<li><strong>Shipped:</strong> committed as <code>120baf9</code> (explicit pathspecs: homepage + CHANGELOG.md + version.txt), pushed, and verified on the served copy at https://davedellaquila.github.io/buddy-system/developer-buddy/ — header Tip Jar bug, live stats (1,497 commits), and ship-log hero all present in the served HTML; served version.txt reads 20261028.0826.</li>
+</ul>
+<h2>2026-10-28 — First queue pass (build 20261028.1540) + School Buddy header + Tip Jar generator migration</h2>
+<ul>
+<li><strong>New Buddy silent create failure FIXED</strong> (buddy-tree build 20261028.1540, commit 0840d3a): styled sheet error, sticky action-bar status in plain language, on-device queue (S.nbQueue + flushNbQueue at boot/token-appear), unmistakable success toast. Verified live end-to-end (no-token path in a fresh profile; sheet-shaped test request landed in docs/inbox via the sheet's exact write path, then deleted).</li>
+<li><strong>Persona picker</strong>: Generic Male/Female/Gender-Neutral pinned first in the sheet's catalog (27 triples with trait keywords) + keyword filter with count and friendly empty state. Live-verified ("feisty" → 6).</li>
+<li><strong>Panel search removed entirely</strong> at Dave's word (Investment Buddy thread): #bp-search field/CSS/JS + '/' routing unwound; ⌘F Find untouched, live-verified on the Investment panel.</li>
+<li><strong>Sidebar × circle un-clipped</strong>: #sb-tools right 8→24px (clear of the .sb-scroll classic scrollbar band) + #sb-resize left formula corrected for the floating sidebar's 12px viewport offset (anchored override kept).</li>
+<li><strong>School Buddy header repaired</strong> (commit 84dd093): fleet dash-link injection had landed inside the 44px .mark icon tile; moved into the topbar row, muted; crumb clears the Recents floater when embedded.</li>
+<li><strong>Tip Jar header migration, generator-managed pages</strong> (commit cf55bd1): canonical snippet rewritten as the header bug; gen_basic places it in the topbar of all 71 template homepages, gen_default in the About nav/hero of all 164 About pages; 15 v2 default index pages swapped surgically (no template-generation jump). Floating pill count on generated pages = 0, served-verified. Remainder: ~81 custom/thread-owned pages + sub-pages, per-page plan via Astro before any bulk edit.</li>
+<li><strong>2026-10-28 (afternoon) — Chevron + four-icon rail (build 20261028.1348, buddy-tree 097bd13):</strong> at Dave's call, the sidebar's ✕ became a left chevron (the panel collapses to the rail, never closes; circleX kept for true dismissals) and the collapsed rail became exactly four icons — › expand, 🔍 Find (opens the ⌘F overlay), 💼 Business Plans (popover menu, pick navigates via show('plan:…')), current-view icon + views popover — with the Views stack hidden while collapsed. Live-verified on the served copy: chevron glyph + "Collapse sidebar" label, exactly four rail icons in order, plans menu lists plans (Amador County Transport first), Find opens from the rail, views menu complete.</li>
+</ul></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">README.md</span><span class="rf-dir">repo root</span></button><div class="rf-panel" hidden><div class="rf-body"><h1>Developer Buddy</h1>
+<p>Developer Buddy is Dave's software engineer for the BuddyOS codebase. It owns the code day-to-day — the dashboard, the homepage generators, the shared components, and the buddy-server codebase — so Dave's main chat stays about what he wants, not how the code works. Change requests arrive as decisions from Dave via Astro and as buildable specs from the Designer; Developer Buddy turns them into shipped builds, verifies each one on the served copy, and reports back in outcomes: what changed, which build number, and where to see it.</p>
+<h2>Product brief</h2>
+<p><a href="docs/brief.md">Read the full brief</a> · <a href="https://docs.google.com/document/d/1XlKkO6VH0aYC6P5nlCxoZ_Gm62F4qkn51PwkWtI-zqg/edit">Google Doc</a></p></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">docs-tipjar-custom-plan.md</span><span class="rf-dir">repo root</span></button><div class="rf-panel" hidden><div class="rf-body"><h1>Tip Jar migration — custom &amp; thread-owned pages: scoped plan</h1>
+<p>Prepared by Developer Buddy, 2026-10-28. Status: <strong>awaiting Astro/Dave go-ahead — no page has been edited under this plan.</strong></p>
+<p>Generator-managed pages are done (build cf55bd1: 71 template homepages, 164 About pages, 15 v2 default pages). What remains is every page the generators do NOT own: <strong>78 custom buddy homepages + 3 sub-pages</strong> still carrying the floating pill (<code>class="tipjar"</code>). Per the standing rule, these migrate per-page — this plan is the scope, surfaced before any bulk edit.</p>
+<h2>The swap (identical for every Category A page)</h2>
+<ol>
+<li>Remove the floating block — it is the machine-injected canonical snippet, verified byte-identical per page before removal; a page whose block differs is skipped to manual (Category B treatment).</li>
+<li>Add the canonical header-tip <code>&lt;style&gt;</code> to <code>&lt;head&gt;</code> and the <code>&lt;a class="header-tip"&gt;</code> anchor as the last item of the page's existing header/topbar row (with a right-end rule where the header is flex).</li>
+<li>Diff discipline: the only lines that may change are the tip jar furniture. Any page whose diff exceeds that is reverted and flagged.</li>
+<li>Ship in batches of ~15 pages: one commit + CHANGELOG line per batch, served spot-check of 2 pages per batch.</li>
+</ol>
+<h2>Category A — has a header/topbar (74 homepages): mechanical swap, batch order = alphabetical</h2>
+<ul>
+<li>amanda-buddy/index.html</li>
+<li>architect-buddy/index.html</li>
+<li>astro/index.html</li>
+<li>astronomy-buddy/index.html</li>
+<li>bicycle-buddy/index.html</li>
+<li>cabin-buddy/index.html</li>
+<li>calendar-buddy/index.html</li>
+<li>car-buddy/index.html</li>
+<li>career-buddy/index.html</li>
+<li>charts-buddy/index.html</li>
+<li>connie-ko/index.html</li>
+<li>dave-swiger-buddy/index.html</li>
+<li>decision-buddy/index.html</li>
+<li>dellaquila-com/index.html</li>
+<li>discovery-buddy/index.html</li>
+<li>document-buddy/index.html</li>
+<li>documentarian-buddy/index.html</li>
+<li>dpg-shop-software/index.html</li>
+<li>emil-house-sale/index.html</li>
+<li>emile-buddy/index.html</li>
+<li>eric/index.html</li>
+<li>family/index.html</li>
+<li>feedback-buddy/index.html</li>
+<li>finance-buddy/index.html</li>
+<li>game-buddy/index.html</li>
+<li>guardian-buddy/index.html</li>
+<li>hans-buddy/index.html</li>
+<li>health-buddy/index.html</li>
+<li>hot-tub-buddy/index.html</li>
+<li>housing-buddy/index.html</li>
+<li>investment-buddy/index.html</li>
+<li>jessica-buddy/index.html</li>
+<li>jody-reed/index.html</li>
+<li>joel-buddy/index.html</li>
+<li>journal-buddy/index.html</li>
+<li>larry-osana/index.html</li>
+<li>legal-buddy/index.html</li>
+<li>lenwood-water/index.html</li>
+<li>little-guy-buddy/index.html</li>
+<li>llagas-creek-sale/index.html</li>
+<li>mail-buddy/index.html</li>
+<li>marketing-buddy/index.html</li>
+<li>marley-buddy/index.html</li>
+<li>mei-ying-buddy/index.html</li>
+<li>money-buddy/index.html</li>
+<li>nancy-buddy/index.html</li>
+<li>neighborhood-buddy/index.html</li>
+<li>party-buddy/index.html</li>
+<li>penny-luedtke/index.html</li>
+<li>plumber-buddy/index.html</li>
+<li>portfolio-buddy/index.html</li>
+<li>quentin-buddy/index.html</li>
+<li>relationship-buddy/index.html</li>
+<li>reminder-buddy/index.html</li>
+<li>rocky-buddy/index.html</li>
+<li>ron-buddy/index.html</li>
+<li>sarah-buddy/index.html</li>
+<li>sawyer-buddy/index.html</li>
+<li>scaffold-buddy/index.html</li>
+<li>school-buddy/index.html</li>
+<li>sharing-buddy/index.html</li>
+<li>shopping-buddy/index.html</li>
+<li>shreya-dhingra/index.html</li>
+<li>social-media-buddy/index.html</li>
+<li>soundboard/index.html</li>
+<li>sports-car-adventures/index.html</li>
+<li>stumpjumper-buddy/index.html</li>
+<li>tester-relations-buddy/index.html</li>
+<li>travel-buddy/index.html</li>
+<li>tv-buddy/index.html</li>
+<li>w163-mastertech-buddy/index.html</li>
+<li>wisdom-buddy/index.html</li>
+<li>work-buddy/index.html</li>
+<li>zen-buddy/index.html</li>
+</ul>
+<h2>Category B — no obvious header (4 homepages): individual placement proposal each, NO auto-edit</h2>
+<ul>
+<li>carl-buddy/index.html</li>
+<li>james-buddy/index.html</li>
+<li>news-buddy/index.html</li>
+<li>personal-buddy/index.html</li>
+</ul>
+<h2>Category C — sub-pages (3): swap if a header exists, else Category B treatment</h2>
+<ul>
+<li>hans-buddy/chime/index.html</li>
+<li>vote/e39-touring-shirts/index.html</li>
+<li>vote/gallery-preference/index.html</li>
+</ul>
+<h2>Out of scope</h2>
+<ul>
+<li>Any redesign of a page's header itself. - Pages a buddy owns in its own repo (outside buddy-tree). - The dashboard's own sidebar tip jar (separate implementation, untouched).</li>
+</ul></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">brief.md</span><span class="rf-dir">docs</span></button><div class="rf-panel" hidden><div class="rf-body"><h1>Developer Buddy</h1>
+<h2>Role summary</h2>
+<p>Developer Buddy is Dave's software engineer for the BuddyOS codebase. It owns the code day-to-day — the dashboard, the homepage generators, the shared components, and the buddy-server codebase — so Dave's main chat stays about what he wants, not how the code works. Change requests arrive as decisions from Dave via Astro and as buildable specs from the Designer; Developer Buddy turns them into shipped builds, verifies each one on the served copy, and reports back in outcomes: what changed, which build number, and where to see it.</p>
+<h2>Reports to</h2>
+<p>Project Buddy. Dave directs through Astro; the Designer (with Jonny's crits) supplies design specs; Astro relays decisions in and results out.</p>
+<h2>Responsibilities</h2>
+<ul>
+<li>Own the build queue: every requested change is a named, tracked item on Developer Buddy's homepage until it ships.</li>
+<li>Implement dashboard changes in build.py from Designer specs — currently queued as its first build pass: the window-centered Find palette (Jonny's crit + spec), the Recents floater sizing + grow-up menu, and the inboard grippers.</li>
+<li>Maintain the homepage generators (gen_basic_homepages.py, gen_default_homepages.py) and the canonical shared components — Tip Jar, brain-dump box, sticky header.</li>
+<li>Ship safely: scope the blast radius, node --check every inline script before pushing, verify on the served copy, keep CHANGELOG.md and FEATURES.md current, and re-sync the dashboard mirror after every push.</li>
+<li>Keep a living KNOWLEDGE.md of codebase facts — repo layout, build conventions, traps already hit — so no lesson is learned twice.</li>
+<li>Flag design collisions and ambiguities back to Astro instead of silently dropping or widening an ask. Build exactly the spec, nothing wider.</li>
+</ul>
+<h2>Success criteria</h2>
+<ul>
+<li>Dave's main chat receives decisions and finished results only — code mechanics live in this thread.</li>
+<li>Changes ship with a build number, a named surface, and served-copy verification; nothing is announced done from a diagnosis or a queue slot.</li>
+<li>The homepage shows the operation at a glance: builds shipped, changes landed, queue depth, recent commits — real numbers, kept current.</li>
+<li>Zero regressions reach Dave unannounced; when one slips through, it's owned in one breath with the fix already queued.</li>
+</ul>
+<h2>Out of scope for v1</h2>
+<ul>
+<li>Firebase deploys — those run only from Dave's own machine (Developer Buddy prepares, Dave deploys).</li>
+<li>Product and design decisions — those belong to Dave and the Designer; Developer Buddy builds the spec it's given.</li>
+<li>Hiring or directing other buddies.</li>
+<li>Publishing anything new and public without Dave's review.</li>
+</ul>
+<h2>Growth path</h2>
+<p>Automated pre-push checks (script lint, link checks), visual regression screenshots of the dashboard at phone/tablet/desktop widths, a weekly code-health digest, and owning the buddy-server codebase once Dave's deploy lands. Possibly: a starter-repo template pass so every future buddy repo is born with the same tooling.</p>
+<h2>Known facts at hire</h2>
+<ul>
+<li>Codebase: the buddy-system repo (local clone ~/workspace/projects/buddy-tree; build.py generates the dashboard; live build at hire: 20261028.0114; registry holds 162 buddies).</li>
+<li>Queued first build pass: Find palette centering + Recents floater + inboard grippers — spec: ~/workspace/find-palette/find-palette-crit-spec.md (Jonny's crit, Designer thread).</li>
+<li>In flight at hire: the Tip Jar is moving from a floating footer pill into the sticky page header (Dave's call, 2026-10-28) — snippet + both generators + fleet rollout.</li>
+<li>Standing traps: never <code>git add -A</code> in buddy-tree (explicit pathspecs only); extract inline scripts and node --check before pushing; pull --rebase before push; GitHub Pages lags ~1–2 min; Dave reviews on the served copy or his local clone, never on a claim.</li>
+</ul></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">ingest.md</span><span class="rf-dir">docs</span></button><div class="rf-panel" hidden><div class="rf-body"><h1>Ingest log — Developer Buddy</h1>
+<p>Raw brain-dumps about this buddy. Each entry is timestamped; work the keepers into the dossier.</p>
+<h2>10/28/2026, 8:39:27 AM</h2>
+<p>DONE — Dave marked this done on the homepage: "Job req ready for review — looks good, edits, or defer?" (attention id: developer-buddy-job-req). Please remove it from the attention list in buddies.json.</p>
+<h2>10/28/2026, 8:39:58 AM</h2>
+<p>It would be nice if the tiles on the Developer Buddy homepage were active, if I could click them and go see additional information about whatever it is that I clicked on.</p></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">job-req.md</span><span class="rf-dir">docs</span></button><div class="rf-panel" hidden><div class="rf-body"><h1>Developer Buddy</h1>
+<h2>Role summary</h2>
+<p>Developer Buddy is Dave's software engineer for the BuddyOS codebase. It owns the code day-to-day — the dashboard, the homepage generators, the shared components, and the buddy-server codebase — so Dave's main chat stays about what he wants, not how the code works. Change requests arrive as decisions from Dave via Astro and as buildable specs from the Designer; Developer Buddy turns them into shipped builds, verifies each one on the served copy, and reports back in outcomes: what changed, which build number, and where to see it.</p>
+<h2>Reports to</h2>
+<p>Project Buddy. Dave directs through Astro; the Designer (with Jonny's crits) supplies design specs; Astro relays decisions in and results out.</p>
+<h2>Responsibilities</h2>
+<ul>
+<li>Own the build queue: every requested change is a named, tracked item on Developer Buddy's homepage until it ships.</li>
+<li>Implement dashboard changes in build.py from Designer specs — currently queued as its first build pass: the window-centered Find palette (Jonny's crit + spec), the Recents floater sizing + grow-up menu, and the inboard grippers.</li>
+<li>Maintain the homepage generators (gen_basic_homepages.py, gen_default_homepages.py) and the canonical shared components — Tip Jar, brain-dump box, sticky header.</li>
+<li>Ship safely: scope the blast radius, node --check every inline script before pushing, verify on the served copy, keep CHANGELOG.md and FEATURES.md current, and re-sync the dashboard mirror after every push.</li>
+<li>Keep a living KNOWLEDGE.md of codebase facts — repo layout, build conventions, traps already hit — so no lesson is learned twice.</li>
+<li>Flag design collisions and ambiguities back to Astro instead of silently dropping or widening an ask. Build exactly the spec, nothing wider.</li>
+</ul>
+<h2>Success criteria</h2>
+<ul>
+<li>Dave's main chat receives decisions and finished results only — code mechanics live in this thread.</li>
+<li>Changes ship with a build number, a named surface, and served-copy verification; nothing is announced done from a diagnosis or a queue slot.</li>
+<li>The homepage shows the operation at a glance: builds shipped, changes landed, queue depth, recent commits — real numbers, kept current.</li>
+<li>Zero regressions reach Dave unannounced; when one slips through, it's owned in one breath with the fix already queued.</li>
+</ul>
+<h2>Out of scope for v1</h2>
+<ul>
+<li>Firebase deploys — those run only from Dave's own machine (Developer Buddy prepares, Dave deploys).</li>
+<li>Product and design decisions — those belong to Dave and the Designer; Developer Buddy builds the spec it's given.</li>
+<li>Hiring or directing other buddies.</li>
+<li>Publishing anything new and public without Dave's review.</li>
+</ul>
+<h2>Growth path</h2>
+<p>Automated pre-push checks (script lint, link checks), visual regression screenshots of the dashboard at phone/tablet/desktop widths, a weekly code-health digest, and owning the buddy-server codebase once Dave's deploy lands. Possibly: a starter-repo template pass so every future buddy repo is born with the same tooling.</p>
+<h2>Known facts at hire</h2>
+<ul>
+<li>Codebase: the buddy-system repo (local clone ~/workspace/projects/buddy-tree; build.py generates the dashboard; live build at hire: 20261028.0114; registry holds 162 buddies).</li>
+<li>Queued first build pass: Find palette centering + Recents floater + inboard grippers — spec: ~/workspace/find-palette/find-palette-crit-spec.md (Jonny's crit, Designer thread).</li>
+<li>In flight at hire: the Tip Jar is moving from a floating footer pill into the sticky page header (Dave's call, 2026-10-28) — snippet + both generators + fleet rollout.</li>
+<li>Standing traps: never <code>git add -A</code> in buddy-tree (explicit pathspecs only); extract inline scripts and node --check before pushing; pull --rebase before push; GitHub Pages lags ~1–2 min; Dave reviews on the served copy or his local clone, never on a claim.</li>
+</ul></div></div></div></div>
 </div>
 </section>
 </section>
@@ -585,246 +839,18 @@ footer{margin-top:36px;padding-top:18px;border-top:1px solid var(--border);color
   var sec = document.querySelector('.repo-files');
   if (!sec || sec.dataset.rfInit) return;
   sec.dataset.rfInit = '1';
-  var bid = sec.getAttribute('data-buddy-id') || (function(){
-    var p = location.pathname.replace(/\\/+$/, '');
-    return p.substring(p.lastIndexOf('/') + 1);
-  })();
-  function lsGet(){ try { return JSON.parse(localStorage.getItem('buddyTree.v3') || '{}'); } catch(e){ return {}; } }
-  function token(){ return lsGet().ghToken || ''; }
-  function b64encode(str){
-    var bytes = new TextEncoder().encode(str), bin = '';
-    bytes.forEach(function(b){ bin += String.fromCharCode(b); });
-    return btoa(bin);
-  }
-  async function ghApi(path, method, body){
-    var t = token();
-    if (!t) throw new Error('Add a GitHub token first.');
-    var r = await fetch('https://api.github.com' + path, {
-      method: method || 'GET',
-      headers: {'Authorization': 'Bearer ' + t, 'Accept': 'application/vnd.github+json', 'Content-Type': 'application/json'},
-      body: body ? JSON.stringify(body) : undefined
-    });
-    if (!r.ok) throw new Error('GitHub ' + r.status);
-    return r.status === 204 ? null : await r.json();
-  }
-  async function ghGetFile(repo, path){
-    try {
-      var j = await ghApi('/repos/davedellaquila/' + repo + '/contents/' + path);
-      if (j && j.content) return {
-        text: new TextDecoder().decode(Uint8Array.from(atob(j.content.replace(/\\n/g, '')), function(c){ return c.charCodeAt(0); })),
-        sha: j.sha
-      };
-    } catch(e){}
-    return null;
-  }
-  var repo = null;
-  async function resolveRepo(){
-    try {
-      var r = await fetch('../buddies.json', {cache: 'no-store'});
-      var d = await r.json();
-      var buds = d.buddies || [];
-      for (var i = 0; i < buds.length; i++) {
-        if (buds[i].id === bid && buds[i].repo) { repo = buds[i].repo; break; }
-      }
-    } catch(e){}
-  }
-  function esc(s){ return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
-  function inline(s){
-    s = esc(s);
-    s = s.replace(/`([^`]+)`/g, '<code>$1</code>');
-    s = s.replace(/\\*\\*([^*]+)\\*\\*/g, '<strong>$1</strong>');
-    s = s.replace(/(^|[^*])\\*([^*\\n]+)\\*/g, '$1<em>$2</em>');
-    s = s.replace(/\\[([^\\]]+)\\]\\((https?:[^)\\s]+)\\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>');
-    return s;
-  }
-  function mdRender(src){
-    var lines = src.split('\\n'), out = [], inList = false, inCode = false, codeBuf = [];
-    function closeList(){ if (inList) { out.push('</ul>'); inList = false; } }
-    for (var i = 0; i < lines.length; i++){
-      var ln = lines[i], m;
-      if (/^```/.test(ln)) {
-        if (inCode) { out.push('<pre><code>' + esc(codeBuf.join('\\n')) + '</code></pre>'); codeBuf = []; inCode = false; }
-        else { closeList(); inCode = true; }
-        continue;
-      }
-      if (inCode) { codeBuf.push(ln); continue; }
-      if ((m = ln.match(/^(#{1,4})\\s+(.*)/))) {
-        closeList();
-        var lv = Math.min(m[1].length + 1, 4);
-        out.push('<h' + lv + '>' + inline(m[2]) + '</h' + lv + '>');
-        continue;
-      }
-      if (/^\\s*(-{3,}|\\*{3,})\\s*$/.test(ln)) { closeList(); out.push('<hr>'); continue; }
-      if ((m = ln.match(/^\\s*[-*]\\s+(.*)/)) || (m = ln.match(/^\\s*\\d+[.)]\\s+(.*)/))) {
-        if (!inList) { out.push('<ul>'); inList = true; }
-        out.push('<li>' + inline(m[1]) + '</li>');
-        continue;
-      }
-      if ((m = ln.match(/^>\\s?(.*)/))) { closeList(); out.push('<blockquote>' + inline(m[1]) + '</blockquote>'); continue; }
-      if (!ln.trim()) { closeList(); continue; }
-      closeList();
-      out.push('<p>' + inline(ln) + '</p>');
-    }
-    closeList();
-    if (inCode) out.push('<pre><code>' + esc(codeBuf.join('\\n')) + '</code></pre>');
-    return out.join('\\n');
-  }
-  var locked = sec.querySelector('.rf-locked'), main = sec.querySelector('.rf-main'),
-      list = sec.querySelector('.rf-list'), st = sec.querySelector('.rf-status');
-  /* Accordion files (Dave 2026-10-21): a list of file names; clicking a
-     name toggles that file's contents open inline right below the name.
-     Toggles are independent — several files can be open at once. Contents
-     load lazily on first open and are cached in the item's own state;
-     Edit/Save lives inside the opened panel. */
-  function buildFileSection(f){
-    var wrap = document.createElement('div');
-    wrap.className = 'rf-fileitem';
-    var head = document.createElement('button');
-    head.type = 'button';
-    head.className = 'rf-file';
-    head.setAttribute('aria-expanded', 'false');
-    var nm = document.createElement('span');
-    nm.className = 'rf-name';
-    nm.textContent = '📄 ' + f.name;
-    var dir = document.createElement('span');
-    dir.className = 'rf-dir';
-    dir.textContent = f.path;
-    var chev = document.createElement('span');
-    chev.className = 'rf-chev';
-    chev.textContent = '▸';
-    head.appendChild(nm);
-    head.appendChild(dir);
-    head.appendChild(chev);
-    var panel = document.createElement('div');
-    panel.className = 'rf-panel';
-    panel.hidden = true;
-    var phead = document.createElement('div');
-    phead.className = 'rf-viewhead';
-    var ppath = document.createElement('span');
-    ppath.className = 'rf-path';
-    ppath.textContent = f.path;
-    var editBtn = document.createElement('button');
-    editBtn.type = 'button';
-    editBtn.className = 'attn-btn rf-edit';
-    editBtn.textContent = 'Edit';
-    editBtn.disabled = true;
-    phead.appendChild(ppath);
-    phead.appendChild(editBtn);
-    var bodyEl = document.createElement('div');
-    bodyEl.className = 'rf-body';
-    bodyEl.innerHTML = '<p class="rf-loading">Loading ' + esc(f.path) + '…</p>';
-    var editor = document.createElement('div');
-    editor.className = 'rf-editor';
-    editor.hidden = true;
-    var ta = document.createElement('textarea');
-    ta.className = 'rf-ta';
-    ta.rows = 18;
-    ta.spellcheck = false;
-    ta.setAttribute('aria-label', 'Markdown source for ' + f.path);
-    var actions = document.createElement('div');
-    actions.className = 'attn-actions';
-    var saveBtn = document.createElement('button');
-    saveBtn.type = 'button';
-    saveBtn.className = 'attn-btn primary rf-save';
-    saveBtn.textContent = 'Save to GitHub';
-    var cancelBtn = document.createElement('button');
-    cancelBtn.type = 'button';
-    cancelBtn.className = 'attn-btn rf-cancel';
-    cancelBtn.textContent = 'Cancel';
-    actions.appendChild(saveBtn);
-    actions.appendChild(cancelBtn);
-    editor.appendChild(ta);
-    editor.appendChild(actions);
-    var fst = document.createElement('div');
-    fst.className = 'rf-fstatus attn-status';
-    fst.setAttribute('role', 'status');
-    panel.appendChild(phead);
-    panel.appendChild(bodyEl);
-    panel.appendChild(editor);
-    panel.appendChild(fst);
-    wrap.appendChild(head);
-    wrap.appendChild(panel);
-    var cur = null, loaded = false;
-    function loadOnce(){
-      if (loaded) return;
-      loaded = true;
-      ghGetFile(repo, f.path).then(function(got){
-        if (!got) { loaded = false; bodyEl.innerHTML = '<p class="rf-loading">⚠ Could not load ' + esc(f.path) + ' — close and open it again to retry.</p>'; return; }
-        cur = {path: f.path, sha: got.sha, text: got.text};
-        bodyEl.innerHTML = mdRender(got.text);
-        editBtn.disabled = false;
-      });
-    }
-    head.addEventListener('click', function(){
+  sec.querySelectorAll('.rf-fileitem > .rf-file').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var item = btn.parentElement;
+      var panel = item ? item.querySelector('.rf-panel') : null;
+      if (!panel) return;
       var open = panel.hidden;
       panel.hidden = !open;
-      head.setAttribute('aria-expanded', open ? 'true' : 'false');
-      chev.textContent = open ? '▾' : '▸';
-      if (open) loadOnce();
+      btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      var ch = btn.querySelector('.rf-chev');
+      if (ch) ch.textContent = open ? '▾' : '▸';
     });
-    editBtn.addEventListener('click', function(){
-      if (!cur) return;
-      ta.value = cur.text;
-      bodyEl.hidden = true;
-      editor.hidden = false;
-      ta.focus();
-    });
-    cancelBtn.addEventListener('click', function(){
-      editor.hidden = true;
-      bodyEl.hidden = false;
-    });
-    saveBtn.addEventListener('click', async function(){
-      if (!cur) return;
-      saveBtn.disabled = true;
-      fst.textContent = 'Saving…';
-      try {
-        var payload = {message: 'Edit ' + cur.path + ' from the homepage', content: b64encode(ta.value), sha: cur.sha};
-        var j = await ghApi('/repos/davedellaquila/' + repo + '/contents/' + cur.path, 'PUT', payload);
-        if (j && j.content && j.content.sha) cur.sha = j.content.sha;
-        cur.text = ta.value;
-        editor.hidden = true;
-        bodyEl.hidden = false;
-        bodyEl.innerHTML = mdRender(cur.text);
-        fst.textContent = '✓ Saved to GitHub (' + repo + '/' + cur.path + ').';
-      } catch(err){
-        var why = (err && err.message) || String(err);
-        fst.textContent = /409|422/.test(why)
-          ? '⚠ GitHub said the file changed since you loaded it (' + why + ') — reload this page and try again.'
-          : '⚠ Save failed (' + why + ') — your edit is still in the editor.';
-      }
-      saveBtn.disabled = false;
-    });
-    return wrap;
-  }
-  async function init(){
-    await resolveRepo();
-    if (!repo) {
-      locked.hidden = false;
-      locked.textContent = 'No repo is linked for this buddy yet, so there are no repo files to show.';
-      return;
-    }
-    if (!token()) { locked.hidden = false; return; }
-    main.hidden = false;
-    st.textContent = 'Loading files…';
-    var files = [];
-    async function grab(dir){
-      try {
-        var j = await ghApi('/repos/davedellaquila/' + repo + (dir ? '/contents/' + dir : '/contents'));
-        if (Array.isArray(j)) j.forEach(function(e){
-          if (e.type === 'file' && /\\.md$/i.test(e.name)) files.push({name: e.name, path: e.path});
-        });
-      } catch(e){}
-    }
-    await grab('');
-    await grab('docs');
-    files.sort(function(a, b){ return a.path < b.path ? -1 : 1; });
-    if (!files.length) { st.textContent = 'No markdown files found in the repo yet.'; return; }
-    st.textContent = '';
-    files.forEach(function(f){
-      list.appendChild(buildFileSection(f));
-    });
-  }
-  init();
+  });
 })();
 </script>
 

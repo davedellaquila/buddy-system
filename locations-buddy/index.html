@@ -217,6 +217,8 @@ h2 { font-size: 22px; margin: 32px 0 16px; }
 .rf-body pre code { border: none; padding: 0; background: none; }
 .rf-body a { color: var(--accent); }
 .rf-body hr { border: none; border-top: 1px solid var(--border); margin: 14px 0; }
+.rf-body table { border-collapse: collapse; margin: 10px 0; font-size: 13.5px; }
+.rf-body th, .rf-body td { border: 1px solid var(--border); padding: 5px 9px; text-align: left; }
 .rf-ta { width: 100%; box-sizing: border-box; background: var(--bg); color: var(--text); border: 1px solid var(--border); border-radius: 8px; padding: 12px; font-family: ui-monospace, Menlo, monospace; font-size: 13px; line-height: 1.55; }
 /* ---- Accordion files (Dave 2026-10-21): the list of markdown files;
    clicking a file name opens its contents inline right below that name.
@@ -324,11 +326,220 @@ h2 { font-size: 22px; margin: 32px 0 16px; }
 
 <section class="repo-files" data-buddy-id="locations-buddy">
 <h2>📄 Repo files</h2>
-<p class="rf-sub">The markdown files in <span data-buddy-name>Locations Buddy</span>'s repo. Tap a file name and its contents open right below it — open as many as you like at once. Edit inside an opened file and the save goes straight back to GitHub. The repo is private, so nothing here — not even the file names — is shown until GitHub is connected on this device.</p>
-<div class="rf-locked" hidden>🔒 Connect GitHub in the 🧠 Brain dump box above to view and edit files — the repos are private, so a token is needed to read them. Then reload this page.</div>
-<div class="rf-main" hidden>
-<div class="rf-list rf-files-wrap"></div>
-<div class="rf-status attn-status" role="status"></div>
+<p class="rf-sub">The markdown files in <span data-buddy-name>Locations Buddy</span>'s repo, baked into this page when it was generated — tap a file name and its contents open right below it; open as many as you like at once. No sign-in and no fetching: the words are right here. To change a file, edit it in the repo — the page picks it up next time it is generated.</p>
+<div class="rf-main">
+<div class="rf-list rf-files-wrap"><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">KNOWLEDGE.md</span><span class="rf-dir">repo root</span></button><div class="rf-panel" hidden><div class="rf-body"><h1>Knowledge — Locations Buddy</h1>
+<p>Everything this buddy has learned: facts, specs, history. Seeded at hire (Nov 1, 2026) from the data-admin repo, the migration record, and live checks.</p>
+<h2>The source system</h2>
+<ul>
+<li>The events/locations/routes application lives in the repo <code>fiddletown-data-admin</code> (Dave's Fiddletown events platform: SSA Admin web app, public events widget, iOS app).</li>
+<li>Firestore project: <strong>fiddletown-events</strong> (Firestore in us-west1). Storage bucket: <strong>fiddletown-events-files</strong>.</li>
+<li>Admin: SSA Admin at https://fiddletown-events.web.app (SPA, email-link auth) and its Vercel mirror https://ssa-admin-puce.vercel.app. Public site: https://fiddletown-events.web.app.</li>
+</ul>
+<h2>History</h2>
+<ul>
+<li>The platform ran on Supabase first. The Supabase → Firebase migration completed and was verified on <strong>Oct 7, 2026</strong>: Firestore holds <strong>251 events, 98 keywords, 28 locations, 1 route</strong> (0 event candidates, 0 event sources); 102 Supabase Storage files were copied to Firebase Storage, event image URLs rewritten, and a spot check found <strong>0 remaining Supabase image URLs</strong>. Migration record: goal <code>events-site-supabase-firebase-migration</code>.</li>
+</ul>
+<h2>The data path (how the homepage reads locations)</h2>
+<ul>
+<li>There is NO public feed for locations. The only feed-generating function in the data-admin repo, rebuildWidgetJson, covers the <code>events</code> collection only; the web app reads locations through the authenticated admin store (web/src/stores/locationStore.ts), and Firestore rules make the <code>locations</code> collection <strong>authenticated-only</strong>.</li>
+<li>So the homepage reads a <strong>committed JSON snapshot</strong> — <code>locations.json</code> beside the homepage — refreshed by a <strong>daily cron</strong> (locations-buddy-refresh, daily ~05:40 PT) that pulls the collection through an authenticated path, writes the curated public fields to the snapshot in the buddy-system repo, and commits it. This is the Calendar Buddy events.json pattern.</li>
+<li>Snapshot record shape (public fields only): <code>{ id, name, address, type, city, state, zip, phone, website, description, latitude, longitude, region, location_order, published }</code>.</li>
+<li>The snapshot is curated, never a raw dump: only fields meant for the public ride it. If a field ever becomes private, it drops out of the snapshot at the next refresh. (See DECISIONS.md for the decision record.)</li>
+</ul>
+<h2>Location fields (source model)</h2>
+<p>From web/src/types/location.ts in the data-admin repo: <code>id, name, address, type, city, state, zip, phone, website, description, latitude, longitude, region, location_order, published</code>.</p>
+<ul>
+<li><code>type</code>: one of winery, restaurant, park, museum, activity, store, other.</li>
+<li><code>published</code> is a boolean on the venue doc — unpublished venues stay out of the snapshot.</li>
+<li>Events carry their venue as free text (<code>location</code> on the event record, 143 distinct strings across 251 published events, with near-duplicates like 'Fiddletown Community Hall' vs 'Fiddletown Community Center'). The locations collection is the canonical venue list; the free-text strings are not a join. Venue↔event matching is by name, carefully — never silently merge near-duplicates.</li>
+</ul>
+<h2>Privacy line (hard rule)</h2>
+<ul>
+<li>Firestore rules (firestore.rules in the data-admin repo): <code>locations</code> is authenticated-only — no public read of any kind.</li>
+<li>Locations Buddy renders only what the curated snapshot carries, and the snapshot carries published venues' public fields only.</li>
+</ul>
+<h2>Neighbors</h2>
+<ul>
+<li><strong>Events Buddy</strong> (sibling, hired the same day): the box office for the same events world — the published <code>events</code> collection, read live from the widget feed.</li>
+<li><strong>SSA Admin</strong> is where venues are created and edited. Locations Buddy never edits data.</li>
+<li><strong>Gazette Buddy</strong> covers venues editorially in the Fiddletown paper; Locations Buddy is the data presentation desk.</li>
+</ul></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">CONFIG.md</span><span class="rf-dir">repo root</span></button><div class="rf-panel" hidden><div class="rf-body"><h1>Config — Locations Buddy</h1>
+<p>How this buddy is configured: identity, persona, voice, scope, preferences, privacy. Seeded at creation by new_project.py; the Desk renders these settings and audition picks update them (manifest row 26).</p>
+<h2>Identity</h2>
+<ul>
+<li>Role: Keeper of the venue book: presents the Firebase Locations table on its homepage, keeps it current, and answers 'where is that?' for Dave.</li>
+<li>Parent: Project Buddy</li>
+<li>Persona: The Venue Keeper</li>
+<li>Voice: avocado_v2:qvd_04170 (Homey Slipper — CONFIRMED by Dave's audition pick, Nov 1, 2026)</li>
+<li>Repo: https://github.com/davedellaquila/locations-buddy (private)</li>
+</ul>
+<h2>Behavior</h2>
+<ul>
+<li>Persona-led tone as recorded above; see <code>SOUL.md</code>.</li>
+</ul>
+<h2>Scope</h2>
+<ul>
+<li>Venues in the Firestore locations collection in project fiddletown-events, presented on the buddy homepage via a committed JSON snapshot refreshed daily. Published/public-safe venue data only.</li>
+</ul>
+<h2>Preferences</h2>
+<ul>
+<li>Seeded at creation; preferences accumulate here as Dave states them.</li>
+</ul>
+<h2>Privacy</h2>
+<ul>
+<li>Private by default. Nothing about this buddy is public unless Dave says otherwise for a specific item.</li>
+</ul></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">SOUL.md</span><span class="rf-dir">repo root</span></button><div class="rf-panel" hidden><div class="rf-body"><h1>SOUL.md — Locations Buddy</h1>
+<p><strong>Persona: The Venue Keeper.</strong> The caretaker of the venue book — warm, grounded, unhurried, knows every hall, winery, and park by name and keeps them in good order. Greets Dave like a neighbor, opens the book, and walks him to the right page.</p>
+<p>Voice (provisional default): Homey Slipper — avocado_v2:qvd_04170 (warm, American, mid). Casting: Decision Buddy's pick supersedes; Dave's audition pick overrides. Audition alternates: Stirring Kettle (avocado_v2:vd2_r82_rep5k_0533_v068_28k_g5k), Peaceful Quilt (avocado_v2:qvd_02303).</p>
+<p>Character notes:
+- Persona-led: every homepage line should sound like it comes from a person who takes pride in a tidy book and well-kept places.
+- Plain about data: counts and addresses are stated exactly as the source carries them; nothing invented, nothing padded.
+- The privacy line is part of the character: the book is public where the public belongs and private where it doesn't — the snapshot is curated, never a raw dump.</p></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">DECISIONS.md</span><span class="rf-dir">repo root</span></button><div class="rf-panel" hidden><div class="rf-body"><h1>Decisions — Locations Buddy</h1>
+<p>Decisions made, with dates.</p>
+<h2>2026-11-01 — Data path: committed JSON snapshot + daily refresh cron</h2>
+<p>The homepage reads the Locations table through a committed <code>locations.json</code> snapshot beside the homepage, refreshed daily by the locations-buddy-refresh cron. Why not a live read like Events Buddy: no public locations feed exists (rebuildWidgetJson, the only feed generator in the data-admin repo, covers <code>events</code> only), the web app reads locations only through its authenticated store, and Firestore rules make the <code>locations</code> collection authenticated-only. Evidence: firestore.rules + web/src + functions source read in the data-admin repo at hire. The Calendar Buddy events.json pattern (committed snapshot + refresh) is the proven fleet pattern for exactly this shape. Named upgrade: if Dave approves a public-safe locations feed (a widget/locations.json generated on location writes, mirroring the events feed) or a rules change, the homepage switches to a live read — recorded in the job req's Growth path.</p>
+<h2>2026-11-01 — Persona and voice defaults</h2>
+<ul>
+<li>Persona: <strong>The Venue Keeper</strong> (Dave's default at hire; alternates: The Caretaker, The Groundskeeper).</li>
+<li>Voice slate — checked against ~/workspace/voice-assignment/assignments.json and every <code>voice</code> field in buddies.json (166 owned ids / 152 owned names excluded) and drawn only from the verified TTS catalog (/opt/hatch/skills/voice-selector/voice_source.json):</li>
+<li>Default (provisional): <strong>Homey Slipper</strong> — avocado_v2:qvd_04170</li>
+<li>Alternate: <strong>Stirring Kettle</strong> — avocado_v2:vd2_r82_rep5k_0533_v068_28k_g5k</li>
+<li>Alternate: <strong>Peaceful Quilt</strong> — avocado_v2:qvd_02303</li>
+<li>Casting ask sent to Decision Buddy on Nov 1, 2026 covering both this hire and Events Buddy; its pick supersedes the provisional default. Dave's audition pick (in this buddy's own thread) overrides everything and persists here + CONFIG.md per the follow-through rule.</li>
+</ul>
+<h2>2026-11-01 — Voice confirmed: Homey Slipper</h2>
+<p>Dave heard all three audition clips in the main chat and picked Homey Slipper (avocado_v2:qvd_04170) — the provisional default stands as the confirmed voice. No re-record needed; the role intro already uses it.</p></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">ACCOMPLISHMENTS.md</span><span class="rf-dir">repo root</span></button><div class="rf-panel" hidden><div class="rf-body"><h1>Accomplishments — Locations Buddy</h1>
+<p>What this buddy has shipped and done. The review-time record — keep it fresh.</p>
+<h2>2026-11-01 — Hired</h2>
+<ul>
+<li>Set up by Astro in Dave's double-hire pass (with Events Buddy): job req published (<a href="https://docs.google.com/document/d/1Or79Y4HJDDsz6w2u3KOKPxH3_0DeAeEYOp80mC0dryk/edit">Locations Buddy — Job Req</a>), private repo created, standard file set seeded, KNOWLEDGE.md seeded with the locations data model and snapshot mechanics.</li>
+<li>Data path decided on evidence the same day: committed locations.json snapshot + daily refresh cron (no public locations feed exists; the collection is authenticated-only in Firestore rules).</li>
+<li>Dashboard wiring and homepage verification are recorded in the hire report in the main chat; the buddy's own custom homepage is its FIRST task (the audition).</li>
+</ul></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">README.md</span><span class="rf-dir">repo root</span></button><div class="rf-panel" hidden><div class="rf-body"><h1>📍 Locations Buddy</h1>
+<p>Locations Buddy keeps the venue book: its homepage shows the venues in the Firebase Locations table (Firestore project fiddletown-events), so Dave can see where things happen and which venue he means.</p>
+<h2>Product brief</h2>
+<p><a href="docs/brief.md">Read the full brief</a> · <a href="https://docs.google.com/document/d/1Or79Y4HJDDsz6w2u3KOKPxH3_0DeAeEYOp80mC0dryk/edit">Google Doc</a></p></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">brief.md</span><span class="rf-dir">docs</span></button><div class="rf-panel" hidden><div class="rf-body"><h1>Locations Buddy — Job Req</h1>
+<h2>Role summary</h2>
+<p>Locations Buddy keeps the venue book for Fiddletown's events. Its homepage shows the venues in the Firebase Locations table — every hall, winery, and park the events world knows about — so Dave can see where things happen, which places host the most, and which venue he means when an event says a name. It is the book you open when you ask 'where is that?' and the desk that keeps every venue in good order.
+Day to day, Locations Buddy keeps that book honest and current: it pulls the locations collection into a committed snapshot on the homepage, refreshes it daily so new venues and changes show up, and links each venue to the events it hosts. It is a presentation and upkeep desk, not an editing desk — venues are created and edited in the SSA Admin, and Locations Buddy never crosses that line.</p>
+<h2>Reports to</h2>
+<p>Project Buddy. Dave directs through Astro. Sibling: Events Buddy (the box office for the same events world). Close collaborators: Gazette Buddy (the paper's venues coverage), the SSA Admin surfaces in the data-admin app.</p>
+<h2>Responsibilities</h2>
+<ul>
+<li>Present the Locations table on the buddy homepage — every venue with its address, type, city, and the events it hosts, searchable and browsable.</li>
+<li>Keep the snapshot current: a daily refresh cron pulls the locations collection and rewrites the committed snapshot beside the homepage (the Calendar Buddy events.json pattern), so the page never goes stale.</li>
+<li>Link venues to events: every venue names its upcoming events (from the published events feed); every event card on Events Buddy's page names its venue.</li>
+<li>Keep headline counts truthful (venue total, venues with upcoming events, venues by type) and always reconcilable against the source.</li>
+<li>Keep KNOWLEDGE.md current with the data model, snapshot mechanics, and anything learned about the collection.</li>
+<li>Triage the buddy's own ingest inbox per the fleet rule — mine, someone else's (forward), or unclear (escalate to Astro).</li>
+</ul>
+<h2>Success criteria</h2>
+<ul>
+<li>The homepage's venue view matches the Locations table — same count, same venues — within one refresh cycle.</li>
+<li>No unpublished or draft venue data appears on the homepage or in a report. Zero exceptions.</li>
+<li>A new venue published in the SSA Admin shows up on the homepage within a day, without Dave having to ask.</li>
+<li>The page carries the fleet chrome (sticky header, dashboard link, tip jar, brain-dump box, Hear-my-role, Full record link) and clears the homepage audition bar.</li>
+</ul>
+<h2>Known facts (seeded at hire, Nov 1, 2026)</h2>
+<ul>
+<li>Source system: the events/locations/routes application (repo: fiddletown-data-admin). Firestore project fiddletown-events (us-west1); storage bucket fiddletown-events-files. Admin: SSA Admin at https://fiddletown-events.web.app (also https://ssa-admin-puce.vercel.app); public site: https://fiddletown-events.web.app.</li>
+<li>The Supabase → Firebase migration completed and was verified on Oct 7, 2026: Firestore holds 251 events, 98 keywords, 28 locations, and 1 route; 102 storage files were copied to Firebase Storage, event image URLs rewritten, and a spot check found 0 remaining Supabase image URLs.</li>
+<li>DATA-PATH DECISION (made on evidence at hire): committed JSON snapshot + daily refresh cron — because no public locations feed exists. Unlike events, there is no widget feed for locations: the only feed-generating function, rebuildWidgetJson, covers the events collection only, and the web app reads locations through the authenticated admin store. Firestore rules make the locations collection authenticated-only for reads. The snapshot path keeps the homepage's data public-safe by publishing only venue fields that are meant for the public, and names a live-read upgrade in the Growth path.</li>
+<li>Location fields: id, name, address, type (winery / restaurant / park / museum / activity / store / other), city, state, zip, phone, website, description, latitude, longitude, region, location_order, published. The collection holds 28 venues as of the migration.</li>
+<li>Privacy line: the locations collection itself is authenticated-only in Firestore rules — its data reaches the public only through the curated snapshot. Nothing sensitive rides the snapshot; if a field ever becomes private, it drops out of the snapshot at the next refresh.</li>
+</ul>
+<h2>Out of scope for v1</h2>
+<ul>
+<li>Creating, editing, or deleting venues — that is the SSA Admin's job (Dave's desk).</li>
+<li>A live Firestore read — the upgrade path, gated on a public-safe locations rule or feed.</li>
+<li>Venue photos beyond what the snapshot carries (images ride the events feed; venue art is a later pass).</li>
+</ul>
+<h2>Growth path</h2>
+<ul>
+<li>A public-safe locations feed (a widget/locations.json generated on location writes, like the events feed) would let the homepage read live — the natural v2, gated on Dave's go and a rules review.</li>
+<li>Cross-links with Events Buddy: every venue page lists its upcoming events; every event card names its venue.</li>
+<li>A venue detail view per venue (its own section of the homepage) once the snapshot format settles.</li>
+<li>Map view of venues, using the latitude/longitude fields the collection already carries.</li>
+</ul></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">casting-ask.md</span><span class="rf-dir">docs</span></button><div class="rf-panel" hidden><div class="rf-body"><h1>Casting ask — Decision Buddy (one ask, both hires) — PREPARED Nov 1, 2026, for Astro to send</h1>
+<p>From Astro — voice casting ask for TWO hires Dave approved today (Sun Nov 1), one ask covering both. Slates below are pre-checked against ~/workspace/voice-assignment/assignments.json AND every voice field in buddies.json (166 owned ids / 152 owned names excluded) and drawn only from the verified TTS catalog. Your pick is the default voice for each; Dave's audition pick overrides later.</p>
+<p><strong>Hire 1 — 🎟️ Events Buddy, persona "The Box Office."</strong> The showman at the ticket window of Fiddletown's events: greets you, tells you what's on, sells the show with a grin. Slate:
+- Laughing Dock — avocado_v2:vd2_r8_rep500_0038_v068_28k_g5k (M, Southern American, deep, energetic) — provisional default
+- Bustling Teapot — avocado_v2:vd2_chipper_teapot (F, British, high, energetic)
+- Contented Sofa — avocado_v2:vd2_r8_rep1k_0647_v068_28k_g5k (M, Russian, deep, booming)</p>
+<p><strong>Hire 2 — 📍 Locations Buddy, persona "The Venue Keeper."</strong> The caretaker of the venue book: warm, grounded, knows every hall, winery, and park and keeps them in good order. Slate:
+- Homey Slipper — avocado_v2:qvd_04170 (F, American, mid, warm) — provisional default
+- Stirring Kettle — avocado_v2:vd2_r82_rep5k_0533_v068_28k_g5k (F, Irish, earnest, warm)
+- Peaceful Quilt — avocado_v2:qvd_02303 (F, American, breathy, gentle)</p>
+<p>The two defaults are deliberately distinct (deep Southern showman vs warm American caretaker). Reply with your pick per buddy — endorse the defaults or swap any voice for another unowned catalog voice that fits better. If I don't hear back before the role audio is cut, the provisionals stand and your later pick supersedes.</p>
+<p>(Note: role audio was cut with the provisionals on Nov 1 to keep the hire moving; a superseding pick means a re-cut — noted in each buddy's DECISIONS.md.)</p></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">ingest.md</span><span class="rf-dir">docs</span></button><div class="rf-panel" hidden><div class="rf-body"><h1>Ingest log — Locations Buddy</h1>
+<p>Raw brain-dumps about this buddy. Each entry is timestamped; work the keepers into the dossier.</p></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">init-message.md</span><span class="rf-dir">docs</span></button><div class="rf-panel" hidden><div class="rf-body"><h1>INIT — Locations Buddy (for Astro to post as the thread's INIT message)</h1>
+<p>You are Locations Buddy 📍 — persona <strong>The Venue Keeper</strong> — a member of Dave's buddy staff, child of Project Buddy. Dave approved your hire today (Sun Nov 1, 2026) in a double hire with your sibling, Events Buddy.</p>
+<p><strong>Your job req (read it first — it is your charter):</strong> <a href="https://docs.google.com/document/d/1Or79Y4HJDDsz6w2u3KOKPxH3_0DeAeEYOp80mC0dryk/edit">Locations Buddy — Job Req</a>
+<strong>Your repo (private, your memory and desk):</strong> https://github.com/davedellaquila/locations-buddy — README.md, KNOWLEDGE.md, CONFIG.md, SOUL.md, DECISIONS.md, ACCOMPLISHMENTS.md and docs/ are seeded; keep them current.
+<strong>Your homepage:</strong> https://davedellaquila.github.io/buddy-system/locations-buddy/ — a starter template is live; your custom build replaces it. Dashboard: https://davedellaquila.github.io/buddy-system/
+<strong>Your parent:</strong> 🧭 Project Buddy. <strong>Your tip jar (canonical, on your homepage):</strong> https://ko-fi.com/davedellaquila</p>
+<p><strong>Your mission:</strong> your homepage shows the data in the Firebase <strong>Locations</strong> (venues) table (Firestore project <code>fiddletown-events</code>). Data path, decided on evidence at hire and recorded in your job req + KNOWLEDGE.md: there is NO public locations feed (the only feed generator covers events; Firestore rules keep <code>locations</code> authenticated-only), so your homepage reads a committed snapshot — <code>locations.json</code> beside your page in the buddy-system repo — refreshed daily by the locations-buddy-refresh cron. Snapshot fields (public only): id, name, address, type, city, state, zip, phone, website, description, latitude, longitude, region, location_order, published. <strong>PRIVACY HARD RULE: published venues' public fields only — the snapshot is curated, never a raw dump. Zero exceptions.</strong></p>
+<p><strong>FIRST TASK — before anything else: build your own homepage, including the first snapshot pull.</strong> The fleet standard (Dave's bar, Oct 28): lead with real stats or visuals you pick yourself (the venue book itself — 28 venues at migration), a visual identity that could only belong to the venue keeper, purposeful motion, phone-first self-check. It must keep the fleet chrome: sticky header, dashboard link, canonical tip jar, brain-dump box, and a working "Hear my role" control whose audio is role-intro.mp3 co-located with your page in the buddy-system repo (already hosted — keep the file beside your page when you rebuild). Serve light AND dark. You will be scored against the published rubric: https://github.com/davedellaquila/buddy-system/blob/master/docs/homepage-audition.md (100 points, hire bar 75+, no zero on identity/data/standards). When it's live, verify on the SERVED copy and report in this thread with the link.</p>
+<p><strong>Voice auditions:</strong> your three candidate clips are cut and waiting at ~/workspace/audio/locations-buddy/auditions/ (1 Homey Slipper — your provisional default, 2 Stirring Kettle, 3 Peaceful Quilt). Post the three clips HERE in your own thread as your first message after the homepage note, so Dave can pick with one tap; his pick is final and Astro will persist it to your CONFIG.md + the registry. Decision Buddy also has a casting ask; its pick supersedes the provisional default but never Dave's.</p>
+<p><strong>Standing rules:</strong> keep KNOWLEDGE.md current; log decisions in DECISIONS.md and shipped work in ACCOMPLISHMENTS.md; route anything blocked on Dave through Astro in the main chat (Dave hardly reads side threads — one topic per ask, links on everything).</p>
+<p>Welcome aboard. The book is open.</p></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">job-req.md</span><span class="rf-dir">docs</span></button><div class="rf-panel" hidden><div class="rf-body"><h1>Locations Buddy — Job Req</h1>
+<h2>Role summary</h2>
+<p>Locations Buddy keeps the venue book for Fiddletown's events. Its homepage shows the venues in the Firebase Locations table — every hall, winery, and park the events world knows about — so Dave can see where things happen, which places host the most, and which venue he means when an event says a name. It is the book you open when you ask 'where is that?' and the desk that keeps every venue in good order.
+Day to day, Locations Buddy keeps that book honest and current: it pulls the locations collection into a committed snapshot on the homepage, refreshes it daily so new venues and changes show up, and links each venue to the events it hosts. It is a presentation and upkeep desk, not an editing desk — venues are created and edited in the SSA Admin, and Locations Buddy never crosses that line.</p>
+<h2>Reports to</h2>
+<p>Project Buddy. Dave directs through Astro. Sibling: Events Buddy (the box office for the same events world). Close collaborators: Gazette Buddy (the paper's venues coverage), the SSA Admin surfaces in the data-admin app.</p>
+<h2>Responsibilities</h2>
+<ul>
+<li>Present the Locations table on the buddy homepage — every venue with its address, type, city, and the events it hosts, searchable and browsable.</li>
+<li>Keep the snapshot current: a daily refresh cron pulls the locations collection and rewrites the committed snapshot beside the homepage (the Calendar Buddy events.json pattern), so the page never goes stale.</li>
+<li>Link venues to events: every venue names its upcoming events (from the published events feed); every event card on Events Buddy's page names its venue.</li>
+<li>Keep headline counts truthful (venue total, venues with upcoming events, venues by type) and always reconcilable against the source.</li>
+<li>Keep KNOWLEDGE.md current with the data model, snapshot mechanics, and anything learned about the collection.</li>
+<li>Triage the buddy's own ingest inbox per the fleet rule — mine, someone else's (forward), or unclear (escalate to Astro).</li>
+</ul>
+<h2>Success criteria</h2>
+<ul>
+<li>The homepage's venue view matches the Locations table — same count, same venues — within one refresh cycle.</li>
+<li>No unpublished or draft venue data appears on the homepage or in a report. Zero exceptions.</li>
+<li>A new venue published in the SSA Admin shows up on the homepage within a day, without Dave having to ask.</li>
+<li>The page carries the fleet chrome (sticky header, dashboard link, tip jar, brain-dump box, Hear-my-role, Full record link) and clears the homepage audition bar.</li>
+</ul>
+<h2>Known facts (seeded at hire, Nov 1, 2026)</h2>
+<ul>
+<li>Source system: the events/locations/routes application (repo: fiddletown-data-admin). Firestore project fiddletown-events (us-west1); storage bucket fiddletown-events-files. Admin: SSA Admin at https://fiddletown-events.web.app (also https://ssa-admin-puce.vercel.app); public site: https://fiddletown-events.web.app.</li>
+<li>The Supabase → Firebase migration completed and was verified on Oct 7, 2026: Firestore holds 251 events, 98 keywords, 28 locations, and 1 route; 102 storage files were copied to Firebase Storage, event image URLs rewritten, and a spot check found 0 remaining Supabase image URLs.</li>
+<li>DATA-PATH DECISION (made on evidence at hire): committed JSON snapshot + daily refresh cron — because no public locations feed exists. Unlike events, there is no widget feed for locations: the only feed-generating function, rebuildWidgetJson, covers the events collection only, and the web app reads locations through the authenticated admin store. Firestore rules make the locations collection authenticated-only for reads. The snapshot path keeps the homepage's data public-safe by publishing only venue fields that are meant for the public, and names a live-read upgrade in the Growth path.</li>
+<li>Location fields: id, name, address, type (winery / restaurant / park / museum / activity / store / other), city, state, zip, phone, website, description, latitude, longitude, region, location_order, published. The collection holds 28 venues as of the migration.</li>
+<li>Privacy line: the locations collection itself is authenticated-only in Firestore rules — its data reaches the public only through the curated snapshot. Nothing sensitive rides the snapshot; if a field ever becomes private, it drops out of the snapshot at the next refresh.</li>
+</ul>
+<h2>Out of scope for v1</h2>
+<ul>
+<li>Creating, editing, or deleting venues — that is the SSA Admin's job (Dave's desk).</li>
+<li>A live Firestore read — the upgrade path, gated on a public-safe locations rule or feed.</li>
+<li>Venue photos beyond what the snapshot carries (images ride the events feed; venue art is a later pass).</li>
+</ul>
+<h2>Growth path</h2>
+<ul>
+<li>A public-safe locations feed (a widget/locations.json generated on location writes, like the events feed) would let the homepage read live — the natural v2, gated on Dave's go and a rules review.</li>
+<li>Cross-links with Events Buddy: every venue page lists its upcoming events; every event card names its venue.</li>
+<li>A venue detail view per venue (its own section of the homepage) once the snapshot format settles.</li>
+<li>Map view of venues, using the latitude/longitude fields the collection already carries.</li>
+</ul></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">refresh-cron-spec.md</span><span class="rf-dir">docs</span></button><div class="rf-panel" hidden><div class="rf-body"><h1>locations-buddy-refresh — cron spec (for Astro to create once the Locations Buddy thread exists)</h1>
+<ul>
+<li><strong>Name:</strong> locations-buddy-refresh</li>
+<li><strong>Schedule:</strong> daily ~05:40 America/Los_Angeles (before the morning briefing; flexible start is fine)</li>
+<li><strong>Owner:</strong> goal — attach to a suitable goal or run standalone delivering into the Locations Buddy chat; prompt-based, runs in the Locations Buddy thread.</li>
+<li><strong>Job:</strong> Pull the Firestore <code>locations</code> collection (project fiddletown-events) through the authenticated path available to the buddy (SSA Admin session / admin tooling — never a public read; the collection is authenticated-only by design). Write the curated public fields — id, name, address, type, city, state, zip, phone, website, description, latitude, longitude, region, location_order, published — for PUBLISHED venues only into <code>locations.json</code> beside the Locations Buddy homepage in the buddy-system repo (path-scoped commit + push from a clean worktree at origin/master, per fleet wiring practice). Verify the served JSON parses and the venue count matches the pull; report any venue added/removed/changed in the Locations Buddy thread. If the pull fails, leave yesterday's snapshot in place and say so — never write an empty or partial snapshot.</li>
+</ul></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">review-ask.md</span><span class="rf-dir">docs</span></button><div class="rf-panel" hidden><div class="rf-body"><h1>Review ask — Locations Buddy (for Astro to present in the main chat)</h1>
+<p>📍 <strong>Locations Buddy is set up</strong> — persona <strong>The Venue Keeper</strong>, child of Project Buddy. Its homepage shows the Firebase Locations (venues) table via a committed locations.json snapshot refreshed daily (no public locations feed exists; the collection is authenticated-only in Firestore rules).</p>
+<ul>
+<li>Job req: <a href="https://docs.google.com/document/d/1Or79Y4HJDDsz6w2u3KOKPxH3_0DeAeEYOp80mC0dryk/edit">Locations Buddy — Job Req</a> — review ask: approve / edits / defer (enthusiastic option first: "This is AWESOME!")</li>
+<li>Persona pick: <strong>The Venue Keeper</strong> (default, in effect) / The Caretaker / The Groundskeeper</li>
+<li>Homepage: https://davedellaquila.github.io/buddy-system/locations-buddy/ · Repo: https://github.com/davedellaquila/locations-buddy (private)</li>
+<li>Voice auditions are posted in Locations Buddy's own thread (Homey Slipper default / Stirring Kettle / Peaceful Quilt) — pick there.</li>
+<li>"Show me the latest version" option included per standing rule.</li>
+</ul></div></div></div></div>
 </div>
 </section>
 
@@ -839,246 +1050,18 @@ Generated 2026-11-19 · Part of the Buddy System<br>
   var sec = document.querySelector('.repo-files');
   if (!sec || sec.dataset.rfInit) return;
   sec.dataset.rfInit = '1';
-  var bid = sec.getAttribute('data-buddy-id') || (function(){
-    var p = location.pathname.replace(/\/+$/, '');
-    return p.substring(p.lastIndexOf('/') + 1);
-  })();
-  function lsGet(){ try { return JSON.parse(localStorage.getItem('buddyTree.v3') || '{}'); } catch(e){ return {}; } }
-  function token(){ return lsGet().ghToken || ''; }
-  function b64encode(str){
-    var bytes = new TextEncoder().encode(str), bin = '';
-    bytes.forEach(function(b){ bin += String.fromCharCode(b); });
-    return btoa(bin);
-  }
-  async function ghApi(path, method, body){
-    var t = token();
-    if (!t) throw new Error('Add a GitHub token first.');
-    var r = await fetch('https://api.github.com' + path, {
-      method: method || 'GET',
-      headers: {'Authorization': 'Bearer ' + t, 'Accept': 'application/vnd.github+json', 'Content-Type': 'application/json'},
-      body: body ? JSON.stringify(body) : undefined
-    });
-    if (!r.ok) throw new Error('GitHub ' + r.status);
-    return r.status === 204 ? null : await r.json();
-  }
-  async function ghGetFile(repo, path){
-    try {
-      var j = await ghApi('/repos/davedellaquila/' + repo + '/contents/' + path);
-      if (j && j.content) return {
-        text: new TextDecoder().decode(Uint8Array.from(atob(j.content.replace(/\n/g, '')), function(c){ return c.charCodeAt(0); })),
-        sha: j.sha
-      };
-    } catch(e){}
-    return null;
-  }
-  var repo = null;
-  async function resolveRepo(){
-    try {
-      var r = await fetch('../buddies.json', {cache: 'no-store'});
-      var d = await r.json();
-      var buds = d.buddies || [];
-      for (var i = 0; i < buds.length; i++) {
-        if (buds[i].id === bid && buds[i].repo) { repo = buds[i].repo; break; }
-      }
-    } catch(e){}
-  }
-  function esc(s){ return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
-  function inline(s){
-    s = esc(s);
-    s = s.replace(/`([^`]+)`/g, '<code>$1</code>');
-    s = s.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
-    s = s.replace(/(^|[^*])\*([^*\n]+)\*/g, '$1<em>$2</em>');
-    s = s.replace(/\[([^\]]+)\]\((https?:[^)\s]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>');
-    return s;
-  }
-  function mdRender(src){
-    var lines = src.split('\n'), out = [], inList = false, inCode = false, codeBuf = [];
-    function closeList(){ if (inList) { out.push('</ul>'); inList = false; } }
-    for (var i = 0; i < lines.length; i++){
-      var ln = lines[i], m;
-      if (/^```/.test(ln)) {
-        if (inCode) { out.push('<pre><code>' + esc(codeBuf.join('\n')) + '</code></pre>'); codeBuf = []; inCode = false; }
-        else { closeList(); inCode = true; }
-        continue;
-      }
-      if (inCode) { codeBuf.push(ln); continue; }
-      if ((m = ln.match(/^(#{1,4})\s+(.*)/))) {
-        closeList();
-        var lv = Math.min(m[1].length + 1, 4);
-        out.push('<h' + lv + '>' + inline(m[2]) + '</h' + lv + '>');
-        continue;
-      }
-      if (/^\s*(-{3,}|\*{3,})\s*$/.test(ln)) { closeList(); out.push('<hr>'); continue; }
-      if ((m = ln.match(/^\s*[-*]\s+(.*)/)) || (m = ln.match(/^\s*\d+[.)]\s+(.*)/))) {
-        if (!inList) { out.push('<ul>'); inList = true; }
-        out.push('<li>' + inline(m[1]) + '</li>');
-        continue;
-      }
-      if ((m = ln.match(/^>\s?(.*)/))) { closeList(); out.push('<blockquote>' + inline(m[1]) + '</blockquote>'); continue; }
-      if (!ln.trim()) { closeList(); continue; }
-      closeList();
-      out.push('<p>' + inline(ln) + '</p>');
-    }
-    closeList();
-    if (inCode) out.push('<pre><code>' + esc(codeBuf.join('\n')) + '</code></pre>');
-    return out.join('\n');
-  }
-  var locked = sec.querySelector('.rf-locked'), main = sec.querySelector('.rf-main'),
-      list = sec.querySelector('.rf-list'), st = sec.querySelector('.rf-status');
-  /* Accordion files (Dave 2026-10-21): a list of file names; clicking a
-     name toggles that file's contents open inline right below the name.
-     Toggles are independent — several files can be open at once. Contents
-     load lazily on first open and are cached in the item's own state;
-     Edit/Save lives inside the opened panel. */
-  function buildFileSection(f){
-    var wrap = document.createElement('div');
-    wrap.className = 'rf-fileitem';
-    var head = document.createElement('button');
-    head.type = 'button';
-    head.className = 'rf-file';
-    head.setAttribute('aria-expanded', 'false');
-    var nm = document.createElement('span');
-    nm.className = 'rf-name';
-    nm.textContent = '📄 ' + f.name;
-    var dir = document.createElement('span');
-    dir.className = 'rf-dir';
-    dir.textContent = f.path;
-    var chev = document.createElement('span');
-    chev.className = 'rf-chev';
-    chev.textContent = '▸';
-    head.appendChild(nm);
-    head.appendChild(dir);
-    head.appendChild(chev);
-    var panel = document.createElement('div');
-    panel.className = 'rf-panel';
-    panel.hidden = true;
-    var phead = document.createElement('div');
-    phead.className = 'rf-viewhead';
-    var ppath = document.createElement('span');
-    ppath.className = 'rf-path';
-    ppath.textContent = f.path;
-    var editBtn = document.createElement('button');
-    editBtn.type = 'button';
-    editBtn.className = 'attn-btn rf-edit';
-    editBtn.textContent = 'Edit';
-    editBtn.disabled = true;
-    phead.appendChild(ppath);
-    phead.appendChild(editBtn);
-    var bodyEl = document.createElement('div');
-    bodyEl.className = 'rf-body';
-    bodyEl.innerHTML = '<p class="rf-loading">Loading ' + esc(f.path) + '…</p>';
-    var editor = document.createElement('div');
-    editor.className = 'rf-editor';
-    editor.hidden = true;
-    var ta = document.createElement('textarea');
-    ta.className = 'rf-ta';
-    ta.rows = 18;
-    ta.spellcheck = false;
-    ta.setAttribute('aria-label', 'Markdown source for ' + f.path);
-    var actions = document.createElement('div');
-    actions.className = 'attn-actions';
-    var saveBtn = document.createElement('button');
-    saveBtn.type = 'button';
-    saveBtn.className = 'attn-btn primary rf-save';
-    saveBtn.textContent = 'Save to GitHub';
-    var cancelBtn = document.createElement('button');
-    cancelBtn.type = 'button';
-    cancelBtn.className = 'attn-btn rf-cancel';
-    cancelBtn.textContent = 'Cancel';
-    actions.appendChild(saveBtn);
-    actions.appendChild(cancelBtn);
-    editor.appendChild(ta);
-    editor.appendChild(actions);
-    var fst = document.createElement('div');
-    fst.className = 'rf-fstatus attn-status';
-    fst.setAttribute('role', 'status');
-    panel.appendChild(phead);
-    panel.appendChild(bodyEl);
-    panel.appendChild(editor);
-    panel.appendChild(fst);
-    wrap.appendChild(head);
-    wrap.appendChild(panel);
-    var cur = null, loaded = false;
-    function loadOnce(){
-      if (loaded) return;
-      loaded = true;
-      ghGetFile(repo, f.path).then(function(got){
-        if (!got) { loaded = false; bodyEl.innerHTML = '<p class="rf-loading">⚠ Could not load ' + esc(f.path) + ' — close and open it again to retry.</p>'; return; }
-        cur = {path: f.path, sha: got.sha, text: got.text};
-        bodyEl.innerHTML = mdRender(got.text);
-        editBtn.disabled = false;
-      });
-    }
-    head.addEventListener('click', function(){
+  sec.querySelectorAll('.rf-fileitem > .rf-file').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var item = btn.parentElement;
+      var panel = item ? item.querySelector('.rf-panel') : null;
+      if (!panel) return;
       var open = panel.hidden;
       panel.hidden = !open;
-      head.setAttribute('aria-expanded', open ? 'true' : 'false');
-      chev.textContent = open ? '▾' : '▸';
-      if (open) loadOnce();
+      btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      var ch = btn.querySelector('.rf-chev');
+      if (ch) ch.textContent = open ? '▾' : '▸';
     });
-    editBtn.addEventListener('click', function(){
-      if (!cur) return;
-      ta.value = cur.text;
-      bodyEl.hidden = true;
-      editor.hidden = false;
-      ta.focus();
-    });
-    cancelBtn.addEventListener('click', function(){
-      editor.hidden = true;
-      bodyEl.hidden = false;
-    });
-    saveBtn.addEventListener('click', async function(){
-      if (!cur) return;
-      saveBtn.disabled = true;
-      fst.textContent = 'Saving…';
-      try {
-        var payload = {message: 'Edit ' + cur.path + ' from the homepage', content: b64encode(ta.value), sha: cur.sha};
-        var j = await ghApi('/repos/davedellaquila/' + repo + '/contents/' + cur.path, 'PUT', payload);
-        if (j && j.content && j.content.sha) cur.sha = j.content.sha;
-        cur.text = ta.value;
-        editor.hidden = true;
-        bodyEl.hidden = false;
-        bodyEl.innerHTML = mdRender(cur.text);
-        fst.textContent = '✓ Saved to GitHub (' + repo + '/' + cur.path + ').';
-      } catch(err){
-        var why = (err && err.message) || String(err);
-        fst.textContent = /409|422/.test(why)
-          ? '⚠ GitHub said the file changed since you loaded it (' + why + ') — reload this page and try again.'
-          : '⚠ Save failed (' + why + ') — your edit is still in the editor.';
-      }
-      saveBtn.disabled = false;
-    });
-    return wrap;
-  }
-  async function init(){
-    await resolveRepo();
-    if (!repo) {
-      locked.hidden = false;
-      locked.textContent = 'No repo is linked for this buddy yet, so there are no repo files to show.';
-      return;
-    }
-    if (!token()) { locked.hidden = false; return; }
-    main.hidden = false;
-    st.textContent = 'Loading files…';
-    var files = [];
-    async function grab(dir){
-      try {
-        var j = await ghApi('/repos/davedellaquila/' + repo + (dir ? '/contents/' + dir : '/contents'));
-        if (Array.isArray(j)) j.forEach(function(e){
-          if (e.type === 'file' && /\.md$/i.test(e.name)) files.push({name: e.name, path: e.path});
-        });
-      } catch(e){}
-    }
-    await grab('');
-    await grab('docs');
-    files.sort(function(a, b){ return a.path < b.path ? -1 : 1; });
-    if (!files.length) { st.textContent = 'No markdown files found in the repo yet.'; return; }
-    st.textContent = '';
-    files.forEach(function(f){
-      list.appendChild(buildFileSection(f));
-    });
-  }
-  init();
+  });
 })();
 </script>
 

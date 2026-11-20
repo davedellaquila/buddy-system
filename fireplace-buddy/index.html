@@ -217,6 +217,8 @@ h2 { font-size: 22px; margin: 32px 0 16px; }
 .rf-body pre code { border: none; padding: 0; background: none; }
 .rf-body a { color: var(--accent); }
 .rf-body hr { border: none; border-top: 1px solid var(--border); margin: 14px 0; }
+.rf-body table { border-collapse: collapse; margin: 10px 0; font-size: 13.5px; }
+.rf-body th, .rf-body td { border: 1px solid var(--border); padding: 5px 9px; text-align: left; }
 .rf-ta { width: 100%; box-sizing: border-box; background: var(--bg); color: var(--text); border: 1px solid var(--border); border-radius: 8px; padding: 12px; font-family: ui-monospace, Menlo, monospace; font-size: 13px; line-height: 1.55; }
 /* ---- Accordion files (Dave 2026-10-21): the list of markdown files;
    clicking a file name opens its contents inline right below that name.
@@ -315,11 +317,205 @@ h2 { font-size: 22px; margin: 32px 0 16px; }
 
 <section class="repo-files" data-buddy-id="fireplace-buddy">
 <h2>📄 Repo files</h2>
-<p class="rf-sub">The markdown files in <span data-buddy-name>Fireplace Buddy</span>'s repo. Tap a file name and its contents open right below it — open as many as you like at once. Edit inside an opened file and the save goes straight back to GitHub. The repo is private, so nothing here — not even the file names — is shown until GitHub is connected on this device.</p>
-<div class="rf-locked" hidden>🔒 Connect GitHub in the 🧠 Brain dump box above to view and edit files — the repos are private, so a token is needed to read them. Then reload this page.</div>
-<div class="rf-main" hidden>
-<div class="rf-list rf-files-wrap"></div>
-<div class="rf-status attn-status" role="status"></div>
+<p class="rf-sub">The markdown files in <span data-buddy-name>Fireplace Buddy</span>'s repo, baked into this page when it was generated — tap a file name and its contents open right below it; open as many as you like at once. No sign-in and no fetching: the words are right here. To change a file, edit it in the repo — the page picks it up next time it is generated.</p>
+<div class="rf-main">
+<div class="rf-list rf-files-wrap"><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">KNOWLEDGE.md</span><span class="rf-dir">repo root</span></button><div class="rf-panel" hidden><div class="rf-body"><h1>Knowledge — Fireplace Buddy</h1>
+<p>Seeded 2026-10-21 during the repo backfill from registry/homepage/memory — starting record, grows from here.</p>
+<h2>The fireplace (MEMORY.md / repo manual)</h2>
+<ul>
+<li>Dave's Fiddletown cabin fireplace is a Fireplace Xtrordinair 36-Elite (Travis Industries) wood-burning fireplace.</li>
+<li>Specs recorded in MEMORY.md: 3.7 cu ft firebox, max log length 24", up to 10-hour burn, heats up to 2,500 sq ft, 10,300–66,000 BTU/hr, 388 CFM blower.</li>
+<li>Chimney must be inspected twice a year for creosote per the manual.</li>
+<li>Owner's manual is filed in this repo under <code>manuals/</code> (36-Elite-Owners-Manual.pdf).</li>
+</ul>
+<h2>What it tracks (registry mission / docs/brief.md)</h2>
+<ul>
+<li>Wood supply, chimney, and winter readiness for the Fiddletown cabin fireplace.</li>
+<li>Robert's rhythm: Robert collects wood on Fridays and cuts on Saturdays (also in docs/brief.md as Friday collection / Saturday cutting).</li>
+<li>Firewood backlog: split / stack / cover. The brief in this repo also records Carl Towne's community wood splitter as the borrow, with the ask text ready to send.</li>
+<li>Chimney maintenance and the winter-readiness / pre-season checklist.</li>
+</ul>
+<h2>Door-seal job — still open (MEMORY.md, re-raised by Dave 2026-10-21)</h2>
+<ul>
+<li>Clean the door glass with a plastic razor blade, then replace the door seal — an air leak is letting oxygen in, causing the black/soot coating inside the glass.</li>
+<li>Gasket: Travis Industries part #98500717, ~$60.</li>
+<li>Full plan already saved in this repo at <code>docs/door-seal-fix.md</code> (saved 2026-10-13).</li>
+<li>Dave asked to be reminded; timing not yet set at the time MEMORY.md recorded it.</li>
+</ul>
+<h2>Chimney — NEVER swept (confirmed by Dave 2026-10-24)</h2>
+<ul>
+<li>The 36-Elite has <strong>never had a creosote cleaning</strong> in Dave's six years at the cabin (since ~2020). Per the manual's twice-a-year inspection cadence, that's <strong>12 inspections behind</strong>.</li>
+<li>The week of Oct 17–24, 2026 the unit ran almost non-stop and worked great — burning season is fully on, which makes the overdue sweep the top safety item.</li>
+<li>Sweep + Level 2 camera inspection is tracked (goal_e8576e9531a7); vendor research for Amador County sweeps started 2026-10-24.</li>
+<li>Recommendation on record: first service by a professional with camera inspection (possible glazed creosote after 6 years); DIY only for between-visit upkeep afterward.</li>
+<li>Possible same-visit add: the door-seal job below (gasket #98500717).</li>
+</ul>
+<h2>Still unknown (MEMORY.md)</h2>
+<ul>
+<li>Robert's current rhythm status.</li>
+<li>Typical winter burn rate.</li>
+</ul></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">CONFIG.md</span><span class="rf-dir">repo root</span></button><div class="rf-panel" hidden><div class="rf-body"><h1>Config — Fireplace Buddy</h1>
+<h2>Identity</h2>
+<ul>
+<li>Role: Keeps the Fiddletown cabin fireplace burning — wood supply, chimney, winter readiness.</li>
+<li>Parent: property-buddy</li>
+<li>Persona: not recorded (no persona field in the registry entry)</li>
+<li>Voice: not recorded (no voice field in the registry entry)</li>
+<li>Repo created: this repo already existed before the 2026-10-21 backfill (README, docs/brief.md, docs/ingest.md, and manuals/ were already present); the backfill added only the missing standard files. See DECISIONS.md.</li>
+</ul>
+<h2>Behavior</h2>
+<ul>
+<li>No persona is recorded for this buddy in the registry, homepage, or memory sources consulted; no tone is assumed here.</li>
+</ul>
+<h2>Scope</h2>
+<ul>
+<li>Wood supply, chimney maintenance, and winter readiness for the Fireplace Xtrordinair 36-Elite at the Fiddletown cabin.</li>
+<li>Out of scope for v1, per the brief already in this repo (docs/brief.md): no automated ordering of firewood or chimney services — Dave handles vendors; no IoT stove sensors (unless Dave gets interested).</li>
+</ul>
+<h2>Preferences</h2>
+<ul>
+<li>No preferences are recorded in the sources consulted for this seed.</li>
+</ul>
+<h2>Privacy</h2>
+<ul>
+<li>Private by default. No source consulted records a decision by Dave to make this buddy or its repo public.</li>
+</ul></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">STUDY.md</span><span class="rf-dir">repo root</span></button><div class="rf-panel" hidden><div class="rf-body"><h1>Study Topics — Fireplace Buddy</h1>
+<p>Status markers: 📋 queued, 🔄 researching, ✅ learned</p>
+<p>No study topics are recorded in the registry, homepage, or memory sources consulted for this seed.</p></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">SOUL.md</span><span class="rf-dir">repo root</span></button><div class="rf-panel" hidden><div class="rf-body"><h1>SOUL.md — Fireplace Buddy</h1>
+<p>No persona is recorded for Fireplace Buddy in the registry, homepage, or memory sources consulted.
+This stub records exactly that; a persona can be added here when Dave records one.</p></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">DECISIONS.md</span><span class="rf-dir">repo root</span></button><div class="rf-panel" hidden><div class="rf-body"><h1>Decisions — Fireplace Buddy</h1>
+<ul>
+<li><strong>2026-10-21 — Repo backfill (adopted, not created).</strong> Fleet-wide repo backfill ordered by Dave; this repo already existed, so only the missing standard files were added and no existing content was overwritten. Facts seeded from registry/homepage/memory and this repo's existing brief only.</li>
+</ul></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">ACCOMPLISHMENTS.md</span><span class="rf-dir">repo root</span></button><div class="rf-panel" hidden><div class="rf-body"><h1>Accomplishments — Fireplace Buddy</h1>
+<p>What this buddy has shipped and done. The review-time record — keep it fresh.</p></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">README.md</span><span class="rf-dir">repo root</span></button><div class="rf-panel" hidden><div class="rf-body"><h1>Fireplace Buddy</h1>
+<p>Fireplace Buddy keeps Dave's Fiddletown cabin fireplace burning — literally. It tracks the wood supply (Robert's Friday-collect/Saturday-cut rhythm), the split-stack-cover backlog, chimney maintenance, and winter readiness. When the snow comes, the wood is dry, the chimney is clean, and the fire's ready.</p>
+<h2>Product brief</h2>
+<p><a href="docs/brief.md">Read the full brief</a> · <a href="https://docs.google.com/document/d/1sBwdKun7vEtzteP-YUArt1h3xPE4NIXtD4RvYCXsW3I/edit">Google Doc</a></p></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">brief.md</span><span class="rf-dir">docs</span></button><div class="rf-panel" hidden><div class="rf-body"><h1>Fireplace Buddy</h1>
+<h2>Executive summary</h2>
+<p>Fireplace Buddy keeps Dave's Fiddletown cabin fireplace burning — literally. It tracks the wood supply (Robert's Friday-collect/Saturday-cut rhythm), the split-stack-cover backlog, chimney maintenance, and winter readiness. When the snow comes, the wood is dry, the chimney is clean, and the fire's ready.</p>
+<h2>The idea</h2>
+<p>Dave heats with wood at the cabin, and there's a whole operation behind it: Robert cutting, Carl's splitter to borrow, wet wood separated from dry, piles covered before the rain. Fireplace Buddy is the one place that knows the state of all of it — how much wood is ready, what needs splitting, when the chimney was last swept, and whether there's enough seasoned wood to get through winter.</p>
+<h2>How it works</h2>
+<p>The buddy tracks: (1) Wood inventory — what's split, stacked, covered, and ready vs. what still needs work. (2) Robert's rhythm — Friday collection, Saturday cutting, confirmed weekly. (3) The borrow — Carl Towne's community wood splitter, with the ask text ready to send. (4) Chimney — sweep history and inspection schedule (currently unknown, to be established). (5) Winter readiness — a pre-season checklist: enough dry wood, chimney clean, fireplace type confirmed.</p>
+<h2>Revenue potential</h2>
+<p>None — this is cabin infrastructure. The value is a warm house in January and never scrambling for dry wood in a storm.</p>
+<h2>Room for growth</h2>
+<p>Burn-rate tracking (cords per winter, so Dave knows how much to put up). Moisture-meter readings per stack. A 'burn tonight?' check — is there enough dry wood within reach? Integration with the cabin winter-prep checklist.</p>
+<h2>Out of scope for v1</h2>
+<p>No automated ordering of firewood or chimney services — Dave handles vendors. No IoT stove sensors (unless Dave gets interested).</p>
+<h2>Open questions</h2>
+<p>What type is the fireplace — masonry, insert, or stove? When was the chimney last swept? Is Robert's Friday/Saturday rhythm still active? How many cords does Dave burn in a typical winter?</p></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">door-seal-fix.md</span><span class="rf-dir">docs</span></button><div class="rf-panel" hidden><div class="rf-body"><h1>Fireplace Door Seal Fix — 36-Elite (Travis Industries / Fireplace Xtrordinair)</h1>
+<p>Date: 2026-10-13 · Unit: Fireplace Xtrordinair 36-Elite (cabin fireplace)
+Symptom: carbon/soot building up on the inside of the glass; suspected door-seal air leak.</p>
+<p>Sources: repo copy of the 36-Elite Owner's Manual (doc 93508091, 2015 ed.),
+Travis dealer parts lists, retailer listings.</p>
+<h2>The part to buy</h2>
+<p><strong>Travis Industries #98500717 — "Door Gasket, FPX Wood Fireplace"</strong>
+(confirmed in the manual's Replacement Parts List, printed p.19)</p>
+<ul>
+<li>Spec: flat fiberglass tape, <strong>1/16" thick × 5/8" wide × 150" long</strong>, no self-stick
+  adhesive. One kit does two 44 or 36 double doors, or one 36 single door.</li>
+<li>Kit includes the gasket tape, gasket cement, and brush.</li>
+<li>Reference price: <strong>$60</strong> at woodmanspartsplus.com (in stock per their listing —
+  but they state Travis policy restricts them to <strong>New England sales only</strong>, so this
+  is not a California option).</li>
+<li>Do NOT buy 98500731 for this job — that is the <em>glass</em> gasket kit (glass-to-door
+  seal), a different part.</li>
+<li>If the latch itself is worn rather than just misadjusted: <strong>#98500712</strong>
+  "Door Latch Assembly, Right Side of Double Door, FPX 36A &amp; 36 Elite."</li>
+</ul>
+<p>Where to buy (Dave is in California):
+1. A local authorized Travis Industries / Fireplace Xtrordinair dealer — Travis
+   sells hearth parts through its dealer network (dealer locator on
+   travisindustries.com). Fastest path: call ahead with part #98500717.
+2. fire-parts.com (Travis dealer site) — check their parts catalog for 98500717.
+3. In a pinch: any hearth shop sells generic 5/8" flat fiberglass stove-gasket
+   tape + high-temp stove gasket cement; functionally equivalent, though OEM kit
+   is preferred.</p>
+<h2>Replacement procedure</h2>
+<p>Manual guidance (printed p.18, "Check Door Seal, Adjust if Necessary"):
+the door latch and door gasket work together to seal the firebox; leaking air makes
+the fire burn too fast and kills overnight burns and burn-rate control. The gasket
+should adhere to the door and be intact on both doors; it follows the door perimeter
+along the <strong>outside</strong> edge (the inside edge has no gasket).</p>
+<p>Step-by-step (synthesized from the manual's gasket guidance + Travis's standard
+door-gasket replacement text):</p>
+<ol>
+<li>Let the fireplace go <strong>fully cold</strong> (at least 2 hours after the last coal).</li>
+<li>Open the door(s) and pull the old gasket out of the <strong>outer groove</strong> of the door
+   retainer. Scrape out all residual cement so the groove is clean.</li>
+<li>Run a bead of wood-stove gasket cement into the groove.</li>
+<li>Lay the new gasket in, <strong>starting at the lower left corner</strong>. Do not stretch it —
+   lay it in relaxed, then cut off the excess.</li>
+<li>Close the door. The cement fully cures with heat from the stove; you may need to
+   open and close the door repeatedly to get the gasket to seat fully.</li>
+<li>Do one hot burn to cure the cement, then check the seal again.</li>
+</ol>
+<p>Seal check (dollar-bill test): close the door on a dollar bill at several points
+around the perimeter. If it pulls out with no resistance anywhere, the seal is still
+leaking there.</p>
+<h2>Door latch adjustment (do this too)</h2>
+<p>Manual, printed p.18 — "Door Latch Adjustment":</p>
+<ul>
+<li>Closing the handle should pull the doors in to a snug fit. If the latch is loose:
+  <strong>move one washer from the inner side of the latch shaft to the outer side.</strong>
+  For finer adjustment, <strong>tighten the outer nut against the inner nut</strong> (9/16" wrench).</li>
+<li>"Door Latch Rod Adjustment": if the latch rod doesn't keep the <strong>bottom</strong> of the
+  doors snug against the firebox, <strong>bend the rod in slightly</strong> for a tighter fit.</li>
+</ul>
+<p>Do the latch adjustment <em>after</em> the new gasket is in — the gasket changes how the
+door sits, so latch tension set on the old gasket will be wrong.</p>
+<h2>Other things to check (carbon on glass has more than one cause)</h2>
+<ul>
+<li><strong>Wet wood is the #1 cause of sooty glass</strong> (manual, "Selecting Wood," p.14):
+  wood over ~20% moisture cools the fire and produces the smoke that deposits on
+  glass. Knock-test or meter-test the firewood.</li>
+<li><strong>Low, smoldering burns</strong>: running the air control at minimum with a cool fire
+  deposits soot; small hot creosote accumulation in the lower corners at minimum
+  air is considered normal, heavy/fast-returning soot is not.</li>
+<li><strong>Logs too close to the glass</strong> / overfilled firebox — flames licking the glass
+  scorch it permanently.</li>
+<li><strong>Engaging the catalytic combustor too early</strong>: keep the bypass open until the
+  unit is hot (15–30 min); closing it on a cool fire makes dirty smoke.</li>
+<li><strong>Airwash disruption</strong>: the 36-Elite feeds glass-cleaning air through holes above
+  the door via the air control (manual p.12). A door leak short-circuits this —
+  cool leak air chills the glass and smoke condenses on it. So the leak and the
+  soot are plausibly linked, but fix the wood/burn habits too if soot returns.</li>
+<li>After the repair, clean the glass with a cleaner made for fireplace glass,
+  <strong>only when the glass is cold</strong>.</li>
+</ul>
+<h2>Parts summary</h2>
+<table>
+<thead>
+<tr>
+<th>Need</th>
+<th>Part #</th>
+<th>~Price</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Door gasket kit (tape + cement + brush)</td>
+<td>98500717</td>
+<td>~$60</td>
+<td>OEM; buy via local Travis dealer</td>
+</tr>
+<tr>
+<td>Door latch assembly (if worn, not just loose)</td>
+<td>98500712</td>
+<td>dealer quote</td>
+<td>right side, double door</td>
+</tr>
+<tr>
+<td>Glass gasket kit (only if glass seal also bad)</td>
+<td>98500731</td>
+<td>~$68</td>
+<td>3/4" tape + channel + 1/2" rope — different job</td>
+</tr>
+</tbody>
+</table></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">ingest.md</span><span class="rf-dir">docs</span></button><div class="rf-panel" hidden><div class="rf-body"><h1>Ingest log — Fireplace Buddy</h1>
+<p>Raw brain-dumps about this buddy. Each entry is timestamped; work the keepers into the dossier.</p></div></div></div></div>
 </div>
 </section>
 
@@ -830,246 +1026,18 @@ Generated 2026-11-19 · Part of the Buddy System<br>
   var sec = document.querySelector('.repo-files');
   if (!sec || sec.dataset.rfInit) return;
   sec.dataset.rfInit = '1';
-  var bid = sec.getAttribute('data-buddy-id') || (function(){
-    var p = location.pathname.replace(/\/+$/, '');
-    return p.substring(p.lastIndexOf('/') + 1);
-  })();
-  function lsGet(){ try { return JSON.parse(localStorage.getItem('buddyTree.v3') || '{}'); } catch(e){ return {}; } }
-  function token(){ return lsGet().ghToken || ''; }
-  function b64encode(str){
-    var bytes = new TextEncoder().encode(str), bin = '';
-    bytes.forEach(function(b){ bin += String.fromCharCode(b); });
-    return btoa(bin);
-  }
-  async function ghApi(path, method, body){
-    var t = token();
-    if (!t) throw new Error('Add a GitHub token first.');
-    var r = await fetch('https://api.github.com' + path, {
-      method: method || 'GET',
-      headers: {'Authorization': 'Bearer ' + t, 'Accept': 'application/vnd.github+json', 'Content-Type': 'application/json'},
-      body: body ? JSON.stringify(body) : undefined
-    });
-    if (!r.ok) throw new Error('GitHub ' + r.status);
-    return r.status === 204 ? null : await r.json();
-  }
-  async function ghGetFile(repo, path){
-    try {
-      var j = await ghApi('/repos/davedellaquila/' + repo + '/contents/' + path);
-      if (j && j.content) return {
-        text: new TextDecoder().decode(Uint8Array.from(atob(j.content.replace(/\n/g, '')), function(c){ return c.charCodeAt(0); })),
-        sha: j.sha
-      };
-    } catch(e){}
-    return null;
-  }
-  var repo = null;
-  async function resolveRepo(){
-    try {
-      var r = await fetch('../buddies.json', {cache: 'no-store'});
-      var d = await r.json();
-      var buds = d.buddies || [];
-      for (var i = 0; i < buds.length; i++) {
-        if (buds[i].id === bid && buds[i].repo) { repo = buds[i].repo; break; }
-      }
-    } catch(e){}
-  }
-  function esc(s){ return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
-  function inline(s){
-    s = esc(s);
-    s = s.replace(/`([^`]+)`/g, '<code>$1</code>');
-    s = s.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
-    s = s.replace(/(^|[^*])\*([^*\n]+)\*/g, '$1<em>$2</em>');
-    s = s.replace(/\[([^\]]+)\]\((https?:[^)\s]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>');
-    return s;
-  }
-  function mdRender(src){
-    var lines = src.split('\n'), out = [], inList = false, inCode = false, codeBuf = [];
-    function closeList(){ if (inList) { out.push('</ul>'); inList = false; } }
-    for (var i = 0; i < lines.length; i++){
-      var ln = lines[i], m;
-      if (/^```/.test(ln)) {
-        if (inCode) { out.push('<pre><code>' + esc(codeBuf.join('\n')) + '</code></pre>'); codeBuf = []; inCode = false; }
-        else { closeList(); inCode = true; }
-        continue;
-      }
-      if (inCode) { codeBuf.push(ln); continue; }
-      if ((m = ln.match(/^(#{1,4})\s+(.*)/))) {
-        closeList();
-        var lv = Math.min(m[1].length + 1, 4);
-        out.push('<h' + lv + '>' + inline(m[2]) + '</h' + lv + '>');
-        continue;
-      }
-      if (/^\s*(-{3,}|\*{3,})\s*$/.test(ln)) { closeList(); out.push('<hr>'); continue; }
-      if ((m = ln.match(/^\s*[-*]\s+(.*)/)) || (m = ln.match(/^\s*\d+[.)]\s+(.*)/))) {
-        if (!inList) { out.push('<ul>'); inList = true; }
-        out.push('<li>' + inline(m[1]) + '</li>');
-        continue;
-      }
-      if ((m = ln.match(/^>\s?(.*)/))) { closeList(); out.push('<blockquote>' + inline(m[1]) + '</blockquote>'); continue; }
-      if (!ln.trim()) { closeList(); continue; }
-      closeList();
-      out.push('<p>' + inline(ln) + '</p>');
-    }
-    closeList();
-    if (inCode) out.push('<pre><code>' + esc(codeBuf.join('\n')) + '</code></pre>');
-    return out.join('\n');
-  }
-  var locked = sec.querySelector('.rf-locked'), main = sec.querySelector('.rf-main'),
-      list = sec.querySelector('.rf-list'), st = sec.querySelector('.rf-status');
-  /* Accordion files (Dave 2026-10-21): a list of file names; clicking a
-     name toggles that file's contents open inline right below the name.
-     Toggles are independent — several files can be open at once. Contents
-     load lazily on first open and are cached in the item's own state;
-     Edit/Save lives inside the opened panel. */
-  function buildFileSection(f){
-    var wrap = document.createElement('div');
-    wrap.className = 'rf-fileitem';
-    var head = document.createElement('button');
-    head.type = 'button';
-    head.className = 'rf-file';
-    head.setAttribute('aria-expanded', 'false');
-    var nm = document.createElement('span');
-    nm.className = 'rf-name';
-    nm.textContent = '📄 ' + f.name;
-    var dir = document.createElement('span');
-    dir.className = 'rf-dir';
-    dir.textContent = f.path;
-    var chev = document.createElement('span');
-    chev.className = 'rf-chev';
-    chev.textContent = '▸';
-    head.appendChild(nm);
-    head.appendChild(dir);
-    head.appendChild(chev);
-    var panel = document.createElement('div');
-    panel.className = 'rf-panel';
-    panel.hidden = true;
-    var phead = document.createElement('div');
-    phead.className = 'rf-viewhead';
-    var ppath = document.createElement('span');
-    ppath.className = 'rf-path';
-    ppath.textContent = f.path;
-    var editBtn = document.createElement('button');
-    editBtn.type = 'button';
-    editBtn.className = 'attn-btn rf-edit';
-    editBtn.textContent = 'Edit';
-    editBtn.disabled = true;
-    phead.appendChild(ppath);
-    phead.appendChild(editBtn);
-    var bodyEl = document.createElement('div');
-    bodyEl.className = 'rf-body';
-    bodyEl.innerHTML = '<p class="rf-loading">Loading ' + esc(f.path) + '…</p>';
-    var editor = document.createElement('div');
-    editor.className = 'rf-editor';
-    editor.hidden = true;
-    var ta = document.createElement('textarea');
-    ta.className = 'rf-ta';
-    ta.rows = 18;
-    ta.spellcheck = false;
-    ta.setAttribute('aria-label', 'Markdown source for ' + f.path);
-    var actions = document.createElement('div');
-    actions.className = 'attn-actions';
-    var saveBtn = document.createElement('button');
-    saveBtn.type = 'button';
-    saveBtn.className = 'attn-btn primary rf-save';
-    saveBtn.textContent = 'Save to GitHub';
-    var cancelBtn = document.createElement('button');
-    cancelBtn.type = 'button';
-    cancelBtn.className = 'attn-btn rf-cancel';
-    cancelBtn.textContent = 'Cancel';
-    actions.appendChild(saveBtn);
-    actions.appendChild(cancelBtn);
-    editor.appendChild(ta);
-    editor.appendChild(actions);
-    var fst = document.createElement('div');
-    fst.className = 'rf-fstatus attn-status';
-    fst.setAttribute('role', 'status');
-    panel.appendChild(phead);
-    panel.appendChild(bodyEl);
-    panel.appendChild(editor);
-    panel.appendChild(fst);
-    wrap.appendChild(head);
-    wrap.appendChild(panel);
-    var cur = null, loaded = false;
-    function loadOnce(){
-      if (loaded) return;
-      loaded = true;
-      ghGetFile(repo, f.path).then(function(got){
-        if (!got) { loaded = false; bodyEl.innerHTML = '<p class="rf-loading">⚠ Could not load ' + esc(f.path) + ' — close and open it again to retry.</p>'; return; }
-        cur = {path: f.path, sha: got.sha, text: got.text};
-        bodyEl.innerHTML = mdRender(got.text);
-        editBtn.disabled = false;
-      });
-    }
-    head.addEventListener('click', function(){
+  sec.querySelectorAll('.rf-fileitem > .rf-file').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var item = btn.parentElement;
+      var panel = item ? item.querySelector('.rf-panel') : null;
+      if (!panel) return;
       var open = panel.hidden;
       panel.hidden = !open;
-      head.setAttribute('aria-expanded', open ? 'true' : 'false');
-      chev.textContent = open ? '▾' : '▸';
-      if (open) loadOnce();
+      btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      var ch = btn.querySelector('.rf-chev');
+      if (ch) ch.textContent = open ? '▾' : '▸';
     });
-    editBtn.addEventListener('click', function(){
-      if (!cur) return;
-      ta.value = cur.text;
-      bodyEl.hidden = true;
-      editor.hidden = false;
-      ta.focus();
-    });
-    cancelBtn.addEventListener('click', function(){
-      editor.hidden = true;
-      bodyEl.hidden = false;
-    });
-    saveBtn.addEventListener('click', async function(){
-      if (!cur) return;
-      saveBtn.disabled = true;
-      fst.textContent = 'Saving…';
-      try {
-        var payload = {message: 'Edit ' + cur.path + ' from the homepage', content: b64encode(ta.value), sha: cur.sha};
-        var j = await ghApi('/repos/davedellaquila/' + repo + '/contents/' + cur.path, 'PUT', payload);
-        if (j && j.content && j.content.sha) cur.sha = j.content.sha;
-        cur.text = ta.value;
-        editor.hidden = true;
-        bodyEl.hidden = false;
-        bodyEl.innerHTML = mdRender(cur.text);
-        fst.textContent = '✓ Saved to GitHub (' + repo + '/' + cur.path + ').';
-      } catch(err){
-        var why = (err && err.message) || String(err);
-        fst.textContent = /409|422/.test(why)
-          ? '⚠ GitHub said the file changed since you loaded it (' + why + ') — reload this page and try again.'
-          : '⚠ Save failed (' + why + ') — your edit is still in the editor.';
-      }
-      saveBtn.disabled = false;
-    });
-    return wrap;
-  }
-  async function init(){
-    await resolveRepo();
-    if (!repo) {
-      locked.hidden = false;
-      locked.textContent = 'No repo is linked for this buddy yet, so there are no repo files to show.';
-      return;
-    }
-    if (!token()) { locked.hidden = false; return; }
-    main.hidden = false;
-    st.textContent = 'Loading files…';
-    var files = [];
-    async function grab(dir){
-      try {
-        var j = await ghApi('/repos/davedellaquila/' + repo + (dir ? '/contents/' + dir : '/contents'));
-        if (Array.isArray(j)) j.forEach(function(e){
-          if (e.type === 'file' && /\.md$/i.test(e.name)) files.push({name: e.name, path: e.path});
-        });
-      } catch(e){}
-    }
-    await grab('');
-    await grab('docs');
-    files.sort(function(a, b){ return a.path < b.path ? -1 : 1; });
-    if (!files.length) { st.textContent = 'No markdown files found in the repo yet.'; return; }
-    st.textContent = '';
-    files.forEach(function(f){
-      list.appendChild(buildFileSection(f));
-    });
-  }
-  init();
+  });
 })();
 </script>
 

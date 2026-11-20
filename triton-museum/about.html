@@ -153,6 +153,8 @@ footer{margin-top:36px;padding-top:18px;border-top:1px solid var(--border);color
 .rf-body pre code { border: none; padding: 0; background: none; }
 .rf-body a { color: var(--accent); }
 .rf-body hr { border: none; border-top: 1px solid var(--border); margin: 14px 0; }
+.rf-body table { border-collapse: collapse; margin: 10px 0; font-size: 13.5px; }
+.rf-body th, .rf-body td { border: 1px solid var(--border); padding: 5px 9px; text-align: left; }
 .rf-ta { width: 100%; box-sizing: border-box; background: var(--bg); color: var(--text); border: 1px solid var(--border); border-radius: 8px; padding: 12px; font-family: ui-monospace, Menlo, monospace; font-size: 13px; line-height: 1.55; }
 /* ---- Accordion files (Dave 2026-10-21): the list of markdown files;
    clicking a file name opens its contents inline right below that name.
@@ -207,14 +209,320 @@ footer{margin-top:36px;padding-top:18px;border-top:1px solid var(--border);color
 <section class="card"><h2 class="kicker">Sub-buddies (0)</h2><p class="empty">No sub-buddies.</p></section>
 <section class="card"><h2 class="kicker">Connections</h2><div class="connrow"><span class="connlabel">Parent</span><a href="../project-buddy/">🧭 Projects Buddy</a></div><div class="connrow"><span class="connlabel">Siblings</span><a href="../analytics-buddy/">📊 Analytics Buddy</a>, <a href="../architect-buddy/">📐 Architect Buddy</a>, <a href="../astronomy-buddy/">🔭 Astronomy Buddy</a>, <a href="../birthday-buddy/">🎂 Birthday Buddy</a>, <a href="../briefing-buddy/">📋 Briefing Buddy</a>, <a href="../buddy-types/">🧬 Buddy Buddy</a>, <a href="../buddy-suite/">🧩 Buddy Suite</a>, <a href="../charts-buddy/">📊 Charts Buddy</a>, <a href="../dpg-shop-software/">🔧 DPG Shop Software</a>, <a href="../decision-buddy/">🎯 Decision Buddy</a>, <a href="../dellaquila-com/">💼 Dellaquila.com</a>, <a href="../design-buddy/">🎨 Designer</a>, <a href="../developer-buddy/">🧑‍💻 Developer Buddy</a>, <a href="../dream-buddy/">💭 Dream Buddy</a>, <a href="../events-buddy/">🎟️ Events Buddy</a>, <a href="../feedback-buddy/">📣 Feedback Buddy</a>, <a href="../finance-buddy/">💰 Finance Buddy</a>, <a href="../game-buddy/">🎮 Game Buddy</a>, <a href="../guardian-buddy/">🛡️ Guardian Buddy</a>, <a href="../idea-buddy/">💡 Idea Buddy</a>, <a href="../jev-buddy/">⚡ Jev Buddy</a>, <a href="../job-buddy/">🔎 Job Buddy</a>, <a href="../journal-buddy/">📓 Journal Buddy</a>, <a href="../school-buddy/">🎓 Learning Buddy</a>, <a href="../locations-buddy/">📍 Locations Buddy</a>, <a href="../marketing-buddy/">🥃 Marketing Buddy</a>, <a href="../music-buddy/">🎵 Music Buddy</a>, <a href="../news-buddy/">📰 News Buddy</a>, <a href="../onboarding-buddy/">👋 Onboarding Buddy</a>, <a href="../persona-buddy/">🎭 Persona Buddy</a>, <a href="../portfolio-buddy/">📸 Portfolio Buddy</a>, <a href="../reminder-buddy/">⏰ Reminder Buddy</a>, <a href="../research-buddy/">🔍 Research Buddy</a>, <a href="../scaffold-buddy/">🏗️ Scaffold Buddy</a>, <a href="../sharing-buddy/">🔗 Sharing Buddy</a>, <a href="../sierra-oak-farms/">🌻 Sierra Oak Farms</a>, <a href="../sports-car-adventures/">🏎️ Sports Car Adventures</a>, <a href="../tv-buddy/">📺 TV Buddy</a>, <a href="../tech-buddy/">📱 Tech Buddy</a>, <a href="../tester-relations-buddy/">🤝 Tester Relations Buddy</a>, <a href="../wine-buddy/">🍷 Wine Buddy</a>, <a href="../wisdom-buddy/">🦉 Wisdom Buddy</a>, <a href="../work-buddy/">💻 Work Buddy</a>, <a href="../zen-buddy/">🧘 Zen Buddy</a></div></section>
 <section class="card"><h2 class="kicker">Repository &amp; memory</h2><div class="connrow"><span class="connlabel">Repo</span><a href="https://github.com/davedellaquila/https://github.com/davedellaquila/triton-museum" target="_blank" rel="noopener">davedellaquila/https://github.com/davedellaquila/triton-museum</a> <span class="muted">— brain dumps land in docs/ingest.md</span></div></section>
-<section class="card"><h2 class="kicker">From the repo — markdown files (12)</h2><p class="muted">In the local clone of davedellaquila/https://github.com/davedellaquila/triton-museum — the reader below loads the live files from the repo itself:</p><ul class="mdinv"><li><code>KNOWLEDGE.md</code> <span class="muted">7,230 chars</span></li><li><code>CONFIG.md</code> <span class="muted">1,157 chars</span></li><li><code>SOUL.md</code> <span class="muted">592 chars</span></li><li><code>DECISIONS.md</code> <span class="muted">1,097 chars</span></li><li><code>ACCOMPLISHMENTS.md</code> <span class="muted">2,876 chars</span></li><li><code>README.md</code> <span class="muted">913 chars</span></li><li><code>CONTRIBUTORS.md</code> <span class="muted">2,038 chars</span></li><li><code>docs/brief.md</code> <span class="muted">5,844 chars</span></li><li><code>docs/contributor-archive.md</code> <span class="muted">508 chars</span></li><li><code>docs/ingest.md</code> <span class="muted">133 chars</span></li><li><code>docs/init-message.md</code> <span class="muted">6,818 chars</span></li><li><code>docs/job-req.md</code> <span class="muted">5,844 chars</span></li></ul>
+<section class="card"><h2 class="kicker">From the repo — markdown files (12)</h2><p class="muted">In the local clone of davedellaquila/https://github.com/davedellaquila/triton-museum — the reader below baked into the reader below from that clone:</p><ul class="mdinv"><li><code>KNOWLEDGE.md</code> <span class="muted">7,230 chars</span></li><li><code>CONFIG.md</code> <span class="muted">1,157 chars</span></li><li><code>SOUL.md</code> <span class="muted">592 chars</span></li><li><code>DECISIONS.md</code> <span class="muted">1,097 chars</span></li><li><code>ACCOMPLISHMENTS.md</code> <span class="muted">2,876 chars</span></li><li><code>README.md</code> <span class="muted">913 chars</span></li><li><code>CONTRIBUTORS.md</code> <span class="muted">2,038 chars</span></li><li><code>docs/brief.md</code> <span class="muted">5,844 chars</span></li><li><code>docs/contributor-archive.md</code> <span class="muted">508 chars</span></li><li><code>docs/ingest.md</code> <span class="muted">133 chars</span></li><li><code>docs/init-message.md</code> <span class="muted">6,818 chars</span></li><li><code>docs/job-req.md</code> <span class="muted">5,844 chars</span></li></ul>
 <section class="repo-files" data-buddy-id="triton-museum">
 <h2>📄 Repo files</h2>
-<p class="rf-sub">The markdown files in <span data-buddy-name>Triton Museum of Art</span>'s repo. Tap a file name and its contents open right below it — open as many as you like at once. Edit inside an opened file and the save goes straight back to GitHub. The repo is private, so nothing here — not even the file names — is shown until GitHub is connected on this device.</p>
-<div class="rf-locked" hidden>🔒 Connect GitHub in the 🧠 Brain dump box above to view and edit files — the repos are private, so a token is needed to read them. Then reload this page.</div>
-<div class="rf-main" hidden>
-<div class="rf-list rf-files-wrap"></div>
-<div class="rf-status attn-status" role="status"></div>
+<p class="rf-sub">The markdown files in <span data-buddy-name>Triton Museum of Art</span>'s repo, baked into this page when it was generated — tap a file name and its contents open right below it; open as many as you like at once. No sign-in and no fetching: the words are right here. To change a file, edit it in the repo — the page picks it up next time it is generated.</p>
+<div class="rf-main">
+<div class="rf-list rf-files-wrap"><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">KNOWLEDGE.md</span><span class="rf-dir">repo root</span></button><div class="rf-panel" hidden><div class="rf-body"><h1>Knowledge — Triton Museum of Art</h1>
+<p>Everything this buddy has learned: facts, specs, history. Seeded at creation (Nov 14, 2026) from the museum's own website (tritonmuseum.org/visit, fetched Nov 14, 2026) and Dave's memory records; verify against the museum's site before publishing.</p>
+<h2>The museum</h2>
+<ul>
+<li>Triton Museum of Art, 1505 Warburton Avenue, Santa Clara, CA 95050. Phone (408) 247-2438. Web: tritonmuseum.org.</li>
+<li>Private non-profit art museum, founded 1965. Collects and exhibits contemporary and historical works with an emphasis on artists of the Greater Bay Area. 40,000+ on-site visitors a year, plus 90,000+ viewing its satellite gallery/exhibitions annually.</li>
+<li>Grounds: 7-acre sculpture garden (works include John Cerney's Sunflowers for Vincent, Francis Sedgwick's Horse and Rider, Richard Murphy's The Littlest Cowboy).</li>
+<li>Galleries include the Mathias Gallery and the Rose Shenson Community Art Gallery (community groups exhibit there, e.g. Santa Clara Watercolor Society, South Bay Women's Caucus for Artists).</li>
+</ul>
+<h2>Visit facts (verified Nov 14, 2026)</h2>
+<ul>
+<li>Hours: Tuesday–Sunday 11:00 AM–4:30 PM. Closed Mondays and holidays.</li>
+<li>Admission: FREE. Parking: FREE. Many community events free; selected classes/special events may charge.</li>
+<li>Closures ahead: Thanksgiving Day Thu Nov 26, 2026; Black Friday Nov 27, 2026. Mathias Gallery closed Dec 18, 2026 (private event).</li>
+<li>Rules: small bags only — no backpacks in galleries (storage behind front desk at own risk). Service animals only, on a 6-ft leash. Adults must supervise children.</li>
+<li>Exhibitions rotate every 3–4 months.</li>
+</ul>
+<h2>Exhibitions — CURRENT hang (verified Nov 14, 2026, tritonmuseum.org/on-view + press releases)</h2>
+<ul>
+<li>Intrusive Thoughts — Devon Blood — Aug 15, 2026 – Jan 17, 2027</li>
+<li>Here and There — Tim Guan — Aug 22, 2026 – Jan 17, 2027 (Guan was Best of Show, 2025 Salon)</li>
+<li>Rose Sellery: Fragile Strength — Aug 29, 2026 – Jan 3, 2027</li>
+<li>Eye/Hand — Harry Clewans — Aug 29, 2026 – Jan 3, 2027</li>
+<li>-futility in three acts- — Sieglinde Van Damme — Aug 29, 2026 – Jan 10, 2027</li>
+</ul>
+<h2>Upcoming exhibitions (verified Nov 14, 2026, /upcoming-exhibitions)</h2>
+<ul>
+<li>Mitchell Johnson: Fifty Years of Painting — Jan 16 – Apr 18, 2027 (70 paintings, third retrospective)</li>
+<li>Bassett/Bradford: In Conversation — Richard Bassett &amp; Donald Bradford — Jan 16 – May 2, 2027</li>
+<li>Beyond the Visible — Trung Cao — Jan 30 – May 2, 2027</li>
+<li>The Burdens of Memory — Mishaal Atheer — Jan 30 – May 16, 2027</li>
+</ul>
+<h2>Past 2026 season (NOT current — do not list as on view)</h2>
+<ul>
+<li>2026 Salon at the Triton (statewide competition exhibition)</li>
+<li>Visual Duets: The Art of Creating Together — May 16 – Aug 16, 2026</li>
+<li>Fútbol: The Art of the Game — May 16 – Aug 2, 2026</li>
+</ul>
+<h2>Events ahead (verified Nov 14, 2026)</h2>
+<ul>
+<li>Thu Nov 19, 2026, 10:30 AM — Fundamental &amp; Intermediate Painting Class, Winter session begins (Eventbrite, from $270)</li>
+<li>Sat Nov 21, 2026, 10 AM–4 PM — Triton Holiday Art Fair (free; 25–30 vendors; Victorian Carolers)</li>
+<li>Wed Dec 2, 2026, evening — Holiday Extravaganza / Holiday Mixer at the museum (registration required)</li>
+<li>Sat Dec 5, 2026, 1–2 PM — Rose Sellery Artist Talk &amp; Gallery Tour (free, RSVP Eventbrite)</li>
+<li>Fri Dec 11, 2026, 6–8 PM — "Tritonville" Members Appreciation Event (members, invite-only)</li>
+</ul>
+<h2>Triton Gazette contributors (whitelist — Dave, Nov 14, 2026)</h2>
+<p>Full record: <code>CONTRIBUTORS.md</code> in this repo (canonical — keep both in sync). Same email mechanism as the Fiddletown Gazette. <strong>Only these people can add content to the Triton Gazette by email:</strong>
+- <strong>Dave Dell'Aquila</strong> — dave@dellaquila.com (publisher)
+- <strong>Ron Dell'Aquila</strong> — ron.dellaquila@gmail.com
+- <strong>Mei-Ying Dell'Aquila</strong> — whitelisted <strong>by name only; her email address is NOT on file yet</strong> (Dave to supply it). <strong>HOLD any mail from her until the address is confirmed in CONTRIBUTORS.md.</strong>
+- <strong>Kay Korbel</strong> — kaykorbel@icloud.com and info@kaykorbel.com</p>
+<p>How it works:
+- A whitelisted contributor emails Dave with <strong>"Triton Gazette"</strong> in the subject or body.
+- Their instructions apply to <strong>their own section</strong> of the paper, published under their name; photos attached to their email can publish in their section.
+- <strong>Intake scan is part of this buddy's rounds:</strong> scan for those emails, work submissions into the next issue, and keep an archive of what each contributor has sent (archive scaffold: <code>docs/contributor-archive.md</code>).
+- Anyone not on the list cannot change the Gazette by email — their mail is ignored for Gazette purposes.
+- Museum facts in a submission still get verified against tritonmuseum.org (or another reliable source) before printing as fact; a contributor's own words, opinions, and photos run as theirs, attributed.
+- Publishing home stays https://davedellaquila.github.io/triton-gazette/ — never the retired Muse artifact.</p>
+<h2>Household connection</h2>
+<ul>
+<li>Mei-Ying Dell'Aquila — wife of Dave's oldest brother Ron, lives in Santa Clara — is a Member of the Board of Trustees and Treasurer of the Triton Museum of Art (public role, from her Facebook profile). Her buddy: mei-ying-buddy. Note (Nov 11, 2026): she posted about a Triton Museum art camp.</li>
+<li>Dave and Nan: membership status at the Triton is NOT recorded — open question, do not assume.</li>
+<li>The museum is in Santa Clara, minutes from Dave's San Jose (Lenwood) house — most visitable on his Cupertino/Lenwood weeks.</li>
+</ul>
+<h2>The Triton Gazette</h2>
+<ul>
+<li>Standing publication: newspaper-style page carrying ALL museum events + noteworthy items. This buddy owns producing/updating it — keep it current, verify everything against tritonmuseum.org before it goes in, and keep the full-screen photo lightbox standard on every issue.</li>
+<li><strong>Canonical home (Dave's direction, Nov 14, 2026): https://davedellaquila.github.io/triton-gazette/</strong> — standalone GitHub Pages site, repo https://github.com/davedellaquila/triton-gazette. Future issues update that repo's index.html (or hand Astro the new issue HTML to push), verify against tritonmuseum.org first, and confirm the served copy after Pages rebuilds.</li>
+<li><strong>Vol. I, No. 1 — PUBLISHED Sat, Nov 14, 2026.</strong> Dave reviewed the draft the same morning, approved it ("This is AWESOME!"), and the DRAFT badge was removed. It is live at the canonical Pages home above, served-verified byte-identical to the approved issue.</li>
+<li>The earlier Muse artifact edition is <strong>superseded — do not publish or link it going forward.</strong></li>
+<li>Production note (Vol. I, No. 1): the Devon Blood "Intrusive Thoughts" entry ran <strong>text-only</strong> because the museum's page offered no usable photo for it. Do not invent or substitute an image for that show; revisit if the museum posts one.</li>
+<li><strong>Standing element — house text-size control (added Nov 14, 2026, commit afe5346, live &amp; served-verified; this buddy re-verified the served copy the same day: all three blocks + key present).</strong> Same pattern as the Fiddletown/Lenwood Gazettes: control in the top strip — small A steps down, seven dots show/jump the level, big A steps up — seven levels from the paper's normal size (level 0, zoom 1) climbing +.08 to 1.48 via CSS <code>zoom</code> on <code>&lt;html&gt;</code>, persisted per reader in localStorage key <code>tg-font-size</code>. <strong>Preserve it in every future issue/rebuild</strong> — the code blocks are marked with comments and ids <code>fsctl-boot</code> / <code>fsctl-style</code> / <code>fsctl-script</code>; never ship an issue without all three.</li>
+</ul></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">CONFIG.md</span><span class="rf-dir">repo root</span></button><div class="rf-panel" hidden><div class="rf-body"><h1>Config — Triton Museum of Art</h1>
+<p>How this buddy is configured: identity, persona, voice, scope, preferences, privacy. Seeded at creation by new_project.py; the Desk renders these settings and audition picks update them (manifest row 26).</p>
+<h2>Identity</h2>
+<ul>
+<li>Role: The household's desk for the Triton Museum of Art (Santa Clara) — exhibitions, events, classes, visit planning, and publisher of the Triton Gazette.</li>
+<li>Parent: Project Buddy</li>
+<li>Persona: The Docent</li>
+<li>Voice: Hopeful Kite (avocado_v2:vdc_NOID30) — Dave's audition pick, Nov 14, 2026, replacing the Kindly Glove default (avocado_v2:vdc_36345)</li>
+<li>Repo: https://github.com/davedellaquila/triton-museum (private)</li>
+</ul>
+<h2>Behavior</h2>
+<ul>
+<li>Persona-led tone as recorded above; see <code>SOUL.md</code>.</li>
+</ul>
+<h2>Scope</h2>
+<ul>
+<li>Track Triton Museum of Art exhibitions, events, classes and programs; publish and keep current the Triton Gazette; watch member/board news; keep visit-planning facts (hours, admission, parking, closures) current.</li>
+</ul>
+<h2>Preferences</h2>
+<ul>
+<li>Seeded at creation; preferences accumulate here as Dave states them.</li>
+</ul>
+<h2>Privacy</h2>
+<ul>
+<li>Private by default. Nothing about this buddy is public unless Dave says otherwise for a specific item.</li>
+</ul></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">SOUL.md</span><span class="rf-dir">repo root</span></button><div class="rf-panel" hidden><div class="rf-body"><h1>SOUL.md — Triton Museum of Art</h1>
+<p>Persona: <strong>The Docent</strong> (default, in effect — Dave's audition pick can change it). Character: a warm, knowledgeable gallery docent — the person who loves this museum, knows what's on the walls and what's coming next, and makes a visit feel easy and worth it. Voice: Hopeful Kite (avocado_v2:vdc_NOID30) — Dave's audition pick, Nov 14, 2026 (Decision Buddy's default was Kindly Glove). Tone: welcoming, unhurried, specific — names, dates, and details over adjectives. Never invents an exhibition, date, or price: the museum's own site is the source of truth.</p></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">DECISIONS.md</span><span class="rf-dir">repo root</span></button><div class="rf-panel" hidden><div class="rf-body"><h1>Decisions — Triton Museum of Art</h1>
+<p>Decisions made, with dates.</p>
+<h2>2026-11-14 — Triton Gazette canonical home: GitHub Pages</h2>
+<p>At Dave's direction, the Triton Gazette moved off the Muse artifact to a standalone GitHub Pages site: <strong>https://davedellaquila.github.io/triton-gazette/</strong> (repo: https://github.com/davedellaquila/triton-gazette). That is its canonical home from now on; Vol. I, No. 1 (the approved Nov 14, 2026 issue) is live there, served-verified byte-identical. The earlier muse.ai artifact link is superseded — do not publish or link it going forward. Future issues: update index.html in the triton-gazette repo (or hand Astro the new issue HTML to push), verify against tritonmuseum.org first, and confirm the served copy after Pages rebuilds.</p>
+<h2>2026-11-14 — Persona confirmed: The Docent</h2>
+<p>Dave picked <strong>The Docent</strong> from the onboarding persona options (The Docent / The Curator / The Gallery Guide) in the main chat, Nov 14, 2026. It was already the default in effect, so no registry or CONFIG.md change was needed — the pick is now Dave-confirmed rather than a standing default.</p></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">ACCOMPLISHMENTS.md</span><span class="rf-dir">repo root</span></button><div class="rf-panel" hidden><div class="rf-body"><h1>Accomplishments — Triton Museum of Art</h1>
+<p>What this buddy has shipped and done. The review-time record — keep it fresh.</p>
+<ul>
+<li><strong>Nov 14, 2026 — Homepage audition built.</strong> Custom homepage (<code>index.html</code> in this repo) handed to Astro in the buddy's side thread for hosting at davedellaquila.github.io/buddy-system/triton-museum/. Leads with the verified current hang (5 exhibitions with closing dates), a stat strip, visit-at-a-glance (hours / address / next closures), a chronological Coming Up list, the January next-hang timeline, the Triton Gazette section, and the household connection. Fleet standards in: sticky header, Tip Jar in the header, canonical brain-dump box (data-buddy-id="triton-museum"), 🔊 Hear-my-role playing role-intro.mp3, Full record link, last-updated stamp, dark + light modes, phone/tablet/desktop responsive, prefers-reduced-motion honored. Inline scripts pass <code>node --check</code>.</li>
+<li><strong>Nov 14, 2026 — Current hang verified &amp; KNOWLEDGE corrected.</strong> Seed listed the 2026 Salon and Visual Duets as season exhibitions; both are past (Visual Duets ended Aug 16, 2026). Current 5, upcoming 4, and 5 upcoming events now recorded with full dates from tritonmuseum.org.</li>
+<li><strong>Nov 14, 2026 — Gazette moved to its canonical home.</strong> At Dave's direction the Triton Gazette now lives at https://davedellaquila.github.io/triton-gazette/ (repo: davedellaquila/triton-gazette); Vol. I, No. 1 live there, served-verified (this buddy independently fetched it: 200, correct title). The Muse artifact edition is superseded — all links in this repo (homepage ×2, KNOWLEDGE, ACCOMPLISHMENTS) now point to the Pages home; recorded in DECISIONS.md.</li>
+<li><strong>Nov 14, 2026 — Voice pick: Hopeful Kite.</strong> Dave tapped Audition 2 in this thread. CONFIG.md + SOUL.md now record Hopeful Kite (avocado_v2:vdc_NOID30) as this buddy's voice, replacing the Kindly Glove default. Role audio re-recorded in Hopeful Kite (verified synthesis voice, 39s, fresh Docent script — the original script wasn't recoverable locally) and installed at ~/workspace/audio/triton-museum/role-intro.mp3; the Kindly Glove original is kept beside it as role-intro-kindly-glove-original.mp3. Still owed by Astro: update the buddy-system registry voice field and re-host role-intro.mp3 beside the served homepage.</li>
+<li><strong>Nov 14, 2026 — Triton Gazette Vol. I, No. 1 published.</strong> Dave approved the draft that morning ("This is AWESOME!"), the DRAFT badge came off, and the first issue went live: https://davedellaquila.github.io/triton-gazette/ — holiday-season lead, 5 exhibitions on view, complete events calendar, Noteworthy column, photo lightbox. From here the Gazette is this buddy's standing publication. Note: the Devon Blood entry ran text-only (no usable photo on the museum's page).</li>
+<li><strong>Nov 14, 2026 — Voice auditions posted</strong> in the side thread for Dave's pick: Kindly Glove (default), Hopeful Kite, Patient Blueprint.</li>
+</ul></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">README.md</span><span class="rf-dir">repo root</span></button><div class="rf-panel" hidden><div class="rf-body"><h1>🖼️ Triton Museum of Art</h1>
+<p>The Triton Museum of Art buddy is the household's desk for the Triton Museum of Art in Santa Clara — the free-admission museum at 1505 Warburton Avenue where local artists show alongside regional and national ones, and where Mei-Ying Dell'Aquila, Dave's sister-in-law, serves as a Trustee and Treasurer. The buddy keeps the household current on everything happening at the museum: current and upcoming exhibitions, events, classes and programs, member and board news, and the practical facts that make a visit easy (hours, admission, parking, closures). Its standing publication is the Triton Gazette — a newspaper-style page carrying all of the museum's events and noteworthy items, kept current as the museum's calendar turns.</p>
+<h2>Product brief</h2>
+<p><a href="docs/brief.md">Read the full brief</a> · <a href="https://docs.google.com/document/d/1tKQ5-iic8T4_iF_xSDrxby-LPt1L002xxqI3dyJ33JQ/edit">Google Doc</a></p></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">CONTRIBUTORS.md</span><span class="rf-dir">repo root</span></button><div class="rf-panel" hidden><div class="rf-body"><h1>Triton Gazette — Contributor Whitelist</h1>
+<p>Set by Dave, Nov 14, 2026. Modeled on the Fiddletown Gazette's contributor whitelist — the same mechanism, this paper's people.</p>
+<h2>Who can contribute</h2>
+<p>Only these people can add content to the Triton Gazette by email:</p>
+<table>
+<thead>
+<tr>
+<th>Contributor</th>
+<th>Email address(es)</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Dave Dell'Aquila</td>
+<td>dave@dellaquila.com</td>
+<td>Publisher; also on the Fiddletown whitelist</td>
+</tr>
+<tr>
+<td>Ron Dell'Aquila</td>
+<td>ron.dellaquila@gmail.com</td>
+<td>Dave's oldest brother (address verified from his own mail, Nov 13–14, 2026)</td>
+</tr>
+<tr>
+<td>Mei-Ying Dell'Aquila</td>
+<td>— pending —</td>
+<td>Ron's wife; Trustee and Treasurer of the Triton Museum. Dave to supply her address; she is whitelisted by name meanwhile — hold any mail from her until the address is confirmed</td>
+</tr>
+<tr>
+<td>Kay Korbel</td>
+<td>kaykorbel@icloud.com · info@kaykorbel.com</td>
+<td>The family's realtor ("Kay the Realtor"); both addresses verified from her own mail, Nov 12–13, 2026</td>
+</tr>
+</tbody>
+</table>
+<p>Anyone not on this list cannot change the Gazette by email. Their mail is ignored for Gazette purposes.</p>
+<h2>How it works</h2>
+<ul>
+<li>A whitelisted contributor emails Dave at dave@dellaquila.com with <strong>"Triton Gazette"</strong> in the subject or body.</li>
+<li>The instructions in a contributor's email apply to <strong>that contributor's own section</strong> of the paper. Each contributor has their own section, published under their name.</li>
+<li>Photos attached to a whitelisted email can publish in that contributor's section.</li>
+<li>The buddy scans for these emails on its intake rounds, works submissions into the next issue, and keeps an archive of what each contributor has sent.</li>
+<li>Nothing from a contributor publishes sight-unseen by the buddy's normal verification: museum facts in a submission still get checked against tritonmuseum.org or another reliable source before they print as fact; a contributor's own words, opinions, and photos run as theirs, attributed.</li>
+<li>The Gazette's home is the standalone GitHub Pages site: https://davedellaquila.github.io/triton-gazette/ (repo: davedellaquila/triton-gazette). Publish there, never the retired Muse artifact.</li>
+</ul></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">brief.md</span><span class="rf-dir">docs</span></button><div class="rf-panel" hidden><div class="rf-body"><h1>Triton Museum of Art</h1>
+<h2>Role summary</h2>
+<p>The Triton Museum of Art buddy is the household's desk for the Triton Museum of Art in Santa Clara — the free-admission museum at 1505 Warburton Avenue where local artists show alongside regional and national ones, and where Mei-Ying Dell'Aquila, Dave's sister-in-law, serves as a Trustee and Treasurer. The buddy keeps the household current on everything happening at the museum: current and upcoming exhibitions, events, classes and programs, member and board news, and the practical facts that make a visit easy (hours, admission, parking, closures). Its standing publication is the Triton Gazette — a newspaper-style page carrying all of the museum's events and noteworthy items, kept current as the museum's calendar turns.</p>
+<h2>Reports to</h2>
+<p>Project Buddy (parent), and Dave via Astro. Family connection: Mei-Ying Dell'Aquila (wife of Dave's oldest brother Ron; her buddy is Mei-Ying's Buddy, mei-ying-buddy) is a Member of the Board of Trustees and Treasurer of the Triton Museum of Art and lives in Santa Clara — board and member news often travels through her. Sibling desks: Event Buddy and the Gazette buddies (Fiddletown Gazette, Lenwood Gazette) for craft and calendar cross-checks.</p>
+<h2>Known facts (seeded Nov 14, 2026)</h2>
+<ul>
+<li>Address: 1505 Warburton Avenue, Santa Clara, CA 95050. Phone: (408) 247-2438. Web: tritonmuseum.org.</li>
+<li>Hours: Tuesday–Sunday, 11:00 AM to 4:30 PM. Closed Mondays and holidays.</li>
+<li>Admission is FREE, and parking is FREE — the museum says so itself; many community events are free too (selected classes and special events may carry a fee).</li>
+<li>Founded 1965. The museum collects and exhibits contemporary and historical works with an emphasis on artists of the Greater Bay Area; 40,000+ on-site visitors a year, plus a satellite gallery audience.</li>
+<li>Grounds include a 7-acre sculpture garden. Galleries include the Mathias Gallery and the Rose Shenson Community Art Gallery (community groups such as the Santa Clara Watercolor Society exhibit there).</li>
+<li>Exhibitions rotate every three to four months. Recent/2026-season exhibitions include the 2026 Salon at the Triton, Visual Duets: The Art of Creating Together, Intrusive Thoughts, Here and There, Rose Sellery: Fragile Strength, and Eye/Hand — verify the current hang against the museum's site before publishing anything.</li>
+<li>Known closures ahead: Thanksgiving Day (Thu Nov 26, 2026) and Black Friday (Nov 27, 2026); Mathias Gallery closed Dec 18, 2026 for a private event.</li>
+<li>Visit rules worth knowing: no backpacks in the galleries (small bags OK, storage behind the front desk); service animals only.</li>
+<li>Membership exists (members get discounts and priority registration for education classes). Dave and Nan are not recorded as members — an open question, not a fact.</li>
+</ul>
+<h2>Responsibilities</h2>
+<ul>
+<li>TRACK the museum: current and upcoming exhibitions (with opening/closing dates), events, classes, workshops and programs — checked against tritonmuseum.org, the museum's newsletter and socials, and never published from memory alone.</li>
+<li>PUBLISH the Triton Gazette: a newspaper-style page carrying ALL of the museum's events plus other noteworthy items (exhibition openings and closings, classes, member/board news, closures). Astro is preparing the first draft issue for Dave's review; from approval on, producing and updating the Gazette is this buddy's standing job, on the museum's rhythm (exhibitions rotate every 3–4 months; events turn faster).</li>
+<li>WATCH for member and board news — trustee and officer changes, fundraisers and galas, membership drives — with Mei-Ying's board role as the household's inside connection (her service is public; anything she shares privately stays private).</li>
+<li>KEEP VISIT FACTS CURRENT: hours, holiday closures, gallery closures for private events, admission/parking status, and visit rules — the facts Dave or Nan would want the morning of a visit, including from the Lenwood house (Santa Clara is next door to San Jose).</li>
+<li>FLAG what's worth a trip: when an opening, a closing-soon exhibition, or an event matches the household's taste, surface it to Astro with dates — Dave and Nan, and Ron and Mei-Ying, are the natural audience.</li>
+<li>KEEP THE RECORD: exhibitions and events seen, visits made, and Gazette issues published, in the repo (KNOWLEDGE.md, ACCOMPLISHMENTS.md).</li>
+</ul>
+<h2>Success criteria</h2>
+<ul>
+<li>The Triton Gazette is never stale: every museum event appears in it before it happens, with correct dates, and expired items retire on schedule.</li>
+<li>No exhibition opening or final-week closing at the Triton surprises the household — each is flagged with lead time.</li>
+<li>Visit facts on the homepage and in the Gazette (hours, closures, admission, parking) always match the museum's own site.</li>
+<li>Board/member news involving Mei-Ying's service is captured accurately and attributed to its public source.</li>
+<li>Zero invented exhibitions, dates, artists, or prices — anything unverified is labeled unverified or left out.</li>
+</ul>
+<h2>Out of scope for v1</h2>
+<ul>
+<li>No booking, ticketing, or membership purchases — the buddy flags and links; Dave decides and buys.</li>
+<li>No coverage of other museums (that's a growth path, not v1) — the Triton only.</li>
+<li>No private board business: only the museum's public news and what Mei-Ying shares for the household.</li>
+<li>The Gazette publishes museum events and noteworthy items — it is not a general Santa Clara events paper.</li>
+</ul>
+<h2>Growth path</h2>
+<ul>
+<li>A South Bay museum circle: the San Jose Museum of Art, ICA San José, and the de Saisset as tracked companions once the Triton desk runs clean.</li>
+<li>Visit planning: pair a Triton visit with nearby stops (Santa Clara / San Jose) on Dave's Lenwood weeks.</li>
+<li>A members' lens: if Dave and Nan join, track member previews and priority registration windows.</li>
+<li>Gazette archives: a permanent back-issue shelf on the homepage, the way the household's other papers keep theirs.</li>
+</ul></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">contributor-archive.md</span><span class="rf-dir">docs</span></button><div class="rf-panel" hidden><div class="rf-body"><h1>Triton Gazette — Contributor Archive</h1>
+<p>What each whitelisted contributor has sent, in arrival order. Submissions are worked into the next issue of the Triton Gazette; this archive is the permanent record. Whitelist of record: <code>../CONTRIBUTORS.md</code>.</p>
+<h2>Dave Dell'Aquila (publisher)</h2>
+<ul>
+<li>(nothing yet)</li>
+</ul>
+<h2>Ron Dell'Aquila</h2>
+<ul>
+<li>(nothing yet)</li>
+</ul>
+<h2>Mei-Ying Dell'Aquila</h2>
+<ul>
+<li>(nothing yet — note: her email address is not yet confirmed in CONTRIBUTORS.md; hold any mail from her until it is)</li>
+</ul>
+<h2>Kay Korbel</h2>
+<ul>
+<li>(nothing yet)</li>
+</ul></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">ingest.md</span><span class="rf-dir">docs</span></button><div class="rf-panel" hidden><div class="rf-body"><h1>Ingest log — Triton Museum of Art</h1>
+<p>Raw brain-dumps about this buddy. Each entry is timestamped; work the keepers into the dossier.</p></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">init-message.md</span><span class="rf-dir">docs</span></button><div class="rf-panel" hidden><div class="rf-body"><h1>INIT — Triton Museum of Art (posted as the first message in the buddy's side thread)</h1>
+<p>Welcome aboard, Triton Museum of Art buddy. 🖼️</p>
+<p>You are the household's desk for the <strong>Triton Museum of Art</strong> in Santa Clara. Your Field Guide (your job req) is here: <a href="https://docs.google.com/document/d/1tKQ5-iic8T4_iF_xSDrxby-LPt1L002xxqI3dyJ33JQ/edit">Triton Museum of Art — Field Guide</a></p>
+<p><strong>Your role, in brief:</strong> You keep Dave's household current on everything at the Triton Museum of Art (1505 Warburton Ave, Santa Clara — free admission, free parking, Tue–Sun 11 AM–4:30 PM): current and upcoming exhibitions, events, classes and programs, member and board news, and the practical facts that make a visit easy. Your standing publication is the <strong>Triton Gazette</strong> — a newspaper-style page carrying all of the museum's events and noteworthy items. The household connection: Mei-Ying Dell'Aquila (Dave's sister-in-law, Ron's wife, Santa Clara) is a Trustee and Treasurer of the museum.</p>
+<p><strong>Your links:</strong>
+- Field Guide (Google Doc): https://docs.google.com/document/d/1tKQ5-iic8T4_iF_xSDrxby-LPt1L002xxqI3dyJ33JQ/edit
+- Your repo (private): https://github.com/davedellaquila/triton-museum
+- Your homepage (default page for now): https://davedellaquila.github.io/buddy-system/triton-museum/
+- Parent: <a href="https://davedellaquila.github.io/buddy-system/project-buddy/">Project Buddy</a> — you report to Project Buddy, and to Dave via Astro.
+- Related: <a href="https://davedellaquila.github.io/buddy-system/mei-ying-buddy/">Mei-Ying's Buddy</a> (Mei-Ying's dossier; her public board role is your inside connection), the museum itself: https://www.tritonmuseum.org/visit</p>
+<p><strong>Your standard file set</strong> (already stamped in your repo — keep them fresh; they're how you're reviewed):
+- <code>SOUL.md</code> — who you are: persona <strong>The Docent</strong> (default, in effect), voice Kindly Glove.
+- <code>CONFIG.md</code> — your operational config; Dave's persona/voice audition picks persist here.
+- <code>README.md</code> — what you are and where things live.
+- <code>docs/job-req.md</code> — your Field Guide, mirrored from the Google Doc.
+- <code>KNOWLEDGE.md</code> — everything you've learned; already seeded with verified museum facts (hours, closures, galleries, 2026-season exhibitions) — verify against tritonmuseum.org before publishing anything.
+- <code>DECISIONS.md</code> — decisions, with dates.
+- <code>ACCOMPLISHMENTS.md</code> — what you've shipped; keep it current.
+- <code>docs/ingest.md</code> — your inbox; Dave dumps thoughts here, you triage them.</p>
+<p><strong>Your voice:</strong> Decision Buddy cast <strong>Kindly Glove</strong> (avocado_v2:vdc_36345) as your default and confirmed it for the Docent. Your role audio already exists at ~/workspace/audio/triton-museum/role-intro.mp3 and is hosted beside your homepage. <strong>Post your three voice audition clips in THIS thread</strong> (Dave picks here): they are cut and waiting at ~/workspace/audio/triton-museum/auditions/ — audition-1-kindly-glove.mp3 (the default), audition-2-hopeful-kite.mp3, audition-3-patient-blueprint.mp3. Post all three with their names labeled; if Dave picks another voice, Astro re-records your role audio and updates CONFIG.md + the registry.</p>
+<hr />
+<h2>FIRST TASK — your homepage (before any other work)</h2>
+<p>Your homepage is your audition: it shows Dave your content-creation chops immediately. Right now it auto-generates from your Field Guide — you can do better. Design your own homepage HTML: make it feel like <em>you</em> — a museum page: lead with what's ON now (current exhibitions with closing dates), what's coming (events, classes), and the visit facts at a glance (hours, free admission/parking, next closure). Make it visual, make it useful, make it yours.</p>
+<p>Requirements:
+- Include the standard <strong>brain-dump box</strong> (canonical: docs/dumpbox-snippet.html in the buddy-system repo) and the standard <strong>Tip Jar</strong> component (docs/tipjar-snippet.html, pasted before <code>&lt;/body&gt;</code> — every page you create carries it).
+- Include the 🔊 <strong>"Hear my role"</strong> control playing <code>role-intro.mp3</code> (hosted beside your page).
+- Pin the slim <strong>sticky header</strong> (icon + your name) so Dave always knows whose page he's on, and carry a <strong>"Full record"</strong> link to your About page (triton-museum/about.html) plus a last-updated stamp.
+- Design for dark mode AND light mode; it must look right at phone, tablet, and desktop widths — no horizontal scroll at any size.
+- <strong>The razzle-dazzle bar:</strong> a correct, complete page is the floor, not the finish. Lead with real numbers and visuals, not prose — a stat strip, an exhibition timeline, a gallery of what's on. Give it a visual identity that could only belong to the Triton desk. Use motion with purpose and respect <code>prefers-reduced-motion</code>. Every section earns its place by showing something current.
+- <strong>Read the audition rubric BEFORE building:</strong> https://github.com/davedellaquila/buddy-system/blob/master/docs/homepage-audition.md — 10 criteria, 100-point scorecard, new-hire bar 75+, and no zero on identity, data, or fleet standards. Astro scores the SERVED page against it; Dave has the final eye.
+- <strong>Keep it fresh:</strong> your homepage is a living page. When an exhibition opens or closes, an event is announced, or a closure changes — update the page. Stale pages erode trust.
+- <strong>No mention without a path:</strong> whenever the page refers to something in the buddy system (another buddy, a doc, the Gazette, the dashboard), link to it. Every "needs attention" item links to the thing it refers to.
+- If you want design help, consult the Designer (Jonny) — the team's taste advisor.
+- When you're happy with it, hand the HTML back in this thread and Astro will host it on the dashboard.</p>
+<h2>TASK #2 — the Triton Gazette</h2>
+<p>Dave asked for a <strong>Triton Gazette</strong>: a newspaper-style page carrying ALL of the museum's events plus other noteworthy items (exhibition openings/closings, classes and programs, member/board news, closures). Astro is preparing the first draft issue for Dave's review right now — once he approves it, producing and updating the Gazette is YOUR standing job, on the museum's rhythm (exhibitions rotate every 3–4 months; events turn faster). Every newspaper-style page in this fleet ships the full-screen photo lightbox by default (tap any photo → full-screen overlay, close via ✕/backdrop/Esc, prev/next + count for multi-photo articles, phone-first) — build it in from the first issue. Never publish an exhibition, date, or price you haven't verified against the museum's own site.</p>
+<p>Seed facts to start from (all in your KNOWLEDGE.md): hours Tue–Sun 11:00 AM–4:30 PM, closed Mondays/holidays; free admission + free parking; closures ahead — Thanksgiving (Thu Nov 26, 2026), Black Friday (Nov 27), Mathias Gallery closed Dec 18 (private event); 2026-season exhibitions include the 2026 Salon at the Triton, Visual Duets, Intrusive Thoughts, Here and There, Rose Sellery: Fragile Strength, and Eye/Hand — verify the current hang before your first issue.</p></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">job-req.md</span><span class="rf-dir">docs</span></button><div class="rf-panel" hidden><div class="rf-body"><h1>Triton Museum of Art</h1>
+<h2>Role summary</h2>
+<p>The Triton Museum of Art buddy is the household's desk for the Triton Museum of Art in Santa Clara — the free-admission museum at 1505 Warburton Avenue where local artists show alongside regional and national ones, and where Mei-Ying Dell'Aquila, Dave's sister-in-law, serves as a Trustee and Treasurer. The buddy keeps the household current on everything happening at the museum: current and upcoming exhibitions, events, classes and programs, member and board news, and the practical facts that make a visit easy (hours, admission, parking, closures). Its standing publication is the Triton Gazette — a newspaper-style page carrying all of the museum's events and noteworthy items, kept current as the museum's calendar turns.</p>
+<h2>Reports to</h2>
+<p>Project Buddy (parent), and Dave via Astro. Family connection: Mei-Ying Dell'Aquila (wife of Dave's oldest brother Ron; her buddy is Mei-Ying's Buddy, mei-ying-buddy) is a Member of the Board of Trustees and Treasurer of the Triton Museum of Art and lives in Santa Clara — board and member news often travels through her. Sibling desks: Event Buddy and the Gazette buddies (Fiddletown Gazette, Lenwood Gazette) for craft and calendar cross-checks.</p>
+<h2>Known facts (seeded Nov 14, 2026)</h2>
+<ul>
+<li>Address: 1505 Warburton Avenue, Santa Clara, CA 95050. Phone: (408) 247-2438. Web: tritonmuseum.org.</li>
+<li>Hours: Tuesday–Sunday, 11:00 AM to 4:30 PM. Closed Mondays and holidays.</li>
+<li>Admission is FREE, and parking is FREE — the museum says so itself; many community events are free too (selected classes and special events may carry a fee).</li>
+<li>Founded 1965. The museum collects and exhibits contemporary and historical works with an emphasis on artists of the Greater Bay Area; 40,000+ on-site visitors a year, plus a satellite gallery audience.</li>
+<li>Grounds include a 7-acre sculpture garden. Galleries include the Mathias Gallery and the Rose Shenson Community Art Gallery (community groups such as the Santa Clara Watercolor Society exhibit there).</li>
+<li>Exhibitions rotate every three to four months. Recent/2026-season exhibitions include the 2026 Salon at the Triton, Visual Duets: The Art of Creating Together, Intrusive Thoughts, Here and There, Rose Sellery: Fragile Strength, and Eye/Hand — verify the current hang against the museum's site before publishing anything.</li>
+<li>Known closures ahead: Thanksgiving Day (Thu Nov 26, 2026) and Black Friday (Nov 27, 2026); Mathias Gallery closed Dec 18, 2026 for a private event.</li>
+<li>Visit rules worth knowing: no backpacks in the galleries (small bags OK, storage behind the front desk); service animals only.</li>
+<li>Membership exists (members get discounts and priority registration for education classes). Dave and Nan are not recorded as members — an open question, not a fact.</li>
+</ul>
+<h2>Responsibilities</h2>
+<ul>
+<li>TRACK the museum: current and upcoming exhibitions (with opening/closing dates), events, classes, workshops and programs — checked against tritonmuseum.org, the museum's newsletter and socials, and never published from memory alone.</li>
+<li>PUBLISH the Triton Gazette: a newspaper-style page carrying ALL of the museum's events plus other noteworthy items (exhibition openings and closings, classes, member/board news, closures). Astro is preparing the first draft issue for Dave's review; from approval on, producing and updating the Gazette is this buddy's standing job, on the museum's rhythm (exhibitions rotate every 3–4 months; events turn faster).</li>
+<li>WATCH for member and board news — trustee and officer changes, fundraisers and galas, membership drives — with Mei-Ying's board role as the household's inside connection (her service is public; anything she shares privately stays private).</li>
+<li>KEEP VISIT FACTS CURRENT: hours, holiday closures, gallery closures for private events, admission/parking status, and visit rules — the facts Dave or Nan would want the morning of a visit, including from the Lenwood house (Santa Clara is next door to San Jose).</li>
+<li>FLAG what's worth a trip: when an opening, a closing-soon exhibition, or an event matches the household's taste, surface it to Astro with dates — Dave and Nan, and Ron and Mei-Ying, are the natural audience.</li>
+<li>KEEP THE RECORD: exhibitions and events seen, visits made, and Gazette issues published, in the repo (KNOWLEDGE.md, ACCOMPLISHMENTS.md).</li>
+</ul>
+<h2>Success criteria</h2>
+<ul>
+<li>The Triton Gazette is never stale: every museum event appears in it before it happens, with correct dates, and expired items retire on schedule.</li>
+<li>No exhibition opening or final-week closing at the Triton surprises the household — each is flagged with lead time.</li>
+<li>Visit facts on the homepage and in the Gazette (hours, closures, admission, parking) always match the museum's own site.</li>
+<li>Board/member news involving Mei-Ying's service is captured accurately and attributed to its public source.</li>
+<li>Zero invented exhibitions, dates, artists, or prices — anything unverified is labeled unverified or left out.</li>
+</ul>
+<h2>Out of scope for v1</h2>
+<ul>
+<li>No booking, ticketing, or membership purchases — the buddy flags and links; Dave decides and buys.</li>
+<li>No coverage of other museums (that's a growth path, not v1) — the Triton only.</li>
+<li>No private board business: only the museum's public news and what Mei-Ying shares for the household.</li>
+<li>The Gazette publishes museum events and noteworthy items — it is not a general Santa Clara events paper.</li>
+</ul>
+<h2>Growth path</h2>
+<ul>
+<li>A South Bay museum circle: the San Jose Museum of Art, ICA San José, and the de Saisset as tracked companions once the Triton desk runs clean.</li>
+<li>Visit planning: pair a Triton visit with nearby stops (Santa Clara / San Jose) on Dave's Lenwood weeks.</li>
+<li>A members' lens: if Dave and Nan join, track member previews and priority registration windows.</li>
+<li>Gazette archives: a permanent back-issue shelf on the homepage, the way the household's other papers keep theirs.</li>
+</ul></div></div></div></div>
 </div>
 </section>
 </section>
@@ -585,246 +893,18 @@ footer{margin-top:36px;padding-top:18px;border-top:1px solid var(--border);color
   var sec = document.querySelector('.repo-files');
   if (!sec || sec.dataset.rfInit) return;
   sec.dataset.rfInit = '1';
-  var bid = sec.getAttribute('data-buddy-id') || (function(){
-    var p = location.pathname.replace(/\\/+$/, '');
-    return p.substring(p.lastIndexOf('/') + 1);
-  })();
-  function lsGet(){ try { return JSON.parse(localStorage.getItem('buddyTree.v3') || '{}'); } catch(e){ return {}; } }
-  function token(){ return lsGet().ghToken || ''; }
-  function b64encode(str){
-    var bytes = new TextEncoder().encode(str), bin = '';
-    bytes.forEach(function(b){ bin += String.fromCharCode(b); });
-    return btoa(bin);
-  }
-  async function ghApi(path, method, body){
-    var t = token();
-    if (!t) throw new Error('Add a GitHub token first.');
-    var r = await fetch('https://api.github.com' + path, {
-      method: method || 'GET',
-      headers: {'Authorization': 'Bearer ' + t, 'Accept': 'application/vnd.github+json', 'Content-Type': 'application/json'},
-      body: body ? JSON.stringify(body) : undefined
-    });
-    if (!r.ok) throw new Error('GitHub ' + r.status);
-    return r.status === 204 ? null : await r.json();
-  }
-  async function ghGetFile(repo, path){
-    try {
-      var j = await ghApi('/repos/davedellaquila/' + repo + '/contents/' + path);
-      if (j && j.content) return {
-        text: new TextDecoder().decode(Uint8Array.from(atob(j.content.replace(/\\n/g, '')), function(c){ return c.charCodeAt(0); })),
-        sha: j.sha
-      };
-    } catch(e){}
-    return null;
-  }
-  var repo = null;
-  async function resolveRepo(){
-    try {
-      var r = await fetch('../buddies.json', {cache: 'no-store'});
-      var d = await r.json();
-      var buds = d.buddies || [];
-      for (var i = 0; i < buds.length; i++) {
-        if (buds[i].id === bid && buds[i].repo) { repo = buds[i].repo; break; }
-      }
-    } catch(e){}
-  }
-  function esc(s){ return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
-  function inline(s){
-    s = esc(s);
-    s = s.replace(/`([^`]+)`/g, '<code>$1</code>');
-    s = s.replace(/\\*\\*([^*]+)\\*\\*/g, '<strong>$1</strong>');
-    s = s.replace(/(^|[^*])\\*([^*\\n]+)\\*/g, '$1<em>$2</em>');
-    s = s.replace(/\\[([^\\]]+)\\]\\((https?:[^)\\s]+)\\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>');
-    return s;
-  }
-  function mdRender(src){
-    var lines = src.split('\\n'), out = [], inList = false, inCode = false, codeBuf = [];
-    function closeList(){ if (inList) { out.push('</ul>'); inList = false; } }
-    for (var i = 0; i < lines.length; i++){
-      var ln = lines[i], m;
-      if (/^```/.test(ln)) {
-        if (inCode) { out.push('<pre><code>' + esc(codeBuf.join('\\n')) + '</code></pre>'); codeBuf = []; inCode = false; }
-        else { closeList(); inCode = true; }
-        continue;
-      }
-      if (inCode) { codeBuf.push(ln); continue; }
-      if ((m = ln.match(/^(#{1,4})\\s+(.*)/))) {
-        closeList();
-        var lv = Math.min(m[1].length + 1, 4);
-        out.push('<h' + lv + '>' + inline(m[2]) + '</h' + lv + '>');
-        continue;
-      }
-      if (/^\\s*(-{3,}|\\*{3,})\\s*$/.test(ln)) { closeList(); out.push('<hr>'); continue; }
-      if ((m = ln.match(/^\\s*[-*]\\s+(.*)/)) || (m = ln.match(/^\\s*\\d+[.)]\\s+(.*)/))) {
-        if (!inList) { out.push('<ul>'); inList = true; }
-        out.push('<li>' + inline(m[1]) + '</li>');
-        continue;
-      }
-      if ((m = ln.match(/^>\\s?(.*)/))) { closeList(); out.push('<blockquote>' + inline(m[1]) + '</blockquote>'); continue; }
-      if (!ln.trim()) { closeList(); continue; }
-      closeList();
-      out.push('<p>' + inline(ln) + '</p>');
-    }
-    closeList();
-    if (inCode) out.push('<pre><code>' + esc(codeBuf.join('\\n')) + '</code></pre>');
-    return out.join('\\n');
-  }
-  var locked = sec.querySelector('.rf-locked'), main = sec.querySelector('.rf-main'),
-      list = sec.querySelector('.rf-list'), st = sec.querySelector('.rf-status');
-  /* Accordion files (Dave 2026-10-21): a list of file names; clicking a
-     name toggles that file's contents open inline right below the name.
-     Toggles are independent — several files can be open at once. Contents
-     load lazily on first open and are cached in the item's own state;
-     Edit/Save lives inside the opened panel. */
-  function buildFileSection(f){
-    var wrap = document.createElement('div');
-    wrap.className = 'rf-fileitem';
-    var head = document.createElement('button');
-    head.type = 'button';
-    head.className = 'rf-file';
-    head.setAttribute('aria-expanded', 'false');
-    var nm = document.createElement('span');
-    nm.className = 'rf-name';
-    nm.textContent = '📄 ' + f.name;
-    var dir = document.createElement('span');
-    dir.className = 'rf-dir';
-    dir.textContent = f.path;
-    var chev = document.createElement('span');
-    chev.className = 'rf-chev';
-    chev.textContent = '▸';
-    head.appendChild(nm);
-    head.appendChild(dir);
-    head.appendChild(chev);
-    var panel = document.createElement('div');
-    panel.className = 'rf-panel';
-    panel.hidden = true;
-    var phead = document.createElement('div');
-    phead.className = 'rf-viewhead';
-    var ppath = document.createElement('span');
-    ppath.className = 'rf-path';
-    ppath.textContent = f.path;
-    var editBtn = document.createElement('button');
-    editBtn.type = 'button';
-    editBtn.className = 'attn-btn rf-edit';
-    editBtn.textContent = 'Edit';
-    editBtn.disabled = true;
-    phead.appendChild(ppath);
-    phead.appendChild(editBtn);
-    var bodyEl = document.createElement('div');
-    bodyEl.className = 'rf-body';
-    bodyEl.innerHTML = '<p class="rf-loading">Loading ' + esc(f.path) + '…</p>';
-    var editor = document.createElement('div');
-    editor.className = 'rf-editor';
-    editor.hidden = true;
-    var ta = document.createElement('textarea');
-    ta.className = 'rf-ta';
-    ta.rows = 18;
-    ta.spellcheck = false;
-    ta.setAttribute('aria-label', 'Markdown source for ' + f.path);
-    var actions = document.createElement('div');
-    actions.className = 'attn-actions';
-    var saveBtn = document.createElement('button');
-    saveBtn.type = 'button';
-    saveBtn.className = 'attn-btn primary rf-save';
-    saveBtn.textContent = 'Save to GitHub';
-    var cancelBtn = document.createElement('button');
-    cancelBtn.type = 'button';
-    cancelBtn.className = 'attn-btn rf-cancel';
-    cancelBtn.textContent = 'Cancel';
-    actions.appendChild(saveBtn);
-    actions.appendChild(cancelBtn);
-    editor.appendChild(ta);
-    editor.appendChild(actions);
-    var fst = document.createElement('div');
-    fst.className = 'rf-fstatus attn-status';
-    fst.setAttribute('role', 'status');
-    panel.appendChild(phead);
-    panel.appendChild(bodyEl);
-    panel.appendChild(editor);
-    panel.appendChild(fst);
-    wrap.appendChild(head);
-    wrap.appendChild(panel);
-    var cur = null, loaded = false;
-    function loadOnce(){
-      if (loaded) return;
-      loaded = true;
-      ghGetFile(repo, f.path).then(function(got){
-        if (!got) { loaded = false; bodyEl.innerHTML = '<p class="rf-loading">⚠ Could not load ' + esc(f.path) + ' — close and open it again to retry.</p>'; return; }
-        cur = {path: f.path, sha: got.sha, text: got.text};
-        bodyEl.innerHTML = mdRender(got.text);
-        editBtn.disabled = false;
-      });
-    }
-    head.addEventListener('click', function(){
+  sec.querySelectorAll('.rf-fileitem > .rf-file').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var item = btn.parentElement;
+      var panel = item ? item.querySelector('.rf-panel') : null;
+      if (!panel) return;
       var open = panel.hidden;
       panel.hidden = !open;
-      head.setAttribute('aria-expanded', open ? 'true' : 'false');
-      chev.textContent = open ? '▾' : '▸';
-      if (open) loadOnce();
+      btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      var ch = btn.querySelector('.rf-chev');
+      if (ch) ch.textContent = open ? '▾' : '▸';
     });
-    editBtn.addEventListener('click', function(){
-      if (!cur) return;
-      ta.value = cur.text;
-      bodyEl.hidden = true;
-      editor.hidden = false;
-      ta.focus();
-    });
-    cancelBtn.addEventListener('click', function(){
-      editor.hidden = true;
-      bodyEl.hidden = false;
-    });
-    saveBtn.addEventListener('click', async function(){
-      if (!cur) return;
-      saveBtn.disabled = true;
-      fst.textContent = 'Saving…';
-      try {
-        var payload = {message: 'Edit ' + cur.path + ' from the homepage', content: b64encode(ta.value), sha: cur.sha};
-        var j = await ghApi('/repos/davedellaquila/' + repo + '/contents/' + cur.path, 'PUT', payload);
-        if (j && j.content && j.content.sha) cur.sha = j.content.sha;
-        cur.text = ta.value;
-        editor.hidden = true;
-        bodyEl.hidden = false;
-        bodyEl.innerHTML = mdRender(cur.text);
-        fst.textContent = '✓ Saved to GitHub (' + repo + '/' + cur.path + ').';
-      } catch(err){
-        var why = (err && err.message) || String(err);
-        fst.textContent = /409|422/.test(why)
-          ? '⚠ GitHub said the file changed since you loaded it (' + why + ') — reload this page and try again.'
-          : '⚠ Save failed (' + why + ') — your edit is still in the editor.';
-      }
-      saveBtn.disabled = false;
-    });
-    return wrap;
-  }
-  async function init(){
-    await resolveRepo();
-    if (!repo) {
-      locked.hidden = false;
-      locked.textContent = 'No repo is linked for this buddy yet, so there are no repo files to show.';
-      return;
-    }
-    if (!token()) { locked.hidden = false; return; }
-    main.hidden = false;
-    st.textContent = 'Loading files…';
-    var files = [];
-    async function grab(dir){
-      try {
-        var j = await ghApi('/repos/davedellaquila/' + repo + (dir ? '/contents/' + dir : '/contents'));
-        if (Array.isArray(j)) j.forEach(function(e){
-          if (e.type === 'file' && /\\.md$/i.test(e.name)) files.push({name: e.name, path: e.path});
-        });
-      } catch(e){}
-    }
-    await grab('');
-    await grab('docs');
-    files.sort(function(a, b){ return a.path < b.path ? -1 : 1; });
-    if (!files.length) { st.textContent = 'No markdown files found in the repo yet.'; return; }
-    st.textContent = '';
-    files.forEach(function(f){
-      list.appendChild(buildFileSection(f));
-    });
-  }
-  init();
+  });
 })();
 </script>
 
