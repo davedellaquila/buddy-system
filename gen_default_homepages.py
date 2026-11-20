@@ -446,7 +446,7 @@ def build_page(buddies, plans, b, about=False):
                         if bid in (x.get('links') or [])])
     bplans = [p for p in plans if bid in (p.get('buddies') or [])]
     attn = [a if isinstance(a, dict) else {'text': str(a)} for a in (b.get('attention') or [])]
-    attn_open = sum(1 for a in attn if not a.get('cleared'))
+    attn_open = sum(1 for a in attn if not (a.get('cleared') or a.get('later') or a.get('dropped')))
     docs = [d if isinstance(d, dict) else {'url': str(d), 'label': str(d)} for d in (b.get('docs') or [])]
     photos = [p for p in (b.get('photos') or [])]
     mem = memory_files(b)
@@ -520,8 +520,13 @@ def build_page(buddies, plans, b, about=False):
     # and an Undo. ATTN_JS (shared with the basic template) drives them.
     attn_html = ''
     for a in attn:
-        cleared = a.get('cleared') or None
-        cdate = esc(str(cleared.get('date', ''))) if cleared else ''
+        stamp = None
+        if a.get('cleared'): stamp = ('done', a['cleared'])
+        elif a.get('later'): stamp = ('later', a['later'])
+        elif a.get('dropped'): stamp = ('dropped', a['dropped'])
+        cdate = esc(str(stamp[1].get('date', ''))) if stamp else ''
+        sattr = {'done': 'data-cleared', 'later': 'data-later', 'dropped': 'data-dropped'}
+        smsg = {'done': '✓ Done · ', 'later': 'Later · ', 'dropped': 'Dropped by Dave · '}
         txt = esc(a.get('text', ''))
         if a.get('url'):
             txt = '<a href="%s" target="_blank" rel="noopener">%s ↗</a>' % (esc(a['url']), txt)
@@ -532,12 +537,14 @@ def build_page(buddies, plans, b, about=False):
                       '<div class="attn-actions">'
                       '<button type="button" class="attn-btn primary" data-act="done">Done</button>'
                       '<button type="button" class="attn-btn" data-act="info">Need more info</button>'
+                      '<button type="button" class="attn-btn" data-act="later">Later</button>'
+                      '<button type="button" class="attn-btn" data-act="drop">Drop it</button>'
                       '</div><div class="attn-status" role="status">%s</div>%s</div></div>'
-                      % ((' resolved' if cleared else ''), aid,
-                         ((' data-cleared="' + cdate + '"') if cleared else ''),
+                      % ((' resolved' if stamp else ''), aid,
+                         ((' ' + sattr[stamp[0]] + '="' + cdate + '"') if stamp else ''),
                          txt, date,
-                         (('✓ Cleared by Dave · ' + cdate) if cleared else ''),
-                         (('<button type="button" class="attn-btn attn-undo" data-act="undo">Undo</button>') if cleared else '')))
+                         ((smsg[stamp[0]] + cdate) if stamp else ''),
+                         (('<button type="button" class="attn-btn attn-undo" data-act="undo">Undo</button>') if stamp else '')))
     attn_sec = section('Needs attention (%d)' % attn_open,
                        '<div>' + attn_html + '</div>' if attn_html
                        else '<p class="empty">Nothing needs attention right now.</p>')

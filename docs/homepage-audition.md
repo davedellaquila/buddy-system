@@ -42,6 +42,10 @@ what we're learning about you.
    `docs/tipjar-snippet.html`); the brain-dump box; a 🔊 "Hear my role"
    control playing your `role-intro.mp3`; a "Full record" link to your About
    page; a last-updated stamp.
+   Every task / needs-attention item carries its action options in place —
+   ✓ Done / Need more info / Later / Drop it with Undo, persisted as registry
+   disposition stamps (Dave's standard, 2026-11-20): a task card that is a
+   bare statement with no controls fails this criterion.
 
 7. **Everything mentioned is linked.** Another buddy, a document, a repo, an
    artifact, a dashboard view — if you refer to it, Dave can tap through to
@@ -74,7 +78,7 @@ marks which is which.
 | 3 | Every section earns its place | 8 | Eye — attention items carry working links |
 | 4 | Works everywhere (phone/tablet/desktop, dark + light) | 15 | Machine + rendered check at three widths, both modes |
 | 5 | Motion with purpose | 7 | Eye + `prefers-reduced-motion` honored (machine) |
-| 6 | Fleet standards present | 12 | Machine — sticky header, dashboard link, tip jar, brain-dump box, Hear-my-role, Full record link, updated stamp |
+| 6 | Fleet standards present | 12 | Machine — sticky header, dashboard link, tip jar, brain-dump box, Hear-my-role, Full record link, updated stamp; every task/attention item carries Done / Need more info / Later / Drop it + Undo |
 | 7 | Everything mentioned is linked | 8 | Machine-assisted — references resolve to real targets |
 | 8 | Voice in the writing | 8 | Eye — persona recognizable from the copy alone |
 | 9 | Honest and private-safe | 6 | Eye — no placeholder data passed off as real; nothing private on the public page |

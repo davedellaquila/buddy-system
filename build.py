@@ -3763,7 +3763,7 @@ function homepageUrl(b){
    on the homepage. (Dave 2026-10-20) */
 function attnSeen(bid, a){
   if (!a) return false;
-  if (a.cleared) return true; /* registry clearance (Dave 2026-11-19): durable, every surface */
+  if (a.cleared || a.later || a.dropped) return true; /* registry disposition stamps — cleared (Done) 2026-11-19, later/dropped 2026-11-20: durable, every surface */
   if (S.seen && S.seen[a.id]) return true;
   const m = S.attnDone || {};
   return !!m[bid + '|' + a.id];
@@ -7851,20 +7851,30 @@ async function writeBuddyLink(fromId, toId){
    token-less devices, and a token-gated flush that applies every
    queued clearance to a fresh copy of buddies.json. */
 function todayLocal(){ const d = new Date(); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); }
-function applyAttnClearToMemory(bid, aid, obj){
+function applyAttnStateToMemory(bid, aid, field, obj){
   const b = byId[bid]; if (!b || !b.attention) return;
-  b.attention.forEach(a => { if (a && typeof a === 'object' && a.id === aid) { if (obj) a.cleared = obj; else delete a.cleared; } });
+  b.attention.forEach(a => {
+    if (a && typeof a === 'object' && a.id === aid) {
+      /* Dispositions are mutually exclusive: setting one clears the others;
+         a null field clears all three (Undo). */
+      if (obj && field) { ['cleared', 'later', 'dropped'].forEach(f => delete a[f]); a[field] = obj; }
+      else if (field) delete a[field];
+      else ['cleared', 'later', 'dropped'].forEach(f => delete a[f]);
+    }
+  });
 }
-function writeAttnClear(bid, aid, obj){
+function applyAttnClearToMemory(bid, aid, obj){ applyAttnStateToMemory(bid, aid, 'cleared', obj); }
+function writeAttnState(bid, aid, field, obj){
   if (!bid || !aid) return;
-  applyAttnClearToMemory(bid, aid, obj);
+  applyAttnStateToMemory(bid, aid, field, obj);
   if (!S.pendingAttnClear) S.pendingAttnClear = {};
   if (!S.pendingAttnClear[bid]) S.pendingAttnClear[bid] = {};
-  S.pendingAttnClear[bid][aid] = obj;
+  S.pendingAttnClear[bid][aid] = {f: field, o: obj};
   save();
   flushAttnClear();
   refreshPanelIfShowing(bid);
 }
+function writeAttnClear(bid, aid, obj){ writeAttnState(bid, aid, 'cleared', obj); }
 async function flushAttnClear(){
   const q = S.pendingAttnClear || {};
   const bids = Object.keys(q).filter(bid => q[bid] && Object.keys(q[bid]).length);
@@ -7878,14 +7888,16 @@ async function flushAttnClear(){
       const bb = (data.buddies || []).find(x => x.id === bid);
       if (!bb) return;
       Object.keys(q[bid]).forEach(aid => {
-        const obj = q[bid][aid];
-        (bb.attention || []).forEach(a => { if (a && typeof a === 'object' && a.id === aid) { if (obj) a.cleared = obj; else delete a.cleared; } });
+        const ent = q[bid][aid];
+        const field = (ent && ent.f) || 'cleared';
+        const val = (ent && ('o' in ent)) ? ent.o : ent;
+        (bb.attention || []).forEach(a => { if (a && typeof a === 'object' && a.id === aid) { ['cleared', 'later', 'dropped'].forEach(f => delete a[f]); if (val) a[field] = val; } });
       });
     });
     await ghPutFile('buddy-system', 'buddies.json', b64encode(JSON.stringify(data, null, 1)), 'Attention clearances (dashboard)');
     S.pendingAttnClear = {};
     save();
-    toast('Cleared \u2014 recorded in the registry.');
+    toast('Recorded in the registry.');
   } catch (e) {
     toast('Could not update the registry yet (' + (e.message || e) + ') \u2014 will retry when a GitHub token is connected.');
   }
@@ -8098,10 +8110,11 @@ function renderBuddy(id){
     } catch (e) { return ''; }
   };
   let unseenCount = 0;
-  const clearedItems = (b.attention || []).filter(x => x && typeof x === 'object' && x.cleared);
-  const clearedHtml = clearedItems.map(a => '<div class="attn cleared" data-attn="' + a.id + '"><span class="adot"></span>'
+  const resolvedItems = (b.attention || []).filter(x => x && typeof x === 'object' && (x.cleared || x.later || x.dropped));
+  const resolvedNote = a => a.cleared ? '\u2713 Done \u00b7 ' + escHtml((a.cleared && a.cleared.date) || '') : (a.later ? 'Later \u00b7 ' + escHtml((a.later && a.later.date) || '') : 'Dropped \u00b7 ' + escHtml((a.dropped && a.dropped.date) || ''));
+  const clearedHtml = resolvedItems.map(a => '<div class="attn cleared" data-attn="' + a.id + '"><span class="adot"></span>'
     + '<div class="attn-body"><div class="attn-text">' + escHtml(a.text || '') + '</div>'
-    + '<div class="attn-cleared-note">\u2713 Cleared by Dave \u00b7 ' + escHtml((a.cleared && a.cleared.date) || '') + '</div></div>'
+    + '<div class="attn-cleared-note">' + resolvedNote(a) + '</div></div>'
     + '<button type="button" class="attn-act attn-unclear" data-unclear="' + a.id + '">Undo</button></div>').join('');
   if (!items.length) attn = clearedHtml;
   else {
@@ -8119,7 +8132,7 @@ function renderBuddy(id){
       }).join('');
       return '<div class="attn unseen" data-attn="'+a.id+'"><span class="adot"></span>'
         + '<div class="attn-body">'+body
-        + (acts || a.id ? '<div class="attn-actions">'+acts+(a.id ? '<button type="button" class="attn-act attn-clear" data-clear="'+a.id+'">\u2713 Mark cleared</button>' : '')+'</div>' : '')
+        + (acts || a.id ? '<div class="attn-actions">'+acts+(a.id ? '<button type="button" class="attn-act attn-clear" data-clear="'+a.id+'">\u2713 Done</button><button type="button" class="attn-act" data-later="'+a.id+'">Later</button><button type="button" class="attn-act" data-drop="'+a.id+'">Drop it</button>' : '')+'</div>' : '')
         + (a.date ? '<div class="attn-date">Asked '+escHtml(a.date)+'</div>' : '')+'</div>'
         + '<button class="seenbtn" data-done="'+a.id+'" title="Mark done" aria-label="Mark done" role="checkbox" aria-checked="false">\u25cb</button></div>';
     }).join('');
@@ -8198,7 +8211,7 @@ function renderBuddy(id){
     + '<button class="linkbtn" id="bp-homepage-copy" title="Copy homepage URL to clipboard">Copy</button>'
     + '<button class="linkbtn" id="bp-homepage-open" title="Open homepage in a new tab">Open</button>'
     + '</div></div>'
-    + (unseenCount > 0 ? (function(){ const fx = getSetting('attnEffect') || 'none'; const high = items.some(a => !attnSeen(b.id, a) && a.priority === 'high'); return '<div class="bp-sec fx-'+fx+(high?' attn-high':'')+'" data-field="attention"><h3>Needs your attention <span class="attn-count">('+unseenCount+')</span></h3>'+attn+'</div>'; })() : '')
+    + (unseenCount > 0 || resolvedItems.length > 0 ? (function(){ const fx = getSetting('attnEffect') || 'none'; const high = items.some(a => !attnSeen(b.id, a) && a.priority === 'high'); return '<div class="bp-sec fx-'+fx+(high?' attn-high':'')+'" data-field="attention"><h3>Needs your attention'+(unseenCount > 0 ? ' <span class="attn-count">('+unseenCount+')</span>' : '')+'</h3>'+attn+'</div>'; })() : '')
     + photos
     + docs
     + (id === ROOT_ID
@@ -16188,8 +16201,12 @@ document.addEventListener('click', e => {
   if (sa) { markAllAttentionDone(sa.dataset.doneAll); return; }
   const cb = e.target.closest('[data-clear]');
   if (cb) { const bidC = (S.sel || '').startsWith('buddy:') ? S.sel.slice(6) : null; if (bidC) writeAttnClear(bidC, cb.dataset.clear, {date: todayLocal(), by: 'Dave'}); return; }
+  const lb = e.target.closest('[data-later]');
+  if (lb) { const bidL = (S.sel || '').startsWith('buddy:') ? S.sel.slice(6) : null; if (bidL) writeAttnState(bidL, lb.dataset.later, 'later', {date: todayLocal(), by: 'Dave'}); return; }
+  const db2 = e.target.closest('[data-drop]');
+  if (db2) { const bidD = (S.sel || '').startsWith('buddy:') ? S.sel.slice(6) : null; if (bidD) writeAttnState(bidD, db2.dataset.drop, 'dropped', {date: todayLocal(), by: 'Dave'}); return; }
   const ub2 = e.target.closest('[data-unclear]');
-  if (ub2) { const bidU = (S.sel || '').startsWith('buddy:') ? S.sel.slice(6) : null; if (bidU) writeAttnClear(bidU, ub2.dataset.unclear, null); return; }
+  if (ub2) { const bidU = (S.sel || '').startsWith('buddy:') ? S.sel.slice(6) : null; if (bidU) writeAttnState(bidU, ub2.dataset.unclear, null, null); return; }
   const ab = e.target.closest('[data-act-buddy]');
   if (ab) { selectBuddy(ab.dataset.actBuddy); return; }
   const nb = e.target.closest('[data-navbtn]');
@@ -16298,20 +16315,21 @@ flushPendingLinks();
 // anywhere becomes permanent, then flush when a token is connected.
 (function bootAttnClear(){
   const q = S.pendingAttnClear || {};
-  Object.keys(q).forEach(bid => Object.keys(q[bid] || {}).forEach(aid => applyAttnClearToMemory(bid, aid, q[bid][aid])));
+  Object.keys(q).forEach(bid => Object.keys(q[bid] || {}).forEach(aid => { const e2 = q[bid][aid]; if (e2 && e2.f) applyAttnStateToMemory(bid, aid, e2.f, e2.o); else applyAttnClearToMemory(bid, aid, e2); }));
   const today = todayLocal();
-  const promote = (bid, aid) => {
+  const promote = (bid, aid, field, date) => {
     const b = byId[bid]; if (!b) return;
     const a = (b.attention || []).find(x => x && typeof x === 'object' && x.id === aid);
-    if (a && !a.cleared) {
-      const obj = {date: today, by: 'Dave'};
-      applyAttnClearToMemory(bid, aid, obj);
+    if (a && !a.cleared && !a.later && !a.dropped) {
+      const obj = {date: date || today, by: 'Dave'};
+      applyAttnStateToMemory(bid, aid, field || 'cleared', obj);
       if (!S.pendingAttnClear) S.pendingAttnClear = {};
       if (!S.pendingAttnClear[bid]) S.pendingAttnClear[bid] = {};
-      S.pendingAttnClear[bid][aid] = obj;
+      S.pendingAttnClear[bid][aid] = {f: field || 'cleared', o: obj};
     }
   };
   Object.keys(S.attnDone || {}).forEach(k => { const p = k.split('|'); if (p.length === 2 && p[1].indexOf('text:') !== 0) promote(p[0], p[1]); });
+  Object.keys(S.attnState || {}).forEach(k => { const p = k.split('|'); const st = S.attnState[k]; if (p.length === 2 && p[1].indexOf('text:') !== 0 && st && (st.kind === 'later' || st.kind === 'dropped')) promote(p[0], p[1], st.kind, st.date); });
   Object.keys(S.seen || {}).forEach(aid => { const owner = BUDDIES.find(b => (b.attention || []).some(x => x && typeof x === 'object' && x.id === aid)); if (owner) promote(owner.id, aid); });
   save();
 })();
