@@ -30,6 +30,7 @@ button.dump { background:var(--accent); color:#fff; border:0; border-radius:8px;
 .attn-status { font-size:13px; color:var(--muted); margin-top:8px; min-height:18px; }
 .attn.resolved { opacity:.6; }
 .attn.resolved .attn-actions { display:none; }
+.attn-undo { margin-top:8px; }
 .tokenrow { display:flex; gap:8px; margin-top:10px; }
 .tokenrow input { flex:1; min-width:0; background:var(--bg); color:var(--text); border:1px solid var(--border); border-radius:8px; padding:8px 10px; font:inherit; }
 .tokenrow button { background:var(--card); color:var(--text); border:1px solid var(--border); border-radius:8px; padding:8px 14px; font:inherit; font-size:.9em; cursor:pointer; }
@@ -78,12 +79,12 @@ button.dump { background:var(--accent); color:#fff; border:0; border-radius:8px;
 <h2>Needs your attention</h2>
 <div class="attn" data-attn-id="mission-review">
 <div class="attn-text"><a href="https://docs.google.com/document/d/1IcfE4V-Q-r2nh2zLmwBvqBiZ3lJEFf82C0cXTrBqSXI/edit" target="_blank" rel="noopener">Mission statement</a> — ready for your review.</div>
-<div class="attn-actions"><button class="attn-btn primary" data-act="done">✓ Done</button><button class="attn-btn" data-act="info">Need more info</button></div>
+<div class="attn-actions"><button type="button" class="attn-btn primary" data-act="done">✓ Done</button><button type="button" class="attn-btn" data-act="info">Need more info</button><button type="button" class="attn-btn" data-act="later">Later</button><button type="button" class="attn-btn" data-act="drop">Drop it</button></div>
 <div class="attn-status" role="status"></div>
 </div>
 <div class="attn" data-attn-id="invite-james-joel">
 <div class="attn-text">Invite James (and Joel?) over — timing TBD.</div>
-<div class="attn-actions"><button class="attn-btn primary" data-act="done">✓ Done</button><button class="attn-btn" data-act="info">Need more info</button></div>
+<div class="attn-actions"><button type="button" class="attn-btn primary" data-act="done">✓ Done</button><button type="button" class="attn-btn" data-act="info">Need more info</button><button type="button" class="attn-btn" data-act="later">Later</button><button type="button" class="attn-btn" data-act="drop">Drop it</button></div>
 <div class="attn-status" role="status"></div>
 </div>
 </div>
@@ -101,7 +102,7 @@ button.dump { background:var(--accent); color:#fff; border:0; border-radius:8px;
 <p class="muted" id="tokenmsg"></p>
 </div>
 
-<p class="stamp">Last refreshed: 2026-10-12 · living page</p>
+<p class="stamp">Last refreshed: 2026-11-20 · living page</p>
 </div>
 <script>
 (function(){
@@ -145,9 +146,58 @@ button.dump { background:var(--accent); color:#fff; border:0; border-radius:8px;
     dumpBtn.disabled=false;
   });
   function rkey(aid,text){ return bid+'|'+(aid||('text:'+text.slice(0,60))); }
-  function isResolved(aid,text){ var m=lsGet().attnDone||{}; return !!m[rkey(aid,text)]; }
-  function setResolved(aid,text){ var s=lsGet(),m=s.attnDone||{}; m[rkey(aid,text)]=1; s.attnDone=m; lsSet(s); }
-  function paintResolved(tile,msg){ tile.classList.add('resolved'); var st=tile.querySelector('.attn-status'); if(st) st.textContent=msg; }
+  /* Dispositions (fleet standard, Dave 2026-11-20): Done / Need more info /
+     Later / Drop it in place, with Undo. Local state uses the fleet scheme —
+     'done' in attnDone, 'later'/'dropped' in attnState, same buddyTree.v3
+     store and keys as the generated pages — and each tap also writes its
+     stamp (date + Dave) to docs/ingest.md through the token-gated path,
+     which is this page's registry route: the buddy applies the
+     cleared/later/dropped stamp from the ingest entry. A dispositioned
+     item stays visible in place with its stamp and leaves the open counts. */
+  function localState(aid,text){
+    var s=lsGet(), st=(s.attnState||{})[rkey(aid,text)];
+    if(st&&st.kind) return st;
+    if((s.attnDone||{})[rkey(aid,text)]) return {kind:'done'};
+    if(aid&&s.seen&&s.seen[aid]) return {kind:'done'};
+    return null;
+  }
+  function setLocalState(aid,text,kind,date){
+    var s=lsGet(), m=s.attnDone||{}, st=s.attnState||{}, k=rkey(aid,text);
+    if(kind==='done'){ m[k]=1; delete st[k]; }
+    else { st[k]={kind:kind,date:date}; delete m[k]; if(aid&&s.seen) delete s.seen[aid]; }
+    s.attnDone=m; s.attnState=st; lsSet(s);
+  }
+  function unsetLocalState(aid,text){
+    var s=lsGet(), m=s.attnDone||{}, st=s.attnState||{}, k=rkey(aid,text);
+    delete m[k]; delete st[k]; s.attnDone=m; s.attnState=st;
+    if(aid&&s.seen) delete s.seen[aid]; lsSet(s);
+  }
+  function stateMsg(kind,date){
+    if(kind==='later') return 'Later \u00b7 '+(date||'');
+    if(kind==='dropped') return 'Dropped by Dave \u00b7 '+(date||'');
+    return '\u2713 Done'+(date?' \u00b7 '+date:'');
+  }
+  function todayStr(){ var d=new Date(); return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
+  function ensureUndo(tile){
+    var stEl=tile.querySelector('.attn-status');
+    if(stEl&&!tile.querySelector('[data-act="undo"]')){
+      var ub=document.createElement('button');
+      ub.type='button'; ub.className='attn-btn attn-undo'; ub.setAttribute('data-act','undo'); ub.textContent='Undo';
+      stEl.parentNode.insertBefore(ub,stEl.nextSibling);
+    }
+  }
+  function paintResolved(tile,msg,immediate){
+    var st=tile.querySelector('.attn-status'); if(st) st.textContent=msg;
+    ensureUndo(tile);
+    if(immediate){ tile.classList.add('resolved'); return; }
+    setTimeout(function(){ tile.classList.add('resolved'); },1100);
+  }
+  function paintOpen(tile){
+    tile.classList.remove('resolved');
+    var st=tile.querySelector('.attn-status'); if(st) st.textContent='';
+    var ub=tile.querySelector('[data-act="undo"]'); if(ub) ub.remove();
+    tile.querySelectorAll('.attn-btn').forEach(function(b){ b.disabled=false; });
+  }
   async function sendAction(tile,entry,okMsg){
     var st=tile.querySelector('.attn-status'), btns=tile.querySelectorAll('.attn-btn');
     if(!token()){ st.textContent='Add a GitHub token in the Brain dump section above to enable actions.'; return false; }
@@ -155,18 +205,48 @@ button.dump { background:var(--accent); color:#fff; border:0; border-radius:8px;
     try{ await appendIngest(entry); st.textContent=okMsg; return true; }
     catch(err){ st.textContent='Save failed: '+(err.message||err); btns.forEach(function(b){ b.disabled=false; }); return false; }
   }
+  /* Disposition taps resolve locally at once (fleet behavior); the stamp
+     then goes to the ingest log when a token is on this device. */
+  function applyDisposition(tile,aid,text,kind,entry){
+    var date=todayStr();
+    setLocalState(aid,text,kind,date);
+    paintResolved(tile,stateMsg(kind,date));
+    if(!token()){
+      var st=tile.querySelector('.attn-status');
+      if(st) st.textContent=stateMsg(kind,date)+' \u2014 on this device only; add a GitHub token in the Brain dump section above to record the stamp.';
+      return;
+    }
+    appendIngest(entry).then(function(){
+      var st=tile.querySelector('.attn-status');
+      if(st) st.textContent=stateMsg(kind,date)+' \u2014 stamp sent to '+buddyName+' to record.';
+    }).catch(function(err){
+      var st=tile.querySelector('.attn-status');
+      if(st) st.textContent=stateMsg(kind,date)+' \u2014 on this device; the stamp write failed ('+(err.message||err)+').';
+    });
+  }
   document.querySelectorAll('.attn[data-attn-id]').forEach(function(tile){
     var aid=tile.getAttribute('data-attn-id')||'';
     var textEl=tile.querySelector('.attn-text'), text=textEl?textEl.textContent.trim():'';
-    if(isResolved(aid,text)){ paintResolved(tile,'Marked done'); return; }
+    var lk=localState(aid,text);
+    if(lk) paintResolved(tile, lk.kind==='done'&&!lk.date ? 'Marked done' : stateMsg(lk.kind,lk.date||''), true);
     tile.addEventListener('click',function(ev){
       var btn=ev.target.closest?ev.target.closest('.attn-btn'):null;
       if(!btn||btn.disabled) return;
       var act=btn.getAttribute('data-act');
       var idBit=aid?' (attention id: '+aid+')':'';
+      var date=todayStr();
       if(act==='done'){
-        sendAction(tile,'DONE \u2014 Dave marked this done on the homepage: "'+text+'"'+idBit+'. Please remove it from the attention list in buddies.json.','Marked done \u2014 the buddy will clear it.')
-          .then(function(ok){ if(ok){ setResolved(aid,text); paintResolved(tile,'Marked done \u2014 the buddy will clear it.'); } });
+        applyDisposition(tile,aid,text,'done','DONE \u2014 Dave marked this done on the homepage: "'+text+'"'+idBit+'. Cleared stamp: '+date+' by Dave. Please remove it from the attention list in buddies.json.');
+      }else if(act==='later'){
+        applyDisposition(tile,aid,text,'later','LATER \u2014 Dave deferred this item on the homepage: "'+text+'"'+idBit+'. Later stamp: '+date+' by Dave. Keep it visible with its stamp; it no longer counts as open.');
+      }else if(act==='drop'){
+        applyDisposition(tile,aid,text,'dropped','DROPPED \u2014 Dave dropped this item on the homepage: "'+text+'"'+idBit+'. Dropped stamp: '+date+' by Dave. Keep it visible with its stamp; it no longer counts as open.');
+      }else if(act==='undo'){
+        unsetLocalState(aid,text);
+        paintOpen(tile);
+        var st=tile.querySelector('.attn-status');
+        if(st) st.textContent='Reopened \u2014 it needs attention again.';
+        if(token()) appendIngest('REOPENED \u2014 Dave undid the disposition on the homepage: "'+text+'"'+idBit+'. Please treat it as open again and clear any cleared/later/dropped stamp.').catch(function(){});
       }else if(act==='info'){
         sendAction(tile,'FOLLOW-UP \u2014 Dave needs more info on: "'+text+'"'+idBit+'. Please follow up with him.','Sent \u2014 '+buddyName+' will follow up.');
       }
