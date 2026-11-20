@@ -1,4 +1,4 @@
-<!-- BUDDY-BASIC-TEMPLATE v2 -->
+<!-- Thread-owned custom homepage — Family Buddy. Generators: do not overwrite. -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -91,6 +91,11 @@ h2 { font-size: 22px; margin: 32px 0 16px; }
 .attn.resolved { opacity: .6; }
 .attn-undo { margin-top: 8px; }
 .attn.resolved .attn-actions { display: none; }
+.attn-notebox { margin-top: 10px; }
+.attn-notebox textarea { width: 100%; box-sizing: border-box; min-height: 54px; border: 1px solid var(--border); border-radius: 8px; padding: 8px 10px; font: inherit; font-size: 14px; background: var(--card); color: var(--text); }
+.attn-notebox-row { display: flex; gap: 8px; margin-top: 8px; flex-wrap: wrap; }
+.attn-note { margin-top: 8px; font-size: 13px; color: var(--muted); border-left: 3px solid var(--accent); padding: 4px 10px; }
+.attn-note b { color: var(--text); }
 /* ---- skills (Dave 2026-10-16) ---- */
 .skills { display: flex; flex-direction: column; gap: 10px; margin-top: 4px; }
 .skill { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 12px 16px; }
@@ -293,8 +298,8 @@ h2 { font-size: 22px; margin: 32px 0 16px; }
 
 
 <h2>Needs Attention</h2>
-<div class="attn" data-attn-id="family-buddy-brief"><div class="attn-text">Product brief ready for review — looks good, edits, or defer? The home for family projects shared with the household (Quentin, Sawyer, Amanda), coordinating family-scope work without absorbing any child&#x27;s thread.</div><div class="attn-link"><a href="https://docs.google.com/document/d/1JVwC4BCHHi0YPAk-qdcpg74XGq94e4AQ6R4x6U5Ju1U/edit" target="_blank" rel="noopener">Open →</a></div><div class="attn-date">2026-10-11</div><div class="attn-actions"><button type="button" class="attn-btn primary" data-act="done">Done</button><button type="button" class="attn-btn" data-act="info">Need more info</button><button type="button" class="attn-btn" data-act="later">Later</button><button type="button" class="attn-btn" data-act="drop">Drop it</button></div><div class="attn-status" role="status"></div></div>
-<div class="attn" data-attn-id="pops-buddy-rename"><div class="attn-text">Pops Buddy retirement — Pops is Dave&#x27;s own nickname, so that buddy retires and the name passes to &#x27;Dave Buddy&#x27; (presumed Personal Buddy). Confirm the target and Astro runs it: archive the Pops thread, delete the empty pops-buddy repo, rename personal-buddy.</div><div class="attn-date">2026-10-09</div><div class="attn-actions"><button type="button" class="attn-btn primary" data-act="done">Done</button><button type="button" class="attn-btn" data-act="info">Need more info</button><button type="button" class="attn-btn" data-act="later">Later</button><button type="button" class="attn-btn" data-act="drop">Drop it</button></div><div class="attn-status" role="status"></div></div>
+<div class="attn" data-attn-id="family-buddy-brief"><div class="attn-text">Product brief ready for review — looks good, edits, or defer? The home for family projects shared with the household (Quentin, Sawyer, Amanda), coordinating family-scope work without absorbing any child&#x27;s thread.</div><div class="attn-link"><a href="https://docs.google.com/document/d/1JVwC4BCHHi0YPAk-qdcpg74XGq94e4AQ6R4x6U5Ju1U/edit" target="_blank" rel="noopener">Open →</a></div><div class="attn-date">2026-10-11</div><div class="attn-actions"><button type="button" class="attn-btn primary" data-act="done">Done</button><button type="button" class="attn-btn" data-act="info">Need more info</button><button type="button" class="attn-btn" data-act="later">Later</button><button type="button" class="attn-btn" data-act="drop">Drop it</button><button type="button" class="attn-btn" data-act="note">✎ Add a note…</button></div><div class="attn-notebox" hidden><textarea rows="2" placeholder="Add a note for Family Buddy…" aria-label="Note for this item"></textarea><div class="attn-notebox-row"><button type="button" class="attn-btn primary" data-act="note-save">Save note</button><button type="button" class="attn-btn" data-act="note-cancel">Cancel</button></div></div><div class="attn-note" hidden></div><div class="attn-status" role="status"></div></div>
+<div class="attn" data-attn-id="pops-buddy-rename"><div class="attn-text">Pops Buddy retirement — Pops is Dave&#x27;s own nickname, so that buddy retires and the name passes to &#x27;Dave Buddy&#x27; (presumed Personal Buddy). Confirm the target and Astro runs it: archive the Pops thread, delete the empty pops-buddy repo, rename personal-buddy.</div><div class="attn-date">2026-10-09</div><div class="attn-actions"><button type="button" class="attn-btn primary" data-act="done">Done</button><button type="button" class="attn-btn" data-act="info">Need more info</button><button type="button" class="attn-btn" data-act="later">Later</button><button type="button" class="attn-btn" data-act="drop">Drop it</button><button type="button" class="attn-btn" data-act="note">✎ Add a note…</button></div><div class="attn-notebox" hidden><textarea rows="2" placeholder="Add a note for Family Buddy…" aria-label="Note for this item"></textarea><div class="attn-notebox-row"><button type="button" class="attn-btn primary" data-act="note-save">Save note</button><button type="button" class="attn-btn" data-act="note-cancel">Cancel</button></div></div><div class="attn-note" hidden></div><div class="attn-status" role="status"></div></div>
 
 
 
@@ -362,7 +367,7 @@ h2 { font-size: 22px; margin: 32px 0 16px; }
 
 
 <div class="footer">
-Generated 2026-11-20 · Part of the Buddy System<br>
+Refreshed 2026-11-20 · Family Buddy<br>
 <a href="about.html">About · the full record →</a>
 </div>
 
@@ -914,6 +919,54 @@ Generated 2026-11-20 · Part of the Buddy System<br>
     var ub = tile.querySelector('[data-act="undo"]');
     if (ub) ub.remove();
   }
+  /* Note action (Dave 2026-11-20 amendment): ✎ Add a note opens a small
+     field on the item; Save writes Dave's words to the buddy's ingest via
+     the same token-gated path as the other actions, shows the note on the
+     card, and keeps a device-local copy so the note survives a reload
+     until the owning thread bakes it into the page. */
+  function savedNote(aid, text){
+    var s = lsGet(); var notes = s.attnNotes || {};
+    return notes[rkey(aid, text)] || null;
+  }
+  function storeNote(aid, text, note){
+    var s = lsGet(); var notes = s.attnNotes || {};
+    if (note) notes[rkey(aid, text)] = note; else delete notes[rkey(aid, text)];
+    s.attnNotes = notes; lsSet(s);
+  }
+  function paintNote(tile, note){
+    var box = tile.querySelector('.attn-note');
+    if (!box) return;
+    box.textContent = '';
+    if (!note) { box.hidden = true; return; }
+    var b = document.createElement('b');
+    b.textContent = '✎ Dave\u2019s note · ' + note.date + ': ';
+    box.appendChild(b);
+    box.appendChild(document.createTextNode(note.text));
+    box.hidden = false;
+  }
+  async function saveNote(tile, entry){
+    var st = tile.querySelector('.attn-status');
+    var btns = tile.querySelectorAll('.attn-btn');
+    if (!token()) { st.textContent = 'Add a GitHub token in the Brain dump section above to enable actions.'; return false; }
+    if (!repo) { st.textContent = 'No repo linked for this buddy yet.'; return false; }
+    btns.forEach(function(b){ b.disabled = true; });
+    st.textContent = 'Saving note\u2026';
+    try {
+      var NL = String.fromCharCode(10);
+      var stamp = new Date().toLocaleString();
+      var cur = await ghGetFile(repo, 'docs/ingest.md');
+      var base = cur ? cur.text : '# Ingest log — ' + buddyName + NL + NL;
+      var body = {message: 'Attention note for ' + bid, content: b64encode(base + '## ' + stamp + NL + NL + entry + NL + NL)};
+      if (cur && cur.sha) body.sha = cur.sha;
+      await ghApi('/repos/davedellaquila/' + repo + '/contents/docs/ingest.md', 'PUT', body);
+      btns.forEach(function(b){ b.disabled = false; });
+      return true;
+    } catch(err){
+      st.textContent = 'Save failed: ' + (err.message || err);
+      btns.forEach(function(b){ b.disabled = false; });
+      return false;
+    }
+  }
   tiles.forEach(function(tile){
     var aid = tile.getAttribute('data-attn-id') || '';
     var textEl = tile.querySelector('.attn-text');
@@ -922,6 +975,7 @@ Generated 2026-11-20 · Part of the Buddy System<br>
     var bakedDate = tile.getAttribute('data-cleared') || tile.getAttribute('data-later') || tile.getAttribute('data-dropped') || '';
     var lk = bakedKind || localState(aid, text);
     if (lk) paintResolved(tile, bakedKind ? stateMsg(lk, bakedDate) : (lk === 'done' ? 'Marked done' : (lk === 'later' ? 'Marked later — on this device' : 'Dropped — on this device')), true);
+    paintNote(tile, savedNote(aid, text));
     tile.addEventListener('click', function(ev){
       var btn = ev.target.closest ? ev.target.closest('.attn-btn') : null;
       if (!btn || btn.disabled) return;
@@ -965,6 +1019,32 @@ Generated 2026-11-20 · Part of the Buddy System<br>
         sendAction(tile,
           'FOLLOW-UP — Dave needs more info on: "' + text + '"' + idBit + '. Please follow up with him.',
           'Sent — ' + buddyName + ' will follow up.');
+      } else if (act === 'note') {
+        var nb = tile.querySelector('.attn-notebox');
+        if (nb) { nb.hidden = !nb.hidden; if (!nb.hidden) { var ta = nb.querySelector('textarea'); if (ta) ta.focus(); } }
+      } else if (act === 'note-cancel') {
+        var nbc = tile.querySelector('.attn-notebox');
+        if (nbc) nbc.hidden = true;
+      } else if (act === 'note-save') {
+        var nbs = tile.querySelector('.attn-notebox');
+        var tas = nbs ? nbs.querySelector('textarea') : null;
+        var val = tas ? tas.value.trim() : '';
+        if (!val) {
+          var stn = tile.querySelector('.attn-status');
+          if (stn) stn.textContent = 'Note was empty — nothing saved.';
+          if (nbs) nbs.hidden = true;
+        } else {
+          saveNote(tile, 'NOTE — Dave\u2019s note on: "' + text + '"' + idBit + ':' + String.fromCharCode(10) + val).then(function(ok){
+            if (ok) {
+              var note = {text: val, date: todayStr()};
+              storeNote(aid, text, note);
+              paintNote(tile, note);
+              if (nbs) nbs.hidden = true;
+              var st4 = tile.querySelector('.attn-status');
+              if (st4) st4.textContent = 'Note saved — it lives in ' + buddyName + '\u2019s ingest.';
+            }
+          });
+        }
       }
     });
   });
