@@ -20,6 +20,24 @@
     --gold: #B98A2F;
     --gold-soft: #F8EFD8;
     --blue: #2F6FB2;
+    color-scheme: light dark;
+  }
+  /* Dark mode (fleet standard, added 2026-11-19): the same warm paper
+     family, deepened — follows the system setting automatically. */
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --paper: #171214;
+      --card: #231A1D;
+      --ink: #F2E7E4;
+      --dim: #A08D89;
+      --line: #3A2C2C;
+      --rose: #DE7CA0;
+      --rose-deep: #C96B8E;
+      --rose-soft: #38222B;
+      --gold: #D9A94A;
+      --gold-soft: #332A18;
+      --blue: #6FA8DC;
+    }
   }
   * { box-sizing: border-box; }
   body {
@@ -213,6 +231,13 @@
   padding: 12px 14px; margin-bottom: 12px; font-size: 14px;
 }
 .dumpbox-connect p { margin-bottom: 8px; }
+  /* Dark-mode component overrides (end of sheet so they win the cascade). */
+  @media (prefers-color-scheme: dark) {
+    .fact { border-color: #5A3745; }
+    .dumpbox textarea { background: var(--card); }
+    .status-pill { background: #3A2C2C; color: var(--ink); }
+    .artifact { background: #3A2C2C; color: var(--ink); }
+  }
 </style>
 <style data-bs-dash>.bs-dash-link{font-size:13px;font-weight:600;color:var(--accent,#0066cc);text-decoration:none;white-space:nowrap;margin-left:10px}.bs-dash-link:hover{text-decoration:underline}</style>
 </head>

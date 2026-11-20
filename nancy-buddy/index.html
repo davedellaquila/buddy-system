@@ -21,6 +21,25 @@
     --sage-soft: #E4EBDF;
     --note: #FDF3D8;
     --amber: #B98A2F;
+    color-scheme: light dark;
+  }
+  /* Dark mode (fleet standard, added 2026-11-19): the same warm paper
+     family, deepened — follows the system setting automatically. */
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --paper: #171310;
+      --card: #221C16;
+      --ink: #F0E6D8;
+      --dim: #A08E78;
+      --line: #3A3026;
+      --terra: #D98B63;
+      --terra-soft: #3A271C;
+      --rose: #E8A87C;
+      --sage: #9DBE9D;
+      --sage-soft: #26301F;
+      --note: #2E2A1C;
+      --amber: #D9A94A;
+    }
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
@@ -242,6 +261,15 @@
            color: var(--dim); font-size: 13px; display: flex; gap: 16px; flex-wrap: wrap; }
   footer a { color: var(--terra); }
   @media (max-width: 640px) { h1 { font-size: 30px; } header.hero::after { font-size: 70px; } }
+  /* Dark-mode component overrides (end of sheet so they win the cascade
+     over the hard-coded light values above). */
+  @media (prefers-color-scheme: dark) {
+    header.hero { background: linear-gradient(135deg, #2A211A 0%, #241B14 55%, #1E1712 100%); }
+    .note:nth-child(even) { background: #262019; }
+    .month { background: var(--card); }
+    .badge { color: #E9B98F; border-color: #6B4A30; }
+    .pill.st { border-color: #6B4A30; }
+  }
 </style>
 <style data-bs-dash>.bs-dash-link{font-size:13px;font-weight:600;color:var(--accent,#0066cc);text-decoration:none;white-space:nowrap;margin-left:10px}.bs-dash-link:hover{text-decoration:underline}</style>
 </head>
