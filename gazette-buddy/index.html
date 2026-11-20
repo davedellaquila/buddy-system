@@ -90,6 +90,11 @@ h2 { font-size: 22px; margin: 32px 0 16px; }
 .attn-status { font-size: 13px; color: var(--muted); margin-top: 8px; min-height: 18px; }
 .attn.resolved { opacity: .6; }
 .attn-undo { margin-top: 8px; }
+.attn-notes { margin-top: 8px; }
+.attn-note { font-size: 13.5px; background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 7px 10px; margin-top: 6px; }
+.attn-notebox { margin-top: 10px; }
+.attn-notebox textarea { width: 100%; box-sizing: border-box; min-height: 64px; padding: 8px 10px; border: 1px solid var(--border); border-radius: 8px; background: var(--bg); color: var(--text); font: inherit; font-size: 14px; }
+.attn-notebox .attn-actions { margin-top: 8px; }
 .attn.resolved .attn-actions { display: none; }
 /* ---- skills (Dave 2026-10-16) ---- */
 .skills { display: flex; flex-direction: column; gap: 10px; margin-top: 4px; }
@@ -287,7 +292,7 @@ h2 { font-size: 22px; margin: 32px 0 16px; }
 
 
 <h2>Needs Attention</h2>
-<div class="attn" data-attn-id="gazette-buddy-job-req-review"><div class="attn-text">Job req ready for Dave&#x27;s review — looks good, edits, or defer? Persona pick is presented in the main chat (The Editor is the default); voice auditions are live in this buddy&#x27;s own thread (provisional voice: Boomy Mountain; Decision Buddy casting asked).</div><div class="attn-link"><a href="https://docs.google.com/document/d/19inbHB5-jZbvNXb27i0NVdPXxpYxRxKUFXdSyEs9yK4/edit" target="_blank" rel="noopener">Open →</a></div><div class="attn-date">2026-10-30</div><div class="attn-actions"><button type="button" class="attn-btn primary" data-act="done">Done</button><button type="button" class="attn-btn" data-act="info">Need more info</button><button type="button" class="attn-btn" data-act="later">Later</button><button type="button" class="attn-btn" data-act="drop">Drop it</button></div><div class="attn-status" role="status"></div></div>
+<div class="attn" data-attn-id="gazette-buddy-job-req-review"><div class="attn-text">Job req ready for Dave&#x27;s review — looks good, edits, or defer? Persona pick is presented in the main chat (The Editor is the default); voice auditions are live in this buddy&#x27;s own thread (provisional voice: Boomy Mountain; Decision Buddy casting asked).</div><div class="attn-link"><a href="https://docs.google.com/document/d/19inbHB5-jZbvNXb27i0NVdPXxpYxRxKUFXdSyEs9yK4/edit" target="_blank" rel="noopener">Open →</a></div><div class="attn-date">2026-10-30</div><div class="attn-actions"><button type="button" class="attn-btn primary" data-act="done">Done</button><button type="button" class="attn-btn" data-act="info">Need more info</button><button type="button" class="attn-btn" data-act="later">Later</button><button type="button" class="attn-btn" data-act="drop">Drop it</button><button type="button" class="attn-btn" data-act="note">✎ Add a note…</button></div><div class="attn-notes"></div><div class="attn-notebox" hidden><textarea placeholder="Write a note for Gazette Buddy…"></textarea><div class="attn-actions"><button type="button" class="attn-btn primary" data-act="note-save">Save note</button><button type="button" class="attn-btn" data-act="note-cancel">Cancel</button></div></div><div class="attn-status" role="status"></div></div>
 
 
 
@@ -734,6 +739,21 @@ Generated 2026-10-31 · Part of the Buddy System<br>
      write the Need-more-info button uses. */
   function getState(aid, text){ var s = lsGet(); var m = s.attnState || {}; return m[rkey(aid, text)] || ''; }
   function setState(aid, text, v){ var s = lsGet(); var m = s.attnState || {}; if (v) m[rkey(aid, text)] = v; else delete m[rkey(aid, text)]; s.attnState = m; lsSet(s); }
+  /* ✎ Add a note (Dave 2026-11-20, fleet standard): Dave's words save to
+     this buddy's ingest through the same token-gated write, and the note
+     renders on the card (remembered per item on this device). */
+  function getNotes(aid, text){ var s = lsGet(); var m = s.attnNotes || {}; return m[rkey(aid, text)] || []; }
+  function addNote(aid, text, note){ var s = lsGet(); var m = s.attnNotes || {}; var k = rkey(aid, text); var arr = m[k] || []; arr.push(note); m[k] = arr; s.attnNotes = m; lsSet(s); }
+  function renderNotes(tile, aid, text){
+    var box = tile.querySelector('.attn-notes'); if (!box) return;
+    box.textContent = '';
+    getNotes(aid, text).forEach(function(n){
+      var d = document.createElement('div');
+      d.className = 'attn-note';
+      d.textContent = '✎ Dave · ' + n.date + ' — ' + n.text;
+      box.appendChild(d);
+    });
+  }
   function noteAction(tile, entry, okMsg){
     sendAction(tile, entry, okMsg).then(function(){
       tile.querySelectorAll('.attn-btn').forEach(function(b){ b.disabled = false; });
@@ -863,6 +883,7 @@ Generated 2026-10-31 · Part of the Buddy System<br>
     var baked = tile.getAttribute('data-cleared');
     var st0 = getState(aid, text);
     if (baked || isResolved(aid, text)) paintResolved(tile, baked ? ('✓ Cleared by Dave · ' + baked) : (st0 === 'later' ? 'Later — snoozed by Dave' : st0 === 'drop' ? 'Dropped by Dave' : st0 === 'arrived' ? '✓ Arrived — logged by Dave' : 'Marked done'), true);
+    renderNotes(tile, aid, text);
     tile.addEventListener('click', function(ev){
       var btn = ev.target.closest ? ev.target.closest('.attn-btn') : null;
       if (!btn || btn.disabled) return;
@@ -920,6 +941,23 @@ Generated 2026-10-31 · Part of the Buddy System<br>
         noteAction(tile,
           'STILL WAITING — Dave confirms this is still outstanding: "' + text + '"' + idBit + '. Keep it on the open list.',
           'Noted — still waiting; it stays on the list.');
+      } else if (act === 'note') {
+        var nb = tile.querySelector('.attn-notebox');
+        if (nb) { nb.hidden = false; var ta = nb.querySelector('textarea'); if (ta) ta.focus(); }
+      } else if (act === 'note-cancel') {
+        var nb2 = tile.querySelector('.attn-notebox');
+        if (nb2) { nb2.hidden = true; var ta2 = nb2.querySelector('textarea'); if (ta2) ta2.value = ''; }
+      } else if (act === 'note-save') {
+        var nb3 = tile.querySelector('.attn-notebox');
+        var ta3 = nb3 ? nb3.querySelector('textarea') : null;
+        var words = ta3 ? ta3.value.trim() : '';
+        if (!words) { if (nb3) nb3.hidden = true; return; }
+        addNote(aid, text, {date: todayStr(), text: words});
+        renderNotes(tile, aid, text);
+        if (nb3) { nb3.hidden = true; ta3.value = ''; }
+        noteAction(tile,
+          'NOTE — Dave added a note to: "' + text + '"' + idBit + ' — "' + words + '"',
+          'Note saved — it is on the card and in the ingest.');
       }
     });
   });
