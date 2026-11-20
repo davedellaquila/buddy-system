@@ -171,6 +171,13 @@
     .attn-btn.primary { background: var(--honey-deep); border-color: var(--honey-deep); color: #fff; }
     .attn-btn:disabled { opacity: .45; cursor: default; }
     .attn-status { font-size: 13px; color: var(--muted); margin-top: 8px; min-height: 18px; }
+    .attn-undo { margin-top: 8px; }
+    .attn-notebox { margin-top: 10px; display: none; }
+    .attn-notebox.open { display: block; }
+    .attn-notebox textarea { width: 100%; box-sizing: border-box; min-height: 54px; border: 1px solid var(--line); border-radius: 10px; padding: 8px 10px; font: inherit; font-size: 14px; background: var(--paper); color: var(--ink); }
+    .attn-notebox .attn-actions { margin-top: 8px; }
+    .attn-note-shown { font-size: 13px; color: var(--muted); margin-top: 6px; font-style: italic; }
+    .attn.resolved .attn-notebox { display: none; }
     .attn.resolved { opacity: .55; }
     .attn.resolved .attn-actions { display: none; }
     .attn.resolved .btn { display: none; }
@@ -253,28 +260,41 @@
       so &ldquo;later&rdquo; actually happens.
     </div>
 
-    <h2>Needs your attention <span class="count">1</span></h2>
+    <h2>Needs your attention <span class="count" id="attn-open-count">1</span></h2>
     <p class="sub">Fresh from the thread — tap through and clear it.</p>
-    <div class="card attention-card attn" data-attn-id="brief-review">
+    <div class="card attention-card attn" data-attn-id="brief-review" data-count-for="attn-open-count">
       <h3 class="attn-text">📄 Product brief ready for review</h3>
       <p>Looks good, edits, or defer? Your call decides whether this goes to a PRD. (Working title, per Dave: &ldquo;we&rsquo;ll think of a good name, we can change it later.&rdquo;)</p>
       <a class="btn" href="https://docs.google.com/document/d/1jJ_xZDQeogti-GRPLNnY8e-IgsBa93-QhdG1EhLIEJs/edit" target="_blank" rel="noopener">Read the brief</a>
       <div class="attn-actions">
         <button type="button" class="attn-btn primary" data-act="done">✓ Done</button>
         <button type="button" class="attn-btn" data-act="info">Need more info</button>
+        <button type="button" class="attn-btn" data-act="later">Later</button>
+        <button type="button" class="attn-btn" data-act="drop">Drop it</button>
+        <button type="button" class="attn-btn" data-act="note">✎ Add a note…</button>
       </div>
       <div class="attn-status" role="status"></div>
+      <div class="attn-notebox"><textarea placeholder="Add a note for Personal Buddy…"></textarea><div class="attn-actions"><button type="button" class="attn-btn primary" data-act="note-save">Save note</button><button type="button" class="attn-btn" data-act="note-cancel">Cancel</button></div></div>
     </div>
 
-    <h2>On the list <span class="count">1</span></h2>
+    <h2>On the list <span class="count" id="list-open-count">1</span></h2>
     <p class="sub">Every item carries a nudge slip — like a library due-date card, but it bites.</p>
-    <div class="card item">
+    <div class="card item attn" data-attn-id="calendar-visibility" data-count-for="list-open-count">
       <div>
         <div class="kicker">Seed item · Parked</div>
-        <h3>The calendar visibility problem</h3>
+        <h3 class="attn-text">The calendar visibility problem</h3>
         <p>A multi-day &ldquo;in San Jose&rdquo; indicator visible on <em>both</em> family and work
         calendars &mdash; without showing Dave as busy, and without maintaining two separate events.
         Parked, not solved: it&rsquo;s the first thing on the list for a reason.</p>
+        <div class="attn-actions">
+          <button type="button" class="attn-btn primary" data-act="done">✓ Done</button>
+          <button type="button" class="attn-btn" data-act="info">Need more info</button>
+          <button type="button" class="attn-btn" data-act="later">Later</button>
+          <button type="button" class="attn-btn" data-act="drop">Drop it</button>
+          <button type="button" class="attn-btn" data-act="note">✎ Add a note…</button>
+        </div>
+        <div class="attn-status" role="status"></div>
+        <div class="attn-notebox"><textarea placeholder="Add a note for Personal Buddy…"></textarea><div class="attn-actions"><button type="button" class="attn-btn primary" data-act="note-save">Save note</button><button type="button" class="attn-btn" data-act="note-cancel">Cancel</button></div></div>
       </div>
       <div class="slip">
         <div class="slip-title">Next nudge</div>
@@ -488,13 +508,18 @@ async function dump(){
 })();
 </script>
 <script>
-// ---- attention actions: per-tile "Done" / "Need more info" ----
-// Same GitHub write path as the dump box: the shared token from localStorage
-// ('buddyTree.v3' / 'ghToken') appends a timestamped entry to the buddy's
-// docs/ingest.md for triage. Resolved state persists in localStorage.
+// ---- attention action buttons (fleet standard, Dave 2026-11-20) ----
+// Every tile carries Done / Need more info / Later / Drop it + Undo, plus a
+// free-text note action — same set as the generated pages and ML500 Buddy.
+// Dispositions persist in localStorage (attnState: kind|date) and are written
+// to docs/ingest.md through the same token-gated path as the brain-dump box:
+// shared token from dashboard localStorage (buddyTree.v3 → ghToken), repo
+// resolved from ../buddies.json. A dispositioned tile stays visible in place
+// with its stamp (kind · date · Dave) and leaves the open set.
 (function(){
   var tiles = document.querySelectorAll('.attn[data-attn-id]');
-  if (!tiles.length) return;
+  if (!tiles.length || document.querySelector('[data-attn-init]')) return;
+  document.documentElement.setAttribute('data-attn-init', '1');
   var dumpbox = document.querySelector('.dumpbox');
   var bid = (dumpbox && dumpbox.getAttribute('data-buddy-id')) || (function(){
     var p = location.pathname.replace(/\/+$/, '');
@@ -547,10 +572,60 @@ async function dump(){
   function rkey(aid, text){ return bid + '|' + (aid || ('text:' + text.slice(0, 60))); }
   function isResolved(aid, text){ var m = lsGet().attnDone || {}; return !!m[rkey(aid, text)]; }
   function setResolved(aid, text){ var s = lsGet(); var m = s.attnDone || {}; m[rkey(aid, text)] = 1; s.attnDone = m; lsSet(s); }
+  function unsetResolved(aid, text){ var s = lsGet(); var m = s.attnDone || {}; delete m[rkey(aid, text)]; s.attnDone = m; lsSet(s); }
+  /* Disposition stamps (Dave 2026-11-20): kind + date, remembered per item so
+     a reload paints the state Dave chose; every tap also leaves a matching
+     entry in this buddy's ingest through the same token-gated write. */
+  function getState(aid, text){ var m = lsGet().attnState || {}; var v = m[rkey(aid, text)] || ''; var p = v.split('|'); return {kind: p[0] || '', date: p[1] || ''}; }
+  function setState(aid, text, kind, date){ var s = lsGet(); var m = s.attnState || {}; if (kind) m[rkey(aid, text)] = kind + '|' + (date || ''); else delete m[rkey(aid, text)]; s.attnState = m; lsSet(s); }
+  function todayStr(){ var d = new Date(); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); }
+  function stampText(kind, date){
+    var tail = date ? ' · ' + date : '';
+    if (kind === 'later') return 'Later — snoozed by Dave' + tail;
+    if (kind === 'drop') return 'Dropped by Dave' + tail;
+    return '✓ Cleared by Dave' + tail;
+  }
+  function updateCounts(){
+    var groups = {};
+    tiles.forEach(function(t){ var g = t.getAttribute('data-count-for'); if (!g) return; if (!(g in groups)) groups[g] = 0; if (!t.classList.contains('resolved')) groups[g]++; });
+    Object.keys(groups).forEach(function(g){ var el = document.getElementById(g); if (el) el.textContent = groups[g]; });
+  }
   function paintResolved(tile, msg){
     tile.classList.add('resolved');
     var st = tile.querySelector('.attn-status');
     if (st) st.textContent = msg;
+    if (st && !tile.querySelector('[data-act="undo"]')) {
+      var ub = document.createElement('button');
+      ub.type = 'button'; ub.className = 'attn-btn attn-undo'; ub.setAttribute('data-act', 'undo'); ub.textContent = 'Undo';
+      st.parentNode.insertBefore(ub, st.nextSibling);
+    }
+    updateCounts();
+  }
+  function paintOpen(tile){
+    tile.classList.remove('resolved');
+    var st = tile.querySelector('.attn-status');
+    if (st) st.textContent = '';
+    var ub = tile.querySelector('[data-act="undo"]');
+    if (ub) ub.remove();
+  }
+  /* Saved notes show on the card itself (Dave 2026-11-20 amendment), not
+     just in the ingest: the latest note per item renders under the status
+     and persists in localStorage (attnNotes) across reloads. */
+  function paintNote(tile, aid, text){
+    var m = lsGet().attnNotes || {}; var n = m[rkey(aid, text)];
+    var el = tile.querySelector('.attn-note-shown');
+    if (!n) { if (el) el.remove(); return; }
+    if (!el) {
+      el = document.createElement('div'); el.className = 'attn-note-shown';
+      var st = tile.querySelector('.attn-status');
+      if (st) st.parentNode.insertBefore(el, st.nextSibling); else tile.appendChild(el);
+    }
+    el.textContent = '📝 “' + n.text + '” — Dave' + (n.date ? ' · ' + n.date : '');
+  }
+  function saveNote(aid, text, note){
+    var s = lsGet(); var m = s.attnNotes || {};
+    m[rkey(aid, text)] = {text: note, date: todayStr()};
+    s.attnNotes = m; lsSet(s);
   }
   async function sendAction(tile, entry, okMsg){
     var st = tile.querySelector('.attn-status');
@@ -575,24 +650,75 @@ async function dump(){
       return false;
     }
   }
+  function enableUndo(tile){ var ub = tile.querySelector('[data-act="undo"]'); if (ub) ub.disabled = false; }
+  function enableAll(tile){ tile.querySelectorAll('.attn-btn').forEach(function(b){ b.disabled = false; }); }
   tiles.forEach(function(tile){
     var aid = tile.getAttribute('data-attn-id') || '';
     var textEl = tile.querySelector('.attn-text');
-    var text = textEl ? textEl.textContent.trim() : '';
-    if (isResolved(aid, text)) { paintResolved(tile, 'Marked done'); return; }
+    var text = textEl ? textEl.textContent.trim().replace(/\s+/g, ' ') : '';
+    var st0 = getState(aid, text);
+    if (st0.kind) paintResolved(tile, stampText(st0.kind, st0.date));
+    else if (isResolved(aid, text)) paintResolved(tile, '✓ Cleared by Dave');
+    paintNote(tile, aid, text);
     tile.addEventListener('click', function(ev){
       var btn = ev.target.closest ? ev.target.closest('.attn-btn') : null;
       if (!btn || btn.disabled) return;
       var act = btn.getAttribute('data-act');
       var idBit = aid ? ' (attention id: ' + aid + ')' : '';
       if (act === 'done') {
+        var d1 = todayStr();
+        setResolved(aid, text); setState(aid, text, 'done', d1);
+        paintResolved(tile, stampText('done', d1));
         sendAction(tile,
-          'DONE — Dave marked this done on the homepage: "' + text + '"' + idBit + '. Please remove it from the attention list in buddies.json.',
-          'Marked done — the buddy will clear it.').then(function(ok){ if (ok) { setResolved(aid, text); paintResolved(tile, 'Marked done — the buddy will clear it.'); } });
+          'DONE — Dave marked this done on the homepage: "' + text + '"' + idBit + '. Stamp: cleared · ' + d1 + ' · Dave. Please remove it from the attention section of the homepage.',
+          stampText('done', d1)).then(function(){ enableUndo(tile); });
+      } else if (act === 'later') {
+        var d2 = todayStr();
+        setState(aid, text, 'later', d2);
+        paintResolved(tile, stampText('later', d2));
+        sendAction(tile,
+          'LATER — Dave snoozed this item on the homepage: "' + text + '"' + idBit + '. Stamp: later · ' + d2 + ' · Dave. Resurface it later.',
+          stampText('later', d2)).then(function(){ enableUndo(tile); });
+      } else if (act === 'drop') {
+        var d3 = todayStr();
+        setResolved(aid, text); setState(aid, text, 'drop', d3);
+        paintResolved(tile, stampText('drop', d3));
+        sendAction(tile,
+          'DROPPED — Dave dropped this item on the homepage: "' + text + '"' + idBit + '. Stamp: dropped · ' + d3 + ' · Dave. Remove it from the open list.',
+          stampText('drop', d3)).then(function(){ enableUndo(tile); });
+      } else if (act === 'undo') {
+        unsetResolved(aid, text); setState(aid, text, '');
+        paintOpen(tile);
+        var st = tile.querySelector('.attn-status');
+        if (st) st.textContent = 'Reopened — it needs attention again.';
+        sendAction(tile,
+          'REOPENED — Dave undid the disposition on: "' + text + '"' + idBit + '. It needs attention again.',
+          'Reopened — it needs attention again.').then(function(){ enableAll(tile); });
       } else if (act === 'info') {
         sendAction(tile,
           'FOLLOW-UP — Dave needs more info on: "' + text + '"' + idBit + '. Please follow up with him.',
-          'Sent — ' + buddyName + ' will follow up.');
+          'Sent — ' + buddyName + ' will follow up.').then(function(){ enableAll(tile); });
+      } else if (act === 'note') {
+        var nb = tile.querySelector('.attn-notebox');
+        if (nb) { nb.classList.toggle('open'); var ta = nb.querySelector('textarea'); if (ta && nb.classList.contains('open')) ta.focus(); }
+      } else if (act === 'note-cancel') {
+        var nb2 = tile.querySelector('.attn-notebox');
+        if (nb2) nb2.classList.remove('open');
+      } else if (act === 'note-save') {
+        var nb3 = tile.querySelector('.attn-notebox');
+        var ta3 = nb3 ? nb3.querySelector('textarea') : null;
+        var note = ta3 ? ta3.value.trim() : '';
+        var st4 = tile.querySelector('.attn-status');
+        if (!note) { if (st4) st4.textContent = 'Write the note first, then save.'; return; }
+        sendAction(tile,
+          'NOTE — Dave added a note on: "' + text + '"' + idBit + ': "' + note + '"',
+          'Note saved — ' + buddyName + ' has it.').then(function(ok){
+            enableAll(tile);
+            if (ok) {
+              saveNote(aid, text, note); paintNote(tile, aid, text);
+              if (nb3) { nb3.classList.remove('open'); ta3.value = ''; }
+            }
+          });
       }
     });
   });
