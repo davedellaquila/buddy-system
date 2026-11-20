@@ -234,3 +234,7 @@ DONE — Dave marked this done on the homepage: "Voice picked by Dave Nov 1, 202
 
 DONE — Dave marked this done on the homepage: "Job req ready for Dave's review — looks good, edits, or defer? The Homepage & Route Attribute Brief is also open for his review. Persona pick is presented in the main chat (The Cartographer is the default); voice auditions are live in this buddy's own thread." (attention id: route-buddy-job-req-review). Please remove it from the attention list in buddies.json.
 
+## 11/20/2026, 12:18:02 PM
+
+the oil change info for the Mercedes should be in the Airtable service history database
+
