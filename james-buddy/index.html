@@ -31,6 +31,11 @@ button.dump { background:var(--accent); color:#fff; border:0; border-radius:8px;
 .attn.resolved { opacity:.6; }
 .attn.resolved .attn-actions { display:none; }
 .attn-undo { margin-top:8px; }
+.attn-note-shown { font-size:13px; color:var(--muted); margin-top:6px; font-style:italic; }
+.attn-notebox { margin-top:10px; display:none; }
+.attn-notebox.open { display:block; }
+.attn-notebox textarea { width:100%; box-sizing:border-box; min-height:54px; border:1px solid var(--border); border-radius:8px; padding:8px 10px; font:inherit; font-size:14px; background:var(--bg); color:var(--text); }
+.attn-notebox .attn-actions { margin-top:8px; }
 .tokenrow { display:flex; gap:8px; margin-top:10px; }
 .tokenrow input { flex:1; min-width:0; background:var(--bg); color:var(--text); border:1px solid var(--border); border-radius:8px; padding:8px 10px; font:inherit; }
 .tokenrow button { background:var(--card); color:var(--text); border:1px solid var(--border); border-radius:8px; padding:8px 14px; font:inherit; font-size:.9em; cursor:pointer; }
@@ -79,13 +84,15 @@ button.dump { background:var(--accent); color:#fff; border:0; border-radius:8px;
 <h2>Needs your attention</h2>
 <div class="attn" data-attn-id="mission-review">
 <div class="attn-text"><a href="https://docs.google.com/document/d/1IcfE4V-Q-r2nh2zLmwBvqBiZ3lJEFf82C0cXTrBqSXI/edit" target="_blank" rel="noopener">Mission statement</a> — ready for your review.</div>
-<div class="attn-actions"><button type="button" class="attn-btn primary" data-act="done">✓ Done</button><button type="button" class="attn-btn" data-act="info">Need more info</button><button type="button" class="attn-btn" data-act="later">Later</button><button type="button" class="attn-btn" data-act="drop">Drop it</button></div>
+<div class="attn-actions"><button type="button" class="attn-btn primary" data-act="done">✓ Done</button><button type="button" class="attn-btn" data-act="info">Need more info</button><button type="button" class="attn-btn" data-act="later">Later</button><button type="button" class="attn-btn" data-act="drop">Drop it</button><button type="button" class="attn-btn" data-act="note">✎ Add a note…</button></div>
 <div class="attn-status" role="status"></div>
+<div class="attn-notebox"><textarea placeholder="Add a note for James’s Buddy…"></textarea><div class="attn-actions"><button type="button" class="attn-btn primary" data-act="note-save">Save note</button><button type="button" class="attn-btn" data-act="note-cancel">Cancel</button></div></div>
 </div>
 <div class="attn" data-attn-id="invite-james-joel">
 <div class="attn-text">Invite James (and Joel?) over — timing TBD.</div>
-<div class="attn-actions"><button type="button" class="attn-btn primary" data-act="done">✓ Done</button><button type="button" class="attn-btn" data-act="info">Need more info</button><button type="button" class="attn-btn" data-act="later">Later</button><button type="button" class="attn-btn" data-act="drop">Drop it</button></div>
+<div class="attn-actions"><button type="button" class="attn-btn primary" data-act="done">✓ Done</button><button type="button" class="attn-btn" data-act="info">Need more info</button><button type="button" class="attn-btn" data-act="later">Later</button><button type="button" class="attn-btn" data-act="drop">Drop it</button><button type="button" class="attn-btn" data-act="note">✎ Add a note…</button></div>
 <div class="attn-status" role="status"></div>
+<div class="attn-notebox"><textarea placeholder="Add a note for James’s Buddy…"></textarea><div class="attn-actions"><button type="button" class="attn-btn primary" data-act="note-save">Save note</button><button type="button" class="attn-btn" data-act="note-cancel">Cancel</button></div></div>
 </div>
 </div>
 
@@ -205,6 +212,25 @@ button.dump { background:var(--accent); color:#fff; border:0; border-radius:8px;
     try{ await appendIngest(entry); st.textContent=okMsg; return true; }
     catch(err){ st.textContent='Save failed: '+(err.message||err); btns.forEach(function(b){ b.disabled=false; }); return false; }
   }
+  /* Saved notes show on the card itself (Dave 2026-11-20 amendment), not
+     just in the ingest: the latest note per item renders under the status
+     and persists in localStorage (attnNotes) across reloads. */
+  function paintNote(tile,aid,text){
+    var m=lsGet().attnNotes||{}, n=m[rkey(aid,text)];
+    var el=tile.querySelector('.attn-note-shown');
+    if(!n){ if(el) el.remove(); return; }
+    if(!el){
+      el=document.createElement('div'); el.className='attn-note-shown';
+      var st=tile.querySelector('.attn-status');
+      if(st) st.parentNode.insertBefore(el,st.nextSibling); else tile.appendChild(el);
+    }
+    el.textContent='\u{1F4DD} \u201c'+n.text+'\u201d \u2014 Dave'+(n.date?' \u00b7 '+n.date:'');
+  }
+  function saveNote(aid,text,note){
+    var s=lsGet(), m=s.attnNotes||{};
+    m[rkey(aid,text)]={text:note,date:todayStr()};
+    s.attnNotes=m; lsSet(s);
+  }
   /* Disposition taps resolve locally at once (fleet behavior); the stamp
      then goes to the ingest log when a token is on this device. */
   function applyDisposition(tile,aid,text,kind,entry){
@@ -229,6 +255,7 @@ button.dump { background:var(--accent); color:#fff; border:0; border-radius:8px;
     var textEl=tile.querySelector('.attn-text'), text=textEl?textEl.textContent.trim():'';
     var lk=localState(aid,text);
     if(lk) paintResolved(tile, lk.kind==='done'&&!lk.date ? 'Marked done' : stateMsg(lk.kind,lk.date||''), true);
+    paintNote(tile,aid,text);
     tile.addEventListener('click',function(ev){
       var btn=ev.target.closest?ev.target.closest('.attn-btn'):null;
       if(!btn||btn.disabled) return;
@@ -249,6 +276,25 @@ button.dump { background:var(--accent); color:#fff; border:0; border-radius:8px;
         if(token()) appendIngest('REOPENED \u2014 Dave undid the disposition on the homepage: "'+text+'"'+idBit+'. Please treat it as open again and clear any cleared/later/dropped stamp.').catch(function(){});
       }else if(act==='info'){
         sendAction(tile,'FOLLOW-UP \u2014 Dave needs more info on: "'+text+'"'+idBit+'. Please follow up with him.','Sent \u2014 '+buddyName+' will follow up.');
+      }else if(act==='note'){
+        var nb=tile.querySelector('.attn-notebox');
+        if(nb){ nb.classList.toggle('open'); var ta=nb.querySelector('textarea'); if(ta&&nb.classList.contains('open')) ta.focus(); }
+      }else if(act==='note-cancel'){
+        var nb2=tile.querySelector('.attn-notebox');
+        if(nb2) nb2.classList.remove('open');
+      }else if(act==='note-save'){
+        var nb3=tile.querySelector('.attn-notebox');
+        var ta3=nb3?nb3.querySelector('textarea'):null;
+        var note=ta3?ta3.value.trim():'';
+        var st4=tile.querySelector('.attn-status');
+        if(!note){ if(st4) st4.textContent='Write the note first, then save.'; return; }
+        sendAction(tile,'NOTE \u2014 Dave added a note on: "'+text+'"'+idBit+': "'+note+'"','Note saved \u2014 '+buddyName+' has it.').then(function(ok){
+          tile.querySelectorAll('.attn-btn').forEach(function(b){ b.disabled=false; });
+          if(ok){
+            saveNote(aid,text,note); paintNote(tile,aid,text);
+            if(nb3){ nb3.classList.remove('open'); ta3.value=''; }
+          }
+        });
       }
     });
   });
