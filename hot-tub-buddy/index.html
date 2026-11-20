@@ -219,6 +219,11 @@
     .attn-status { font-size: 13px; color: var(--muted); margin-top: 8px; min-height: 18px; }
     .attn.resolved { opacity: .6; }
     .attn.resolved .attn-actions { display: none; }
+    .attn-undo { margin-top: 8px; }
+    .attn-notebox { margin-top: 10px; display: none; }
+    .attn-notebox.open { display: block; }
+    .attn-notebox textarea { width: 100%; box-sizing: border-box; min-height: 54px; border: 1px solid var(--line); border-radius: 10px; padding: 8px 10px; font: inherit; font-size: 14px; background: var(--surface-soft); color: inherit; }
+    .attn-notebox .attn-actions { margin-top: 8px; }
 
     .foot { text-align: center; color: var(--faint); font-size: 12.5px; margin-top: 34px; }
   </style>
@@ -245,28 +250,40 @@
           <li class="attn" data-attn-id="inner-filter-part"><span class="tag open">Before ordering</span>
             <div class="attn-text"><strong>Verify the inner-filter part number</strong> — 6540-502S vs 6473-453 for 2024+ 880-series. Confirm with the dealer before any filter order.</div>
             <div class="attn-actions">
-              <button type="button" class="attn-btn primary" data-act="done">✓ Done</button>
+              <button type="button" class="attn-btn primary" data-act="done">Done</button>
               <button type="button" class="attn-btn" data-act="info">Need more info</button>
+              <button type="button" class="attn-btn" data-act="later">Later</button>
+              <button type="button" class="attn-btn" data-act="drop">Drop it</button>
+              <button type="button" class="attn-btn" data-act="note">✎ Add a note…</button>
               <a class="attn-btn" href="https://www.hottubthings.com/products/sundance-microclean-filter-set-880-980-series-6541-397s" target="_blank" rel="noopener">🛒 Buy filters</a>
               <a class="attn-btn" href="https://lightexports.com/6472-841-uvc-pool-spa-equivalent-bulb-for-sundance-clear-ray-xl/" target="_blank" rel="noopener">💡 Buy UV bulb</a>
             </div>
-            <div class="attn-status" role="status"></div></li>
+            <div class="attn-status" role="status"></div>
+            <div class="attn-notebox"><textarea placeholder="Add a note for Hot Tub Buddy…"></textarea><div class="attn-actions"><button type="button" class="attn-btn primary" data-act="note-save">Save note</button><button type="button" class="attn-btn" data-act="note-cancel">Cancel</button></div></div></li>
           <li class="attn" data-attn-id="chlorine-vs-bromine"><span class="tag attn">Open question</span>
             <div class="attn-text"><strong>Chlorine or bromine setup?</strong> Chemistry targets differ — the brief needs this nailed down.<br>
             <a class="go-link" href="https://docs.google.com/document/d/1BDcst37j2FftKqzY-Tz-ecQLtYc5OnR3kmY6xmn80Sg/edit" target="_blank" rel="noopener">📄 Open the product brief →</a></div>
             <div class="attn-actions">
-              <button type="button" class="attn-btn primary" data-act="done">✓ Done</button>
+              <button type="button" class="attn-btn primary" data-act="done">Done</button>
               <button type="button" class="attn-btn" data-act="info">Need more info</button>
+              <button type="button" class="attn-btn" data-act="later">Later</button>
+              <button type="button" class="attn-btn" data-act="drop">Drop it</button>
+              <button type="button" class="attn-btn" data-act="note">✎ Add a note…</button>
             </div>
-            <div class="attn-status" role="status"></div></li>
+            <div class="attn-status" role="status"></div>
+            <div class="attn-notebox"><textarea placeholder="Add a note for Hot Tub Buddy…"></textarea><div class="attn-actions"><button type="button" class="attn-btn primary" data-act="note-save">Save note</button><button type="button" class="attn-btn" data-act="note-cancel">Cancel</button></div></div></li>
           <li class="attn" data-attn-id="brief-review"><span class="tag attn">Review</span>
             <div class="attn-text">The <strong>product brief</strong> is in your court. Next steps follow your review — no PRD or business-plan placeholders until then.<br>
             <a class="go-link" href="https://docs.google.com/document/d/1BDcst37j2FftKqzY-Tz-ecQLtYc5OnR3kmY6xmn80Sg/edit" target="_blank" rel="noopener">📄 Open the product brief →</a></div>
             <div class="attn-actions">
-              <button type="button" class="attn-btn primary" data-act="done">✓ Done</button>
+              <button type="button" class="attn-btn primary" data-act="done">Done</button>
               <button type="button" class="attn-btn" data-act="info">Need more info</button>
+              <button type="button" class="attn-btn" data-act="later">Later</button>
+              <button type="button" class="attn-btn" data-act="drop">Drop it</button>
+              <button type="button" class="attn-btn" data-act="note">✎ Add a note…</button>
             </div>
-            <div class="attn-status" role="status"></div></li>
+            <div class="attn-status" role="status"></div>
+            <div class="attn-notebox"><textarea placeholder="Add a note for Hot Tub Buddy…"></textarea><div class="attn-actions"><button type="button" class="attn-btn primary" data-act="note-save">Save note</button><button type="button" class="attn-btn" data-act="note-cancel">Cancel</button></div></div></li>
         </ul>
       </section>
 
@@ -356,7 +373,7 @@
       </div>
     </section>
 
-    <p class="foot">Hot Tub Buddy · designed by me, for the dashboard · updated 2026-11-02 · treatment logged Nov 2</p>
+    <p class="foot">Hot Tub Buddy · designed by me, for the dashboard · updated 2026-11-20 · full task action set (Done / Need more info / Later / Drop it + Undo + note) live on every attention tile</p>
   </div>
 <script>
 // ---- brain-dump box: textarea + "Dump it" (Cmd/Ctrl+Enter) → docs/ingest.md via GitHub API ----
@@ -523,10 +540,14 @@ async function dump(){
 })();
 </script>
 <script>
-// ---- attention action buttons: "Done" / "Need more info" per tile ----
-// Same GitHub write path as the brain-dump box: shared token from dashboard
-// localStorage (buddyTree.v3 → ghToken), repo resolved from ../buddies.json.
-// Resolved state persists in localStorage so tiles stay resolved on reload.
+// ---- attention action buttons (fleet standard, Dave 2026-11-20) ----
+// Every tile carries Done / Need more info / Later / Drop it + Undo, plus a
+// free-text note action — same set as the generated pages and ML500 Buddy.
+// Dispositions persist in localStorage (attnState: kind|date) and are written
+// to docs/ingest.md through the same token-gated path as the brain-dump box:
+// shared token from dashboard localStorage (buddyTree.v3 → ghToken), repo
+// resolved from ../buddies.json. A dispositioned tile stays visible in place
+// with its stamp (kind · date · Dave) and leaves the open set.
 (function(){
   var tiles = document.querySelectorAll('.attn[data-attn-id]');
   if (!tiles.length || document.querySelector('[data-attn-init]')) return;
@@ -583,10 +604,35 @@ async function dump(){
   function rkey(aid, text){ return bid + '|' + (aid || ('text:' + text.slice(0, 60))); }
   function isResolved(aid, text){ var m = lsGet().attnDone || {}; return !!m[rkey(aid, text)]; }
   function setResolved(aid, text){ var s = lsGet(); var m = s.attnDone || {}; m[rkey(aid, text)] = 1; s.attnDone = m; lsSet(s); }
+  function unsetResolved(aid, text){ var s = lsGet(); var m = s.attnDone || {}; delete m[rkey(aid, text)]; s.attnDone = m; lsSet(s); }
+  /* Disposition stamps (Dave 2026-11-20): kind + date, remembered per item so
+     a reload paints the state Dave chose; every tap also leaves a matching
+     entry in this buddy's ingest through the same token-gated write. */
+  function getState(aid, text){ var m = lsGet().attnState || {}; var v = m[rkey(aid, text)] || ''; var p = v.split('|'); return {kind: p[0] || '', date: p[1] || ''}; }
+  function setState(aid, text, kind, date){ var s = lsGet(); var m = s.attnState || {}; if (kind) m[rkey(aid, text)] = kind + '|' + (date || ''); else delete m[rkey(aid, text)]; s.attnState = m; lsSet(s); }
+  function todayStr(){ var d = new Date(); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); }
+  function stampText(kind, date){
+    var tail = date ? ' · ' + date : '';
+    if (kind === 'later') return 'Later — snoozed by Dave' + tail;
+    if (kind === 'drop') return 'Dropped by Dave' + tail;
+    return '✓ Cleared by Dave' + tail;
+  }
   function paintResolved(tile, msg){
     tile.classList.add('resolved');
     var st = tile.querySelector('.attn-status');
     if (st) st.textContent = msg;
+    if (st && !tile.querySelector('[data-act="undo"]')) {
+      var ub = document.createElement('button');
+      ub.type = 'button'; ub.className = 'attn-btn attn-undo'; ub.setAttribute('data-act', 'undo'); ub.textContent = 'Undo';
+      st.parentNode.insertBefore(ub, st.nextSibling);
+    }
+  }
+  function paintOpen(tile){
+    tile.classList.remove('resolved');
+    var st = tile.querySelector('.attn-status');
+    if (st) st.textContent = '';
+    var ub = tile.querySelector('[data-act="undo"]');
+    if (ub) ub.remove();
   }
   async function sendAction(tile, entry, okMsg){
     var st = tile.querySelector('.attn-status');
@@ -611,29 +657,75 @@ async function dump(){
       return false;
     }
   }
-  resolveBuddy().then(function(){
-    tiles.forEach(function(tile){
-      var aid = tile.getAttribute('data-attn-id') || '';
-      var textEl = tile.querySelector('.attn-text');
-      var text = textEl ? textEl.textContent.trim().replace(/\s+/g, ' ') : '';
-      if (isResolved(aid, text)) { paintResolved(tile, 'Marked done'); return; }
-      tile.addEventListener('click', function(ev){
-        var btn = ev.target.closest ? ev.target.closest('.attn-btn') : null;
-        if (!btn || btn.disabled) return;
-        var act = btn.getAttribute('data-act');
-        var idBit = aid ? ' (attention id: ' + aid + ')' : '';
-        if (act === 'done') {
-          sendAction(tile,
-            'DONE — Dave marked this done on the homepage: "' + text + '"' + idBit + '. Please remove it from the attention section of the homepage.',
-            'Marked done — the buddy will clear it.').then(function(ok){ if (ok) { setResolved(aid, text); paintResolved(tile, 'Marked done — the buddy will clear it.'); } });
-        } else if (act === 'info') {
-          sendAction(tile,
-            'FOLLOW-UP — Dave needs more info on: "' + text + '"' + idBit + '. Please follow up with him.',
-            'Sent — ' + buddyName + ' will follow up.');
-        }
-      });
+  function enableUndo(tile){ var ub = tile.querySelector('[data-act="undo"]'); if (ub) ub.disabled = false; }
+  function enableAll(tile){ tile.querySelectorAll('.attn-btn').forEach(function(b){ b.disabled = false; }); }
+  tiles.forEach(function(tile){
+    var aid = tile.getAttribute('data-attn-id') || '';
+    var textEl = tile.querySelector('.attn-text');
+    var text = textEl ? textEl.textContent.trim().replace(/\s+/g, ' ') : '';
+    var st0 = getState(aid, text);
+    if (st0.kind) paintResolved(tile, stampText(st0.kind, st0.date));
+    else if (isResolved(aid, text)) paintResolved(tile, '✓ Cleared by Dave');
+    tile.addEventListener('click', function(ev){
+      var btn = ev.target.closest ? ev.target.closest('.attn-btn') : null;
+      if (!btn || btn.disabled) return;
+      var act = btn.getAttribute('data-act');
+      var idBit = aid ? ' (attention id: ' + aid + ')' : '';
+      if (act === 'done') {
+        var d1 = todayStr();
+        setResolved(aid, text); setState(aid, text, 'done', d1);
+        paintResolved(tile, stampText('done', d1));
+        sendAction(tile,
+          'DONE — Dave marked this done on the homepage: "' + text + '"' + idBit + '. Stamp: cleared · ' + d1 + ' · Dave. Please remove it from the attention section of the homepage.',
+          stampText('done', d1)).then(function(){ enableUndo(tile); });
+      } else if (act === 'later') {
+        var d2 = todayStr();
+        setState(aid, text, 'later', d2);
+        paintResolved(tile, stampText('later', d2));
+        sendAction(tile,
+          'LATER — Dave snoozed this item on the homepage: "' + text + '"' + idBit + '. Stamp: later · ' + d2 + ' · Dave. Resurface it later.',
+          stampText('later', d2)).then(function(){ enableUndo(tile); });
+      } else if (act === 'drop') {
+        var d3 = todayStr();
+        setResolved(aid, text); setState(aid, text, 'drop', d3);
+        paintResolved(tile, stampText('drop', d3));
+        sendAction(tile,
+          'DROPPED — Dave dropped this item on the homepage: "' + text + '"' + idBit + '. Stamp: dropped · ' + d3 + ' · Dave. Remove it from the open list.',
+          stampText('drop', d3)).then(function(){ enableUndo(tile); });
+      } else if (act === 'undo') {
+        unsetResolved(aid, text); setState(aid, text, '');
+        paintOpen(tile);
+        var st = tile.querySelector('.attn-status');
+        if (st) st.textContent = 'Reopened — it needs attention again.';
+        sendAction(tile,
+          'REOPENED — Dave undid the disposition on: "' + text + '"' + idBit + '. It needs attention again.',
+          'Reopened — it needs attention again.').then(function(){ enableAll(tile); });
+      } else if (act === 'info') {
+        sendAction(tile,
+          'FOLLOW-UP — Dave needs more info on: "' + text + '"' + idBit + '. Please follow up with him.',
+          'Sent — ' + buddyName + ' will follow up.').then(function(){ enableAll(tile); });
+      } else if (act === 'note') {
+        var nb = tile.querySelector('.attn-notebox');
+        if (nb) { nb.classList.toggle('open'); var ta = nb.querySelector('textarea'); if (ta && nb.classList.contains('open')) ta.focus(); }
+      } else if (act === 'note-cancel') {
+        var nb2 = tile.querySelector('.attn-notebox');
+        if (nb2) nb2.classList.remove('open');
+      } else if (act === 'note-save') {
+        var nb3 = tile.querySelector('.attn-notebox');
+        var ta3 = nb3 ? nb3.querySelector('textarea') : null;
+        var note = ta3 ? ta3.value.trim() : '';
+        var st4 = tile.querySelector('.attn-status');
+        if (!note) { if (st4) st4.textContent = 'Write the note first, then save.'; return; }
+        sendAction(tile,
+          'NOTE — Dave added a note on: "' + text + '"' + idBit + ': "' + note + '"',
+          'Note saved — ' + buddyName + ' has it.').then(function(ok){
+            enableAll(tile);
+            if (ok && nb3) { nb3.classList.remove('open'); ta3.value = ''; }
+          });
+      }
     });
   });
+  resolveBuddy();
 })();
 </script>
 <!--
