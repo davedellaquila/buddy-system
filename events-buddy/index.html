@@ -90,6 +90,12 @@ h2 { font-size: 22px; margin: 32px 0 16px; }
 .attn-status { font-size: 13px; color: var(--muted); margin-top: 8px; min-height: 18px; }
 .attn.resolved { opacity: .6; }
 .attn.resolved .attn-actions { display: none; }
+.attn-undo { margin-top: 8px; }
+.attn-notes { margin-top: 4px; }
+.attn-note { font-size: 14px; background: var(--card); border-left: 3px solid var(--accent); padding: 6px 10px; margin-top: 6px; border-radius: 6px; white-space: pre-wrap; }
+.attn-note-date { color: var(--muted); font-size: 12px; }
+.attn-notebox { margin-top: 10px; }
+.attn-noteta { width: 100%; box-sizing: border-box; font: inherit; padding: 8px 10px; border: 1px solid var(--border); border-radius: 8px; background: var(--bg); color: var(--text); }
 /* ---- skills (Dave 2026-10-16) ---- */
 .skills { display: flex; flex-direction: column; gap: 10px; margin-top: 4px; }
 .skill { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 12px 16px; }
@@ -329,7 +335,10 @@ h2 { font-size: 22px; margin: 32px 0 16px; }
 
 
 <h2>Needs Attention</h2>
-<p class="empty">Nothing needs attention right now.</p>
+<div class="attn" data-attn-id="events-firestore-signin"><div class="attn-text">Firestore sign-in — the fix is on your laptop: on the fiddletown-events project, grant yourself Organization Policy Administrator, then set 'Disable service account key creation' to Enforcement Off, then tell Astro 'done'. That unblocks the service-account key — and 394 staged intake events flush into the internal database.</div><div class="attn-actions"><button type="button" class="attn-btn primary" data-act="done">Done</button><button type="button" class="attn-btn" data-act="info">Need more info</button><button type="button" class="attn-btn" data-act="later">Later</button><button type="button" class="attn-btn" data-act="drop">Drop it</button><button type="button" class="attn-btn" data-act="note">✎ Add a note…</button></div><div class="attn-notes"></div><div class="attn-notebox" hidden><textarea class="attn-noteta" rows="3" placeholder="Your note for Events Buddy…"></textarea><div class="attn-actions"><button type="button" class="attn-btn primary" data-act="note-save">Save note</button><button type="button" class="attn-btn" data-act="note-cancel">Cancel</button></div></div><div class="attn-status" role="status"></div></div>
+<div class="attn" data-attn-id="events-master-list-live"><div class="attn-text">Events Master List — still a static snapshot from Oct 16. Your call: wire it to read the live database, or leave it as a snapshot?</div><div class="attn-actions"><button type="button" class="attn-btn primary" data-act="done">Done</button><button type="button" class="attn-btn" data-act="info">Need more info</button><button type="button" class="attn-btn" data-act="later">Later</button><button type="button" class="attn-btn" data-act="drop">Drop it</button><button type="button" class="attn-btn" data-act="note">✎ Add a note…</button></div><div class="attn-notes"></div><div class="attn-notebox" hidden><textarea class="attn-noteta" rows="3" placeholder="Your note for Events Buddy…"></textarea><div class="attn-actions"><button type="button" class="attn-btn primary" data-act="note-save">Save note</button><button type="button" class="attn-btn" data-act="note-cancel">Cancel</button></div></div><div class="attn-status" role="status"></div></div>
+<div class="attn" data-attn-id="events-supabase-cutover"><div class="attn-text">Supabase → Firebase cutover — the events app still runs on legacy Supabase (~$35/mo); the Firebase copy was migrated Oct 3–5 and is waiting. Cut over when you're confident, then downgrade/delete Supabase.</div><div class="attn-actions"><button type="button" class="attn-btn primary" data-act="done">Done</button><button type="button" class="attn-btn" data-act="info">Need more info</button><button type="button" class="attn-btn" data-act="later">Later</button><button type="button" class="attn-btn" data-act="drop">Drop it</button><button type="button" class="attn-btn" data-act="note">✎ Add a note…</button></div><div class="attn-notes"></div><div class="attn-notebox" hidden><textarea class="attn-noteta" rows="3" placeholder="Your note for Events Buddy…"></textarea><div class="attn-actions"><button type="button" class="attn-btn primary" data-act="note-save">Save note</button><button type="button" class="attn-btn" data-act="note-cancel">Cancel</button></div></div><div class="attn-status" role="status"></div></div>
+<div class="attn" data-attn-id="events-viewer-links"><div class="attn-text">Gold Country Events viewer is live on your GitHub Pages — want the Gazette's Around Town section and this homepage to link out to it?</div><div class="attn-link"><a href="https://davedellaquila.github.io/gold-country-events/">Gold Country Events ↗</a></div><div class="attn-actions"><button type="button" class="attn-btn primary" data-act="done">Done</button><button type="button" class="attn-btn" data-act="info">Need more info</button><button type="button" class="attn-btn" data-act="later">Later</button><button type="button" class="attn-btn" data-act="drop">Drop it</button><button type="button" class="attn-btn" data-act="note">✎ Add a note…</button></div><div class="attn-notes"></div><div class="attn-notebox" hidden><textarea class="attn-noteta" rows="3" placeholder="Your note for Events Buddy…"></textarea><div class="attn-actions"><button type="button" class="attn-btn primary" data-act="note-save">Save note</button><button type="button" class="attn-btn" data-act="note-cancel">Cancel</button></div></div><div class="attn-status" role="status"></div></div>
 
 
 
@@ -956,7 +965,7 @@ Generated 2026-11-19 · Part of the Buddy System<br>
     } catch(e){}
     return null;
   }
-  var repo = null, buddyName = bid;
+  var repo = null, buddyName = bid, regStamps = {};
   async function resolveBuddy(){
     try {
       var r = await fetch('../buddies.json', {cache: 'no-store'});
@@ -966,6 +975,11 @@ Generated 2026-11-19 · Part of the Buddy System<br>
         if (buds[i].id === bid) {
           if (buds[i].repo) repo = buds[i].repo;
           if (buds[i].name) buddyName = buds[i].name;
+          var atts = buds[i].attention || [];
+          for (var j = 0; j < atts.length; j++) {
+            var a = atts[j];
+            if (a && typeof a === 'object' && a.id && (a.cleared || a.later || a.dropped)) regStamps[a.id] = a;
+          }
           break;
         }
       }
@@ -983,6 +997,47 @@ Generated 2026-11-19 · Part of the Buddy System<br>
     return false;
   }
   function setResolved(aid, text){ var s = lsGet(); var m = s.attnDone || {}; m[rkey(aid, text)] = 1; s.attnDone = m; lsSet(s); }
+  function unsetResolved(aid, text){ var s = lsGet(); var m = s.attnDone || {}; delete m[rkey(aid, text)]; s.attnDone = m; if (aid && s.seen) delete s.seen[aid]; lsSet(s); }
+  /* Dispositions beyond Done (Dave 2026-11-20): Later / Drop it are
+     remembered per item so a reload paints the state Dave chose, and each
+     one also writes its registry stamp (below) so the item leaves the
+     open counts on every surface while staying visible in place. */
+  function getState(aid, text){ var s = lsGet(); var m = s.attnState || {}; return m[rkey(aid, text)] || ''; }
+  function setState(aid, text, v){ var s = lsGet(); var m = s.attnState || {}; if (v) m[rkey(aid, text)] = v; else delete m[rkey(aid, text)]; s.attnState = m; lsSet(s); }
+  function todayStr(){ var d = new Date(); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); }
+  /* Registry stamps (Dave 2026-11-19/20): a tap writes the item's stamp
+     into buddies.json itself through the token-gated GitHub path — Done
+     writes `cleared`, Later writes `later`, Drop it writes `dropped`,
+     each {date, by: 'Dave'} — so a dispositioned item stays visible with
+     its stamp and leaves the open counts everywhere. Undo removes the
+     stamps. The device-local marks remain the instant/offline record. */
+  async function regStamp(aid, text, key, obj){
+    try {
+      var cur = await ghGetFile('buddy-system', 'buddies.json');
+      if (!cur) return false;
+      var d = JSON.parse(cur.text);
+      var buds = d.buddies || [], bb = null;
+      for (var i = 0; i < buds.length; i++) if (buds[i].id === bid) { bb = buds[i]; break; }
+      if (!bb) return false;
+      var list = bb.attention || [], hit = null, hitIdx = -1;
+      for (var j = 0; j < list.length; j++) {
+        var e = list[j];
+        if (aid && e && typeof e === 'object' && e.id === aid) { hit = e; break; }
+        if (!aid && typeof e === 'string' && e.slice(0, 60) === text.slice(0, 60)) { hitIdx = j; break; }
+        if (!aid && e && typeof e === 'object' && (e.text || '').slice(0, 60) === text.slice(0, 60)) { hit = e; break; }
+      }
+      if (!hit && hitIdx >= 0) { hit = {text: list[hitIdx]}; bb.attention[hitIdx] = hit; }
+      if (!hit) return false;
+      /* The three stamps are mutually exclusive — setting one clears the
+         others; Undo (key = null) removes all three. */
+      delete hit.cleared; delete hit.later; delete hit.dropped;
+      if (key) hit[key] = obj;
+      var body = {message: (key ? ('Stamp attention ' + key + ' ') : 'Reopen attention ') + (aid || 'item') + ' for ' + bid + ' (homepage)', content: b64encode(JSON.stringify(d, null, 1))};
+      if (cur.sha) body.sha = cur.sha;
+      await ghApi('/repos/davedellaquila/buddy-system/contents/buddies.json', 'PUT', body);
+      return true;
+    } catch(e){ return false; }
+  }
   /* Las Vegas mode (Dave 2026-10-20): marking done feels like a win — the
      button spins once and confetti bursts from it. DOM + WAAPI only;
      skipped under prefers-reduced-motion; only ever called on a real tap. */
@@ -1020,14 +1075,27 @@ Generated 2026-11-19 · Part of the Buddy System<br>
        button renders plain "Done"; the check appears only once clicked. */
     var db = tile.querySelector('[data-act="done"]');
     if (db) db.textContent = '✓ Done';
+    if (st && !tile.querySelector('[data-act="undo"]')) {
+      var ub = document.createElement('button');
+      ub.type = 'button'; ub.className = 'attn-btn attn-undo'; ub.setAttribute('data-act', 'undo'); ub.textContent = 'Undo';
+      st.parentNode.insertBefore(ub, st.nextSibling);
+    }
     if (immediate) { tile.classList.add('resolved'); return; }
     /* Fresh tap (Dave, 2026-10-21): the check + status land while the button
        is still visible, and celebrate() fires against the live button; the
        resolved class (dim + hide actions) arrives a beat later so the result
-       registers first. Applying it instantly hid the button before the check
-       could be seen — and zeroed the rect celebrate() measures, which sent
-       the confetti to the viewport's upper-left corner. */
+       registers first. */
     setTimeout(function(){ tile.classList.add('resolved'); }, 1100);
+  }
+  function paintOpen(tile){
+    tile.classList.remove('resolved');
+    tile.removeAttribute('data-cleared');
+    var st = tile.querySelector('.attn-status');
+    if (st) st.textContent = '';
+    var db = tile.querySelector('[data-act="done"]');
+    if (db) db.textContent = 'Done';
+    var ub = tile.querySelector('[data-act="undo"]');
+    if (ub) ub.remove();
   }
   async function sendAction(tile, entry, okMsg){
     var st = tile.querySelector('.attn-status');
@@ -1052,28 +1120,137 @@ Generated 2026-11-19 · Part of the Buddy System<br>
       return false;
     }
   }
+  /* Free-text notes (Dave 2026-11-20): ✎ Add a note… opens a small field on
+     the item; saving sends Dave's words to this buddy's ingest through the
+     same token-gated path and shows the note on the card. Notes are also
+     kept in the device store so they stay on the card across reloads. */
+  function getNotes(aid, text){ var s = lsGet(); var m = s.attnNotes || {}; return m[rkey(aid, text)] || []; }
+  function addNoteLocal(aid, text, note){
+    var s = lsGet(); var m = s.attnNotes || {}; var k = rkey(aid, text);
+    var arr = m[k] || []; arr.push({date: todayStr(), text: note}); m[k] = arr; s.attnNotes = m; lsSet(s);
+  }
+  function renderNotes(tile, aid, text){
+    var box = tile.querySelector('.attn-notes');
+    if (!box) return;
+    box.innerHTML = '';
+    getNotes(aid, text).forEach(function(n){
+      var div = document.createElement('div');
+      div.className = 'attn-note';
+      var dt = document.createElement('span');
+      dt.className = 'attn-note-date';
+      dt.textContent = '✎ ' + n.date + ' — ';
+      div.appendChild(dt);
+      div.appendChild(document.createTextNode(n.text));
+      box.appendChild(div);
+    });
+  }
+  function stampMsg(kind, stamp){
+    if (!stamp) return '';
+    if (kind === 'cleared') return '✓ Cleared by Dave · ' + (stamp.date || '');
+    if (kind === 'later') return 'Later — snoozed by Dave · ' + (stamp.date || '');
+    if (kind === 'dropped') return 'Dropped by Dave · ' + (stamp.date || '');
+    return '';
+  }
   tiles.forEach(function(tile){
     var aid = tile.getAttribute('data-attn-id') || '';
     var textEl = tile.querySelector('.attn-text');
     var text = textEl ? textEl.textContent.trim() : '';
-    if (isResolved(aid, text)) { paintResolved(tile, 'Marked done', true); return; }
+    renderNotes(tile, aid, text);
+    var baked = tile.getAttribute('data-cleared');
+    var st0 = getState(aid, text);
+    if (baked || isResolved(aid, text)) paintResolved(tile, baked ? ('✓ Cleared by Dave · ' + baked) : (st0 === 'later' ? 'Later — snoozed by Dave' : st0 === 'drop' ? 'Dropped by Dave' : 'Marked done'), true);
     tile.addEventListener('click', function(ev){
       var btn = ev.target.closest ? ev.target.closest('.attn-btn') : null;
       if (!btn || btn.disabled) return;
       var act = btn.getAttribute('data-act');
       var idBit = aid ? ' (attention id: ' + aid + ')' : '';
+      var st = tile.querySelector('.attn-status');
       if (act === 'done') {
-        sendAction(tile,
-          'DONE — Dave marked this done on the homepage: "' + text + '"' + idBit + '. Please remove it from the attention list in buddies.json.',
-          'Marked done — the buddy will clear it.').then(function(ok){ if (ok) { setResolved(aid, text); paintResolved(tile, 'Marked done — the buddy will clear it.'); celebrate(btn, tile); } });
+        var cobj = {date: todayStr(), by: 'Dave'};
+        setResolved(aid, text);
+        paintResolved(tile, '✓ Cleared by Dave · ' + cobj.date);
+        celebrate(btn, tile);
+        if (token()) {
+          regStamp(aid, text, 'cleared', cobj).then(function(ok){
+            if (st) st.textContent = ok ? '✓ Cleared — recorded in the registry, so it stays cleared on every surface.' : 'Marked done on this device — the registry could not be updated just now, so other surfaces may still show it open.';
+          });
+        } else if (st) {
+          st.textContent = 'Marked done on this device — connect GitHub (Brain dump box above) to record it in the registry for good.';
+        }
+      } else if (act === 'undo') {
+        unsetResolved(aid, text);
+        setState(aid, text, '');
+        paintOpen(tile);
+        if (st) st.textContent = 'Reopened — it needs attention again.';
+        if (token()) regStamp(aid, text, null, null);
       } else if (act === 'info') {
         sendAction(tile,
           'FOLLOW-UP — Dave needs more info on: "' + text + '"' + idBit + '. Please follow up with him.',
           'Sent — ' + buddyName + ' will follow up.');
+      } else if (act === 'later') {
+        var lobj = {date: todayStr(), by: 'Dave'};
+        setState(aid, text, 'later');
+        paintResolved(tile, 'Later — snoozed by Dave · ' + lobj.date);
+        if (token()) {
+          regStamp(aid, text, 'later', lobj).then(function(ok){
+            if (st) st.textContent = ok ? 'Later — recorded in the registry; it stays visible here with its stamp and leaves the open counts.' : 'Later — saved on this device; the registry could not be updated just now.';
+          });
+        } else if (st) {
+          st.textContent = 'Later — saved on this device; connect GitHub (Brain dump box above) to record it in the registry.';
+        }
+      } else if (act === 'drop') {
+        var dobj = {date: todayStr(), by: 'Dave'};
+        setResolved(aid, text); setState(aid, text, 'drop');
+        paintResolved(tile, 'Dropped by Dave · ' + dobj.date);
+        if (token()) {
+          regStamp(aid, text, 'dropped', dobj).then(function(ok){
+            if (st) st.textContent = ok ? 'Dropped — recorded in the registry; it stays visible here with its stamp and leaves the open counts.' : 'Dropped on this device; the registry could not be updated just now.';
+          });
+        } else if (st) {
+          st.textContent = 'Dropped on this device; connect GitHub (Brain dump box above) to record it in the registry.';
+        }
+      } else if (act === 'note') {
+        var nb = tile.querySelector('.attn-notebox');
+        if (nb) { nb.hidden = !nb.hidden; if (!nb.hidden) { var ta = nb.querySelector('.attn-noteta'); if (ta) ta.focus(); } }
+      } else if (act === 'note-cancel') {
+        var nb2 = tile.querySelector('.attn-notebox');
+        if (nb2) nb2.hidden = true;
+      } else if (act === 'note-save') {
+        var nb3 = tile.querySelector('.attn-notebox');
+        var ta3 = nb3 ? nb3.querySelector('.attn-noteta') : null;
+        var noteText = ta3 ? ta3.value.trim() : '';
+        if (!noteText) { if (st) st.textContent = 'Write the note first — the field above is empty.'; return; }
+        addNoteLocal(aid, text, noteText);
+        renderNotes(tile, aid, text);
+        if (nb3) nb3.hidden = true;
+        if (ta3) ta3.value = '';
+        if (token()) {
+          sendAction(tile,
+            'NOTE — Dave added a note on: "' + text + '"' + idBit + ':' + String.fromCharCode(10) + '"' + noteText + '"',
+            'Note saved — it is in the buddy\'s ingest and on this card.').then(function(ok){
+              if (!ok && st) st.textContent = 'Note saved on this card — the ingest write did not go through, so the buddy has not seen it yet.';
+              tile.querySelectorAll('.attn-btn').forEach(function(b){ b.disabled = false; });
+            });
+        } else if (st) {
+          st.textContent = 'Note saved on this card — add a GitHub token (Brain dump above) to send it to the buddy.';
+        }
       }
     });
   });
-  resolveBuddy();
+  /* Registry stamps written on another surface (or before a rebuild baked
+     them in) paint on load too, so a dispositioned item shows its stamp
+     here even on a fresh device. Local state from this device wins when
+     both exist — it is the same tap, seen from the other side. */
+  resolveBuddy().then(function(){
+    tiles.forEach(function(tile){
+      if (tile.classList.contains('resolved')) return;
+      var aid = tile.getAttribute('data-attn-id') || '';
+      var reg = regStamps[aid];
+      if (!reg) return;
+      var kind = reg.cleared ? 'cleared' : (reg.later ? 'later' : (reg.dropped ? 'dropped' : ''));
+      if (kind) paintResolved(tile, stampMsg(kind, reg[kind]), true);
+    });
+  });
 })();
 </script>
 
