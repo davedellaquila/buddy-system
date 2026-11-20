@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>1967 MGB GT — Vehicle Buddy</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏎️</text></svg>">
+<style>
+  :root {
+    --bg: #141311;
+    --bg2: #1b1916;
+    --card: #211e19;
+    --border: #3a332a;
+    --text: #f2ead9;
+    --muted: #b3a68c;
+    --amber: #e0a437;
+    --red: #d96a5f;
+    --green: #7fb069;
+    --blue: #6aa8d8;
+    --purple: #b48ad8;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+    line-height: 1.55;
+    padding: 0 0 64px;
+  }
+  .stripe {
+    height: 6px;
+    background: repeating-linear-gradient(135deg, var(--amber) 0 18px, #141311 18px 36px);
+  }
+  .wrap { max-width: 920px; margin: 0 auto; padding: 0 24px; }
+  header.hero { padding: 52px 0 30px; border-bottom: 1px solid var(--border); margin-bottom: 30px; }
+  .kicker {
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    font-size: 12px;
+    color: var(--amber);
+    margin-bottom: 12px;
+  }
+  h1 {
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 44px;
+    font-weight: 600;
+    letter-spacing: -0.5px;
+    margin-bottom: 8px;
+  }
+  h1 .icon { margin-right: 10px; }
+  .mission { color: var(--muted); font-size: 17px; max-width: 660px; }
+  .mission strong { color: var(--text); font-weight: 600; }
+  h2 {
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 24px;
+    margin: 40px 0 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  h2 .rule { flex: 1; height: 1px; background: var(--border); }
+  .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 14px; }
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px 18px;
+  }
+  .card h3 { font-size: 16px; margin-bottom: 6px; }
+  a.card.fleet-link { display: block; text-decoration: none; color: inherit; cursor: pointer; }
+  a.card.fleet-link:hover { border-color: var(--amber); }
+  .card p { font-size: 14px; color: var(--muted); }
+  .card p strong { color: var(--text); }
+  .pill {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 3px 10px;
+    border-radius: 999px;
+    margin-bottom: 10px;
+  }
+  .pill.ok { background: rgba(127,176,105,.13); color: var(--green); border: 1px solid rgba(127,176,105,.4); }
+  .pill.attn { background: rgba(217,106,95,.13); color: var(--red); border: 1px solid rgba(217,106,95,.45); }
+  .pill.next { background: rgba(106,168,216,.15); color: var(--blue); border: 1px solid rgba(106,168,216,.4); }
+  .pill.locked { background: rgba(127,176,105,.13); color: var(--green); border: 1px solid rgba(127,176,105,.4); }
+  .pill.open { background: rgba(180,138,216,.13); color: var(--purple); border: 1px solid rgba(180,138,216,.4); }
+  .pill.wait { background: rgba(224,164,55,.13); color: var(--amber); border: 1px solid rgba(224,164,55,.4); }
+  .steps { display: flex; gap: 0; margin: 6px 0 4px; overflow-x: auto; }
+  .step {
+    flex: 1 1 0;
+    min-width: 96px;
+    text-align: center;
+    font-size: 12px;
+    color: var(--muted);
+    padding: 10px 6px;
+    border-top: 3px solid var(--border);
+    position: relative;
+  }
+  .step.done { border-top-color: var(--green); color: var(--text); }
+  .step.now { border-top-color: var(--amber); color: var(--text); font-weight: 700; }
+  .step b { display: block; font-size: 13px; }
+  .attention { list-style: none; }
+  .attention li {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--red);
+    border-radius: 8px;
+    padding: 14px 18px;
+    margin-bottom: 10px;
+    font-size: 15px;
+  }
+  .attention li.calm { border-left-color: var(--amber); }
+  .attention li strong { display: block; margin-bottom: 2px; }
+  .attention a { color: var(--accent, #e0a437); font-weight: 600; }
+  .attention li span { color: var(--muted); font-size: 14px; }
+  .attn-actions { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
+  .attn-btn {
+    border: 1px solid var(--border); background: var(--bg); color: var(--text);
+    border-radius: 8px; padding: 7px 14px; font-size: 13px; font-weight: 600; cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .attn-btn:hover { border-color: var(--amber); }
+  .attn-btn.primary { background: var(--amber); border-color: var(--amber); color: var(--bg); }
+  .attn-btn:disabled { opacity: .45; cursor: default; }
+  .attn-status { font-size: 13px; color: var(--muted); margin-top: 8px; min-height: 18px; }
+  .attn.resolved { opacity: .55; }
+  .attn.resolved .attn-actions { display: none; }
+  .attn-undo { margin-top: 8px; }
+  .attn-notebox { margin-top: 10px; }
+  .attn-notebox textarea {
+    width: 100%; min-height: 54px; resize: vertical;
+    background: var(--bg); border: 1px solid var(--border); border-radius: 8px;
+    padding: 8px 10px; font-size: 14px; color: var(--text); font-family: inherit;
+  }
+  .attn-note { margin-top: 8px; font-size: 13px; color: var(--muted); border-left: 3px solid var(--amber); padding: 4px 10px; }
+  .attn-note b { color: var(--text); }
+  .docs { display: flex; gap: 12px; flex-wrap: wrap; }
+  .doc {
+    flex: 1 1 220px;
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px 18px;
+    font-size: 14px;
+    color: var(--muted);
+    text-decoration: none;
+    display: block;
+  }
+  .doc:hover { border-color: var(--amber); }
+  .doc strong { color: var(--text); display: block; font-size: 15px; margin-bottom: 4px; }
+  footer {
+    margin-top: 48px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+    color: var(--muted);
+    font-size: 13px;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  a { color: var(--amber); }
+/* ---- dump-box CSS (adapt colors to your theme; keep dark/light working) ---- */
+.dumpbox {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px 22px;
+  margin-bottom: 32px;
+}
+.dumpbox h2 { margin: 0 0 6px; font-size: 20px; }
+.dumpbox-sub { color: var(--muted); font-size: 14px; margin-bottom: 14px; }
+.dumpbox textarea {
+  width: 100%; min-height: 96px; resize: vertical;
+  background: var(--bg); border: 1px solid var(--border); border-radius: 8px;
+  padding: 10px 12px; font-size: 14px; color: var(--text); font-family: inherit;
+}
+.dumpbox textarea:focus { outline: none; border-color: var(--accent, #e0a437); }
+.dumpbox textarea:disabled { opacity: .55; }
+.dumpbox-row { display: flex; align-items: center; gap: 12px; margin-top: 10px; flex-wrap: wrap; }
+.dumpbox-btn {
+  background: var(--accent, #e0a437); color: #fff; border: none; border-radius: 8px;
+  padding: 9px 22px; font-size: 14px; font-weight: 600; cursor: pointer;
+}
+.dumpbox-btn:disabled { opacity: .45; cursor: default; }
+.dumpbox-status { font-size: 13px; color: var(--muted); }
+.dumpbox-token {
+  background: var(--bg); border: 1px dashed var(--border); border-radius: 8px;
+  padding: 12px 14px; margin-bottom: 12px; font-size: 14px;
+}
+.dumpbox-connect {
+  background: var(--bg); border: 1px dashed var(--border); border-radius: 8px;
+  padding: 14px 16px; margin-bottom: 12px; font-size: 14px;
+}
+.dumpbox-connect p { margin: 0 0 10px; }
+
+.dumpbox-token p { margin-bottom: 8px; }
+.dumpbox-tokenrow { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.dumpbox-tokenrow input {
+  flex: 1; min-width: 170px; background: var(--card); border: 1px solid var(--border);
+  border-radius: 8px; padding: 7px 10px; font-size: 13px; color: var(--text);
+}
+.dumpbox-tokenrow button {
+  background: transparent; color: var(--accent, #e0a437); border: 1px solid var(--accent, #e0a437);
+  border-radius: 8px; padding: 7px 14px; font-size: 13px; font-weight: 600; cursor: pointer;
+}
+.dumpbox-tokenrow a { color: var(--accent, #e0a437); font-size: 13px; }
+
+</style>
+<style>
+  @media (prefers-color-scheme: light) {
+    :root { --bg:#f4efe4; --bg2:#ece5d3; --card:#fffaf0; --border:#d8cdb4; --text:#2b2417; --muted:#6f6350; --amber:#a8741a; }
+  }
+  .stickyhdr { position: sticky; top: 0; z-index: 50; background: var(--bg); border-bottom: 1px solid var(--border); }
+  .stickyhdr .in { max-width: 920px; margin: 0 auto; padding: 10px 24px; display: flex; align-items: center; gap: 10px; font-weight: 600; }
+  .stickyhdr a { color: var(--amber); text-decoration: none; font-size: 13px; font-weight: 600; margin-left: auto; white-space: nowrap; }
+  .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin: 26px 0 6px; }
+  .stat { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; }
+  .stat .n { font-size: 26px; font-weight: 700; font-family: Georgia, serif; }
+  .stat .l { color: var(--muted); font-size: 12px; text-transform: uppercase; letter-spacing: 1.5px; margin-top: 2px; }
+  .facts { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 6px 18px; margin: 14px 0; }
+  .facts .row { display: flex; gap: 14px; padding: 9px 0; border-bottom: 1px solid var(--border); font-size: 15px; }
+  .facts .row:last-child { border-bottom: none; }
+  .facts .k { color: var(--muted); min-width: 150px; }
+  .ev { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 14px 18px; margin: 10px 0; }
+  .ev .d { color: var(--amber); font-size: 13px; font-weight: 700; letter-spacing: .5px; }
+  .ev .t { font-size: 17px; font-weight: 600; margin: 2px 0 4px; }
+  .ev .m { color: var(--muted); font-size: 13.5px; }
+  .ev .notes { margin-top: 6px; font-size: 14.5px; white-space: pre-wrap; }
+  .ev .att { margin-top: 6px; font-size: 13.5px; }
+  .ev .att a { color: var(--amber); }
+  .empty { background: var(--card); border: 1px dashed var(--border); border-radius: 12px; padding: 20px; color: var(--muted); }
+  .links a { color: var(--amber); }
+  footer.colophon { margin-top: 44px; border-top: 1px solid var(--border); padding-top: 16px; color: var(--muted); font-size: 13.5px; }
+</style>
+</head>
+<body>
+<div class="stickyhdr"><div class="in"><span>🏎️</span><span>1967 MGB GT</span><a href="https://davedellaquila.github.io/buddy-system/">Buddy System dashboard</a></div></div>
+<div class="stripe"></div>
+<div class="wrap">
+<header class="hero">
+  <div class="kicker">🚗 Car Buddy · Vehicle dossier</div>
+  <h1><span class="icon">🏎️</span>1967 MGB GT</h1>
+  <p class="mission">The vehicle buddy for Dave's <strong>1967 MGB GT</strong>. One car, one record: identity, service history, and what it needs next — held verbatim from the canonical record, never invented.</p>
+  <div class="stats">
+    <div class="stat"><div class="n">0</div><div class="l">Service events</div></div><div class="stat"><div class="n">No dated events</div><div class="l">Record span</div></div><div class="stat"><div class="n">0</div><div class="l">Attachments archived</div></div><div class="stat"><div class="n">Sparse</div><div class="l">Costs on record</div></div>
+  </div>
+</header>
+
+<h2>📋 The record</h2>
+<div class="facts">
+  <div class="row"><div class="k">VIN</div><div>Not recorded yet</div></div><div class="row"><div class="k">Status</div><div>Active — in Dave&#x27;s fleet</div></div><div class="row"><div class="k">History source</div><div>Lenwood fleet dossier (Oct 24, 2026) — this car is NOT in the Airtable service record</div></div>
+</div>
+
+<h2>🔧 Service history</h2>
+<p style="color:var(--muted);font-size:14.5px;margin-bottom:6px;">Every event exactly as recorded — costs shown only where the record has them (most events carry none; nothing is backfilled).</p>
+<div class="empty">This is a Lenwood-fleet car (6929 Lenwood Way) with its own dossier in its repo — it does not appear in Dave's Airtable service history, so there are no canonical events to load. Its record lives in KNOWLEDGE.md in its repo and fills in from there.</div>
+
+<h2>🔗 Links</h2>
+<ul class="links" style="line-height:1.9; padding-left:20px;">
+  <li><a href="https://docs.google.com/document/d/1XyJ56kAGMvEUxTGjTAop-E7nc2BXjDskRyGm17AKqDE/edit">1967 MGB GT — Job Req</a></li>
+  <li><a href="https://github.com/davedellaquila/1967-mgb-gt">GitHub repo (private)</a> — dossier, KNOWLEDGE.md, and data/service-history.md + .json</li>
+  <li><a href="https://davedellaquila.github.io/buddy-system/car-buddy/">🚗 Car Buddy</a> — parent buddy</li>
+  <li><a href="https://github.com/davedellaquila/car-buddy/tree/main/data">Canonical fleet data</a> — the portable master record this history came from</li>
+  <li><a href="about.html">Full record</a> — registry entry + repo files</li>
+</ul>
+
+<!-- ---- dump-box HTML (set data-buddy-id; Car Buddy = escaped buddy name) ---- -->
+<section class="dumpbox" data-buddy-id="1967-mgb-gt">
+<h2>🧠 Brain dump</h2>
+<p class="dumpbox-sub">Dump what's on your mind about 1967 MGB GT — raw and unfiltered. Each dump lands in the buddy's repo (docs/ingest.md) as a timestamped entry.</p>
+<div class="dumpbox-connect" hidden>
+<p>🔒 Connect GitHub to unlock dumping. Paste a token once — it stays on this device only.</p>
+<button type="button" class="dumpbox-btn">Connect GitHub to enable</button>
+</div>
+<div class="dumpbox-token" hidden>
+<p>🔒 Connect GitHub to unlock dumping. Paste a token once — it stays on this device only.</p>
+<div class="dumpbox-tokenrow">
+<input type="password" placeholder="GitHub token (repo scope)" aria-label="GitHub token">
+<button type="button">Save token</button>
+<a href="https://github.com/settings/tokens" target="_blank" rel="noopener">Get a token</a>
+</div>
+</div>
+<textarea rows="4" placeholder="Dump what's on your mind about 1967 MGB GT…"></textarea>
+<div class="dumpbox-row">
+<button type="button" class="dumpbox-btn">Dump it</button>
+<span class="dumpbox-status" role="status"></span>
+</div>
+</section>
+
+<footer class="colophon">Vehicle buddy under 🚗 Car Buddy · History verbatim from the canonical Auto Service History record · Last updated Nov 20, 2026</footer>
+</div>
+<script>
+// ---- dump-box JS (self-contained; no dependencies) ----
+(function(){
+  var box = document.querySelector('.dumpbox');
+  if (!box || box.dataset.dumpInit) return;
+  box.dataset.dumpInit = '1';
+  var bid = box.getAttribute('data-buddy-id') || (function(){
+    var p = location.pathname.replace(/\/+$/, '');
+    return p.substring(p.lastIndexOf('/') + 1);
+  })();
+  var ta = box.querySelector('textarea'),
+      btn = box.querySelector('.dumpbox-row .dumpbox-btn'),
+      st = box.querySelector('.dumpbox-status'),
+      tokWrap = box.querySelector('.dumpbox-token');
+  function lsGet(){ try { return JSON.parse(localStorage.getItem('buddyTree.v3') || '{}'); } catch(e){ return {}; } }
+  function lsSet(patch){ try { var s = lsGet(); for (var k in patch) s[k] = patch[k]; localStorage.setItem('buddyTree.v3', JSON.stringify(s)); } catch(e){} }
+  function token(){ return lsGet().ghToken || ''; }
+  function b64encode(str){
+    var bytes = new TextEncoder().encode(str), bin = '';
+    bytes.forEach(function(b){ bin += String.fromCharCode(b); });
+    return btoa(bin);
+  }
+  async function ghApi(path, method, body){
+    var t = token();
+    if (!t) throw new Error('Add a GitHub token first.');
+    var r = await fetch('https://api.github.com' + path, {
+      method: method || 'GET',
+      headers: {'Authorization': 'Bearer ' + t, 'Accept': 'application/vnd.github+json', 'Content-Type': 'application/json'},
+      body: body ? JSON.stringify(body) : undefined
+    });
+    if (!r.ok) throw new Error('GitHub ' + r.status);
+    return r.status === 204 ? null : await r.json();
+  }
+  async function ghGetFile(repo, path){
+    try {
+      var j = await ghApi('/repos/davedellaquila/' + repo + '/contents/' + path);
+      if (j && j.content) return {
+        text: new TextDecoder().decode(Uint8Array.from(atob(j.content.replace(/\n/g, '')), function(c){ return c.charCodeAt(0); })),
+        sha: j.sha
+      };
+    } catch(e){}
+    return null;
+  }
+  var repo = null, repoName = bid;
+  async function resolveRepo(){
+    try {
+      var r = await fetch('../buddies.json', {cache: 'no-store'});
+      var d = await r.json();
+      var buds = d.buddies || [];
+      for (var i = 0; i < buds.length; i++) {
+        if (buds[i].id === bid && buds[i].repo) { repo = String(buds[i].repo).split('/').filter(Boolean).pop(); repoName = buds[i].name || bid; break; }
+      }
+    } catch(e){}
+  }
+  /* Local fallback (Dave 2026-10-15, widened 2026-10-16): dumping always works,
+     even with no GitHub token AND no repo linked — entries are saved in this
+     device's localStorage until the GitHub write path can take them. The backlog
+     flushes into the repo on the next successful GitHub dump (once a repo is
+     linked and a token is present). */
+  function localKey(){ return 'buddyTree.ingest.' + bid; }
+  function localBacklog(){
+    try { var a = JSON.parse(localStorage.getItem(localKey()) || '[]'); return Array.isArray(a) ? a : []; }
+    catch(e){ return []; }
+  }
+  function localSave(entry){
+    var a = localBacklog(); a.push(entry);
+    try { localStorage.setItem(localKey(), JSON.stringify(a)); } catch(e){}
+  }
+  function localClear(){ try { localStorage.removeItem(localKey()); } catch(e){} }
+  function refreshUI(){
+  var has = !!token();
+  tokWrap.hidden = has;
+  /* The box always works: no token and/or no repo just means local saves. */
+  ta.disabled = false;
+  btn.disabled = false;
+  var n = localBacklog().length;
+  if (!repo) {
+    st.textContent = n
+      ? n + ' local ' + (n === 1 ? 'dump' : 'dumps') + ' saved on this device — will sync when a repo is linked.'
+      : 'No repo linked yet — dumps save on this device and will sync when one is linked.';
+    return;
+  }
+  st.textContent = has
+    ? (n ? n + ' local ' + (n === 1 ? 'dump' : 'dumps') + ' will sync on next dump.' : '')
+    : 'No GitHub token — dumps save on this device for now.';
+  }
+  var tokInput = tokWrap.querySelector('input'),
+      tokSave = tokWrap.querySelector('button');
+  tokSave.addEventListener('click', async function(){
+  var v = tokInput.value.trim();
+  if (!v) return;
+  lsSet({ghToken: v});
+  tokInput.value = '';
+  st.textContent = 'Checking token…';
+  try {
+    await ghApi('/user');
+    refreshUI();
+    st.textContent = '✓ Token verified — dumps will sync to GitHub.';
+  } catch(e) {
+    refreshUI();
+    st.textContent = '⚠ GitHub rejected that token (' + ((e && e.message) || e) + ') — dumps stay on this device until a working token is added.';
+  }
+});
+async function dump(){
+  var text = ta.value.trim();
+  if (!text) return;
+  var stamp = new Date().toLocaleString();
+  var NL = String.fromCharCode(10);
+  if (!repo) {
+    /* No repo linked yet — save on this device; syncs once one is linked. */
+    localSave({t: stamp, text: text});
+    ta.value = '';
+    st.textContent = '✓ Saved on this device — will sync to the repo once one is linked.';
+    refreshUI();
+    return;
+  }
+  if (!token()) {
+    /* Temporary workaround: no token → save on this device. */
+    localSave({t: stamp, text: text});
+    ta.value = '';
+    st.textContent = '✓ Saved on this device — add a GitHub token to sync it to the repo.';
+    return;
+  }
+  st.textContent = 'Dumping…';
+  btn.disabled = true;
+  try {
+    /* Flush any locally-saved backlog first, then the new entry. */
+    var backlog = localBacklog();
+    var parts = backlog.map(function(b){ return '## ' + b.t + NL + NL + b.text + NL + NL; });
+    parts.push('## ' + stamp + NL + NL + text + NL + NL);
+    var cur = await ghGetFile(repo, 'docs/ingest.md');
+    var base = cur ? cur.text : '# Ingest log — ' + repoName + NL + NL;
+    var body = {message: 'Ingest dump for ' + bid, content: b64encode(base + parts.join(''))};
+    if (cur && cur.sha) body.sha = cur.sha;
+    await ghApi('/repos/davedellaquila/' + repo + '/contents/docs/ingest.md', 'PUT', body);
+    localClear();
+    ta.value = '';
+    st.textContent = '✓ Dumped to ' + repo + '/docs/ingest.md' + (backlog.length ? ' (' + backlog.length + ' local synced)' : '');
+    } catch(err){
+    /* Dave 2026-10-18: a failed GitHub write must never drop the dump.
+       Keep it on this device and say so plainly, with the backlog count -
+       it syncs on the next successful dump. */
+    try { localSave({t: stamp, text: text}); } catch(e2){}
+    ta.value = '';
+    refreshUI();
+    var why = (err && err.message) || String(err);
+    var nq = 0; try { nq = localBacklog().length; } catch(e2){}
+    var tail = nq > 1 ? ' (' + nq + ' on this device waiting to sync)' : '';
+    st.textContent = (/404/.test(why)
+      ? '⚠ Saved on this device — GitHub said 404 (usually a wrong/expired token, or no access to this private repo). Fix the token, then dump again to sync.'
+      : '⚠ Saved on this device — GitHub said: ' + why + '. It will sync on your next successful dump.') + tail;
+  }
+  btn.disabled = false;
+  }
+  btn.addEventListener('click', dump);
+  ta.addEventListener('keydown', function(ev){
+    if ((ev.metaKey || ev.ctrlKey) && ev.key === 'Enter') { ev.preventDefault(); dump(); }
+  });
+  resolveRepo().then(refreshUI);
+})();
+</script>
+<!--
+  TIP JAR — canonical snippet (Dave's standard, 2026-10-24; motion v2, 2026-10-26)
+  Every buddy homepage and every page a buddy creates carries the tip jar.
+  Public pages especially: a reader who got value can say thanks.
+
+  USAGE: paste this whole block just before </body>. No dependencies.
+  The jar points at Dave's Ko-fi page by default. A page for a specific app
+  may override the destination with its own Ko-fi page later:
+      <div class="tipjar" ...> — change the href on the <a>.
+
+  DESIGN NOTES (keep it alive, never annoying):
+  - "Breathing" (v2): a calm but clearly visible pulse — the pill scales
+    1 → 1.045 over a 3.2s ease-in-out cycle while its glow swells with it.
+    (V1 breathed at 1.035 over 6s — Dave: "rather static." Too subtle.)
+  - "Shimmer" (v2): a soft light sweep crosses the pill once every ~8s —
+    a ~1.3s pass inside a long rest, built into the keyframe cycle.
+  - Hover: the jar spins (same move as the dashboard sidebar's tip jar).
+  - V1's hop + coin glint were retired in v2 — with the breathing and the
+    shimmer running, the stack got busy; breathing + shimmer + hover spin
+    is the trio now.
+  - prefers-reduced-motion: all animation off. The jar is just a link.
+  - Transform/opacity/box-shadow only — no layout shift.
+  - Works in dark and light mode; sits above page content (z-index 60) but
+    below modals on buddy pages.
+-->
+<style>
+  .tipjar{position:fixed;right:18px;bottom:18px;z-index:60;
+    font-family:inherit;-webkit-tap-highlight-color:transparent}
+  .tipjar a{display:inline-flex;align-items:center;gap:.5em;position:relative;overflow:hidden;
+    padding:.55em 1em;border-radius:999px;text-decoration:none;
+    font-size:.9rem;font-weight:600;line-height:1;
+    color:#fff;background:linear-gradient(135deg,#7c4dff,#b388ff);
+    box-shadow:0 6px 18px rgba(124,77,255,.35),0 2px 6px rgba(0,0,0,.25);
+    animation:tipjar-breathe 3.2s ease-in-out infinite}
+  .tipjar a::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;
+    background:linear-gradient(105deg,rgba(255,255,255,0) 35%,rgba(255,255,255,.45) 50%,rgba(255,255,255,0) 65%);
+    transform:translateX(-110%);animation:tipjar-sheen 8s ease-in-out infinite}
+  .tipjar .jar{display:inline-block;font-size:1.15em}
+  .tipjar a:hover .jar{animation:tipjar-spin .7s cubic-bezier(.34,1.56,.64,1)}
+  .tipjar a:focus-visible{outline:3px solid #ffd54f;outline-offset:3px}
+  @keyframes tipjar-breathe{0%,100%{transform:scale(1);box-shadow:0 6px 18px rgba(124,77,255,.35),0 2px 6px rgba(0,0,0,.25)}50%{transform:scale(1.045);box-shadow:0 9px 26px rgba(124,77,255,.55),0 3px 8px rgba(0,0,0,.28)}}
+  @keyframes tipjar-sheen{0%{transform:translateX(-110%)}16%{transform:translateX(110%)}100%{transform:translateX(110%)}}
+  @keyframes tipjar-spin{to{transform:rotate(360deg)}}
+  @media (prefers-reduced-motion: reduce){
+    .tipjar a,.tipjar a:hover .jar{animation:none}
+    .tipjar a::after{display:none}
+  }
+</style>
+<div class="tipjar">
+  <a href="https://ko-fi.com/davedellaquila" target="_blank" rel="noopener"
+     aria-label="Tip jar — if this page helped you, you can leave Dave a tip on Ko-fi">
+    <span class="jar">🫙</span><span class="tiptext">Tip Jar</span>
+  </a>
+</div>
+
+</body>
+</html>
