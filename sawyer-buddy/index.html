@@ -672,7 +672,7 @@ async function dump(){
      GitHub token on the device the completion is also noted in the buddy's
      repo ingest so the owning thread can retire the card. */
   .mind-foot { display: flex; align-items: center; gap: 10px; margin-top: 10px; flex-wrap: wrap; }
-  .mind-done-btn { font: inherit; font-size: 12.5px; font-weight: 600; color: inherit; background: transparent; border: 1px solid var(--line); border-radius: 999px; padding: 4px 12px; cursor: pointer; }
+  .mind-done-btn { font: inherit; font-size: 12.5px; font-weight: 600; color: inherit; background: transparent; border: 1px solid var(--line); border-radius: 999px; padding: 4px 12px; cursor: pointer; white-space: nowrap; }
   .mind-stamp { font-size: 12.5px; color: var(--dim); }
   .mind.done .dot, .mind.done .t, .mind.done .d { opacity: .5; }
 </style>
@@ -712,7 +712,7 @@ async function dump(){
     var btn = document.createElement('button'); btn.type = 'button'; btn.className = 'mind-done-btn';
     var stamp = document.createElement('span'); stamp.className = 'mind-stamp';
     foot.appendChild(btn); foot.appendChild(stamp);
-    card.appendChild(foot);
+    (tEl ? tEl.parentElement : card).appendChild(foot);
     function paint() {
       var d = store[key];
       card.classList.toggle('done', !!d);
