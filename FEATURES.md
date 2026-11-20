@@ -102,6 +102,16 @@ Build: `build.py` generates `index.html` from `buddies.json` + `plans.json`.
   the gear, and 2nd in the collapsed rail — and its menu always fits the
   visible viewport, scrolling internally rather than running off the
   bottom.)
+- **Homepage nav on the left rail** — the Settings toggle **Homepage nav
+  on the left rail** (default off) seats the footer cluster's Find /
+  Previous / Next homepage discs on the left rail instead, stacked under
+  the rail's own buttons in that order, with the same icons, disabled
+  states, and tooltips ("Next: <buddy>"). The footer cluster steps aside
+  only where the rail actually shows — desktop with the sidebar
+  collapsed, and the phone tree view — so the nav never vanishes: on
+  phone over a framed homepage the rail steps aside by design and the
+  footer keeps the nav. Back is not part of the group; it stays where
+  it is either way.
 - **Google Doc links open in a new tab** — every docs.google.com /
   drive.google.com link on buddy homepages and About pages carries
   target="_blank": a Doc loaded inside the dashboard's homepage frame

@@ -1072,6 +1072,33 @@ body:has(#view-buddy.sheet.active) #hp-nav,
 body:has(#view-buddy.sheet.active) #hp-back{display:flex}
 body:has(#field-settings.show) #hp-nav,
 body:has(#field-settings.show) #hp-back{display:none !important}
+/* Homepage nav on the left rail (Dave 2026-11-20, setting hpNavRail): the
+   footer trio (Find / Previous / Next) appended under the rail's own buttons.
+   The wrapper is display:contents when live so the discs join #rail-mid's own
+   stack and spacing. It wakes in exactly the contexts #hp-nav wakes in; the
+   footer cluster steps aside only where the rail can actually show (desktop:
+   sb-closed; phone: the floating cluster), so the nav never vanishes. */
+#rail-hpnav{display:none}
+#rail-hpnav button:disabled{opacity:.35;cursor:default}
+#rail-hpnav button:disabled:active{transform:none}
+body.hp-rail:not(.standalone):has(#main.homepage-mode):has(#view-project.active) #rail-hpnav,
+body.hp-rail:not(.standalone):not(.bp-collapsed):has(#view-buddy.panel.active) #rail-hpnav,
+body.hp-rail:not(.standalone):has(#view-tree.active) #rail-hpnav,
+body.hp-rail:not(.standalone):has(#view-buddy.sheet.active) #rail-hpnav{display:contents}
+body.hp-rail:has(#field-settings.show) #rail-hpnav{display:none !important}
+@media (min-width:640px){
+body.hp-rail.sb-closed:not(.standalone):has(#main.homepage-mode):has(#view-project.active) #hp-nav,
+body.hp-rail.sb-closed:not(.standalone):not(.bp-collapsed):has(#view-buddy.panel.active) #hp-nav,
+body.hp-rail.sb-closed:not(.standalone):has(#view-tree.active) #hp-nav,
+body.hp-rail.sb-closed:not(.standalone):has(#view-buddy.sheet.active) #hp-nav{display:none}
+}
+@media (max-width:639px){
+/* Phone: #rail-mid itself steps aside over a framed homepage and under the
+   open sheet (the 2026-10-31 / 2026-11-04 rules below), so the footer steps
+   aside ONLY in the tree view, the one phone homepage-nav context where the
+   rail cluster is actually on screen. Everywhere else the footer stays. */
+body.hp-rail:not(.standalone):not(.ph-left-open):not(.ph-right-open):has(#view-tree.active) #hp-nav{display:none}
+}
 #hp-nav button, #hp-back{width:44px;height:44px;border-radius:50%;padding:0; /* Dave 2026-10-30: the footer discs shrink to the rail discs' 44px - one disc diameter across the chrome. (Was 56px. #hp-back shares this rule and the footer family, so it matches too.) Icons, gap (12px), glass, and the --kb-lift transform on the container are untouched. */
   background:rgba(50,50,52,.55);color:#fff;border:.5px solid rgba(255,255,255,.38);cursor:pointer;
   align-items:center;justify-content:center;
@@ -2360,9 +2387,9 @@ body:has(#sidebar.sb-floating) #sb-resize{display:none}
        rail showed three different styles at once. The line icons inside
        are one weight (24px, stroke 2); the current-view slot keeps the
        view's own icon, sized by the same font-size, inside the same disc. */
-    #rail-expand, #rail-recents, #rail-curview, #rail-dump{width:44px;height:44px;border-radius:50%;border:1px solid color-mix(in srgb, var(--text) 24%, transparent);background:color-mix(in srgb, var(--panel) 78%, transparent);-webkit-backdrop-filter:blur(14px) saturate(1.6);backdrop-filter:blur(14px) saturate(1.6);box-shadow:0 2px 14px var(--shadow);color:var(--text); /* Dave 2026-10-31 contrast fix: the floating discs' fill goes 16% -> 78% panel (the strength #sb-to-top and #bp-to-top already used), glyphs go full-strength var(--text), and the border picks up a text-tinted edge — at 16% the backdrop decided the disc's lightness, so a light framed page washed the discs and their glyphs out entirely (his TV Buddy screenshot: 9 of 10 discs illegible). The disc now reads as its own surface on any page, light or dark. */cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1.25rem;padding:0}
-    #rail-expand:hover, #rail-recents:hover, #rail-curview:hover, #rail-dump:hover{color:var(--accent);border-color:var(--accent)}
-    #rail-expand:active, #rail-recents:active, #rail-curview:active, #rail-dump:active{transform:scale(.96)}
+    #rail-expand, #rail-recents, #rail-curview, #rail-dump, #rail-find, #rail-prev, #rail-next{width:44px;height:44px;border-radius:50%;border:1px solid color-mix(in srgb, var(--text) 24%, transparent);background:color-mix(in srgb, var(--panel) 78%, transparent);-webkit-backdrop-filter:blur(14px) saturate(1.6);backdrop-filter:blur(14px) saturate(1.6);box-shadow:0 2px 14px var(--shadow);color:var(--text); /* Dave 2026-10-31 contrast fix: the floating discs' fill goes 16% -> 78% panel (the strength #sb-to-top and #bp-to-top already used), glyphs go full-strength var(--text), and the border picks up a text-tinted edge — at 16% the backdrop decided the disc's lightness, so a light framed page washed the discs and their glyphs out entirely (his TV Buddy screenshot: 9 of 10 discs illegible). The disc now reads as its own surface on any page, light or dark. */cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1.25rem;padding:0}
+    #rail-expand:hover, #rail-recents:hover, #rail-curview:hover, #rail-dump:hover, #rail-find:hover, #rail-prev:hover, #rail-next:hover{color:var(--accent);border-color:var(--accent)}
+    #rail-expand:active, #rail-recents:active, #rail-curview:active, #rail-dump:active, #rail-find:active, #rail-prev:active, #rail-next:active{transform:scale(.96)}
     /* Rail split (Dave 2026-10-29): the collapsed rail is TWO glass cards,
        not one - the expand chevron alone in a card fixed to the top-left
        corner, and the navigation cluster (Recents, current-view) in its
@@ -3044,7 +3071,7 @@ body.find-open #find-card{display:block;animation:findIn .14s cubic-bezier(.32,.
 .find-row-sub{font-size:.8125rem;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .find-row-sub b{color:var(--text2)}
 .find-empty{padding:20px 14px;color:var(--muted);font-size:.875rem;text-align:center}
-body.find-open #hp-find{border-color:var(--accent);color:var(--accent);box-shadow:0 0 0 2px var(--accent)}
+body.find-open #hp-find, body.find-open #rail-find{border-color:var(--accent);color:var(--accent);box-shadow:0 0 0 2px var(--accent)}
 /* ==== Welcome Card (Jonny's welcome-card system, 2026-10-15; connected to
    the first open by the first-open crit, 2026-10-23) ====
    In-flow at the head of Astro's homepage, first visit only per device:
@@ -5377,6 +5404,7 @@ const SETTING_DEFS = [
   {id:'fontScale', label:'Text size', type:'slider', def:100, min:80, max:130, step:5, advanced:true, tip:'Scales text throughout the app — layout, dialogs and buttons keep their size.', unit:'%'},
   {id:'sidebarStyle', label:'Panel style', type:'choice', options:['floating','anchored'], def:'floating', tip:'One style for both panels — the sidebar and the info panel. Floating: inset cards; drag a panel by its gripper to move it, and resize it from any side. Anchored: both panels sit flush to their edge in the same squared-off style, the main view resizes to make room, and neither panel can be dragged.'},
   {id:'panelTranslucency', label:'Panel translucency', type:'choice', options:['standard','glass'], def:'standard', tip:'Glass: the sidebar and buddy panel go deeply translucent — the page behind them tints the glass (Apple Weather style). Standard: the usual soft frost.'},
+  {id:'hpNavRail', label:'Homepage nav on the left rail', type:'bool', def:false, tip:'On: the footer\u2019s Find / Previous / Next homepage buttons also appear on the left rail, stacked under the rail\u2019s existing buttons \u2014 and the footer cluster steps aside wherever the rail is showing. Off: they live in the footer only. Back is not part of this group; it stays where it is.'},
   {id:'frameworkButtonsFooter', label:'Group framework buttons in the footer', type:'bool', def:true, tip:'On: New and Back sit along the bottom of the screen, nearly see-through. Off: they take their separate corners (New bottom-right, Back bottom-left). Info always stays in the top-right corner, swapping with the panel close x — it is not part of this group. On phone widths the buttons keep their corner spots either way. (Recents lives in the buddy panel now — header and rail — and is not part of this group.)'},
   {id:'sectionToggleStyle', label:'Section toggle style', type:'choice', options:['chevron','section-icon','plus-minus','caret','arrow','dot','triangle','double-chevron','none'], def:'section-icon', tip:'How section headers show their expand/collapse control: classic chevron, the section\u2019s own icon, plus/minus, and more.'},
   {id:'sectionIconBehavior', label:'Section icon behavior', type:'choice', options:['rotate','spin','bounce','flip','pulse','none'], def:'rotate', tip:'What the section icon does when you expand/collapse: tips on its side, spins around, bounces, flips, pulses, or stays still.'},
@@ -5401,6 +5429,7 @@ function applySidebarStyle(){
   document.body.classList.toggle('sb-anchored', getSetting('sidebarStyle') === 'anchored');
   document.body.classList.toggle('glass-panels', getSetting('panelTranslucency') === 'glass');
   document.body.classList.toggle('fw-footer', !!getSetting('frameworkButtonsFooter'));
+  document.body.classList.toggle('hp-rail', !!getSetting('hpNavRail'));
   // Unified panel style (Dave, 2026-10-20): Anchored docks a floated info
   // panel (its rect is kept and returns when the style goes back to
   // Floating); Floating restores it. The sidebar reconciles itself the
@@ -5426,6 +5455,7 @@ function snapshotSettable(){
     sidebarStyle: S.sidebarStyle || 'floating',
     panelTranslucency: S.panelTranslucency || 'standard',
     frameworkButtonsFooter: !!S.frameworkButtonsFooter,
+    hpNavRail: !!S.hpNavRail,
   };
 }
 function resetToFactory(){
@@ -5435,6 +5465,7 @@ function resetToFactory(){
   S.sidebarStyle = f.sidebarStyle || 'floating';
   S.panelTranslucency = f.panelTranslucency || 'standard';
   S.frameworkButtonsFooter = !!f.frameworkButtonsFooter;
+  S.hpNavRail = !!f.hpNavRail;
   if (Array.isArray(f.fieldOrder) && f.fieldOrder.length) S.fieldOrder = f.fieldOrder.slice();
   if (f.fieldHidden && typeof f.fieldHidden === 'object') S.fieldHidden = Object.assign({}, f.fieldHidden);
   if (Array.isArray(f.viewOrder) && f.viewOrder.length) S.viewOrder = f.viewOrder.slice();
@@ -7347,6 +7378,8 @@ function updateHpNav(){
   next.disabled = !(i >= 0 && i < ids.length - 1);
   prev.title = i > 0 ? 'Previous: ' + dispName(byId[ids[i - 1]]) : 'Previous homepage';
   next.title = (i >= 0 && i < ids.length - 1) ? 'Next: ' + dispName(byId[ids[i + 1]]) : 'Next homepage';
+  const rprev = document.getElementById('rail-prev'), rnext = document.getElementById('rail-next');
+  if (rprev && rnext) { rprev.disabled = prev.disabled; rnext.disabled = next.disabled; rprev.title = prev.title; rnext.title = next.title; }
 }
 function hpStep(dir){
   const ids = hpCollection();
@@ -15856,6 +15889,9 @@ document.addEventListener('click', e => {
   if (e.target.closest && e.target.closest('#hp-find')) { toggleFind(); return; }
   if (e.target.closest && e.target.closest('#hp-prev')) { hpStep(-1); return; }
   if (e.target.closest && e.target.closest('#hp-next')) { hpStep(1); return; }
+  if (e.target.closest && e.target.closest('#rail-find')) { toggleFind(); return; }
+  if (e.target.closest && e.target.closest('#rail-prev')) { hpStep(-1); return; }
+  if (e.target.closest && e.target.closest('#rail-next')) { hpStep(1); return; }
   if (e.target.closest && e.target.closest('#menu-btn')) {
     // State-dependent per Dave's rule: with the right (detail) panel open, the
     // floating › closes it (same screen position as the drawer's open chevron).
@@ -16427,7 +16463,7 @@ flushDumpQueue();
   <div class="nav-sec" id="plans-sec"><h3 style="cursor:pointer" id="plans-toggle"><span id="plans-arrow">\u203a</span> Business Plans</h3><div id="plan-nav"></div></div>
   </div>
   <div class="sb-tipjar"><a href="https://ko-fi.com/davedellaquila" target="_blank" rel="noopener" title="Support the buddy system"><span class="jar">\U0001FAD9</span> <span class="tiptext">Tip the jar</span></a></div>
-  <div id="rail-mid"><button type="button" id="rail-recents" title="Recent buddies" aria-label="Recent buddies"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 8.5A9 9 0 1 1 3.2 13.6"/><path d="M3.2 3.8v4.8h4.8"/><path d="M12 7.5V12l3 2"/></svg></button><div class="rail-div" aria-hidden="true"></div><button type="button" id="rail-curview" title="Current view" aria-label="Current view - tap to switch views"></button><button type="button" id="rail-dump" title="Dump to Astro - a universal inbox, from anywhere" aria-label="Dump to Astro"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v7"/><path d="m8.2 6.8 3.8 3.8 3.8-3.8"/><path d="M3.5 13.5h4l1.8 2.7h5.4l1.8-2.7h4"/><path d="M3.5 13.5V19a1.8 1.8 0 0 0 1.8 1.8h13.4a1.8 1.8 0 0 0 1.8-1.8v-5.5"/></svg></button></div>
+  <div id="rail-mid"><button type="button" id="rail-recents" title="Recent buddies" aria-label="Recent buddies"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 8.5A9 9 0 1 1 3.2 13.6"/><path d="M3.2 3.8v4.8h4.8"/><path d="M12 7.5V12l3 2"/></svg></button><div class="rail-div" aria-hidden="true"></div><button type="button" id="rail-curview" title="Current view" aria-label="Current view - tap to switch views"></button><button type="button" id="rail-dump" title="Dump to Astro - a universal inbox, from anywhere" aria-label="Dump to Astro"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v7"/><path d="m8.2 6.8 3.8 3.8 3.8-3.8"/><path d="M3.5 13.5h4l1.8 2.7h5.4l1.8-2.7h4"/><path d="M3.5 13.5V19a1.8 1.8 0 0 0 1.8 1.8h13.4a1.8 1.8 0 0 0 1.8-1.8v-5.5"/></svg></button><div id="rail-hpnav" role="group" aria-label="Previous and next buddy homepage"><button type="button" id="rail-find" title="Find a buddy" aria-label="Find a buddy"><svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="2.4"/><path d="M15.5 15.5L21 21" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg></button><button type="button" id="rail-prev" title="Previous homepage" aria-label="Previous buddy homepage"><svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><path d="M5.5 14.5L12 8l6.5 6.5" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button><button type="button" id="rail-next" title="Next homepage" aria-label="Next buddy homepage"><svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><path d="M5.5 9.5L12 16l6.5-6.5" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div></div>
 </aside>
 <div id="sb-resize" title="Drag left or right to resize the sidebar. Double-click to close."></div>
 <button type="button" id="sb-tab" title="Open sidebar" aria-label="Open sidebar"></button>
