@@ -345,7 +345,7 @@ DUMPBOX_JS = """
       var d = await r.json();
       var buds = d.buddies || [];
       for (var i = 0; i < buds.length; i++) {
-        if (buds[i].id === bid && buds[i].repo) { repo = buds[i].repo; repoName = buds[i].name || bid; break; }
+        if (buds[i].id === bid && buds[i].repo) { repo = String(buds[i].repo).split('/').filter(Boolean).pop(); repoName = buds[i].name || bid; break; }
       }
     } catch(e){}
   }
@@ -814,7 +814,7 @@ ATTN_JS = """
       var buds = d.buddies || [];
       for (var i = 0; i < buds.length; i++) {
         if (buds[i].id === bid) {
-          if (buds[i].repo) repo = buds[i].repo;
+          if (buds[i].repo) repo = String(buds[i].repo).split('/').filter(Boolean).pop();
           if (buds[i].name) buddyName = buds[i].name;
           break;
         }

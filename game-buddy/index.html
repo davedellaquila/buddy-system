@@ -418,7 +418,7 @@ h2.sec{font-size:23px;margin:36px 0 6px;display:flex;align-items:center;gap:9px;
       var d = await r.json();
       var buds = d.buddies || [];
       for (var i = 0; i < buds.length; i++) {
-        if (buds[i].id === bid && buds[i].repo) { repo = buds[i].repo; repoName = buds[i].name || bid; break; }
+        if (buds[i].id === bid && buds[i].repo) { repo = String(buds[i].repo).split('/').filter(Boolean).pop(); repoName = buds[i].name || bid; break; }
       }
     } catch(e){}
   }

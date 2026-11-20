@@ -76,6 +76,12 @@
   .attn-btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
   .attn-btn:disabled{opacity:.45;cursor:default}
   .attn-status{font-size:13px;color:var(--muted);margin-top:6px;min-height:18px}
+  .attn-note{font-size:13px;color:var(--text);margin-top:8px;background:var(--bg);border:1px solid var(--border);border-left:3px solid var(--accent);padding:6px 10px;border-radius:0 6px 6px 0;white-space:pre-wrap}
+  .attn-note-edit{margin-top:10px}
+  .attn-note-edit textarea{width:100%;box-sizing:border-box;border:1px solid var(--border);border-radius:8px;padding:8px 10px;font:inherit;font-size:14px;background:var(--bg);color:var(--text);min-height:56px}
+  .attn-note-btns{display:flex;gap:8px;margin-top:8px}
+  .attn-note-msg{font-size:12.5px;color:var(--muted);margin-top:6px}
+  .attn-undo{margin-top:8px}
   .feed-item.resolved{opacity:.55}
   .feed-item.resolved .attn-actions{display:none}
   /* ---------- awaiting item detail (click-through) ---------- */
@@ -531,7 +537,7 @@
     .then(function(d){
       var buds=d.buddies||[];
       var attn=[];
-      buds.forEach(function(b){(b.attention||[]).forEach(function(a){attn.push({buddy:b,aid:a.id||"",text:a.text,date:a.date||"",icon:b.icon||"📌",name:b.name,url:a.url||"",bid:b.id||""});});});
+      buds.forEach(function(b){(b.attention||[]).forEach(function(a){attn.push({buddy:b,aid:a.id||"",text:a.text,date:a.date||"",icon:b.icon||"📌",name:b.name,url:a.url||"",bid:b.id||"",repo:b.repo||"",cleared:a.cleared||null,later:a.later||null,dropped:a.dropped||null,note:(a.note&&a.note.text)?a.note:null});});});
       attn.sort(function(x,y){return (y.date||"").localeCompare(x.date||"");});
       set("st-buddies",buds.length);
       set("st-attn",attn.length);
@@ -587,25 +593,38 @@
           var home=buddyHome(a.bid);
           var txt=esc(a.text);
           if(a.url){txt='<a href="'+esc(a.url)+'" target="_blank" rel="noopener">'+txt+'</a>';}
-          return '<div class="feed-item" data-bid="'+esc(a.bid)+'" data-aid="'+esc(a.aid)+'"><div class="feed-icon">'+esc(a.icon)+'</div>'+
+          var stampAttr = a.cleared ? ' data-cleared="'+esc(a.cleared.date||'')+'"' : (a.later ? ' data-later="'+esc(a.later.date||'')+'"' : (a.dropped ? ' data-dropped="'+esc(a.dropped.date||'')+'"' : ''));
+          var noteAttr = a.note ? ' data-note="'+esc(a.note.text)+'" data-note-date="'+esc(a.note.date||'')+'"' : '';
+          return '<div class="feed-item" data-bid="'+esc(a.bid)+'" data-aid="'+esc(a.aid)+'" data-repo="'+esc(a.repo)+'"'+stampAttr+noteAttr+'><div class="feed-icon">'+esc(a.icon)+'</div>'+
             '<div class="feed-body"><div class="feed-buddy"><a href="'+home+'" target="_blank" rel="noopener">'+esc(a.name)+'</a></div>'+
             '<div class="feed-text">'+txt+'</div>'+
             (a.date?'<div class="feed-date">'+esc(a.date)+'</div>':'')+
             '<div class="attn-actions"><button type="button" class="attn-circle" data-act="done" title="Mark done" aria-label="Mark done" role="checkbox" aria-checked="false">○</button>'+
-            '<button type="button" class="attn-link" data-act="info">Need more info</button></div>'+
+            '<button type="button" class="attn-link" data-act="info">Need more info</button>'+
+            '<button type="button" class="attn-link" data-act="later">Later</button>'+
+            '<button type="button" class="attn-link" data-act="drop">Drop it</button>'+
+            '<button type="button" class="attn-link" data-act="note">\u270e Add a note\u2026</button></div>'+
             '<div class="attn-status" role="status"></div></div></div>';
         }).join("")+
         (attn.length>show.length?'<div class="feed-more">+ '+(attn.length-show.length)+' more — see them all on the <a href="../">dashboard</a>.</div>':'');
       }
-/* ---------- attention actions: Done / Need more info → docs/ingest.md ---------- */
+/* ---------- attention actions: full fleet action set (Dave's standard, 2026-11-20) ----------
+   Done / Need more info / Later / Drop it / ✎ Add a note… + Undo on every
+   feed tile. Dispositions stamp the OWNING buddy's registry entry in
+   buddies.json (token-gated) and mirror into the shared on-device store
+   (attnDone / attnState / attnNotes, keyed owner-bid|aid) so they agree
+   with the dashboard and the buddy's own homepage. Info and notes are
+   delivered to the owning buddy's docs/ingest.md. No token: everything
+   still records on this device and the tile says what didn't sync. */
       (function initAttnActions(){
         var tiles = document.querySelectorAll('.feed-item[data-aid]');
         if (!tiles.length) return;
-        var bid = 'astro', repo = 'buddy-system', buddyName = 'Astro';
+        var FIELD = { done: 'cleared', later: 'later', dropped: 'dropped' };
         function lsGet(){ try { return JSON.parse(localStorage.getItem('buddyTree.v3') || '{}'); } catch(e){ return {}; } }
         function lsSet(patch){ try { var s = lsGet(); for (var k in patch) s[k] = patch[k]; localStorage.setItem('buddyTree.v3', JSON.stringify(s)); } catch(e){} }
         function token(){ return lsGet().ghToken || ''; }
         function b64encode(str){ var b = new TextEncoder().encode(str), s = ''; for (var i=0;i<b.length;i++) s += String.fromCharCode(b[i]); return btoa(s); }
+        function todayLocal(){ var d = new Date(); function p(n){ return (n < 10 ? '0' : '') + n; } return d.getFullYear() + '-' + p(d.getMonth() + 1) + '-' + p(d.getDate()); }
         async function ghApi(path, method, body){
           var t = token();
           if (!t) throw new Error('Add a GitHub token first.');
@@ -628,75 +647,204 @@
           } catch(e){}
           return null;
         }
-        function rkey(aid, text){ return bid + '|' + (aid || ('text:' + text.slice(0, 60))); }
-        function isResolved(aid, text){ var m = lsGet().attnDone || {}; return !!m[rkey(aid, text)]; }
-        function setResolved(aid, text){ var s = lsGet(); var m = s.attnDone || {}; m[rkey(aid, text)] = 1; s.attnDone = m; lsSet(s); }
-        function paintResolved(tile, msg){
-          tile.classList.add('resolved');
-          var st = tile.querySelector('.attn-status');
-          if (st) st.textContent = msg;
+        function rkey(obid, aid, text){ return obid + '|' + (aid || ('text:' + text.slice(0, 60))); }
+        function localState(obid, aid, text){
+          var s = lsGet(), k = rkey(obid, aid, text);
+          if ((s.attnDone || {})[k]) return { kind: 'done', date: '' };
+          var m = (s.attnState || {})[k];
+          if (m && m.kind) return { kind: m.kind, date: m.date || '' };
+          return null;
         }
-        async function sendAction(tile, entry, okMsg){
-          var st = tile.querySelector('.attn-status');
-          var btns = tile.querySelectorAll('.attn-btn');
-          if (!token()) { st.textContent = 'Add a GitHub token in the 🧠 Brain dump section above to enable actions.'; return false; }
-          btns.forEach(function(b){ b.disabled = true; });
-          st.textContent = 'Working…';
+        function setLocalState(obid, aid, text, kind, date){
+          var s = lsGet(), k = rkey(obid, aid, text);
+          var done = s.attnDone || {}, st = s.attnState || {}, seen = s.seen || {};
+          delete st[k];
+          if (kind === 'done') { done[k] = 1; if (aid) seen[aid] = 1; }
+          else if (kind) { st[k] = { kind: kind, date: date }; delete done[k]; if (aid) delete seen[aid]; }
+          else { delete done[k]; if (aid) delete seen[aid]; }
+          lsSet({ attnDone: done, attnState: st, seen: seen });
+        }
+        function localNote(obid, aid, text){ var m = lsGet().attnNotes || {}; return m[rkey(obid, aid, text)] || null; }
+        function setLocalNote(obid, aid, text, note){ var s = lsGet(); var m = s.attnNotes || {}; if (note) m[rkey(obid, aid, text)] = note; else delete m[rkey(obid, aid, text)]; lsSet({ attnNotes: m }); }
+        async function regWrite(obid, aid, kind, obj){
+          if (!token() || !aid) return false;
           try {
-            var NL = String.fromCharCode(10);
-            var stamp = new Date().toLocaleString();
-            var cur = await ghGetFile(repo, 'docs/ingest.md');
-            var base = cur ? cur.text : '# Ingest log — ' + buddyName + NL + NL;
-            var body = {message: 'Attention action for ' + bid, content: b64encode(base + '## ' + stamp + NL + NL + entry + NL + NL)};
-            if (cur && cur.sha) body.sha = cur.sha;
-            await ghApi('/repos/davedellaquila/' + repo + '/contents/docs/ingest.md', 'PUT', body);
-            st.textContent = okMsg;
+            var cur = await ghGetFile('buddy-system', 'buddies.json');
+            if (!cur) return false;
+            var data = JSON.parse(cur.text);
+            var buds = data.buddies || [];
+            var entry = null;
+            for (var i = 0; i < buds.length; i++) if (buds[i].id === obid) { entry = buds[i]; break; }
+            if (!entry) return false;
+            var list = entry.attention || [], found = false;
+            for (var j = 0; j < list.length; j++) {
+              var a = list[j];
+              if (typeof a === 'string') { if (a === aid) { a = { text: a }; list[j] = a; } else continue; }
+              if (a && a.id === aid) {
+                found = true;
+                if (kind) { a[FIELD[kind]] = obj; if (kind !== 'done') delete a.cleared; if (kind !== 'later') delete a.later; if (kind !== 'dropped') delete a.dropped; }
+                else { delete a.cleared; delete a.later; delete a.dropped; }
+              }
+            }
+            if (!found) return false;
+            var body = { message: (kind ? 'Disposition ' + kind + ' for attention ' + aid + ' for ' + obid : 'Reopen attention ' + aid + ' for ' + obid) + ' (Astro homepage feed)', content: b64encode(JSON.stringify(data, null, 1)) };
+            if (cur.sha) body.sha = cur.sha;
+            await ghApi('/repos/davedellaquila/buddy-system/contents/buddies.json', 'PUT', body);
             return true;
-          } catch(err){
-            st.textContent = 'Save failed: ' + (err.message || err);
-            btns.forEach(function(b){ b.disabled = false; });
-            return false;
-          }
+          } catch(e){ return false; }
+        }
+        async function ingest(orepo, oname, obid, entry){
+          var cur = await ghGetFile(orepo, 'docs/ingest.md');
+          var NL = String.fromCharCode(10);
+          var base = cur ? cur.text : '# Ingest log — ' + oname + NL + NL;
+          var body = { message: 'Attention action for ' + obid + ' (Astro homepage feed)', content: b64encode(base + '## ' + new Date().toLocaleString() + NL + NL + entry + NL + NL) };
+          if (cur && cur.sha) body.sha = cur.sha;
+          await ghApi('/repos/davedellaquila/' + orepo + '/contents/docs/ingest.md', 'PUT', body);
+        }
+        function stampText(kind, date){
+          var when = date ? ' · ' + date : '';
+          return kind === 'done' ? '✓ Done' + when : (kind === 'later' ? 'Later' + when : 'Dropped' + when);
+        }
+        function stateMsg(tile, kind, recorded){
+          var st = tile.querySelector('.attn-status');
+          if (!st) return;
+          if (recorded) st.textContent = stampText(kind, todayLocal()) + ' — recorded in the registry.';
+          else if (!token()) st.textContent = stampText(kind, todayLocal()) + ' — marked on this device; connect GitHub (dashboard) to record it in the registry for good.';
+          else st.textContent = stampText(kind, todayLocal()) + ' — marked on this device; the registry write did not go through.';
         }
         tiles.forEach(function(tile){
+          var obid = tile.getAttribute('data-bid') || '';
+          var orepo = (tile.getAttribute('data-repo') || '').split('/').filter(Boolean).pop() || '';
           var aid = tile.getAttribute('data-aid') || '';
+          var nameEl = tile.querySelector('.feed-buddy a');
+          var oname = nameEl ? nameEl.textContent.trim() : obid;
           var textEl = tile.querySelector('.feed-text');
           var text = textEl ? textEl.textContent.trim() : '';
-          if (isResolved(aid, text)) { paintResolved(tile, 'Marked done'); return; }
+          var body = tile.querySelector('.feed-body');
+          function paintNote(note){
+            var el = tile.querySelector('.attn-note');
+            if (!note || !note.text) { if (el) el.remove(); return; }
+            if (!el) {
+              el = document.createElement('div'); el.className = 'attn-note';
+              var st = tile.querySelector('.attn-status');
+              if (st) body.insertBefore(el, st); else body.appendChild(el);
+            }
+            el.textContent = '✎ ' + note.text + (note.date ? ' · ' + note.date : '');
+          }
+          function paintResolved(kind, date){
+            tile.classList.add('resolved');
+            var st = tile.querySelector('.attn-status');
+            if (st) st.textContent = stampText(kind, date);
+            if (!tile.querySelector('.attn-undo')) {
+              var u = document.createElement('button');
+              u.type = 'button'; u.className = 'attn-btn attn-undo'; u.setAttribute('data-act', 'undo'); u.textContent = '↩ Undo';
+              if (st && st.parentNode) st.parentNode.insertBefore(u, st.nextSibling);
+            }
+            var nb = tile.querySelector('[data-act="note"]');
+            var un = tile.querySelector('.attn-undo');
+            if (nb && un && un.nextSibling !== nb) un.parentNode.insertBefore(nb, un.nextSibling);
+          }
+          function paintOpen(){
+            tile.classList.remove('resolved');
+            var st = tile.querySelector('.attn-status');
+            if (st) st.textContent = '';
+            var un = tile.querySelector('.attn-undo'); if (un) un.remove();
+            var nb = tile.querySelector('[data-act="note"]');
+            var acts = tile.querySelector('.attn-actions');
+            if (nb && acts && nb.parentNode !== acts) acts.appendChild(nb);
+          }
+          async function disposition(kind){
+            if (!kind) {
+              setLocalState(obid, aid, text, null);
+              paintOpen();
+              if (token()) {
+                var okU = await regWrite(obid, aid, null, null);
+                var stU = tile.querySelector('.attn-status');
+                if (stU) stU.textContent = okU ? 'Reopened — recorded in the registry.' : 'Reopened on this device.';
+              }
+              return;
+            }
+            var obj = { date: todayLocal(), by: 'Dave' };
+            setLocalState(obid, aid, text, kind, obj.date);
+            var ok = await regWrite(obid, aid, kind, obj);
+            paintResolved(kind, obj.date);
+            stateMsg(tile, kind, ok);
+          }
+          async function sendInfo(){
+            var st = tile.querySelector('.attn-status');
+            if (!token()) { st.textContent = 'Add a GitHub token in the 🧠 Brain dump section above to enable actions.'; return; }
+            if (!orepo) { st.textContent = 'No repo linked for ' + oname + ' yet, so this could not be sent.'; return; }
+            st.textContent = 'Working…';
+            try {
+              await ingest(orepo, oname, obid, 'FOLLOW-UP — Dave needs more info on: "' + text + '"' + (aid ? ' (attention id: ' + aid + ')' : '') + '. Please follow up with him.');
+              st.textContent = 'Sent — ' + oname + ' will follow up.';
+            } catch(err){ st.textContent = 'Save failed: ' + (err.message || err); }
+          }
+          async function sendNote(noteText, msgEl){
+            setLocalNote(obid, aid, text, { text: noteText, date: todayLocal() });
+            paintNote({ text: noteText, date: todayLocal() });
+            if (!token()) { msgEl.textContent = 'Note saved on this device and shown here — connect GitHub (Brain dump box above) to send it to ' + oname + '.'; return; }
+            if (!orepo) { msgEl.textContent = 'Note saved on this device and shown here — no repo linked for ' + oname + ' yet, so it could not be sent.'; return; }
+            msgEl.textContent = 'Sending…';
+            try {
+              await ingest(orepo, oname, obid, 'NOTE — Dave’s note on: "' + text + '"' + (aid ? ' (attention id: ' + aid + ')' : '') + ':' + String.fromCharCode(10) + String.fromCharCode(10) + noteText);
+              msgEl.textContent = 'Note saved — sent to ' + oname + ' and shown on this card.';
+            } catch(err){ msgEl.textContent = 'Note saved on this device — sending failed (' + (err.message || err) + '), so ' + oname + ' has not seen it yet.'; }
+          }
+          function openNoteEditor(){
+            var old = tile.querySelector('.attn-note-edit');
+            if (old) { var t0 = old.querySelector('textarea'); if (t0) t0.focus(); return; }
+            var wrap = document.createElement('div'); wrap.className = 'attn-note-edit';
+            var ta = document.createElement('textarea');
+            ta.placeholder = 'Type your note…'; ta.setAttribute('aria-label', 'Note for this item');
+            var cur = localNote(obid, aid, text);
+            if (cur) ta.value = cur.text;
+            else if (tile.getAttribute('data-note')) ta.value = tile.getAttribute('data-note');
+            var btns = document.createElement('div'); btns.className = 'attn-note-btns';
+            var sv = document.createElement('button'); sv.type = 'button'; sv.className = 'attn-btn primary'; sv.setAttribute('data-note-act', 'save'); sv.textContent = 'Save note';
+            var cx = document.createElement('button'); cx.type = 'button'; cx.className = 'attn-btn'; cx.setAttribute('data-note-act', 'cancel'); cx.textContent = 'Cancel';
+            var msg = document.createElement('div'); msg.className = 'attn-note-msg'; msg.setAttribute('role', 'status');
+            btns.appendChild(sv); btns.appendChild(cx);
+            wrap.appendChild(ta); wrap.appendChild(btns); wrap.appendChild(msg);
+            var st = tile.querySelector('.attn-status');
+            if (st) body.insertBefore(wrap, st); else body.appendChild(wrap);
+            ta.focus();
+          }
+          /* boot paint: baked registry stamp, else on-device state; note likewise */
+          var bakedKind = tile.hasAttribute('data-cleared') ? 'done' : (tile.hasAttribute('data-later') ? 'later' : (tile.hasAttribute('data-dropped') ? 'dropped' : null));
+          var bakedDate = bakedKind ? (tile.getAttribute('data-' + (bakedKind === 'done' ? 'cleared' : bakedKind)) || '') : '';
+          var lk = localState(obid, aid, text);
+          if (lk) paintResolved(lk.kind, lk.date);
+          else if (bakedKind) paintResolved(bakedKind, bakedDate);
+          var bn = tile.getAttribute('data-note') ? { text: tile.getAttribute('data-note'), date: tile.getAttribute('data-note-date') || '' } : null;
+          paintNote(localNote(obid, aid, text) || bn);
           tile.addEventListener('click', function(ev){
-            var btn = ev.target.closest ? ev.target.closest('.attn-circle, .attn-link') : null;
+            var nb = ev.target.closest ? ev.target.closest('[data-note-act]') : null;
+            if (nb) {
+              var wrap = nb.closest('.attn-note-edit');
+              if (nb.getAttribute('data-note-act') === 'cancel') { if (wrap) wrap.remove(); return; }
+              var ta = wrap ? wrap.querySelector('textarea') : null;
+              var msg = wrap ? wrap.querySelector('.attn-note-msg') : null;
+              var val = ta ? ta.value.trim() : '';
+              if (!val) { if (msg) msg.textContent = 'Write a note first, or Cancel.'; return; }
+              sendNote(val, msg);
+              return;
+            }
+            var btn = ev.target.closest ? ev.target.closest('.attn-circle, .attn-link, .attn-btn') : null;
             if (!btn || btn.disabled) return;
             var act = btn.getAttribute('data-act');
-            var idBit = aid ? ' (attention id: ' + aid + ')' : '';
             if (act === 'done') {
-              // Jonny's circle: fill accent + white check (200ms), then glide out
               btn.style.background = 'var(--accent,#007aff)';
               btn.style.borderColor = 'var(--accent,#007aff)';
               btn.style.color = '#fff';
-              btn.textContent = '\u2713';
+              btn.textContent = '✓';
               btn.setAttribute('aria-checked', 'true');
-              setTimeout(function(){
-                sendAction(tile,
-                  'DONE — Dave marked this done on the homepage: "' + text + '"' + idBit + '. Please remove it from the attention list in buddies.json.',
-                  'Marked done — the buddy will clear it.').then(function(ok){
-                    if (ok) {
-                      setResolved(aid, text);
-                      tile.style.transition = 'opacity .25s, transform .25s';
-                      tile.style.opacity = '0';
-                      tile.style.transform = 'translateX(24px)';
-                      setTimeout(function(){ paintResolved(tile, 'Marked done — the buddy will clear it.'); tile.style.display = 'none'; }, 250);
-                    } else {
-                      // Restore the circle on failure
-                      btn.style.background = ''; btn.style.borderColor = ''; btn.style.color = '';
-                      btn.textContent = '\u25cb'; btn.setAttribute('aria-checked', 'false');
-                    }
-                  });
-              }, 200);
-            } else if (act === 'info') {
-              sendAction(tile,
-                'FOLLOW-UP — Dave needs more info on: "' + text + '"' + idBit + '. Please follow up with him.',
-                'Sent — ' + buddyName + ' will follow up.');
-            }
+              setTimeout(function(){ disposition('done'); }, 200);
+            } else if (act === 'later') disposition('later');
+            else if (act === 'drop') disposition('dropped');
+            else if (act === 'undo') disposition(null);
+            else if (act === 'note') openNoteEditor();
+            else if (act === 'info') sendInfo();
           });
         });
       })();
@@ -865,7 +1013,7 @@
       var d = await r.json();
       var buds = d.buddies || [];
       for (var i = 0; i < buds.length; i++) {
-        if (buds[i].id === bid && buds[i].repo) { repo = buds[i].repo; repoName = buds[i].name || bid; break; }
+        if (buds[i].id === bid && buds[i].repo) { repo = String(buds[i].repo).split('/').filter(Boolean).pop(); repoName = buds[i].name || bid; break; }
       }
     } catch(e){}
   }
