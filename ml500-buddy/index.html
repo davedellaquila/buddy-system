@@ -294,9 +294,6 @@ dl.specgrid{display:grid;grid-template-columns:auto 1fr;gap:7px 16px;font-size:1
 .pill.badp{color:#b42318;border-color:#b42318}
 @media (prefers-color-scheme: dark){.pill.warnp{color:#e5b84f;border-color:#e5b84f}.pill.badp{color:#ff8a7a;border-color:#ff8a7a}}
 .settled{background:var(--card);border:1px solid var(--border);border-left:4px solid var(--ok);border-radius:12px;padding:14px 18px;margin-top:14px;font-size:15px}
-.attn{list-style:none;padding:0}
-.attn li{background:var(--card);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:8px;padding:12px 16px;margin-bottom:10px;font-size:15px}
-.attn li span{color:var(--muted);font-size:14px;display:block}
 @media (max-width:560px){dl.specgrid{grid-template-columns:1fr}.specgrid dt{padding-top:9px}}
 </style>
 </head>
@@ -433,13 +430,11 @@ dl.specgrid{display:grid;grid-template-columns:auto 1fr;gap:7px 16px;font-size:1
 
 
 <h2>⚠️ Needs Dave's attention</h2>
-<ul class="attn">
-  <li><strong>Tire order — placed ✓</strong><span>Costco order #1332908428 (Nov 20): BFGoodrich KO3 LT265/65R17/D &times;4, shipping to the Folsom Tire Center, installation booked as part of the order. Still open: the appointment date and Costco's delivery notice.</span></li>
-  <li><strong>Last oil change</strong><span>Date and mileage unknown — the oil half of the mileage/oil record is still open.</span></li>
-  <li><strong>VIN</strong><span>Still to capture — a photo of the windshield plate or the door-jamb sticker closes it.</span></li>
-  <li><strong>Dipstick delivery</strong><span>The genuine engine-oil dipstick (113 010 04 72), ordered via FCP Euro in Sep 2026 — arrival and install unconfirmed.</span></li>
-  <li><strong>Registration / tags</strong><span>An October note said they may be well out of date — current status unverified.</span></li>
-</ul>
+<div class="attn" data-attn-id="ml500-tire-install"><div class="attn-text">Tire order — placed ✓. Costco order #1332908428 (Nov 20): BFGoodrich KO3 LT265/65R17/D ×4, shipping to the Folsom Tire Center, installation booked as part of the order. Still open: the appointment date and Costco&rsquo;s delivery notice. (Done = tires installed.)</div><div class="attn-actions"><button type="button" class="attn-btn primary" data-act="done">Done</button><button type="button" class="attn-btn" data-act="info">Need more info</button><button type="button" class="attn-btn" data-act="later">Later</button><button type="button" class="attn-btn" data-act="drop">Drop it</button></div><div class="attn-status" role="status"></div></div>
+<div class="attn" data-attn-id="ml500-oil-change"><div class="attn-text">Last oil change — date and mileage unknown; the oil half of the mileage/oil record is still open.</div><div class="attn-actions"><button type="button" class="attn-btn primary" data-act="done">Done</button><button type="button" class="attn-btn" data-act="info">Need more info</button><button type="button" class="attn-btn" data-act="later">Later</button><button type="button" class="attn-btn" data-act="drop">Drop it</button></div><div class="attn-status" role="status"></div></div>
+<div class="attn" data-attn-id="ml500-vin"><div class="attn-text">VIN — still to capture. A photo of the windshield plate or the door-jamb sticker closes it.</div><div class="attn-actions"><button type="button" class="attn-btn primary" data-act="done">Done</button><button type="button" class="attn-btn" data-act="info">Need more info</button><button type="button" class="attn-btn" data-act="later">Later</button><button type="button" class="attn-btn" data-act="drop">Drop it</button><button type="button" class="attn-btn" data-act="note-photo">📷 I&rsquo;ll send a photo</button></div><div class="attn-status" role="status"></div></div>
+<div class="attn" data-attn-id="ml500-dipstick"><div class="attn-text">Dipstick delivery — the genuine engine-oil dipstick (113 010 04 72), ordered via FCP Euro in Sep 2026; arrival and install unconfirmed.</div><div class="attn-actions"><button type="button" class="attn-btn primary" data-act="done">Done</button><button type="button" class="attn-btn" data-act="info">Need more info</button><button type="button" class="attn-btn" data-act="later">Later</button><button type="button" class="attn-btn" data-act="drop">Drop it</button><button type="button" class="attn-btn" data-act="arrived">It arrived</button><button type="button" class="attn-btn" data-act="note-waiting">Still waiting</button></div><div class="attn-status" role="status"></div></div>
+<div class="attn" data-attn-id="ml500-registration"><div class="attn-text">Registration / tags — an October note said they may be well out of date; current status unverified.</div><div class="attn-actions"><button type="button" class="attn-btn primary" data-act="done">Done</button><button type="button" class="attn-btn" data-act="info">Need more info</button><button type="button" class="attn-btn" data-act="later">Later</button><button type="button" class="attn-btn" data-act="drop">Drop it</button></div><div class="attn-status" role="status"></div></div>
 
 
 
@@ -962,6 +957,18 @@ dl.specgrid{display:grid;grid-template-columns:auto 1fr;gap:7px 16px;font-size:1
   }
   function setResolved(aid, text){ var s = lsGet(); var m = s.attnDone || {}; m[rkey(aid, text)] = 1; s.attnDone = m; lsSet(s); }
   function unsetResolved(aid, text){ var s = lsGet(); var m = s.attnDone || {}; delete m[rkey(aid, text)]; s.attnDone = m; if (aid && s.seen) delete s.seen[aid]; lsSet(s); }
+  /* Dispositions beyond Done (Dave 2026-11-20): Later / Drop it / arrived are
+     remembered per item so a reload paints the state Dave chose, and every tap
+     also leaves a note in this buddy's ingest through the same token-gated
+     write the Need-more-info button uses. */
+  function getState(aid, text){ var s = lsGet(); var m = s.attnState || {}; return m[rkey(aid, text)] || ''; }
+  function setState(aid, text, v){ var s = lsGet(); var m = s.attnState || {}; if (v) m[rkey(aid, text)] = v; else delete m[rkey(aid, text)]; s.attnState = m; lsSet(s); }
+  function noteAction(tile, entry, okMsg){
+    sendAction(tile, entry, okMsg).then(function(){
+      tile.querySelectorAll('.attn-btn').forEach(function(b){ b.disabled = false; });
+    });
+  }
+  function todayStr(){ var d = new Date(); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); }
   /* Registry clearance (Dave 2026-11-19): Done used to leave a note in
      the buddy's ingest asking an agent to hand-edit buddies.json later,
      so a fixed blocker (Emile's DocuSign, resolved Oct 21) kept
@@ -1083,7 +1090,8 @@ dl.specgrid{display:grid;grid-template-columns:auto 1fr;gap:7px 16px;font-size:1
     var textEl = tile.querySelector('.attn-text');
     var text = textEl ? textEl.textContent.trim() : '';
     var baked = tile.getAttribute('data-cleared');
-    if (baked || isResolved(aid, text)) paintResolved(tile, baked ? ('✓ Cleared by Dave · ' + baked) : 'Marked done', true);
+    var st0 = getState(aid, text);
+    if (baked || isResolved(aid, text)) paintResolved(tile, baked ? ('✓ Cleared by Dave · ' + baked) : (st0 === 'later' ? 'Later — snoozed by Dave' : st0 === 'drop' ? 'Dropped by Dave' : st0 === 'arrived' ? '✓ Arrived — logged by Dave' : 'Marked done'), true);
     tile.addEventListener('click', function(ev){
       var btn = ev.target.closest ? ev.target.closest('.attn-btn') : null;
       if (!btn || btn.disabled) return;
@@ -1105,6 +1113,7 @@ dl.specgrid{display:grid;grid-template-columns:auto 1fr;gap:7px 16px;font-size:1
         }
       } else if (act === 'undo') {
         unsetResolved(aid, text);
+        setState(aid, text, '');
         paintOpen(tile);
         var st3 = tile.querySelector('.attn-status');
         if (st3) st3.textContent = 'Reopened — it needs attention again.';
@@ -1113,6 +1122,33 @@ dl.specgrid{display:grid;grid-template-columns:auto 1fr;gap:7px 16px;font-size:1
         sendAction(tile,
           'FOLLOW-UP — Dave needs more info on: "' + text + '"' + idBit + '. Please follow up with him.',
           'Sent — ' + buddyName + ' will follow up.');
+      } else if (act === 'later') {
+        setState(aid, text, 'later');
+        paintResolved(tile, 'Later — snoozed by Dave · ' + todayStr());
+        noteAction(tile,
+          'LATER — Dave snoozed: "' + text + '"' + idBit + '. Resurface it later.',
+          'Later — noted in the ingest; it will resurface.');
+      } else if (act === 'drop') {
+        setResolved(aid, text); setState(aid, text, 'drop');
+        paintResolved(tile, 'Dropped by Dave · ' + todayStr());
+        noteAction(tile,
+          'DROPPED — Dave dropped: "' + text + '"' + idBit + '. Remove it from the open list.',
+          'Dropped — noted in the ingest; it comes off the list.');
+      } else if (act === 'arrived') {
+        setResolved(aid, text); setState(aid, text, 'arrived');
+        paintResolved(tile, '✓ Arrived — logged by Dave · ' + todayStr());
+        celebrate(btn, tile);
+        noteAction(tile,
+          'ARRIVED — Dave confirms the part in this item has arrived: "' + text + '"' + idBit + '. Update the dossier (delivery confirmed; install still to confirm).',
+          '✓ Arrived — noted in the ingest; the dossier gets updated.');
+      } else if (act === 'note-photo') {
+        noteAction(tile,
+          'VIN PHOTO — Dave will send a photo for: "' + text + '"' + idBit + '. Watch for it and log the VIN when it lands.',
+          'Photo coming — the VIN gets logged when it lands.');
+      } else if (act === 'note-waiting') {
+        noteAction(tile,
+          'STILL WAITING — Dave confirms this is still outstanding: "' + text + '"' + idBit + '. Keep it on the open list.',
+          'Noted — still waiting; it stays on the list.');
       }
     });
   });
