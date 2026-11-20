@@ -89,6 +89,7 @@ h2 { font-size: 22px; margin: 32px 0 16px; }
 .attn-btn:disabled { opacity: .45; cursor: default; }
 .attn-status { font-size: 13px; color: var(--muted); margin-top: 8px; min-height: 18px; }
 .attn.resolved { opacity: .6; }
+.attn-undo { margin-top: 8px; }
 .attn.resolved .attn-actions { display: none; }
 /* ---- skills (Dave 2026-10-16) ---- */
 .skills { display: flex; flex-direction: column; gap: 10px; margin-top: 4px; }
@@ -313,7 +314,7 @@ h2 { font-size: 22px; margin: 32px 0 16px; }
 
 
 <div class="footer">
-Generated 2026-11-19 · Part of the Buddy System<br>
+Generated 2026-11-20 · Part of the Buddy System<br>
 <a href="about.html">About · the full record →</a>
 </div>
 
@@ -718,6 +719,38 @@ Generated 2026-11-19 · Part of the Buddy System<br>
     return false;
   }
   function setResolved(aid, text){ var s = lsGet(); var m = s.attnDone || {}; m[rkey(aid, text)] = 1; s.attnDone = m; lsSet(s); }
+  function unsetResolved(aid, text){ var s = lsGet(); var m = s.attnDone || {}; delete m[rkey(aid, text)]; s.attnDone = m; if (aid && s.seen) delete s.seen[aid]; lsSet(s); }
+  /* Registry clearance (Dave 2026-11-19): Done used to leave a note in
+     the buddy's ingest asking an agent to hand-edit buddies.json later,
+     so a fixed blocker (Emile's DocuSign, resolved Oct 21) kept
+     presenting as open. The tap now writes the item's cleared stamp
+     into buddies.json itself when a token is on this device. The
+     device-local attnDone mark remains the instant/offline record,
+     and the dashboard promotes local marks into the registry at boot. */
+  async function regWrite(aid, text, clearedObj){
+    try {
+      var cur = await ghGetFile('buddy-system', 'buddies.json');
+      if (!cur) return false;
+      var d = JSON.parse(cur.text);
+      var buds = d.buddies || [], bb = null;
+      for (var i = 0; i < buds.length; i++) if (buds[i].id === bid) { bb = buds[i]; break; }
+      if (!bb) return false;
+      var list = bb.attention || [], hit = null, hitIdx = -1;
+      for (var j = 0; j < list.length; j++) {
+        var e = list[j];
+        if (aid && e && typeof e === 'object' && e.id === aid) { hit = e; break; }
+        if (!aid && typeof e === 'string' && e.slice(0, 60) === text.slice(0, 60)) { hitIdx = j; break; }
+        if (!aid && e && typeof e === 'object' && (e.text || '').slice(0, 60) === text.slice(0, 60)) { hit = e; break; }
+      }
+      if (hit) { if (clearedObj) hit.cleared = clearedObj; else delete hit.cleared; }
+      else if (hitIdx >= 0 && clearedObj) { bb.attention[hitIdx] = {text: bb.attention[hitIdx], cleared: clearedObj}; }
+      else return false;
+      var body = {message: (clearedObj ? 'Clear attention ' : 'Reopen attention ') + (aid || 'item') + ' for ' + bid + ' (homepage)', content: b64encode(JSON.stringify(d, null, 1))};
+      if (cur.sha) body.sha = cur.sha;
+      await ghApi('/repos/davedellaquila/buddy-system/contents/buddies.json', 'PUT', body);
+      return true;
+    } catch(e){ return false; }
+  }
   /* Las Vegas mode (Dave 2026-10-20): marking done feels like a win — the
      button spins once and confetti bursts from it. DOM + WAAPI only;
      skipped under prefers-reduced-motion; only ever called on a real tap. */
@@ -755,6 +788,12 @@ Generated 2026-11-19 · Part of the Buddy System<br>
        button renders plain "Done"; the check appears only once clicked. */
     var db = tile.querySelector('[data-act="done"]');
     if (db) db.textContent = '✓ Done';
+    var stEl = tile.querySelector('.attn-status');
+    if (stEl && !tile.querySelector('[data-act="undo"]')) {
+      var ub = document.createElement('button');
+      ub.type = 'button'; ub.className = 'attn-btn attn-undo'; ub.setAttribute('data-act', 'undo'); ub.textContent = 'Undo';
+      stEl.parentNode.insertBefore(ub, stEl.nextSibling);
+    }
     if (immediate) { tile.classList.add('resolved'); return; }
     /* Fresh tap (Dave, 2026-10-21): the check + status land while the button
        is still visible, and celebrate() fires against the live button; the
@@ -787,20 +826,47 @@ Generated 2026-11-19 · Part of the Buddy System<br>
       return false;
     }
   }
+  function paintOpen(tile){
+    tile.classList.remove('resolved');
+    tile.removeAttribute('data-cleared');
+    var st = tile.querySelector('.attn-status');
+    if (st) st.textContent = '';
+    var db = tile.querySelector('[data-act="done"]');
+    if (db) db.textContent = 'Done';
+    var ub = tile.querySelector('[data-act="undo"]');
+    if (ub) ub.remove();
+  }
   tiles.forEach(function(tile){
     var aid = tile.getAttribute('data-attn-id') || '';
     var textEl = tile.querySelector('.attn-text');
     var text = textEl ? textEl.textContent.trim() : '';
-    if (isResolved(aid, text)) { paintResolved(tile, 'Marked done', true); return; }
+    var baked = tile.getAttribute('data-cleared');
+    if (baked || isResolved(aid, text)) paintResolved(tile, baked ? ('✓ Cleared by Dave · ' + baked) : 'Marked done', true);
     tile.addEventListener('click', function(ev){
       var btn = ev.target.closest ? ev.target.closest('.attn-btn') : null;
       if (!btn || btn.disabled) return;
       var act = btn.getAttribute('data-act');
       var idBit = aid ? ' (attention id: ' + aid + ')' : '';
       if (act === 'done') {
-        sendAction(tile,
-          'DONE — Dave marked this done on the homepage: "' + text + '"' + idBit + '. Please remove it from the attention list in buddies.json.',
-          'Marked done — the buddy will clear it.').then(function(ok){ if (ok) { setResolved(aid, text); paintResolved(tile, 'Marked done — the buddy will clear it.'); celebrate(btn, tile); } });
+        var _nd = new Date(); var cobj = {date: _nd.getFullYear() + '-' + String(_nd.getMonth() + 1).padStart(2, '0') + '-' + String(_nd.getDate()).padStart(2, '0'), by: 'Dave'};
+        setResolved(aid, text);
+        paintResolved(tile, '✓ Cleared by Dave · ' + cobj.date);
+        celebrate(btn, tile);
+        if (token()) {
+          regWrite(aid, text, cobj).then(function(ok){
+            var st = tile.querySelector('.attn-status');
+            if (st) st.textContent = ok ? '✓ Cleared — recorded in the registry, so it stays cleared on every surface.' : 'Marked done on this device — the registry could not be updated just now, so other surfaces may still show it open.';
+          });
+        } else {
+          var st2 = tile.querySelector('.attn-status');
+          if (st2) st2.textContent = 'Marked done on this device — connect GitHub (Brain dump box above) to record it in the registry for good.';
+        }
+      } else if (act === 'undo') {
+        unsetResolved(aid, text);
+        paintOpen(tile);
+        var st3 = tile.querySelector('.attn-status');
+        if (st3) st3.textContent = 'Reopened — it needs attention again.';
+        if (token()) regWrite(aid, text, null);
       } else if (act === 'info') {
         sendAction(tile,
           'FOLLOW-UP — Dave needs more info on: "' + text + '"' + idBit + '. Please follow up with him.',

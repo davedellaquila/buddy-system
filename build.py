@@ -2914,6 +2914,9 @@ input.bp-name{background:transparent;border-top:none;border-right:none;border-le
 .seenbtn.done{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
 .seenbtn.done:hover{color:var(--on-accent);border-color:var(--accent)}
 .attn-all{margin-top:6px}
+.attn.cleared{opacity:.62}
+.attn-cleared-note{color:var(--muted);font-size:.75rem;margin-top:2px}
+.attn-unclear{margin-left:auto;flex:0 0 auto}
 /* Standing orders — broadcast to every buddy detail (agents + Dave) */
 .standing-order{margin:10px 0 4px;padding:10px 12px;border-radius:10px;border:1px solid var(--amber-bd);
   background:var(--amber-bg);font-size:.84375rem;line-height:1.45;color:var(--amber-tx)}
@@ -3760,6 +3763,7 @@ function homepageUrl(b){
    on the homepage. (Dave 2026-10-20) */
 function attnSeen(bid, a){
   if (!a) return false;
+  if (a.cleared) return true; /* registry clearance (Dave 2026-11-19): durable, every surface */
   if (S.seen && S.seen[a.id]) return true;
   const m = S.attnDone || {};
   return !!m[bid + '|' + a.id];
@@ -7839,6 +7843,53 @@ async function writeBuddyLink(fromId, toId){
     toast('Linked on this device - sync failed (' + (err.message || err) + '); will retry when a token is connected.');
   }
 }
+/* Registry clearances (Dave 2026-11-19): a blocked/attention item can
+   be marked cleared IN PLACE and the stamp lives on the registry entry
+   itself (a.cleared = {date, by}) in buddies.json, so it survives
+   rebuilds and shows on every surface. Same write pattern as buddy
+   links: optimistic in-memory update, a localStorage queue for
+   token-less devices, and a token-gated flush that applies every
+   queued clearance to a fresh copy of buddies.json. */
+function todayLocal(){ const d = new Date(); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); }
+function applyAttnClearToMemory(bid, aid, obj){
+  const b = byId[bid]; if (!b || !b.attention) return;
+  b.attention.forEach(a => { if (a && typeof a === 'object' && a.id === aid) { if (obj) a.cleared = obj; else delete a.cleared; } });
+}
+function writeAttnClear(bid, aid, obj){
+  if (!bid || !aid) return;
+  applyAttnClearToMemory(bid, aid, obj);
+  if (!S.pendingAttnClear) S.pendingAttnClear = {};
+  if (!S.pendingAttnClear[bid]) S.pendingAttnClear[bid] = {};
+  S.pendingAttnClear[bid][aid] = obj;
+  save();
+  flushAttnClear();
+  refreshPanelIfShowing(bid);
+}
+async function flushAttnClear(){
+  const q = S.pendingAttnClear || {};
+  const bids = Object.keys(q).filter(bid => q[bid] && Object.keys(q[bid]).length);
+  if (!bids.length) return;
+  if (!S.ghToken) return; /* stays queued; the panel note at mark time said so */
+  try {
+    const regText = await ghGetFile('buddy-system', 'buddies.json');
+    if (!regText) throw new Error('registry read failed');
+    const data = JSON.parse(regText);
+    bids.forEach(bid => {
+      const bb = (data.buddies || []).find(x => x.id === bid);
+      if (!bb) return;
+      Object.keys(q[bid]).forEach(aid => {
+        const obj = q[bid][aid];
+        (bb.attention || []).forEach(a => { if (a && typeof a === 'object' && a.id === aid) { if (obj) a.cleared = obj; else delete a.cleared; } });
+      });
+    });
+    await ghPutFile('buddy-system', 'buddies.json', b64encode(JSON.stringify(data, null, 1)), 'Attention clearances (dashboard)');
+    S.pendingAttnClear = {};
+    save();
+    toast('Cleared \u2014 recorded in the registry.');
+  } catch (e) {
+    toast('Could not update the registry yet (' + (e.message || e) + ') \u2014 will retry when a GitHub token is connected.');
+  }
+}
 async function flushPendingLinks(){
   const p = S.pendingLinks;
   if (!p || !Object.keys(p).length || !ghToken()) return;
@@ -8047,7 +8098,12 @@ function renderBuddy(id){
     } catch (e) { return ''; }
   };
   let unseenCount = 0;
-  if (!items.length) attn = '';
+  const clearedItems = (b.attention || []).filter(x => x && typeof x === 'object' && x.cleared);
+  const clearedHtml = clearedItems.map(a => '<div class="attn cleared" data-attn="' + a.id + '"><span class="adot"></span>'
+    + '<div class="attn-body"><div class="attn-text">' + escHtml(a.text || '') + '</div>'
+    + '<div class="attn-cleared-note">\u2713 Cleared by Dave \u00b7 ' + escHtml((a.cleared && a.cleared.date) || '') + '</div></div>'
+    + '<button type="button" class="attn-act attn-unclear" data-unclear="' + a.id + '">Undo</button></div>').join('');
+  if (!items.length) attn = clearedHtml;
   else {
     attn = items.map(a => {
       const txt = escHtml(a.text || '');
@@ -8063,12 +8119,13 @@ function renderBuddy(id){
       }).join('');
       return '<div class="attn unseen" data-attn="'+a.id+'"><span class="adot"></span>'
         + '<div class="attn-body">'+body
-        + (acts ? '<div class="attn-actions">'+acts+'</div>' : '')
+        + (acts || a.id ? '<div class="attn-actions">'+acts+(a.id ? '<button type="button" class="attn-act attn-clear" data-clear="'+a.id+'">\u2713 Mark cleared</button>' : '')+'</div>' : '')
         + (a.date ? '<div class="attn-date">Asked '+escHtml(a.date)+'</div>' : '')+'</div>'
         + '<button class="seenbtn" data-done="'+a.id+'" title="Mark done" aria-label="Mark done" role="checkbox" aria-checked="false">\u25cb</button></div>';
     }).join('');
     unseenCount = items.length;
     if (items.length > 1) attn += '<div class="attn-all"><button class="seenbtn" data-done-all="'+id+'">Mark all done</button></div>';
+    attn += clearedHtml;
   }
   document.getElementById('buddy-home').innerHTML =
     '<div class="bp-wrap">'
@@ -16129,6 +16186,10 @@ document.addEventListener('click', e => {
   if (sb) { markAttentionDone(sb.dataset.done, sb); return; }
   const sa = e.target.closest('[data-done-all]');
   if (sa) { markAllAttentionDone(sa.dataset.doneAll); return; }
+  const cb = e.target.closest('[data-clear]');
+  if (cb) { const bidC = (S.sel || '').startsWith('buddy:') ? S.sel.slice(6) : null; if (bidC) writeAttnClear(bidC, cb.dataset.clear, {date: todayLocal(), by: 'Dave'}); return; }
+  const ub2 = e.target.closest('[data-unclear]');
+  if (ub2) { const bidU = (S.sel || '').startsWith('buddy:') ? S.sel.slice(6) : null; if (bidU) writeAttnClear(bidU, ub2.dataset.unclear, null); return; }
   const ab = e.target.closest('[data-act-buddy]');
   if (ab) { selectBuddy(ab.dataset.actBuddy); return; }
   const nb = e.target.closest('[data-navbtn]');
@@ -16231,6 +16292,30 @@ flushPendingDumps();
 flushPendingRenames();
 // Flush any buddy links queued while offline or token-less (Dave 2026-11-19)
 flushPendingLinks();
+// Registry clearances (Dave 2026-11-19): re-apply queued clearances to
+// the in-memory registry, promote device-local done marks (homepage
+// attnDone, dashboard seen) into registry clearances so a mark made
+// anywhere becomes permanent, then flush when a token is connected.
+(function bootAttnClear(){
+  const q = S.pendingAttnClear || {};
+  Object.keys(q).forEach(bid => Object.keys(q[bid] || {}).forEach(aid => applyAttnClearToMemory(bid, aid, q[bid][aid])));
+  const today = todayLocal();
+  const promote = (bid, aid) => {
+    const b = byId[bid]; if (!b) return;
+    const a = (b.attention || []).find(x => x && typeof x === 'object' && x.id === aid);
+    if (a && !a.cleared) {
+      const obj = {date: today, by: 'Dave'};
+      applyAttnClearToMemory(bid, aid, obj);
+      if (!S.pendingAttnClear) S.pendingAttnClear = {};
+      if (!S.pendingAttnClear[bid]) S.pendingAttnClear[bid] = {};
+      S.pendingAttnClear[bid][aid] = obj;
+    }
+  };
+  Object.keys(S.attnDone || {}).forEach(k => { const p = k.split('|'); if (p.length === 2 && p[1].indexOf('text:') !== 0) promote(p[0], p[1]); });
+  Object.keys(S.seen || {}).forEach(aid => { const owner = BUDDIES.find(b => (b.attention || []).some(x => x && typeof x === 'object' && x.id === aid)); if (owner) promote(owner.id, aid); });
+  save();
+})();
+flushAttnClear();
 // Flush any new-buddy requests queued while offline or token-less
 flushNbQueue();
 // Pull the global flags + favorites and merge (Job C, Dave 2026-10-21)
