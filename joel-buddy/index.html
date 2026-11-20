@@ -57,6 +57,15 @@
   .attn-status{font-size:13px; color:var(--muted); margin-top:8px; min-height:18px}
   .attn.resolved{opacity:.6}
   .attn.resolved .attn-actions{display:none}
+  .attn-extra{display:flex; gap:8px; margin-top:8px; flex-wrap:wrap}
+  .attn-notes{margin-top:4px}
+  .attn-note{font-size:14px; border-left:3px solid var(--accent2); background:var(--card); padding:6px 10px; margin-top:8px}
+  .attn-note-when{color:var(--dim); font-size:12px; display:block; margin-top:2px}
+  .attn-notebox{margin-top:10px}
+  .attn-notebox textarea{width:100%; min-height:64px; resize:vertical; background:var(--card);
+    border:1px solid var(--border); border-radius:8px; padding:8px 10px; font-size:14px; color:var(--text); font-family:inherit}
+  .attn-notebox textarea:focus{outline:none; border-color:var(--accent)}
+  .attn-notebox-row{display:flex; gap:8px; margin-top:8px; flex-wrap:wrap}
   /* dump-box */
   .dumpbox{background:var(--card); border:1px solid var(--border); border-radius:12px; padding:20px 22px; margin-top:18px}
   .dumpbox h2{margin:0 0 6px; font-size:19px}
@@ -553,7 +562,12 @@ async function dump(){
 })();
 </script>
 <script>
-/* Needs Attention: render tiles from buddies.json + Dave's action buttons (done / need more info) */
+/* Needs Attention — full disposition set (Dave's fleet standard, Nov 20, 2026):
+   ✓ Done / Need more info / Later / Drop it on the item itself, with Undo,
+   plus a free-text ✎ Add a note… action. Done/Later/Drop write registry stamps
+   (cleared/later/dropped = {date, by}) into buddies.json through the same
+   token-gated path; a dispositioned item stays visible in place with its
+   stamp. Notes save to the buddy's docs/ingest.md and show on the card. */
 (function(){
   var list = document.getElementById('attn-list');
   if (!list) return;
@@ -590,17 +604,61 @@ async function dump(){
     return null;
   }
   function rkey(aid, text){ return bid + '|' + (aid || ('text:' + text.slice(0, 60))); }
-  function isResolved(aid, text){ var m = lsGet().attnDone || {}; return !!m[rkey(aid, text)]; }
-  function setResolved(aid, text){ var s = lsGet(); var m = s.attnDone || {}; m[rkey(aid, text)] = 1; s.attnDone = m; lsSet(s); }
-  function paintResolved(tile, msg){
-    tile.classList.add('resolved');
+  function todayStr(){ var d = new Date(); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); }
+  function stampObj(){ return {date: todayStr(), by: 'Dave'}; }
+  /* Device-local marks: the instant/offline record (the registry stamp is the durable one). */
+  function isDone(aid, text){
+    var s = lsGet();
+    var m = s.attnDone || {};
+    if (m[rkey(aid, text)]) return true;
+    if (aid && s.seen && s.seen[aid]) return true;
+    return false;
+  }
+  function setDone(aid, text){ var s = lsGet(); var m = s.attnDone || {}; m[rkey(aid, text)] = 1; s.attnDone = m; lsSet(s); }
+  function unsetDone(aid, text){ var s = lsGet(); var m = s.attnDone || {}; delete m[rkey(aid, text)]; s.attnDone = m; if (aid && s.seen) delete s.seen[aid]; lsSet(s); }
+  function getState(aid, text){ var s = lsGet(); var m = s.attnState || {}; return m[rkey(aid, text)] || ''; }
+  function setState(aid, text, v){ var s = lsGet(); var m = s.attnState || {}; if (v) m[rkey(aid, text)] = v; else delete m[rkey(aid, text)]; s.attnState = m; lsSet(s); }
+  /* Dave's notes on an item: kept on this device so they show on the card
+     across reloads, and written to the buddy's ingest when a token is present. */
+  function getNotes(aid, text){ var s = lsGet(); var m = s.attnNotes || {}; return m[rkey(aid, text)] || []; }
+  function addNoteLocal(aid, text, note){ var s = lsGet(); var m = s.attnNotes || {}; var k = rkey(aid, text); var arr = m[k] || []; arr.push({text: note, date: todayStr()}); m[k] = arr; s.attnNotes = m; lsSet(s); }
+  /* Registry stamps: set one of cleared/later/dropped (mutually exclusive),
+     or pass field=null to reopen (Undo). Token-gated write to buddies.json. */
+  async function regWriteState(aid, text, field, obj){
+    try {
+      var cur = await ghGetFile('buddy-system', 'buddies.json');
+      if (!cur) return false;
+      var d = JSON.parse(cur.text);
+      var buds = d.buddies || [], bb = null;
+      for (var i = 0; i < buds.length; i++) if (buds[i].id === bid) { bb = buds[i]; break; }
+      if (!bb) return false;
+      var items = bb.attention || [], hit = null, hitIdx = -1;
+      for (var j = 0; j < items.length; j++) {
+        var e = items[j];
+        if (aid && e && typeof e === 'object' && e.id === aid) { hit = e; break; }
+        if (!aid && typeof e === 'string' && e.slice(0, 60) === text.slice(0, 60)) { hitIdx = j; break; }
+        if (!aid && e && typeof e === 'object' && (e.text || '').slice(0, 60) === text.slice(0, 60)) { hit = e; break; }
+      }
+      if (hit) {
+        ['cleared', 'later', 'dropped'].forEach(function(f){ delete hit[f]; });
+        if (field && obj) hit[field] = obj;
+      } else if (hitIdx >= 0 && field && obj) {
+        var o = {text: bb.attention[hitIdx]}; o[field] = obj; bb.attention[hitIdx] = o;
+      } else return false;
+      var body = {message: (field ? ('Attention ' + field + ' ') : 'Reopen attention ') + (aid || 'item') + ' for ' + bid + ' (homepage)', content: b64encode(JSON.stringify(d, null, 1))};
+      if (cur.sha) body.sha = cur.sha;
+      await ghApi('/repos/davedellaquila/buddy-system/contents/buddies.json', 'PUT', body);
+      return true;
+    } catch(e){ return false; }
+  }
+  function setStatus(tile, msg){
     var st = tile.querySelector('.attn-status');
     if (st) st.textContent = msg;
   }
-  async function sendAction(tile, entry, okMsg, repo, buddyName){
+  async function sendIngest(tile, entry, okMsg, repo, buddyName){
     var st = tile.querySelector('.attn-status');
     var btns = tile.querySelectorAll('.attn-btn');
-    if (!token()) { st.textContent = 'Add a GitHub token in the Brain dump section above to enable actions.'; return false; }
+    if (!token()) { st.textContent = 'Add a GitHub token in the Brain dump section to enable actions.'; return false; }
     if (!repo) { st.textContent = 'No repo linked for this buddy yet.'; return false; }
     btns.forEach(function(b){ b.disabled = true; });
     st.textContent = 'Working…';
@@ -613,6 +671,7 @@ async function dump(){
       if (cur && cur.sha) body.sha = cur.sha;
       await ghApi('/repos/davedellaquila/' + repo + '/contents/docs/ingest.md', 'PUT', body);
       st.textContent = okMsg;
+      btns.forEach(function(b){ b.disabled = false; });
       return true;
     } catch(err){
       st.textContent = 'Save failed: ' + (err.message || err);
@@ -620,24 +679,127 @@ async function dump(){
       return false;
     }
   }
-  function bindTile(tile, repo, buddyName){
+  function renderNotes(tile, aid, text){
+    var wrap = tile.querySelector('.attn-notes');
+    if (!wrap) return;
+    var html = '';
+    getNotes(aid, text).forEach(function(n){
+      html += '<div class="attn-note">✎ ' + esc(n.text) + '<span class="attn-note-when">Dave · ' + esc(n.date || '') + '</span></div>';
+    });
+    wrap.innerHTML = html;
+  }
+  function ensureExtra(tile){
+    var extra = tile.querySelector('.attn-extra');
+    if (!extra) return;
+    if (!extra.querySelector('[data-act="undo"]')) {
+      var ub = document.createElement('button');
+      ub.type = 'button'; ub.className = 'attn-btn attn-undo'; ub.setAttribute('data-act', 'undo'); ub.textContent = 'Undo';
+      extra.appendChild(ub);
+    }
+    if (!extra.querySelector('[data-act="note"]')) {
+      var nb = document.createElement('button');
+      nb.type = 'button'; nb.className = 'attn-btn'; nb.setAttribute('data-act', 'note'); nb.textContent = '✎ Add a note…';
+      extra.appendChild(nb);
+    }
+  }
+  function paintDispositioned(tile, label, immediate){
+    setStatus(tile, label);
+    ensureExtra(tile);
+    if (immediate) tile.classList.add('resolved');
+    else setTimeout(function(){ tile.classList.add('resolved'); }, 900);
+  }
+  function paintOpen(tile){
+    tile.classList.remove('resolved');
+    setStatus(tile, '');
+    var extra = tile.querySelector('.attn-extra');
+    if (extra) extra.innerHTML = '';
+    var nb = tile.querySelector('.attn-notebox');
+    if (nb) nb.hidden = true;
+  }
+  function bindTile(tile, item, repo, buddyName){
     var aid = tile.getAttribute('data-attn-id') || '';
     var textEl = tile.querySelector('.attn-text');
     var text = textEl ? textEl.textContent.trim() : '';
-    if (isResolved(aid, text)) { paintResolved(tile, 'Marked done'); return; }
+    renderNotes(tile, aid, text);
+    /* Initial paint: registry stamp wins, then the device-local marks. */
+    var reg = null;
+    if (item && typeof item === 'object') {
+      if (item.cleared) reg = {kind: 'done', date: (item.cleared && item.cleared.date) || ''};
+      else if (item.later) reg = {kind: 'later', date: (item.later && item.later.date) || ''};
+      else if (item.dropped) reg = {kind: 'drop', date: (item.dropped && item.dropped.date) || ''};
+    }
+    if (reg) {
+      paintDispositioned(tile, reg.kind === 'done' ? ('✓ Done · ' + reg.date) : reg.kind === 'later' ? ('Later · ' + reg.date) : ('Dropped · ' + reg.date), true);
+    } else {
+      var st0 = getState(aid, text);
+      if (st0 === 'later') paintDispositioned(tile, 'Later — snoozed by Dave', true);
+      else if (st0 === 'drop') paintDispositioned(tile, 'Dropped by Dave', true);
+      else if (isDone(aid, text)) paintDispositioned(tile, 'Marked done', true);
+    }
     tile.addEventListener('click', function(ev){
       var btn = ev.target.closest ? ev.target.closest('.attn-btn') : null;
       if (!btn || btn.disabled) return;
       var act = btn.getAttribute('data-act');
       var idBit = aid ? ' (attention id: ' + aid + ')' : '';
       if (act === 'done') {
-        sendAction(tile,
-          'DONE \u2014 Dave marked this done on the homepage: "' + text + '"' + idBit + '. Please remove it from the attention list in buddies.json.',
-          'Marked done \u2014 the buddy will clear it.', repo, buddyName).then(function(ok){ if (ok) { setResolved(aid, text); paintResolved(tile, 'Marked done \u2014 the buddy will clear it.'); } });
+        var cobj = stampObj();
+        setDone(aid, text); setState(aid, text, '');
+        paintDispositioned(tile, '✓ Done · ' + cobj.date);
+        if (token()) {
+          regWriteState(aid, text, 'cleared', cobj).then(function(ok){
+            setStatus(tile, ok ? '✓ Cleared — recorded in the registry, so it stays cleared on every surface.' : 'Marked done on this device — the registry could not be updated just now, so other surfaces may still show it open.');
+          });
+        } else {
+          setStatus(tile, 'Marked done on this device — connect GitHub (Brain dump box) to record it in the registry for good.');
+        }
+      } else if (act === 'undo') {
+        unsetDone(aid, text); setState(aid, text, '');
+        paintOpen(tile);
+        setStatus(tile, 'Reopened — it needs attention again.');
+        if (token()) regWriteState(aid, text, null, null);
       } else if (act === 'info') {
-        sendAction(tile,
-          'FOLLOW-UP \u2014 Dave needs more info on: "' + text + '"' + idBit + '. Please follow up with him.',
-          'Sent \u2014 ' + buddyName + ' will follow up.', repo, buddyName);
+        sendIngest(tile,
+          'FOLLOW-UP — Dave needs more info on: "' + text + '"' + idBit + '. Please follow up with him.',
+          'Sent — ' + buddyName + ' will follow up.', repo, buddyName);
+      } else if (act === 'later') {
+        setState(aid, text, 'later');
+        paintDispositioned(tile, 'Later — snoozed by Dave · ' + todayStr());
+        if (token()) regWriteState(aid, text, 'later', stampObj());
+        sendIngest(tile,
+          'LATER — Dave snoozed: "' + text + '"' + idBit + '. Resurface it later.',
+          'Later — noted in the ingest; it will resurface.', repo, buddyName);
+      } else if (act === 'drop') {
+        setDone(aid, text); setState(aid, text, 'drop');
+        paintDispositioned(tile, 'Dropped by Dave · ' + todayStr());
+        if (token()) regWriteState(aid, text, 'dropped', stampObj());
+        sendIngest(tile,
+          'DROPPED — Dave dropped: "' + text + '"' + idBit + '. Remove it from the open list.',
+          'Dropped — noted in the ingest; it comes off the list.', repo, buddyName);
+      } else if (act === 'note') {
+        var nbox = tile.querySelector('.attn-notebox');
+        if (nbox) {
+          nbox.hidden = !nbox.hidden;
+          if (!nbox.hidden) { var ta = nbox.querySelector('textarea'); if (ta) ta.focus(); }
+        }
+      } else if (act === 'note-cancel') {
+        var nb2 = tile.querySelector('.attn-notebox');
+        if (nb2) nb2.hidden = true;
+      } else if (act === 'note-save') {
+        var nb3 = tile.querySelector('.attn-notebox');
+        var ta3 = nb3 ? nb3.querySelector('textarea') : null;
+        var val = ta3 ? ta3.value.trim() : '';
+        if (!val) { if (nb3) nb3.hidden = true; return; }
+        addNoteLocal(aid, text, val);
+        renderNotes(tile, aid, text);
+        if (ta3) ta3.value = '';
+        if (nb3) nb3.hidden = true;
+        if (token()) {
+          sendIngest(tile,
+            'NOTE — Dave added a note on: "' + text + '"' + idBit + ': "' + val + '"',
+            'Note saved — it is in the buddy\u2019s ingest and on the card.', repo, buddyName);
+        } else {
+          setStatus(tile, 'Note saved on this card — connect GitHub (Brain dump box) to also send it to the buddy\u2019s ingest.');
+        }
       }
     });
   }
@@ -650,18 +812,27 @@ async function dump(){
     var items = (b && b.attention) || [];
     if (!items.length) { list.innerHTML = '<p style="color:var(--muted);font-size:14px">Nothing needs attention right now.</p>'; return; }
     var html = '';
-    items.slice(0, 10).forEach(function(a){
+    var shown = items.slice(0, 10);
+    shown.forEach(function(a){
       var text = typeof a === 'string' ? a : (a.text || '');
       var date = (a && a.date) || '';
       var aid = (a && a.id) || '';
       html += '<div class="attn" data-attn-id="' + esc(aid) + '"><div class="attn-text">' + esc(text) + '</div>';
       if (date) html += '<div class="attn-date">' + esc(date) + '</div>';
-      html += '<div class="attn-actions"><button type="button" class="attn-btn primary" data-act="done">\u2713 Done</button>' +
-              '<button type="button" class="attn-btn" data-act="info">Need more info</button></div>' +
-              '<div class="attn-status" role="status"></div></div>';
+      html += '<div class="attn-notes"></div>' +
+              '<div class="attn-actions"><button type="button" class="attn-btn primary" data-act="done">✓ Done</button>' +
+              '<button type="button" class="attn-btn" data-act="info">Need more info</button>' +
+              '<button type="button" class="attn-btn" data-act="later">Later</button>' +
+              '<button type="button" class="attn-btn" data-act="drop">Drop it</button>' +
+              '<button type="button" class="attn-btn" data-act="note">✎ Add a note…</button></div>' +
+              '<div class="attn-notebox" hidden><textarea rows="3" placeholder="Add a note for ' + esc(buddyName) + '…"></textarea>' +
+              '<div class="attn-notebox-row"><button type="button" class="attn-btn primary" data-act="note-save">Save note</button>' +
+              '<button type="button" class="attn-btn" data-act="note-cancel">Cancel</button></div></div>' +
+              '<div class="attn-status" role="status"></div><div class="attn-extra"></div></div>';
     });
     list.innerHTML = html;
-    Array.prototype.forEach.call(list.querySelectorAll('.attn[data-attn-id]'), function(tile){ bindTile(tile, repo, buddyName); });
+    var tiles = list.querySelectorAll('.attn[data-attn-id]');
+    Array.prototype.forEach.call(tiles, function(tile, idx){ bindTile(tile, shown[idx], repo, buddyName); });
   }).catch(function(){
     list.innerHTML = '<p style="color:var(--muted);font-size:14px">Could not load attention items.</p>';
   });
