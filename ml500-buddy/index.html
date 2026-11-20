@@ -1,11 +1,11 @@
-<!-- BUDDY-BASIC-TEMPLATE v2 -->
+<!-- ML500 Buddy CUSTOM HOMEPAGE — thread-owned design (gen_basic_homepages.py never overwrites pages without the template marker). v2 spec-led refresh, 2026-11-20. -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
-<title data-buddy-name>ML500 Buddy</title>
+<title>ML500 Buddy — 🚙 The 2002 ML500 Dossier &amp; Spec Sheet</title>
 <style>
 :root {
   --bg: #ffffff;
@@ -253,17 +253,126 @@ h2 { font-size: 22px; margin: 32px 0 16px; }
   .header-tip::after{display:none}
 }
 </style>
+
+<style data-custom="ml500-v2">
+/* ML500 custom v2 — spec-led refresh, 2026-11-20. Uses the template's CSS vars so dark/light both hold. */
+body{max-width:1020px}
+h2{border-bottom:2px solid var(--border);padding-bottom:6px}
+.dumpbox h2{border-bottom:none;padding-bottom:0}
+.hero{padding:22px 0 4px}
+.hero-photo{width:100%;height:min(46vw,380px);object-fit:cover;border-radius:14px;border:1px solid var(--border);display:block}
+.kicker{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;text-transform:uppercase;letter-spacing:2.5px;font-size:11px;color:var(--accent);margin:18px 0 8px}
+.hero h1{font-size:clamp(32px,6vw,48px);line-height:1.05;margin:0 0 6px}
+.hero .tagline{font-size:clamp(16px,2.6vw,19px)}
+.rolebox{margin-top:16px;background:var(--card);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:10px;padding:12px 16px;display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.rolebox strong{font-size:15px}
+.rolebox span{color:var(--muted);font-size:13px;display:block}
+.rolebox audio{height:36px;max-width:100%;flex:1;min-width:220px}
+.sech{display:flex;align-items:center;gap:10px;border-bottom:none;padding-bottom:0}
+.sech .rule{flex:1;height:1px;background:var(--border)}
+.sub{color:var(--muted);font-size:14px;margin:4px 0 14px;max-width:780px}
+.stattiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:14px}
+.tile{background:var(--card);border:1px solid var(--border);border-top:3px solid var(--accent);border-radius:12px;padding:14px 16px;text-align:center}
+.tile-num{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:32px;font-weight:700;line-height:1.1}
+.tile-lab{color:var(--muted);font-size:12.5px;text-transform:uppercase;letter-spacing:.6px;margin-top:4px}
+.specpanel{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:18px 20px}
+dl.specgrid{display:grid;grid-template-columns:auto 1fr;gap:7px 16px;font-size:15px;margin:0}
+.specgrid dt{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);padding-top:3px}
+.specgrid dd{font-weight:600;margin:0}
+.src{color:var(--muted);font-size:13px;margin-top:14px}
+.tiregrid,.filegrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+.tirecard,.filegrid .card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px 18px}
+.tirecard.chosen{border:2px solid var(--accent)}
+.tire-size{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:30px;font-weight:700;margin:6px 0 8px}
+.tirecard p,.filegrid .card p{font-size:14px;color:var(--muted)}
+.tirecard strong,.filegrid .card strong{color:var(--text)}
+.filegrid .card h3{font-size:15px;margin:0 0 8px}
+.bignum{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:26px;font-weight:700;color:var(--text) !important}
+.pill{display:inline-block;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;padding:3px 9px;border-radius:999px;border:1px solid var(--muted);color:var(--muted);margin-bottom:8px}
+.pill.okp{color:var(--ok);border-color:var(--ok)}
+.pill.warnp{color:#9a6a00;border-color:#9a6a00}
+.pill.badp{color:#b42318;border-color:#b42318}
+@media (prefers-color-scheme: dark){.pill.warnp{color:#e5b84f;border-color:#e5b84f}.pill.badp{color:#ff8a7a;border-color:#ff8a7a}}
+.settled{background:var(--card);border:1px solid var(--border);border-left:4px solid var(--ok);border-radius:12px;padding:14px 18px;margin-top:14px;font-size:15px}
+.attn{list-style:none;padding:0}
+.attn li{background:var(--card);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:8px;padding:12px 16px;margin-bottom:10px;font-size:15px}
+.attn li span{color:var(--muted);font-size:14px;display:block}
+@media (max-width:560px){dl.specgrid{grid-template-columns:1fr}.specgrid dt{padding-top:9px}}
+</style>
 </head>
 <body>
 <nav data-buddy-crumb style="padding:14px 20px 0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:14px;line-height:1.4;"><a href="https://davedellaquila.github.io/buddy-system/car-buddy/" style="color:inherit;opacity:.65;text-decoration:none;">← Car Buddy</a></nav>
 <div class="topbar"><span class="topbar-icon">🚙</span><span class="topbar-name" data-buddy-name>ML500 Buddy</span><button class="topbar-refresh" title="Reload this page (bypasses cache)" onclick="location.href=location.pathname+'?v='+Date.now()">&#8635;</button><a class="bs-dash-link" href="https://davedellaquila.github.io/buddy-system/">Buddy System dashboard</a><a class="header-tip" href="https://ko-fi.com/davedellaquila" target="_blank" rel="noopener" aria-label="Tip Jar — if this page helped you, you can leave Dave a tip on Ko-fi"><span class="jar" aria-hidden="true">🫙</span><span>Tip Jar</span></a></div>
-<div class="header">
-<div class="icon">🚙</div>
-<h1 data-buddy-name>ML500 Buddy</h1>
-<div class="tagline">2002 Mercedes ML500 — the white SUV</div>
+<header class="hero">
+  <img class="hero-photo" src="https://raw.githubusercontent.com/davedellaquila/buddy-system/master/photos/ml500-buddy/1792043971948-DSC_0004_33_.jpg" alt="Dave's 2002 Mercedes-Benz ML500 at the Fiddletown cabin in the snow">
+  <div class="kicker">Living dossier · W163 · Fiddletown, CA</div>
+  <h1>🚙 ML500 Buddy</h1>
+  <p class="tagline">The 2002 Mercedes-Benz ML500 — Dave's five-liter W163. Service history, parts, and mileage, kept straight.</p>
+  <div class="rolebox">
+    <div><strong>🔊 Hear my role</strong><span>Persona: Hans, German master tech — the living dossier, in my own voice</span></div>
+    <audio controls preload="none" src="role-intro.mp3"></audio>
+  </div>
+</header>
+<div class="mission">Living dossier for the 2002 Mercedes-Benz ML500: service history, parts, mileage log. Notable: the dipstick question is settled — the 722.6 transmission has no factory dipstick; the ordered dipstick is for engine oil.</div>
+
+<h2 class="sech">📋 Spec sheet — 2002 ML500 <span class="rule"></span></h2>
+<p class="sub">The headline numbers for the US-spec W163 ML500, verified Nov 20, 2026. Dave's truck reads <strong>159,672 miles</strong> (Nov 9, 2026).</p>
+<div class="stattiles">
+  <div class="tile"><div class="tile-num">288</div><div class="tile-lab">hp @ 5,600 rpm</div></div>
+  <div class="tile"><div class="tile-num">325</div><div class="tile-lab">lb-ft @ 2,700 rpm</div></div>
+  <div class="tile"><div class="tile-num">5,000</div><div class="tile-lab">lb max towing</div></div>
+  <div class="tile"><div class="tile-num">22.0</div><div class="tile-lab">gal fuel · 83 L</div></div>
+</div>
+<section class="specpanel">
+<dl class="specgrid">
+  <dt>Engine</dt><dd>M113 5.0L V8 · SOHC 24-valve · 4,966 cc</dd>
+  <dt>Power</dt><dd>288 hp @ 5,600 rpm</dd>
+  <dt>Torque</dt><dd>325 lb-ft @ 2,700 rpm (plateau to 4,250)</dd>
+  <dt>Transmission</dt><dd>5-speed automatic with TouchShift (722.6)</dd>
+  <dt>Drivetrain</dt><dd>Full-time AWD · low-range transfer case</dd>
+  <dt>Towing</dt><dd>5,000 lb max</dd>
+  <dt>Curb weight</dt><dd>4,874 lb</dd>
+  <dt>Dimensions</dt><dd>182.6&Prime; L &times; 72.4&Prime; W (without mirrors) &times; 71.7&Prime; H</dd>
+  <dt>Wheelbase</dt><dd>111.0 in</dd>
+  <dt>Fuel</dt><dd>22.0 gal (83 L) · premium unleaded required</dd>
+  <dt>EPA economy</dt><dd>13 city / 16 highway / 14 combined MPG</dd>
+  <dt>Cargo</dt><dd>34.7 cu ft (seats up) · 81.2 cu ft max</dd>
+  <dt>Seating</dt><dd>5 (optional third row: 7)</dd>
+  <dt>Wheels</dt><dd>17 &times; 8.5 in alloy</dd>
+</dl>
+<p class="src">Factory figures, verified Nov 20, 2026 — <a href="https://www.edmunds.com/mercedes-benz/m-class/2002/st-100003580/features-specs/" target="_blank" rel="noopener">Edmunds</a>, <a href="https://www.fueleconomy.gov/feg/Find.do?action=sbs&amp;id=18216" target="_blank" rel="noopener">fueleconomy.gov (EPA)</a>, the ML500 owner's manual, and Car and Driver's Feb 2002 test. The same sheet lives in the <a href="https://github.com/davedellaquila/ml500-buddy/blob/master/KNOWLEDGE.md">full record (KNOWLEDGE.md)</a>.</p>
+</section>
+
+<h2 class="sech">🛞 Tires <span class="rule"></span></h2>
+<p class="sub">Two sizes live on this page, on purpose. Read both before &ldquo;correcting&rdquo; either.</p>
+<div class="tiregrid">
+  <section class="tirecard">
+    <span class="pill">Factory recommended</span>
+    <div class="tire-size">275/55R17</div>
+    <p>The OEM fitment (109V) on 17 &times; 8.5 wheels. Note: neither the Michelin Defender LTX M/S2 nor the Continental TerrainContact H/T is made in this size — that's what started the research (<a href="https://muse.ai/s/ml500-tire-research-round-2-va5xyxr1axo2wxj/AKfytTMl5yVSjWJUkkk-lIS3gdCsO4iIaW5ZuHMlljo" target="_blank" rel="noopener">Rounds 2–3, Oct 2026</a>).</p>
+  </section>
+  <section class="tirecard chosen">
+    <span class="pill okp">Dave's chosen upsize</span>
+    <div class="tire-size">265/65R17</div>
+    <p><strong>Michelin Defender LTX M/S2</strong> — Costco item 1764197, $288.99/tire. Dave's deliberate, researched upsize — about 1.7&Prime; taller than stock. <strong>Not a mistake; don't &ldquo;correct&rdquo; it back.</strong></p>
+    <p><strong>Order status (Nov 20, 2026):</strong> Dave is placing the Costco order himself today. At the final review on Nov 16 the set of 4 totaled $1,176.05 (after the $80 set promotion, incl. fees and tax); delivery to the Folsom Tire Center, install appointment once the tires land.</p>
+  </section>
 </div>
 
-<div class="mission">Living dossier for the 2002 Mercedes-Benz ML500: service history, parts, mileage log. Notable: the dipstick question is settled — the 722.6 transmission has no factory dipstick; the ordered dipstick is for engine oil.</div>
+<h2 class="sech">🗂️ The ML500 file — dossier status <span class="rule"></span></h2>
+<p class="sub">What the record actually holds today — known vs still-to-gather, honestly. Nothing here is padded.</p>
+<div class="filegrid">
+  <section class="card"><span class="pill okp">7 of 8 known</span><h3>Vehicle identity</h3><p>2002 ML500 · W163 · M113 V8 · 722.6 auto · Fiddletown. Color is recorded as white, but the photos below show a champagne-gold truck — flagged for Dave to settle (Nov 20). Still open: <strong>VIN</strong>.</p></section>
+  <section class="card"><span class="pill okp">Complete</span><h3>Factory spec sheet</h3><p>Full headline specs verified Nov 20, 2026 — the panel at the top of this page, and in the <a href="https://github.com/davedellaquila/ml500-buddy/blob/master/KNOWLEDGE.md">full record</a>.</p></section>
+  <section class="card"><span class="pill okp">Started</span><h3>Mileage log</h3><p class="bignum">159,672 mi</p><p>Nov 9, 2026 — read directly from Dave's cluster photo. The first entry in the log.</p></section>
+  <section class="card"><span class="pill warnp">1 record</span><h3>Parts</h3><p>Engine-oil dipstick, OE <strong>113 010 04 72</strong>, ordered genuine via FCP Euro (Sep 2026). Delivery/install still unconfirmed.</p></section>
+  <section class="card"><span class="pill badp">Empty</span><h3>Service history</h3><p>Nothing recorded yet — the older records sit in the unmigrated Airtable base (<a href="https://davedellaquila.github.io/buddy-system/car-buddy/">Car Buddy's</a> migration project). Last oil change: unknown.</p></section>
+  <section class="card"><span class="pill okp">Decided</span><h3>Tires</h3><p>265/65R17 Defender LTX M/S2 chosen over the factory 275/55R17 — order in motion (panel above).</p></section>
+</div>
+<div class="settled">
+  <p><b>📌 Settled:</b> the 722.6 transmission has <b>no factory dipstick</b> (capped tube). The dipstick on order is for <b>engine oil</b>. Closed question — do not reopen it.</p>
+</div>
+
 
 <h2>Photos</h2>
 <div class="gallery">
@@ -299,6 +408,7 @@ h2 { font-size: 22px; margin: 32px 0 16px; }
 
 
 
+
 <section class="dumpbox" data-buddy-id="ml500-buddy">
 <h2>🧠 Brain dump</h2>
 <p class="dumpbox-sub">Dump what's on your mind about <span data-buddy-name>ML500 Buddy</span> — raw and unfiltered. Each dump lands in the buddy's repo (docs/ingest.md) as a timestamped entry — or saves on this device until a repo is linked and a token is connected.</p>
@@ -321,8 +431,15 @@ h2 { font-size: 22px; margin: 32px 0 16px; }
 </section>
 
 
-<h2>Needs Attention</h2>
-<p class="empty">Nothing needs attention right now.</p>
+<h2>⚠️ Needs Dave's attention</h2>
+<ul class="attn">
+  <li><strong>Tire order — today</strong><span>You're placing the Costco order yourself today (Nov 20): Defender LTX M/S2 265/65R17 &times;4, delivery to Folsom. Say when it's placed and I'll track delivery and the install booking.</span></li>
+  <li><strong>Last oil change</strong><span>Date and mileage unknown — the oil half of the mileage/oil record is still open.</span></li>
+  <li><strong>VIN</strong><span>Still to capture — a photo of the windshield plate or the door-jamb sticker closes it.</span></li>
+  <li><strong>Dipstick delivery</strong><span>The genuine engine-oil dipstick (113 010 04 72), ordered via FCP Euro in Sep 2026 — arrival and install unconfirmed.</span></li>
+  <li><strong>Registration / tags</strong><span>An October note said they may be well out of date — current status unverified.</span></li>
+  <li><strong>Truck color — records disagree</strong><span>The registry says white; all three dossier photos show a champagne-gold truck. Say the word and I'll fix whichever record is wrong.</span></li>
+</ul>
 
 
 
@@ -351,7 +468,31 @@ h2 { font-size: 22px; margin: 32px 0 16px; }
 <h2>Vehicle identity</h2>
 <ul>
 <li>2002 Mercedes-Benz ML500, W163 chassis, M113 5.0L V8, 722.6 5-speed automatic, full-time AWD + low range.</li>
-<li>Open: VIN, color, where the truck is kept (Fiddletown or San Jose).</li>
+<li>Color: white. Home: Fiddletown, CA (both per the W163 Mastertech job req — Known facts at hire).</li>
+<li>Open: VIN.</li>
+</ul>
+<h2>Factory specifications (2002 ML500, US spec — verified Nov 20, 2026)</h2>
+<ul>
+<li>Engine: M113 5.0L V8, SOHC 24-valve, 4,966 cc (302 cu in)</li>
+<li>Power: 288 hp @ 5,600 rpm</li>
+<li>Torque: 325 lb-ft @ 2,700 rpm (plateau to 4,250 rpm)</li>
+<li>Transmission: 5-speed automatic with TouchShift (722.6)</li>
+<li>Drivetrain: full-time all-wheel drive, low-range transfer case</li>
+<li>Towing: 5,000 lb max</li>
+<li>Curb weight: 4,874 lb</li>
+<li>Dimensions: 182.6 in long × 72.4 in wide (without mirrors) × 71.7 in high; wheelbase 111.0 in</li>
+<li>Fuel capacity: 22.0 US gal (83 L); premium unleaded required</li>
+<li>EPA economy: 13 city / 16 highway / 14 combined MPG (current EPA ratings)</li>
+<li>Cargo: 34.7 cu ft (seats up) / 81.2 cu ft (max); seating 5 (optional 7)</li>
+<li>Wheels: 17 × 8.5 in alloy</li>
+<li>Sources: Edmunds 2002 M-Class ML500 specs; fueleconomy.gov (EPA); ML500 owner's manual (fuel capacity); Car and Driver, Feb 2002 test (power/torque).</li>
+</ul>
+<h2>Tires</h2>
+<ul>
+<li><strong>Factory-recommended size: 275/55R17</strong> (109V) — the OEM fitment.</li>
+<li>Neither the Michelin Defender LTX M/S2 nor the Continental TerrainContact H/T is made in 275/55R17 (tire research Rounds 2–3, Oct 2026).</li>
+<li><strong>Dave's chosen upsize: 265/65R17</strong> — Michelin Defender LTX M/S2, Costco item 1764197, $288.99/tire. This is a deliberate, researched upsize — do not "correct" it back to stock.</li>
+<li>Order status: at the final review step on Nov 16, 2026 the set of 4 totaled $1,176.05 (after the $80 set promotion, incl. fees and tax) but was NOT placed. Dave is placing the Costco order himself on Nov 20, 2026, for delivery to the Folsom Tire Center; the installation appointment gets booked once the tires land.</li>
 </ul>
 <h2>Mileage log</h2>
 <table>
@@ -389,6 +530,7 @@ h2 { font-size: 22px; margin: 32px 0 16px; }
 <li>Dipstick delivery/install confirmation.</li>
 <li>Registration/tag status to confirm (noted Oct 2026 as possibly well out of date; unverified).</li>
 <li>Service baseline with ⭐ W163 Mastertech Buddy: odometer anchor delivered 2026-11-09 (159,672 mi); service records + VIN still outstanding.</li>
+<li>Tire install: Defender LTX M/S2 set (265/65R17) — order being placed by Dave Nov 20, 2026; confirm placement, delivery to Folsom, and the install appointment once booked.</li>
 </ul></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">README.md</span><span class="rf-dir">repo root</span></button><div class="rf-panel" hidden><div class="rf-body"><h1>🚙 ML500 Buddy</h1>
 <p>Living dossier for Dave's 2002 Mercedes-Benz ML500 (W163): service history, parts, and mileage log.</p>
 <h2>Product brief</h2>
@@ -413,7 +555,7 @@ h2 { font-size: 22px; margin: 32px 0 16px; }
 
 
 <div class="footer">
-Generated 2026-11-20 · Part of the Buddy System<br>
+🚙 ML500 Buddy · Custom homepage v2 · Nov 20, 2026 · Specs verified, gaps labelled<br>
 <a href="about.html">About · the full record →</a>
 </div>
 
