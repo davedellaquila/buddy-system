@@ -2,7 +2,6 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="robots" content="noindex, nofollow">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Charts Buddy — Homepage</title>
 <style>
@@ -155,6 +154,15 @@
   .attn-status { font-size: 13px; color: var(--muted); margin-top: 8px; min-height: 18px; }
   .attn.resolved { opacity: .6; }
   .attn.resolved .attn-actions { display: none; }
+  .attn-undo { margin-top: 8px; }
+  .attn-notebox { margin-top: 12px; }
+  .attn-notebox textarea { width: 100%; box-sizing: border-box; border: 1px solid var(--border); border-radius: 8px; background: var(--bg); color: var(--text); padding: 8px 10px; font: inherit; font-size: 14px; resize: vertical; }
+  .attn-notebox textarea:focus { outline: none; border-color: var(--accent); }
+  .attn-notebox-row { display: flex; gap: 8px; margin-top: 8px; flex-wrap: wrap; }
+  .attn-notes { margin-top: 10px; }
+  .attn-note { margin-top: 8px; font-size: 13px; color: var(--muted); border-left: 3px solid var(--accent); padding: 4px 10px; }
+  .attn-note b { color: var(--text); }
+  .attn-note-date { color: var(--muted); font-size: 12px; }
   footer {
     margin-top: 48px;
     padding-top: 20px;
@@ -221,19 +229,15 @@
     header.hero { padding: 40px 0 24px; }
   }
 </style>
-<style data-bs-dash>.bs-dash-link{font-size:13px;font-weight:600;color:var(--accent,#0066cc);text-decoration:none;white-space:nowrap;margin-left:10px}.bs-dash-link:hover{text-decoration:underline}</style>
 </head>
 <body>
-<nav data-buddy-crumb style="padding:14px 20px 0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:14px;line-height:1.4;"><a href="https://davedellaquila.github.io/buddy-system/project-buddy/" style="color:inherit;opacity:.65;text-decoration:none;">← Project Buddy</a></nav>
-
 <div class="wrap">
 
   <header class="hero">
     <div class="kicker">Project Buddy &mdash; Homepage</div>
     <h1><span class="icon">📊</span>Charts Buddy</h1>
     <p class="mission">I turn Dave's data into <strong>beautiful, honest charts</strong> — sunrise times, market moves, sleep data, project stats. I work hand-in-glove with <strong>Designer (Jonny)</strong>: he sets the visual bar, I execute. Every chart follows the <strong>Kin design language</strong> and lives where the data lives.</p>
-  <a class="bs-dash-link" href="https://davedellaquila.github.io/buddy-system/">Buddy System dashboard</a>
-</header>
+  </header>
 
   <h2>Chart gallery <span class="rule"></span></h2>
   <div class="gallery">
@@ -288,7 +292,12 @@
     <li class="attn" data-attn-id="gallery-open">
       <strong class="attn-text">The gallery is open for business</strong>
       <span>Got numbers with a story in them? Point me at the data — markets, sleep, workouts, project stats — and I'll chart them, Kin-styled.</span>
-      <div class="attn-actions"><button type="button" class="attn-btn primary" data-act="done">✓ Done</button><button type="button" class="attn-btn" data-act="info">Need more info</button></div>
+      <div class="attn-actions"><button type="button" class="attn-btn primary" data-act="done">Done</button><button type="button" class="attn-btn" data-act="info">Need more info</button><button type="button" class="attn-btn" data-act="later">Later</button><button type="button" class="attn-btn" data-act="drop">Drop it</button><button type="button" class="attn-btn" data-act="note">✎ Add a note…</button></div>
+      <div class="attn-notebox" hidden>
+        <textarea rows="2" placeholder="Add a note for Charts Buddy…" aria-label="Note for this item"></textarea>
+        <div class="attn-notebox-row"><button type="button" class="attn-btn primary" data-act="note-save">Save note</button><button type="button" class="attn-btn" data-act="note-cancel">Cancel</button></div>
+      </div>
+      <div class="attn-notes"></div>
       <div class="attn-status" role="status"></div>
     </li>
   </ul>
@@ -405,8 +414,9 @@
   paint();
 })();
 </script>
+
 <script>
-// ---- attention action buttons (Dave-approved rollout; reference: gen_basic_homepages.py ATTN_JS) ----
+// ---- attention actions: Done / Need more info / Later / Drop it + Undo + notes (fleet standard, Dave 2026-11-20; reference: gen_basic_homepages.py ATTN_JS) ----
 (function(){
   var tiles = document.querySelectorAll('.attn[data-attn-id]');
   if (!tiles.length) return;
@@ -460,12 +470,128 @@
     } catch(e){}
   }
   function rkey(aid, text){ return bid + '|' + (aid || ('text:' + text.slice(0, 60))); }
-  function isResolved(aid, text){ var m = lsGet().attnDone || {}; return !!m[rkey(aid, text)]; }
-  function setResolved(aid, text){ var s = lsGet(); var m = s.attnDone || {}; m[rkey(aid, text)] = 1; s.attnDone = m; lsSet(s); }
-  function paintResolved(tile, msg){
-    tile.classList.add('resolved');
+  /* Disposition state (Dave 2026-11-20): every attention item carries Done /
+     Need more info / Later / Drop it, in place. 'done' keeps its Nov 19
+     device-local record (attnDone + the dashboard's 'seen' map); 'later' and
+     'dropped' live in attnState, keyed the same way, so a tap on any surface
+     promotes into the matching registry stamp at dashboard boot. */
+  function localState(aid, text){
+    var s = lsGet();
+    var st = (s.attnState || {})[rkey(aid, text)];
+    if (st && st.kind) return st.kind;
+    var m = s.attnDone || {};
+    if (m[rkey(aid, text)]) return 'done';
+    /* Also honor the dashboard's own done map (the same store's 'seen',
+       keyed by bare attention id) so an item cleared in the dashboard
+       stays cleared here — one done state across surfaces. */
+    if (aid && s.seen && s.seen[aid]) return 'done';
+    return null;
+  }
+  function setLocalState(aid, text, kind, date){
+    var s = lsGet(); var m = s.attnDone || {}; var st = s.attnState || {}; var k = rkey(aid, text);
+    if (kind === 'done') { m[k] = 1; delete st[k]; }
+    else { st[k] = {kind: kind, date: date}; delete m[k]; if (aid && s.seen) delete s.seen[aid]; }
+    s.attnDone = m; s.attnState = st; lsSet(s);
+  }
+  function unsetLocalState(aid, text){
+    var s = lsGet(); var m = s.attnDone || {}; var st = s.attnState || {}; var k = rkey(aid, text);
+    delete m[k]; delete st[k]; s.attnDone = m; s.attnState = st;
+    if (aid && s.seen) delete s.seen[aid]; lsSet(s);
+  }
+  function stateMsg(kind, date){
+    if (kind === 'later') return 'Later · ' + date;
+    if (kind === 'dropped') return 'Dropped by Dave · ' + date;
+    return '✓ Done · ' + date;
+  }
+  function todayStr(){ var d = new Date(); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); }
+  /* Registry clearance (Dave 2026-11-19): Done used to leave a note in
+     the buddy's ingest asking an agent to hand-edit buddies.json later,
+     so a fixed blocker (Emile's DocuSign, resolved Oct 21) kept
+     presenting as open. The tap now writes the item's cleared stamp
+     into buddies.json itself when a token is on this device. The
+     device-local attnDone mark remains the instant/offline record,
+     and the dashboard promotes local marks into the registry at boot. */
+  async function regWrite(aid, text, kind, obj){
+    try {
+      var cur = await ghGetFile('buddy-system', 'buddies.json');
+      if (!cur) return false;
+      var d = JSON.parse(cur.text);
+      var buds = d.buddies || [], bb = null;
+      for (var i = 0; i < buds.length; i++) if (buds[i].id === bid) { bb = buds[i]; break; }
+      if (!bb) return false;
+      var list = bb.attention || [], hit = null, hitIdx = -1;
+      for (var j = 0; j < list.length; j++) {
+        var e = list[j];
+        if (aid && e && typeof e === 'object' && e.id === aid) { hit = e; break; }
+        if (!aid && typeof e === 'string' && e.slice(0, 60) === text.slice(0, 60)) { hitIdx = j; break; }
+        if (!aid && e && typeof e === 'object' && (e.text || '').slice(0, 60) === text.slice(0, 60)) { hit = e; break; }
+      }
+      /* Dispositions are mutually exclusive stamps on the entry — setting one
+         clears the others; an Undo removes all three (Dave 2026-11-20). */
+      var ATTN_FIELD = {done: 'cleared', later: 'later', dropped: 'dropped'};
+      if (hit) {
+        ['cleared', 'later', 'dropped'].forEach(function(f){ delete hit[f]; });
+        if (obj && kind) hit[ATTN_FIELD[kind]] = obj;
+      }
+      else if (hitIdx >= 0 && obj && kind) { var nb = {text: bb.attention[hitIdx]}; nb[ATTN_FIELD[kind]] = obj; bb.attention[hitIdx] = nb; }
+      else return false;
+      var body = {message: (obj && kind ? 'Disposition ' + kind + ' for attention ' : 'Reopen attention ') + (aid || 'item') + ' for ' + bid + ' (homepage)', content: b64encode(JSON.stringify(d, null, 1))};
+      if (cur.sha) body.sha = cur.sha;
+      await ghApi('/repos/davedellaquila/buddy-system/contents/buddies.json', 'PUT', body);
+      return true;
+    } catch(e){ return false; }
+  }
+  /* Las Vegas mode (Dave 2026-10-20): marking done feels like a win — the
+     button spins once and confetti bursts from it. DOM + WAAPI only;
+     skipped under prefers-reduced-motion; only ever called on a real tap. */
+  function celebrate(el, fallbackEl){
+    if (!el || !el.getBoundingClientRect) return;
+    if (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    try { el.animate([{transform:'rotate(0deg)'},{transform:'rotate(360deg)'}], {duration:450, easing:'cubic-bezier(.2,.7,.3,1.2)'}); } catch(e){}
+    var r = el.getBoundingClientRect();
+    /* A hidden element's rect is all zeros — bursting from it put the
+       confetti in the viewport's upper-left corner (Dave, 2026-10-21). Fall
+       back to the tile's rect; never burst from a zero rect at all. */
+    if ((!r.width || !r.height) && fallbackEl && fallbackEl.getBoundingClientRect) r = fallbackEl.getBoundingClientRect();
+    if (!r.width || !r.height) return;
+    var cx = r.left + r.width/2, cy = r.top + r.height/2;
+    var colors = ['#f0b429','#3fb950','#f778ba','#58a6ff','#ff7b72','#d2a8ff'];
+    for (var i = 0; i < 26; i++){
+      var s = document.createElement('span');
+      var sz = 5 + Math.random()*6;
+      s.style.cssText = 'position:fixed;left:'+cx+'px;top:'+cy+'px;width:'+sz+'px;height:'+(sz*0.6)+'px;background:'+colors[i%colors.length]+';z-index:99999;pointer-events:none;border-radius:2px;';
+      document.body.appendChild(s);
+      var ang = Math.random()*Math.PI*2, v = 60 + Math.random()*130;
+      var dx = Math.cos(ang)*v, dy = Math.sin(ang)*v - 90;
+      var anim = s.animate([
+        {transform:'translate(-50%,-50%) rotate(0deg)', opacity:1},
+        {transform:'translate(calc(-50% + '+dx+'px), calc(-50% + '+(dy+170)+'px)) rotate('+(Math.random()*540-270)+'deg)', opacity:0}
+      ], {duration: 750 + Math.random()*450, easing:'cubic-bezier(.15,.6,.4,1)'});
+      (function(node, a){ if (a) a.onfinish = function(){ node.remove(); }; else setTimeout(function(){ node.remove(); }, 1300); })(s, anim);
+    }
+  }
+  function paintResolved(tile, msg, immediate){
     var st = tile.querySelector('.attn-status');
     if (st) st.textContent = msg;
+    /* Dave 2026-10-20: the check belongs to the RESULT of the tap, never the
+       label beforehand — an upfront check reads as "already done." The Done
+       button renders plain "Done"; the check appears only once clicked. */
+    var db = tile.querySelector('[data-act="done"]');
+    if (db) db.textContent = '✓ Done';
+    var stEl = tile.querySelector('.attn-status');
+    if (stEl && !tile.querySelector('[data-act="undo"]')) {
+      var ub = document.createElement('button');
+      ub.type = 'button'; ub.className = 'attn-btn attn-undo'; ub.setAttribute('data-act', 'undo'); ub.textContent = 'Undo';
+      stEl.parentNode.insertBefore(ub, stEl.nextSibling);
+    }
+    if (immediate) { tile.classList.add('resolved'); return; }
+    /* Fresh tap (Dave, 2026-10-21): the check + status land while the button
+       is still visible, and celebrate() fires against the live button; the
+       resolved class (dim + hide actions) arrives a beat later so the result
+       registers first. Applying it instantly hid the button before the check
+       could be seen — and zeroed the rect celebrate() measures, which sent
+       the confetti to the viewport's upper-left corner. */
+    setTimeout(function(){ tile.classList.add('resolved'); }, 1100);
   }
   async function sendAction(tile, entry, okMsg){
     var st = tile.querySelector('.attn-status');
@@ -490,20 +616,113 @@
       return false;
     }
   }
+  function paintOpen(tile){
+    tile.classList.remove('resolved');
+    tile.removeAttribute('data-cleared');
+    tile.removeAttribute('data-later');
+    tile.removeAttribute('data-dropped');
+    var st = tile.querySelector('.attn-status');
+    if (st) st.textContent = '';
+    var db = tile.querySelector('[data-act="done"]');
+    if (db) db.textContent = 'Done';
+    var ub = tile.querySelector('[data-act="undo"]');
+    if (ub) ub.remove();
+  }
+  /* Free-text notes (Dave 2026-11-20): \u270e Add a note\u2026 opens a small
+     field on the item; the note is kept on this device, shown on the card,
+     and saved to the buddy's ingest through the same token-gated path. */
+  function getNotes(aid, text){
+    var m = lsGet().attnNotes || {};
+    return m[rkey(aid, text)] || [];
+  }
+  function addNote(aid, text, note){
+    var s = lsGet(); var m = s.attnNotes || {}; var k = rkey(aid, text);
+    var arr = m[k] || []; arr.push(note); m[k] = arr; s.attnNotes = m; lsSet(s);
+  }
+  function paintNotes(tile){
+    var aid = tile.getAttribute('data-attn-id') || '';
+    var textEl = tile.querySelector('.attn-text');
+    var text = textEl ? textEl.textContent.trim() : '';
+    var box = tile.querySelector('.attn-notes');
+    if (!box) return;
+    box.innerHTML = '';
+    getNotes(aid, text).forEach(function(n){
+      var d = document.createElement('div');
+      d.className = 'attn-note';
+      var b = document.createElement('b'); b.textContent = '\u270e Note';
+      var dt = document.createElement('span'); dt.className = 'attn-note-date'; dt.textContent = ' \u00b7 ' + n.date;
+      var body = document.createElement('div'); body.textContent = n.text;
+      d.appendChild(b); d.appendChild(dt); d.appendChild(body);
+      box.appendChild(d);
+    });
+  }
   tiles.forEach(function(tile){
     var aid = tile.getAttribute('data-attn-id') || '';
     var textEl = tile.querySelector('.attn-text');
     var text = textEl ? textEl.textContent.trim() : '';
-    if (isResolved(aid, text)) { paintResolved(tile, 'Marked done'); return; }
+    var bakedKind = tile.getAttribute('data-cleared') ? 'done' : (tile.getAttribute('data-later') ? 'later' : (tile.getAttribute('data-dropped') ? 'dropped' : null));
+    var bakedDate = tile.getAttribute('data-cleared') || tile.getAttribute('data-later') || tile.getAttribute('data-dropped') || '';
+    var lk = bakedKind || localState(aid, text);
+    if (lk) paintResolved(tile, bakedKind ? stateMsg(lk, bakedDate) : (lk === 'done' ? 'Marked done' : (lk === 'later' ? 'Marked later — on this device' : 'Dropped — on this device')), true);
+    paintNotes(tile);
     tile.addEventListener('click', function(ev){
       var btn = ev.target.closest ? ev.target.closest('.attn-btn') : null;
       if (!btn || btn.disabled) return;
       var act = btn.getAttribute('data-act');
       var idBit = aid ? ' (attention id: ' + aid + ')' : '';
       if (act === 'done') {
+        var cobj = {date: todayStr(), by: 'Dave'};
+        setLocalState(aid, text, 'done', cobj.date);
+        paintResolved(tile, stateMsg('done', cobj.date));
+        celebrate(btn, tile);
+        if (token()) {
+          regWrite(aid, text, 'done', cobj).then(function(ok){
+            var st = tile.querySelector('.attn-status');
+            if (st) st.textContent = ok ? '✓ Done — recorded in the registry, so it stays done on every surface.' : 'Marked done on this device — the registry could not be updated just now, so other surfaces may still show it open.';
+          });
+        } else {
+          var st2 = tile.querySelector('.attn-status');
+          if (st2) st2.textContent = 'Marked done on this device — connect GitHub (Brain dump box above) to record it in the registry for good.';
+        }
+      } else if (act === 'later' || act === 'drop') {
+        var kind = act === 'later' ? 'later' : 'dropped';
+        var dobj = {date: todayStr(), by: 'Dave'};
+        setLocalState(aid, text, kind, dobj.date);
+        paintResolved(tile, stateMsg(kind, dobj.date));
+        if (token()) {
+          regWrite(aid, text, kind, dobj).then(function(ok){
+            var st = tile.querySelector('.attn-status');
+            if (st) st.textContent = ok ? stateMsg(kind, dobj.date) + ' — recorded in the registry.' : 'Marked on this device — the registry could not be updated just now, so other surfaces may still show it open.';
+          });
+        } else {
+          var st2 = tile.querySelector('.attn-status');
+          if (st2) st2.textContent = 'Marked on this device — connect GitHub (Brain dump box above) to record it in the registry for good.';
+        }
+      } else if (act === 'undo') {
+        unsetLocalState(aid, text);
+        paintOpen(tile);
+        var st3 = tile.querySelector('.attn-status');
+        if (st3) st3.textContent = 'Reopened — it needs attention again.';
+        if (token()) regWrite(aid, text, null, null);
+      } else if (act === 'note') {
+        var nb = tile.querySelector('.attn-notebox');
+        if (nb) { nb.hidden = !nb.hidden; if (!nb.hidden) { var ta = nb.querySelector('textarea'); if (ta) ta.focus(); } }
+      } else if (act === 'note-cancel') {
+        var nb2 = tile.querySelector('.attn-notebox');
+        if (nb2) { nb2.hidden = true; var ta2 = nb2.querySelector('textarea'); if (ta2) ta2.value = ''; }
+      } else if (act === 'note-save') {
+        var nb3 = tile.querySelector('.attn-notebox');
+        var ta3 = nb3 ? nb3.querySelector('textarea') : null;
+        var noteText = ta3 ? ta3.value.trim() : '';
+        if (!noteText) { if (nb3) nb3.hidden = true; return; }
+        addNote(aid, text, {text: noteText, date: todayStr()});
+        paintNotes(tile);
+        if (nb3) { nb3.hidden = true; ta3.value = ''; }
         sendAction(tile,
-          'DONE — Dave marked this done on the homepage: "' + text + '"' + idBit + '. Please remove it from the attention list in buddies.json.',
-          'Marked done — the buddy will clear it.').then(function(ok){ if (ok) { setResolved(aid, text); paintResolved(tile, 'Marked done — the buddy will clear it.'); } });
+          'NOTE \u2014 Dave added a note on: "' + text + '"' + idBit + ' \u2014 "' + noteText + '"',
+          'Note saved \u2014 on the card and in the ingest.').then(function(){
+            tile.querySelectorAll('.attn-btn').forEach(function(b){ b.disabled = false; });
+          });
       } else if (act === 'info') {
         sendAction(tile,
           'FOLLOW-UP — Dave needs more info on: "' + text + '"' + idBit + '. Please follow up with him.',
@@ -514,59 +733,5 @@
   resolveBuddy();
 })();
 </script>
-<!--
-  TIP JAR — canonical snippet (Dave's standard, 2026-10-24; motion v2, 2026-10-26)
-  Every buddy homepage and every page a buddy creates carries the tip jar.
-  Public pages especially: a reader who got value can say thanks.
-
-  USAGE: paste this whole block just before </body>. No dependencies.
-  The jar points at Dave's Ko-fi page by default. A page for a specific app
-  may override the destination with its own Ko-fi page later:
-      <div class="tipjar" ...> — change the href on the <a>.
-
-  DESIGN NOTES (keep it alive, never annoying):
-  - "Breathing" (v2): a calm but clearly visible pulse — the pill scales
-    1 → 1.045 over a 3.2s ease-in-out cycle while its glow swells with it.
-    (V1 breathed at 1.035 over 6s — Dave: "rather static." Too subtle.)
-  - "Shimmer" (v2): a soft light sweep crosses the pill once every ~8s —
-    a ~1.3s pass inside a long rest, built into the keyframe cycle.
-  - Hover: the jar spins (same move as the dashboard sidebar's tip jar).
-  - V1's hop + coin glint were retired in v2 — with the breathing and the
-    shimmer running, the stack got busy; breathing + shimmer + hover spin
-    is the trio now.
-  - prefers-reduced-motion: all animation off. The jar is just a link.
-  - Transform/opacity/box-shadow only — no layout shift.
-  - Works in dark and light mode; sits above page content (z-index 60) but
-    below modals on buddy pages.
--->
-<style>
-  .tipjar{position:fixed;right:18px;bottom:18px;z-index:60;
-    font-family:inherit;-webkit-tap-highlight-color:transparent}
-  .tipjar a{display:inline-flex;align-items:center;gap:.5em;position:relative;overflow:hidden;
-    padding:.55em 1em;border-radius:999px;text-decoration:none;
-    font-size:.9rem;font-weight:600;line-height:1;
-    color:#fff;background:linear-gradient(135deg,#7c4dff,#b388ff);
-    box-shadow:0 6px 18px rgba(124,77,255,.35),0 2px 6px rgba(0,0,0,.25);
-    animation:tipjar-breathe 3.2s ease-in-out infinite}
-  .tipjar a::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;
-    background:linear-gradient(105deg,rgba(255,255,255,0) 35%,rgba(255,255,255,.45) 50%,rgba(255,255,255,0) 65%);
-    transform:translateX(-110%);animation:tipjar-sheen 8s ease-in-out infinite}
-  .tipjar .jar{display:inline-block;font-size:1.15em}
-  .tipjar a:hover .jar{animation:tipjar-spin .7s cubic-bezier(.34,1.56,.64,1)}
-  .tipjar a:focus-visible{outline:3px solid #ffd54f;outline-offset:3px}
-  @keyframes tipjar-breathe{0%,100%{transform:scale(1);box-shadow:0 6px 18px rgba(124,77,255,.35),0 2px 6px rgba(0,0,0,.25)}50%{transform:scale(1.045);box-shadow:0 9px 26px rgba(124,77,255,.55),0 3px 8px rgba(0,0,0,.28)}}
-  @keyframes tipjar-sheen{0%{transform:translateX(-110%)}16%{transform:translateX(110%)}100%{transform:translateX(110%)}}
-  @keyframes tipjar-spin{to{transform:rotate(360deg)}}
-  @media (prefers-reduced-motion: reduce){
-    .tipjar a,.tipjar a:hover .jar{animation:none}
-    .tipjar a::after{display:none}
-  }
-</style>
-<div class="tipjar">
-  <a href="https://ko-fi.com/davedellaquila" target="_blank" rel="noopener"
-     aria-label="Tip jar — if this page helped you, you can leave Dave a tip on Ko-fi">
-    <span class="jar">🫙</span><span class="tiptext">Tip Jar</span>
-  </a>
-</div>
 </body>
 </html>
