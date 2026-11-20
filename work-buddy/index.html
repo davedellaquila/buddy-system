@@ -219,6 +219,28 @@
     .attn-status { font-size: 13px; color: var(--muted); margin-top: 8px; min-height: 18px; }
     .attn.resolved { opacity: .65; }
     .attn.resolved .attn-actions { display: none; }
+    /* ---- full action set: note field, undo, task-card actions (fleet standard 2026-11-20) ---- */
+    .attn-undo { margin-top: 8px; }
+    .attn-notebox { margin-top: 10px; }
+    .attn-notebox textarea {
+      width: 100%; min-height: 56px; resize: vertical;
+      background: var(--surface); border: 1px solid var(--line-strong); border-radius: 10px;
+      padding: 9px 11px; font-size: 13px; color: var(--ink); font-family: var(--sans);
+    }
+    .attn-notebox textarea:focus { outline: none; border-color: var(--blue); }
+    .item-note {
+      margin-top: 10px; font-size: 13px; color: var(--muted); line-height: 1.45;
+      background: var(--surface); border: 1px dashed var(--line-strong);
+      border-radius: 10px; padding: 8px 11px; white-space: pre-wrap;
+    }
+    .item-note strong { color: var(--ink); }
+    .task-actions { padding: 2px 24px 6px 69px; margin-top: 0; }
+    .task-status { padding: 0 24px 0 69px; margin-top: 0; min-height: 0; }
+    .task-status:not(:empty) { padding-bottom: 14px; }
+    .task .attn-notebox, .task .item-note { margin-left: 69px; margin-right: 24px; }
+    .task .attn-undo { margin-left: 69px; margin-bottom: 14px; }
+    .task.dispositioned { opacity: .65; }
+    .task.dispositioned .task-actions { display: none; }
     .filters { display: flex; gap: 5px; flex-wrap: wrap; }
     .filter {
       border: 1px solid transparent;
@@ -336,6 +358,10 @@
       .tag { grid-column: 2; grid-row: 2; justify-self: start; }
       .chevron { grid-column: 3; grid-row: 1; }
       .task-detail { padding: 0 18px 18px 48px; }
+      .task-actions { padding: 2px 18px 6px 48px; }
+      .task-status { padding: 0 18px 0 48px; }
+      .task .attn-notebox, .task .item-note { margin-left: 48px; margin-right: 18px; }
+      .task .attn-undo { margin-left: 48px; }
       .detail-grid { grid-template-columns: 1fr; }
       .rail { grid-template-columns: 1fr; }
       .mobile-nav {
@@ -450,19 +476,23 @@
 
           <section class="section-card" id="needs-attention" aria-labelledby="attention-title">
             <div class="section-head">
-              <div><h2 id="attention-title">Needs Attention</h2><span class="count">2 open</span></div>
+              <div><h2 id="attention-title">Needs Attention</h2><span class="count" id="attn-open-count">2 open</span></div>
             </div>
             <div class="attn-list">
               <div class="attn" data-attn-id="work-buddy-brief">
                 <div class="attn-text">Product brief ready for review — looks good, edits, or defer?</div>
                 <div class="attn-meta"><span>2026-10-09</span> · <a href="https://docs.google.com/document/d/10HnvQ2-ECTHyc-cwzv_klOcqnQvqfgxNvOAE7bZT9NQ/edit" target="_blank" rel="noopener">Open the brief</a></div>
-                <div class="attn-actions"><button type="button" class="attn-btn primary" data-act="done">✓ Done</button><button type="button" class="attn-btn" data-act="info">Need more info</button></div>
+                <div class="attn-actions"><button type="button" class="attn-btn primary" data-act="done">Done</button><button type="button" class="attn-btn" data-act="info">Need more info</button><button type="button" class="attn-btn" data-act="later">Later</button><button type="button" class="attn-btn" data-act="drop">Drop it</button><button type="button" class="attn-btn" data-act="note">✎ Add a note…</button></div>
+                <div class="attn-notebox" hidden><textarea rows="2" placeholder="Your note — it goes to Work Buddy's ingest with this item"></textarea><div class="attn-actions"><button type="button" class="attn-btn primary" data-act="note-save">Save note</button><button type="button" class="attn-btn" data-act="note-cancel">Cancel</button></div></div>
+                <div class="item-note" hidden></div>
                 <div class="attn-status" role="status"></div>
               </div>
               <div class="attn" data-attn-id="work-buddy-est-loop">
                 <div class="attn-text">Brief updated: new “The estimation loop” section added after “How it works” — worth a re-read before reviewing.</div>
                 <div class="attn-meta"><span>2026-10-09</span> · <a href="https://docs.google.com/document/d/10HnvQ2-ECTHyc-cwzv_klOcqnQvqfgxNvOAE7bZT9NQ/edit" target="_blank" rel="noopener">Open the brief</a></div>
-                <div class="attn-actions"><button type="button" class="attn-btn primary" data-act="done">✓ Done</button><button type="button" class="attn-btn" data-act="info">Need more info</button></div>
+                <div class="attn-actions"><button type="button" class="attn-btn primary" data-act="done">Done</button><button type="button" class="attn-btn" data-act="info">Need more info</button><button type="button" class="attn-btn" data-act="later">Later</button><button type="button" class="attn-btn" data-act="drop">Drop it</button><button type="button" class="attn-btn" data-act="note">✎ Add a note…</button></div>
+                <div class="attn-notebox" hidden><textarea rows="2" placeholder="Your note — it goes to Work Buddy's ingest with this item"></textarea><div class="attn-actions"><button type="button" class="attn-btn primary" data-act="note-save">Save note</button><button type="button" class="attn-btn" data-act="note-cancel">Cancel</button></div></div>
+                <div class="item-note" hidden></div>
                 <div class="attn-status" role="status"></div>
               </div>
             </div>
@@ -479,29 +509,53 @@
               </div>
             </div>
             <div class="tasks" id="task-list">
-              <article class="task" data-status="today">
+              <article class="task" data-status="today" data-task-id="bulk-action-thoughts">
                 <button class="task-toggle" aria-expanded="false"><span class="priority-mark hot"></span><span><span class="task-title">Bulk action menu — share design thoughts</span><span class="task-meta"><span class="owner">Connie</span><span>Slack</span><span>Async review</span></span></span><span class="tag today">Optional today</span><svg class="chevron" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg></button>
                 <div class="task-detail"><p>Give Connie your view on how to make the four suggestion-application options less clunky. If this lands asynchronously, Monday’s session can stay short.</p><div class="detail-grid"><div class="detail-item"><span>Next checkpoint</span><strong>Quick session Monday</strong></div><div class="detail-item"><span>Delivery channel</span><strong>Manual Slack ping</strong></div></div></div>
+              <div class="attn-actions task-actions"><button type="button" class="attn-btn primary" data-act="done">Done</button><button type="button" class="attn-btn" data-act="info">Need more info</button><button type="button" class="attn-btn" data-act="later">Later</button><button type="button" class="attn-btn" data-act="drop">Drop it</button><button type="button" class="attn-btn" data-act="note">✎ Add a note…</button></div>
+                <div class="attn-notebox" hidden><textarea rows="2" placeholder="Your note — it goes to Work Buddy's ingest with this item"></textarea><div class="attn-actions"><button type="button" class="attn-btn primary" data-act="note-save">Save note</button><button type="button" class="attn-btn" data-act="note-cancel">Cancel</button></div></div>
+                <div class="item-note" hidden></div>
+                <div class="attn-status task-status" role="status"></div>
               </article>
-              <article class="task" data-status="upcoming">
+              <article class="task" data-status="upcoming" data-task-id="bulk-action-iteration">
                 <button class="task-toggle" aria-expanded="false"><span class="priority-mark hot"></span><span><span class="task-title">Bulk action control — next iteration</span><span class="task-meta"><span class="owner">Connie</span><span>Prototype</span><span>Variations possible</span></span></span><span class="tag">Target: Mon</span><svg class="chevron" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg></button>
                 <div class="task-detail"><p>Target the next iteration for Monday; a couple of alternatives may emerge as the design develops. The prototype is being adjusted so Connie can respond without waiting for a meeting.</p><div class="detail-grid"><div class="detail-item"><span>Confirmed</span><strong>Monday quick session</strong></div><div class="detail-item"><span>Estimate</span><strong>Not captured yet</strong></div></div></div>
+              <div class="attn-actions task-actions"><button type="button" class="attn-btn primary" data-act="done">Done</button><button type="button" class="attn-btn" data-act="info">Need more info</button><button type="button" class="attn-btn" data-act="later">Later</button><button type="button" class="attn-btn" data-act="drop">Drop it</button><button type="button" class="attn-btn" data-act="note">✎ Add a note…</button></div>
+                <div class="attn-notebox" hidden><textarea rows="2" placeholder="Your note — it goes to Work Buddy's ingest with this item"></textarea><div class="attn-actions"><button type="button" class="attn-btn primary" data-act="note-save">Save note</button><button type="button" class="attn-btn" data-act="note-cancel">Cancel</button></div></div>
+                <div class="item-note" hidden></div>
+                <div class="attn-status task-status" role="status"></div>
               </article>
-              <article class="task" data-status="upcoming waiting">
+              <article class="task" data-status="upcoming waiting" data-task-id="acv-trend-phase1">
                 <button class="task-toggle" aria-expanded="false"><span class="priority-mark next"></span><span><span class="task-title">ACV Trend — phase-one design</span><span class="task-meta"><span class="owner">Connie → Liz</span><span>Cursor prototype</span><span>Estimate: ≤ 1 day</span></span></span><span class="tag waiting">Time pending</span><svg class="chevron" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg></button>
                 <div class="task-detail"><p>Match the current production STIX look and feel closely enough for phase one, then hand off to Liz. “Final” means phase-one final; broader UI improvements can follow later.</p><div class="detail-grid"><div class="detail-item"><span>Review target</span><strong>Tuesday, later than 11 proposed</strong></div><div class="detail-item"><span>Risk</span><strong>Feedback before Connie’s OOO</strong></div></div></div>
+              <div class="attn-actions task-actions"><button type="button" class="attn-btn primary" data-act="done">Done</button><button type="button" class="attn-btn" data-act="info">Need more info</button><button type="button" class="attn-btn" data-act="later">Later</button><button type="button" class="attn-btn" data-act="drop">Drop it</button><button type="button" class="attn-btn" data-act="note">✎ Add a note…</button></div>
+                <div class="attn-notebox" hidden><textarea rows="2" placeholder="Your note — it goes to Work Buddy's ingest with this item"></textarea><div class="attn-actions"><button type="button" class="attn-btn primary" data-act="note-save">Save note</button><button type="button" class="attn-btn" data-act="note-cancel">Cancel</button></div></div>
+                <div class="item-note" hidden></div>
+                <div class="attn-status task-status" role="status"></div>
               </article>
-              <article class="task" data-status="upcoming">
+              <article class="task" data-status="upcoming" data-task-id="partner-info">
                 <button class="task-toggle" aria-expanded="false"><span class="priority-mark"></span><span><span class="task-title">Partner info</span><span class="task-meta"><span class="owner">STIX</span><span>Priority 3</span><span>Estimate needed</span></span></span><span class="tag">Queued</span><svg class="chevron" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg></button>
                 <div class="task-detail"><p>Third in Connie’s agreed priority order, after the bulk action menu and ACV Trend phase one.</p></div>
+              <div class="attn-actions task-actions"><button type="button" class="attn-btn primary" data-act="done">Done</button><button type="button" class="attn-btn" data-act="info">Need more info</button><button type="button" class="attn-btn" data-act="later">Later</button><button type="button" class="attn-btn" data-act="drop">Drop it</button><button type="button" class="attn-btn" data-act="note">✎ Add a note…</button></div>
+                <div class="attn-notebox" hidden><textarea rows="2" placeholder="Your note — it goes to Work Buddy's ingest with this item"></textarea><div class="attn-actions"><button type="button" class="attn-btn primary" data-act="note-save">Save note</button><button type="button" class="attn-btn" data-act="note-cancel">Cancel</button></div></div>
+                <div class="item-note" hidden></div>
+                <div class="attn-status task-status" role="status"></div>
               </article>
-              <article class="task" data-status="upcoming">
+              <article class="task" data-status="upcoming" data-task-id="config-view">
                 <button class="task-toggle" aria-expanded="false"><span class="priority-mark"></span><span><span class="task-title">Config View</span><span class="task-meta"><span class="owner">STIX</span><span>Priority 4</span><span>Estimate needed</span></span></span><span class="tag">Queued</span><svg class="chevron" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg></button>
                 <div class="task-detail"><p>Fourth in the current priority order. No estimate or review date has been captured yet.</p></div>
+              <div class="attn-actions task-actions"><button type="button" class="attn-btn primary" data-act="done">Done</button><button type="button" class="attn-btn" data-act="info">Need more info</button><button type="button" class="attn-btn" data-act="later">Later</button><button type="button" class="attn-btn" data-act="drop">Drop it</button><button type="button" class="attn-btn" data-act="note">✎ Add a note…</button></div>
+                <div class="attn-notebox" hidden><textarea rows="2" placeholder="Your note — it goes to Work Buddy's ingest with this item"></textarea><div class="attn-actions"><button type="button" class="attn-btn primary" data-act="note-save">Save note</button><button type="button" class="attn-btn" data-act="note-cancel">Cancel</button></div></div>
+                <div class="item-note" hidden></div>
+                <div class="attn-status task-status" role="status"></div>
               </article>
-              <article class="task" data-status="waiting">
+              <article class="task" data-status="waiting" data-task-id="version-check-brief">
                 <button class="task-toggle" aria-expanded="false"><span class="priority-mark"></span><span><span class="task-title">Version-check brief — review</span><span class="task-meta"><span class="owner">Work stuff</span><span>Brief delivered</span></span></span><span class="tag waiting">Awaiting you</span><svg class="chevron" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg></button>
                 <div class="task-detail"><p>The Money Buddy-style version-check mechanism brief for the STIX prototype is delivered and waiting for your review.</p></div>
+              <div class="attn-actions task-actions"><button type="button" class="attn-btn primary" data-act="done">Done</button><button type="button" class="attn-btn" data-act="info">Need more info</button><button type="button" class="attn-btn" data-act="later">Later</button><button type="button" class="attn-btn" data-act="drop">Drop it</button><button type="button" class="attn-btn" data-act="note">✎ Add a note…</button></div>
+                <div class="attn-notebox" hidden><textarea rows="2" placeholder="Your note — it goes to Work Buddy's ingest with this item"></textarea><div class="attn-actions"><button type="button" class="attn-btn primary" data-act="note-save">Save note</button><button type="button" class="attn-btn" data-act="note-cancel">Cancel</button></div></div>
+                <div class="item-note" hidden></div>
+                <div class="attn-status task-status" role="status"></div>
               </article>
             </div>
             <div class="empty" id="empty">Nothing in this view.</div>
@@ -778,13 +832,18 @@ async function dump(){
 
 </script>
 <script>
-/* Attention action buttons — same GitHub write path as the brain-dump box.
-   "Done" appends a DONE entry to docs/ingest.md asking the buddy to clear the
-   item from buddies.json; "Need more info" appends a FOLLOW-UP entry.
-   Reference: gen_basic_homepages.py ATTN_JS. */
+/* Item action options — fleet standard (Dave, 2026-11-20), modeled on ML500 Buddy.
+   Every attention tile and commitment task carries: Done / Need more info /
+   Later / Drop it / ✎ Add a note…, with Undo on any disposition.
+   - Attention tiles are registry-backed: Done / Later / Drop write the matching
+     disposition stamp (cleared / later / dropped = {date, by: "Dave"}) into
+     buddies.json through the token-gated GitHub path; Undo removes the stamp.
+   - Commitment tasks are not registry items: every action leaves a timestamped
+     entry in this buddy's docs/ingest.md through the same token-gated path.
+   - Notes save to the ingest the same way and stay displayed on the card.
+   Dispositions also persist in localStorage (instant, per-device); a
+   dispositioned item stays visible in place and leaves the open counts. */
 (function(){
-  var tiles = document.querySelectorAll('.attn[data-attn-id]');
-  if (!tiles.length) return;
   var dumpbox = document.querySelector('.dumpbox');
   var bid = (dumpbox && dumpbox.getAttribute('data-buddy-id')) || (function(){
     var p = location.pathname.replace(/\/+$/, '');
@@ -834,56 +893,201 @@ async function dump(){
       }
     } catch(e){}
   }
-  function rkey(aid, text){ return bid + '|' + (aid || ('text:' + text.slice(0, 60))); }
-  function isResolved(aid, text){ var m = lsGet().attnDone || {}; return !!m[rkey(aid, text)]; }
-  function setResolved(aid, text){ var s = lsGet(); var m = s.attnDone || {}; m[rkey(aid, text)] = 1; s.attnDone = m; lsSet(s); }
-  function paintResolved(tile, msg){
-    tile.classList.add('resolved');
-    var st = tile.querySelector('.attn-status');
-    if (st) st.textContent = msg;
+  function todayStr(){ var d = new Date(); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); }
+  function rkey(id, text){ return bid + '|' + (id || ('text:' + text.slice(0, 60))); }
+  function getMap(name){ return lsGet()[name] || {}; }
+  function setMap(name, key, val){ var s = lsGet(); var m = s[name] || {}; if (val) m[key] = val; else delete m[key]; s[name] = m; lsSet(s); }
+  function idBit(item){ return item.id ? ' (' + (item.registry ? 'attention' : 'task') + ' id: ' + item.id + ')' : ''; }
+
+  /* ---- disposition state (localStorage; mirrors the registry stamps) ---- */
+  function getDisp(item){
+    var s = lsGet(), k = rkey(item.id, item.text);
+    var st = (s.attnState || {})[k];
+    if (st && st.kind) return st;
+    if ((s.attnDone || {})[k]) return {kind: 'done', date: ''};
+    if (item.baked) return {kind: 'done', date: item.baked};
+    return null;
   }
-  async function sendAction(tile, entry, okMsg){
-    var st = tile.querySelector('.attn-status');
-    var btns = tile.querySelectorAll('.attn-btn');
-    if (!token()) { st.textContent = 'Add a GitHub token in the Brain dump section above to enable actions.'; return false; }
-    if (!repo) { st.textContent = 'No repo linked for this buddy yet.'; return false; }
+  function setDisp(item, kind){
+    setMap('attnState', rkey(item.id, item.text), {kind: kind, date: todayStr()});
+    if (kind === 'done' || kind === 'drop') setMap('attnDone', rkey(item.id, item.text), 1);
+  }
+  function clearDisp(item){
+    setMap('attnState', rkey(item.id, item.text), null);
+    setMap('attnDone', rkey(item.id, item.text), null);
+  }
+
+  /* ---- registry stamps in buddies.json (attention items only) ---- */
+  async function regWrite(aid, field, obj){
+    try {
+      var cur = await ghGetFile('buddy-system', 'buddies.json');
+      if (!cur) return false;
+      var d = JSON.parse(cur.text);
+      var buds = d.buddies || [], bb = null;
+      for (var i = 0; i < buds.length; i++) if (buds[i].id === bid) { bb = buds[i]; break; }
+      if (!bb) return false;
+      var list = bb.attention || [], hit = null;
+      for (var j = 0; j < list.length; j++) {
+        var e = list[j];
+        if (e && typeof e === 'object' && e.id === aid) { hit = e; break; }
+      }
+      if (!hit) return false;
+      ['cleared', 'later', 'dropped'].forEach(function(f){ delete hit[f]; });
+      if (field && obj) hit[field] = obj;
+      var body = {message: (obj ? 'Set ' + field + ' stamp on ' : 'Reopen attention ') + aid + ' for ' + bid + ' (homepage)', content: b64encode(JSON.stringify(d, null, 1))};
+      if (cur.sha) body.sha = cur.sha;
+      await ghApi('/repos/davedellaquila/buddy-system/contents/buddies.json', 'PUT', body);
+      return true;
+    } catch(e){ return false; }
+  }
+
+  /* ---- ingest entries (tasks, follow-ups, notes) ---- */
+  async function sendEntry(item, entry, okMsg){
+    var st = item.root.querySelector('.attn-status');
+    if (!token()) { if (st) st.textContent = 'Add a GitHub token in the Brain dump section above to enable actions.'; return false; }
+    if (!repo) { if (st) st.textContent = 'No repo linked for this buddy yet.'; return false; }
+    var btns = item.root.querySelectorAll('.attn-btn');
     btns.forEach(function(b){ b.disabled = true; });
-    st.textContent = 'Working…';
+    if (st) st.textContent = 'Working…';
     try {
       var NL = String.fromCharCode(10);
       var stamp = new Date().toLocaleString();
       var cur = await ghGetFile(repo, 'docs/ingest.md');
       var base = cur ? cur.text : '# Ingest log — ' + buddyName + NL + NL;
-      var body = {message: 'Attention action for ' + bid, content: b64encode(base + '## ' + stamp + NL + NL + entry + NL + NL)};
+      var body = {message: 'Homepage item action for ' + bid, content: b64encode(base + '## ' + stamp + NL + NL + entry + NL + NL)};
       if (cur && cur.sha) body.sha = cur.sha;
       await ghApi('/repos/davedellaquila/' + repo + '/contents/docs/ingest.md', 'PUT', body);
-      st.textContent = okMsg;
+      if (st) st.textContent = okMsg;
       return true;
     } catch(err){
-      st.textContent = 'Save failed: ' + (err.message || err);
-      btns.forEach(function(b){ b.disabled = false; });
+      if (st) st.textContent = 'Save failed: ' + (err.message || err);
       return false;
+    } finally {
+      btns.forEach(function(b){ b.disabled = false; });
     }
   }
-  tiles.forEach(function(tile){
-    var aid = tile.getAttribute('data-attn-id') || '';
-    var textEl = tile.querySelector('.attn-text');
-    var text = textEl ? textEl.textContent.trim() : '';
-    if (isResolved(aid, text)) { paintResolved(tile, 'Marked done'); return; }
-    tile.addEventListener('click', function(ev){
+
+  /* ---- painting ---- */
+  var items = [];
+  function stampLabel(disp){
+    var d = disp.date ? ' · ' + disp.date : '';
+    if (disp.kind === 'done') return '✓ Done — cleared by Dave' + d;
+    if (disp.kind === 'later') return 'Later — snoozed by Dave' + d;
+    return 'Dropped by Dave' + d;
+  }
+  function paintNote(item){
+    var el = item.root.querySelector('.item-note');
+    if (!el) return;
+    var note = getMap('attnNotes')[rkey(item.id, item.text)];
+    if (note) { el.hidden = false; el.textContent = '✎ Dave’s note — ' + note; }
+    else { el.hidden = true; el.textContent = ''; }
+  }
+  function updateOpenCount(){
+    var el = document.getElementById('attn-open-count');
+    if (!el) return;
+    var open = 0;
+    items.forEach(function(it){ if (it.registry && !getDisp(it)) open++; });
+    el.textContent = open + ' open';
+  }
+  function paint(item, msg){
+    var st = item.root.querySelector('.attn-status');
+    var disp = getDisp(item);
+    var cls = item.registry ? 'resolved' : 'dispositioned';
+    if (disp) {
+      item.root.classList.add(cls);
+      if (st) st.textContent = msg || stampLabel(disp);
+    } else {
+      item.root.classList.remove(cls);
+      if (st) st.textContent = msg || '';
+    }
+    var ub = item.root.querySelector('[data-act="undo"]');
+    if (disp && !ub && st) {
+      ub = document.createElement('button');
+      ub.type = 'button'; ub.className = 'attn-btn attn-undo'; ub.setAttribute('data-act', 'undo'); ub.textContent = 'Undo';
+      st.parentNode.insertBefore(ub, st.nextSibling);
+    } else if (!disp && ub) { ub.remove(); }
+    paintNote(item);
+    updateOpenCount();
+  }
+
+  /* ---- actions ---- */
+  function disposition(item, kind){
+    var field = kind === 'done' ? 'cleared' : kind;
+    var obj = {date: todayStr(), by: 'Dave'};
+    setDisp(item, kind);
+    paint(item);
+    var st = item.root.querySelector('.attn-status');
+    var label = kind === 'done' ? '✓ Done' : kind === 'later' ? 'Later' : 'Dropped';
+    if (item.registry) {
+      if (token()) {
+        regWrite(item.id, field, obj).then(function(ok){
+          if (st) st.textContent = ok
+            ? label + ' — recorded in the registry · ' + obj.date
+            : label + ' on this device · ' + obj.date + ' — the registry could not be updated just now, so other surfaces may still show it open.';
+        });
+      } else if (st) {
+        st.textContent = label + ' on this device · ' + obj.date + ' — add a token in the Brain dump box to record it in the registry for good.';
+      }
+    } else {
+      var word = kind === 'done' ? 'done' : kind === 'later' ? 'Later' : 'dropped';
+      var entry = (kind === 'done' ? 'DONE' : kind === 'later' ? 'LATER' : 'DROPPED') + ' — Dave marked this commitment ' + word + ' on the homepage: "' + item.text + '"' + idBit(item) + '.';
+      if (token()) {
+        sendEntry(item, entry, label + ' — noted in the ingest · ' + obj.date).then(function(ok){
+          if (!ok && st) st.textContent = label + ' on this device · ' + obj.date + ' — the ingest write failed.';
+        });
+      } else if (st) {
+        st.textContent = label + ' on this device · ' + obj.date + ' — add a token in the Brain dump box to send it to ' + buddyName + '.';
+      }
+    }
+  }
+  function undo(item){
+    clearDisp(item);
+    if (item.baked) { item.root.removeAttribute('data-cleared'); item.baked = ''; }
+    paint(item, 'Reopened — it needs attention again.');
+    if (item.registry) {
+      if (token()) regWrite(item.id, null, null);
+    } else if (token()) {
+      sendEntry(item, 'REOPENED — Dave undid the disposition on this commitment: "' + item.text + '"' + idBit(item) + '.', 'Reopened — noted in the ingest.');
+    }
+  }
+  function saveNote(item){
+    var box = item.root.querySelector('.attn-notebox');
+    var ta = box ? box.querySelector('textarea') : null;
+    var note = ta ? ta.value.trim() : '';
+    if (!note) { if (box) box.hidden = true; return; }
+    setMap('attnNotes', rkey(item.id, item.text), note);
+    if (box) { box.hidden = true; ta.value = ''; }
+    paintNote(item);
+    var st = item.root.querySelector('.attn-status');
+    if (!token()) { if (st) st.textContent = 'Note saved on this card — add a token in the Brain dump box to send it to ' + buddyName + '.'; return; }
+    sendEntry(item, 'NOTE — Dave added a note on: "' + item.text + '"' + idBit(item) + ' — "' + note + '"', 'Note saved — on the card and in the ingest.');
+  }
+
+  document.querySelectorAll('.attn[data-attn-id]').forEach(function(el){
+    var t = el.querySelector('.attn-text');
+    items.push({root: el, id: el.getAttribute('data-attn-id') || '', text: t ? t.textContent.trim() : '', registry: true, baked: el.getAttribute('data-cleared') || ''});
+  });
+  document.querySelectorAll('.task[data-task-id]').forEach(function(el){
+    var t = el.querySelector('.task-title');
+    items.push({root: el, id: el.getAttribute('data-task-id') || '', text: t ? t.textContent.trim() : '', registry: false, baked: ''});
+  });
+  items.forEach(function(item){
+    paint(item);
+    item.root.addEventListener('click', function(ev){
       var btn = ev.target.closest ? ev.target.closest('.attn-btn') : null;
       if (!btn || btn.disabled) return;
       var act = btn.getAttribute('data-act');
-      var idBit = aid ? ' (attention id: ' + aid + ')' : '';
-      if (act === 'done') {
-        sendAction(tile,
-          'DONE — Dave marked this done on the homepage: "' + text + '"' + idBit + '. Please remove it from the attention list in buddies.json.',
-          'Marked done — the buddy will clear it.').then(function(ok){ if (ok) { setResolved(aid, text); paintResolved(tile, 'Marked done — the buddy will clear it.'); } });
-      } else if (act === 'info') {
-        sendAction(tile,
-          'FOLLOW-UP — Dave needs more info on: "' + text + '"' + idBit + '. Please follow up with him.',
-          'Sent — ' + buddyName + ' will follow up.');
+      if (act === 'done' || act === 'later' || act === 'drop') disposition(item, act);
+      else if (act === 'undo') undo(item);
+      else if (act === 'info') {
+        sendEntry(item, 'FOLLOW-UP — Dave needs more info on: "' + item.text + '"' + idBit(item) + '. Please follow up with him.', 'Sent — ' + buddyName + ' will follow up.');
       }
+      else if (act === 'note') {
+        var box = item.root.querySelector('.attn-notebox');
+        if (box) { box.hidden = false; var ta = box.querySelector('textarea'); if (ta) ta.focus(); }
+      }
+      else if (act === 'note-cancel') { var b2 = item.root.querySelector('.attn-notebox'); if (b2) b2.hidden = true; }
+      else if (act === 'note-save') saveNote(item);
     });
   });
   resolveBuddy();
