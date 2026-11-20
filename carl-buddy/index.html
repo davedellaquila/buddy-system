@@ -33,6 +33,11 @@ button.dump { background:var(--accent); color:#fff; border:0; border-radius:8px;
 .attn-status { font-size:13px; color:var(--muted); margin-top:8px; min-height:18px; }
 .attn.resolved { opacity:.6; }
 .attn.resolved .attn-actions { display:none; }
+.attn-undo { margin-top:8px; }
+.attn-notebox { margin-top:10px; }
+.attn-noteinput { width:100%; min-height:56px; background:var(--bg); color:var(--text); border:1px solid var(--border); border-radius:8px; padding:8px 10px; font:inherit; font-size:14px; }
+.attn-noteactions { display:flex; gap:8px; margin-top:8px; flex-wrap:wrap; }
+.attn-note { margin-top:10px; font-size:13.5px; background:var(--card); border:1px dashed var(--border); border-radius:8px; padding:8px 10px; white-space:pre-wrap; }
 .stamp { text-align:right; font-size:.8em; color:var(--muted); margin-top:24px; }
 @media (max-width:560px){ .kv{grid-template-columns:1fr;} .kv dt{margin-top:8px;} }
 </style>
@@ -80,12 +85,16 @@ button.dump { background:var(--accent); color:#fff; border:0; border-radius:8px;
 <h2>Needs your attention</h2>
 <div class="attn" data-attn-id="mission-review">
 <div class="attn-text"><a href="https://docs.google.com/document/d/1L6AN__tlq-VZL9vrb9SzXfxWyEG9vCI9fUnKb1QCSqM/edit" target="_blank" rel="noopener">Mission statement</a> — ready for your review.</div>
-<div class="attn-actions"><button type="button" class="attn-btn primary" data-act="done">✓ Done</button><button type="button" class="attn-btn" data-act="info">Need more info</button></div>
+<div class="attn-actions"><button type="button" class="attn-btn primary" data-act="done">✓ Done</button><button type="button" class="attn-btn" data-act="info">Need more info</button><button type="button" class="attn-btn" data-act="later">Later</button><button type="button" class="attn-btn" data-act="drop">Drop it</button><button type="button" class="attn-btn" data-act="note">✎ Add a note…</button></div>
+<div class="attn-notebox" hidden><textarea class="attn-noteinput" rows="2" placeholder="Your note for Carl's Buddy…"></textarea><div class="attn-noteactions"><button type="button" class="attn-btn primary" data-act="note-save">Save note</button><button type="button" class="attn-btn" data-act="note-cancel">Cancel</button></div></div>
+<div class="attn-note" hidden></div>
 <div class="attn-status" role="status"></div>
 </div>
 <div class="attn" data-attn-id="wood-splitter">
 <div class="attn-text"><strong>Wood splitter:</strong> Dave asked Carl (text drafted 2026-10-11) about getting on the borrow list — awaiting Carl's reply.</div>
-<div class="attn-actions"><button type="button" class="attn-btn primary" data-act="done">✓ Done</button><button type="button" class="attn-btn" data-act="info">Need more info</button></div>
+<div class="attn-actions"><button type="button" class="attn-btn primary" data-act="done">✓ Done</button><button type="button" class="attn-btn" data-act="info">Need more info</button><button type="button" class="attn-btn" data-act="later">Later</button><button type="button" class="attn-btn" data-act="drop">Drop it</button><button type="button" class="attn-btn" data-act="note">✎ Add a note…</button></div>
+<div class="attn-notebox" hidden><textarea class="attn-noteinput" rows="2" placeholder="Your note for Carl's Buddy…"></textarea><div class="attn-noteactions"><button type="button" class="attn-btn primary" data-act="note-save">Save note</button><button type="button" class="attn-btn" data-act="note-cancel">Cancel</button></div></div>
+<div class="attn-note" hidden></div>
 <div class="attn-status" role="status"></div>
 </div>
 </div>
@@ -107,7 +116,7 @@ button.dump { background:var(--accent); color:#fff; border:0; border-radius:8px;
 <p class="muted" id="dumpmsg"></p>
 </div>
 
-<p class="stamp">Last refreshed: 2026-10-12 · living page</p>
+<p class="stamp">Last refreshed: 2026-11-20 · living page</p>
 </div>
 <script>
 function dump(){
@@ -174,12 +183,53 @@ function dump(){
     } catch(e){}
   }
   function rkey(aid, text){ return bid + '|' + (aid || ('text:' + text.slice(0, 60))); }
-  function isResolved(aid, text){ var m = lsGet().attnDone || {}; return !!m[rkey(aid, text)]; }
-  function setResolved(aid, text){ var s = lsGet(); var m = s.attnDone || {}; m[rkey(aid, text)] = 1; s.attnDone = m; lsSet(s); }
-  function paintResolved(tile, msg){
-    tile.classList.add('resolved');
+  /* Dispositions (fleet standard, Dave 2026-11-20): Done / Later / Drop it are
+     remembered per item with a date stamp; the item stays visible in place
+     with its stamp and an Undo. Each tap also writes an ingest note through
+     the same token-gated path (this page's established write path). The
+     legacy attnDone map is kept in sync for Done. */
+  function getDisp(aid, text){
+    var s = lsGet(); var m = s.attnState || {}; var v = m[rkey(aid, text)];
+    if (v && v.kind) return v;
+    var d = s.attnDone || {}; if (d[rkey(aid, text)]) return {kind: 'done', date: ''};
+    return null;
+  }
+  function setDisp(aid, text, v){
+    var s = lsGet(); var m = s.attnState || {}; var k = rkey(aid, text);
+    if (v) m[k] = v; else delete m[k];
+    s.attnState = m;
+    var d = s.attnDone || {};
+    if (v && v.kind === 'done') d[k] = 1; else delete d[k];
+    s.attnDone = d; lsSet(s);
+  }
+  function getNotes(aid, text){ var s = lsGet(); var m = s.attnNotes || {}; return m[rkey(aid, text)] || []; }
+  function addNote(aid, text, note){ var s = lsGet(); var m = s.attnNotes || {}; var k = rkey(aid, text); var a = m[k] || []; a.push(note); m[k] = a; s.attnNotes = m; lsSet(s); }
+  function todayStr(){ var d = new Date(); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); }
+  function stampText(disp){
+    var lbl = disp.kind === 'done' ? '✓ Done' : (disp.kind === 'later' ? 'Later' : 'Dropped');
+    return disp.date ? (lbl + ' · ' + disp.date) : lbl;
+  }
+  function paintDisp(tile, disp){
     var st = tile.querySelector('.attn-status');
-    if (st) st.textContent = msg;
+    var old = tile.querySelector('.attn-undo'); if (old) old.remove();
+    if (disp) {
+      tile.classList.add('resolved');
+      if (st) st.textContent = stampText(disp);
+      var ub = document.createElement('button');
+      ub.type = 'button'; ub.className = 'attn-btn attn-undo'; ub.setAttribute('data-act', 'undo'); ub.textContent = 'Undo';
+      tile.appendChild(ub);
+    } else {
+      tile.classList.remove('resolved');
+      if (st) st.textContent = '';
+    }
+  }
+  function paintNotes(tile, aid, text){
+    var box = tile.querySelector('.attn-note');
+    if (!box) return;
+    var notes = getNotes(aid, text);
+    if (!notes.length) { box.hidden = true; box.textContent = ''; return; }
+    box.hidden = false;
+    box.textContent = notes.map(function(n){ return '✎ ' + (n.date || '') + (n.text ? ' — ' + n.text : ''); }).join('\n');
   }
   async function sendAction(tile, entry, okMsg){
     var st = tile.querySelector('.attn-status');
@@ -208,20 +258,46 @@ function dump(){
     var aid = tile.getAttribute('data-attn-id') || '';
     var textEl = tile.querySelector('.attn-text');
     var text = textEl ? textEl.textContent.trim() : '';
-    if (isResolved(aid, text)) { paintResolved(tile, 'Marked done'); return; }
+    paintNotes(tile, aid, text);
+    var disp0 = getDisp(aid, text);
+    if (disp0) paintDisp(tile, disp0);
     tile.addEventListener('click', function(ev){
       var btn = ev.target.closest ? ev.target.closest('.attn-btn') : null;
       if (!btn || btn.disabled) return;
       var act = btn.getAttribute('data-act');
       var idBit = aid ? ' (attention id: ' + aid + ')' : '';
-      if (act === 'done') {
-        sendAction(tile,
-          'DONE — Dave marked this done on the homepage: "' + text + '"' + idBit + '. Please remove it from the attention list in buddies.json.',
-          'Marked done — the buddy will clear it.').then(function(ok){ if (ok) { setResolved(aid, text); paintResolved(tile, 'Marked done — the buddy will clear it.'); } });
+      if (act === 'done' || act === 'later' || act === 'drop') {
+        var kind = act === 'done' ? 'done' : (act === 'later' ? 'later' : 'dropped');
+        var date = todayStr();
+        var entry, okMsg;
+        if (kind === 'done') { entry = 'DONE — Dave marked this done on the homepage: "' + text + '"' + idBit + '. Please remove it from the attention list in buddies.json.'; okMsg = 'Marked done — the buddy will clear it.'; }
+        if (kind === 'later') { entry = 'LATER — Dave marked this for later on the homepage: "' + text + '"' + idBit + '. Disposition stamp: later, ' + date + ', by Dave. Please keep it tracked but deprioritized.'; okMsg = 'Marked for later.'; }
+        if (kind === 'dropped') { entry = 'DROPPED — Dave dropped this on the homepage: "' + text + '"' + idBit + '. Disposition stamp: dropped, ' + date + ', by Dave. Please remove it from the attention list in buddies.json.'; okMsg = 'Dropped.'; }
+        sendAction(tile, entry, okMsg).then(function(ok){ if (ok) { var nd = {kind: kind, date: date}; setDisp(aid, text, nd); paintDisp(tile, nd); } });
       } else if (act === 'info') {
         sendAction(tile,
           'FOLLOW-UP — Dave needs more info on: "' + text + '"' + idBit + '. Please follow up with him.',
           'Sent — ' + buddyName + ' will follow up.');
+      } else if (act === 'undo') {
+        setDisp(aid, text, null); paintDisp(tile, null);
+        sendAction(tile,
+          'UNDO — Dave reopened this on the homepage: "' + text + '"' + idBit + '. Please treat it as open again.',
+          'Reopened.');
+      } else if (act === 'note') {
+        var nb = tile.querySelector('.attn-notebox');
+        if (nb) { nb.hidden = !nb.hidden; if (!nb.hidden) { var ta = nb.querySelector('.attn-noteinput'); if (ta) ta.focus(); } }
+      } else if (act === 'note-cancel') {
+        var nb2 = tile.querySelector('.attn-notebox'); if (nb2) nb2.hidden = true;
+      } else if (act === 'note-save') {
+        var nb3 = tile.querySelector('.attn-notebox');
+        var ta3 = nb3 ? nb3.querySelector('.attn-noteinput') : null;
+        var noteText = ta3 ? ta3.value.trim() : '';
+        if (!noteText) { if (nb3) nb3.hidden = true; return; }
+        sendAction(tile,
+          'NOTE — Dave added a note on the homepage: "' + text + '"' + idBit + ': "' + noteText + '"',
+          'Note saved.').then(function(ok){
+          if (ok) { addNote(aid, text, {date: todayStr(), text: noteText}); paintNotes(tile, aid, text); if (ta3) ta3.value = ''; if (nb3) nb3.hidden = true; }
+        });
       }
     });
   });
