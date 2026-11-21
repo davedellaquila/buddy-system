@@ -269,6 +269,22 @@ h2 { font-size: 22px; margin: 32px 0 16px; }
 .evstat:focus-visible{outline:2px solid var(--accent,#b4762a);outline-offset:2px}
 .evstat b{display:block;font-size:26px;line-height:1.05;font-weight:700}
 .evstat span{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+@keyframes evStatPulse{
+  0%,100%{box-shadow:0 0 0 0 rgba(0,0,0,0);transform:scale(1)}
+  50%{box-shadow:0 0 18px 3px color-mix(in srgb,var(--accent,#b4762a) 38%,transparent);transform:scale(1.02)}
+}
+@keyframes evFacetPulse{
+  0%,100%{box-shadow:0 0 0 0 rgba(0,0,0,0)}
+  50%{box-shadow:0 0 0 5px color-mix(in srgb,var(--accent,#b4762a) 45%,transparent)}
+}
+.pulse-hit{animation:evFacetPulse .7s ease-in-out 3}
+@media (prefers-reduced-motion: no-preference){
+  .evstat{animation:evStatPulse 3s ease-in-out infinite}
+}
+@media (prefers-reduced-motion: reduce){
+  .evstat{animation:none}
+  .pulse-hit{animation:none}
+}
 .evcontrols input[type=search]{flex:1 1 200px;padding:9px 12px;border:1px solid var(--border);border-radius:8px;background:var(--bg);color:var(--text);font-size:15px}
 .evcontrols select{padding:9px 10px;border:1px solid var(--border);border-radius:8px;background:var(--bg);color:var(--text);font-size:15px}
 .evlist{display:flex;flex-direction:column;gap:10px}
@@ -1605,8 +1621,18 @@ Generated 2026-11-19 · Part of the Buddy System<br>
   }
   statGo('ev-stat-published', function () { whenEl.value = 'all'; showAll = false; render(); scrollToViewer(); });
   statGo('ev-stat-upcoming', function () { whenEl.value = 'upcoming'; showAll = false; render(); scrollToViewer(); });
-  statGo('ev-stat-towns', function () { scrollToViewer(); townEl.focus(); });
-  statGo('ev-stat-hosts', function () { scrollToViewer(); hostEl.focus(); });
+  function pulseHit(el) {
+    if (!el) return;
+    el.classList.remove('pulse-hit');
+    void el.offsetWidth;
+    el.classList.add('pulse-hit');
+    el.addEventListener('animationend', function h() {
+      el.classList.remove('pulse-hit');
+      el.removeEventListener('animationend', h);
+    });
+  }
+  statGo('ev-stat-towns', function () { scrollToViewer(); townEl.focus(); pulseHit(townEl); });
+  statGo('ev-stat-hosts', function () { scrollToViewer(); hostEl.focus(); pulseHit(hostEl); });
 
   load();
 })();
