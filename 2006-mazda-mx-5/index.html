@@ -1,136 +1,168 @@
-<!-- BUDDY-BASIC-TEMPLATE v2 -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="robots" content="noindex, nofollow">
-<title data-buddy-name>2006 Mazda MX-5</title>
+<title>2006 Mazda MX-5 — Vehicle Buddy</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏎️</text></svg>">
 <style>
-:root {
-  --bg: #ffffff;
-  --text: #1a1a1a;
-  --muted: #666;
-  --card: #f5f5f5;
-  --border: #e0e0e0;
-  --accent: #0066cc;
-  --ok: #1b7a2e;
-}
-@media (prefers-color-scheme: dark) {
   :root {
-    --bg: #1a1a1a;
-    --text: #e0e0e0;
-    --muted: #999;
-    --card: #2a2a2a;
-    --border: #3a3a3a;
-    --accent: #4da6ff;
-    --ok: #5fd08a;
+    --bg: #141311;
+    --bg2: #1b1916;
+    --card: #211e19;
+    --border: #3a332a;
+    --text: #f2ead9;
+    --muted: #b3a68c;
+    --amber: #e0a437;
+    --red: #d96a5f;
+    --green: #7fb069;
+    --blue: #6aa8d8;
+    --purple: #b48ad8;
   }
-}
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  background: var(--bg);
-  color: var(--text);
-  line-height: 1.6;
-  padding: 40px 20px;
-  max-width: 800px;
-  margin: 0 auto;
-}
-.header { text-align: center; margin-bottom: 40px; }
-.topbar {
-  position: sticky; top: 0; z-index: 50;
-  display: flex; flex-wrap: wrap; align-items: center; gap: 10px;
-  background: var(--bg);
-  border-bottom: 1px solid var(--border);
-  padding: 10px 2px; margin-bottom: 24px;
-  font-size: 17px; font-weight: 700;
-}
-.topbar-icon { font-size: 22px; line-height: 1; }
-.topbar-refresh {
-  margin-left: auto; background: none; border: 1px solid transparent; border-radius: 8px;
-  color: var(--muted); font-size: 16px; cursor: pointer; padding: 4px 10px; line-height: 1;
-}
-.topbar-refresh:hover { color: var(--text); border-color: var(--border); }
-.bs-dash-link { font-size: 13px; font-weight: 600; color: var(--accent); text-decoration: none; white-space: nowrap; margin-left: 10px; }
-.bs-dash-link:hover { text-decoration: underline; }
-.topbar .header-tip { margin-left: auto; flex: none; }
-.icon { font-size: 64px; margin-bottom: 16px; }
-h1 { font-size: 32px; margin-bottom: 8px; }
-.tagline { color: var(--muted); font-size: 18px; }
-.mission {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 24px;
-  margin-bottom: 32px;
-  font-size: 17px;
-}
-h2 { font-size: 22px; margin: 32px 0 16px; }
-.attn {
-  background: var(--card);
-  border-left: 4px solid var(--accent);
-  border-radius: 0 8px 8px 0;
-  padding: 16px 20px;
-  margin-bottom: 12px;
-}
-.attn-date { color: var(--muted); font-size: 14px; margin-top: 8px; }
-.attn-link { margin-top: 8px; }
-.attn-link a { color: var(--accent); font-weight: 600; text-decoration: none; }
-.attn-link a:hover { text-decoration: underline; }
-.attn-actions { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
-.attn-btn {
-  border: 1px solid var(--border); background: var(--bg); color: var(--text);
-  border-radius: 8px; padding: 7px 14px; font-size: 13px; font-weight: 600; cursor: pointer;
-  -webkit-tap-highlight-color: transparent;
-}
-.attn-btn:hover { border-color: var(--accent); }
-.attn-btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
-.attn-btn:disabled { opacity: .45; cursor: default; }
-.attn-status { font-size: 13px; color: var(--muted); margin-top: 8px; min-height: 18px; }
-.attn.resolved { opacity: .6; }
-.attn-undo { margin-top: 8px; }
-.attn-note { font-size: 13px; color: var(--text); margin-top: 8px; background: var(--card); border-left: 3px solid var(--accent); padding: 6px 10px; border-radius: 0 6px 6px 0; white-space: pre-wrap; }
-.attn-note-edit { margin-top: 10px; }
-.attn-note-edit textarea { width: 100%; box-sizing: border-box; border: 1px solid var(--border); border-radius: 8px; padding: 8px 10px; font: inherit; font-size: 14px; background: var(--bg); color: var(--text); min-height: 56px; }
-.attn-note-btns { display: flex; gap: 8px; margin-top: 8px; }
-.attn-note-msg { font-size: 12.5px; color: var(--muted); margin-top: 6px; }
-.attn.resolved .attn-actions { display: none; }
-/* ---- skills (Dave 2026-10-16) ---- */
-.skills { display: flex; flex-direction: column; gap: 10px; margin-top: 4px; }
-.skill { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 12px 16px; }
-.skill-name { font-weight: 700; font-size: 15px; }
-.skill-evidence { color: var(--muted); font-size: 13px; margin-top: 4px; line-height: 1.45; }
-.children { display: flex; flex-wrap: wrap; gap: 12px; }
-.child {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 12px 20px;
-  text-decoration: none;
-  color: var(--text);
-}
-.child:hover { border-color: var(--accent); }
-.footer {
-  margin-top: 48px;
-  padding-top: 24px;
-  border-top: 1px solid var(--border);
-  color: var(--muted);
-  font-size: 14px;
-  text-align: center;
-}
-.empty { color: var(--muted); font-style: italic; }
-/* Dave 2026-10-16: photo gallery — baked in at generation time from the buddy's repo photos/ */
-.gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; margin-bottom: 8px; }
-.gallery a { display: block; border-radius: 12px; overflow: hidden; border: 1px solid var(--border); background: var(--card); }
-.gallery img { width: 100%; height: 160px; object-fit: cover; display: block; transition: transform .25s ease; }
-.gallery a:hover img { transform: scale(1.04); }
-.lightbox { position: fixed; inset: 0; z-index: 1000; display: flex; align-items: center; justify-content: center; }
-.lightbox[hidden] { display: none; }
-.lightbox-bg { position: absolute; inset: 0; background: rgba(0,0,0,.88); }
-.lightbox-img { position: relative; max-width: 92vw; max-height: 88vh; border-radius: 12px; box-shadow: 0 24px 64px rgba(0,0,0,.5); }
-.lightbox-x { position: absolute; top: 16px; right: 20px; background: rgba(255,255,255,.12); color: #fff; border: none; border-radius: 50%; width: 44px; height: 44px; font-size: 26px; cursor: pointer; line-height: 1; }
-
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+    line-height: 1.55;
+    padding: 0 0 64px;
+  }
+  .stripe {
+    height: 6px;
+    background: repeating-linear-gradient(135deg, var(--amber) 0 18px, #141311 18px 36px);
+  }
+  .wrap { max-width: 920px; margin: 0 auto; padding: 0 24px; }
+  header.hero { padding: 52px 0 30px; border-bottom: 1px solid var(--border); margin-bottom: 30px; }
+  .kicker {
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    font-size: 12px;
+    color: var(--amber);
+    margin-bottom: 12px;
+  }
+  h1 {
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 44px;
+    font-weight: 600;
+    letter-spacing: -0.5px;
+    margin-bottom: 8px;
+  }
+  h1 .icon { margin-right: 10px; }
+  .mission { color: var(--muted); font-size: 17px; max-width: 660px; }
+  .mission strong { color: var(--text); font-weight: 600; }
+  h2 {
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 24px;
+    margin: 40px 0 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  h2 .rule { flex: 1; height: 1px; background: var(--border); }
+  .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 14px; }
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px 18px;
+  }
+  .card h3 { font-size: 16px; margin-bottom: 6px; }
+  a.card.fleet-link { display: block; text-decoration: none; color: inherit; cursor: pointer; }
+  a.card.fleet-link:hover { border-color: var(--amber); }
+  .card p { font-size: 14px; color: var(--muted); }
+  .card p strong { color: var(--text); }
+  .pill {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 3px 10px;
+    border-radius: 999px;
+    margin-bottom: 10px;
+  }
+  .pill.ok { background: rgba(127,176,105,.13); color: var(--green); border: 1px solid rgba(127,176,105,.4); }
+  .pill.attn { background: rgba(217,106,95,.13); color: var(--red); border: 1px solid rgba(217,106,95,.45); }
+  .pill.next { background: rgba(106,168,216,.15); color: var(--blue); border: 1px solid rgba(106,168,216,.4); }
+  .pill.locked { background: rgba(127,176,105,.13); color: var(--green); border: 1px solid rgba(127,176,105,.4); }
+  .pill.open { background: rgba(180,138,216,.13); color: var(--purple); border: 1px solid rgba(180,138,216,.4); }
+  .pill.wait { background: rgba(224,164,55,.13); color: var(--amber); border: 1px solid rgba(224,164,55,.4); }
+  .steps { display: flex; gap: 0; margin: 6px 0 4px; overflow-x: auto; }
+  .step {
+    flex: 1 1 0;
+    min-width: 96px;
+    text-align: center;
+    font-size: 12px;
+    color: var(--muted);
+    padding: 10px 6px;
+    border-top: 3px solid var(--border);
+    position: relative;
+  }
+  .step.done { border-top-color: var(--green); color: var(--text); }
+  .step.now { border-top-color: var(--amber); color: var(--text); font-weight: 700; }
+  .step b { display: block; font-size: 13px; }
+  .attention { list-style: none; }
+  .attention li {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--red);
+    border-radius: 8px;
+    padding: 14px 18px;
+    margin-bottom: 10px;
+    font-size: 15px;
+  }
+  .attention li.calm { border-left-color: var(--amber); }
+  .attention li strong { display: block; margin-bottom: 2px; }
+  .attention a { color: var(--accent, #e0a437); font-weight: 600; }
+  .attention li span { color: var(--muted); font-size: 14px; }
+  .attn-actions { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
+  .attn-btn {
+    border: 1px solid var(--border); background: var(--bg); color: var(--text);
+    border-radius: 8px; padding: 7px 14px; font-size: 13px; font-weight: 600; cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .attn-btn:hover { border-color: var(--amber); }
+  .attn-btn.primary { background: var(--amber); border-color: var(--amber); color: var(--bg); }
+  .attn-btn:disabled { opacity: .45; cursor: default; }
+  .attn-status { font-size: 13px; color: var(--muted); margin-top: 8px; min-height: 18px; }
+  .attn.resolved { opacity: .55; }
+  .attn.resolved .attn-actions { display: none; }
+  .attn-undo { margin-top: 8px; }
+  .attn-notebox { margin-top: 10px; }
+  .attn-notebox textarea {
+    width: 100%; min-height: 54px; resize: vertical;
+    background: var(--bg); border: 1px solid var(--border); border-radius: 8px;
+    padding: 8px 10px; font-size: 14px; color: var(--text); font-family: inherit;
+  }
+  .attn-note { margin-top: 8px; font-size: 13px; color: var(--muted); border-left: 3px solid var(--amber); padding: 4px 10px; }
+  .attn-note b { color: var(--text); }
+  .docs { display: flex; gap: 12px; flex-wrap: wrap; }
+  .doc {
+    flex: 1 1 220px;
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px 18px;
+    font-size: 14px;
+    color: var(--muted);
+    text-decoration: none;
+    display: block;
+  }
+  .doc:hover { border-color: var(--amber); }
+  .doc strong { color: var(--text); display: block; font-size: 15px; margin-bottom: 4px; }
+  footer {
+    margin-top: 48px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+    color: var(--muted);
+    font-size: 13px;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  a { color: var(--amber); }
+/* ---- dump-box CSS (adapt colors to your theme; keep dark/light working) ---- */
 .dumpbox {
   background: var(--card);
   border: 1px solid var(--border);
@@ -145,138 +177,201 @@ h2 { font-size: 22px; margin: 32px 0 16px; }
   background: var(--bg); border: 1px solid var(--border); border-radius: 8px;
   padding: 10px 12px; font-size: 14px; color: var(--text); font-family: inherit;
 }
-.dumpbox textarea:focus { outline: none; border-color: var(--accent); }
+.dumpbox textarea:focus { outline: none; border-color: var(--accent, #e0a437); }
 .dumpbox textarea:disabled { opacity: .55; }
 .dumpbox-row { display: flex; align-items: center; gap: 12px; margin-top: 10px; flex-wrap: wrap; }
 .dumpbox-btn {
-  background: var(--accent); color: #fff; border: none; border-radius: 8px;
+  background: var(--accent, #e0a437); color: #fff; border: none; border-radius: 8px;
   padding: 9px 22px; font-size: 14px; font-weight: 600; cursor: pointer;
 }
 .dumpbox-btn:disabled { opacity: .45; cursor: default; }
-.dumpbox-btn.saved { background: var(--ok); }
 .dumpbox-status { font-size: 13px; color: var(--muted); }
-.dumpbox-status.flash { color: var(--ok); font-weight: 700; }
-.dumpbox-hint { font-size: 12px; color: var(--muted); margin-top: 8px; }
-.dumpbox-addimg {
-  background: transparent; color: var(--text); border: 1px solid var(--border);
-  border-radius: 8px; padding: 8px 16px; font-size: 14px; font-weight: 600; cursor: pointer;
-}
-.dumpbox-addimg:hover { border-color: var(--accent); color: var(--accent); }
-.dumpbox-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
-.dumpbox-chips:empty { display: none; }
-.dumpbox-chip {
-  display: inline-flex; align-items: center; gap: 7px; background: var(--card);
-  border: 1px solid var(--border); border-radius: 8px; padding: 4px 6px 4px 4px;
-  font-size: 12px; max-width: 100%;
-}
-.dumpbox-chip img { width: 32px; height: 32px; object-fit: cover; border-radius: 5px; }
-.dumpbox-chip .dc-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 140px; }
-.dumpbox-chip .dc-x { background: none; border: 0; color: var(--muted); cursor: pointer; font-size: 14px; line-height: 1; padding: 4px; }
 .dumpbox-token {
-  /* Jonny, 2026-10-19 (Dave's ask): amber, not zebra. A solid amber frame +
-     a soft amber wash says "one small step needs you" — zebra striping is
-     hazard tape, it signals danger and fights every calm surface around it.
-     Dashed grey read as placeholder; solid amber reads as deliberate. */
-  background: rgba(245, 158, 11, .09);
-  background: color-mix(in srgb, #f59e0b 9%, var(--bg));
-  border: 2px solid #f59e0b;
-  box-shadow: 0 0 0 3px rgba(245, 158, 11, .16);
-  box-shadow: 0 0 0 3px color-mix(in srgb, #f59e0b 16%, transparent);
-  border-radius: 8px;
+  background: var(--bg); border: 1px dashed var(--border); border-radius: 8px;
   padding: 12px 14px; margin-bottom: 12px; font-size: 14px;
 }
-.dumpbox-token p { margin-bottom: 8px; font-weight: 700; color: #cf222e; }
-@media (prefers-color-scheme: dark) { .dumpbox-token p { color: #ff7b72; } }
+.dumpbox-connect {
+  background: var(--bg); border: 1px dashed var(--border); border-radius: 8px;
+  padding: 14px 16px; margin-bottom: 12px; font-size: 14px;
+}
+.dumpbox-connect p { margin: 0 0 10px; }
+
+.dumpbox-token p { margin-bottom: 8px; }
 .dumpbox-tokenrow { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
 .dumpbox-tokenrow input {
   flex: 1; min-width: 170px; background: var(--card); border: 1px solid var(--border);
   border-radius: 8px; padding: 7px 10px; font-size: 13px; color: var(--text);
 }
 .dumpbox-tokenrow button {
-  background: transparent; color: var(--accent); border: 1px solid var(--accent);
+  background: transparent; color: var(--accent, #e0a437); border: 1px solid var(--accent, #e0a437);
   border-radius: 8px; padding: 7px 14px; font-size: 13px; font-weight: 600; cursor: pointer;
 }
-.dumpbox-tokenrow a { color: var(--accent); font-size: 13px; }
-
-
-/* ---- Repo files (Dave 2026-10-20): view + edit the buddy's repo markdown ---- */
-.repo-files { margin-top: 8px; }
-.rf-sub { color: var(--muted); font-size: 14px; margin-bottom: 12px; }
-.rf-locked { background: var(--card); border: 1px dashed var(--border); border-radius: 8px; padding: 14px 16px; color: var(--muted); font-size: 14px; }
-.rf-list { display: flex; flex-direction: column; gap: 8px; }
-.rf-file { display: flex; align-items: center; gap: 10px; background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 10px 14px; cursor: pointer; text-align: left; width: 100%; color: var(--text); font: inherit; -webkit-tap-highlight-color: transparent; }
-.rf-file:hover { border-color: var(--accent); }
-.rf-file .rf-name { font-weight: 600; font-size: 15px; }
-.rf-file .rf-dir { color: var(--muted); font-size: 13px; margin-left: auto; word-break: break-all; text-align: right; }
-.rf-view, .rf-editor { margin-top: 14px; background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 16px; }
-.rf-viewhead { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 10px; }
-.rf-path { font-weight: 700; font-size: 14px; margin-right: auto; word-break: break-all; }
-.rf-body { font-size: 15px; }
-.rf-body h2 { font-size: 21px; margin: 16px 0 8px; }
-.rf-body h3 { font-size: 18px; margin: 14px 0 6px; }
-.rf-body h4 { font-size: 16px; margin: 12px 0 6px; }
-.rf-body p { margin: 6px 0; }
-.rf-body ul { margin: 6px 0 6px 20px; }
-.rf-body blockquote { border-left: 3px solid var(--border); padding-left: 12px; color: var(--muted); margin: 8px 0; }
-.rf-body code { background: var(--bg); border: 1px solid var(--border); border-radius: 4px; padding: 0 4px; font-size: 13px; }
-.rf-body pre { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 12px; overflow-x: auto; margin: 8px 0; }
-.rf-body pre code { border: none; padding: 0; background: none; }
-.rf-body a { color: var(--accent); }
-.rf-body hr { border: none; border-top: 1px solid var(--border); margin: 14px 0; }
-.rf-body table { border-collapse: collapse; margin: 10px 0; font-size: 13.5px; }
-.rf-body th, .rf-body td { border: 1px solid var(--border); padding: 5px 9px; text-align: left; }
-.rf-ta { width: 100%; box-sizing: border-box; background: var(--bg); color: var(--text); border: 1px solid var(--border); border-radius: 8px; padding: 12px; font-family: ui-monospace, Menlo, monospace; font-size: 13px; line-height: 1.55; }
-/* ---- Accordion files (Dave 2026-10-21): the list of markdown files;
-   clicking a file name opens its contents inline right below that name.
-   Every file toggles independently — several can be open at once — and
-   Edit lives inside the opened panel. ---- */
-.rf-files-wrap { display: flex; flex-direction: column; gap: 8px; }
-.rf-fileitem { display: flex; flex-direction: column; }
-.rf-file .rf-chev { color: var(--muted); font-size: 13px; flex: none; }
-.rf-panel { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 16px; margin-top: 8px; }
-.rf-panel .rf-viewhead { margin-bottom: 8px; }
-.rf-loading { color: var(--muted); font-size: 14px; }
-.rf-panel .rf-editor { margin-top: 4px; }
-.rf-panel .rf-fstatus { margin-top: 8px; }
+.dumpbox-tokenrow a { color: var(--accent, #e0a437); font-size: 13px; }
 
 </style>
 <style>
-.header-tip{position:relative;overflow:hidden;flex:none;display:inline-flex;align-items:center;gap:.45em;padding:6px 12px;border-radius:999px;text-decoration:none;
-  font-size:13px;font-weight:800;line-height:1;color:#fff;background:linear-gradient(135deg,#7c4dff,#b388ff);
-  box-shadow:0 4px 14px rgba(124,77,255,.35);animation:tip-breathe 3.2s ease-in-out infinite;white-space:nowrap}
-.header-tip::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;
-  background:linear-gradient(105deg,rgba(255,255,255,0) 35%,rgba(255,255,255,.45) 50%,rgba(255,255,255,0) 65%);
-  transform:translateX(-110%);animation:tip-sheen 8s ease-in-out infinite}
-.header-tip .jar{display:inline-block;font-size:1.1em}
-.header-tip:hover .jar{animation:tip-spin .7s cubic-bezier(.34,1.56,.64,1)}
-.header-tip:focus-visible{outline:3px solid #ffd54f;outline-offset:3px}
-@keyframes tip-breathe{0%,100%{transform:scale(1)}50%{transform:scale(1.045)}}
-@keyframes tip-sheen{0%{transform:translateX(-110%)}16%{transform:translateX(110%)}100%{transform:translateX(110%)}}
-@keyframes tip-spin{to{transform:rotate(360deg)}}
-@media (prefers-reduced-motion: reduce){
-  .header-tip,.header-tip:hover .jar{animation:none}
-  .header-tip::after{display:none}
-}
+  @media (prefers-color-scheme: light) {
+    :root { --bg:#f4efe4; --bg2:#ece5d3; --card:#fffaf0; --border:#d8cdb4; --text:#2b2417; --muted:#6f6350; --amber:#a8741a; }
+  }
+  .stickyhdr { position: sticky; top: 0; z-index: 50; background: var(--bg); border-bottom: 1px solid var(--border); }
+  .stickyhdr .in { max-width: 920px; margin: 0 auto; padding: 10px 24px; display: flex; align-items: center; gap: 10px; font-weight: 600; }
+  .stickyhdr a { color: var(--amber); text-decoration: none; font-size: 13px; font-weight: 600; margin-left: auto; white-space: nowrap; }
+  .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin: 26px 0 6px; }
+  .stat { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; }
+  .stat .n { font-size: 26px; font-weight: 700; font-family: Georgia, serif; }
+  .stat .l { color: var(--muted); font-size: 12px; text-transform: uppercase; letter-spacing: 1.5px; margin-top: 2px; }
+  .facts { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 6px 18px; margin: 14px 0; }
+  .facts .row { display: flex; gap: 14px; padding: 9px 0; border-bottom: 1px solid var(--border); font-size: 15px; }
+  .facts .row:last-child { border-bottom: none; }
+  .facts .k { color: var(--muted); min-width: 150px; }
+  .ev { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 14px 18px; margin: 10px 0; }
+  .ev .d { color: var(--amber); font-size: 13px; font-weight: 700; letter-spacing: .5px; }
+  .ev .t { font-size: 17px; font-weight: 600; margin: 2px 0 4px; }
+  .ev .m { color: var(--muted); font-size: 13.5px; }
+  .ev .notes { margin-top: 6px; font-size: 14.5px; white-space: pre-wrap; }
+  .ev .att { margin-top: 6px; font-size: 13.5px; }
+  .ev .att a { color: var(--amber); }
+  .empty { background: var(--card); border: 1px dashed var(--border); border-radius: 12px; padding: 20px; color: var(--muted); }
+  .links a { color: var(--amber); }
+  footer.colophon { margin-top: 44px; border-top: 1px solid var(--border); padding-top: 16px; color: var(--muted); font-size: 13.5px; }
 </style>
 </head>
 <body>
-<nav data-buddy-crumb style="padding:14px 20px 0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:14px;line-height:1.4;"><a href="https://davedellaquila.github.io/buddy-system/car-buddy/" style="color:inherit;opacity:.65;text-decoration:none;">← Car Buddy</a></nav>
-<div class="topbar"><span class="topbar-icon">🤖</span><span class="topbar-name" data-buddy-name>2006 Mazda MX-5</span><button class="topbar-refresh" title="Reload this page (bypasses cache)" onclick="location.href=location.pathname+'?v='+Date.now()">&#8635;</button><a class="bs-dash-link" href="https://davedellaquila.github.io/buddy-system/">Buddy System dashboard</a><a class="header-tip" href="https://ko-fi.com/davedellaquila" target="_blank" rel="noopener" aria-label="Tip Jar — if this page helped you, you can leave Dave a tip on Ko-fi"><span class="jar" aria-hidden="true">🫙</span><span>Tip Jar</span></a></div>
-<div class="header">
-<div class="icon">🤖</div>
-<h1 data-buddy-name>2006 Mazda MX-5</h1>
-<div class="tagline">New buddy — setup pending</div>
+<div class="stickyhdr"><div class="in"><span>🏎️</span><span>2006 Mazda MX-5</span><a href="https://davedellaquila.github.io/buddy-system/">Buddy System dashboard</a></div></div>
+<div class="stripe"></div>
+<div class="wrap">
+<header class="hero">
+  <div class="kicker">🚗 Car Buddy · Vehicle dossier</div>
+  <h1><span class="icon">🏎️</span>2006 Mazda MX-5</h1>
+  <p class="mission">The vehicle buddy for Dave's <strong>2006 Mazda MX-5</strong> — “Pop&#x27;s Car”. One car, one record: identity, service history, and what it needs next — held verbatim from the canonical record, never invented.</p>
+  <div class="stats">
+    <div class="stat"><div class="n">58</div><div class="l">Service events</div></div><div class="stat"><div class="n">2013-09-01 → 2025-10-31</div><div class="l">Record span</div></div><div class="stat"><div class="n">16</div><div class="l">Attachments archived</div></div><div class="stat"><div class="n">$9,590.84</div><div class="l">Documented spend</div></div>
+  </div>
+</header>
+
+<h2>📋 The record</h2>
+<div class="facts">
+  <div class="row"><div class="k">Nickname</div><div>“Pop&#x27;s Car”</div></div><div class="row"><div class="k">License plate</div><div>5SNS352</div></div><div class="row"><div class="k">VIN</div><div>JM1NC25F160106858</div></div><div class="row"><div class="k">Acquired</div><div>2005-12-05</div></div><div class="row"><div class="k">Status</div><div>Active — in Dave&#x27;s fleet</div></div><div class="row"><div class="k">History source</div><div>Canonical Auto Service History record (migrated from Airtable, verified Oct 25, 2026)</div></div>
 </div>
 
-<div class="mission"></div>
+<h2>🔧 Service history</h2>
+<p style="color:var(--muted);font-size:14.5px;margin-bottom:6px;">Every event exactly as recorded — costs shown only where the record has them (most events carry none; nothing is backfilled).</p>
+<div class="ev"><div class="d">2025-10-31</div><div class="t">Oil &amp; Filter change</div><div class="m">Performed by Dave · 227,000 mi</div><div class="notes">Bosch filter
+Torco 10W-30, 10W-40 50/50 mix</div></div>
+<div class="ev"><div class="d">2024-05-26</div><div class="t">Replaced clutch, engine oil, trans oil</div><div class="m">Performed by Dave, Sawyer, Quentin · 217,654 mi · $1,000.00</div><div class="notes">- R&amp;R Flywheel
+    - Fidanza aluminum flywheel PART NUMBER: 21-1048B
+    - 7.6 lbs
+    - $530
+- R&amp;R Clutch and pressure plate
+    - PART NUMBER: 61-2711
+    - Clutch Masters FX350 Fiber Friction Clutch
+    - $544
+- R&amp;R Transmission Oil
+    - Ford transmission oil
+- R&amp;R Engine oil
+    - Torco 5W20 Synthetic
+- R&amp;R Oil filter
+    - 3330
+- Complete NC Clutch Hydraulics Combo
+    - $119
+    - PART NUMBER: 61-2381
 
+Note: added 2 spacers to clutch fork pivot fork to reduce amount of clutch pedal travel. Quentin and Sawyer helped.</div></div>
+<div class="ev"><div class="d">2022-10-06</div><div class="t">Oil change</div><div class="m">Performed by Dave · 206,500 mi</div><div class="notes">Torco 10W-40</div></div>
+<div class="ev"><div class="d">2022-07-01</div><div class="t">major service</div><div class="m">Performed by Sawyer, Quentin · 205,000 mi</div><div class="notes">Ohlin Coilovers
+Brake pads, rotors, fluid
+Replace seats (new ones have heating elements)</div></div>
+<div class="ev"><div class="d">2021-10-05</div><div class="t">left fog light assembly replaced</div><div class="m">Performed by Dave · 197,490 mi</div><div class="notes">Purchased from ebay</div></div>
+<div class="ev"><div class="d">2021-10-05</div><div class="t">Oil change</div><div class="m">Performed by Dave · 197,490 mi</div><div class="notes">4.5 qts Torco synthetic Oil</div></div>
+<div class="ev"><div class="d">2021-10-05</div><div class="t">Battery Replaced</div><div class="m">Performed by Dave · 197,490 mi · $175.00</div><div class="notes">Napa legend series</div><div class="att">📎 <a href="https://github.com/davedellaquila/car-buddy/blob/main/data/attachments/recoI3BUntVxzM9Ng/2021-10-05 12.45.05.jpg">2021-10-05 12.45.05.jpg</a> · image/jpeg · 9,583,801 bytes</div></div>
+<div class="ev"><div class="d">2021-05-17</div><div class="t">2 new Bridgestone tires</div><div class="m">Performed by Dave, Gerrard Tire</div><div class="notes">Mounted and balanced by Gerrard Tire Los Gatos.</div></div>
+<div class="ev"><div class="d">2021-04-04</div><div class="t">Oil and filter change</div><div class="m">Performed by Dave · 191,588 mi</div><div class="notes">Bosch 3330M
+5 qt Torco racing oil</div></div>
+<div class="ev"><div class="d">2020-01-20</div><div class="t">Replaed engine wiring harness, vacuum hose</div><div class="m">Performed by Dave · 185,000 mi</div><div class="notes">Replaced wiring harness to address intermittent ignition issue caused by broken coil pack ignition wire. Also replaced brake booster vacuum hose.</div><div class="att">📎 <a href="https://github.com/davedellaquila/car-buddy/blob/main/data/attachments/rec9Pri6yyAfVIHH4/All Photos - 1 of 1.png">All Photos - 1 of 1.png</a> · image/png · 2,083,672 bytes</div><div class="att">📎 <a href="https://github.com/davedellaquila/car-buddy/blob/main/data/attachments/rec9Pri6yyAfVIHH4/All Photos - 1 of 1 (1).png">All Photos - 1 of 1 (1).png</a> · image/png · 2,788,360 bytes</div></div>
+<div class="ev"><div class="d">2018-12-27</div><div class="t">Passed smog test</div><div class="m">175,200 mi</div><div class="notes">Performed by Holiday Smog, Soquel CA</div></div>
+<div class="ev"><div class="d">2018-12-27</div><div class="t">Oil and filter change</div><div class="m">175,150 mi</div><div class="notes">Replaced with 10W-30 Torco (4.5 qts). Bosch 3330 filter</div></div>
+<div class="ev"><div class="d">2018-11-02</div><div class="t">Claybar and waxed exterior</div><div class="m">Performed by Dave · 172,392 mi</div></div>
+<div class="ev"><div class="d">2018-09-26</div><div class="t">Replaced 4 tires</div><div class="m">Performed by Wheels Works · 171,246 mi · $645.84</div><div class="notes">215/45R-17 BRIDGESTONE POTENZA RE760 SPORT XL</div><div class="att">📎 <a href="https://github.com/davedellaquila/car-buddy/blob/main/data/attachments/recOcf3Eo1V7BT6Mc/Tire Rack order.pdf">Tire Rack order.pdf</a> · application/pdf · 144,500 bytes</div></div>
+<div class="ev"><div class="d">2018-07-01</div><div class="t">Oil &amp; filter change</div><div class="m">170,000 mi</div><div class="notes">Estimate change date
+Replaced with 10W-30 Torco (4.5 qts). Bosch 3330 filter</div></div>
+<div class="ev"><div class="d">2018-06-21</div><div class="t">4 wheel alignment</div><div class="m">Performed by Quentin · 168,190 mi</div></div>
+<div class="ev"><div class="d">2018-05-05</div><div class="t">Downgraded ECU ROM file to v5 (from v6)</div><div class="m">Performed by Dave · 166,666 mi</div></div>
+<div class="ev"><div class="d">2018-04-08</div><div class="t">Oil &amp; filter change</div><div class="m">165,365 mi</div><div class="notes">Replaced with 10W-30 Torco (4.5 qts). Bosch 3330 filter</div></div>
+<div class="ev"><div class="d">2018-04-08</div><div class="t">fixed rattle in exhaust system</div><div class="m">Performed by Dave · 165,365 mi</div><div class="notes">Discovered a crack on one of the support brackets on the muffler. Re-welded to fix.</div></div>
+<div class="ev"><div class="d">2018-02-17</div><div class="t">Eliminated front brake squeal. Applied gasket sealer to clips. Greased all contact points. </div><div class="m">Performed by Dave · 160,000 mi</div></div>
+<div class="ev"><div class="d">2017-12-16</div><div class="t">Replaced front pads and rotors</div><div class="m">Performed by Dave · 163,110 mi</div><div class="notes">1. Premium DBA4000 Thermographic Slotted Miata MX5 Brake Rotors--FRONT PAIR (Part no 61-0118F)
+2. Hawk HP PLUS Front MX5 Brake Pad (part no 60-12493)
 
+Purchased from Good Win Racing</div><div class="att">📎 <a href="https://github.com/davedellaquila/car-buddy/blob/main/data/attachments/recPkxQDSlcFX3rFg/Goodwin Racing, Inc. -- Receipt.pdf">Goodwin Racing, Inc. -- Receipt.pdf</a> · application/pdf · 332,055 bytes</div><div class="att">📎 <a href="https://github.com/davedellaquila/car-buddy/blob/main/data/attachments/recPkxQDSlcFX3rFg/2017-12-16 11.11.08.jpg">2017-12-16 11.11.08.jpg</a> · image/jpeg · 1,327,483 bytes</div><div class="att">📎 <a href="https://github.com/davedellaquila/car-buddy/blob/main/data/attachments/recPkxQDSlcFX3rFg/2017-12-16 11.11.33.jpg">2017-12-16 11.11.33.jpg</a> · image/jpeg · 1,977,976 bytes</div><div class="att">📎 <a href="https://github.com/davedellaquila/car-buddy/blob/main/data/attachments/recPkxQDSlcFX3rFg/2017-12-16 11.17.12.jpg">2017-12-16 11.17.12.jpg</a> · image/jpeg · 1,978,973 bytes</div><div class="att">📎 <a href="https://github.com/davedellaquila/car-buddy/blob/main/data/attachments/recPkxQDSlcFX3rFg/2017-12-16 11.17.28.jpg">2017-12-16 11.17.28.jpg</a> · image/jpeg · 1,522,497 bytes</div><div class="att">📎 <a href="https://github.com/davedellaquila/car-buddy/blob/main/data/attachments/recPkxQDSlcFX3rFg/2017-12-16 11.17.45.jpg">2017-12-16 11.17.45.jpg</a> · image/jpeg · 1,767,809 bytes</div></div>
+<div class="ev"><div class="d">2017-12-05</div><div class="t">Replace battery</div><div class="m">163,000 mi</div><div class="notes">Bosch 400 cca
+Purchased from WorldPac</div></div>
+<div class="ev"><div class="d">2017-09-10</div><div class="t">Oil and filter change</div><div class="m">Performed by Dave · 160,587 mi</div><div class="notes">Replaced oil with Torco 10W30, and Bosch MT3330 filter. Old oil was dirty (grade: C-)</div></div>
+<div class="ev"><div class="d">2017-02-01</div><div class="t">Replaced tires</div><div class="m">Performed by Quentin · 154,300 mi · $650.00</div><div class="notes">Bridgestone Potenza RE760 Sport
+Treadwear 340
+Traction A
+Temperature A
 
+Installed by Quentin at BMW</div></div>
+<div class="ev"><div class="d">2017-01-21</div><div class="t">Oil and filter change</div><div class="m">Performed by Dave · 154,243 mi · $60.00</div><div class="notes">4.5 quarts Torco 10-30 synthetic, Bosch 3330 filter</div></div>
+<div class="ev"><div class="d">2016-12-22</div><div class="t">Fixed intermittent misfire</div><div class="m">Performed by Dave · 153,000 mi · $0.00</div><div class="notes">Diagnosed problem to be broken wire (yellow/brown) to coil pack plug on cylinder 1. Stripped back jacket, soldered wire back together, covered with shrink tubing. Road test. fixed.</div></div>
+<div class="ev"><div class="d">2016-12-10</div><div class="t">Replaced harder door stops with original factory door stops.</div><div class="m">Performed by Dave</div><div class="notes">New door stops were too hard, requiring too much force to shut and latch door. Reinstalled original stops. Problem fixed.</div></div>
+<div class="ev"><div class="d">2016-12-10</div><div class="t">Repaired midpipe and muffler</div><div class="m">Performed by Dave · $0.00</div><div class="notes">Symptom: noticed rattles at 2500 RPM. 
 
+Diagnosis: determined 2 cracks in exhaust system: 1 on mid pipe, 1 on muffler bracket. Rewelded both. Refitted, and road tested. Problem solved.</div></div>
+<div class="ev"><div class="d">2016-12-03</div><div class="t">Welded cracked mid pipe.</div><div class="m">150,000 mi · $60.00</div><div class="notes">Had work performed at Advanced Welding in Mountain View.</div><div class="att">📎 <a href="https://github.com/davedellaquila/car-buddy/blob/main/data/attachments/recM2uox3MOlyZ5P6/IMG_4488.JPG">IMG_4488.JPG</a> · image/jpeg · 2,367,737 bytes</div><div class="att">📎 <a href="https://github.com/davedellaquila/car-buddy/blob/main/data/attachments/recM2uox3MOlyZ5P6/IMG_4484.MOV">IMG_4484.MOV</a> · video/quicktime · 35,723,530 bytes</div></div>
+<div class="ev"><div class="d">2016-10-25</div><div class="t">Replace front shocks</div><div class="m">Performed by Dave, Quentin, Sawyer · 151,345 mi</div><div class="notes">Replaced worn out front shocks with Bilstiens.</div><div class="att">📎 <a href="https://github.com/davedellaquila/car-buddy/blob/main/data/attachments/recGHK0UaWQNJdBTQ/IMG_3806.png">IMG_3806.png</a> · image/png · 1,971,372 bytes</div><div class="att">📎 <a href="https://github.com/davedellaquila/car-buddy/blob/main/data/attachments/recGHK0UaWQNJdBTQ/IMG_3805.png">IMG_3805.png</a> · image/png · 1,834,204 bytes</div><div class="att">📎 <a href="https://github.com/davedellaquila/car-buddy/blob/main/data/attachments/recGHK0UaWQNJdBTQ/IMG_3804.png">IMG_3804.png</a> · image/png · 1,863,689 bytes</div></div>
+<div class="ev"><div class="d">2016-08-23</div><div class="t">Clay bar and Carnuba wax</div><div class="m">Performed by Dave</div></div>
+<div class="ev"><div class="d">2016-08-23</div><div class="t">Removed 0.5 quart of oil</div><div class="m">Performed by Dave</div><div class="notes">Was billowing smoke under load occasionally.</div></div>
+<div class="ev"><div class="d">2016-08-14</div><div class="t">Adjusted middle cross brace </div><div class="m">Performed by Dave, Sawyer, Quentin · 149,500 mi</div><div class="notes">Added 4 washers to the right forward mount point on the middle cross brace.</div></div>
+<div class="ev"><div class="d">2016-08-14</div><div class="t">Oil change</div><div class="m">Performed by Dave · 149,500 mi</div><div class="notes">Torco 10W-30 racing oil.</div></div>
+<div class="ev"><div class="d">2016-05-21</div><div class="t">Add 1/2 qt break in oil</div><div class="m">148,472 mi</div><div class="notes">Torco SAE 30</div><div class="att">📎 <a href="https://github.com/davedellaquila/car-buddy/blob/main/data/attachments/recdG3dy8U3kMGUgz/2016-05-21 10.15.12.jpg">2016-05-21 10.15.12.jpg</a> · image/jpeg · 1,521,048 bytes</div></div>
+<div class="ev"><div class="d">2016-05-14</div><div class="t">2.5L Engine Swap</div><div class="m">Performed by Rocky&#x27;s Miatamotive · $7,000.00</div><div class="notes">Worked performed by Rocky&#x27;s Miatamotive, San Diego.
+Installed GWR Triple Pass radiator
+Happy Meal Combo Flywheel and Exedy Clutch
+Ceramic exhaust header
+Mid pipe: Herzhold
+Roadster Sport Q muffler
+EcuTek Tuning Kit</div></div>
+<div class="ev"><div class="d">2016-05-14</div><div class="t">CEL: P2187</div><div class="notes">Fuel mixture too lean on bank #2. Occurred on drive back from San Diego</div></div>
+<div class="ev"><div class="d">2016-02-01</div><div class="t">Oil + filter change</div><div class="m">Performed by Dave, Sawyer · 145,477 mi</div><div class="notes">Castrol 5-20 Syntec. 4.5 Quarts. Bosch 3330 oil filter</div></div>
+<div class="ev"><div class="d">2015-10-10</div><div class="t">Oil + filter change</div><div class="m">Performed by Sawyer · 142,800 mi</div><div class="notes">Castrol 5-20 Syntec. 4.5 Quarts. Bosch 3330 oil filter</div></div>
+<div class="ev"><div class="d">2015-08-02</div><div class="t">Replace diff oil</div><div class="m">Performed by Dave · 139,340 mi</div><div class="notes">90W Redline</div></div>
+<div class="ev"><div class="d">2015-08-02</div><div class="t">Clean MAF sensor</div><div class="m">139,340 mi</div></div>
+<div class="ev"><div class="d">2015-08-01</div><div class="t">4 new Bridgestone Potenza tires, mount, balance</div><div class="m">139,340 mi</div></div>
+<div class="ev"><div class="d">2015-07-25</div><div class="t">Replace VVT, OCV, Timing Chain</div><div class="m">Performed by Capitol Mazda · 139,168 mi</div><div class="notes">Work performed by Capitol Mazda</div></div>
+<div class="ev"><div class="d">2015-07-01</div><div class="t">Rotated tires front to back.</div><div class="notes">Before Faultline rally</div></div>
+<div class="ev"><div class="d">2015-06-13</div><div class="t">Oil + filter change</div><div class="m">137,700 mi</div><div class="notes">Castrol 5-20 Syntec. 4.5 Quarts. Bosch oil filter</div></div>
+<div class="ev"><div class="d">2015-04-26</div><div class="t">Fixed clunk. Loose nut on front right sway bar tie rod.</div><div class="m">Performed by Dave · 136,500 mi</div></div>
+<div class="ev"><div class="d">2015-04-26</div><div class="t">Rotated tires front to back.</div><div class="m">136,500 mi</div></div>
+<div class="ev"><div class="d">2015-03-23</div><div class="t">Noticing &#x27;clunking&#x27; sound coming from right front suspsention (over bumps)</div><div class="m">136,000 mi</div></div>
+<div class="ev"><div class="d">2015-03-23</div><div class="t">Added 2.5 Qts of oil</div><div class="m">Performed by Dave · 136,000 mi</div><div class="notes">Seemed to reduced the amount of pinging. Still investigating</div></div>
+<div class="ev"><div class="d">2014-10-04</div><div class="t">Replaced serp belt</div><div class="m">129,261 mi</div><div class="notes">Gates Mirco-V AT K060883</div></div>
+<div class="ev"><div class="d">2014-10-04</div><div class="t">Replaced alternator</div><div class="m">129,261 mi</div><div class="notes">Denso 210-4238 from WorldPac.</div></div>
+<div class="ev"><div class="d">2014-10-04</div><div class="t">Replaced brake fluid</div><div class="m">129,261 mi</div><div class="notes">Performed by Capitol Mazda</div></div>
+<div class="ev"><div class="d">2014-10-04</div><div class="t">Flushed radiator</div><div class="m">129,261 mi</div><div class="notes">Performed by Capitol Mazda</div></div>
+<div class="ev"><div class="d">2014-06-25</div><div class="t">Oil + filter change</div><div class="m">126,500 mi</div><div class="notes">Castrol 5-20 Syntec. 4.5 Quarts. Bosch oil filter</div></div>
+<div class="ev"><div class="d">2014-06-22</div><div class="t">Replace rear brake pads</div><div class="m">126,000 mi</div><div class="notes">Hawk</div></div>
+<div class="ev"><div class="d">2014-03-01</div><div class="t">Oil + filter change</div><div class="m">122,500 mi</div><div class="notes">Castrol 5-20 Syntec. 4.5 Quarts. Bosch oil filter</div></div>
+<div class="ev"><div class="d">2013-10-12</div><div class="t">Oil + filter change</div><div class="m">Performed by Dave · 118,900 mi</div><div class="notes">Castrol 5-20 Syntec. 5.1 Quarts. Checked plugs, broke #4. Replaced with Autolite? Fram oil filter.</div></div>
+<div class="ev"><div class="d">2013-09-01</div><div class="t">Replace tires</div><div class="m">117,000 mi</div><div class="notes">Bridgestone Potenza 205/45/17</div></div>
 
+<h2>🔗 Links</h2>
+<ul class="links" style="line-height:1.9; padding-left:20px;">
+  <li><a href="https://docs.google.com/document/d/1tdGOk2bpB4UchRHF3CKxIWuGcQUnsDdTwAHji800iLk/edit">2006 Mazda MX-5 — Job Req</a></li>
+  <li><a href="https://github.com/davedellaquila/2006-mazda-mx-5">GitHub repo (private)</a> — dossier, KNOWLEDGE.md, and data/service-history.md + .json</li>
+  <li><a href="https://davedellaquila.github.io/buddy-system/car-buddy/">🚗 Car Buddy</a> — parent buddy</li>
+  <li><a href="https://github.com/davedellaquila/car-buddy/tree/main/data">Canonical fleet data</a> — the portable master record this history came from</li>
+  <li><a href="about.html">Full record</a> — registry entry + repo files</li>
+</ul>
+
+<!-- ---- dump-box HTML (set data-buddy-id; Car Buddy = escaped buddy name) ---- -->
 <section class="dumpbox" data-buddy-id="2006-mazda-mx-5">
 <h2>🧠 Brain dump</h2>
-<p class="dumpbox-sub">Dump what's on your mind about <span data-buddy-name>2006 Mazda MX-5</span> — raw and unfiltered. Each dump lands in the buddy's repo (docs/ingest.md) as a timestamped entry — or saves on this device until a repo is linked and a token is connected.</p>
+<p class="dumpbox-sub">Dump what's on your mind about 2006 Mazda MX-5 — raw and unfiltered. Each dump lands in the buddy's repo (docs/ingest.md) as a timestamped entry.</p>
+<div class="dumpbox-connect" hidden>
+<p>🔒 Connect GitHub to unlock dumping. Paste a token once — it stays on this device only.</p>
+<button type="button" class="dumpbox-btn">Connect GitHub to enable</button>
+</div>
 <div class="dumpbox-token" hidden>
 <p>🔒 Connect GitHub to unlock dumping. Paste a token once — it stays on this device only.</p>
 <div class="dumpbox-tokenrow">
@@ -287,149 +382,15 @@ h2 { font-size: 22px; margin: 32px 0 16px; }
 </div>
 <textarea rows="4" placeholder="Dump what's on your mind about 2006 Mazda MX-5…"></textarea>
 <div class="dumpbox-row">
-<div class="dumpbox-chips"></div>
 <button type="button" class="dumpbox-btn">Dump it</button>
-<button type="button" class="dumpbox-addimg">🖼️ Add image</button>
 <span class="dumpbox-status" role="status"></span>
 </div>
-<p class="dumpbox-hint">Enter dumps it &middot; Shift+Enter for a new line &middot; Images shrink to 1600px wide before upload — the original stays in your library</p>
 </section>
 
-
-<h2>Needs Attention</h2>
-<div class="attn" data-attn-id="setup-2006-mazda-mx-5"><div class="attn-text">New buddy added from the dashboard — run the full onboarding (mission doc, repo, side chat, homepage).</div><div class="attn-date">2026-11-06</div><div class="attn-actions"><button type="button" class="attn-btn primary" data-act="done">Done</button><button type="button" class="attn-btn" data-act="info">Need more info</button><button type="button" class="attn-btn" data-act="later">Later</button><button type="button" class="attn-btn" data-act="drop">Drop it</button><button type="button" class="attn-btn" data-act="note">✎ Add a note…</button></div><div class="attn-status" role="status"></div></div>
-
-
-
-
-
-
-
-
-<h2>📁 Files</h2>
-<div class="docs">
-<p style="margin:6px 0"><a href="https://github.com/davedellaquila/2006-mazda-mx-5/blob/master/KNOWLEDGE.md">KNOWLEDGE.md</a></p>
-<p style="margin:6px 0"><a href="https://github.com/davedellaquila/2006-mazda-mx-5/blob/master/CONFIG.md">CONFIG.md</a></p>
-<p style="margin:6px 0"><a href="https://github.com/davedellaquila/2006-mazda-mx-5/blob/master/SOUL.md">SOUL.md</a></p>
-<p style="margin:6px 0"><a href="https://github.com/davedellaquila/2006-mazda-mx-5/blob/master/DECISIONS.md">DECISIONS.md</a></p>
-<p style="margin:6px 0"><a href="https://github.com/davedellaquila/2006-mazda-mx-5/blob/master/ACCOMPLISHMENTS.md">ACCOMPLISHMENTS.md</a></p>
-<p style="margin:6px 0"><a href="https://github.com/davedellaquila/2006-mazda-mx-5/blob/master/README.md">README.md</a></p>
-<p style="margin:6px 0"><a href="https://github.com/davedellaquila/2006-mazda-mx-5/blob/master/docs/brief.md">brief.md</a> <span style="color:var(--muted);font-size:14px">docs/</span></p>
-<p style="margin:6px 0"><a href="https://github.com/davedellaquila/2006-mazda-mx-5/blob/master/docs/ingest.md">ingest.md</a> <span style="color:var(--muted);font-size:14px">docs/</span></p>
-<p style="margin:6px 0"><a href="https://github.com/davedellaquila/2006-mazda-mx-5/blob/master/docs/job-req.md">job-req.md</a> <span style="color:var(--muted);font-size:14px">docs/</span></p>
+<footer class="colophon">Vehicle buddy under 🚗 Car Buddy · History verbatim from the canonical Auto Service History record · Last updated Nov 20, 2026</footer>
 </div>
-
-
-<section class="repo-files" data-buddy-id="2006-mazda-mx-5">
-<h2>📄 Repo files</h2>
-<p class="rf-sub">The markdown files in <span data-buddy-name>2006 Mazda MX-5</span>'s repo, baked into this page when it was generated — tap a file name and its contents open right below it; open as many as you like at once. No sign-in and no fetching: the words are right here. To change a file, edit it in the repo — the page picks it up next time it is generated.</p>
-<div class="rf-main">
-<div class="rf-list rf-files-wrap"><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">KNOWLEDGE.md</span><span class="rf-dir">repo root</span></button><div class="rf-panel" hidden><div class="rf-body"><h1>Knowledge — 2006 Mazda MX-5</h1>
-<p>Everything this buddy has learned: facts, specs, history.</p>
-<h2>Canonical service history (loaded 2026-11-20 by Car Buddy)</h2>
-<ul>
-<li>Source: Dave's Auto Service History data, migrated out of Airtable into the car-buddy repo (verified 18/18, Oct 25, 2026). Full record: <code>data/service-history.md</code> + <code>data/service-history.json</code> in this repo.</li>
-<li>Events on record: <strong>58</strong>, 2013-09-01 → 2025-10-31; attachments: 16; documented spend (recorded costs only): $9,590.84.</li>
-<li>License plate on record: 5SNS352.</li>
-<li>Date acquired on record: 2005-12-05.</li>
-</ul></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">CONFIG.md</span><span class="rf-dir">repo root</span></button><div class="rf-panel" hidden><div class="rf-body"><h1>Config — 2006 Mazda MX-5</h1>
-<p>How this buddy is configured: identity, persona, voice, scope, preferences, privacy. Seeded at creation by new_project.py; the Desk renders these settings and audition picks update them (manifest row 26).</p>
-<h2>Identity</h2>
-<ul>
-<li>Role: Vehicle buddy for the 2006 Mazda MX-5 — dossier and service history.</li>
-<li>Parent: Car Buddy</li>
-<li>Persona: Dave's roadster right hand, steady</li>
-<li>Voice: Gentle Snowdrift (<code>avocado_v2:vd2_r82_rep5k_2571_v068_28k_g5k</code>) — cast by Decision Buddy, Nov 20, 2026 (default; Dave's pick overrides). Role-intro audio pending.</li>
-<li>Repo: https://github.com/davedellaquila/2006-mazda-mx-5 (private)</li>
-</ul>
-<h2>Behavior</h2>
-<ul>
-<li>Persona-led tone as recorded above; see <code>SOUL.md</code>.</li>
-</ul>
-<h2>Scope</h2>
-<ul>
-<li>One vehicle: the 2006 Mazda MX-5. Dossier, service history, due-service watch.</li>
-</ul>
-<h2>Preferences</h2>
-<ul>
-<li>Seeded at creation; preferences accumulate here as Dave states them.</li>
-</ul>
-<h2>Privacy</h2>
-<ul>
-<li>Private by default. Nothing about this buddy is public unless Dave says otherwise for a specific item.</li>
-</ul></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">SOUL.md</span><span class="rf-dir">repo root</span></button><div class="rf-panel" hidden><div class="rf-body"><h1>SOUL.md — 2006 Mazda MX-5</h1>
-<p>Persona: Dave's roadster right hand, steady. The keeper of one car's story — factual, warm, and precise about dates, miles, and money. Says "not recorded" when it isn't. Never invents a spec.</p></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">DECISIONS.md</span><span class="rf-dir">repo root</span></button><div class="rf-panel" hidden><div class="rf-body"><h1>Decisions — 2006 Mazda MX-5</h1>
-<p>Decisions made, with dates.</p></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">ACCOMPLISHMENTS.md</span><span class="rf-dir">repo root</span></button><div class="rf-panel" hidden><div class="rf-body"><h1>Accomplishments — 2006 Mazda MX-5</h1>
-<p>What this buddy has shipped and done. The review-time record — keep it fresh.</p>
-<ul>
-<li>2026-11-20 — Canonical service history loaded by Car Buddy: 58 events (2013-09-01 → 2025-10-31), 16 attachments linked. Homepage live on the Buddy System dashboard with the full history.</li>
-</ul></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">README.md</span><span class="rf-dir">repo root</span></button><div class="rf-panel" hidden><div class="rf-body"><h1>🏎️ 2006 Mazda MX-5</h1>
-<p>2006 Mazda MX-5 is the vehicle buddy for the 2006 Mazda MX-5 — "Pop's Car", one of Dave's vehicles under Car Buddy. It keeps this one car's record straight: identity, service history, parts, mileage, and what it needs next. Its history is loaded from the canonical Auto Service History data (the verified Oct 2026 migration out of Airtable): 58 service events on record (2013-09-01 → 2025-10-31), 16 attachments archived, documented spend $9,590.84 (costs are recorded on only some events — sparse is honest). Nothing about this car should live only in Dave's head or in a retired database.</p>
-<h2>Product brief</h2>
-<p><a href="docs/brief.md">Read the full brief</a> · <a href="https://docs.google.com/document/d/1tdGOk2bpB4UchRHF3CKxIWuGcQUnsDdTwAHji800iLk/edit">Google Doc</a></p></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">brief.md</span><span class="rf-dir">docs</span></button><div class="rf-panel" hidden><div class="rf-body"><h1>2006 Mazda MX-5</h1>
-<h2>Role summary</h2>
-<p>2006 Mazda MX-5 is the vehicle buddy for the 2006 Mazda MX-5 — "Pop's Car", one of Dave's vehicles under Car Buddy. It keeps this one car's record straight: identity, service history, parts, mileage, and what it needs next. Its history is loaded from the canonical Auto Service History data (the verified Oct 2026 migration out of Airtable): 58 service events on record (2013-09-01 → 2025-10-31), 16 attachments archived, documented spend $9,590.84 (costs are recorded on only some events — sparse is honest). Nothing about this car should live only in Dave's head or in a retired database.</p>
-<h2>Reports to</h2>
-<p>Car Buddy (parent buddy); Dave via Astro.</p>
-<h2>Responsibilities</h2>
-<ul>
-<li>Keep the dossier (KNOWLEDGE.md) current: identity facts, condition, status, and open questions — unknowns marked TBD, never invented.</li>
-<li>Hold the full service history verbatim from the canonical record (data/service-history.md + service-history.json in this repo) and log new work the day it happens: date, mileage, who did it, cost, parts.</li>
-<li>Watch for due or overdue service and surface it to Car Buddy before it strands anyone.</li>
-<li>Track identity paperwork — VIN, plate, registration, insurance — and flag gaps.</li>
-<li>Link every receipt/photo to the archived attachment files in the car-buddy repo; never let a record point at an expiring URL.</li>
-</ul>
-<h2>Success criteria</h2>
-<ul>
-<li>The homepage shows the car's real current state and its complete service history, loaded from the canonical events.</li>
-<li>Every canonical event is present and verbatim; costs exactly as recorded (no backfilling, no rounding into existence).</li>
-<li>New service is logged in the same conversation where Dave mentions it.</li>
-<li>Anything unknown is labeled unknown.</li>
-</ul>
-<h2>Out of scope for v1</h2>
-<ul>
-<li>Booking service or buying parts (surface the need; Dave decides).</li>
-<li>Any other car's record — siblings have their own buddies under Car Buddy.</li>
-</ul>
-<h2>Growth path</h2>
-<p>Due-service reminders through Car Buddy; cost-of-ownership rollups into Car Buddy's fleet chart; photo log as new pictures land in the dossier.</p></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">ingest.md</span><span class="rf-dir">docs</span></button><div class="rf-panel" hidden><div class="rf-body"><h1>Ingest log — 2006 Mazda MX-5</h1>
-<p>Raw brain-dumps about this buddy. Each entry is timestamped; work the keepers into the dossier.</p></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">job-req.md</span><span class="rf-dir">docs</span></button><div class="rf-panel" hidden><div class="rf-body"><h1>2006 Mazda MX-5</h1>
-<h2>Role summary</h2>
-<p>2006 Mazda MX-5 is the vehicle buddy for the 2006 Mazda MX-5 — "Pop's Car", one of Dave's vehicles under Car Buddy. It keeps this one car's record straight: identity, service history, parts, mileage, and what it needs next. Its history is loaded from the canonical Auto Service History data (the verified Oct 2026 migration out of Airtable): 58 service events on record (2013-09-01 → 2025-10-31), 16 attachments archived, documented spend $9,590.84 (costs are recorded on only some events — sparse is honest). Nothing about this car should live only in Dave's head or in a retired database.</p>
-<h2>Reports to</h2>
-<p>Car Buddy (parent buddy); Dave via Astro.</p>
-<h2>Responsibilities</h2>
-<ul>
-<li>Keep the dossier (KNOWLEDGE.md) current: identity facts, condition, status, and open questions — unknowns marked TBD, never invented.</li>
-<li>Hold the full service history verbatim from the canonical record (data/service-history.md + service-history.json in this repo) and log new work the day it happens: date, mileage, who did it, cost, parts.</li>
-<li>Watch for due or overdue service and surface it to Car Buddy before it strands anyone.</li>
-<li>Track identity paperwork — VIN, plate, registration, insurance — and flag gaps.</li>
-<li>Link every receipt/photo to the archived attachment files in the car-buddy repo; never let a record point at an expiring URL.</li>
-</ul>
-<h2>Success criteria</h2>
-<ul>
-<li>The homepage shows the car's real current state and its complete service history, loaded from the canonical events.</li>
-<li>Every canonical event is present and verbatim; costs exactly as recorded (no backfilling, no rounding into existence).</li>
-<li>New service is logged in the same conversation where Dave mentions it.</li>
-<li>Anything unknown is labeled unknown.</li>
-</ul>
-<h2>Out of scope for v1</h2>
-<ul>
-<li>Booking service or buying parts (surface the need; Dave decides).</li>
-<li>Any other car's record — siblings have their own buddies under Car Buddy.</li>
-</ul>
-<h2>Growth path</h2>
-<p>Due-service reminders through Car Buddy; cost-of-ownership rollups into Car Buddy's fleet chart; photo log as new pictures land in the dossier.</p></div></div></div></div>
-</div>
-</section>
-
-
-<div class="footer">
-Generated 2026-11-21 · Part of the Buddy System<br>
-<a href="about.html">About · the full record →</a>
-</div>
-
 <script>
+// ---- dump-box JS (self-contained; no dependencies) ----
 (function(){
   var box = document.querySelector('.dumpbox');
   if (!box || box.dataset.dumpInit) return;
@@ -439,107 +400,12 @@ Generated 2026-11-21 · Part of the Buddy System<br>
     return p.substring(p.lastIndexOf('/') + 1);
   })();
   var ta = box.querySelector('textarea'),
-      btn = box.querySelector('.dumpbox-btn'),
+      btn = box.querySelector('.dumpbox-row .dumpbox-btn'),
       st = box.querySelector('.dumpbox-status'),
-      tokWrap = box.querySelector('.dumpbox-token'),
-      chipsBox = box.querySelector('.dumpbox-chips'),
-      addBtn = box.querySelector('.dumpbox-addimg');
-  /* Image attachments (Dave 2026-11-08): picked photos shrink on the device
-     first (<=1600px JPEG; the original stays in the Photos library), then
-     ride the dump into the buddy's repo under docs/ingest-files/<ts>/ and
-     are listed with links in the ingest entry — the same mechanics as the
-     dashboard's Universal Dump files. */
-  var dumpFiles = [];
+      tokWrap = box.querySelector('.dumpbox-token');
   function lsGet(){ try { return JSON.parse(localStorage.getItem('buddyTree.v3') || '{}'); } catch(e){ return {}; } }
   function lsSet(patch){ try { var s = lsGet(); for (var k in patch) s[k] = patch[k]; localStorage.setItem('buddyTree.v3', JSON.stringify(s)); } catch(e){} }
   function token(){ return lsGet().ghToken || ''; }
-  function b64OfBlob(blob){
-    return new Promise(function(res, rej){
-      var fr = new FileReader();
-      fr.onload = function(){ res(String(fr.result).split(',')[1]); };
-      fr.onerror = rej;
-      fr.readAsDataURL(blob);
-    });
-  }
-  function loadHeic(){
-    return new Promise(function(res, rej){
-      if (window.heic2any) return res();
-      var sc = document.createElement('script');
-      sc.src = 'https://cdn.jsdelivr.net/npm/heic2any@0.0.4/dist/heic2any.min.js';
-      sc.onload = res; sc.onerror = rej;
-      document.head.appendChild(sc);
-    });
-  }
-  var DUMP_FILE_MAX = 1024 * 1024;
-  function fmtSize(n){ return n >= 1048576 ? (n / 1048576).toFixed(1) + ' MB' : Math.max(1, Math.round(n / 1024)) + ' KB'; }
-  async function shrinkImage(file){
-    var blob = file;
-    if (/\\.hei[cf]$/i.test(file.name || '') || file.type === 'image/heic' || file.type === 'image/heif') {
-      await loadHeic();
-      blob = await window.heic2any({blob: file, toType: 'image/jpeg', quality: 0.92});
-    }
-    var bmp = await createImageBitmap(blob);
-    var scale = Math.min(1, 1600 / Math.max(bmp.width, bmp.height));
-    var out = blob, outName = file.name || 'image.jpg';
-    if (scale < 1 || !/jpe?g$/i.test(blob.type || '')) {
-      var c = document.createElement('canvas');
-      c.width = Math.max(1, Math.round(bmp.width * scale));
-      c.height = Math.max(1, Math.round(bmp.height * scale));
-      c.getContext('2d').drawImage(bmp, 0, 0, c.width, c.height);
-      var jb = await new Promise(function(res){ c.toBlob(res, 'image/jpeg', 0.85); });
-      if (jb) { out = jb; outName = outName.replace(/\\.[^.]+$/, '') + '.jpg'; }
-    }
-    if (bmp.close) bmp.close();
-    return { name: outName, type: 'image/jpeg', b64: await b64OfBlob(out), size: out.size };
-  }
-  async function prepareImages(fileList, notes){
-    var list = Array.prototype.slice.call(fileList || []).filter(function(f){ return f.type.indexOf('image/') === 0 || /\\.hei[cf]$/i.test(f.name || ''); });
-    var out = [];
-    for (var i = 0; i < list.length; i++) {
-      var f = list[i];
-      try {
-        var rec = await shrinkImage(f);
-        if (rec.size > DUMP_FILE_MAX) { notes.push('“' + rec.name + '” is still ' + fmtSize(rec.size) + ' after shrinking — over the 1 MB upload limit, so it was not attached.'); continue; }
-        out.push(rec);
-      } catch(e) { notes.push('“' + (f.name || 'image') + '” could not be prepared — not attached.'); }
-    }
-    return out;
-  }
-  function fileSlug(name){ return String(name || 'file').replace(/[^A-Za-z0-9._-]+/g, '-').replace(/^-+|-+$/g, '') || 'file'; }
-  function folderOf(t){
-    var d = new Date(t), z = function(n){ return String(n).padStart(2, '0'); };
-    return d.getFullYear() + z(d.getMonth() + 1) + z(d.getDate()) + '-' + z(d.getHours()) + z(d.getMinutes()) + z(d.getSeconds());
-  }
-  function entryBody(text, paths){
-    var NL = String.fromCharCode(10);
-    var body = text || '';
-    if (paths && paths.length) {
-      if (body) body += NL + NL;
-      body += 'Files:' + paths.map(function(pp){ return NL + '- [' + pp.split('/').pop() + '](https://github.com/davedellaquila/' + repo + '/blob/master/' + pp + ')'; }).join('');
-    }
-    return body;
-  }
-  async function uploadFiles(files, whenMs){
-    var paths = [];
-    if (!files || !files.length) return paths;
-    var folder = 'docs/ingest-files/' + folderOf(whenMs) + '/';
-    for (var i = 0; i < files.length; i++) {
-      var path = folder + fileSlug(files[i].name);
-      await ghApi('/repos/davedellaquila/' + repo + '/contents/' + path, 'PUT',
-        {message: 'Dump image for ' + bid, content: files[i].b64});
-      paths.push(path);
-    }
-    return paths;
-  }
-  function escChip(t){
-    return String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-  }
-  function renderChips(){
-    if (!chipsBox) return;
-    chipsBox.innerHTML = dumpFiles.map(function(f, i){
-      return '<span class="dumpbox-chip"><img alt="" src="data:' + (f.type || 'image/jpeg') + ';base64,' + f.b64 + '"><span class="dc-name">' + escChip(f.name) + '</span><button type="button" class="dc-x" data-dc-x="' + i + '" aria-label="Remove ' + escChip(f.name) + '">×</button></span>';
-    }).join('');
-  }
   function b64encode(str){
     var bytes = new TextEncoder().encode(str), bin = '';
     bytes.forEach(function(b){ bin += String.fromCharCode(b); });
@@ -589,598 +455,155 @@ Generated 2026-11-21 · Part of the Buddy System<br>
   }
   function localSave(entry){
     var a = localBacklog(); a.push(entry);
-    try { localStorage.setItem(localKey(), JSON.stringify(a)); } catch(e){
-      /* Oversize local state (queued photos can exceed the storage quota):
-         keep the text, drop the image bytes, and SAY so on the status line -
-         a queued dump must never vanish silently. */
-      try {
-        var lite = {t: entry.t, text: entry.text};
-        if (entry.files && entry.files.length) lite.filesDropped = entry.files.length;
-        var a2 = localBacklog(); a2.push(lite);
-        localStorage.setItem(localKey(), JSON.stringify(a2));
-        st.textContent = '⚠️ Saved on this device, but the image was too large for this device’s storage — the text is queued and will sync; re-attach the image after connecting GitHub.';
-      } catch(e2){}
-    }
+    try { localStorage.setItem(localKey(), JSON.stringify(a)); } catch(e){}
   }
   function localClear(){ try { localStorage.removeItem(localKey()); } catch(e){} }
-  /* Split a local backlog entry into (text, file paths) ready for the ingest
-     body: its own already-uploaded paths (first sync attempt), plus a note
-     for any image that could not be kept on this device. */
-  function splitEntry(b){
-    var body = b.text || '';
-    if (b.filesDropped) {
-      var NL = String.fromCharCode(10);
-      body += (body ? NL + NL : '') + '_(' + b.filesDropped + ' image' + (b.filesDropped === 1 ? '' : 's') + ' could not be kept on the device while queued — re-attach from the Photos library.)_';
-    }
-    return body;
-  }
   function refreshUI(){
-    var has = !!token();
-    tokWrap.hidden = has;
-    /* The box always works: no token and/or no repo just means local saves. */
-    ta.disabled = false;
-    btn.disabled = false;
-    var n = localBacklog().length;
-    if (!repo) {
-      st.textContent = n
-        ? n + ' local ' + (n === 1 ? 'dump' : 'dumps') + ' saved on this device — will sync when a repo is linked.'
-        : 'No repo linked yet — dumps save on this device and will sync when one is linked.';
-      return;
-    }
-    st.textContent = has
-      ? (n ? n + ' local ' + (n === 1 ? 'dump' : 'dumps') + ' will sync on next dump.' : '')
-      : 'No GitHub token — dumps save on this device for now.';
+  var has = !!token();
+  tokWrap.hidden = has;
+  /* The box always works: no token and/or no repo just means local saves. */
+  ta.disabled = false;
+  btn.disabled = false;
+  var n = localBacklog().length;
+  if (!repo) {
+    st.textContent = n
+      ? n + ' local ' + (n === 1 ? 'dump' : 'dumps') + ' saved on this device — will sync when a repo is linked.'
+      : 'No repo linked yet — dumps save on this device and will sync when one is linked.';
+    return;
+  }
+  st.textContent = has
+    ? (n ? n + ' local ' + (n === 1 ? 'dump' : 'dumps') + ' will sync on next dump.' : '')
+    : 'No GitHub token — dumps save on this device for now.';
   }
   var tokInput = tokWrap.querySelector('input'),
       tokSave = tokWrap.querySelector('button');
-  /* Visual save confirmation (Dave 2026-10-16): the button flashes green
-     with a ✓ for ~2s on every successful save, so the save is unmissable. */
-  function flashSaved(){
-    var label = btn.textContent;
-    btn.classList.add('saved');
-    btn.textContent = '✓ Saved';
-    st.classList.add('flash');
-    setTimeout(function(){
-      btn.classList.remove('saved');
-      if (btn.textContent === '✓ Saved') btn.textContent = label;
-      st.classList.remove('flash');
-    }, 1800);
-  }
-  /* Dave 2026-10-18: verify the token against GitHub when pasted, so a
-     bad token is caught here instead of surfacing as a mysterious 404 on
-     the next dump. The token is kept either way; dumps queue locally until
-     a working token is in place. */
   tokSave.addEventListener('click', async function(){
-    var v = tokInput.value.trim();
-    if (!v) return;
-    lsSet({ghToken: v});
-    tokInput.value = '';
-    st.textContent = 'Checking token…';
-    try {
-      await ghApi('/user');
-      refreshUI();
-      st.textContent = '✓ Token verified — dumps will sync to GitHub.';
-    } catch(e) {
-      refreshUI();
-      st.textContent = '⚠ GitHub rejected that token (' + ((e && e.message) || e) + ') — dumps stay on this device until a working token is added.';
-    }
-  });
-  async function dump(){
-    var text = ta.value.trim();
-    var files = dumpFiles.slice();
-    if (!text && !files.length) return;
-    var stamp = new Date().toLocaleString();
-    var whenMs = Date.now();
-    var NL = String.fromCharCode(10);
-    function clearBox(){
-      ta.value = '';
-      dumpFiles = [];
-      renderChips();
-    }
-    if (!repo) {
-      /* No repo linked yet — save on this device; syncs once one is linked. */
-      localSave({t: stamp, text: text, files: files, when: whenMs});
-      clearBox();
-      refreshUI();
-      if (!/too large/.test(st.textContent)) st.textContent = '✓ Saved on this device — will sync to the repo once one is linked.';
-      flashSaved();
-      return;
-    }
-    if (!token()) {
-      /* Temporary workaround: no token → save on this device. */
-      localSave({t: stamp, text: text, files: files, when: whenMs});
-      clearBox();
-      if (!/too large/.test(st.textContent)) st.textContent = '✓ Saved on this device — add a GitHub token to sync it to the repo.';
-      flashSaved();
-      return;
-    }
-    st.textContent = 'Dumping…';
-    btn.disabled = true;
-    try {
-      /* This dump's own paths, then the backlog with each entry's uploads. */
-      var myPaths = await uploadFiles(files, whenMs);
-      var backlog = localBacklog();
-      var parts = [];
-      for (var bi = 0; bi < backlog.length; bi++) {
-        var b = backlog[bi];
-        var bPaths = b.paths ? b.paths.slice() : await uploadFiles(b.files || [], b.when || whenMs);
-        b.paths = bPaths;
-        try { localStorage.setItem(localKey(), JSON.stringify(backlog)); } catch(e){}
-        parts.push('## ' + b.t + NL + NL + entryBody(splitEntry(b), bPaths) + NL + NL);
-      }
-      parts.push('## ' + stamp + NL + NL + entryBody(text, myPaths) + NL + NL);
-      var cur = await ghGetFile(repo, 'docs/ingest.md');
-      var base = cur ? cur.text : '# Ingest log — ' + repoName + NL + NL;
-      var body = {message: 'Ingest dump for ' + bid, content: b64encode(base + parts.join(''))};
-      if (cur && cur.sha) body.sha = cur.sha;
-      await ghApi('/repos/davedellaquila/' + repo + '/contents/docs/ingest.md', 'PUT', body);
-      localClear();
-      clearBox();
-      st.textContent = '✓ Dumped to ' + repo + '/docs/ingest.md' + (backlog.length ? ' (' + backlog.length + ' local synced)' : '');
-      flashSaved();
+  var v = tokInput.value.trim();
+  if (!v) return;
+  lsSet({ghToken: v});
+  tokInput.value = '';
+  st.textContent = 'Checking token…';
+  try {
+    await ghApi('/user');
+    refreshUI();
+    st.textContent = '✓ Token verified — dumps will sync to GitHub.';
+  } catch(e) {
+    refreshUI();
+    st.textContent = '⚠ GitHub rejected that token (' + ((e && e.message) || e) + ') — dumps stay on this device until a working token is added.';
+  }
+});
+async function dump(){
+  var text = ta.value.trim();
+  if (!text) return;
+  var stamp = new Date().toLocaleString();
+  var NL = String.fromCharCode(10);
+  if (!repo) {
+    /* No repo linked yet — save on this device; syncs once one is linked. */
+    localSave({t: stamp, text: text});
+    ta.value = '';
+    st.textContent = '✓ Saved on this device — will sync to the repo once one is linked.';
+    refreshUI();
+    return;
+  }
+  if (!token()) {
+    /* Temporary workaround: no token → save on this device. */
+    localSave({t: stamp, text: text});
+    ta.value = '';
+    st.textContent = '✓ Saved on this device — add a GitHub token to sync it to the repo.';
+    return;
+  }
+  st.textContent = 'Dumping…';
+  btn.disabled = true;
+  try {
+    /* Flush any locally-saved backlog first, then the new entry. */
+    var backlog = localBacklog();
+    var parts = backlog.map(function(b){ return '## ' + b.t + NL + NL + b.text + NL + NL; });
+    parts.push('## ' + stamp + NL + NL + text + NL + NL);
+    var cur = await ghGetFile(repo, 'docs/ingest.md');
+    var base = cur ? cur.text : '# Ingest log — ' + repoName + NL + NL;
+    var body = {message: 'Ingest dump for ' + bid, content: b64encode(base + parts.join(''))};
+    if (cur && cur.sha) body.sha = cur.sha;
+    await ghApi('/repos/davedellaquila/' + repo + '/contents/docs/ingest.md', 'PUT', body);
+    localClear();
+    ta.value = '';
+    st.textContent = '✓ Dumped to ' + repo + '/docs/ingest.md' + (backlog.length ? ' (' + backlog.length + ' local synced)' : '');
     } catch(err){
-      /* Dave 2026-10-18: a failed GitHub write must never drop the dump.
-         Keep it on this device and say so plainly, with the backlog count —
-         it syncs on the next successful dump. */
-      try { localSave({t: stamp, text: text, files: files, when: whenMs}); } catch(e2){}
-      clearBox();
-      refreshUI();
-      var why = (err && err.message) || String(err);
-      var nq = 0; try { nq = localBacklog().length; } catch(e2){}
-      var tail = nq > 1 ? ' (' + nq + ' on this device waiting to sync)' : '';
-      st.textContent = (/404/.test(why)
-        ? '⚠ Saved on this device — GitHub said 404 (usually a wrong/expired token, or no access to this private repo). Fix the token, then dump again to sync.'
-        : '⚠ Saved on this device — GitHub said: ' + why + '. It will sync on your next successful dump.') + tail;
-    }
-    btn.disabled = false;
+    /* Dave 2026-10-18: a failed GitHub write must never drop the dump.
+       Keep it on this device and say so plainly, with the backlog count -
+       it syncs on the next successful dump. */
+    try { localSave({t: stamp, text: text}); } catch(e2){}
+    ta.value = '';
+    refreshUI();
+    var why = (err && err.message) || String(err);
+    var nq = 0; try { nq = localBacklog().length; } catch(e2){}
+    var tail = nq > 1 ? ' (' + nq + ' on this device waiting to sync)' : '';
+    st.textContent = (/404/.test(why)
+      ? '⚠ Saved on this device — GitHub said 404 (usually a wrong/expired token, or no access to this private repo). Fix the token, then dump again to sync.'
+      : '⚠ Saved on this device — GitHub said: ' + why + '. It will sync on your next successful dump.') + tail;
+  }
+  btn.disabled = false;
   }
   btn.addEventListener('click', dump);
   ta.addEventListener('keydown', function(ev){
-    /* Dave 2026-10-16: plain Return dumps, like the button. Shift+Return for a newline. */
-    if (ev.key === 'Enter' && !ev.shiftKey && !ev.altKey) { ev.preventDefault(); dump(); }
-  });
-  if (addBtn) addBtn.addEventListener('click', function(){
-    var inp = document.createElement('input');
-    inp.type = 'file'; inp.accept = 'image/*,.heic,.heif'; inp.multiple = true;
-    inp.addEventListener('change', async function(){
-      if (!inp.files || !inp.files.length) return;
-      st.textContent = 'Preparing image…';
-      var notes = [];
-      var recs = await prepareImages(inp.files, notes);
-      dumpFiles = dumpFiles.concat(recs);
-      renderChips();
-      st.textContent = notes.join(' ') || (recs.length ? recs.length + ' image' + (recs.length === 1 ? '' : 's') + ' attached — they ride your next dump.' : '');
-      if (recs.length && !ta.value.trim()) dump();
-    });
-    inp.click();
-  });
-  if (chipsBox) chipsBox.addEventListener('click', function(ev){
-    var x = ev.target.closest('[data-dc-x]');
-    if (!x) return;
-    dumpFiles.splice(parseInt(x.getAttribute('data-dc-x'), 10), 1);
-    renderChips();
+    if ((ev.metaKey || ev.ctrlKey) && ev.key === 'Enter') { ev.preventDefault(); dump(); }
   });
   resolveRepo().then(refreshUI);
 })();
 </script>
+<!--
+  TIP JAR — canonical snippet (Dave's standard, 2026-10-24; motion v2, 2026-10-26)
+  Every buddy homepage and every page a buddy creates carries the tip jar.
+  Public pages especially: a reader who got value can say thanks.
 
+  USAGE: paste this whole block just before </body>. No dependencies.
+  The jar points at Dave's Ko-fi page by default. A page for a specific app
+  may override the destination with its own Ko-fi page later:
+      <div class="tipjar" ...> — change the href on the <a>.
 
-<script>
-(function(){
-  var tiles = document.querySelectorAll('.attn[data-attn-id]');
-  if (!tiles.length) return;
-  var dumpbox = document.querySelector('.dumpbox');
-  var bid = (dumpbox && dumpbox.getAttribute('data-buddy-id')) || (function(){
-    var p = location.pathname.replace(/\/+$/, '');
-    return p.substring(p.lastIndexOf('/') + 1);
-  })();
-  function lsGet(){ try { return JSON.parse(localStorage.getItem('buddyTree.v3') || '{}'); } catch(e){ return {}; } }
-  function lsSet(patch){ try { var s = lsGet(); for (var k in patch) s[k] = patch[k]; localStorage.setItem('buddyTree.v3', JSON.stringify(s)); } catch(e){} }
-  function token(){ return lsGet().ghToken || ''; }
-  function b64encode(str){
-    var bytes = new TextEncoder().encode(str), bin = '';
-    bytes.forEach(function(b){ bin += String.fromCharCode(b); });
-    return btoa(bin);
+  DESIGN NOTES (keep it alive, never annoying):
+  - "Breathing" (v2): a calm but clearly visible pulse — the pill scales
+    1 → 1.045 over a 3.2s ease-in-out cycle while its glow swells with it.
+    (V1 breathed at 1.035 over 6s — Dave: "rather static." Too subtle.)
+  - "Shimmer" (v2): a soft light sweep crosses the pill once every ~8s —
+    a ~1.3s pass inside a long rest, built into the keyframe cycle.
+  - Hover: the jar spins (same move as the dashboard sidebar's tip jar).
+  - V1's hop + coin glint were retired in v2 — with the breathing and the
+    shimmer running, the stack got busy; breathing + shimmer + hover spin
+    is the trio now.
+  - prefers-reduced-motion: all animation off. The jar is just a link.
+  - Transform/opacity/box-shadow only — no layout shift.
+  - Works in dark and light mode; sits above page content (z-index 60) but
+    below modals on buddy pages.
+-->
+<style>
+  .tipjar{position:fixed;right:18px;bottom:18px;z-index:60;
+    font-family:inherit;-webkit-tap-highlight-color:transparent}
+  .tipjar a{display:inline-flex;align-items:center;gap:.5em;position:relative;overflow:hidden;
+    padding:.55em 1em;border-radius:999px;text-decoration:none;
+    font-size:.9rem;font-weight:600;line-height:1;
+    color:#fff;background:linear-gradient(135deg,#7c4dff,#b388ff);
+    box-shadow:0 6px 18px rgba(124,77,255,.35),0 2px 6px rgba(0,0,0,.25);
+    animation:tipjar-breathe 3.2s ease-in-out infinite}
+  .tipjar a::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;
+    background:linear-gradient(105deg,rgba(255,255,255,0) 35%,rgba(255,255,255,.45) 50%,rgba(255,255,255,0) 65%);
+    transform:translateX(-110%);animation:tipjar-sheen 8s ease-in-out infinite}
+  .tipjar .jar{display:inline-block;font-size:1.15em}
+  .tipjar a:hover .jar{animation:tipjar-spin .7s cubic-bezier(.34,1.56,.64,1)}
+  .tipjar a:focus-visible{outline:3px solid #ffd54f;outline-offset:3px}
+  @keyframes tipjar-breathe{0%,100%{transform:scale(1);box-shadow:0 6px 18px rgba(124,77,255,.35),0 2px 6px rgba(0,0,0,.25)}50%{transform:scale(1.045);box-shadow:0 9px 26px rgba(124,77,255,.55),0 3px 8px rgba(0,0,0,.28)}}
+  @keyframes tipjar-sheen{0%{transform:translateX(-110%)}16%{transform:translateX(110%)}100%{transform:translateX(110%)}}
+  @keyframes tipjar-spin{to{transform:rotate(360deg)}}
+  @media (prefers-reduced-motion: reduce){
+    .tipjar a,.tipjar a:hover .jar{animation:none}
+    .tipjar a::after{display:none}
   }
-  async function ghApi(path, method, body){
-    var t = token();
-    if (!t) throw new Error('Add a GitHub token first.');
-    var r = await fetch('https://api.github.com' + path, {
-      method: method || 'GET',
-      headers: {'Authorization': 'Bearer ' + t, 'Accept': 'application/vnd.github+json', 'Content-Type': 'application/json'},
-      body: body ? JSON.stringify(body) : undefined
-    });
-    if (!r.ok) throw new Error('GitHub ' + r.status);
-    return r.status === 204 ? null : await r.json();
-  }
-  async function ghGetFile(repo, path){
-    try {
-      var j = await ghApi('/repos/davedellaquila/' + repo + '/contents/' + path);
-      if (j && j.content) return {
-        text: new TextDecoder().decode(Uint8Array.from(atob(j.content.replace(/\n/g, '')), function(c){ return c.charCodeAt(0); })),
-        sha: j.sha
-      };
-    } catch(e){}
-    return null;
-  }
-  var repo = null, buddyName = bid;
-  async function resolveBuddy(){
-    try {
-      var r = await fetch('../buddies.json', {cache: 'no-store'});
-      var d = await r.json();
-      var buds = d.buddies || [];
-      for (var i = 0; i < buds.length; i++) {
-        if (buds[i].id === bid) {
-          if (buds[i].repo) repo = String(buds[i].repo).split('/').filter(Boolean).pop();
-          if (buds[i].name) buddyName = buds[i].name;
-          break;
-        }
-      }
-    } catch(e){}
-  }
-  function rkey(aid, text){ return bid + '|' + (aid || ('text:' + text.slice(0, 60))); }
-  /* Disposition state (Dave 2026-11-20): every attention item carries Done /
-     Need more info / Later / Drop it, in place. 'done' keeps its Nov 19
-     device-local record (attnDone + the dashboard's 'seen' map); 'later' and
-     'dropped' live in attnState, keyed the same way, so a tap on any surface
-     promotes into the matching registry stamp at dashboard boot. */
-  function localState(aid, text){
-    var s = lsGet();
-    var st = (s.attnState || {})[rkey(aid, text)];
-    if (st && st.kind) return st.kind;
-    var m = s.attnDone || {};
-    if (m[rkey(aid, text)]) return 'done';
-    /* Also honor the dashboard's own done map (the same store's 'seen',
-       keyed by bare attention id) so an item cleared in the dashboard
-       stays cleared here — one done state across surfaces. */
-    if (aid && s.seen && s.seen[aid]) return 'done';
-    return null;
-  }
-  function setLocalState(aid, text, kind, date){
-    var s = lsGet(); var m = s.attnDone || {}; var st = s.attnState || {}; var k = rkey(aid, text);
-    if (kind === 'done') { m[k] = 1; delete st[k]; }
-    else { st[k] = {kind: kind, date: date}; delete m[k]; if (aid && s.seen) delete s.seen[aid]; }
-    s.attnDone = m; s.attnState = st; lsSet(s);
-  }
-  function unsetLocalState(aid, text){
-    var s = lsGet(); var m = s.attnDone || {}; var st = s.attnState || {}; var k = rkey(aid, text);
-    delete m[k]; delete st[k]; s.attnDone = m; s.attnState = st;
-    if (aid && s.seen) delete s.seen[aid]; lsSet(s);
-  }
-  /* Free-text notes (Dave 2026-11-20 amendment): the fifth action. A note
-     lives on the device in attnNotes (same store, same keying as the
-     dispositions, so the dashboard shows it too), renders on the card with
-     its date, and is delivered to the owning buddy as a NOTE entry in
-     docs/ingest.md through the same token-gated path as Need more info.
-     A registry entry may also carry note {text, date}; the generator bakes
-     it as data-note attrs and the tile paints it when no local note exists. */
-  function localNote(aid, text){ var s = lsGet(); return (s.attnNotes || {})[rkey(aid, text)] || null; }
-  function setLocalNote(aid, text, noteText, date){ var s = lsGet(); var n = s.attnNotes || {}; n[rkey(aid, text)] = {text: noteText, date: date}; s.attnNotes = n; lsSet(s); }
-  function paintNote(tile, note){
-    var el = tile.querySelector('.attn-note');
-    if (!note) { if (el) el.remove(); return; }
-    if (!el) {
-      el = document.createElement('div'); el.className = 'attn-note';
-      var st = tile.querySelector('.attn-status');
-      if (st && st.parentNode) st.parentNode.insertBefore(el, st.nextSibling); else tile.appendChild(el);
-    }
-    el.textContent = '✎ ' + note.text + (note.date ? ' · ' + note.date : '');
-  }
-  async function sendNote(aid, text, noteText, msgEl){
-    if (!token()) { msgEl.textContent = 'Note saved on this device and shown here — connect GitHub (Brain dump box above) to send it to ' + buddyName + '.'; return; }
-    if (!repo) { msgEl.textContent = 'Note saved on this device and shown here — no repo linked for this buddy yet, so it could not be sent.'; return; }
-    msgEl.textContent = 'Sending…';
-    try {
-      var NL = String.fromCharCode(10);
-      var stamp = new Date().toLocaleString();
-      var cur = await ghGetFile(repo, 'docs/ingest.md');
-      var base = cur ? cur.text : '# Ingest log — ' + buddyName + NL + NL;
-      var idBit = aid ? ' (attention id: ' + aid + ')' : '';
-      var entry = 'NOTE — Dave’s note on: "' + text + '"' + idBit + ':' + NL + NL + noteText;
-      var body = {message: 'Attention note for ' + bid, content: b64encode(base + '## ' + stamp + NL + NL + entry + NL + NL)};
-      if (cur && cur.sha) body.sha = cur.sha;
-      await ghApi('/repos/davedellaquila/' + repo + '/contents/docs/ingest.md', 'PUT', body);
-      msgEl.textContent = 'Note saved — sent to ' + buddyName + ' and shown on this card.';
-    } catch(err){ msgEl.textContent = 'Note saved on this device and shown here — sending failed (' + (err.message || err) + '), so ' + buddyName + ' has not seen it yet.'; }
-  }
-  function openNoteEditor(tile, aid, text){
-    var existing = tile.querySelector('.attn-note-edit');
-    if (existing) { var ta0 = existing.querySelector('textarea'); if (ta0) ta0.focus(); return; }
-    var wrap = document.createElement('div'); wrap.className = 'attn-note-edit';
-    var ta = document.createElement('textarea'); ta.placeholder = 'Type your note…'; ta.setAttribute('aria-label', 'Note for this item');
-    var cur = localNote(aid, text); if (cur) ta.value = cur.text;
-    var btns = document.createElement('div'); btns.className = 'attn-note-btns';
-    var save = document.createElement('button'); save.type = 'button'; save.className = 'attn-btn primary'; save.setAttribute('data-note-act', 'save'); save.textContent = 'Save note';
-    var cancel = document.createElement('button'); cancel.type = 'button'; cancel.className = 'attn-btn'; cancel.setAttribute('data-note-act', 'cancel'); cancel.textContent = 'Cancel';
-    var msg = document.createElement('div'); msg.className = 'attn-note-msg'; msg.setAttribute('role', 'status');
-    btns.appendChild(save); btns.appendChild(cancel); wrap.appendChild(ta); wrap.appendChild(btns); wrap.appendChild(msg);
-    var acts = tile.querySelector('.attn-actions');
-    if (acts && acts.parentNode) acts.parentNode.insertBefore(wrap, acts.nextSibling); else tile.appendChild(wrap);
-    ta.focus();
-  }
-  function stateMsg(kind, date){
-    if (kind === 'later') return 'Later · ' + date;
-    if (kind === 'dropped') return 'Dropped by Dave · ' + date;
-    return '✓ Done · ' + date;
-  }
-  function todayStr(){ var d = new Date(); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); }
-  /* Registry clearance (Dave 2026-11-19): Done used to leave a note in
-     the buddy's ingest asking an agent to hand-edit buddies.json later,
-     so a fixed blocker (Emile's DocuSign, resolved Oct 21) kept
-     presenting as open. The tap now writes the item's cleared stamp
-     into buddies.json itself when a token is on this device. The
-     device-local attnDone mark remains the instant/offline record,
-     and the dashboard promotes local marks into the registry at boot. */
-  async function regWrite(aid, text, kind, obj){
-    try {
-      var cur = await ghGetFile('buddy-system', 'buddies.json');
-      if (!cur) return false;
-      var d = JSON.parse(cur.text);
-      var buds = d.buddies || [], bb = null;
-      for (var i = 0; i < buds.length; i++) if (buds[i].id === bid) { bb = buds[i]; break; }
-      if (!bb) return false;
-      var list = bb.attention || [], hit = null, hitIdx = -1;
-      for (var j = 0; j < list.length; j++) {
-        var e = list[j];
-        if (aid && e && typeof e === 'object' && e.id === aid) { hit = e; break; }
-        if (!aid && typeof e === 'string' && e.slice(0, 60) === text.slice(0, 60)) { hitIdx = j; break; }
-        if (!aid && e && typeof e === 'object' && (e.text || '').slice(0, 60) === text.slice(0, 60)) { hit = e; break; }
-      }
-      /* Dispositions are mutually exclusive stamps on the entry — setting one
-         clears the others; an Undo removes all three (Dave 2026-11-20). */
-      var ATTN_FIELD = {done: 'cleared', later: 'later', dropped: 'dropped'};
-      if (hit) {
-        ['cleared', 'later', 'dropped'].forEach(function(f){ delete hit[f]; });
-        if (obj && kind) hit[ATTN_FIELD[kind]] = obj;
-      }
-      else if (hitIdx >= 0 && obj && kind) { var nb = {text: bb.attention[hitIdx]}; nb[ATTN_FIELD[kind]] = obj; bb.attention[hitIdx] = nb; }
-      else return false;
-      var body = {message: (obj && kind ? 'Disposition ' + kind + ' for attention ' : 'Reopen attention ') + (aid || 'item') + ' for ' + bid + ' (homepage)', content: b64encode(JSON.stringify(d, null, 1))};
-      if (cur.sha) body.sha = cur.sha;
-      await ghApi('/repos/davedellaquila/buddy-system/contents/buddies.json', 'PUT', body);
-      return true;
-    } catch(e){ return false; }
-  }
-  /* Las Vegas mode (Dave 2026-10-20): marking done feels like a win — the
-     button spins once and confetti bursts from it. DOM + WAAPI only;
-     skipped under prefers-reduced-motion; only ever called on a real tap. */
-  function celebrate(el, fallbackEl){
-    if (!el || !el.getBoundingClientRect) return;
-    if (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    try { el.animate([{transform:'rotate(0deg)'},{transform:'rotate(360deg)'}], {duration:450, easing:'cubic-bezier(.2,.7,.3,1.2)'}); } catch(e){}
-    var r = el.getBoundingClientRect();
-    /* A hidden element's rect is all zeros — bursting from it put the
-       confetti in the viewport's upper-left corner (Dave, 2026-10-21). Fall
-       back to the tile's rect; never burst from a zero rect at all. */
-    if ((!r.width || !r.height) && fallbackEl && fallbackEl.getBoundingClientRect) r = fallbackEl.getBoundingClientRect();
-    if (!r.width || !r.height) return;
-    var cx = r.left + r.width/2, cy = r.top + r.height/2;
-    var colors = ['#f0b429','#3fb950','#f778ba','#58a6ff','#ff7b72','#d2a8ff'];
-    for (var i = 0; i < 26; i++){
-      var s = document.createElement('span');
-      var sz = 5 + Math.random()*6;
-      s.style.cssText = 'position:fixed;left:'+cx+'px;top:'+cy+'px;width:'+sz+'px;height:'+(sz*0.6)+'px;background:'+colors[i%colors.length]+';z-index:99999;pointer-events:none;border-radius:2px;';
-      document.body.appendChild(s);
-      var ang = Math.random()*Math.PI*2, v = 60 + Math.random()*130;
-      var dx = Math.cos(ang)*v, dy = Math.sin(ang)*v - 90;
-      var anim = s.animate([
-        {transform:'translate(-50%,-50%) rotate(0deg)', opacity:1},
-        {transform:'translate(calc(-50% + '+dx+'px), calc(-50% + '+(dy+170)+'px)) rotate('+(Math.random()*540-270)+'deg)', opacity:0}
-      ], {duration: 750 + Math.random()*450, easing:'cubic-bezier(.15,.6,.4,1)'});
-      (function(node, a){ if (a) a.onfinish = function(){ node.remove(); }; else setTimeout(function(){ node.remove(); }, 1300); })(s, anim);
-    }
-  }
-  function paintResolved(tile, msg, immediate){
-    var st = tile.querySelector('.attn-status');
-    if (st) st.textContent = msg;
-    /* Dave 2026-10-20: the check belongs to the RESULT of the tap, never the
-       label beforehand — an upfront check reads as "already done." The Done
-       button renders plain "Done"; the check appears only once clicked. */
-    var db = tile.querySelector('[data-act="done"]');
-    if (db) db.textContent = '✓ Done';
-    var stEl = tile.querySelector('.attn-status');
-    if (stEl && !tile.querySelector('[data-act="undo"]')) {
-      var ub = document.createElement('button');
-      ub.type = 'button'; ub.className = 'attn-btn attn-undo'; ub.setAttribute('data-act', 'undo'); ub.textContent = 'Undo';
-      stEl.parentNode.insertBefore(ub, stEl.nextSibling);
-    }
-    /* The resolved class hides .attn-actions; the note button moves beside
-       Undo so a dispositioned item can still be noted (Dave 2026-11-20). */
-    var nb2 = tile.querySelector('[data-act="note"]');
-    var ub2 = tile.querySelector('[data-act="undo"]');
-    if (nb2 && ub2 && nb2.parentNode !== ub2.parentNode) ub2.parentNode.insertBefore(nb2, ub2.nextSibling);
-    if (immediate) { tile.classList.add('resolved'); return; }
-    /* Fresh tap (Dave, 2026-10-21): the check + status land while the button
-       is still visible, and celebrate() fires against the live button; the
-       resolved class (dim + hide actions) arrives a beat later so the result
-       registers first. Applying it instantly hid the button before the check
-       could be seen — and zeroed the rect celebrate() measures, which sent
-       the confetti to the viewport's upper-left corner. */
-    setTimeout(function(){ tile.classList.add('resolved'); }, 1100);
-  }
-  async function sendAction(tile, entry, okMsg){
-    var st = tile.querySelector('.attn-status');
-    var btns = tile.querySelectorAll('.attn-btn');
-    if (!token()) { st.textContent = 'Add a GitHub token in the Brain dump section above to enable actions.'; return false; }
-    if (!repo) { st.textContent = 'No repo linked for this buddy yet.'; return false; }
-    btns.forEach(function(b){ b.disabled = true; });
-    st.textContent = 'Working…';
-    try {
-      var NL = String.fromCharCode(10);
-      var stamp = new Date().toLocaleString();
-      var cur = await ghGetFile(repo, 'docs/ingest.md');
-      var base = cur ? cur.text : '# Ingest log — ' + buddyName + NL + NL;
-      var body = {message: 'Attention action for ' + bid, content: b64encode(base + '## ' + stamp + NL + NL + entry + NL + NL)};
-      if (cur && cur.sha) body.sha = cur.sha;
-      await ghApi('/repos/davedellaquila/' + repo + '/contents/docs/ingest.md', 'PUT', body);
-      st.textContent = okMsg;
-      return true;
-    } catch(err){
-      st.textContent = 'Save failed: ' + (err.message || err);
-      btns.forEach(function(b){ b.disabled = false; });
-      return false;
-    }
-  }
-  function paintOpen(tile){
-    tile.classList.remove('resolved');
-    tile.removeAttribute('data-cleared');
-    tile.removeAttribute('data-later');
-    tile.removeAttribute('data-dropped');
-    var st = tile.querySelector('.attn-status');
-    if (st) st.textContent = '';
-    var db = tile.querySelector('[data-act="done"]');
-    if (db) db.textContent = 'Done';
-    var ub = tile.querySelector('[data-act="undo"]');
-    if (ub) ub.remove();
-    var acts2 = tile.querySelector('.attn-actions');
-    var nb3 = tile.querySelector('[data-act="note"]');
-    if (acts2 && nb3 && nb3.parentNode !== acts2) acts2.appendChild(nb3);
-  }
-  tiles.forEach(function(tile){
-    var aid = tile.getAttribute('data-attn-id') || '';
-    var textEl = tile.querySelector('.attn-text');
-    var text = textEl ? textEl.textContent.trim() : '';
-    var bakedKind = tile.getAttribute('data-cleared') ? 'done' : (tile.getAttribute('data-later') ? 'later' : (tile.getAttribute('data-dropped') ? 'dropped' : null));
-    var bakedDate = tile.getAttribute('data-cleared') || tile.getAttribute('data-later') || tile.getAttribute('data-dropped') || '';
-    var lk = bakedKind || localState(aid, text);
-    if (lk) paintResolved(tile, bakedKind ? stateMsg(lk, bakedDate) : (lk === 'done' ? 'Marked done' : (lk === 'later' ? 'Marked later — on this device' : 'Dropped — on this device')), true);
-    var bakedNote = tile.getAttribute('data-note') ? {text: tile.getAttribute('data-note'), date: tile.getAttribute('data-note-date') || ''} : null;
-    var ln = localNote(aid, text);
-    if (ln) paintNote(tile, ln); else if (bakedNote) paintNote(tile, bakedNote);
-    tile.addEventListener('click', function(ev){
-      var nb = ev.target.closest ? ev.target.closest('[data-note-act]') : null;
-      if (nb) {
-        var wrap = nb.closest('.attn-note-edit');
-        var msg = wrap ? wrap.querySelector('.attn-note-msg') : null;
-        if (nb.getAttribute('data-note-act') === 'cancel') { if (wrap) wrap.remove(); return; }
-        var ta = wrap ? wrap.querySelector('textarea') : null;
-        var val = ta ? ta.value.trim() : '';
-        if (!val) { if (msg) msg.textContent = 'Write a note first, or Cancel.'; return; }
-        var ndate = todayStr();
-        setLocalNote(aid, text, val, ndate);
-        paintNote(tile, {text: val, date: ndate});
-        if (msg) sendNote(aid, text, val, msg);
-        return;
-      }
-      var btn = ev.target.closest ? ev.target.closest('.attn-btn') : null;
-      if (!btn || btn.disabled) return;
-      var act = btn.getAttribute('data-act');
-      var idBit = aid ? ' (attention id: ' + aid + ')' : '';
-      if (act === 'done') {
-        var cobj = {date: todayStr(), by: 'Dave'};
-        setLocalState(aid, text, 'done', cobj.date);
-        paintResolved(tile, stateMsg('done', cobj.date));
-        celebrate(btn, tile);
-        if (token()) {
-          regWrite(aid, text, 'done', cobj).then(function(ok){
-            var st = tile.querySelector('.attn-status');
-            if (st) st.textContent = ok ? '✓ Done — recorded in the registry, so it stays done on every surface.' : 'Marked done on this device — the registry could not be updated just now, so other surfaces may still show it open.';
-          });
-        } else {
-          var st2 = tile.querySelector('.attn-status');
-          if (st2) st2.textContent = 'Marked done on this device — connect GitHub (Brain dump box above) to record it in the registry for good.';
-        }
-      } else if (act === 'later' || act === 'drop') {
-        var kind = act === 'later' ? 'later' : 'dropped';
-        var dobj = {date: todayStr(), by: 'Dave'};
-        setLocalState(aid, text, kind, dobj.date);
-        paintResolved(tile, stateMsg(kind, dobj.date));
-        if (token()) {
-          regWrite(aid, text, kind, dobj).then(function(ok){
-            var st = tile.querySelector('.attn-status');
-            if (st) st.textContent = ok ? stateMsg(kind, dobj.date) + ' — recorded in the registry.' : 'Marked on this device — the registry could not be updated just now, so other surfaces may still show it open.';
-          });
-        } else {
-          var st2 = tile.querySelector('.attn-status');
-          if (st2) st2.textContent = 'Marked on this device — connect GitHub (Brain dump box above) to record it in the registry for good.';
-        }
-      } else if (act === 'undo') {
-        unsetLocalState(aid, text);
-        paintOpen(tile);
-        var st3 = tile.querySelector('.attn-status');
-        if (st3) st3.textContent = 'Reopened — it needs attention again.';
-        if (token()) regWrite(aid, text, null, null);
-      } else if (act === 'note') {
-        openNoteEditor(tile, aid, text);
-      } else if (act === 'info') {
-        sendAction(tile,
-          'FOLLOW-UP — Dave needs more info on: "' + text + '"' + idBit + '. Please follow up with him.',
-          'Sent — ' + buddyName + ' will follow up.');
-      }
-    });
-  });
-  resolveBuddy();
-})();
-</script>
-
-
-<script>
-(function(){
-  var sec = document.querySelector('.repo-files');
-  if (!sec || sec.dataset.rfInit) return;
-  sec.dataset.rfInit = '1';
-  sec.querySelectorAll('.rf-fileitem > .rf-file').forEach(function(btn){
-    btn.addEventListener('click', function(){
-      var item = btn.parentElement;
-      var panel = item ? item.querySelector('.rf-panel') : null;
-      if (!panel) return;
-      var open = panel.hidden;
-      panel.hidden = !open;
-      btn.setAttribute('aria-expanded', open ? 'true' : 'false');
-      var ch = btn.querySelector('.rf-chev');
-      if (ch) ch.textContent = open ? '▾' : '▸';
-    });
-  });
-})();
-</script>
-
-
-<script>
-(function(){
-  var parts = location.pathname.split('/');
-  var bid = '';
-  for (var i = parts.length - 1; i >= 0; i--) { if (parts[i]) { bid = parts[i]; break; } }
-  function applyName(name){
-    if (!name) return;
-    var els = document.querySelectorAll('[data-buddy-name]');
-    for (var k = 0; k < els.length; k++) els[k].textContent = name;
-    var ta = document.querySelector('.dumpbox textarea');
-    if (ta) ta.setAttribute('placeholder', "Dump what's on your mind about " + name + "…");
-  }
-  /* Pending renames (Dave 2026-10-18): when the dashboard has no GitHub token,
-     a rename queues in localStorage instead of reaching the registry. The
-     dashboard and homepages share an origin, so the homepage reads that queue
-     here — a pending rename supersedes the registry name, which is why a freshly
-     renamed buddy kept showing its old name after refresh. */
-  function pendingName(){
-    try {
-      var s = JSON.parse(localStorage.getItem('buddyTree.v3') || '{}');
-      if (s && s.pendingRenames && s.pendingRenames[bid]) return s.pendingRenames[bid];
-    } catch(e){}
-    return null;
-  }
-  var pn = pendingName();
-  if (pn) applyName(pn);
-  try {
-    fetch('../buddies.json', {cache: 'no-store'}).then(function(r){ return r.json(); }).then(function(d){
-      var buds = (d && d.buddies) || [];
-      for (var j = 0; j < buds.length; j++) {
-        if (buds[j].id === bid && buds[j].name) { applyName(pendingName() || buds[j].name); break; }
-      }
-    }).catch(function(){});
-  } catch(e){}
-  /* Live rename (Dave 2026-10-16): the dashboard broadcasts renames via
-     localStorage, so an open page updates its name without a refresh.
-     Same browser only — other devices pick it up on their next load. */
-  window.addEventListener('storage', function(e){
-    if (e.key !== 'buddyTree.rename' || !e.newValue) return;
-    try {
-      var d = JSON.parse(e.newValue);
-      if (d && d.id === bid && d.name) applyName(d.name);
-    } catch(err){}
-  });
-})();
-</script>
+</style>
+<div class="tipjar">
+  <a href="https://ko-fi.com/davedellaquila" target="_blank" rel="noopener"
+     aria-label="Tip jar — if this page helped you, you can leave Dave a tip on Ko-fi">
+    <span class="jar">🫙</span><span class="tiptext">Tip Jar</span>
+  </a>
+</div>
 
 </body>
 </html>
