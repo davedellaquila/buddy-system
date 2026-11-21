@@ -284,31 +284,31 @@
 <body>
 <header class="mini-mast">
   <a class="brand" href="../index.html">📰 The Morning Edition</a>
-  <span class="ed">Friday, November 20, 2026</span>
+  <span class="ed">Saturday, November 21, 2026</span>
   <button id="themeBtn" class="voice-change" style="margin-left:0">Theme: Auto</button>
 </header>
 <main class="detail secpage" style="max-width:860px;margin:0 auto;padding:0 20px">
   <p class="kicker">Section</p>
   <h1>Engineering</h1>
-  <p class="lede">The outage week, closed out: National Cyber Director Cairncross is out and Pentagon CIO Davies is in (acting); the four failures sequenced -- Microsoft 365, the FAA halt, JPMorgan&#x27;s bug, NSANet -- point at rushed patching in the AI-flaw era; and OpenAI&#x27;s Codex Performance Factory shows the constrained-agent pattern working from inside.</p>
+  <p class="lede">Patch OpenSSL (CVE-2026-121481, 9.8, fixed in 4.0.4/4.1.1 -- and check bundled copies in Node); Signal blocks screenshots by default as desktop agents arrive; and frontier models get demoed on open problems, moving verification to the fields.</p>
   <div class="storyitem">
       <div class="card-top"></div>
-      <h3><a href="../articles/2026-11-20-the-outage-week-gets-its-personnel-consequence-national.html">The outage week gets its personnel consequence: National Cyber Director Sean Cairncross is out; Pentagon CIO Kirsten Davies takes over, acting</a></h3>
-      <p class="byline">SecurityAffairs</p>
-      <p class="body">SecurityAffairs, relaying Reuters: the White House fired National Cyber Director Sean Cairncross — the first major personnel move since the outage string — with a person close to the administration telling Reuters the president fully supported the firing; Stephen Miller reportedly pushed for it. Cairncross, in the job since 2025, said the role had been ’the honor of a lifetime.’ Department of Defense CIO Kirsten Davies assumes the position temporarily. The week’s ledger she inherits: a global Microsoft outage hitting Outlook and Microsoft 365 for hundreds of millions; a nationwide FAA ground stop affecting more than 18,000 flights; a JPMorgan Chase software bug delaying payments; Apple’s internal-update outage; and the NSA’s classified NSANet degrading during maintenance on November 17. Officials maintain none of it was connected or a coordinated attack.</p>
-      <p class="body"><em>Why it matters:</em> The cyber director&#x27;s firing is the outage week&#x27;s accountability receipt -- and Davies inherits a coordination job, not a culprit. Whether the post-mortems get published matters more than who holds the title.</p>
+      <h3><a href="../articles/2026-11-21-patch-now-openssl-hit-by-a-critical-9-8-heap-buffer-ove.html">Patch now: OpenSSL hit by a critical 9.8 heap buffer overflow in its Base64 encoder — CVE-2026-121481, fixed in 4.0.4 and 4.1.1</a></h3>
+      <p class="byline">Cyber Security News</p>
+      <p class="body">Cyber Security News, via the security feeds: a heap buffer overflow in OpenSSL’s EVP_EncodeBlock() — CVSS 9.8, published Nov. 18 — can corrupt memory when an application passes very large untrusted inputs to the Base64 encoder. Affected: OpenSSL 4.0.0-4.0.3 and 4.1.0; fixed in 4.0.4 and 4.1.1; 3.x is outside the affected ranges in the CVE record. Ubuntu flags a trap: Node.js on 22.04 embeds its own OpenSSL copy, so checking only the system library misses bundled copies. The question for every team is the same: what untrusted data reaches your encoder?</p>
+      <p class="body"><em>Why it matters:</em> CVE-2026-121481 at 9.8 with a bundled-Node trap is the week&#x27;s one unambiguous engineering action: patch, and check embedded copies.</p>
     </div><div class="storyitem">
       <div class="card-top"></div>
-      <h3><a href="../articles/2026-11-20-how-a-week-of-failures-actually-sequenced-microsoft-365.html">How a week of failures actually sequenced: Microsoft 365 on Nov. 12, the FAA halt on Nov. 13, JPMorgan’s bug on Nov. 16, NSANet on Nov. 17 — and the rushed-patch theory</a></h3>
-      <p class="byline">Brussels Signal</p>
-      <p class="body">Brussels Signal’s timeline of the outage week: it began November 12 when a Microsoft 365 failure knocked out Outlook and disrupted Teams and Copilot across more than 70 countries; on November 13 the FAA halted U.S. departures for more than four hours after its telecommunications network failed — and at the FAA’s request Eurocontrol suspended U.S.-bound departures from its member states overnight; JPMorgan Chase blamed a software bug for payment delays on November 16; the NSA reported a temporary degradation of its classified network a day later, during routine maintenance. The expert theory offered to Reuters is the engineering story: as AI tools surface vulnerabilities faster, vendors rush patches, and rushed patches break production. The administration’s line — separate technical issues, maintenance and upgrades, no malicious actor — has held for a week; the pattern underneath it is a change-management pattern.</p>
-      <p class="body"><em>Why it matters:</em> Four failures, four owners, one pattern: change. The rushed-patch theory -- AI finds flaws faster than change windows can absorb -- is the week&#x27;s most consequential engineering hypothesis, and it&#x27;s testable in every org&#x27;s own incident log.</p>
+      <h3><a href="../articles/2026-11-21-signal-will-block-screenshots-by-default-to-keep-ai-age.html">Signal will block screenshots by default to keep AI agents out of private chats — the agent era meets the encrypted messenger</a></h3>
+      <p class="byline">IT Security News</p>
+      <p class="body">Via the security-news archive: Signal is restricting screenshots on iOS 27 and some Android devices to stop built-in AI assistants from reading private chats through screen capture — and a companion report claims a Meta AI agent could read encrypted Signal chats without direct app access, via the screen. Together they mark the week’s engineering turn: encryption held, the glass leaked. As desktop agents ship (Gemini on Mac, Apple’s reported agent), screenshot policy becomes a security boundary, and Signal is the first major messenger to draw it by default.</p>
+      <p class="body"><em>Why it matters:</em> Encryption held, the glass leaked: screenshot policy is now a security boundary as desktop agents ship -- Signal drew it first.</p>
     </div><div class="storyitem">
       <div class="card-top"></div>
-      <h3><a href="../articles/2026-11-20-openais-performance-factory-codex-agents-now-investigat.html">OpenAI’s Performance Factory: Codex agents now investigate ChatGPT’s own performance regressions — constrained agents doing production engineering</a></h3>
-      <p class="byline">SXF Brief</p>
-      <p class="body">SXF Brief’s engineering file: OpenAI explains how Codex-backed agent workflows help investigate ChatGPT performance regressions and automate repeatable production engineering checks — agents turned inward, on the operator’s own systems, with bounded scope. It is the constructive counterpart to the week’s agent-escape litigation: the same class of tooling, run inside a constrained harness against a defined target, producing checkable work. The desk’s interest is the pattern, which generalizes — an agent with a narrow mandate, a real system, and a human reviewing the diff is the deployment shape that keeps working, in a week when the unconstrained version is being sued in two states.</p>
-      <p class="body"><em>Why it matters:</em> Agents investigating their own platform&#x27;s regressions, inside a harness, is the deployment shape that keeps surviving contact with reality -- the constructive half of a week otherwise spent on agent litigation.</p>
+      <h3><a href="../articles/2026-11-21-frontier-models-as-research-instruments-claude-on-black.html">Frontier models as research instruments: Claude on black-hole problems, GPT-6.2’s 94-minute theorem proof, and an AI-designed CPU called Frostbite</a></h3>
+      <p class="byline">The Daily Gradient</p>
+      <p class="body">The Daily Gradient’s Friday file collects the week’s strangest engineering claims: Anthropic says Claude solved two open problems in black-hole physics; GPT-6.2 reportedly invented a proof method and proved a top-journal theorem in 94 minutes; and an AI designed and verified a new CPU architecture called Frostbite. Each claim needs independent verification — flagged thin as a group — but the pattern is the story: labs now demo models on open problems, not benchmarks, and the verification burden has moved to the fields themselves.</p>
+      <p class="body"><em>Why it matters:</em> Labs demoing on open problems moves verification to the fields themselves; treat each claim as a preprint-shaped rumor until checked.</p>
     </div>
   <section class="suggestbox" data-buddy-id="news-buddy">
     <h2>Suggestions</h2>
