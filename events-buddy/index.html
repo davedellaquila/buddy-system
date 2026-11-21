@@ -263,6 +263,12 @@ h2 { font-size: 22px; margin: 32px 0 16px; }
 .evwrap{margin:28px 0}
 .evsub{color:var(--muted);margin:4px 0 12px}
 .evcontrols{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 14px}
+.evstats{display:flex;flex-wrap:wrap;gap:10px;margin:0 0 14px}
+.evstat{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:10px 16px;min-width:104px;cursor:pointer;font:inherit;color:var(--text);text-align:left;transition:border-color .15s ease,transform .15s ease}
+.evstat:hover{border-color:var(--accent,#b4762a);transform:translateY(-1px)}
+.evstat:focus-visible{outline:2px solid var(--accent,#b4762a);outline-offset:2px}
+.evstat b{display:block;font-size:26px;line-height:1.05;font-weight:700}
+.evstat span{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
 .evcontrols input[type=search]{flex:1 1 200px;padding:9px 12px;border:1px solid var(--border);border-radius:8px;background:var(--bg);color:var(--text);font-size:15px}
 .evcontrols select{padding:9px 10px;border:1px solid var(--border);border-radius:8px;background:var(--bg);color:var(--text);font-size:15px}
 .evlist{display:flex;flex-direction:column;gap:10px}
@@ -304,9 +310,16 @@ h2 { font-size: 22px; margin: 32px 0 16px; }
 <section class="evwrap" id="events-viewer">
 <h2>📅 Events in the database</h2>
 <p class="evsub">Every published event in the events database, upcoming first — the same store the Gazette and the briefings draw from. <span id="ev-count"></span></p>
+<div class="evstats" id="ev-stats">
+<button type="button" class="evstat" id="ev-stat-published"><b>–</b><span>Published</span></button>
+<button type="button" class="evstat" id="ev-stat-upcoming"><b>–</b><span>Upcoming</span></button>
+<button type="button" class="evstat" id="ev-stat-towns"><b>–</b><span>Towns</span></button>
+<button type="button" class="evstat" id="ev-stat-hosts"><b>–</b><span>Hosts</span></button>
+</div>
 <div class="evcontrols">
 <input id="ev-q" type="search" placeholder="Search name, place, or host…" aria-label="Search events">
 <select id="ev-town" aria-label="Filter by town"><option value="">All towns</option></select>
+<select id="ev-host" aria-label="Filter by host"><option value="">All hosts</option></select>
 <select id="ev-when" aria-label="Filter by date"><option value="upcoming">Upcoming</option><option value="next30">Next 30 days</option><option value="all">All dates</option><option value="past">Past events</option></select>
 </div>
 <div id="ev-list" class="evlist"><p class="evmsg">Loading events…</p></div>
@@ -1348,6 +1361,7 @@ Generated 2026-11-19 · Part of the Buddy System<br>
   var qEl = document.getElementById('ev-q');
   var townEl = document.getElementById('ev-town');
   var whenEl = document.getElementById('ev-when');
+  var hostEl = document.getElementById('ev-host');
   if (!listEl) return;
 
   var rows = [];
@@ -1407,14 +1421,16 @@ Generated 2026-11-19 · Part of the Buddy System<br>
     if (when === 'past') return !isUpcoming(e);
     return true; // all
   }
-  /* Rows passing the current filters; with ignoreTown=true the town
-     selection itself is skipped, so town counts stay meaningful. */
-  function facetRows(ignoreTown) {
+  /* Rows passing the current filters; `except` names one facet (town/host)
+     whose own selection is skipped, so facet counts stay meaningful. */
+  function facetRows(except) {
     var q = qEl.value.trim().toLowerCase();
     var town = townEl.value;
+    var host = hostEl.value;
     return rows.filter(function (e) {
       if (!passesWhen(e)) return false;
-      if (!ignoreTown && town && e.town !== town) return false;
+      if (except !== 'town' && town && e.town !== town) return false;
+      if (except !== 'host' && host && e.host !== host) return false;
       if (q) {
         var hay = (e.name + ' ' + e.location + ' ' + e.host + ' ' + e.town).toLowerCase();
         if (hay.indexOf(q) === -1) return false;
@@ -1425,7 +1441,7 @@ Generated 2026-11-19 · Part of the Buddy System<br>
 
   function filtered() {
     var when = whenEl.value;
-    var out = facetRows(false);
+    var out = facetRows(null);
     if (when === 'past') {
       out.sort(function (a, b) { return b.start - a.start; });
     } else if (when === 'all') {
@@ -1460,6 +1476,8 @@ Generated 2026-11-19 · Part of the Buddy System<br>
 
   function render() {
     fillTowns();
+    buildHosts();
+    fillStats();
     var out = filtered();
     var upcomingTotal = rows.filter(isUpcoming).length;
     countEl.textContent = 'Showing ' + out.length + ' of ' + rows.length + ' published events (' + upcomingTotal + ' upcoming).';
@@ -1481,7 +1499,7 @@ Generated 2026-11-19 · Part of the Buddy System<br>
     var allCounts = {};
     rows.forEach(function (e) { if (e.town) allCounts[e.town] = (allCounts[e.town] || 0) + 1; });
     var counts = {};
-    facetRows(true).forEach(function (e) { if (e.town) counts[e.town] = (counts[e.town] || 0) + 1; });
+    facetRows('town').forEach(function (e) { if (e.town) counts[e.town] = (counts[e.town] || 0) + 1; });
     var current = townEl.value;
     townEl.innerHTML = '<option value="">All towns</option>';
     Object.keys(allCounts).sort().forEach(function (t) {
@@ -1491,6 +1509,32 @@ Generated 2026-11-19 · Part of the Buddy System<br>
       townEl.appendChild(opt);
     });
     townEl.value = current;
+  }
+
+  function buildHosts() {
+    var allCounts = {};
+    rows.forEach(function (e) { if (e.host) allCounts[e.host] = (allCounts[e.host] || 0) + 1; });
+    var counts = {};
+    facetRows('host').forEach(function (e) { if (e.host) counts[e.host] = (counts[e.host] || 0) + 1; });
+    var current = hostEl.value;
+    hostEl.innerHTML = '<option value="">All hosts</option>';
+    Object.keys(allCounts).sort().forEach(function (h) {
+      var opt = document.createElement('option');
+      opt.value = h;
+      opt.textContent = counts[h] ? h + ' (' + counts[h] + ')' : h;
+      hostEl.appendChild(opt);
+    });
+    hostEl.value = current;
+  }
+
+  function fillStats() {
+    var towns = {}, hosts = {};
+    rows.forEach(function (e) { if (e.town) towns[e.town] = 1; if (e.host) hosts[e.host] = 1; });
+    var set = function (id, v) { var el = document.querySelector('#' + id + ' b'); if (el) el.textContent = v; };
+    set('ev-stat-published', rows.length);
+    set('ev-stat-upcoming', rows.filter(isUpcoming).length);
+    set('ev-stat-towns', Object.keys(towns).length);
+    set('ev-stat-hosts', Object.keys(hosts).length);
   }
 
   function normalizeApi(e) {
@@ -1546,10 +1590,24 @@ Generated 2026-11-19 · Part of the Buddy System<br>
       });
   }
 
-  [qEl, townEl, whenEl].forEach(function (el) {
+  [qEl, townEl, hostEl, whenEl].forEach(function (el) {
     el.addEventListener('input', function () { showAll = false; render(); });
     el.addEventListener('change', function () { showAll = false; render(); });
   });
+  /* Stat cards (Dave, Nov 21): each card applies its view, then lands on the list. */
+  function scrollToViewer() {
+    var w = document.getElementById('events-viewer');
+    if (w) w.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+  function statGo(id, fn) {
+    var el = document.getElementById(id);
+    if (el) el.addEventListener('click', fn);
+  }
+  statGo('ev-stat-published', function () { whenEl.value = 'all'; showAll = false; render(); scrollToViewer(); });
+  statGo('ev-stat-upcoming', function () { whenEl.value = 'upcoming'; showAll = false; render(); scrollToViewer(); });
+  statGo('ev-stat-towns', function () { scrollToViewer(); townEl.focus(); });
+  statGo('ev-stat-hosts', function () { scrollToViewer(); hostEl.focus(); });
+
   load();
 })();
 </script>
