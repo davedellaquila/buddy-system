@@ -112,6 +112,13 @@
   .attn-btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
   .attn-btn:disabled{opacity:.45;cursor:default}
   .attn-status{font-size:13px;color:var(--muted);margin-top:8px;min-height:18px;font-style:italic;font-family:Georgia,serif}
+  .attn-undo{margin-top:8px}
+  .attn-note{font-size:13.5px;color:var(--ink);margin-top:10px;padding:8px 12px;border-left:3px solid var(--accent);background:var(--accent-soft);border-radius:0 8px 8px 0}
+  .attn-note .who{color:var(--muted);font-size:12px}
+  .attn-notebox{margin-top:10px}
+  .attn-notebox textarea{width:100%;box-sizing:border-box;min-height:56px;resize:vertical;background:var(--paper);border:1px solid var(--rule);border-radius:8px;padding:8px 10px;font-size:14px;color:var(--ink);font-family:inherit}
+  .attn-notebox textarea:focus{outline:none;border-color:var(--accent)}
+  .attn-notebox-row{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap}
   .card.attention.resolved{opacity:.6}
   .card.attention.resolved .attn-actions{display:none}
   .stack{display:grid;gap:14px}
@@ -323,37 +330,37 @@
         <div class="card attention" data-attn-id="attn-prd">
           <h3><span class="flag">Open</span>Full PRD — not started yet</h3>
           <p>You asked for a full PRD after the brief. The <a href="https://docs.google.com/document/d/1s9ghZ-kyp9dag2whTPnk24ULLUJP3JW_0UGtocAynbs/edit" target="_blank" rel="noopener">brief</a> already queues the spec: user stories per feature, the sections library, per-briefing content mixing, scheduling &amp; send-time rules, the delivery contract with the assistant, and success criteria. Say the word and it's drafted.</p>
-          <div class="attn-actions"><button type="button" class="attn-btn primary" data-act="done">✓ Done</button><button type="button" class="attn-btn" data-act="info">Need more info</button></div>
+          <div class="attn-actions"><button type="button" class="attn-btn primary" data-act="done">✓ Done</button><button type="button" class="attn-btn" data-act="info">Need more info</button><button type="button" class="attn-btn" data-act="later">Later</button><button type="button" class="attn-btn" data-act="drop">Drop it</button><button type="button" class="attn-btn" data-act="note">✎ Add a note…</button></div>
           <div class="attn-status" role="status"></div>
         </div>
         <div class="card attention" data-attn-id="attn-split">
           <h3><span class="flag">Resolved</span>The News ⇄ Briefing split is live</h3>
           <p>Settled Oct 11: <strong>Briefing Buddy</strong> assembles and delivers your morning/evening briefings; <strong><a href="https://davedellaquila.github.io/buddy-system/news-buddy/" target="_blank" rel="noopener">News Buddy</a></strong> is the separate news-sources expert with its own thread and brief. Briefing Buddy's own <a href="https://docs.google.com/document/d/1s9ghZ-kyp9dag2whTPnk24ULLUJP3JW_0UGtocAynbs/edit">brief</a> and private repo (<a href="https://github.com/davedellaquila/briefing-buddy" target="_blank" rel="noopener">davedellaquila/briefing-buddy</a>) are live.</p>
-          <div class="attn-actions"><button type="button" class="attn-btn primary" data-act="done">✓ Done</button><button type="button" class="attn-btn" data-act="info">Need more info</button></div>
+          <div class="attn-actions"><button type="button" class="attn-btn primary" data-act="done">✓ Done</button><button type="button" class="attn-btn" data-act="info">Need more info</button><button type="button" class="attn-btn" data-act="later">Later</button><button type="button" class="attn-btn" data-act="drop">Drop it</button><button type="button" class="attn-btn" data-act="note">✎ Add a note…</button></div>
           <div class="attn-status" role="status"></div>
         </div>
         <div class="card attention" data-attn-id="attn-brief-review">
           <h3><span class="flag">Open</span>Brief review still pending</h3>
-          <p>The <a href="https://docs.google.com/document/d/1s9ghZ-kyp9dag2whTPnk24ULLUJP3JW_0UGtocAynbs/edit">Briefing Buddy brief</a> went up for review Oct 11 — looks good, edits, or hold? The open questions inside (exact section lists, 6 AM / 6 PM still right, who else gets briefings, settings → job write-back) are what the PRD will settle. Re-checked against the live brief Nov 20 (morning) — unchanged.</p>
-          <div class="attn-actions"><button type="button" class="attn-btn primary" data-act="done">✓ Done</button><button type="button" class="attn-btn" data-act="info">Need more info</button></div>
+          <p>The <a href="https://docs.google.com/document/d/1s9ghZ-kyp9dag2whTPnk24ULLUJP3JW_0UGtocAynbs/edit">Briefing Buddy brief</a> went up for review Oct 11 — looks good, edits, or hold? The open questions inside (exact section lists, 6 AM / 6 PM still right, who else gets briefings, settings → job write-back) are what the PRD will settle. Re-checked against the live brief Nov 20 (evening) — unchanged.</p>
+          <div class="attn-actions"><button type="button" class="attn-btn primary" data-act="done">✓ Done</button><button type="button" class="attn-btn" data-act="info">Need more info</button><button type="button" class="attn-btn" data-act="later">Later</button><button type="button" class="attn-btn" data-act="drop">Drop it</button><button type="button" class="attn-btn" data-act="note">✎ Add a note…</button></div>
           <div class="attn-status" role="status"></div>
         </div>
         <div class="card attention" data-attn-id="attn-briefing-rules">
           <h3><span class="flag">Open</span>Two briefing rules set Oct 11</h3>
-          <p><strong>Morning north star:</strong> Dave finishes it in about 10 minutes — digestibility is the design rule now. <strong>Evening sports:</strong> <a href="https://www.49ers.com" target="_blank" rel="noopener">49ers</a>' next-opponent scouting is now a standing section — the evening cron definition still hasn't been updated to include it (re-checked Nov 20, morning against the live cron), so tonight's lineup ships without it.</p>
-          <div class="attn-actions"><button type="button" class="attn-btn primary" data-act="done">✓ Done</button><button type="button" class="attn-btn" data-act="info">Need more info</button></div>
+          <p><strong>Morning north star:</strong> Dave finishes it in about 10 minutes — digestibility is the design rule now. <strong>Evening sports:</strong> <a href="https://www.49ers.com" target="_blank" rel="noopener">49ers</a>' next-opponent scouting is now a standing section — the evening cron definition still hasn't been updated to include it (re-checked Nov 20, evening — the cron store timed out on list, and the saved definitions on file are unchanged), so tonight's lineup ships without it.</p>
+          <div class="attn-actions"><button type="button" class="attn-btn primary" data-act="done">✓ Done</button><button type="button" class="attn-btn" data-act="info">Need more info</button><button type="button" class="attn-btn" data-act="later">Later</button><button type="button" class="attn-btn" data-act="drop">Drop it</button><button type="button" class="attn-btn" data-act="note">✎ Add a note…</button></div>
           <div class="attn-status" role="status"></div>
         </div>
         <div class="card attention" data-attn-id="attn-picks-split">
           <h3><span class="flag">Open</span>New picks split needs cron updates</h3>
-          <p>Dave ruled Oct 15: <strong>podcasts go in the morning briefing</strong> (new since overnight), <strong>videos + <a href="https://www.reddit.com" target="_blank" rel="noopener">Reddit</a>/community picks go in the evening</strong> (things worth watching that night). The live cron definitions don't reflect it yet (re-checked Nov 20, morning against the live crons) — the evening cron still lists both YouTube picks and Podcast picks, and the morning cron has neither. The edition cards below mirror the crons as they are.</p>
-          <div class="attn-actions"><button type="button" class="attn-btn primary" data-act="done">✓ Done</button><button type="button" class="attn-btn" data-act="info">Need more info</button></div>
+          <p>Dave ruled Oct 15: <strong>podcasts go in the morning briefing</strong> (new since overnight), <strong>videos + <a href="https://www.reddit.com" target="_blank" rel="noopener">Reddit</a>/community picks go in the evening</strong> (things worth watching that night). The live cron definitions don't reflect it yet (re-checked Nov 20, evening — saved definitions on file unchanged) — the evening cron still lists both YouTube picks and Podcast picks, and the morning cron has neither. The edition cards below mirror the crons as they are.</p>
+          <div class="attn-actions"><button type="button" class="attn-btn primary" data-act="done">✓ Done</button><button type="button" class="attn-btn" data-act="info">Need more info</button><button type="button" class="attn-btn" data-act="later">Later</button><button type="button" class="attn-btn" data-act="drop">Drop it</button><button type="button" class="attn-btn" data-act="note">✎ Add a note…</button></div>
           <div class="attn-status" role="status"></div>
         </div>
         <div class="card attention" data-attn-id="attn-voice-rotation">
           <h3><span class="flag">Open</span>Briefing voice rotation — approved</h3>
           <p>Dave approved the rotation Oct 15: the briefing is read by an <strong>Alex + Jordan duo</strong> (Astro hosts the standups). Still to design: the voice roster, the rotation schedule, and how it plugs into briefing generation.</p>
-          <div class="attn-actions"><button type="button" class="attn-btn primary" data-act="done">✓ Done</button><button type="button" class="attn-btn" data-act="info">Need more info</button></div>
+          <div class="attn-actions"><button type="button" class="attn-btn primary" data-act="done">✓ Done</button><button type="button" class="attn-btn" data-act="info">Need more info</button><button type="button" class="attn-btn" data-act="later">Later</button><button type="button" class="attn-btn" data-act="drop">Drop it</button><button type="button" class="attn-btn" data-act="note">✎ Add a note…</button></div>
           <div class="attn-status" role="status"></div>
         </div>
       </div>
@@ -372,10 +379,10 @@
           <p class="meta">New Oct 21: an NPR hourly-news link and a Zen quote now open every edition.</p>
           <p class="meta">New Nov 2: the morning briefing now also leads <strong>The Morning Edition</strong> — Dave&rsquo;s daily one-page newspaper (briefing + standup audio &amp; transcript + tappable Decisions + headlines), rebuilt each morning with a new standing <strong>Reminders for Today</strong> section; the link is emailed to Dave each morning.</p>
           <p class="meta">New Nov 19: the morning briefing now also stages a plain-text version as a tap-to-send text draft to Dave&rsquo;s own number via his iPhone &mdash; thread + HTML email delivery unchanged.</p>
-          <p class="meta">Latest Zen (Thu Nov 19): Zenrin Kush&#363; — &ldquo;The bamboo shadows sweep the stairs, but no dust is stirred.&rdquo; Previous (Wed Nov 18): Shunryu Suzuki — &ldquo;In the beginner&rsquo;s mind there are many possibilities, but in the expert&rsquo;s there are few.&rdquo;</p>
+          <p class="meta">Today&rsquo;s Zen (Fri Nov 20): Hakuin Ekaku — &ldquo;What is the sound of one hand?&rdquo; Previous (Thu Nov 19): Zenrin Kush&#363; — &ldquo;The bamboo shadows sweep the stairs, but no dust is stirred.&rdquo;</p>
           <p class="meta">Effective today, Fri Nov 20: one Zen saying per day &mdash; the morning briefing&rsquo;s pick is the day&rsquo;s saying, and the Fiddletown Gazette&rsquo;s Zen for Today prints the same one (the two desks picked separately through Thu Nov 19).</p>
           <p class="meta">Effective Sun Nov 8: the morning standup roster is now the core ten, report-by-exception — and Music Buddy adds a daily pick to the standup (first pick Sun Nov 8: Bonobo — Black Sands).</p>
-          <p class="meta">Today (Fri Nov 20): Dave is home in Fiddletown for the week of Nov 16 (corrected Nov 15 &mdash; San Jose is Thanksgiving week, Nov 23), so there is no Commute section today. The morning opens rainy &mdash; rain at 42&deg; (feels like 38&deg;), rain through the morning easing to cloudy / few showers by midday, high 48&deg; / low 35&deg;, about 0.22 in of rain expected today, sunrise 6:50 AM PST, sunset 4:46 PM PST, and the Moon is waxing gibbous (moonrise 2:09 PM PST, moonset 2:20 AM PST). AQI 20 (Good). No weather alerts are in effect at refresh. Markets follow Thursday&rsquo;s sharp reversal &mdash; S&amp;P 500 &minus;2.02% to 7,175.83 (sixth straight loss), Nasdaq Composite &minus;2.25% to 23,879.20, Dow &minus;2.19% to 49,097.06; AAPL closed $349.21 (&minus;0.92%) and is up about 0.35% in premarket to ~$350.42. Friday premarket is mixed-to-lower: S&amp;P 500 futures &minus;0.63%, Nasdaq futures &minus;1.51%, Dow futures +0.02%; Anthropic (ANT), which closed its debut Thu at $97.17 (+17.07% on the $83 pricing), is down about 6&ndash;7% premarket, Nvidia is down about 2.5% premarket, and the VIX is reported above 30 after closing Thu at 28.44. Today&rsquo;s calendar eye: the Costco tire retry Dave approved for this morning &mdash; 4&times; Michelin Defender LTX M/S2 265/65R17, installed at Folsom, capped at $1,176.05 (the Thu order was rate-limited, HTTP 429, nothing charged). Music Buddy&rsquo;s Album of the Day for Fri Nov 20 is Eva Cassidy &mdash; Songbird (1998), carried in today&rsquo;s standup. Settled / live: the Money Buddy deploy Dave had been awaiting was verified live Nov 19 (build v202611192313) &mdash; autopay field, statement grid and budget cards are live, no longer awaiting his pull. Emil&rsquo;s IRA submission package was prepared Nov 19 &mdash; sections 1&ndash;3 complete, section 6 pre-filled; only Dave&rsquo;s section 4 sub-choice (4B ACH vs 4E wire) and section 5 withholding elections remain. Still open: the Fischer trust request ($24,687.07 due Tue Nov 17 &mdash; still unpaid as of Nov 19 night, no Clio receipt found; the separate Fischer bill via Clio was paid and is a different item), the HomeGuard Morgan Hill balance ($23,989 &mdash; counted Nov 19 as due/committed, not paid; the $225 waiver deadline was Thu Nov 19), the Hockaday invoice ($832.76 &mdash; Dave dropped the clarification draft Nov 19, the invoice itself remains open), the ElevenLabs keep-or-drop decision, and the Tanker desk pickup day pick from Fernando Martinez. A roof leak into the primary bedroom closet at the Llagas Creek house was reported Nov 19 &mdash; Kay is handling it, photos sent to HomeGuard, roofer dispatch asked for. No dish was named for Thu Nov 19 or Fri Nov 20 in the sources checked; last named dinner (Tue Nov 17) was Cowboy Soup. The hot tub is not overdue &mdash; Dave treated it Sat Nov 14; next treatment due ~Sat Nov 21. A propane-tank refill reminder (Tractor Supply) is set for Sat Nov 21.</p>
+          <p class="meta">Today (Fri Nov 20) — as delivered at 6:00 AM and updated at the evening refresh: Dave is home in Fiddletown for the week of Nov 16 (San Jose is Thanksgiving week, Nov 23), so there was no Commute section. The morning opened rainy &mdash; rain at 42&deg;, easing to clear by afternoon, high 48&deg; / low 35&deg;, sunrise 6:50 AM PST, sunset 4:46 PM PST, Moon waxing gibbous (moonrise 2:09 PM PST, moonset 2:20 AM PST). The day&rsquo;s slate: Friday Food with Chef Rob at Bella Grace (11 AM), the English Beat at Napa Music Hall tonight, and Bill Maher 8&ndash;9 PM. Music Buddy&rsquo;s Album of the Day is Eva Cassidy &mdash; Songbird (1998), carried in today&rsquo;s standup (audio below, updated to the Fri Nov 20 standup, 3:51). Sleep, corrected on Dave&rsquo;s word: Thu night&ndash;Fri morning in bed 10:33 PM to 7:06 AM, 6.7 hours asleep at 78% &mdash; fitting the good run, not a streak-breaker (the standup&rsquo;s older synced night was stale). Two morning items RESOLVED during the day: (1) Tires &mdash; the Michelin Defender retry FAILED (rate-limited, nothing charged, approval window closed at noon) and Dave placed the order himself: BFGoodrich All-Terrain T/A KO3, LT265/65R17/D (Costco item 1937647, $264.99/tire, ~$1,073 all-in), Costco order #1332908428, delivery to the Folsom Tire Center, installation already booked as part of the order &mdash; the appointment date is not recorded and stays open. The Defender (item 1764197, $1,176.05) is the passed alternative; Dave&rsquo;s 265/65R17 upsize over the factory 275/55R17 is deliberate. (2) HomeGuard &mdash; Dave confirmed Nov 20 the $23,989 Morgan Hill item is handled (it is not counted in Paid; Due drops accordingly; no payer, method, or date invented). Markets then fell hard into Friday&rsquo;s close (see the Evening Edition card): the morning&rsquo;s premarket softness became the worst day of the year. Settled / live: Money Buddy build v202611192313 verified live Nov 19 (autopay field, statement grid, budget cards). Emil&rsquo;s IRA package stands prepared &mdash; only Dave&rsquo;s section 4 sub-choice (4B ACH vs 4E wire) and section 5 withholding elections remain. Still open: the Fischer trust request ($24,687.07 due Tue Nov 17 &mdash; still unpaid, no Clio receipt found; the separate Fischer bill via Clio was paid and is a different item), the Hockaday invoice ($832.76), the ElevenLabs keep-or-drop decision, and the Tanker desk pickup day pick from Fernando Martinez. The Llagas Creek roof leak into the primary bedroom closet (reported Nov 19) stays with Kay / HomeGuard. Also today: Squarespace was CANCELLED (dellaquila.com Personal Plan, access through Mar 21, 2027); the dellaquila.com move-to-Cloudflare decision is time-sensitive (GoDaddy renewal Nov 27); Task Buddy was set up as the fleet&rsquo;s follow-through watchdog; and Dave booked a security review for this afternoon, 3:30&ndash;4:30 PM. No dish was named for Thu Nov 19 or Fri Nov 20; last named dinner (Tue Nov 17) was Cowboy Soup. The hot tub is not overdue &mdash; treated Sat Nov 14; next treatment due ~Sat Nov 21, the same day as the propane-tank refill reminder (Tractor Supply).</p>
           <span class="status">● Live — thread + email</span>
           <details>
             <summary>13 sections + NPR &amp; Zen opener</summary>
@@ -387,7 +394,7 @@
           </details>
           <figure class="audio">
             <audio controls preload="metadata" src="audio/briefing-latest.mp3"></audio>
-            <figcaption>🎧 <span data-audio-label>Morning Standup — Thursday Nov 19 (4:05)</span></figcaption>
+            <figcaption>🎧 <span data-audio-label>Morning Standup — Friday Nov 20 (3:51)</span></figcaption>
           </figure>
           <figure class="chart">
             <img data-chart="sunrise" data-light="charts/sunrise-fiddletown-60days-light.png" data-dark="charts/sunrise-fiddletown-60days-dark.png" src="charts/sunrise-fiddletown-60days-light.png" alt="Sunrise trend — Fiddletown, 60 days">
@@ -403,7 +410,7 @@
           <h3>The Evening Edition</h3>
           <p class="meta">Daily &middot; 6:00 PM PT</p>
           <p class="meta">New Oct 28: Night sky now runs every night, carrying tonight&rsquo;s sky chart (Moon &amp; planets, sunset to sunrise).</p>
-          <p class="meta">Last edition (Thu Nov 19): the 6:00 PM edition carried Thursday&rsquo;s sharp reversal &mdash; an early Anthropic-debut rally faded into a broad sell-off: S&amp;P 500 &minus;2.02% to 7,175.83 (sixth straight loss), Nasdaq Composite &minus;2.25% to 23,879.20, Dow &minus;2.19% to 49,097.06; ANT closed +17.07% at $97.17; AAPL &minus;0.92% to $349.21; Nvidia &minus;3.30% to $145.98; Walmart beat before the bell but slipped &minus;1.04% to $126.04; VIX 28.44 &mdash; plus that night&rsquo;s sky chart.</p><p class="meta">Tonight (Fri Nov 20): the 6:00 PM edition will carry Friday&rsquo;s close, Tech &amp; AI, YouTube + Podcast picks, and tonight&rsquo;s sky chart. Fiddletown tonight clears after the morning rain &mdash; clear and 42&deg; at 6 PM, falling to about 38&ndash;39&deg; overnight, low 35&deg; &mdash; so viewing is much better than Thu night: the waxing gibbous Moon (moonrise 2:09 PM PST, moonset 2:20 AM PST) is up through the evening, and the Leonids and Taurids remain active under clear skies.</p>
+          <p class="meta">Last edition (Thu Nov 19): the 6:00 PM edition carried Thursday&rsquo;s sharp reversal &mdash; an early Anthropic-debut rally faded into a broad sell-off: S&amp;P 500 &minus;2.02% to 7,175.83 (sixth straight loss), Nasdaq Composite &minus;2.25% to 23,879.20, Dow &minus;2.19% to 49,097.06; ANT closed +17.07% at $97.17; AAPL &minus;0.92% to $349.21; Nvidia &minus;3.30% to $145.98; Walmart beat before the bell but slipped &minus;1.04% to $126.04; VIX 28.44 &mdash; plus that night&rsquo;s sky chart.</p><p class="meta">Tonight (Fri Nov 20): the 6:00 PM edition leads with Friday&rsquo;s close &mdash; the worst day of the year: S&amp;P 500 &minus;3.70% to 6,910.39 (seventh straight loss; S&amp;P and Dow both more than 10% below their record closes, confirming a correction), Nasdaq Composite &minus;5.28% to 22,617.73, Dow &minus;1.93% to 48,147.33; AAPL $342.85 (&minus;1.82%); Nvidia cratered &minus;14.01% to $125.53 after a Reuters report of an SEC accounting inquiry; Anthropic (ANT) fell &minus;8.5% to $88.91 in its second session (intraday low $83.05, just above the $83 offer price); VIX 35.89 (+26.2%). For the week: S&amp;P &minus;8.6%, Dow &minus;8.0%, Nasdaq &minus;10.0%. Plus Tech &amp; AI, YouTube + Podcast picks, and tonight&rsquo;s sky chart. Fiddletown tonight is clear after the morning rain &mdash; clear and 41&deg; at refresh, 40&deg; at 6 PM, falling to about 36&deg; overnight, low 35&deg; &mdash; much better viewing than Thu night: the waxing gibbous Moon (moonrise 2:09 PM PST, moonset 2:20 AM PST) is up through the evening, and the Leonids and Taurids remain active under clear skies.</p>
           <span class="status">● Live — thread + email</span>
           <details>
             <summary>9 sections + closing dinner question</summary>
@@ -415,7 +422,7 @@
           </details>
           <figure class="audio">
             <audio controls preload="metadata" src="audio/briefing-latest.mp3"></audio>
-            <figcaption>🎧 <span data-audio-label>Morning Standup — Thursday Nov 19 (4:05)</span></figcaption>
+            <figcaption>🎧 <span data-audio-label>Morning Standup — Friday Nov 20 (3:51)</span></figcaption>
           </figure>
           <figure class="chart">
             <img data-chart="markets" data-light="charts/markets-snapshot-light.png" data-dark="charts/markets-snapshot-dark.png" src="charts/markets-snapshot-light.png" alt="Market snapshot — Dow, S&P 500, Nasdaq and AAPL, one month">
@@ -432,16 +439,16 @@
     <!-- LIVE DATA -->
     <section>
       <div class="sec-head"><span class="sec-num">No. 3</span><h2><a href="live-data.html">Live briefing data</a></h2><span class="line"></span></div>
-      <p class="lede">What the briefings actually carry right now &mdash; snapshot refreshed this morning (Fri Nov 20, ~5:41 AM), carrying Thursday&rsquo;s market close and Friday&rsquo;s premarket ahead of today&rsquo;s 6:00 AM morning briefing. This is the data the settings below act on.</p>
+      <p class="lede">What the briefings actually carry right now &mdash; snapshot refreshed this evening (Fri Nov 20, ~5:41 PM), carrying Friday&rsquo;s market close ahead of tonight&rsquo;s 6:00 PM evening briefing. This is the data the settings below act on.</p>
       <div class="lib-grid">
-        <div class="card lib-item"><h4><span class="dot"></span>Weather — <a href="https://www.google.com/maps/search/?api=1&query=Fiddletown,+CA" target="_blank" rel="noopener">Fiddletown</a></h4><p>Fri Nov 20 morning: rain and 42&deg; at refresh in Fiddletown (feels like 38&deg;, humidity 92%, wind SSE 6 mph), sunrise 6:50 AM PST, sunset 4:46 PM PST; AQI 20 (Good, O3). Today: AM rain easing to cloudy / few showers, high 48&deg; / low 35&deg;, rain 100%, about 0.22 in. Tonight: clear, low 35&deg;. No weather alerts in effect at refresh. Tomorrow (Sat Nov 21) &mdash; cloudy, high 49&deg; / low 43&deg;, rain 10%, sunrise 6:51 AM PST, sunset 4:45 PM PST. Dave stays in Fiddletown for the week of Nov 16; San Jose is Thanksgiving week (week of Nov 23).</p><div class="tile-links"><a href="https://www.timeanddate.com/weather/@z-us-95666" target="_blank" rel="noopener">Full forecast</a></div></div></div>
-        <div class="card lib-item"><h4><span class="dot"></span>Sky</h4><p>Sunrise today (Fiddletown) is 6:50 AM PST, sunset 4:46 PM PST; the Moon is waxing gibbous, moonrise 2:09 PM PST, moonset 2:20 AM PST. Tomorrow&rsquo;s sunrise 6:51 AM PST, sunset 4:45 PM PST, moonrise 2:36 PM PST, Moon still waxing gibbous.</p><div class="tile-links"><a href="https://www.timeanddate.com/sun/@z-us-95666" target="_blank" rel="noopener">Sunrise &amp; sunset</a><a href="https://www.timeanddate.com/moon/phases/@z-us-95666" target="_blank" rel="noopener">Moon phase</a></div></div></div>
-        <div class="card lib-item"><h4><span class="dot"></span>Night sky</h4><p>Tonight (Fri Nov 20) over Fiddletown: clear after the morning rain &mdash; 42&deg; at 6 PM, falling to 38&ndash;39&deg; overnight &mdash; so viewing is much better than Thu night. The waxing gibbous Moon is up through the evening and sets 2:20 AM. The Leonids (peaked early Wed Nov 18) and the Southern and Northern Taurids remain active. Tonight&rsquo;s evening briefing (6:00 PM) carries the nightly sky chart.</p><div class="tile-links"><a href="https://www.timeanddate.com/astronomy/night/@z-us-95666" target="_blank" rel="noopener">Tonight's sky</a></div></div></div>
-        <div class="card lib-item"><h4><span class="dot"></span>Fire &amp; air</h4><p>AQI 20 (Good, O3) in Fiddletown this morning. No weather alerts in effect at refresh. No active wildfire or evacuation for Amador County in the latest safety poll. Call the burn line before any pile burn.</p><div class="tile-links"><a href="https://alerts.weather.gov" target="_blank" rel="noopener">NWS alerts</a><a href="https://www.airnow.gov" target="_blank" rel="noopener">Air quality</a></div></div></div>
-        <div class="card lib-item"><h4><span class="dot"></span>Markets — AAPL</h4><p>Thursday&rsquo;s close (Nov 19) &mdash; a sharp reversal, the S&amp;P&rsquo;s sixth straight loss: <a href="https://finance.yahoo.com/quote/%5EGSPC" target="_blank" rel="noopener">S&amp;P</a> &minus;2.02% to 7,175.83, <a href="https://finance.yahoo.com/quote/%5EIXIC" target="_blank" rel="noopener">Nasdaq</a> &minus;2.25% to 23,879.20, and <a href="https://finance.yahoo.com/quote/%5EDJI" target="_blank" rel="noopener">Dow</a> &minus;2.19% to 49,097.06. Anthropic (ANT) closed its debut at $97.17 (+17.07% on the $83 pricing). AAPL closed at $349.21, &minus;0.92%. Friday premarket (at refresh): S&amp;P 500 futures &minus;0.63%, Nasdaq futures &minus;1.51%, Dow futures +0.02%; AAPL +0.35% to ~$350.42; ANT down about 6&ndash;7%; Nvidia down about 2.5%; VIX reported above 30 after Thu&rsquo;s 28.44 close. The 10-year Treasury yield was 5.05% at Thu&rsquo;s close.</p><div class="tile-links"><a href="https://finance.yahoo.com/quote/AAPL" target="_blank" rel="noopener">AAPL on Yahoo Finance</a></div></div>
-        <div class="card lib-item"><h4><span class="dot"></span>Tonight&rsquo;s dinner</h4><p>Fri Nov 20 &mdash; no dish named yet in the sources checked at refresh. Not on Nan&rsquo;s plan file (her week of Oct 18&ndash;24 has ended; a new week hasn&rsquo;t been provided yet). Last named dinner (Tue Nov 17) was Cowboy Soup, which Dave directed be added to Nan&rsquo;s recipes in Recipe Buddy; no dish was named for Wed Nov 18, Thu Nov 19 in the sources checked. Last planned night on the file was Fri Oct 23 &mdash; Pizza (tentative).</p><div class="tile-links"><a href="live-data.html">This week&rsquo;s menu</a></div></div>
-        <div class="card lib-item"><h4><span class="dot"></span>Awaiting your reply</h4><p>60 entries in the main Open list, plus headed follow-ups below it (recount Nov 20, morning &mdash; unchanged at 60 from Nov 19). Newest entries are still the Nov 18 Riddles Buddy job-req review (~4:20 PM) and the Nov 18 Gift Card Buddy job-req review (~3:52 PM), ahead of the Nov 16 Recipe Buddy and Marker Buddy reviews, the Nov 14 Sierra Oak Farms and Kay&rsquo;s Buddy reviews, the Nov 9 Polaris Ranger XP 700 spec sheet review, the Nov 8 Bella review, and the Nov 4 Inspiration Buddy review.</p><div class="tile-links"><a href="https://muse.ai/chat/78c651d7-2427-4212-b279-f4957f3ae0dc" target="_blank" rel="noopener">Open Briefings thread</a></div></div>
-        <div class="card lib-item"><h4><span class="dot"></span>Next: morning edition, 6:00 AM PT today</h4><p>Morning edition at 6:00 AM PT today (Fri Nov 20) &mdash; NPR + Zen opener (today is the first day of the unified one-Zen-saying rule: the morning pick is also the Gazette&rsquo;s Zen for Today) &middot; Coming up &middot; Weather (rain 42&deg;, high 48&deg; / low 35&deg;) &middot; Sky (sunrise 6:50 AM PST; Moon waxing gibbous) &middot; Fire &amp; air (AQI 20) &middot; Inbox &middot; Markets &amp; tech (Thu close + Fri premarket, above) &middot; Events radar &middot; Prep &middot; Tonight&rsquo;s dinner (none named) &middot; Bills &middot; Awaiting your reply (60 open) &middot; Quick links &mdash; plus the tap-to-send text draft to Dave&rsquo;s own number. No Commute section: Dave stays in Fiddletown for the week of Nov 16. Then the evening edition at 6:00 PM PT today carries Friday&rsquo;s close + tonight&rsquo;s sky chart (clear tonight). Today&rsquo;s eye: the Costco tire retry this morning (4&times; Michelin Defender LTX M/S2, Folsom, $1,176.05 cap; Thu order rate-limited, nothing charged). Tomorrow Sat Nov 21: propane-tank refill reminder (Tractor Supply) and hot tub treatment due (~Sat Nov 21, last treated Sat Nov 14). Still open: Fischer trust request ($24,687.07 due Nov 17, still unpaid as of Nov 19 night), HomeGuard $23,989 (due/committed, not counted paid), Hockaday invoice $832.76, ElevenLabs decision, and Emil&rsquo;s IRA section 4/5 elections.</p><div class="tile-links"><a href="editions.html">Edition details</a></div></div></div>
+        <div class="card lib-item"><h4><span class="dot"></span>Weather — <a href="https://www.google.com/maps/search/?api=1&query=Fiddletown,+CA" target="_blank" rel="noopener">Fiddletown</a></h4><p>Fri Nov 20 evening: clear and 41&deg; at refresh in Fiddletown (humidity 96%, wind N 4 mph), sunrise 6:50 AM PST, sunset 4:46 PM PST; AQI 31 (Good, O3). Today&rsquo;s rain (about 0.22 in) has cleared; tonight: clear, low 35&deg;. No weather alerts in effect at refresh. Tomorrow (Sat Nov 21) &mdash; cloudy, high 49&deg; / low 41&deg;, rain 10%, sunrise 6:51 AM PST, sunset 4:45 PM PST. Dave stays in Fiddletown for the week of Nov 16; San Jose is Thanksgiving week (week of Nov 23).</p><div class="tile-links"><a href="https://www.timeanddate.com/weather/@z-us-95666" target="_blank" rel="noopener">Full forecast</a></div></div></div>
+        <div class="card lib-item"><h4><span class="dot"></span>Sky</h4><p>Sunrise today (Fiddletown) was 6:50 AM PST, sunset 4:46 PM PST; the Moon is waxing gibbous, moonrise 2:09 PM PST, moonset 2:20 AM PST. Tomorrow&rsquo;s sunrise 6:51 AM PST, sunset 4:45 PM PST, moonrise 2:36 PM PST, moonset 3:28 AM PST, Moon still waxing gibbous.</p><div class="tile-links"><a href="https://www.timeanddate.com/sun/@z-us-95666" target="_blank" rel="noopener">Sunrise &amp; sunset</a><a href="https://www.timeanddate.com/moon/phases/@z-us-95666" target="_blank" rel="noopener">Moon phase</a></div></div></div>
+        <div class="card lib-item"><h4><span class="dot"></span>Night sky</h4><p>Tonight (Fri Nov 20) over Fiddletown: clear after the morning rain &mdash; 40&deg; at 6 PM, falling to about 36&deg; overnight &mdash; so viewing is much better than Thu night. The waxing gibbous Moon is up through the evening and sets 2:20 AM. The Leonids (peaked early Wed Nov 18) and the Southern and Northern Taurids remain active. Tonight&rsquo;s evening briefing (6:00 PM) carries the nightly sky chart.</p><div class="tile-links"><a href="https://www.timeanddate.com/astronomy/night/@z-us-95666" target="_blank" rel="noopener">Tonight's sky</a></div></div></div>
+        <div class="card lib-item"><h4><span class="dot"></span>Fire &amp; air</h4><p>AQI 31 (Good, O3) in Fiddletown this evening. No weather alerts in effect at refresh. No active wildfire or evacuation for Amador County in the latest safety poll. Call the burn line before any pile burn.</p><div class="tile-links"><a href="https://alerts.weather.gov" target="_blank" rel="noopener">NWS alerts</a><a href="https://www.airnow.gov" target="_blank" rel="noopener">Air quality</a></div></div></div>
+        <div class="card lib-item"><h4><span class="dot"></span>Markets — AAPL</h4><p>Friday&rsquo;s close (Nov 20) &mdash; the worst day of the year, and a seventh straight loss for the <a href="https://finance.yahoo.com/quote/%5EGSPC" target="_blank" rel="noopener">S&amp;P</a> (&minus;3.70% to 6,910.39; S&amp;P and <a href="https://finance.yahoo.com/quote/%5EDJI" target="_blank" rel="noopener">Dow</a> both closed more than 10% below their records, confirming a correction), <a href="https://finance.yahoo.com/quote/%5EIXIC" target="_blank" rel="noopener">Nasdaq</a> Composite &minus;5.28% to 22,617.73, Dow &minus;1.93% to 48,147.33. Nvidia fell &minus;14.01% to $125.53 after a Reuters report of an SEC accounting inquiry; Anthropic (ANT) fell &minus;8.5% to $88.91 in its second session; VIX 35.89 (+26.2%). AAPL closed at $342.85, &minus;1.82%. For the week: S&amp;P &minus;8.6%, Dow &minus;8.0%, Nasdaq &minus;10.0%. Thursday&rsquo;s close (Nov 19) for reference: S&amp;P 7,175.83, Nasdaq 23,879.20, Dow 49,097.06, AAPL $349.21.</p><div class="tile-links"><a href="https://finance.yahoo.com/quote/AAPL" target="_blank" rel="noopener">AAPL on Yahoo Finance</a></div></div>
+        <div class="card lib-item"><h4><span class="dot"></span>Tonight&rsquo;s dinner</h4><p>Fri Nov 20 &mdash; no dish named yet in the sources checked at the evening refresh. Not on Nan&rsquo;s plan file (her week of Oct 18&ndash;24 has ended; a new week hasn&rsquo;t been provided yet). Last named dinner (Tue Nov 17) was Cowboy Soup, which Dave directed be added to Nan&rsquo;s recipes in Recipe Buddy; no dish was named for Wed Nov 18, Thu Nov 19 in the sources checked. Last planned night on the file was Fri Oct 23 &mdash; Pizza (tentative).</p><div class="tile-links"><a href="live-data.html">This week&rsquo;s menu</a></div></div>
+        <div class="card lib-item"><h4><span class="dot"></span>Awaiting your reply</h4><p>60 entries in the main Open list, plus headed follow-ups below it (recount Nov 20, evening &mdash; unchanged at 60 from the morning refresh and from Nov 19). Newest entries are still the Nov 18 Riddles Buddy job-req review (~4:20 PM) and the Nov 18 Gift Card Buddy job-req review (~3:52 PM), ahead of the Nov 16 Recipe Buddy and Marker Buddy reviews, the Nov 14 Sierra Oak Farms and Kay&rsquo;s Buddy reviews, the Nov 9 Polaris Ranger XP 700 spec sheet review, the Nov 8 Bella review, and the Nov 4 Inspiration Buddy review.</p><div class="tile-links"><a href="https://muse.ai/chat/78c651d7-2427-4212-b279-f4957f3ae0dc" target="_blank" rel="noopener">Open Briefings thread</a></div></div>
+        <div class="card lib-item"><h4><span class="dot"></span>Next: evening edition, 6:00 PM PT today</h4><p>Evening edition at 6:00 PM PT today (Fri Nov 20) &mdash; Top stories &middot; Markets (Friday&rsquo;s close, above) &middot; Tech &amp; AI &middot; YouTube picks &middot; Podcast picks &middot; Sky &middot; Night sky (clear tonight, with the nightly sky chart) &middot; Awaiting your reply (60 open) &middot; Quick links &middot; the closing dinner question. Then the morning edition Sat Nov 21 at 6:00 AM PT &mdash; NPR + Zen opener (the unified one-Zen-saying rule: the morning pick is also the Gazette&rsquo;s Zen for Today) &middot; Weather (cloudy, high 49&deg; / low 41&deg;) &middot; Sky (sunrise 6:51 AM PST; Moon waxing gibbous) &middot; no Commute (Dave stays in Fiddletown) &mdash; plus the tap-to-send text draft to Dave&rsquo;s own number. Tomorrow Sat Nov 21: propane-tank refill reminder (Tractor Supply) and hot tub treatment due (last treated Sat Nov 14). Resolved today: the tire order (Dave placed Costco order #1332908428 for the BFGoodrich KO3 set himself after the Michelin retry failed with nothing charged; installation booked, appointment date still open) and the HomeGuard $23,989 item (handled on Dave&rsquo;s word, not counted in Paid). Still open: Fischer trust request ($24,687.07 due Nov 17, still unpaid), Hockaday invoice $832.76, ElevenLabs decision, Emil&rsquo;s IRA section 4/5 elections, and the dellaquila.com Cloudflare decision (GoDaddy renewal Nov 27 &mdash; renew at GoDaddy by ~Nov 25 if a transfer has not completed).</p><div class="tile-links"><a href="editions.html">Edition details</a></div></div></div>
       </div>
     </section>
 
@@ -523,7 +530,7 @@
   </main>
 
   <footer>
-    <span>Briefing Buddy · a living page · last refreshed <strong>November 20, 2026 (morning)</strong></span>
+    <span>Briefing Buddy · a living page · last refreshed <strong>November 20, 2026 (evening)</strong></span>
     <span><a href="https://docs.google.com/document/d/1s9ghZ-kyp9dag2whTPnk24ULLUJP3JW_0UGtocAynbs/edit">Product brief</a> · editions live in the Briefings thread</span>
   </footer>
 </div>
@@ -757,7 +764,7 @@
       var d = await r.json();
       var buds = d.buddies || [];
       for (var i = 0; i < buds.length; i++) {
-        if (buds[i].id === bid && buds[i].repo) { repo = String(buds[i].repo).split('/').filter(Boolean).pop(); repoName = buds[i].name || bid; break; }
+        if (buds[i].id === bid && buds[i].repo) { repo = buds[i].repo; repoName = buds[i].name || bid; break; }
       }
     } catch(e){}
   }
@@ -809,7 +816,7 @@
 })();
 </script>
 <script>
-/* ---------- attention actions (Dave-approved 2026-10-12; adapted from gen_basic_homepages.py ATTN_JS) ---------- */
+/* ---------- attention actions (Dave-approved 2026-10-12; full fleet action set \u2014 Done / info / Later / Drop it / note, with Undo \u2014 added 2026-11-20 per Dave's homepage standard, following ML500 Buddy's pattern) ---------- */
 (function(){
   var tiles = document.querySelectorAll('.card.attention[data-attn-id]');
   if (!tiles.length) return;
@@ -855,7 +862,7 @@
       var buds = d.buddies || [];
       for (var i = 0; i < buds.length; i++) {
         if (buds[i].id === bid) {
-          if (buds[i].repo) repo = String(buds[i].repo).split('/').filter(Boolean).pop();
+          if (buds[i].repo) repo = buds[i].repo;
           if (buds[i].name) buddyName = buds[i].name;
           break;
         }
@@ -873,10 +880,46 @@
   function rkey(aid, text){ return bid + '|' + (aid || ('text:' + text.slice(0, 60))); }
   function isResolved(aid, text){ var m = lsGet().attnDone || {}; return !!m[rkey(aid, text)]; }
   function setResolved(aid, text){ var s = lsGet(); var m = s.attnDone || {}; m[rkey(aid, text)] = 1; s.attnDone = m; lsSet(s); }
+  function unsetResolved(aid, text){ var s = lsGet(); var m = s.attnDone || {}; delete m[rkey(aid, text)]; s.attnDone = m; lsSet(s); }
+  /* Dispositions beyond Done (fleet standard, Dave 2026-11-20): Later / Drop it
+     are remembered per item so a reload paints the state Dave chose; every tap
+     also leaves a note in this buddy's ingest via the same token-gated write. */
+  function getState(aid, text){ var m = lsGet().attnState || {}; return m[rkey(aid, text)] || ''; }
+  function setState(aid, text, v){ var s = lsGet(); var m = s.attnState || {}; if (v) m[rkey(aid, text)] = v; else delete m[rkey(aid, text)]; s.attnState = m; lsSet(s); }
+  function getNote(aid, text){ var m = lsGet().attnNotes || {}; return m[rkey(aid, text)] || null; }
+  function setNote(aid, text, note){ var s = lsGet(); var m = s.attnNotes || {}; m[rkey(aid, text)] = note; s.attnNotes = m; lsSet(s); }
+  function todayStr(){ var d = new Date(); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); }
+  function paintNote(tile, aid, text){
+    var n = getNote(aid, text);
+    var el = tile.querySelector('.attn-note');
+    if (!n) { if (el) el.remove(); return; }
+    if (!el) {
+      el = document.createElement('p');
+      el.className = 'attn-note';
+      var st0 = tile.querySelector('.attn-status');
+      st0.parentNode.insertBefore(el, st0);
+    }
+    el.textContent = '';
+    var body = document.createElement('span'); body.textContent = '📝 ' + n.text + ' ';
+    var who = document.createElement('span'); who.className = 'who'; who.textContent = '\u2014 Dave \u00b7 ' + n.date;
+    el.appendChild(body); el.appendChild(who);
+  }
   function paintResolved(tile, msg){
     tile.classList.add('resolved');
     var st = tile.querySelector('.attn-status');
     if (st) st.textContent = msg;
+    if (st && !tile.querySelector('[data-act="undo"]')) {
+      var ub = document.createElement('button');
+      ub.type = 'button'; ub.className = 'attn-btn attn-undo'; ub.setAttribute('data-act', 'undo'); ub.textContent = 'Undo';
+      st.parentNode.insertBefore(ub, st.nextSibling);
+    }
+  }
+  function paintOpen(tile){
+    tile.classList.remove('resolved');
+    var st = tile.querySelector('.attn-status');
+    if (st) st.textContent = '';
+    var ub = tile.querySelector('[data-act="undo"]');
+    if (ub) ub.remove();
   }
   async function sendAction(tile, entry, okMsg){
     var st = tile.querySelector('.attn-status');
@@ -901,10 +944,39 @@
       return false;
     }
   }
+  function noteAction(tile, entry, okMsg){
+    sendAction(tile, entry, okMsg).then(function(){
+      tile.querySelectorAll('.attn-btn').forEach(function(b){ b.disabled = false; });
+    });
+  }
+  function openNoteBox(tile){
+    var existing = tile.querySelector('.attn-notebox');
+    if (existing) { var t0 = existing.querySelector('textarea'); if (t0) t0.focus(); return; }
+    var box = document.createElement('div');
+    box.className = 'attn-notebox';
+    var ta = document.createElement('textarea');
+    ta.setAttribute('placeholder', 'Add a note for Briefing Buddy\u2026');
+    ta.setAttribute('aria-label', 'Note on this item');
+    var row = document.createElement('div');
+    row.className = 'attn-notebox-row';
+    var save = document.createElement('button');
+    save.type = 'button'; save.className = 'attn-btn primary'; save.setAttribute('data-act', 'note-save'); save.textContent = 'Save note';
+    var cancel = document.createElement('button');
+    cancel.type = 'button'; cancel.className = 'attn-btn'; cancel.setAttribute('data-act', 'note-cancel'); cancel.textContent = 'Cancel';
+    row.appendChild(save); row.appendChild(cancel);
+    box.appendChild(ta); box.appendChild(row);
+    var st = tile.querySelector('.attn-status');
+    st.parentNode.insertBefore(box, st);
+    ta.focus();
+  }
   tiles.forEach(function(tile){
     var aid = tile.getAttribute('data-attn-id') || '';
     var text = tileText(tile);
-    if (isResolved(aid, text)) { paintResolved(tile, 'Marked done'); return; }
+    var st0 = getState(aid, text);
+    if (st0 === 'later') paintResolved(tile, 'Later \u2014 snoozed by Dave');
+    else if (st0 === 'drop') paintResolved(tile, 'Dropped by Dave');
+    else if (isResolved(aid, text)) paintResolved(tile, 'Marked done');
+    paintNote(tile, aid, text);
     tile.addEventListener('click', function(ev){
       var btn = ev.target.closest ? ev.target.closest('.attn-btn') : null;
       if (!btn || btn.disabled) return;
@@ -912,12 +984,50 @@
       var idBit = aid ? ' (attention id: ' + aid + ')' : '';
       if (act === 'done') {
         sendAction(tile,
-          'DONE — Dave marked this done on the homepage: "' + text + '"' + idBit + '. Please remove it from the attention list in buddies.json.',
-          'Marked done — the buddy will clear it.').then(function(ok){ if (ok) { setResolved(aid, text); paintResolved(tile, 'Marked done — the buddy will clear it.'); } });
+          'DONE \u2014 Dave marked this done on the homepage: "' + text + '"' + idBit + '. Please remove it from the attention list in buddies.json.',
+          'Marked done \u2014 the buddy will clear it.').then(function(ok){ if (ok) { setResolved(aid, text); setState(aid, text, ''); paintResolved(tile, 'Marked done \u2014 the buddy will clear it.'); } });
       } else if (act === 'info') {
         sendAction(tile,
-          'FOLLOW-UP — Dave needs more info on: "' + text + '"' + idBit + '. Please follow up with him.',
-          'Sent — ' + buddyName + ' will follow up.');
+          'FOLLOW-UP \u2014 Dave needs more info on: "' + text + '"' + idBit + '. Please follow up with him.',
+          'Sent \u2014 ' + buddyName + ' will follow up.');
+      } else if (act === 'later') {
+        setState(aid, text, 'later');
+        paintResolved(tile, 'Later \u2014 snoozed by Dave \u00b7 ' + todayStr());
+        noteAction(tile,
+          'LATER \u2014 Dave snoozed this homepage item: "' + text + '"' + idBit + '. Resurface it later.',
+          'Later \u2014 noted in the ingest; it will resurface.');
+      } else if (act === 'drop') {
+        setResolved(aid, text); setState(aid, text, 'drop');
+        paintResolved(tile, 'Dropped by Dave \u00b7 ' + todayStr());
+        noteAction(tile,
+          'DROPPED \u2014 Dave dropped this homepage item: "' + text + '"' + idBit + '. Remove it from the open list.',
+          'Dropped \u2014 noted in the ingest; it comes off the list.');
+      } else if (act === 'undo') {
+        unsetResolved(aid, text); setState(aid, text, '');
+        paintOpen(tile);
+        noteAction(tile,
+          'REOPENED \u2014 Dave undid the disposition on this homepage item: "' + text + '"' + idBit + '. It needs attention again.',
+          'Reopened \u2014 noted in the ingest; it needs attention again.');
+      } else if (act === 'note') {
+        openNoteBox(tile);
+      } else if (act === 'note-cancel') {
+        var box0 = tile.querySelector('.attn-notebox');
+        if (box0) box0.remove();
+      } else if (act === 'note-save') {
+        var box = tile.querySelector('.attn-notebox');
+        var nta = box ? box.querySelector('textarea') : null;
+        var val = nta ? nta.value.trim() : '';
+        if (!val) { if (nta) nta.focus(); return; }
+        sendAction(tile,
+          'NOTE \u2014 Dave added a note on this homepage item: "' + text + '"' + idBit + ' \u2014 Note: ' + val,
+          'Note saved \u2014 it is on the card and in the ingest.').then(function(ok){
+            if (ok) {
+              setNote(aid, text, {text: val, date: todayStr()});
+              paintNote(tile, aid, text);
+              if (box) box.remove();
+            }
+            tile.querySelectorAll('.attn-btn').forEach(function(b){ b.disabled = false; });
+          });
       }
     });
   });
