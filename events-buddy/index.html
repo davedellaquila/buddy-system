@@ -290,6 +290,7 @@ h2 { font-size: 22px; margin: 32px 0 16px; }
 .evcontrols select{padding:9px 10px;border:1px solid var(--border);border-radius:8px;background:var(--bg);color:var(--text);font-size:15px}
 .evlist{display:flex;flex-direction:column;gap:10px}
 .evcard{display:flex;gap:14px;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px 14px}
+.evsrc{display:inline-block;margin-top:6px;font-size:13.5px;font-weight:700;color:var(--accent,#b4762a)}
 .evcard.past{opacity:.62}
 .evimg{width:84px;height:84px;flex:none;border-radius:8px;object-fit:contain;background:var(--bg);border:1px solid var(--border)}
 .evmain{min-width:0}
@@ -1488,6 +1489,7 @@ Generated 2026-11-19 · Part of the Buddy System<br>
       + '<div class="evmain"><p class="evname">' + nameHtml + (past ? '<span class="evchip">Past</span>' : '') + '</p>'
       + '<div class="evmeta">' + esc(meta) + '</div>'
       + (e.desc ? '<div class="evdesc">' + esc(e.desc) + '</div>' : '')
+      + (e.url ? '<a class="evsrc" href="' + esc(e.url) + '" target="_blank" rel="noopener">More info ↗</a>' : '')
       + '</div></div>';
   }
 
