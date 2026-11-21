@@ -1399,24 +1399,33 @@ Generated 2026-11-19 · Part of the Buddy System<br>
   }
   function isUpcoming(e) { return e.end && e.end >= todayStart(); }
 
-  function filtered() {
+  function passesWhen(e) {
+    var when = whenEl.value;
+    if (!e.start) return when === 'all';
+    if (when === 'upcoming') return isUpcoming(e);
+    if (when === 'next30') return isUpcoming(e) && e.start <= new Date(todayStart().getTime() + 30 * 864e5);
+    if (when === 'past') return !isUpcoming(e);
+    return true; // all
+  }
+  /* Rows passing the current filters; with ignoreTown=true the town
+     selection itself is skipped, so town counts stay meaningful. */
+  function facetRows(ignoreTown) {
     var q = qEl.value.trim().toLowerCase();
     var town = townEl.value;
-    var when = whenEl.value;
-    var now = todayStart();
-    var in30 = new Date(now.getTime() + 30 * 864e5);
-    var out = rows.filter(function (e) {
-      if (town && e.town !== town) return false;
+    return rows.filter(function (e) {
+      if (!passesWhen(e)) return false;
+      if (!ignoreTown && town && e.town !== town) return false;
       if (q) {
         var hay = (e.name + ' ' + e.location + ' ' + e.host + ' ' + e.town).toLowerCase();
         if (hay.indexOf(q) === -1) return false;
       }
-      if (!e.start) return when === 'all';
-      if (when === 'upcoming') return isUpcoming(e);
-      if (when === 'next30') return isUpcoming(e) && e.start <= in30;
-      if (when === 'past') return !isUpcoming(e);
-      return true; // all
+      return true;
     });
+  }
+
+  function filtered() {
+    var when = whenEl.value;
+    var out = facetRows(false);
     if (when === 'past') {
       out.sort(function (a, b) { return b.start - a.start; });
     } else if (when === 'all') {
@@ -1450,6 +1459,7 @@ Generated 2026-11-19 · Part of the Buddy System<br>
   }
 
   function render() {
+    fillTowns();
     var out = filtered();
     var upcomingTotal = rows.filter(isUpcoming).length;
     countEl.textContent = 'Showing ' + out.length + ' of ' + rows.length + ' published events (' + upcomingTotal + ' upcoming).';
@@ -1468,14 +1478,19 @@ Generated 2026-11-19 · Part of the Buddy System<br>
   }
 
   function fillTowns() {
+    var allCounts = {};
+    rows.forEach(function (e) { if (e.town) allCounts[e.town] = (allCounts[e.town] || 0) + 1; });
     var counts = {};
-    rows.forEach(function (e) { if (e.town) counts[e.town] = (counts[e.town] || 0) + 1; });
-    Object.keys(counts).sort().forEach(function (t) {
+    facetRows(true).forEach(function (e) { if (e.town) counts[e.town] = (counts[e.town] || 0) + 1; });
+    var current = townEl.value;
+    townEl.innerHTML = '<option value="">All towns</option>';
+    Object.keys(allCounts).sort().forEach(function (t) {
       var opt = document.createElement('option');
       opt.value = t;
-      opt.textContent = t + ' (' + counts[t] + ')';
+      opt.textContent = counts[t] ? t + ' (' + counts[t] + ')' : t;
       townEl.appendChild(opt);
     });
+    townEl.value = current;
   }
 
   function normalizeApi(e) {
