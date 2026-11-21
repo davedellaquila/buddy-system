@@ -263,6 +263,7 @@ h2 { font-size: 22px; margin: 32px 0 16px; }
 .evwrap{margin:28px 0}
 .evsub{color:var(--muted);margin:4px 0 12px}
 .evcontrols{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 14px}
+.evselwrap{display:inline-flex;border-radius:8px}
 .evstats{display:flex;flex-wrap:wrap;gap:10px;margin:0 0 14px}
 .evstat{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:10px 16px;min-width:104px;cursor:pointer;font:inherit;color:var(--text);text-align:left;transition:border-color .15s ease,transform .15s ease}
 .evstat:hover{border-color:var(--accent,#b4762a);transform:translateY(-1px)}
@@ -275,9 +276,9 @@ h2 { font-size: 22px; margin: 32px 0 16px; }
 }
 @keyframes evFacetPulse{
   0%,100%{box-shadow:0 0 0 0 rgba(0,0,0,0)}
-  50%{box-shadow:0 0 0 5px color-mix(in srgb,var(--accent,#b4762a) 45%,transparent)}
+  50%{box-shadow:0 0 0 7px color-mix(in srgb,var(--accent,#b4762a) 55%,transparent)}
 }
-.pulse-hit{animation:evFacetPulse .7s ease-in-out 3}
+.pulse-hit{animation:evFacetPulse .9s ease-in-out 4}
 @media (prefers-reduced-motion: no-preference){
   .evstat{animation:evStatPulse 3s ease-in-out infinite}
 }
@@ -334,8 +335,8 @@ h2 { font-size: 22px; margin: 32px 0 16px; }
 </div>
 <div class="evcontrols">
 <input id="ev-q" type="search" placeholder="Search name, place, or host…" aria-label="Search events">
-<select id="ev-town" aria-label="Filter by town"><option value="">All towns</option></select>
-<select id="ev-host" aria-label="Filter by host"><option value="">All hosts</option></select>
+<span class="evselwrap"><select id="ev-town" aria-label="Filter by town"><option value="">All towns</option></select></span>
+<span class="evselwrap"><select id="ev-host" aria-label="Filter by host"><option value="">All hosts</option></select></span>
 <select id="ev-when" aria-label="Filter by date"><option value="upcoming">Upcoming</option><option value="next30">Next 30 days</option><option value="all">All dates</option><option value="past">Past events</option></select>
 </div>
 <div id="ev-list" class="evlist"><p class="evmsg">Loading events…</p></div>
@@ -1631,8 +1632,8 @@ Generated 2026-11-19 · Part of the Buddy System<br>
       el.removeEventListener('animationend', h);
     });
   }
-  statGo('ev-stat-towns', function () { scrollToViewer(); townEl.focus(); pulseHit(townEl); });
-  statGo('ev-stat-hosts', function () { scrollToViewer(); hostEl.focus(); pulseHit(hostEl); });
+  statGo('ev-stat-towns', function () { scrollToViewer(); townEl.focus(); setTimeout(function () { pulseHit(townEl.parentElement); }, 300); });
+  statGo('ev-stat-hosts', function () { scrollToViewer(); hostEl.focus(); setTimeout(function () { pulseHit(hostEl.parentElement); }, 300); });
 
   load();
 })();
