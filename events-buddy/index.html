@@ -1325,11 +1325,13 @@ Generated 2026-11-19 · Part of the Buddy System<br>
 
 <script>
 (function () {
-  // ===== Events data layer (swappable) =====
-  // Today the viewer reads the legacy Supabase events database with its
-  // public anon key (read-only; the query asks for published rows only).
-  // When the Firebase migration lands, swap this one fetch for the new
-  // feed and keep the normalized row shape used below.
+  // ===== Events data layer =====
+  // Primary source: the Gold Country Events public API (Dave approved
+  // Nov 21, 2026) — published events only, shaped by the API Worker.
+  // Fallback: the legacy Supabase feed below (public anon key, published
+  // rows only), kept while the API is being proven; remove it once the
+  // API has been live and stable.
+  var API_BASE = 'https://api.fiddletowngazette.com/v1';
   var FEED_URL = 'https://ydftcebaftngcdjvxrgl.supabase.co/rest/v1/events'
     + '?select=name,slug,start_date,start_time,end_date,end_time,location,host_org,website_url,image_url,short_description'
     + '&status=eq.published&order=start_date.asc&limit=1000';
@@ -1476,14 +1478,51 @@ Generated 2026-11-19 · Part of the Buddy System<br>
     });
   }
 
+  function normalizeApi(e) {
+    var start = parseDate(e.start_date);
+    var end = parseDate(e.end_date) || start;
+    return {
+      name: e.name || 'Untitled event',
+      start: start, end: end,
+      time: e.starts_at ? fmtTime(e.starts_at.slice(11, 19)) : '',
+      location: e.location || '',
+      town: e.town || townOf(e.location),
+      host: e.host || '',
+      url: e.website_url || '',
+      img: e.image_url || '',
+      desc: e.short_description || ''
+    };
+  }
+  function loadFromApi() {
+    var collected = [];
+    function page(offset) {
+      return fetch(API_BASE + '/events?from=2000-01-01&limit=200&offset=' + offset)
+        .then(function (res) { if (!res.ok) throw new Error('api ' + res.status); return res.json(); })
+        .then(function (body) {
+          if (!body || !Array.isArray(body.data) || !body.meta) throw new Error('api shape');
+          collected = collected.concat(body.data);
+          if (collected.length < body.meta.total) return page(collected.length);
+          return collected;
+        });
+    }
+    return page(0);
+  }
   function load() {
     listEl.innerHTML = '<p class="evmsg">Loading events…</p>';
-    fetch(FEED_URL, { headers: { 'apikey': ANON_KEY, 'Authorization': 'Bearer ' + ANON_KEY } })
-      .then(function (res) { if (!res.ok) throw new Error('feed ' + res.status); return res.json(); })
+    loadFromApi()
       .then(function (data) {
-        rows = data.map(normalize);
+        rows = data.map(normalizeApi);
         fillTowns();
         render();
+      })
+      .catch(function () {
+        return fetch(FEED_URL, { headers: { 'apikey': ANON_KEY, 'Authorization': 'Bearer ' + ANON_KEY } })
+          .then(function (res) { if (!res.ok) throw new Error('feed ' + res.status); return res.json(); })
+          .then(function (data) {
+            rows = data.map(normalize);
+            fillTowns();
+            render();
+          });
       })
       .catch(function () {
         countEl.textContent = '';
