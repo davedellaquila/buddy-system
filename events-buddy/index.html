@@ -1427,6 +1427,11 @@ Generated 2026-11-19 · Part of the Buddy System<br>
     for (var i = 0; i < TOWNS.length; i++) if (loc.indexOf(TOWNS[i]) !== -1) return TOWNS[i] === 'Mt Aukum' ? 'Mount Aukum' : TOWNS[i];
     return '';
   }
+  function startMinutesOf(tv) {
+    if (!tv) return null;
+    var p = String(tv).split(':');
+    return (+p[0]) * 60 + (+p[1] || 0);
+  }
   function normalize(r) {
     var start = parseDate(r.start_date);
     var end = parseDate(r.end_date) || start;
@@ -1434,6 +1439,7 @@ Generated 2026-11-19 · Part of the Buddy System<br>
       name: r.name || 'Untitled event',
       start: start, end: end,
       time: fmtTime(r.start_time),
+      mins: startMinutesOf(r.start_time),
       location: r.location || '',
       town: townOf(r.location),
       host: (r.host_org || '').trim(),
@@ -1470,18 +1476,31 @@ Generated 2026-11-19 · Part of the Buddy System<br>
     });
   }
 
+  /* Holiday events (Dave, Nov 22, 2026): within each day, holiday events
+     list first, then everything by start time; untimed events close out
+     their subgroup. Same rule as the public viewer. */
+  var HOLIDAY_RE = /christmas|holiday|santa|tiny tim|farce day|festival of trees|tunnel of lights|light show|polar express|magic train|carols|plaid friday|skating rink|giving tuesday|thanksgiving|black friday|turkey trot|wreath/i;
+  function isHoliday(e) { return HOLIDAY_RE.test(e.name || ''); }
+  function dayOrder(a, b) {
+    var ha = isHoliday(a) ? 0 : 1, hb = isHoliday(b) ? 0 : 1;
+    if (ha !== hb) return ha - hb;
+    if (a.mins == null && b.mins == null) return 0;
+    if (a.mins == null) return 1;
+    if (b.mins == null) return -1;
+    return a.mins - b.mins;
+  }
   function filtered() {
     var when = whenEl.value;
     var out = facetRows(null);
     if (when === 'past') {
-      out.sort(function (a, b) { return b.start - a.start; });
+      out.sort(function (a, b) { return (b.start - a.start) || dayOrder(a, b); });
     } else if (when === 'all') {
-      var up = out.filter(isUpcoming).sort(function (a, b) { return a.start - b.start; });
-      var past = out.filter(function (e) { return !isUpcoming(e); }).sort(function (a, b) { return b.start - a.start; });
+      var up = out.filter(isUpcoming).sort(function (a, b) { return (a.start - b.start) || dayOrder(a, b); });
+      var past = out.filter(function (e) { return !isUpcoming(e); }).sort(function (a, b) { return (b.start - a.start) || dayOrder(a, b); });
       var undated = out.filter(function (e) { return !e.start; });
       out = up.concat(past, undated);
     } else {
-      out.sort(function (a, b) { return a.start - b.start; });
+      out.sort(function (a, b) { return (a.start - b.start) || dayOrder(a, b); });
     }
     return out;
   }
@@ -1584,6 +1603,7 @@ Generated 2026-11-19 · Part of the Buddy System<br>
       name: e.name || 'Untitled event',
       start: start, end: end,
       time: e.starts_at ? fmtTime(e.starts_at.slice(11, 19)) : '',
+      mins: e.starts_at ? startMinutesOf(e.starts_at.slice(11, 19)) : null,
       location: e.location || '',
       town: e.town || townOf(e.location),
       host: (e.host || '').trim(),
