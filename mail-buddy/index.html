@@ -264,10 +264,9 @@ h2 { font-size: 22px; margin: 32px 0 16px; }
 
 <section class="mail-attn">
 <h2>📬 Needs your attention</h2>
-<p class="ma-edition">Sat Nov 21, 2026 — evening edition. Window re-covered from the last published edition (Fri Nov 20, 5:41 PM PT, per the Nov 21 morning edition, whose scan was cut short by a Gmail rate limit) through Sat Nov 21, 5:41 PM PT. Both mailboxes verified connected. Dave&#x27;s mailbox: targeted people / money / security searches plus one catch-all inbox triage returned at least 65 results under the light-scan caps (Gmail estimated at least 201 messages in the window); most were newsletters, promos and bulk mail and were spiked. Only messages whose bodies were actually read are listed. Coverage gap: mail in the window beyond the capped top returns was not individually reviewed — the next run should re-check deeper mail from Fri Nov 20, 5:41 PM to Sat Nov 21 afternoon if Dave wants full coverage of that span. Dad&#x27;s mailbox: one window triage, 15 scanned, 15 spiked as bulk / Nextdoor / newsletters, none surfaced. No mb-disp emails were found in the last 3 days.</p>
+<p class="ma-edition">Sun Nov 22, 2026 — morning edition. Window: Sat Nov 21, 5:41 PM PT through Sun Nov 22, 6:41 AM PT. Both mailboxes verified connected. Dave&#x27;s mailbox: targeted people / money / security searches plus one catch-all inbox triage (25 returned, Gmail estimated at least 201 in the wider day) — 24 of the 25 catch-all returns were newsletters, promos and bulk mail and were spiked; the targeted searches also re-checked the span the Nov 21 evening edition flagged as a coverage gap and returned only already-published or bulk items there. Only messages whose bodies were actually read are listed. Dad&#x27;s mailbox: one window triage, 11 returned, 3 in-window, all spiked as bulk / Nextdoor / newsletters, none surfaced. No mb-disp emails were found in the last 3 days.</p>
 <ol class="ma-list">
-<li id="item-1a200e2cfad92792" data-mid="1a200e2cfad92792" data-acct="dave" data-kind="fyi" data-sender="Tim Clark" data-subject="C&amp;C today, a bit chilly, that Corvette sounded pretty mean"><b>Tim Clark</b> — <a target="_blank" rel="noopener" href="https://mail.google.com/mail/u/0/#inbox/1a200e2cfad92792">C&amp;C today, a bit chilly, that Corvette sounded pretty mean</a><span class="ma-why">Real person sharing photos from today&#x27;s Cars &amp; Coffee via a Google Photos link — worth a look and a thank-you when you have a moment; no deadline stated.</span></li>
-<li id="item-1a1ff04d2aaa5647" data-mid="1a1ff04d2aaa5647" data-acct="dave" data-kind="money" data-sender="GoDaddy Renewals" data-subject="Dave Dell&#x27;Aquila, your domains are set to continue."><b>GoDaddy Renewals</b> — <a target="_blank" rel="noopener" href="https://mail.google.com/mail/u/0/#inbox/1a1ff04d2aaa5647">Dave Dell&#x27;Aquila, your domains are set to continue.</a><span class="ma-why">FYI — money moving: EMILESSCPERFORMANCE.COM is set to auto-renew, billed Nov 26, 2026, $22.99 plus taxes/fees for 1 year, unless renewal settings change; no action needed if that renewal is intended.</span></li>
+<li id="item-1a203ae00f152af6" data-mid="1a203ae00f152af6" data-acct="dave" data-kind="money" data-sender="Citi® / AAdvantage® Platinum Select® Card" data-subject="Your statement is now available online"><b>Citi® / AAdvantage® Platinum Select® Card</b> — <a target="_blank" rel="noopener" href="https://mail.google.com/mail/u/0/#inbox/1a203ae00f152af6">Your statement is now available online</a><span class="ma-why">Money — statement ending Nov 20, 2026 is ready: balance $169.99, minimum payment $41.00, payment due Thu Dec 17, 2026.</span></li>
 </ol>
 <p class="ma-meta">Dispositions honoured this run: 19 closed records on file; closed suppressed: 0; open carried: 0; reminders resurfaced: 0; no new mb-disp calls merged.</p>
 <h3>From Dad&#x27;s inbox — Emil&#x27;s mailbox, not Dave&#x27;s</h3>
@@ -372,7 +371,7 @@ Generated 2026-10-22 · Buddy System<br>
       var d = await r.json();
       var buds = d.buddies || [];
       for (var i = 0; i < buds.length; i++) {
-        if (buds[i].id === bid && buds[i].repo) { repo = String(buds[i].repo).split('/').filter(Boolean).pop(); repoName = buds[i].name || bid; break; }
+        if (buds[i].id === bid && buds[i].repo) { repo = buds[i].repo; repoName = buds[i].name || bid; break; }
       }
     } catch(e){}
   }
@@ -552,7 +551,7 @@ Generated 2026-10-22 · Buddy System<br>
       var buds = d.buddies || [];
       for (var i = 0; i < buds.length; i++) {
         if (buds[i].id === bid) {
-          if (buds[i].repo) repo = String(buds[i].repo).split('/').filter(Boolean).pop();
+          if (buds[i].repo) repo = buds[i].repo;
           if (buds[i].name) buddyName = buds[i].name;
           break;
         }
