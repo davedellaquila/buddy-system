@@ -1367,11 +1367,16 @@ Generated 2026-11-19 · Part of the Buddy System<br>
     + '?select=name,slug,start_date,start_time,end_date,end_time,location,host_org,website_url,image_url,short_description'
     + '&status=eq.published&order=start_date.asc&limit=1000';
   var ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlkZnRjZWJhZnRuZ2NkanZ4cmdsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjA1NDA5NDcsImV4cCI6MjA3NjExNjk0N30.8AlcsUMJSxBlua-ehaGLAn69bbORoMBdjM--MSxxXF0';
-  var TOWNS = ['Fiddletown', 'Plymouth', 'Volcano', 'Sutter Creek', 'Jackson',
-    'Pine Grove', 'Drytown', 'Amador City', 'Ione', 'Shenandoah Valley',
-    'Sacramento', 'San Jose', 'Napa', 'Danville', 'Santa Cruz', 'Monterey',
-    'Morgan Hill', 'Stockton', 'Placerville', 'Auburn', 'Grass Valley',
-    'Sonora', 'Angels Camp', 'Murphys', 'Pleasanton'];
+  // Canonical town list + derivation - identical in the public viewer, this
+  // homepage, the prepared API viewer, and the API Worker: the postal city
+  // (", Town, CA") wins; else the first known-towns substring match;
+  // "Mt Aukum" normalizes to "Mount Aukum". Hosts are counted trimmed.
+  var TOWNS = ['Shenandoah Valley', 'Sutter Creek', 'Amador City', 'Pine Grove',
+    'Valley Springs', 'Angels Camp', 'Grass Valley', 'Mount Aukum', 'Mt Aukum',
+    'Fair Play', 'Fiddletown', 'Plymouth', 'Volcano', 'Jackson', 'Drytown',
+    'Ione', 'Sacramento', 'San Jose', 'Napa', 'Danville', 'Santa Cruz',
+    'Monterey', 'Morgan Hill', 'Stockton', 'Placerville', 'Auburn', 'Sonora',
+    'Murphys', 'Pleasanton'];
   var LIMIT = 120;
 
   var listEl = document.getElementById('ev-list');
@@ -1410,8 +1415,8 @@ Generated 2026-11-19 · Part of the Buddy System<br>
   function townOf(loc) {
     if (!loc) return '';
     var m = loc.match(/,\s*([A-Za-z .']+?),\s*CA\b/);
-    if (m) return m[1].trim();
-    for (var i = 0; i < TOWNS.length; i++) if (loc.indexOf(TOWNS[i]) !== -1) return TOWNS[i];
+    if (m) { var t = m[1].trim(); return t === 'Mt Aukum' ? 'Mount Aukum' : t; }
+    for (var i = 0; i < TOWNS.length; i++) if (loc.indexOf(TOWNS[i]) !== -1) return TOWNS[i] === 'Mt Aukum' ? 'Mount Aukum' : TOWNS[i];
     return '';
   }
   function normalize(r) {
@@ -1423,7 +1428,7 @@ Generated 2026-11-19 · Part of the Buddy System<br>
       time: fmtTime(r.start_time),
       location: r.location || '',
       town: townOf(r.location),
-      host: r.host_org || '',
+      host: (r.host_org || '').trim(),
       url: r.website_url || '',
       img: r.image_url || '',
       desc: r.short_description || ''
@@ -1565,7 +1570,7 @@ Generated 2026-11-19 · Part of the Buddy System<br>
       time: e.starts_at ? fmtTime(e.starts_at.slice(11, 19)) : '',
       location: e.location || '',
       town: e.town || townOf(e.location),
-      host: e.host || '',
+      host: (e.host || '').trim(),
       url: e.website_url || '',
       img: e.image_url || '',
       desc: e.short_description || ''
