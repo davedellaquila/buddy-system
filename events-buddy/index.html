@@ -1609,7 +1609,7 @@ Generated 2026-11-19 · Part of the Buddy System<br>
         render();
       })
       .catch(function () {
-        return fetch(FEED_URL, { headers: { 'apikey': ANON_KEY, 'Authorization': 'Bearer ' + ANON_KEY } })
+        return fetch(FEED_URL, { cache: 'no-store', headers: { 'apikey': ANON_KEY, 'Authorization': 'Bearer ' + ANON_KEY } })
           .then(function (res) { if (!res.ok) throw new Error('feed ' + res.status); return res.json(); })
           .then(function (data) {
             rows = data.map(normalize);
