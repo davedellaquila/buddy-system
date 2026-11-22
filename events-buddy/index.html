@@ -291,6 +291,8 @@ h2 { font-size: 22px; margin: 32px 0 16px; }
 .evlist{display:flex;flex-direction:column;gap:10px}
 .evcard{display:flex;gap:14px;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px 14px}
 .evsrc{display:inline-block;margin-top:6px;font-size:13.5px;font-weight:700;color:var(--accent,#b4762a)}
+.evhost{display:inline-block;margin-top:6px;font-size:12.5px;font-weight:700;color:var(--accent,#b4762a);background:color-mix(in srgb,var(--accent,#b4762a) 13%,transparent);padding:3px 11px;border-radius:999px;cursor:pointer}
+.evhost:hover{text-decoration:underline;text-underline-offset:2px}
 .evcard.past{opacity:.62}
 .evimg{width:84px;height:84px;flex:none;border-radius:8px;object-fit:contain;background:var(--bg);border:1px solid var(--border)}
 .evmain{min-width:0}
@@ -1488,11 +1490,12 @@ Generated 2026-11-19 · Part of the Buddy System<br>
     var nameHtml = e.url
       ? '<a href="' + esc(e.url) + '" target="_blank" rel="noopener">' + esc(e.name) + '</a>'
       : esc(e.name);
-    var meta = [dateLine, e.location, e.host ? 'Hosted by ' + e.host : ''].filter(Boolean).join(' · ');
+    var meta = [dateLine, e.location].filter(Boolean).join(' · ');
     return '<div class="evcard' + (past ? ' past' : '') + '">'
       + (e.img ? '<img class="evimg" loading="lazy" alt="" src="' + esc(e.img) + '" onerror="this.style.display=\'none\'">' : '')
       + '<div class="evmain"><p class="evname">' + nameHtml + (past ? '<span class="evchip">Past</span>' : '') + '</p>'
       + '<div class="evmeta">' + esc(meta) + '</div>'
+      + (e.host ? '<div><span class="evhost" data-host="' + esc(e.host) + '" title="See all events from this host">Hosted by ' + esc(e.host) + '</span></div>' : '')
       + (e.desc ? '<div class="evdesc">' + esc(e.desc) + '</div>' : '')
       + (e.url ? '<a class="evsrc" href="' + esc(e.url) + '" target="_blank" rel="noopener">More info ↗</a>' : '')
       + '</div></div>';
@@ -1517,6 +1520,13 @@ Generated 2026-11-19 · Part of the Buddy System<br>
     listEl.innerHTML = html;
     var more = document.getElementById('ev-more');
     if (more) more.addEventListener('click', function () { showAll = true; render(); });
+    Array.prototype.forEach.call(listEl.querySelectorAll('.evhost'), function (p) {
+      p.addEventListener('click', function () {
+        hostEl.value = p.getAttribute('data-host');
+        showAll = false;
+        render();
+      });
+    });
   }
 
   function fillTowns() {
