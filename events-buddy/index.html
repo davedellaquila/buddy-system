@@ -306,6 +306,22 @@ h2 { font-size: 22px; margin: 32px 0 16px; }
 .evmsg{color:var(--muted)}
 .evmore{margin-top:6px;padding:9px 14px;border:1px solid var(--border);border-radius:8px;background:var(--card);color:var(--text);font-size:14px;cursor:pointer}
 @media (max-width:560px){.evimg{width:64px;height:64px}}
+/* Full-screen photo viewer (newspaper standard, Nov 22) */
+.evimg{cursor:zoom-in}
+.evlb{position:fixed;inset:0;z-index:120;background:rgba(12,8,3,.94);display:none;align-items:center;justify-content:center}
+.evlb.open{display:flex}
+.evlb-fig{margin:0;display:flex;flex-direction:column;align-items:center;gap:12px;max-width:97vw;max-height:100vh;max-height:100dvh;padding:18px 12px}
+.evlb-fig img{max-width:96vw;max-height:calc(100vh - 150px);max-height:calc(100dvh - 150px);object-fit:contain;display:block;border-radius:6px;background:#000}
+.evlb-cap{display:flex;flex-direction:column;align-items:center;gap:2px;text-align:center;color:#fff;max-width:720px}
+.evlb-name{font-family:Georgia,serif;font-size:21px;font-weight:600;line-height:1.2}
+.evlb-meta{font-size:13.5px;color:rgba(255,255,255,.78)}
+.evlb-count{font-size:12px;font-weight:700;letter-spacing:.14em;color:rgba(255,255,255,.55);margin-top:4px}
+.evlb-x{position:absolute;top:14px;right:14px;width:44px;height:44px;border:none;border-radius:50%;background:rgba(255,255,255,.14);color:#fff;font-size:24px;line-height:1;cursor:pointer;z-index:2}
+.evlb-x:hover{background:rgba(255,255,255,.28)}
+.evlb-nav{position:absolute;top:50%;transform:translateY(-50%);width:48px;height:48px;border:none;border-radius:50%;background:rgba(255,255,255,.14);color:#fff;font-size:32px;line-height:1;cursor:pointer;z-index:2;display:flex;align-items:center;justify-content:center;padding:0 0 4px}
+.evlb-nav:hover{background:rgba(255,255,255,.28)}
+.evlb-prev{left:12px}.evlb-next{right:12px}
+@media (max-width:560px){.evlb-nav{width:42px;height:42px;font-size:27px}.evlb-name{font-size:18px}}
 </style>
 <link rel="icon" href="favicon.ico" sizes="any" />
 <link rel="shortcut icon" href="favicon.ico" />
@@ -350,6 +366,20 @@ h2 { font-size: 22px; margin: 32px 0 16px; }
 </div>
 <div id="ev-list" class="evlist"><p class="evmsg">Loading events…</p></div>
 </section>
+
+<div class="evlb" id="evlb" role="dialog" aria-modal="true" aria-label="Photo viewer">
+  <button class="evlb-x" id="evlb-x" type="button" aria-label="Close photo viewer">×</button>
+  <button class="evlb-nav evlb-prev" id="evlb-prev" type="button" aria-label="Previous photo">‹</button>
+  <figure class="evlb-fig" id="evlb-fig">
+    <img id="evlb-img" alt="">
+    <figcaption class="evlb-cap">
+      <span class="evlb-name" id="evlb-name"></span>
+      <span class="evlb-meta" id="evlb-meta"></span>
+      <span class="evlb-count" id="evlb-count"></span>
+    </figcaption>
+  </figure>
+  <button class="evlb-nav evlb-next" id="evlb-next" type="button" aria-label="Next photo">›</button>
+</div>
 
 <section class="dumpbox" data-buddy-id="events-buddy">
 <h2>🧠 Brain dump</h2>
@@ -1552,6 +1582,14 @@ Generated 2026-11-19 · Part of the Buddy System<br>
         render();
       });
     });
+    evLbList = out;
+    Array.prototype.forEach.call(listEl.querySelectorAll('.evcard'), function (cardEl, i) {
+      var im = cardEl.querySelector('img.evimg');
+      if (im) {
+        im.title = 'View photo full-screen';
+        im.addEventListener('click', function () { openEvLb(shown[i]); });
+      }
+    });
   }
 
   function fillTowns() {
@@ -1649,6 +1687,73 @@ Generated 2026-11-19 · Part of the Buddy System<br>
         document.getElementById('ev-retry').addEventListener('click', load);
       });
   }
+
+  /* Full-screen photo viewer (newspaper standard, Nov 22) */
+  var evLbList = [];
+  var evlb = document.getElementById('evlb'), evLbImg = document.getElementById('evlb-img'),
+      evLbName = document.getElementById('evlb-name'), evLbMeta = document.getElementById('evlb-meta'),
+      evLbCount = document.getElementById('evlb-count'), evLbPrev = document.getElementById('evlb-prev'),
+      evLbNext = document.getElementById('evlb-next'), evLbFig = document.getElementById('evlb-fig');
+  var evLbGroup = [], evLbIdx = 0, evLbReturn = null;
+  function evLbIsOpen() { return evlb.classList.contains('open'); }
+  function evLbMetaText(e) {
+    var d;
+    if (!e.start) d = 'Date to be announced';
+    else if (e.end && e.end.getTime() !== e.start.getTime()) d = fmtDate(e.start) + ' – ' + fmtDate(e.end);
+    else d = fmtDate(e.start);
+    if (e.time) d += ' · ' + e.time;
+    if (e.location) d += ' · ' + e.location;
+    return d;
+  }
+  function openEvLb(ev) {
+    if (!ev || !ev.img) return;
+    evLbGroup = evLbList.filter(function (e) { return !!e.img; });
+    evLbIdx = evLbGroup.indexOf(ev);
+    if (evLbIdx < 0) return;
+    evLbReturn = document.activeElement;
+    showEvLb();
+    evlb.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    document.getElementById('evlb-x').focus();
+  }
+  function showEvLb() {
+    var e = evLbGroup[evLbIdx]; if (!e) return;
+    evLbImg.src = e.img; evLbImg.alt = e.name;
+    evLbName.textContent = e.name;
+    evLbMeta.textContent = evLbMetaText(e);
+    var multi = evLbGroup.length > 1;
+    evLbPrev.style.display = multi ? '' : 'none';
+    evLbNext.style.display = multi ? '' : 'none';
+    evLbCount.textContent = multi ? (evLbIdx + 1) + ' / ' + evLbGroup.length : '';
+  }
+  function stepEvLb(d) {
+    if (evLbGroup.length < 2) return;
+    evLbIdx = (evLbIdx + d + evLbGroup.length) % evLbGroup.length;
+    showEvLb();
+  }
+  function closeEvLb() {
+    evlb.classList.remove('open');
+    evLbImg.removeAttribute('src');
+    document.body.style.overflow = '';
+    if (evLbReturn && evLbReturn.focus) evLbReturn.focus();
+  }
+  document.getElementById('evlb-x').addEventListener('click', closeEvLb);
+  evLbPrev.addEventListener('click', function () { stepEvLb(-1); });
+  evLbNext.addEventListener('click', function () { stepEvLb(1); });
+  evlb.addEventListener('click', function (e) { if (e.target === evlb || e.target === evLbFig) closeEvLb(); });
+  document.addEventListener('keydown', function (e) {
+    if (!evLbIsOpen()) return;
+    if (e.key === 'Escape') closeEvLb();
+    else if (e.key === 'ArrowLeft') stepEvLb(-1);
+    else if (e.key === 'ArrowRight') stepEvLb(1);
+  });
+  var evLbTouchX = null;
+  evlb.addEventListener('touchstart', function (e) { evLbTouchX = e.changedTouches[0].clientX; }, { passive: true });
+  evlb.addEventListener('touchend', function (e) {
+    if (evLbTouchX === null) return;
+    var dx = e.changedTouches[0].clientX - evLbTouchX; evLbTouchX = null;
+    if (Math.abs(dx) > 42) stepEvLb(dx < 0 ? 1 : -1);
+  }, { passive: true });
 
   [qEl, townEl, hostEl, whenEl].forEach(function (el) {
     el.addEventListener('input', function () { showAll = false; render(); });
