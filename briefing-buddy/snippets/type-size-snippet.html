@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Type-size snippet — reference for buddy threads</title>
+</head>
+<body>
+<!--
+  PER-PAGE TYPE SIZE SNIPPET — integration reference
+  =================================================
+  Dave (2026-10-18) wants a type-size control on buddy pages: four options
+  (smaller / small / medium / large) that set the type size on THAT page.
+  Each page keeps its own size — visiting another page never changes it.
+  A global default may exist, but a per-page choice always wins for that page.
+
+  WHAT IT DOES
+  A compact segmented control (four "Ag" buttons, each rendered at its own
+  size so the control is self-demonstrating) that sets the page's type scale.
+  Applied via CSS `zoom` on <html> — scales text AND layout proportionally,
+  so px-based designs reflow naturally and media queries respond to the
+  zoomed width (fewer columns when text is larger, as expected). Works in
+  all modern browsers (Chrome/Edge/Safari/Firefox 126+); on anything older
+  the control simply has no visual effect.
+
+  SIZES
+    smaller → 0.875x    small → 0.9375x    medium → 1x (default)    large → 1.125x
+
+  PERSISTENCE
+  One localStorage key, 'buddyTree.typeSize', holding JSON:
+    { "default": "medium", "pages": { "<page-id>": "<size>" } }
+  Page id is derived from location.pathname (e.g. /buddy-system/briefing-buddy/
+  → "buddy-system-briefing-buddy"), so every page is automatically keyed
+  without configuration. Resolution order: per-page → global default → medium.
+
+  GLOBAL DEFAULT
+  There is no default UI for it yet (by design — Dave hasn't asked for one).
+  Set it from the console or a future settings surface:
+    BuddyTypeSize.setDefault("large")
+  Read it with BuddyTypeSize.getDefault(). A per-page choice always wins.
+
+  INTEGRATION (3 paste spots)
+  1. CSS → paste into your <style> (uses --card/--rule/--muted/--accent tokens;
+     restyle to match your visual language, keep dark + light working).
+  2. HTML → paste the .tsize group wherever the control should live
+     (Briefing Buddy puts it in the masthead dateline, next to the theme toggle).
+     The buttons are wired by delegation — no IDs needed, and you may place
+     more than one control on a page.
+  3. JS → paste the <script> in <head> (NOT at end of body): it applies the
+     saved zoom to <html> before first paint, so there is no size flash on load.
+     Button states update on DOMContentLoaded.
+
+  API (window.BuddyTypeSize)
+    set(size)          — set this page's size ("smaller"|"small"|"medium"|"large")
+    get()              — this page's resolved size
+    setDefault(size)   — set the global default
+    getDefault()       — the global default ("medium" if unset)
+    pageId()           — this page's storage id
+
+  TEST
+  1. Click each of the four options — the whole page scales, tiles reflow,
+     dark/light toggle still works.
+  2. Reload — the chosen size persists.
+  3. Open a second page with the snippet — it keeps its own size.
+  4. localStorage 'buddyTree.typeSize' shows {pages:{...}} keyed per page.
+-->
+
+<!-- 1. CSS -->
+<style>
+.tsize{display:inline-flex;align-items:stretch;border:1px solid var(--rule);border-radius:999px;overflow:hidden;background:var(--card)}
+.tsize button{border:0;background:transparent;color:var(--muted);font-family:Georgia,serif;line-height:1;padding:6px 9px;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.tsize button + button{border-left:1px solid var(--rule)}
+.tsize button:hover{color:var(--accent)}
+.tsize button[aria-pressed="true"]{background:var(--accent-soft);color:var(--accent-ink);font-weight:700}
+.tsize button[data-tsize="smaller"]{font-size:11px}
+.tsize button[data-tsize="small"]{font-size:12.5px}
+.tsize button[data-tsize="medium"]{font-size:14px}
+.tsize button[data-tsize="large"]{font-size:16px}
+</style>
+
+<!-- 2. HTML (place where you want the control) -->
+<div class="tsize" role="group" aria-label="Type size" title="Type size">
+  <button type="button" data-tsize="smaller" title="Smaller" aria-pressed="false">Ag</button>
+  <button type="button" data-tsize="small" title="Small" aria-pressed="false">Ag</button>
+  <button type="button" data-tsize="medium" title="Medium" aria-pressed="false">Ag</button>
+  <button type="button" data-tsize="large" title="Large" aria-pressed="false">Ag</button>
+</div>
+
+<!-- 3. JS (in <head>, so the saved size applies before first paint) -->
+<script>
+/* Per-page type size — reusable snippet (Dave, 2026-10-18). See snippets/type-size-snippet.html */
+(function(){
+  "use strict";
+  var ZOOM = {smaller: 0.875, small: 0.9375, medium: 1, large: 1.125};
+  var KEY = "buddyTree.typeSize";
+  function pageId(){
+    var p = (location.pathname || "").replace(/^\/+|\/+$/g, "");
+    if(!p) p = "home";
+    return p.replace(/\.html?$/i, "").replace(/[^a-z0-9]+/gi, "-").replace(/^-+|-+$/g, "").toLowerCase() || "page";
+  }
+  var PID = pageId();
+  function load(){ try{ return JSON.parse(localStorage.getItem(KEY)) || {}; }catch(e){ return {}; } }
+  function save(s){ try{ localStorage.setItem(KEY, JSON.stringify(s)); }catch(e){} }
+  function valid(v){ return !!ZOOM[v]; }
+  function current(){
+    var s = load();
+    if(s.pages && valid(s.pages[PID])) return s.pages[PID];
+    if(valid(s.default)) return s.default;
+    return "medium";
+  }
+  function paint(size){
+    var z = ZOOM[size] || 1;
+    document.documentElement.style.zoom = (z === 1) ? "" : String(z);
+    var btns = document.querySelectorAll('[data-tsize]');
+    for(var i = 0; i < btns.length; i++){
+      btns[i].setAttribute("aria-pressed", btns[i].getAttribute("data-tsize") === size ? "true" : "false");
+    }
+  }
+  function set(size){
+    if(!valid(size)) return;
+    var s = load(); s.pages = s.pages || {}; s.pages[PID] = size; save(s); paint(size);
+  }
+  // Apply ASAP (no size flash); buttons may not exist yet if we're in <head>.
+  paint(current());
+  if(document.readyState === "loading"){
+    document.addEventListener("DOMContentLoaded", function(){ paint(current()); });
+  }
+  document.addEventListener("click", function(ev){
+    var b = ev.target && ev.target.closest ? ev.target.closest("[data-tsize]") : null;
+    if(!b) return;
+    set(b.getAttribute("data-tsize"));
+  });
+  window.BuddyTypeSize = {
+    set: set,
+    get: current,
+    pageId: function(){ return PID; },
+    setDefault: function(size){ if(!valid(size)) return; var s = load(); s.default = size; save(s); paint(current()); },
+    getDefault: function(){ var s = load(); return valid(s.default) ? s.default : "medium"; }
+  };
+})();
+</script>
+</body>
+</html>
