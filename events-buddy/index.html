@@ -1668,7 +1668,7 @@ Generated 2026-11-19 · Part of the Buddy System<br>
      Scrolling down collapses the filter box to a single summary row that
      still shows what's active; tapping it expands the full filters in
      place; scrolling back to the top restores them. State never touched. */
-  var evFsManualOpen = false, evFsExpandY = 0, evFsTicking = false;
+  var evFsManualOpen = false, evFsExpandY = 0, evFsExpandAt = 0, evFsTicking = false;
   function evSelText(el){ return el && el.selectedIndex > 0 ? el.options[el.selectedIndex].text : ''; }
   function renderEvFilterSummary() {
     var t = document.getElementById('ev-filtersum-text'), badge = document.getElementById('ev-filtersum-n');
@@ -1705,12 +1705,17 @@ Generated 2026-11-19 · Part of the Buddy System<br>
       var y = window.scrollY || 0;
       if (y < 40) { evFsManualOpen = false; box.classList.remove('opensticky'); if (collapsed) setEvFiltersCollapsed(false); }
       else if (!collapsed && !evFsManualOpen && rect.top < -40) setEvFiltersCollapsed(true);
-      else if (!collapsed && evFsManualOpen && y > evFsExpandY + 240) { evFsManualOpen = false; setEvFiltersCollapsed(true); }
+      else if (!collapsed && evFsManualOpen) {
+        if (Date.now() - evFsExpandAt < 900) evFsExpandY = y; /* expansion still settling (anchoring) — track the baseline */
+        else if (y > evFsExpandY + 240) { evFsManualOpen = false; setEvFiltersCollapsed(true); }
+      }
     });
   }
   window.addEventListener('scroll', onEvFilterScroll, { passive: true });
   document.getElementById('ev-filtersum').addEventListener('click', function () {
     evFsManualOpen = true;
+    evFsExpandAt = Date.now();
+    evFsExpandY = window.scrollY || 0;
     setEvFiltersCollapsed(false);
     var box = document.getElementById('ev-filterbox');
     var tb = document.querySelector('.topbar');
