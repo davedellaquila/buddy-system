@@ -286,8 +286,43 @@ h2 { font-size: 22px; margin: 32px 0 16px; }
   .evstat{animation:none}
   .pulse-hit{animation:none}
 }
-.evcontrols input[type=search]{flex:1 1 200px;padding:9px 12px;border:1px solid var(--border);border-radius:8px;background:var(--bg);color:var(--text);font-size:15px}
-.evcontrols select{padding:9px 10px;border:1px solid var(--border);border-radius:8px;background:var(--bg);color:var(--text);font-size:15px}
+.evcontrols input[type=search]{flex:1 1 200px;padding:9px 36px 9px 12px;border:1px solid var(--border);border-radius:8px;background:var(--bg);color:var(--text);font-size:16px}
+.evcontrols select{padding:9px 10px;border:1px solid var(--border);border-radius:8px;background:var(--bg);color:var(--text);font-size:16px}
+.evsearch{position:relative;flex:1 1 200px;display:flex}
+.evsearch input[type=search]{flex:1 1 auto;width:100%}
+.evclearq{position:absolute;right:6px;top:50%;transform:translateY(-50%);width:32px;height:32px;border:1px solid var(--border);border-radius:50%;background:var(--card);color:var(--muted);font-size:15px;line-height:1;cursor:pointer;display:none;padding:0}
+.evsearch.has-q .evclearq{display:block}
+.evclearq:hover{background:var(--bg);color:var(--text)}
+.evsavedpill{padding:9px 14px;border:1px solid var(--border);border-radius:999px;background:var(--card);color:var(--text);font-size:14.5px;font-weight:700;cursor:pointer}
+.evsavedpill[aria-pressed="true"]{background:var(--accent,#b4762a);border-color:var(--accent,#b4762a);color:#fff}
+.evsavedpill .n{font-weight:600;opacity:.75;margin-left:4px;font-size:12.5px}
+.evmappref{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-top:10px}
+.evmappref span{font-size:13px;font-weight:700;color:var(--muted)}
+.evmappref button{border:1px solid var(--border);background:var(--card);color:var(--text);border-radius:999px;padding:7px 12px;font-size:13.5px;font-weight:600;cursor:pointer;min-height:36px}
+.evmappref button[aria-pressed="true"]{background:var(--accent,#b4762a);border-color:var(--accent,#b4762a);color:#fff}
+.evstar{flex:none;margin-left:auto;align-self:flex-start;width:38px;height:38px;display:inline-flex;align-items:center;justify-content:center;border-radius:50%;background:var(--bg);border:1px solid var(--border);color:var(--muted);font-size:20px;line-height:1;cursor:pointer}
+.evstar[aria-pressed="true"]{color:var(--accent,#b4762a);border-color:var(--accent,#b4762a)}
+.evopen{cursor:pointer}
+.evopen:hover{text-decoration:underline;text-underline-offset:2px}
+.evdetails{display:inline-block;margin-top:6px;margin-left:12px;font-size:13.5px;font-weight:700;color:var(--accent,#b4762a);cursor:pointer}
+.evscrim{position:fixed;inset:0;background:rgba(12,8,3,.55);opacity:0;pointer-events:none;transition:opacity .18s ease;z-index:130}
+.evscrim.open{opacity:1;pointer-events:auto}
+.evsheet{position:fixed;left:0;right:0;bottom:0;top:auto;max-height:92vh;max-height:92dvh;overflow-y:auto;background:var(--card);color:var(--text);border-radius:16px 16px 0 0;box-shadow:0 -12px 40px rgba(0,0,0,.35);transform:translateY(102%);transition:transform .22s ease;z-index:131}
+.evsheet.open{transform:translateY(0)}
+@media (min-width:720px){.evsheet{left:50%;right:auto;top:50%;bottom:auto;width:min(680px,94vw);max-height:88vh;border-radius:16px;transform:translate(-50%,-46%);opacity:0;pointer-events:none;transition:opacity .18s ease,transform .22s ease}.evsheet.open{transform:translate(-50%,-50%);opacity:1;pointer-events:auto}}
+.evsheet-media{position:relative;background:var(--bg)}
+.evsheet-media img{width:100%;max-height:320px;object-fit:contain;display:block}
+.evsheet-x{position:absolute;top:10px;right:10px;width:40px;height:40px;border:1px solid var(--border);border-radius:50%;background:var(--card);color:var(--text);font-size:20px;line-height:1;cursor:pointer;z-index:2}
+.evsheet-body{padding:18px 20px 22px}
+.evsheet-body h3{font-family:Georgia,serif;font-size:24px;line-height:1.2;margin:0 30px 10px 0}
+.evsrow{display:flex;gap:10px;font-size:15px;margin-top:7px;align-items:flex-start}
+.evsrow .k{flex:none;width:74px;font-size:11.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);padding-top:3px}
+.evsrow a{color:var(--accent,#b4762a);font-weight:600}
+.evssub{display:block;font-size:12.5px;color:var(--muted);font-weight:400}
+.evsdesc{font-size:15px;line-height:1.55;margin-top:12px}
+.evsactions{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+.evbtn{display:inline-flex;align-items:center;gap:7px;padding:10px 16px;border-radius:999px;border:1px solid var(--accent,#b4762a);background:var(--accent,#b4762a);color:#fff;font-size:14.5px;font-weight:700;cursor:pointer;text-decoration:none}
+.evbtn.ghost{background:transparent;color:var(--accent,#b4762a)}
 .evlist{display:flex;flex-direction:column;gap:10px}
 .evcard{display:flex;gap:14px;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px 14px}
 .evsrc{display:inline-block;margin-top:6px;font-size:13.5px;font-weight:700;color:var(--accent,#b4762a)}
@@ -359,13 +394,18 @@ h2 { font-size: 22px; margin: 32px 0 16px; }
 <button type="button" class="evstat" id="ev-stat-hosts"><b>–</b><span>Hosts</span></button>
 </div>
 <div class="evcontrols">
-<input id="ev-q" type="search" placeholder="Search name, place, or host…" aria-label="Search events">
+<span class="evsearch"><input id="ev-q" type="search" placeholder="Search name, place, or host…" aria-label="Search events"><button class="evclearq" id="ev-clearq" type="button" aria-label="Clear search" title="Clear search">&#10005;</button></span>
 <span class="evselwrap"><select id="ev-town" aria-label="Filter by town"><option value="">All towns</option></select></span>
 <span class="evselwrap"><select id="ev-host" aria-label="Filter by host"><option value="">All hosts</option></select></span>
 <select id="ev-when" aria-label="Filter by date"><option value="upcoming">Upcoming</option><option value="next30">Next 30 days</option><option value="all">All dates</option><option value="past">Past events</option></select>
+<button type="button" class="evsavedpill" id="ev-saved-pill" aria-pressed="false">★ Saved</button>
 </div>
+<div class="evmappref" role="group" aria-label="Preferred map app"><span>Maps:</span><button type="button" data-evmappref="google" aria-pressed="true">Google Maps</button><button type="button" data-evmappref="apple" aria-pressed="false">Apple Maps</button><button type="button" data-evmappref="osm" aria-pressed="false">OpenStreetMap</button></div>
 <div id="ev-list" class="evlist"><p class="evmsg">Loading events…</p></div>
 </section>
+
+<div class="evscrim" id="evscrim"></div>
+<div class="evsheet" id="evsheet" role="dialog" aria-modal="true" aria-label="Event details"></div>
 
 <div class="evlb" id="evlb" role="dialog" aria-modal="true" aria-label="Photo viewer">
   <button class="evlb-x" id="evlb-x" type="button" aria-label="Close photo viewer">×</button>
@@ -1402,7 +1442,7 @@ Generated 2026-11-19 · Part of the Buddy System<br>
   // API has been live and stable.
   var API_BASE = 'https://api.fiddletowngazette.com/v1';
   var FEED_URL = 'https://ydftcebaftngcdjvxrgl.supabase.co/rest/v1/events'
-    + '?select=name,slug,start_date,start_time,end_date,end_time,location,host_org,website_url,image_url,short_description'
+    + '?select=name,slug,start_date,start_time,end_date,end_time,location,host_org,website_url,image_url,short_description,source_url,source_label'
     + '&status=eq.published&order=start_date.asc&limit=1000';
   var ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlkZnRjZWJhZnRuZ2NkanZ4cmdsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjA1NDA5NDcsImV4cCI6MjA3NjExNjk0N30.8AlcsUMJSxBlua-ehaGLAn69bbORoMBdjM--MSxxXF0';
   // Canonical town list + derivation - identical in the public viewer, this
@@ -1427,6 +1467,51 @@ Generated 2026-11-19 · Part of the Buddy System<br>
 
   var rows = [];
   var showAll = false;
+
+  /* Parity with the public events viewer (Dave, Nov 24, 2026): on-device
+     persistent filter state, the Saved star, the shared map-app preference,
+     hash deep links, source lines, the share-sheet Share button, and the
+     bordered-circle search clear. Same storage keys as the public viewer. */
+  var EV_LS_KEY = 'gcev.filters.v1';
+  var savedOnly = false;
+  var pendingTown = '', pendingHost = '';
+  function saveEvState() {
+    try { localStorage.setItem(EV_LS_KEY, JSON.stringify({ q: qEl.value, town: townEl.value, host: hostEl.value, when: whenEl.value, savedOnly: savedOnly })); } catch (e) {}
+  }
+  (function restoreEvState() {
+    try {
+      var s = JSON.parse(localStorage.getItem(EV_LS_KEY) || 'null');
+      if (!s) return;
+      if (typeof s.q === 'string') qEl.value = s.q;
+      if (typeof s.when === 'string') {
+        for (var i = 0; i < whenEl.options.length; i++) if (whenEl.options[i].value === s.when) whenEl.value = s.when;
+      }
+      if (typeof s.town === 'string') pendingTown = s.town;
+      if (typeof s.host === 'string') pendingHost = s.host;
+      if (s.savedOnly) savedOnly = true;
+    } catch (e) {}
+  })();
+  var SAVED_KEY = 'gcev.saved.v1';
+  function loadSaved() { try { var v = JSON.parse(localStorage.getItem(SAVED_KEY) || '{}'); return (v && typeof v === 'object') ? v : {}; } catch (e) { return {}; } }
+  var savedSet = loadSaved();
+  function saveSaved() { try { localStorage.setItem(SAVED_KEY, JSON.stringify(savedSet)); } catch (e) {} }
+  function toggleSaved(slug) { if (!slug) return; if (savedSet[slug]) delete savedSet[slug]; else savedSet[slug] = true; saveSaved(); }
+  function savedCount() { var n = 0; rows.forEach(function (e) { if (e.slug && savedSet[e.slug]) n++; }); return n; }
+  function starHTML(e) {
+    if (!e.slug) return '';
+    var on = !!savedSet[e.slug];
+    return '<span class="evstar" data-save="' + esc(e.slug) + '" role="button" aria-pressed="' + (on ? 'true' : 'false') + '" aria-label="' + (on ? 'Saved — tap to unsave' : 'Save this event') + '" title="' + (on ? 'Saved — tap to unsave' : 'Save this event') + '">' + (on ? '★' : '☆') + '</span>';
+  }
+  var MAP_PREF_KEY = 'burgers-gold-country-maps-v1';
+  var MAP_LABELS = { google: 'Google Maps', apple: 'Apple Maps', osm: 'OpenStreetMap' };
+  function getMapPref() { try { var p = localStorage.getItem(MAP_PREF_KEY); return MAP_LABELS[p] ? p : 'google'; } catch (e) { return 'google'; } }
+  function eventMapsURL(loc) {
+    var pref = getMapPref(), q = encodeURIComponent(loc);
+    if (pref === 'apple') return 'https://maps.apple.com/?q=' + q;
+    if (pref === 'osm') return 'https://www.openstreetmap.org/search?query=' + q;
+    return 'https://www.google.com/maps/search/?api=1&query=' + q;
+  }
+  function canonicalURL(slug) { return location.origin + location.pathname + '?event=' + encodeURIComponent(slug) + '#/event/' + encodeURIComponent(slug); }
 
   function esc(s) {
     return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
@@ -1467,6 +1552,7 @@ Generated 2026-11-19 · Part of the Buddy System<br>
     var end = parseDate(r.end_date) || start;
     return {
       name: r.name || 'Untitled event',
+      slug: r.slug || '',
       start: start, end: end,
       time: fmtTime(r.start_time),
       mins: startMinutesOf(r.start_time),
@@ -1475,7 +1561,9 @@ Generated 2026-11-19 · Part of the Buddy System<br>
       host: (r.host_org || '').trim(),
       url: r.website_url || '',
       img: r.image_url || '',
-      desc: r.short_description || ''
+      desc: r.short_description || '',
+      source_url: r.source_url || '',
+      source_label: r.source_label || ''
     };
   }
   function isUpcoming(e) { return e.end && e.end >= todayStart(); }
@@ -1495,7 +1583,9 @@ Generated 2026-11-19 · Part of the Buddy System<br>
     var town = townEl.value;
     var host = hostEl.value;
     return rows.filter(function (e) {
-      if (!passesWhen(e)) return false;
+      if (savedOnly && !(e.slug && savedSet[e.slug])) return false;
+      /* With Saved on, the date range steps aside (past saves stay listed). */
+      if (!savedOnly && !passesWhen(e)) return false;
       if (except !== 'town' && town && e.town !== town) return false;
       if (except !== 'host' && host && e.host !== host) return false;
       if (q) {
@@ -1520,7 +1610,7 @@ Generated 2026-11-19 · Part of the Buddy System<br>
     return a.mins - b.mins;
   }
   function filtered() {
-    var when = whenEl.value;
+    var when = savedOnly ? 'all' : whenEl.value;
     var out = facetRows(null);
     if (when === 'past') {
       out.sort(function (a, b) { return (b.start - a.start) || dayOrder(a, b); });
@@ -1542,8 +1632,8 @@ Generated 2026-11-19 · Part of the Buddy System<br>
     else dateLine = fmtDate(e.start);
     if (e.time) dateLine += ' · ' + e.time;
     var past = e.start && !isUpcoming(e);
-    var nameHtml = e.url
-      ? '<a href="' + esc(e.url) + '" target="_blank" rel="noopener">' + esc(e.name) + '</a>'
+    var nameHtml = e.slug
+      ? '<span class="evopen" data-open="' + esc(e.slug) + '" role="button" tabindex="0" title="See event details">' + esc(e.name) + '</span>'
       : esc(e.name);
     var meta = [dateLine, e.location].filter(Boolean).join(' · ');
     return '<div class="evcard' + (past ? ' past' : '') + '">'
@@ -1553,10 +1643,18 @@ Generated 2026-11-19 · Part of the Buddy System<br>
       + (e.host ? '<div><span class="evhost" data-host="' + esc(e.host) + '" title="See all events from this host">Hosted by ' + esc(e.host) + '</span></div>' : '')
       + (e.desc ? '<div class="evdesc">' + esc(e.desc) + '</div>' : '')
       + (e.url ? '<a class="evsrc" href="' + esc(e.url) + '" target="_blank" rel="noopener">More info ↗</a>' : '')
-      + '</div></div>';
+      + (e.slug ? '<span class="evdetails" data-open="' + esc(e.slug) + '" role="button">Details →</span>' : '')
+      + '</div>'
+      + starHTML(e)
+      + '</div>';
   }
 
   function render() {
+    saveEvState();
+    var sp = document.getElementById('ev-saved-pill');
+    if (sp) { var sn = savedCount(); sp.innerHTML = '★ Saved' + (sn ? '<span class="n">' + sn + '</span>' : ''); sp.setAttribute('aria-pressed', savedOnly ? 'true' : 'false'); }
+    var sw = qEl.closest('.evsearch');
+    if (sw) sw.classList.toggle('has-q', !!qEl.value);
     fillTowns();
     buildHosts();
     fillStats();
@@ -1579,6 +1677,20 @@ Generated 2026-11-19 · Part of the Buddy System<br>
       p.addEventListener('click', function () {
         hostEl.value = p.getAttribute('data-host');
         showAll = false;
+        render();
+      });
+    });
+    Array.prototype.forEach.call(listEl.querySelectorAll('[data-open]'), function (p) {
+      var open = function () {
+        var slug = p.getAttribute('data-open');
+        for (var i = 0; i < rows.length; i++) if (rows[i].slug === slug) { openDetail(rows[i]); return; }
+      };
+      p.addEventListener('click', open);
+      p.addEventListener('keydown', function (ev) { if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); open(); } });
+    });
+    Array.prototype.forEach.call(listEl.querySelectorAll('.evstar'), function (p) {
+      p.addEventListener('click', function () {
+        toggleSaved(p.getAttribute('data-save'));
         render();
       });
     });
@@ -1606,6 +1718,7 @@ Generated 2026-11-19 · Part of the Buddy System<br>
       townEl.appendChild(opt);
     });
     townEl.value = current;
+    if (pendingTown) { townEl.value = pendingTown; pendingTown = ''; }
   }
 
   function buildHosts() {
@@ -1622,6 +1735,7 @@ Generated 2026-11-19 · Part of the Buddy System<br>
       hostEl.appendChild(opt);
     });
     hostEl.value = current;
+    if (pendingHost) { hostEl.value = pendingHost; pendingHost = ''; }
   }
 
   function fillStats() {
@@ -1639,6 +1753,7 @@ Generated 2026-11-19 · Part of the Buddy System<br>
     var end = parseDate(e.end_date) || start;
     return {
       name: e.name || 'Untitled event',
+      slug: e.slug || '',
       start: start, end: end,
       time: e.starts_at ? fmtTime(e.starts_at.slice(11, 19)) : '',
       mins: e.starts_at ? startMinutesOf(e.starts_at.slice(11, 19)) : null,
@@ -1647,7 +1762,9 @@ Generated 2026-11-19 · Part of the Buddy System<br>
       host: (e.host || '').trim(),
       url: e.website_url || '',
       img: e.image_url || '',
-      desc: e.short_description || ''
+      desc: e.short_description || '',
+      source_url: e.source_url || '',
+      source_label: e.source_label || ''
     };
   }
   function loadFromApi() {
@@ -1671,6 +1788,7 @@ Generated 2026-11-19 · Part of the Buddy System<br>
         rows = data.map(normalizeApi);
         fillTowns();
         render();
+        applyRoute();
       })
       .catch(function () {
         return fetch(FEED_URL, { cache: 'no-store', headers: { 'apikey': ANON_KEY, 'Authorization': 'Bearer ' + ANON_KEY } })
@@ -1679,6 +1797,7 @@ Generated 2026-11-19 · Part of the Buddy System<br>
             rows = data.map(normalize);
             fillTowns();
             render();
+            applyRoute();
           });
       })
       .catch(function () {
@@ -1687,6 +1806,109 @@ Generated 2026-11-19 · Part of the Buddy System<br>
         document.getElementById('ev-retry').addEventListener('click', load);
       });
   }
+
+  /* ---------- Detail sheet + hash deep links (parity, Nov 24, 2026) ---------- */
+  var evSheet = document.getElementById('evsheet'), evScrim = document.getElementById('evscrim');
+  var sheetSlug = null, sheetReturn = null;
+  var EV_SHARE_HTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:15px;height:15px;vertical-align:-2px"><path d="M12 3v13"/><path d="M7 8l5-5 5 5"/><path d="M5 13v7a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-7"/></svg> Share';
+  function sheetIsOpen() { return evSheet.classList.contains('open'); }
+  function dateLineOf(e) {
+    var d;
+    if (!e.start) d = 'Date to be announced';
+    else if (e.end && e.end.getTime() !== e.start.getTime()) d = fmtDate(e.start) + ' – ' + fmtDate(e.end);
+    else d = fmtDate(e.start);
+    if (e.time) d += ' · ' + e.time;
+    return d;
+  }
+  function openDetail(e, skipRoute) {
+    if (!e) return;
+    sheetSlug = e.slug || null;
+    sheetReturn = document.activeElement;
+    var rowsHtml = '<div class="evsrow"><span class="k">When</span><span>' + esc(dateLineOf(e)) + '</span></div>';
+    if (e.location) rowsHtml += '<div class="evsrow"><span class="k">Where</span><span><a href="' + esc(eventMapsURL(e.location)) + '" target="_blank" rel="noopener">' + esc(e.location) + '</a><span class="evssub">Tap to open in ' + MAP_LABELS[getMapPref()] + '</span></span></div>';
+    if (e.host) rowsHtml += '<div class="evsrow"><span class="k">Host</span><span>' + esc(e.host) + '</span></div>';
+    var srcHref = e.source_url || e.url, srcText = e.source_label || '';
+    if (srcText && srcHref) rowsHtml += '<div class="evsrow"><span class="k">Source</span><span><a href="' + esc(srcHref) + '" target="_blank" rel="noopener">' + esc(srcText) + '</a></span></div>';
+    else if (srcText) rowsHtml += '<div class="evsrow"><span class="k">Source</span><span>' + esc(srcText) + '</span></div>';
+    evSheet.innerHTML =
+      '<div class="evsheet-media"><button class="evsheet-x" id="evsheet-x" type="button" aria-label="Close details">×</button>'
+      + (e.img ? '<img id="evsheet-img" src="' + esc(e.img) + '" alt="">' : '')
+      + '</div>'
+      + '<div class="evsheet-body"><h3>' + esc(e.name) + '</h3>'
+      + rowsHtml
+      + (e.desc ? '<p class="evsdesc">' + esc(e.desc) + '</p>' : '')
+      + '<div class="evsactions">'
+      + (e.url ? '<a class="evbtn" href="' + esc(e.url) + '" target="_blank" rel="noopener">More info</a>' : '')
+      + (e.location ? '<a class="evbtn ghost" href="' + esc(eventMapsURL(e.location)) + '" target="_blank" rel="noopener">Open in ' + MAP_LABELS[getMapPref()] + '</a>' : '')
+      + (e.slug ? '<button class="evbtn ghost" id="evsheet-copy" type="button">' + EV_SHARE_HTML + '</button>' : '')
+      + (e.slug ? '<button class="evbtn ghost" id="evsheet-save" type="button">' + (savedSet[e.slug] ? '★ Saved' : '☆ Save') + '</button>' : '')
+      + '</div></div>';
+    evSheet.classList.add('open');
+    evScrim.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    if (!skipRoute && e.slug) { try { history.pushState(null, '', '#/event/' + encodeURIComponent(e.slug)); } catch (err) {} }
+    var x = document.getElementById('evsheet-x');
+    if (x) { x.focus(); x.addEventListener('click', function () { closeDetail(); }); }
+    var im = document.getElementById('evsheet-img');
+    if (im) { im.title = 'View photo full-screen'; im.addEventListener('click', function () { openEvLb(e); }); }
+    var cp = document.getElementById('evsheet-copy');
+    if (cp) cp.addEventListener('click', function () {
+      var url = canonicalURL(e.slug);
+      function done() { cp.textContent = '✓ Link copied'; setTimeout(function () { cp.innerHTML = EV_SHARE_HTML; }, 1600); }
+      function copyFallback() {
+        if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(url).then(done, done);
+        else { var ta = document.createElement('textarea'); ta.value = url; document.body.appendChild(ta); ta.select(); try { document.execCommand('copy'); } catch (err) {} document.body.removeChild(ta); done(); }
+      }
+      if (navigator.share) {
+        navigator.share({ title: e.name + ' · Gold Country Events', text: e.name + ' — from the Gold Country Events calendar', url: url })
+          .catch(function (err) { if (err && err.name !== 'AbortError') copyFallback(); });
+      } else copyFallback();
+    });
+    var sv = document.getElementById('evsheet-save');
+    if (sv) sv.addEventListener('click', function () {
+      toggleSaved(e.slug);
+      sv.textContent = savedSet[e.slug] ? '★ Saved' : '☆ Save';
+      render();
+    });
+  }
+  function closeDetail(skipRoute) {
+    if (!sheetIsOpen()) return;
+    evSheet.classList.remove('open');
+    evScrim.classList.remove('open');
+    document.body.style.overflow = '';
+    sheetSlug = null;
+    if (!skipRoute) { try { history.pushState(null, '', location.pathname + location.search); } catch (err) {} }
+    if (sheetReturn && sheetReturn.focus) sheetReturn.focus();
+  }
+  evScrim.addEventListener('click', function () { closeDetail(); });
+  document.addEventListener('keydown', function (ev) {
+    if (ev.key === 'Escape' && sheetIsOpen() && !evLbIsOpen()) closeDetail();
+  });
+  function routeFromURL() {
+    var m = (location.hash || '').match(/^#\/event\/(.+)$/);
+    if (m) return decodeURIComponent(m[1]);
+    return new URLSearchParams(location.search).get('event');
+  }
+  function applyRoute() {
+    var slug = routeFromURL();
+    if (slug) {
+      for (var i = 0; i < rows.length; i++) if (rows[i].slug === slug) { if (sheetSlug !== slug) openDetail(rows[i], true); return; }
+    } else if (sheetIsOpen()) closeDetail(true);
+  }
+  window.addEventListener('hashchange', applyRoute);
+  function applyEvMapPref() {
+    var pref = getMapPref();
+    document.querySelectorAll('[data-evmappref]').forEach(function (b) { b.setAttribute('aria-pressed', b.getAttribute('data-evmappref') === pref ? 'true' : 'false'); });
+    if (sheetSlug) { for (var i = 0; i < rows.length; i++) if (rows[i].slug === sheetSlug) { openDetail(rows[i], true); break; } }
+  }
+  document.querySelectorAll('[data-evmappref]').forEach(function (b) {
+    b.addEventListener('click', function () { try { localStorage.setItem(MAP_PREF_KEY, b.getAttribute('data-evmappref')); } catch (e) {} applyEvMapPref(); });
+  });
+  applyEvMapPref();
+  var evSavedPill = document.getElementById('ev-saved-pill');
+  if (evSavedPill) evSavedPill.addEventListener('click', function () { savedOnly = !savedOnly; showAll = false; render(); });
+  var evClearBtn = document.getElementById('ev-clearq');
+  if (evClearBtn) evClearBtn.addEventListener('click', function () { qEl.value = ''; showAll = false; render(); qEl.focus(); });
 
   /* Full-screen photo viewer (newspaper standard, Nov 22) */
   var evLbList = [];
@@ -1768,8 +1990,8 @@ Generated 2026-11-19 · Part of the Buddy System<br>
     var el = document.getElementById(id);
     if (el) el.addEventListener('click', fn);
   }
-  statGo('ev-stat-published', function () { whenEl.value = 'all'; showAll = false; render(); scrollToViewer(); });
-  statGo('ev-stat-upcoming', function () { whenEl.value = 'upcoming'; showAll = false; render(); scrollToViewer(); });
+  statGo('ev-stat-published', function () { whenEl.value = 'all'; savedOnly = false; showAll = false; render(); scrollToViewer(); });
+  statGo('ev-stat-upcoming', function () { whenEl.value = 'upcoming'; savedOnly = false; showAll = false; render(); scrollToViewer(); });
   function pulseHit(el) {
     if (!el) return;
     el.classList.remove('pulse-hit');
