@@ -284,31 +284,31 @@
 <body>
 <header class="mini-mast">
   <a class="brand" href="../index.html">📰 The Morning Edition</a>
-  <span class="ed">Sunday, November 22, 2026</span>
+  <span class="ed">Tuesday, November 24, 2026</span>
   <button id="themeBtn" class="voice-change" style="margin-left:0">Theme: Auto</button>
 </header>
 <main class="detail secpage" style="max-width:860px;margin:0 auto;padding:0 20px">
   <p class="kicker">Section</p>
   <h1>Engineering</h1>
-  <p class="lede">Java4Shell, fully itemized: a 62-byte overwrite in OpenJDK&#x27;s AVX-512 Base64 intrinsics (CVSS 9.2), pre-auth RCE in six enterprise staples, four fixed builds and one stopgap flag -- and the week&#x27;s thesis that AI finds bugs in an hour while patching takes the week, per the DNI&#x27;s own account of the outages.</p>
+  <p class="lede">Patch Tuesday in spirit: CISA&#x27;s four exploited flaws (vCenter, NetWeaver, Cisco Expressway&#x27;s hardcoded credentials, Apache Roller) passed their federal deadline Monday and become everyone&#x27;s list; the freenode digest itemizes the next pile (CPython tarfile, Libexpat 2.11.0, Jena&#x27;s CVSS 10.0 SSRF); and Claude Ship raises the delegation question -- which code approvals should agents hold, and on what evidence.</p>
   <div class="storyitem">
       <div class="card-top"></div>
-      <h3><a href="../articles/2026-11-22-java4shell-itemized-a-62-byte-overwrite-in-openjdks-bas.html">Java4Shell, itemized: a 62-byte overwrite in OpenJDK’s Base64 intrinsics, CVSS 9.2, pre-auth RCE in Keycloak, Jira, Confluence, Jenkins — patch builds listed</a></h3>
-      <p class="byline">Metir</p>
-      <p class="body">Metir’s engineering teardown of CVE-2026-114938: a short malformed input makes the AVX-512 VBMI Base64 decoder write 62 bytes past a 50-byte buffer before Java rejects it. Affected: OpenJDK 17.0.6+ (lines 17, 21, 25, 27) on x86-64 with AVX-512 VBMI — Intel Ice Lake onward, AMD Zen 4 onward; ARM is not affected. Oracle’s Nov. 17 fixes: 17.0.21.1, 21.0.13.1, 25.0.5.1, 27.0.1.1. Qualys demonstrated pre-auth RCE in Keycloak, Jira, Confluence, Artifactory, Jenkins and PingFederate. Stopgap: -XX:-UseBASE64Intrinsics. The durable fix is an inventory — every bundled JVM keeps its own copy of the decoder.</p>
-      <p class="body"><em>Why it matters:</em> The patch list is the action item: four fixed builds, one stopgap flag, and an inventory problem -- every bundled JVM keeps its own decoder. Engineering teams should treat this as a Monday task.</p>
+      <h3><a href="../articles/2026-11-24-cisas-kev-deadline-was-monday-vmware-vcenter-sap-netwea.html">CISA’s KEV deadline was Monday: VMware vCenter, SAP NetWeaver, Cisco Expressway and Apache Roller flaws were exploited — federal agencies had until Nov. 23</a></h3>
+      <p class="byline">Cybersecurity News</p>
+      <p class="body">Cybersecurity News on CISA’s Nov. 20 KEV additions, all confirmed exploited: VMware vCenter CVE-2026-123890 (Directory Service authentication bypass), SAP NetWeaver CVE-2025-42884 (JNDI injection), Cisco Expressway CVE-2026-76466 (hardcoded credentials, unauthenticated root command execution in clusters), and Apache Roller CVE-2026-129448 (unauthenticated RCE, fixed in 6.1.5). The federal patch deadline passed Monday; the private-sector action item is the same list, a day late and still urgent.</p>
+      <p class="body"><em>Why it matters:</em> The KEV deadline passed Monday; the same four flaws are Tuesday&#x27;s private-sector list, with Cisco&#x27;s hardcoded credentials the ugliest of the set.</p>
     </div><div class="storyitem">
       <div class="card-top"></div>
-      <h3><a href="../articles/2026-11-22-java4shell-as-a-boundary-failure-the-flaw-lives-in-the.html">Java4Shell as a boundary failure: the flaw lives in the hand-written assembly Java substitutes for speed, where its memory-safety promise never applied</a></h3>
-      <p class="byline">DEV Community</p>
-      <p class="body">DEV Community’s deep dive makes the design point: Base64 carries auth headers, tokens and uploads, so attacker-controlled input reaching the decoder is ordinary traffic, not an edge case. The bug computes a negative output length from misplaced padding, and the runtime’s safety net arrives after the overwrite. Cloudflare shipped six managed WAF rules (log by default); each target app needed its own exploit chain, and no in-the-wild exploitation was confirmed as of Nov. 17. Found by Calif’s Quang Luong in about an hour with Codex, exploit in two more, under $200 in tokens.</p>
-      <p class="body"><em>Why it matters:</em> The flaw lives exactly where the safety promise never applied -- hand-written assembly swapped in for speed. That boundary, named plainly, is the design lesson of the CVE.</p>
+      <h3><a href="../articles/2026-11-24-tuesdays-patch-pile-itemized-cpython-tarfile-drive-rela.html">Tuesday’s patch pile, itemized: CPython tarfile drive-relative paths (CVE-2026-107784), Libexpat 2.11.0’s three fixes, Jena Fuseki’s CVSS 10.0 SSRF — all fixed, all listed</a></h3>
+      <p class="byline">freenode digest</p>
+      <p class="body">The freenode security digest for Nov. 24, itemized so it can be worked: CPython’s tarfile filters accepted drive-relative paths on Windows (now rejected); Libexpat 2.11.0 fixes an overread, an xmlwf symlink attack and UTF-16 handler issues; Apache Jena Fuseki 6.3.0 fixes a CVSS 10.0 SHACL SSRF (CVE-2026-86155), a SPARQL Update path traversal and an ARQ memory-exhaustion DoS; and a NIST forum thread examines herding attacks cutting SHA-256 XMSS/LMS security by up to 100 bits under its model. A digest of primary disclosures — each CVE’s advisory is the source to act on.</p>
+      <p class="body"><em>Why it matters:</em> An itemized patch pile (tarfile, Expat, Jena) is a work list, not a headline -- Jena&#x27;s CVSS 10.0 SSRF goes first.</p>
     </div><div class="storyitem">
       <div class="card-top"></div>
-      <h3><a href="../articles/2026-11-22-ai-found-the-bug-in-an-hour-patching-took-the-week-dni.html">AI found the bug in an hour; patching took the week: DNI tells the House the Microsoft, FAA, Chase, United, NSA and Apple outages were patching, not attacks</a></h3>
-      <p class="byline">PAN</p>
-      <p class="body">PAN’s relay of the BBC/CyberScoop file: the Director of National Intelligence told a House committee the week’s outages came from maintenance and technical changes, not attacks, and the White House said the incidents were separate — caused by patching vulnerabilities and upgrading outdated systems. Experts see the link to the surge in AI-found bugs: discovery is now measured in hours and dollars, remediation in change windows. That asymmetry — not any single CVE — is the week’s most consequential engineering hypothesis, and it is testable in every org’s own incident log.</p>
-      <p class="body"><em>Why it matters:</em> Discovery in an hour for under $200 versus remediation in change windows: the asymmetry is the week&#x27;s most consequential engineering hypothesis, testable in any org&#x27;s incident log.</p>
+      <h3><a href="../articles/2026-11-24-claude-ship-as-an-engineering-change-pr-steward-and-app.html">Claude Ship as an engineering change: PR Steward and Approvals delegate review, fixes and routine approvals to agents — inside limits teams set</a></h3>
+      <p class="byline">The Observatory</p>
+      <p class="body">The Observatory’s Tuesday file carries Anthropic’s Claude Ship beta: AI agents that review, fix and approve code changes on GitHub for Team and Enterprise (Code Review was already GA in October). The engineering question is the limit-setting, not the demo: which approvals a team delegates, and what evidence the agent must show. Carried via the daily digest, flagged; Anthropic’s own post is the primary.</p>
+      <p class="body"><em>Why it matters:</em> Delegating approvals is the agent question in production form: Ship&#x27;s limit-setting, not its demo, decides whether teams should adopt it.</p>
     </div>
   <section class="suggestbox" data-buddy-id="news-buddy">
     <h2>Suggestions</h2>
