@@ -90,11 +90,6 @@ h2 { font-size: 22px; margin: 32px 0 16px; }
 .attn-status { font-size: 13px; color: var(--muted); margin-top: 8px; min-height: 18px; }
 .attn.resolved { opacity: .6; }
 .attn-undo { margin-top: 8px; }
-.attn-notes { margin-top: 8px; }
-.attn-note { font-size: 13.5px; background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 7px 10px; margin-top: 6px; }
-.attn-notebox { margin-top: 10px; }
-.attn-notebox textarea { width: 100%; box-sizing: border-box; min-height: 64px; padding: 8px 10px; border: 1px solid var(--border); border-radius: 8px; background: var(--bg); color: var(--text); font: inherit; font-size: 14px; }
-.attn-notebox .attn-actions { margin-top: 8px; }
 .attn.resolved .attn-actions { display: none; }
 /* ---- skills (Dave 2026-10-16) ---- */
 .skills { display: flex; flex-direction: column; gap: 10px; margin-top: 4px; }
@@ -292,7 +287,7 @@ h2 { font-size: 22px; margin: 32px 0 16px; }
 
 
 <h2>Needs Attention</h2>
-<div class="attn" data-attn-id="gazette-buddy-job-req-review"><div class="attn-text">Job req ready for Dave&#x27;s review — looks good, edits, or defer? Persona pick is presented in the main chat (The Editor is the default); voice auditions are live in this buddy&#x27;s own thread (provisional voice: Boomy Mountain; Decision Buddy casting asked).</div><div class="attn-link"><a href="https://docs.google.com/document/d/19inbHB5-jZbvNXb27i0NVdPXxpYxRxKUFXdSyEs9yK4/edit" target="_blank" rel="noopener">Open →</a></div><div class="attn-date">2026-10-30</div><div class="attn-actions"><button type="button" class="attn-btn primary" data-act="done">Done</button><button type="button" class="attn-btn" data-act="info">Need more info</button><button type="button" class="attn-btn" data-act="later">Later</button><button type="button" class="attn-btn" data-act="drop">Drop it</button><button type="button" class="attn-btn" data-act="note">✎ Add a note…</button></div><div class="attn-notes"></div><div class="attn-notebox" hidden><textarea placeholder="Write a note for Gazette Buddy…"></textarea><div class="attn-actions"><button type="button" class="attn-btn primary" data-act="note-save">Save note</button><button type="button" class="attn-btn" data-act="note-cancel">Cancel</button></div></div><div class="attn-status" role="status"></div></div>
+<div class="attn" data-attn-id="gazette-buddy-job-req-review"><div class="attn-text">Job req ready for Dave&#x27;s review — looks good, edits, or defer? Persona pick is presented in the main chat (The Editor is the default); voice auditions are live in this buddy&#x27;s own thread (provisional voice: Boomy Mountain; Decision Buddy casting asked).</div><div class="attn-link"><a href="https://docs.google.com/document/d/19inbHB5-jZbvNXb27i0NVdPXxpYxRxKUFXdSyEs9yK4/edit" target="_blank" rel="noopener">Open →</a></div><div class="attn-date">2026-10-30</div><div class="attn-actions"><button type="button" class="attn-btn primary" data-act="done">Done</button><button type="button" class="attn-btn" data-act="info">Need more info</button><button type="button" class="attn-btn" data-act="later">Later</button><button type="button" class="attn-btn" data-act="drop">Drop it</button></div><div class="attn-status" role="status"></div></div>
 
 
 
@@ -316,7 +311,7 @@ h2 { font-size: 22px; margin: 32px 0 16px; }
 </div>
 <div class="wl-locked" hidden>🔒 Connect GitHub in the 🧠 Brain dump box above to see the confirmed addresses and edit the record — the Gazette repos are private, so a token is needed. Then reload this page.</div>
 <div class="wl-main" hidden>
-<p class="wl-sub">🔓 <strong>Private view</strong> — the canonical record (<code>whitelist.json</code> in Gazette Buddy's private repo). Edit a section name or the confirmed addresses, then save: the write goes straight to the record, and Gazette Buddy's intake watch enforces exactly what's saved here. Adding or removing a person goes through Gazette Buddy (maintainer of record) on Dave's word.</p>
+<p class="wl-sub">🔓 <strong>Private view</strong> — the canonical record (<code>whitelist.json</code> in Gazette Buddy's private repo). Edit a section name or the confirmed addresses, then save: the write goes straight to the record, and Gazette Buddy's intake watch enforces exactly what's saved here. Each card also carries the section's <strong>on/off switch</strong> — flipping it saves to the record immediately: OFF holds that person's filings and takes the section off the paper at the next edition; ON restores it. Adding or removing a person goes through Gazette Buddy (maintainer of record) on Dave's word.</p>
 <div class="wl-edit"></div>
 <div class="wl-queued" hidden></div>
 <div class="attn-actions"><button type="button" class="wl-save attn-btn primary">Save the record</button></div>
@@ -339,6 +334,16 @@ h2 { font-size: 22px; margin: 32px 0 16px; }
 .wl-person input{width:100%;box-sizing:border-box;padding:7px 10px;border:1px solid var(--border);border-radius:8px;background:var(--bg);color:var(--text);font-size:14px;margin-bottom:5px}
 .wl-queued{background:var(--card);border:1px dashed var(--border);border-left:5px solid #f59e0b;border-radius:12px;padding:10px 14px;margin:10px 0;font-size:14px}
 .wl-queued button{font:inherit;cursor:pointer;border:1px solid var(--border);background:none;color:var(--text);border-radius:8px;padding:3px 10px;margin-left:10px}
+.wl-row.off{opacity:.55}
+.wl-offbadge{color:#d43a2f;font-weight:700;font-size:12px;margin-left:8px}
+.wl-person.off{opacity:.78}
+.wl-toggle{display:flex;align-items:center;gap:10px;margin:2px 0 10px;font-size:13.5px;font-weight:700}
+.wl-switch{position:relative;width:46px;height:26px;flex:none;display:inline-block}
+.wl-switch input{opacity:0;width:0;height:0;position:absolute}
+.wl-track{position:absolute;inset:0;border-radius:999px;background:var(--border);transition:.15s;cursor:pointer}
+.wl-track:before{content:"";position:absolute;left:3px;top:3px;width:20px;height:20px;border-radius:50%;background:var(--card);transition:.15s}
+.wl-switch input:checked + .wl-track{background:#2e7d32}
+.wl-switch input:checked + .wl-track:before{transform:translateX(20px)}
 </style>
 <script>
 (function(){
@@ -398,11 +403,64 @@ h2 { font-size: 22px; margin: 32px 0 16px; }
       var addrInputs = addrs.map(function(a){
         return '<input type="email" class="wl-addr" value="' + esc(a) + '" placeholder="add an address, or leave blank" autocomplete="off">';
       }).join('');
+      var on = person.enabled !== false;
+      card.classList.toggle('off', !on);
       card.innerHTML = '<h3>' + esc(person.name) + (person.nickname ? ' · “' + esc(person.nickname) + '”' : '') + '</h3>'
+        + '<div class="wl-toggle"><label class="wl-switch"><input type="checkbox" class="wl-enabled"' + (on ? ' checked' : '') + '><span class="wl-track"></span></label><span>' + (on ? 'Section ON — filings publish' : 'Section OFF — filings held') + '</span></div>'
         + '<label>Section name</label><input type="text" class="wl-section" value="' + esc(person.section || '') + '">'
         + '<label>Confirmed email addresses</label>' + addrInputs
         + '<label>Status (read-only)</label><div style="font-size:13.5px">' + esc(person.status || '') + '</div>';
       editBox.appendChild(card);
+    });
+    bindToggles(); syncRoster();
+  }
+  async function saveRecord(){
+    try {
+      var res = await gh('/repos/davedellaquila/gazette-buddy/contents/whitelist.json', 'PUT', {
+        message: 'Whitelist update from the Gazette Buddy homepage',
+        content: b64encode(JSON.stringify(record, null, 2)),
+        sha: fileSha
+      });
+      fileSha = res.content.sha;
+      status.textContent = '✅ Saved — the record in the repo is updated, and the intake watch enforces it from here.';
+      return true;
+    } catch(e) {
+      setQueue(record, e.message);
+      renderQueued();
+      status.textContent = 'Save failed (' + e.message + '). Nothing was changed in the record — and your edit is queued on this device (see above), so it is not lost: it sends when this view next loads with a working token.';
+      return false;
+    }
+  }
+  function syncRoster(){
+    if (!record) return;
+    sec.querySelectorAll('.wl-row').forEach(function(row){
+      var nameEl = row.querySelector('.wl-name'); if (!nameEl) return;
+      var rn = nameEl.textContent;
+      (record.people || []).forEach(function(p){
+        var parts = p.name.split(' '), first = parts[0], last = parts[parts.length - 1];
+        if (rn.indexOf(first) >= 0 && rn.indexOf(last) >= 0) {
+          var off = p.enabled === false, st = row.querySelector('.wl-status');
+          row.classList.toggle('off', off);
+          if (st) {
+            var badge = st.querySelector('.wl-offbadge');
+            if (off && !badge) { badge = document.createElement('span'); badge.className = 'wl-offbadge'; badge.textContent = '· Section OFF'; st.appendChild(badge); }
+            if (!off && badge) badge.remove();
+          }
+        }
+      });
+    });
+  }
+  function bindToggles(){
+    editBox.querySelectorAll('.wl-enabled').forEach(function(inp){
+      inp.addEventListener('change', async function(){
+        var card = inp.closest('.wl-person'); if (!card || !record) return;
+        var person = record.people[+card.dataset.idx], val = inp.checked;
+        (record.people || []).forEach(function(p){ if (p.sectionAnchor && person.sectionAnchor && p.sectionAnchor === person.sectionAnchor) p.enabled = val; });
+        render();
+        status.textContent = 'Saving the switch…';
+        var ok = await saveRecord();
+        if (ok) status.textContent = '✅ ' + person.section + ' is now ' + (val ? 'ON — filings publish again, and the section returns at the next edition.' : 'OFF — the intake watch holds those filings and flags them, and the section leaves the paper at the next edition.');
+      });
     });
   }
   async function load(){
@@ -449,19 +507,7 @@ h2 { font-size: 22px; margin: 32px 0 16px; }
     });
     if (bad) { status.textContent = 'Not saved — “' + bad + '” does not look like an email address.'; return; }
     status.textContent = 'Saving…';
-    try {
-      var res = await gh('/repos/davedellaquila/gazette-buddy/contents/whitelist.json', 'PUT', {
-        message: 'Whitelist update from the Gazette Buddy homepage',
-        content: b64encode(JSON.stringify(record, null, 2)),
-        sha: fileSha
-      });
-      fileSha = res.content.sha;
-      status.textContent = '✅ Saved — the record in the repo is updated, and the intake watch enforces it from here.';
-    } catch(e) {
-      setQueue(record, e.message);
-      renderQueued();
-      status.textContent = 'Save failed (' + e.message + '). Nothing was changed in the record — and your edit is queued on this device (see above), so it is not lost: it sends when this view next loads with a working token.';
-    }
+    await saveRecord();
   });
   load();
 })();
@@ -533,7 +579,7 @@ Generated 2026-10-31 · Part of the Buddy System<br>
       var d = await r.json();
       var buds = d.buddies || [];
       for (var i = 0; i < buds.length; i++) {
-        if (buds[i].id === bid && buds[i].repo) { repo = String(buds[i].repo).split('/').filter(Boolean).pop(); repoName = buds[i].name || bid; break; }
+        if (buds[i].id === bid && buds[i].repo) { repo = buds[i].repo; repoName = buds[i].name || bid; break; }
       }
     } catch(e){}
   }
@@ -713,7 +759,7 @@ Generated 2026-10-31 · Part of the Buddy System<br>
       var buds = d.buddies || [];
       for (var i = 0; i < buds.length; i++) {
         if (buds[i].id === bid) {
-          if (buds[i].repo) repo = String(buds[i].repo).split('/').filter(Boolean).pop();
+          if (buds[i].repo) repo = buds[i].repo;
           if (buds[i].name) buddyName = buds[i].name;
           break;
         }
@@ -739,21 +785,6 @@ Generated 2026-10-31 · Part of the Buddy System<br>
      write the Need-more-info button uses. */
   function getState(aid, text){ var s = lsGet(); var m = s.attnState || {}; return m[rkey(aid, text)] || ''; }
   function setState(aid, text, v){ var s = lsGet(); var m = s.attnState || {}; if (v) m[rkey(aid, text)] = v; else delete m[rkey(aid, text)]; s.attnState = m; lsSet(s); }
-  /* ✎ Add a note (Dave 2026-11-20, fleet standard): Dave's words save to
-     this buddy's ingest through the same token-gated write, and the note
-     renders on the card (remembered per item on this device). */
-  function getNotes(aid, text){ var s = lsGet(); var m = s.attnNotes || {}; return m[rkey(aid, text)] || []; }
-  function addNote(aid, text, note){ var s = lsGet(); var m = s.attnNotes || {}; var k = rkey(aid, text); var arr = m[k] || []; arr.push(note); m[k] = arr; s.attnNotes = m; lsSet(s); }
-  function renderNotes(tile, aid, text){
-    var box = tile.querySelector('.attn-notes'); if (!box) return;
-    box.textContent = '';
-    getNotes(aid, text).forEach(function(n){
-      var d = document.createElement('div');
-      d.className = 'attn-note';
-      d.textContent = '✎ Dave · ' + n.date + ' — ' + n.text;
-      box.appendChild(d);
-    });
-  }
   function noteAction(tile, entry, okMsg){
     sendAction(tile, entry, okMsg).then(function(){
       tile.querySelectorAll('.attn-btn').forEach(function(b){ b.disabled = false; });
@@ -883,7 +914,6 @@ Generated 2026-10-31 · Part of the Buddy System<br>
     var baked = tile.getAttribute('data-cleared');
     var st0 = getState(aid, text);
     if (baked || isResolved(aid, text)) paintResolved(tile, baked ? ('✓ Cleared by Dave · ' + baked) : (st0 === 'later' ? 'Later — snoozed by Dave' : st0 === 'drop' ? 'Dropped by Dave' : st0 === 'arrived' ? '✓ Arrived — logged by Dave' : 'Marked done'), true);
-    renderNotes(tile, aid, text);
     tile.addEventListener('click', function(ev){
       var btn = ev.target.closest ? ev.target.closest('.attn-btn') : null;
       if (!btn || btn.disabled) return;
@@ -941,23 +971,6 @@ Generated 2026-10-31 · Part of the Buddy System<br>
         noteAction(tile,
           'STILL WAITING — Dave confirms this is still outstanding: "' + text + '"' + idBit + '. Keep it on the open list.',
           'Noted — still waiting; it stays on the list.');
-      } else if (act === 'note') {
-        var nb = tile.querySelector('.attn-notebox');
-        if (nb) { nb.hidden = false; var ta = nb.querySelector('textarea'); if (ta) ta.focus(); }
-      } else if (act === 'note-cancel') {
-        var nb2 = tile.querySelector('.attn-notebox');
-        if (nb2) { nb2.hidden = true; var ta2 = nb2.querySelector('textarea'); if (ta2) ta2.value = ''; }
-      } else if (act === 'note-save') {
-        var nb3 = tile.querySelector('.attn-notebox');
-        var ta3 = nb3 ? nb3.querySelector('textarea') : null;
-        var words = ta3 ? ta3.value.trim() : '';
-        if (!words) { if (nb3) nb3.hidden = true; return; }
-        addNote(aid, text, {date: todayStr(), text: words});
-        renderNotes(tile, aid, text);
-        if (nb3) { nb3.hidden = true; ta3.value = ''; }
-        noteAction(tile,
-          'NOTE — Dave added a note to: "' + text + '"' + idBit + ' — "' + words + '"',
-          'Note saved — it is on the card and in the ingest.');
       }
     });
   });
