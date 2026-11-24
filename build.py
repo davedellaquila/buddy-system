@@ -382,6 +382,17 @@ body:has(#token-pill) #canvas-bar{padding-right:204px}
 @media (min-width:640px){
   body:not(.standalone):not(.sb-anchored):not(.sb-closed) #canvas-bar{margin-left:324px}
   body:not(.standalone).sb-closed:has(#main.homepage-mode) #canvas-bar{margin-left:56px}
+  /* Dave 2026-11-24: center the view switch (.cb-switch) in the content
+     area instead of gluing it to the right edge (margin-left:auto). The
+     bar becomes a 3-column grid - crumb left, switch dead center of the
+     bar's content box, empty right column - so the switch stays centered
+     at any width and the crumb wraps inside its own column when tight
+     rather than colliding. The (i)-button / token-pill right padding
+     reserves above still apply (centering is inside the content box).
+     Phone (<640px) keeps the flex bar + loose-pill switch untouched. */
+  #canvas-bar{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr)}
+  #canvas-bar .cb-crumb{justify-self:start}
+  #canvas-bar .cb-switch{margin-left:0;justify-self:center}
 }
 .cb-crumb{display:flex;align-items:center;gap:8px;font-size:.9375rem;color:var(--text);min-width:0;flex-wrap:wrap}
 .cb-crumb b{font-weight:700}
