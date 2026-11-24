@@ -147,7 +147,8 @@ section.blk{margin:1.2rem 0}
 .pgroup>span{display:block;font-size:.74rem;text-transform:uppercase;letter-spacing:.12em;color:var(--ink-soft);margin-bottom:.35rem}
 .pgroup>span em{text-transform:none;letter-spacing:0;font-style:italic}
 .pills{display:flex;flex-wrap:wrap;gap:.4rem}
-.pill{border:1.5px solid var(--ink);background:var(--chip);color:var(--ink);border-radius:999px;padding:.42rem .8rem;font-size:.92rem}
+.pill{border:1.5px solid var(--ink);background:var(--chip);color:var(--ink);border-radius:999px;padding:.42rem .8rem;font-size:.92rem;touch-action:manipulation}
+.chip{touch-action:manipulation}
 .pill:hover{border-color:var(--accent)}
 .pill[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fffaf0;font-weight:bold}
 .otherwrap{margin-top:.5rem}
@@ -1912,7 +1913,11 @@ document.querySelectorAll('.pgroup[data-group]').forEach(group => {
   group.querySelectorAll('.pill').forEach(pill => {
     pill.addEventListener('click', () => {
       const val = pill.getAttribute('data-val');
-      const on = pill.getAttribute('aria-pressed') === 'true';
+      /* Toggle state is read from BUILD — the single source of truth — never
+         back from the DOM attribute. Dave's rule (Nov 24, 2026): tapping a
+         selected pill deselects it, and the group reverts to its all/any
+         (nothing-picked) state. */
+      const on = mode === 'single' ? BUILD[gname] === val : BUILD.visits.has(val);
       if (mode === 'single') {
         group.querySelectorAll('.pill').forEach(p => p.setAttribute('aria-pressed','false'));
         if (!on) { pill.setAttribute('aria-pressed','true'); BUILD[gname] = val; }
