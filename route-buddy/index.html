@@ -399,7 +399,7 @@ section.blk{margin:1.2rem 0}
       <div class="stat"><b id="stOffmap">—</b><span>Off-map records</span><small id="stOffmapSub">—</small></div>
     </section>
 
-    <div class="honest">🛣️ <b>Honest partial map:</b> the catalog holds <b>43 records</b> (first inventory sweep + the 2019 DWA Sierra Rally GPX intake, Oct 30, 2026 + the Lincoln Highway Pioneer Branch trace, Nov 24, 2026). The <b>5 DWA records and the 4 Lincoln Highway records now have real master GPX files</b> in the Route Buddy repo — download them from their records below. Every line drawn on this plate is still an <b>approximate place-anchor sketch between known towns — not route geometry</b> (the real geometry for those records lives in their GPX files); ◆ pins mark records placed by region only, and some records can't be placed at all yet. For the other 34 records there is no master GPX yet, so distances are either <i>stated</i> in a source or <i>computed</i> from source geometry — each record says which. Judgment fields (technical, surface, vehicle fit, season, Dave's rating) stay “— / awaiting cataloging” until Dave supplies them.</div>
+    <div class="honest">🛣️ <b>Honest partial map:</b> the catalog holds <b>44 records</b> (first inventory sweep + the 2019 DWA Sierra Rally GPX intake, Oct 30, 2026 + the Lincoln Highway Pioneer Branch trace, Nov 24, 2026 + the Fiddletown Lakes Loop, Dave's first route-builder delivery, Nov 24, 2026). The <b>5 DWA records, the 4 Lincoln Highway records and the Fiddletown Lakes Loop record now have real master GPX files</b> in the Route Buddy repo — download them from their records below. Every line drawn on this plate is still an <b>approximate place-anchor sketch between known towns — not route geometry</b> (the real geometry for those records lives in their GPX files); ◆ pins mark records placed by region only, and some records can't be placed at all yet. For the other 34 records there is no master GPX yet, so distances are either <i>stated</i> in a source or <i>computed</i> from source geometry — each record says which. Judgment fields (technical, surface, vehicle fit, season, Dave's rating) stay “— / awaiting cataloging” until Dave supplies them.</div>
 
     <section class="mapcard" aria-label="Map of the United States with Dave's routes">
       <div class="maphead"><b>United States — Route Atlas</b><span>Tap a pin or dashed line to open a route's record · ◆ = region anchor only</span></div>
@@ -456,16 +456,18 @@ section.blk{margin:1.2rem 0}
   <a href="https://davedellaquila.github.io/buddy-system/route-buddy/">Route Buddy dashboard</a> ·
   <a href="https://davedellaquila.github.io/buddy-system/sports-car-adventures/">🏁 Sports Car Adventures (parent)</a> ·
   <a href="https://ko-fi.com/davedellaquila" target="_blank" rel="noopener">☕ Tip Jar (Ko-fi)</a>
-  <br><small>Custom homepage v3 — route builder + full library (43 records incl. the 2019 DWA Sierra Rally GPX set, Oct 30, 2026, and the Lincoln Highway Pioneer Branch trace, Nov 24, 2026). Route lines marked “approximate” are place-anchor sketches; the DWA and Lincoln Highway records' real geometry is in their master GPX files, linked from their records.</small>
+  <br><small>Custom homepage v3 — route builder + full library (44 records incl. the 2019 DWA Sierra Rally GPX set, Oct 30, 2026, the Lincoln Highway Pioneer Branch trace, Nov 24, 2026, and the Fiddletown Lakes Loop, Nov 24, 2026). Route lines marked “approximate” are place-anchor sketches; the DWA, Lincoln Highway and Fiddletown Lakes Loop records' real geometry is in their master GPX files, linked from their records.</small>
 </footer>
 
 
 <script>
 /* ================= ROUTES DATA =================
    VERBATIM copy of the inventory catalog (~/workspace/route-buddy-inventory/
-   routes.json) — 43 records: the 34-record first inventory sweep, the
-   5-record 2019 DWA Sierra Rally GPX intake (Oct 30, 2026), and the
-   4-record Lincoln Highway Pioneer Branch trace (Nov 24, 2026). Same shape as
+   routes.json) — 44 records: the 34-record first inventory sweep, the
+   5-record 2019 DWA Sierra Rally GPX intake (Oct 30, 2026), the
+   4-record Lincoln Highway Pioneer Branch trace (Nov 24, 2026), and the
+   Fiddletown Lakes Loop, Dave's first route-builder delivery (Nov 24, 2026).
+   Same shape as
    routes.json so the production swap to a live fetch stays mechanical.
    Presentation-only placement lives in ANCHORS below, keyed by slug.
    HONESTY RULE: null = not yet cataloged. Nothing here invents distance,
@@ -1546,12 +1548,43 @@ const ROUTES = [
     "daves_rating": null,
     "daves_notes": null,
     "notes": "Folsom Blvd the whole way, through Rancho Cordova into Sacramento. Finish runs on L St, one block north of the historic M St line, to the Capitol endpoint. 143 rtept. Named stops (ViaPoints): Sutter Street — Folsom History Museum (start); California State Capitol, Sacramento (end)."
+  },
+  {
+    "slug": "fiddletown-lakes-loop",
+    "name": "Fiddletown Lakes Loop — back roads, lakes & waterfalls (half day)",
+    "start": "Fiddletown, CA",
+    "end": "Fiddletown, CA",
+    "distance_mi": 125.0,
+    "distance_basis": "road distance from full OSM/OSRM geometry per the build audit (2026-11-24); the simplified 148-point GPX trace sums to 108.1 mi point-to-point",
+    "drive_time": "≈4.6 h estimated (road-class estimate in build notes); ≈4.1 h / 113 mi without the Middle Bar spur",
+    "elevation": null,
+    "region": "CA — Amador / Calaveras foothills",
+    "shape": "loop",
+    "source": "Dave's route-builder request via the Route Buddy homepage (Nov 24, 2026): scenic loop, Fiddletown cabin start, half day, lakes & waterfalls, back roads only",
+    "format_on_hand": "GPX (inRoute native via format: ViaPoint stops + ShapingPoint pins holding the back roads)",
+    "master_gpx_status": "yes — route-buddy repo: routes/masters/fiddletown-lakes-loop.gpx",
+    "evidence_link_or_path": "route-buddy repo: routes/masters/fiddletown-lakes-loop.gpx; build notes: routes/FIDDLETOWN-LAKES-LOOP-NOTES.md",
+    "last_driven": null,
+    "scenery_tags": [
+      "lakes",
+      "river",
+      "historic bridge",
+      "small towns"
+    ],
+    "season": null,
+    "technical": null,
+    "surface": null,
+    "vehicle_fit": null,
+    "daves_rating": null,
+    "daves_notes": null,
+    "notes": "Fiddletown → Shake Ridge Rd → Volcano → Clinton Rd → Lake Tabeaud → Jackson (surface streets) → Stony Creek Rd → Pardee Dam → Pardee Recreation Area → Middle Bar Bridge (1912, Mokelumne River) spur → Lake Camanche North Shore → Ione → Sutter Creek → Plymouth → Shenandoah Rd home. Back-roads audit: ~2.35 mi of forced state-highway links (0.21 mi CA-88 in Pine Grove; ~2.1 mi CA-124 east of Ione; 0.24 mi Ione main street) out of 125 — flagged in the notes, no alternative exists without long repeats. NO waterfall: no named road-accessible falls exists on a back-roads loop from Fiddletown (Mokelumne/Fantasy Falls are wilderness whitewater drops) — none invented. Bear River / Salt Springs / Lake Amador excluded: CA-88-only access. 148 rtept."
   }
 ];
 
 /* ================= MASTER GPX FILES =================
    The 2019 DWA Sierra Rally records (committed d2bb083) and the Lincoln
-   Highway Pioneer Branch trace records have real master GPX files in
+   Highway Pioneer Branch trace records, and the Fiddletown Lakes Loop
+   (Dave's first route-builder delivery) have real master GPX files in
    the Route Buddy repo (routes/masters/). Filenames are the repo's
    slug-style names; two DWA leg records' slugs differ from their file
    names, so the mapping is explicit rather than derived.             */
@@ -1565,7 +1598,8 @@ const GPX_FILES = {
   "lincoln-highway-pioneer-branch-0-genoa-to-stateline": "lincoln-highway-pioneer-branch-0-genoa-to-stateline.gpx",
   "lincoln-highway-pioneer-branch-1-stateline-to-pollock-pines": "lincoln-highway-pioneer-branch-1-stateline-to-pollock-pines.gpx",
   "lincoln-highway-pioneer-branch-2-pollock-pines-to-folsom": "lincoln-highway-pioneer-branch-2-pollock-pines-to-folsom.gpx",
-  "lincoln-highway-pioneer-branch-3-folsom-to-sacramento": "lincoln-highway-pioneer-branch-3-folsom-to-sacramento.gpx"
+  "lincoln-highway-pioneer-branch-3-folsom-to-sacramento": "lincoln-highway-pioneer-branch-3-folsom-to-sacramento.gpx",
+  "fiddletown-lakes-loop": "fiddletown-lakes-loop.gpx"
 };
 function gpxFileFor(r){ return GPX_FILES[r.slug] || null; }
 function gpxBadge(r){ return gpxFileFor(r) ? '<span class="badge geo">🗺️ Master GPX on file</span>' : ''; }
@@ -1814,14 +1848,14 @@ function render(){
     `Showing ${visible.length} of ${ROUTES.length} cataloged routes — map and list are the same filtered set (Europe and not-yet-placed records appear in the book only).`;
   /* honest stats, computed from the data itself */
   document.getElementById('stRoutes').textContent = ROUTES.length;
-  document.getElementById('stRoutesSub').textContent = 'first inventory sweep + DWA GPX intake + Lincoln Highway trace · Oct 30 – Nov 24, 2026';
+  document.getElementById('stRoutesSub').textContent = 'first inventory sweep + DWA GPX intake + Lincoln Highway trace + Fiddletown Lakes Loop · Oct 30 – Nov 24, 2026';
   const withDist = ROUTES.filter(r=>r.distance_mi!=null);
   const stated = withDist.filter(r=>basisOf(r)==='stated');
   const computed = withDist.filter(r=>basisOf(r)==='computed');
   const sum = a => a.reduce((s,r)=>s+r.distance_mi,0);
   document.getElementById('stMiles').textContent = fmtMi(sum(withDist));
   document.getElementById('stMilesSub').textContent =
-    `${fmtMi(sum(stated))} mi stated in sources (${stated.length} routes) · ${fmtMi(sum(computed))} mi computed from source geometry (My Maps lines / GPX tracks) (${computed.length} routes) · ${ROUTES.length-withDist.length} routes have no distance yet · ${ROUTES.filter(r=>gpxFileFor(r)).length} records have a master GPX on file (2019 DWA Sierra Rally set + Lincoln Highway Pioneer Branch trace)`;
+    `${fmtMi(sum(stated))} mi stated in sources (${stated.length} routes) · ${fmtMi(sum(computed))} mi computed from source geometry (My Maps lines / GPX tracks) (${computed.length} routes) · ${ROUTES.length-withDist.length} routes have no distance yet · ${ROUTES.filter(r=>gpxFileFor(r)).length} records have a master GPX on file (2019 DWA Sierra Rally set + Lincoln Highway Pioneer Branch trace + Fiddletown Lakes Loop)`;
   const states = new Set();
   ROUTES.forEach(r=>{ const reg=r.region||''; if(/^Europe/.test(reg)) return;
     (reg.match(/\b(CA|NV|AZ|OR|UT|WA|ID|CO)\b/g)||[]).forEach(s=>states.add(s)); });
@@ -2194,7 +2228,15 @@ const DELIVERED = [
       { label: "Leg 2 — Pollock Pines to Folsom · 43.5 mi", href: "https://github.com/davedellaquila/route-buddy/blob/master/routes/masters/lincoln-highway-pioneer-branch-2-pollock-pines-to-folsom.gpx" },
       { label: "Leg 3 — Folsom to Sacramento · 25.5 mi", href: "https://github.com/davedellaquila/route-buddy/blob/master/routes/masters/lincoln-highway-pioneer-branch-3-folsom-to-sacramento.gpx" }
     ],
-    preview: [[-119.84569,39.00489],[-119.83283,38.98443],[-119.84384,38.94419],[-119.83906,38.92855],[-119.84746,38.93439],[-119.84705,38.96185],[-119.87109,38.97071],[-119.86424,38.9726],[-119.88658,38.97921],[-119.93639,38.96763],[-119.97583,38.88967],[-119.99806,38.86479],[-120.04272,38.84174],[-120.02876,38.8251],[-120.07096,38.82158],[-120.112,38.80242],[-120.12145,38.80219],[-120.1212,38.81152],[-120.13643,38.80819],[-120.15789,38.78694],[-120.1915,38.79125],[-120.33213,38.76347],[-120.40586,38.77628],[-120.44646,38.76878],[-120.46415,38.77647],[-120.50583,38.76044],[-120.55433,38.76744],[-120.67394,38.73815],[-120.75968,38.74658],[-120.78599,38.73121],[-120.82824,38.72327],[-120.84564,38.68209],[-120.86034,38.69176],[-120.87636,38.6764],[-120.96192,38.65323],[-120.96908,38.66042],[-121.01074,38.66384],[-121.01509,38.65582],[-121.03462,38.66636],[-121.02675,38.65373],[-121.05484,38.65919],[-121.09282,38.62701],[-121.13624,38.66373],[-121.18068,38.67654],[-121.18886,38.64596],[-121.1819,38.65126],[-121.20175,38.6348],[-121.38862,38.54807],[-121.49493,38.57699]] }
+    preview: [[-119.84569,39.00489],[-119.83283,38.98443],[-119.84384,38.94419],[-119.83906,38.92855],[-119.84746,38.93439],[-119.84705,38.96185],[-119.87109,38.97071],[-119.86424,38.9726],[-119.88658,38.97921],[-119.93639,38.96763],[-119.97583,38.88967],[-119.99806,38.86479],[-120.04272,38.84174],[-120.02876,38.8251],[-120.07096,38.82158],[-120.112,38.80242],[-120.12145,38.80219],[-120.1212,38.81152],[-120.13643,38.80819],[-120.15789,38.78694],[-120.1915,38.79125],[-120.33213,38.76347],[-120.40586,38.77628],[-120.44646,38.76878],[-120.46415,38.77647],[-120.50583,38.76044],[-120.55433,38.76744],[-120.67394,38.73815],[-120.75968,38.74658],[-120.78599,38.73121],[-120.82824,38.72327],[-120.84564,38.68209],[-120.86034,38.69176],[-120.87636,38.6764],[-120.96192,38.65323],[-120.96908,38.66042],[-121.01074,38.66384],[-121.01509,38.65582],[-121.03462,38.66636],[-121.02675,38.65373],[-121.05484,38.65919],[-121.09282,38.62701],[-121.13624,38.66373],[-121.18068,38.67654],[-121.18886,38.64596],[-121.1819,38.65126],[-121.20175,38.6348],[-121.38862,38.54807],[-121.49493,38.57699]] },
+  { name: "Fiddletown Lakes Loop",
+    summary: "Dave\u2019s first route-builder request, delivered: a half-day scenic loop from Fiddletown, back roads only, built around the lakes \u2014 out Shake Ridge Road to Volcano and Lake Tabeaud, across Pardee Dam to the Pardee Recreation Area and the 1912 Middle Bar Bridge over the Mokelumne, Lake Camanche\u2019s North Shore, then home through Ione, Sutter Creek and Plymouth on Shenandoah Road. Honest notes: no road-accessible waterfall exists on a back-roads loop from Fiddletown, so none was invented; and ~2.4 mi of the 125 are forced highway links where the back roads dead-end (detailed in the build notes).",
+    chips: ["125 mi", "\u22484.6 h driving", "5 stops"],
+    stops: ["Lake Tabeaud", "Pardee Recreation Area", "Middle Bar Bridge (1912)", "Lake Camanche North Shore", "Ione"],
+    files: [
+      { label: "GPX \u2014 Fiddletown Lakes Loop", href: "https://github.com/davedellaquila/route-buddy/blob/master/routes/masters/fiddletown-lakes-loop.gpx" }
+    ],
+    preview: [[-120.76216,38.50458],[-120.71293,38.48978],[-120.69985,38.47354],[-120.70616,38.45177],[-120.69606,38.44383],[-120.63979,38.45187],[-120.63090,38.44197],[-120.63087,38.42991],[-120.65908,38.41336],[-120.67361,38.38920],[-120.67186,38.36522],[-120.66694,38.37581],[-120.64868,38.36335],[-120.67559,38.34886],[-120.74544,38.35355],[-120.76204,38.34356],[-120.78843,38.35931],[-120.82411,38.33517],[-120.83048,38.30193],[-120.86509,38.29014],[-120.87114,38.27544],[-120.83459,38.23017],[-120.82058,38.22654],[-120.76335,38.25965],[-120.75027,38.29784],[-120.76319,38.25944],[-120.82083,38.22651],[-120.83448,38.22948],[-120.87064,38.27729],[-120.87784,38.27066],[-120.91132,38.28721],[-120.91938,38.26047],[-120.95769,38.24262],[-120.99565,38.24639],[-120.95439,38.24136],[-120.92779,38.29307],[-120.91362,38.29438],[-120.93576,38.35412],[-120.91522,38.37642],[-120.87313,38.37660],[-120.83212,38.39983],[-120.80334,38.39311],[-120.81951,38.43811],[-120.79580,38.45495],[-120.79193,38.48152],[-120.76642,38.50484],[-120.78230,38.50467],[-120.81357,38.48256],[-120.84406,38.48186],[-120.81357,38.48256],[-120.78078,38.50591],[-120.76216,38.50458]] }
 ];
 (function(){
   const wrap = document.getElementById('deliveredList');
