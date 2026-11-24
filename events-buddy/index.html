@@ -268,6 +268,7 @@ h2 { font-size: 22px; margin: 32px 0 16px; }
 .evfilterbox.collapsed .evfiltersum{display:flex}
 .evfilterbox.collapsed .evcontrols,.evfilterbox.collapsed .evmappref{display:none!important}
 .evfilterbox.collapsed{position:sticky;top:56px;z-index:30;background:var(--bg);padding:8px 0}
+.evfilterbox.opensticky{position:sticky;z-index:30;background:var(--bg);padding:8px 0}
 .evfiltersum-text{flex:1 1 auto;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:600}
 .evfiltersum-cta{flex:none;display:inline-flex;align-items:center;gap:6px;font-weight:700;color:var(--accent,#b4762a);border:1px solid var(--border);border-radius:999px;padding:5px 12px;background:var(--bg)}
 .evfiltersum-n{background:var(--accent,#b4762a);color:#fff;border-radius:999px;padding:0 7px;font-size:12px;line-height:18px}
@@ -1687,6 +1688,7 @@ Generated 2026-11-19 · Part of the Buddy System<br>
     if (on) {
       var tb = document.querySelector('.topbar');
       box.style.top = ((tb ? tb.offsetHeight : 48) + 6) + 'px';
+      box.classList.remove('opensticky');
       renderEvFilterSummary();
     }
     box.classList.toggle('collapsed', on);
@@ -1701,16 +1703,22 @@ Generated 2026-11-19 · Part of the Buddy System<br>
       var rect = box.getBoundingClientRect();
       var collapsed = box.classList.contains('collapsed');
       var y = window.scrollY || 0;
-      if (y < 40) { evFsManualOpen = false; if (collapsed) setEvFiltersCollapsed(false); }
+      if (y < 40) { evFsManualOpen = false; box.classList.remove('opensticky'); if (collapsed) setEvFiltersCollapsed(false); }
       else if (!collapsed && !evFsManualOpen && rect.top < -40) setEvFiltersCollapsed(true);
-      else if (!collapsed && evFsManualOpen && y > evFsExpandY + 160) { evFsManualOpen = false; setEvFiltersCollapsed(true); }
+      else if (!collapsed && evFsManualOpen && y > evFsExpandY + 240) { evFsManualOpen = false; setEvFiltersCollapsed(true); }
     });
   }
   window.addEventListener('scroll', onEvFilterScroll, { passive: true });
   document.getElementById('ev-filtersum').addEventListener('click', function () {
     evFsManualOpen = true;
-    evFsExpandY = window.scrollY || 0;
     setEvFiltersCollapsed(false);
+    var box = document.getElementById('ev-filterbox');
+    var tb = document.querySelector('.topbar');
+    box.style.top = ((tb ? tb.offsetHeight : 48) + 6) + 'px';
+    box.classList.add('opensticky');
+    /* Baseline AFTER the expansion settles (scroll anchoring adjusts
+       scrollY by roughly the growth when the block expands). */
+    requestAnimationFrame(function () { requestAnimationFrame(function () { evFsExpandY = window.scrollY || 0; }); });
   });
 
   function render() {
