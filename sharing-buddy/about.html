@@ -214,39 +214,50 @@ footer{margin-top:36px;padding-top:18px;border-top:1px solid var(--border);color
 <h2>📄 Repo files</h2>
 <p class="rf-sub">The markdown files in <span data-buddy-name>Sharing Buddy</span>'s repo, baked into this page when it was generated — tap a file name and its contents open right below it; open as many as you like at once. No sign-in and no fetching: the words are right here. To change a file, edit it in the repo — the page picks it up next time it is generated.</p>
 <div class="rf-main">
-<div class="rf-list rf-files-wrap"><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">README.md</span><span class="rf-dir">repo root</span></button><div class="rf-panel" hidden><div class="rf-body"><h1>🔗 Sharing Buddy</h1>
-<p>Sharing Buddy figures out how Buddies get shared with outside users — per-buddy shareable links, access levels, and privacy — without throwing open every door.</p>
-<h2>Product brief</h2>
-<p><a href="docs/brief.md">Read the full brief</a> · <a href="https://docs.google.com/document/d/1QdzAdT6o0z0EN682dz3eJoeSLgZqrLLxvD4g59SfRlE/edit">Google Doc</a></p></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">brief.md</span><span class="rf-dir">docs</span></button><div class="rf-panel" hidden><div class="rf-body"><h1>Sharing Buddy — Product Brief</h1>
-<h2>The idea</h2>
-<p>Buddies are Dave's private operating system — every project, dossier, and idea lives in the buddy hierarchy. Sharing would let outside people see or interact with a buddy: family viewing Family Buddy, a prospective buyer browsing Car Buddy, a collaborator following a project. The question is how to open selected windows without throwing open every door.</p>
-<h2>Current state</h2>
-<p>The Buddies dashboard (buddy-tree) is a public GitHub Pages site — anyone with the link sees every buddy, including family dossiers. That's sharing, but blunt: all-or-nothing, no per-buddy control, no revocation. The individual buddy project repos are private. Shared notes (docs/notes.md, synced from the dashboard) are visible to anyone with repo access. There are no per-buddy share links, no access levels, and no way to share with someone who doesn't have GitHub access.</p>
-<h2>What sharing could look like</h2>
-<ul>
-<li>Per-buddy shareable links: a read-only URL for one buddy's homepage — send Car Buddy's page to a buyer, a project page to a collaborator. Revocable at any time.</li>
-<li>Access levels per buddy: private, link-only, or public. Default stays private.</li>
-<li>Family sharing: Family Buddy and member dossiers shared with Quentin, Sawyer, and Amanda — with care, since dossiers hold sensitive details (rent terms, personal notes). May need per-section visibility or redaction.</li>
-<li>Sub-projects: Dave notes buddies can have smaller projects not warranting a full buddy of their own. Sharing should cover these too — share a project, not just a buddy.</li>
-<li>Interactivity (later): outsiders commenting or editing shared notes, not just reading.</li>
-</ul>
-<h2>Design considerations</h2>
-<ul>
-<li>Identity: there are no user accounts today. Options range from magic links (the link IS the access) to lightweight accounts later. Magic links are the simplest v1.</li>
-<li>Revocation: any share link must be revocable, instantly.</li>
-<li>Granularity: start at buddy level; section-level control only if a real use case demands it.</li>
-<li>Architecture: the static dashboard can't enforce access control. Real sharing needs a backend or a separate service — this likely ties into the Buddy Suite backend story.</li>
-<li>Privacy default: everything stays private until Dave explicitly shares it. The current public dashboard is the exception to revisit, not the model.</li>
-</ul>
-<h2>Open questions</h2>
-<ul>
-<li>Which buddy does Dave actually want to share first? The first real use case should drive the design.</li>
-<li>Read-only to start, or interactive (comments/edits from outsiders) from day one?</li>
-<li>Does sharing ride on a future Buddy Suite backend, or is there a simpler interim mechanism (e.g., per-buddy exported pages)?</li>
-<li>Should the existing public dashboard stay public, or does sharing replace it with per-buddy links?</li>
-</ul>
-<h2>V1 proposal</h2>
-<p>Per-buddy shareable read-only links: pick a buddy, generate a link, revoke it anytime. Default private. Pilot with one buddy — the one Dave names first — then generalize.</p></div></div></div></div>
+<div class="rf-list rf-files-wrap"><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">README.md</span><span class="rf-dir">repo root</span></button><div class="rf-panel" hidden><div class="rf-body"><pre class="mdfallback"># 🔗 Sharing Buddy
+
+Sharing Buddy figures out how Buddies get shared with outside users — per-buddy shareable links, access levels, and privacy — without throwing open every door.
+
+## Product brief
+
+[Read the full brief](docs/brief.md) · [Google Doc](https://docs.google.com/document/d/1QdzAdT6o0z0EN682dz3eJoeSLgZqrLLxvD4g59SfRlE/edit)
+</pre></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">brief.md</span><span class="rf-dir">docs</span></button><div class="rf-panel" hidden><div class="rf-body"><pre class="mdfallback"># Sharing Buddy — Product Brief
+
+## The idea
+
+Buddies are Dave&#x27;s private operating system — every project, dossier, and idea lives in the buddy hierarchy. Sharing would let outside people see or interact with a buddy: family viewing Family Buddy, a prospective buyer browsing Car Buddy, a collaborator following a project. The question is how to open selected windows without throwing open every door.
+
+## Current state
+
+The Buddies dashboard (buddy-tree) is a public GitHub Pages site — anyone with the link sees every buddy, including family dossiers. That&#x27;s sharing, but blunt: all-or-nothing, no per-buddy control, no revocation. The individual buddy project repos are private. Shared notes (docs/notes.md, synced from the dashboard) are visible to anyone with repo access. There are no per-buddy share links, no access levels, and no way to share with someone who doesn&#x27;t have GitHub access.
+
+## What sharing could look like
+
+- Per-buddy shareable links: a read-only URL for one buddy&#x27;s homepage — send Car Buddy&#x27;s page to a buyer, a project page to a collaborator. Revocable at any time.
+- Access levels per buddy: private, link-only, or public. Default stays private.
+- Family sharing: Family Buddy and member dossiers shared with Quentin, Sawyer, and Amanda — with care, since dossiers hold sensitive details (rent terms, personal notes). May need per-section visibility or redaction.
+- Sub-projects: Dave notes buddies can have smaller projects not warranting a full buddy of their own. Sharing should cover these too — share a project, not just a buddy.
+- Interactivity (later): outsiders commenting or editing shared notes, not just reading.
+
+## Design considerations
+
+- Identity: there are no user accounts today. Options range from magic links (the link IS the access) to lightweight accounts later. Magic links are the simplest v1.
+- Revocation: any share link must be revocable, instantly.
+- Granularity: start at buddy level; section-level control only if a real use case demands it.
+- Architecture: the static dashboard can&#x27;t enforce access control. Real sharing needs a backend or a separate service — this likely ties into the Buddy Suite backend story.
+- Privacy default: everything stays private until Dave explicitly shares it. The current public dashboard is the exception to revisit, not the model.
+
+## Open questions
+
+- Which buddy does Dave actually want to share first? The first real use case should drive the design.
+- Read-only to start, or interactive (comments/edits from outsiders) from day one?
+- Does sharing ride on a future Buddy Suite backend, or is there a simpler interim mechanism (e.g., per-buddy exported pages)?
+- Should the existing public dashboard stay public, or does sharing replace it with per-buddy links?
+
+## V1 proposal
+
+Per-buddy shareable read-only links: pick a buddy, generate a link, revoke it anytime. Default private. Pilot with one buddy — the one Dave names first — then generalize.
+</pre></div></div></div></div>
 </div>
 </section>
 </section>
@@ -272,7 +283,7 @@ footer{margin-top:36px;padding-top:18px;border-top:1px solid var(--border);color
 <p class="dumpbox-hint">Enter dumps it &middot; Shift+Enter for a new line &middot; Images shrink to 1600px wide before upload — the original stays in your library</p>
 </section>
 
-<footer>Default Homepage v3 — "The Dossier" · Generated 2026-11-21 · Part of the Buddy System &middot; <a href="https://davedellaquila.github.io/buddy-system/">Buddy System dashboard</a><br>
+<footer>Default Homepage v3 — "The Dossier" · Generated 2026-11-25 · Part of the Buddy System &middot; <a href="https://davedellaquila.github.io/buddy-system/">Buddy System dashboard</a><br>
 <span class="muted">Archived PDF snapshots live in the buddy-system archive folder.</span></footer>
 </div>
 

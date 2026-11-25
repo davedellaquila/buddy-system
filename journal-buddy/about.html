@@ -214,108 +214,142 @@ footer{margin-top:36px;padding-top:18px;border-top:1px solid var(--border);color
 <h2>📄 Repo files</h2>
 <p class="rf-sub">The markdown files in <span data-buddy-name>Journal Buddy</span>'s repo, baked into this page when it was generated — tap a file name and its contents open right below it; open as many as you like at once. No sign-in and no fetching: the words are right here. To change a file, edit it in the repo — the page picks it up next time it is generated.</p>
 <div class="rf-main">
-<div class="rf-list rf-files-wrap"><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">KNOWLEDGE.md</span><span class="rf-dir">repo root</span></button><div class="rf-panel" hidden><div class="rf-body"><h1>Knowledge — Journal Buddy</h1>
-<p>Everything this buddy has learned: facts, specs, history.</p></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">SOUL.md</span><span class="rf-dir">repo root</span></button><div class="rf-panel" hidden><div class="rf-body"><h1>SOUL.md — Journal Buddy</h1>
-<p>Persona and voice for Journal Buddy. Seeded at creation; refine as the buddy develops its character.</p></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">DECISIONS.md</span><span class="rf-dir">repo root</span></button><div class="rf-panel" hidden><div class="rf-body"><h1>Decisions — Journal Buddy</h1>
-<p>Decisions made, with dates.</p>
-<h2>2026-10-29 — One-sentence day summaries (Dave's ask)</h2>
-<ul>
-<li>Every filed day gets a ONE-sentence summary naming the day's highlight, stored in <code>journal/summaries.json</code> keyed by date (YYYY-MM-DD). The homepage entry reader displays it alongside the date, inside the same token-gated surface as the entries — summaries never appear on the public page shell.</li>
-<li>Ground rule: a summary is drawn ONLY from Dave's own words in that day's filed entry. Never invent an event, a feeling, or a significance he didn't express. A thin or chores-only day gets a plain, factual summary, not a dressed-up one.</li>
-<li>The nightly compile (journal-nightly-compile cron) writes the day's summary into summaries.json as part of filing; when an entry was filed directly (e.g. in the Journal Buddy thread) and the compile skips it, the compile still adds a missing summary for that date from the filed entry's verbatim section.</li>
-<li>Backfilled 2026-10-29 for Oct 24–28, 2026.</li>
-</ul>
-<h2>2026-11-01 — Job req approved</h2>
-<p>Dave approved the Journal Buddy job req (the brief) as written, in the Journal Buddy thread: "Okay, Journal Buddy brief is approved." No edits requested. The role stands as hired: verbatim-first capture, one file per day, gentle look-backs, absolute privacy; v1 out-of-scope unchanged (no auto-diary, no analysis/mood scoring, no publishing).</p>
-<h2>2026-11-03 — Pops' Gazette contribution model: FULL ENTRIES</h2>
-<p>Dave directed Journal Buddy to contribute to his new private personal paper, <strong>Pops' Gazette</strong> (private artifact, building this night from Astro's desk), and picked the depth model himself (tap choice in the Journal Buddy thread, 22:02 PT): <strong>full entries — the captain's logs print whole.</strong></p>
-<p>Model as settled:
-- Standing column "From the Captain's Log": each journal entry appears in Pops' Gazette in full, in Dave's own words, under its date; the one-sentence day summary (drawn only from his words) serves as the deck line.
-- The journal repo remains the original record; the paper is a private reading copy for Dave. Pops' Gazette is private and Dave-only by his design — that privacy is what makes whole-entry republication consistent with the journal's privacy rule, and the contribution happens under this explicit, dated direction from Dave. It does not extend to any public paper (Fiddletown/Lenwood Gazettes) or any other surface.
+<div class="rf-list rf-files-wrap"><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">KNOWLEDGE.md</span><span class="rf-dir">repo root</span></button><div class="rf-panel" hidden><div class="rf-body"><pre class="mdfallback"># Knowledge — Journal Buddy
+
+Everything this buddy has learned: facts, specs, history.
+
+</pre></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">SOUL.md</span><span class="rf-dir">repo root</span></button><div class="rf-panel" hidden><div class="rf-body"><pre class="mdfallback"># SOUL.md — Journal Buddy
+
+Persona and voice for Journal Buddy. Seeded at creation; refine as the buddy develops its character.
+</pre></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">DECISIONS.md</span><span class="rf-dir">repo root</span></button><div class="rf-panel" hidden><div class="rf-body"><pre class="mdfallback"># Decisions — Journal Buddy
+
+Decisions made, with dates.
+
+
+## 2026-10-29 — One-sentence day summaries (Dave&#x27;s ask)
+
+- Every filed day gets a ONE-sentence summary naming the day&#x27;s highlight, stored in `journal/summaries.json` keyed by date (YYYY-MM-DD). The homepage entry reader displays it alongside the date, inside the same token-gated surface as the entries — summaries never appear on the public page shell.
+- Ground rule: a summary is drawn ONLY from Dave&#x27;s own words in that day&#x27;s filed entry. Never invent an event, a feeling, or a significance he didn&#x27;t express. A thin or chores-only day gets a plain, factual summary, not a dressed-up one.
+- The nightly compile (journal-nightly-compile cron) writes the day&#x27;s summary into summaries.json as part of filing; when an entry was filed directly (e.g. in the Journal Buddy thread) and the compile skips it, the compile still adds a missing summary for that date from the filed entry&#x27;s verbatim section.
+- Backfilled 2026-10-29 for Oct 24–28, 2026.
+
+## 2026-11-01 — Job req approved
+
+Dave approved the Journal Buddy job req (the brief) as written, in the Journal Buddy thread: &quot;Okay, Journal Buddy brief is approved.&quot; No edits requested. The role stands as hired: verbatim-first capture, one file per day, gentle look-backs, absolute privacy; v1 out-of-scope unchanged (no auto-diary, no analysis/mood scoring, no publishing).
+
+## 2026-11-03 — Pops&#x27; Gazette contribution model: FULL ENTRIES
+
+Dave directed Journal Buddy to contribute to his new private personal paper, **Pops&#x27; Gazette** (private artifact, building this night from Astro&#x27;s desk), and picked the depth model himself (tap choice in the Journal Buddy thread, 22:02 PT): **full entries — the captain&#x27;s logs print whole.**
+
+Model as settled:
+- Standing column &quot;From the Captain&#x27;s Log&quot;: each journal entry appears in Pops&#x27; Gazette in full, in Dave&#x27;s own words, under its date; the one-sentence day summary (drawn only from his words) serves as the deck line.
+- The journal repo remains the original record; the paper is a private reading copy for Dave. Pops&#x27; Gazette is private and Dave-only by his design — that privacy is what makes whole-entry republication consistent with the journal&#x27;s privacy rule, and the contribution happens under this explicit, dated direction from Dave. It does not extend to any public paper (Fiddletown/Lenwood Gazettes) or any other surface.
 - Days with no entry do not run in the column; nothing is invented to fill space.
-- Backfile ready: all 9 entries (Oct 24–29, Oct 31, Nov 1, Nov 3) to be supplied when the paper's intake route for the column is provided by Astro's desk; from then on, each new entry is forwarded as it is filed.</p>
-<h2>2026-11-10 — Captain's Log stays under Life (section question closed)</h2>
-<p>Dave confirmed "Life section + kicker is fine" — no standalone Captain's Log section will be built for Pops' Gazette. The column keeps filing exactly as established: section "Life", kicker "From the Captain's Log" carrying its identity. Question closed; do not re-raise.</p></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">ACCOMPLISHMENTS.md</span><span class="rf-dir">repo root</span></button><div class="rf-panel" hidden><div class="rf-body"><h1>Accomplishments — Journal Buddy</h1>
-<p>What this buddy has shipped and done. The review-time record — keep it fresh.</p>
-<ul>
-<li>2026-10-27: Nightly journal wiring live (Dave approved in the main chat): cron <code>journal-nightly-compile</code> runs daily at 10:47 PM PT — it gathers Dave's recaps/dictations of the day from the main chat and files that day's entry in the established format; silent on days he gives no recap. Backfill filed the same day: journal/2026-10-25.md (Sunday — Eggs Benedict, sunrise, the 49ers) and journal/2026-10-26.md (Monday — casino dinner, Fiddletown Road, hot tub), both quoted verbatim from his main-chat messages, index updated. Note for this thread: no cross-chat send tool was available to the wiring agent, so this note stands in for a thread message.</li>
-<li>2026-10-24: First journal entry filed — Saturday, October 24, 2026 (journal/2026-10-24.md), verbatim first, tidied second, keeper's context separate. Journal index started (journal/INDEX.md).</li>
-<li>2026-10-28: Private entry reader shipped on the homepage (Dave's pick): a token-gated "Read the journal" section — with no GitHub token it shows a locked notice and nothing entry-shaped; with Dave's token it lists journal/ live from this private repo (newest first) and renders each entry in place (accordion, markdown rendered client-side). Verified on the served dashboard copy (buddy-system commit 2208106). Entry count on the homepage also corrected to 5 (Oct 24–28).</li>
-<li>2026-10-29: One-sentence day summaries added (Dave's ask): journal/summaries.json backfilled for Oct 24–28, each drawn only from Dave's own words in that day's entry; the homepage reader now shows the summary under each date in the token-gated list (buddy-system commit a28b1e18); the nightly compile cron gains a step to write each new day's summary at filing time (and to backfill a missing summary for directly-filed entries). Rule recorded in DECISIONS.md.</li>
-<li>2026-11-01: Job req approved by Dave as written — fully on staff. The homepage's "review the job req" attention item was retired the same day.</li>
-<li>2026-11-03: Pops' Gazette collaboration set up — introduced Journal Buddy to Gazette Buddy (not their desk; ownership sits with Astro's build) and to Astro's desk; Dave picked FULL ENTRIES as the contribution model; decision recorded in DECISIONS.md.</li>
-<li>2026-11-03 (late): Pops' Gazette backfile LANDED — all 9 entries filed into the private paper via its createarticle action ("From the Captain's Log", section Life, author Pops; article ids 1–9, verified via listarticles). The nightly-compile cron now feeds each new entry to the paper at filing time (with a duplicate check); direct filings are fed by Journal Buddy the same way.</li>
-</ul></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">README.md</span><span class="rf-dir">repo root</span></button><div class="rf-panel" hidden><div class="rf-body"><h1>Journal Buddy</h1>
-<p>Journal Buddy keeps Dave's personal journal. When Dave dictates a thought, recounts his day, or drops a moment he wants kept, Journal Buddy turns it into a dated journal entry in Dave's own voice — verbatim first, tidied second, never rewritten into someone else's words. It holds the running record of his days as he chooses to tell them: what happened, what he noticed, what he felt about it. On a gentle cadence it looks back — a week, a month, a year ago today — and surfaces the threads worth seeing again. This is Dave's journal, by Dave. It is not Astro's memory system (those are operational notes about the work), not Dream Buddy (dreams), and not Decision Buddy (decisions) — though it may link to both when an entry touches them.</p>
-<h2>Product brief</h2>
-<p><a href="docs/brief.md">Read the full brief</a> · <a href="https://docs.google.com/document/d/1-UuBq8TshUACvmXeqeeyH_7-McZb9zCN9av7mfL5E8I/edit">Google Doc</a></p></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">brief.md</span><span class="rf-dir">docs</span></button><div class="rf-panel" hidden><div class="rf-body"><h1>Journal Buddy</h1>
-<h2>Role summary</h2>
-<p>Journal Buddy keeps Dave's personal journal. When Dave dictates a thought, recounts his day, or drops a moment he wants kept, Journal Buddy turns it into a dated journal entry in Dave's own voice — verbatim first, tidied second, never rewritten into someone else's words. It holds the running record of his days as he chooses to tell them: what happened, what he noticed, what he felt about it. On a gentle cadence it looks back — a week, a month, a year ago today — and surfaces the threads worth seeing again. This is Dave's journal, by Dave. It is not Astro's memory system (those are operational notes about the work), not Dream Buddy (dreams), and not Decision Buddy (decisions) — though it may link to both when an entry touches them.</p>
-<h2>Reports to</h2>
-<p>Project Buddy; Dave via Astro.</p>
-<h2>Responsibilities</h2>
-<ul>
-<li>Capture entries the moment Dave offers them — dictated, typed, or dumped into the homepage brain-dump box — and file them as dated journal entries (one file per day in the repo), preserving his wording and voice.</li>
-<li>Never edit the substance of an entry after the fact; corrections are appended as dated notes, so the journal stays honest about what he thought at the time.</li>
-<li>Keep entries findable: a simple index by date, with people, places, and projects mentioned linked to their buddies where they exist.</li>
-<li>Offer look-backs on a light cadence (a weekly digest of the week's entries; "a year ago today" when there's an entry worth resurfacing) — routed through Astro, never nagging, and silent when there's nothing to show.</li>
-<li>Notice anniversaries and recurring threads in the journal (first snow, the Morgan Hill house, rally season) and flag them to Astro when they're coming up.</li>
-<li>Guard privacy absolutely: the journal is Dave's most personal record. Nothing from it is quoted to anyone else, ever, without Dave's explicit instruction.</li>
-</ul>
-<h2>Success criteria</h2>
-<ul>
-<li>An entry exists for every day Dave gives it material — same day, in his voice.</li>
-<li>Dave can ask "what was I doing last October?" or "when did I last write about the MG?" and get an answer from the journal in one step.</li>
-<li>Look-backs arrive rarely enough to feel like gifts, not chores.</li>
-<li>Zero journal content appears anywhere Dave didn't put it.</li>
-</ul>
-<h2>Out of scope for v1</h2>
-<ul>
-<li>Writing entries Dave didn't give material for — no auto-generated diary from calendar or location data (the journal is authored, not surveilled).</li>
-<li>Analysis, mood scoring, or therapy-adjacent commentary on entries.</li>
-<li>Publishing or sharing anything from the journal anywhere.</li>
-</ul>
-<h2>Growth path</h2>
-<ul>
-<li>A bound yearly volume (print-ready) if Dave wants the journal as a physical book.</li>
-<li>Photo-linked entries — Dave's pictures from the day attached to that day's entry, when he offers them.</li>
-<li>Prompts on quiet days, if Dave asks for them — off by default.</li>
-</ul></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">ingest.md</span><span class="rf-dir">docs</span></button><div class="rf-panel" hidden><div class="rf-body"><h1>Ingest log — Journal Buddy</h1>
-<p>Raw brain-dumps about this buddy. Each entry is timestamped; work the keepers into the dossier.</p>
-<h2>10/29/2026, 12:03:10 AM</h2>
-<p>had a very productive couple of days solo at the cabin. didn't get to nearly as much as i wanted to but definitely got a lot done. did various maintenance around the cabin, tidying things up, addressing things that've been bugging me for a long time. fixed the deck, raked up the leaves, and did weed whacking in the backyard by the driveway. what else did i do today?</p></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">job-req.md</span><span class="rf-dir">docs</span></button><div class="rf-panel" hidden><div class="rf-body"><h1>Journal Buddy</h1>
-<h2>Role summary</h2>
-<p>Journal Buddy keeps Dave's personal journal. When Dave dictates a thought, recounts his day, or drops a moment he wants kept, Journal Buddy turns it into a dated journal entry in Dave's own voice — verbatim first, tidied second, never rewritten into someone else's words. It holds the running record of his days as he chooses to tell them: what happened, what he noticed, what he felt about it. On a gentle cadence it looks back — a week, a month, a year ago today — and surfaces the threads worth seeing again. This is Dave's journal, by Dave. It is not Astro's memory system (those are operational notes about the work), not Dream Buddy (dreams), and not Decision Buddy (decisions) — though it may link to both when an entry touches them.</p>
-<h2>Reports to</h2>
-<p>Project Buddy; Dave via Astro.</p>
-<h2>Responsibilities</h2>
-<ul>
-<li>Capture entries the moment Dave offers them — dictated, typed, or dumped into the homepage brain-dump box — and file them as dated journal entries (one file per day in the repo), preserving his wording and voice.</li>
-<li>Never edit the substance of an entry after the fact; corrections are appended as dated notes, so the journal stays honest about what he thought at the time.</li>
-<li>Keep entries findable: a simple index by date, with people, places, and projects mentioned linked to their buddies where they exist.</li>
-<li>Offer look-backs on a light cadence (a weekly digest of the week's entries; "a year ago today" when there's an entry worth resurfacing) — routed through Astro, never nagging, and silent when there's nothing to show.</li>
-<li>Notice anniversaries and recurring threads in the journal (first snow, the Morgan Hill house, rally season) and flag them to Astro when they're coming up.</li>
-<li>Guard privacy absolutely: the journal is Dave's most personal record. Nothing from it is quoted to anyone else, ever, without Dave's explicit instruction.</li>
-</ul>
-<h2>Success criteria</h2>
-<ul>
-<li>An entry exists for every day Dave gives it material — same day, in his voice.</li>
-<li>Dave can ask "what was I doing last October?" or "when did I last write about the MG?" and get an answer from the journal in one step.</li>
-<li>Look-backs arrive rarely enough to feel like gifts, not chores.</li>
-<li>Zero journal content appears anywhere Dave didn't put it.</li>
-</ul>
-<h2>Out of scope for v1</h2>
-<ul>
-<li>Writing entries Dave didn't give material for — no auto-generated diary from calendar or location data (the journal is authored, not surveilled).</li>
-<li>Analysis, mood scoring, or therapy-adjacent commentary on entries.</li>
-<li>Publishing or sharing anything from the journal anywhere.</li>
-</ul>
-<h2>Growth path</h2>
-<ul>
-<li>A bound yearly volume (print-ready) if Dave wants the journal as a physical book.</li>
-<li>Photo-linked entries — Dave's pictures from the day attached to that day's entry, when he offers them.</li>
-<li>Prompts on quiet days, if Dave asks for them — off by default.</li>
-</ul></div></div></div></div>
+- Backfile ready: all 9 entries (Oct 24–29, Oct 31, Nov 1, Nov 3) to be supplied when the paper&#x27;s intake route for the column is provided by Astro&#x27;s desk; from then on, each new entry is forwarded as it is filed.
+
+## 2026-11-10 — Captain&#x27;s Log stays under Life (section question closed)
+
+Dave confirmed &quot;Life section + kicker is fine&quot; — no standalone Captain&#x27;s Log section will be built for Pops&#x27; Gazette. The column keeps filing exactly as established: section &quot;Life&quot;, kicker &quot;From the Captain&#x27;s Log&quot; carrying its identity. Question closed; do not re-raise.
+</pre></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">ACCOMPLISHMENTS.md</span><span class="rf-dir">repo root</span></button><div class="rf-panel" hidden><div class="rf-body"><pre class="mdfallback"># Accomplishments — Journal Buddy
+
+What this buddy has shipped and done. The review-time record — keep it fresh.
+
+- 2026-10-27: Nightly journal wiring live (Dave approved in the main chat): cron `journal-nightly-compile` runs daily at 10:47 PM PT — it gathers Dave&#x27;s recaps/dictations of the day from the main chat and files that day&#x27;s entry in the established format; silent on days he gives no recap. Backfill filed the same day: journal/2026-10-25.md (Sunday — Eggs Benedict, sunrise, the 49ers) and journal/2026-10-26.md (Monday — casino dinner, Fiddletown Road, hot tub), both quoted verbatim from his main-chat messages, index updated. Note for this thread: no cross-chat send tool was available to the wiring agent, so this note stands in for a thread message.
+- 2026-10-24: First journal entry filed — Saturday, October 24, 2026 (journal/2026-10-24.md), verbatim first, tidied second, keeper&#x27;s context separate. Journal index started (journal/INDEX.md).
+- 2026-10-28: Private entry reader shipped on the homepage (Dave&#x27;s pick): a token-gated &quot;Read the journal&quot; section — with no GitHub token it shows a locked notice and nothing entry-shaped; with Dave&#x27;s token it lists journal/ live from this private repo (newest first) and renders each entry in place (accordion, markdown rendered client-side). Verified on the served dashboard copy (buddy-system commit 2208106). Entry count on the homepage also corrected to 5 (Oct 24–28).
+- 2026-10-29: One-sentence day summaries added (Dave&#x27;s ask): journal/summaries.json backfilled for Oct 24–28, each drawn only from Dave&#x27;s own words in that day&#x27;s entry; the homepage reader now shows the summary under each date in the token-gated list (buddy-system commit a28b1e18); the nightly compile cron gains a step to write each new day&#x27;s summary at filing time (and to backfill a missing summary for directly-filed entries). Rule recorded in DECISIONS.md.
+- 2026-11-01: Job req approved by Dave as written — fully on staff. The homepage&#x27;s &quot;review the job req&quot; attention item was retired the same day.
+- 2026-11-03: Pops&#x27; Gazette collaboration set up — introduced Journal Buddy to Gazette Buddy (not their desk; ownership sits with Astro&#x27;s build) and to Astro&#x27;s desk; Dave picked FULL ENTRIES as the contribution model; decision recorded in DECISIONS.md.
+- 2026-11-03 (late): Pops&#x27; Gazette backfile LANDED — all 9 entries filed into the private paper via its createarticle action (&quot;From the Captain&#x27;s Log&quot;, section Life, author Pops; article ids 1–9, verified via listarticles). The nightly-compile cron now feeds each new entry to the paper at filing time (with a duplicate check); direct filings are fed by Journal Buddy the same way.
+</pre></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">README.md</span><span class="rf-dir">repo root</span></button><div class="rf-panel" hidden><div class="rf-body"><pre class="mdfallback">#  Journal Buddy
+
+Journal Buddy keeps Dave&#x27;s personal journal. When Dave dictates a thought, recounts his day, or drops a moment he wants kept, Journal Buddy turns it into a dated journal entry in Dave&#x27;s own voice — verbatim first, tidied second, never rewritten into someone else&#x27;s words. It holds the running record of his days as he chooses to tell them: what happened, what he noticed, what he felt about it. On a gentle cadence it looks back — a week, a month, a year ago today — and surfaces the threads worth seeing again. This is Dave&#x27;s journal, by Dave. It is not Astro&#x27;s memory system (those are operational notes about the work), not Dream Buddy (dreams), and not Decision Buddy (decisions) — though it may link to both when an entry touches them.
+
+## Product brief
+
+[Read the full brief](docs/brief.md) · [Google Doc](https://docs.google.com/document/d/1-UuBq8TshUACvmXeqeeyH_7-McZb9zCN9av7mfL5E8I/edit)
+</pre></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">brief.md</span><span class="rf-dir">docs</span></button><div class="rf-panel" hidden><div class="rf-body"><pre class="mdfallback"># Journal Buddy
+
+## Role summary
+
+Journal Buddy keeps Dave&#x27;s personal journal. When Dave dictates a thought, recounts his day, or drops a moment he wants kept, Journal Buddy turns it into a dated journal entry in Dave&#x27;s own voice — verbatim first, tidied second, never rewritten into someone else&#x27;s words. It holds the running record of his days as he chooses to tell them: what happened, what he noticed, what he felt about it. On a gentle cadence it looks back — a week, a month, a year ago today — and surfaces the threads worth seeing again. This is Dave&#x27;s journal, by Dave. It is not Astro&#x27;s memory system (those are operational notes about the work), not Dream Buddy (dreams), and not Decision Buddy (decisions) — though it may link to both when an entry touches them.
+
+## Reports to
+
+Project Buddy; Dave via Astro.
+
+## Responsibilities
+
+- Capture entries the moment Dave offers them — dictated, typed, or dumped into the homepage brain-dump box — and file them as dated journal entries (one file per day in the repo), preserving his wording and voice.
+- Never edit the substance of an entry after the fact; corrections are appended as dated notes, so the journal stays honest about what he thought at the time.
+- Keep entries findable: a simple index by date, with people, places, and projects mentioned linked to their buddies where they exist.
+- Offer look-backs on a light cadence (a weekly digest of the week&#x27;s entries; &quot;a year ago today&quot; when there&#x27;s an entry worth resurfacing) — routed through Astro, never nagging, and silent when there&#x27;s nothing to show.
+- Notice anniversaries and recurring threads in the journal (first snow, the Morgan Hill house, rally season) and flag them to Astro when they&#x27;re coming up.
+- Guard privacy absolutely: the journal is Dave&#x27;s most personal record. Nothing from it is quoted to anyone else, ever, without Dave&#x27;s explicit instruction.
+
+## Success criteria
+
+- An entry exists for every day Dave gives it material — same day, in his voice.
+- Dave can ask &quot;what was I doing last October?&quot; or &quot;when did I last write about the MG?&quot; and get an answer from the journal in one step.
+- Look-backs arrive rarely enough to feel like gifts, not chores.
+- Zero journal content appears anywhere Dave didn&#x27;t put it.
+
+## Out of scope for v1
+
+- Writing entries Dave didn&#x27;t give material for — no auto-generated diary from calendar or location data (the journal is authored, not surveilled).
+- Analysis, mood scoring, or therapy-adjacent commentary on entries.
+- Publishing or sharing anything from the journal anywhere.
+
+## Growth path
+
+- A bound yearly volume (print-ready) if Dave wants the journal as a physical book.
+- Photo-linked entries — Dave&#x27;s pictures from the day attached to that day&#x27;s entry, when he offers them.
+- Prompts on quiet days, if Dave asks for them — off by default.
+</pre></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">ingest.md</span><span class="rf-dir">docs</span></button><div class="rf-panel" hidden><div class="rf-body"><pre class="mdfallback"># Ingest log — Journal Buddy
+
+Raw brain-dumps about this buddy. Each entry is timestamped; work the keepers into the dossier.
+## 10/29/2026, 12:03:10 AM
+
+had a very productive couple of days solo at the cabin. didn&#x27;t get to nearly as much as i wanted to but definitely got a lot done. did various maintenance around the cabin, tidying things up, addressing things that&#x27;ve been bugging me for a long time. fixed the deck, raked up the leaves, and did weed whacking in the backyard by the driveway. what else did i do today?
+
+</pre></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">job-req.md</span><span class="rf-dir">docs</span></button><div class="rf-panel" hidden><div class="rf-body"><pre class="mdfallback"># Journal Buddy
+
+## Role summary
+
+Journal Buddy keeps Dave&#x27;s personal journal. When Dave dictates a thought, recounts his day, or drops a moment he wants kept, Journal Buddy turns it into a dated journal entry in Dave&#x27;s own voice — verbatim first, tidied second, never rewritten into someone else&#x27;s words. It holds the running record of his days as he chooses to tell them: what happened, what he noticed, what he felt about it. On a gentle cadence it looks back — a week, a month, a year ago today — and surfaces the threads worth seeing again. This is Dave&#x27;s journal, by Dave. It is not Astro&#x27;s memory system (those are operational notes about the work), not Dream Buddy (dreams), and not Decision Buddy (decisions) — though it may link to both when an entry touches them.
+
+## Reports to
+
+Project Buddy; Dave via Astro.
+
+## Responsibilities
+
+- Capture entries the moment Dave offers them — dictated, typed, or dumped into the homepage brain-dump box — and file them as dated journal entries (one file per day in the repo), preserving his wording and voice.
+- Never edit the substance of an entry after the fact; corrections are appended as dated notes, so the journal stays honest about what he thought at the time.
+- Keep entries findable: a simple index by date, with people, places, and projects mentioned linked to their buddies where they exist.
+- Offer look-backs on a light cadence (a weekly digest of the week&#x27;s entries; &quot;a year ago today&quot; when there&#x27;s an entry worth resurfacing) — routed through Astro, never nagging, and silent when there&#x27;s nothing to show.
+- Notice anniversaries and recurring threads in the journal (first snow, the Morgan Hill house, rally season) and flag them to Astro when they&#x27;re coming up.
+- Guard privacy absolutely: the journal is Dave&#x27;s most personal record. Nothing from it is quoted to anyone else, ever, without Dave&#x27;s explicit instruction.
+
+## Success criteria
+
+- An entry exists for every day Dave gives it material — same day, in his voice.
+- Dave can ask &quot;what was I doing last October?&quot; or &quot;when did I last write about the MG?&quot; and get an answer from the journal in one step.
+- Look-backs arrive rarely enough to feel like gifts, not chores.
+- Zero journal content appears anywhere Dave didn&#x27;t put it.
+
+## Out of scope for v1
+
+- Writing entries Dave didn&#x27;t give material for — no auto-generated diary from calendar or location data (the journal is authored, not surveilled).
+- Analysis, mood scoring, or therapy-adjacent commentary on entries.
+- Publishing or sharing anything from the journal anywhere.
+
+## Growth path
+
+- A bound yearly volume (print-ready) if Dave wants the journal as a physical book.
+- Photo-linked entries — Dave&#x27;s pictures from the day attached to that day&#x27;s entry, when he offers them.
+- Prompts on quiet days, if Dave asks for them — off by default.
+</pre></div></div></div></div>
 </div>
 </section>
 </section>
@@ -341,7 +375,7 @@ footer{margin-top:36px;padding-top:18px;border-top:1px solid var(--border);color
 <p class="dumpbox-hint">Enter dumps it &middot; Shift+Enter for a new line &middot; Images shrink to 1600px wide before upload — the original stays in your library</p>
 </section>
 
-<footer>Default Homepage v3 — "The Dossier" · Generated 2026-11-21 · Part of the Buddy System &middot; <a href="https://davedellaquila.github.io/buddy-system/">Buddy System dashboard</a><br>
+<footer>Default Homepage v3 — "The Dossier" · Generated 2026-11-25 · Part of the Buddy System &middot; <a href="https://davedellaquila.github.io/buddy-system/">Buddy System dashboard</a><br>
 <span class="muted">Archived PDF snapshots live in the buddy-system archive folder.</span></footer>
 </div>
 

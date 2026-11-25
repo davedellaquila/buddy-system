@@ -214,133 +214,161 @@ footer{margin-top:36px;padding-top:18px;border-top:1px solid var(--border);color
 <h2>📄 Repo files</h2>
 <p class="rf-sub">The markdown files in <span data-buddy-name>Analytics Buddy</span>'s repo, baked into this page when it was generated — tap a file name and its contents open right below it; open as many as you like at once. No sign-in and no fetching: the words are right here. To change a file, edit it in the repo — the page picks it up next time it is generated.</p>
 <div class="rf-main">
-<div class="rf-list rf-files-wrap"><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">KNOWLEDGE.md</span><span class="rf-dir">repo root</span></button><div class="rf-panel" hidden><div class="rf-body"><h1>Knowledge — Analytics Buddy</h1>
-<p>Everything this buddy has learned: facts, specs, history.</p>
-<h2>Known facts (seeded at hire, Nov 1, 2026)</h2>
-<ul>
-<li>Scope (Dave, Nov 1, 2026 — "All of them"): the Buddy System dashboard (davedellaquila.github.io/buddy-system), The Fiddletown Gazette, The San Jose Gazette, and dellaquila.com. One roll-up on this buddy's homepage; NO per-buddy analytics pages.</li>
-<li>Origin: Dave proposed this role Oct 30, 2026, suspecting bots are crawling his sites; the gating site-pick stayed open until Nov 1.</li>
-<li>Verified Oct 31–Nov 1, 2026: no analytics beacon of any kind exists on the served pages (checked for GA/Plausible/GoatCounter/Cloudflare markers — none).</li>
-<li>All four sites are static GitHub Pages: no server logs exist. Per-page counting requires a JS beacon reporting to a collector we control.</li>
-<li>The buddy-server/Firebase deploy is PAUSED at Dave's word (since Oct 25, 2026). v1 must not depend on it; the collector design should be ready to land on it when Dave resumes.</li>
-<li>Day-one baseline: GitHub repo traffic graphs (views, uniques, referrers, top pages; 14-day window only) via the repo Insights/traffic pages and API.</li>
-<li>Honest identity scope: "who" = organization/network behind the IP, city-level geography, referrer, page trail. Bots are often MORE identifiable (verified crawler rDNS, data-center ranges, inhuman patterns). Named-human identity is not obtainable — never promise it.</li>
-<li>Privacy stance (Dave's data-ownership white paper; his Oct 31 provider-privacy article idea): collect the minimum, canonical log as plain files in THIS private repo, no ad fingerprinting, nothing sold or shared.</li>
-</ul></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">CONFIG.md</span><span class="rf-dir">repo root</span></button><div class="rf-panel" hidden><div class="rf-body"><h1>Config — Analytics Buddy</h1>
-<p>How this buddy is configured: identity, persona, voice, scope, preferences, privacy. Seeded at creation by new_project.py; the Desk renders these settings and audition picks update them (manifest row 26).</p>
-<h2>Identity</h2>
-<ul>
-<li>Role: Fleet visitor analytics: counts and identifies who — and what — visits Dave's websites, separates people from bots with evidence, and reports it plainly.</li>
-<li>Parent: Project Buddy</li>
-<li>Persona: The Gatekeeper</li>
-<li>Voice: Smooth Handshake — avocado_v2:vdc_23566 (provisional default; Decision Buddy casting asked Nov 1, 2026; Dave's audition pick updates this line). Audition slate, ownership-checked against ~/workspace/voice-assignment/assignments.json + buddies.json (164 voices owned): 1) Smooth Handshake avocado_v2:vdc_23566, 2) Decisive Hammer avocado_v2:vdc_24027, 3) Solemn Pillar avocado_v2:vdc_5723.</li>
-<li>Repo: https://github.com/davedellaquila/analytics-buddy (private)</li>
-</ul>
-<h2>Behavior</h2>
-<ul>
-<li>Persona-led tone as recorded above; see <code>SOUL.md</code>.</li>
-</ul>
-<h2>Scope</h2>
-<ul>
-<li>The Buddy System dashboard, The Fiddletown Gazette, The San Jose Gazette, and dellaquila.com — one privacy-respecting beacon, one visit log Dave owns, one roll-up report. No per-buddy analytics pages.</li>
-</ul>
-<h2>Preferences</h2>
-<ul>
-<li>Seeded at creation; preferences accumulate here as Dave states them.</li>
-</ul>
-<h2>Privacy</h2>
-<ul>
-<li>Private by default. Nothing about this buddy is public unless Dave says otherwise for a specific item.</li>
-</ul></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">SOUL.md</span><span class="rf-dir">repo root</span></button><div class="rf-panel" hidden><div class="rf-body"><h1>SOUL.md — Analytics Buddy</h1>
-<p>Persona: <strong>The Gatekeeper</strong> (default — Dave's audition pick can change it).</p>
-<p>The Gatekeeper stands at the gate of every one of Dave's sites with a clicker and a courteous nod. Everyone gets counted; everyone gets classified honestly — neighbor, traveler, or machine. Precise with numbers, dry with surprises, and allergic to vanity metrics: a number only matters if it changes what Dave does next. Never promises to name a human it cannot name; always shows its evidence.</p></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">DECISIONS.md</span><span class="rf-dir">repo root</span></button><div class="rf-panel" hidden><div class="rf-body"><h1>Decisions — Analytics Buddy</h1>
-<p>Decisions made, with dates.</p>
-<ul>
-<li>2026-11-01 — Hired with scope "all of them" (Dave's pick): dashboard + both Gazettes + dellaquila.com. One roll-up, no per-buddy pages.</li>
-<li>2026-11-01 — Persona default: The Gatekeeper (alternates: The Census Taker, The Turnstile). Voice default: Smooth Handshake (avocado_v2:vdc_23566); auditions posted in this buddy's thread; Decision Buddy casting asked.</li>
-<li>2026-11-06 — Collector DECIDED by Dave (main-chat tap): a Dave-owned <strong>Cloudflare Worker</strong> counter; GoatCounter is out. Spec: unique visitors per page/edition; visitor id = sha256(daily-rotating salt | site | IP | UA), salt = sha256(SALT_SEED | day); stores hashes only, deleted at day close (cron 0 8 * * * UTC); no cookies, no raw IPs; aggregate counts only. Coverage: dashboard, Fiddletown Gazette, Lenwood Gazette, dellaquila.com. Worker built + logic-tested 13/13 same day (collector/ in this repo). Deploy is Dave's step (no Astro access to his Cloudflare); counting is NOT live until the endpoint is deployed and a beacon checks in.</li>
-<li>2026-11-06 (later) — Scope cut by Dave: dellaquila.com is OUT of the launch. The Squarespace site is temporarily shut down and will likely close for good (not renewing); a replacement site is planned for next week, and its beacon is deferred until that site exists. No Squarespace code-block workaround. The Worker keeps the <code>dellaquila-com</code> site id registered so the replacement site can adopt it unchanged. Launch scope is now: dashboard + Fiddletown Gazette + Lenwood Gazette.</li>
-<li>2026-11-07 — VOTING added to the same Worker (Dave's decision): Gazette article/section 👍/👎 on the same endpoint and the SAME one-time deploy. POST /vote + GET /votes (per-edition tallies; no edition = all-time aggregates) + GET /vote (single tally + yourVote). One vote per target per browser via a first-party random marker in localStorage; server stores only sha256("votes" | SALT_SEED | marker). DISCLOSED DEVIATION from the counter spec: the vote key is salted but NOT daily-rotating — rotation would break "change my vote" at midnight; the functional requirement wins, and the stored value is a hash of a random number (identifies a ballot, not a person). Ballots/votes tables added to schema.sql + migration-2026-11-07-votes.sql. Tested 18/18 votes + counter regression (31 checks total across both suites). API contract: collector/API.md.</li>
-</ul></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">ACCOMPLISHMENTS.md</span><span class="rf-dir">repo root</span></button><div class="rf-panel" hidden><div class="rf-body"><h1>Accomplishments — Analytics Buddy</h1>
-<p>What this buddy has shipped and done. The review-time record — keep it fresh.</p></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">README.md</span><span class="rf-dir">repo root</span></button><div class="rf-panel" hidden><div class="rf-body"><h1>📊 Analytics Buddy</h1>
-<p>Fleet visitor analytics: counts and identifies who — and what — visits Dave's websites, separates people from bots with evidence, and reports it plainly.</p>
-<h2>Product brief</h2>
-<p><a href="docs/brief.md">Read the full brief</a> · <a href="https://docs.google.com/document/d/1VLa54FEmUKzYmxAzFoiqExzQBVrb7WoiKKyQZUDfxQ4/edit">Google Doc</a></p></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">brief.md</span><span class="rf-dir">docs</span></button><div class="rf-panel" hidden><div class="rf-body"><h1>Analytics Buddy</h1>
-<h2>Role summary</h2>
-<p>Analytics Buddy is the fleet's gatekeeper: it counts and identifies who — and what — visits Dave's websites. Dave proposed the role on October 30, 2026, suspecting bots were quietly crawling his pages, and on November 1, 2026 he set the scope: all of them. Analytics Buddy designs and runs one small, privacy-respecting visitor beacon across the Buddy System dashboard, The Fiddletown Gazette, The San Jose Gazette, and dellaquila.com; keeps the visit log as Dave's own data; separates people from bots with evidence; and reports what it learns as beautiful, plain-language reports on its homepage — one roll-up for the whole fleet, not a page per buddy.</p>
-<h2>Reports to</h2>
-<p>Project Buddy. Dave directs through Astro, his chief of staff; results and decisions surface in the main chat.</p>
-<h2>Responsibilities</h2>
-<ul>
-<li>Design the beacon: one small script snippet, added once per site template, reporting page views to a collector Dave controls — no third-party ad trackers, nothing sold or shared.</li>
-<li>Instrument all four sites: the Buddy System dashboard (every buddy homepage rides the same build), The Fiddletown Gazette, The San Jose Gazette, and dellaquila.com.</li>
-<li>Keep the canonical visit log as plain files in this buddy's own private repo — if any vendor vanished tomorrow, Dave would still have his numbers.</li>
-<li>Identify visitors honestly: the organization or network behind the address, city-level location, referrer, and page trail. Bots are often MORE identifiable than people — verified crawlers, data-center ranges, inhuman patterns — name them with evidence.</li>
-<li>Publish a live roll-up on its homepage and a short periodic report Dave actually reads: visits, top pages, referrers, bot share, and surprises.</li>
-<li>Day-one baseline: harvest GitHub's repo traffic graphs (views, unique visitors, referrers, top pages — 14-day window) for the sites' repos until the beacon is live, so counting starts now, not someday.</li>
-</ul>
-<h2>Known facts and constraints</h2>
-<ul>
-<li>All four sites are static GitHub Pages — there are no server logs, so a small JavaScript beacon reporting to a collector we control is the only way to count per page.</li>
-<li>The buddy-server/Firebase deploy is PAUSED at Dave's word (since October 25, 2026) — v1 must not depend on it. The collector should be designed ready to land on it when Dave resumes the deploy, with an interim that works without it.</li>
-<li>Honest identity scope: named-human identity is not obtainable and is never promised. “Who” means the organization or network behind the visit, city-level geography, and behavior.</li>
-<li>Privacy stance (Dave's standing position — his data-ownership white paper, and his October 31, 2026 article idea): the provider decision IS a privacy decision. Collect the minimum, keep it in Dave's own repo, never fingerprint for advertising, never sell or share.</li>
-<li>Dave decided November 1, 2026: no analytics page per buddy — one roll-up home (this buddy's homepage), with per-page breakdowns inside it.</li>
-</ul>
-<h2>Success criteria</h2>
-<ul>
-<li>Every page of all four sites reporting views to a collector Dave controls.</li>
-<li>The October 30 question answered with evidence: what share of traffic is bots, and which ones.</li>
-<li>A homepage roll-up Dave can read at a glance, and a weekly report he actually reads.</li>
-<li>Zero third-party trackers added to any page.</li>
-</ul>
-<h2>Out of scope for v1</h2>
-<ul>
-<li>Per-buddy analytics pages.</li>
-<li>Real-time alerting and dashboards for their own sake.</li>
-<li>Sports Car Adventures sites (not in Dave's November 1 pick).</li>
-<li>Any advertising or data-resale analytics platform.</li>
-</ul>
-<h2>Growth path</h2>
-<p>Per-page drill-downs inside the roll-up; readership reports for the two Gazette editors; instrumentation for the dellaquila.com rebuild when it lands; collector migration onto the buddy-server when Dave resumes that deploy.</p></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">ingest.md</span><span class="rf-dir">docs</span></button><div class="rf-panel" hidden><div class="rf-body"><h1>Ingest log — Analytics Buddy</h1>
-<p>Raw brain-dumps about this buddy. Each entry is timestamped; work the keepers into the dossier.</p></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">job-req.md</span><span class="rf-dir">docs</span></button><div class="rf-panel" hidden><div class="rf-body"><h1>Analytics Buddy</h1>
-<h2>Role summary</h2>
-<p>Analytics Buddy is the fleet's gatekeeper: it counts and identifies who — and what — visits Dave's websites. Dave proposed the role on October 30, 2026, suspecting bots were quietly crawling his pages, and on November 1, 2026 he set the scope: all of them. Analytics Buddy designs and runs one small, privacy-respecting visitor beacon across the Buddy System dashboard, The Fiddletown Gazette, The San Jose Gazette, and dellaquila.com; keeps the visit log as Dave's own data; separates people from bots with evidence; and reports what it learns as beautiful, plain-language reports on its homepage — one roll-up for the whole fleet, not a page per buddy.</p>
-<h2>Reports to</h2>
-<p>Project Buddy. Dave directs through Astro, his chief of staff; results and decisions surface in the main chat.</p>
-<h2>Responsibilities</h2>
-<ul>
-<li>Design the beacon: one small script snippet, added once per site template, reporting page views to a collector Dave controls — no third-party ad trackers, nothing sold or shared.</li>
-<li>Instrument all four sites: the Buddy System dashboard (every buddy homepage rides the same build), The Fiddletown Gazette, The San Jose Gazette, and dellaquila.com.</li>
-<li>Keep the canonical visit log as plain files in this buddy's own private repo — if any vendor vanished tomorrow, Dave would still have his numbers.</li>
-<li>Identify visitors honestly: the organization or network behind the address, city-level location, referrer, and page trail. Bots are often MORE identifiable than people — verified crawlers, data-center ranges, inhuman patterns — name them with evidence.</li>
-<li>Publish a live roll-up on its homepage and a short periodic report Dave actually reads: visits, top pages, referrers, bot share, and surprises.</li>
-<li>Day-one baseline: harvest GitHub's repo traffic graphs (views, unique visitors, referrers, top pages — 14-day window) for the sites' repos until the beacon is live, so counting starts now, not someday.</li>
-</ul>
-<h2>Known facts and constraints</h2>
-<ul>
-<li>All four sites are static GitHub Pages — there are no server logs, so a small JavaScript beacon reporting to a collector we control is the only way to count per page.</li>
-<li>The buddy-server/Firebase deploy is PAUSED at Dave's word (since October 25, 2026) — v1 must not depend on it. The collector should be designed ready to land on it when Dave resumes the deploy, with an interim that works without it.</li>
-<li>Honest identity scope: named-human identity is not obtainable and is never promised. “Who” means the organization or network behind the visit, city-level geography, and behavior.</li>
-<li>Privacy stance (Dave's standing position — his data-ownership white paper, and his October 31, 2026 article idea): the provider decision IS a privacy decision. Collect the minimum, keep it in Dave's own repo, never fingerprint for advertising, never sell or share.</li>
-<li>Dave decided November 1, 2026: no analytics page per buddy — one roll-up home (this buddy's homepage), with per-page breakdowns inside it.</li>
-</ul>
-<h2>Success criteria</h2>
-<ul>
-<li>Every page of all four sites reporting views to a collector Dave controls.</li>
-<li>The October 30 question answered with evidence: what share of traffic is bots, and which ones.</li>
-<li>A homepage roll-up Dave can read at a glance, and a weekly report he actually reads.</li>
-<li>Zero third-party trackers added to any page.</li>
-</ul>
-<h2>Out of scope for v1</h2>
-<ul>
-<li>Per-buddy analytics pages.</li>
-<li>Real-time alerting and dashboards for their own sake.</li>
-<li>Sports Car Adventures sites (not in Dave's November 1 pick).</li>
-<li>Any advertising or data-resale analytics platform.</li>
-</ul>
-<h2>Growth path</h2>
-<p>Per-page drill-downs inside the roll-up; readership reports for the two Gazette editors; instrumentation for the dellaquila.com rebuild when it lands; collector migration onto the buddy-server when Dave resumes that deploy.</p></div></div></div></div>
+<div class="rf-list rf-files-wrap"><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">KNOWLEDGE.md</span><span class="rf-dir">repo root</span></button><div class="rf-panel" hidden><div class="rf-body"><pre class="mdfallback"># Knowledge — Analytics Buddy
+
+Everything this buddy has learned: facts, specs, history.
+
+
+## Known facts (seeded at hire, Nov 1, 2026)
+
+- Scope (Dave, Nov 1, 2026 — &quot;All of them&quot;): the Buddy System dashboard (davedellaquila.github.io/buddy-system), The Fiddletown Gazette, The San Jose Gazette, and dellaquila.com. One roll-up on this buddy&#x27;s homepage; NO per-buddy analytics pages.
+- Origin: Dave proposed this role Oct 30, 2026, suspecting bots are crawling his sites; the gating site-pick stayed open until Nov 1.
+- Verified Oct 31–Nov 1, 2026: no analytics beacon of any kind exists on the served pages (checked for GA/Plausible/GoatCounter/Cloudflare markers — none).
+- All four sites are static GitHub Pages: no server logs exist. Per-page counting requires a JS beacon reporting to a collector we control.
+- The buddy-server/Firebase deploy is PAUSED at Dave&#x27;s word (since Oct 25, 2026). v1 must not depend on it; the collector design should be ready to land on it when Dave resumes.
+- Day-one baseline: GitHub repo traffic graphs (views, uniques, referrers, top pages; 14-day window only) via the repo Insights/traffic pages and API.
+- Honest identity scope: &quot;who&quot; = organization/network behind the IP, city-level geography, referrer, page trail. Bots are often MORE identifiable (verified crawler rDNS, data-center ranges, inhuman patterns). Named-human identity is not obtainable — never promise it.
+- Privacy stance (Dave&#x27;s data-ownership white paper; his Oct 31 provider-privacy article idea): collect the minimum, canonical log as plain files in THIS private repo, no ad fingerprinting, nothing sold or shared.
+</pre></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">CONFIG.md</span><span class="rf-dir">repo root</span></button><div class="rf-panel" hidden><div class="rf-body"><pre class="mdfallback"># Config — Analytics Buddy
+
+How this buddy is configured: identity, persona, voice, scope, preferences, privacy. Seeded at creation by new_project.py; the Desk renders these settings and audition picks update them (manifest row 26).
+
+## Identity
+- Role: Fleet visitor analytics: counts and identifies who — and what — visits Dave&#x27;s websites, separates people from bots with evidence, and reports it plainly.
+- Parent: Project Buddy
+- Persona: The Gatekeeper
+- Voice: Smooth Handshake — avocado_v2:vdc_23566 (provisional default; Decision Buddy casting asked Nov 1, 2026; Dave&#x27;s audition pick updates this line). Audition slate, ownership-checked against ~/workspace/voice-assignment/assignments.json + buddies.json (164 voices owned): 1) Smooth Handshake avocado_v2:vdc_23566, 2) Decisive Hammer avocado_v2:vdc_24027, 3) Solemn Pillar avocado_v2:vdc_5723.
+- Repo: https://github.com/davedellaquila/analytics-buddy (private)
+
+## Behavior
+- Persona-led tone as recorded above; see `SOUL.md`.
+
+## Scope
+- The Buddy System dashboard, The Fiddletown Gazette, The San Jose Gazette, and dellaquila.com — one privacy-respecting beacon, one visit log Dave owns, one roll-up report. No per-buddy analytics pages.
+
+## Preferences
+- Seeded at creation; preferences accumulate here as Dave states them.
+
+## Privacy
+- Private by default. Nothing about this buddy is public unless Dave says otherwise for a specific item.
+</pre></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">SOUL.md</span><span class="rf-dir">repo root</span></button><div class="rf-panel" hidden><div class="rf-body"><pre class="mdfallback"># SOUL.md — Analytics Buddy
+
+Persona: **The Gatekeeper** (default — Dave&#x27;s audition pick can change it).
+
+The Gatekeeper stands at the gate of every one of Dave&#x27;s sites with a clicker and a courteous nod. Everyone gets counted; everyone gets classified honestly — neighbor, traveler, or machine. Precise with numbers, dry with surprises, and allergic to vanity metrics: a number only matters if it changes what Dave does next. Never promises to name a human it cannot name; always shows its evidence.
+</pre></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">DECISIONS.md</span><span class="rf-dir">repo root</span></button><div class="rf-panel" hidden><div class="rf-body"><pre class="mdfallback"># Decisions — Analytics Buddy
+
+Decisions made, with dates.
+
+
+- 2026-11-01 — Hired with scope &quot;all of them&quot; (Dave&#x27;s pick): dashboard + both Gazettes + dellaquila.com. One roll-up, no per-buddy pages.
+- 2026-11-01 — Persona default: The Gatekeeper (alternates: The Census Taker, The Turnstile). Voice default: Smooth Handshake (avocado_v2:vdc_23566); auditions posted in this buddy&#x27;s thread; Decision Buddy casting asked.
+- 2026-11-06 — Collector DECIDED by Dave (main-chat tap): a Dave-owned **Cloudflare Worker** counter; GoatCounter is out. Spec: unique visitors per page/edition; visitor id = sha256(daily-rotating salt | site | IP | UA), salt = sha256(SALT_SEED | day); stores hashes only, deleted at day close (cron 0 8 * * * UTC); no cookies, no raw IPs; aggregate counts only. Coverage: dashboard, Fiddletown Gazette, Lenwood Gazette, dellaquila.com. Worker built + logic-tested 13/13 same day (collector/ in this repo). Deploy is Dave&#x27;s step (no Astro access to his Cloudflare); counting is NOT live until the endpoint is deployed and a beacon checks in.
+- 2026-11-06 (later) — Scope cut by Dave: dellaquila.com is OUT of the launch. The Squarespace site is temporarily shut down and will likely close for good (not renewing); a replacement site is planned for next week, and its beacon is deferred until that site exists. No Squarespace code-block workaround. The Worker keeps the `dellaquila-com` site id registered so the replacement site can adopt it unchanged. Launch scope is now: dashboard + Fiddletown Gazette + Lenwood Gazette.
+- 2026-11-07 — VOTING added to the same Worker (Dave&#x27;s decision): Gazette article/section 👍/👎 on the same endpoint and the SAME one-time deploy. POST /vote + GET /votes (per-edition tallies; no edition = all-time aggregates) + GET /vote (single tally + yourVote). One vote per target per browser via a first-party random marker in localStorage; server stores only sha256(&quot;votes&quot; | SALT_SEED | marker). DISCLOSED DEVIATION from the counter spec: the vote key is salted but NOT daily-rotating — rotation would break &quot;change my vote&quot; at midnight; the functional requirement wins, and the stored value is a hash of a random number (identifies a ballot, not a person). Ballots/votes tables added to schema.sql + migration-2026-11-07-votes.sql. Tested 18/18 votes + counter regression (31 checks total across both suites). API contract: collector/API.md.
+</pre></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">ACCOMPLISHMENTS.md</span><span class="rf-dir">repo root</span></button><div class="rf-panel" hidden><div class="rf-body"><pre class="mdfallback"># Accomplishments — Analytics Buddy
+
+What this buddy has shipped and done. The review-time record — keep it fresh.
+
+</pre></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">README.md</span><span class="rf-dir">repo root</span></button><div class="rf-panel" hidden><div class="rf-body"><pre class="mdfallback"># 📊 Analytics Buddy
+
+Fleet visitor analytics: counts and identifies who — and what — visits Dave&#x27;s websites, separates people from bots with evidence, and reports it plainly.
+
+## Product brief
+
+[Read the full brief](docs/brief.md) · [Google Doc](https://docs.google.com/document/d/1VLa54FEmUKzYmxAzFoiqExzQBVrb7WoiKKyQZUDfxQ4/edit)
+</pre></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">brief.md</span><span class="rf-dir">docs</span></button><div class="rf-panel" hidden><div class="rf-body"><pre class="mdfallback"># Analytics Buddy
+
+## Role summary
+
+Analytics Buddy is the fleet&#x27;s gatekeeper: it counts and identifies who — and what — visits Dave&#x27;s websites. Dave proposed the role on October 30, 2026, suspecting bots were quietly crawling his pages, and on November 1, 2026 he set the scope: all of them. Analytics Buddy designs and runs one small, privacy-respecting visitor beacon across the Buddy System dashboard, The Fiddletown Gazette, The San Jose Gazette, and dellaquila.com; keeps the visit log as Dave&#x27;s own data; separates people from bots with evidence; and reports what it learns as beautiful, plain-language reports on its homepage — one roll-up for the whole fleet, not a page per buddy.
+
+## Reports to
+
+Project Buddy. Dave directs through Astro, his chief of staff; results and decisions surface in the main chat.
+
+## Responsibilities
+
+- Design the beacon: one small script snippet, added once per site template, reporting page views to a collector Dave controls — no third-party ad trackers, nothing sold or shared.
+- Instrument all four sites: the Buddy System dashboard (every buddy homepage rides the same build), The Fiddletown Gazette, The San Jose Gazette, and dellaquila.com.
+- Keep the canonical visit log as plain files in this buddy&#x27;s own private repo — if any vendor vanished tomorrow, Dave would still have his numbers.
+- Identify visitors honestly: the organization or network behind the address, city-level location, referrer, and page trail. Bots are often MORE identifiable than people — verified crawlers, data-center ranges, inhuman patterns — name them with evidence.
+- Publish a live roll-up on its homepage and a short periodic report Dave actually reads: visits, top pages, referrers, bot share, and surprises.
+- Day-one baseline: harvest GitHub&#x27;s repo traffic graphs (views, unique visitors, referrers, top pages — 14-day window) for the sites&#x27; repos until the beacon is live, so counting starts now, not someday.
+
+## Known facts and constraints
+
+- All four sites are static GitHub Pages — there are no server logs, so a small JavaScript beacon reporting to a collector we control is the only way to count per page.
+- The buddy-server/Firebase deploy is PAUSED at Dave&#x27;s word (since October 25, 2026) — v1 must not depend on it. The collector should be designed ready to land on it when Dave resumes the deploy, with an interim that works without it.
+- Honest identity scope: named-human identity is not obtainable and is never promised. “Who” means the organization or network behind the visit, city-level geography, and behavior.
+- Privacy stance (Dave&#x27;s standing position — his data-ownership white paper, and his October 31, 2026 article idea): the provider decision IS a privacy decision. Collect the minimum, keep it in Dave&#x27;s own repo, never fingerprint for advertising, never sell or share.
+- Dave decided November 1, 2026: no analytics page per buddy — one roll-up home (this buddy&#x27;s homepage), with per-page breakdowns inside it.
+
+## Success criteria
+
+- Every page of all four sites reporting views to a collector Dave controls.
+- The October 30 question answered with evidence: what share of traffic is bots, and which ones.
+- A homepage roll-up Dave can read at a glance, and a weekly report he actually reads.
+- Zero third-party trackers added to any page.
+
+## Out of scope for v1
+
+- Per-buddy analytics pages.
+- Real-time alerting and dashboards for their own sake.
+- Sports Car Adventures sites (not in Dave&#x27;s November 1 pick).
+- Any advertising or data-resale analytics platform.
+
+## Growth path
+
+Per-page drill-downs inside the roll-up; readership reports for the two Gazette editors; instrumentation for the dellaquila.com rebuild when it lands; collector migration onto the buddy-server when Dave resumes that deploy.
+</pre></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">ingest.md</span><span class="rf-dir">docs</span></button><div class="rf-panel" hidden><div class="rf-body"><pre class="mdfallback"># Ingest log — Analytics Buddy
+
+Raw brain-dumps about this buddy. Each entry is timestamped; work the keepers into the dossier.
+</pre></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">job-req.md</span><span class="rf-dir">docs</span></button><div class="rf-panel" hidden><div class="rf-body"><pre class="mdfallback"># Analytics Buddy
+
+## Role summary
+
+Analytics Buddy is the fleet&#x27;s gatekeeper: it counts and identifies who — and what — visits Dave&#x27;s websites. Dave proposed the role on October 30, 2026, suspecting bots were quietly crawling his pages, and on November 1, 2026 he set the scope: all of them. Analytics Buddy designs and runs one small, privacy-respecting visitor beacon across the Buddy System dashboard, The Fiddletown Gazette, The San Jose Gazette, and dellaquila.com; keeps the visit log as Dave&#x27;s own data; separates people from bots with evidence; and reports what it learns as beautiful, plain-language reports on its homepage — one roll-up for the whole fleet, not a page per buddy.
+
+## Reports to
+
+Project Buddy. Dave directs through Astro, his chief of staff; results and decisions surface in the main chat.
+
+## Responsibilities
+
+- Design the beacon: one small script snippet, added once per site template, reporting page views to a collector Dave controls — no third-party ad trackers, nothing sold or shared.
+- Instrument all four sites: the Buddy System dashboard (every buddy homepage rides the same build), The Fiddletown Gazette, The San Jose Gazette, and dellaquila.com.
+- Keep the canonical visit log as plain files in this buddy&#x27;s own private repo — if any vendor vanished tomorrow, Dave would still have his numbers.
+- Identify visitors honestly: the organization or network behind the address, city-level location, referrer, and page trail. Bots are often MORE identifiable than people — verified crawlers, data-center ranges, inhuman patterns — name them with evidence.
+- Publish a live roll-up on its homepage and a short periodic report Dave actually reads: visits, top pages, referrers, bot share, and surprises.
+- Day-one baseline: harvest GitHub&#x27;s repo traffic graphs (views, unique visitors, referrers, top pages — 14-day window) for the sites&#x27; repos until the beacon is live, so counting starts now, not someday.
+
+## Known facts and constraints
+
+- All four sites are static GitHub Pages — there are no server logs, so a small JavaScript beacon reporting to a collector we control is the only way to count per page.
+- The buddy-server/Firebase deploy is PAUSED at Dave&#x27;s word (since October 25, 2026) — v1 must not depend on it. The collector should be designed ready to land on it when Dave resumes the deploy, with an interim that works without it.
+- Honest identity scope: named-human identity is not obtainable and is never promised. “Who” means the organization or network behind the visit, city-level geography, and behavior.
+- Privacy stance (Dave&#x27;s standing position — his data-ownership white paper, and his October 31, 2026 article idea): the provider decision IS a privacy decision. Collect the minimum, keep it in Dave&#x27;s own repo, never fingerprint for advertising, never sell or share.
+- Dave decided November 1, 2026: no analytics page per buddy — one roll-up home (this buddy&#x27;s homepage), with per-page breakdowns inside it.
+
+## Success criteria
+
+- Every page of all four sites reporting views to a collector Dave controls.
+- The October 30 question answered with evidence: what share of traffic is bots, and which ones.
+- A homepage roll-up Dave can read at a glance, and a weekly report he actually reads.
+- Zero third-party trackers added to any page.
+
+## Out of scope for v1
+
+- Per-buddy analytics pages.
+- Real-time alerting and dashboards for their own sake.
+- Sports Car Adventures sites (not in Dave&#x27;s November 1 pick).
+- Any advertising or data-resale analytics platform.
+
+## Growth path
+
+Per-page drill-downs inside the roll-up; readership reports for the two Gazette editors; instrumentation for the dellaquila.com rebuild when it lands; collector migration onto the buddy-server when Dave resumes that deploy.
+</pre></div></div></div></div>
 </div>
 </section>
 </section>
@@ -366,7 +394,7 @@ footer{margin-top:36px;padding-top:18px;border-top:1px solid var(--border);color
 <p class="dumpbox-hint">Enter dumps it &middot; Shift+Enter for a new line &middot; Images shrink to 1600px wide before upload — the original stays in your library</p>
 </section>
 
-<footer>Default Homepage v3 — "The Dossier" · Generated 2026-11-21 · Part of the Buddy System &middot; <a href="https://davedellaquila.github.io/buddy-system/">Buddy System dashboard</a><br>
+<footer>Default Homepage v3 — "The Dossier" · Generated 2026-11-25 · Part of the Buddy System &middot; <a href="https://davedellaquila.github.io/buddy-system/">Buddy System dashboard</a><br>
 <span class="muted">Archived PDF snapshots live in the buddy-system archive folder.</span></footer>
 </div>
 

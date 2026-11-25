@@ -356,344 +356,191 @@ h2 { font-size: 22px; margin: 32px 0 16px; }
 <h2>📄 Repo files</h2>
 <p class="rf-sub">The markdown files in <span data-buddy-name>BMW E61</span>'s repo, baked into this page when it was generated — tap a file name and its contents open right below it; open as many as you like at once. No sign-in and no fetching: the words are right here. To change a file, edit it in the repo — the page picks it up next time it is generated.</p>
 <div class="rf-main">
-<div class="rf-list rf-files-wrap"><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">KNOWLEDGE.md</span><span class="rf-dir">repo root</span></button><div class="rf-panel" hidden><div class="rf-body"><h1>Knowledge — BMW Buddy (BMW E61)</h1>
-<p>Everything this buddy has learned: facts, specs, history.</p>
-<h2>Canonical service history (loaded 2026-11-20 by Car Buddy)</h2>
-<ul>
-<li>Source: Dave's Auto Service History data, migrated out of Airtable into the car-buddy repo (verified 18/18, Oct 25, 2026). Full record: <code>data/service-history.md</code> + <code>data/service-history.json</code> in this repo.</li>
-<li>Events on record: <strong>18</strong>, 2020-02-17 → 2026-03-19; attachments: 4; documented spend (recorded costs only): $1,070.00.</li>
-<li>License plate on record: 8MWZ030.</li>
-<li>Date acquired on record: 2020-01-28.</li>
-</ul></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">README.md</span><span class="rf-dir">repo root</span></button><div class="rf-panel" hidden><div class="rf-body"><h1>BMW</h1>
-<p>Dave's BMW is approaching 200,000 miles. This buddy tracks maintenance, diagnostics, and the work needed to keep it running strong. Current concern (Oct 11, 2026): rough idle on cold start and at intersections. Diagnostic scan shows 2A17 (DMTL system fault) and 2AAF (fuel pump plausibility).</p>
-<h2>Product brief</h2>
-<p><a href="docs/brief.md">Read the full brief</a> · <a href="https://docs.google.com/document/d/1WMq1NM0RMiJtT2UhjLRunPNYzS8oHRMlLdXJtI1--aQ/edit">Google Doc</a></p></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">bmw-e61-parts-research.md</span><span class="rf-dir">docs</span></button><div class="rf-panel" hidden><div class="rf-body"><h1>BMW E61 — Parts Research</h1>
-<p>Pricing research for the <a href="bmw-e61-repair-plan.md">repair plan</a>, confirmed by Dave 2026-10-12.
-Searches run across FCP Euro, ECS Tuning, and alternates. Batches land here as they complete.</p>
-<h2>Batch 1 — DMTL pump + battery (filed 2026-10-12)</h2>
-<h3>⚠️ Part-number correction</h3>
-<p>BMW 13907614005 does <strong>not</strong> exist — RealOEM reports "part not found" and it returns zero results everywhere.
-The correct current DMTL/leak-diagnosis pump for the E61 LCI (04/2006–03/2010) is <strong>BMW 16137193479</strong>
-(supersedes 16130428344). The repair plan has been updated to this number.</p>
-<h3>DMTL pump (BMW 16137193479) — fixes 2A17</h3>
-<table>
-<thead>
-<tr>
-<th>Merchant</th>
-<th>Brand / part</th>
-<th>Price</th>
-<th>Availability</th>
-<th>Link</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>FCP Euro</td>
-<td>Genuine BMW</td>
-<td><strong>$258.56</strong></td>
-<td>In stock</td>
-<td>https://www.fcpeuro.com/products/bmw-leak-detection-pump-genuine-bmw-16137193479</td>
-</tr>
-<tr>
-<td>ECS Tuning (ES#37298)</td>
-<td>Genuine BMW</td>
-<td><strong>$250.99</strong> (MSRP $266.99)</td>
-<td>Available from supplier, ships 1–2 days, free shipping, lifetime replacement</td>
-<td>https://www.ecstuning.com/b-genuine-bmw-parts/leak-diagnosis-pump-priced-each/16137193479/</td>
-</tr>
-<tr>
-<td>ECS Tuning (ES#2574860)</td>
-<td>Bosch (OE supplier, Mfg# 0261222018)</td>
-<td><strong>$68.99</strong> — BEST VALUE</td>
-<td>In stock, ships 1 business day, free shipping, lifetime replacement. Fitment verified for E61 535xi N54</td>
-<td>https://www.ecstuning.com/b-bosch-parts/leak-detection-pump-priced-each/16137193479~bos/?source=37298&amp;feature=suggestion</td>
-</tr>
-<tr>
-<td>ECS Tuning</td>
-<td>Bremmen Parts</td>
-<td><strong>$54.39</strong> (was $65.99)</td>
-<td>In stock</td>
-<td>—</td>
-</tr>
-<tr>
-<td>RockAuto (cross-reference, no dedicated pages)</td>
-<td>Wells 4B1633</td>
-<td>$61.79</td>
-<td>—</td>
-<td>—</td>
-</tr>
-<tr>
-<td>RockAuto</td>
-<td>Dorman 310601</td>
-<td>$87.89</td>
-<td>—</td>
-<td>—</td>
-</tr>
-<tr>
-<td>RockAuto</td>
-<td>Standard Motor Products LDP49</td>
-<td>$94.79</td>
-<td>—</td>
-<td>—</td>
-</tr>
-</tbody>
-</table>
-<h3>Battery — Group H8/49 AGM (optional, repair plan step 4)</h3>
-<table>
-<thead>
-<tr>
-<th>Merchant</th>
-<th>Battery</th>
-<th>Price</th>
-<th>Availability / terms</th>
-<th>Link</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Advance Auto Parts</td>
-<td>DieHard Platinum AGM H8 (900 CCA, 1000 CA, 160-min reserve, 95AH)</td>
-<td><strong>$264.99</strong> + $22 core</td>
-<td>4-year warranty</td>
-<td>https://shop.advanceautoparts.com/p/diehard-platinum-agm-battery-h8-group-size-900-cca-1000-ca-160-minute-reserve-capacity-h8-agm/10210828-P?searchTerm=DieHard+Platinum+AGM+H8+battery</td>
-</tr>
-<tr>
-<td>RockAuto</td>
-<td>ACDelco 49AGM Professional AGM (900 CCA)</td>
-<td><strong>$188.79</strong> + $18 core</td>
-<td>—</td>
-<td>—</td>
-</tr>
-<tr>
-<td>RockAuto</td>
-<td>FVP P49AGM Platinum AGM (850 CCA)</td>
-<td><strong>$199.79</strong> + $10 core</td>
-<td>—</td>
-<td>—</td>
-</tr>
-</tbody>
-</table>
-<p>Notes: FCP Euro doesn't sell batteries. ECS had no standard Group 49/H8. AutoZone was blocked by a bot wall.</p>
-<h2>Batch 2 — Index-12 fuel injectors (filed 2026-10-12)</h2>
-<p><strong>FUEL INJECTORS — Index 12 (BMW 13538616079)</strong>, all verified index-12, all in stock.</p>
-<h3>FCP Euro (free shipping)</h3>
-<table>
-<thead>
-<tr>
-<th>Part</th>
-<th>Each</th>
-<th>Set of 6</th>
-<th>Link</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Genuine BMW single</td>
-<td><strong>$907.04</strong> + $250 core</td>
-<td>$5,442.24 + $1,500 core</td>
-<td>https://www.fcpeuro.com/products/bmw-fuel-injector-13537585261</td>
-</tr>
-<tr>
-<td>Vitesco (OE supplier) single</td>
-<td><strong>$535.99</strong></td>
-<td><strong>$3,215.94</strong></td>
-<td>https://www.fcpeuro.com/products/bmw-fuel-injector-vitesco-13538616079</td>
-</tr>
-<tr>
-<td>Genuine BMW kit (6 injectors + 6 decoupler rings)</td>
-<td>—</td>
-<td><strong>$5,556.18</strong> + $1,500 core</td>
-<td>https://www.fcpeuro.com/products/bmw-fuel-injector-kit-13538616079kt</td>
-</tr>
-<tr>
-<td>Vitesco kit (6 injectors + 6 decouplers)</td>
-<td>—</td>
-<td><strong>$3,329.88</strong></td>
-<td>https://www.fcpeuro.com/products/bmw-fuel-injector-kit-set-of-6-for-n54-index-12-13538648937kt2</td>
-</tr>
-<tr>
-<td>GB Remanufacturing single (reman, budget option)</td>
-<td><strong>$349.99</strong> + $200 core</td>
-<td>$2,099.94 + $1,200 core</td>
-<td>https://www.fcpeuro.com/products/bmw-fuel-injector-index-12-gb-remanufacturing-855-12101</td>
-</tr>
-</tbody>
-</table>
-<h3>ECS Tuning (in stock, ships 1 business day, free shipping $49+)</h3>
-<table>
-<thead>
-<tr>
-<th>Part</th>
-<th>Price</th>
-<th>Link</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Vitesco single with seal ring (ES#4819062)</td>
-<td><strong>$499.99</strong> on sale (was $560.99) — set of 6 = <strong>$2,999.94</strong></td>
-<td>https://www.ecstuning.com/b-vitesco-technologies-parts/fuel-injector-with-seal-ring-index-12/13538616079~vts/</td>
-</tr>
-<tr>
-<td>Vitesco replacement kit, set of 6 (ES#4840279)</td>
-<td><strong>$3,113.99</strong></td>
-<td>https://www.ecstuning.com/b-vitesco-technologies-parts/fuel-injector-replacement-kit-index-12/13538616079v1kt/</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Takeaway:</strong> Dave's estimate of "~$3,000 for a set" lands right on the Vitesco options ($3,000–$3,330). Genuine BMW runs ~$5,500. Reman GB set is ~$2,100 (+ $1,200 core).</p>
-<h2>Batch 3 — Fuel system parts (filed 2026-10-12) ✅ Research complete</h2>
-<p>All from FCP Euro, all in stock, fitment confirmed for 2008 BMW 535xi wagon N54.</p>
-<h3>1. Low-pressure (in-tank) fuel pump — the primary repair</h3>
-<table>
-<thead>
-<tr>
-<th>Part</th>
-<th>Price</th>
-<th>Link</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>Bosch 0580202027 (OE quality)</strong> ← pick</td>
-<td><strong>$290.59</strong></td>
-<td>https://www.fcpeuro.com/products/clone-bmw-fuel-pump-and-sender-assembly-16117373521</td>
-</tr>
-<tr>
-<td>Genuine BMW 16117373521</td>
-<td>$529.99</td>
-<td>—</td>
-</tr>
-<tr>
-<td>Delphi 16117373521</td>
-<td>$227.99</td>
-<td>—</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Part-number note:</strong> the original number 16147163212 returned no FCP results — 16117373521 is the current supersession, and the Bosch 0580202027 is the fitment-confirmed equivalent.</p>
-<h3>2. EKP fuel pump control module</h3>
-<table>
-<thead>
-<tr>
-<th>Part</th>
-<th>Price</th>
-<th>Link</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>Genuine BMW 16147229173 (Made in Germany)</strong></td>
-<td><strong>$433.62</strong></td>
-<td>https://www.fcpeuro.com/products/bmw-fuel-pump-control-unit-16147229173</td>
-</tr>
-</tbody>
-</table>
-<p>(Vemo aftermarket version listed at $560.99 but not available.)</p>
-<h3>3. Low-pressure fuel pressure sensor</h3>
-<table>
-<thead>
-<tr>
-<th>Part</th>
-<th>Price</th>
-<th>Link</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>Bosch 13537622231 (OE quality, Made in Germany)</strong></td>
-<td><strong>$79.04</strong></td>
-<td>https://www.fcpeuro.com/products/bmw-low-pressure-transmitter-13537622231</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Part-number note:</strong> the original number 13537547876 returned no FCP results — 13537622231 is the current BMW number for the N54 low-pressure sensor.</p>
-<h2>Repair cost summary (Hans's plan, best-value picks)</h2>
-<table>
-<thead>
-<tr>
-<th>Item</th>
-<th>Price</th>
-<th>Status</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Low-pressure pump (Bosch)</td>
-<td>$290.59</td>
-<td>← START HERE</td>
-</tr>
-<tr>
-<td>DMTL pump (Bosch 16137193479)</td>
-<td>$68.99</td>
-<td>Just get it</td>
-</tr>
-<tr>
-<td>Fuel pressure sensor (Bosch)</td>
-<td>$79.04</td>
-<td>If needed</td>
-</tr>
-<tr>
-<td>EKP module (Genuine)</td>
-<td>$433.62</td>
-<td>Price-check before deciding</td>
-</tr>
-<tr>
-<td>Battery (DieHard AGM H8)</td>
-<td>$264.99</td>
-<td>Optional</td>
-</tr>
-<tr>
-<td>Injectors, index-12 Vitesco set of 6</td>
-<td>~$3,114</td>
-<td>Optional, staged</td>
-</tr>
-</tbody>
-</table>
-<p><strong>All three batches complete.</strong></p></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">bmw-e61-repair-plan.md</span><span class="rf-dir">docs</span></button><div class="rf-panel" hidden><div class="rf-body"><h1>BMW E61 — Repair Plan</h1>
-<p><strong>Vehicle:</strong> Dave's BMW E61 535xi (N54), ~191,119 miles (Oct 11, 2026)
-<strong>Symptom:</strong> Rough idle on cold start and at intersections
-<strong>Scan (Quentin, AutoLogic, Oct 11, 2026):</strong>
-- <strong>2A17</strong> — DMTL system fault (P1434), not currently present
-- <strong>2AAF</strong> — Fuel pump plausibility, frequency 255 (very persistent)</p>
-<p><strong>Source:</strong> Hans's diagnosis, confirmed by Dave 2026-10-12. Diagnostic report: <code>docs/bmw-e61-diagnosis.md</code> in the <a href="https://github.com/davedellaquila/hans-buddy/blob/main/docs/bmw-e61-diagnosis.md">hans-buddy repo</a> (also linked from the dashboard).</p>
-<h2>The plan</h2>
-<h3>1. START HERE — Low-pressure fuel pump (in-tank intake pump)</h3>
-<p>Primary suspect for the 2AAF rough idle. Replace, clear codes, reassess before spending on anything else. If the idle smooths out, the rest of the plan shrinks.</p>
-<h3>2. CHECK PRICING — EKP fuel pump control module + low-pressure fuel pressure sensor</h3>
-<p>Price both before deciding. These are "decide after pricing" items, not automatic replacements.</p>
-<h3>3. JUST GET — DMTL pump (BMW 16137193479)</h3>
-<p>Addresses the 2A17 fault. Straightforward buy. (Correct number confirmed 2026-10-12 — the originally noted
+<div class="rf-list rf-files-wrap"><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">KNOWLEDGE.md</span><span class="rf-dir">repo root</span></button><div class="rf-panel" hidden><div class="rf-body"><pre class="mdfallback"># Knowledge — BMW Buddy (BMW E61)
+
+Everything this buddy has learned: facts, specs, history.
+
+## Canonical service history (loaded 2026-11-20 by Car Buddy)
+
+- Source: Dave&#x27;s Auto Service History data, migrated out of Airtable into the car-buddy repo (verified 18/18, Oct 25, 2026). Full record: `data/service-history.md` + `data/service-history.json` in this repo.
+- Events on record: **18**, 2020-02-17 → 2026-03-19; attachments: 4; documented spend (recorded costs only): $1,070.00.
+- License plate on record: 8MWZ030.
+- Date acquired on record: 2020-01-28.
+</pre></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">README.md</span><span class="rf-dir">repo root</span></button><div class="rf-panel" hidden><div class="rf-body"><pre class="mdfallback">#  BMW
+
+Dave&#x27;s BMW is approaching 200,000 miles. This buddy tracks maintenance, diagnostics, and the work needed to keep it running strong. Current concern (Oct 11, 2026): rough idle on cold start and at intersections. Diagnostic scan shows 2A17 (DMTL system fault) and 2AAF (fuel pump plausibility).
+
+## Product brief
+
+[Read the full brief](docs/brief.md) · [Google Doc](https://docs.google.com/document/d/1WMq1NM0RMiJtT2UhjLRunPNYzS8oHRMlLdXJtI1--aQ/edit)
+</pre></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">bmw-e61-parts-research.md</span><span class="rf-dir">docs</span></button><div class="rf-panel" hidden><div class="rf-body"><pre class="mdfallback"># BMW E61 — Parts Research
+
+Pricing research for the [repair plan](bmw-e61-repair-plan.md), confirmed by Dave 2026-10-12.
+Searches run across FCP Euro, ECS Tuning, and alternates. Batches land here as they complete.
+
+## Batch 1 — DMTL pump + battery (filed 2026-10-12)
+
+### ⚠️ Part-number correction
+BMW 13907614005 does **not** exist — RealOEM reports &quot;part not found&quot; and it returns zero results everywhere.
+The correct current DMTL/leak-diagnosis pump for the E61 LCI (04/2006–03/2010) is **BMW 16137193479**
+(supersedes 16130428344). The repair plan has been updated to this number.
+
+### DMTL pump (BMW 16137193479) — fixes 2A17
+
+| Merchant | Brand / part | Price | Availability | Link |
+|---|---|---|---|---|
+| FCP Euro | Genuine BMW | **$258.56** | In stock | https://www.fcpeuro.com/products/bmw-leak-detection-pump-genuine-bmw-16137193479 |
+| ECS Tuning (ES#37298) | Genuine BMW | **$250.99** (MSRP $266.99) | Available from supplier, ships 1–2 days, free shipping, lifetime replacement | https://www.ecstuning.com/b-genuine-bmw-parts/leak-diagnosis-pump-priced-each/16137193479/ |
+| ECS Tuning (ES#2574860) | Bosch (OE supplier, Mfg# 0261222018) | **$68.99** — BEST VALUE | In stock, ships 1 business day, free shipping, lifetime replacement. Fitment verified for E61 535xi N54 | https://www.ecstuning.com/b-bosch-parts/leak-detection-pump-priced-each/16137193479~bos/?source=37298&amp;feature=suggestion |
+| ECS Tuning | Bremmen Parts | **$54.39** (was $65.99) | In stock | — |
+| RockAuto (cross-reference, no dedicated pages) | Wells 4B1633 | $61.79 | — | — |
+| RockAuto | Dorman 310601 | $87.89 | — | — |
+| RockAuto | Standard Motor Products LDP49 | $94.79 | — | — |
+
+### Battery — Group H8/49 AGM (optional, repair plan step 4)
+
+| Merchant | Battery | Price | Availability / terms | Link |
+|---|---|---|---|---|
+| Advance Auto Parts | DieHard Platinum AGM H8 (900 CCA, 1000 CA, 160-min reserve, 95AH) | **$264.99** + $22 core | 4-year warranty | https://shop.advanceautoparts.com/p/diehard-platinum-agm-battery-h8-group-size-900-cca-1000-ca-160-minute-reserve-capacity-h8-agm/10210828-P?searchTerm=DieHard+Platinum+AGM+H8+battery |
+| RockAuto | ACDelco 49AGM Professional AGM (900 CCA) | **$188.79** + $18 core | — | — |
+| RockAuto | FVP P49AGM Platinum AGM (850 CCA) | **$199.79** + $10 core | — | — |
+
+Notes: FCP Euro doesn&#x27;t sell batteries. ECS had no standard Group 49/H8. AutoZone was blocked by a bot wall.
+
+## Batch 2 — Index-12 fuel injectors (filed 2026-10-12)
+
+**FUEL INJECTORS — Index 12 (BMW 13538616079)**, all verified index-12, all in stock.
+
+### FCP Euro (free shipping)
+
+| Part | Each | Set of 6 | Link |
+|---|---|---|---|
+| Genuine BMW single | **$907.04** + $250 core | $5,442.24 + $1,500 core | https://www.fcpeuro.com/products/bmw-fuel-injector-13537585261 |
+| Vitesco (OE supplier) single | **$535.99** | **$3,215.94** | https://www.fcpeuro.com/products/bmw-fuel-injector-vitesco-13538616079 |
+| Genuine BMW kit (6 injectors + 6 decoupler rings) | — | **$5,556.18** + $1,500 core | https://www.fcpeuro.com/products/bmw-fuel-injector-kit-13538616079kt |
+| Vitesco kit (6 injectors + 6 decouplers) | — | **$3,329.88** | https://www.fcpeuro.com/products/bmw-fuel-injector-kit-set-of-6-for-n54-index-12-13538648937kt2 |
+| GB Remanufacturing single (reman, budget option) | **$349.99** + $200 core | $2,099.94 + $1,200 core | https://www.fcpeuro.com/products/bmw-fuel-injector-index-12-gb-remanufacturing-855-12101 |
+
+### ECS Tuning (in stock, ships 1 business day, free shipping $49+)
+
+| Part | Price | Link |
+|---|---|---|
+| Vitesco single with seal ring (ES#4819062) | **$499.99** on sale (was $560.99) — set of 6 = **$2,999.94** | https://www.ecstuning.com/b-vitesco-technologies-parts/fuel-injector-with-seal-ring-index-12/13538616079~vts/ |
+| Vitesco replacement kit, set of 6 (ES#4840279) | **$3,113.99** | https://www.ecstuning.com/b-vitesco-technologies-parts/fuel-injector-replacement-kit-index-12/13538616079v1kt/ |
+
+**Takeaway:** Dave&#x27;s estimate of &quot;~$3,000 for a set&quot; lands right on the Vitesco options ($3,000–$3,330). Genuine BMW runs ~$5,500. Reman GB set is ~$2,100 (+ $1,200 core).
+
+## Batch 3 — Fuel system parts (filed 2026-10-12) ✅ Research complete
+
+All from FCP Euro, all in stock, fitment confirmed for 2008 BMW 535xi wagon N54.
+
+### 1. Low-pressure (in-tank) fuel pump — the primary repair
+
+| Part | Price | Link |
+|---|---|---|
+| **Bosch 0580202027 (OE quality)** ← pick | **$290.59** | https://www.fcpeuro.com/products/clone-bmw-fuel-pump-and-sender-assembly-16117373521 |
+| Genuine BMW 16117373521 | $529.99 | — |
+| Delphi 16117373521 | $227.99 | — |
+
+**Part-number note:** the original number 16147163212 returned no FCP results — 16117373521 is the current supersession, and the Bosch 0580202027 is the fitment-confirmed equivalent.
+
+### 2. EKP fuel pump control module
+
+| Part | Price | Link |
+|---|---|---|
+| **Genuine BMW 16147229173 (Made in Germany)** | **$433.62** | https://www.fcpeuro.com/products/bmw-fuel-pump-control-unit-16147229173 |
+
+(Vemo aftermarket version listed at $560.99 but not available.)
+
+### 3. Low-pressure fuel pressure sensor
+
+| Part | Price | Link |
+|---|---|---|
+| **Bosch 13537622231 (OE quality, Made in Germany)** | **$79.04** | https://www.fcpeuro.com/products/bmw-low-pressure-transmitter-13537622231 |
+
+**Part-number note:** the original number 13537547876 returned no FCP results — 13537622231 is the current BMW number for the N54 low-pressure sensor.
+
+## Repair cost summary (Hans&#x27;s plan, best-value picks)
+
+| Item | Price | Status |
+|---|---|---|
+| Low-pressure pump (Bosch) | $290.59 | ← START HERE |
+| DMTL pump (Bosch 16137193479) | $68.99 | Just get it |
+| Fuel pressure sensor (Bosch) | $79.04 | If needed |
+| EKP module (Genuine) | $433.62 | Price-check before deciding |
+| Battery (DieHard AGM H8) | $264.99 | Optional |
+| Injectors, index-12 Vitesco set of 6 | ~$3,114 | Optional, staged |
+
+**All three batches complete.**
+</pre></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">bmw-e61-repair-plan.md</span><span class="rf-dir">docs</span></button><div class="rf-panel" hidden><div class="rf-body"><pre class="mdfallback"># BMW E61 — Repair Plan
+
+**Vehicle:** Dave&#x27;s BMW E61 535xi (N54), ~191,119 miles (Oct 11, 2026)
+**Symptom:** Rough idle on cold start and at intersections
+**Scan (Quentin, AutoLogic, Oct 11, 2026):**
+- **2A17** — DMTL system fault (P1434), not currently present
+- **2AAF** — Fuel pump plausibility, frequency 255 (very persistent)
+
+**Source:** Hans&#x27;s diagnosis, confirmed by Dave 2026-10-12. Diagnostic report: `docs/bmw-e61-diagnosis.md` in the [hans-buddy repo](https://github.com/davedellaquila/hans-buddy/blob/main/docs/bmw-e61-diagnosis.md) (also linked from the dashboard).
+
+## The plan
+
+### 1. START HERE — Low-pressure fuel pump (in-tank intake pump)
+Primary suspect for the 2AAF rough idle. Replace, clear codes, reassess before spending on anything else. If the idle smooths out, the rest of the plan shrinks.
+
+### 2. CHECK PRICING — EKP fuel pump control module + low-pressure fuel pressure sensor
+Price both before deciding. These are &quot;decide after pricing&quot; items, not automatic replacements.
+
+### 3. JUST GET — DMTL pump (BMW 16137193479)
+Addresses the 2A17 fault. Straightforward buy. (Correct number confirmed 2026-10-12 — the originally noted
 13907614005 does not exist; 16137193479 supersedes 16130428344 for the E61 LCI 04/2006–03/2010. See
-<code>bmw-e61-parts-research.md</code> for pricing: Bosch OE at ECS $68.99 is the value pick.)</p>
-<h3>4. OPTIONAL</h3>
-<ul>
-<li><strong>New battery (group H8 AGM).</strong></li>
-<li><strong>Updated index-12 fuel injectors (~$3,000/set).</strong> If the budget pinches, do these in stages.</li>
-</ul>
-<h2>Parts research (pending)</h2>
-<p>Three pricing searches are running (fuel system parts · DMTL pump + battery · index-12 injector set) across FCP Euro, ECS Tuning, and alternates. Results land in <code>docs/bmw-e61-parts-research.md</code> — part names, merchants, prices, availability, and product URLs.</p>
-<h2>Sequencing logic</h2>
-<p>Pump first because 2AAF's frequency-255 persistence points squarely at the low-pressure side, and the EKP module is the classic "don't guess, price it" item. The DMTL pump is an independent, known fault — no diagnosis needed, just buy it. Injectors sit last: they're the big ticket and the index-12 update is preventative as much as corrective.</p></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">brief.md</span><span class="rf-dir">docs</span></button><div class="rf-panel" hidden><div class="rf-body"><h1>BMW</h1>
-<h2>Executive summary</h2>
-<p>Dave's BMW is approaching 200,000 miles. This buddy tracks maintenance, diagnostics, and the work needed to keep it running strong. Current concern (Oct 11, 2026): rough idle on cold start and at intersections. Diagnostic scan shows 2A17 (DMTL system fault) and 2AAF (fuel pump plausibility).</p>
-<h2>The car</h2>
-<p>Model TBD — Dave to confirm. Mileage: ~191,119 miles (Oct 11, 2026). Approaching 200k.</p>
-<h2>Current issue</h2>
-<p>Rough idle, particularly on cold start, also at intersections. Not silky-smooth. Quentin scanned with AutoLogic: 2A17 DMTL system fault (P1434, not currently present) and 2AAF fuel pump plausibility (frequency 255, very persistent).</p>
-<h2>Maintenance backlog</h2>
-<p>Fuel-system filters, fuel pump, fuel smell noticed after sitting at Dave's dad's house. General 200k-mile longevity maintenance.</p>
-<h2>How it works</h2>
-<p>Log symptoms, scans, and repairs. Track parts ordered and maintenance due. Hans (automotive technician buddy) advises on diagnosis and parts.</p>
-<h2>Open questions</h2>
-<p>Exact model/year/engine? Which repairs to prioritize?</p></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">ingest.md</span><span class="rf-dir">docs</span></button><div class="rf-panel" hidden><div class="rf-body"><h1>Ingest log — BMW</h1>
-<p>Raw brain-dumps about this buddy. Each entry is timestamped; work the keepers into the dossier.</p></div></div></div></div>
+`bmw-e61-parts-research.md` for pricing: Bosch OE at ECS $68.99 is the value pick.)
+
+### 4. OPTIONAL
+- **New battery (group H8 AGM).**
+- **Updated index-12 fuel injectors (~$3,000/set).** If the budget pinches, do these in stages.
+
+## Parts research (pending)
+
+Three pricing searches are running (fuel system parts · DMTL pump + battery · index-12 injector set) across FCP Euro, ECS Tuning, and alternates. Results land in `docs/bmw-e61-parts-research.md` — part names, merchants, prices, availability, and product URLs.
+
+## Sequencing logic
+
+Pump first because 2AAF&#x27;s frequency-255 persistence points squarely at the low-pressure side, and the EKP module is the classic &quot;don&#x27;t guess, price it&quot; item. The DMTL pump is an independent, known fault — no diagnosis needed, just buy it. Injectors sit last: they&#x27;re the big ticket and the index-12 update is preventative as much as corrective.
+</pre></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">brief.md</span><span class="rf-dir">docs</span></button><div class="rf-panel" hidden><div class="rf-body"><pre class="mdfallback"># BMW
+
+## Executive summary
+
+Dave&#x27;s BMW is approaching 200,000 miles. This buddy tracks maintenance, diagnostics, and the work needed to keep it running strong. Current concern (Oct 11, 2026): rough idle on cold start and at intersections. Diagnostic scan shows 2A17 (DMTL system fault) and 2AAF (fuel pump plausibility).
+
+## The car
+
+Model TBD — Dave to confirm. Mileage: ~191,119 miles (Oct 11, 2026). Approaching 200k.
+
+## Current issue
+
+Rough idle, particularly on cold start, also at intersections. Not silky-smooth. Quentin scanned with AutoLogic: 2A17 DMTL system fault (P1434, not currently present) and 2AAF fuel pump plausibility (frequency 255, very persistent).
+
+## Maintenance backlog
+
+Fuel-system filters, fuel pump, fuel smell noticed after sitting at Dave&#x27;s dad&#x27;s house. General 200k-mile longevity maintenance.
+
+## How it works
+
+Log symptoms, scans, and repairs. Track parts ordered and maintenance due. Hans (automotive technician buddy) advises on diagnosis and parts.
+
+## Open questions
+
+Exact model/year/engine? Which repairs to prioritize?
+</pre></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">ingest.md</span><span class="rf-dir">docs</span></button><div class="rf-panel" hidden><div class="rf-body"><pre class="mdfallback"># Ingest log — BMW
+
+Raw brain-dumps about this buddy. Each entry is timestamped; work the keepers into the dossier.
+</pre></div></div></div></div>
 </div>
 </section>
 
 
 <div class="footer">
-Generated 2026-11-21 · Part of the Buddy System<br>
+Generated 2026-11-25 · Part of the Buddy System<br>
 <a href="about.html">About · the full record →</a>
 </div>
 

@@ -214,119 +214,98 @@ footer{margin-top:36px;padding-top:18px;border-top:1px solid var(--border);color
 <h2>📄 Repo files</h2>
 <p class="rf-sub">The markdown files in <span data-buddy-name>News Buddy</span>'s repo, baked into this page when it was generated — tap a file name and its contents open right below it; open as many as you like at once. No sign-in and no fetching: the words are right here. To change a file, edit it in the repo — the page picks it up next time it is generated.</p>
 <div class="rf-main">
-<div class="rf-list rf-files-wrap"><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">README.md</span><span class="rf-dir">repo root</span></button><div class="rf-panel" hidden><div class="rf-body"><h1>📰 News Buddy</h1>
-<p>News Buddy (Briefing Buddy) is Dave's personalized news companion — productized daily briefings, with topics as the personalization axis (AI/tech, markets, product design, engineering, motorsport, live music, Amador County local news), plus a listen mode.</p>
-<h2>Product brief</h2>
-<p><a href="docs/brief.md">Read the full brief</a> · <a href="https://docs.google.com/document/d/11Zz2wGbuIKCqS7OSPOnjIAbz5VsmLQPvxS-OfRicSN0/edit">Google Doc</a></p></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">brief.md</span><span class="rf-dir">docs</span></button><div class="rf-panel" hidden><div class="rf-body"><h1>News Buddy — Product Brief</h1>
-<blockquote>
-<p>Canonical brief: <a href="https://docs.google.com/document/d/11Zz2wGbuIKCqS7OSPOnjIAbz5VsmLQPvxS-OfRicSN0/edit">News Buddy — Brief</a> (Google Doc, Zuki Docs)</p>
-</blockquote>
-<p>Starting brief — October 7, 2026. A living document; edit freely. A full PRD follows next.</p>
-<h2>Problem</h2>
-<p>Dave already gets a morning briefing and an evening news briefing from his assistant every day, delivered to a dedicated Briefings thread. They work — but they're a service, not a product: they arrive on a fixed schedule, they cover a fixed set of topics, and there's no way to go deeper on a story, catch up on demand, or tune what gets covered. Meanwhile the broader news landscape is a firehose of undifferentiated feeds. Nobody builds the news companion the way Dave would build it: personal, crafted, delightful.</p>
-<p>News Buddy is the productized version of the briefings experience — a personalized news companion that knows what Dave cares about and delivers it the way he likes it, whenever he wants it.</p>
-<h2>Goals</h2>
-<ol>
-<li>
-<p>Productize the briefings: take the morning/evening briefing experience Dave already loves and make it on-demand, personalizable, and interactive.</p>
-</li>
-<li>
-<p>One companion for "what's going on" across all of Dave's interests — not just markets, not just tech.</p>
-</li>
-<li>
-<p>Make catching up a pleasure, not a chore: read it in two minutes or listen to it on the drive to San Jose.</p>
-</li>
-<li>
-<p>Build it to Dave's craftsmanship bar: the news app that feels hand-made, with personality as the moat.</p>
-</li>
-</ol>
-<h2>Core Features</h2>
-<ul>
-<li>
-<p>Personalized briefing feed: a living feed of stories matched to Dave's interest topics, ranked by relevance. The editorial voice of the current briefings — plain language, key facts first — becomes the product's voice.</p>
-</li>
-<li>
-<p>Topics / interests: the core personalization axis. Seeded from what Dave already reads: AI and technology, markets and investing, product design, engineering, motorsport, live music, Amador County local news. Add, mute, and tune topics; the feed reshapes itself.</p>
-</li>
-<li>
-<p>Catch-up modes: the familiar rhythms, on demand. Morning edition (calendar-aware: what's on today shapes what matters), evening edition (the day that was), plus "catch me up" anytime — 2-minute skim, 10-minute deep read.</p>
-</li>
-<li>
-<p>Listen mode: any briefing or story as generated audio. The drive to San Jose is the canonical use case. (Shared capability with the investing module's signals podcast — one audio pipeline, two products.)</p>
-</li>
-<li>
-<p>Story depth: tap any story for the fuller picture — key facts, why it matters, related coverage, source links. No doomscrolling; every story earns its place.</p>
-</li>
-<li>
-<p>Save and share: save stories to read later, share clean links. Saved items sync across devices.</p>
-</li>
-<li>
-<p>Local news: Amador County and Fiddletown-area coverage as a first-class topic — the stuff national apps never carry (fire/burn-day status, road conditions, local events).</p>
-</li>
-<li>
-<p>Briefing designer: News Buddy is where Dave designs the assistant's briefings. Set how many briefings go out per day, what time each lands, and what's in each — a sections library (topics, AAPL tracking, market moves, YouTube and podcast picks, Night sky, sunrise, the lunch/dinner question, calendar-aware items) that can be mixed and matched per briefing. What's designed here is exactly what lands in the Briefings thread; tweak it anytime and the next scheduled briefing follows the new design. The sections library includes a high-priority reminders section (sourced from the assistant’s reminder registry), shown at the top of every briefing.</p>
-</li>
-</ul>
-<p>RELATIONSHIP TO THE BRIEFINGS + INVESTING MODULE</p>
-<ul>
-<li>
-<p>The daily briefings are News Buddy's prototype and editorial seed: the morning/evening briefing format, the AAPL tracking, the YouTube/podcast picks, the Night sky section — all of it is product research already done. News Buddy doesn't replace the assistant's briefings on day one; it grows out of them.</p>
-</li>
-<li>
-<p>The relationship also runs the other way: News Buddy becomes the control panel for the briefings. The schedule, send times, and per-briefing contents are configured in the app, and the assistant executes them — the briefings stop being a fixed service and become something Dave designed.</p>
-</li>
-<li>
-<p>The investing module (brief written 2026-10-07) is a sibling product: it owns the investing loop (ideas, holdings, dog detection, market signals) and has its own news page and signals podcast. News Buddy is broader than investing — markets is one topic among many. The two should share the news-gathering backend and the audio pipeline rather than building either twice. Where a markets story matters to both, it appears in both, each in its own voice.</p>
-</li>
-</ul>
-<h2>Data Sources</h2>
-<ul>
-<li>
-<p>News APIs and RSS: mainstream + tech + local outlets; TBD which providers (cost, quality, licensing).</p>
-</li>
-<li>
-<p>Web gathering: scheduled searches for topic keywords, same pattern as the briefing research and the investing module's signal gathering.</p>
-</li>
-<li>
-<p>Briefings feed: the morning/evening briefings keep running as the editorial source of truth while News Buddy is built — their story selection trains the ranking.</p>
-</li>
-</ul>
-<h2>Non-Goals</h2>
-<ul>
-<li>
-<p>Not a social network: no comments, no follows, no algorithmic outrage.</p>
-</li>
-<li>
-<p>Not a replacement for the assistant's briefings on day one — it earns that over time.</p>
-</li>
-<li>
-<p>Not financial advice: markets coverage is news and context, same line the investing module walks.</p>
-</li>
-</ul>
-<h2>Open Questions</h2>
-<ul>
-<li>
-<p>Standalone app vs. part of a bigger "buddy" suite? A pattern is emerging: TV buddy, Service buddy, News buddy. Is there one Buddy app with modules, or a family of apps?</p>
-</li>
-<li>
-<p>The name: "News Buddy" fits the pattern, but is it the right product name long-term?</p>
-</li>
-<li>
-<p>Personalization depth: explicit topic toggles only, or learned from reading/listening behavior too?</p>
-</li>
-<li>
-<p>Local news sourcing: which outlets and feeds actually cover Amador County well?</p>
-</li>
-<li>
-<p>Business model: is this a personal tool, or does it become something shippable? (The events-site experience with local advertising is a relevant precedent.)</p>
-</li>
-<li>
-<p>Delivery mechanics: how does a briefing design in the app become the assistant's actual briefing schedule — a sections library, send-time triggers, a preview before it goes live?</p>
-</li>
-</ul>
-<h2>Prd Next Steps</h2>
-<p>Dave asked for a full PRD after this brief. The PRD should expand: user stories per feature, the topic taxonomy (v1 list), feed ranking rules, the listen-mode spec (voices, length options), data-source decisions with costs, the shared-backend contract with the investing module, and success criteria (what does "catching up is a pleasure" measure as?). It should also spec the briefing designer: the sections library, per-briefing content mixing, scheduling and send-time rules, and the delivery contract between the app and the assistant. It should also spec the reminders data contract: what counts as high priority, who tags it, and how the registry feeds the briefing.</p></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">ingest.md</span><span class="rf-dir">docs</span></button><div class="rf-panel" hidden><div class="rf-body"><h1>Ingest log — News Buddy</h1>
-<p>Raw brain-dumps about this buddy. Each entry is timestamped; work the keepers into the dossier.</p></div></div></div></div>
+<div class="rf-list rf-files-wrap"><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">README.md</span><span class="rf-dir">repo root</span></button><div class="rf-panel" hidden><div class="rf-body"><pre class="mdfallback"># 📰 News Buddy
+
+News Buddy (Briefing Buddy) is Dave&#x27;s personalized news companion — productized daily briefings, with topics as the personalization axis (AI/tech, markets, product design, engineering, motorsport, live music, Amador County local news), plus a listen mode.
+
+## Product brief
+
+[Read the full brief](docs/brief.md) · [Google Doc](https://docs.google.com/document/d/11Zz2wGbuIKCqS7OSPOnjIAbz5VsmLQPvxS-OfRicSN0/edit)
+</pre></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">brief.md</span><span class="rf-dir">docs</span></button><div class="rf-panel" hidden><div class="rf-body"><pre class="mdfallback"># News Buddy — Product Brief
+
+&gt; Canonical brief: [News Buddy — Brief](https://docs.google.com/document/d/11Zz2wGbuIKCqS7OSPOnjIAbz5VsmLQPvxS-OfRicSN0/edit) (Google Doc, Zuki Docs)
+
+Starting brief — October 7, 2026. A living document; edit freely. A full PRD follows next.
+
+## Problem
+
+Dave already gets a morning briefing and an evening news briefing from his assistant every day, delivered to a dedicated Briefings thread. They work — but they&#x27;re a service, not a product: they arrive on a fixed schedule, they cover a fixed set of topics, and there&#x27;s no way to go deeper on a story, catch up on demand, or tune what gets covered. Meanwhile the broader news landscape is a firehose of undifferentiated feeds. Nobody builds the news companion the way Dave would build it: personal, crafted, delightful.
+
+News Buddy is the productized version of the briefings experience — a personalized news companion that knows what Dave cares about and delivers it the way he likes it, whenever he wants it.
+
+## Goals
+
+1. Productize the briefings: take the morning/evening briefing experience Dave already loves and make it on-demand, personalizable, and interactive.
+
+2. One companion for &quot;what&#x27;s going on&quot; across all of Dave&#x27;s interests — not just markets, not just tech.
+
+3. Make catching up a pleasure, not a chore: read it in two minutes or listen to it on the drive to San Jose.
+
+4. Build it to Dave&#x27;s craftsmanship bar: the news app that feels hand-made, with personality as the moat.
+
+## Core Features
+
+- Personalized briefing feed: a living feed of stories matched to Dave&#x27;s interest topics, ranked by relevance. The editorial voice of the current briefings — plain language, key facts first — becomes the product&#x27;s voice.
+
+- Topics / interests: the core personalization axis. Seeded from what Dave already reads: AI and technology, markets and investing, product design, engineering, motorsport, live music, Amador County local news. Add, mute, and tune topics; the feed reshapes itself.
+
+- Catch-up modes: the familiar rhythms, on demand. Morning edition (calendar-aware: what&#x27;s on today shapes what matters), evening edition (the day that was), plus &quot;catch me up&quot; anytime — 2-minute skim, 10-minute deep read.
+
+- Listen mode: any briefing or story as generated audio. The drive to San Jose is the canonical use case. (Shared capability with the investing module&#x27;s signals podcast — one audio pipeline, two products.)
+
+- Story depth: tap any story for the fuller picture — key facts, why it matters, related coverage, source links. No doomscrolling; every story earns its place.
+
+- Save and share: save stories to read later, share clean links. Saved items sync across devices.
+
+- Local news: Amador County and Fiddletown-area coverage as a first-class topic — the stuff national apps never carry (fire/burn-day status, road conditions, local events).
+
+- Briefing designer: News Buddy is where Dave designs the assistant&#x27;s briefings. Set how many briefings go out per day, what time each lands, and what&#x27;s in each — a sections library (topics, AAPL tracking, market moves, YouTube and podcast picks, Night sky, sunrise, the lunch/dinner question, calendar-aware items) that can be mixed and matched per briefing. What&#x27;s designed here is exactly what lands in the Briefings thread; tweak it anytime and the next scheduled briefing follows the new design. The sections library includes a high-priority reminders section (sourced from the assistant’s reminder registry), shown at the top of every briefing.
+
+RELATIONSHIP TO THE BRIEFINGS + INVESTING MODULE
+
+- The daily briefings are News Buddy&#x27;s prototype and editorial seed: the morning/evening briefing format, the AAPL tracking, the YouTube/podcast picks, the Night sky section — all of it is product research already done. News Buddy doesn&#x27;t replace the assistant&#x27;s briefings on day one; it grows out of them.
+
+- The relationship also runs the other way: News Buddy becomes the control panel for the briefings. The schedule, send times, and per-briefing contents are configured in the app, and the assistant executes them — the briefings stop being a fixed service and become something Dave designed.
+
+- The investing module (brief written 2026-10-07) is a sibling product: it owns the investing loop (ideas, holdings, dog detection, market signals) and has its own news page and signals podcast. News Buddy is broader than investing — markets is one topic among many. The two should share the news-gathering backend and the audio pipeline rather than building either twice. Where a markets story matters to both, it appears in both, each in its own voice.
+
+## Data Sources
+
+- News APIs and RSS: mainstream + tech + local outlets; TBD which providers (cost, quality, licensing).
+
+- Web gathering: scheduled searches for topic keywords, same pattern as the briefing research and the investing module&#x27;s signal gathering.
+
+- Briefings feed: the morning/evening briefings keep running as the editorial source of truth while News Buddy is built — their story selection trains the ranking.
+
+## Non-Goals
+
+- Not a social network: no comments, no follows, no algorithmic outrage.
+
+- Not a replacement for the assistant&#x27;s briefings on day one — it earns that over time.
+
+- Not financial advice: markets coverage is news and context, same line the investing module walks.
+
+## Open Questions
+
+- Standalone app vs. part of a bigger &quot;buddy&quot; suite? A pattern is emerging: TV buddy, Service buddy, News buddy. Is there one Buddy app with modules, or a family of apps?
+
+- The name: &quot;News Buddy&quot; fits the pattern, but is it the right product name long-term?
+
+- Personalization depth: explicit topic toggles only, or learned from reading/listening behavior too?
+
+- Local news sourcing: which outlets and feeds actually cover Amador County well?
+
+- Business model: is this a personal tool, or does it become something shippable? (The events-site experience with local advertising is a relevant precedent.)
+
+- Delivery mechanics: how does a briefing design in the app become the assistant&#x27;s actual briefing schedule — a sections library, send-time triggers, a preview before it goes live?
+
+## Prd Next Steps
+
+Dave asked for a full PRD after this brief. The PRD should expand: user stories per feature, the topic taxonomy (v1 list), feed ranking rules, the listen-mode spec (voices, length options), data-source decisions with costs, the shared-backend contract with the investing module, and success criteria (what does &quot;catching up is a pleasure&quot; measure as?). It should also spec the briefing designer: the sections library, per-briefing content mixing, scheduling and send-time rules, and the delivery contract between the app and the assistant. It should also spec the reminders data contract: what counts as high priority, who tags it, and how the registry feeds the briefing.
+</pre></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">ingest.md</span><span class="rf-dir">docs</span></button><div class="rf-panel" hidden><div class="rf-body"><pre class="mdfallback"># Ingest log — News Buddy
+
+Raw brain-dumps about this buddy. Each entry is timestamped; work the keepers into the dossier.
+</pre></div></div></div></div>
 </div>
 </section>
 </section>
@@ -352,7 +331,7 @@ footer{margin-top:36px;padding-top:18px;border-top:1px solid var(--border);color
 <p class="dumpbox-hint">Enter dumps it &middot; Shift+Enter for a new line &middot; Images shrink to 1600px wide before upload — the original stays in your library</p>
 </section>
 
-<footer>Default Homepage v3 — "The Dossier" · Generated 2026-11-21 · Part of the Buddy System &middot; <a href="https://davedellaquila.github.io/buddy-system/">Buddy System dashboard</a><br>
+<footer>Default Homepage v3 — "The Dossier" · Generated 2026-11-25 · Part of the Buddy System &middot; <a href="https://davedellaquila.github.io/buddy-system/">Buddy System dashboard</a><br>
 <span class="muted">Archived PDF snapshots live in the buddy-system archive folder.</span></footer>
 </div>
 

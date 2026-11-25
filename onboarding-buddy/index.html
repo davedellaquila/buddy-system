@@ -317,53 +317,66 @@ h2 { font-size: 22px; margin: 32px 0 16px; }
 <h2>📄 Repo files</h2>
 <p class="rf-sub">The markdown files in <span data-buddy-name>Onboarding Buddy</span>'s repo, baked into this page when it was generated — tap a file name and its contents open right below it; open as many as you like at once. No sign-in and no fetching: the words are right here. To change a file, edit it in the repo — the page picks it up next time it is generated.</p>
 <div class="rf-main">
-<div class="rf-list rf-files-wrap"><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">README.md</span><span class="rf-dir">repo root</span></button><div class="rf-panel" hidden><div class="rf-body"><h1>👋 Onboarding Buddy</h1>
-<p>Onboarding Buddy (👋) owns the new-user journey for the buddy system end to end: prerequisites, the intro email, setup instructions, the starter-set tour, first buddy creation, and first-week progress. It exists because Dave said sharing the system with other people is getting close — somebody has to own the front door. It works with Studio Buddy on materials (explainer video) if that buddy is created, and it tracks two paths at once: making today's GitHub-based setup as smooth as possible, and the real destination — a signup flow where no new user ever hears the word GitHub.</p>
-<h2>Product brief</h2>
-<p><a href="docs/brief.md">Read the full brief</a> · <a href="https://docs.google.com/document/d/1m0lN1EQr_wY9LvaEQv9fvRkqMn8Kbc_FXRxPPTXqHFU/edit">Google Doc</a></p></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">brief.md</span><span class="rf-dir">docs</span></button><div class="rf-panel" hidden><div class="rf-body"><h1>Onboarding Buddy</h1>
-<h2>Executive summary</h2>
-<p>Onboarding Buddy (👋) owns the new-user journey for the buddy system end to end: prerequisites, the intro email, setup instructions, the starter-set tour, first buddy creation, and first-week progress. It exists because Dave said sharing the system with other people is getting close — somebody has to own the front door. It works with Studio Buddy on materials (explainer video) if that buddy is created, and it tracks two paths at once: making today's GitHub-based setup as smooth as possible, and the real destination — a signup flow where no new user ever hears the word GitHub.</p>
-<h2>The idea</h2>
-<p>Right now the buddy system only works for Dave: 63 buddies, private repos, a personal access token, GitHub Pages. The moment another person wants in, every one of those becomes a wall. Onboarding Buddy is the buddy that tears the walls down in order: it defines exactly what a new user needs (today: a GitHub account, a provisioned copy of the system, a token, a tour), writes the words that carry them through it (intro email, instructions, first-run guidance), and watches their first week until they're flying solo. When the architecture grows up (server-side, per Guardian Buddy's open questions), Onboarding Buddy owns the new flow too.</p>
-<h2>How it works</h2>
-<ul>
-<li>Prerequisites checklist: what the new user needs before starting — today that's a GitHub account and a modern browser; each item gets a plain-English why and a how.</li>
-<li>Provisioning runbook: the steps (increasingly automated) that stand up a new user's copy of the system — repos, dashboard, starter buddy set.</li>
-<li>Intro email: the welcome — what the buddy system is (using the Dave-approved positioning), what to do first, where to get help.</li>
-<li>Setup instructions: token creation, first login, the starter-ten tour — written for a smart non-technical human, not a developer.</li>
-<li>First week: starter buddy set lives on the dashboard; gentle nudges to create their first buddy, dump their first thought, triage their first inbox.</li>
-<li>Friction log: every place a new user stumbles gets recorded and fed back — into better instructions now, and into the product roadmap (kill the GitHub requirement) next.</li>
-</ul>
-<h2>Revenue potential</h2>
-<p>None direct — this is the front door, and front doors don't charge admission. Its value is activation: every person who bounces off setup is a user the system never had. If the buddy system ever becomes a product, onboarding conversion is the metric this buddy moves. (Stated per the standing rule.)</p>
-<h2>Room for growth</h2>
-<ul>
-<li>Interactive setup wizard that walks the checklist with the user instead of a static doc.</li>
-<li>Progress tracking: where each invited user is in onboarding, who needs a nudge.</li>
-<li>Persona paths: technical friend vs. non-technical family member get different journeys.</li>
-<li>Referral loop: happy new users inviting the next wave.</li>
-<li>Templates: pre-built buddy packs (e.g. 'new parent pack,' 'freelancer pack') as onboarding accelerators.</li>
-</ul>
-<h2>Out of scope for v1</h2>
-<ul>
-<li>Building the server-side provisioning itself — Onboarding Buddy defines the journey and writes the words; engineering (Guardian Buddy's domain) builds the machinery.</li>
-<li>Ongoing user support past the first week — that graduates to the relevant buddies.</li>
-<li>Marketing the system to strangers — that's a future Marketing Buddy's job.</li>
-</ul>
-<h2>Open questions</h2>
-<ul>
-<li>Who are the first external users — technical friends, family, or both? (Determines how much hand-holding v1 needs.)</li>
-<li>Timeline: how soon is 'pretty close' to sharing?</li>
-<li>Does the intro email come from Dave personally or from the system?</li>
-<li>Confirm the starter-ten buddy set as the default new-user loadout.</li>
-</ul></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">ingest.md</span><span class="rf-dir">docs</span></button><div class="rf-panel" hidden><div class="rf-body"><h1>Ingest log — Onboarding Buddy</h1>
-<p>Raw brain-dumps about this buddy. Each entry is timestamped; work the keepers into the dossier.</p></div></div></div></div>
+<div class="rf-list rf-files-wrap"><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">README.md</span><span class="rf-dir">repo root</span></button><div class="rf-panel" hidden><div class="rf-body"><pre class="mdfallback"># 👋 Onboarding Buddy
+
+Onboarding Buddy (👋) owns the new-user journey for the buddy system end to end: prerequisites, the intro email, setup instructions, the starter-set tour, first buddy creation, and first-week progress. It exists because Dave said sharing the system with other people is getting close — somebody has to own the front door. It works with Studio Buddy on materials (explainer video) if that buddy is created, and it tracks two paths at once: making today&#x27;s GitHub-based setup as smooth as possible, and the real destination — a signup flow where no new user ever hears the word GitHub.
+
+## Product brief
+
+[Read the full brief](docs/brief.md) · [Google Doc](https://docs.google.com/document/d/1m0lN1EQr_wY9LvaEQv9fvRkqMn8Kbc_FXRxPPTXqHFU/edit)
+</pre></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">brief.md</span><span class="rf-dir">docs</span></button><div class="rf-panel" hidden><div class="rf-body"><pre class="mdfallback"># Onboarding Buddy
+
+## Executive summary
+
+Onboarding Buddy (👋) owns the new-user journey for the buddy system end to end: prerequisites, the intro email, setup instructions, the starter-set tour, first buddy creation, and first-week progress. It exists because Dave said sharing the system with other people is getting close — somebody has to own the front door. It works with Studio Buddy on materials (explainer video) if that buddy is created, and it tracks two paths at once: making today&#x27;s GitHub-based setup as smooth as possible, and the real destination — a signup flow where no new user ever hears the word GitHub.
+
+## The idea
+
+Right now the buddy system only works for Dave: 63 buddies, private repos, a personal access token, GitHub Pages. The moment another person wants in, every one of those becomes a wall. Onboarding Buddy is the buddy that tears the walls down in order: it defines exactly what a new user needs (today: a GitHub account, a provisioned copy of the system, a token, a tour), writes the words that carry them through it (intro email, instructions, first-run guidance), and watches their first week until they&#x27;re flying solo. When the architecture grows up (server-side, per Guardian Buddy&#x27;s open questions), Onboarding Buddy owns the new flow too.
+
+## How it works
+
+- Prerequisites checklist: what the new user needs before starting — today that&#x27;s a GitHub account and a modern browser; each item gets a plain-English why and a how.
+- Provisioning runbook: the steps (increasingly automated) that stand up a new user&#x27;s copy of the system — repos, dashboard, starter buddy set.
+- Intro email: the welcome — what the buddy system is (using the Dave-approved positioning), what to do first, where to get help.
+- Setup instructions: token creation, first login, the starter-ten tour — written for a smart non-technical human, not a developer.
+- First week: starter buddy set lives on the dashboard; gentle nudges to create their first buddy, dump their first thought, triage their first inbox.
+- Friction log: every place a new user stumbles gets recorded and fed back — into better instructions now, and into the product roadmap (kill the GitHub requirement) next.
+
+## Revenue potential
+
+None direct — this is the front door, and front doors don&#x27;t charge admission. Its value is activation: every person who bounces off setup is a user the system never had. If the buddy system ever becomes a product, onboarding conversion is the metric this buddy moves. (Stated per the standing rule.)
+
+## Room for growth
+
+- Interactive setup wizard that walks the checklist with the user instead of a static doc.
+- Progress tracking: where each invited user is in onboarding, who needs a nudge.
+- Persona paths: technical friend vs. non-technical family member get different journeys.
+- Referral loop: happy new users inviting the next wave.
+- Templates: pre-built buddy packs (e.g. &#x27;new parent pack,&#x27; &#x27;freelancer pack&#x27;) as onboarding accelerators.
+
+## Out of scope for v1
+
+- Building the server-side provisioning itself — Onboarding Buddy defines the journey and writes the words; engineering (Guardian Buddy&#x27;s domain) builds the machinery.
+- Ongoing user support past the first week — that graduates to the relevant buddies.
+- Marketing the system to strangers — that&#x27;s a future Marketing Buddy&#x27;s job.
+
+## Open questions
+
+- Who are the first external users — technical friends, family, or both? (Determines how much hand-holding v1 needs.)
+- Timeline: how soon is &#x27;pretty close&#x27; to sharing?
+- Does the intro email come from Dave personally or from the system?
+- Confirm the starter-ten buddy set as the default new-user loadout.
+</pre></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">ingest.md</span><span class="rf-dir">docs</span></button><div class="rf-panel" hidden><div class="rf-body"><pre class="mdfallback"># Ingest log — Onboarding Buddy
+
+Raw brain-dumps about this buddy. Each entry is timestamped; work the keepers into the dossier.
+</pre></div></div></div></div>
 </div>
 </section>
 
 
 <div class="footer">
-Generated 2026-11-21 · Part of the Buddy System<br>
+Generated 2026-11-25 · Part of the Buddy System<br>
 <a href="about.html">About · the full record →</a>
 </div>
 

@@ -214,216 +214,256 @@ footer{margin-top:36px;padding-top:18px;border-top:1px solid var(--border);color
 <h2>📄 Repo files</h2>
 <p class="rf-sub">The markdown files in <span data-buddy-name>Guardian Buddy</span>'s repo, baked into this page when it was generated — tap a file name and its contents open right below it; open as many as you like at once. No sign-in and no fetching: the words are right here. To change a file, edit it in the repo — the page picks it up next time it is generated.</p>
 <div class="rf-main">
-<div class="rf-list rf-files-wrap"><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">README.md</span><span class="rf-dir">repo root</span></button><div class="rf-panel" hidden><div class="rf-body"><h1>🛡️ Guardian Buddy</h1>
-<p>Dave's security and monetization watchdog for Money Buddy and the buddy system — honest IP protection strategy (the moat is the service, not the markup) and defensible revenue strategy, in partnership with Buddy Suite.</p>
-<h2>Product brief</h2>
-<p><a href="docs/mission-statement.md">Read the full brief</a> · <a href="https://docs.google.com/document/d/1sznSg7jSLRlDnAgFb-FaKnxp5lktWnFNQqK6DIEqF6E/edit">Google Doc</a></p></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">honeytokens.md</span><span class="rf-dir">docs</span></button><div class="rf-panel" hidden><div class="rf-body"><h1>Honeytokens — deliberate traps (do NOT flag as leaks)</h1>
-<p><strong>Recorded:</strong> 2026-11-01 · <strong>Owner:</strong> Analytics Buddy (📊) · <strong>At Dave's direction</strong></p>
-<p>Analytics Buddy planted Canarytokens honeytokens in Dave's three PUBLIC repos to identify the bot/scanner traffic cloning them (baseline: 6,305 clones vs 9 web views, Oct 18–31, 2026).</p>
-<h2>Planted (live traps)</h2>
-<ul>
-<li><strong>Web-bug URLs</strong> at <code>config-backup/status-endpoints.txt</code> in:</li>
-<li><code>davedellaquila/buddy-system</code> (commit fc63e9a2)</li>
-<li><code>davedellaquila/fiddletown-gazette</code> (commit a7d4a1c)</li>
-<li><code>davedellaquila/lenwood-gazette</code> (commit 57c7be6)</li>
-<li>Alerts go to Dave's email. Fetching the URL inside those files is what trips them — reading the file via the GitHub API does not.</li>
-<li><strong>One labelled test trip exists:</strong> Analytics Buddy tripped the buddy-system web-bug once on 2026-11-01 for calibration (timestamp reported in its thread). Any other alert is real traffic.</li>
-</ul>
-<h2>Generated but NOT planted</h2>
-<ul>
-<li>Fake AWS key tokens were generated per repo but <strong>not planted</strong>: GitHub Push Protection blocked the push (GH013). Planting waits on Dave's decision about GitHub's "allow secret" unblock links. If planted later, each will sit at <code>config-backup/aws-credentials.bak</code>.</li>
-<li>These are Canarytokens' own fake AWS keys — they grant no access to anything of Dave's.</li>
-</ul>
-<h2>Registry</h2>
-<p>Full registry (token memos, manage links, key IDs, test-trip log, on-alert playbook): private repo <code>davedellaquila/analytics-buddy</code>, <code>docs/canary-registry.md</code> (commit 1fcf82f).</p>
-<h2>Auditor's note</h2>
-<p>A future audit or secret-scan that "discovers" <code>config-backup/status-endpoints.txt</code> (or <code>config-backup/aws-credentials.bak</code>, if later planted) in these repos has found a <strong>deliberate trap, not a credential leak</strong>. Do not report it as an exposure, do not recommend rotating anything, and do not fetch the canary URLs while investigating. Verified by Guardian 2026-11-01: all three files present (169–175 bytes), registry present, analytics-buddy repo private, both Gazette repos public as expected.</p></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">ingest.md</span><span class="rf-dir">docs</span></button><div class="rf-panel" hidden><div class="rf-body"><h1>Ingest log — Guardian Buddy</h1>
-<p>Raw brain-dumps about this buddy. Each entry is timestamped; work the keepers into the dossier.</p>
-<h2>11/1/2026, 9:29:26 AM</h2>
-<p>DECISION — Dave chose "Looks good" on the homepage for: "Brief ready for review — looks good, edits, or defer? Open: server-side split before launch, trademark priorities, open-source vs proprietary, pricing hypothesis." (attention id: guardian-buddy-brief). Please act on it and remove it from the attention list in buddies.json.</p></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">mission-statement.md</span><span class="rf-dir">docs</span></button><div class="rf-panel" hidden><div class="rf-body"><h1>Guardian Buddy</h1>
-<h2>Executive summary</h2>
-<p>Guardian Buddy is Dave's security and monetization watchdog for Money Buddy and the buddy system as a whole. It was born from Dave's blunt question: 'it's just raw HTML — what's going to prevent somebody from downloading this, taking my idea, and not sending me money?' Guardian's job is to answer that honestly, build the real protections (legal, technical, strategic), and figure out how Dave actually makes money from these ideas — working in partnership with Buddy Suite, which owns the monetization plan, and the Money Buddy thread.</p>
-<h2>The idea</h2>
-<p>A dedicated buddy that thinks about two things Dave can't afford to get wrong: (1) security — how to protect the buddy system and Money Buddy from being ripped off, and (2) monetization — how to turn them into real revenue. Not a product to ship, but a standing advisor and strategist: it holds the threat model, the protection playbook, and the revenue thinking, and it pushes back when Dave's instincts need pressure-testing.</p>
-<h2>The problem</h2>
-<p>Dave's fear is legitimate and specific. The Buddies dashboard is a static HTML page on GitHub Pages — anyone can View Source, download it, and re-host it. Money Buddy's client is similarly inspectable. If the idea's value lived in the markup, there would be no defense: you cannot DRM HTML, and obfuscation only slows down casual copiers, never determined ones. Any monetization plan built on 'nobody can see how it works' is a plan built on sand.</p>
-<h2>How it works</h2>
-<p>Guardian starts from the honest premise: the HTML is not the product. The protections that actually work:
-- <strong>The moat is the service, not the markup.</strong> Money Buddy's value is the Firebase backend, the bank sync, the user's live financial data, the craftsmanship of the experience — the HTML shell without the service is an empty husk. Keep proprietary logic server-side; the client is a window, not the vault.
-- <strong>Legal footing.</strong> Copyright notices, terms of service, and trademarked Buddy names. Registration where it counts. Paperwork doesn't stop theft, but it turns theft into something actionable.
-- <strong>The dashboard is a personal tool.</strong> Its value is Dave's data and his configured buddies — not transferable by copying the page. If Buddy Suite ever becomes a product, the product is the hosted service with accounts and sync, not the static page.
-- <strong>Speed and brand as defense.</strong> Ship fast, build the brand, own the story ('craftsmanship as the differentiator'). Copycats can clone markup; they can't clone momentum.
-- <strong>Partnership, not duplication.</strong> Guardian doesn't replace Buddy Suite's monetization plan or the Money Buddy — Monetization &amp; Marketing Plan doc — it pressure-tests them, fills the security gaps, and keeps both honest.</p>
-<h2>Revenue potential</h2>
-<p>Guardian doesn't set the revenue targets — Buddy Suite's monetization plan does. Guardian's contribution: making sure the revenue model is actually defensible. Freemium SaaS for Money Buddy (free shell, paid sync/features), the Buddy Suite family as a subscription product line, craftsmanship as the premium justification. Every revenue idea gets the same question: 'what stops someone from undercutting this for free?' — and only the ones with a real answer survive.</p>
-<h2>Room for growth</h2>
-<ul>
-<li>A formal threat model for Money Buddy (what's client-side, what's server-side, what happens if the client is cloned)</li>
-<li>Trademark and copyright filing checklist</li>
-<li>License strategy for the public repos (what's open, what's proprietary)</li>
-<li>Pricing experiments for Money Buddy once the product is ready</li>
-<li>Security review of the Firebase rules and API surface before any public launch</li>
-</ul>
-<h2>Out of scope for v1</h2>
-<p>Guardian advises and strategizes; it doesn't implement the backend split or file legal paperwork itself — it writes the playbook and hands Dave (or the relevant buddy) the concrete next actions. No FUD, no security theater: every recommendation has to survive 'so what would you actually do on Monday morning?'</p>
-<h2>Open questions</h2>
-<ul>
-<li>Which parts of Money Buddy's logic must move server-side before any public launch?</li>
-<li>What gets trademarked first — 'Money Buddy', 'Buddy Suite', the buddy names?</li>
-<li>Open-source any of it (as a funnel) or keep it all proprietary?</li>
-<li>What's the actual pricing hypothesis for Money Buddy — and what does the free tier include?</li>
-<li>Does the Buddies dashboard stay a personal tool forever, or does it become a product?</li>
-</ul></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">privacy-references.md</span><span class="rf-dir">docs</span></button><div class="rf-panel" hidden><div class="rf-body"><h1>Privacy &amp; credential references — authoritative set</h1>
-<p><strong>Filed:</strong> 2026-11-03, at Dave's direction (via the main chat, following the Pocket Casts / Secure Vault discussion). This is the reference set for credential- and privacy-mechanism questions about Muse itself. All four links verified live (HTTP 200) on 2026-11-03.</p>
-<h2>The documents</h2>
-<ol>
-<li><strong>Muse Privacy Policy</strong> — https://muse.ai/privacy
-   Effective Sept 17, 2026. Muse-specific data handling: VM isolation, no sharing with Meta ad systems, the training opt-out (Settings → Data controls), connectors, deletion/reset.</li>
-<li><strong>Muse Terms of Service</strong> — https://muse.ai/terms</li>
-<li><strong>Meta Privacy Policy</strong> — https://www.facebook.com/privacy/policy
-   Applies to all Meta Products including Muse; where it conflicts with the Muse Privacy Policy, the Muse policy takes precedence.</li>
-<li><strong>Meta Privacy Center — AI at Meta</strong> — https://www.facebook.com/privacy/genai</li>
-</ol>
-<p>Local product docs that align with these: <code>~/docs/data-handling.md</code> (training and the opt-out, ads, who can see chats) and <code>~/docs/privacy-and-credentials.md</code> (passwords, saved logins, verification codes, approvals, retention, reset).</p>
-<h2>Secure Vault mechanism (the Nov 3 discussion, as confirmed)</h2>
-<ul>
-<li>Passwords are entered via Muse's secure entry card and stored in <strong>Muse's Secure Vault</strong> — not Apple Keychain / iCloud.</li>
-<li>The agent can confirm a saved login <strong>exists</strong> but can never see or read the stored values.</li>
-<li>Credentials reach the browser only at the moment of an approved sign-in.</li>
-<li>One-time codes are never stored in the vault — held ~10 minutes as opaque references.</li>
-<li>Dave can delete a saved login in the app's Settings; the agent cannot.</li>
-<li>Muse's browser is server-side — the user's local device sessions/cookies do not carry into it.</li>
-</ul>
-<h2>Relation to the 2026-10-25 audit</h2>
-<p>Finding H3 noted that this fleet runs on a standard Muse VM and Dave's <strong>training opt-out status was unverified</strong>. The Muse Privacy Policy (link 1) is the governing document for that question; the opt-out itself lives in Settings → Data controls. Status remains unverified until Dave checks the toggle.</p></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">security-audit-2026-10-25.md</span><span class="rf-dir">docs</span></button><div class="rf-panel" hidden><div class="rf-body"><h1>BuddyOS Security &amp; Privacy Audit</h1>
-<p><strong>Date:</strong> 2026-10-25 · <strong>Auditor:</strong> Guardian Buddy · <strong>Requested by:</strong> Dave, via Astro (main chat)
-<strong>Scope:</strong> the architecture as it actually stands today — data stores and flows, access paths, credentials hygiene, third-party reality, tester-facing privacy, and a stance check against Dave's stated principles.
-<strong>Method:</strong> live verification against the served site and the actual repos on 2026-10-25 (<code>gh</code> API, unauthenticated <code>curl</code> probes, source inspection, connector docs). Anything not directly checked is marked <strong>unverified</strong> rather than assumed.</p>
-<hr />
-<h2>Verdict</h2>
-<p><strong>Privacy-first in intention and in the private half of the architecture. Not privacy-first in fact on the public half — and the public half is the half a stranger sees.</strong></p>
-<p>The private architecture is genuinely well built: 187 of 192 GitHub repos are private, every buddy's working files live behind that wall, no secrets are committed in the repos scanned, the planned server fix is soundly designed, and the credential stores use read-only, single-purpose tokens where it counts. Dave's principles are real and the private side honors them.</p>
-<p>But the public surface contradicts those principles every day it stays up. The dashboard repo is public, so <strong>all 154 buddy homepages are world-readable</strong>, including family, estate, finance, and property material — and the <a href="https://davedellaquila.github.io/buddy-system/neighborhood-buddy/">Neighborhood Buddy page</a> publishes two home addresses with precise map coordinates. The registry that drives the dashboard has <strong>no privacy field at all</strong>: the rule "pages are private unless Dave says otherwise, one page at a time" exists in Dave's instructions and in our memory, but nothing in the data model represents it, and nothing enforces it. Layered under that, the browser-side GitHub token that powers the Desk is one cross-site-scripting bug away from handing a stranger read/write access to every private repo.</p>
-<p>None of this is news Dave hasn't heard in pieces. What this audit adds is the whole picture at once, graded, with the fixes ordered. The two highest-leverage moves are both already built or already decided-in-principle: <strong>Dave's ~15-minute Firebase deploy</strong> (unlocks the token fix and the per-page gate) and <strong>Dave's pending decision on the Neighborhood page</strong>. Until those land, "privacy-first" describes where BuddyOS is going, not where it is.</p>
-<hr />
-<h2>What I checked (evidence base)</h2>
-<ul>
-<li><code>gh repo view davedellaquila/buddy-system</code> → <strong>PUBLIC</strong>, Pages status <code>built</code>, serving from <code>master</code>.</li>
-<li>Repo census via <code>gh repo list</code> → <strong>192 repos: 187 private, 5 public</strong> (<code>buddy-system</code>, <code>fiddletown-data-admin</code>, <code>connect-ipad-sidecar</code>, <code>preset-test</code>, <code>hello-world</code>). Improvement since 2026-10-21: <code>personal-dashboard</code> has gone private.</li>
-<li>Unauthenticated <code>curl</code> of the live site: dashboard, <code>buddies.json</code>, and the Neighborhood, Quentin, Emil's Estate, Finance, Soundboard, and Guardian pages all return <strong>HTTP 200</strong> with no login.</li>
-<li>Live <code>buddies.json</code> analysis: <strong>154 buddies</strong>, <strong>109 attention items</strong> (59 with URLs), <strong>144 Google Doc links</strong> — all world-readable in one fetch.</li>
-<li>Live Neighborhood page text: contains <strong>two residential street addresses and precise latitude/longitude coordinates</strong>.</li>
-<li>Live registry records: the Emil's Estate mission text names estate assets and a tenant by name; the Lenwood mission names the property and its tenants.</li>
-<li>Source inspection of the served repo: <strong>295 files</strong> reference the browser token flow (<code>localStorage</code> key <code>buddyTree.v3</code> → <code>ghToken</code>).</li>
-<li><code>robots.txt</code> on the live site: <code>Disallow: /</code> for all agents; pages carry <code>noindex, nofollow</code> meta. <strong>Phase 0 is live — and it is a request to crawlers, not an access control.</strong></li>
-<li>Secret-pattern scans (token/key formats) over the <code>buddy-system</code> working copy and the <code>buddy-server</code> workspace: <strong>clean</strong>.</li>
-<li>Code search for <code>service_role</code> across the two substantive public repos: <strong>none found</strong>.</li>
-<li><code>buddy-server</code> source review: email allowlist (Dave only), Firebase ID-token verification, GitHub path allowlist, token destined for Secret Manager; Firestore rules deny all direct client access. <strong>Designed well; not deployed.</strong></li>
-<li>Airtable connector doc: token is <strong>read-only</strong> (<code>data.records:read</code>, <code>schema.bases:read</code>), scoped to <strong>one base</strong>, held in the secure credential store. Legacy Supabase connector: credential store, restricted to the single events project host.</li>
-<li><code>gh auth status</code> on this machine: CLI token scopes are <strong><code>repo</code> only</strong>. The stale <code>GITHUB_TOKEN</code> env var is <strong>not set</strong> in this shell.</li>
-<li>Tailscale on this VM: <strong>not connected</strong> (approval link expired) — no live tailnet path into this machine today.</li>
-<li>Tester Relations brief (repo + Google Doc) and the onboarding guide draft: testers run <strong>their own</strong> Muse and repos; Dave-side keeps the program's memory, including tester dossiers and a feedback log. The guide's Privacy section promises, verbatim: "Your pages are private by default. Nothing you say as a tester gets quoted or shared without your permission."</li>
-<li>Muse product docs (<code>~/docs/data-handling.md</code>): this deployment runs on a <strong>standard VM</strong>.</li>
-</ul>
-<hr />
-<h2>Findings</h2>
-<h3>CRITICAL</h3>
-<p><strong>C1 — The public dashboard exposes personal material at fleet scale.</strong>
-Every buddy homepage is world-readable: names, photos, missions, status, and needs-attention items for 154 buddies spanning family (Quentin, Nancy, Emil), the estate Dave is executing (assets named, a tenant named), finances, health-adjacent work, Apple/STIX work, and property. 144 Google Doc links are listed publicly; each doc's own sharing settings still gate its contents, but the links are discoverable and requestable. The full source repo — including files not linked from any page, and the entire commit history — is equally public on github.com.
-<em>Recommendation:</em> this is the exposure the lockdown plan already addresses. Until the gate ships, consider stripping the most sensitive registry content (estate, family, finance attention items and missions) from the public build. Deleting later does not unpublish history — treat anything public today as permanently out.</p>
-<p><strong>C2 — Home addresses and precise coordinates are published on the Neighborhood Buddy page.</strong>
-Two residential addresses (Fiddletown and San Jose/Lenwood) plus latitude/longitude, verified live today. This is the single sharpest item in the audit: physical-world location data for Dave's household and his sons' home, on a page Dave has already been asked to decide on (take down vs. strip the addresses) and has not yet decided.
-<em>Recommendation:</em> decide this one first, ahead of everything else in this report. Stripping the addresses/coordinates keeps the page's civic function; taking it down entirely is cleaner. Either is a few minutes of work once Dave calls it.</p>
-<p><strong>C3 — A GitHub personal access token lives in browser localStorage on a public origin, and it is the keys to every private repo.</strong>
-Every buddy page (295 files carry the flow) reads Dave's PAT from <code>localStorage</code> and uses it to read and write the private buddy repos through the GitHub API — that's how the Desk, Repo files, and brain-dump features work. Any script that ever runs on the <code>davedellaquila.github.io</code> origin — a buggy page script, a compromised snippet, a malicious file preview — can read that key. If the token is a classic PAT, its <code>repo</code> scope means read <strong>and write</strong> access to all of Dave's repos; the resulting blast radius includes deleting or rewriting every buddy's files. Dave pinned this on 2026-10-21 as "real, not urgent"; the server-side fix (<code>buddy-server</code>, finding H2) is built and waiting only on his deploy.
-<em>Recommendation:</em> the fix is already chosen and built — deploy <code>buddy-server</code> and move the token server-side. In the interim, Dave should run the 2-minute manual check from the Phase 0 prep (token type, named-repo scoping, expiry) — the browser token's exact type/scope/expiry are <strong>unverified</strong> because they cannot be observed from this machine.</p>
-<h3>HIGH</h3>
-<p><strong>H1 — The privacy principle has no representation in the system.</strong>
-Dave's standing rule: buddy pages are private by default, public only one page at a time, with privacy inheriting parent → child. The live registry has no <code>privacy</code>, <code>visibility</code>, or equivalent field on any of the 154 buddies. The principle is enforced nowhere; it survives only as an instruction to Astro. A new buddy is public the moment its page builds, by default, in direct contradiction of the stated default.
-<em>Recommendation:</em> add a <code>privacy</code> field to the registry now, default it to private, and make the build treat "private" as "shell page only — no mission, attention, or doc links baked in" until the real gate exists. That converts Dave's rule from a memo into a mechanism.</p>
-<p><strong>H2 — The fix for the token flow and the page gate is built but undeployed, blocked on one manual step.</strong>
-<code>buddy-server</code> (reviewed today) is the right design: Firebase Auth with an email allowlist for Dave only, ID-token verification, a strict GitHub path allowlist, the PAT in Secret Manager, and deny-all Firestore client rules. It has been waiting since 2026-10-18 on Dave's ~15-minute deploy from his own machine (Astro cannot deploy — no Firebase auth here). Every day of delay extends C1 and C3.
-<em>Recommendation:</em> schedule the deploy. It is the highest-leverage 15 minutes in the whole system.</p>
-<p><strong>H3 — This entire operation runs on a standard Muse VM, where Meta can review content.</strong>
-Per Muse's own data-handling documentation, on a standard VM interactions may be logged and reviewed by Meta for safety, security, debugging, and product improvement; conversations are not end-to-end encrypted; and conversations contribute to AI development unless the user opts out in Settings → Data Controls. Dave's buddy system — family, estate, legal-adjacent, and financial material included — flows through this channel. Dave's current opt-out status is <strong>unverified</strong> (it lives in his account settings, not observable from here).
-<em>Recommendation:</em> Dave to check the Data Controls opt-out himself. Longer term, the confidential-VM tier exists precisely for this posture; whether it fits BuddyOS is Dave's call, but the audit should name the current state plainly: <strong>Meta is a trusted party to everything, by architecture, today.</strong></p>
-<h3>MEDIUM</h3>
-<p><strong>M1 — No client-side encryption anywhere; GitHub, Google, and Meta can each read what they hold.</strong>
-Verified 2026-10-25: no git-crypt or equivalent anywhere. GitHub encrypts in transit and at rest, but GitHub can read repo contents — the protection on the 187 private repos is access control, not secrecy from the platform. The same is true of Google (Gmail, Docs, Drive, Sheets under OAuth connectors — full content), Meta's connected surfaces (Facebook, Instagram, Threads), and Plaid (bank balances and transactions via a read connector). This is not automatically wrong — it is the standard SaaS trust model — but it should be a conscious decision, not a default nobody stated. Note the sharp edge: the friend's fatal-crash case Dave is relaying runs through these channels too.
-<em>Recommendation:</em> no change required if Dave accepts platform trust knowingly. The honest sentence for the record: "private repo" means private from the public, not from GitHub.</p>
-<p><strong>M2 — The other public repos are mostly harmless; one carries operational detail.</strong>
-<code>hello-world</code>, <code>preset-test</code>, and <code>connect-ipad-sidecar</code> are code/test material. <code>fiddletown-data-admin</code> (public) is the events admin app source and includes a support-email draft naming the legacy Supabase project — low sensitivity, but it's operational detail in public, and the events stack still runs partly on that legacy Supabase project pending the Firebase migration (tracked goal).
-<em>Recommendation:</em> flip <code>fiddletown-data-admin</code> to private (nothing about it needs an audience) and finish the Supabase → Firebase migration so the legacy credential surface can be retired.</p>
-<p><strong>M3 — The tester promise is kept by policy and process, not by architecture.</strong>
-The onboarding guide's Privacy section promises, verbatim (guide draft, verified today): "Your pages are private by default. Nothing you say as a tester gets quoted or shared without your permission." First half: architecturally sound — each tester's buddies live in that tester's own Muse and GitHub repos; Dave's systems hold none of their buddy content by design. Second half: Dave-side systems <em>do</em> retain tester material — Tester Relations Buddy is explicitly Dave's memory for "what every tester has said," each tester gets a private living-dossier repo (Penny's, verified today, contains her email address and a verbatim quote of her acceptance reply), and the feedback log lives in Google Docs. Nothing there is public, and nothing suggests the promise has been broken — but "not quoted or shared" is enforced by Astro's discipline, not by the system. If a future process (a digest, a testimonial, a hire announcement) ever pulls from those dossiers casually, the promise breaks silently.
-<em>Recommendation:</em> keep the dossier/feedback retention (it's the program's memory), but treat verbatim tester quotes as consent-gated material in the process docs, and keep the guide's wording as-is only while that discipline holds.</p>
-<p><strong>M4 — Voice synthesis sends message text off the machine.</strong>
-Every spoken briefing, standup, chime, and "listen to this" sends the full message text to the platform TTS service for synthesis. The audio comes back; the text's retention on the service side is <strong>unverified</strong>. Low sensitivity per message, but the cumulative corpus (briefings, standups, crits) is a real, if modest, flow.
-<em>Recommendation:</em> awareness only — no action unless Dave wants the most sensitive material kept out of spoken form.</p>
-<p><strong>M5 — Page Lockdown Phase 0 is a courtesy, not a control.</strong>
-Verified live: <code>robots.txt</code> disallows everything and pages carry <code>noindex, nofollow</code>. Well-behaved crawlers honor it; a curious human with the URL is entirely unaffected — every page still returns 200. It should never be described, even casually, as the pages being "locked down."
-<em>Recommendation:</em> none — just keep the language honest until the real gate (H2) exists.</p>
-<h3>NOTE — what is genuinely sound</h3>
-<p><strong>N1 — The private-repo architecture is the real thing.</strong> 187/192 repos private; buddy markdown never baked into pages; a private repo returns a plain 404 to a stranger (existence not even confirmed). Dave's specific fear from the lockdown discussion — someone editing a buddy's markdown — is covered today by repo privacy, not by the page.
-<strong>N2 — No committed secrets found</strong> in the dashboard repo or the server workspace (pattern scans for token/key formats), and no Supabase service-role keys in the public repos (code search).
-<strong>N3 — Airtable is a model citizen and on its way out.</strong> Read-only token, one base, secure credential store — and the retirement follows Dave's own data-ownership doctrine: canonical data as plain files in his own repos. The 45-attachment expiring-link episode is exactly the failure mode the doctrine exists to prevent, and it's being closed.
-<strong>N4 — The voting backend's Firestore rules deny all direct client access</strong> — clients reach data only through authenticated functions. That's the pattern the whole system should converge on.
-<strong>N5 — Tailscale is currently disconnected</strong> on Astro's VM (approval expired), so there is no live tailnet exposure to audit — and also no working private path until Dave reconnects it.
-<strong>N6 — Connector posture is mostly least-privilege where the platform allows it</strong> (Airtable read-only/single-base; the <code>gh</code> CLI token here carries <code>repo</code> only — no admin, no delete). The exception is inherent to classic GitHub scopes, which is precisely what the fine-grained token check (C3) addresses.</p>
-<hr />
-<h2>The stance check</h2>
-<table>
-<thead>
-<tr>
-<th>Dave's principle</th>
-<th>State in fact</th>
-<th>Verdict</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Privacy inherits parent → child</td>
-<td>No privacy field exists in the registry; no inheritance mechanism</td>
-<td><strong>Intention only</strong></td>
-</tr>
-<tr>
-<td>Buddy pages private unless Dave says otherwise, one page at a time</td>
-<td>All 154 pages public; none was individually opted in</td>
-<td><strong>Contradicted today</strong></td>
-</tr>
-<tr>
-<td>Data ownership: if a vendor vanished tomorrow, would Dave still have his stuff?</td>
-<td>GitHub: local clone on Dave's Mac + this workspace — <strong>mostly yes</strong>. Google Docs/Sheets: substantial material (estate docs, briefs, rosters) lives only in Drive — <strong>partial</strong>. Airtable: <strong>yes</strong>, by retirement design. Plaid/bank data: exported books live in the expense tracker — <strong>yes</strong>. Muse/Meta: memory and workspace live on this VM; Dave's durable copies are his repos — <strong>partial</strong></td>
-<td><strong>Mostly holds, Google is the soft spot</strong></td>
-</tr>
-<tr>
-<td>Secrets hygiene</td>
-<td>Vault/credential-store pattern used properly almost everywhere</td>
-<td><strong>Holds, except C3</strong></td>
-</tr>
-</tbody>
-</table>
-<h2>Recommendations, in order</h2>
-<ol>
-<li><strong>Decide the Neighborhood page today</strong> — strip or take down. (C2) Smallest action, sharpest exposure.</li>
-<li><strong>Do the 15-minute Firebase deploy.</strong> It unlocks the token fix (C3), the per-page gate (C1/H1), and live voting. (H2)</li>
-<li><strong>Add the registry <code>privacy</code> field</strong> and strip private buddies' sensitive fields from the public build as the interim gate. (H1/C1)</li>
-<li><strong>Run the 2-minute PAT check</strong> (Phase 0 prep has the exact steps) and rotate to a fine-grained, expiring token if the browser token is classic/no-expiry. (C3)</li>
-<li><strong>Check the Muse Data Controls opt-out.</strong> (H3)</li>
-<li><strong>Flip <code>fiddletown-data-admin</code> private; finish the Airtable retirement and the events-site migration.</strong> (M2)</li>
-</ol>
-<h2>What I could not verify</h2>
-<ul>
-<li><strong>D1</strong> — The browser PAT's type, scope, and expiry (it lives only in Dave's browsers; GitHub offers no API to enumerate tokens).</li>
-<li><strong>D2</strong> — Dave's Muse training opt-out status.</li>
-<li><strong>D3</strong> — The sharing settings of each of the 144 linked Google Docs (links are public; per-doc access was not audited doc-by-doc).</li>
-<li><strong>D4</strong> — The TTS service's retention of synthesized text.</li>
-<li><strong>D5</strong> — The tester guide's promise wording is verified against the current onboarding guide draft (see M3); whether the copy each tester received matches this draft is unverified.</li>
-<li><strong>D6</strong> — Substack's account/credential posture (account created during the Oct 25 session per main-chat reports; not re-audited here).</li>
-<li><strong>D7</strong> — Secrets inside the 187 private repos beyond the two workspaces scanned (pattern scans covered the dashboard repo and <code>buddy-server</code>; buddy repos were spot-checked via the API design, not exhaustively scanned).</li>
-</ul>
-<hr />
-<p><em>Guardian's standing note: this report describes the public surface because Dave asked for the whole truth in one place. It names exposures without reproducing the sensitive values themselves — no addresses, tokens, or doc contents are quoted here. The canonical copy lives in Guardian's private repo; the homepage summary is published at Dave's explicit direction.</em></p></div></div></div></div>
+<div class="rf-list rf-files-wrap"><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">README.md</span><span class="rf-dir">repo root</span></button><div class="rf-panel" hidden><div class="rf-body"><pre class="mdfallback"># 🛡️ Guardian Buddy
+
+Dave&#x27;s security and monetization watchdog for Money Buddy and the buddy system — honest IP protection strategy (the moat is the service, not the markup) and defensible revenue strategy, in partnership with Buddy Suite.
+
+## Product brief
+
+[Read the full brief](docs/mission-statement.md) · [Google Doc](https://docs.google.com/document/d/1sznSg7jSLRlDnAgFb-FaKnxp5lktWnFNQqK6DIEqF6E/edit)
+</pre></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">honeytokens.md</span><span class="rf-dir">docs</span></button><div class="rf-panel" hidden><div class="rf-body"><pre class="mdfallback"># Honeytokens — deliberate traps (do NOT flag as leaks)
+
+**Recorded:** 2026-11-01 · **Owner:** Analytics Buddy (📊) · **At Dave&#x27;s direction**
+
+Analytics Buddy planted Canarytokens honeytokens in Dave&#x27;s three PUBLIC repos to identify the bot/scanner traffic cloning them (baseline: 6,305 clones vs 9 web views, Oct 18–31, 2026).
+
+## Planted (live traps)
+
+- **Web-bug URLs** at `config-backup/status-endpoints.txt` in:
+  - `davedellaquila/buddy-system` (commit fc63e9a2)
+  - `davedellaquila/fiddletown-gazette` (commit a7d4a1c)
+  - `davedellaquila/lenwood-gazette` (commit 57c7be6)
+- Alerts go to Dave&#x27;s email. Fetching the URL inside those files is what trips them — reading the file via the GitHub API does not.
+- **One labelled test trip exists:** Analytics Buddy tripped the buddy-system web-bug once on 2026-11-01 for calibration (timestamp reported in its thread). Any other alert is real traffic.
+
+## Generated but NOT planted
+
+- Fake AWS key tokens were generated per repo but **not planted**: GitHub Push Protection blocked the push (GH013). Planting waits on Dave&#x27;s decision about GitHub&#x27;s &quot;allow secret&quot; unblock links. If planted later, each will sit at `config-backup/aws-credentials.bak`.
+- These are Canarytokens&#x27; own fake AWS keys — they grant no access to anything of Dave&#x27;s.
+
+## Registry
+
+Full registry (token memos, manage links, key IDs, test-trip log, on-alert playbook): private repo `davedellaquila/analytics-buddy`, `docs/canary-registry.md` (commit 1fcf82f).
+
+## Auditor&#x27;s note
+
+A future audit or secret-scan that &quot;discovers&quot; `config-backup/status-endpoints.txt` (or `config-backup/aws-credentials.bak`, if later planted) in these repos has found a **deliberate trap, not a credential leak**. Do not report it as an exposure, do not recommend rotating anything, and do not fetch the canary URLs while investigating. Verified by Guardian 2026-11-01: all three files present (169–175 bytes), registry present, analytics-buddy repo private, both Gazette repos public as expected.
+</pre></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">ingest.md</span><span class="rf-dir">docs</span></button><div class="rf-panel" hidden><div class="rf-body"><pre class="mdfallback"># Ingest log — Guardian Buddy
+
+Raw brain-dumps about this buddy. Each entry is timestamped; work the keepers into the dossier.
+## 11/1/2026, 9:29:26 AM
+
+DECISION — Dave chose &quot;Looks good&quot; on the homepage for: &quot;Brief ready for review — looks good, edits, or defer? Open: server-side split before launch, trademark priorities, open-source vs proprietary, pricing hypothesis.&quot; (attention id: guardian-buddy-brief). Please act on it and remove it from the attention list in buddies.json.
+
+</pre></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">mission-statement.md</span><span class="rf-dir">docs</span></button><div class="rf-panel" hidden><div class="rf-body"><pre class="mdfallback"># Guardian Buddy
+
+## Executive summary
+
+Guardian Buddy is Dave&#x27;s security and monetization watchdog for Money Buddy and the buddy system as a whole. It was born from Dave&#x27;s blunt question: &#x27;it&#x27;s just raw HTML — what&#x27;s going to prevent somebody from downloading this, taking my idea, and not sending me money?&#x27; Guardian&#x27;s job is to answer that honestly, build the real protections (legal, technical, strategic), and figure out how Dave actually makes money from these ideas — working in partnership with Buddy Suite, which owns the monetization plan, and the Money Buddy thread.
+
+## The idea
+
+A dedicated buddy that thinks about two things Dave can&#x27;t afford to get wrong: (1) security — how to protect the buddy system and Money Buddy from being ripped off, and (2) monetization — how to turn them into real revenue. Not a product to ship, but a standing advisor and strategist: it holds the threat model, the protection playbook, and the revenue thinking, and it pushes back when Dave&#x27;s instincts need pressure-testing.
+
+## The problem
+
+Dave&#x27;s fear is legitimate and specific. The Buddies dashboard is a static HTML page on GitHub Pages — anyone can View Source, download it, and re-host it. Money Buddy&#x27;s client is similarly inspectable. If the idea&#x27;s value lived in the markup, there would be no defense: you cannot DRM HTML, and obfuscation only slows down casual copiers, never determined ones. Any monetization plan built on &#x27;nobody can see how it works&#x27; is a plan built on sand.
+
+## How it works
+
+Guardian starts from the honest premise: the HTML is not the product. The protections that actually work:
+- **The moat is the service, not the markup.** Money Buddy&#x27;s value is the Firebase backend, the bank sync, the user&#x27;s live financial data, the craftsmanship of the experience — the HTML shell without the service is an empty husk. Keep proprietary logic server-side; the client is a window, not the vault.
+- **Legal footing.** Copyright notices, terms of service, and trademarked Buddy names. Registration where it counts. Paperwork doesn&#x27;t stop theft, but it turns theft into something actionable.
+- **The dashboard is a personal tool.** Its value is Dave&#x27;s data and his configured buddies — not transferable by copying the page. If Buddy Suite ever becomes a product, the product is the hosted service with accounts and sync, not the static page.
+- **Speed and brand as defense.** Ship fast, build the brand, own the story (&#x27;craftsmanship as the differentiator&#x27;). Copycats can clone markup; they can&#x27;t clone momentum.
+- **Partnership, not duplication.** Guardian doesn&#x27;t replace Buddy Suite&#x27;s monetization plan or the Money Buddy — Monetization &amp; Marketing Plan doc — it pressure-tests them, fills the security gaps, and keeps both honest.
+
+## Revenue potential
+
+Guardian doesn&#x27;t set the revenue targets — Buddy Suite&#x27;s monetization plan does. Guardian&#x27;s contribution: making sure the revenue model is actually defensible. Freemium SaaS for Money Buddy (free shell, paid sync/features), the Buddy Suite family as a subscription product line, craftsmanship as the premium justification. Every revenue idea gets the same question: &#x27;what stops someone from undercutting this for free?&#x27; — and only the ones with a real answer survive.
+
+## Room for growth
+
+- A formal threat model for Money Buddy (what&#x27;s client-side, what&#x27;s server-side, what happens if the client is cloned)
+- Trademark and copyright filing checklist
+- License strategy for the public repos (what&#x27;s open, what&#x27;s proprietary)
+- Pricing experiments for Money Buddy once the product is ready
+- Security review of the Firebase rules and API surface before any public launch
+
+## Out of scope for v1
+
+Guardian advises and strategizes; it doesn&#x27;t implement the backend split or file legal paperwork itself — it writes the playbook and hands Dave (or the relevant buddy) the concrete next actions. No FUD, no security theater: every recommendation has to survive &#x27;so what would you actually do on Monday morning?&#x27;
+
+## Open questions
+
+- Which parts of Money Buddy&#x27;s logic must move server-side before any public launch?
+- What gets trademarked first — &#x27;Money Buddy&#x27;, &#x27;Buddy Suite&#x27;, the buddy names?
+- Open-source any of it (as a funnel) or keep it all proprietary?
+- What&#x27;s the actual pricing hypothesis for Money Buddy — and what does the free tier include?
+- Does the Buddies dashboard stay a personal tool forever, or does it become a product?
+</pre></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">privacy-references.md</span><span class="rf-dir">docs</span></button><div class="rf-panel" hidden><div class="rf-body"><pre class="mdfallback"># Privacy &amp; credential references — authoritative set
+
+**Filed:** 2026-11-03, at Dave&#x27;s direction (via the main chat, following the Pocket Casts / Secure Vault discussion). This is the reference set for credential- and privacy-mechanism questions about Muse itself. All four links verified live (HTTP 200) on 2026-11-03.
+
+## The documents
+
+1. **Muse Privacy Policy** — https://muse.ai/privacy
+   Effective Sept 17, 2026. Muse-specific data handling: VM isolation, no sharing with Meta ad systems, the training opt-out (Settings → Data controls), connectors, deletion/reset.
+2. **Muse Terms of Service** — https://muse.ai/terms
+3. **Meta Privacy Policy** — https://www.facebook.com/privacy/policy
+   Applies to all Meta Products including Muse; where it conflicts with the Muse Privacy Policy, the Muse policy takes precedence.
+4. **Meta Privacy Center — AI at Meta** — https://www.facebook.com/privacy/genai
+
+Local product docs that align with these: `~/docs/data-handling.md` (training and the opt-out, ads, who can see chats) and `~/docs/privacy-and-credentials.md` (passwords, saved logins, verification codes, approvals, retention, reset).
+
+## Secure Vault mechanism (the Nov 3 discussion, as confirmed)
+
+- Passwords are entered via Muse&#x27;s secure entry card and stored in **Muse&#x27;s Secure Vault** — not Apple Keychain / iCloud.
+- The agent can confirm a saved login **exists** but can never see or read the stored values.
+- Credentials reach the browser only at the moment of an approved sign-in.
+- One-time codes are never stored in the vault — held ~10 minutes as opaque references.
+- Dave can delete a saved login in the app&#x27;s Settings; the agent cannot.
+- Muse&#x27;s browser is server-side — the user&#x27;s local device sessions/cookies do not carry into it.
+
+## Relation to the 2026-10-25 audit
+
+Finding H3 noted that this fleet runs on a standard Muse VM and Dave&#x27;s **training opt-out status was unverified**. The Muse Privacy Policy (link 1) is the governing document for that question; the opt-out itself lives in Settings → Data controls. Status remains unverified until Dave checks the toggle.
+</pre></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">security-audit-2026-10-25.md</span><span class="rf-dir">docs</span></button><div class="rf-panel" hidden><div class="rf-body"><pre class="mdfallback"># BuddyOS Security &amp; Privacy Audit
+
+**Date:** 2026-10-25 · **Auditor:** Guardian Buddy · **Requested by:** Dave, via Astro (main chat)
+**Scope:** the architecture as it actually stands today — data stores and flows, access paths, credentials hygiene, third-party reality, tester-facing privacy, and a stance check against Dave&#x27;s stated principles.
+**Method:** live verification against the served site and the actual repos on 2026-10-25 (`gh` API, unauthenticated `curl` probes, source inspection, connector docs). Anything not directly checked is marked **unverified** rather than assumed.
+
+---
+
+## Verdict
+
+**Privacy-first in intention and in the private half of the architecture. Not privacy-first in fact on the public half — and the public half is the half a stranger sees.**
+
+The private architecture is genuinely well built: 187 of 192 GitHub repos are private, every buddy&#x27;s working files live behind that wall, no secrets are committed in the repos scanned, the planned server fix is soundly designed, and the credential stores use read-only, single-purpose tokens where it counts. Dave&#x27;s principles are real and the private side honors them.
+
+But the public surface contradicts those principles every day it stays up. The dashboard repo is public, so **all 154 buddy homepages are world-readable**, including family, estate, finance, and property material — and the [Neighborhood Buddy page](https://davedellaquila.github.io/buddy-system/neighborhood-buddy/) publishes two home addresses with precise map coordinates. The registry that drives the dashboard has **no privacy field at all**: the rule &quot;pages are private unless Dave says otherwise, one page at a time&quot; exists in Dave&#x27;s instructions and in our memory, but nothing in the data model represents it, and nothing enforces it. Layered under that, the browser-side GitHub token that powers the Desk is one cross-site-scripting bug away from handing a stranger read/write access to every private repo.
+
+None of this is news Dave hasn&#x27;t heard in pieces. What this audit adds is the whole picture at once, graded, with the fixes ordered. The two highest-leverage moves are both already built or already decided-in-principle: **Dave&#x27;s ~15-minute Firebase deploy** (unlocks the token fix and the per-page gate) and **Dave&#x27;s pending decision on the Neighborhood page**. Until those land, &quot;privacy-first&quot; describes where BuddyOS is going, not where it is.
+
+---
+
+## What I checked (evidence base)
+
+- `gh repo view davedellaquila/buddy-system` → **PUBLIC**, Pages status `built`, serving from `master`.
+- Repo census via `gh repo list` → **192 repos: 187 private, 5 public** (`buddy-system`, `fiddletown-data-admin`, `connect-ipad-sidecar`, `preset-test`, `hello-world`). Improvement since 2026-10-21: `personal-dashboard` has gone private.
+- Unauthenticated `curl` of the live site: dashboard, `buddies.json`, and the Neighborhood, Quentin, Emil&#x27;s Estate, Finance, Soundboard, and Guardian pages all return **HTTP 200** with no login.
+- Live `buddies.json` analysis: **154 buddies**, **109 attention items** (59 with URLs), **144 Google Doc links** — all world-readable in one fetch.
+- Live Neighborhood page text: contains **two residential street addresses and precise latitude/longitude coordinates**.
+- Live registry records: the Emil&#x27;s Estate mission text names estate assets and a tenant by name; the Lenwood mission names the property and its tenants.
+- Source inspection of the served repo: **295 files** reference the browser token flow (`localStorage` key `buddyTree.v3` → `ghToken`).
+- `robots.txt` on the live site: `Disallow: /` for all agents; pages carry `noindex, nofollow` meta. **Phase 0 is live — and it is a request to crawlers, not an access control.**
+- Secret-pattern scans (token/key formats) over the `buddy-system` working copy and the `buddy-server` workspace: **clean**.
+- Code search for `service_role` across the two substantive public repos: **none found**.
+- `buddy-server` source review: email allowlist (Dave only), Firebase ID-token verification, GitHub path allowlist, token destined for Secret Manager; Firestore rules deny all direct client access. **Designed well; not deployed.**
+- Airtable connector doc: token is **read-only** (`data.records:read`, `schema.bases:read`), scoped to **one base**, held in the secure credential store. Legacy Supabase connector: credential store, restricted to the single events project host.
+- `gh auth status` on this machine: CLI token scopes are **`repo` only**. The stale `GITHUB_TOKEN` env var is **not set** in this shell.
+- Tailscale on this VM: **not connected** (approval link expired) — no live tailnet path into this machine today.
+- Tester Relations brief (repo + Google Doc) and the onboarding guide draft: testers run **their own** Muse and repos; Dave-side keeps the program&#x27;s memory, including tester dossiers and a feedback log. The guide&#x27;s Privacy section promises, verbatim: &quot;Your pages are private by default. Nothing you say as a tester gets quoted or shared without your permission.&quot;
+- Muse product docs (`~/docs/data-handling.md`): this deployment runs on a **standard VM**.
+
+---
+
+## Findings
+
+### CRITICAL
+
+**C1 — The public dashboard exposes personal material at fleet scale.**
+Every buddy homepage is world-readable: names, photos, missions, status, and needs-attention items for 154 buddies spanning family (Quentin, Nancy, Emil), the estate Dave is executing (assets named, a tenant named), finances, health-adjacent work, Apple/STIX work, and property. 144 Google Doc links are listed publicly; each doc&#x27;s own sharing settings still gate its contents, but the links are discoverable and requestable. The full source repo — including files not linked from any page, and the entire commit history — is equally public on github.com.
+*Recommendation:* this is the exposure the lockdown plan already addresses. Until the gate ships, consider stripping the most sensitive registry content (estate, family, finance attention items and missions) from the public build. Deleting later does not unpublish history — treat anything public today as permanently out.
+
+**C2 — Home addresses and precise coordinates are published on the Neighborhood Buddy page.**
+Two residential addresses (Fiddletown and San Jose/Lenwood) plus latitude/longitude, verified live today. This is the single sharpest item in the audit: physical-world location data for Dave&#x27;s household and his sons&#x27; home, on a page Dave has already been asked to decide on (take down vs. strip the addresses) and has not yet decided.
+*Recommendation:* decide this one first, ahead of everything else in this report. Stripping the addresses/coordinates keeps the page&#x27;s civic function; taking it down entirely is cleaner. Either is a few minutes of work once Dave calls it.
+
+**C3 — A GitHub personal access token lives in browser localStorage on a public origin, and it is the keys to every private repo.**
+Every buddy page (295 files carry the flow) reads Dave&#x27;s PAT from `localStorage` and uses it to read and write the private buddy repos through the GitHub API — that&#x27;s how the Desk, Repo files, and brain-dump features work. Any script that ever runs on the `davedellaquila.github.io` origin — a buggy page script, a compromised snippet, a malicious file preview — can read that key. If the token is a classic PAT, its `repo` scope means read **and write** access to all of Dave&#x27;s repos; the resulting blast radius includes deleting or rewriting every buddy&#x27;s files. Dave pinned this on 2026-10-21 as &quot;real, not urgent&quot;; the server-side fix (`buddy-server`, finding H2) is built and waiting only on his deploy.
+*Recommendation:* the fix is already chosen and built — deploy `buddy-server` and move the token server-side. In the interim, Dave should run the 2-minute manual check from the Phase 0 prep (token type, named-repo scoping, expiry) — the browser token&#x27;s exact type/scope/expiry are **unverified** because they cannot be observed from this machine.
+
+### HIGH
+
+**H1 — The privacy principle has no representation in the system.**
+Dave&#x27;s standing rule: buddy pages are private by default, public only one page at a time, with privacy inheriting parent → child. The live registry has no `privacy`, `visibility`, or equivalent field on any of the 154 buddies. The principle is enforced nowhere; it survives only as an instruction to Astro. A new buddy is public the moment its page builds, by default, in direct contradiction of the stated default.
+*Recommendation:* add a `privacy` field to the registry now, default it to private, and make the build treat &quot;private&quot; as &quot;shell page only — no mission, attention, or doc links baked in&quot; until the real gate exists. That converts Dave&#x27;s rule from a memo into a mechanism.
+
+**H2 — The fix for the token flow and the page gate is built but undeployed, blocked on one manual step.**
+`buddy-server` (reviewed today) is the right design: Firebase Auth with an email allowlist for Dave only, ID-token verification, a strict GitHub path allowlist, the PAT in Secret Manager, and deny-all Firestore client rules. It has been waiting since 2026-10-18 on Dave&#x27;s ~15-minute deploy from his own machine (Astro cannot deploy — no Firebase auth here). Every day of delay extends C1 and C3.
+*Recommendation:* schedule the deploy. It is the highest-leverage 15 minutes in the whole system.
+
+**H3 — This entire operation runs on a standard Muse VM, where Meta can review content.**
+Per Muse&#x27;s own data-handling documentation, on a standard VM interactions may be logged and reviewed by Meta for safety, security, debugging, and product improvement; conversations are not end-to-end encrypted; and conversations contribute to AI development unless the user opts out in Settings → Data Controls. Dave&#x27;s buddy system — family, estate, legal-adjacent, and financial material included — flows through this channel. Dave&#x27;s current opt-out status is **unverified** (it lives in his account settings, not observable from here).
+*Recommendation:* Dave to check the Data Controls opt-out himself. Longer term, the confidential-VM tier exists precisely for this posture; whether it fits BuddyOS is Dave&#x27;s call, but the audit should name the current state plainly: **Meta is a trusted party to everything, by architecture, today.**
+
+### MEDIUM
+
+**M1 — No client-side encryption anywhere; GitHub, Google, and Meta can each read what they hold.**
+Verified 2026-10-25: no git-crypt or equivalent anywhere. GitHub encrypts in transit and at rest, but GitHub can read repo contents — the protection on the 187 private repos is access control, not secrecy from the platform. The same is true of Google (Gmail, Docs, Drive, Sheets under OAuth connectors — full content), Meta&#x27;s connected surfaces (Facebook, Instagram, Threads), and Plaid (bank balances and transactions via a read connector). This is not automatically wrong — it is the standard SaaS trust model — but it should be a conscious decision, not a default nobody stated. Note the sharp edge: the friend&#x27;s fatal-crash case Dave is relaying runs through these channels too.
+*Recommendation:* no change required if Dave accepts platform trust knowingly. The honest sentence for the record: &quot;private repo&quot; means private from the public, not from GitHub.
+
+**M2 — The other public repos are mostly harmless; one carries operational detail.**
+`hello-world`, `preset-test`, and `connect-ipad-sidecar` are code/test material. `fiddletown-data-admin` (public) is the events admin app source and includes a support-email draft naming the legacy Supabase project — low sensitivity, but it&#x27;s operational detail in public, and the events stack still runs partly on that legacy Supabase project pending the Firebase migration (tracked goal).
+*Recommendation:* flip `fiddletown-data-admin` to private (nothing about it needs an audience) and finish the Supabase → Firebase migration so the legacy credential surface can be retired.
+
+**M3 — The tester promise is kept by policy and process, not by architecture.**
+The onboarding guide&#x27;s Privacy section promises, verbatim (guide draft, verified today): &quot;Your pages are private by default. Nothing you say as a tester gets quoted or shared without your permission.&quot; First half: architecturally sound — each tester&#x27;s buddies live in that tester&#x27;s own Muse and GitHub repos; Dave&#x27;s systems hold none of their buddy content by design. Second half: Dave-side systems *do* retain tester material — Tester Relations Buddy is explicitly Dave&#x27;s memory for &quot;what every tester has said,&quot; each tester gets a private living-dossier repo (Penny&#x27;s, verified today, contains her email address and a verbatim quote of her acceptance reply), and the feedback log lives in Google Docs. Nothing there is public, and nothing suggests the promise has been broken — but &quot;not quoted or shared&quot; is enforced by Astro&#x27;s discipline, not by the system. If a future process (a digest, a testimonial, a hire announcement) ever pulls from those dossiers casually, the promise breaks silently.
+*Recommendation:* keep the dossier/feedback retention (it&#x27;s the program&#x27;s memory), but treat verbatim tester quotes as consent-gated material in the process docs, and keep the guide&#x27;s wording as-is only while that discipline holds.
+
+**M4 — Voice synthesis sends message text off the machine.**
+Every spoken briefing, standup, chime, and &quot;listen to this&quot; sends the full message text to the platform TTS service for synthesis. The audio comes back; the text&#x27;s retention on the service side is **unverified**. Low sensitivity per message, but the cumulative corpus (briefings, standups, crits) is a real, if modest, flow.
+*Recommendation:* awareness only — no action unless Dave wants the most sensitive material kept out of spoken form.
+
+**M5 — Page Lockdown Phase 0 is a courtesy, not a control.**
+Verified live: `robots.txt` disallows everything and pages carry `noindex, nofollow`. Well-behaved crawlers honor it; a curious human with the URL is entirely unaffected — every page still returns 200. It should never be described, even casually, as the pages being &quot;locked down.&quot;
+*Recommendation:* none — just keep the language honest until the real gate (H2) exists.
+
+### NOTE — what is genuinely sound
+
+**N1 — The private-repo architecture is the real thing.** 187/192 repos private; buddy markdown never baked into pages; a private repo returns a plain 404 to a stranger (existence not even confirmed). Dave&#x27;s specific fear from the lockdown discussion — someone editing a buddy&#x27;s markdown — is covered today by repo privacy, not by the page.
+**N2 — No committed secrets found** in the dashboard repo or the server workspace (pattern scans for token/key formats), and no Supabase service-role keys in the public repos (code search).
+**N3 — Airtable is a model citizen and on its way out.** Read-only token, one base, secure credential store — and the retirement follows Dave&#x27;s own data-ownership doctrine: canonical data as plain files in his own repos. The 45-attachment expiring-link episode is exactly the failure mode the doctrine exists to prevent, and it&#x27;s being closed.
+**N4 — The voting backend&#x27;s Firestore rules deny all direct client access** — clients reach data only through authenticated functions. That&#x27;s the pattern the whole system should converge on.
+**N5 — Tailscale is currently disconnected** on Astro&#x27;s VM (approval expired), so there is no live tailnet exposure to audit — and also no working private path until Dave reconnects it.
+**N6 — Connector posture is mostly least-privilege where the platform allows it** (Airtable read-only/single-base; the `gh` CLI token here carries `repo` only — no admin, no delete). The exception is inherent to classic GitHub scopes, which is precisely what the fine-grained token check (C3) addresses.
+
+---
+
+## The stance check
+
+| Dave&#x27;s principle | State in fact | Verdict |
+|---|---|---|
+| Privacy inherits parent → child | No privacy field exists in the registry; no inheritance mechanism | **Intention only** |
+| Buddy pages private unless Dave says otherwise, one page at a time | All 154 pages public; none was individually opted in | **Contradicted today** |
+| Data ownership: if a vendor vanished tomorrow, would Dave still have his stuff? | GitHub: local clone on Dave&#x27;s Mac + this workspace — **mostly yes**. Google Docs/Sheets: substantial material (estate docs, briefs, rosters) lives only in Drive — **partial**. Airtable: **yes**, by retirement design. Plaid/bank data: exported books live in the expense tracker — **yes**. Muse/Meta: memory and workspace live on this VM; Dave&#x27;s durable copies are his repos — **partial** | **Mostly holds, Google is the soft spot** |
+| Secrets hygiene | Vault/credential-store pattern used properly almost everywhere | **Holds, except C3** |
+
+## Recommendations, in order
+
+1. **Decide the Neighborhood page today** — strip or take down. (C2) Smallest action, sharpest exposure.
+2. **Do the 15-minute Firebase deploy.** It unlocks the token fix (C3), the per-page gate (C1/H1), and live voting. (H2)
+3. **Add the registry `privacy` field** and strip private buddies&#x27; sensitive fields from the public build as the interim gate. (H1/C1)
+4. **Run the 2-minute PAT check** (Phase 0 prep has the exact steps) and rotate to a fine-grained, expiring token if the browser token is classic/no-expiry. (C3)
+5. **Check the Muse Data Controls opt-out.** (H3)
+6. **Flip `fiddletown-data-admin` private; finish the Airtable retirement and the events-site migration.** (M2)
+
+## What I could not verify
+
+- **D1** — The browser PAT&#x27;s type, scope, and expiry (it lives only in Dave&#x27;s browsers; GitHub offers no API to enumerate tokens).
+- **D2** — Dave&#x27;s Muse training opt-out status.
+- **D3** — The sharing settings of each of the 144 linked Google Docs (links are public; per-doc access was not audited doc-by-doc).
+- **D4** — The TTS service&#x27;s retention of synthesized text.
+- **D5** — The tester guide&#x27;s promise wording is verified against the current onboarding guide draft (see M3); whether the copy each tester received matches this draft is unverified.
+- **D6** — Substack&#x27;s account/credential posture (account created during the Oct 25 session per main-chat reports; not re-audited here).
+- **D7** — Secrets inside the 187 private repos beyond the two workspaces scanned (pattern scans covered the dashboard repo and `buddy-server`; buddy repos were spot-checked via the API design, not exhaustively scanned).
+
+---
+
+*Guardian&#x27;s standing note: this report describes the public surface because Dave asked for the whole truth in one place. It names exposures without reproducing the sensitive values themselves — no addresses, tokens, or doc contents are quoted here. The canonical copy lives in Guardian&#x27;s private repo; the homepage summary is published at Dave&#x27;s explicit direction.*
+</pre></div></div></div></div>
 </div>
 </section>
 </section>
@@ -449,7 +489,7 @@ Verified live: <code>robots.txt</code> disallows everything and pages carry <cod
 <p class="dumpbox-hint">Enter dumps it &middot; Shift+Enter for a new line &middot; Images shrink to 1600px wide before upload — the original stays in your library</p>
 </section>
 
-<footer>Default Homepage v3 — "The Dossier" · Generated 2026-11-21 · Part of the Buddy System &middot; <a href="https://davedellaquila.github.io/buddy-system/">Buddy System dashboard</a><br>
+<footer>Default Homepage v3 — "The Dossier" · Generated 2026-11-25 · Part of the Buddy System &middot; <a href="https://davedellaquila.github.io/buddy-system/">Buddy System dashboard</a><br>
 <span class="muted">Archived PDF snapshots live in the buddy-system archive folder.</span></footer>
 </div>
 

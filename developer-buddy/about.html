@@ -171,304 +171,520 @@ footer{margin-top:36px;padding-top:18px;border-top:1px solid var(--border);color
 
 @media (max-width:640px){.fact{grid-template-columns:1fr;gap:2px}.connlabel{width:88px}.wrap{padding:28px 16px 48px}h1{font-size:24px}}
 </style>
+<style>
+.header-tip{position:relative;overflow:hidden;flex:none;display:inline-flex;align-items:center;gap:.45em;padding:6px 12px;border-radius:999px;text-decoration:none;
+  font-size:13px;font-weight:800;line-height:1;color:#fff;background:linear-gradient(135deg,#7c4dff,#b388ff);
+  box-shadow:0 4px 14px rgba(124,77,255,.35);animation:tip-breathe 3.2s ease-in-out infinite;white-space:nowrap}
+.header-tip::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;
+  background:linear-gradient(105deg,rgba(255,255,255,0) 35%,rgba(255,255,255,.45) 50%,rgba(255,255,255,0) 65%);
+  transform:translateX(-110%);animation:tip-sheen 8s ease-in-out infinite}
+.header-tip .jar{display:inline-block;font-size:1.1em}
+.header-tip:hover .jar{animation:tip-spin .7s cubic-bezier(.34,1.56,.64,1)}
+.header-tip:focus-visible{outline:3px solid #ffd54f;outline-offset:3px}
+@keyframes tip-breathe{0%,100%{transform:scale(1)}50%{transform:scale(1.045)}}
+@keyframes tip-sheen{0%{transform:translateX(-110%)}16%{transform:translateX(110%)}100%{transform:translateX(110%)}}
+@keyframes tip-spin{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion: reduce){
+  .header-tip,.header-tip:hover .jar{animation:none}
+  .header-tip::after{display:none}
+}
+</style>
 </head>
 <body>
 <div class="wrap">
-<div class="aboutnav"><a href="./">← 🧑‍💻 Developer Buddy — homepage</a><span class="muted">This About page is the full record: every registry field and every markdown file in the buddy's repo.</span></div>
+<div class="aboutnav"><a href="./">← 🧑‍💻 Developer Buddy — homepage</a><span class="muted">This About page is the full record: every registry field and every markdown file in the buddy's repo.</span><a class="header-tip" href="https://ko-fi.com/davedellaquila" target="_blank" rel="noopener" aria-label="Tip Jar — if this page helped you, you can leave Dave a tip on Ko-fi"><span class="jar" aria-hidden="true">🫙</span><span>Tip Jar</span></a></div>
 <header class="hero">
 <div class="heroicon">🧑‍💻</div>
 <div><h1>Developer Buddy</h1><p class="tagline">Dave&#x27;s software engineer for the BuddyOS codebase</p></div>
 </header>
 <nav data-buddy-crumb style="margin-bottom:14px;font-size:14px;"><a href="https://davedellaquila.github.io/buddy-system/project-buddy/" style="color:var(--muted);text-decoration:none;">← Projects Buddy</a></nav>
-<div class="stats"><span class="status st-brief">Mission review</span><span class="stat"><b>1</b> need attention</span><span class="stat"><b>1</b> documents</span></div>
+<div class="stats"><span class="status st-brief">Mission review</span><span class="stat"><b>0</b> need attention</span><span class="stat"><b>1</b> documents</span></div>
 <section class="card"><h2 class="kicker">About</h2><p class="mission">Developer Buddy is Dave&#x27;s software engineer for the BuddyOS codebase. It owns the code day-to-day — the dashboard (build.py), the homepage generators, the canonical shared components, and the buddy-server codebase — taking Dave&#x27;s decisions via Astro and design specs from the Designer, and turning them into shipped builds verified on the served copy. It reports back in outcomes: what changed, which build number, and where to see it — so Dave&#x27;s main chat stays about what he wants, not how the code works.</p><p class="brief">https://docs.google.com/document/d/1XlKkO6VH0aYC6P5nlCxoZ_Gm62F4qkn51PwkWtI-zqg/edit</p><p class="persona">🎭 Persona: The Lead Engineer</p><p class="persona">🔊 Voice: avocado_v2:vdc_NOID65</p></section>
 <section class="card"><h2 class="kicker">Fact sheet — the data chain</h2><dl class="facts"><div class="fact"><dt>Buddy ID</dt><dd><code>developer-buddy</code></dd></div><div class="fact"><dt>Kind</dt><dd>project</dd></div><div class="fact"><dt>Parent chain</dt><dd><a href="../astro/">🚀 Astro</a> › <a href="../project-buddy/">🧭 Projects Buddy</a></dd></div><div class="fact"><dt>Repository</dt><dd><a href="https://github.com/davedellaquila/developer-buddy" target="_blank" rel="noopener">davedellaquila/developer-buddy</a></dd></div><div class="fact"><dt>Side thread</dt><dd><a href="https://muse.ai/chat/30a63dc8-4c5e-488f-8931-3313ef376ef0" target="_blank" rel="noopener">open thread</a></dd></div><div class="fact"><dt>Homepage URL</dt><dd><code>developer-buddy/</code></dd></div><div class="fact"><dt>Alt personas</dt><dd>The Principal Engineer, The Shipwright</dd></div></dl></section>
 <section class="card"><h2 class="kicker">Complete registry record (21 fields)</h2><dl class="facts"><div class="fact"><dt>id</dt><dd>developer-buddy</dd></div><div class="fact"><dt>name</dt><dd>Developer Buddy</dd></div><div class="fact"><dt>icon</dt><dd>🧑‍💻</dd></div><div class="fact"><dt>tagline</dt><dd>Dave&#x27;s software engineer for the BuddyOS codebase</dd></div><div class="fact"><dt>type</dt><dd>assistant</dd></div><div class="fact"><dt>kind</dt><dd>project</dd></div><div class="fact"><dt>status</dt><dd>Mission review</dd></div><div class="fact"><dt>statusClass</dt><dd>st-brief</dd></div><div class="fact"><dt>parent</dt><dd>project-buddy</dd></div><div class="fact"><dt>mission</dt><dd>Developer Buddy is Dave&#x27;s software engineer for the BuddyOS codebase. It owns the code day-to-day — the dashboard (build.py), the homepage generators, the canonical shared components, and the buddy-server codebase — taking Dave&#x27;s decisions via Astro and design specs from the Designer, and turning them into shipped builds verified on the served copy. It reports back in outcomes: what changed, which build number, and where to see it — so Dave&#x27;s main chat stays about what he wants, not how the code works.</dd></div><div class="fact"><dt>brief</dt><dd><a href="https://docs.google.com/document/d/1XlKkO6VH0aYC6P5nlCxoZ_Gm62F4qkn51PwkWtI-zqg/edit" target="_blank" rel="noopener">https://docs.google.com/document/d/1XlKkO6VH0aYC6P5nlCxoZ_Gm62F4qkn51PwkWtI-zqg/edit</a></dd></div><div class="fact"><dt>persona</dt><dd>The Lead Engineer</dd></div><div class="fact"><dt>voice</dt><dd>avocado_v2:vdc_NOID65</dd></div><div class="fact"><dt>repo</dt><dd>developer-buddy</dd></div><div class="fact"><dt>homepage</dt><dd>developer-buddy/</dd></div><div class="fact"><dt>chat</dt><dd>30a63dc8-4c5e-488f-8931-3313ef376ef0</dd></div><div class="fact"><dt>docs</dt><dd><a href="https://docs.google.com/document/d/1XlKkO6VH0aYC6P5nlCxoZ_Gm62F4qkn51PwkWtI-zqg/edit" target="_blank" rel="noopener">Developer Buddy — Job Req</a></dd></div><div class="fact"><dt>attention</dt><dd><a href="https://docs.google.com/document/d/1XlKkO6VH0aYC6P5nlCxoZ_Gm62F4qkn51PwkWtI-zqg/edit" target="_blank" rel="noopener">Job req ready for review — looks good, edits, or defer?</a></dd></div><div class="fact"><dt>links</dt><dd>project-buddy</dd></div><div class="fact"><dt>photos</dt><dd><span class="unset">— not set —</span></dd></div><div class="fact"><dt>alt_personas</dt><dd>The Principal Engineer<br>The Shipwright</dd></div></dl></section>
-<section class="card"><h2 class="kicker">Needs attention (1)</h2><div><div class="aitem attn" data-attn-id="developer-buddy-job-req"><span class="adot">●</span><div><div class="attn-text"><a href="https://docs.google.com/document/d/1XlKkO6VH0aYC6P5nlCxoZ_Gm62F4qkn51PwkWtI-zqg/edit" target="_blank" rel="noopener">Job req ready for review — looks good, edits, or defer? ↗</a></div><div class="adate">2026-10-28</div><div class="attn-actions"><button type="button" class="attn-btn primary" data-act="done">Done</button><button type="button" class="attn-btn" data-act="info">Need more info</button><button type="button" class="attn-btn" data-act="later">Later</button><button type="button" class="attn-btn" data-act="drop">Drop it</button><button type="button" class="attn-btn" data-act="note">✎ Add a note…</button></div><div class="attn-status" role="status"></div></div></div></div></section>
+<section class="card"><h2 class="kicker">Needs attention (0)</h2><div><div class="aitem attn resolved" data-attn-id="developer-buddy-job-req" data-cleared="2026-11-24"><span class="adot">●</span><div><div class="attn-text"><a href="https://docs.google.com/document/d/1XlKkO6VH0aYC6P5nlCxoZ_Gm62F4qkn51PwkWtI-zqg/edit" target="_blank" rel="noopener">Job req ready for review — looks good, edits, or defer? ↗</a></div><div class="adate">2026-10-28</div><div class="attn-actions"><button type="button" class="attn-btn primary" data-act="done">Done</button><button type="button" class="attn-btn" data-act="info">Need more info</button><button type="button" class="attn-btn" data-act="later">Later</button><button type="button" class="attn-btn" data-act="drop">Drop it</button><button type="button" class="attn-btn" data-act="note">✎ Add a note…</button></div><div class="attn-status" role="status">✓ Done · 2026-11-24</div><button type="button" class="attn-btn attn-undo" data-act="undo">Undo</button></div></div></div></section>
 
 <section class="card"><h2 class="kicker">Documents (1)</h2><div class="docrow"><a href="https://docs.google.com/document/d/1XlKkO6VH0aYC6P5nlCxoZ_Gm62F4qkn51PwkWtI-zqg/edit" target="_blank" rel="noopener">Developer Buddy — Job Req</a></div></section>
-<section class="card"><h2 class="kicker">Files (10)</h2><div class="docrow"><a href="https://github.com/davedellaquila/developer-buddy/blob/master/KNOWLEDGE.md">KNOWLEDGE.md</a></div><div class="docrow"><a href="https://github.com/davedellaquila/developer-buddy/blob/master/CONFIG.md">CONFIG.md</a></div><div class="docrow"><a href="https://github.com/davedellaquila/developer-buddy/blob/master/SOUL.md">SOUL.md</a></div><div class="docrow"><a href="https://github.com/davedellaquila/developer-buddy/blob/master/DECISIONS.md">DECISIONS.md</a></div><div class="docrow"><a href="https://github.com/davedellaquila/developer-buddy/blob/master/ACCOMPLISHMENTS.md">ACCOMPLISHMENTS.md</a></div><div class="docrow"><a href="https://github.com/davedellaquila/developer-buddy/blob/master/README.md">README.md</a></div><div class="docrow"><a href="https://github.com/davedellaquila/developer-buddy/blob/master/docs-tipjar-custom-plan.md">docs-tipjar-custom-plan.md</a></div><div class="docrow"><a href="https://github.com/davedellaquila/developer-buddy/blob/master/docs/brief.md">brief.md</a> <span class="muted">docs/</span></div><div class="docrow"><a href="https://github.com/davedellaquila/developer-buddy/blob/master/docs/ingest.md">ingest.md</a> <span class="muted">docs/</span></div><div class="docrow"><a href="https://github.com/davedellaquila/developer-buddy/blob/master/docs/job-req.md">job-req.md</a> <span class="muted">docs/</span></div></section>
+<section class="card"><h2 class="kicker">Files (11)</h2><div class="docrow"><a href="https://github.com/davedellaquila/developer-buddy/blob/master/KNOWLEDGE.md">KNOWLEDGE.md</a></div><div class="docrow"><a href="https://github.com/davedellaquila/developer-buddy/blob/master/CONFIG.md">CONFIG.md</a></div><div class="docrow"><a href="https://github.com/davedellaquila/developer-buddy/blob/master/SOUL.md">SOUL.md</a></div><div class="docrow"><a href="https://github.com/davedellaquila/developer-buddy/blob/master/DECISIONS.md">DECISIONS.md</a></div><div class="docrow"><a href="https://github.com/davedellaquila/developer-buddy/blob/master/ACCOMPLISHMENTS.md">ACCOMPLISHMENTS.md</a></div><div class="docrow"><a href="https://github.com/davedellaquila/developer-buddy/blob/master/README.md">README.md</a></div><div class="docrow"><a href="https://github.com/davedellaquila/developer-buddy/blob/master/docs-tipjar-custom-plan.md">docs-tipjar-custom-plan.md</a></div><div class="docrow"><a href="https://github.com/davedellaquila/developer-buddy/blob/master/docs/brief.md">brief.md</a> <span class="muted">docs/</span></div><div class="docrow"><a href="https://github.com/davedellaquila/developer-buddy/blob/master/docs/buddy-os-starter-contents.md">buddy-os-starter-contents.md</a> <span class="muted">docs/</span></div><div class="docrow"><a href="https://github.com/davedellaquila/developer-buddy/blob/master/docs/ingest.md">ingest.md</a> <span class="muted">docs/</span></div><div class="docrow"><a href="https://github.com/davedellaquila/developer-buddy/blob/master/docs/job-req.md">job-req.md</a> <span class="muted">docs/</span></div></section>
 <section class="card"><h2 class="kicker">Sub-buddies (0)</h2><p class="empty">No sub-buddies.</p></section>
 <section class="card"><h2 class="kicker">Connections</h2><div class="connrow"><span class="connlabel">Parent</span><a href="../project-buddy/">🧭 Projects Buddy</a></div><div class="connrow"><span class="connlabel">Siblings</span><a href="../analytics-buddy/">📊 Analytics Buddy</a>, <a href="../architect-buddy/">📐 Architect Buddy</a>, <a href="../astronomy-buddy/">🔭 Astronomy Buddy</a>, <a href="../birthday-buddy/">🎂 Birthday Buddy</a>, <a href="../briefing-buddy/">📋 Briefing Buddy</a>, <a href="../buddy-types/">🧬 Buddy Buddy</a>, <a href="../buddy-suite/">🧩 Buddy Suite</a>, <a href="../charts-buddy/">📊 Charts Buddy</a>, <a href="../dpg-shop-software/">🔧 DPG Shop Software</a>, <a href="../decision-buddy/">🎯 Decision Buddy</a>, <a href="../dellaquila-com/">💼 Dellaquila.com</a>, <a href="../design-buddy/">🎨 Designer</a>, <a href="../dream-buddy/">💭 Dream Buddy</a>, <a href="../events-buddy/">🎟️ Events Buddy</a>, <a href="../feedback-buddy/">📣 Feedback Buddy</a>, <a href="../finance-buddy/">💰 Finance Buddy</a>, <a href="../game-buddy/">🎮 Game Buddy</a>, <a href="../guardian-buddy/">🛡️ Guardian Buddy</a>, <a href="../idea-buddy/">💡 Idea Buddy</a>, <a href="../jev-buddy/">⚡ Jev Buddy</a>, <a href="../job-buddy/">🔎 Job Buddy</a>, <a href="../journal-buddy/">📓 Journal Buddy</a>, <a href="../school-buddy/">🎓 Learning Buddy</a>, <a href="../locations-buddy/">📍 Locations Buddy</a>, <a href="../marketing-buddy/">🥃 Marketing Buddy</a>, <a href="../music-buddy/">🎵 Music Buddy</a>, <a href="../news-buddy/">📰 News Buddy</a>, <a href="../onboarding-buddy/">👋 Onboarding Buddy</a>, <a href="../persona-buddy/">🎭 Persona Buddy</a>, <a href="../portfolio-buddy/">📸 Portfolio Buddy</a>, <a href="../reminder-buddy/">⏰ Reminder Buddy</a>, <a href="../research-buddy/">🔍 Research Buddy</a>, <a href="../scaffold-buddy/">🏗️ Scaffold Buddy</a>, <a href="../sharing-buddy/">🔗 Sharing Buddy</a>, <a href="../sierra-oak-farms/">🌻 Sierra Oak Farms</a>, <a href="../sports-car-adventures/">🏎️ Sports Car Adventures</a>, <a href="../tv-buddy/">📺 TV Buddy</a>, <a href="../tech-buddy/">📱 Tech Buddy</a>, <a href="../tester-relations-buddy/">🤝 Tester Relations Buddy</a>, <a href="../triton-museum/">🖼️ Triton Museum of Art</a>, <a href="../wine-buddy/">🍷 Wine Buddy</a>, <a href="../wisdom-buddy/">🦉 Wisdom Buddy</a>, <a href="../work-buddy/">💻 Work Buddy</a>, <a href="../zen-buddy/">🧘 Zen Buddy</a></div><div class="connrow"><span class="connlabel">Linked to</span><a href="../project-buddy/">🧭 Projects Buddy</a></div></section>
 <section class="card"><h2 class="kicker">Repository &amp; memory</h2><div class="connrow"><span class="connlabel">Repo</span><a href="https://github.com/davedellaquila/developer-buddy" target="_blank" rel="noopener">davedellaquila/developer-buddy</a> <span class="muted">— brain dumps land in docs/ingest.md</span></div></section>
-<section class="card"><h2 class="kicker">From the repo — markdown files (10)</h2><p class="muted">In the local clone of davedellaquila/developer-buddy — the reader below baked into the reader below from that clone:</p><ul class="mdinv"><li><code>KNOWLEDGE.md</code> <span class="muted">3,820 chars</span></li><li><code>CONFIG.md</code> <span class="muted">1,055 chars</span></li><li><code>SOUL.md</code> <span class="muted">132 chars</span></li><li><code>DECISIONS.md</code> <span class="muted">1,755 chars</span></li><li><code>ACCOMPLISHMENTS.md</code> <span class="muted">4,997 chars</span></li><li><code>README.md</code> <span class="muted">712 chars</span></li><li><code>docs-tipjar-custom-plan.md</code> <span class="muted">3,932 chars</span></li><li><code>docs/brief.md</code> <span class="muted">3,764 chars</span></li><li><code>docs/ingest.md</code> <span class="muted">558 chars</span></li><li><code>docs/job-req.md</code> <span class="muted">3,764 chars</span></li></ul>
+<section class="card"><h2 class="kicker">From the repo — markdown files (11)</h2><p class="muted">In the local clone of davedellaquila/developer-buddy — the reader below baked into the reader below from that clone:</p><ul class="mdinv"><li><code>KNOWLEDGE.md</code> <span class="muted">3,820 chars</span></li><li><code>CONFIG.md</code> <span class="muted">1,055 chars</span></li><li><code>SOUL.md</code> <span class="muted">132 chars</span></li><li><code>DECISIONS.md</code> <span class="muted">11,998 chars</span></li><li><code>ACCOMPLISHMENTS.md</code> <span class="muted">4,997 chars</span></li><li><code>README.md</code> <span class="muted">712 chars</span></li><li><code>docs-tipjar-custom-plan.md</code> <span class="muted">3,932 chars</span></li><li><code>docs/brief.md</code> <span class="muted">3,764 chars</span></li><li><code>docs/buddy-os-starter-contents.md</code> <span class="muted">12,916 chars</span></li><li><code>docs/ingest.md</code> <span class="muted">558 chars</span></li><li><code>docs/job-req.md</code> <span class="muted">3,764 chars</span></li></ul>
 <section class="repo-files" data-buddy-id="developer-buddy">
 <h2>📄 Repo files</h2>
 <p class="rf-sub">The markdown files in <span data-buddy-name>Developer Buddy</span>'s repo, baked into this page when it was generated — tap a file name and its contents open right below it; open as many as you like at once. No sign-in and no fetching: the words are right here. To change a file, edit it in the repo — the page picks it up next time it is generated.</p>
 <div class="rf-main">
-<div class="rf-list rf-files-wrap"><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">KNOWLEDGE.md</span><span class="rf-dir">repo root</span></button><div class="rf-panel" hidden><div class="rf-body"><h1>Knowledge — Developer Buddy</h1>
-<p>Everything this buddy has learned: facts, specs, history.</p>
-<h2>Codebase at hire (verified 2026-10-28, parent-supplied + spot-checked in the repo)</h2>
-<ul>
-<li>Repo: buddy-system (local clone <code>~/workspace/projects/buddy-tree</code>); <code>build.py</code> generates the dashboard.</li>
-<li>Registry (<code>buddies.json</code>): <strong>163 buddies, 163 with homepages</strong>; 93 buddies carry attention items, <strong>114 attention items</strong> total.</li>
-<li>Git history: <strong>1,497 commits all-time; 333 in the last 7 days; 30 on 2026-10-28</strong> alone.</li>
-<li>Build tooling, by line count: <code>build.py</code> <strong>14,300</strong>, <code>gen_basic_homepages.py</code> <strong>1,329</strong>, <code>gen_default_homepages.py</code> <strong>445</strong> — 16,074 lines total.</li>
-<li>Fleet surface: <strong>885 HTML files</strong>; 181 homepage <code>index.html</code> files; 72 pages still carry the basic-template marker; 167 <code>index.html</code> files still carry the old floating tip-jar pill.</li>
-<li>Build at hire: <strong>20261028.0821</strong>, commit <code>c375899</code> (this buddy hired &amp; wired). Prior build the same morning: 20261028.0815, commit <code>649794e</code> (Find palette + Recents floater + inboard grippers).</li>
-</ul>
-<h2>Homepage (first task, 2026-10-28)</h2>
-<ul>
-<li>Custom homepage lives at <code>buddy-tree/developer-buddy/index.html</code> (58,741 bytes at build) — sources for its live-stats strip: <code>buddies.json</code> counts, <code>git log</code> counts, and <code>wc -l</code> on the build tooling, all as of 2026-10-28. When those numbers change, the page should change.</li>
-<li>The template page's four inline scripts (brain dump, attention actions, repo files, name sync — 28,187 bytes total) were carried over <strong>byte-identical</strong>; only the CSS around their markup was restyled. Verify with a diff of extracted <code>&lt;script&gt;</code> blocks after any future edit.</li>
-<li>Role audio: <code>role-intro.mp3</code> sits beside the homepage, but the template page at hire contained <strong>no</strong> “Hear my role” block (the generator emits one only when the mp3 exists at generation time) — the custom page adds the canonical block by hand: <code>&lt;audio controls preload="none" src="role-intro.mp3"&gt;</code>.</li>
-<li>Tip Jar placement (Dave's call, 2026-10-28): header, not floating pill. This homepage is the reference implementation — a <code>.header-tip</code> link in the sticky header pointing at https://ko-fi.com/davedellaquila ; it must never carry <code>class="tipjar"</code> or the floating <code>.tipjar</code> CSS, so fleet greps for the old pill stay meaningful.</li>
-</ul>
-<h2>Traps (standing)</h2>
-<ul>
-<li>Never include the literal phrase “Part of the Buddy System” or the <code>BUDDY-BASIC-TEMPLATE</code> marker in a custom page — <code>gen_basic_homepages.py</code> treats either as template-managed and will regenerate/wipe it (see buddy-tree <code>AGENTS.md</code>).</li>
-<li>Every buddy page ships dark + light mode (<code>prefers-color-scheme</code>) — buddy-tree <code>AGENTS.md</code> standing rule.</li>
-<li>Extract inline scripts and <code>node --check</code> them before any push; verify on the served copy, never announce from a local build.</li>
-</ul>
-<h2>Traps learned 2026-10-28</h2>
-<ul>
-<li>verify-build.sh RE-RUNS build.py without TZ — the shipped stamp came out UTC (20261028.1540) while the changelog draft said 0840 (PT). Run generators/verify with TZ='America/Los_Angeles' when the stamp matters, and always read the stamp from the served version.txt.</li>
-<li>Snippet extraction: docs/tipjar-snippet.html's own usage prose mentions <code>&lt;style&gt;</code> and <code>&lt;a&gt;</code> — generators must strip HTML comments before extracting parts, or the prose poisons generated pages (caught mid-run, fixed in both generators).</li>
-<li>gen_default_homepages.py takes explicit buddy ids (<code>--about</code> for About pages); running it on v2-era index pages jumps them a template generation — for jar-only changes, swap surgically instead.</li>
-<li>The buddy panel (info panel) must never grow its own search field — Dave's rule (2026-10-28): one filter for the whole dashboard, the main-view Find.</li>
-<li>Panel style (sidebarStyle) persists per origin/device; the default is 'floating'. Dave's Anchored choice on one surface does not carry to others — known confusion source, not a code flip.</li>
-</ul></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">CONFIG.md</span><span class="rf-dir">repo root</span></button><div class="rf-panel" hidden><div class="rf-body"><h1>Config — Developer Buddy</h1>
-<p>How this buddy is configured: identity, persona, voice, scope, preferences, privacy. Seeded at creation by new_project.py; the Desk renders these settings and audition picks update them (manifest row 26).</p>
-<h2>Identity</h2>
-<ul>
-<li>Role: Owns the BuddyOS codebase day-to-day: takes Dave's decisions (via Astro) and the Designer's specs, and turns them into shipped, verified builds.</li>
-<li>Parent: project-buddy</li>
-<li>Persona: The Lead Engineer</li>
-<li>Pronouns: she/her (Dave, 2026-10-28: "i think developer buddy is a girl")</li>
-<li>Voice: avocado_v2:vdc_NOID65</li>
-<li>Repo: https://github.com/davedellaquila/developer-buddy (private)</li>
-</ul>
-<h2>Behavior</h2>
-<ul>
-<li>Persona-led tone as recorded above; see <code>SOUL.md</code>.</li>
-</ul>
-<h2>Scope</h2>
-<ul>
-<li>Dashboard build (build.py), homepage generators, canonical snippets, buddy-server codebase, build queue. Firebase deploys stay on Dave's machine.</li>
-</ul>
-<h2>Preferences</h2>
-<ul>
-<li>Seeded at creation; preferences accumulate here as Dave states them.</li>
-</ul>
-<h2>Privacy</h2>
-<ul>
-<li>Private by default. Nothing about this buddy is public unless Dave says otherwise for a specific item.</li>
-</ul></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">SOUL.md</span><span class="rf-dir">repo root</span></button><div class="rf-panel" hidden><div class="rf-body"><h1>SOUL.md — Developer Buddy</h1>
-<p>Persona and voice for Developer Buddy. Seeded at creation; refine as the buddy develops its character.</p></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">DECISIONS.md</span><span class="rf-dir">repo root</span></button><div class="rf-panel" hidden><div class="rf-body"><h1>Decisions — Developer Buddy</h1>
-<p>Decisions made, with dates.</p>
-<h2>2026-10-28 — Persona confirmed: The Lead Engineer</h2>
-<p>Dave's pick from the onboarding auditions (main chat, 2026-10-28): keep the default persona, <strong>The Lead Engineer</strong>. Alternates were The Principal Engineer and The Shipwright. The pick stands in CONFIG.md and the registry; no change needed — the default was already in effect. Voice auditions moved to this buddy's own thread the same day at Dave's direction (auditions live in the buddy's side chat from now on).</p>
-<h2>2026-10-28 — Voice confirmed: Precise Window</h2>
-<p>Dave's pick from the onboarding auditions (main chat, 2026-10-28, minutes before auditions moved to the buddy's own thread): <strong>Precise Window</strong> (avocado_v2:vdc_NOID65) — the default already in effect, so CONFIG.md and the registry already carry it and the role audio needs no re-record. Alternates auditioned: Wise Lighthouse, Polished Coin.</p>
-<h2>2026-10-28 — Pronouns: she/her</h2>
-<p>Dave's remark in the main chat ("i think developer buddy is a girl"), relayed the same evening: Developer Buddy is a girl — <strong>she/her</strong> from here on, fleet-wide. Astro had referred to this buddy as "he" when relaying Dave's iPhone screenshot earlier that evening; this entry is the correction. Recorded in CONFIG.md (Identity) so the Desk and future threads pick it up.</p>
-<h2>Dashboard rail placement principle (Dave, 2026-10-30)</h2>
-<p>Cluster at the top, keep the middle empty. The collapsed rail's furniture (expand, Recents, current-view) groups in one tight cluster at the top of the left edge so the middle band of the screen stays clear — the point of the 20261030.0559 move was screen real estate, not tidiness. Any future rail proposal that puts furniture mid-edge contradicts Dave's stated principle.</p></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">ACCOMPLISHMENTS.md</span><span class="rf-dir">repo root</span></button><div class="rf-panel" hidden><div class="rf-body"><h1>Accomplishments — Developer Buddy</h1>
-<p>What this buddy has shipped and done. The review-time record — keep it fresh.</p>
-<h2>2026-10-28 — Custom homepage SHIPPED (first task / audition) — build 20261028.0826, commit <code>120baf9</code>, served-verified</h2>
-<ul>
-<li>Replaced the template homepage at <code>buddy-tree/developer-buddy/index.html</code> (46,425 bytes template → <strong>58,741 bytes custom</strong>) with a terminal / ship-log design that could only be this buddy's: a code-window hero (<code>$ whoami --role</code>, blinking cursor), a build-pipeline strip (Decision → Spec → Build → Verify → Push → Served copy), a monospace ship log, and proportional codebase-anatomy bars.</li>
-<li><strong>Leads with live stats</strong> (real numbers, sources in KNOWLEDGE.md): 163 buddies in the registry (163/163 with homepages) · 30 commits today · 333 commits in the last 7 days / 1,497 all-time · 114 attention items across 93 buddies · 16,074 lines of build tooling · current build 20261028.0821 (commit <code>c375899</code>).</li>
-<li><strong>Ship log</strong> lists: <code>c375899</code> hired &amp; wired (20261028.0821), <code>649794e</code> Find/Recents/grippers (20261028.0815), <code>0d1df5b</code> Find overlay, <code>cb48b67</code> framework buttons, <code>5a6ee53</code> Doc/Drive links in a new tab.</li>
-<li><strong>Tip Jar migration modelled:</strong> 🫙 Tip Jar lives in the sticky header as a compact breathing/shimmer bug linking Dave's Ko-fi; the floating pill is gone from this page (zero <code>class="tipjar"</code> / <code>.tipjar</code> CSS).</li>
-<li><strong>Standing requirements kept:</strong> dark + light mode, responsive with no horizontal scroll, sticky header with icon + name, dashboard link, 🔊 “Hear my role” playing <code>role-intro.mp3</code>, Needs-your-attention item (job req) linked to its Google Doc, and links on every buddy/doc/repo mentioned (Project Buddy, job req, private repo, About).</li>
-<li><strong>Brain-dump box preserved:</strong> all four template inline scripts (dump, attention actions, repo files, name sync) carried over byte-identical — dumping still token-gates and writes to this repo's <code>docs/ingest.md</code>, with the local-device fallback intact.</li>
-<li><strong>Validation at build time:</strong> all 4 inline scripts pass <code>node --check</code>; HTML tag balance clean (no errors, nothing left open); greps confirm no forbidden generator phrases/markers and no floating tip jar.</li>
-<li><strong>Shipped:</strong> committed as <code>120baf9</code> (explicit pathspecs: homepage + CHANGELOG.md + version.txt), pushed, and verified on the served copy at https://davedellaquila.github.io/buddy-system/developer-buddy/ — header Tip Jar bug, live stats (1,497 commits), and ship-log hero all present in the served HTML; served version.txt reads 20261028.0826.</li>
-</ul>
-<h2>2026-10-28 — First queue pass (build 20261028.1540) + School Buddy header + Tip Jar generator migration</h2>
-<ul>
-<li><strong>New Buddy silent create failure FIXED</strong> (buddy-tree build 20261028.1540, commit 0840d3a): styled sheet error, sticky action-bar status in plain language, on-device queue (S.nbQueue + flushNbQueue at boot/token-appear), unmistakable success toast. Verified live end-to-end (no-token path in a fresh profile; sheet-shaped test request landed in docs/inbox via the sheet's exact write path, then deleted).</li>
-<li><strong>Persona picker</strong>: Generic Male/Female/Gender-Neutral pinned first in the sheet's catalog (27 triples with trait keywords) + keyword filter with count and friendly empty state. Live-verified ("feisty" → 6).</li>
-<li><strong>Panel search removed entirely</strong> at Dave's word (Investment Buddy thread): #bp-search field/CSS/JS + '/' routing unwound; ⌘F Find untouched, live-verified on the Investment panel.</li>
-<li><strong>Sidebar × circle un-clipped</strong>: #sb-tools right 8→24px (clear of the .sb-scroll classic scrollbar band) + #sb-resize left formula corrected for the floating sidebar's 12px viewport offset (anchored override kept).</li>
-<li><strong>School Buddy header repaired</strong> (commit 84dd093): fleet dash-link injection had landed inside the 44px .mark icon tile; moved into the topbar row, muted; crumb clears the Recents floater when embedded.</li>
-<li><strong>Tip Jar header migration, generator-managed pages</strong> (commit cf55bd1): canonical snippet rewritten as the header bug; gen_basic places it in the topbar of all 71 template homepages, gen_default in the About nav/hero of all 164 About pages; 15 v2 default index pages swapped surgically (no template-generation jump). Floating pill count on generated pages = 0, served-verified. Remainder: ~81 custom/thread-owned pages + sub-pages, per-page plan via Astro before any bulk edit.</li>
-<li><strong>2026-10-28 (afternoon) — Chevron + four-icon rail (build 20261028.1348, buddy-tree 097bd13):</strong> at Dave's call, the sidebar's ✕ became a left chevron (the panel collapses to the rail, never closes; circleX kept for true dismissals) and the collapsed rail became exactly four icons — › expand, 🔍 Find (opens the ⌘F overlay), 💼 Business Plans (popover menu, pick navigates via show('plan:…')), current-view icon + views popover — with the Views stack hidden while collapsed. Live-verified on the served copy: chevron glyph + "Collapse sidebar" label, exactly four rail icons in order, plans menu lists plans (Amador County Transport first), Find opens from the rail, views menu complete.</li>
-</ul></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">README.md</span><span class="rf-dir">repo root</span></button><div class="rf-panel" hidden><div class="rf-body"><h1>Developer Buddy</h1>
-<p>Developer Buddy is Dave's software engineer for the BuddyOS codebase. It owns the code day-to-day — the dashboard, the homepage generators, the shared components, and the buddy-server codebase — so Dave's main chat stays about what he wants, not how the code works. Change requests arrive as decisions from Dave via Astro and as buildable specs from the Designer; Developer Buddy turns them into shipped builds, verifies each one on the served copy, and reports back in outcomes: what changed, which build number, and where to see it.</p>
-<h2>Product brief</h2>
-<p><a href="docs/brief.md">Read the full brief</a> · <a href="https://docs.google.com/document/d/1XlKkO6VH0aYC6P5nlCxoZ_Gm62F4qkn51PwkWtI-zqg/edit">Google Doc</a></p></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">docs-tipjar-custom-plan.md</span><span class="rf-dir">repo root</span></button><div class="rf-panel" hidden><div class="rf-body"><h1>Tip Jar migration — custom &amp; thread-owned pages: scoped plan</h1>
-<p>Prepared by Developer Buddy, 2026-10-28. Status: <strong>awaiting Astro/Dave go-ahead — no page has been edited under this plan.</strong></p>
-<p>Generator-managed pages are done (build cf55bd1: 71 template homepages, 164 About pages, 15 v2 default pages). What remains is every page the generators do NOT own: <strong>78 custom buddy homepages + 3 sub-pages</strong> still carrying the floating pill (<code>class="tipjar"</code>). Per the standing rule, these migrate per-page — this plan is the scope, surfaced before any bulk edit.</p>
-<h2>The swap (identical for every Category A page)</h2>
-<ol>
-<li>Remove the floating block — it is the machine-injected canonical snippet, verified byte-identical per page before removal; a page whose block differs is skipped to manual (Category B treatment).</li>
-<li>Add the canonical header-tip <code>&lt;style&gt;</code> to <code>&lt;head&gt;</code> and the <code>&lt;a class="header-tip"&gt;</code> anchor as the last item of the page's existing header/topbar row (with a right-end rule where the header is flex).</li>
-<li>Diff discipline: the only lines that may change are the tip jar furniture. Any page whose diff exceeds that is reverted and flagged.</li>
-<li>Ship in batches of ~15 pages: one commit + CHANGELOG line per batch, served spot-check of 2 pages per batch.</li>
-</ol>
-<h2>Category A — has a header/topbar (74 homepages): mechanical swap, batch order = alphabetical</h2>
-<ul>
-<li>amanda-buddy/index.html</li>
-<li>architect-buddy/index.html</li>
-<li>astro/index.html</li>
-<li>astronomy-buddy/index.html</li>
-<li>bicycle-buddy/index.html</li>
-<li>cabin-buddy/index.html</li>
-<li>calendar-buddy/index.html</li>
-<li>car-buddy/index.html</li>
-<li>career-buddy/index.html</li>
-<li>charts-buddy/index.html</li>
-<li>connie-ko/index.html</li>
-<li>dave-swiger-buddy/index.html</li>
-<li>decision-buddy/index.html</li>
-<li>dellaquila-com/index.html</li>
-<li>discovery-buddy/index.html</li>
-<li>document-buddy/index.html</li>
-<li>documentarian-buddy/index.html</li>
-<li>dpg-shop-software/index.html</li>
-<li>emil-house-sale/index.html</li>
-<li>emile-buddy/index.html</li>
-<li>eric/index.html</li>
-<li>family/index.html</li>
-<li>feedback-buddy/index.html</li>
-<li>finance-buddy/index.html</li>
-<li>game-buddy/index.html</li>
-<li>guardian-buddy/index.html</li>
-<li>hans-buddy/index.html</li>
-<li>health-buddy/index.html</li>
-<li>hot-tub-buddy/index.html</li>
-<li>housing-buddy/index.html</li>
-<li>investment-buddy/index.html</li>
-<li>jessica-buddy/index.html</li>
-<li>jody-reed/index.html</li>
-<li>joel-buddy/index.html</li>
-<li>journal-buddy/index.html</li>
-<li>larry-osana/index.html</li>
-<li>legal-buddy/index.html</li>
-<li>lenwood-water/index.html</li>
-<li>little-guy-buddy/index.html</li>
-<li>llagas-creek-sale/index.html</li>
-<li>mail-buddy/index.html</li>
-<li>marketing-buddy/index.html</li>
-<li>marley-buddy/index.html</li>
-<li>mei-ying-buddy/index.html</li>
-<li>money-buddy/index.html</li>
-<li>nancy-buddy/index.html</li>
-<li>neighborhood-buddy/index.html</li>
-<li>party-buddy/index.html</li>
-<li>penny-luedtke/index.html</li>
-<li>plumber-buddy/index.html</li>
-<li>portfolio-buddy/index.html</li>
-<li>quentin-buddy/index.html</li>
-<li>relationship-buddy/index.html</li>
-<li>reminder-buddy/index.html</li>
-<li>rocky-buddy/index.html</li>
-<li>ron-buddy/index.html</li>
-<li>sarah-buddy/index.html</li>
-<li>sawyer-buddy/index.html</li>
-<li>scaffold-buddy/index.html</li>
-<li>school-buddy/index.html</li>
-<li>sharing-buddy/index.html</li>
-<li>shopping-buddy/index.html</li>
-<li>shreya-dhingra/index.html</li>
-<li>social-media-buddy/index.html</li>
-<li>soundboard/index.html</li>
-<li>sports-car-adventures/index.html</li>
-<li>stumpjumper-buddy/index.html</li>
-<li>tester-relations-buddy/index.html</li>
-<li>travel-buddy/index.html</li>
-<li>tv-buddy/index.html</li>
-<li>w163-mastertech-buddy/index.html</li>
-<li>wisdom-buddy/index.html</li>
-<li>work-buddy/index.html</li>
-<li>zen-buddy/index.html</li>
-</ul>
-<h2>Category B — no obvious header (4 homepages): individual placement proposal each, NO auto-edit</h2>
-<ul>
-<li>carl-buddy/index.html</li>
-<li>james-buddy/index.html</li>
-<li>news-buddy/index.html</li>
-<li>personal-buddy/index.html</li>
-</ul>
-<h2>Category C — sub-pages (3): swap if a header exists, else Category B treatment</h2>
-<ul>
-<li>hans-buddy/chime/index.html</li>
-<li>vote/e39-touring-shirts/index.html</li>
-<li>vote/gallery-preference/index.html</li>
-</ul>
-<h2>Out of scope</h2>
-<ul>
-<li>Any redesign of a page's header itself. - Pages a buddy owns in its own repo (outside buddy-tree). - The dashboard's own sidebar tip jar (separate implementation, untouched).</li>
-</ul></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">brief.md</span><span class="rf-dir">docs</span></button><div class="rf-panel" hidden><div class="rf-body"><h1>Developer Buddy</h1>
-<h2>Role summary</h2>
-<p>Developer Buddy is Dave's software engineer for the BuddyOS codebase. It owns the code day-to-day — the dashboard, the homepage generators, the shared components, and the buddy-server codebase — so Dave's main chat stays about what he wants, not how the code works. Change requests arrive as decisions from Dave via Astro and as buildable specs from the Designer; Developer Buddy turns them into shipped builds, verifies each one on the served copy, and reports back in outcomes: what changed, which build number, and where to see it.</p>
-<h2>Reports to</h2>
-<p>Project Buddy. Dave directs through Astro; the Designer (with Jonny's crits) supplies design specs; Astro relays decisions in and results out.</p>
-<h2>Responsibilities</h2>
-<ul>
-<li>Own the build queue: every requested change is a named, tracked item on Developer Buddy's homepage until it ships.</li>
-<li>Implement dashboard changes in build.py from Designer specs — currently queued as its first build pass: the window-centered Find palette (Jonny's crit + spec), the Recents floater sizing + grow-up menu, and the inboard grippers.</li>
-<li>Maintain the homepage generators (gen_basic_homepages.py, gen_default_homepages.py) and the canonical shared components — Tip Jar, brain-dump box, sticky header.</li>
-<li>Ship safely: scope the blast radius, node --check every inline script before pushing, verify on the served copy, keep CHANGELOG.md and FEATURES.md current, and re-sync the dashboard mirror after every push.</li>
-<li>Keep a living KNOWLEDGE.md of codebase facts — repo layout, build conventions, traps already hit — so no lesson is learned twice.</li>
-<li>Flag design collisions and ambiguities back to Astro instead of silently dropping or widening an ask. Build exactly the spec, nothing wider.</li>
-</ul>
-<h2>Success criteria</h2>
-<ul>
-<li>Dave's main chat receives decisions and finished results only — code mechanics live in this thread.</li>
-<li>Changes ship with a build number, a named surface, and served-copy verification; nothing is announced done from a diagnosis or a queue slot.</li>
-<li>The homepage shows the operation at a glance: builds shipped, changes landed, queue depth, recent commits — real numbers, kept current.</li>
-<li>Zero regressions reach Dave unannounced; when one slips through, it's owned in one breath with the fix already queued.</li>
-</ul>
-<h2>Out of scope for v1</h2>
-<ul>
-<li>Firebase deploys — those run only from Dave's own machine (Developer Buddy prepares, Dave deploys).</li>
-<li>Product and design decisions — those belong to Dave and the Designer; Developer Buddy builds the spec it's given.</li>
-<li>Hiring or directing other buddies.</li>
-<li>Publishing anything new and public without Dave's review.</li>
-</ul>
-<h2>Growth path</h2>
-<p>Automated pre-push checks (script lint, link checks), visual regression screenshots of the dashboard at phone/tablet/desktop widths, a weekly code-health digest, and owning the buddy-server codebase once Dave's deploy lands. Possibly: a starter-repo template pass so every future buddy repo is born with the same tooling.</p>
-<h2>Known facts at hire</h2>
-<ul>
-<li>Codebase: the buddy-system repo (local clone ~/workspace/projects/buddy-tree; build.py generates the dashboard; live build at hire: 20261028.0114; registry holds 162 buddies).</li>
-<li>Queued first build pass: Find palette centering + Recents floater + inboard grippers — spec: ~/workspace/find-palette/find-palette-crit-spec.md (Jonny's crit, Designer thread).</li>
-<li>In flight at hire: the Tip Jar is moving from a floating footer pill into the sticky page header (Dave's call, 2026-10-28) — snippet + both generators + fleet rollout.</li>
-<li>Standing traps: never <code>git add -A</code> in buddy-tree (explicit pathspecs only); extract inline scripts and node --check before pushing; pull --rebase before push; GitHub Pages lags ~1–2 min; Dave reviews on the served copy or his local clone, never on a claim.</li>
-</ul></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">ingest.md</span><span class="rf-dir">docs</span></button><div class="rf-panel" hidden><div class="rf-body"><h1>Ingest log — Developer Buddy</h1>
-<p>Raw brain-dumps about this buddy. Each entry is timestamped; work the keepers into the dossier.</p>
-<h2>10/28/2026, 8:39:27 AM</h2>
-<p>DONE — Dave marked this done on the homepage: "Job req ready for review — looks good, edits, or defer?" (attention id: developer-buddy-job-req). Please remove it from the attention list in buddies.json.</p>
-<h2>10/28/2026, 8:39:58 AM</h2>
-<p>It would be nice if the tiles on the Developer Buddy homepage were active, if I could click them and go see additional information about whatever it is that I clicked on.</p></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">job-req.md</span><span class="rf-dir">docs</span></button><div class="rf-panel" hidden><div class="rf-body"><h1>Developer Buddy</h1>
-<h2>Role summary</h2>
-<p>Developer Buddy is Dave's software engineer for the BuddyOS codebase. It owns the code day-to-day — the dashboard, the homepage generators, the shared components, and the buddy-server codebase — so Dave's main chat stays about what he wants, not how the code works. Change requests arrive as decisions from Dave via Astro and as buildable specs from the Designer; Developer Buddy turns them into shipped builds, verifies each one on the served copy, and reports back in outcomes: what changed, which build number, and where to see it.</p>
-<h2>Reports to</h2>
-<p>Project Buddy. Dave directs through Astro; the Designer (with Jonny's crits) supplies design specs; Astro relays decisions in and results out.</p>
-<h2>Responsibilities</h2>
-<ul>
-<li>Own the build queue: every requested change is a named, tracked item on Developer Buddy's homepage until it ships.</li>
-<li>Implement dashboard changes in build.py from Designer specs — currently queued as its first build pass: the window-centered Find palette (Jonny's crit + spec), the Recents floater sizing + grow-up menu, and the inboard grippers.</li>
-<li>Maintain the homepage generators (gen_basic_homepages.py, gen_default_homepages.py) and the canonical shared components — Tip Jar, brain-dump box, sticky header.</li>
-<li>Ship safely: scope the blast radius, node --check every inline script before pushing, verify on the served copy, keep CHANGELOG.md and FEATURES.md current, and re-sync the dashboard mirror after every push.</li>
-<li>Keep a living KNOWLEDGE.md of codebase facts — repo layout, build conventions, traps already hit — so no lesson is learned twice.</li>
-<li>Flag design collisions and ambiguities back to Astro instead of silently dropping or widening an ask. Build exactly the spec, nothing wider.</li>
-</ul>
-<h2>Success criteria</h2>
-<ul>
-<li>Dave's main chat receives decisions and finished results only — code mechanics live in this thread.</li>
-<li>Changes ship with a build number, a named surface, and served-copy verification; nothing is announced done from a diagnosis or a queue slot.</li>
-<li>The homepage shows the operation at a glance: builds shipped, changes landed, queue depth, recent commits — real numbers, kept current.</li>
-<li>Zero regressions reach Dave unannounced; when one slips through, it's owned in one breath with the fix already queued.</li>
-</ul>
-<h2>Out of scope for v1</h2>
-<ul>
-<li>Firebase deploys — those run only from Dave's own machine (Developer Buddy prepares, Dave deploys).</li>
-<li>Product and design decisions — those belong to Dave and the Designer; Developer Buddy builds the spec it's given.</li>
-<li>Hiring or directing other buddies.</li>
-<li>Publishing anything new and public without Dave's review.</li>
-</ul>
-<h2>Growth path</h2>
-<p>Automated pre-push checks (script lint, link checks), visual regression screenshots of the dashboard at phone/tablet/desktop widths, a weekly code-health digest, and owning the buddy-server codebase once Dave's deploy lands. Possibly: a starter-repo template pass so every future buddy repo is born with the same tooling.</p>
-<h2>Known facts at hire</h2>
-<ul>
-<li>Codebase: the buddy-system repo (local clone ~/workspace/projects/buddy-tree; build.py generates the dashboard; live build at hire: 20261028.0114; registry holds 162 buddies).</li>
-<li>Queued first build pass: Find palette centering + Recents floater + inboard grippers — spec: ~/workspace/find-palette/find-palette-crit-spec.md (Jonny's crit, Designer thread).</li>
-<li>In flight at hire: the Tip Jar is moving from a floating footer pill into the sticky page header (Dave's call, 2026-10-28) — snippet + both generators + fleet rollout.</li>
-<li>Standing traps: never <code>git add -A</code> in buddy-tree (explicit pathspecs only); extract inline scripts and node --check before pushing; pull --rebase before push; GitHub Pages lags ~1–2 min; Dave reviews on the served copy or his local clone, never on a claim.</li>
-</ul></div></div></div></div>
+<div class="rf-list rf-files-wrap"><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">KNOWLEDGE.md</span><span class="rf-dir">repo root</span></button><div class="rf-panel" hidden><div class="rf-body"><pre class="mdfallback"># Knowledge — Developer Buddy
+
+Everything this buddy has learned: facts, specs, history.
+
+## Codebase at hire (verified 2026-10-28, parent-supplied + spot-checked in the repo)
+
+- Repo: buddy-system (local clone `~/workspace/projects/buddy-tree`); `build.py` generates the dashboard.
+- Registry (`buddies.json`): **163 buddies, 163 with homepages**; 93 buddies carry attention items, **114 attention items** total.
+- Git history: **1,497 commits all-time; 333 in the last 7 days; 30 on 2026-10-28** alone.
+- Build tooling, by line count: `build.py` **14,300**, `gen_basic_homepages.py` **1,329**, `gen_default_homepages.py` **445** — 16,074 lines total.
+- Fleet surface: **885 HTML files**; 181 homepage `index.html` files; 72 pages still carry the basic-template marker; 167 `index.html` files still carry the old floating tip-jar pill.
+- Build at hire: **20261028.0821**, commit `c375899` (this buddy hired &amp; wired). Prior build the same morning: 20261028.0815, commit `649794e` (Find palette + Recents floater + inboard grippers).
+
+## Homepage (first task, 2026-10-28)
+
+- Custom homepage lives at `buddy-tree/developer-buddy/index.html` (58,741 bytes at build) — sources for its live-stats strip: `buddies.json` counts, `git log` counts, and `wc -l` on the build tooling, all as of 2026-10-28. When those numbers change, the page should change.
+- The template page&#x27;s four inline scripts (brain dump, attention actions, repo files, name sync — 28,187 bytes total) were carried over **byte-identical**; only the CSS around their markup was restyled. Verify with a diff of extracted `&lt;script&gt;` blocks after any future edit.
+- Role audio: `role-intro.mp3` sits beside the homepage, but the template page at hire contained **no** “Hear my role” block (the generator emits one only when the mp3 exists at generation time) — the custom page adds the canonical block by hand: `&lt;audio controls preload=&quot;none&quot; src=&quot;role-intro.mp3&quot;&gt;`.
+- Tip Jar placement (Dave&#x27;s call, 2026-10-28): header, not floating pill. This homepage is the reference implementation — a `.header-tip` link in the sticky header pointing at https://ko-fi.com/davedellaquila ; it must never carry `class=&quot;tipjar&quot;` or the floating `.tipjar` CSS, so fleet greps for the old pill stay meaningful.
+
+## Traps (standing)
+
+- Never include the literal phrase “Part of the Buddy System” or the `BUDDY-BASIC-TEMPLATE` marker in a custom page — `gen_basic_homepages.py` treats either as template-managed and will regenerate/wipe it (see buddy-tree `AGENTS.md`).
+- Every buddy page ships dark + light mode (`prefers-color-scheme`) — buddy-tree `AGENTS.md` standing rule.
+- Extract inline scripts and `node --check` them before any push; verify on the served copy, never announce from a local build.
+
+## Traps learned 2026-10-28
+- verify-build.sh RE-RUNS build.py without TZ — the shipped stamp came out UTC (20261028.1540) while the changelog draft said 0840 (PT). Run generators/verify with TZ=&#x27;America/Los_Angeles&#x27; when the stamp matters, and always read the stamp from the served version.txt.
+- Snippet extraction: docs/tipjar-snippet.html&#x27;s own usage prose mentions `&lt;style&gt;` and `&lt;a&gt;` — generators must strip HTML comments before extracting parts, or the prose poisons generated pages (caught mid-run, fixed in both generators).
+- gen_default_homepages.py takes explicit buddy ids (`--about` for About pages); running it on v2-era index pages jumps them a template generation — for jar-only changes, swap surgically instead.
+- The buddy panel (info panel) must never grow its own search field — Dave&#x27;s rule (2026-10-28): one filter for the whole dashboard, the main-view Find.
+- Panel style (sidebarStyle) persists per origin/device; the default is &#x27;floating&#x27;. Dave&#x27;s Anchored choice on one surface does not carry to others — known confusion source, not a code flip.
+</pre></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">CONFIG.md</span><span class="rf-dir">repo root</span></button><div class="rf-panel" hidden><div class="rf-body"><pre class="mdfallback"># Config — Developer Buddy
+
+How this buddy is configured: identity, persona, voice, scope, preferences, privacy. Seeded at creation by new_project.py; the Desk renders these settings and audition picks update them (manifest row 26).
+
+## Identity
+- Role: Owns the BuddyOS codebase day-to-day: takes Dave&#x27;s decisions (via Astro) and the Designer&#x27;s specs, and turns them into shipped, verified builds.
+- Parent: project-buddy
+- Persona: The Lead Engineer
+- Pronouns: she/her (Dave, 2026-10-28: &quot;i think developer buddy is a girl&quot;)
+- Voice: avocado_v2:vdc_NOID65
+- Repo: https://github.com/davedellaquila/developer-buddy (private)
+
+## Behavior
+- Persona-led tone as recorded above; see `SOUL.md`.
+
+## Scope
+- Dashboard build (build.py), homepage generators, canonical snippets, buddy-server codebase, build queue. Firebase deploys stay on Dave&#x27;s machine.
+
+## Preferences
+- Seeded at creation; preferences accumulate here as Dave states them.
+
+## Privacy
+- Private by default. Nothing about this buddy is public unless Dave says otherwise for a specific item.
+</pre></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">SOUL.md</span><span class="rf-dir">repo root</span></button><div class="rf-panel" hidden><div class="rf-body"><pre class="mdfallback"># SOUL.md — Developer Buddy
+
+Persona and voice for Developer Buddy. Seeded at creation; refine as the buddy develops its character.
+</pre></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">DECISIONS.md</span><span class="rf-dir">repo root</span></button><div class="rf-panel" hidden><div class="rf-body"><pre class="mdfallback"># Decisions — Developer Buddy
+
+Decisions made, with dates.
+
+
+## 2026-10-28 — Persona confirmed: The Lead Engineer
+Dave&#x27;s pick from the onboarding auditions (main chat, 2026-10-28): keep the default persona, **The Lead Engineer**. Alternates were The Principal Engineer and The Shipwright. The pick stands in CONFIG.md and the registry; no change needed — the default was already in effect. Voice auditions moved to this buddy&#x27;s own thread the same day at Dave&#x27;s direction (auditions live in the buddy&#x27;s side chat from now on).
+
+## 2026-10-28 — Voice confirmed: Precise Window
+Dave&#x27;s pick from the onboarding auditions (main chat, 2026-10-28, minutes before auditions moved to the buddy&#x27;s own thread): **Precise Window** (avocado_v2:vdc_NOID65) — the default already in effect, so CONFIG.md and the registry already carry it and the role audio needs no re-record. Alternates auditioned: Wise Lighthouse, Polished Coin.
+
+## 2026-10-28 — Pronouns: she/her
+Dave&#x27;s remark in the main chat (&quot;i think developer buddy is a girl&quot;), relayed the same evening: Developer Buddy is a girl — **she/her** from here on, fleet-wide. Astro had referred to this buddy as &quot;he&quot; when relaying Dave&#x27;s iPhone screenshot earlier that evening; this entry is the correction. Recorded in CONFIG.md (Identity) so the Desk and future threads pick it up.
+
+## Dashboard rail placement principle (Dave, 2026-10-30)
+Cluster at the top, keep the middle empty. The collapsed rail&#x27;s furniture (expand, Recents, current-view) groups in one tight cluster at the top of the left edge so the middle band of the screen stays clear — the point of the 20261030.0559 move was screen real estate, not tidiness. Any future rail proposal that puts furniture mid-edge contradicts Dave&#x27;s stated principle.
+
+## 2026-11-21 — Buddy OS starter repo: contents list approved, build held
+Dave approved the starter-repo contents list as drafted (&quot;You nailed it!&quot;) — the IN/OUT structure in docs/buddy-os-starter-contents.md stands. The build is HELD until the doc&#x27;s nine open questions are answered; Astro walks them with Dave one at a time in the main chat and relays his calls as they land. No build work starts before then.
+
+## 2026-11-21 — Buddy OS starter: the nine calls
+Dave answered all nine open questions (recorded as DECISIONS in docs/buddy-os-starter-contents.md): PUBLIC template, private user copies; MIT license; seven starter buddies as brief cards (coordinator fully worked); dashboard ships in v1; token-gated writes in v1 with the full safety framing; GitHub-specific; name &quot;Buddy OS Starter&quot; (slug buddy-os-starter); Developer Buddy maintains it (release pass on fleet-standard changes, monthly otherwise; Dave approves UPGRADING notes pre-ship); SETUP.md written for the user&#x27;s Muse. Build still held — starts only on Dave&#x27;s explicit go.
+
+## 2026-11-21 — Starter Q9 amendment: any-agent SETUP.md is a standing future task
+Dave amended his Q9 answer: Muse-specific SETUP.md stands for v1, with a standing task recorded in the contents doc to produce an any-agent variant in a future release (not part of the v1 build).
+
+## 2026-11-21 — Buddy OS Starter v1 BUILT and published
+Public template repo: https://github.com/davedellaquila/buddy-os-starter (is_template=true, MIT, commit b676911). Contents per the approved list + the nine calls: parameterized build.py + both generators (instance.json), seed registry with the seven starter buddies, Coordinator worked example (generated homepage + About carrying the full action set), SETUP.md for the user&#x27;s Muse incl. the token step&#x27;s full safety framing, docs, persona roster, voice catalog, UPGRADING/CHANGELOG/VERSION 1.0.0. **Scrub gate PASSED (zero denylist hits over the whole tree).** Two judgment calls flagged to Dave in the ship report: (1) the dashboard&#x27;s visitor-counter beacon + brand pill (his Cloudflare Worker endpoint) were REMOVED from the starter — a public template must not phone his analytics; (2) sources were taken from origin/master, not the shared checkout, whose working copies were stale (pre-note-action) mid-rebase. The parameterization pipeline is re-runnable: ~/workspace/projects/starter-build-tools/parameterize.py (origin snapshot beside it). **The v1.0.0 release TAG is held until Dave approves the UPGRADING notes (his Q8 rule).** Maintenance: Developer Buddy owns release passes (fleet-standard changes + monthly batch).
+
+## 2026-11-21 — Starter amendment: the pick-list (LANDED)
+Dave&#x27;s post-go amendment folded into SETUP.md (starter commit 67a93be): during setup the seven starters are presented as a pick-list — brief cards as the menu, Coordinator pre-selected as the anchor/first buddy, the other six opt-in; unpicked buddies are NOT deleted (cards stay in the user&#x27;s copy for later install; registry seeding follows the picks), and SETUP.md states plainly that entirely new buddies can be created later. README&#x27;s tour step updated to match.
+
+## 2026-11-21 — Starter framing: Coordinator ≠ chief of staff (LANDED)
+Dave&#x27;s clarification: the user&#x27;s own Muse IS their chief of staff (the interface, never installed); the Coordinator buddy is a project tracker inside the system, one level down. Starter commit (see repo log): SETUP.md &quot;Who&#x27;s who&quot; section + step-3 rewording; concepts.md and the Coordinator&#x27;s brief/registry text rewritten; the dashboard&#x27;s root-buddy strings (dump flow, org chart, root overview) now substitute the root buddy&#x27;s name from instance config (`root_name`, default &quot;Coordinator&quot;) while actor strings say &quot;your Muse will run the setup&quot;; the generators&#x27; family-nav crumb now links to the root buddy (it hardcoded Dave&#x27;s own root page). Emitted dashboard carries zero &quot;Chief of Staff&quot; strings; scrub gate re-passed.
+
+## 2026-11-21 — Starter amendment: START-HERE.md human companion guide (LANDED)
+Dave&#x27;s amendment: a short human-facing companion beside the Claude-facing SETUP.md. Shipped (starter commits 039bb02 + follow-up): START-HERE.md — what Buddy OS is in plain terms (staff metaphor; Muse = chief of staff; Coordinator distinction), what to have ready (GitHub account), what setup will do and ask (interview, private copy, pick-list), the token step in plain language with the full safety framing, checking results with their own eyes (dashboard + first homepage), and a day-two pointer list. README points humans to it first; SETUP.md cross-references it back.
+
+## 2026-11-21 — Starter amendments: tester guide + guides-as-website (LANDED)
+TESTING.md added (machinery explainer, six-step test route, feedback asks, v1 known-rough-edges list). The two human guides are now also a website: build_guides.py renders START-HERE.md/TESTING.md to start-here.html/testing.html (shared template, dark mode, cross-linked pair) so they can&#x27;t drift from the sources; Pages enabled on the template repo — the sendable links are live (verified 200): https://davedellaquila.github.io/buddy-os-starter/start-here.html and .../testing.html. SETUP.md stays in-repo only, by design. Note: the README&#x27;s START-HERE pointer from the earlier commit had silently not survived (an assert anchored on misremembered README text) — caught by reading the file, fixed against its actual text, and the README now leads with the companion guide.
+
+## 2026-11-21 — Starter amendment: Substack links (LANDED; scrub exception on record)
+Dave&#x27;s two public essays are linked on purpose in the guides: &quot;Buddies All the Way Down&quot; (substack.com/p/objects-all-the-way-down) beside START-HERE&#x27;s concepts and in TESTING&#x27;s Background reading; &quot;How to Choose Your Buddies&quot; (substack.com/p/how-to-choose-your-buddies) beside START-HERE&#x27;s pick-list step and in TESTING. **These URLs contain the owner&#x27;s name by design — they are a deliberate, documented EXCEPTION to the scrub denylist.** Future release passes: the gate should whitelist exactly these two URLs; any OTHER dellaquila hit remains a scrub failure. All seven post-go amendments are now landed; the v1.0.0 tag still waits on Dave&#x27;s approval of the UPGRADING notes.
+
+## 2026-11-21 — Buddy OS Starter v1.0.0 RELEASED
+Dave approved the (amendment-updated) UPGRADING notes Nov 21. Tag v1.0.0 cut at starter HEAD 92d0d24 and the GitHub release published with the UPGRADING v1.0.0 section as its notes: https://github.com/davedellaquila/buddy-os-starter/releases/tag/v1.0.0 (verified via API: not draft, not prerelease). The starter project is complete: contents list → nine decisions → build → scrub gate → seven amendments → notes approval → release. Maintenance cadence per Q8 stands (release pass on fleet-standard changes, monthly batch otherwise, Dave approves each release&#x27;s UPGRADING notes). Standing future task remains: an any-agent variant of SETUP.md.
+
+## 2026-11-21 — Buddy OS Starter v1.1.0 candidate built (tag held for Dave&#x27;s notes approval)
+The one-ask update path (Dave&#x27;s go, Nov 21): `starter_version` stamp in instance.json (SETUP.md documents it; pre-stamp copies are treated as 1.0.0 and gain the field on first update); UPDATE.md written for the user&#x27;s Muse — trigger &quot;check for Buddy OS updates&quot;, then check latest release → read UPGRADING sections → git checkpoint → apply by file class (system-owned replace, user-owned never overwrite, conventions merged, local edits surfaced) → regenerate → verify → report, with rollback on failure. START-HERE&#x27;s day-two list gains the one ask. UPGRADING v1.1.0 section + CHANGELOG entry written; VERSION at 1.1.0; starter commit fab2fbd. **Tag held** until Dave approves the v1.1 notes via Astro. Gate note: the scrub denylist now lives persistently at ~/workspace/projects/starter-build-tools/denylist.txt (/tmp copies kept evaporating between turns — two gate runs silently no-opped on the missing file before this was caught; always confirm the list file exists). Whitelist grew by one deliberate entry: UPDATE.md names the upstream repo URL (github.com/davedellaquila/buddy-os-starter) — functionally required, the product&#x27;s own public address, same class as the Substack exception; flagged to Dave in the ship report.
+
+## 2026-11-21 — Buddy OS Starter v1.1.0 RELEASED
+Dave approved the v1.1.0 UPGRADING notes (&quot;This is AWESOME!&quot;). Tag v1.1.0 cut at starter HEAD fab2fbd; release published with the v1.1.0 UPGRADING section as its notes, API-verified (not draft, not prerelease): https://github.com/davedellaquila/buddy-os-starter/releases/tag/v1.1.0. The one-ask update path is live — and fittingly, v1.1.0 is the first release a v1.0.0 copy can adopt by hand (stamp + UPDATE.md) and the last one it will ever have to.
+
+## 2026-11-22 — Gazette design decisions staged as candidate starter material
+At Dave&#x27;s direction, today&#x27;s Gazette design decisions (top-bar distribution, non-sticky phone headers, masthead reader counter + honesty tooltip + red today-number, name-as-section-menu, Suggestion Box + section voting, syndicated sections verbatim, the Services board standard, chart honesty, the inherited photo viewer) were distilled into a transferable-standards draft at ~/workspace/projects/starter-build-tools/gazette-design-decisions.md — staged alongside the release pipeline, NOT in the published repo. No release is decided; if Dave ever ships it, the form is a docs/newspaper-standards.md + UPGRADING section sourced from that draft.
+
+## 2026-11-22 — Staged draft extended: homepage/template standards (Part II)
+The staged design-decisions draft (~/workspace/projects/starter-build-tools/gazette-design-decisions.md) gained Part II per Dave&#x27;s extension: the standing homepage standards as transferable release material — task-card action options with registry-stamp dispositions (§10), the sticky buddy-page header (§11), the generated Files section incl. the private_files flag (§12), homepage-as-first-task + the published rubric (§13), dark mode everywhere (§14), and the propagation mechanism (§15: generators/templates are system-owned in UPDATE.md&#x27;s file classification, so a release re-renders adopters&#x27; homepages on pull while their data stays untouched). Still unpublished staging; Dave decides if/when any of it ships.
+</pre></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">ACCOMPLISHMENTS.md</span><span class="rf-dir">repo root</span></button><div class="rf-panel" hidden><div class="rf-body"><pre class="mdfallback"># Accomplishments — Developer Buddy
+
+What this buddy has shipped and done. The review-time record — keep it fresh.
+
+## 2026-10-28 — Custom homepage SHIPPED (first task / audition) — build 20261028.0826, commit `120baf9`, served-verified
+
+- Replaced the template homepage at `buddy-tree/developer-buddy/index.html` (46,425 bytes template → **58,741 bytes custom**) with a terminal / ship-log design that could only be this buddy&#x27;s: a code-window hero (`$ whoami --role`, blinking cursor), a build-pipeline strip (Decision → Spec → Build → Verify → Push → Served copy), a monospace ship log, and proportional codebase-anatomy bars.
+- **Leads with live stats** (real numbers, sources in KNOWLEDGE.md): 163 buddies in the registry (163/163 with homepages) · 30 commits today · 333 commits in the last 7 days / 1,497 all-time · 114 attention items across 93 buddies · 16,074 lines of build tooling · current build 20261028.0821 (commit `c375899`).
+- **Ship log** lists: `c375899` hired &amp; wired (20261028.0821), `649794e` Find/Recents/grippers (20261028.0815), `0d1df5b` Find overlay, `cb48b67` framework buttons, `5a6ee53` Doc/Drive links in a new tab.
+- **Tip Jar migration modelled:** 🫙 Tip Jar lives in the sticky header as a compact breathing/shimmer bug linking Dave&#x27;s Ko-fi; the floating pill is gone from this page (zero `class=&quot;tipjar&quot;` / `.tipjar` CSS).
+- **Standing requirements kept:** dark + light mode, responsive with no horizontal scroll, sticky header with icon + name, dashboard link, 🔊 “Hear my role” playing `role-intro.mp3`, Needs-your-attention item (job req) linked to its Google Doc, and links on every buddy/doc/repo mentioned (Project Buddy, job req, private repo, About).
+- **Brain-dump box preserved:** all four template inline scripts (dump, attention actions, repo files, name sync) carried over byte-identical — dumping still token-gates and writes to this repo&#x27;s `docs/ingest.md`, with the local-device fallback intact.
+- **Validation at build time:** all 4 inline scripts pass `node --check`; HTML tag balance clean (no errors, nothing left open); greps confirm no forbidden generator phrases/markers and no floating tip jar.
+- **Shipped:** committed as `120baf9` (explicit pathspecs: homepage + CHANGELOG.md + version.txt), pushed, and verified on the served copy at https://davedellaquila.github.io/buddy-system/developer-buddy/ — header Tip Jar bug, live stats (1,497 commits), and ship-log hero all present in the served HTML; served version.txt reads 20261028.0826.
+
+## 2026-10-28 — First queue pass (build 20261028.1540) + School Buddy header + Tip Jar generator migration
+- **New Buddy silent create failure FIXED** (buddy-tree build 20261028.1540, commit 0840d3a): styled sheet error, sticky action-bar status in plain language, on-device queue (S.nbQueue + flushNbQueue at boot/token-appear), unmistakable success toast. Verified live end-to-end (no-token path in a fresh profile; sheet-shaped test request landed in docs/inbox via the sheet&#x27;s exact write path, then deleted).
+- **Persona picker**: Generic Male/Female/Gender-Neutral pinned first in the sheet&#x27;s catalog (27 triples with trait keywords) + keyword filter with count and friendly empty state. Live-verified (&quot;feisty&quot; → 6).
+- **Panel search removed entirely** at Dave&#x27;s word (Investment Buddy thread): #bp-search field/CSS/JS + &#x27;/&#x27; routing unwound; ⌘F Find untouched, live-verified on the Investment panel.
+- **Sidebar × circle un-clipped**: #sb-tools right 8→24px (clear of the .sb-scroll classic scrollbar band) + #sb-resize left formula corrected for the floating sidebar&#x27;s 12px viewport offset (anchored override kept).
+- **School Buddy header repaired** (commit 84dd093): fleet dash-link injection had landed inside the 44px .mark icon tile; moved into the topbar row, muted; crumb clears the Recents floater when embedded.
+- **Tip Jar header migration, generator-managed pages** (commit cf55bd1): canonical snippet rewritten as the header bug; gen_basic places it in the topbar of all 71 template homepages, gen_default in the About nav/hero of all 164 About pages; 15 v2 default index pages swapped surgically (no template-generation jump). Floating pill count on generated pages = 0, served-verified. Remainder: ~81 custom/thread-owned pages + sub-pages, per-page plan via Astro before any bulk edit.
+- **2026-10-28 (afternoon) — Chevron + four-icon rail (build 20261028.1348, buddy-tree 097bd13):** at Dave&#x27;s call, the sidebar&#x27;s ✕ became a left chevron (the panel collapses to the rail, never closes; circleX kept for true dismissals) and the collapsed rail became exactly four icons — › expand, 🔍 Find (opens the ⌘F overlay), 💼 Business Plans (popover menu, pick navigates via show(&#x27;plan:…&#x27;)), current-view icon + views popover — with the Views stack hidden while collapsed. Live-verified on the served copy: chevron glyph + &quot;Collapse sidebar&quot; label, exactly four rail icons in order, plans menu lists plans (Amador County Transport first), Find opens from the rail, views menu complete.
+</pre></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">README.md</span><span class="rf-dir">repo root</span></button><div class="rf-panel" hidden><div class="rf-body"><pre class="mdfallback">#  Developer Buddy
+
+Developer Buddy is Dave&#x27;s software engineer for the BuddyOS codebase. It owns the code day-to-day — the dashboard, the homepage generators, the shared components, and the buddy-server codebase — so Dave&#x27;s main chat stays about what he wants, not how the code works. Change requests arrive as decisions from Dave via Astro and as buildable specs from the Designer; Developer Buddy turns them into shipped builds, verifies each one on the served copy, and reports back in outcomes: what changed, which build number, and where to see it.
+
+## Product brief
+
+[Read the full brief](docs/brief.md) · [Google Doc](https://docs.google.com/document/d/1XlKkO6VH0aYC6P5nlCxoZ_Gm62F4qkn51PwkWtI-zqg/edit)
+</pre></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">docs-tipjar-custom-plan.md</span><span class="rf-dir">repo root</span></button><div class="rf-panel" hidden><div class="rf-body"><pre class="mdfallback"># Tip Jar migration — custom &amp; thread-owned pages: scoped plan
+
+Prepared by Developer Buddy, 2026-10-28. Status: **awaiting Astro/Dave go-ahead — no page has been edited under this plan.**
+
+Generator-managed pages are done (build cf55bd1: 71 template homepages, 164 About pages, 15 v2 default pages). What remains is every page the generators do NOT own: **78 custom buddy homepages + 3 sub-pages** still carrying the floating pill (`class=&quot;tipjar&quot;`). Per the standing rule, these migrate per-page — this plan is the scope, surfaced before any bulk edit.
+
+## The swap (identical for every Category A page)
+
+1. Remove the floating block — it is the machine-injected canonical snippet, verified byte-identical per page before removal; a page whose block differs is skipped to manual (Category B treatment).
+2. Add the canonical header-tip `&lt;style&gt;` to `&lt;head&gt;` and the `&lt;a class=&quot;header-tip&quot;&gt;` anchor as the last item of the page&#x27;s existing header/topbar row (with a right-end rule where the header is flex).
+3. Diff discipline: the only lines that may change are the tip jar furniture. Any page whose diff exceeds that is reverted and flagged.
+4. Ship in batches of ~15 pages: one commit + CHANGELOG line per batch, served spot-check of 2 pages per batch.
+
+## Category A — has a header/topbar (74 homepages): mechanical swap, batch order = alphabetical
+
+- amanda-buddy/index.html
+- architect-buddy/index.html
+- astro/index.html
+- astronomy-buddy/index.html
+- bicycle-buddy/index.html
+- cabin-buddy/index.html
+- calendar-buddy/index.html
+- car-buddy/index.html
+- career-buddy/index.html
+- charts-buddy/index.html
+- connie-ko/index.html
+- dave-swiger-buddy/index.html
+- decision-buddy/index.html
+- dellaquila-com/index.html
+- discovery-buddy/index.html
+- document-buddy/index.html
+- documentarian-buddy/index.html
+- dpg-shop-software/index.html
+- emil-house-sale/index.html
+- emile-buddy/index.html
+- eric/index.html
+- family/index.html
+- feedback-buddy/index.html
+- finance-buddy/index.html
+- game-buddy/index.html
+- guardian-buddy/index.html
+- hans-buddy/index.html
+- health-buddy/index.html
+- hot-tub-buddy/index.html
+- housing-buddy/index.html
+- investment-buddy/index.html
+- jessica-buddy/index.html
+- jody-reed/index.html
+- joel-buddy/index.html
+- journal-buddy/index.html
+- larry-osana/index.html
+- legal-buddy/index.html
+- lenwood-water/index.html
+- little-guy-buddy/index.html
+- llagas-creek-sale/index.html
+- mail-buddy/index.html
+- marketing-buddy/index.html
+- marley-buddy/index.html
+- mei-ying-buddy/index.html
+- money-buddy/index.html
+- nancy-buddy/index.html
+- neighborhood-buddy/index.html
+- party-buddy/index.html
+- penny-luedtke/index.html
+- plumber-buddy/index.html
+- portfolio-buddy/index.html
+- quentin-buddy/index.html
+- relationship-buddy/index.html
+- reminder-buddy/index.html
+- rocky-buddy/index.html
+- ron-buddy/index.html
+- sarah-buddy/index.html
+- sawyer-buddy/index.html
+- scaffold-buddy/index.html
+- school-buddy/index.html
+- sharing-buddy/index.html
+- shopping-buddy/index.html
+- shreya-dhingra/index.html
+- social-media-buddy/index.html
+- soundboard/index.html
+- sports-car-adventures/index.html
+- stumpjumper-buddy/index.html
+- tester-relations-buddy/index.html
+- travel-buddy/index.html
+- tv-buddy/index.html
+- w163-mastertech-buddy/index.html
+- wisdom-buddy/index.html
+- work-buddy/index.html
+- zen-buddy/index.html
+
+## Category B — no obvious header (4 homepages): individual placement proposal each, NO auto-edit
+
+- carl-buddy/index.html
+- james-buddy/index.html
+- news-buddy/index.html
+- personal-buddy/index.html
+
+## Category C — sub-pages (3): swap if a header exists, else Category B treatment
+
+- hans-buddy/chime/index.html
+- vote/e39-touring-shirts/index.html
+- vote/gallery-preference/index.html
+
+## Out of scope
+
+- Any redesign of a page&#x27;s header itself. - Pages a buddy owns in its own repo (outside buddy-tree). - The dashboard&#x27;s own sidebar tip jar (separate implementation, untouched).
+</pre></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">brief.md</span><span class="rf-dir">docs</span></button><div class="rf-panel" hidden><div class="rf-body"><pre class="mdfallback"># Developer Buddy
+
+## Role summary
+
+Developer Buddy is Dave&#x27;s software engineer for the BuddyOS codebase. It owns the code day-to-day — the dashboard, the homepage generators, the shared components, and the buddy-server codebase — so Dave&#x27;s main chat stays about what he wants, not how the code works. Change requests arrive as decisions from Dave via Astro and as buildable specs from the Designer; Developer Buddy turns them into shipped builds, verifies each one on the served copy, and reports back in outcomes: what changed, which build number, and where to see it.
+
+## Reports to
+
+Project Buddy. Dave directs through Astro; the Designer (with Jonny&#x27;s crits) supplies design specs; Astro relays decisions in and results out.
+
+## Responsibilities
+
+- Own the build queue: every requested change is a named, tracked item on Developer Buddy&#x27;s homepage until it ships.
+- Implement dashboard changes in build.py from Designer specs — currently queued as its first build pass: the window-centered Find palette (Jonny&#x27;s crit + spec), the Recents floater sizing + grow-up menu, and the inboard grippers.
+- Maintain the homepage generators (gen_basic_homepages.py, gen_default_homepages.py) and the canonical shared components — Tip Jar, brain-dump box, sticky header.
+- Ship safely: scope the blast radius, node --check every inline script before pushing, verify on the served copy, keep CHANGELOG.md and FEATURES.md current, and re-sync the dashboard mirror after every push.
+- Keep a living KNOWLEDGE.md of codebase facts — repo layout, build conventions, traps already hit — so no lesson is learned twice.
+- Flag design collisions and ambiguities back to Astro instead of silently dropping or widening an ask. Build exactly the spec, nothing wider.
+
+## Success criteria
+
+- Dave&#x27;s main chat receives decisions and finished results only — code mechanics live in this thread.
+- Changes ship with a build number, a named surface, and served-copy verification; nothing is announced done from a diagnosis or a queue slot.
+- The homepage shows the operation at a glance: builds shipped, changes landed, queue depth, recent commits — real numbers, kept current.
+- Zero regressions reach Dave unannounced; when one slips through, it&#x27;s owned in one breath with the fix already queued.
+
+## Out of scope for v1
+
+- Firebase deploys — those run only from Dave&#x27;s own machine (Developer Buddy prepares, Dave deploys).
+- Product and design decisions — those belong to Dave and the Designer; Developer Buddy builds the spec it&#x27;s given.
+- Hiring or directing other buddies.
+- Publishing anything new and public without Dave&#x27;s review.
+
+## Growth path
+
+Automated pre-push checks (script lint, link checks), visual regression screenshots of the dashboard at phone/tablet/desktop widths, a weekly code-health digest, and owning the buddy-server codebase once Dave&#x27;s deploy lands. Possibly: a starter-repo template pass so every future buddy repo is born with the same tooling.
+
+## Known facts at hire
+
+- Codebase: the buddy-system repo (local clone ~/workspace/projects/buddy-tree; build.py generates the dashboard; live build at hire: 20261028.0114; registry holds 162 buddies).
+- Queued first build pass: Find palette centering + Recents floater + inboard grippers — spec: ~/workspace/find-palette/find-palette-crit-spec.md (Jonny&#x27;s crit, Designer thread).
+- In flight at hire: the Tip Jar is moving from a floating footer pill into the sticky page header (Dave&#x27;s call, 2026-10-28) — snippet + both generators + fleet rollout.
+- Standing traps: never `git add -A` in buddy-tree (explicit pathspecs only); extract inline scripts and node --check before pushing; pull --rebase before push; GitHub Pages lags ~1–2 min; Dave reviews on the served copy or his local clone, never on a claim.
+</pre></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">buddy-os-starter-contents.md</span><span class="rf-dir">docs</span></button><div class="rf-panel" hidden><div class="rf-body"><pre class="mdfallback"># Buddy OS Starter Repository — Contents List (DRAFT for Dave&#x27;s review)
+
+*Developer Buddy, 2026-11-21. Design only — nothing here is built yet. **APPROVED by Dave 2026-11-21 (&quot;You nailed it!&quot;) — the IN/OUT structure stands as drafted, and all nine open questions were answered by Dave the same day (see DECISIONS at the end). The build starts only on Dave&#x27;s explicit go.**
+
+## The idea in one paragraph
+
+A new Buddy OS user starts from a **GitHub template repository**: they click &quot;Use this template&quot; and get a clean copy with fresh history — theirs from day one, not a clone of ours. The starter ships the **system only**: the machinery, conventions, and a guided first run. Our buddy-system repo mixes that system with Dave&#x27;s instance (208 buddies, personal data, flows bound to his repos); the starter is what remains when every trace of the instance is scrubbed out. Its centerpiece is not the files — it&#x27;s a **first-run setup guide written for the user&#x27;s own Muse**: their Muse interviews them, creates their first buddy, wires the registry, and builds the first homepage. *Less app, more buddy.*
+
+## Proposed shape
+
+```
+buddy-os-starter/
+  README.md                  — what this is, the 10-minute tour
+  SETUP.md                   — the first-run guide, written for the user&#x27;s Muse
+  AGENTS.md                  — operating conventions (generic form)
+  VERSION                    — starter release, e.g. 0.1.0
+  CHANGELOG.md               — the starter&#x27;s own changelog (starts empty of history)
+  UPGRADING.md               — &quot;what changed / how to adopt it&quot;, per release
+  buddies.json               — seed registry: the sample buddies only
+  build.py                   — dashboard build (generic form)
+  gen_basic_homepages.py     — homepage generator (generic form)
+  gen_default_homepages.py   — Dossier + About generator (generic form)
+  docs/
+    concepts.md              — what a buddy is; system vs instance; the staff metaphor
+    registry-format.md       — the buddies.json schema, field by field
+    homepage-audition.md     — the homepage rubric (generic form)
+    standing-orders.md       — starter standing orders (dark mode, action options, links)
+    tipjar-snippet.html      — canonical tip jar, destination blank
+    dumpbox-snippet.html     — brain-dump box snippet (generic form)
+    inbox/                   — new-buddy intake drop (empty, with README)
+  samples/                   — sample buddy repos&#x27; homepage sources live in-tree as examples
+    &lt;sample-buddy&gt;/index.html, about.html, README.md, CONFIG.md, KNOWLEDGE.md
+  .gitignore
+  LICENSE                    — MIT (Dave&#x27;s call, 2026-11-21)
+```
+
+---
+
+## IN — what the starter ships
+
+### A. First-run bootstrap (the centerpiece)
+
+1. **SETUP.md — a guide written for the user&#x27;s Muse, not the user.** Step-by-step, in order: (1) interview the user (name, what to call them, timezone, what they care about, who matters to them); (2) explain the system-vs-instance split and that everything created is *theirs*; (3) create their first buddy together (name, parent, persona defaults, icon); (4) wire the registry entry; (5) generate and open the first homepage; (6) walk the dashboard; (7) set up the token-gated write path against **the user&#x27;s own** GitHub account, with the safety framing (which account, which single permission, what they will see, never paste a token in chat); (8) a &quot;day two&quot; list — briefings, a second buddy, making the repo private/public as they chose.
+2. **Interview script outline** inside SETUP.md — the questions, in the order our onboarding learned to ask them, with &quot;skip freely&quot; defaults so setup never blocks on taste decisions (persona/voice/icon get sensible defaults, changeable later).
+3. **First-buddy walkthrough** — the worked example: one buddy created start to finish in the guide, matching Sample Buddy #1 below, so the user&#x27;s Muse can pattern-match instead of improvising.
+
+### B. Core machinery, in generic form
+
+4. **Dashboard (`build.py`)** — the full dashboard build with every owner-specific string parameterized: GitHub owner, repo name, Pages URL, and names read from a single `instance.json` config the setup guide creates. No `davedellaquila` strings anywhere (see the scrub gate in Notes).
+5. **Homepage generators (`gen_basic_homepages.py`, `gen_default_homepages.py`)** — same parameterization; the baked-in fleet standards ship as defaults: Files section, baked markdown reader with the `private_files` flag, the full task action set (Done / Need more info / Later / Drop it / ✎ Add a note… + Undo, registry stamps), dark mode, sticky header.
+6. **Registry (`buddies.json`) + schema** — the seed registry contains only the sample buddies. `docs/registry-format.md` documents every field (id, name, icon, repo, status, attention + its stamps, links, files, parentage, privacy, voice/persona) so a user&#x27;s Muse can extend it safely.
+7. **Token-gated write helpers** — the client-side write pattern (dashboard + homepage ingest writes, disposition stamps) in generic form, pointed at the user&#x27;s own repos by the instance config. The *mechanism* is system; every binding to a specific account is instance and is created during setup, never shipped pre-bound.
+8. **`.gitignore` + repo hygiene defaults** — no tokens, no local stores, no scratch.
+
+### C. Sample buddies — generic, scrubbed, deliberately few
+
+The v1 set (Dave&#x27;s call, 2026-11-21): **seven starter buddies defined as brief cards** — the coordinator below is the one fully-worked example the setup guide builds with the user; the other six ship as brief cards the user&#x27;s Muse fleshes out during setup. The three worked shapes:
+
+9. **Sample 1: a coordinator** (&quot;Project Buddy&quot;-shaped, renamed and re-personed generically) — shows parentage, a dashboard presence, an attention item carrying the full action set, and a homepage that passes the rubric. This is the buddy the setup guide creates *with* the user, pre-built here as the reference.
+10. **Sample 2: a simple personal buddy** (a reading/hobby buddy) — shows the lightest viable buddy: registry entry, basic homepage, one ingest-fed section. Proves a buddy can be small.
+11. **Sample 3 (optional in v1): a custom-page buddy** — one hand-built homepage beside the generated ones, showing where custom pages plug in and what they must still honor (dark mode, action options, no generator-trap phrases).
+
+Each sample ships as brief cards + finished example pages: the card says what the buddy is for; the pages show the standard met. All names, people, places, and data in the samples are invented for the starter.
+
+### D. Conventions and docs a new user needs in the first hour
+
+12. **AGENTS.md (generic form)** — the operating conventions that make the system behave: git discipline in a shared checkout, verify on the served copy, every named thing gets its link, one topic per message, the critical-items idea (adapted generically), no credential in chat. Written as *a* working model to adopt and edit, clearly marked as a starting point, not a creed.
+13. **Homepage rubric (`docs/homepage-audition.md`, generic form)** — the standard a homepage is judged against, including the fleet action standard and dark mode.
+14. **Standing orders (`docs/standing-orders.md`)** — the short list: dark mode on every page; action options on every task; newspaper pages get the lightbox; GPX-style domain rules *excluded* (those are Dave&#x27;s instance, not system).
+15. **Snippets** — tip jar (destination blank, filled in during setup), brain-dump box, welcome card.
+16. **README.md** — the 10-minute tour: what Buddy OS is, the staff metaphor, what to click first, where SETUP.md takes over.
+17. **`docs/concepts.md`** — system vs instance, registry as source of truth, homepages as the buddy&#x27;s face, &quot;less app, more buddy.&quot;
+
+### E. Release machinery (update honesty)
+
+Template copies receive **no** automatic upstream updates — the contents list plans for that instead of pretending otherwise:
+
+18. **VERSION file + tagged releases** — the starter is versioned (semver); each release is a GitHub release with notes.
+19. **UPGRADING.md** — per release: what changed, whether it&#x27;s machinery (safe to copy over), conventions (read and adopt), or schema (migration steps), and a &quot;keep your data&quot; checklist — the Muse-mediated *&quot;update my system, keep my data&quot;* path: the user&#x27;s own Muse reads UPGRADING.md and applies it to their copy.
+20. **Minimal-and-stable bias** — the starter changes slowly on purpose; our working model&#x27;s experiments land here only once they&#x27;ve proven out (see Notes).
+
+---
+
+## OUT — deliberately excluded (the scrub list)
+
+Everything personal to Dave&#x27;s instance. Named by category so the scrub can be checked, not trusted:
+
+1. **The registry&#x27;s contents** — all 208 of Dave&#x27;s buddies: ids, names, statuses, attention items, links, files lists, voice/persona picks. The starter&#x27;s registry holds only the samples.
+2. **Personal pages and data** — every buddy homepage/About page from Dave&#x27;s fleet and everything in them: family members and their details, neighbors&#x27; names/addresses/coordinates (the Neighborhood page above all), health and sleep material, money and expense content, vehicles and their records, the Morgan Hill / Llagas Creek sales, Emil&#x27;s estate, the Lenwood lease.
+3. **Private buddy content** — briefs, job reqs, CONFIG/KNOWLEDGE files, ingest logs, decision records, and memory files from Dave&#x27;s buddies, including Developer Buddy&#x27;s own paperwork.
+4. **Dave-bound flows and identifiers** — his GitHub owner/repo names anywhere in code or docs, his Pages domain and custom domains (fiddletowngazette.com et al.), his Ko-fi destination, his email addresses and phone numbers, his Muse account artifacts (the project-buddy mirror), the buddy-server, API tokens or token-shaped strings of any kind (none ship; the *pattern* ships unbound).
+5. **Media** — photos, role-intro and audition audio, avatars, generated artwork from Dave&#x27;s instance. Samples use placeholder art created for the starter or none.
+6. **History** — Dave&#x27;s CHANGELOG.md and FEATURES.md (the starter starts its own), his git history (template mechanics already guarantee this), his tracked goals, crons, hooks, and briefings machinery tied to his accounts (Gmail/Calendar connectors, Muse Mail address, iPhone routes).
+7. **Other products in the fleet** — the Fiddletown Gazette and newspaper system, Money Buddy and the expense tracker, the events database and its API: separate systems that happen to share the fleet, not part of Buddy OS&#x27;s starter core.
+8. **Workspace/VM specifics** — paths, device ids, Tailscale names, local tooling notes (TOOLS.md), and any file whose content only makes sense on Dave&#x27;s machines.
+
+---
+
+## DECISIONS — Dave&#x27;s calls (2026-11-21, replacing the open questions)
+
+1. **Template visibility: PUBLIC template repo; user copies private.** SETUP.md steers each user to create their copy as a private repo.
+2. **License: MIT.**
+3. **Samples: SEVEN starter buddies as brief cards** (reviving Dave&#x27;s Oct 26 idea). The coordinator remains the one fully-worked example the setup guide builds with the user; the seven are defined as brief cards.
+4. **Dashboard: SHIPS in v1** — build.py included, parameterized.
+5. **Writes: token-gated writes IN v1** — setup includes the GitHub token step with the full safety framing.
+6. **Platform: GitHub-specific** — no portable variant in v1.
+7. **Name: &quot;Buddy OS Starter&quot;**, repo slug `buddy-os-starter`.
+8. **Maintenance: Developer Buddy owns it** — a release pass whenever a fleet standard changes, batched monthly otherwise; **Dave approves each release&#x27;s UPGRADING notes before it ships.**
+9. **Audience: SETUP.md is written for the user&#x27;s Muse specifically** (our stack), not generic agents.
+
+**Standing future item (Dave, 2026-11-21 — NOT part of the v1 build):** produce an any-agent variant of SETUP.md, generalizing the guide for any capable coding agent. Muse-specific stands for v1; this generalization is a recorded standing task for a later release.
+
+---
+
+## Notes for the build phase (not decisions, just recorded)
+
+- **Scrub gate:** before the starter repo is created — and before every release — an automated pass greps the tree for a maintained denylist (owner/repo strings, surnames, domains, addresses, token patterns) and fails the release on any hit. The OUT list above becomes that denylist&#x27;s first draft.
+- **Parameterization is the real work:** the machinery currently hardcodes the instance in a handful of places (owner strings, Pages URL, HERE paths). The build phase extracts those into the instance config the setup guide creates; that extraction, not the file copying, is the schedule driver.
+- **Our repo stays the working model.** The starter is a downstream, periodically re-cut export — never a second place where system work happens, or the two drift.
+
+*Filed at docs/buddy-os-starter-contents.md in the developer-buddy repo. Dave&#x27;s review next; build starts only on his go.*
+</pre></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">ingest.md</span><span class="rf-dir">docs</span></button><div class="rf-panel" hidden><div class="rf-body"><pre class="mdfallback"># Ingest log — Developer Buddy
+
+Raw brain-dumps about this buddy. Each entry is timestamped; work the keepers into the dossier.
+## 10/28/2026, 8:39:27 AM
+
+DONE — Dave marked this done on the homepage: &quot;Job req ready for review — looks good, edits, or defer?&quot; (attention id: developer-buddy-job-req). Please remove it from the attention list in buddies.json.
+
+## 10/28/2026, 8:39:58 AM
+
+It would be nice if the tiles on the Developer Buddy homepage were active, if I could click them and go see additional information about whatever it is that I clicked on.
+
+</pre></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">job-req.md</span><span class="rf-dir">docs</span></button><div class="rf-panel" hidden><div class="rf-body"><pre class="mdfallback"># Developer Buddy
+
+## Role summary
+
+Developer Buddy is Dave&#x27;s software engineer for the BuddyOS codebase. It owns the code day-to-day — the dashboard, the homepage generators, the shared components, and the buddy-server codebase — so Dave&#x27;s main chat stays about what he wants, not how the code works. Change requests arrive as decisions from Dave via Astro and as buildable specs from the Designer; Developer Buddy turns them into shipped builds, verifies each one on the served copy, and reports back in outcomes: what changed, which build number, and where to see it.
+
+## Reports to
+
+Project Buddy. Dave directs through Astro; the Designer (with Jonny&#x27;s crits) supplies design specs; Astro relays decisions in and results out.
+
+## Responsibilities
+
+- Own the build queue: every requested change is a named, tracked item on Developer Buddy&#x27;s homepage until it ships.
+- Implement dashboard changes in build.py from Designer specs — currently queued as its first build pass: the window-centered Find palette (Jonny&#x27;s crit + spec), the Recents floater sizing + grow-up menu, and the inboard grippers.
+- Maintain the homepage generators (gen_basic_homepages.py, gen_default_homepages.py) and the canonical shared components — Tip Jar, brain-dump box, sticky header.
+- Ship safely: scope the blast radius, node --check every inline script before pushing, verify on the served copy, keep CHANGELOG.md and FEATURES.md current, and re-sync the dashboard mirror after every push.
+- Keep a living KNOWLEDGE.md of codebase facts — repo layout, build conventions, traps already hit — so no lesson is learned twice.
+- Flag design collisions and ambiguities back to Astro instead of silently dropping or widening an ask. Build exactly the spec, nothing wider.
+
+## Success criteria
+
+- Dave&#x27;s main chat receives decisions and finished results only — code mechanics live in this thread.
+- Changes ship with a build number, a named surface, and served-copy verification; nothing is announced done from a diagnosis or a queue slot.
+- The homepage shows the operation at a glance: builds shipped, changes landed, queue depth, recent commits — real numbers, kept current.
+- Zero regressions reach Dave unannounced; when one slips through, it&#x27;s owned in one breath with the fix already queued.
+
+## Out of scope for v1
+
+- Firebase deploys — those run only from Dave&#x27;s own machine (Developer Buddy prepares, Dave deploys).
+- Product and design decisions — those belong to Dave and the Designer; Developer Buddy builds the spec it&#x27;s given.
+- Hiring or directing other buddies.
+- Publishing anything new and public without Dave&#x27;s review.
+
+## Growth path
+
+Automated pre-push checks (script lint, link checks), visual regression screenshots of the dashboard at phone/tablet/desktop widths, a weekly code-health digest, and owning the buddy-server codebase once Dave&#x27;s deploy lands. Possibly: a starter-repo template pass so every future buddy repo is born with the same tooling.
+
+## Known facts at hire
+
+- Codebase: the buddy-system repo (local clone ~/workspace/projects/buddy-tree; build.py generates the dashboard; live build at hire: 20261028.0114; registry holds 162 buddies).
+- Queued first build pass: Find palette centering + Recents floater + inboard grippers — spec: ~/workspace/find-palette/find-palette-crit-spec.md (Jonny&#x27;s crit, Designer thread).
+- In flight at hire: the Tip Jar is moving from a floating footer pill into the sticky page header (Dave&#x27;s call, 2026-10-28) — snippet + both generators + fleet rollout.
+- Standing traps: never `git add -A` in buddy-tree (explicit pathspecs only); extract inline scripts and node --check before pushing; pull --rebase before push; GitHub Pages lags ~1–2 min; Dave reviews on the served copy or his local clone, never on a claim.
+</pre></div></div></div></div>
 </div>
 </section>
 </section>
@@ -494,7 +710,7 @@ footer{margin-top:36px;padding-top:18px;border-top:1px solid var(--border);color
 <p class="dumpbox-hint">Enter dumps it &middot; Shift+Enter for a new line &middot; Images shrink to 1600px wide before upload — the original stays in your library</p>
 </section>
 
-<footer>Default Homepage v3 — "The Dossier" · Generated 2026-11-21 · Part of the Buddy System &middot; <a href="https://davedellaquila.github.io/buddy-system/">Buddy System dashboard</a><br>
+<footer>Default Homepage v3 — "The Dossier" · Generated 2026-11-25 · Part of the Buddy System &middot; <a href="https://davedellaquila.github.io/buddy-system/">Buddy System dashboard</a><br>
 <span class="muted">Archived PDF snapshots live in the buddy-system archive folder.</span></footer>
 </div>
 

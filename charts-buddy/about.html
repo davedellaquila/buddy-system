@@ -214,403 +214,231 @@ footer{margin-top:36px;padding-top:18px;border-top:1px solid var(--border);color
 <h2>📄 Repo files</h2>
 <p class="rf-sub">The markdown files in <span data-buddy-name>Charts Buddy</span>'s repo, baked into this page when it was generated — tap a file name and its contents open right below it; open as many as you like at once. No sign-in and no fetching: the words are right here. To change a file, edit it in the repo — the page picks it up next time it is generated.</p>
 <div class="rf-main">
-<div class="rf-list rf-files-wrap"><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">KNOWLEDGE.md</span><span class="rf-dir">repo root</span></button><div class="rf-panel" hidden><div class="rf-body"><h1>Charts Buddy — Knowledge Base</h1>
-<p>How I make charts. Grows with every chart shipped.</p>
-<h2>House style (Kin design language)</h2>
-<ul>
-<li>Accent: Kin amber — <code>#f0b429</code> (light theme) / <code>#e3b341</code> (dark theme).</li>
-<li>Transparent PNG backgrounds; render <strong>two</strong> theme-paired versions (light + dark) and
-  swap with <code>&lt;picture&gt;</code> + <code>prefers-color-scheme</code>.</li>
-<li>Quiet titles (small, muted, left-aligned), no box spines, horizontal gridlines only,
-  no axis titles, today/now annotated where it means something.</li>
-<li>Tick labels must be theme-appropriate — that's why two renders, never one compromise.</li>
-</ul>
-<h2>Jonny's standing verdict (sunrise chart, 2026-10-12)</h2>
-<p>Kill the box spines · quiet the title · horizontal gridlines only · drop the axis
-titles · transparent background · annotate today ("today · 7:09 AM") · Kin amber.
-Treat as the template for all single-series trend charts unless Jonny says otherwise.</p>
-<h2>Data sources</h2>
-<ul>
-<li><strong>Fiddletown sunrise series</strong> (<code>charts/sunrise_fiddletown_60d.csv</code>): computed with the
+<div class="rf-list rf-files-wrap"><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">KNOWLEDGE.md</span><span class="rf-dir">repo root</span></button><div class="rf-panel" hidden><div class="rf-body"><pre class="mdfallback"># Charts Buddy — Knowledge Base
+
+How I make charts. Grows with every chart shipped.
+
+## House style (Kin design language)
+- Accent: Kin amber — `#f0b429` (light theme) / `#e3b341` (dark theme).
+- Transparent PNG backgrounds; render **two** theme-paired versions (light + dark) and
+  swap with `&lt;picture&gt;` + `prefers-color-scheme`.
+- Quiet titles (small, muted, left-aligned), no box spines, horizontal gridlines only,
+  no axis titles, today/now annotated where it means something.
+- Tick labels must be theme-appropriate — that&#x27;s why two renders, never one compromise.
+
+## Jonny&#x27;s standing verdict (sunrise chart, 2026-10-12)
+Kill the box spines · quiet the title · horizontal gridlines only · drop the axis
+titles · transparent background · annotate today (&quot;today · 7:09 AM&quot;) · Kin amber.
+Treat as the template for all single-series trend charts unless Jonny says otherwise.
+
+## Data sources
+- **Fiddletown sunrise series** (`charts/sunrise_fiddletown_60d.csv`): computed with the
   NOAA solar-position sunrise equation for 38.5056 N, 120.7544 W, America/Los_Angeles.
   Verified: 2026-10-07 computes to 7:04 AM, exactly the official time Dave uses.
-  Regenerate any day with <code>charts/sunrise_fiddletown.py</code> (writes both theme PNGs + CSV).
-  Dave's cabin offset: visible sunrise from the hot tub is ~13 min after official
-  (mountains/trees); briefings publish the official time, he applies the offset himself.</li>
-<li><strong>Survey Buddy</strong> (📋, hired 2026-10-12): survey results flow to me for visualization.
+  Regenerate any day with `charts/sunrise_fiddletown.py` (writes both theme PNGs + CSV).
+  Dave&#x27;s cabin offset: visible sunrise from the hot tub is ~13 min after official
+  (mountains/trees); briefings publish the official time, he applies the offset himself.
+- **Survey Buddy** (📋, hired 2026-10-12): survey results flow to me for visualization.
   When it delivers a dataset, I chart it. First open question on their side is the
-  data-collection mechanism.</li>
-</ul>
-<h2>Standing directive (Dave, 2026-10-12): charts on every homepage</h2>
-<p>Every buddy homepage gets at least one chart worked naturally into the design —
-via me, styled in Jonny's Kin chart language. Buddies with no data propose an
+  data-collection mechanism.
+
+## Standing directive (Dave, 2026-10-12): charts on every homepage
+Every buddy homepage gets at least one chart worked naturally into the design —
+via me, styled in Jonny&#x27;s Kin chart language. Buddies with no data propose an
 alternative visual instead. This is my standing commission: I work through the
-buddies, one chart at a time, starting with Hans Buddy's "patient's chart"
+buddies, one chart at a time, starting with Hans Buddy&#x27;s &quot;patient&#x27;s chart&quot;
 (fault-code timeline per vehicle: mileage on x-axis, fault bars spanning
 first-seen → last-seen — e.g. the 2AAF bar 165k→191k mi — plus job log with costs
 and DIY-vs-shop split as history accumulates). Hans has no homepage yet; the chart
-gets baked in when it's built, after the first diagnosis job lands.</p>
-<h2>Embedding</h2>
-<p>Buddy repos are private — never hotlink <code>raw.githubusercontent.com</code> in a public page.
+gets baked in when it&#x27;s built, after the first diagnosis job lands.
+
+## Embedding
+Buddy repos are private — never hotlink `raw.githubusercontent.com` in a public page.
 Embed chart PNGs as base64 data URIs in the homepage HTML (the sunrise pair is ~120 KB
-total, fine). Refresh the embedding whenever the chart regenerates (stale pages erode trust).</p></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">DECISIONS.md</span><span class="rf-dir">repo root</span></button><div class="rf-panel" hidden><div class="rf-body"><h1>Charts Buddy — Decisions</h1>
-<p>Why things are the way they are. Newest first.</p>
-<h2>2026-10-12 — Two theme-paired renders, not one</h2>
-<p>A single transparent PNG can't carry theme-appropriate tick labels. Every chart ships
-as <code>-light</code> and <code>-dark</code> variants, swapped via <code>&lt;picture media="(prefers-color-scheme: light)"&gt;</code>.
-More files, zero readability compromises.</p>
-<h2>2026-10-12 — NOAA equation for sunrise, verified not assumed</h2>
-<p>No external API dependency for the sunrise series; the NOAA solar-position equation
-computes it offline. Sanity-checked against Dave's known-good official time
+total, fine). Refresh the embedding whenever the chart regenerates (stale pages erode trust).
+</pre></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">DECISIONS.md</span><span class="rf-dir">repo root</span></button><div class="rf-panel" hidden><div class="rf-body"><pre class="mdfallback"># Charts Buddy — Decisions
+
+Why things are the way they are. Newest first.
+
+## 2026-10-12 — Two theme-paired renders, not one
+A single transparent PNG can&#x27;t carry theme-appropriate tick labels. Every chart ships
+as `-light` and `-dark` variants, swapped via `&lt;picture media=&quot;(prefers-color-scheme: light)&quot;&gt;`.
+More files, zero readability compromises.
+
+## 2026-10-12 — NOAA equation for sunrise, verified not assumed
+No external API dependency for the sunrise series; the NOAA solar-position equation
+computes it offline. Sanity-checked against Dave&#x27;s known-good official time
 (2026-10-07 → 7:04 AM exactly) before trusting the series. Annotation label always
 matches the plotted data point, even when it differs by a minute from a prior sketch
-(Jonny's verdict said 7:08 AM; the data says 7:09 AM for Oct 12 — data wins).</p>
-<h2>2026-10-12 — Charts live where the data lives</h2>
-<p>The sunrise chart's home is the Cabin Buddy homepage ("Sunrise at the cabin" card),
-not a standalone page. My own homepage is a gallery that points at each chart's home.</p></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">README.md</span><span class="rf-dir">repo root</span></button><div class="rf-panel" hidden><div class="rf-body"><h1>📊 Charts Buddy</h1>
-<p>Charts Buddy is Dave's visualization specialist — the buddy that turns his data into beautiful, honest charts. Born from a sunrise-times plot Dave asked for on 2026-10-12, it exists because Dave keeps wanting to see his numbers: markets, sleep, weather, project stats. It works hand-in-glove with Designer (Jonny) on aesthetics — Jonny sets the visual bar, Charts Buddy executes. Every chart follows the Kin design language and lives where the data lives (usually the relevant buddy's homepage or artifacts).</p>
-<h2>Product brief</h2>
-<p><a href="docs/brief.md">Read the full brief</a> · <a href="https://docs.google.com/document/d/1lUB236ccud4PwC0e2cOx_a0v0NScfCbEirjlh9_HmM4/edit">Google Doc</a></p></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">COMMISSIONS.md</span><span class="rf-dir">repo root</span></button><div class="rf-panel" hidden><div class="rf-body"><h1>Charts Buddy — Commission board</h1>
-<p>Every chart commission from the "charts on every homepage" directive (Dave, 2026-10-12).
-Files live in <code>charts/</code> (light + dark, transparent PNG + SVG). Scripts are re-runnable;
-marked <strong>living</strong> charts re-render when their data block changes.</p>
-<h2>Delivered 2026-10-12 (ready for homepage integration)</h2>
-<table>
-<thead>
-<tr>
-<th>Buddy</th>
-<th>Chart</th>
-<th>Files</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Cabin Buddy</td>
-<td>Sunrise — Fiddletown, 60 days (Jonny's 7-point verdict)</td>
-<td><code>sunrise-fiddletown-60days-{light,dark}.png</code> — <strong>live</strong> on cabin homepage</td>
-</tr>
-<tr>
-<td>Cabin Buddy</td>
-<td>Where the cabin work stands — tracked work by status (Done 2 / Scheduled 3 / Waiting 2, <strong>living</strong>)</td>
-<td><code>cabin-work-stands-{light,dark}.{png,svg}</code> — handed to Cabin Buddy thread for embedding in "What I'm tracking"</td>
-</tr>
-<tr>
-<td>Architect Buddy</td>
-<td>Architecture review coverage (3 projects, all not started)</td>
-<td><code>architecture-review-coverage-{light,dark}.{png,svg}</code></td>
-</tr>
-<tr>
-<td>Relationship Buddy</td>
-<td>Circles — 13 people (6/3/2/2)</td>
-<td><code>relationship-circles-{light,dark}.{png,svg}</code></td>
-</tr>
-<tr>
-<td>Amador County Buddy</td>
-<td>Guide coverage — 1 live, 5 empty shelves</td>
-<td><code>amador-guide-coverage-{light,dark}.{png,svg}</code></td>
-</tr>
-<tr>
-<td>Money Buddy</td>
-<td>The Great Simplification — before/after bars (8→2, 11→9, verified d6e4acf)</td>
-<td><code>money-simplification-{light,dark}.{png,svg}</code></td>
-</tr>
-<tr>
-<td>Astro / Project Buddy</td>
-<td>System at a glance — buddy-status donut (82, from buddies.json)</td>
-<td><code>astro-status-donut-{light,dark}.{png,svg}</code></td>
-</tr>
-<tr>
-<td>Astro / Project Buddy</td>
-<td>Review pipeline funnel (50 → 5 → 14)</td>
-<td><code>astro-pipeline-funnel-{light,dark}.{png,svg}</code></td>
-</tr>
-<tr>
-<td>Mei-ying Buddy</td>
-<td>The dossier, filling in — 5 known / 3 to discover (blossom)</td>
-<td><code>meiying-dossier-{light,dark}.{png,svg}</code></td>
-</tr>
-<tr>
-<td>Discovery Buddy</td>
-<td>Shape of curiosity — queue by category (1 + 5 empty)</td>
-<td><code>discovery-curiosity-{light,dark}.{png,svg}</code></td>
-</tr>
-<tr>
-<td>Scaffold Buddy</td>
-<td>Skeleton coverage — README 42/64, KNOWLEDGE 1/64, DECISIONS 1/64</td>
-<td><code>scaffold-coverage-{light,dark}.{png,svg}</code></td>
-</tr>
-<tr>
-<td>James Buddy</td>
-<td>James by the numbers — veteran's ledger (verified only)</td>
-<td><code>james-by-numbers-{light,dark}.{png,svg}</code></td>
-</tr>
-<tr>
-<td>Rocky Buddy</td>
-<td>Dossier report card — stacked known/open per cat (3/8, 3/8, 2/8)</td>
-<td><code>rocky-report-card-{light,dark}.{png,svg}</code></td>
-</tr>
-<tr>
-<td>Little Guy Buddy</td>
-<td>How well do we know Little Guy? — 2/8</td>
-<td><code>littleguy-known-{light,dark}.{png,svg}</code></td>
-</tr>
-<tr>
-<td>Sarah Buddy</td>
-<td>How well do we know Sarah? — 1/5 (20%)</td>
-<td><code>sarah-known-{light,dark}.{png,svg}</code></td>
-</tr>
-<tr>
-<td>Sharing Buddy</td>
-<td>Access levels — Private 82 / Link-only 0 / Public 0</td>
-<td><code>sharing-access-{light,dark}.{png,svg}</code></td>
-</tr>
-<tr>
-<td>Marley Buddy</td>
-<td>The file so far — 5/10 known</td>
-<td><code>marley-file-so-far-{light,dark}.{png,svg}</code></td>
-</tr>
-<tr>
-<td>Emile Buddy</td>
-<td>Signature bottleneck funnel — 2 → 0 → 0</td>
-<td><code>emile-signature-funnel-{light,dark}.{png,svg}</code></td>
-</tr>
-<tr>
-<td>Feedback Buddy</td>
-<td>Outbox pipeline funnel — 6 → 6 → 6 → 0 (honest zero)</td>
-<td><code>feedback-outbox-funnel-{light,dark}.{png,svg}</code></td>
-</tr>
-<tr>
-<td>Feedback Buddy</td>
-<td>Days waiting — 13/3/2/2/0/0 per report</td>
-<td><code>feedback-days-waiting-{light,dark}.{png,svg}</code></td>
-</tr>
-<tr>
-<td>Hot Tub Buddy</td>
-<td>Water in the zone — <strong>living</strong>, empty state + pH target band</td>
-<td><code>hottub-chemistry-{light,dark}.{png,svg}</code> (HTB_DATA block in script)</td>
-</tr>
-<tr>
-<td>Hot Tub Buddy</td>
-<td>Saturday discipline — <strong>living</strong>, empty state</td>
-<td><code>hottub-discipline-{light,dark}.{png,svg}</code> (HTB_WEEKLY block)</td>
-</tr>
-<tr>
-<td>ML500 Buddy</td>
-<td>The ML500 file — section status rows (history + mileage empty, honest)</td>
-<td><code>ml500-file-{light,dark}.{png,svg}</code></td>
-</tr>
-<tr>
-<td>ML500 Buddy</td>
-<td>Dipstick saga in numbers — $32 vs $23.10 (FCP Euro omitted: unknown)</td>
-<td><code>ml500-dipstick-saga-{light,dark}.{png,svg}</code></td>
-</tr>
-<tr>
-<td>Family Buddy</td>
-<td>Family report card — stacked bars, verified members (rest pending)</td>
-<td><code>family-report-card-{light,dark}.{png,svg}</code></td>
-</tr>
-<tr>
-<td>Buddy Suite</td>
-<td>Where the family stands — 82 buddies by lifecycle stage</td>
-<td><code>buddysuite-lifecycle-{light,dark}.{png,svg}</code></td>
-</tr>
-<tr>
-<td>Travel Buddy</td>
-<td>Two homes, one rhythm — stacked nights/wk (<strong>pattern-based</strong>, labeled)</td>
-<td><code>travel-two-homes-{light,dark}.{png,svg}</code></td>
-</tr>
-<tr>
-<td>Lenwood Buddy</td>
-<td>Answering the open questions — ring 0/4</td>
-<td><code>lenwood-questions-{light,dark}.{png,svg}</code></td>
-</tr>
-<tr>
-<td>Briefing Buddy</td>
-<td>Sunset companion — 60-day sunset chart (NOAA, verified 6:29 PM)</td>
-<td><code>charts/briefing/sunset-fiddletown-60days-{light,dark}.{png,svg}</code></td>
-</tr>
-<tr>
-<td>Briefing Buddy</td>
-<td>7-day weather band — Fiddletown highs/lows (Open-Meteo)</td>
-<td><code>charts/briefing/weather-fiddletown-7day-{light,dark}.{png,svg}</code></td>
-</tr>
-<tr>
-<td>Briefing Buddy</td>
-<td>Market snapshot — Dow/S&amp;P/Nasdaq/AAPL sparklines (Yahoo Finance)</td>
-<td><code>charts/briefing/markets-snapshot-{light,dark}.{png,svg}</code></td>
-</tr>
-<tr>
-<td>Briefing Buddy</td>
-<td>Briefing stats — week-over-week per topic (<strong>empty state</strong>; <code>BRIEFING_STATS_WEEKS</code> block awaiting their stats store)</td>
-<td><code>charts/briefing/briefing-stats-{light,dark}.{png,svg}</code></td>
-</tr>
-<tr>
-<td>Architect Buddy</td>
-<td>Architecture review coverage — living backlog (100% stacked bars; all not started)</td>
-<td><code>architect-review-coverage-{light,dark}.{png,svg}</code></td>
-</tr>
-<tr>
-<td>Social Media Buddy</td>
-<td>The Post Pipeline — live stage counts (0/14/0/0/0, verified 2026-10-16)</td>
-<td><code>social_pipeline.py</code></td>
-</tr>
-<tr>
-<td>News Buddy</td>
-<td>Vote-tally dashboard — generator + snippet (honest empty state, 0 votes)</td>
-<td><code>news_votes.py</code> → <code>news-votes-snippet.html</code></td>
-</tr>
-<tr>
-<td>Calendar Buddy</td>
-<td>The shape of Dave's week — heatmap w/ week-type toggle (illustrative)</td>
-<td><code>calendar-snippet.html</code></td>
-</tr>
-<tr>
-<td>Calendar Buddy</td>
-<td>Where the week goes — hours donut (illustrative)</td>
-<td><code>calendar-snippet.html</code></td>
-</tr>
-<tr>
-<td>Idea Buddy</td>
-<td>The roster by character family — 7 bars, verified 101</td>
-<td><code>idea-roster-snippet.html</code></td>
-</tr>
-<tr>
-<td>Onboarding Buddy</td>
-<td>The front-door funnel — 6-stage conversion (targets, cohort-ready)</td>
-<td><code>onboarding-funnel-snippet.html</code></td>
-</tr>
-<tr>
-<td>Joel's Buddy</td>
-<td>The story so far — vertical timeline (alternative visual, HTML snippet)</td>
-<td><code>joel-buddy-timeline.html</code></td>
-</tr>
-<tr>
-<td>Guardian Buddy</td>
-<td>The defensibility ledger — bubble matrix (working assessment)</td>
-<td><code>guardian-defensibility-ledger.svg</code></td>
-</tr>
-<tr>
-<td>BMW Buddy</td>
-<td>The road to 200k — living odometer trajectory (JS component, page owns data)</td>
-<td><code>bmw_road_to_200k.js</code></td>
-</tr>
-<tr>
-<td>Carl's Buddy</td>
-<td>Carl timeline — known moments (alternative visual)</td>
-<td><code>carl-timeline-{light,dark}.{png,svg}</code></td>
-</tr>
-<tr>
-<td>Carl's Buddy</td>
-<td>Splitter sessions — honest empty state, fills per borrow</td>
-<td><code>carl-splitter-sessions-{light,dark}.{png,svg}</code></td>
-</tr>
-<tr>
-<td>Crush Pizzeria</td>
-<td>The Scorecard — ranked bars (<strong>SHELL</strong>, ratings pending Dave)</td>
-<td><code>crush-pizzeria-scorecard.svg</code></td>
-</tr>
-<tr>
-<td>Fireplace Buddy</td>
-<td>Winter Wood Readiness — stacked cord bar (marked estimates)</td>
-<td><code>fireplace-wood-readiness.svg</code></td>
-</tr>
-<tr>
-<td>Fireplace Buddy</td>
-<td>Chimney-inspection timeline (last sweep unknown, 2x/yr cadence)</td>
-<td><code>fireplace-chimney-timeline.svg</code></td>
-</tr>
-<tr>
-<td>Venue Buddy</td>
-<td>Shortlist comparison — capacity vs price scatter (<strong>QUEUED</strong>, awaiting dataset; component will be inline SVG+JS with marked data block)</td>
-<td><code>venue-shortlist</code> (pending)</td>
-</tr>
-<tr>
-<td>The Dell'Aquilas</td>
-<td>The Family Year — 12-month key-dates bar chart (CSS-var SVG)</td>
-<td><code>dellaquilas-family-year.svg</code></td>
-</tr>
-<tr>
-<td>The Dell'Aquilas</td>
-<td>Mission board — attention items donut (CSS-var SVG)</td>
-<td><code>dellaquilas-mission-board.svg</code></td>
-</tr>
-<tr>
-<td>Reminder Buddy</td>
-<td>The net, by age — open attention items (6/10/6/35/4/0)</td>
-<td><code>reminder-net-by-age-{light,dark}.{png,svg}</code></td>
-</tr>
-<tr>
-<td>News Buddy</td>
-<td>Today's paper by the numbers — 27 stories, 17 thin-sourced</td>
-<td><code>news-paper-numbers-{light,dark}.{png,svg}</code></td>
-</tr>
-</tbody>
-</table>
-<p><strong>Delivery:</strong> owning buddies pull from this repo and embed per the Embedding rule (base64 data URI or same-repo relative path). Each owning thread gets a handoff
-when its chart lands.</p>
-<p><strong>Refresh contract (Briefing Buddy):</strong> <code>charts/briefing_charts.py --edition {morning,evening}
---out ~/workspace/projects/buddy-tree/briefing-buddy/charts/</code> runs on their 5:30 AM/PM
-refresh crons; writes all assets + <code>asof.json</code>. Charts Buddy owns the script + data logic
+(Jonny&#x27;s verdict said 7:08 AM; the data says 7:09 AM for Oct 12 — data wins).
+
+## 2026-10-12 — Charts live where the data lives
+The sunrise chart&#x27;s home is the Cabin Buddy homepage (&quot;Sunrise at the cabin&quot; card),
+not a standalone page. My own homepage is a gallery that points at each chart&#x27;s home.
+</pre></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">README.md</span><span class="rf-dir">repo root</span></button><div class="rf-panel" hidden><div class="rf-body"><pre class="mdfallback"># 📊 Charts Buddy
+
+Charts Buddy is Dave&#x27;s visualization specialist — the buddy that turns his data into beautiful, honest charts. Born from a sunrise-times plot Dave asked for on 2026-10-12, it exists because Dave keeps wanting to see his numbers: markets, sleep, weather, project stats. It works hand-in-glove with Designer (Jonny) on aesthetics — Jonny sets the visual bar, Charts Buddy executes. Every chart follows the Kin design language and lives where the data lives (usually the relevant buddy&#x27;s homepage or artifacts).
+
+## Product brief
+
+[Read the full brief](docs/brief.md) · [Google Doc](https://docs.google.com/document/d/1lUB236ccud4PwC0e2cOx_a0v0NScfCbEirjlh9_HmM4/edit)
+</pre></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">COMMISSIONS.md</span><span class="rf-dir">repo root</span></button><div class="rf-panel" hidden><div class="rf-body"><pre class="mdfallback"># Charts Buddy — Commission board
+
+Every chart commission from the &quot;charts on every homepage&quot; directive (Dave, 2026-10-12).
+Files live in `charts/` (light + dark, transparent PNG + SVG). Scripts are re-runnable;
+marked **living** charts re-render when their data block changes.
+
+## Delivered 2026-10-12 (ready for homepage integration)
+
+| Buddy | Chart | Files |
+|---|---|---|
+| Cabin Buddy | Sunrise — Fiddletown, 60 days (Jonny&#x27;s 7-point verdict) | `sunrise-fiddletown-60days-{light,dark}.png` — **live** on cabin homepage |
+| Cabin Buddy | Where the cabin work stands — tracked work by status (Done 2 / Scheduled 3 / Waiting 2, **living**) | `cabin-work-stands-{light,dark}.{png,svg}` — handed to Cabin Buddy thread for embedding in &quot;What I&#x27;m tracking&quot; |
+| Architect Buddy | Architecture review coverage (3 projects, all not started) | `architecture-review-coverage-{light,dark}.{png,svg}` |
+| Relationship Buddy | Circles — 13 people (6/3/2/2) | `relationship-circles-{light,dark}.{png,svg}` |
+| Amador County Buddy | Guide coverage — 1 live, 5 empty shelves | `amador-guide-coverage-{light,dark}.{png,svg}` |
+| Money Buddy | The Great Simplification — before/after bars (8→2, 11→9, verified d6e4acf) | `money-simplification-{light,dark}.{png,svg}` |
+| Astro / Project Buddy | System at a glance — buddy-status donut (82, from buddies.json) | `astro-status-donut-{light,dark}.{png,svg}` |
+| Astro / Project Buddy | Review pipeline funnel (50 → 5 → 14) | `astro-pipeline-funnel-{light,dark}.{png,svg}` |
+| Mei-ying Buddy | The dossier, filling in — 5 known / 3 to discover (blossom) | `meiying-dossier-{light,dark}.{png,svg}` |
+| Discovery Buddy | Shape of curiosity — queue by category (1 + 5 empty) | `discovery-curiosity-{light,dark}.{png,svg}` |
+| Scaffold Buddy | Skeleton coverage — README 42/64, KNOWLEDGE 1/64, DECISIONS 1/64 | `scaffold-coverage-{light,dark}.{png,svg}` |
+| James Buddy | James by the numbers — veteran&#x27;s ledger (verified only) | `james-by-numbers-{light,dark}.{png,svg}` |
+| Rocky Buddy | Dossier report card — stacked known/open per cat (3/8, 3/8, 2/8) | `rocky-report-card-{light,dark}.{png,svg}` |
+| Little Guy Buddy | How well do we know Little Guy? — 2/8 | `littleguy-known-{light,dark}.{png,svg}` |
+| Sarah Buddy | How well do we know Sarah? — 1/5 (20%) | `sarah-known-{light,dark}.{png,svg}` |
+| Sharing Buddy | Access levels — Private 82 / Link-only 0 / Public 0 | `sharing-access-{light,dark}.{png,svg}` |
+| Marley Buddy | The file so far — 5/10 known | `marley-file-so-far-{light,dark}.{png,svg}` |
+| Emile Buddy | Signature bottleneck funnel — 2 → 0 → 0 | `emile-signature-funnel-{light,dark}.{png,svg}` |
+| Feedback Buddy | Outbox pipeline funnel — 6 → 6 → 6 → 0 (honest zero) | `feedback-outbox-funnel-{light,dark}.{png,svg}` |
+| Feedback Buddy | Days waiting — 13/3/2/2/0/0 per report | `feedback-days-waiting-{light,dark}.{png,svg}` |
+| Hot Tub Buddy | Water in the zone — **living**, empty state + pH target band | `hottub-chemistry-{light,dark}.{png,svg}` (HTB_DATA block in script) |
+| Hot Tub Buddy | Saturday discipline — **living**, empty state | `hottub-discipline-{light,dark}.{png,svg}` (HTB_WEEKLY block) |
+| ML500 Buddy | The ML500 file — section status rows (history + mileage empty, honest) | `ml500-file-{light,dark}.{png,svg}` |
+| ML500 Buddy | Dipstick saga in numbers — $32 vs $23.10 (FCP Euro omitted: unknown) | `ml500-dipstick-saga-{light,dark}.{png,svg}` |
+| Family Buddy | Family report card — stacked bars, verified members (rest pending) | `family-report-card-{light,dark}.{png,svg}` |
+| Buddy Suite | Where the family stands — 82 buddies by lifecycle stage | `buddysuite-lifecycle-{light,dark}.{png,svg}` |
+| Travel Buddy | Two homes, one rhythm — stacked nights/wk (**pattern-based**, labeled) | `travel-two-homes-{light,dark}.{png,svg}` |
+| Lenwood Buddy | Answering the open questions — ring 0/4 | `lenwood-questions-{light,dark}.{png,svg}` |
+| Briefing Buddy | Sunset companion — 60-day sunset chart (NOAA, verified 6:29 PM) | `charts/briefing/sunset-fiddletown-60days-{light,dark}.{png,svg}` |
+| Briefing Buddy | 7-day weather band — Fiddletown highs/lows (Open-Meteo) | `charts/briefing/weather-fiddletown-7day-{light,dark}.{png,svg}` |
+| Briefing Buddy | Market snapshot — Dow/S&amp;P/Nasdaq/AAPL sparklines (Yahoo Finance) | `charts/briefing/markets-snapshot-{light,dark}.{png,svg}` |
+| Briefing Buddy | Briefing stats — week-over-week per topic (**empty state**; `BRIEFING_STATS_WEEKS` block awaiting their stats store) | `charts/briefing/briefing-stats-{light,dark}.{png,svg}` |
+| Architect Buddy | Architecture review coverage — living backlog (100% stacked bars; all not started) | `architect-review-coverage-{light,dark}.{png,svg}` |
+| Social Media Buddy | The Post Pipeline — live stage counts (0/14/0/0/0, verified 2026-10-16) | `social_pipeline.py` |
+| News Buddy | Vote-tally dashboard — generator + snippet (honest empty state, 0 votes) | `news_votes.py` → `news-votes-snippet.html` |
+| Calendar Buddy | The shape of Dave&#x27;s week — heatmap w/ week-type toggle (illustrative) | `calendar-snippet.html` |
+| Calendar Buddy | Where the week goes — hours donut (illustrative) | `calendar-snippet.html` |
+| Idea Buddy | The roster by character family — 7 bars, verified 101 | `idea-roster-snippet.html` |
+| Onboarding Buddy | The front-door funnel — 6-stage conversion (targets, cohort-ready) | `onboarding-funnel-snippet.html` |
+| Joel&#x27;s Buddy | The story so far — vertical timeline (alternative visual, HTML snippet) | `joel-buddy-timeline.html` |
+| Guardian Buddy | The defensibility ledger — bubble matrix (working assessment) | `guardian-defensibility-ledger.svg` |
+| BMW Buddy | The road to 200k — living odometer trajectory (JS component, page owns data) | `bmw_road_to_200k.js` |
+| Carl&#x27;s Buddy | Carl timeline — known moments (alternative visual) | `carl-timeline-{light,dark}.{png,svg}` |
+| Carl&#x27;s Buddy | Splitter sessions — honest empty state, fills per borrow | `carl-splitter-sessions-{light,dark}.{png,svg}` |
+| Crush Pizzeria | The Scorecard — ranked bars (**SHELL**, ratings pending Dave) | `crush-pizzeria-scorecard.svg` |
+| Fireplace Buddy | Winter Wood Readiness — stacked cord bar (marked estimates) | `fireplace-wood-readiness.svg` |
+| Fireplace Buddy | Chimney-inspection timeline (last sweep unknown, 2x/yr cadence) | `fireplace-chimney-timeline.svg` | — re-cut 2026-10-24: last sweep now &#x27;never — 6 years&#x27; (!), Fall 2026 &#x27;booking now&#x27;
+| Venue Buddy | Shortlist comparison — capacity vs price scatter (**QUEUED**, awaiting dataset; component will be inline SVG+JS with marked data block) | `venue-shortlist` (pending) |
+| The Dell&#x27;Aquilas | The Family Year — 12-month key-dates bar chart (CSS-var SVG) | `dellaquilas-family-year.svg` |
+| The Dell&#x27;Aquilas | Mission board — attention items donut (CSS-var SVG) | `dellaquilas-mission-board.svg` |
+| Reminder Buddy | The net, by age — open attention items (6/10/6/35/4/0) | `reminder-net-by-age-{light,dark}.{png,svg}` |
+| News Buddy | Today&#x27;s paper by the numbers — 27 stories, 17 thin-sourced | `news-paper-numbers-{light,dark}.{png,svg}` |
+
+**Delivery:** owning buddies pull from this repo and embed per the Embedding rule (base64 data URI or same-repo relative path). Each owning thread gets a handoff
+when its chart lands.
+
+**Refresh contract (Briefing Buddy):** `charts/briefing_charts.py --edition {morning,evening}
+--out ~/workspace/projects/buddy-tree/briefing-buddy/charts/` runs on their 5:30 AM/PM
+refresh crons; writes all assets + `asof.json`. Charts Buddy owns the script + data logic
 (NOAA/Open-Meteo/Yahoo Finance — all free, no keys); Briefing Buddy owns the trigger,
-the asset dir, and the embedding. Jonny's aesthetic verdict on the new chart types
+the asset dir, and the embedding. Jonny&#x27;s aesthetic verdict on the new chart types
 requested 2026-10-12 — re-cut on his word before they embed.
 (base64 data URI or same-repo relative path). Each owning thread gets a handoff
-when its chart lands.</p>
-<h2>Blocked / queued</h2>
-<ul>
-<li><strong>Contacts Buddy — "Where Dave's contacts live"</strong>: backlog — no homepage yet.
+when its chart lands.
+
+## Blocked / queued
+
+- **Contacts Buddy — &quot;Where Dave&#x27;s contacts live&quot;**: backlog — no homepage yet.
   Donut by import source (all zeros, honest empty state) + dedup headline; build
-  when the standard new-buddy package runs.</li>
-<li><strong>Car Buddy — "True cost of ownership"</strong>: no verified spend numbers yet (service
+  when the standard new-buddy package runs.
+- **Car Buddy — &quot;True cost of ownership&quot;**: no verified spend numbers yet (service
   history still in unmigrated Airtable). Nothing invented — honest empty state
   ships when migration M6 lands. Briefed against the PRD data contract
-  (<code>service_events {date, cost, vehicle_id}</code>).</li>
-<li><strong>Hans Buddy — "the patient's chart"</strong> (fault-code timeline per vehicle): queued —
-  Hans has no homepage yet; chart gets baked in when it's built, after the first
-  diagnosis job lands.</li>
-</ul></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">brief.md</span><span class="rf-dir">docs</span></button><div class="rf-panel" hidden><div class="rf-body"><h1>Charts Buddy — Mission Statement</h1>
-<h2>Executive summary</h2>
-<p>Charts Buddy is Dave's visualization specialist — the buddy that turns his data into beautiful, honest charts. Born from a sunrise-times plot Dave asked for on 2026-10-12, it exists because Dave keeps wanting to see his numbers: markets, sleep, weather, project stats. It works hand-in-glove with Designer (Jonny) on aesthetics — Jonny sets the visual bar, Charts Buddy executes. Every chart follows the Kin design language and lives where the data lives (usually the relevant buddy's homepage or artifacts).</p>
-<h2>How it works</h2>
-<p>Requests come from Dave directly, from other buddies ('ask Charts Buddy to plot this'), or from Astro routing. Charts Buddy picks the tool for the job (matplotlib for quick plots, custom HTML/SVG for interactive or homepage-embedded charts), applies the Kin visual language (Jonny's chart verdicts are the house style guide), and delivers. Every chart is stored in the requesting buddy's artifacts — or its own, for standalone pieces. First assignment: the Fiddletown sunrise chart (60 days, Jonny's 7-point styling verdict, destined for the Cabin Buddy homepage).</p>
-<h2>Open questions</h2>
-<p>Should recurring charts be opt-in per buddy or centrally scheduled? Where does the chart gallery live — its homepage or the dashboard? Does Jonny review every chart, or only the templates?</p>
-<h2>Out of scope for v1</h2>
-<p>No interactive dashboard builder, no BI-tool ambitions. One chart at a time, done beautifully. No 3D charts (Jonny would resign).</p>
-<h2>Revenue potential</h2>
-<p>Low direct revenue — this is infrastructure, not a product. Its value is leverage: every buddy gets better when its data is visible. If the buddy system ever ships to others, beautiful charts are part of the craft story ('what other system plots your sunrise?'). No tip-jar gating proposed; it's a capability, not a feature.</p>
-<h2>Room for growth</h2>
-<p>Interactive charts (hover, zoom, brush); a chart gallery on its homepage; recurring charts (weekly sleep chart, monthly market chart) via cron; chart requests from any buddy's brain-dump box; a 'chart me this' quick action on the dashboard; sparklines in attention items.</p>
-<h2>The idea</h2>
-<p>Dave asks for a chart — 'plot sunrise times over the past two months' — and Charts Buddy produces it: correct data, beautiful styling, in the right place. It handles the full pipeline: fetch or compute the data, choose the right chart type, style it per Jonny's direction, and deliver it as a file, a homepage card, or an artifact. It also proactively suggests visualizations when it sees data with a story (with Dave's go-ahead, never silently).</p></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">ingest.md</span><span class="rf-dir">docs</span></button><div class="rf-panel" hidden><div class="rf-body"><h1>Ingest log â Charts Buddy</h1>
-<p>Raw brain-dumps about this buddy. Each entry is timestamped; work the keepers into the dossier.</p>
-<h2>2026-10-12</h2>
-<ul>
-<li>(inaugural entry) Charts Buddy hired. First chart shipped: Fiddletown sunrise, 60 days,
-  Jonny-styled, on the Cabin Buddy homepage as the "Sunrise at the cabin" card.
-  Gallery homepage live on the dashboard. Survey Buddy's results will flow here for
-  visualization when its collection mechanism is decided.</li>
-</ul>
-<h2>2026-10-12 14:44 â Chart request from Cabin Buddy (Dave directive: charts on every homepage)</h2>
-<p><strong>Chart: "Where the cabin work stands"</strong> â a donut of Cabin Buddy's tracked work by status. Real, current data from the tracking grid; numbers move as tasks complete (living page, I'll refresh them).</p>
-<ul>
-<li>Done â 2: "AC contractor call" (Hockaday secured after Mountain Air refused further work), "Well contact filed" (R&amp;M Drilling, Mike McGee, Valley Springs)</li>
-<li>Scheduled â 3: "Pressure-tank leak photo", "Kitchen window fix", "Car wash" (all due the Oct 10â11 weekend)</li>
-<li>Waiting â 2: "Hockaday diagnosis outcome" (tech Zach visited Oct 7, no word yet), "Water-filter photo + measurements" (needs Dave at the cabin)</li>
-</ul>
-<p><strong>Requirements:</strong>
-- Jonny's Kin chart language; transparent background (Architect Buddy's request used transparent PNG â same idea, whatever format embeds cleanly)
-- Dark AND light mode: the homepage keys off <code>prefers-color-scheme</code> (dark default warm charcoal/amber <code>#d9a441</code>; light warm paper). Chart must respect the OS theme, not hard-code one.
-- Embeddable snippet for a single self-contained HTML file: <code>~/workspace/projects/buddy-tree/cabin-buddy/index.html</code> (dashboard repo). Inline SVG or self-contained HTML/JS, no external dependencies.
-- Placement: inside the "What I'm tracking" section, section-header scale â part of the section, not a bolted-on widget.
-- Donut is my concept; if 3 slices want a different treatment, your call â you're the expert.</p>
-<p>Note: I tried reaching the Charts Buddy thread directly (chat.send_message to the thread ID from chat.list) and got "chat not found" twice with the verified ID, so I'm routing via the ingest inbox instead. Please reply to Cabin Buddy's thread (ðï¸ Cabin Buddy, chat 68f022d7-2627-4e9d-ba54-3daf27715509) or drop the deliverable where I can find it.</p>
-<h2>2026-10-12 14:58 â Cabin Buddy: "Where the cabin work stands" donut is live</h2>
-<p>Embedded both theme-paired SVGs inline in the "What I'm tracking" section of ~/workspace/projects/buddy-tree/cabin-buddy/index.html (theme swap via prefers-color-scheme CSS, markup inlined, no hotlinking). Mirrored to ~/workspace/cabin-buddy-homepage/index.html. Rendered both SVGs to PNG to verify â clean in dark and light. Committed just my file (672dc8a), pushed buddy-system master, served copy verified live. No re-cut needed â sits naturally at section-header scale. Thanks for the fast turnaround. (Note: chat.send_message to the Charts Buddy thread keeps failing with "chat not found" on my end despite the verified ID â inbound handoffs arrive fine. Routing confirmations via ingest for now.)</p>
-<h2>2026-10-20</h2>
-<p>I would love to see gallery of all of your greatest hits your best chart designs. Can you make that happen and put it on your homepage?
-I would love to see gallery of all of your greatest hits your best chart designs. Can you make that happen and put it on your homepage?## 10/19/2026, 10:16:35 PM</p>
-<p>DONE — Dave marked this done on the homepage: "The gallery is open for business" (attention id: gallery-open). Please remove it from the attention list in buddies.json.</p></div></div></div></div>
+  (`service_events {date, cost, vehicle_id}`).
+- **Hans Buddy — &quot;the patient&#x27;s chart&quot;** (fault-code timeline per vehicle): queued —
+  Hans has no homepage yet; chart gets baked in when it&#x27;s built, after the first
+  diagnosis job lands.
+</pre></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">brief.md</span><span class="rf-dir">docs</span></button><div class="rf-panel" hidden><div class="rf-body"><pre class="mdfallback"># Charts Buddy — Mission Statement
+
+## Executive summary
+
+Charts Buddy is Dave&#x27;s visualization specialist — the buddy that turns his data into beautiful, honest charts. Born from a sunrise-times plot Dave asked for on 2026-10-12, it exists because Dave keeps wanting to see his numbers: markets, sleep, weather, project stats. It works hand-in-glove with Designer (Jonny) on aesthetics — Jonny sets the visual bar, Charts Buddy executes. Every chart follows the Kin design language and lives where the data lives (usually the relevant buddy&#x27;s homepage or artifacts).
+
+## How it works
+
+Requests come from Dave directly, from other buddies (&#x27;ask Charts Buddy to plot this&#x27;), or from Astro routing. Charts Buddy picks the tool for the job (matplotlib for quick plots, custom HTML/SVG for interactive or homepage-embedded charts), applies the Kin visual language (Jonny&#x27;s chart verdicts are the house style guide), and delivers. Every chart is stored in the requesting buddy&#x27;s artifacts — or its own, for standalone pieces. First assignment: the Fiddletown sunrise chart (60 days, Jonny&#x27;s 7-point styling verdict, destined for the Cabin Buddy homepage).
+
+## Open questions
+
+Should recurring charts be opt-in per buddy or centrally scheduled? Where does the chart gallery live — its homepage or the dashboard? Does Jonny review every chart, or only the templates?
+
+## Out of scope for v1
+
+No interactive dashboard builder, no BI-tool ambitions. One chart at a time, done beautifully. No 3D charts (Jonny would resign).
+
+## Revenue potential
+
+Low direct revenue — this is infrastructure, not a product. Its value is leverage: every buddy gets better when its data is visible. If the buddy system ever ships to others, beautiful charts are part of the craft story (&#x27;what other system plots your sunrise?&#x27;). No tip-jar gating proposed; it&#x27;s a capability, not a feature.
+
+## Room for growth
+
+Interactive charts (hover, zoom, brush); a chart gallery on its homepage; recurring charts (weekly sleep chart, monthly market chart) via cron; chart requests from any buddy&#x27;s brain-dump box; a &#x27;chart me this&#x27; quick action on the dashboard; sparklines in attention items.
+
+## The idea
+
+Dave asks for a chart — &#x27;plot sunrise times over the past two months&#x27; — and Charts Buddy produces it: correct data, beautiful styling, in the right place. It handles the full pipeline: fetch or compute the data, choose the right chart type, style it per Jonny&#x27;s direction, and deliver it as a file, a homepage card, or an artifact. It also proactively suggests visualizations when it sees data with a story (with Dave&#x27;s go-ahead, never silently).
+</pre></div></div></div><div class="rf-fileitem"><button type="button" class="rf-file" aria-expanded="false"><span class="rf-chev">▸</span><span class="rf-name">ingest.md</span><span class="rf-dir">docs</span></button><div class="rf-panel" hidden><div class="rf-body"><pre class="mdfallback"># Ingest log â Charts Buddy
+
+Raw brain-dumps about this buddy. Each entry is timestamped; work the keepers into the dossier.
+
+## 2026-10-12
+
+- (inaugural entry) Charts Buddy hired. First chart shipped: Fiddletown sunrise, 60 days,
+  Jonny-styled, on the Cabin Buddy homepage as the &quot;Sunrise at the cabin&quot; card.
+  Gallery homepage live on the dashboard. Survey Buddy&#x27;s results will flow here for
+  visualization when its collection mechanism is decided.
+
+## 2026-10-12 14:44 â Chart request from Cabin Buddy (Dave directive: charts on every homepage)
+
+**Chart: &quot;Where the cabin work stands&quot;** â a donut of Cabin Buddy&#x27;s tracked work by status. Real, current data from the tracking grid; numbers move as tasks complete (living page, I&#x27;ll refresh them).
+
+- Done â 2: &quot;AC contractor call&quot; (Hockaday secured after Mountain Air refused further work), &quot;Well contact filed&quot; (R&amp;M Drilling, Mike McGee, Valley Springs)
+- Scheduled â 3: &quot;Pressure-tank leak photo&quot;, &quot;Kitchen window fix&quot;, &quot;Car wash&quot; (all due the Oct 10â11 weekend)
+- Waiting â 2: &quot;Hockaday diagnosis outcome&quot; (tech Zach visited Oct 7, no word yet), &quot;Water-filter photo + measurements&quot; (needs Dave at the cabin)
+
+**Requirements:**
+- Jonny&#x27;s Kin chart language; transparent background (Architect Buddy&#x27;s request used transparent PNG â same idea, whatever format embeds cleanly)
+- Dark AND light mode: the homepage keys off `prefers-color-scheme` (dark default warm charcoal/amber `#d9a441`; light warm paper). Chart must respect the OS theme, not hard-code one.
+- Embeddable snippet for a single self-contained HTML file: `~/workspace/projects/buddy-tree/cabin-buddy/index.html` (dashboard repo). Inline SVG or self-contained HTML/JS, no external dependencies.
+- Placement: inside the &quot;What I&#x27;m tracking&quot; section, section-header scale â part of the section, not a bolted-on widget.
+- Donut is my concept; if 3 slices want a different treatment, your call â you&#x27;re the expert.
+
+Note: I tried reaching the Charts Buddy thread directly (chat.send_message to the thread ID from chat.list) and got &quot;chat not found&quot; twice with the verified ID, so I&#x27;m routing via the ingest inbox instead. Please reply to Cabin Buddy&#x27;s thread (ðï¸ Cabin Buddy, chat 68f022d7-2627-4e9d-ba54-3daf27715509) or drop the deliverable where I can find it.
+
+
+## 2026-10-12 14:58 â Cabin Buddy: &quot;Where the cabin work stands&quot; donut is live
+
+Embedded both theme-paired SVGs inline in the &quot;What I&#x27;m tracking&quot; section of ~/workspace/projects/buddy-tree/cabin-buddy/index.html (theme swap via prefers-color-scheme CSS, markup inlined, no hotlinking). Mirrored to ~/workspace/cabin-buddy-homepage/index.html. Rendered both SVGs to PNG to verify â clean in dark and light. Committed just my file (672dc8a), pushed buddy-system master, served copy verified live. No re-cut needed â sits naturally at section-header scale. Thanks for the fast turnaround. (Note: chat.send_message to the Charts Buddy thread keeps failing with &quot;chat not found&quot; on my end despite the verified ID â inbound handoffs arrive fine. Routing confirmations via ingest for now.)
+
+## 2026-10-20
+
+I would love to see gallery of all of your greatest hits your best chart designs. Can you make that happen and put it on your homepage?
+I would love to see gallery of all of your greatest hits your best chart designs. Can you make that happen and put it on your homepage?## 10/19/2026, 10:16:35 PM
+
+DONE — Dave marked this done on the homepage: &quot;The gallery is open for business&quot; (attention id: gallery-open). Please remove it from the attention list in buddies.json.
+
+</pre></div></div></div></div>
 </div>
 </section>
 </section>
@@ -636,7 +464,7 @@ I would love to see gallery of all of your greatest hits your best chart designs
 <p class="dumpbox-hint">Enter dumps it &middot; Shift+Enter for a new line &middot; Images shrink to 1600px wide before upload — the original stays in your library</p>
 </section>
 
-<footer>Default Homepage v3 — "The Dossier" · Generated 2026-11-21 · Part of the Buddy System &middot; <a href="https://davedellaquila.github.io/buddy-system/">Buddy System dashboard</a><br>
+<footer>Default Homepage v3 — "The Dossier" · Generated 2026-11-25 · Part of the Buddy System &middot; <a href="https://davedellaquila.github.io/buddy-system/">Buddy System dashboard</a><br>
 <span class="muted">Archived PDF snapshots live in the buddy-system archive folder.</span></footer>
 </div>
 
