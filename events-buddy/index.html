@@ -269,6 +269,15 @@ h2 { font-size: 22px; margin: 32px 0 16px; }
 .evfilterbox.collapsed .evcontrols,.evfilterbox.collapsed .evmappref{display:none!important}
 .evfilterbox.collapsed{position:sticky;top:56px;z-index:30;background:var(--bg);padding:8px 0}
 .evfilterbox.opensticky{position:sticky;z-index:30;background:var(--bg);padding:8px 0}
+.evfilterbox.fs-anim{overflow:hidden;transition:height .3s ease,padding .3s ease;position:sticky;z-index:30;background:var(--bg)}
+.evfilterbox.fs-anim.fs-pad{padding:8px 0}
+.evfilterbox.fs-anim .evfiltersum{display:flex;position:absolute;top:8px;left:0;right:0;z-index:2}
+.evfiltersum.fs-sum-in{opacity:0;transition:opacity .28s ease}
+.evfiltersum.fs-sum-out{transition:opacity .15s ease}
+@media (prefers-reduced-motion: reduce){
+.evfilterbox.fs-anim{transition:none}
+.evfiltersum.fs-sum-in,.evfiltersum.fs-sum-out{transition:none}
+}
 .evfiltersum-text{flex:1 1 auto;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:600}
 .evfiltersum-cta{flex:none;display:inline-flex;align-items:center;gap:6px;font-weight:700;color:var(--accent,#b4762a);border:1px solid var(--border);border-radius:999px;padding:5px 12px;background:var(--bg)}
 .evfiltersum-n{background:var(--accent,#b4762a);color:#fff;border-radius:999px;padding:0 7px;font-size:12px;line-height:18px}
@@ -1683,16 +1692,60 @@ Generated 2026-11-19 · Part of the Buddy System<br>
     t.textContent = parts.join(' \u00B7 ');
     if (badge) { badge.hidden = n === 0; badge.textContent = n; }
   }
+  var evFsAnimId = 0, evFsAnimating = false, evFsAnimTarget = null;
+  function evFsReducedMotion() { try { return window.matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) { return false; } }
+  function evFsStickyTop() { var tb = document.querySelector('.topbar'); return ((tb ? tb.offsetHeight : 48) + 6) + 'px'; }
+  function finishEvFsState(on) {
+    var box = document.getElementById('ev-filterbox'); if (!box) return;
+    evFsAnimId++; evFsAnimating = false; evFsAnimTarget = null;
+    box.classList.remove('fs-anim'); box.classList.remove('fs-pad');
+    box.style.height = '';
+    var sum = document.getElementById('ev-filtersum');
+    sum.classList.remove('fs-sum-in'); sum.classList.remove('fs-sum-out');
+    sum.style.opacity = '';
+    box.classList.toggle('collapsed', on);
+    if (on) box.classList.remove('opensticky');
+  }
   function setEvFiltersCollapsed(on) {
     var box = document.getElementById('ev-filterbox'); if (!box) return;
+    var sum = document.getElementById('ev-filtersum');
+    sum.setAttribute('aria-expanded', String(!on));
+    if (evFsAnimating && evFsAnimTarget === on) return;
+    if (!evFsAnimating && box.classList.contains('collapsed') === on) { if (on) { box.style.top = evFsStickyTop(); box.classList.remove('opensticky'); renderEvFilterSummary(); } return; }
+    if (on) { box.style.top = evFsStickyTop(); box.classList.remove('opensticky'); renderEvFilterSummary(); }
+    if (evFsReducedMotion() || !box.offsetHeight) { finishEvFsState(on); return; }
+    var myId = ++evFsAnimId;
+    evFsAnimating = true; evFsAnimTarget = on;
+    box.style.top = evFsStickyTop();
     if (on) {
-      var tb = document.querySelector('.topbar');
-      box.style.top = ((tb ? tb.offsetHeight : 48) + 6) + 'px';
-      box.classList.remove('opensticky');
-      renderEvFilterSummary();
+      var startH = box.offsetHeight;
+      box.classList.add('fs-anim');
+      box.classList.add('fs-pad');
+      void box.offsetHeight;
+      var targetH = sum.offsetHeight + 16;
+      box.style.height = startH + 'px';
+      void box.offsetHeight;
+      sum.classList.add('fs-sum-in');
+      requestAnimationFrame(function () { sum.style.opacity = '1'; });
+      box.style.height = targetH + 'px';
+    } else {
+      var fromH = box.offsetHeight;
+      box.classList.add('fs-anim');
+      box.classList.add('fs-pad');
+      box.classList.remove('collapsed');
+      box.style.height = '';
+      var fullH = box.offsetHeight - 16;
+      box.style.height = fromH + 'px';
+      void box.offsetHeight;
+      box.classList.remove('fs-pad');
+      sum.classList.add('fs-sum-out');
+      requestAnimationFrame(function () { sum.style.opacity = '0'; });
+      box.style.height = fullH + 'px';
     }
-    box.classList.toggle('collapsed', on);
-    document.getElementById('ev-filtersum').setAttribute('aria-expanded', String(!on));
+    var done = function () { if (myId === evFsAnimId) finishEvFsState(on); };
+    var h = function (e) { if (e.propertyName === 'height') { box.removeEventListener('transitionend', h); done(); } };
+    box.addEventListener('transitionend', h);
+    setTimeout(done, 450);
   }
   function onEvFilterScroll() {
     if (evFsTicking) return;
