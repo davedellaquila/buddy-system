@@ -1,3 +1,6 @@
+## 2026-11-25
+- **Music Buddy — Album of the Day, Wed Nov 25, 2026:** Elton John — *Elton John* (1970).
+
 ## 2026-11-24
 - **Events Buddy homepage — long description on the detail sheet:** the embedded viewer's detail sheet now shows the event's long description, falling back to the short description when a record has no long one (Dave's ruling, Nov 24, 2026) — cards keep the short; the feed now selects description. Same change shipped on the public events viewer; the prepared API viewer file carries it for the API deploy.
 - **Events Buddy homepage — animated filter collapse:** the embedded viewer now eases into and out of its collapsed mini-row (300 ms height transition, summary row crossfades), matching the public events viewer and Places; honors prefers-reduced-motion.
