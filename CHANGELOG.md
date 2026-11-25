@@ -1,5 +1,6 @@
 ## 2026-11-25
 - **Music Buddy — Album of the Day, Wed Nov 25, 2026:** Elton John — *Elton John* (1970).
+- **Mail Buddy — morning edition, Wed Nov 25, 2026 (rate-limited partial/gap edition)** — Both mailboxes verified connected and dispositions pulled (19 closed on file), but the mb-disp disposition search hit a terminal Gmail connector rate limit, so all Gmail work stopped with no retries. Published an honest gap edition with no items (no bodies read/verified, nothing carried over): Dave's people/money/security searches, catch-all triage, body reads, the mb-disp check and Dad's triage were NOT covered; the window Tue Nov 24, 5:41 PM – Wed Nov 25, 6:41 AM PT must be re-covered by the next run. Dispositions: 0 suppressed / 0 carried / 0 resurfaced. Shipped via the GitHub Contents API because the shared checkout is wedged.
 
 ## 2026-11-24
 - **Events Buddy homepage — long description on the detail sheet:** the embedded viewer's detail sheet now shows the event's long description, falling back to the short description when a record has no long one (Dave's ruling, Nov 24, 2026) — cards keep the short; the feed now selects description. Same change shipped on the public events viewer; the prepared API viewer file carries it for the API deploy.
