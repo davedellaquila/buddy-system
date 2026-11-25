@@ -1466,7 +1466,7 @@ Generated 2026-11-19 · Part of the Buddy System<br>
   // API has been live and stable.
   var API_BASE = 'https://api.fiddletowngazette.com/v1';
   var FEED_URL = 'https://ydftcebaftngcdjvxrgl.supabase.co/rest/v1/events'
-    + '?select=name,slug,start_date,start_time,end_date,end_time,location,host_org,website_url,image_url,short_description,source_url,source_label'
+    + '?select=name,slug,start_date,start_time,end_date,end_time,location,host_org,website_url,image_url,description,short_description,source_url,source_label'
     + '&status=eq.published&order=start_date.asc&limit=1000';
   var ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlkZnRjZWJhZnRuZ2NkanZ4cmdsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjA1NDA5NDcsImV4cCI6MjA3NjExNjk0N30.8AlcsUMJSxBlua-ehaGLAn69bbORoMBdjM--MSxxXF0';
   // Canonical town list + derivation - identical in the public viewer, this
@@ -1586,6 +1586,7 @@ Generated 2026-11-19 · Part of the Buddy System<br>
       url: r.website_url || '',
       img: r.image_url || '',
       desc: r.short_description || '',
+      longDesc: r.description || '',
       source_url: r.source_url || '',
       source_label: r.source_label || ''
     };
@@ -1894,6 +1895,7 @@ Generated 2026-11-19 · Part of the Buddy System<br>
       url: e.website_url || '',
       img: e.image_url || '',
       desc: e.short_description || '',
+      longDesc: e.description || '',
       source_url: e.source_url || '',
       source_label: e.source_label || ''
     };
@@ -1967,7 +1969,7 @@ Generated 2026-11-19 · Part of the Buddy System<br>
       + '</div>'
       + '<div class="evsheet-body"><h3>' + esc(e.name) + '</h3>'
       + rowsHtml
-      + (e.desc ? '<p class="evsdesc">' + esc(e.desc) + '</p>' : '')
+      + ((e.longDesc||e.desc) ? '<p class="evsdesc">' + esc(e.longDesc||e.desc) + '</p>' : '')
       + '<div class="evsactions">'
       + (e.url ? '<a class="evbtn" href="' + esc(e.url) + '" target="_blank" rel="noopener">More info</a>' : '')
       + (e.location ? '<a class="evbtn ghost" href="' + esc(eventMapsURL(e.location)) + '" target="_blank" rel="noopener">Open in ' + MAP_LABELS[getMapPref()] + '</a>' : '')
