@@ -284,31 +284,31 @@
 <body>
 <header class="mini-mast">
   <a class="brand" href="../index.html">📰 The Morning Edition</a>
-  <span class="ed">Wednesday, November 25, 2026</span>
+  <span class="ed">Thursday, November 26, 2026</span>
   <button id="themeBtn" class="voice-change" style="margin-left:0">Theme: Auto</button>
 </header>
 <main class="detail secpage" style="max-width:860px;margin:0 auto;padding:0 20px">
   <p class="kicker">Section</p>
   <h1>Engineering</h1>
-  <p class="lede">Octoverse 2026 lands: agents opened 40%+ of GitHub&#x27;s September PRs and drove a 14x load surge; Lamanna says the human job moves to design, verification and audit; and the week&#x27;s infrastructure pile includes 31,088 secrets leaked in public agent config files.</p>
+  <p class="lede">Agents meet their review bottleneck: Claude Ship&#x27;s three-agent separation of duties dissected, a ten-day GitHub review finding humans-in-the-loop tools ascendant and @claude in the credits, and Anthropic&#x27;s own Python-to-Rust API port cutting CPU about 70%.</p>
   <div class="storyitem">
       <div class="card-top"></div>
-      <h3><a href="../articles/2026-11-25-github-octoverse-2026-ai-agents-opened-more-than-40-of.html">GitHub Octoverse 2026: AI agents opened more than 40% of pull requests by September, up from 17% in March — and drove a 14x workload surge humans didn’t</a></h3>
-      <p class="byline">Emergent</p>
-      <p class="body">Emergent’s file on GitHub’s Octoverse 2026 (published Oct. 28, surfaced in Microsoft’s Nov. 24 disclosure): agents initiated over 40% of GitHub’s 110 million September pull requests, a 135% jump in share from March, and GitHub’s workload surged 14x on agent activity alone. Microsoft’s Charles Lamanna says the company is now redesigning APIs and user experiences for agents as the dominant software users — machine-consumption modes over human readability.</p>
-      <p class="body"><em>Why it matters:</em> Agents opening 40% of GitHub&#x27;s PRs reframes every engineering workflow Dave touches -- the platform itself is being redesigned for them.</p>
-    </div><div class="storyitem">
-      <div class="card-top"></div>
-      <h3><a href="../articles/2026-11-25-the-human-job-moves-up-the-stack-as-agents-absorb-line.html">The human job moves up the stack: as agents absorb line-by-line typing, engineers absorb architecture, verification, security auditing and coordination — Lamanna’s Ignite interview, in full</a></h3>
+      <h3><a href="../articles/2026-11-26-claude-ship-dissected-three-agents-strict-separation-of.html">Claude Ship, dissected: three agents, strict separation of duties — Code Review comments, PR Steward fixes but can never approve, Claude Approvals signs off only under a .claude/approvals.yml policy</a></h3>
       <p class="byline">Windows Forum</p>
-      <p class="body">Windows Forum’s long read of the Behind the Craft interview: agent-started PRs modified multiple files about 87% of the time (vs. 79% for human PRs), and repositories with an agent configuration file averaged eight times as many commits as those without. Lamanna’s warning pairs with the numbers: the discipline isn’t obsolete, but vigilance can’t slip — human engineers now own system design, safe rollouts and the audit of machine-speed code.</p>
-      <p class="body"><em>Why it matters:</em> The human job moving to design and verification is the Octoverse data&#x27;s human half -- and the strongest counter to the replacement narrative.</p>
+      <p class="body">Windows Forum’s full read of Anthropic’s Nov. 23 beta: the architecture is the reassurance. Code Review (GA) posts severity-ranked comments and never blocks; PR Steward (beta) resolves failing CI, merge conflicts and review comments but is designed never to approve or merge; Claude Approvals (beta) evaluates diffs against the repo’s policy file and routes risky changes to humans, with GitHub branch rules still governing merges. Anthropic’s own Claude Code team is the case study: Claude writes most of the code, humans were stuck context-switching back into old branches.</p>
+      <p class="body"><em>Why it matters:</em> Separation of duties is the whole ballgame for agent approvals: the agent that fixes can never sign off -- that one design choice is what makes Claude Ship shippable.</p>
     </div><div class="storyitem">
       <div class="card-top"></div>
-      <h3><a href="../articles/2026-11-25-the-weeks-agent-infrastructure-pile-a-shared-copilot-ha.html">The week’s agent-infrastructure pile: a shared Copilot harness across products, 31,088 secrets found in public Claude Code settings files (5,343 still valid), and Copilot model retirements forcing fallbacks</a></h3>
-      <p class="byline">New Runtime</p>
-      <p class="body">New Runtime’s GitHub topic hub, week of Nov. 23: Visual Studio Copilot Chat now sits on the shared Copilot SDK harness; GitHub retired Claude Opus 4.8, Opus 5 and GPT-5.6 Terra from most Copilot experiences, so harnesses need model-ID fallbacks; GitGuardian found 31,088 secrets in Claude Code settings.local.json files in public repositories, 5,343 still valid. A roundup of roundups — click through to each original before acting.</p>
-      <p class="body"><em>Why it matters:</em> 31,088 leaked secrets in agent config files is the week&#x27;s actionable security item: check any public repo carrying a settings.local.json.</p>
+      <h3><a href="../articles/2026-11-26-ten-days-in-review-the-bottleneck-moved-from-generating.html">Ten days in review: the bottleneck moved from generating work to reviewing it — GitHub’s trending board froze for four days while human-in-the-loop tools took the stretch</a></h3>
+      <p class="byline">Medium</p>
+      <p class="body">A Medium ten-day review (Day 287, Nov. 26) of the GitHub trending board: the same sixteen repositories sat in the same order for four days from Nov. 23, and the stretch’s pattern was tools that keep a person in the loop — plan-annotation workspaces before the work, approval gates during it, deterministic-plus-LLM review after it. On Days 278-279, @claude appeared among top contributors on eight, then seven, of the fifteen trending repos: agent-assisted open source is now visible in the credits, co-author lines and all.</p>
+      <p class="body"><em>Why it matters:</em> The bottleneck moving to review is the engineering story of the year in one sentence -- and @claude in the contributor credits makes agent work visible, not assumed.</p>
+    </div><div class="storyitem">
+      <div class="card-top"></div>
+      <h3><a href="../articles/2026-11-26-anthropic-ported-its-own-api-from-python-to-rust-with-c.html">Anthropic ported its own API from Python to Rust with Claude and cut CPU use about 70% — the week’s most concrete agent-engineering receipt, via Toldrop’s Thursday report</a></h3>
+      <p class="byline">Toldrop</p>
+      <p class="body">Buried in Toldrop’s Nov. 26 special report is the engineering number worth keeping: Anthropic disclosed it used Claude to port its API from Python to Rust, cutting CPU usage by about 70%. Paired with the Octoverse data in yesterday’s paper (agents opening 40%+ of GitHub’s September PRs), it is the migration-scale version of the same story — agents doing a whole-platform rewrite, with the savings stated in infrastructure terms rather than demo terms. A relay of Anthropic’s disclosure; the 70% is the company’s own figure.</p>
+      <p class="body"><em>Why it matters:</em> A 70% CPU cut from a Python-to-Rust port is the agent-migration receipt in infrastructure terms -- the number to quote when the Octoverse percentages feel abstract.</p>
     </div>
   <section class="suggestbox" data-buddy-id="news-buddy">
     <h2>Suggestions</h2>
