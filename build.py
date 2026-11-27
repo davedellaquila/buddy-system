@@ -2224,6 +2224,34 @@ html.light .status.st-dormant{background:rgba(139,148,158,.18);color:var(--muted
   body.sb-anchored:has(#main.homepage-mode):not(.bp-collapsed):has(#view-buddy.panel.active:not(.floating)) #main{padding-right:calc(var(--bpw, min(416px, calc(100vw - 250px))) + 16px)}
   body.sb-anchored:has(#main.homepage-mode):not(.sb-closed) #main{padding-left:302px}
 }
+/* ---- Medium band, floating panel style (fix, 2026-11-27): the yields
+   above are anchored-only, but floating is the default style — so at iPad
+   widths the fixed sidebar and the fixed info panel both overlaid #main,
+   which cleared neither, and the panels covered the content (Dave's iPad
+   screenshot, 2026-11-27). This is a separate failure from the 834px
+   crumb nit: the band's clearance rules were never written for floating.
+   Floating now yields like anchored in this band. #main clears the
+   sidebar's real width (--sbw — the JS-set inline width outranks this
+   band's 278px sidebar rule, so the band must follow the real width),
+   and the views that self-offset at desktop widths are zeroed, exactly
+   as the anchored rules zero them. In the band's upper half #main also
+   makes room for the docked panel, whose width is capped so the content
+   channel never drops below ~300px. In the lower half (<=950px) three
+   columns cannot fit: the panel stays a free overlay there — the phone
+   contract, dismissible via its close button — while #main still
+   clears the sidebar. */
+@media (min-width:640px) and (max-width:1100px){
+  body:not(.sb-anchored):not(.sb-closed) #main{padding-left:calc(var(--sbw, 336px) + 12px)}
+  body:not(.sb-anchored):not(.sb-closed) #tree-chrome-main{padding-left:0}
+  body:not(.standalone):not(.sb-anchored):not(.sb-closed) #canvas-bar{margin-left:0}
+  body:not(.sb-anchored):not(.sb-closed) #view-projects,body:not(.sb-anchored):not(.sb-closed) #view-plans,body:not(.sb-anchored):not(.sb-closed) #view-manifest,body:not(.sb-anchored):not(.sb-closed) #view-changelog{padding-left:0}
+}
+@media (min-width:951px) and (max-width:1100px){
+  body:not(.sb-anchored) #view-buddy.panel{width:min(416px, calc(100vw - var(--sbw, 336px) - 340px))}
+  body.sb-closed:not(.sb-anchored) #view-buddy.panel{width:min(416px, calc(100vw - 428px))}
+  body:not(.sb-anchored):not(.bp-collapsed):has(#view-buddy.panel.active:not(.floating)) #main{padding-right:calc(var(--bpw, min(416px, calc(100vw - var(--sbw, 336px) - 340px))) + 16px)}
+  body.sb-closed:not(.sb-anchored):not(.bp-collapsed):has(#view-buddy.panel.active:not(.floating)) #main{padding-right:calc(var(--bpw, min(416px, calc(100vw - 428px))) + 16px)}
+}
 /* ---- Large: >1100px (desktop) ---- */
 @media (min-width:1101px){
   #view-buddy.panel{position:fixed;top:12px;right:0;bottom:12px;width:440px;z-index:60;
