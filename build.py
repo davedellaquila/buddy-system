@@ -3822,6 +3822,7 @@ function getHomepage(b){ return (S.homepages && S.homepages[b.id]) || b.homepage
 function homepageUrl(b){
   const hp = getHomepage(b);
   if (!hp) return '';
+  if (b.private && b.repo) return 'https://github.com/davedellaquila/' + b.repo + '/blob/HEAD/homepage/index.html';
   // If it's already a full URL, use as-is. Otherwise resolve against the site origin.
   if (/^https?:\/\//i.test(hp)) return hp;
   const base = window.location.origin + window.location.pathname.replace(/\/[^/]*$/, '/');
@@ -7300,6 +7301,72 @@ function buildWelcomeCard(){
   card.querySelector('.wc-x').addEventListener('click', dismiss);
   return card;
 }
+/* Private buddies (Dave 2026-11-27; first: Gift Buddy): the homepage lives
+   in the buddy's own private repo and is never published to this public
+   tree. The frame loads it through the GitHub contents API with this
+   device's token (the PDF viewer's pattern) and shows it as a blob URL.
+   Without a token, a lock notice explains the route instead of a 404. */
+let privBlobUrl = null;
+function renderPrivateHomepage(pv, b){
+  document.getElementById('main').classList.add('homepage-mode');
+  const bar2 = document.getElementById('journal-bar');
+  if (bar2) bar2.classList.remove('show');
+  const wrap = document.createElement('div');
+  wrap.id = 'homepage-wrap';
+  const repoFile = 'https://github.com/davedellaquila/' + (b.repo || '') + '/blob/HEAD/homepage/index.html';
+  const open = document.createElement('a');
+  open.id = 'homepage-open';
+  open.href = repoFile;
+  open.target = '_blank';
+  open.rel = 'noopener';
+  open.textContent = 'Open in a new tab';
+  const note = document.createElement('div');
+  note.style.cssText = 'width:100%;height:100%;overflow:auto;background:var(--bg);padding:28px;box-sizing:border-box';
+  wrap.appendChild(note);
+  wrap.appendChild(open);
+  pv.appendChild(wrap);
+  updateHpNav();
+  if (!b.repo) {
+    note.textContent = 'This buddy is private and has no repo linked, so its homepage cannot be loaded here.';
+    return;
+  }
+  if (!ghToken()) {
+    const p1 = document.createElement('p');
+    p1.textContent = '🔒 ' + b.name + ' is a private buddy. Its homepage lives in its private GitHub repo and is never published to this public site.';
+    const p2 = document.createElement('p');
+    p2.textContent = 'Add your GitHub token on this device (the token pill, top right) and the homepage loads right here. Or open the file on GitHub while signed in:';
+    const p3 = document.createElement('p');
+    const a = document.createElement('a');
+    a.href = repoFile;
+    a.target = '_blank';
+    a.rel = 'noopener';
+    a.textContent = 'github.com/davedellaquila/' + b.repo + ' · homepage/index.html';
+    p3.appendChild(a);
+    note.appendChild(p1);
+    note.appendChild(p2);
+    note.appendChild(p3);
+    return;
+  }
+  note.textContent = 'Loading the private homepage…';
+  const api = 'https://api.github.com/repos/davedellaquila/' + b.repo + '/contents/homepage/index.html';
+  fetch(api, { headers: { 'Accept': 'application/vnd.github.raw', 'Authorization': 'token ' + ghToken() } })
+    .then(r => { if (!r.ok) throw new Error('GitHub said ' + r.status); return r.blob(); })
+    .then(blob => {
+      if (privBlobUrl) { URL.revokeObjectURL(privBlobUrl); privBlobUrl = null; }
+      privBlobUrl = URL.createObjectURL(new Blob([blob], { type: 'text/html' }));
+      const frame = document.createElement('iframe');
+      frame.id = 'homepage-frame';
+      frame.title = b.name + ' homepage';
+      frame.style.opacity = '0';
+      frame.style.transition = 'opacity 180ms ease-in';
+      frame.addEventListener('load', () => { frame.style.opacity = '1'; });
+      note.replaceWith(frame);
+      frame.src = privBlobUrl;
+    })
+    .catch(err => {
+      note.textContent = 'Could not load the private homepage (' + (err.message || err) + '). Check the token on this device, or use the GitHub link below.';
+    });
+}
 function renderProjectView(){
   const pv = document.getElementById('view-project');
   if (!pv) return;
@@ -7313,6 +7380,7 @@ function renderProjectView(){
     renderGallery(pv);
     return;
   }
+  if (b.private) { renderPrivateHomepage(pv, b); return; }
   const hp = getHomepage(b);
   document.getElementById('main').classList.add('homepage-mode');
   const bar2 = document.getElementById('journal-bar');
